@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 2 Quiz - Life Skills - Barber Study Pro</title>
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --dark: #1a1a1a;
+            --dark-gray: #2d2d2d;
+            --medium-gray: #3d3d3d;
+            --light-gray: #888;
+            --white: #f5f5f5;
+            --success: #22c55e;
+            --danger: #ef4444;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--dark);
+            color: var(--white);
+            line-height: 1.6;
+        }
+        .progress-bar {
+            position: fixed; top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--dark-gray); z-index: 1000;
+        }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.3s; }
+        
+        nav {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: sticky; top: 4px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+        .nav-container {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .back-link:hover { color: var(--gold); }
+
+        .container {
+            max-width: 800px; margin: 0 auto; padding: 3rem 2rem;
+        }
+
+        .quiz-header {
+            text-align: center; margin-bottom: 3rem;
+        }
+        .quiz-header h1 { color: var(--gold); margin-bottom: 1rem; }
+        .quiz-header p { color: var(--light-gray); }
+
+        .quiz-section { background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
+        .quiz-section h2 { color: var(--gold); margin-bottom: 1.5rem; }
+        .quiz-question { margin-bottom: 1.5rem; }
+        .quiz-question p { font-weight: 600; margin-bottom: 0.75rem; color: var(--white); }
+        .quiz-options label { display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .quiz-options label:hover { background: rgba(212, 175, 55, 0.1); }
+        .quiz-options input[type="radio"] { margin-right: 0.75rem; }
+        .quiz-submit { background: var(--gold); color: var(--dark); border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+        .quiz-result { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: none; }
+        .quiz-result.correct { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; }
+        .quiz-result.incorrect { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">⚡ Barber Study Pro</a>
+            <a href="chapter-02.html" class="back-link">← Back to Chapter 2</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="quiz-header">
+            <h1>Chapter 2: Life Skills</h1>
+            <p>Comprehensive Review Quiz - 25 Questions</p>
+        </div>
+
+        <section class="quiz-section">
+            <h2>📝 Chapter 2 Comprehensive Review Quiz</h2>
+            
+            <div class="quiz-question">
+                <p>1. What is the foundation of a pleasing attitude according to the text?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q1" value="a"> Being the most talented barber</label>
+                    <label><input type="radio" name="q1" value="b"> Being helpful to others</label>
+                    <label><input type="radio" name="q1" value="c"> Having the lowest prices</label>
+                    <label><input type="radio" name="q1" value="d"> Working the longest hours</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>2. What is one of the best ways to build a loyal clientele?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q2" value="a"> Offering discounts</label>
+                    <label><input type="radio" name="q2" value="b"> Making friends with clients</label>
+                    <label><input type="radio" name="q2" value="c"> Working faster than competitors</label>
+                    <label><input type="radio" name="q2" value="d"> Using expensive products</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>3. What does self-esteem provide that helps you reach out to others?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q3" value="a"> Financial security</label>
+                    <label><input type="radio" name="q3" value="b"> The courage to reach out</label>
+                    <label><input type="radio" name="q3" value="c"> Technical skills</label>
+                    <label><input type="radio" name="q3" value="d"> Physical strength</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>4. How can humor help in the workplace?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q4" value="a"> It increases prices</label>
+                    <label><input type="radio" name="q4" value="b"> It helps get through difficult situations</label>
+                    <label><input type="radio" name="q4" value="c"> It reduces work hours</label>
+                    <label><input type="radio" name="q4" value="d"> It eliminates competition</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>5. What is cooperation defined as in the text?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q5" value="a"> Working alone</label>
+                    <label><input type="radio" name="q5" value="b"> Working with others to achieve a common goal</label>
+                    <label><input type="radio" name="q5" value="c"> Competing with coworkers</label>
+                    <label><input type="radio" name="q5" value="d"> Following orders without question</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>6. What does being responsible mean?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q6" value="a"> Blaming others for mistakes</label>
+                    <label><input type="radio" name="q6" value="b"> Being accountable for your actions</label>
+                    <label><input type="radio" name="q6" value="c"> Working only when supervised</label>
+                    <label><input type="radio" name="q6" value="d"> Avoiding difficult tasks</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>7. Why is consistency important in barbering?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q7" value="a"> It allows for frequent price changes</label>
+                    <label><input type="radio" name="q7" value="b"> It builds trust with clients</label>
+                    <label><input type="radio" name="q7" value="c"> It reduces the need for training</label>
+                    <label><input type="radio" name="q7" value="d"> It eliminates competition</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>8. What does adapting to change require?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q8" value="a"> Refusing to learn new techniques</label>
+                    <label><input type="radio" name="q8" value="b"> Flexibility and openness to new ideas</label>
+                    <label><input type="radio" name="q8" value="c"> Sticking to old methods</label>
+                    <label><input type="radio" name="q8" value="d"> Ignoring client feedback</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>9. What is the first step in building self-esteem?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q9" value="a"> Comparing yourself to others</label>
+                    <label><input type="radio" name="q9" value="b"> Trusting your abilities</label>
+                    <label><input type="radio" name="q9" value="c"> Criticizing your weaknesses</label>
+                    <label><input type="radio" name="q9" value="d"> Focusing on past failures</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>10. What does visualizing success involve?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q10" value="a"> Worrying about failures</label>
+                    <label><input type="radio" name="q10" value="b"> Imagining yourself working in your dream shop</label>
+                    <label><input type="radio" name="q10" value="c"> Comparing yourself to competitors</label>
+                    <label><input type="radio" name="q10" value="d"> Focusing on negative outcomes</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>11. How should you treat yourself when building on strengths?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q11" value="a"> Be critical of your weaknesses</label>
+                    <label><input type="radio" name="q11" value="b"> Maintain a positive self-image</label>
+                    <label><input type="radio" name="q11" value="c"> Ignore your accomplishments</label>
+                    <label><input type="radio" name="q11" value="d"> Focus only on what you cannot do</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>12. What should you eliminate when being kind to yourself?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q12" value="a"> Self-praise</label>
+                    <label><input type="radio" name="q12" value="b"> Self-critical thoughts</label>
+                    <label><input type="radio" name="q12" value="c"> Goal setting</label>
+                    <label><input type="radio" name="q12" value="d"> Positive affirmations</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>13. What does staying true to yourself mean?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q13" value="a"> Copying other barbers</label>
+                    <label><input type="radio" name="q13" value="b"> Being unique and not pretending to be someone else</label>
+                    <label><input type="radio" name="q13" value="c"> Changing your personality for clients</label>
+                    <label><input type="radio" name="q13" value="d"> Hiding your true feelings</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>14. What blocks the creative mind from exploring ideas?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q14" value="a"> Positivity</label>
+                    <label><input type="radio" name="q14" value="b"> Criticism</label>
+                    <label><input type="radio" name="q14" value="c"> Inspiration</label>
+                    <label><input type="radio" name="q14" value="d"> Vocabulary building</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>15. What is a mission statement?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q15" value="a"> A list of daily tasks</label>
+                    <label><input type="radio" name="q15" value="b"> A statement that establishes purpose and values</label>
+                    <label><input type="radio" name="q15" value="c"> A financial report</label>
+                    <label><input type="radio" name="q15" value="d"> A marketing advertisement</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>16. What is the difference between short-term and long-term goals?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q16" value="a"> Short-term goals take years, long-term take days</label>
+                    <label><input type="radio" name="q16" value="b"> Short-term goals are accomplished in a year or less, long-term in larger increments</label>
+                    <label><input type="radio" name="q16" value="c"> There is no difference</label>
+                    <label><input type="radio" name="q16" value="d"> Short-term goals are more important</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>17. What are the three bad habits that can keep you from maintaining peak performance?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q17" value="a"> Punctuality, organization, and planning</label>
+                    <label><input type="radio" name="q17" value="b"> Procrastination, perfectionism, and lack of a game plan</label>
+                    <label><input type="radio" name="q17" value="c"> Creativity, innovation, and risk-taking</label>
+                    <label><input type="radio" name="q17" value="d"> Communication, teamwork, and leadership</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>18. What is procrastination defined as?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q18" value="a"> Completing tasks early</label>
+                    <label><input type="radio" name="q18" value="b"> Putting off until tomorrow what you can do today</label>
+                    <label><input type="radio" name="q18" value="c"> Working efficiently</label>
+                    <label><input type="radio" name="q18" value="d"> Setting realistic goals</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>19. What does prioritizing mean in time management?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q19" value="a"> Doing all tasks at once</label>
+                    <label><input type="radio" name="q19" value="b"> Ordering tasks from most important to least important</label>
+                    <label><input type="radio" name="q19" value="c"> Avoiding difficult tasks</label>
+                    <label><input type="radio" name="q19" value="d"> Working without a plan</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>20. What should you do when something is not clear in class?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q20" value="a"> Pretend you understand</label>
+                    <label><input type="radio" name="q20" value="b"> Ask for clarification</label>
+                    <label><input type="radio" name="q20" value="c"> Skip that topic</label>
+                    <label><input type="radio" name="q20" value="d"> Wait until after the exam</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>21. What is a mnemonic device?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q21" value="a"> A type of haircutting tool</label>
+                    <label><input type="radio" name="q21" value="b"> A memory trigger to help recall information</label>
+                    <label><input type="radio" name="q21" value="c"> A scheduling app</label>
+                    <label><input type="radio" name="q21" value="d"> A type of hair product</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>22. What are ethics defined as?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q22" value="a"> Legal requirements only</label>
+                    <label><input type="radio" name="q22" value="b"> The moral principles by which we live and work</label>
+                    <label><input type="radio" name="q22" value="c"> Technical skills</label>
+                    <label><input type="radio" name="q22" value="d"> Marketing strategies</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>23. What is integrity in professional ethics?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q23" value="a"> Making the most money possible</label>
+                    <label><input type="radio" name="q23" value="b"> Aligning your behavior and actions to your values</label>
+                    <label><input type="radio" name="q23" value="c"> Working the longest hours</label>
+                    <label><input type="radio" name="q23" value="d"> Avoiding all mistakes</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>24. What is diplomacy also known as?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q24" value="a"> Aggressiveness</label>
+                    <label><input type="radio" name="q24" value="b"> Tact</label>
+                    <label><input type="radio" name="q24" value="c"> Rudeness</label>
+                    <label><input type="radio" name="q24" value="d"> Passivity</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>25. What does emotional stability involve?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q25" value="a"> Hiding all emotions</label>
+                    <label><input type="radio" name="q25" value="b"> Handling confrontation and sharing feelings professionally</label>
+                    <label><input type="radio" name="q25" value="c"> Being overly emotional</label>
+                    <label><input type="radio" name="q25" value="d"> Avoiding all conflict</label>
+                </div>
+            </div>
+            
+            <button class="quiz-submit" onclick="checkQuiz()">Check Answers</button>
+            <div class="quiz-result" id="quiz-result"></div>
+        </section>
+    </div>
+
+    <script>
+        function checkQuiz() {
+            const answers = { 
+                q1: 'b', q2: 'b', q3: 'b', q4: 'b', q5: 'b',
+                q6: 'b', q7: 'b', q8: 'b', q9: 'b', q10: 'b',
+                q11: 'b', q12: 'b', q13: 'b', q14: 'b', q15: 'b',
+                q16: 'b', q17: 'b', q18: 'b', q19: 'b', q20: 'b',
+                q21: 'b', q22: 'b', q23: 'b', q24: 'b', q25: 'b'
+            };
+            let score = 0;
+            let total = 25;
+            
+            for (let q in answers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (selected && selected.value === answers[q]) score++;
+            }
+            
+            const resultDiv = document.getElementById('quiz-result');
+            resultDiv.style.display = 'block';
+            if (score === total) {
+                resultDiv.className = 'quiz-result correct';
+                resultDiv.innerHTML = `<strong>Perfect! 🎉</strong> You got ${score}/${total} correct!`;
+            } else {
+                resultDiv.className = 'quiz-result incorrect';
+                resultDiv.innerHTML = `<strong>Keep studying!</strong> You got ${score}/${total} correct.`;
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html>

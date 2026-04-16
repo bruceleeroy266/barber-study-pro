@@ -1,0 +1,110 @@
+                <p>24. What should you do when you don't understand what a client wants?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q24" value="a"> Guess and hope for the best</label>
+                    <label><input type="radio" name="q24" value="b"> Ask questions to clarify</label>
+                    <label><input type="radio" name="q24" value="c"> Do what you think looks best</label>
+                    <label><input type="radio" name="q24" value="d"> Ignore the client</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>25. What is emotional control?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q25" value="a"> Showing all your emotions</label>
+                    <label><input type="radio" name="q25" value="b"> Learning to respond rather than react</label>
+                    <label><input type="radio" name="q25" value="c"> Hiding your feelings</label>
+                    <label><input type="radio" name="q25" value="d"> Being emotional at work</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>26. What should you NOT do on social media as a professional?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q26" value="a"> Post helpful content</label>
+                    <label><input type="radio" name="q26" value="b"> Use profane language or post embarrassing photos</label>
+                    <label><input type="radio" name="q26" value="c"> Communicate with peers and clients</label>
+                    <label><input type="radio" name="q26" value="d"> Manage your personal pages</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>27. What is the first step in effective communication?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q27" value="a"> Start cutting immediately</label>
+                    <label><input type="radio" name="q27" value="b"> Organize your thoughts</label>
+                    <label><input type="radio" name="q27" value="c"> Talk about yourself</label>
+                    <label><input type="radio" name="q27" value="d"> Ignore the client</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>28. What should you do with disputes and differences?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q28" value="a"> Discuss them in front of other clients</label>
+                    <label><input type="radio" name="q28" value="b"> Deal with them in private</label>
+                    <label><input type="radio" name="q28" value="c"> Ignore them</label>
+                    <label><input type="radio" name="q28" value="d"> Post about them on social media</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>29. What is a positive approach?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q29" value="a"> Being unpleasant and rude</label>
+                    <label><input type="radio" name="q29" value="b"> Being pleasant and gracious with a smile and word of welcome</label>
+                    <label><input type="radio" name="q29" value="c"> Ignoring clients</label>
+                    <label><input type="radio" name="q29" value="d"> Working in silence</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>30. Why is maintaining professional image online important?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q30" value="a"> It doesn't matter</label>
+                    <label><input type="radio" name="q30" value="b"> It is an investment of time that can have huge returns for your business</label>
+                    <label><input type="radio" name="q30" value="c"> It is required by law</label>
+                    <label><input type="radio" name="q30" value="d"> It takes no effort</label>
+                </div>
+            </div>
+            
+            <button class="quiz-submit" onclick="checkQuiz()">Check Answers</button>
+            <div class="quiz-result" id="quiz-result"></div>
+        </section>
+    </div>
+
+    <script>
+        function checkQuiz() {
+            const answers = { 
+                q1: 'b', q2: 'b', q3: 'b', q4: 'b', q5: 'b',
+                q6: 'b', q7: 'b', q8: 'b', q9: 'b', q10: 'b',
+                q11: 'b', q12: 'b', q13: 'b', q14: 'b', q15: 'b',
+                q16: 'b', q17: 'b', q18: 'b', q19: 'b', q20: 'b',
+                q21: 'b', q22: 'b', q23: 'b', q24: 'b', q25: 'b',
+                q26: 'b', q27: 'b', q28: 'b', q29: 'b', q30: 'b'
+            };
+            let score = 0;
+            let total = 30;
+            
+            for (let q in answers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (selected && selected.value === answers[q]) score++;
+            }
+            
+            const resultDiv = document.getElementById('quiz-result');
+            resultDiv.style.display = 'block';
+            if (score === total) {
+                resultDiv.className = 'quiz-result correct';
+                resultDiv.innerHTML = `<strong>Perfect! 🎉</strong> You got ${score}/${total} correct!`;
+            } else {
+                resultDiv.className = 'quiz-result incorrect';
+                resultDiv.innerHTML = `<strong>Keep studying!</strong> You got ${score}/${total} correct.`;
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html>

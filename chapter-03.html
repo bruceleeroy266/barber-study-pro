@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 3: Professional Image | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --gold-light: #F4E4A6; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .back-link:hover { color: var(--gold); }
+        .chapter-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
+        .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; }
+        .chapter-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
+        .chapter-header p { color: var(--light-gray); max-width: 600px; margin: 0 auto; }
+        .content { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+        .section { margin-bottom: 3rem; }
+        .section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+        .section h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .section p { margin-bottom: 1rem; color: #ccc; }
+        .section ul { margin-left: 1.5rem; color: #ccc; margin-bottom: 1rem; }
+        .section ul li { margin-bottom: 0.5rem; }
+        .key-point { background: rgba(212, 175, 55, 0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .key-point strong { color: var(--gold); }
+        .term { background: var(--medium-gray); padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 8px; }
+        .term strong { color: var(--gold); display: block; margin-bottom: 0.25rem; }
+        .study-tools { position: fixed; bottom: 2rem; right: 2rem; display: flex; gap: 1rem; }
+        .tool-btn { background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; }
+        .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.3s; }
+        .nav-chapters { display: flex; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--medium-gray); }
+        .nav-chapters a { color: var(--gold); text-decoration: none; font-weight: 600; }
+        @media (max-width: 768px) { .study-tools { bottom: 1rem; right: 1rem; left: 1rem; justify-content: center; } }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">⚡ Barber Study Pro</a>
+            <a href="index.html#chapters" class="back-link">← Back to Chapters</a>
+        </div>
+    </nav>
+
+    <header class="chapter-header">
+        <span class="chapter-number">CHAPTER 3</span>
+        <h1>Professional Image</h1>
+        <p>Hygiene, ergonomics, and communication skills</p>
+    </header>
+
+    <main class="content">
+        <section class="section">
+            <h2>🎯 Why Study Professional Image?</h2>
+            <p>First impressions are critical for job interviews, gaining new clients, and building a professional reputation. Barbers are held to higher image standards because clients view them as image experts.</p>
+            <p>A positive professional image includes: appearance, positive attitude, team camaraderie, proper ergonomics, and good communication skills.</p>
+            
+            <div class="key-point">
+                <strong>Key Point:</strong> One weak moment (body odor, bad breath, stained clothes) can cause clients to not return and share negative experiences.
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🧼 Apply Healthful Habits</h2>
+            
+            <h3>Personal Hygiene</h3>
+            <p>Basic daily cleanliness is essential when working in close proximity to clients:</p>
+            <ul>
+                <li>Wash hands frequently throughout the day, including at the start of each service</li>
+                <li>Perform self-checks and freshen under arms as needed</li>
+                <li>Brush and floss teeth; use mouthwash or breath mints</li>
+                <li>Do not smoke during work hours. If you smoke on break, brush teeth, use mouthwash, and wash hands afterward</li>
+            </ul>
+
+            <h3>Rest and Relaxation</h3>
+            <ul>
+                <li>Adequate sleep is essential for health and efficient functioning</li>
+                <li>Most people need 7–8 hours per night (varies by individual)</li>
+                <li>Relaxation (movies, reading, sports, dancing) provides a change of pace and helps you return to work refreshed</li>
+            </ul>
+
+            <h3>Nutrition</h3>
+            <ul>
+                <li>What you eat affects health, appearance, personality, and job performance</li>
+                <li>Follow a balanced diet with variety of vitamins and minerals</li>
+                <li>Drink plenty of water daily</li>
+                <li>Limit sugar, salt, caffeine, and highly processed/fatty foods</li>
+            </ul>
+
+            <h3>Nail Care</h3>
+            <ul>
+                <li>Barbers use their hands constantly — do not neglect your own nail care</li>
+                <li>Keep nails at a suitable length for your style and keep them thoroughly clean</li>
+                <li>Occasional chipped polish or broken nails is okay, but not as a regular occurrence</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>🪑 Employ Proper Ergonomics</h2>
+            <div class="term">
+                <strong>Ergonomics</strong>
+                The science of designing workplace/tools for comfort, efficiency, and safety
+            </div>
+
+            <h3>Posture Guidelines (Standing Behind the Chair):</h3>
+            <ul>
+                <li>Keep head up, chin parallel to floor</li>
+                <li>Neck elongated and balanced over shoulders</li>
+                <li>Chest up and out (no slouching)</li>
+                <li>Shoulders level and relaxed</li>
+                <li>Spine straight</li>
+            </ul>
+
+            <h3>Correct Sitting Posture:</h3>
+            <ul>
+                <li>Hips level, knees flexed slightly over feet</li>
+                <li>Back straight, weight on thigh bones (not end of spine)</li>
+                <li>Feet flat on floor</li>
+                <li>Chair height so arms form 90° angle when writing</li>
+            </ul>
+
+            <h3>Suggestions to Avoid Problems:</h3>
+            <ul>
+                <li>Do not grip tools too tightly</li>
+                <li>Avoid constant wrist bending</li>
+                <li>Keep arms at <60° angle when raised</li>
+                <li>Adjust chair height for client's head</li>
+                <li>Keep wrists neutral</li>
+                <li>Use ergonomic tools, antifatigue mats, proper stance (legs hip-width, knees bent)</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>👔 Follow Image-Building Basics</h2>
+            
+            <h3>Dress for Success</h3>
+            <ul>
+                <li>Wardrobe should complement the barbershop's image and be professional</li>
+                <li>Clothes must be clean, pressed, stain-free, and functional/comfortable</li>
+                <li>Avoid overly baggy or tight clothing</li>
+                <li>Follow shop dress code (e.g., barber jacket, smock, tie, specific colors)</li>
+                <li>Shoes: supportive, polished, in good repair (no flip-flops or open-toed around tools)</li>
+            </ul>
+
+            <h3>Hair Maintenance</h3>
+            <ul>
+                <li>Keep your own haircut/style fresh and up-to-date</li>
+                <li>Schedule regular appointments (barter with other barbers if needed)</li>
+                <li>Facial hair: keep beard/mustache neat and trimmed; clean-shaven barbers should shave daily</li>
+            </ul>
+
+            <h3>Skin Care and Makeup</h3>
+            <ul>
+                <li>Healthy skin promotes a professional image</li>
+                <li>Develop a skin care regimen (cleansing, sunscreen, etc.)</li>
+                <li>Makeup (if used) should enhance features subtly — never apply at your station</li>
+                <li>Caution: Many shops have a no-fragrance policy due to allergies/sensitivities</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>💬 Practice Effective Communication</h2>
+            <div class="term">
+                <strong>Human Relations</strong>
+                Interactions and relationships between people
+            </div>
+
+            <h3>Guidelines for Good Human Relations:</h3>
+            <ul>
+                <li>Greet clients by name with a pleasant tone</li>
+                <li>Be alert to client's mood; be a good listener</li>
+                <li>Choose conversation topics carefully (avoid controversial subjects, gossip, personal issues)</li>
+                <li>Maintain confidentiality</li>
+                <li>Look and act professionally at all times</li>
+                <li>Show genuine interest and give undivided attention</li>
+                <li>Use tact when handling problems</li>
+                <li>Be punctual and efficient</li>
+                <li>Practice emotional control and a positive approach</li>
+            </ul>
+
+            <h3>Steps for Determining Client Expectations:</h3>
+            <ul>
+                <li><strong>Organize your thoughts</strong> — Ask clear questions</li>
+                <li><strong>Clarify</strong> — Make sure you understand what the client means</li>
+                <li><strong>Repeat</strong> — Confirm the client's description back to them</li>
+            </ul>
+
+            <h3>Social Media</h3>
+            <ul>
+                <li>Powerful tool when used correctly, but can easily damage reputation if misused</li>
+                <li><strong>Do:</strong> Manage pages professionally, post helpful content, communicate appropriately</li>
+                <li><strong>Don't:</strong> Use profanity, argue online, post embarrassing/nude photos, forward spam</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>📝 Chapter 3 Key Takeaways</h2>
+            <div class="key-point">
+                <ul style="margin-left: 1rem;">
+                    <li>Barbers are held to <strong>higher image standards</strong> because clients view them as image experts</li>
+                    <li>Four key personal hygiene habits: <strong>hand washing, freshening, dental care, no smoking</strong> during work</li>
+                    <li><strong>Ergonomics</strong> prevents musculoskeletal disorders from repetitive motions</li>
+                    <li>Dress for success: <strong>clean, pressed, professional</strong> wardrobe matching shop image</li>
+                    <li>Keep your own <strong>haircut fresh</strong> and facial hair neat</li>
+                    <li>Practice <strong>effective communication</strong>: organize thoughts, clarify, repeat</li>
+                    <li>Use <strong>social media professionally</strong> — it can build or destroy your reputation</li>
+                    <li>Maintaining a strong professional image is a <strong>daily investment</strong> that directly impacts your success</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="quiz-section">
+            <h2>📝 Mini Review Quiz</h2>
+            <div class="quiz-question">
+                <p>1. What is the science of designing workplace/tools for comfort, efficiency, and safety?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q1" value="a"> Hygiene</label>
+                    <label><input type="radio" name="q1" value="b"> Ergonomics</label>
+                    <label><input type="radio" name="q1" value="c"> Physiology</label>
+                    <label><input type="radio" name="q1" value="d"> Kinesiology</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>2. How many hours of sleep do most people need per night?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q2" value="a"> 5-6 hours</label>
+                    <label><input type="radio" name="q2" value="b"> 7-8 hours</label>
+                    <label><input type="radio" name="q2" value="c"> 9-10 hours</label>
+                    <label><input type="radio" name="q2" value="d"> 4-5 hours</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>3. What should you do if you smoke on a break?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q3" value="a"> Nothing, just return to work</label>
+                    <label><input type="radio" name="q3" value="b"> Brush teeth, use mouthwash, wash hands</label>
+                    <label><input type="radio" name="q3" value="c"> Just use breath mints</label>
+                    <label><input type="radio" name="q3" value="d"> Change clothes only</label>
+                </div>
+            </div>
+            <button class="quiz-submit" onclick="checkQuiz()">Check Answers</button>
+            <div class="quiz-result" id="quiz-result"></div>
+        </section>
+
+        <div class="nav-chapters">
+            <a href="chapter-02.html">← Chapter 2: Life Skills</a>
+            <a href="chapter-04.html">Chapter 4: Infection Control →</a>
+        </div>
+    </main>
+
+    <div class="study-tools">
+        <button class="tool-btn" onclick="openQuiz()">🎴 Flashcards</button>
+        <button class="tool-btn" onclick="openQuiz()">❓ Quiz</button>
+    </div>
+
+    <script>
+        function checkQuiz() {
+            const answers = { q1: 'b', q2: 'b', q3: 'b' };
+            let score = 0;
+            let total = 3;
+            for (let q in answers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (selected && selected.value === answers[q]) score++;
+            }
+            const resultDiv = document.getElementById('quiz-result');
+            resultDiv.style.display = 'block';
+            if (score === total) {
+                resultDiv.className = 'quiz-result correct';
+                resultDiv.innerHTML = `<strong>Perfect! 🎉</strong> You got ${score}/${total} correct!`;
+            } else {
+                resultDiv.className = 'quiz-result incorrect';
+                resultDiv.innerHTML = `<strong>Keep studying!</strong> You got ${score}/${total} correct.`;
+            }
+        }
+
+        function openQuiz() {
+            window.location.href = 'chapter-03-quiz.html';
+        }
+
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+            localStorage.setItem('chapter-03-progress', Math.round(scrolled));
+        });
+    </script>
+</body>
+</html>

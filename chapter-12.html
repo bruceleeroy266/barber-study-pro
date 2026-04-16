@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 12: Men's Facial Massage and Treatments | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F4E4A6;
+            --dark: #0a0a0a;
+            --dark-gray: #1a1a1a;
+            --medium-gray: #2a2a2a;
+            --light-gray: #888;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .back-link:hover { color: var(--gold); }
+
+        .chapter-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
+        .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; }
+        .chapter-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
+        .chapter-header p { color: var(--light-gray); max-width: 600px; margin: 0 auto; }
+
+        .content { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+
+        .section { margin-bottom: 3rem; }
+        .section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+        .section h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .section p { margin-bottom: 1rem; color: #ccc; }
+
+        .key-point { background: rgba(212, 175, 55, 0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .key-point strong { color: var(--gold); }
+
+        .term { background: var(--medium-gray); padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 8px; }
+        .term strong { color: var(--gold); display: block; margin-bottom: 0.25rem; }
+
+        table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+        th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--medium-gray); }
+        th { background: var(--medium-gray); font-weight: 600; color: var(--gold); }
+
+        .study-tools { position: fixed; bottom: 2rem; right: 2rem; display: flex; gap: 1rem; }
+        .tool-btn { background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3); transition: all 0.3s; }
+        .tool-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 30px rgba(212, 175, 55, 0.4); }
+
+        .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.3s; }
+
+        .quiz-section { background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
+        .quiz-section h2 { color: var(--gold); margin-bottom: 1.5rem; }
+        .quiz-question { margin-bottom: 1.5rem; }
+        .quiz-question p { font-weight: 600; margin-bottom: 0.75rem; color: var(--white); }
+        .quiz-options label { display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .quiz-options label:hover { background: rgba(212, 175, 55, 0.1); }
+        .quiz-options input[type="radio"] { margin-right: 0.75rem; }
+        .quiz-submit { background: var(--gold); color: var(--dark); border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+        .quiz-result { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: none; }
+        .quiz-result.correct { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; }
+        .quiz-result.incorrect { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+
+        @media (max-width: 768px) {
+            .study-tools { bottom: 1rem; right: 1rem; left: 1rem; justify-content: center; }
+            .content { padding: 2rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">⚡ Barber Study Pro</a>
+            <a href="index.html#chapters" class="back-link">← Back to Chapters</a>
+        </div>
+    </nav>
+
+    <header class="chapter-header">
+        <span class="chapter-number">CHAPTER 12</span>
+        <h1>Men's Facial Massage and Treatments</h1>
+        <p>Master facial massage techniques, electrotherapy, skin analysis, and professional treatment procedures</p>
+    </header>
+
+    <main class="content">
+        <section class="section">
+            <h2>🎯 Why Study This Chapter?</h2>
+            <p>Men's facial massage and treatments are highly relaxing services that improve skin condition, stimulate circulation, and provide a complete grooming experience. Clients often view a good facial as one of the most luxurious parts of a barbershop visit.</p>
+            
+            <p>As a barber, mastering these services allows you to:</p>
+            <ul style="margin-left: 1.5rem; color: #ccc;">
+                <li>Offer therapeutic benefits beyond basic haircutting and shaving</li>
+                <li>Address common skin concerns such as dryness, oiliness, or fatigue</li>
+                <li>Build client loyalty through personalized, relaxing care</li>
+                <li>Understand when a service is safe or when referral to a physician is needed</li>
+            </ul>
+
+            <div class="key-point">
+                <strong>Key Point:</strong> Facial treatments combine science (anatomy and physiology) with art (technique and touch). When performed correctly, they leave the client feeling refreshed and looking better.
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🧠 Subdermal Systems</h2>
+            <p>To perform effective facial massage and electrotherapy, you must understand the structures beneath the skin.</p>
+
+            <h3>Muscles of the Scalp, Face, and Neck</h3>
+            <table>
+                <tr>
+                    <th>Muscle</th>
+                    <th>Function</th>
+                </tr>
+                <tr>
+                    <td><strong>Epicranius</strong> (frontalis and occipitalis)</td>
+                    <td>Raises eyebrows and moves scalp</td>
+                </tr>
+                <tr>
+                    <td><strong>Orbicularis oculi</strong></td>
+                    <td>Closes the eye</td>
+                </tr>
+                <tr>
+                    <td><strong>Orbicularis oris</strong></td>
+                    <td>Closes and puckers the lips</td>
+                </tr>
+                <tr>
+                    <td><strong>Masseter</strong></td>
+                    <td>Chewing muscle; important during jaw relaxation</td>
+                </tr>
+                <tr>
+                    <td><strong>Platysma</strong></td>
+                    <td>Draws down the lower lip and mouth</td>
+                </tr>
+                <tr>
+                    <td><strong>Sternocleidomastoid</strong></td>
+                    <td>Turns and flexes the head; key in neck massage</td>
+                </tr>
+            </table>
+
+            <h3>Nerves</h3>
+            <div class="term">
+                <strong>Fifth cranial nerve (trigeminal)</strong>
+                Provides sensation to the face
+            </div>
+            <div class="term">
+                <strong>Seventh cranial nerve (facial)</strong>
+                Controls facial expressions and muscle movement
+            </div>
+            <div class="term">
+                <strong>Eleventh cranial nerve (accessory)</strong>
+                Affects neck and shoulder muscles
+            </div>
+
+            <h3>Arteries and Veins</h3>
+            <p>Main blood supply comes from branches of the <strong>common carotid artery</strong> (external maxillary, superficial temporal, occipital, posterior auricular). Veins drain blood back to the heart via internal and external jugular veins.</p>
+
+            <div class="key-point">
+                <strong>Key Point:</strong> Massage movements should follow the direction of muscle fibers and nerve pathways to achieve relaxation and stimulation without causing discomfort.
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>⚡ Modalities That Affect Muscle and Nerve Response</h2>
+            <p>A <strong>modality</strong> is a method or tool used to produce a physical or chemical effect on the body.</p>
+
+            <table>
+                <tr>
+                    <th>Modality</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td><strong>Massage</strong></td>
+                    <td>Mechanical manipulation of soft tissues</td>
+                </tr>
+                <tr>
+                    <td><strong>Electric currents</strong></td>
+                    <td>Galvanic, high-frequency (Tesla), microcurrent</td>
+                </tr>
+                <tr>
+                    <td><strong>Light rays</strong></td>
+                    <td>Infrared (heat), ultraviolet (germicidal)</td>
+                </tr>
+                <tr>
+                    <td><strong>Heat and moist heat</strong></td>
+                    <td>Steamers, hot towels</td>
+                </tr>
+                <tr>
+                    <td><strong>Nerve impulses and chemicals</strong></td>
+                    <td>Products that stimulate or soothe</td>
+                </tr>
+            </table>
+
+            <h3>Physiological Effects of Massage:</h3>
+            <ul style="margin-left: 1.5rem; color: #ccc;">
+                <li>Increases blood circulation and nourishment to the skin</li>
+                <li>Stimulates or relaxes muscles</li>
+                <li>Improves gland activity (oil and sweat)</li>
+                <li>Relieves muscle tension and pain</li>
+                <li>Promotes overall relaxation</li>
+            </ul>
+
+            <div class="key-point">
+                <strong>Key Point:</strong> Massage should always be performed with smooth, rhythmic movements directed toward the heart to aid circulation.
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>👐 Massage Manipulations</h2>
+            <p>Five basic movements form the foundation of facial massage:</p>
+
+            <div class="term">
+                <strong>Effleurage</strong>
+                Light, gliding strokes; used at the beginning and end for relaxation
+            </div>
+            <div class="term">
+                <strong>Pétrissage</strong>
+                Kneading or squeezing; stimulates deeper tissues and muscles
+            </div>
+            <div class="term">
+                <strong>Friction</strong>
+                Circular or back-and-forth rubbing; increases circulation and breaks up adhesions
+            </div>
+            <div class="term">
+                <strong>Tapotement (percussion)</strong>
+                Light tapping or slapping; invigorates and stimulates
+            </div>
+            <div class="term">
+                <strong>Vibration</strong>
+                Rapid shaking or trembling; relaxes nerves and muscles
+            </div>
+
+            <h3>General Rules for Facial Massage:</h3>
+            <ul style="margin-left: 1.5rem; color: #ccc;">
+                <li>Work upward and outward on the face (against gravity)</li>
+                <li>Use lighter pressure around the eyes</li>
+                <li>Keep movements rhythmic and even</li>
+                <li>Always adapt pressure to the client's comfort and skin sensitivity</li>
+            </ul>
+
+            <div class="key-point">
+                <strong>Key Point:</strong> Proper massage technique can turn a basic facial into a deeply relaxing experience. Practice on a mannequin or partner until movements feel natural.
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🔧 Facial Equipment and Electrotherapy</h2>
+            
+            <table>
+                <tr>
+                    <th>Equipment</th>
+                    <th>Function</th>
+                </tr>
+                <tr>
+                    <td><strong>Brush machine</strong></td>
+                    <td>Exfoliates and stimulates with rotating brushes</td>
+                </tr>
+                <tr>
+                    <td><strong>Facial steamer</strong></td>
+                    <td>Opens pores with moist heat; softens skin for extractions</td>
+                </tr>
+                <tr>
+                    <td><strong>High-frequency (Tesla) machine</strong></td>
+                    <td>Uses glass electrodes; produces heat, stimulates circulation, germicidal effects</td>
+                </tr>
+                <tr>
+                    <td><strong>Galvanic machine</strong></td>
+                    <td>Uses direct current for iontophoresis (product penetration) and desincrustation (deep cleansing)</td>
+                </tr>
+                <tr>
+                    <td><strong>Microcurrent and microdermabrasion</strong></td>
+                    <td>Advanced options for toning and exfoliation</td>
+                </tr>
+            </table>
+
+            <h3>Safety Guidelines for Electrotherapy:</h3>
+            <ul style="margin-left: 1.5rem; color: #ccc;">
+                <li>Check for contraindications (pacemakers, metal implants, heart conditions, epilepsy, pregnancy, broken skin)</li>
+                <li>Use protective goggles with light or high-frequency treatments</li>
+                <li>Start with low intensity and gradually increase</li>
+                <li>Never leave a client unattended during electrical treatments</li>
+            </ul>
+
+            <div class="key-point">
+                <strong>Key Point:</strong> Electrotherapy enhances results but must be used only when appropriate and with full client consent and safety checks.
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🔍 Skin Analysis and Product Selection</h2>
+            <p>Before any facial, analyze the skin:</p>
+
+            <table>
+                <tr>
+                    <th>Skin Type</th>
+                    <th>Characteristics</th>
+                    <th>Product Needs</th>
+                </tr>
+                <tr>
+                    <td><strong>Dry skin</strong></td>
+                    <td>Tight, flaky</td>
+                    <td>Moisturizing products</td>
+                </tr>
+                <tr>
+                    <td><strong>Normal skin</strong></td>
+                    <td>Balanced</td>
+                    <td>Most products work well</td>
+                </tr>
+                <tr>
+                    <td><strong>Oily skin</strong></td>
+                    <td>Shiny, enlarged pores</td>
+                    <td>Balancing or mattifying products</td>
+                </tr>
+                <tr>
+                    <td><strong>Combination skin</strong></td>
+                    <td>Oily T-zone with drier cheeks</td>
+                    <td>Targeted products by zone</td>
+                </tr>
+            </table>
+
+            <h3>Product Order (Basic Facial):</h3>
+            <ol style="margin-left: 1.5rem; color: #ccc;">
+                <li>Cleanser</li>
+                <li>Exfoliant/toner</li>
+                <li>Mask (if appropriate)</li>
+                <li>Moisturizer or treatment serum</li>
+                <li>Sunscreen or finishing product</li>
+            </ol>
+
+            <div class="key-point">
+                <strong>Key Point:</strong> Accurate skin typing and analysis ensure you choose products that benefit rather than irritate the client.
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>📋 Basic Facial Procedure</h2>
+            <p>A standard men's facial includes:</p>
+            <ol style="margin-left: 1.5rem; color: #ccc;">
+                <li>Cleansing</li>
+                <li>Exfoliation or steaming</li>
+                <li>Massage</li>
+                <li>Mask or specialized treatment</li>
+                <li>Toner and moisturizer</li>
+                <li>Finishing touches</li>
+            </ol>
+
+            <h3>Variations:</h3>
+            <ul style="margin-left: 1.5rem; color: #ccc;">
+                <li>Vibratory facial (using electric massager)</li>
+                <li>Rolling cream variation</li>
+                <li>Brush machine facial</li>
+            </ul>
+
+            <h3>Clean-up:</h3>
+            <ul style="margin-left: 1.5rem; color: #ccc;">
+                <li>Disinfect all equipment and tools</li>
+                <li>Launder towels and capes</li>
+                <li>Sanitize the work area</li>
+            </ul>
+
+            <div class="key-point">
+                <strong>Key Point:</strong> Every facial should end with the client feeling refreshed, with visible improvement in skin tone and texture.
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>⚠️ Contraindications and Safety</h2>
+            <p><strong>Do NOT perform facial treatments if the client has:</strong></p>
+            <ul style="margin-left: 1.5rem; color: #ccc;">
+                <li>Open sores, infections, or severe inflammation</li>
+                <li>High blood pressure, heart conditions, or recent surgery</li>
+                <li>Pacemakers or metal implants (for electrical modalities)</li>
+                <li>Allergies to products being used</li>
+            </ul>
+
+            <div class="key-point">
+                <strong>Key Point:</strong> Client health history and skin analysis are mandatory before every facial service.
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>📝 Chapter 12 Key Takeaways</h2>
+            <div class="key-point">
+                <ul style="margin-left: 1rem;">
+                    <li><strong>Subdermal systems</strong> (muscles, nerves, arteries, veins) must be understood to perform safe and effective facial massage</li>
+                    <li><strong>Massage manipulations</strong> (effleurage, pétrissage, friction, tapotement, vibration) produce specific physiological effects and should follow muscle direction</li>
+                    <li><strong>Electrotherapy equipment</strong> (high-frequency, galvanic, steamer, brush machine) enhances circulation and product penetration but requires strict safety checks and contraindication awareness</li>
+                    <li><strong>Skin analysis</strong> identifies dry, normal, oily, or combination types and guides product selection</li>
+                    <li><strong>Basic facial follows a logical sequence:</strong> cleanse, exfoliate/steam, massage, mask/treatment, tone, moisturize, and finish</li>
+                    <li><strong>Safety first</strong> — always check health history, use protective equipment, and refer when in doubt</li>
+                    <li><strong>Facial treatments combine technical skill with client care</strong> to deliver a relaxing, beneficial service that builds loyalty</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="quiz-section">
+            <h2>📝 Mini Review Quiz</h2>
+            <div class="quiz-question">
+                <p>1. Which massage movement involves light, continuous stroking?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q1" value="a"> Petrissage</label>
+                    <label><input type="radio" name="q1" value="b"> Effleurage</label>
+                    <label><input type="radio" name="q1" value="c"> Tapotement</label>
+                    <label><input type="radio" name="q1" value="d"> Friction</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>2. What does high-frequency current produce?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q2" value="a"> Heat only</label>
+                    <label><input type="radio" name="q2" value="b"> Ozone and germicidal action</label>
+                    <label><input type="radio" name="q2" value="c"> Cold therapy</label>
+                    <label><input type="radio" name="q2" value="d"> Ultrasound waves</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>3. What is the first step in a basic facial?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q3" value="a"> Exfoliation</label>
+                    <label><input type="radio" name="q3" value="b"> Cleansing</label>
+                    <label><input type="radio" name="q3" value="c"> Massage</label>
+                    <label><input type="radio" name="q3" value="d"> Mask application</label>
+                </div>
+            </div>
+            <button class="quiz-submit" onclick="checkQuiz()">Check Answers</button>
+            <div class="quiz-result" id="quiz-result"></div>
+        </section>
+    </main>
+
+    <div class="study-tools">
+        <button class="tool-btn" onclick="openFlashcards()">🎴 Flashcards</button>
+        <button class="tool-btn" onclick="scrollToQuiz()">❓ Quiz</button>
+    </div>
+
+    <script>
+        function checkQuiz() {
+            const answers = { q1: 'b', q2: 'b', q3: 'b' };
+            let score = 0;
+            let total = 3;
+            for (let q in answers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (selected && selected.value === answers[q]) score++;
+            }
+            const resultDiv = document.getElementById('quiz-result');
+            resultDiv.style.display = 'block';
+            if (score === total) {
+                resultDiv.className = 'quiz-result correct';
+                resultDiv.innerHTML = `<strong>Perfect! 🎉</strong> You got ${score}/${total} correct!`;
+            } else {
+                resultDiv.className = 'quiz-result incorrect';
+                resultDiv.innerHTML = `<strong>Keep studying!</strong> You got ${score}/${total} correct.`;
+            }
+        }
+
+        function scrollToQuiz() {
+            document.querySelector('.quiz-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+        });
+
+        function openFlashcards() {
+            alert('Flashcards feature coming soon! This will show flip cards for all terms in Chapter 12.');
+        }
+
+        function openQuiz() {
+            alert('Quiz feature coming soon! This will test your knowledge with multiple choice questions.');
+        }
+    </script>
+</body>
+</html>

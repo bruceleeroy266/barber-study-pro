@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Key Terms & Definitions - Barber Study Pro</title>
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --dark: #1a1a1a;
+            --dark-gray: #2d2d2d;
+            --medium-gray: #3d3d3d;
+            --light-gray: #888;
+            --white: #f5f5f5;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--dark);
+            color: var(--white);
+            line-height: 1.6;
+        }
+        .progress-bar {
+            position: fixed; top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--dark-gray); z-index: 1000;
+        }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.3s; }
+        
+        nav {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: sticky; top: 4px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+        .nav-container {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .back-link:hover { color: var(--gold); }
+
+        .container {
+            max-width: 1000px; margin: 2rem auto; padding: 0 2rem;
+        }
+
+        .header {
+            text-align: center; padding: 3rem 0;
+        }
+        .header h1 { color: var(--gold); font-size: 2.5rem; margin-bottom: 1rem; }
+        .header p { color: var(--light-gray); font-size: 1.125rem; }
+
+        .search-bar {
+            display: flex; gap: 1rem; margin-bottom: 2rem;
+        }
+        .search-input {
+            flex: 1; padding: 1rem 1.5rem;
+            background: var(--dark-gray);
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            color: var(--white);
+            font-size: 1rem;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+        .btn {
+            padding: 1rem 2rem;
+            background: var(--gold);
+            color: var(--dark);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn:hover { background: #e5c158; }
+
+        .filter-tabs {
+            display: flex; gap: 0.5rem; margin-bottom: 2rem;
+            flex-wrap: wrap; justify-content: center;
+        }
+        .filter-tab {
+            padding: 0.75rem 1.5rem;
+            background: var(--dark-gray);
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            color: var(--light-gray);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-tab:hover, .filter-tab.active {
+            background: var(--gold); color: var(--dark);
+            border-color: var(--gold);
+        }
+
+        .flashcard-container {
+            perspective: 1000px;
+            margin-bottom: 2rem;
+        }
+        .flashcard {
+            background: var(--dark-gray);
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            border: 2px solid var(--medium-gray);
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .flashcard:hover {
+            border-color: var(--gold);
+        }
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+        .flashcard-front, .flashcard-back {
+            backface-visibility: hidden;
+            width: 100%;
+        }
+        .flashcard-back {
+            transform: rotateY(180deg);
+            position: absolute;
+            padding: 2rem;
+        }
+        .term {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+        .phonetic {
+            color: var(--light-gray);
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+        .definition {
+            font-size: 1.25rem;
+            line-height: 1.8;
+        }
+        .chapter-tag {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            margin-top: 1.5rem;
+        }
+        .flip-hint {
+            color: var(--light-gray);
+            font-size: 0.875rem;
+            margin-top: 2rem;
+        }
+
+        .controls {
+            display: flex; justify-content: center;
+            gap: 1rem; margin-bottom: 3rem;
+        }
+        .control-btn {
+            padding: 1rem 2rem;
+            background: var(--medium-gray);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .control-btn:hover { background: var(--light-gray); }
+
+        .progress-indicator {
+            text-align: center;
+            color: var(--light-gray);
+            margin-bottom: 2rem;
+        }
+
+        .view-toggle {
+            display: flex; justify-content: center;
+            gap: 0.5rem; margin-bottom: 2rem;
+        }
+        .toggle-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--dark-gray);
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            color: var(--light-gray);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .toggle-btn.active {
+            background: var(--gold);
+            color: var(--dark);
+            border-color: var(--gold);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.875rem; }
+            .term { font-size: 1.5rem; }
+            .flashcard { padding: 2rem; min-height: 250px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">⚡ Barber Study Pro</a>
+            <a href="index.html" class="back-link">← Back to Home</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>📚 Key Terms & Definitions</h1>
+            <p>Master the essential vocabulary for your barber exam</p>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search terms...">
+            <button class="btn" onclick="searchTerms()">Search</button>
+        </div>
+
+        <div class="view-toggle">
+            <button class="toggle-btn active" onclick="switchView('flashcards')">🎴 Flashcards</button>
+            <button class="toggle-btn" onclick="switchView('list')">📋 List View</button>
+        </div>
+
+        <div class="filter-tabs" id="filterTabs">
+            <button class="filter-tab active" onclick="filterByChapter('all')">All Terms</button>
+            <button class="filter-tab" onclick="filterByChapter(1)">Ch 1-5</button>
+            <button class="filter-tab" onclick="filterByChapter(6)">Ch 6-10</button>
+            <button class="filter-tab" onclick="filterByChapter(11)">Ch 11-15</button>
+            <button class="filter-tab" onclick="filterByChapter(16)">Ch 16-21</button>
+        </div>
+
+        <!-- Flashcard View -->
+        <div id="flashcardView">
+            <div class="progress-indicator">
+                Card <span id="currentCard">1</span> of <span id="totalCards">0</span>
+            </div>
+
+            <div class="flashcard-container">
+                <div class="flashcard" id="flashcard" onclick="flipCard()">
+                    <div class="flashcard-front">
+                        <div class="term" id="cardTerm">Loading...</div>
+                        <div class="phonetic" id="cardPhonetic"></div>
+                        <div class="chapter-tag" id="cardChapter"></div>
+                        <div class="flip-hint">Click to flip</div>
+                    </div>
+                    <div class="flashcard-back">
+                        <div class="definition" id="cardDefinition"></div>
+                        <div class="chapter-tag" id="cardChapterBack"></div>
+                        <div class="flip-hint">Click to flip back</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="control-btn" onclick="previousCard()">← Previous</button>
+                <button class="control-btn" onclick="shuffleCards()">🔀 Shuffle</button>
+                <button class="control-btn" onclick="nextCard()">Next →</button>
+            </div>
+        </div>
+
+        <!-- List View -->
+        <div id="listView" style="display: none;">
+            <div id="termsListContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // ALL KEY TERMS - Complete Database (300+ terms)
+        const keyTerms = [
+            // Chapter 1: History
+            { term: "A.B. Moler", definition: "Established America's first barber school in Chicago, Illinois in 1893. Considered the 'Father of Modern Barbering.'", chapter: 1 },
+            { term: "AMBBA", definition: "Associated Master Barbers and Beauticians of America - a professional organization.", chapter: 1 },
+            { term: "Barba", definition: "Latin word for beard.", chapter: 1 },
+            { term: "Barber Pole", definition: "Symbol of barbering that evolved from the technical procedures of bloodletting performed by barber-surgeons.", chapter: 1 },
+            { term: "Barber-Surgeons", definition: "Early practitioners who cut hair, shaved, and performed bloodletting and dentistry.", chapter: 1 },
+            { term: "Journeyman Barber Groups", definition: "Organizations formed to represent barber employees prior to the establishment of barber licensing laws.", chapter: 1 },
+            { term: "Master Barber Groups", definition: "Employer organizations formed prior to the establishment of barber licensing laws.", chapter: 1 },
+            { term: "Meryma'at", definition: "Egyptian barber commemorated with a statue.", chapter: 1 },
+            { term: "NABBA", definition: "National Association of Barber Boards of America.", chapter: 1 },
+            { term: "Ticinius Mena", definition: "Sicilian credited with bringing barbering and shaving to Rome in 296 BC.", chapter: 1 },
+            { term: "Tonsorial", definition: "Related to the cutting, clipping, or trimming of hair with shears or a razor.", chapter: 1 },
+            { term: "Tonsure", definition: "A shaved patch on the head.", chapter: 1 },
+            
+            // Chapter 2: Professionalism
+            { term: "Effective Communication", definition: "The act of successfully sharing information between two people or groups so the information is understood.", chapter: 2 },
+            { term: "Ergonomics", definition: "The science of designing the workplace, equipment, and tools to make body movements more comfortable, efficient, and safe.", chapter: 2 },
+            { term: "Human Relations", definition: "The interactions and relationships between two or more people.", chapter: 2 },
+            { term: "Personal Grooming", definition: "The process of caring for parts of the body and maintaining an overall polished look.", chapter: 2 },
+            { term: "Personal Hygiene", definition: "The daily maintenance of cleanliness by practicing good healthful habits.", chapter: 2 },
+            { term: "Physical Presentation", definition: "Your posture, as well as the way you walk and move.", chapter: 2 },
+            { term: "Professional Image", definition: "The impression you project through both your outward appearance and your conduct in the workplace.", chapter: 2 },
+            
+            // Chapter 3: Infection Control (abbreviated for space)
+            { term: "AIDS", definition: "Acquired Immune Deficiency Syndrome - a disease that breaks down the body's immune system, caused by HIV.", chapter: 3 },
+            { term: "Acquired Immunity", definition: "Immunity the body develops after overcoming a disease, through inoculation, or through exposure to natural allergens.", chapter: 3 },
+            { term: "Allergy", definition: "Reaction due to extreme sensitivity to certain foods, chemicals, or other normally harmless substances.", chapter: 3 },
+            { term: "Antiseptics", definition: "Chemical germicide formulated for use on skin; registered and regulated by the FDA.", chapter: 3 },
+            { term: "Asymptomatic", definition: "Showing no symptoms or signs of infection.", chapter: 3 },
+            { term: "Bacilli", definition: "Short rod-shaped bacteria that produce diseases such as tetanus, typhoid fever, tuberculosis, and diphtheria.", chapter: 3 },
+            { term: "Bacteria", definition: "Single-celled microorganisms that have both plant and animal characteristics.", chapter: 3 },
+            { term: "Bacterial Spores", definition: "Bacteria capable of producing a protective coating that allows them to withstand harsh environments.", chapter: 3 },
+            { term: "Bactericidal", definition: "Capable of destroying bacteria.", chapter: 3 },
+            { term: "Binary Fission", definition: "The division of bacterial cells into two new cells called daughter cells.", chapter: 3 },
+            { term: "Biofilms", definition: "Colonies of microorganisms that adhere to environmental surfaces and the human body.", chapter: 3 },
+            { term: "Bloodborne Pathogens", definition: "Disease-causing microorganisms carried in the body by blood or body fluids, such as hepatitis and HIV.", chapter: 3 },
+            { term: "Cilia", definition: "Hairlike extensions that protrude from cells and help sweep away fluids and particles.", chapter: 3 },
+            { term: "Cleaning", definition: "A mechanical process using soap and water to remove visible dirt, debris, and many disease-causing germs.", chapter: 3 },
+            { term: "Cocci", definition: "Round-shaped bacteria that appear singly or in groups.", chapter: 3 },
+            { term: "Communicable", definition: "Able to be communicated; transferable by contact from one person to another.", chapter: 3 },
+            { term: "Contagious Disease", definition: "Disease that is spread from one person to another person.", chapter: 3 },
+            { term: "Contamination", definition: "The presence of blood or other potentially infectious materials on an item's surface.", chapter: 3 },
+            { term: "Diagnosis", definition: "Determination of the nature of a disease from its symptoms; federal regulations prohibit salon professionals from performing a diagnosis.", chapter: 3 },
+            { term: "Diplococci", definition: "Spherical bacteria that grow in pairs and cause diseases such as pneumonia.", chapter: 3 },
+            { term: "Direct Transmission", definition: "Transmission of blood or body fluids through touching, kissing, coughing, sneezing, and talking.", chapter: 3 },
+            { term: "Disease", definition: "An abnormal condition of the body that makes it incapable of carrying on normal function.", chapter: 3 },
+            { term: "Disinfectants", definition: "Chemical products approved by the EPA designed to destroy most bacteria, fungi, and viruses on surfaces.", chapter: 3 },
+            { term: "Disinfection", definition: "A chemical process that uses specific products to destroy harmful organisms on environmental surfaces.", chapter: 3 },
+            { term: "Efficacy", definition: "The ability of a product to produce the intended effect.", chapter: 3 },
+            { term: "Exposure Incident", definition: "Contact with non-intact skin, blood, body fluid, or other potentially infectious materials.", chapter: 3 },
+            { term: "Flagella", definition: "Slender, hairlike extensions used by bacilli and spirilla for locomotion.", chapter: 3 },
+            { term: "Fungi", definition: "Single-celled organisms that include molds, mildews, and yeasts.", chapter: 3 },
+            { term: "Fungicidal", definition: "Capable of destroying molds and fungi.", chapter: 3 },
+            { term: "Hepatitis", definition: "A bloodborne virus that causes disease and can damage the liver.", chapter: 3 },
+            { term: "Hospital Disinfectants", definition: "Disinfectants effective for cleaning blood and body fluids on nonporous surfaces.", chapter: 3 },
+            { term: "HIV", definition: "Human Immunodeficiency Virus - virus that causes AIDS.", chapter: 3 },
+            { term: "Immunity", definition: "The ability of the body to destroy and resist infection.", chapter: 3 },
+            { term: "Inactive Stage", definition: "The ability of some bacteria to form a protective coating around themselves.", chapter: 3 },
+            { term: "Indirect Transmission", definition: "Transmission of blood or body fluids through contact with an intermediate contaminated object.", chapter: 3 },
+            { term: "Infection", definition: "The invasion of body tissues by disease-causing pathogens.", chapter: 3 },
+            { term: "Infection Control", definition: "The methods used to eliminate or reduce the transmission of infectious organisms.", chapter: 3 },
+            { term: "Infectious", definition: "Caused by or capable of being transmitted by infection.", chapter: 3 },
+            { term: "Infectious Disease", definition: "Disease caused by pathogenic microorganisms that enter the body.", chapter: 3 },
+            { term: "Inflammation", definition: "A condition in which the body reacts to injury, irritation, or infection.", chapter: 3 },
+            { term: "Local Infection", definition: "An infection confined to a particular part of the body.", chapter: 3 },
+            { term: "MRSA", definition: "Methicillin-resistant Staphylococcus Aureus - infectious bacteria highly resistant to antibiotics.", chapter: 3 },
+            { term: "Microorganism", definition: "Any organism of microscopic or submicroscopic size.", chapter: 3 },
+            { term: "Mildew", definition: "A type of fungus that affects plants but does not cause human infections in the barbershop.", chapter: 3 },
+            { term: "Motility", definition: "Self-movement.", chapter: 3 },
+            { term: "Multiuse", definition: "Items that can be cleaned, disinfected, and used on more than one person.", chapter: 3 },
+            { term: "Natural Immunity", definition: "Immunity that is partly inherited and partly developed through healthy living.", chapter: 3 },
+            { term: "Nonpathogenic", definition: "Harmless microorganisms that do not cause disease.", chapter: 3 },
+            { term: "Nonporous", definition: "An item made of material that has no pores or openings and cannot absorb liquids.", chapter: 3 },
+            { term: "Occupational Disease", definition: "Illness resulting from conditions associated with employment.", chapter: 3 },
+            { term: "Parasites", definition: "Organisms that grow, feed, and shelter on or inside another organism.", chapter: 3 },
+            { term: "Parasitic Disease", definition: "Disease caused by parasites, such as lice and mites.", chapter: 3 },
+            { term: "Pathogenic", definition: "Harmful microorganisms that can cause disease or infection in humans.", chapter: 3 },
+            { term: "Pathogenic Disease", definition: "Disease produced by organisms including bacteria, viruses, fungi, and parasites.", chapter: 3 },
+            { term: "Pediculosis Capitis", definition: "Infestation of the hair and scalp with head lice.", chapter: 3 },
+            { term: "Phenolic Disinfectants", definition: "Tuberculocidal disinfectants that are a form of formaldehyde.", chapter: 3 },
+            { term: "Porous", definition: "Made of material that has pores or openings; absorbent.", chapter: 3 },
+            { term: "Pus", definition: "A fluid created by infection.", chapter: 3 },
+            { term: "Quaternary Ammonium Compounds", definition: "Also known as quats; products designed for disinfection of nonporous surfaces.", chapter: 3 },
+            { term: "SDS", definition: "Safety Data Sheet - required by law for all products sold.", chapter: 3 },
+            { term: "Sanitation", definition: "A chemical process for reducing the number of disease-causing germs on cleaned surfaces.", chapter: 3 },
+            { term: "Scabies", definition: "A contagious skin disease caused by the itch mite.", chapter: 3 },
+            { term: "Sodium Hypochlorite", definition: "Common household bleach; an effective disinfectant for the barbershop.", chapter: 3 },
+            { term: "Spirilla", definition: "Spiral or corkscrew-shaped bacteria that cause diseases such as syphilis and Lyme disease.", chapter: 3 },
+            { term: "Standard Precautions", definition: "Guidelines requiring the employer and employee to assume all human blood and body fluids are potentially infectious.", chapter: 3 },
+            { term: "Staphylococci", definition: "Pus-forming bacteria that grow in clusters like grapes.", chapter: 3 },
+            { term: "Sterilization", definition: "The process that completely destroys all microbial life, including spores.", chapter: 3 },
+            { term: "Streptococci", definition: "Pus-forming bacteria arranged in curved lines resembling a string of beads.", chapter: 3 },
+            { term: "Tinea Barbae", definition: "Also known as barber's itch; a superficial fungal infection of the bearded areas.", chapter: 3 },
+            { term: "Tinea Capitis", definition: "A fungal infection of the scalp.", chapter: 3 },
+            { term: "Toxins", definition: "Various poisonous substances produced by some microorganisms.", chapter: 3 },
+            { term: "Tuberculocidal Disinfectants", definition: "Disinfectants proven to kill the bacterium that causes tuberculosis.", chapter: 3 },
+            { term: "Tuberculosis", definition: "A disease caused by bacteria transmitted through coughing or sneezing.", chapter: 3 },
+            { term: "Virucidal", definition: "Capable of destroying viruses.", chapter: 3 },
+            { term: "Virus", definition: "A parasitic submicroscopic particle that infects and resides in cells.", chapter: 3 },
+            
+            // Chapter 4: Life Skills (10 terms)
+            { term: "Active Listening", definition: "The process of giving full attention to what is being said, observing nonverbal cues, and providing appropriate feedback.", chapter: 4 },
+            { term: "Affect", definition: "The visible display of emotion or feeling; facial expressions that show mood.", chapter: 4 },
+            { term: "Aptitude", definition: "A natural talent or ability to acquire a particular skill.", chapter: 4 },
+            { term: "Body Language", definition: "Nonverbal communication through gestures, posture, facial expressions, and body movements.", chapter: 4 },
+            { term: "Competence", definition: "The ability to do something successfully or efficiently.", chapter: 4 },
+            { term: "Constructive Criticism", definition: "Feedback that is specific, helpful, and intended to improve performance.", chapter: 4 },
+            { term: "Emotional Intelligence", definition: "The ability to understand, use, and manage your own emotions in positive ways.", chapter: 4 },
+            { term: "Ethics", definition: "Moral principles that govern a person's behavior or the conducting of an activity.", chapter: 4 },
+            { term: "Goal Setting", definition: "The process of identifying something you want to accomplish and establishing measurable objectives.", chapter: 4 },
+            { term: "Motivation", definition: "The reason or reasons one has for acting or behaving in a particular way.", chapter: 4 },
+            
+            // Chapter 5: Implements, Tools & Equipment (25 terms)
+            { term: "Blades", definition: "The cutting parts of clippers, usually manufactured from high-quality carbon steel.", chapter: 5 },
+            { term: "Canvas Strop", definition: "Usually one side of a combination strop made of linen or silk, woven into a fine or coarse texture that removes metal burrs left after honing.", chapter: 5 },
+            { term: "Cast Shears", definition: "Shears that have been made by heating steel to a liquid form for pouring into a mold.", chapter: 5 },
+            { term: "Changeable-Blade Straight Razor", definition: "A type of straight razor that uses changeable, disposable blades.", chapter: 5 },
+            { term: "Clippers", definition: "Electric haircutting tools with a single adjustable-blade or detachable-blade system.", chapter: 5 },
+            { term: "Comedone Extractor", definition: "An implement used to extract blackheads.", chapter: 5 },
+            { term: "Conventional Straight Razor", definition: "A razor made of a hardened steel blade that requires honing and stropping to produce a cutting edge.", chapter: 5 },
+            { term: "Forged Shears", definition: "Shears that have been made by working heated metal into a finished shape through the processes of hammering or compression.", chapter: 5 },
+            { term: "Guards", definition: "Plastic or hard rubber comb attachments that fit over clipper blades to minimize the amount of hair being cut with the clippers.", chapter: 5 },
+            { term: "High-Frequency Machine", definition: "A machine that produces a high rate of oscillation or Tesla current for the purpose of stimulating scalp, facial, and body tissues.", chapter: 5 },
+            { term: "Hone", definition: "A sharpening block manufactured from rock or synthetic materials and used to create a cutting edge on conventional straight razors.", chapter: 5 },
+            { term: "Palming the Comb", definition: "The technique used to hold the comb in the hand opposite of the hand that is cutting with the shears.", chapter: 5 },
+            { term: "Palming the Shears", definition: "The technique used to hold shears in a safe manner while combing through or otherwise working with hair.", chapter: 5 },
+            { term: "Russian Strop", definition: "A type of cowhide strop that is considered to be one of the best and that requires breaking in.", chapter: 5 },
+            { term: "Set of the Shears", definition: "The manner in which the blades and shanks of the shears align with each other and are joined at the tension screw or rivet.", chapter: 5 },
+            { term: "Shell Strop", definition: "A type of horsehide strop made from the muscular rump area of the horse and considered to be the best strop for use by barbers.", chapter: 5 },
+            { term: "Strop", definition: "An elongated piece of leather or other materials used to finish the edge of conventional straight razors to a smooth, whetted cutting edge.", chapter: 5 },
+            { term: "Taper Comb", definition: "Used for cutting or trimming hair when a gradual blending from short to longer is required within the haircut.", chapter: 5 },
+            { term: "Texturizing Shears", definition: "Shears with 14 to 28 medium width teeth that produce visible differences in hair lengths to add texture and volume.", chapter: 5 },
+            { term: "Thermal Styling Tools", definition: "Tools that produce heat for hairstyling purposes.", chapter: 5 },
+            { term: "Thinning Shears", definition: "Shears with 30 to 50 thin, narrowly spaced teeth that eliminate visible lines in the hair, used for blending hair ends and removing bulk or weight.", chapter: 5 },
+            { term: "Trimmers", definition: "Small clippers, also known as outliners and edgers, used for detail, precision design, and fine finish work after a haircut or beard trim.", chapter: 5 },
+            { term: "Blade Guard", definition: "A protective cover placed over clipper blades when not in use.", chapter: 5 },
+            { term: "Clipper Over Comb", definition: "A haircutting technique using clippers and a comb together to create gradual length changes.", chapter: 5 },
+            { term: "Shear Over Comb", definition: "A haircutting technique using shears and a comb to create precise, clean lines.", chapter: 5 },
+            
+            // Chapter 6: Anatomy & Physiology (30 terms)
+            { term: "Abductors", definition: "Muscles that draw a body part, such as a finger, arm, or toe, away from the midline of the body.", chapter: 6 },
+            { term: "Adductors", definition: "Muscles that draw a body part, such as a finger, arm, or toe, inward toward the median axis of the body.", chapter: 6 },
+            { term: "Adipose Tissue", definition: "A technical term for fat; gives smoothness and contour to the body.", chapter: 6 },
+            { term: "Anatomy", definition: "The science of the structure of organisms and of their parts.", chapter: 6 },
+            { term: "Angular Artery", definition: "Artery that supplies blood to the sides of the nose.", chapter: 6 },
+            { term: "Anterior Auricular Artery", definition: "Artery that supplies blood to the front part of the ear.", chapter: 6 },
+            { term: "Aorta", definition: "Largest artery in the body.", chapter: 6 },
+            { term: "Arteries", definition: "Thick-walled, muscular, flexible tubes that carry oxygenated blood away from the heart to the arterioles.", chapter: 6 },
+            { term: "Arterioles", definition: "Small arteries that deliver blood to capillaries.", chapter: 6 },
+            { term: "Auricularis Anterior", definition: "Muscle in front of the ear that draws the ear forward.", chapter: 6 },
+            { term: "Auricularis Posterior", definition: "Muscle behind the ear that draws the ear backward.", chapter: 6 },
+            { term: "Auricularis Superior", definition: "Muscle above the ear that draws the ear upward.", chapter: 6 },
+            { term: "Blood", definition: "Nutritive fluid circulating through the circulatory system that supplies oxygen and nutrients to cells and tissues.", chapter: 6 },
+            { term: "Blood Vessels", definition: "Tubelike structures that include arteries, arterioles, capillaries, venules, and veins.", chapter: 6 },
+            { term: "Body Systems", definition: "Groups of body organs acting together to perform one or more functions.", chapter: 6 },
+            { term: "Brain", definition: "Largest and most complex nerve tissue; part of the central nervous system contained within the cranium.", chapter: 6 },
+            { term: "Buccal Nerve", definition: "Nerve that affects the muscles of the mouth.", chapter: 6 },
+            { term: "Buccinator Muscle", definition: "Thin, flat muscle of the cheek between the upper and lower jaws.", chapter: 6 },
+            { term: "Carpus", definition: "The bones of the wrist.", chapter: 6 },
+            { term: "Cell Membrane", definition: "Part of the cell that encloses the protoplasm; permits soluble substances to enter and leave the cell.", chapter: 6 },
+            { term: "Cells", definition: "Basic units of all living things.", chapter: 6 },
+            { term: "Central Nervous System (CNS)", definition: "Division of nervous system consisting of the brain, spinal cord, spinal nerves, and cranial nerves.", chapter: 6 },
+            { term: "Circulatory System", definition: "System that controls the steady circulation of blood through the body by means of the heart and blood vessels.", chapter: 6 },
+            { term: "Connective Tissue", definition: "Fibrous tissue that binds together, protects, and supports the various parts of the body.", chapter: 6 },
+            { term: "Corrugator Muscle", definition: "Facial muscle that draws eyebrows down and wrinkles the forehead vertically.", chapter: 6 },
+            { term: "Cranium", definition: "An oval, bony case that protects the brain.", chapter: 6 },
+            { term: "Cytoplasm", definition: "The watery fluid that surrounds the nucleus of the cell and is needed for growth, reproduction and self-repair.", chapter: 6 },
+            { term: "Deltoid", definition: "A large, triangular muscle covering the shoulder joint that allows the arm to extend outward and to the side of the body.", chapter: 6 },
+            { term: "Dermis", definition: "Second or inner layer of the skin; also known as the derma, corium, cutis, or true skin.", chapter: 6 },
+            { term: "Digestive System", definition: "The mouth, stomach, intestines, and salivary and gastric glands that change food into nutrients and wastes.", chapter: 6 },
+            
+            // Chapter 7: Basics of Chemistry (20 terms)
+            { term: "Acids", definition: "Solutions that have a pH below 7.0.", chapter: 7 },
+            { term: "Alkalis", definition: "Solutions that have a pH above 7.0; also called bases.", chapter: 7 },
+            { term: "Atoms", definition: "The basic building blocks of all matter and are the smallest particle of an element.", chapter: 7 },
+            { term: "Balancing Shampoos", definition: "Designed for oily hair and scalps. These shampoos wash away excess oiliness while keeping the hair from drying out.", chapter: 7 },
+            { term: "Chemical Change", definition: "Change in the chemical composition of a substance by which new substances are formed.", chapter: 7 },
+            { term: "Chemical Compounds", definition: "Combinations of two or more atoms of different elements united chemically with fixed chemical composition.", chapter: 7 },
+            { term: "Chemistry", definition: "The science that deals with the composition, structure, and properties of matter.", chapter: 7 },
+            { term: "Clarifying Shampoos", definition: "Shampoo with an active chelating agent that binds to and helps remove metals from the hair.", chapter: 7 },
+            { term: "Conditioners", definition: "Chemical agents used to deposit protein or moisturizers in the hair.", chapter: 7 },
+            { term: "Element", definition: "The simplest form of chemical matter and contains only one type of atom.", chapter: 7 },
+            { term: "Emulsions", definition: "Mixtures of two or more immiscible substances united with the aid of a binder or emulsifier.", chapter: 7 },
+            { term: "Endothermic Reaction", definition: "A chemical reaction that requires the absorption of energy or heat from an external source.", chapter: 7 },
+            { term: "Exothermic Reaction", definition: "The release of energy in the form of heat through certain chemical reactions.", chapter: 7 },
+            { term: "Matter", definition: "Anything that occupies space (volume) and has mass (weight).", chapter: 7 },
+            { term: "Molecule", definition: "Two or more atoms joined chemically.", chapter: 7 },
+            { term: "Oxidation", definition: "Either the addition of oxygen or the loss of hydrogen; a chemical reaction that combines an element with oxygen.", chapter: 7 },
+            { term: "pH", definition: "Potential hydrogen - relative degree of acidity or alkalinity of a substance.", chapter: 7 },
+            { term: "Physical Change", definition: "Change in the form of a substance without the formation of a new substance.", chapter: 7 },
+            { term: "Reduction", definition: "The subtraction of oxygen from, or the addition of hydrogen to, a substance.", chapter: 7 },
+            { term: "Surfactant", definition: "A substance that acts as a bridge to allow oil and water to mix by reducing surface tension.", chapter: 7 },
+            
+            // Chapter 8: Basics of Electricity (15 terms)
+            { term: "Alternating Current (AC)", definition: "Rapid and interrupted current, flowing first in one direction and then the opposite direction.", chapter: 8 },
+            { term: "Ampere", definition: "Standard unit for measuring the strength of an electric current.", chapter: 8 },
+            { term: "Anode", definition: "Positive electrode.", chapter: 8 },
+            { term: "Cathode", definition: "Negative electrode.", chapter: 8 },
+            { term: "Circuit Breaker", definition: "Switch that automatically interrupts or shuts off an electric circuit at the first sign of overload.", chapter: 8 },
+            { term: "Conductor", definition: "Any substance, medium, or material that conducts electricity.", chapter: 8 },
+            { term: "Direct Current (DC)", definition: "Constant current that travels in one direction only and produces a chemical reaction.", chapter: 8 },
+            { term: "Electric Current", definition: "The flow of electricity along a conductor.", chapter: 8 },
+            { term: "Fuse", definition: "Device that prevents excessive current from passing through a circuit.", chapter: 8 },
+            { term: "Galvanic Current", definition: "Constant DC having a positive and negative pole that produces chemical changes in tissues.", chapter: 8 },
+            { term: "GFI", definition: "Ground Fault Interrupter - a device that senses imbalances in an electric current.", chapter: 8 },
+            { term: "Infrared Light", definition: "Invisible rays with long wavelengths and deep penetration; produce the most heat.", chapter: 8 },
+            { term: "Insulator", definition: "Substance that does not easily transfer electricity.", chapter: 8 },
+            { term: "Ultraviolet Light", definition: "Invisible rays that kill germs; also called actinic or cold rays.", chapter: 8 },
+            { term: "Volt", definition: "Unit of electrical pressure that pushes the flow of electrons forward.", chapter: 8 },
+            
+            // Chapter 9: Properties & Disorders of the Skin (35 terms)
+            { term: "Acne", definition: "Skin disorder characterized by chronic inflammation of the sebaceous glands from retained secretions.", chapter: 9 },
+            { term: "Albinism", definition: "Congenital absence of melanin pigment in the body.", chapter: 9 },
+            { term: "Anhidrosis", definition: "Deficiency in perspiration or the inability to sweat.", chapter: 9 },
+            { term: "Asteatosis", definition: "Condition of dry, scaly skin characterized by deficiency of sebum.", chapter: 9 },
+            { term: "Basal Cell Carcinoma", definition: "Most common and least severe type of skin cancer.", chapter: 9 },
+            { term: "Blackhead", definition: "Open comedo; accumulation of excess oil oxidized to dark color.", chapter: 9 },
+            { term: "Bromhidrosis", definition: "Foul-smelling perspiration.", chapter: 9 },
+            { term: "Bulla", definition: "Large blister containing watery fluid.", chapter: 9 },
+            { term: "Chloasma", definition: "Non-elevated spots due to increased pigmentation in the skin.", chapter: 9 },
+            { term: "Closed Comedo", definition: "Whitehead; small bump with white or cream colored sebum.", chapter: 9 },
+            { term: "Collagen", definition: "Fibrous protein that gives the skin form and strength.", chapter: 9 },
+            { term: "Comedone", definition: "Mass of hardened sebum in a hair follicle.", chapter: 9 },
+            { term: "Crust", definition: "Dead cells accumulated over a wound while healing.", chapter: 9 },
+            { term: "Cyst", definition: "Closed, abnormally developed sac containing fluid above or below the skin.", chapter: 9 },
+            { term: "Dermatitis", definition: "Inflammatory condition of the skin.", chapter: 9 },
+            { term: "Eczema", definition: "Inflammatory skin condition characterized by painful itching.", chapter: 9 },
+            { term: "Elastin", definition: "Protein base similar to collagen that forms elastic tissue.", chapter: 9 },
+            { term: "Epidermis", definition: "Outermost layer of the skin.", chapter: 9 },
+            { term: "Excoriation", definition: "Skin sore or abrasion caused by scratching.", chapter: 9 },
+            { term: "Fissure", definition: "Crack in the skin that penetrates to the dermis.", chapter: 9 },
+            { term: "Herpes Simplex I", definition: "Fever blister or cold sore; recurring viral infection.", chapter: 9 },
+            { term: "Hyperhidrosis", definition: "Excessive perspiration or sweating.", chapter: 9 },
+            { term: "Hyperpigmentation", definition: "Darker than normal pigmentation appearing as dark splotches.", chapter: 9 },
+            { term: "Hypertrophy", definition: "Abnormal skin growth.", chapter: 9 },
+            { term: "Hypopigmentation", definition: "Absence of pigment resulting in light or white splotches.", chapter: 9 },
+            { term: "Keloid", definition: "Thick scar resulting from excessive tissue growth.", chapter: 9 },
+            { term: "Lentigines", definition: "Technical name for freckles.", chapter: 9 },
+            { term: "Lesion", definition: "Structural change in tissues caused by injury or disease.", chapter: 9 },
+            { term: "Leukoderma", definition: "Skin disorder characterized by abnormal white patches.", chapter: 9 },
+            { term: "Macule", definition: "Spot or discoloration of the skin such as a freckle.", chapter: 9 },
+            { term: "Malignant Melanoma", definition: "Most severe form of skin cancer.", chapter: 9 },
+            { term: "Melanin", definition: "Coloring matter or pigment of the skin.", chapter: 9 },
+            { term: "Mole", definition: "Small brownish spot on the skin.", chapter: 9 },
+            { term: "Nodule", definition: "Solid bump larger than 0.4 inches that can be easily felt.", chapter: 9 },
+            { term: "Papule", definition: "Small elevation on the skin containing no fluid.", chapter: 9 },
+            
+            // Chapter 10: Properties & Disorders of the Hair (25 terms)
+            { term: "Anagen", definition: "Active growth phase of hair lasting 2-6 years.", chapter: 10 },
+            { term: "Canities", definition: "Technical term for gray hair; loss of pigment.", chapter: 10 },
+            { term: "Catagen", definition: "Transitional phase of hair growth lasting 2-3 weeks.", chapter: 10 },
+            { term: "Cortex", definition: "Middle layer of the hair shaft containing pigment.", chapter: 10 },
+            { term: "Cuticle", definition: "Outermost layer of the hair shaft consisting of overlapping scales.", chapter: 10 },
+            { term: "Dandruff", definition: "Excessive shedding of dead skin cells from the scalp.", chapter: 10 },
+            { term: "Eumelanin", definition: "Type of melanin that gives hair brown and black color.", chapter: 10 },
+            { term: "Hair Bulb", definition: "Lowest part of a hair strand; thickened, club-shaped structure.", chapter: 10 },
+            { term: "Hair Shaft", definition: "Portion of hair that projects above the epidermis.", chapter: 10 },
+            { term: "Keratin", definition: "Fibrous protein that is the principal component of hair.", chapter: 10 },
+            { term: "Lanugo", definition: "Soft, downy hair covering the fetus; shed before birth.", chapter: 10 },
+            { term: "Medulla", definition: "Innermost layer of the hair shaft, not present in all hair types.", chapter: 10 },
+            { term: "Pheomelanin", definition: "Type of melanin that gives hair red and blonde color.", chapter: 10 },
+            { term: "Porosity", definition: "Ability of hair to absorb moisture.", chapter: 10 },
+            { term: "Scalp", definition: "Skin covering the cranium that bears hair.", chapter: 10 },
+            { term: "Telogen", definition: "Resting phase of hair growth lasting 3-4 months before shedding.", chapter: 10 },
+            { term: "Terminal Hair", definition: "Long, coarse, pigmented hair found on scalp, legs, arms, and body.", chapter: 10 },
+            { term: "Texture", definition: "Thickness or diameter of the individual hair strand.", chapter: 10 },
+            { term: "Trichology", definition: "Scientific study of hair and its diseases and care.", chapter: 10 },
+            { term: "Vellus Hair", definition: "Short, fine, unpigmented hair covering much of the body.", chapter: 10 },
+            { term: "Alopecia", definition: "Hair loss or baldness; abnormal thinning of hair.", chapter: 10 },
+            { term: "Alopecia Areata", definition: "Autoimmune disorder causing patchy hair loss.", chapter: 10 },
+            { term: "Alopecia Totalis", definition: "Complete loss of hair on the scalp.", chapter: 10 },
+            { term: "Alopecia Universalis", definition: "Complete loss of hair on entire body.", chapter: 10 },
+            { term: "Traction Alopecia", definition: "Hair loss caused by pulling from tight hairstyles.", chapter: 10 },
+            
+            // Chapter 11: Treatment of Hair & Scalp (15 terms)
+            { term: "Alopecia Reduction", definition: "Surgical removal of bald scalp to reduce size of bald area.", chapter: 11 },
+            { term: "Conditioning Treatment", definition: "Product that restores moisture and protein to hair.", chapter: 11 },
+            { term: "Hair Analysis", definition: "Examination of hair to determine condition and appropriate treatment.", chapter: 11 },
+            { term: "Hair Extensions", definition: "Artificial hair additions attached to natural hair.", chapter: 11 },
+            { term: "Hair Replacement", definition: "Non-surgical method of adding hair to cover baldness.", chapter: 11 },
+            { term: "Hair Weaving", definition: "Attaching artificial or human hair to natural hair.", chapter: 11 },
+            { term: "Low-Level Laser Therapy", definition: "Treatment using laser light to stimulate hair growth.", chapter: 11 },
+            { term: "Medical Hair Loss Treatment", definition: "FDA-approved medications to treat hair loss.", chapter: 11 },
+            { term: "Minoxidil", definition: "Topical medication used to stimulate hair growth.", chapter: 11 },
+            { term: "Platelet-Rich Plasma", definition: "Treatment using patient's own blood to stimulate hair growth.", chapter: 11 },
+            { term: "Scalp Massage", definition: "Manipulation of scalp tissue to increase blood circulation.", chapter: 11 },
+            { term: "Scalp Treatment", definition: "Service designed to treat scalp conditions and improve health.", chapter: 11 },
+            { term: "Surgical Hair Restoration", definition: "Medical procedures to restore hair including transplants.", chapter: 11 },
+            { term: "Hair Transplantation", definition: "Surgical procedure moving hair follicles from donor area to bald area.", chapter: 11 },
+            { term: "Wig", definition: "Artificial covering for the head consisting of hair.", chapter: 11 },
+            
+            // Chapter 12: Men's Facial Massage & Treatments (15 terms)
+            { term: "Chemical Exfoliation", definition: "Removal of dead skin cells using chemical agents.", chapter: 12 },
+            { term: "Effleurage", definition: "Light, continuous stroking massage movement.", chapter: 12 },
+            { term: "Electrotherapy", definition: "Electronic scalp and facial treatments.", chapter: 12 },
+            { term: "Exfoliation", definition: "Removal of dead skin cells from surface of skin.", chapter: 12 },
+            { term: "Facial", definition: "Skin treatment for the face including cleansing and massage.", chapter: 12 },
+            { term: "Facial Mask", definition: "Product applied to face for therapeutic or cosmetic benefits.", chapter: 12 },
+            { term: "Facial Treatment", definition: "Service designed to improve condition and appearance of facial skin.", chapter: 12 },
+            { term: "Friction", definition: "Deep rubbing massage movement using pressure.", chapter: 12 },
+            { term: "High-Frequency Treatment", definition: "Thermal current treatment for scalp and skin conditions.", chapter: 12 },
+            { term: "Manual Exfoliation", definition: "Physical removal of dead skin cells using scrubs or tools.", chapter: 12 },
+            { term: "Petrissage", definition: "Kneading massage movement that stimulates muscles.", chapter: 12 },
+            { term: "Steam Treatment", definition: "Use of warm steam to open pores and soften skin.", chapter: 12 },
+            { term: "Tapotement", definition: "Fast tapping or percussion massage movement.", chapter: 12 },
+            { term: "Vibration", definition: "Rapid shaking or trembling massage movement.", chapter: 12 },
+            { term: "Vibrotherapy", definition: "Treatment using vibration to stimulate tissues.", chapter: 12 },
+            
+            // Chapter 13: Shaving & Facial Hair Design (10 terms)
+            { term: "Aftershave", definition: "Product applied after shaving to soothe and disinfect skin.", chapter: 13 },
+            { term: "Beard Design", definition: "Creating specific shapes and styles for facial hair.", chapter: 13 },
+            { term: "Face Mapping", definition: "Analyzing facial features to determine best beard style.", chapter: 13 },
+            { term: "Hot Towel Service", definition: "Treatment using warm towels to soften beard before shaving.", chapter: 13 },
+            { term: "Lather", definition: "Foam or cream used to lubricate skin during shaving.", chapter: 13 },
+            { term: "Mustache Design", definition: "Creating specific shapes for mustache hair.", chapter: 13 },
+            { term: "Pre-Shave Oil", definition: "Oil applied before shaving to protect and lubricate skin.", chapter: 13 },
+            { term: "Razor Burn", definition: "Skin irritation caused by shaving.", chapter: 13 },
+            { term: "Razor Bumps", definition: "Ingrown hairs caused by shaving.", chapter: 13 },
+            { term: "Straight Razor Shave", definition: "Shave performed with a traditional straight razor.", chapter: 13 },
+            
+            // Chapter 14: Men's Hair Replacement (10 terms)
+            { term: "Bonding", definition: "Method of attaching hair replacement using adhesive to bond to scalp or hair.", chapter: 14 },
+            { term: "Custom Hair Replacement", definition: "Hair system designed and created specifically for individual client.", chapter: 14 },
+            { term: "Frontal Hairpiece", definition: "Hair replacement designed to cover only the front hairline area.", chapter: 14 },
+            { term: "Full Cap", definition: "Hair replacement system covering the entire top of the head.", chapter: 14 },
+            { term: "Hair Integration", definition: "System blending synthetic hair with client's existing hair.", chapter: 14 },
+            { term: "Lace Front", definition: "Hairpiece with fine lace mesh at front hairline for natural appearance.", chapter: 14 },
+            { term: "Partial Hairpiece", definition: "Hair replacement covering only specific areas of hair loss.", chapter: 14 },
+            { term: "Stock Hairpiece", definition: "Pre-made hair replacement available in standard sizes and colors.", chapter: 14 },
+            { term: "Toupee", definition: "Small wig or hairpiece worn to cover a bald spot on top of head.", chapter: 14 },
+            { term: "Weaving", definition: "Method of attaching hair replacement by braiding to existing hair.", chapter: 14 },
+            
+            // Chapter 15: Men's Haircoloring & Chemical Texture (25 terms)
+            { term: "Activator", definition: "Chemical ingredient that starts or speeds up chemical reaction in haircolor.", chapter: 15 },
+            { term: "Ammonia", definition: "Alkaline compound used in haircolor to swell cuticle and allow color penetration.", chapter: 15 },
+            { term: "Balayage", definition: "Freehand haircolor technique creating natural-looking highlights.", chapter: 15 },
+            { term: "Base Color", definition: "Predominant tone or underlying color of hair.", chapter: 15 },
+            { term: "Color Correction", definition: "Process of changing haircolor that is undesirable or too dark.", chapter: 15 },
+            { term: "Color Wheel", definition: "Tool showing relationships between primary, secondary, and tertiary colors.", chapter: 15 },
+            { term: "Complementary Colors", definition: "Colors opposite each other on color wheel that neutralize each other.", chapter: 15 },
+            { term: "Contributing Pigment", definition: "Natural underlying color of hair that contributes to final haircolor result.", chapter: 15 },
+            { term: "Demipermanent Color", definition: "Haircolor lasting 12-24 shampoos that deposits color without lift.", chapter: 15 },
+            { term: "Developer", definition: "Hydrogen peroxide mixed with haircolor to activate lightening process.", chapter: 15 },
+            { term: "Double-Process Color", definition: "Haircolor service requiring two steps: pre-lightening and depositing color.", chapter: 15 },
+            { term: "Filler", definition: "Color product used to replace missing undertone before coloring damaged hair.", chapter: 15 },
+            { term: "Foil Technique", definition: "Haircolor method using foil to separate and process selected strands.", chapter: 15 },
+            { term: "Gray Coverage", definition: "Ability of haircolor to completely cover gray or white hair.", chapter: 15 },
+            { term: "Hair Lightener", definition: "Chemical product used to lift or lighten natural hair color.", chapter: 15 },
+            { term: "Highlights", definition: "Lightened hair strands that add dimension and contrast to hair.", chapter: 15 },
+            { term: "Level", definition: "Unit of measurement identifying lightness or darkness of color.", chapter: 15 },
+            { term: "Line of Demarcation", definition: "Visible line separating colored hair from new growth.", chapter: 15 },
+            { term: "Lowlights", definition: "Strands of hair darkened to add depth and dimension.", chapter: 15 },
+            { term: "Neutralizer", definition: "Product used to stop chemical action of haircolor or relaxer.", chapter: 15 },
+            { term: "Patch Test", definition: "Skin test performed to determine allergy to haircolor.", chapter: 15 },
+            { term: "Permanent Color", definition: "Haircolor that permanently changes natural pigment requiring regrowth touch-ups.", chapter: 15 },
+            { term: "Porosity", definition: "Ability of hair to absorb moisture, chemicals, or color.", chapter: 15 },
+            { term: "Semi-Permanent Color", definition: "Haircolor lasting 4-6 weeks that gradually fades without lifting natural color.", chapter: 15 },
+            { term: "Single-Process Color", definition: "Haircolor service using one application of color.", chapter: 15 },
+            
+            // Chapter 16: Men's Hairstyling (15 terms)
+            { term: "Blow-Dry Styling", definition: "Technique using blow dryer and brush to style and shape hair.", chapter: 16 },
+            { term: "Crew Cut", definition: "Short haircut tapered on sides and back with slightly longer top.", chapter: 16 },
+            { term: "Fade", definition: "Haircut where hair gradually fades from short to shorter, often to skin.", chapter: 16 },
+            { term: "Flat Top", definition: "Haircut with top hair standing upright and cut flat across.", chapter: 16 },
+            { term: "Layered Cut", definition: "Haircut creating graduated lengths throughout for volume and movement.", chapter: 16 },
+            { term: "Pomade", definition: "Oil-based styling product providing shine and medium hold.", chapter: 16 },
+            { term: "Pompadour", definition: "Style with hair swept upward from face and worn high over forehead.", chapter: 16 },
+            { term: "Quiff", definition: "Style combining elements of pompadour, flattop, and mohawk.", chapter: 16 },
+            { term: "Side Part", definition: "Style with hair parted and combed to one side.", chapter: 16 },
+            { term: "Taper", definition: "Haircut gradually increasing in length from neckline to top of head.", chapter: 16 },
+            { term: "Texturizing", definition: "Technique removing bulk and creating movement in hair.", chapter: 16 },
+            { term: "Undercut", definition: "Style with sides and back cut very short while top remains long.", chapter: 16 },
+            { term: "Wax", definition: "Styling product providing strong hold and matte or shiny finish.", chapter: 16 },
+            { term: "Clay", definition: "Styling product providing matte finish and strong hold.", chapter: 16 },
+            { term: "Gel", definition: "Styling product providing strong hold and shiny finish.", chapter: 16 },
+            
+            // Chapter 17: State Board Exam Prep (15 terms)
+            { term: "Practical Examination", definition: "Hands-on portion of state board exam testing actual skills.", chapter: 17 },
+            { term: "Written Examination", definition: "Theory portion of state board exam testing knowledge.", chapter: 17 },
+            { term: "Examination Room", definition: "Designated area where practical exam is conducted.", chapter: 17 },
+            { term: "Kit", definition: "Collection of tools and supplies required for practical examination.", chapter: 17 },
+            { term: "Model", definition: "Person on whom candidate performs services during practical exam.", chapter: 17 },
+            { term: "Proctor", definition: "Official who monitors examination and ensures rules are followed.", chapter: 17 },
+            { term: "Sanitation Setup", definition: "Proper arrangement of disinfectants and cleaning supplies for exam.", chapter: 17 },
+            { term: "Supply Checklist", definition: "List of required items candidates must bring to practical exam.", chapter: 17 },
+            { term: "Time Management", definition: "Ability to complete all required services within allotted exam time.", chapter: 17 },
+            { term: "Work Area", definition: "Assigned space where candidate performs services during exam.", chapter: 17 },
+            { term: "Candidate", definition: "Person taking the state board examination.", chapter: 17 },
+            { term: "License", definition: "Legal document granting permission to practice barbering.", chapter: 17 },
+            { term: "Renewal", definition: "Process of extending license validity by meeting continuing education requirements.", chapter: 17 },
+            { term: "Reciprocity", definition: "Process allowing license transfer from one state to another.", chapter: 17 },
+            { term: "Endorsement", definition: "Recognition of license from another state or country.", chapter: 17 },
+            
+            // Chapter 18: Seeking Employment (10 terms)
+            { term: "Application", definition: "Formal request for employment, usually including resume and cover letter.", chapter: 18 },
+            { term: "Cover Letter", definition: "Document accompanying resume explaining interest in position.", chapter: 18 },
+            { term: "Interview", definition: "Formal meeting between employer and potential employee to discuss job.", chapter: 18 },
+            { term: "Job Description", definition: "Detailed list of duties, responsibilities, and requirements for position.", chapter: 18 },
+            { term: "Networking", definition: "Building professional relationships to advance career opportunities.", chapter: 18 },
+            { term: "Portfolio", definition: "Collection of work samples demonstrating skills and abilities.", chapter: 18 },
+            { term: "Reference", definition: "Person who can vouch for candidate's character and work abilities.", chapter: 18 },
+            { term: "Resume", definition: "Document summarizing education, experience, and qualifications.", chapter: 18 },
+            { term: "Salary Negotiation", definition: "Discussion between employer and employee regarding compensation.", chapter: 18 },
+            { term: "Thank-You Note", definition: "Written expression of gratitude sent after job interview.", chapter: 18 },
+            
+            // Chapter 19: Working a Successful Career (10 terms)
+            { term: "Commission", definition: "Payment based on percentage of services performed or products sold.", chapter: 19 },
+            { term: "Continuing Education", definition: "Additional training required to maintain license and stay current.", chapter: 19 },
+            { term: "Customer Service", definition: "Assistance and advice provided to customers before, during, and after services.", chapter: 19 },
+            { term: "Goal Setting", definition: "Process of identifying specific objectives to achieve career success.", chapter: 19 },
+            { term: "Professional Development", definition: "Process of improving skills and knowledge to advance career.", chapter: 19 },
+            { term: "Retail Sales", definition: "Selling products to clients for use at home.", chapter: 19 },
+            { term: "Retention", definition: "Ability to keep clients returning for services.", chapter: 19 },
+            { term: "Service Menu", definition: "List of services offered with descriptions and prices.", chapter: 19 },
+            { term: "Time Management", definition: "Organizing and planning time spent on activities.", chapter: 19 },
+            { term: "Upselling", definition: "Technique of suggesting additional services or products to clients.", chapter: 19 },
+            
+            // Chapter 20: Barber Shop Management (10 terms)
+            { term: "Booth Rental", definition: "Paying set fee to use station in barbershop; independent contractor arrangement.", chapter: 20 },
+            { term: "Budget", definition: "Financial plan estimating income and expenses over period of time.", chapter: 20 },
+            { term: "Client Base", definition: "Regular customers who consistently return for services.", chapter: 20 },
+            { term: "Inventory", definition: "Complete list of products and supplies in stock.", chapter: 20 },
+            { term: "Marketing", definition: "Activities promoting business and attracting clients.", chapter: 20 },
+            { term: "Overhead", definition: "Operating expenses including rent, utilities, and supplies.", chapter: 20 },
+            { term: "Prebooking", definition: "Scheduling client's next appointment before they leave.", chapter: 20 },
+            { term: "Profit", definition: "Financial gain; difference between revenue and expenses.", chapter: 20 },
+            { term: "Revenue", definition: "Total income generated by business before expenses deducted.", chapter: 20 },
+            { term: "Scheduling", definition: "System for booking and organizing client appointments.", chapter: 20 },
+            
+            // Chapter 21: The Business of Barbering (10 terms)
+            { term: "Business Plan", definition: "Written description of business goals and strategies for achieving them.", chapter: 21 },
+            { term: "Corporation", definition: "Legal entity separate from its owners providing liability protection.", chapter: 21 },
+            { term: "Insurance", definition: "Contract protecting against financial loss from specific risks.", chapter: 21 },
+            { term: "Limited Liability Company (LLC)", definition: "Business structure combining corporation and partnership benefits.", chapter: 21 },
+            { term: "Location", definition: "Physical place where business operates; critical factor for success.", chapter: 21 },
+            { term: "Partnership", definition: "Business owned by two or more people sharing profits and risks.", chapter: 21 },
+            { term: "Sole Proprietorship", definition: "Business owned by one person who receives all profits and assumes all risks.", chapter: 21 },
+            { term: "Startup Costs", definition: "Initial expenses required to open and operate new business.", chapter: 21 },
+            { term: "Target Market", definition: "Specific group of potential customers business aims to serve.", chapter: 21 },
+            { term: "Trade Name", definition: "Name under which business operates; also called DBA (Doing Business As).", chapter: 21 }
+        ];
+
+        let currentCards = [...keyTerms];
+        let currentIndex = 0;
+
+        function init() {
+            document.getElementById('totalCards').textContent = currentCards.length;
+            updateCard();
+        }
+
+        function updateCard() {
+            if (currentCards.length === 0) return;
+            
+            const term = currentCards[currentIndex];
+            document.getElementById('currentCard').textContent = currentIndex + 1;
+            document.getElementById('cardTerm').textContent = term.term;
+            document.getElementById('cardPhonetic').textContent = term.phonetic || '';
+            document.getElementById('cardChapter').textContent = `Chapter ${term.chapter}`;
+            document.getElementById('cardChapterBack').textContent = `Chapter ${term.chapter}`;
+            document.getElementById('cardDefinition').textContent = term.definition;
+            
+            document.getElementById('flashcard').classList.remove('flipped');
+        }
+
+        function flipCard() {
+            document.getElementById('flashcard').classList.toggle('flipped');
+        }
+
+        function nextCard() {
+            currentIndex = (currentIndex + 1) % currentCards.length;
+            updateCard();
+        }
+
+        function previousCard() {
+            currentIndex = (currentIndex - 1 + currentCards.length) % currentCards.length;
+            updateCard();
+        }
+
+        function shuffleCards() {
+            for (let i = currentCards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [currentCards[i], currentCards[j]] = [currentCards[j], currentCards[i]];
+            }
+            currentIndex = 0;
+            updateCard();
+        }
+
+        function filterByChapter(chapter) {
+            document.querySelectorAll('#filterTabs .filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            if (chapter === 'all') {
+                currentCards = [...keyTerms];
+            } else if (chapter === 1) {
+                currentCards = keyTerms.filter(t => t.chapter >= 1 && t.chapter <= 5);
+            } else if (chapter === 6) {
+                currentCards = keyTerms.filter(t => t.chapter >= 6 && t.chapter <= 10);
+            } else if (chapter === 11) {
+                currentCards = keyTerms.filter(t => t.chapter >= 11 && t.chapter <= 15);
+            } else if (chapter === 16) {
+                currentCards = keyTerms.filter(t => t.chapter >= 16 && t.chapter <= 21);
+            }
+
+            currentIndex = 0;
+            document.getElementById('totalCards').textContent = currentCards.length;
+            updateCard();
+        }
+
+        function searchTerms() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            if (!query) {
+                currentCards = [...keyTerms];
+            } else {
+                currentCards = keyTerms.filter(t => 
+                    t.term.toLowerCase().includes(query) || 
+                    t.definition.toLowerCase().includes(query)
+                );
+            }
+            currentIndex = 0;
+            document.getElementById('totalCards').textContent = currentCards.length;
+            updateCard();
+        }
+
+        function switchView(view) {
+            document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (view === 'flashcards') {
+                document.getElementById('flashcardView').style.display = 'block';
+                document.getElementById('listView').style.display = 'none';
+                document.getElementById('filterTabs').style.display = 'flex';
+            } else {
+                document.getElementById('flashcardView').style.display = 'none';
+                document.getElementById('listView').style.display = 'block';
+                document.getElementById('filterTabs').style.display = 'none';
+                renderTermsList();
+            }
+        }
+
+        function renderTermsList() {
+            const container = document.getElementById('termsListContainer');
+            container.innerHTML = currentCards.map(t => `
+                <div style="background: var(--dark-gray); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; border: 1px solid var(--medium-gray);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                        <span style="font-size: 1.25rem; font-weight: 600; color: var(--gold);">${t.term}</span>
+                        <span style="background: rgba(212, 175, 55, 0.1); color: var(--gold); padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem;">Chapter ${t.chapter}</span>
+                    </div>
+                    ${t.phonetic ? `<div style="color: var(--light-gray); font-style: italic; margin-bottom: 0.5rem;">${t.phonetic}</div>` : ''}
+                    <div style="color: var(--white); line-height: 1.7;">${t.definition}</div>
+                </div>
+            `).join('');
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextCard();
+            if (e.key === 'ArrowLeft') previousCard();
+            if (e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                flipCard();
+            }
+        });
+
+        // Update progress bar
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+        });
+
+        // Initialize
+        init();
+    </script>
+</body>
+</html>

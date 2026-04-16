@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 20: Working Behind the Chair | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .chapter-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
+        .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; }
+        .chapter-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
+        .content { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+        .section { margin-bottom: 3rem; }
+        .section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+        .section h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .section p, .section ul { margin-bottom: 1rem; color: #ccc; }
+        .section ul { margin-left: 1.5rem; }
+        .key-point { background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .key-point strong { color: var(--gold); }
+        .study-tools { position: fixed; bottom: 2rem; right: 2rem; display: flex; gap: 1rem; }
+        .tool-btn { background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; }
+        .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; }
+        .nav-chapters { display: flex; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--medium-gray); }
+        .nav-chapters a { color: var(--gold); text-decoration: none; font-weight: 600; }
+
+        .quiz-section { background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
+        .quiz-section h2 { color: var(--gold); margin-bottom: 1.5rem; }
+        .quiz-question { margin-bottom: 1.5rem; }
+        .quiz-question p { font-weight: 600; margin-bottom: 0.75rem; color: var(--white); }
+        .quiz-options label { display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .quiz-options label:hover { background: rgba(212, 175, 55, 0.1); }
+        .quiz-options input[type="radio"] { margin-right: 0.75rem; }
+        .quiz-submit { background: var(--gold); color: var(--dark); border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+        .quiz-result { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: none; }
+        .quiz-result.correct { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; }
+        .quiz-result.incorrect { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <nav><div class="nav-container"><a href="index.html" class="logo">⚡ Barber Study Pro</a><a href="index.html#chapters" class="back-link">← Back</a></div></nav>
+    <header class="chapter-header">
+        <span class="chapter-number">CHAPTER 20</span>
+        <h1>Working Behind the Chair</h1>
+        <p>Teamwork, compensation, retailing, and client building</p>
+    </header>
+    <main class="content">
+        <section class="section">
+            <h2>🎯 Why Study This Chapter?</h2>
+            <ul>
+                <li>Working in a barbershop requires strong teamwork skills</li>
+                <li>Compensation structures vary; understanding them helps you choose right</li>
+                <li>Learn money management while building clientele</li>
+                <li>Increase income through retailing and upselling</li>
+            </ul>
+        </section>
+        <section class="section">
+            <h2>🤝 Being a Good Team Player</h2>
+            <ul>
+                <li>Strive to help others succeed</li>
+                <li>Pitch in with any task (folding towels, answering phones)</li>
+                <li>Share knowledge and learn from others</li>
+                <li>Remain positive; avoid gossip</li>
+                <li>Build relationships</li>
+                <li>Resolve conflicts constructively</li>
+                <li>Be willing to be subordinate when starting</li>
+                <li>Be sincerely loyal to shop, staff, and clients</li>
+            </ul>
+            <div class="key-point"><strong>Mindset Shift:</strong> You are now a professional — accountability and reliability are non-negotiable.</div>
+        </section>
+        <section class="section">
+            <h2>💰 Employment Classifications</h2>
+            <h3>Employee:</h3>
+            <ul>
+                <li>Paid salary, commission, or salary-plus-commission</li>
+                <li>Employer sets hours, may provide benefits</li>
+                <li>Employer withholds taxes; issues W-2</li>
+            </ul>
+            <h3>Independent Contractor:</h3>
+            <ul>
+                <li>Rents chair or works on percentage</li>
+                <li>Responsible for own taxes (1099-MISC)</li>
+                <li>Requires written agreement</li>
+            </ul>
+            <h3>Booth Renter:</h3>
+            <ul>
+                <li>Leases space; operates as small business</li>
+                <li>Handles own clientele, supplies, accounting</li>
+                <li>Pays fixed rent; keeps revenue after expenses</li>
+            </ul>
+        </section>
+        <section class="section">
+            <h2>💵 Wage Structures</h2>
+            <ul>
+                <li><strong>Straight/Hourly Salary</strong> — Fixed income</li>
+                <li><strong>Commission</strong> — Percentage of gross sales (40-70%)</li>
+                <li><strong>Salary-Plus-Commission</strong> — Base + percentage over base</li>
+                <li><strong>Tips</strong> — Must be tracked and reported on taxes</li>
+            </ul>
+        </section>
+        <section class="section">
+            <h2>💼 Money Management</h2>
+            <ul>
+                <li>Honor all loans and debts</li>
+                <li>Report all income (paycheck, tips, commissions)</li>
+                <li>Create personal budget tracking expenses vs income</li>
+                <li>Give yourself a raise by: spending less, working more hours, increasing prices, retailing more</li>
+            </ul>
+        </section>
+        <section class="section">
+            <h2>🛒 Retailing & Client Building</h2>
+            <ul>
+                <li><strong>Upselling</strong> — Recommend additional services</li>
+                <li><strong>Retailing</strong> — Sell take-home products</li>
+                <li>Know features/benefits of products</li>
+                <li>Focus on client needs, not hard selling</li>
+                <li>Send birthday cards with special offers</li>
+                <li>Use social media professionally</li>
+                <li>Ask for referrals</li>
+            </ul>
+        </section>
+        <section class="section">
+            <h2>📝 Chapter 20 Key Takeaways</h2>
+            <div class="key-point">
+                <ul style="margin-left: 1rem;">
+                    <li>Transition demands <strong>reliability, teamwork, client-first mindset</strong></li>
+                    <li>Understand <strong>compensation types</strong> (employee, contractor, booth renter)</li>
+                    <li><strong>Manage money</strong> through budgeting and income tracking</li>
+                    <li>Master <strong>retailing and upselling</strong> by focusing on client needs</li>
+                    <li>Build clientele through <strong>excellent service and referrals</strong></li>
+                    <li>Success comes from <strong>professionalism and continuous learning</strong></li>
+                </ul>
+            </div>
+        </section>
+        <section class="quiz-section">
+            <h2>📝 Mini Review Quiz</h2>
+            <div class="quiz-question">
+                <p>1. What is the key to successful retailing?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q1" value="a"> Pushing products on every client</label>
+                    <label><input type="radio" name="q1" value="b"> Focusing on client needs and solving problems</label>
+                    <label><input type="radio" name="q1" value="c"> Offering discounts on everything</label>
+                    <label><input type="radio" name="q1" value="d"> Only selling expensive items</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>2. What is the best way to build clientele?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q2" value="a"> Advertising on social media only</label>
+                    <label><input type="radio" name="q2" value="b"> Excellent service and referrals</label>
+                    <label><input type="radio" name="q2" value="c"> Offering the lowest prices</label>
+                    <label><input type="radio" name="q2" value="d"> Working long hours</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>3. What should you track for financial success?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q3" value="a"> Only your daily tips</label>
+                    <label><input type="radio" name="q3" value="b"> Income and expenses</label>
+                    <label><input type="radio" name="q3" value="c"> Number of clients only</label>
+                    <label><input type="radio" name="q3" value="d"> Your social media followers</label>
+                </div>
+            </div>
+            <button class="quiz-submit" onclick="checkQuiz()">Check Answers</button>
+            <div class="quiz-result" id="quiz-result"></div>
+        </section>
+
+        <div class="nav-chapters"><a href="chapter-19.html">← Chapter 19</a><a href="chapter-21.html">Chapter 21 →</a></div>
+    </main>
+    <div class="study-tools">
+        <button class="tool-btn" onclick="openQuiz()">🎴 Flashcards</button>
+        <button class="tool-btn" onclick="openQuiz()">❓ Quiz</button>
+    </div>
+    <script>
+        function checkQuiz() {
+            const answers = { q1: 'b', q2: 'b', q3: 'b' };
+            let score = 0;
+            let total = 3;
+            for (let q in answers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (selected && selected.value === answers[q]) score++;
+            }
+            const resultDiv = document.getElementById('quiz-result');
+            resultDiv.style.display = 'block';
+            if (score === total) {
+                resultDiv.className = 'quiz-result correct';
+                resultDiv.innerHTML = `<strong>Perfect! 🎉</strong> You got ${score}/${total} correct!`;
+            } else {
+                resultDiv.className = 'quiz-result incorrect';
+                resultDiv.innerHTML = `<strong>Keep studying!</strong> You got ${score}/${total} correct.`;
+            }
+        }
+
+        function openQuiz() {
+            document.querySelector('.quiz-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+            localStorage.setItem('chapter-20-progress', Math.round(scrolled));
+        });
+    </script>
+</body>
+</html>
