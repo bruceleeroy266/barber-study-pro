@@ -383,13 +383,13 @@
 
     <!-- Email Capture -->
     <section class="email-capture">
-        <h2>🔒 Lock In Your Free Access</h2>
-        <p>Enter your email to get notified before we switch to premium pricing. Free users keep access forever!</p>
+        <h2>Lock In Your Free Access</h2>
+        <p>Enter your email to get notified before we switch to premium pricing. Early users keep free access forever!</p>
         <form class="email-form" onsubmit="event.preventDefault(); alert('Thanks! We\'ll notify you before we go premium.');">
             <input type="email" placeholder="Enter your email address" required>
             <button type="submit">Get Free Access →</button>
         </form>
-        <p style="font-size: 0.875rem; margin-top: 1rem; opacity: 0.8;">No spam. Unsubscribe anytime. We respect your privacy.</p>
+        <p style="font-size: 0.875rem; margin-top: 1rem; opacity: 0.8;">No spam. Unsubscribe anytime. <a href="privacy.html" style="color: var(--gold);">Privacy Policy</a></p>
     </section>
 
     <!-- About -->
@@ -438,10 +438,26 @@
         <a href="chapters.html" class="btn-primary">Start Studying Free →</a>
     </section>
 
+    <!-- Legal Disclaimer -->
+    <section style="background: var(--dark-gray); padding: 2rem; text-align: center; border-top: 1px solid var(--medium-gray);">
+        <p style="color: var(--light-gray); font-size: 0.875rem; max-width: 800px; margin: 0 auto;">
+            <strong>Disclaimer:</strong> Barber Study Pro is an independent educational resource and is not affiliated with, endorsed by, or connected to the Oklahoma State Board of Cosmetology and Barbering, Prov, NIC, or any official testing agency. We do not guarantee passing the state board exam. This material is for educational purposes only.
+        </p>
+    </section>
+
     <!-- Footer -->
-    <footer>
-        <p>© 2026 Barber Study Pro. Built with 🥋 by Gabe, a Navy vet and barber student.</p>
-        <p style="margin-top: 0.5rem;">Free for a limited time. Study hard, pass your exam, build your career.</p>
+    <footer style="background: var(--dark); padding: 3rem 2rem; text-align: center; border-top: 1px solid var(--medium-gray);">
+        <p style="font-size: 1.25rem; font-weight: 800; color: var(--gold); margin-bottom: 1rem;">Barber Study Pro</p>
+        <p style="color: var(--light-gray); margin-bottom: 1.5rem;">Built by a United States Military Veteran</p>
+        
+        <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap;">
+            <a href="terms.html" style="color: var(--light-gray); text-decoration: none;">Terms of Service</a>
+            <a href="privacy.html" style="color: var(--light-gray); text-decoration: none;">Privacy Policy</a>
+            <a href="admin-login.html" style="color: var(--light-gray); text-decoration: none;">Instructor Login</a>
+        </div>
+        
+        <p style="color: var(--light-gray); font-size: 0.875rem;">© 2026 Barber Study Pro. All Rights Reserved.</p>
+        <p style="color: var(--light-gray); font-size: 0.75rem; margin-top: 0.5rem;">Not affiliated with any official state board or testing agency.</p>
     </footer>
 
     <script>

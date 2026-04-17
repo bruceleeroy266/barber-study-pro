@@ -58,9 +58,11 @@
         .term { background: var(--medium-gray); padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 8px; }
         .term strong { color: var(--gold); display: block; margin-bottom: 0.25rem; }
 
-        .study-tools { position: fixed; bottom: 2rem; right: 2rem; display: flex; gap: 1rem; z-index: 100; }
-        .tool-btn { background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3); transition: all 0.3s; text-decoration: none; }
+        .study-tools { position: fixed; bottom: 2rem; right: 2rem; display: flex; gap: 1rem; z-index: 100; flex-direction: column; }
+        .tool-btn { background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3); transition: all 0.3s; text-decoration: none; font-size: 0.9rem; }
         .tool-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 30px rgba(212, 175, 55, 0.4); }
+        .tool-btn.secondary { background: var(--dark-gray); color: var(--gold); border: 2px solid var(--gold); }
+        .tool-btn.secondary:hover { background: rgba(212, 175, 55, 0.1); }
         
         /* Audio Player */
         .audio-player { position: fixed; bottom: 0; left: 0; right: 0; background: var(--dark-gray); border-top: 2px solid var(--gold); padding: 1rem 2rem; z-index: 1000; display: none; align-items: center; gap: 1rem; box-shadow: 0 -4px 20px rgba(0,0,0,0.5); }
@@ -200,7 +202,7 @@
         </section>
 
         <section class="section">
-            <h2>⚡ Influence of Religion, Politics, and Culture</h2>
+            <h2>Influence of Religion, Politics, and Culture</h2>
             <p>Hair has always carried deep meaning:</p>
             
             <div class="term">
@@ -232,7 +234,7 @@
         </section>
 
         <section class="section">
-            <h2>⚕️ Rise of the Barber-Surgeons</h2>
+            <h2>Rise of the Barber-Surgeons</h2>
             <p>During the Middle Ages, barbers provided grooming + medical services:</p>
             <ul>
                 <li>Bloodletting</li>
@@ -880,8 +882,15 @@
     speechSynthesis.onvoiceschanged = () => { speechSynthesis.getVoices(); };
 </script>
 
+<!-- Study Tools -->
+<div class="study-tools">
+    <a href="chapter-01-flashcards.html" class="tool-btn secondary">Flashcards</a>
+    <a href="chapter-01-quiz.html" class="tool-btn secondary">Quiz</a>
+    <a href="chapter-02.html" class="tool-btn">Next Chapter →</a>
+</div>
+
 <!-- TTS Toggle Button -->
-<button class="tts-toggle" id="ttsToggle" onclick="toggleTTS()">🔊 Listen to Chapter</button>
+<button class="tts-toggle" id="ttsToggle" onclick="toggleTTS()">Listen to Chapter</button>
 
 <!-- Audio Player -->
 <div class="audio-player" id="audioPlayer">
