@@ -30,8 +30,9 @@
         .quiz-container { max-width: 800px; margin: 0 auto; padding: 2rem; display: none; }
         .timer { font-size: 1.25rem; font-weight: 700; color: var(--gold); position: fixed; top: 80px; right: 2rem; z-index: 998; }
         .question { background: var(--dark-gray); border-radius: 12px; padding: 2rem; margin: 6rem 0 1.5rem; border: 1px solid var(--medium-gray); }
-        .option { background: var(--medium-gray); padding: 1rem; border-radius: 8px; cursor: pointer; margin-bottom: 0.75rem; }
-        .option:hover { border: 1px solid var(--gold); }
+        .option { background: var(--medium-gray); padding: 1rem; border-radius: 8px; cursor: pointer; margin-bottom: 0.75rem; border: 2px solid transparent; transition: all 0.3s; }
+        .option:hover { border-color: var(--gold); }
+        .option.selected { background: rgba(212, 175, 55, 0.2); border-color: var(--gold); }
         .results { display: none; max-width: 800px; margin: 0 auto; padding: 7rem 2rem 3rem; text-align: center; }
         .score-display { font-size: 4rem; font-weight: 800; color: var(--gold); }
         .pass-status { padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 700; margin: 1rem 0; display: inline-block; }
@@ -102,19 +103,29 @@
         let currentQ = 0;
         let score = 0;
         let selectedQuestions = [];
+        let userAnswers = [];
         let timeLeft = 7200;
         let timer;
 
         function checkAuth() {
-            if(localStorage.getItem('bsp_session')) {
-                document.getElementById('authGate').style.display='none';
-                document.getElementById('protectedContent').classList.add('show');
+            const sessionData = localStorage.getItem('bsp_session');
+            if(sessionData) {
+                try {
+                    const session = JSON.parse(sessionData);
+                    if(session.email) {
+                        document.getElementById('authGate').style.display='none';
+                        document.getElementById('protectedContent').classList.add('show');
+                    }
+                } catch(e) {
+                    console.error('Invalid session data');
+                }
             }
         }
         checkAuth();
 
         function startExam() {
             selectedQuestions = questionBank.sort(()=>0.5-Math.random()).slice(0,Math.min(150,questionBank.length));
+            userAnswers = new Array(selectedQuestions.length).fill(null);
             document.getElementById('startScreen').style.display='none';
             document.getElementById('quizContainer').style.display='block';
             showQuestion();
@@ -129,11 +140,18 @@
         function showQuestion() {
             const q = selectedQuestions[currentQ];
             document.getElementById('qText').textContent = `Question ${currentQ+1}: ${q.q}`;
-            document.getElementById('qOptions').innerHTML = q.o.map((opt,i)=>`<div class="option" onclick="selectAnswer(${i})">${opt}</div>`).join('');
+            document.getElementById('qOptions').innerHTML = q.o.map((opt,i)=>{
+                const selected = userAnswers[currentQ] === i;
+                const correct = i === q.a;
+                let className = 'option';
+                if (selected) className += ' selected';
+                return `<div class="${className}" onclick="selectAnswer(${i})" data-idx="${i}">${opt}</div>`;
+            }).join('');
         }
 
         function selectAnswer(idx) {
-            if(idx===selectedQuestions[currentQ].a) score++;
+            userAnswers[currentQ] = idx;
+            showQuestion();
         }
 
         function nextQuestion() {
@@ -144,6 +162,18 @@
 
         function finishExam() {
             clearInterval(timer);
+            score = 0;
+            let reviewHTML = '<h3>Review Your Answers</h3>';
+            selectedQuestions.forEach((q, i) => {
+                const userAnswer = userAnswers[i];
+                const correct = userAnswer === q.a;
+                if (correct) score++;
+                reviewHTML += `<div style="margin:1rem 0;padding:1rem;background:${correct?'rgba(34,197,94,0.1)':'rgba(239,68,68,0.1)'};border-radius:8px;">
+                    <strong>Question ${i+1}:</strong> ${q.q}<br>
+                    <span style="color:${correct?'#22c55e':'#ef4444'}">Your answer: ${userAnswer !== null ? q.o[userAnswer] : 'Not answered'}</span><br>
+                    ${!correct ? `<span style="color:#22c55e">Correct answer: ${q.o[q.a]}</span>` : ''}
+                </div>`;
+            });
             document.getElementById('quizContainer').style.display='none';
             document.getElementById('resultsBox').style.display='block';
             const pct = Math.round((score/selectedQuestions.length)*100);
@@ -151,6 +181,7 @@
             const pass = pct>=70;
             document.getElementById('passStatus').textContent = pass?'PASSED':'FAILED';
             document.getElementById('passStatus').className = 'pass-status '+(pass?'passed':'failed');
+            document.getElementById('resultsBox').innerHTML += reviewHTML;
         }
     </script>
 </body>

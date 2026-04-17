@@ -986,19 +986,27 @@
 <script>
     // Check if user is logged in
     function checkAuth() {
-        const session = localStorage.getItem('bsp_session');
+        const sessionData = localStorage.getItem('bsp_session');
         const authGate = document.getElementById('authGate');
         const protectedContent = document.getElementById('protectedContent');
         
-        if (session) {
-            // User is logged in, show content
-            authGate.style.display = 'none';
-            protectedContent.classList.add('show');
-        } else {
-            // User is not logged in, show auth gate
-            authGate.style.display = 'flex';
-            protectedContent.classList.remove('show');
+        if (sessionData) {
+            try {
+                const session = JSON.parse(sessionData);
+                if (session.email) {
+                    // User is logged in, show content
+                    authGate.style.display = 'none';
+                    protectedContent.classList.add('show');
+                    return;
+                }
+            } catch(e) {
+                console.error('Invalid session data');
+            }
         }
+        
+        // User is not logged in, show auth gate
+        authGate.style.display = 'flex';
+        protectedContent.classList.remove('show');
     }
     
     // Run auth check on page load

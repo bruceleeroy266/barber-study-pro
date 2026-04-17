@@ -247,7 +247,7 @@
         // Check if logged in
         const session = JSON.parse(localStorage.getItem('bsp_session') || sessionStorage.getItem('bsp_session') || '{}');
         
-        if (!session.isLoggedIn) {
+        if (!session.email) {
             window.location.href = 'login.html';
         }
         
@@ -434,16 +434,25 @@
     <!-- Auth Check Script -->
     <script>
         function checkAuth() {
-            const session = localStorage.getItem('bsp_session');
+            const sessionData = localStorage.getItem('bsp_session');
             const authGate = document.getElementById('authGate');
             const protectedContent = document.getElementById('protectedContent');
-            if (session) {
-                authGate.style.display = 'none';
-                protectedContent.classList.add('show');
-            } else {
-                authGate.style.display = 'flex';
-                protectedContent.classList.remove('show');
+            
+            if (sessionData) {
+                try {
+                    const session = JSON.parse(sessionData);
+                    if (session.email) {
+                        authGate.style.display = 'none';
+                        protectedContent.classList.add('show');
+                        return;
+                    }
+                } catch(e) {
+                    console.error('Invalid session data');
+                }
             }
+            
+            authGate.style.display = 'flex';
+            protectedContent.classList.remove('show');
         }
         checkAuth();
     </script>

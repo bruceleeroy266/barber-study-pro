@@ -195,10 +195,14 @@
                     isLoggedIn: true
                 };
                 
+                // Always store in localStorage for persistence
+                localStorage.setItem('bsp_session', JSON.stringify(sessionData));
+                
+                // Also store login credentials if remember me is checked
                 if (rememberMe) {
-                    localStorage.setItem('bsp_session', JSON.stringify(sessionData));
+                    localStorage.setItem('bsp_remember_email', email);
                 } else {
-                    sessionStorage.setItem('bsp_session', JSON.stringify(sessionData));
+                    localStorage.removeItem('bsp_remember_email');
                 }
                 
                 showSuccess('Login successful! Redirecting...');
@@ -271,9 +275,16 @@
         }
         
         // Check if already logged in
-        const session = JSON.parse(localStorage.getItem('bsp_session') || sessionStorage.getItem('bsp_session') || '{}');
-        if (session.isLoggedIn) {
+        const session = JSON.parse(localStorage.getItem('bsp_session') || '{}');
+        if (session.email) {
             window.location.href = 'student-dashboard.html';
+        }
+        
+        // Auto-fill remembered email
+        const rememberedEmail = localStorage.getItem('bsp_remember_email');
+        if (rememberedEmail) {
+            document.getElementById('loginEmail').value = rememberedEmail;
+            document.getElementById('rememberMe').checked = true;
         }
     </script>
 </body>
