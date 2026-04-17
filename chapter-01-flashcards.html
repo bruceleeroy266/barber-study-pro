@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcards - Chapter 1: History of Barbering | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; min-height: 100vh; }
+        
+        /* Navigation */
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .nav-links { display: flex; gap: 1.5rem; }
+        .nav-links a { color: var(--white); text-decoration: none; font-weight: 500; font-size: 0.9rem; }
+        .nav-links a:hover { color: var(--gold); }
+        
+        /* Header */
+        .flashcard-header { padding: 7rem 2rem 2rem; text-align: center; }
+        .flashcard-header h1 { font-size: 1.75rem; margin-bottom: 0.5rem; }
+        .flashcard-header p { color: var(--light-gray); }
+        
+        /* Progress */
+        .progress-bar { max-width: 600px; margin: 0 auto 2rem; padding: 0 2rem; }
+        .progress-track { background: var(--medium-gray); height: 8px; border-radius: 4px; overflow: hidden; }
+        .progress-fill { background: var(--gold); height: 100%; width: 0%; transition: width 0.3s; }
+        .progress-text { display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.875rem; color: var(--light-gray); }
+        
+        /* Flashcard Container */
+        .flashcard-container { max-width: 600px; margin: 0 auto; padding: 0 2rem 2rem; perspective: 1000px; }
+        
+        /* Flashcard */
+        .flashcard { background: var(--dark-gray); border: 2px solid var(--medium-gray); border-radius: 16px; min-height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2rem; cursor: pointer; transition: transform 0.3s, border-color 0.3s; position: relative; }
+        .flashcard:hover { border-color: var(--gold); }
+        .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+        
+        .flashcard-inner { width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+        
+        .flashcard-front, .flashcard-back { backface-visibility: hidden; position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2rem; }
+        
+        .flashcard-back { transform: rotateY(180deg); }
+        
+        .card-number { position: absolute; top: 1rem; right: 1rem; background: var(--medium-gray); padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; color: var(--light-gray); }
+        
+        .card-question { font-size: 1.25rem; font-weight: 600; text-align: center; margin-bottom: 1rem; }
+        .card-answer { font-size: 1.125rem; text-align: center; color: var(--gold); }
+        
+        .flip-hint { position: absolute; bottom: 1rem; font-size: 0.875rem; color: var(--light-gray); }
+        
+        /* Controls */
+        .controls { max-width: 600px; margin: 0 auto; padding: 0 2rem 2rem; display: flex; justify-content: center; gap: 1rem; }
+        .control-btn { background: var(--medium-gray); border: none; color: var(--white); padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
+        .control-btn:hover { background: var(--gold); color: var(--dark); }
+        .control-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        /* Keyboard shortcuts hint */
+        .shortcuts { text-align: center; padding: 1rem; color: var(--light-gray); font-size: 0.875rem; }
+        .shortcuts kbd { background: var(--medium-gray); padding: 0.25rem 0.5rem; border-radius: 4px; font-family: inherit; }
+        
+        /* Completion screen */
+        .completion { display: none; text-align: center; padding: 4rem 2rem; }
+        .completion.show { display: block; }
+        .completion h2 { font-size: 2rem; margin-bottom: 1rem; color: var(--gold); }
+        .completion p { margin-bottom: 2rem; color: var(--light-gray); }
+        .completion-btn { display: inline-block; background: var(--gold); color: var(--dark); padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; margin: 0.5rem; }
+
+        /* Auth Gate Styles */
+        .auth-gate { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--dark); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+        .auth-gate-content { text-align: center; max-width: 500px; }
+        .auth-gate h2 { font-size: 2rem; margin-bottom: 1rem; }
+        .auth-gate p { color: var(--light-gray); margin-bottom: 2rem; }
+        .auth-gate-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .auth-gate-btn { padding: 1rem 2rem; border-radius: 8px; font-weight: 600; text-decoration: none; transition: all 0.3s; }
+        .auth-gate-btn.primary { background: var(--gold); color: var(--dark); }
+        .auth-gate-btn.secondary { background: var(--medium-gray); color: var(--white); border: 1px solid var(--medium-gray); }
+        .protected-content { display: none; }
+        .protected-content.show { display: block; }
+    </style>
+</head>
+<body>
+    <!-- Auth Gate - Shows if not logged in -->
+    <div class="auth-gate" id="authGate">
+        <div class="auth-gate-content">
+            <h2>🔒 Members Only</h2>
+            <p>This study content is exclusively for registered members. Create a free account to access all 21 chapters, quizzes, flashcards, and the practice exam.</p>
+            <div class="auth-gate-buttons">
+                <a href="login.html" class="auth-gate-btn primary">Create Free Account</a>
+                <a href="index.html" class="auth-gate-btn secondary">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Protected Content - Only shows if logged in -->
+    <div class="protected-content" id="protectedContent">
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">Barber Study Pro</a>
+            <div class="nav-links">
+                <a href="chapter-01.html">← Back to Chapter</a>
+                <a href="chapter-01-quiz.html">Take Quiz</a>
+                <a href="chapters.html">All Chapters</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="flashcard-header">
+        <h1>Chapter 1: History of Barbering</h1>
+        <p>Flip the cards to test your knowledge</p>
+    </header>
+
+    <div class="progress-bar">
+        <div class="progress-track">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-text">
+            <span>Progress</span>
+            <span id="progress-text">1 / 20</span>
+        </div>
+    </div>
+
+    <div class="flashcard-container" id="flashcard-container">
+        <div class="flashcard" id="flashcard" onclick="flipCard()">
+            <span class="card-number" id="card-number">1 / 20</span>
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <div class="card-question" id="card-question">Loading...</div>
+                    <span class="flip-hint">Click to flip ↻</span>
+                </div>
+                <div class="flashcard-back">
+                    <div class="card-answer" id="card-answer">Loading...</div>
+                    <span class="flip-hint">Click to flip back ↻</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="completion" id="completion">
+        <h2>🎉 Great Job!</h2>
+        <p>You've reviewed all 20 flashcards for Chapter 1</p>
+        <a href="chapter-01-quiz.html" class="completion-btn">Take the Quiz →</a>
+        <a href="chapter-02-flashcards.html" class="completion-btn" style="background: var(--medium-gray); color: var(--white);">Next Chapter →</a>
+    </div>
+
+    <div class="controls" id="controls">
+        <button class="control-btn" onclick="previousCard()" id="prev-btn">← Previous</button>
+        <button class="control-btn" onclick="nextCard()" id="next-btn">Next →</button>
+    </div>
+
+    <div class="shortcuts">
+        <kbd>Space</kbd> or <kbd>Click</kbd> to flip • <kbd>←</kbd> <kbd>→</kbd> to navigate
+    </div>
+
+    <script>
+        // Flashcard data for Chapter 1
+        const flashcards = [
+            { question: "What is the origin of the word 'barber'?", answer: "From the Latin word 'barba' meaning beard" },
+            { question: "When did barbering begin?", answer: "Around 3500 BC in Egypt" },
+            { question: "What were early barbers also known as?", answer: "Barber-surgeons" },
+            { question: "What services did barber-surgeons provide?", answer: "Haircuts, shaves, bloodletting, dentistry, and surgery" },
+            { question: "What is the barber pole's origin?", answer: "Represents bloodletting - red for blood, white for bandages, blue for veins" },
+            { question: "When did the barber-surgeon profession split?", answer: "In the 18th century (1700s)" },
+            { question: "What organization was formed in 1893?", answer: "The Barber's Protective Union" },
+            { question: "When did barbering become a licensed profession in the US?", answer: "In the early 1900s (around 1900-1920)" },
+            { question: "What ancient civilization practiced barbering?", answer: "Egyptians, Greeks, and Romans" },
+            { question: "What tools did ancient barbers use?", answer: "Razors made of bronze or obsidian" },
+            { question: "What was the barber's role in ancient Rome?", answer: "Important social figures who groomed wealthy citizens" },
+            { question: "When did the straight razor become popular?", answer: "In the 1700s-1800s" },
+            { question: "What is tonsorial art?", answer: "The art of cutting, styling, and grooming hair" },
+            { question: "What year was the first electric clipper invented?", answer: "1921 by Leo J. Wahl" },
+            { question: "What was the Golden Age of Barbering?", answer: "The 1880s-1940s" },
+            { question: "What caused the decline of barbershops in the 1960s-70s?", answer: "The popularity of long hair and unisex salons" },
+            { question: "When did barbering see a resurgence?", answer: "In the 1990s-2000s" },
+            { question: "What is a tonsor?", answer: "A Latin term for barber" },
+            { question: "What did barbers use before mirrors?", answer: "Polished metal or water reflections" },
+            { question: "What is the oldest barber school in the US?", answer: "Moler Barber College, founded in 1893" }
+        ];
+
+        let currentCard = 0;
+        let isFlipped = false;
+
+        function loadCard() {
+            const card = flashcards[currentCard];
+            document.getElementById('card-question').textContent = card.question;
+            document.getElementById('card-answer').textContent = card.answer;
+            document.getElementById('card-number').textContent = `${currentCard + 1} / ${flashcards.length}`;
+            document.getElementById('progress-text').textContent = `${currentCard + 1} / ${flashcards.length}`;
+            document.getElementById('progress-fill').style.width = `${((currentCard + 1) / flashcards.length) * 100}%`;
+            
+            // Reset flip
+            isFlipped = false;
+            document.getElementById('flashcard').classList.remove('flipped');
+            
+            // Update buttons
+            document.getElementById('prev-btn').disabled = currentCard === 0;
+            document.getElementById('next-btn').textContent = currentCard === flashcards.length - 1 ? 'Finish ✓' : 'Next →';
+        }
+
+        function flipCard() {
+            isFlipped = !isFlipped;
+            document.getElementById('flashcard').classList.toggle('flipped', isFlipped);
+        }
+
+        function nextCard() {
+            if (currentCard < flashcards.length - 1) {
+                currentCard++;
+                loadCard();
+            } else {
+                showCompletion();
+            }
+        }
+
+        function previousCard() {
+            if (currentCard > 0) {
+                currentCard--;
+                loadCard();
+            }
+        }
+
+        function showCompletion() {
+            document.getElementById('flashcard-container').style.display = 'none';
+            document.getElementById('controls').style.display = 'none';
+            document.querySelector('.progress-bar').style.display = 'none';
+            document.getElementById('completion').classList.add('show');
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === ' ') {
+                e.preventDefault();
+                flipCard();
+            } else if (e.key === 'ArrowRight') {
+                nextCard();
+            } else if (e.key === 'ArrowLeft') {
+                previousCard();
+            }
+        });
+
+        // Load first card
+        loadCard();
+    </script>
+
+    <!-- Content Protection -->
+    <script>
+        document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
+        document.addEventListener('copy', e => { e.preventDefault(); return false; });
+        document.addEventListener('cut', e => { e.preventDefault(); return false; });
+        document.addEventListener('selectstart', e => { e.preventDefault(); return false; });
+    </script>
+    </div><!-- End protected content -->
+
+    <!-- Auth Check Script -->
+    <script>
+        function checkAuth() {
+            const session = localStorage.getItem('bsp_session');
+            const authGate = document.getElementById('authGate');
+            const protectedContent = document.getElementById('protectedContent');
+            if (session) {
+                authGate.style.display = 'none';
+                protectedContent.classList.add('show');
+            } else {
+                authGate.style.display = 'flex';
+                protectedContent.classList.remove('show');
+            }
+        }
+        checkAuth();
+    </script>
+</body>
+</html>

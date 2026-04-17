@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 1: History of Barbering | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F4E4A6;
+            --dark: #0a0a0a;
+            --dark-gray: #1a1a1a;
+            --medium-gray: #2a2a2a;
+            --light-gray: #888;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+
+        /* Auth Gate Styles */
+        .auth-gate { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--dark); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+        .auth-gate-content { text-align: center; max-width: 500px; }
+        .auth-gate h2 { font-size: 2rem; margin-bottom: 1rem; }
+        .auth-gate p { color: var(--light-gray); margin-bottom: 2rem; }
+        .auth-gate-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .auth-gate-btn { padding: 1rem 2rem; border-radius: 8px; font-weight: 600; text-decoration: none; transition: all 0.3s; }
+        .auth-gate-btn.primary { background: var(--gold); color: var(--dark); }
+        .auth-gate-btn.secondary { background: var(--medium-gray); color: var(--white); border: 1px solid var(--medium-gray); }
+        .auth-gate-btn:hover { transform: translateY(-2px); }
+        .protected-content { display: none; }
+        .protected-content.show { display: block; }
+
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .back-link:hover { color: var(--gold); }
+
+        .chapter-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
+        .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; }
+        .chapter-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
+        .chapter-header p { color: var(--light-gray); max-width: 600px; margin: 0 auto; }
+
+        .content { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+
+        .section { margin-bottom: 3rem; }
+        .section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+        .section h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .section p { margin-bottom: 1rem; color: #ccc; }
+        .section ul { margin-left: 1.5rem; color: #ccc; margin-bottom: 1rem; }
+        .section ul li { margin-bottom: 0.5rem; }
+
+        .key-point { background: rgba(212, 175, 55, 0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .key-point strong { color: var(--gold); }
+
+        .term { background: var(--medium-gray); padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 8px; }
+        .term strong { color: var(--gold); display: block; margin-bottom: 0.25rem; }
+
+        .study-tools { position: fixed; bottom: 2rem; right: 2rem; display: flex; gap: 1rem; z-index: 100; }
+        .tool-btn { background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3); transition: all 0.3s; text-decoration: none; }
+        .tool-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 30px rgba(212, 175, 55, 0.4); }
+        
+        /* Audio Player */
+        .audio-player { position: fixed; bottom: 0; left: 0; right: 0; background: var(--dark-gray); border-top: 2px solid var(--gold); padding: 1rem 2rem; z-index: 1000; display: none; align-items: center; gap: 1rem; box-shadow: 0 -4px 20px rgba(0,0,0,0.5); }
+        .audio-player.active { display: flex; }
+        .audio-controls { display: flex; align-items: center; gap: 1rem; }
+        .audio-btn { background: var(--gold); color: var(--dark); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+        .audio-btn:hover { background: #e5c04a; transform: scale(1.1); }
+        .audio-progress { flex: 1; height: 6px; background: var(--medium-gray); border-radius: 3px; cursor: pointer; position: relative; }
+        .audio-progress-fill { height: 100%; background: var(--gold); border-radius: 3px; width: 0%; transition: width 0.1s; }
+        .audio-info { color: var(--light-gray); font-size: 0.875rem; min-width: 120px; }
+        .audio-close { background: none; border: none; color: var(--light-gray); font-size: 1.5rem; cursor: pointer; margin-left: auto; }
+        .audio-close:hover { color: var(--gold); }
+        .tts-toggle { position: fixed; bottom: 2rem; left: 2rem; background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3); transition: all 0.3s; z-index: 100; }
+        .tts-toggle:hover { transform: translateY(-2px); box-shadow: 0 6px 30px rgba(212, 175, 55, 0.4); }
+        .tts-toggle.playing { background: #22c55e; }
+
+        .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.3s; }
+
+        .nav-chapters { display: flex; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--medium-gray); }
+        .nav-chapters a { color: var(--gold); text-decoration: none; font-weight: 600; }
+        .nav-chapters a:hover { text-decoration: underline; }
+
+        .quiz-section { background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
+        .quiz-section h2 { color: var(--gold); margin-bottom: 1.5rem; }
+        .quiz-question { margin-bottom: 1.5rem; }
+        .quiz-question p { font-weight: 600; margin-bottom: 0.75rem; color: var(--white); }
+        .quiz-options label { display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .quiz-options label:hover { background: rgba(212, 175, 55, 0.1); }
+        .quiz-options input[type="radio"] { margin-right: 0.75rem; }
+        .quiz-submit { background: var(--gold); color: var(--dark); border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+        .quiz-result { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: none; }
+        .quiz-result.correct { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; }
+        .quiz-result.incorrect { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+
+        @media (max-width: 768px) {
+            .study-tools { bottom: 1rem; right: 1rem; left: 1rem; justify-content: center; }
+            .content { padding: 2rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Auth Gate - Shows if not logged in -->
+    <div class="auth-gate" id="authGate">
+        <div class="auth-gate-content">
+            <h2>Members Only</h2>
+            <p>This study content is exclusively for registered members. Create a free account to access all 21 chapters, quizzes, flashcards, and the practice exam.</p>
+            <div class="auth-gate-buttons">
+                <a href="login.html" class="auth-gate-btn primary">Create Free Account</a>
+                <a href="index.html" class="auth-gate-btn secondary">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Protected Content - Only shows if logged in -->
+    <div class="protected-content" id="protectedContent">
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">⚡ Barber Study Pro</a>
+            <a href="index.html#chapters" class="back-link">← Back to Chapters</a>
+        </div>
+    </nav>
+
+    <header class="chapter-header">
+        <span class="chapter-number">CHAPTER 1</span>
+        <h1>History of Barbering</h1>
+        <p>From ancient civilizations to modern professional standards</p>
+    </header>
+
+    <main class="content">
+        <section class="section">
+            <h2>🎯 Why Study Barbering History?</h2>
+            <p>Barbering is one of the oldest documented professions in the world. Understanding its history helps you:</p>
+            <ul>
+                <li>Appreciate its prominent role across cultures</li>
+                <li>Predict future trends</li>
+                <li>Understand modern organizations, regulations, and expectations</li>
+                <li>Connect with the deep traditions of the craft</li>
+            </ul>
+            
+            <div class="key-point">
+                <strong>Key Point:</strong> As civilization advanced, barbering evolved from a tribal/cultural necessity into a professional art form.
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🏛️ Ancient Cultures & Early Practices</h2>
+            <p>Haircutting and hairstyling dates back to the glacial age using simple tools:</p>
+            <ul>
+                <li>Sharpened flints</li>
+                <li>Oyster shells</li>
+                <li>Bone</li>
+                <li>Animal sinew</li>
+            </ul>
+
+            <h3>Egyptians (First to Cultivate Beauty Extravagantly)</h3>
+            <ul>
+                <li>Used combs, brushes, mirrors, cosmetics, scissors, razors (copper/bronze)</li>
+                <li>High-ranking men and women shaved heads for wigs and parasite prevention</li>
+                <li>Priests shaved entire bodies daily for purity before entering temples</li>
+                <li>Barbers were called <strong>Meryma'at</strong> and held high esteem</li>
+            </ul>
+
+            <h3>Other Ancient Cultures</h3>
+            <ul>
+                <li>Many linked body, mind, and spirit — hair had spiritual significance</li>
+                <li>Good and bad spirits entered/exited through hair</li>
+                <li>Tribal barbers often served as medicine men, shamans, or priests</li>
+                <li>African cultures: intricate carved combs, beads, clay, colored bands, braiding (status symbols)</li>
+                <li>Masai warriors: specific braiding patterns denoting status</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>🪒 The Beard and Shaving</h2>
+            <p>Shaving predates written history:</p>
+            <ul>
+                <li><strong>Upper Paleolithic (40,000–10,000 BC):</strong> Early stone razors/scrapers used for hair removal and animal skinning</li>
+                <li><strong>Neolithic period (8000–5000 BC):</strong> Evidence of clean-shaven men</li>
+                <li><strong>Egypt (~7000 BC):</strong> Flint-bladed razors; by 4000 BC, tweezers used</li>
+                <li><strong>Mesopotamians/Sumerians:</strong> Obsidian blades for shaving</li>
+                <li><strong>Greeks (~1000 BC):</strong> Visited local barbers</li>
+            </ul>
+
+            <h3>Beard Symbolism</h3>
+            <ul>
+                <li>Often symbolized wisdom, strength, manhood, or religious devotion</li>
+                <li>Still true for Orthodox Jews today</li>
+                <li>Rome: First shave was a rite of passage (boyhood to manhood)</li>
+                <li>Rulers/priests often commanded beard removal</li>
+                <li>Alexander the Great ordered soldiers to shave so beards couldn't be grabbed in battle</li>
+                <li>Archbishop of Rouen (1096) prohibited beards → first barber guild in France</li>
+                <li>Peter the Great taxed beards</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>⚡ Influence of Religion, Politics, and Culture</h2>
+            <p>Hair has always carried deep meaning:</p>
+            
+            <div class="term">
+                <strong>Spiritual Power</strong>
+                Pythagoras believed cutting hair decreased intellectual capacity. Native American traditions emphasize the connection between hair and body/spirit.
+            </div>
+
+            <h3>Social Status Indicators</h3>
+            <ul>
+                <li>Hairstyles indicated social status, rank, or submission</li>
+                <li>Chinese queue under Manchu rule</li>
+                <li>Gaul nobles wore long hair vs. Caesar's cut as submission</li>
+            </ul>
+
+            <h3>Hair Coloring</h3>
+            <ul>
+                <li>Ancient Britons lightened hair</li>
+                <li>Romans used dyes based on social class</li>
+                <li>Queen Elizabeth era influenced beard dyeing</li>
+            </ul>
+
+            <h3>Tonsure</h3>
+            <ul>
+                <li>Medieval clergy shaved patch on crown of head</li>
+                <li>Circular tonsure of St. Peter preferred by many</li>
+                <li>Abolished by Roman Catholic Church in 1972</li>
+                <li>Christianity initially viewed long hair as sinful for clergy</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>⚕️ Rise of the Barber-Surgeons</h2>
+            <p>During the Middle Ages, barbers provided grooming + medical services:</p>
+            <ul>
+                <li>Bloodletting</li>
+                <li>Minor surgery</li>
+                <li>Herbal remedies</li>
+                <li>Tooth pulling</li>
+            </ul>
+
+            <h3>Key Historical Events</h3>
+            <ul>
+                <li><strong>1163 (Council of Tours):</strong> Pope forbade clergy from acting as physicians/surgeons → barbers took over these duties</li>
+                <li>Barbers became known as <strong>barber-surgeons</strong></li>
+            </ul>
+
+            <h3>First Organizations</h3>
+            <ul>
+                <li><strong>1096:</strong> First barber guild in France</li>
+                <li><strong>1308:</strong> Worshipful Company of Barbers guild in London</li>
+                <li><strong>1450:</strong> English barbers and surgeons merged into Company of Barber-Surgeons (lasted until 1745)</li>
+                <li><strong>1540:</strong> Henry VIII recombined barbers and surgeons via royal charter</li>
+            </ul>
+
+            <p>Bloodletting declined with medical advances; by 1745, surgeons fully separated.</p>
+
+            <div class="key-point">
+                <strong>Barber Pole Symbolism:</strong> Originated from bloodletting:
+                <ul style="margin-top: 0.5rem;">
+                    <li><strong>Pole</strong> = staff patient held</li>
+                    <li><strong>Basin</strong> = blood bowl</li>
+                    <li><strong>Red</strong> = blood</li>
+                    <li><strong>White</strong> = bandages</li>
+                    <li><strong>Blue</strong> = veins (later variations by country/guild)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🔧 Tools & Technology Evolution</h2>
+            
+            <h3>Shears Evolution</h3>
+            <ul>
+                <li><strong>Prehistory:</strong> Bone, flint, antler, shell cutting tools</li>
+                <li><strong>Middle East (3000–2000 BC):</strong> Earliest scissors</li>
+                <li><strong>Bronze/Iron Age:</strong> Improved metallurgy → better shears</li>
+                <li><strong>Rome (1–100 AD & 400–500 AD):</strong> Cross-bladed shears</li>
+            </ul>
+
+            <h3>Clippers Evolution</h3>
+            <ul>
+                <li><strong>1850–1890:</strong> Nikola Bizumic invents manual hair clippers</li>
+                <li><strong>1919:</strong> Leo J. Wahl invents first practical electric hair clippers (Wahl Clipper Corp. 1921)</li>
+                <li><strong>1921:</strong> Matthew Andis develops electric clipper</li>
+                <li><strong>1924:</strong> John Oster markets hand-driven clipper; motorized version 1928</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>📜 Professional Organizations & Regulation</h2>
+            <p>Late 1800s: Barbering separates fully from religion/medicine</p>
+
+            <h3>Key Organizations</h3>
+            <ul>
+                <li><strong>1886–1887:</strong> Barbers' Protective Association → Journeymen Barbers' International Union of America</li>
+                <li><strong>1897:</strong> First barber-licensing law (Minnesota) — focused on sanitation, education, disinfection</li>
+                <li><strong>1916:</strong> New York "terminal methods" system for strict disinfection</li>
+                <li><strong>1924:</strong> Associated Master Barbers of America (later AMBBA) — standardized training, education council, barber code of ethics</li>
+                <li><strong>1927:</strong> National Association of Barber Schools</li>
+                <li><strong>1929:</strong> National Association of State Boards of Barber Examiners (NABBA) — now represents 300,000+ barbers</li>
+            </ul>
+
+            <div class="term">
+                <strong>NABBA Objectives</strong>
+                Promote info exchange, standards for exams/licensing, curriculum, continuing education, consumer protection
+            </div>
+
+            <p>All states now regulate barbering for public health/safety.</p>
+        </section>
+
+        <section class="section">
+            <h2>🎯 Barber Pole Today</h2>
+            <ul>
+                <li>Red, white, blue poles in U.S. often reference the flag</li>
+                <li>Modern barber poles remain the foremost symbol of professional barbering</li>
+                <li>Some states prohibit displaying a barber pole without a licensed barbershop</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>🚀 State of Barbering Today (21st Century Resurgence)</h2>
+            
+            <h3>1980s–1990s: Decline</h3>
+            <ul>
+                <li>Unisex salons</li>
+                <li>Full-service spas</li>
+                <li>Long hair trends</li>
+                <li>Shift to cosmetology licensing in some states</li>
+            </ul>
+
+            <h3>Late 1990s–2000s: Resurgence</h3>
+            <ul>
+                <li>New schools</li>
+                <li>Independent/franchised barbershops with masculine atmosphere</li>
+            </ul>
+
+            <h3>2010s+: Modern Era</h3>
+            <ul>
+                <li>"Art of manliness" movement</li>
+                <li>Beard popularity</li>
+                <li>Creative grooming</li>
+                <li>Women make up ~30% of clientele in some shops</li>
+                <li>Female barbers/students increasing</li>
+            </ul>
+
+            <p>Modern barbershops blend tradition with new technology/techniques. Barbers now focus on creativity, community role, health/safety standards, and advancing the profession.</p>
+        </section>
+
+        <section class="section">
+            <h2>📝 Chapter 1 Key Takeaways</h2>
+            <div class="key-point">
+                <ul style="margin-left: 1rem;">
+                    <li>Barbering evolved from <strong>spiritual/tribal roles</strong> → <strong>medical (barber-surgeons)</strong> → <strong>independent regulated profession</strong></li>
+                    <li>Strongly influenced by <strong>religion, politics, fashion, and technology</strong></li>
+                    <li>Modern profession emphasizes <strong>hygiene, education, licensing, ethics, and public safety</strong></li>
+                    <li>Today's barbering is <strong>vibrant, diverse, and culturally relevant</strong> with strong growth potential</li>
+                    <li>The <strong>barber pole</strong> remains the foremost symbol of the profession</li>
+                    <li>Understanding history helps predict <strong>future trends</strong> and appreciate the <strong>craft's significance</strong></li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="quiz-section">
+            <h2>📝 Chapter 1 Comprehensive Review Quiz</h2>
+            
+            <div class="quiz-question">
+                <p>1. Which ancient civilization is credited with first cultivating beauty in an extravagant fashion approximately 6000 years ago?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q1" value="a"> Greeks</label>
+                    <label><input type="radio" name="q1" value="b"> Romans</label>
+                    <label><input type="radio" name="q1" value="c"> Egyptians</label>
+                    <label><input type="radio" name="q1" value="d"> Mesopotamians</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>2. What is the name of the Egyptian barber who was held in such high esteem that he was sculpted for posterity?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q2" value="a"> Ticinius Mena</label>
+                    <label><input type="radio" name="q2" value="b"> Meryma'at</label>
+                    <label><input type="radio" name="q2" value="c"> A.B. Moler</label>
+                    <label><input type="radio" name="q2" value="d"> Alexander the Great</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>3. In what year did Ticinius Mena bring barbering and shaving to Rome?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q3" value="a"> 500 BC</label>
+                    <label><input type="radio" name="q3" value="b"> 296 BC</label>
+                    <label><input type="radio" name="q3" value="c"> 100 AD</label>
+                    <label><input type="radio" name="q3" value="d"> 300 BC</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>4. During which time period did the Greek Golden Age occur, when barbering was considered a highly developed art?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q4" value="a"> 1000-800 BC</label>
+                    <label><input type="radio" name="q4" value="b"> 800-500 BC</label>
+                    <label><input type="radio" name="q4" value="c"> 500-300 BC</label>
+                    <label><input type="radio" name="q4" value="d"> 300-100 BC</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>5. Which famous historical figure prohibited the wearing of beards in battle, making shaving gain popularity?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q5" value="a"> Julius Caesar</label>
+                    <label><input type="radio" name="q5" value="b"> Alexander the Great</label>
+                    <label><input type="radio" name="q5" value="c"> Emperor Hadrian</label>
+                    <label><input type="radio" name="q5" value="d"> King Louis XIV</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>6. Which Roman Emperor brought beards back into fashion after they had fallen out of favor?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q6" value="a"> Julius Caesar</label>
+                    <label><input type="radio" name="q6" value="b"> Emperor Hadrian</label>
+                    <label><input type="radio" name="q6" value="c"> Emperor Nero</label>
+                    <label><input type="radio" name="q6" value="d"> Constantine</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>7. The word "barber" is derived from the Latin word "barba" which means:</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q7" value="a"> Hair</label>
+                    <label><input type="radio" name="q7" value="b"> Cut</label>
+                    <label><input type="radio" name="q7" value="c"> Beard</label>
+                    <label><input type="radio" name="q7" value="d"> Style</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>8. What term refers to the cutting, clipping, or trimming of hair with shears or a razor?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q8" value="a"> Barbering</label>
+                    <label><input type="radio" name="q8" value="b"> Tonsorial</label>
+                    <label><input type="radio" name="q8" value="c"> Styling</label>
+                    <label><input type="radio" name="q8" value="d"> Grooming</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>9. When was the first barber guild established in France?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q9" value="a"> 1308</label>
+                    <label><input type="radio" name="q9" value="b"> 1096</label>
+                    <label><input type="radio" name="q9" value="c"> 1540</label>
+                    <label><input type="radio" name="q9" value="d"> 1450</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>10. When was the Worshipful Company of Barbers formed in London, England?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q10" value="a"> 1096</label>
+                    <label><input type="radio" name="q10" value="b"> 1308</label>
+                    <label><input type="radio" name="q10" value="c"> 1540</label>
+                    <label><input type="radio" name="q10" value="d"> 1745</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>11. Which English monarch reunited the barbers and surgeons through an Act of Parliament in 1540?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q11" value="a"> King Henry VII</label>
+                    <label><input type="radio" name="q11" value="b"> Queen Elizabeth I</label>
+                    <label><input type="radio" name="q11" value="c"> King Henry VIII</label>
+                    <label><input type="radio" name="q11" value="d"> King James I</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>12. What does the RED color on the barber pole represent?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q12" value="a"> Veins</label>
+                    <label><input type="radio" name="q12" value="b"> Bandages</label>
+                    <label><input type="radio" name="q12" value="c"> Blood</label>
+                    <label><input type="radio" name="q12" value="d"> The American flag</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>13. What does the WHITE color on the barber pole represent?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q13" value="a"> Blood</label>
+                    <label><input type="radio" name="q13" value="b"> Veins</label>
+                    <label><input type="radio" name="q13" value="c"> Bandages</label>
+                    <label><input type="radio" name="q13" value="d"> Purity</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>14. What does the BLUE color on the barber pole represent?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q14" value="a"> Blood</label>
+                    <label><input type="radio" name="q14" value="b"> Bandages</label>
+                    <label><input type="radio" name="q14" value="c"> Veins</label>
+                    <label><input type="radio" name="q14" value="d"> Water</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>15. Who established America's first barber school in Chicago, Illinois in 1893?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q15" value="a"> Ticinius Mena</label>
+                    <label><input type="radio" name="q15" value="b"> A.B. Moler</label>
+                    <label><input type="radio" name="q15" value="c"> Henry VIII</label>
+                    <label><input type="radio" name="q15" value="d"> Meryma'at</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>16. In what year did Minnesota pass the first barber licensing law in the United States?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q16" value="a"> 1886</label>
+                    <label><input type="radio" name="q16" value="b"> 1893</label>
+                    <label><input type="radio" name="q16" value="c"> 1897</label>
+                    <label><input type="radio" name="q16" value="d"> 1924</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>17. When was the Associated Master Barbers and Beauticians of America (AMBBA) founded?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q17" value="a"> 1897</label>
+                    <label><input type="radio" name="q17" value="b"> 1924</label>
+                    <label><input type="radio" name="q17" value="c"> 1929</label>
+                    <label><input type="radio" name="q17" value="d"> 1941</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>18. When was the National Association of Barber Boards of America (NABBA) formed?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q18" value="a"> 1924</label>
+                    <label><input type="radio" name="q18" value="b"> 1925</label>
+                    <label><input type="radio" name="q18" value="c"> 1929</label>
+                    <label><input type="radio" name="q18" value="d"> 1941</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>19. Which decades represented the heyday for American barbershops, when men visited every two weeks?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q19" value="a"> 1920s-1930s</label>
+                    <label><input type="radio" name="q19" value="b"> 1940s-1950s</label>
+                    <label><input type="radio" name="q19" value="c"> 1960s-1970s</label>
+                    <label><input type="radio" name="q19" value="d"> 1980s-1990s</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>20. What event on February 9, 1964, marked a symbolic turning point that affected barbershop culture?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q20" value="a"> The opening of the first unisex salon</label>
+                    <label><input type="radio" name="q20" value="b"> The Beatles appeared on The Ed Sullivan Show</label>
+                    <label><input type="radio" name="q20" value="c"> The invention of electric clippers</label>
+                    <label><input type="radio" name="q20" value="d"> The founding of NABBA</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>21. What trend in the 1990s drew men away from traditional barbershops?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q21" value="a"> The rise of home haircutting kits</label>
+                    <label><input type="radio" name="q21" value="b"> The popularity of full-service salons and spas</label>
+                    <label><input type="radio" name="q21" value="c"> The invention of the safety razor</label>
+                    <label><input type="radio" name="q21" value="d"> The Great Depression</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>22. When did the resurgence in barbering begin, with new schools opening and barbershops offering atmosphere geared to male consumers?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q22" value="a"> 1980s</label>
+                    <label><input type="radio" name="q22" value="b"> 1990s</label>
+                    <label><input type="radio" name="q22" value="c"> 2000s</label>
+                    <label><input type="radio" name="q22" value="d"> 2010s</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>23. What percentage of barber students were reported to be female by 1985?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q23" value="a"> 10%</label>
+                    <label><input type="radio" name="q23" value="b"> 25%</label>
+                    <label><input type="radio" name="q23" value="c"> 50%</label>
+                    <label><input type="radio" name="q23" value="d"> 75%</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>24. Which medical procedure did medieval barber-surgeons commonly perform in addition to hair services?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q24" value="a"> Eye surgery</label>
+                    <label><input type="radio" name="q24" value="b"> Bloodletting</label>
+                    <label><input type="radio" name="q24" value="c"> Brain surgery</label>
+                    <label><input type="radio" name="q24" value="d"> Heart surgery</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>25. The barber pole symbol evolved from which historical practice?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q25" value="a"> Hair dyeing</label>
+                    <label><input type="radio" name="q25" value="b"> Bloodletting procedures</label>
+                    <label><input type="radio" name="q25" value="c"> Hair washing</label>
+                    <label><input type="radio" name="q25" value="d"> Beard trimming</label>
+                </div>
+            </div>
+            
+            <button class="quiz-submit" onclick="checkQuiz()">Check Answers</button>
+            <div class="quiz-result" id="quiz-result"></div>
+            <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--medium-gray); text-align: center;">
+                <p style="color: var(--light-gray); margin-bottom: 1rem;">Want more practice?</p>
+                <a href="chapter-01-quiz.html" style="display: inline-block; background: var(--gold); color: var(--dark); padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600;">Take Full Quiz (30 Questions) →</a>
+            </div>
+        </section>
+
+        <div class="nav-chapters">
+            <a href="index.html">← All Chapters</a>
+            <a href="chapter-02.html">Chapter 2: Life Skills →</a>
+        </div>
+    </main>
+
+    <div class="study-tools">
+        <button class="tool-btn" onclick="openFlashcards()">🎴 Flashcards</button>
+        <button class="tool-btn" onclick="openQuiz()">❓ Quiz</button>
+    </div>
+
+    <script>
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+            localStorage.setItem('chapter-01-progress', Math.round(scrolled));
+        });
+
+        function checkQuiz() {
+            const answers = { 
+                q1: 'c', q2: 'b', q3: 'b', q4: 'c', q5: 'b',
+                q6: 'b', q7: 'c', q8: 'b', q9: 'b', q10: 'b',
+                q11: 'c', q12: 'c', q13: 'c', q14: 'c', q15: 'b',
+                q16: 'c', q17: 'b', q18: 'c', q19: 'b', q20: 'b',
+                q21: 'b', q22: 'c', q23: 'c', q24: 'b', q25: 'b'
+            };
+            let score = 0;
+            let total = 25;
+            
+            for (let q in answers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (selected && selected.value === answers[q]) score++;
+            }
+            
+            const resultDiv = document.getElementById('quiz-result');
+            resultDiv.style.display = 'block';
+            if (score === total) {
+                resultDiv.className = 'quiz-result correct';
+                resultDiv.innerHTML = `<strong>Perfect! 🎉</strong> You got ${score}/${total} correct!`;
+            } else {
+                resultDiv.className = 'quiz-result incorrect';
+                resultDiv.innerHTML = `<strong>Keep studying!</strong> You got ${score}/${total} correct. Review the chapter and try again.`;
+            }
+        }
+
+        function openFlashcards() {
+            const flashcards = [
+                { term: "Meryma'at", def: "Egyptian barbers who held high esteem" },
+                { term: "Barber-surgeon", def: "Medieval barbers who performed medical services" },
+                { term: "Tonsure", def: "Shaved patch on clergy head" },
+                { term: "NABBA", def: "National Association of State Boards of Barber Examiners (1929)" },
+                { term: "AMBBA", def: "Associated Master Barbers of America (1924)" }
+            ];
+            let current = 0;
+            function showCard() {
+                const card = flashcards[current];
+                const action = confirm(`FLASHCARD ${current+1}/${flashcards.length}\n\nTERM: ${card.term}\n\nClick OK to see definition, Cancel to exit.`);
+                if (action) {
+                    alert(`DEFINITION:\n${card.def}`);
+                    current = (current + 1) % flashcards.length;
+                    showCard();
+                }
+            }
+            showCard();
+        }
+
+        function openQuiz() {
+            document.querySelector('.quiz-section').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+<!-- Content Protection -->
+<script>
+    // Disable right-click
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Content is protected. Right-click is disabled.');
+        return false;
+    });
+
+    // Disable copy
+    document.addEventListener('copy', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Copying is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable cut
+    document.addEventListener('cut', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Cutting is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable text selection
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable drag
+    document.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable print
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+            e.preventDefault();
+            showProtectionMessage('Printing is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            showProtectionMessage('Saving is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+            e.preventDefault();
+            showProtectionMessage('View source is disabled.');
+            return false;
+        }
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J'))) {
+            e.preventDefault();
+            showProtectionMessage('Developer tools are disabled.');
+            return false;
+        }
+    });
+
+    // Show protection message
+    function showProtectionMessage(message) {
+        const existing = document.querySelector('.protection-message');
+        if (existing) existing.remove();
+
+        const div = document.createElement('div');
+        div.className = 'protection-message';
+        div.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #ef4444; color: white; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
+        div.textContent = '⚠️ ' + message;
+        document.body.appendChild(div);
+
+        setTimeout(() => {
+            div.style.opacity = '0';
+            div.style.transition = 'opacity 0.5s';
+            setTimeout(() => div.remove(), 500);
+        }, 3000);
+    }
+
+    // Console warning
+    console.log('%c⚠️ CONTENT PROTECTION', 'color: #ef4444; font-size: 24px; font-weight: bold;');
+    console.log('%cThis content is copyrighted and protected. Unauthorized copying, distribution, or reproduction is prohibited.', 'color: #888; font-size: 14px;');
+    console.log('%c© 2026 Barber Study Pro. All rights reserved.', 'color: #D4AF37; font-size: 12px;');
+
+    // Prevent viewing source via right-click on images
+    document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('contextmenu', e => e.preventDefault());
+    });
+
+    // Text-to-Speech functionality
+    let speechSynthesis = window.speechSynthesis;
+    let currentUtterance = null;
+    let isPlaying = false;
+    let textChunks = [];
+    let currentChunk = 0;
+
+    function extractTextContent() {
+        const content = document.querySelector('.content');
+        if (!content) return '';
+        let fullText = '';
+        const sections = content.querySelectorAll('.section');
+        sections.forEach(section => {
+            const headings = section.querySelectorAll('h2, h3');
+            headings.forEach(h => { fullText += h.textContent + '. '; });
+            const paragraphs = section.querySelectorAll('p');
+            paragraphs.forEach(p => { fullText += p.textContent + ' '; });
+            const listItems = section.querySelectorAll('li');
+            listItems.forEach(li => { fullText += li.textContent + '. '; });
+        });
+        return fullText;
+    }
+
+    function splitTextIntoChunks(text, maxLength = 200) {
+        const sentences = text.match(/[^\.!?]+[\.!?]+/g) || [text];
+        const chunks = [];
+        let currentChunk = '';
+        sentences.forEach(sentence => {
+            if ((currentChunk + sentence).length > maxLength && currentChunk.length > 0) {
+                chunks.push(currentChunk.trim());
+                currentChunk = sentence;
+            } else {
+                currentChunk += sentence + ' ';
+            }
+        });
+        if (currentChunk.trim().length > 0) chunks.push(currentChunk.trim());
+        return chunks;
+    }
+
+    function toggleTTS() {
+        const player = document.getElementById('audioPlayer');
+        const toggle = document.getElementById('ttsToggle');
+        if (!player.classList.contains('active')) {
+            player.classList.add('active');
+            toggle.classList.add('playing');
+            toggle.innerHTML = '🔊 Stop Listening';
+            const text = extractTextContent();
+            textChunks = splitTextIntoChunks(text);
+            currentChunk = 0;
+            startPlayback();
+        } else {
+            stopPlayback();
+        }
+    }
+
+    function startPlayback() {
+        if (currentChunk >= textChunks.length) { closeAudioPlayer(); return; }
+        const text = textChunks[currentChunk];
+        currentUtterance = new SpeechSynthesisUtterance(text);
+        currentUtterance.rate = 0.9;
+        currentUtterance.pitch = 1;
+        currentUtterance.volume = 1;
+        const voices = speechSynthesis.getVoices();
+        const preferredVoice = voices.find(v => v.name.includes('Google US English')) || voices.find(v => v.name.includes('Samantha')) || voices.find(v => v.lang === 'en-US');
+        if (preferredVoice) currentUtterance.voice = preferredVoice;
+        currentUtterance.onstart = () => { isPlaying = true; updatePlayButton(); };
+        currentUtterance.onend = () => { currentChunk++; if (currentChunk < textChunks.length) startPlayback(); else closeAudioPlayer(); };
+        speechSynthesis.speak(currentUtterance);
+    }
+
+    function togglePlay() {
+        if (isPlaying) { speechSynthesis.pause(); isPlaying = false; }
+        else { if (speechSynthesis.paused) speechSynthesis.resume(); else startPlayback(); isPlaying = true; }
+        updatePlayButton();
+    }
+
+    function updatePlayButton() {
+        document.getElementById('playPauseBtn').textContent = isPlaying ? '⏸' : '▶';
+    }
+
+    function skipBackward() { if (currentChunk > 0) { speechSynthesis.cancel(); currentChunk = Math.max(0, currentChunk - 1); startPlayback(); } }
+    function skipForward() { if (currentChunk < textChunks.length - 1) { speechSynthesis.cancel(); currentChunk++; startPlayback(); } }
+
+    function closeAudioPlayer() {
+        speechSynthesis.cancel();
+        isPlaying = false;
+        currentChunk = 0;
+        document.getElementById('audioPlayer').classList.remove('active');
+        document.getElementById('ttsToggle').classList.remove('playing');
+        document.getElementById('ttsToggle').innerHTML = '🔊 Listen to Chapter';
+    }
+
+    function stopPlayback() { speechSynthesis.cancel(); isPlaying = false; closeAudioPlayer(); }
+    speechSynthesis.onvoiceschanged = () => { speechSynthesis.getVoices(); };
+</script>
+
+<!-- TTS Toggle Button -->
+<button class="tts-toggle" id="ttsToggle" onclick="toggleTTS()">🔊 Listen to Chapter</button>
+
+<!-- Audio Player -->
+<div class="audio-player" id="audioPlayer">
+    <div class="audio-controls">
+        <button class="audio-btn" id="playPauseBtn" onclick="togglePlay()">▶</button>
+        <button class="audio-btn" onclick="skipBackward()">⏮</button>
+        <button class="audio-btn" onclick="skipForward()">⏭</button>
+    </div>
+    <div class="audio-info">Listen while you study</div>
+    <button class="audio-close" onclick="closeAudioPlayer()">×</button>
+</div>
+
+<!-- Content Protection -->
+<script>
+    // Disable right-click
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Content is protected. Right-click is disabled.');
+        return false;
+    });
+
+    // Disable copy
+    document.addEventListener('copy', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Copying is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable cut
+    document.addEventListener('cut', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Cutting is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable text selection
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable drag
+    document.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable print
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+            e.preventDefault();
+            showProtectionMessage('Printing is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            showProtectionMessage('Saving is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+            e.preventDefault();
+            showProtectionMessage('View source is disabled.');
+            return false;
+        }
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J'))) {
+            e.preventDefault();
+            showProtectionMessage('Developer tools are disabled.');
+            return false;
+        }
+    });
+
+    // Show protection message
+    function showProtectionMessage(message) {
+        const existing = document.querySelector('.protection-message');
+        if (existing) existing.remove();
+
+        const div = document.createElement('div');
+        div.className = 'protection-message';
+        div.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #ef4444; color: white; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
+        div.textContent = '⚠️ ' + message;
+        document.body.appendChild(div);
+
+        setTimeout(() => {
+            div.style.opacity = '0';
+            div.style.transition = 'opacity 0.5s';
+            setTimeout(() => div.remove(), 500);
+        }, 3000);
+    }
+
+    // Console warning
+    console.log('%c⚠️ CONTENT PROTECTION', 'color: #ef4444; font-size: 24px; font-weight: bold;');
+    console.log('%cThis content is copyrighted and protected. Unauthorized copying, distribution, or reproduction is prohibited.', 'color: #888; font-size: 14px;');
+    console.log('%c© 2026 Barber Study Pro. All rights reserved.', 'color: #D4AF37; font-size: 12px;');
+
+    // Prevent viewing source via right-click on images
+    document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('contextmenu', e => e.preventDefault());
+    });
+</script>
+
+<!-- Auth Check Script -->
+<script>
+    // Check if user is logged in
+    function checkAuth() {
+        const session = localStorage.getItem('bsp_session');
+        const authGate = document.getElementById('authGate');
+        const protectedContent = document.getElementById('protectedContent');
+        
+        if (session) {
+            // User is logged in, show content
+            authGate.style.display = 'none';
+            protectedContent.classList.add('show');
+        } else {
+            // User is not logged in, show auth gate
+            authGate.style.display = 'flex';
+            protectedContent.classList.remove('show');
+        }
+    }
+    
+    // Run auth check on page load
+    checkAuth();
+</script>
+</div><!-- End protected content -->
+</body>
+</html>

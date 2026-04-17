@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 13 Quiz: Shaving and Facial-Hair Design | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; --success: #22c55e; --error: #ef4444; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .quiz-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
+        .quiz-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
+        .quiz-container { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+        .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.3s; }
+        .question { background: var(--dark-gray); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; border: 1px solid var(--medium-gray); }
+        .question-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 700; font-size: 0.875rem; margin-bottom: 1rem; }
+        .question-text { font-size: 1.125rem; font-weight: 600; margin-bottom: 1.5rem; }
+        .options label { display: block; padding: 1rem 1.25rem; margin-bottom: 0.75rem; background: var(--medium-gray); border-radius: 8px; cursor: pointer; transition: all 0.3s; border: 2px solid transparent; }
+        .options label:hover { background: rgba(212, 175, 55, 0.1); border-color: var(--gold); }
+        .options input[type="radio"] { margin-right: 0.75rem; }
+        .submit-btn { background: var(--gold); color: var(--dark); border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; width: 100%; margin-top: 2rem; }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3); }
+        .results { background: var(--dark-gray); border-radius: 12px; padding: 2rem; margin-top: 2rem; text-align: center; display: none; }
+        .results.show { display: block; }
+        .score { font-size: 3rem; font-weight: 800; color: var(--gold); margin-bottom: 1rem; }
+        .results-message { font-size: 1.25rem; margin-bottom: 1.5rem; }
+        .review-item { text-align: left; padding: 1rem; margin: 0.5rem 0; border-radius: 8px; }
+        .review-item.correct { background: rgba(34, 197, 94, 0.1); border-left: 4px solid var(--success); }
+        .review-item.incorrect { background: rgba(239, 68, 68, 0.1); border-left: 4px solid var(--error); }
+        .nav-chapters { display: flex; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--medium-gray); }
+        .nav-chapters a { color: var(--gold); text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <nav><div class="nav-container"><a href="index.html" class="logo">⚡ Barber Study Pro</a><a href="chapter-13.html" class="back-link">← Back to Chapter</a></div></nav>
+    <header class="quiz-header">
+        <h1>Chapter 13 Quiz</h1>
+        <p>Shaving and Facial-Hair Design</p>
+    </header>
+    <main class="quiz-container">
+        <div id="quiz-form"></div>
+        <button class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+        <div class="results" id="results"></div>
+        <div class="nav-chapters"><a href="chapter-12-quiz.html">← Chapter 12 Quiz</a><a href="chapter-14-quiz.html">Chapter 14 Quiz →</a></div>
+    </main>
+    <script>
+        const quizData = [
+            {
+                question: "How many shaving areas are there on the face?",
+                options: ["10", "12", "14", "16"],
+                answer: 2
+            },
+            {
+                question: "Which razor position has the blade facing downward in a natural position?",
+                options: ["Backhand stroke", "Reverse-freehand stroke", "Freehand stroke", "Cross stroke"],
+                answer: 2
+            },
+            {
+                question: "Which razor position has the blade facing upward?",
+                options: ["Freehand stroke", "Backhand stroke", "Reverse-freehand stroke", "Direct stroke"],
+                answer: 1
+            },
+            {
+                question: "In which direction should you shave on the first pass?",
+                options: ["Against the grain", "With the grain", "Across the grain", "Any direction"],
+                answer: 1
+            },
+            {
+                question: "What should you do with your free hand while shaving?",
+                options: ["Hold the razor", "Stretch the skin taut", "Apply lather", "Hold the towel"],
+                answer: 1
+            },
+            {
+                question: "How often should you wipe the razor clean during shaving?",
+                options: ["Every 5 minutes", "After each stroke", "At the end only", "When it looks dirty"],
+                answer: 1
+            },
+            {
+                question: "What should you check for before beginning a shave?",
+                options: ["Hair color only", "Moles, blemishes, or skin conditions", "Client's age", "Time of day"],
+                answer: 1
+            },
+            {
+                question: "Which area is typically shaved with a reverse-freehand stroke?",
+                options: ["Upper lip", "Sideburns", "Lower neck areas", "Cheeks"],
+                answer: 2
+            },
+            {
+                question: "What is the purpose of a second-time-over shave?",
+                options: ["To apply more lather", "To shave against or across the grain for closer shave", "To stretch the skin", "To clean the razor"],
+                answer: 1
+            },
+            {
+                question: "Should you use hot or warm towels for the finishing step?",
+                options: ["Hot towels", "Warm towels (not hot)", "Cold towels only", "No towels"],
+                answer: 1
+            },
+            {
+                question: "What should be applied after shaving to close pores?",
+                options: ["More lather", "Skin toner or mild astringent", "Hot water", "Oil only"],
+                answer: 1
+            },
+            {
+                question: "What position should the chair be in for a neck shave?",
+                options: ["Reclined", "Upright", "Fully flat", "Any position"],
+                answer: 1
+            },
+            {
+                question: "What should be used to clean the neck after shaving?",
+                options: ["Soap", "Witch hazel or antiseptic", "Hot water only", "Alcohol"],
+                answer: 1
+            },
+            {
+                question: "What is the first step in a mustache trim?",
+                options: ["Apply shaving cream", "Consult with client about desired shape", "Start cutting immediately", "Wet the mustache"],
+                answer: 1
+            },
+            {
+                question: "Which tool is commonly used to remove bulk from a mustache?",
+                options: ["Razor only", "Shear-over-comb or outliner-over-comb", "Scissors only", "Clipper without comb"],
+                answer: 1
+            },
+            {
+                question: "What is a full goatee?",
+                options: ["Only chin hair", "Cheek and side hair removed, chin and mustache connected", "Only mustache", "Sideburns only"],
+                answer: 1
+            },
+            {
+                question: "What is a chin goatee?",
+                options: ["Full beard", "Hair only on chin, shaped patch", "Mustache only", "Sideburns connected to chin"],
+                answer: 1
+            },
+            {
+                question: "Where should used blades be disposed?",
+                options: ["Regular trash", "Sharps container", "Countertop", "Sink"],
+                answer: 1
+            },
+            {
+                question: "What should be done with single-use items after a shave?",
+                options: ["Reuse for next client", "Dispose of them", "Wash and save", "Leave on counter"],
+                answer: 1
+            },
+            {
+                question: "Should you shave over active acne?",
+                options: ["Yes, carefully", "No, never", "Only with a new blade", "Only if client insists"],
+                answer: 1
+            },
+            {
+                question: "What type of hair is more prone to ingrown hairs?",
+                options: ["Straight hair", "Wavy or curly hair", "Fine hair", "All hair types equally"],
+                answer: 1
+            },
+            {
+                question: "Why is it important to stretch the skin while shaving?",
+                options: ["To apply more pressure", "To create a smooth surface and avoid cuts", "To speed up the service", "To remove more hair"],
+                answer: 1
+            },
+            {
+                question: "What should you do if a client experiences discomfort during shaving?",
+                options: ["Continue shaving", "Stop immediately", "Apply more pressure", "Change blades only"],
+                answer: 1
+            },
+            {
+                question: "Which stroke is used for the upper lip area?",
+                options: ["Backhand stroke", "Freehand stroke", "Reverse-freehand stroke", "Side stroke"],
+                answer: 1
+            },
+            {
+                question: "What should be applied to the face before the second-time-over shave?",
+                options: ["Powder", "Water to dampen face", "Astringent", "Oil"],
+                answer: 1
+            },
+            {
+                question: "How should you hold the skin when shaving the upper lip?",
+                options: ["Pull down", "Lift the nose", "Stretch to the side", "Don't touch"],
+                answer: 1
+            },
+            {
+                question: "What is the last step in beard redesign?",
+                options: ["Apply lather", "Shave the outlines", "Comb the beard", "Apply oil"],
+                answer: 1
+            },
+            {
+                question: "Which technique is used to establish beard design lines?",
+                options: ["Shears only", "Outliner", "Razor only", "Comb only"],
+                answer: 1
+            },
+            {
+                question: "What should be done with linens and towels after use?",
+                options: ["Reuse for next client", "Place in laundry", "Leave on chair", "Throw in trash"],
+                answer: 1
+            },
+            {
+                question: "When should you wash your hands during the shaving service?",
+                options: ["Only at the beginning", "Before and after the service", "Only at the end", "Never"],
+                answer: 1
+            },
+            {
+                question: "What is the purpose of applying powder after a shave?",
+                options: ["To close pores", "To absorb moisture and provide comfort", "To remove hair", "To apply fragrance only"],
+                answer: 1
+            },
+            {
+                question: "Should you share blades between clients?",
+                options: ["Yes, if cleaned", "No, never", "Only if it looks clean", "Yes, to save money"],
+                answer: 1
+            },
+            {
+                question: "What should you do before establishing a new beard design line?",
+                options: ["Start cutting immediately", "Consult with client about preferences", "Apply shaving cream", "Use hot towels"],
+                answer: 1
+            },
+            {
+                question: "Which areas are shaved with a backhand stroke?",
+                options: ["Only neck", "Sides of mouth and jawline", "Only chin", "Forehead"],
+                answer: 1
+            },
+            {
+                question: "What should be used to detail a mustache shape?",
+                options: ["Scissors only", "Outliner or razor", "Comb only", "Clipper without guard"],
+                answer: 1
+            },
+            {
+                question: "What is the purpose of a neck strip or paper towel?",
+                options: ["Decoration", "To wipe the razor and protect the cape", "To apply lather", "To stretch skin"],
+                answer: 1
+            },
+            {
+                question: "Should you use excessive pressure when shaving?",
+                options: ["Yes, for closer shave", "No, let the razor do the work", "Only on coarse hair", "Only on the neck"],
+                answer: 1
+            },
+            {
+                question: "What should you do if you notice a skin condition before shaving?",
+                options: ["Shave carefully around it", "Proceed with caution", "Do not shave the area", "Apply more lather"],
+                answer: 2
+            },
+            {
+                question: "How should the work area be maintained?",
+                options: ["Clean and organized", "Messy is okay", "Only clean at end of day", "Hair on floor is normal"],
+                answer: 0
+            },
+            {
+                question: "What is 'balling the chin'?",
+                options: ["A type of beard", "Client rolling bottom lip over teeth to stretch skin", "A shaving technique", "A type of razor"],
+                answer: 1
+            },
+            {
+                question: "Which products should be used when shaving with a razor on mustache or beard outlines?",
+                options: ["Water only", "Shaving cream or gel", "Oil only", "Nothing"],
+                answer: 1
+            },
+            {
+                question: "What should be done after completing a beard trim?",
+                options: ["Send client home", "Style or cut hair as needed for finished look", "Apply only water", "Remove cape immediately"],
+                answer: 1
+            },
+            {
+                question: "What is the proper way to hold the razor for a freehand stroke?",
+                options: ["Blade up", "Natural position with blade down", "Sideways", "Upside down"],
+                answer: 1
+            },
+            {
+                question: "When trimming a beard, where should you start to establish a guide?",
+                options: ["Sideburns", "Center under the chin", "Cheeks", "Neck"],
+                answer: 1
+            },
+            {
+                question: "What should be checked when combing through a beard before trimming?",
+                options: ["Only length", "Hidden moles or growths", "Color only", "Texture only"],
+                answer: 1
+            },
+            {
+                question: "Should you shave the same area repeatedly without re-lathering?",
+                options: ["Yes, for smoothness", "No, never", "Only on neck", "Only if client asks"],
+                answer: 1
+            },
+            {
+                question: "What type of container should be used for hair sweepings?",
+                options: ["Open container", "Closed receptacle", "Floor is fine", "Paper bag"],
+                answer: 1
+            },
+            {
+                question: "What should be done with the chair position for a facial shave?",
+                options: ["Keep upright", "Recline to comfortable working angle", "Fully flat", "Any position works"],
+                answer: 1
+            },
+            {
+                question: "What is the purpose of applying facial cream or moisturizer after shaving?",
+                options: ["To remove hair", "To soothe and moisturize the skin", "To clean the razor", "To apply fragrance"],
+                answer: 1
+            },
+            {
+                question: "Which movement should be used when applying facial cream after shaving?",
+                options: ["Tapotement", "Effleurage", "Friction", "Vibration"],
+                answer: 1
+            },
+            {
+                question: "What should be avoided when using hot towels after shaving?",
+                options: ["Using them at all", "Hot towels - skin may be sensitive", "Warm towels", "Cold towels"],
+                answer: 1
+            }
+        ];
+
+        let userAnswers = new Array(quizData.length).fill(null);
+
+        function renderQuiz() {
+            const form = document.getElementById('quiz-form');
+            form.innerHTML = quizData.map((q, i) => `
+                <div class="question" id="q${i}">
+                    <span class="question-number">Question ${i + 1} of ${quizData.length}</span>
+                    <p class="question-text">${q.question}</p>
+                    <div class="options">
+                        ${q.options.map((opt, j) => `
+                            <label>
+                                <input type="radio" name="q${i}" value="${j}" onchange="selectAnswer(${i}, ${j})">
+                                ${opt}
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectAnswer(questionIndex, optionIndex) {
+            userAnswers[questionIndex] = optionIndex;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answered = userAnswers.filter(a => a !== null).length;
+            const progress = (answered / quizData.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        function submitQuiz() {
+            const answered = userAnswers.filter(a => a !== null).length;
+            if (answered < quizData.length) {
+                alert(`Please answer all questions. You have ${quizData.length - answered} remaining.`);
+                const firstUnanswered = userAnswers.findIndex(a => a === null);
+                document.getElementById(`q${firstUnanswered}`).scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+
+            let score = 0;
+            const review = [];
+
+            quizData.forEach((q, i) => {
+                const correct = userAnswers[i] === q.answer;
+                if (correct) score++;
+                review.push({
+                    question: q.question,
+                    userAnswer: q.options[userAnswers[i]],
+                    correctAnswer: q.options[q.answer],
+                    correct: correct
+                });
+            });
+
+            const percentage = Math.round((score / quizData.length) * 100);
+            let message = '';
+            if (percentage >= 90) message = '🎉 Excellent! You\'re a shaving expert!';
+            else if (percentage >= 80) message = '👏 Great job! You know your shaving techniques!';
+            else if (percentage >= 70) message = '👍 Good work! Keep studying!';
+            else message = '📚 Keep studying! Review the chapter and try again.';
+
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div class="score">${score}/${quizData.length}</div>
+                <p class="results-message">${percentage}% — ${message}</p>
+                <h3 style="margin: 2rem 0 1rem; color: var(--gold);">Review</h3>
+                ${review.map((r, i) => `
+                    <div class="review-item ${r.correct ? 'correct' : 'incorrect'}">
+                        <strong>Q${i + 1}:</strong> ${r.question}<br>
+                        <span style="color: ${r.correct ? 'var(--success)' : 'var(--error)'}">
+                            Your answer: ${r.userAnswer} ${r.correct ? '✓' : '✗'}
+                        </span>
+                        ${!r.correct ? `<br><span style="color: var(--success)">Correct: ${r.correctAnswer}</span>` : ''}
+                    </div>
+                `).join('')}
+                <button class="submit-btn" onclick="retakeQuiz()" style="margin-top: 2rem;">Retake Quiz</button>
+            `;
+            resultsDiv.classList.add('show');
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function retakeQuiz() {
+            userAnswers = new Array(quizData.length).fill(null);
+            document.getElementById('results').classList.remove('show');
+            renderQuiz();
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        renderQuiz();
+    </script>
+
+<!-- Content Protection -->
+<script>
+    // Disable right-click
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Content is protected. Right-click is disabled.');
+        return false;
+    });
+
+    // Disable copy
+    document.addEventListener('copy', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Copying is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable cut
+    document.addEventListener('cut', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Cutting is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable text selection
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable drag
+    document.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable print
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+            e.preventDefault();
+            showProtectionMessage('Printing is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            showProtectionMessage('Saving is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+            e.preventDefault();
+            showProtectionMessage('View source is disabled.');
+            return false;
+        }
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J'))) {
+            e.preventDefault();
+            showProtectionMessage('Developer tools are disabled.');
+            return false;
+        }
+    });
+
+    // Show protection message
+    function showProtectionMessage(message) {
+        const existing = document.querySelector('.protection-message');
+        if (existing) existing.remove();
+
+        const div = document.createElement('div');
+        div.className = 'protection-message';
+        div.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #ef4444; color: white; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
+        div.textContent = '⚠️ ' + message;
+        document.body.appendChild(div);
+
+        setTimeout(() => {
+            div.style.opacity = '0';
+            div.style.transition = 'opacity 0.5s';
+            setTimeout(() => div.remove(), 500);
+        }, 3000);
+    }
+
+    // Console warning
+    console.log('%c⚠️ CONTENT PROTECTION', 'color: #ef4444; font-size: 24px; font-weight: bold;');
+    console.log('%cThis content is copyrighted and protected. Unauthorized copying, distribution, or reproduction is prohibited.', 'color: #888; font-size: 14px;');
+    console.log('%c© 2026 Barber Study Pro. All rights reserved.', 'color: #D4AF37; font-size: 12px;');
+
+    // Prevent viewing source via right-click on images
+    document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('contextmenu', e => e.preventDefault());
+    });
+</script>
+</body>
+</html>

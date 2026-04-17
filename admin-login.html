@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        
+        .login-container { background: var(--dark-gray); padding: 3rem; border-radius: 16px; border: 1px solid var(--medium-gray); width: 100%; max-width: 400px; }
+        .login-header { text-align: center; margin-bottom: 2rem; }
+        .login-header h1 { font-size: 1.75rem; margin-bottom: 0.5rem; }
+        .login-header p { color: var(--light-gray); }
+        
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .form-group input { width: 100%; padding: 0.875rem 1rem; background: var(--medium-gray); border: 1px solid var(--medium-gray); border-radius: 8px; color: var(--white); font-size: 1rem; }
+        .form-group input:focus { outline: none; border-color: var(--gold); }
+        
+        .login-btn { width: 100%; background: var(--gold); color: var(--dark); padding: 1rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .login-btn:hover { background: #e5c04a; }
+        
+        .error-message { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; display: none; }
+        .error-message.show { display: block; }
+        
+        .back-link { display: block; text-align: center; margin-top: 1.5rem; color: var(--light-gray); text-decoration: none; }
+        .back-link:hover { color: var(--gold); }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Admin Login</h1>
+            <p>Barber Study Pro Dashboard</p>
+        </div>
+        
+        <div class="error-message" id="errorMessage">
+            Invalid username or password
+        </div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required placeholder="Enter username">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter password">
+            </div>
+            
+            <button type="submit" class="login-btn">Sign In</button>
+        </form>
+        
+        <a href="index.html" class="back-link">← Back to Website</a>
+    </div>
+
+    <script>
+        // Admin credentials (in production, this should be server-side)
+        const ADMIN_USERNAME = 'admin';
+        const ADMIN_PASSWORD = 'barber2026!';
+        
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            
+            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                // Set login session
+                sessionStorage.setItem('adminLoggedIn', 'true');
+                sessionStorage.setItem('adminLoginTime', Date.now());
+                
+                // Redirect to dashboard
+                window.location.href = 'admin-dashboard.html';
+            } else {
+                errorMessage.classList.add('show');
+                document.getElementById('password').value = '';
+            }
+        });
+        
+        // Hide error on input
+        document.getElementById('username').addEventListener('input', function() {
+            document.getElementById('errorMessage').classList.remove('show');
+        });
+        document.getElementById('password').addEventListener('input', function() {
+            document.getElementById('errorMessage').classList.remove('show');
+        });
+    </script>
+</body>
+</html>

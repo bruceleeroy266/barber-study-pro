@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 20 Quiz: Working Behind the Chair | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; --success: #22c55e; --error: #ef4444; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .quiz-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
+        .quiz-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
+        .quiz-container { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+        .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.3s; }
+        .question { background: var(--dark-gray); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; border: 1px solid var(--medium-gray); }
+        .question-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 700; font-size: 0.875rem; margin-bottom: 1rem; }
+        .question-text { font-size: 1.125rem; font-weight: 600; margin-bottom: 1.5rem; }
+        .options label { display: block; padding: 1rem 1.25rem; margin-bottom: 0.75rem; background: var(--medium-gray); border-radius: 8px; cursor: pointer; transition: all 0.3s; border: 2px solid transparent; }
+        .options label:hover { background: rgba(212, 175, 55, 0.1); border-color: var(--gold); }
+        .options input[type="radio"] { margin-right: 0.75rem; }
+        .submit-btn { background: var(--gold); color: var(--dark); border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; width: 100%; margin-top: 2rem; }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3); }
+        .results { background: var(--dark-gray); border-radius: 12px; padding: 2rem; margin-top: 2rem; text-align: center; display: none; }
+        .results.show { display: block; }
+        .score { font-size: 3rem; font-weight: 800; color: var(--gold); margin-bottom: 1rem; }
+        .results-message { font-size: 1.25rem; margin-bottom: 1.5rem; }
+        .review-item { text-align: left; padding: 1rem; margin: 0.5rem 0; border-radius: 8px; }
+        .review-item.correct { background: rgba(34, 197, 94, 0.1); border-left: 4px solid var(--success); }
+        .review-item.incorrect { background: rgba(239, 68, 68, 0.1); border-left: 4px solid var(--error); }
+        .nav-chapters { display: flex; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--medium-gray); }
+        .nav-chapters a { color: var(--gold); text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <nav><div class="nav-container"><a href="index.html" class="logo">⚡ Barber Study Pro</a><a href="chapter-20.html" class="back-link">← Back to Chapter</a></div></nav>
+    <header class="quiz-header">
+        <h1>Chapter 20 Quiz</h1>
+        <p>Working Behind the Chair</p>
+    </header>
+    <main class="quiz-container">
+        <div id="quiz-form"></div>
+        <button class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+        <div class="results" id="results"></div>
+        <div class="nav-chapters"><a href="chapter-19-quiz.html">← Chapter 19 Quiz</a><a href="chapter-21-quiz.html">Chapter 21 Quiz →</a></div>
+    </main>
+    <script>
+        const quizData = [
+            {
+                question: "What is the main difference between school and professional work?",
+                options: ["There is no difference", "School is forgiving; work has high expectations", "Work is easier than school", "School is more expensive"],
+                answer: 1
+            },
+            {
+                question: "What is an employee?",
+                options: ["Someone who rents a booth", "Someone who works on salary, commission, or salary-plus-commission with employer withholding taxes", "An independent business owner", "A student"],
+                answer: 1
+            },
+            {
+                question: "What form does an employer provide to an employee for taxes?",
+                options: ["1099", "W-2", "1040", "W-4"],
+                answer: 1
+            },
+            {
+                question: "What is an independent contractor?",
+                options: ["An employee with benefits", "Someone who rents a chair and is responsible for own taxes", "A booth renter only", "A student intern"],
+                answer: 1
+            },
+            {
+                question: "What form does a shop owner provide to an independent contractor?",
+                options: ["W-2", "1099-MISC if earning over $600/year", "W-4", "No form needed"],
+                answer: 1
+            },
+            {
+                question: "What is a booth renter?",
+                options: ["An employee", "Someone setting up a small business within the shop", "An independent contractor only", "A shop manager"],
+                answer: 1
+            },
+            {
+                question: "What is commission?",
+                options: ["A fixed salary", "Percentage of gross service sales generated", "Tips only", "Hourly wage"],
+                answer: 1
+            },
+            {
+                question: "What is salary-plus-commission?",
+                options: ["Only salary", "Only commission", "Guaranteed minimum base plus percentage over base", "Tips only"],
+                answer: 2
+            },
+            {
+                question: "What should you do when you receive a job description?",
+                options: ["Ignore it", "Read it thoroughly and ask questions", "Sign it without reading", "Throw it away"],
+                answer: 1
+            },
+            {
+                question: "What is one habit of a good barbershop team player?",
+                options: ["Put yourself first", "Put others first", "Be late often", "Refuse to help"],
+                answer: 1
+            },
+            {
+                question: "Why is being punctual important?",
+                options: ["It's not important", "Being late inconveniences clients and coworkers", "Only for employees", "Only on Mondays"],
+                answer: 1
+            },
+            {
+                question: "What should you do if you have a conflict with a coworker?",
+                options: ["Gossip about them", "Discuss it with the individual, not others", "Ignore it", "Tell all clients"],
+                answer: 1
+            },
+            {
+                question: "How often are employee evaluations typically scheduled?",
+                options: ["Every day", "90 days after hiring, then annually", "Never", "Only when fired"],
+                answer: 1
+            },
+            {
+                question: "What is a personal budget?",
+                options: ["A list of wants", "A plan tracking income and expenses", "A shopping list", "A resume"],
+                answer: 1
+            },
+            {
+                question: "What is defaulting on a loan?",
+                options: ["Paying it back early", "Not paying back the loan", "Getting a new loan", "Refinancing"],
+                answer: 1
+            },
+            {
+                question: "What is the minimum tip amount per month that must be reported?",
+                options: ["$5", "$20", "$100", "$500"],
+                answer: 1
+            },
+            {
+                question: "What is upselling?",
+                options: ["Lowering prices", "Recommending additional services to clients", "Refusing service", "Closing early"],
+                answer: 1
+            },
+            {
+                question: "What is retailing?",
+                options: ["Buying products for yourself", "Selling products to clients for at-home use", "Only using professional products", "Giving products away"],
+                answer: 1
+            },
+            {
+                question: "What should you do before recommending a product?",
+                options: ["Recommend anything", "Test the product yourself first", "Never recommend products", "Only recommend expensive items"],
+                answer: 1
+            },
+            {
+                question: "What is the most effective way to build clientele?",
+                options: ["Advertising only", "Word of mouth from excellent service", "Social media only", "Business cards only"],
+                answer: 1
+            },
+            {
+                question: "When is the best time to rebook a client?",
+                options: ["After they leave", "While they are still in your chair", "The next day", "Never"],
+                answer: 1
+            },
+            {
+                question: "What should you do with client birthday information?",
+                options: ["Ignore it", "Send a birthday card with special offer", "Sell it", "Post it online"],
+                answer: 1
+            },
+            {
+                question: "What is one way to give yourself a raise?",
+                options: ["Work fewer hours", "Retail more products", "Lower prices", "Refuse clients"],
+                answer: 1
+            },
+            {
+                question: "What should you do if you don't know everything at your first job?",
+                options: ["Quit immediately", "Be patient and willing to learn", "Pretend you know everything", "Refuse to work"],
+                answer: 1
+            },
+            {
+                question: "What is the key to successful selling?",
+                options: ["Being pushy", "Knowing products and believing in them", "Never talking to clients", "Only selling expensive items"],
+                answer: 1
+            },
+            {
+                question: "What should you do once a client offers to buy?",
+                options: ["Keep selling more", "Quit selling and close the sale", "Ignore them", "Offer a discount"],
+                answer: 1
+            },
+            {
+                question: "What is a role model in barbering?",
+                options: ["A famous actor", "Someone having the success you wish to have", "Your teacher only", "A client"],
+                answer: 1
+            },
+            {
+                question: "What is the consequence of not reporting income?",
+                options: ["Nothing", "Fines and potential jail time", "A bonus", "More clients"],
+                answer: 1
+            },
+            {
+                question: "What should you do with business cards?",
+                options: ["Throw them away", "Always have them available", "Only give to friends", "Never use them"],
+                answer: 1
+            },
+            {
+                question: "What is the best way to handle objections?",
+                options: ["Ignore them", "Reword objection to address client's need", "Argue with client", "Refuse service"],
+                answer: 1
+            },
+            {
+                question: "What should you track daily?",
+                options: ["Only haircuts", "Tips and additional income", "Gossip", "Nothing"],
+                answer: 1
+            },
+            {
+                question: "What is loyalty in a barbershop?",
+                options: ["Not important", "Vital to the workings of the shop", "Only for employees", "Only for clients"],
+                answer: 1
+            },
+            {
+                question: "What should you do before signing an independent contractor agreement?",
+                options: ["Sign immediately", "Have an accountant review it", "Ignore it", "Let a friend sign"],
+                answer: 1
+            },
+            {
+                question: "What is ticket upgrading?",
+                options: ["Lowering prices", "Upselling services", "Giving refunds", "Closing early"],
+                answer: 1
+            },
+            {
+                question: "How can you increase efficiency?",
+                options: ["Work slower", "Reduce time per service as you gain experience", "Take longer breaks", "Refuse complex services"],
+                answer: 1
+            },
+            {
+                question: "What should you do with social media?",
+                options: ["Never use it", "Post before-and-after photos with permission", "Post without permission", "Only personal posts"],
+                answer: 1
+            },
+            {
+                question: "What is the first step in selling?",
+                options: ["Sell yourself", "Sell the product", "Ask for money", "Ignore the client"],
+                answer: 0
+            },
+            {
+                question: "What should you do when seeking financial advice?",
+                options: ["Take anyone's advice immediately", "Be an informed consumer and consider carefully", "Never seek advice", "Only listen to friends"],
+                answer: 1
+            },
+            {
+                question: "What is a booth rental agreement?",
+                options: ["An employment contract", "A lease with dates, fee, and responsibilities", "A tip jar", "A business card"],
+                answer: 1
+            },
+            {
+                question: "What percentage range is common for commission?",
+                options: ["10-20%", "40-70%", "90-100%", "0%"],
+                answer: 1
+            },
+            {
+                question: "What should you do to be a lifelong learner?",
+                options: ["Stop learning after school", "Continue learning throughout your career", "Only learn from books", "Refuse training"],
+                answer: 1
+            },
+            {
+                question: "What is the benefit of booth rental?",
+                options: ["No responsibility", "Can become self-employed for small investment", "Free supplies", "No rent"],
+                answer: 1
+            },
+            {
+                question: "What should you do with retail areas?",
+                options: ["Ignore them", "Keep them clean, well lit, and appealing", "Hide products", "Only display expensive items"],
+                answer: 1
+            },
+            {
+                question: "What is the purpose of a job description?",
+                options: ["To confuse employees", "To outline duties and responsibilities", "To list salaries only", "To fire people"],
+                answer: 1
+            },
+            {
+                question: "What should you do if you don't understand something in your job description?",
+                options: ["Ignore it", "Ask your manager for clarification", "Quit", "Complain to coworkers"],
+                answer: 1
+            },
+            {
+                question: "What is the best attitude for a new barber?",
+                options: ["Know everything already", "Be patient and willing to learn", "Refuse help", "Complain often"],
+                answer: 1
+            },
+            {
+                question: "What should you do with client email addresses?",
+                options: ["Sell them", "Use for communication and marketing", "Ignore them", "Post them online"],
+                answer: 1
+            },
+            {
+                question: "What is the key to overcoming price objections?",
+                options: ["Lower the price immediately", "Acknowledge price and reiterate benefits", "Ignore the client", "Refuse service"],
+                answer: 1
+            },
+            {
+                question: "What should you do to build relationships with coworkers?",
+                options: ["Gossip about them", "Become a relationship builder", "Ignore them", "Compete aggressively"],
+                answer: 1
+            },
+            {
+                question: "What is the benefit of public speaking for barbers?",
+                options: ["Nothing", "Puts you in front of potential clients", "Wastes time", "Only for teachers"],
+                answer: 1
+            },
+            {
+                question: "What should you do to be reliable?",
+                options: ["Be late sometimes", "Always be courteous and professional", "Cancel appointments", "Ignore clients"],
+                answer: 1
+            },
+            {
+                question: "What is the first step to financial success?",
+                options: ["Spend everything", "Create and stick to a budget", "Ignore finances", "Borrow money"],
+                answer: 1
+            },
+            {
+                question: "What should you do when working on a client's hair?",
+                options: ["Stay silent", "Talk about their hair condition and home care", "Ignore them", "Only talk about yourself"],
+                answer: 1
+            },
+            {
+                question: "What is the key to a successful barbering career?",
+                options: ["Technical skills only", "Combining technical excellence with business savvy", "Luck only", "Expensive tools only"],
+                answer: 1
+            }
+        ];
+
+        let userAnswers = new Array(quizData.length).fill(null);
+
+        function renderQuiz() {
+            const form = document.getElementById('quiz-form');
+            form.innerHTML = quizData.map((q, i) => `
+                <div class="question" id="q${i}">
+                    <span class="question-number">Question ${i + 1} of ${quizData.length}</span>
+                    <p class="question-text">${q.question}</p>
+                    <div class="options">
+                        ${q.options.map((opt, j) => `
+                            <label>
+                                <input type="radio" name="q${i}" value="${j}" onchange="selectAnswer(${i}, ${j})">
+                                ${opt}
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectAnswer(questionIndex, optionIndex) {
+            userAnswers[questionIndex] = optionIndex;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answered = userAnswers.filter(a => a !== null).length;
+            const progress = (answered / quizData.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        function submitQuiz() {
+            const answered = userAnswers.filter(a => a !== null).length;
+            if (answered < quizData.length) {
+                alert(`Please answer all questions. You have ${quizData.length - answered} remaining.`);
+                const firstUnanswered = userAnswers.findIndex(a => a === null);
+                document.getElementById(`q${firstUnanswered}`).scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+
+            let score = 0;
+            const review = [];
+
+            quizData.forEach((q, i) => {
+                const correct = userAnswers[i] === q.answer;
+                if (correct) score++;
+                review.push({
+                    question: q.question,
+                    userAnswer: q.options[userAnswers[i]],
+                    correctAnswer: q.options[q.answer],
+                    correct: correct
+                });
+            });
+
+            const percentage = Math.round((score / quizData.length) * 100);
+            let message = '';
+            if (percentage >= 90) message = '🎉 Excellent! You understand employment and business!';
+            else if (percentage >= 80) message = '👏 Great job! You know your stuff!';
+            else if (percentage >= 70) message = '👍 Good work! Keep studying!';
+            else message = '📚 Keep studying! Review the chapter and try again.';
+
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div class="score">${score}/${quizData.length}</div>
+                <p class="results-message">${percentage}% — ${message}</p>
+                <h3 style="margin: 2rem 0 1rem; color: var(--gold);">Review</h3>
+                ${review.map((r, i) => `
+                    <div class="review-item ${r.correct ? 'correct' : 'incorrect'}">
+                        <strong>Q${i + 1}:</strong> ${r.question}<br>
+                        <span style="color: ${r.correct ? 'var(--success)' : 'var(--error)'}">
+                            Your answer: ${r.userAnswer} ${r.correct ? '✓' : '✗'}
+                        </span>
+                        ${!r.correct ? `<br><span style="color: var(--success)">Correct: ${r.correctAnswer}</span>` : ''}
+                    </div>
+                `).join('')}
+                <button class="submit-btn" onclick="retakeQuiz()" style="margin-top: 2rem;">Retake Quiz</button>
+            `;
+            resultsDiv.classList.add('show');
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function retakeQuiz() {
+            userAnswers = new Array(quizData.length).fill(null);
+            document.getElementById('results').classList.remove('show');
+            renderQuiz();
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        renderQuiz();
+    </script>
+</body>
+</html>

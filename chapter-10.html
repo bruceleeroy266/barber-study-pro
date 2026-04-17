@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 10: Properties & Disorders of Hair & Scalp | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .chapter-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
+        .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; }
+        .chapter-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
+        .content { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+        .section { margin-bottom: 3rem; }
+        .section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+        .section h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .section p, .section ul { margin-bottom: 1rem; color: #ccc; }
+        .section ul { margin-left: 1.5rem; }
+        .key-point { background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .key-point strong { color: var(--gold); }
+        .term { background: var(--medium-gray); padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 8px; }
+        .term strong { color: var(--gold); display: block; margin-bottom: 0.25rem; }
+        table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+        th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--medium-gray); }
+        th { background: var(--medium-gray); font-weight: 600; color: var(--gold); }
+        .quiz-btn { display: inline-block; background: var(--gold); color: var(--dark); padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; margin: 2rem 0; }
+        .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; }
+        .nav-chapters { display: flex; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--medium-gray); }
+        .nav-chapters a { color: var(--gold); text-decoration: none; font-weight: 600; }
+        .warning { background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .warning strong { color: #ef4444; }
+
+        /* Audio Player */
+        .audio-player { position: fixed; bottom: 0; left: 0; right: 0; background: var(--dark-gray); border-top: 2px solid var(--gold); padding: 1rem 2rem; z-index: 1000; display: none; align-items: center; gap: 1rem; box-shadow: 0 -4px 20px rgba(0,0,0,0.5); }
+        .audio-player.active { display: flex; }
+        .audio-controls { display: flex; align-items: center; gap: 1rem; }
+        .audio-btn { background: var(--gold); color: var(--dark); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+        .audio-info { color: var(--light-gray); font-size: 0.875rem; }
+        .audio-close { background: none; border: none; color: var(--light-gray); font-size: 1.5rem; cursor: pointer; margin-left: auto; }
+        .tts-toggle { position: fixed; bottom: 2rem; left: 2rem; background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3); z-index: 100; }
+        .tts-toggle.playing { background: #22c55e; }
+
+        /* Auth Gate Styles */
+        .auth-gate { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--dark); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+        .auth-gate-content { text-align: center; max-width: 500px; }
+        .auth-gate h2 { font-size: 2rem; margin-bottom: 1rem; }
+        .auth-gate p { color: var(--light-gray); margin-bottom: 2rem; }
+        .auth-gate-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .auth-gate-btn { padding: 1rem 2rem; border-radius: 8px; font-weight: 600; text-decoration: none; transition: all 0.3s; }
+        .auth-gate-btn.primary { background: var(--gold); color: var(--dark); }
+        .auth-gate-btn.secondary { background: var(--medium-gray); color: var(--white); border: 1px solid var(--medium-gray); }
+        .auth-gate-btn:hover { transform: translateY(-2px); }
+        .protected-content { display: none; }
+        .protected-content.show { display: block; }
+    </style>
+</head>
+<body>
+    <!-- Auth Gate - Shows if not logged in -->
+    <div class="auth-gate" id="authGate">
+        <div class="auth-gate-content">
+            <h2>🔒 Members Only</h2>
+            <p>This study content is exclusively for registered members. Create a free account to access all 21 chapters, quizzes, flashcards, and the practice exam.</p>
+            <div class="auth-gate-buttons">
+                <a href="login.html" class="auth-gate-btn primary">Create Free Account</a>
+                <a href="index.html" class="auth-gate-btn secondary">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Protected Content - Only shows if logged in -->
+    <div class="protected-content" id="protectedContent">
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <nav><div class="nav-container"><a href="index.html" class="logo">⚡ Barber Study Pro</a><a href="index.html#chapters" class="back-link">← Back</a></div></nav>
+    <header class="chapter-header">
+        <span class="chapter-number">CHAPTER 10</span>
+        <h1>Properties and Disorders of the Hair and Scalp</h1>
+        <p>Hair structure, growth cycles, disorders, and analysis techniques</p>
+    </header>
+    <main class="content">
+        <section class="section">
+            <h2>🎯 Introduction to Trichology</h2>
+            <p><strong>Trichology</strong> (trik-OL-uh-jee) is the scientific study of hair, its disorders, and its care. The word comes from Greek <em>trichos</em> (hair) and <em>ology</em> (study of).</p>
+            <p>Barbers study hair properties to:</p>
+            <ul>
+                <li>Understand how products and chemicals affect hair structure</li>
+                <li>Keep client's hair and scalp healthy</li>
+                <li>Differentiate between normal and abnormal conditions</li>
+                <li>Perform proper hair and scalp analysis before services</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>🏗️ Structure of the Hair</h2>
+            <p>Hair is an appendage of the skin, composed chiefly of a fibrous protein called <strong>keratin</strong> (KER-uh-tin). Full-grown human hair is divided into two parts:</p>
+            <ul>
+                <li><strong>Hair Root</strong> — Portion enclosed within the follicle beneath the skin surface</li>
+                <li><strong>Hair Shaft</strong> — Portion extending above the skin surface</li>
+            </ul>
+            
+            <h3>Structures of the Hair Root:</h3>
+            <ul>
+                <li><strong>Hair Follicle</strong> — Tubelike depression or pocket in the skin containing the hair root</li>
+                <li><strong>Hair Bulb</strong> — Lowest part of the hair root; contains the dermal papilla</li>
+                <li><strong>Dermal Papilla</strong> — Small, cone-shaped elevation at the base that supplies nourishment</li>
+                <li><strong>Sebaceous Glands</strong> — Oil glands that secrete sebum to lubricate hair and skin</li>
+                <li><strong>Arrector Pili Muscle</strong> — Small muscle that contracts causing "goose bumps"</li>
+            </ul>
+
+            <h3>Factors Affecting Hair Health:</h3>
+            <ul>
+                <li>Diet and nutrition</li>
+                <li>Blood circulation</li>
+                <li>Emotional disturbances</li>
+                <li>Endocrine glands</li>
+                <li>Medication</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>🔬 Layers of the Hair Shaft</h2>
+            <p>The hair shaft has three layers:</p>
+            <ul>
+                <li><strong>Cuticle</strong> — Outermost layer of overlapping scales that protects inner structure. Healthy cuticle lies flat and gives hair shine.</li>
+                <li><strong>Cortex</strong> — Middle layer making up 90% of hair weight. Contains melanin pigment and provides strength and elasticity.</li>
+                <li><strong>Medulla</strong> — Innermost layer composed of round cells. May be absent in fine or naturally blond hair.</li>
+            </ul>
+            <div class="key-point"><strong>Key Point:</strong> The cortex is most important for chemical services because it contains pigment and structural bonds.</div>
+        </section>
+
+        <section class="section">
+            <h2>⚗️ Chemical Composition of Hair</h2>
+            <p>Human hair is approximately <strong>90% protein</strong>. The essential elements in hair are remembered by <strong>COHNS</strong>:</p>
+            <table>
+                <tr><th>Element</th><th>Percentage</th></tr>
+                <tr><td>Carbon</td><td>51%</td></tr>
+                <tr><td>Oxygen</td><td>21%</td></tr>
+                <tr><td>Hydrogen</td><td>6%</td></tr>
+                <tr><td>Nitrogen</td><td>17%</td></tr>
+                <tr><td>Sulfur</td><td>5%</td></tr>
+            </table>
+
+            <h3>Side Bonds of the Hair Cortex:</h3>
+            <table>
+                <tr><th>Bond</th><th>Type</th><th>Strength</th><th>Broken By</th><th>Re-formed By</th></tr>
+                <tr><td>Hydrogen</td><td>Side bond</td><td>Weak, physical</td><td>Water or heat</td><td>Drying or cooling</td></tr>
+                <tr><td>Salt</td><td>Side bond</td><td>Weak, physical</td><td>Changes in pH</td><td>Normalizing pH</td></tr>
+                <tr><td>Disulfide</td><td>Side bond</td><td>Strong, chemical</td><td>Thio perms and relaxers</td><td>Oxidation with neutralizer</td></tr>
+            </table>
+            <div class="key-point"><strong>Disulfide bonds</strong> are the strongest and account for the final third of hair's total strength. They are broken by chemical services and re-formed with neutralizers.</div>
+        </section>
+
+        <section class="section">
+            <h2>🎨 Hair Pigment</h2>
+            <p>Natural hair color results from <strong>melanin</strong> pigment found within the cortex. There are two types:</p>
+            <ul>
+                <li><strong>Eumelanin</strong> (yoo-MEL-uh-nin) — Provides brown and black color to hair</li>
+                <li><strong>Pheomelanin</strong> (fee-oh-MEL-uh-nin) — Provides natural hair colors ranging from red and ginger to yellow and light blond tones</li>
+            </ul>
+            <p>All natural color depends on the ratio of eumelanin to pheomelanin. Gray hair contains only a few scattered melanin granules; white hair contains no melanin.</p>
+        </section>
+
+        <section class="section">
+            <h2>〰️ Wave Pattern</h2>
+            <p>The wave pattern refers to the shape of the hair strand and is described as straight, wavy, curly, or extremely curly. Natural wave patterns result from genetics.</p>
+            
+            <h3>Wave Pattern and Cross Sections:</h3>
+            <table>
+                <tr><th>Wave Pattern</th><th>Shape of Cross Section</th></tr>
+                <tr><td>Straight Hair</td><td>Round cross section</td></tr>
+                <tr><td>Wavy or Curly Hair</td><td>Oval to round cross section</td></tr>
+                <tr><td>Extremely Curly Hair</td><td>Elliptical cross section</td></tr>
+            </table>
+
+            <h3>Extremely Curly Hair Characteristics:</h3>
+            <ul>
+                <li>Grows in long twisted spirals</li>
+                <li>Cross sections appear flattened and vary in shape</li>
+                <li>Has a natural tendency to coil like a telephone cord</li>
+                <li>Usually has fine texture with individual strands winding together</li>
+                <li>Often has low elasticity, breaks easily, and tends to knot</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>🔄 Hair Growth Cycle</h2>
+            <p>Average growth rate: about <strong>½ inch per month</strong>. Hair growth occurs in cycles with three phases:</p>
+            
+            <h3>Three Phases of Hair Growth:</h3>
+            <div class="term">
+                <strong>Anagen (AN-uh-jen) — The Growth Phase</strong>
+                <p>New hair is produced. Cells are manufactured in the hair follicle faster than any other normal cell. About 90% of scalp hair is in this phase, lasting 3-5 years (up to 10 years).</p>
+            </div>
+            <div class="term">
+                <strong>Catagen (KAT-uh-jen) — The Transition Phase</strong>
+                <p>Transition period between growth and resting. The follicle shrinks, hair bulb disappears. Lasts 1-2 weeks. Less than 1% of hair is in this phase.</p>
+            </div>
+            <div class="term">
+                <strong>Telogen (TEL-uh-jen) — The Resting Phase</strong>
+                <p>Final phase where hair either sheds or remains until pushed out by new growth. Lasts 3-6 months. About 10% of scalp hair is in this phase.</p>
+            </div>
+
+            <h3>Normal Hair Shedding:</h3>
+            <p>It is normal to lose an average of <strong>75-100 hairs per day</strong>. Eyebrow hairs and eyelashes are replaced every 4-5 months.</p>
+
+            <h3>Hair Growth Facts:</h3>
+            <ul>
+                <li>Hair growth is NOT increased by shaving, trimming, cutting, singeing, or ointments</li>
+                <li>Scalp massage increases blood flow but has not been proven to increase hair growth</li>
+                <li>Only FDA-approved treatments proven to increase hair growth are minoxidil and finasteride</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>📍 Growth Patterns</h2>
+            <p>Growth patterns result in creating hair streams, whorls, and cowlicks:</p>
+            <ul>
+                <li><strong>Hair Stream</strong> — Hair that flows in the same direction; result of follicles arranged uniformly</li>
+                <li><strong>Whorl</strong> — Hair that grows in a circular or swirl pattern; most often seen at the crown</li>
+                <li><strong>Cowlick</strong> — Tuft of hair that stands straight up; usually more noticeable at front hairline</li>
+            </ul>
+            <div class="key-point">Styles should be chosen to minimize the upright effects of cowlicks.</div>
+        </section>
+
+        <section class="section">
+            <h2>🧪 Myths and Facts About Hair Growth</h2>
+            <table>
+                <tr><th>Myth</th><th>Fact</th></tr>
+                <tr><td>Shaving makes hair grow back faster, darker, and coarser</td><td>Shaving has no effect on hair growth; it may seem coarser because hair is blunt cut</td></tr>
+                <tr><td>Scalp massage increases hair growth</td><td>Massage increases blood circulation but has not been scientifically proven to increase growth</td></tr>
+                <tr><td>Gray hair is coarser and more resistant</td><td>Gray hair is the same as pigmented hair; it is simply more noticeable</td></tr>
+                <tr><td>Natural curl is always determined by racial background</td><td>Anyone of any race can have hair from straight to extremely curly</td></tr>
+            </table>
+        </section>
+
+        <section class="section">
+            <h2>💇 Hair Loss (Alopecia)</h2>
+            <p>Abnormal hair loss is called <strong>alopecia</strong> (al-oh-PEE-shah). Over 63 million men and women in the US suffer from abnormal hair loss.</p>
+
+            <h3>Types of Abnormal Hair Loss:</h3>
+            <div class="term">
+                <strong>Androgenic Alopecia</strong> — Hair loss from genetics, age, and hormonal changes. Known as male pattern baldness.
+            </div>
+            <div class="term">
+                <strong>Alopecia Prematura</strong> — Early onset hair loss, frequently seen by age 40.
+            </div>
+            <div class="term">
+                <strong>Alopecia Areata</strong> — Autoimmune disorder causing round patches of sudden hair loss. Can progress to total scalp hair loss.
+            </div>
+            <div class="term">
+                <strong>Alopecia Totalis</strong> — Complete hair loss on the scalp.
+            </div>
+            <div class="term">
+                <strong>Alopecia Universalis</strong> — Complete body hair loss.
+            </div>
+            <div class="term">
+                <strong>Alopecia Senilis</strong> — Normal loss of scalp hair in old age.
+            </div>
+            <div class="term">
+                <strong>Alopecia Syphilitica</strong> — Caused by syphilis; non-inflamed bald areas look moth-eaten.
+            </div>
+
+            <h3>FDA-Approved Hair Loss Treatments:</h3>
+            <ul>
+                <li><strong>Minoxidil</strong> — Topical treatment applied twice daily; sold as Rogaine</li>
+                <li><strong>Finasteride</strong> — Oral prescription for men only; sold as Propecia</li>
+            </ul>
+
+            <h3>Emotional Impact of Hair Loss:</h3>
+            <p>Studies show bald men are perceived as:</p>
+            <ul>
+                <li>Less physically attractive</li>
+                <li>Less assertive</li>
+                <li>Less successful</li>
+                <li>Less personally likeable</li>
+                <li>Older than actual age (average 5 years)</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>🔍 Hair Disorders (Noncontagious)</h2>
+            <div class="term">
+                <strong>Canities (kuh-NISH-eez)</strong> — Technical term for gray hair. Congenital canities exists at birth (albinism); acquired canities develops with age.
+            </div>
+            <div class="term">
+                <strong>Hypertrichosis (hy-pur-trih-KOH-sis)</strong> — Abnormal growth of hair in areas normally covered with vellus hair only.
+            </div>
+            <div class="term">
+                <strong>Trichoptilosis (trik-op-tih-LOH-sis)</strong> — Technical term for split ends.
+            </div>
+            <div class="term">
+                <strong>Trichorrhexis Nodosa</strong> — Technical term for knotted hair; characterized by brittleness and nodular swellings.
+            </div>
+            <div class="term">
+                <strong>Monilethrix (mon-IL-ee-thriks)</strong> — Technical term for beaded hair; hair breaks easily between beads or nodes.
+            </div>
+            <div class="term">
+                <strong>Fragilitas Crinium</strong> — Technical term for brittle hair; hairs may split at any point.
+            </div>
+            <div class="term">
+                <strong>Ringed Hair</strong> — Variation of canities with alternating bands of gray and pigmented hair.
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🦠 Scalp Disorders</h2>
+            
+            <h3>Dandruff (Pityriasis):</h3>
+            <p><strong>Pityriasis</strong> (pit-ih-RY-uh-sis) is the technical term for dandruff — excessive production and accumulation of skin cells.</p>
+            <ul>
+                <li><strong>Pityriasis Capitis Simplex</strong> — Classic dandruff with scalp irritation, large flakes, itchy scalp</li>
+                <li><strong>Pityriasis Steatoides</strong> — More severe form with greasy/waxy scales mixed with sebum; may cause seborrheic dermatitis</li>
+            </ul>
+            <div class="key-point">Current research confirms dandruff is caused by a fungus called <strong>malassezia</strong> (formerly pityrosporum), present on all human skin.</div>
+
+            <h3>Fungal Infections (Tinea):</h3>
+            <p><strong>Tinea</strong> (TIN-ee-uh) is the medical term for ringworm. All forms are highly contagious.</p>
+            <ul>
+                <li><strong>Tinea Capitis</strong> — Ringworm of the scalp; red papules at follicle openings, hair becomes brittle</li>
+                <li><strong>Tinea Barbae</strong> — Ringworm of the beard; inflamed patches with pustules</li>
+                <li><strong>Tinea Favosa</strong> — Also called honeycomb ringworm; dry, sulfur-yellow cup-like crusts</li>
+            </ul>
+            <div class="warning"><strong>Important:</strong> Clients with suspected or confirmed tinea must be referred to a physician and cannot receive services until cleared.</div>
+
+            <h3>Bacterial Infections:</h3>
+            <ul>
+                <li><strong>Folliculitis Barbae</strong> — Inflammation of hair follicles with inflamed pustules; commonly called barber's itch</li>
+                <li><strong>Pseudofolliculitis Barbae</strong> — Also called razor bumps; chronic inflammatory condition resembling folliculitis</li>
+                <li><strong>Sycosis Vulgaris</strong> — Chronic bacterial infection involving areas surrounding follicles</li>
+                <li><strong>Furuncle</strong> — Boil; acute bacterial infection of hair follicle</li>
+                <li><strong>Carbuncle</strong> — Result of acute, deep-seated bacterial infection; larger than furuncle</li>
+            </ul>
+
+            <h3>Parasitic Infestations:</h3>
+            <ul>
+                <li><strong>Pediculosis Capitis</strong> — Head lice infestation. Lice feed on scalp blood causing severe itching. Highly contagious through contact with infected items.</li>
+                <li><strong>Scabies</strong> — Contagious skin disease caused by mites that burrow under skin. Excessive itching leads to infections.</li>
+            </ul>
+            <div class="warning"><strong>Critical:</strong> Clients with head lice or scabies must NOT be treated in the barbershop and should be referred to a physician immediately.</div>
+        </section>
+
+        <section class="section">
+            <h2>🔬 Hair and Scalp Analysis</h2>
+            <p>Barbering services benefit from analyzing hair condition using four senses:</p>
+            <ul>
+                <li><strong>Sight</strong> — Observe whether hair looks dry or oily</li>
+                <li><strong>Hearing</strong> — Listen to client information about hair, health problems, product experiences</li>
+                <li><strong>Smell</strong> — Odor may indicate scalp disorders</li>
+                <li><strong>Touch</strong> — Essential for analyzing hair condition and texture</li>
+            </ul>
+
+            <h3>Scalp Analysis Procedure:</h3>
+            <ul>
+                <li>Comb through hair gently while parting to check for abnormalities</li>
+                <li>Do NOT begin service if parasites are present</li>
+                <li>Do NOT proceed with chemical services if signs of irritation or abrasions exist</li>
+                <li>Refer clients with unusual pigmentation or growth to a physician</li>
+            </ul>
+
+            <h3>Hair Texture (Diameter):</h3>
+            <ul>
+                <li><strong>Coarse</strong> — Largest diameter; strongest; more resistant to chemicals</li>
+                <li><strong>Medium</strong> — Most common; considered normal standard</li>
+                <li><strong>Fine</strong> — Smallest diameter; most fragile; processes faster</li>
+            </ul>
+
+            <h3>Hair Density:</h3>
+            <p>Number of individual hair strands per square inch. Average: approximately <strong>2,200 strands per square inch</strong> with about <strong>100,000 individual strands</strong> on the head.</p>
+            <table>
+                <tr><th>Hair Color</th><th>Average Number of Hairs</th></tr>
+                <tr><td>Blond</td><td>140,000</td></tr>
+                <tr><td>Brown</td><td>110,000</td></tr>
+                <tr><td>Black</td><td>108,000</td></tr>
+                <tr><td>Red</td><td>80,000</td></tr>
+            </table>
+
+            <h3>Hair Porosity:</h3>
+            <p>Ability of hair to absorb moisture. Related to the condition of the cuticle layer.</p>
+            <ul>
+                <li><strong>Low Porosity (Resistant)</strong> — Compact cuticle; naturally resistant to penetration; may require more alkaline solutions</li>
+                <li><strong>Medium/Normal Porosity</strong> — Absorbs least amount of moisture; processes as expected</li>
+                <li><strong>High Porosity (Overly Porous)</strong> — Absorbs quickly; usually result of overprocessing; dry, damaged, fragile</li>
+            </ul>
+            <p><strong>Porosity Test:</strong> Slide thumb and forefinger down dry hair strand toward scalp. Smooth = resistant; slight roughness = porous; very rough/breaks = overly porous.</p>
+
+            <h3>Hair Elasticity:</h3>
+            <p>Ability of hair to stretch and return to original length without breaking. Indicates strength of side bonds.</p>
+            <ul>
+                <li><strong>Normal:</strong> Stretches up to 50% when wet and returns</li>
+                <li><strong>Curly/Wavy:</strong> May stretch up to 50% and return</li>
+                <li><strong>Low:</strong> Breaks easily or fails to return — indicates damage</li>
+            </ul>
+            <p><strong>Elasticity Test:</strong> Gently tug wet hair strands. Normal elasticity stretches and returns without breaking.</p>
+        </section>
+
+        <section class="section">
+            <h2>📝 Chapter 10 Key Takeaways</h2>
+            <div class="key-point">
+                <ul style="margin-left: 1rem;">
+                    <li><strong>Trichology</strong> is the study of hair and scalp</li>
+                    <li>Hair has root (inside follicle) and shaft (visible) with three layers: cuticle, cortex, medulla</li>
+                    <li>Hair made of <strong>keratin</strong> containing COHNS elements</li>
+                    <li><strong>Disulfide bonds</strong> are strongest; broken by chemical services</li>
+                    <li>Two melanin types: <strong>eumelanin</strong> (brown/black) and <strong>pheomelanin</strong> (red/blond)</li>
+                    <li>Hair grows in cycles: <strong>anagen, catagen, telogen</strong></li>
+                    <li>Normal shedding: 75-100 hairs per day</li>
+                    <li><strong>Alopecia</strong> = abnormal hair loss; many types exist</li>
+                    <li>Only FDA-approved treatments: <strong>minoxidil</strong> and <strong>finasteride</strong></li>
+                    <li><strong>Tinea</strong> (ringworm) is highly contagious — refer to physician</li>
+                    <li><strong>Pediculosis</strong> (lice) and <strong>scabies</strong> — do not service; refer immediately</li>
+                    <li>Analyze <strong>texture, density, porosity, elasticity</strong> before services</li>
+                    <li>Always use sight, hearing, smell, and touch for analysis</li>
+                </ul>
+            </div>
+        </section>
+
+        <a href="chapter-10-quiz.html" class="quiz-btn">📝 Take Chapter 10 Quiz</a>
+
+        <div class="nav-chapters"><a href="chapter-09.html">← Chapter 9</a><a href="chapter-11.html">Chapter 11 →</a></div>
+    </main>
+    <script>
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+            localStorage.setItem('chapter-10-progress', Math.round(scrolled));
+        });
+    </script>
+
+<script>
+// Text-to-Speech functionality
+let speechSynthesis = window.speechSynthesis;
+let currentUtterance = null;
+let isPlaying = false;
+let textChunks = [];
+let currentChunk = 0;
+
+function extractTextContent() {
+    const content = document.querySelector('.content');
+    if (!content) return '';
+    let fullText = '';
+    const sections = content.querySelectorAll('.section');
+    sections.forEach(section => {
+        const headings = section.querySelectorAll('h2, h3');
+        headings.forEach(h => { fullText += h.textContent + '. '; });
+        const paragraphs = section.querySelectorAll('p');
+        paragraphs.forEach(p => { fullText += p.textContent + ' '; });
+        const listItems = section.querySelectorAll('li');
+        listItems.forEach(li => { fullText += li.textContent + '. '; });
+    });
+    return fullText;
+}
+
+function splitTextIntoChunks(text, maxLength = 200) {
+    const sentences = text.match(/[^\.!?]+[\.!?]+/g) || [text];
+    const chunks = [];
+    let currentChunk = '';
+    sentences.forEach(sentence => {
+        if ((currentChunk + sentence).length > maxLength && currentChunk.length > 0) {
+            chunks.push(currentChunk.trim());
+            currentChunk = sentence;
+        } else {
+            currentChunk += sentence + ' ';
+        }
+    });
+    if (currentChunk.trim().length > 0) chunks.push(currentChunk.trim());
+    return chunks;
+}
+
+function toggleTTS() {
+    const player = document.getElementById('audioPlayer');
+    const toggle = document.getElementById('ttsToggle');
+    if (!player.classList.contains('active')) {
+        player.classList.add('active');
+        toggle.classList.add('playing');
+        toggle.innerHTML = '🔊 Stop Listening';
+        const text = extractTextContent();
+        textChunks = splitTextIntoChunks(text);
+        currentChunk = 0;
+        startPlayback();
+    } else {
+        stopPlayback();
+    }
+}
+
+function startPlayback() {
+    if (currentChunk >= textChunks.length) { closeAudioPlayer(); return; }
+    const text = textChunks[currentChunk];
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.rate = 0.9;
+    currentUtterance.pitch = 1;
+    currentUtterance.volume = 1;
+    const voices = speechSynthesis.getVoices();
+    const preferredVoice = voices.find(v => v.name.includes('Google US English')) || voices.find(v => v.name.includes('Samantha')) || voices.find(v => v.lang === 'en-US');
+    if (preferredVoice) currentUtterance.voice = preferredVoice;
+    currentUtterance.onstart = () => { isPlaying = true; updatePlayButton(); };
+    currentUtterance.onend = () => { currentChunk++; if (currentChunk < textChunks.length) startPlayback(); else closeAudioPlayer(); };
+    speechSynthesis.speak(currentUtterance);
+}
+
+function togglePlay() {
+    if (isPlaying) { speechSynthesis.pause(); isPlaying = false; }
+    else { if (speechSynthesis.paused) speechSynthesis.resume(); else startPlayback(); isPlaying = true; }
+    updatePlayButton();
+}
+
+function updatePlayButton() {
+    document.getElementById('playPauseBtn').textContent = isPlaying ? '⏸' : '▶';
+}
+
+function skipBackward() { if (currentChunk > 0) { speechSynthesis.cancel(); currentChunk = Math.max(0, currentChunk - 1); startPlayback(); } }
+function skipForward() { if (currentChunk < textChunks.length - 1) { speechSynthesis.cancel(); currentChunk++; startPlayback(); } }
+
+function closeAudioPlayer() {
+    speechSynthesis.cancel();
+    isPlaying = false;
+    currentChunk = 0;
+    document.getElementById('audioPlayer').classList.remove('active');
+    document.getElementById('ttsToggle').classList.remove('playing');
+    document.getElementById('ttsToggle').innerHTML = '🔊 Listen to Chapter';
+}
+
+function stopPlayback() { speechSynthesis.cancel(); isPlaying = false; closeAudioPlayer(); }
+speechSynthesis.onvoiceschanged = () => { speechSynthesis.getVoices(); };
+</script>
+
+<button class="tts-toggle" id="ttsToggle" onclick="toggleTTS()">🔊 Listen to Chapter</button>
+<div class="audio-player" id="audioPlayer">
+    <div class="audio-controls">
+        <button class="audio-btn" id="playPauseBtn" onclick="togglePlay()">▶</button>
+        <button class="audio-btn" onclick="skipBackward()">⏮</button>
+        <button class="audio-btn" onclick="skipForward()">⏭</button>
+    </div>
+    <div class="audio-info">Listen while you study</div>
+    <button class="audio-close" onclick="closeAudioPlayer()">×</button>
+</div>
+
+<!-- Content Protection -->
+<script>
+    // Disable right-click
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Content is protected. Right-click is disabled.');
+        return false;
+    });
+
+    // Disable copy
+    document.addEventListener('copy', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Copying is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable cut
+    document.addEventListener('cut', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Cutting is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable text selection
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable drag
+    document.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable print
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+            e.preventDefault();
+            showProtectionMessage('Printing is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            showProtectionMessage('Saving is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+            e.preventDefault();
+            showProtectionMessage('View source is disabled.');
+            return false;
+        }
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J'))) {
+            e.preventDefault();
+            showProtectionMessage('Developer tools are disabled.');
+            return false;
+        }
+    });
+
+    // Show protection message
+    function showProtectionMessage(message) {
+        const existing = document.querySelector('.protection-message');
+        if (existing) existing.remove();
+
+        const div = document.createElement('div');
+        div.className = 'protection-message';
+        div.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #ef4444; color: white; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
+        div.textContent = '⚠️ ' + message;
+        document.body.appendChild(div);
+
+        setTimeout(() => {
+            div.style.opacity = '0';
+            div.style.transition = 'opacity 0.5s';
+            setTimeout(() => div.remove(), 500);
+        }, 3000);
+    }
+
+    // Console warning
+    console.log('%c⚠️ CONTENT PROTECTION', 'color: #ef4444; font-size: 24px; font-weight: bold;');
+    console.log('%cThis content is copyrighted and protected. Unauthorized copying, distribution, or reproduction is prohibited.', 'color: #888; font-size: 14px;');
+    console.log('%c© 2026 Barber Study Pro. All rights reserved.', 'color: #D4AF37; font-size: 12px;');
+
+    // Prevent viewing source via right-click on images
+    document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('contextmenu', e => e.preventDefault());
+    });
+</script>
+    </div><!-- End protected content -->
+
+    <!-- Auth Check Script -->
+    <script>
+        function checkAuth() {
+            const session = localStorage.getItem('bsp_session');
+            const authGate = document.getElementById('authGate');
+            const protectedContent = document.getElementById('protectedContent');
+            if (session) {
+                authGate.style.display = 'none';
+                protectedContent.classList.add('show');
+            } else {
+                authGate.style.display = 'flex';
+                protectedContent.classList.remove('show');
+            }
+        }
+        checkAuth();
+    </script>
+</body>
+</html>

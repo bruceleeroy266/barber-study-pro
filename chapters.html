@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Chapters | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+        
+        /* Navigation */
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        
+        /* Enhanced Navigation */
+        .nav-menu { display: flex; gap: 0.5rem; align-items: center; }
+        .nav-item { position: relative; }
+        .nav-link { color: var(--white); text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: 6px; transition: all 0.3s; display: flex; align-items: center; gap: 0.25rem; }
+        .nav-link:hover { color: var(--gold); background: rgba(212,175,55,0.1); }
+        .nav-link::after { content: '▼'; font-size: 0.7rem; transition: transform 0.3s; }
+        .nav-item:hover .nav-link::after { transform: rotate(180deg); }
+        
+        /* Dropdown Menu */
+        .dropdown { position: absolute; top: 100%; left: 0; background: var(--dark-gray); border: 1px solid var(--medium-gray); border-radius: 8px; padding: 0.5rem; min-width: 220px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        .nav-item:hover .dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+        .dropdown-section { margin-bottom: 0.5rem; }
+        .dropdown-section:last-child { margin-bottom: 0; }
+        .dropdown-title { font-size: 0.75rem; text-transform: uppercase; color: var(--light-gray); padding: 0.5rem; font-weight: 600; letter-spacing: 0.5px; }
+        .dropdown a { display: block; color: var(--white); text-decoration: none; padding: 0.5rem 0.75rem; border-radius: 4px; font-size: 0.9rem; transition: all 0.2s; }
+        .dropdown a:hover { background: rgba(212,175,55,0.1); color: var(--gold); }
+        
+        /* Mobile Menu Toggle */
+        .mobile-toggle { display: none; background: none; border: none; color: var(--white); font-size: 1.5rem; cursor: pointer; }
+        
+        .nav-cta { background: var(--gold); color: var(--dark); padding: 0.5rem 1.25rem; border-radius: 6px; text-decoration: none; font-weight: 600; margin-left: 1rem; }
+        
+        @media (max-width: 1024px) {
+            .nav-menu { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--dark-gray); flex-direction: column; padding: 1rem; border-bottom: 1px solid var(--medium-gray); }
+            .nav-menu.active { display: flex; }
+            .nav-item { width: 100%; }
+            .dropdown { position: static; opacity: 1; visibility: visible; transform: none; box-shadow: none; border: none; background: var(--medium-gray); margin-top: 0.5rem; display: none; }
+            .nav-item.active .dropdown { display: block; }
+            .mobile-toggle { display: block; }
+            .nav-link::after { display: none; }
+        }
+        
+        /* Header */
+        .page-header { padding: 8rem 2rem 3rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
+        .page-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 0.5rem; }
+        .page-header p { color: var(--light-gray); max-width: 600px; margin: 0 auto; }
+        
+        /* Progress Overview */
+        .progress-overview { background: var(--dark-gray); padding: 2rem; border-bottom: 1px solid var(--medium-gray); }
+        .progress-container { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .progress-stats { display: flex; gap: 2rem; }
+        .progress-stat { text-align: center; }
+        .progress-stat-number { font-size: 2rem; font-weight: 800; color: var(--gold); }
+        .progress-stat-label { font-size: 0.875rem; color: var(--light-gray); }
+        .overall-progress { flex: 1; min-width: 250px; max-width: 400px; }
+        .progress-bar-bg { background: var(--medium-gray); height: 12px; border-radius: 6px; overflow: hidden; }
+        .progress-bar-fill { background: linear-gradient(90deg, var(--gold), #b8941f); height: 100%; width: 0%; transition: width 0.5s ease; }
+        .progress-text { display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.875rem; }
+        
+        /* Chapters Grid */
+        .chapters-section { padding: 3rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .chapters-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+        
+        /* Chapter Card */
+        .chapter-card { background: var(--dark-gray); border: 1px solid var(--medium-gray); border-radius: 12px; padding: 1.5rem; transition: all 0.3s; cursor: pointer; position: relative; overflow: hidden; }
+        .chapter-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+        .chapter-card.completed { border-left: 4px solid #22c55e; }
+        .chapter-card.in-progress { border-left: 4px solid var(--gold); }
+        .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.75rem; }
+        .chapter-card h3 { font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem; line-height: 1.3; }
+        .chapter-card p { color: var(--light-gray); font-size: 0.9rem; margin-bottom: 1rem; }
+        .chapter-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; color: var(--light-gray); }
+        .chapter-links { display: flex; gap: 0.75rem; margin-top: 1rem; }
+        .chapter-links a { flex: 1; text-align: center; padding: 0.5rem; border-radius: 6px; text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: all 0.3s; }
+        .btn-study { background: var(--gold); color: var(--dark); }
+        .btn-study:hover { background: #e5c04a; }
+        .btn-quiz { background: var(--medium-gray); color: var(--white); border: 1px solid var(--medium-gray); }
+        .btn-quiz:hover { border-color: var(--gold); color: var(--gold); }
+        .progress-indicator { position: absolute; top: 1rem; right: 1rem; width: 40px; height: 40px; }
+        .progress-ring { transform: rotate(-90deg); }
+        .progress-ring-circle { fill: none; stroke: var(--medium-gray); stroke-width: 3; }
+        .progress-ring-progress { fill: none; stroke: var(--gold); stroke-width: 3; stroke-linecap: round; transition: stroke-dashoffset 0.5s; }
+        .progress-text-small { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.7rem; font-weight: 600; }
+        
+        /* Category Sections */
+        .category-section { margin-bottom: 3rem; }
+        .category-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid var(--medium-gray); }
+        .category-icon { font-size: 1.5rem; }
+        .category-title { font-size: 1.25rem; font-weight: 600; }
+        .category-count { background: var(--medium-gray); padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; color: var(--light-gray); }
+        
+        /* Footer */
+        footer { background: var(--dark-gray); padding: 2rem; text-align: center; border-top: 1px solid var(--medium-gray); margin-top: 3rem; }
+        footer p { color: var(--light-gray); font-size: 0.875rem; }
+        
+        /* Mobile */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .progress-stats { flex-direction: column; gap: 1rem; }
+            .chapters-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Auth Gate Styles */
+        .auth-gate { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--dark); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+        .auth-gate-content { text-align: center; max-width: 500px; }
+        .auth-gate h2 { font-size: 2rem; margin-bottom: 1rem; }
+        .auth-gate p { color: var(--light-gray); margin-bottom: 2rem; }
+        .auth-gate-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .auth-gate-btn { padding: 1rem 2rem; border-radius: 8px; font-weight: 600; text-decoration: none; transition: all 0.3s; }
+        .auth-gate-btn.primary { background: var(--gold); color: var(--dark); }
+        .auth-gate-btn.secondary { background: var(--medium-gray); color: var(--white); border: 1px solid var(--medium-gray); }
+        .protected-content { display: none; }
+        .protected-content.show { display: block; }
+    </style>
+</head>
+<body>
+    <!-- Auth Gate - Shows if not logged in -->
+    <div class="auth-gate" id="authGate">
+        <div class="auth-gate-content">
+            <h2>🔒 Members Only</h2>
+            <p>This study content is exclusively for registered members. Create a free account to access all 21 chapters, quizzes, flashcards, and the practice exam.</p>
+            <div class="auth-gate-buttons">
+                <a href="login.html" class="auth-gate-btn primary">Create Free Account</a>
+                <a href="index.html" class="auth-gate-btn secondary">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Protected Content - Only shows if logged in -->
+    <div class="protected-content" id="protectedContent">
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">Barber Study Pro</a>
+            <button class="mobile-toggle" onclick="toggleMobileMenu()">☰</button>
+            <div class="nav-menu" id="navMenu">
+                <div class="nav-item">
+                    <a href="#" class="nav-link">Study</a>
+                    <div class="dropdown">
+                        <div class="dropdown-section">
+                            <div class="dropdown-title">Chapters</div>
+                            <a href="chapters.html">All 21 Chapters</a>
+                            <a href="chapter-01.html">Chapter 1: History</a>
+                            <a href="chapter-02.html">Chapter 2: Life Skills</a>
+                            <a href="chapter-03.html">Chapter 3: Professional Image</a>
+                        </div>
+                        <div class="dropdown-section">
+                            <div class="dropdown-title">Practice</div>
+                            <a href="chapter-01-quiz.html">Quizzes</a>
+                            <a href="chapter-01-flashcards.html">Flashcards</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link">Resources</a>
+                    <div class="dropdown">
+                        <div class="dropdown-section">
+                            <div class="dropdown-title">Study Tools</div>
+                            <a href="index.html#features">Features</a>
+                            <a href="index.html#comparison">Compare to Milady</a>
+                            <a href="index.html#faq">FAQ</a>
+                        </div>
+                        <div class="dropdown-section">
+                            <div class="dropdown-title">Oklahoma</div>
+                            <a href="oklahoma-board.html">OK State Board Info</a>
+                            <a href="oklahoma-board.html#exam">NIC Exam Guide</a>
+                            <a href="oklahoma-board.html#requirements">License Requirements</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <a href="index.html#about" class="nav-link">About</a>
+                    <div class="dropdown">
+                        <a href="index.html#about">Our Story</a>
+                        <a href="index.html#testimonials">Testimonials</a>
+                        <a href="index.html#faq">FAQ</a>
+                    </div>
+                </div>
+                <div class="nav-item" id="authSection">
+                    <a href="login.html" class="nav-link">Sign In</a>
+                    <div class="dropdown">
+                        <a href="login.html">Student Login</a>
+                        <a href="student-dashboard.html">My Dashboard</a>
+                        <a href="#" onclick="logout()">Logout</a>
+                    </div>
+                </div>
+                <a href="final-exam.html" class="nav-cta" style="background:linear-gradient(135deg,var(--gold),#b8941f);">Take Final Exam</a>
+                <a href="index.html" class="nav-cta" style="background:var(--medium-gray);">← Back Home</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="page-header">
+        <h1>Complete Study Guide</h1>
+        <p>All 21 chapters with comprehensive content and interactive quizzes. Track your progress as you study.</p>
+    </header>
+
+    <!-- Progress Overview -->
+    <section class="progress-overview">
+        <div class="progress-container">
+            <div class="progress-stats">
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="completed-count">0</div>
+                    <div class="progress-stat-label">Completed</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="in-progress-count">0</div>
+                    <div class="progress-stat-label">In Progress</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number">21</div>
+                    <div class="progress-stat-label">Total Chapters</div>
+                </div>
+            </div>
+            <div class="overall-progress">
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="overall-progress-bar"></div>
+                </div>
+                <div class="progress-text">
+                    <span>Overall Progress</span>
+                    <span id="overall-percentage">0%</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chapters Section -->
+    <section class="chapters-section">
+        
+        <!-- Foundations -->
+        <div class="category-section">
+            <div class="category-header">
+                <span class="category-icon">📚</span>
+                <h2 class="category-title">Foundations</h2>
+                <span class="category-count">Chapters 1-5</span>
+            </div>
+            <div class="chapters-grid">
+                <div class="chapter-card" data-chapter="1">
+                    <span class="chapter-number">CHAPTER 1</span>
+                    <h3>History of Barbering</h3>
+                    <p>From ancient civilizations to modern barbering. Learn the evolution of the profession.</p>
+                    <div class="chapter-meta">
+                        <span>📖 15 min read</span>
+                        <span>✓ 50 questions</span>
+                    </div>
+                    <div class="chapter-links">
+                        <a href="chapter-01.html" class="btn-study">Study</a>
+                        <a href="chapter-01-quiz.html" class="btn-quiz">Quiz</a>
+                    </div>
+                </div>
+
+                <div class="chapter-card" data-chapter="2">
+                    <span class="chapter-number">CHAPTER 2</span>
+                    <h3>Life Skills</h3>
+                    <p>Professional ethics, communication, time management, and building a successful career.</p>
+                    <div class="chapter-meta">
+                        <span>📖 20 min read</span>
+                        <span>✓ 50 questions</span>
+                    </div>
+                    <div class="chapter-links">
+                        <a href="chapter-02.html" class="btn-study">Study</a>
+                        <a href="chapter-02-quiz.html" class="btn-quiz">Quiz</a>
+                    </div>
+                </div>
+
+                <div class="chapter-card" data-chapter="3">
+                    <span class="chapter-number">CHAPTER 3</span>
+                    <h3>Professional Image</h3>
+                    <p>Personal grooming, professional behavior, and maintaining a positive attitude.</p>
+                    <div class="chapter-meta">
+                        <span>📖 15 min read</span>
+                        <span>✓ 50 questions</span>
+                    </div>
+                    <div class="chapter-links">
+                        <a href="chapter-03.html" class="btn-study">Study</a>
+                        <a href="chapter-03-quiz.html" class="btn-quiz">Quiz</a>
+                    </div>
+                </div>
+
+                <div class="chapter-card" data-chapter="4">
+                    <span class="chapter-number">CHAPTER 4</span>
+                    <h3>Infection Control</h3>
+                    <p>Sanitation, disinfection, sterilization, and preventing disease transmission.</p>
+                    <div class="chapter-meta">
+                        <span>📖 25 min read</span>
+                        <span>✓ 50 questions</span>
+                    </div>
+                    <div class="chapter-links">
+                        <a href="chapter-04.html" class="btn-study">Study</a>
+                        <a href="chapter-04-quiz.html" class="btn-quiz">Quiz</a>
+                    </div>
+                </div>
+
+                <div class="chapter-card" data-chapter="5">
+                    <span class="chapter-number">CHAPTER 5</span>
+                    <h3>Implements, Tools & Equipment</h3>
+                    <p>Clippers, shears, razors, and all the tools of the trade.</p>
+                    <div class="chapter-meta">
+                        <span>📖 20 min read</span>
+                        <span>✓ 50 questions</span>
+                    </div>
+                    <div class="chapter-links">
+                        <a href="chapter-05.html" class="btn-study">Study</a>
+                        <a href="chapter-05-quiz.html" class="btn-quiz">Quiz</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Science -->
+        <div class="category-section">
+            <div class="category-header">
+                <span class="category-icon">🔬</span>
+                <h2 class="category-title">Science</h2>
+                <span class="category-count">Chapters 6-10</span>
+            </div>
+            <div class="chapters-grid">
+                <div class="chapter-card" data-chapter="6">
+                    <span class="chapter-number">CHAPTER 6</span>
+                    <h3>General Anatomy & Physiology</h3>
+                    <p>Human body systems, cells, tissues, and organs relevant to barbering.</p>
+                    <div class="chapter-meta">
+                        <span>📖 30 min read</span>
+                        <span>✓ 50 questions</span>
+                    </div>
+                    <div class="chapter-links">
+                        <a href="chapter-06.html" class="btn-study">Study</a>
+                        <a href="chapter-06-quiz.html" class="btn-quiz">Quiz</a>
+                    </div>
+                </div>
+
+                <div class="chapter-card" data-chapter="7">
+                    <span class="chapter-number">CHAPTER 7</span>
+                    <h3>Basics of Chemistry</h3>
+                    <p>Chemical reactions, pH levels, and product ingredients.</p>
+                    <div class="chapter-meta">
+                        <span>📖 25 min read</span>
+                        <span>✓ 50 questions</span>
+                    </div>
+                    <div class="chapter-links">
+                        <a href="chapter-07.html" class="btn-study">Study</a>
+                        <a href="chapter-07-quiz.html" class="btn-quiz">Quiz</a>
+                    </div>
+                </div>
+
+                <div class="chapter-card" data-chapter="8">
+                    <span class="chapter-number">CHAPTER 8</span>
+                    <h3>Basics of Electricity</h3>
+                    <p>Electrical safety, tools, and equipment in the barbershop.</p>
+                    <div class="chapter-meta">
+                        <span>📖 20 min read</span>
+                        <span>✓ 50 questions</span>
+                    </div>
+                    <div class="chapter-links">
+                        <a href="chapter-08.html" class="btn-study">Study</a>
+                        <a href="chapter-08-quiz.html" class="btn-quiz">Quiz</a>
+                    </div>
+                </div>
+
+                <div class="chapter-card" data-chapter="9">
+                    <span class="chapter-number">CHAPTER 9</span>
+                    <h3>The Skin</h3>
+                    <p>Skin structure, disorders, diseases, and conditions.</p>
+                    <div class="chapter-meta">
+                        <span>📖 25 min read</span>
+                        <span>✓ 50 questions</span>
+                    </div>
+                    <div class="chapter-links">
+                        <a href="chapter-09.html" class="btn-study">Study</a>
+                        <a href="chapter-09-quiz.html" class="btn-quiz">Quiz</a>
+                    </div>
+                </div>
+
+                <div class="chapter-card" data-chapter="10">
+                    <span class="chapter-number">CHAPTER 10</span>
+                    <h3>Properties & Disorders of Hair & Scalp</h3>
+                    <p>Hair structure, growth cycles, and common disorders.</p>
+                    <div class="chapter-meta">
+                        <span>📖 30 min read</span>
+                        <span>✓ 50 questions</span>
+                    </div>
+                    <div class="chapter-links">
+                        <a href="chapter-10.html" class="btn-study">Study</a>
+                        <a href="chapter-10-quiz.html" class="btn-quiz">Quiz</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hair Care -->
+        <div class="category-section">
+            <div class="category-header">
+                <span class="category-icon">💈</span>
+                <h2 class="category-title">Hair Care & Services</h2>
+                <span class="category-count">Chapters 11-13</span>
+            </div>
+            <div class="chapters-grid">
+                <div class="chapter-card" data-chapter="11">
+                    <span class="chapter-number">CHAPTER 11</span>
+                    <h3>Treatment of Hair & Scalp</h3>
+                    <p>Shampooing, conditioning, scalp treatments, and product selection.</p>
+                    <div class="chapter-meta">
+                        <span>📖 25 min read</span>
+                        <span>✓ 50 questions</span>
+                    </div>
+                    <div class="chapter-links">
+                        <a href="chapter-11.html" class="btn-study">Study</a>
+                        <a href="chapter-11-quiz.html" class="btn-quiz">Quiz</a>
+                    </div>
+                </div>
+
+                <div class="chapter-card" data-chapter="12">
+                    <span class="chapter-number">CHAPTER 12</span>
+                    <h3>Men's Facial Massage & Treatments</h3>
+                    <p>Massage techniques, facial treatments, and skin care for men.</p>
+                    <div class="chapter-meta">
+                        <span>📖 20 min read</span>
+                        <span>✓ 50 questions</span>
+                    </div>
+                    <div class="chapter-links">
+                        <a href="chapter-12.html" class="btn-study">Study</a>
+                        <a href="chapter-12-quiz.html" class="btn-quiz">Quiz</a>
+                    </div>
+                </div>
+
+                <div class="chapter-card" data-chapter="13">
+                    <span class="chapter-number">CHAPTER 13</span>
+                    <h3>Shaving & Facial-Hair Design</h3>
+                    <p>Shaving techniques, beard design, and facial hair grooming.</p>
+                    <div class="chapter-meta">
+                        <span>📖 25 min read</span>
+                        <span>✓ 50 questions</span>
+                    </div>
+                    <div class="chapter-links">
+                        <a href="chapter-13.html" class="btn-study">Study</a>
+                        <a href="chapter-13-quiz.html" class="btn-quiz">Quiz</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Haircutting -->
+        <div class="category-section">
+            <div class="category-header">
+                <span class="category-icon">✂️</span>
+                <h2 class="category-title">Haircutting & Styling</h2>
+                <span class="category-count">Chapters 14-16</span>
+            </div>
+            <div class="chapters-grid">
+                <div class="chapter-card" data-chapter="14">
+                    <span class="chapter-number">CHAPTER 14</span>
+                    <h3>Men's Haircutting & Styling</h3>
+                    <p>Clipper cuts, shear cuts, fades, tapers, and styling techniques.</p>
+                    <div class="chapter-meta">
+                        <span>📖 35 min read</span>
+                        <span>✓ 50 questions</span>
+                    </div>
+                    <div class="chapter-links">
+                        <a href="chapter-14.html" class="btn-study">Study</a>
+                        <a href="chapter-14-quiz.html" class="btn-quiz">Quiz</a>
+                    </div>
+                </div>
+
+                <div class="chapter-card" data-chapter="15">
+                    <span class="chapter-number">CHAPTER 15</span>
+                    <h3>Men's Hair Replacement</h3>
+                    <p>Hair replacement systems, hair additions, and camouflage techniques.</p>
+                    <div class="chapter-meta">
+                        <span>📖 20 min read</span>
+                        <span>✓ 50 questions</span>
+                    </div>
+                    <div class="chapter-links">
+                        <a href="chapter-15.html" class="btn-study">Study</a>
+                        <a href="chapter-15-quiz.html" class="btn-quiz">Quiz</a>
+                    </div>
+                </div>
+
+                <div class="chapter-card" data-chapter="16">
+                    <span class="chapter-number">CHAPTER 16</span>
+                    <h3>Women's Haircutting & Styling</h3>
+                    <p>Techniques for cutting and styling women's hair.</p>
+                    <div class="chapter-meta">
+                        <span>📖 30 min read</span>
+                        <span>✓ 50 questions</span>
+                    </div>
+                    <div class="chapter-links">
+                        <a href="chapter-16.html" class="btn-study">Study</a>
+                        <a href="chapter-16-quiz.html" class="btn-quiz">Quiz</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chemical Services -->
+        <div class="category-section">
+            <div class="category-header">
+                <span class="category-icon">🧪</span>
+                <h2 class="category-title">Chemical Services</h2>
+                <span class="category-count">Chapters 17-18</span>
+            </div>
+            <div class="chapters-grid">
+                <div class="chapter-card" data-chapter="17">
+                    <span class="chapter-number">CHAPTER 17</span>
+                    <h3>Chemical Texture Services</h3>
+                    <p>Permanent waving, chemical relaxing, and curl reformation.</p>
+                    <div class="chapter-meta">
+                        <span>📖 30 min read</span>
+                        <span>✓ 50 questions</span>
+                    </div>
+                    <div class="chapter-links">
+                        <a href="chapter-17.html" class="btn-study">Study</a>
+                        <a href="chapter-17-quiz.html" class="btn-quiz">Quiz</a>
+                    </div>
+                </div>
+
+                <div class="chapter-card" data-chapter="18">
+                    <span class="chapter-number">CHAPTER 18</span>
+                    <h3>Haircoloring & Lightening</h3>
+                    <p>Color theory, application techniques, and lightening services.</p>
+                    <div class="chapter-meta">
+                        <span>📖 35 min read</span>
+                        <span>✓ 50 questions</span>
+                    </div>
+                    <div class="chapter-links">
+                        <a href="chapter-18.html" class="btn-study">Study</a>
+                        <a href="chapter-18-quiz.html" class="btn-quiz">Quiz</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Career & Business -->
+        <div class="category-section">
+            <div class="category-header">
+                <span class="category-icon">💼</span>
+                <h2 class="category-title">Career & Business</h2>
+                <span class="category-count">Chapters 19-21</span>
+            </div>
+            <div class="chapters-grid">
+                <div class="chapter-card" data-chapter="19">
+                    <span class="chapter-number">CHAPTER 19</span>
+                    <h3>Preparing for Licensure & Employment</h3>
+                    <p>State board exam prep, job search, resumes, and interviews.</p>
+                    <div class="chapter-meta">
+                        <span>📖 25 min read</span>
+                        <span>✓ 50 questions</span>
+                    </div>
+                    <div class="chapter-links">
+                        <a href="chapter-19.html" class="btn-study">Study</a>
+                        <a href="chapter-19-quiz.html" class="btn-quiz">Quiz</a>
+                    </div>
+                </div>
+
+                <div class="chapter-card" data-chapter="20">
+                    <span class="chapter-number">CHAPTER 20</span>
+                    <h3>Working Behind the Chair</h3>
+                    <p>Employment types, compensation, and building your clientele.</p>
+                    <div class="chapter-meta">
+                        <span>📖 25 min read</span>
+                        <span>✓ 50 questions</span>
+                    </div>
+                    <div class="chapter-links">
+                        <a href="chapter-20.html" class="btn-study">Study</a>
+                        <a href="chapter-20-quiz.html" class="btn-quiz">Quiz</a>
+                    </div>
+                </div>
+
+                <div class="chapter-card" data-chapter="21">
+                    <span class="chapter-number">CHAPTER 21</span>
+                    <h3>The Business of Barbering</h3>
+                    <p>Owning a shop, business plans, marketing, and management.</p>
+                    <div class="chapter-meta">
+                        <span>📖 30 min read</span>
+                        <span>✓ 50 questions</span>
+                    </div>
+                    <div class="chapter-links">
+                        <a href="chapter-21.html" class="btn-study">Study</a>
+                        <a href="chapter-21-quiz.html" class="btn-quiz">Quiz</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 Barber Study Pro. Built with 🥋 by Gabe, a Navy vet and barber student.</p>
+        <p style="margin-top: 0.5rem;">Free for a limited time. Study hard, pass your exam, build your career.</p>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
+        }
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const nav = document.querySelector('nav');
+            const navMenu = document.getElementById('navMenu');
+            if (!nav.contains(e.target) && navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // Load and display progress
+        function loadProgress() {
+            let completed = 0;
+            let inProgress = 0;
+            let totalProgress = 0;
+
+            for (let i = 1; i <= 21; i++) {
+                const progress = localStorage.getItem(`chapter-${i.toString().padStart(2, '0')}-progress`);
+                const card = document.querySelector(`[data-chapter="${i}"]`);
+                
+                if (progress) {
+                    const progressNum = parseInt(progress);
+                    totalProgress += progressNum;
+                    
+                    if (progressNum >= 90) {
+                        completed++;
+                        card.classList.add('completed');
+                    } else if (progressNum > 0) {
+                        inProgress++;
+                        card.classList.add('in-progress');
+                    }
+                }
+            }
+
+            // Update stats
+            document.getElementById('completed-count').textContent = completed;
+            document.getElementById('in-progress-count').textContent = inProgress;
+            
+            // Update overall progress bar
+            const overallPercentage = Math.round(totalProgress / 21);
+            document.getElementById('overall-progress-bar').style.width = overallPercentage + '%';
+            document.getElementById('overall-percentage').textContent = overallPercentage + '%';
+        }
+
+        // Load progress on page load
+        loadProgress();
+        
+        // Auth check - update navigation
+        function checkAuth() {
+            const session = JSON.parse(localStorage.getItem('bsp_session') || sessionStorage.getItem('bsp_session') || '{}');
+            const authSection = document.getElementById('authSection');
+            
+            if (session.isLoggedIn) {
+                authSection.querySelector('.nav-link').textContent = 'My Account';
+            } else {
+                authSection.querySelector('.nav-link').textContent = 'Sign In';
+            }
+        }
+        
+        // Logout function
+        function logout() {
+            localStorage.removeItem('bsp_session');
+            sessionStorage.removeItem('bsp_session');
+            window.location.href = 'index.html';
+        }
+        
+        checkAuth();
+    </script>
+
+<!-- Content Protection -->
+<script>
+    // Disable right-click
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Content is protected. Right-click is disabled.');
+        return false;
+    });
+
+    // Disable copy
+    document.addEventListener('copy', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Copying is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable cut
+    document.addEventListener('cut', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Cutting is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable text selection
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable drag
+    document.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable print
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+            e.preventDefault();
+            showProtectionMessage('Printing is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            showProtectionMessage('Saving is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+            e.preventDefault();
+            showProtectionMessage('View source is disabled.');
+            return false;
+        }
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J'))) {
+            e.preventDefault();
+            showProtectionMessage('Developer tools are disabled.');
+            return false;
+        }
+    });
+
+    // Show protection message
+    function showProtectionMessage(message) {
+        const existing = document.querySelector('.protection-message');
+        if (existing) existing.remove();
+
+        const div = document.createElement('div');
+        div.className = 'protection-message';
+        div.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #ef4444; color: white; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
+        div.textContent = '⚠️ ' + message;
+        document.body.appendChild(div);
+
+        setTimeout(() => {
+            div.style.opacity = '0';
+            div.style.transition = 'opacity 0.5s';
+            setTimeout(() => div.remove(), 500);
+        }, 3000);
+    }
+
+    // Console warning
+    console.log('%c⚠️ CONTENT PROTECTION', 'color: #ef4444; font-size: 24px; font-weight: bold;');
+    console.log('%cThis content is copyrighted and protected. Unauthorized copying, distribution, or reproduction is prohibited.', 'color: #888; font-size: 14px;');
+    console.log('%c© 2026 Barber Study Pro. All rights reserved.', 'color: #D4AF37; font-size: 12px;');
+
+    // Prevent viewing source via right-click on images
+    document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('contextmenu', e => e.preventDefault());
+    });
+</script>
+    </div><!-- End protected content -->
+
+    <!-- Auth Check Script -->
+    <script>
+        function checkAuth() {
+            const session = localStorage.getItem('bsp_session');
+            const authGate = document.getElementById('authGate');
+            const protectedContent = document.getElementById('protectedContent');
+            if (session) {
+                authGate.style.display = 'none';
+                protectedContent.classList.add('show');
+            } else {
+                authGate.style.display = 'flex';
+                protectedContent.classList.remove('show');
+            }
+        }
+        checkAuth();
+    </script>
+</body>
+</html>

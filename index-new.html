@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barber Study Pro | Pass Your State Board Exam</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #C9A227;
+            --gold-light: #E5C158;
+            --gold-dark: #A88420;
+            --dark: #0D0D0D;
+            --dark-gray: #1A1A1A;
+            --medium-gray: #2D2D2D;
+            --light-gray: #6B7280;
+            --lighter-gray: #9CA3AF;
+            --white: #FFFFFF;
+            --success: #22c55e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: var(--white);
+            line-height: 1.6;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(13, 13, 13, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(201, 162, 39, 0.1);
+        }
+
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--white);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .logo-text span {
+            color: var(--gold);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--lighter-gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--gold);
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: var(--dark);
+            padding: 0.6rem 1.25rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            background: 
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(201, 162, 39, 0.15), transparent);
+        }
+
+        .hero-content {
+            max-width: 900px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--success);
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--lighter-gray);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .hero-problem {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            display: inline-block;
+        }
+
+        .hero-problem p {
+            color: #fca5a5;
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: var(--dark);
+            font-size: 1.1rem;
+            padding: 1.25rem 2.5rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(201, 162, 39, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--medium-gray);
+            color: var(--white);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .testimonial {
+            background: var(--dark-gray);
+            border: 1px solid rgba(201, 162, 39, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: var(--lighter-gray);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .testimonial-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .testimonial-name {
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .testimonial-role {
+            font-size: 0.85rem;
+            color: var(--light-gray);
+        }
+
+        .sample-quiz {
+            padding: 6rem 2rem;
+            background: var(--dark-gray);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-label {
+            color: var(--gold);
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .section-title {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 700;
+            margin: 1rem 0;
+        }
+
+        .quiz-card {
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .quiz-question {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .quiz-option {
+            background: var(--medium-gray);
+            border: 2px solid transparent;
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            font-size: 1rem;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--gold);
+            background: rgba(201, 162, 39, 0.1);
+        }
+
+        .quiz-option.correct {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: var(--success);
+        }
+
+        .quiz-option.wrong {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+        }
+
+        .quiz-result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .quiz-result.show {
+            display: block;
+        }
+
+        .quiz-result.correct {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .features {
+            padding: 6rem 2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: var(--dark-gray);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(201, 162, 39, 0.3);
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(201, 162, 39, 0.1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-card p {
+            color: var(--lighter-gray);
+            font-size: 0.95rem;
+        }
+
+        .chapters {
+            padding: 6rem 2rem;
+            background: var(--dark-gray);
+        }
+
+        .chapters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .chapter-card {
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: var(--white);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .chapter-card:hover {
+            border-color: rgba(201, 162, 39, 0.3);
+            transform: translateX(4px);
+        }
+
+        .chapter-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(201, 162, 39, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .chapter-info h3 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .chapter-meta {
+            font-size: 0.85rem;
+            color: var(--light-gray);
+        }
+
+        .instructor-section {
+            padding: 4rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .instructor-section p {
+            color: var(--light-gray);
+            margin-bottom: 1rem;
+        }
+
+        .instructor-link {
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer {
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+            color: var(--light-gray);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero-cta { flex-direction: column; }
+            .hero-problem { display: block; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">✂️</div>
+                <div class="logo-text">Barber <span>Study Pro</span></div>
+            </a>
+            <div class="nav-links">
+                <a href="#chapters" class="nav-link">Chapters</a>
+                <a href="#sample" class="nav-link">Try Sample</a>
+                <a href="chapter-01.html" class="nav-cta">Start Studying →</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">✓ Pass Your Exam on the First Try</div>
+            
+            <h1>Stop Cramming.<br><span class="highlight">Start Passing.</span></h1>
+            
+            <p class="hero-subtitle">430 practice questions written by barbers who've taken the state board exam. Study the exact topics that appear on your test.</p>
+            
+            <div class="hero-problem">
+                <p>😰 Worried about the written exam? Many students don't pass on their first attempt. Let's make sure you do.</p>
+            </div>
+            
+            <div class="hero-cta">
+                <a href="chapter-01.html" class="btn btn-primary">Start Chapter 1 Free →</a>
+                <a href="#sample" class="btn btn-secondary">Try a Sample Question</a>
+            </div>
+            
+            <div class="testimonial">
+                <p class="testimonial-text">"I was stressing about the exam until I found this. The questions are exactly what showed up on my state board. Passed on my first try!"</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">G</div>
+                    <div>
+                        <div class="testimonial-name">Gabe</div>
+                        <div class="testimonial-role">Barber Student, Oklahoma City</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="sample-quiz" id="sample">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Try It Now</div>
+                <h2 class="section-title">Sample Question</h2>
+                <p style="color: var(--lighter-gray);">See exactly what you'll be studying</p>
+            </div>
+            
+            <div class="quiz-card">
+                <p class="quiz-question">What does the 'S' in COHNS stand for?</p>
+                <div class="quiz-options">
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">Sodium</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">Silicon</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, true)">Sulfur</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false)">Silver</button>
+                </div>
+                <div class="quiz-result" id="quiz-result">
+                    <strong>Correct!</strong> Sulfur forms disulfide bonds in hair. This is just one of 430 questions you'll master.
+                    <br><br>
+                    <a href="chapter-01.html" class="btn btn-primary" style="display: inline-block; margin-top: 1rem;">Start Studying Now →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Why Students Choose Us</div>
+                <h2 class="section-title">Everything You Need to Pass</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>430 Practice Questions</h3>
+                    <p>Multiple-choice questions that mirror the actual state board exam format.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Study on Your Phone</h3>
+                    <p>Waiting for a haircut? Study between clients. Works perfectly on mobile.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Track Your Progress</h3>
+                    <p>See exactly which chapters you've mastered and what needs more work.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Exam-Focused Content</h3>
+                    <p>No fluff. Only the topics that actually appear on your state board exam.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Instant Feedback</h3>
+                    <p>Know immediately if you're right and why. Learn from every mistake.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🆓</div>
+                    <h3>Completely Free</h3>
+                    <p>Built by a barber student for barber students. No credit card required.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="chapters" id="chapters">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Curriculum</div>
+                <h2 class="section-title">11 Chapters to Master</h2>
+                <p style="color: var(--lighter-gray);">Click any chapter to start studying</p>
+            </div>
+            <div class="chapters-grid">
+                <a href="chapter-01.html" class="chapter-card">
+                    <div class="chapter-icon">📜</div>
+                    <div class="chapter-info">
+                        <h3>History of Barbering</h3>
+                        <div class="chapter-meta">30 questions • 15 min</div>
+                    </div>
+                </a>
+                <a href="chapter-02.html" class="chapter-card">
+                    <div class="chapter-icon">🎯</div>
+                    <div class="chapter-info">
+                        <h3>Life Skills</h3>
+                        <div class="chapter-meta">30 questions • 15 min</div>
+                    </div>
+                </a>
+                <a href="chapter-03.html" class="chapter-card">
+                    <div class="chapter-icon">👔</div>
+                    <div class="chapter-info">
+                        <h3>Professional Image</h3>
+                        <div class="chapter-meta">30 questions • 15 min</div>
+                    </div>
+                </a>
+                <a href="chapter-04.html" class="chapter-card">
+                    <div class="chapter-icon">🧼</div>
+                    <div class="chapter-info">
+                        <h3>Infection Control</h3>
+                        <div class="chapter-meta">35 questions • 20 min</div>
+                    </div>
+                </a>
+                <a href="chapter-05.html" class="chapter-card">
+                    <div class="chapter-icon">✂️</div>
+                    <div class="chapter-info">
+                        <h3>Implements & Tools</h3>
+                        <div class="chapter-meta">40 questions • 25 min</div>
+                    </div>
+                </a>
+                <a href="chapter-06.html" class="chapter-card">
+                    <div class="chapter-icon">🦴</div>
+                    <div class="chapter-info">
+                        <h3>Anatomy & Physiology</h3>
+                        <div class="chapter-meta">45 questions • 30 min</div>
+                    </div>
+                </a>
+                <a href="chapter-07.html" class="chapter-card">
+                    <div class="chapter-icon">⚗️</div>
+                    <div class="chapter-info">
+                        <h3>Basics of Chemistry</h3>
+                        <div class="chapter-meta">40 questions • 25 min</div>
+                    </div>
+                </a>
+                <a href="chapter-08.html" class="chapter-card">
+                    <div class="chapter-icon">⚡</div>
+                    <div class="chapter-info">
+                        <h3>Basics of Electricity</h3>
+                        <div class="chapter-meta">35 questions • 20 min</div>
+                    </div>
+                </a>
+                <a href="chapter-09.html" class="chapter-card">
+                    <div class="chapter-icon">🧬</div>
+                    <div class="chapter-info">
+                        <h3>The Skin</h3>
+                        <div class="chapter-meta">45 questions • 30 min</div>
+                    </div>
+                </a>
+                <a href="chapter-10.html" class="chapter-card">
+                    <div class="chapter-icon">💇</div>
+                    <div class="chapter-info">
+                        <h3>Hair & Scalp</h3>
+                        <div class="chapter-meta">50 questions • 35 min</div>
+                    </div>
+                </a>
+                <a href="chapter-11.html" class="chapter-card">
+                    <div class="chapter-icon">🧴</div>
+                    <div class="chapter-info">
+                        <h3>Treatment of Hair & Scalp</h3>
+                        <div class="chapter-meta">50 questions • 35 min</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="instructor-section">
+        <div class="container">
+            <p>Are you a barber school instructor?</p>
+            <a href="#" class="instructor-link">See how to track your students' progress →</a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2026 Barber Study Pro. Built by a barber student, for barber students.</p>
+    </footer>
+
+    <script>
+        function checkAnswer(button, isCorrect) {
+            const options = document.querySelectorAll('.quiz-option');
+            const result = document.getElementById('quiz-result');
+            
+            options.forEach(opt => {
+                opt.disabled = true;
+                opt.style.cursor = 'default';
+            });
+            
+            if (isCorrect) {
+                button.classList.add('correct');
+                result.classList.add('correct', 'show');
+                result.innerHTML = `
+                    <strong>Correct! 🎉</strong> Sulfur forms disulfide bonds in hair. 
+                    <br><br>
+                    <a href="chapter-01.html" class="btn btn-primary" style="display: inline-block;">Start Studying Now →</a>
+                `;
+            } else {
+                button.classList.add('wrong');
+                options[2].classList.add('correct');
+                result.classList.add('show');
+                result.style.cssText = 'display: block; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #fca5a5; padding: 1rem; border-radius: 10px; margin-top: 1.5rem;';
+                result.innerHTML = `
+                    <strong>Not quite.</strong> The correct answer is <strong>Sulfur</strong>. 
+                    It forms disulfide bonds in hair.
+                    <br><br>
+                    <a href="chapter-01.html" class="btn btn-primary" style="display: inline-block;">Learn More →</a>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

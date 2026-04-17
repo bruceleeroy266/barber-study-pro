@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 14: Men's Haircutting and Styling | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .chapter-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
+        .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; }
+        .chapter-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
+        .content { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+        .section { margin-bottom: 3rem; }
+        .section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+        .section h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .section p, .section ul { margin-bottom: 1rem; color: #ccc; }
+        .section ul { margin-left: 1.5rem; }
+        .key-point { background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .key-point strong { color: var(--gold); }
+        .term { background: var(--medium-gray); padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 8px; }
+        .term strong { color: var(--gold); display: block; margin-bottom: 0.25rem; }
+        table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+        th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--medium-gray); }
+        th { background: var(--medium-gray); font-weight: 600; color: var(--gold); }
+        .quiz-btn { display: inline-block; background: var(--gold); color: var(--dark); padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; margin: 2rem 0; }
+        .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; }
+        .nav-chapters { display: flex; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--medium-gray); }
+        .nav-chapters a { color: var(--gold); text-decoration: none; font-weight: 600; }
+        .warning { background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .warning strong { color: #ef4444; }
+        .procedure { background: var(--medium-gray); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .procedure h4 { color: var(--gold); margin-bottom: 0.75rem; }
+        .procedure ol { margin-left: 1.5rem; color: #ccc; }
+        .procedure li { margin-bottom: 0.5rem; }
+
+        /* Audio Player */
+        .audio-player { position: fixed; bottom: 0; left: 0; right: 0; background: var(--dark-gray); border-top: 2px solid var(--gold); padding: 1rem 2rem; z-index: 1000; display: none; align-items: center; gap: 1rem; box-shadow: 0 -4px 20px rgba(0,0,0,0.5); }
+        .audio-player.active { display: flex; }
+        .audio-controls { display: flex; align-items: center; gap: 1rem; }
+        .audio-btn { background: var(--gold); color: var(--dark); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+        .audio-info { color: var(--light-gray); font-size: 0.875rem; }
+        .audio-close { background: none; border: none; color: var(--light-gray); font-size: 1.5rem; cursor: pointer; margin-left: auto; }
+        .tts-toggle { position: fixed; bottom: 2rem; left: 2rem; background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3); z-index: 100; }
+        .tts-toggle.playing { background: #22c55e; }
+
+        /* Auth Gate Styles */
+        .auth-gate { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--dark); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+        .auth-gate-content { text-align: center; max-width: 500px; }
+        .auth-gate h2 { font-size: 2rem; margin-bottom: 1rem; }
+        .auth-gate p { color: var(--light-gray); margin-bottom: 2rem; }
+        .auth-gate-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .auth-gate-btn { padding: 1rem 2rem; border-radius: 8px; font-weight: 600; text-decoration: none; transition: all 0.3s; }
+        .auth-gate-btn.primary { background: var(--gold); color: var(--dark); }
+        .auth-gate-btn.secondary { background: var(--medium-gray); color: var(--white); border: 1px solid var(--medium-gray); }
+        .auth-gate-btn:hover { transform: translateY(-2px); }
+        .protected-content { display: none; }
+        .protected-content.show { display: block; }
+    </style>
+</head>
+<body>
+    <!-- Auth Gate - Shows if not logged in -->
+    <div class="auth-gate" id="authGate">
+        <div class="auth-gate-content">
+            <h2>🔒 Members Only</h2>
+            <p>This study content is exclusively for registered members. Create a free account to access all 21 chapters, quizzes, flashcards, and the practice exam.</p>
+            <div class="auth-gate-buttons">
+                <a href="login.html" class="auth-gate-btn primary">Create Free Account</a>
+                <a href="index.html" class="auth-gate-btn secondary">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Protected Content - Only shows if logged in -->
+    <div class="protected-content" id="protectedContent">
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <nav><div class="nav-container"><a href="index.html" class="logo">⚡ Barber Study Pro</a><a href="index.html#chapters" class="back-link">← Back</a></div></nav>
+    <header class="chapter-header">
+        <span class="chapter-number">CHAPTER 14</span>
+        <h1>Men's Haircutting and Styling</h1>
+        <p>Haircutting techniques, styling, and design principles</p>
+    </header>
+    <main class="content">
+        <section class="section">
+            <h2>🎯 Why Study Men's Haircutting?</h2>
+            <p>Haircutting is the foundation of barbering. Understanding proper techniques allows you to:</p>
+            <ul>
+                <li>Create customized haircuts for each client</li>
+                <li>Understand facial shapes and how to complement them</li>
+                <li>Master various cutting techniques and tools</li>
+                <li>Build a loyal client base through quality work</li>
+                <li>Increase revenue through styling and additional services</li>
+            </ul>
+            <div class="key-point"><strong>Key Point:</strong> Practice and technique are essential. The more you practice, the more confident and skilled you become.</div>
+        </section>
+
+        <section class="section">
+            <h2>💬 Client Consultation</h2>
+            <p>A thorough consultation is the foundation of a successful haircut. Understanding what the client wants prevents misunderstandings.</p>
+            
+            <h3>Key Questions to Ask:</h3>
+            <ul>
+                <li>"What would you like done today?"</li>
+                <li>"How short do you want it?" (Use fingers to show length)</li>
+                <li>"Do you want a fade, taper, or all one length?"</li>
+                <li>"How do you usually style your hair?"</li>
+                <li>"Do you have any cowlicks or growth patterns I should know about?"</li>
+            </ul>
+
+            <h3>Understanding "Just a Trim":</h3>
+            <p>When a client says "just a trim," it can mean different things to different people. Always clarify:</p>
+            <ul>
+                <li>Show exactly how much hair will be removed</li>
+                <li>Use fingers or comb to demonstrate length</li>
+                <li>Confirm before cutting</li>
+                <li>Remember: a trim to one person might be a major cut to another</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>👤 Facial Shapes and Hair Design</h2>
+            <p>Understanding facial shapes helps you recommend styles that complement the client's features.</p>
+            
+            <h3>Five Basic Facial Shapes:</h3>
+            <div class="term">
+                <strong>Oval Face</strong> — Considered the ideal shape. Balanced proportions. Can wear most styles. Width of forehead and jaw are similar; face is longer than wide.
+            </div>
+            <div class="term">
+                <strong>Round Face</strong> — Width and length are nearly equal. Full cheeks, rounded jawline. Goal: Add height and minimize width. Avoid styles that add volume to sides.
+            </div>
+            <div class="term">
+                <strong>Square Face</strong> — Strong, angular jawline. Forehead and jaw width similar. Goal: Soften angles. Can wear most styles but avoid too much volume on top.
+            </div>
+            <div class="term">
+                <strong>Inverted Triangular (Heart) Face</strong> — Wider forehead, narrower chin. Goal: Add width at jawline, minimize forehead width. Styles with volume on sides work well.
+            </div>
+            <div class="term">
+                <strong>Pear-Shaped (Triangular) Face</strong> — Narrower forehead, wider jawline. Goal: Add width at temples, minimize jaw width. Styles with volume on top work well.
+            </div>
+
+            <h3>Design Principles:</h3>
+            <ul>
+                <li><strong>Balance:</strong> Create visual equilibrium</li>
+                <li><strong>Proportion:</strong> Keep features in pleasing ratio</li>
+                <li><strong>Emphasis:</strong> Draw attention to best features</li>
+                <li><strong>Rhythm:</strong> Create movement and flow</li>
+                <li><strong>Harmony:</strong> All elements work together</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>✂️ Basic Haircutting Principles</h2>
+            
+            <h3>Preparation for All Haircuts:</h3>
+            <ol>
+                <li>Wash hands thoroughly</li>
+                <li>Conduct client consultation</li>
+                <li>Drape client for wet service</li>
+                <li>Shampoo and towel dry hair</li>
+                <li>Remove waterproof cape; replace with neck strip and haircutting cape</li>
+                <li>Face client toward mirror and lock chair</li>
+            </ol>
+
+            <h3>Basic Techniques:</h3>
+            <div class="term">
+                <strong>Clipper-Over-Comb</strong> — Using clippers over a comb to create precise, clean lines and gradual fades.
+            </div>
+            <div class="term">
+                <strong>Shear-Over-Comb</strong> — Using shears over a comb for softer, more blended results than clippers.
+            </div>
+            <div class="term">
+                <strong>Freehand Clipper</strong> — Using clippers without a comb for outlining and detail work.
+            </div>
+            <div class="term">
+                <strong>Blending</strong> — Creating smooth transitions between different lengths.
+            </div>
+            <div class="term">
+                <strong>Fading</strong> — Gradually tapering hair from short to shorter or to skin.
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🎨 Haircutting Procedures</h2>
+            
+            <h3>Basic Haircut with Clippers:</h3>
+            <div class="procedure">
+                <h4>Procedure:</h4>
+                <ol>
+                    <li>Determine desired length on top</li>
+                    <li>Establish center guide on top</li>
+                    <li>Cut sections right and left of center from front through top</li>
+                    <li>Move to back section; cut from crown to nape</li>
+                    <li>Cut sections left and right of center through back</li>
+                    <li>Move to sides; cut from hairline to top</li>
+                    <li>Cut around ears and blend into back section</li>
+                    <li>Cross-check and blend as needed</li>
+                    <li>Outline and detail with trimmer</li>
+                </ol>
+            </div>
+
+            <h3>Shadow Fade Cut:</h3>
+            <p>Performed using adjustable-blade clipper with and without guards.</p>
+            <div class="procedure">
+                <h4>Procedure:</h4>
+                <ol>
+                    <li>Determine length for top section</li>
+                    <li>Select appropriate clipper blade or guard</li>
+                    <li>Start at front hairline; cut center guide back to crown</li>
+                    <li>Cut sections right and left of center</li>
+                    <li>Move to back; adjust clippers to open blade position</li>
+                    <li>Start at nape; cut against grain to mid-occipital area</li>
+                    <li>Cut sections left and right of center panel</li>
+                    <li>Move to sides; cut from hairline to desired point</li>
+                    <li>Cut around ears and blend</li>
+                    <li>When back and sides are cut, attach guard and close blades halfway</li>
+                    <li>Blend at top of parietal ridge into top section</li>
+                    <li>Adjust blades to closed position; blend through middle parietal</li>
+                    <li>Attach No. 0 guard; blend around parietal ridge</li>
+                    <li>Remove guard; taper and blend hairline</li>
+                    <li>Finish with trimmer or outline shave</li>
+                </ol>
+            </div>
+            <div class="key-point"><strong>Reminder:</strong> Cutting against the grain achieves a closer cut than cutting with the grain.</div>
+
+            <h3>Pompadour Fade:</h3>
+            <div class="procedure">
+                <h4>Procedure:</h4>
+                <ol>
+                    <li>Re-dampen top section with water if necessary</li>
+                    <li>Part off top section following curve of head at parietal ridge</li>
+                    <li>Secure with clips</li>
+                    <li>Select appropriate blade size for back and sides</li>
+                    <li>On preferred side, use freehand clipper technique to establish guide</li>
+                    <li>Rock clipper out at point where transition will occur</li>
+                    <li>Repeat on opposite side</li>
+                    <li>Move to back; cut from nape upward</li>
+                    <li>Blend transition areas</li>
+                    <li>Release top section; comb through</li>
+                    <li>Create slight overdirection of parting to center top guide</li>
+                    <li>Cut parting to guide</li>
+                    <li>Continue cutting from parietal area up to top</li>
+                    <li>Move behind client; comb through top sections</li>
+                    <li>Check hair horizontally and blend as needed</li>
+                    <li>Comb through top section and occipital area</li>
+                    <li>Take vertical parting from center back</li>
+                    <li>Project parting to 90 degrees</li>
+                    <li>Using shortest length at occipital as guide, cut and blend shorter back with longer crown</li>
+                    <li>Pivot through crown section; cut and blend</li>
+                    <li>Return to center back; cut and blend toward right side</li>
+                    <li>Style as desired</li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>💨 Blowdrying Techniques</h2>
+            
+            <h3>Freeform Blowdrying:</h3>
+            <ol>
+                <li>Hold dryer 6 to 10 inches from hair</li>
+                <li>Angle nozzle pointing downward</li>
+                <li>Dry layers underneath first</li>
+                <li>Move dryer briskly from side to side</li>
+                <li>As hair underneath dries, release next section</li>
+                <li>Comb or brush hair down after each section</li>
+                <li>Dry sides in same manner</li>
+                <li>Dry top loosely; comb or brush into desired style</li>
+            </ol>
+
+            <h3>Stylized Blowdrying:</h3>
+            <ol>
+                <li>Begin in back section</li>
+                <li>Lift section with comb or brush</li>
+                <li>Follow movement of comb with dryer</li>
+                <li>Apply concentrated stream of heated air</li>
+                <li>Dry from scalp to ends</li>
+                <li>Repeat until section is dry</li>
+                <li>Move to next section and sides</li>
+            </ol>
+
+            <h3>Blow Waving:</h3>
+            <ol>
+                <li>Use blow-waving technique to create lift or direction in top section</li>
+                <li>Work from natural part</li>
+                <li>Elevate hair to create desired fullness</li>
+                <li>To create definite direction in front, insert comb 1½ inches from hairline</li>
+                <li>Draw comb to back then toward hairline in one motion</li>
+                <li>This creates ridge or bend to set style</li>
+                <li>Apply heat until soft ridge is formed</li>
+                <li>Repeat in subsequent sections</li>
+                <li>Apply suitable styling aid to finish</li>
+            </ol>
+
+            <h3>Diffused Drying:</h3>
+            <ol>
+                <li>Pick hair out into basic shape of desired style</li>
+                <li>Begin drying in back section, working toward crown and sides</li>
+                <li>Gently pick hair out as dryer moves from section to section</li>
+                <li>Dry sides in same manner</li>
+                <li>Dry top section forward from crown</li>
+                <li>Apply suitable styling aid to complete</li>
+            </ol>
+        </section>
+
+        <section class="section">
+            <h2>🪒 The Head Shave</h2>
+            <p>Complete head shave requires careful preparation and technique.</p>
+            
+            <h3>Preparation:</h3>
+            <ol>
+                <li>Wash hands</li>
+                <li>Conduct client consultation</li>
+                <li>Drape client for haircut</li>
+                <li>Face client toward mirror and lock chair</li>
+                <li>Examine scalp for abrasions, lesions, or disorders</li>
+                <li>Remove excess hair length with clippers if necessary</li>
+                <li>Drape for wet service and shampoo remaining hair</li>
+                <li>Re-examine scalp</li>
+                <li>Remove shampoo cape</li>
+                <li>Re-drape with haircutting cape and towels</li>
+                <li>Tuck wiping cloth into neckline</li>
+            </ol>
+
+            <h3>Procedure:</h3>
+            <ol>
+                <li>Apply shaving cream or gel and lather</li>
+                <li>Follow with two or three steamed-towel treatments to soften hair</li>
+                <li>Re-lather scalp</li>
+                <li>Lock chair</li>
+                <li>Start in back section using freehand stroke</li>
+                <li>Shave with grain from crown to nape</li>
+                <li>Use opposite hand to stretch skin taut</li>
+                <li>Follow curve of head</li>
+                <li>Move to front; tip head forward slightly</li>
+                <li>Continue shaving from crown to front hairline</li>
+                <li>Reapply lather as needed</li>
+                <li>Keep skin moist</li>
+                <li>When top is completed, work down sides</li>
+                <li>Hold ear out of way with left hand</li>
+                <li>Carefully shave in front of and around ears</li>
+                <li>Repeat on left side</li>
+                <li>Check for missed areas and re-shave as necessary</li>
+                <li>Wrap warm towel around head</li>
+                <li>Use towel to remove remaining lather</li>
+                <li>Apply witch hazel or skin toner</li>
+                <li>Follow with cool-towel application for 2-3 minutes</li>
+                <li>Apply moisturizing cream or oil as requested</li>
+            </ol>
+        </section>
+
+        <section class="section">
+            <h2>🎀 Cornrow Braiding</h2>
+            <p>Cornrows are narrow rows of visible braids that lie close to the scalp.</p>
+            
+            <h3>Preparation:</h3>
+            <ol>
+                <li>Wash hands</li>
+                <li>Conduct client consultation</li>
+                <li>Drape for wet service</li>
+                <li>Shampoo and condition hair</li>
+                <li>Remove waterproof cape</li>
+                <li>Replace with towels under and over haircutting cape</li>
+                <li>Face client toward mirror and lock chair</li>
+            </ol>
+
+            <h3>Procedure:</h3>
+            <ol>
+                <li>Start with clean, damp hair</li>
+                <li>Apply and massage essential oil to scalp</li>
+                <li>Determine correct size and direction of cornrow base</li>
+                <li>Use tail comb to part off top section on right side</li>
+                <li>Secure with clip</li>
+                <li>Use mirror to determine where to section left side</li>
+                <li>Secure with clip</li>
+                <li>Create two parallel partings in center of top section</li>
+                <li>Form neat row for cornrow base</li>
+                <li>Divide parting into three strands</li>
+                <li>Place fingers close to base</li>
+                <li>Cross left strand under center strand</li>
+                <li>Cross right strand under center strand</li>
+                <li>With each crossing under, pick up hair from base of panel</li>
+                <li>Add to outer strand before crossing under center</li>
+                <li>When braid is finished, secure ends with small rubber band</li>
+                <li>Braid subsequent panels left and right of center</li>
+                <li>Once top three braids complete, complete braids on left and right</li>
+                <li>Maintain even tension</li>
+                <li>Follow curvature of head</li>
+                <li>Finish with oil sheen or appropriate styling aid</li>
+            </ol>
+        </section>
+
+        <section class="section">
+            <h2>🧹 Clean-Up and Disinfection</h2>
+            <p>After every haircutting service:</p>
+            <ul>
+                <li>Clean and disinfect all tools and implements</li>
+                <li>Clean and disinfect the work area</li>
+                <li>Clean surfaces and chair</li>
+                <li>Sweep up hair and deposit in closed receptacle</li>
+                <li>Deposit used blades in sharps container</li>
+                <li>Dispose of single-use items</li>
+                <li>Place all used linens, towels, and capes in laundry</li>
+                <li>Wash hands thoroughly</li>
+            </ul>
+            <div class="warning"><strong>Important:</strong> Never leave used blades on the counter or in regular trash. Always use a proper sharps container.</div>
+        </section>
+
+        <section class="section">
+            <h2>📝 Chapter 14 Key Takeaways</h2>
+            <div class="key-point">
+                <ul style="margin-left: 1rem;">
+                    <li>Always conduct a <strong>thorough consultation</strong> before cutting</li>
+                    <li>Five facial shapes: <strong>oval, round, square, inverted triangular, pear-shaped</strong></li>
+                    <li>Basic techniques: <strong>clipper-over-comb, shear-over-comb, freehand, blending, fading</strong></li>
+                    <li><strong>Shadow fade</strong> uses adjustable-blade clipper with/without guards</li>
+                    <li><strong>Pompadour fade</strong> requires sectioning and careful blending</li>
+                    <li>Blowdrying methods: <strong>freeform, stylized, blow waving, diffused</strong></li>
+                    <li>Head shave requires <strong>steamed towels</strong> and careful stretching of skin</li>
+                    <li>Cornrow braiding involves <strong>picking up hair</strong> with each strand cross</li>
+                    <li>Always follow proper <strong>clean-up and disinfection</strong> procedures</li>
+                    <li>Dispose of blades in <strong>sharps container</strong> only</li>
+                </ul>
+            </div>
+        </section>
+
+        <a href="chapter-14-quiz.html" class="quiz-btn">📝 Take Chapter 14 Quiz</a>
+
+        <div class="nav-chapters"><a href="chapter-13.html">← Chapter 13</a><a href="chapter-15.html">Chapter 15 →</a></div>
+    </main>
+    <script>
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+            localStorage.setItem('chapter-14-progress', Math.round(scrolled));
+        });
+    </script>
+
+<script>
+// Text-to-Speech functionality
+let speechSynthesis = window.speechSynthesis;
+let currentUtterance = null;
+let isPlaying = false;
+let textChunks = [];
+let currentChunk = 0;
+
+function extractTextContent() {
+    const content = document.querySelector('.content');
+    if (!content) return '';
+    let fullText = '';
+    const sections = content.querySelectorAll('.section');
+    sections.forEach(section => {
+        const headings = section.querySelectorAll('h2, h3');
+        headings.forEach(h => { fullText += h.textContent + '. '; });
+        const paragraphs = section.querySelectorAll('p');
+        paragraphs.forEach(p => { fullText += p.textContent + ' '; });
+        const listItems = section.querySelectorAll('li');
+        listItems.forEach(li => { fullText += li.textContent + '. '; });
+    });
+    return fullText;
+}
+
+function splitTextIntoChunks(text, maxLength = 200) {
+    const sentences = text.match(/[^\.!?]+[\.!?]+/g) || [text];
+    const chunks = [];
+    let currentChunk = '';
+    sentences.forEach(sentence => {
+        if ((currentChunk + sentence).length > maxLength && currentChunk.length > 0) {
+            chunks.push(currentChunk.trim());
+            currentChunk = sentence;
+        } else {
+            currentChunk += sentence + ' ';
+        }
+    });
+    if (currentChunk.trim().length > 0) chunks.push(currentChunk.trim());
+    return chunks;
+}
+
+function toggleTTS() {
+    const player = document.getElementById('audioPlayer');
+    const toggle = document.getElementById('ttsToggle');
+    if (!player.classList.contains('active')) {
+        player.classList.add('active');
+        toggle.classList.add('playing');
+        toggle.innerHTML = '🔊 Stop Listening';
+        const text = extractTextContent();
+        textChunks = splitTextIntoChunks(text);
+        currentChunk = 0;
+        startPlayback();
+    } else {
+        stopPlayback();
+    }
+}
+
+function startPlayback() {
+    if (currentChunk >= textChunks.length) { closeAudioPlayer(); return; }
+    const text = textChunks[currentChunk];
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.rate = 0.9;
+    currentUtterance.pitch = 1;
+    currentUtterance.volume = 1;
+    const voices = speechSynthesis.getVoices();
+    const preferredVoice = voices.find(v => v.name.includes('Google US English')) || voices.find(v => v.name.includes('Samantha')) || voices.find(v => v.lang === 'en-US');
+    if (preferredVoice) currentUtterance.voice = preferredVoice;
+    currentUtterance.onstart = () => { isPlaying = true; updatePlayButton(); };
+    currentUtterance.onend = () => { currentChunk++; if (currentChunk < textChunks.length) startPlayback(); else closeAudioPlayer(); };
+    speechSynthesis.speak(currentUtterance);
+}
+
+function togglePlay() {
+    if (isPlaying) { speechSynthesis.pause(); isPlaying = false; }
+    else { if (speechSynthesis.paused) speechSynthesis.resume(); else startPlayback(); isPlaying = true; }
+    updatePlayButton();
+}
+
+function updatePlayButton() {
+    document.getElementById('playPauseBtn').textContent = isPlaying ? '⏸' : '▶';
+}
+
+function skipBackward() { if (currentChunk > 0) { speechSynthesis.cancel(); currentChunk = Math.max(0, currentChunk - 1); startPlayback(); } }
+function skipForward() { if (currentChunk < textChunks.length - 1) { speechSynthesis.cancel(); currentChunk++; startPlayback(); } }
+
+function closeAudioPlayer() {
+    speechSynthesis.cancel();
+    isPlaying = false;
+    currentChunk = 0;
+    document.getElementById('audioPlayer').classList.remove('active');
+    document.getElementById('ttsToggle').classList.remove('playing');
+    document.getElementById('ttsToggle').innerHTML = '🔊 Listen to Chapter';
+}
+
+function stopPlayback() { speechSynthesis.cancel(); isPlaying = false; closeAudioPlayer(); }
+speechSynthesis.onvoiceschanged = () => { speechSynthesis.getVoices(); };
+</script>
+
+<button class="tts-toggle" id="ttsToggle" onclick="toggleTTS()">🔊 Listen to Chapter</button>
+<div class="audio-player" id="audioPlayer">
+    <div class="audio-controls">
+        <button class="audio-btn" id="playPauseBtn" onclick="togglePlay()">▶</button>
+        <button class="audio-btn" onclick="skipBackward()">⏮</button>
+        <button class="audio-btn" onclick="skipForward()">⏭</button>
+    </div>
+    <div class="audio-info">Listen while you study</div>
+    <button class="audio-close" onclick="closeAudioPlayer()">×</button>
+</div>
+
+<!-- Content Protection -->
+<script>
+    // Disable right-click
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Content is protected. Right-click is disabled.');
+        return false;
+    });
+
+    // Disable copy
+    document.addEventListener('copy', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Copying is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable cut
+    document.addEventListener('cut', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Cutting is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable text selection
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable drag
+    document.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable print
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+            e.preventDefault();
+            showProtectionMessage('Printing is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            showProtectionMessage('Saving is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+            e.preventDefault();
+            showProtectionMessage('View source is disabled.');
+            return false;
+        }
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J'))) {
+            e.preventDefault();
+            showProtectionMessage('Developer tools are disabled.');
+            return false;
+        }
+    });
+
+    // Show protection message
+    function showProtectionMessage(message) {
+        const existing = document.querySelector('.protection-message');
+        if (existing) existing.remove();
+
+        const div = document.createElement('div');
+        div.className = 'protection-message';
+        div.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #ef4444; color: white; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
+        div.textContent = '⚠️ ' + message;
+        document.body.appendChild(div);
+
+        setTimeout(() => {
+            div.style.opacity = '0';
+            div.style.transition = 'opacity 0.5s';
+            setTimeout(() => div.remove(), 500);
+        }, 3000);
+    }
+
+    // Console warning
+    console.log('%c⚠️ CONTENT PROTECTION', 'color: #ef4444; font-size: 24px; font-weight: bold;');
+    console.log('%cThis content is copyrighted and protected. Unauthorized copying, distribution, or reproduction is prohibited.', 'color: #888; font-size: 14px;');
+    console.log('%c© 2026 Barber Study Pro. All rights reserved.', 'color: #D4AF37; font-size: 12px;');
+
+    // Prevent viewing source via right-click on images
+    document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('contextmenu', e => e.preventDefault());
+    });
+</script>
+    </div><!-- End protected content -->
+
+    <!-- Auth Check Script -->
+    <script>
+        function checkAuth() {
+            const session = localStorage.getItem('bsp_session');
+            const authGate = document.getElementById('authGate');
+            const protectedContent = document.getElementById('protectedContent');
+            if (session) {
+                authGate.style.display = 'none';
+                protectedContent.classList.add('show');
+            } else {
+                authGate.style.display = 'flex';
+                protectedContent.classList.remove('show');
+            }
+        }
+        checkAuth();
+    </script>
+</body>
+</html>

@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 2: Life Skills | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F4E4A6;
+            --dark: #0a0a0a;
+            --dark-gray: #1a1a1a;
+            --medium-gray: #2a2a2a;
+            --light-gray: #888;
+            --white: #ffffff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .back-link:hover { color: var(--gold); }
+        .chapter-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
+        .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; }
+        .chapter-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
+        .chapter-header p { color: var(--light-gray); max-width: 600px; margin: 0 auto; }
+        .content { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+        .section { margin-bottom: 3rem; }
+        .section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+        .section h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .section p { margin-bottom: 1rem; color: #ccc; }
+        .section ul { margin-left: 1.5rem; color: #ccc; margin-bottom: 1rem; }
+        .section ul li { margin-bottom: 0.5rem; }
+        .key-point { background: rgba(212, 175, 55, 0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .key-point strong { color: var(--gold); }
+        .term { background: var(--medium-gray); padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 8px; }
+        .term strong { color: var(--gold); display: block; margin-bottom: 0.25rem; }
+        .study-tools { position: fixed; bottom: 2rem; right: 2rem; display: flex; gap: 1rem; }
+        .tool-btn { background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; }
+        .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.3s; }
+        .nav-chapters { display: flex; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--medium-gray); }
+        .nav-chapters a { color: var(--gold); text-decoration: none; font-weight: 600; }
+
+        .quiz-section { background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
+        .quiz-section h2 { color: var(--gold); margin-bottom: 1.5rem; }
+        .quiz-question { margin-bottom: 1.5rem; }
+        .quiz-question p { font-weight: 600; margin-bottom: 0.75rem; color: var(--white); }
+        .quiz-options label { display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .quiz-options label:hover { background: rgba(212, 175, 55, 0.1); }
+        .quiz-options input[type="radio"] { margin-right: 0.75rem; }
+        .quiz-submit { background: var(--gold); color: var(--dark); border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+        .quiz-result { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: none; }
+        .quiz-result.correct { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; }
+        .quiz-result.incorrect { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+
+        @media (max-width: 768px) { .study-tools { bottom: 1rem; right: 1rem; left: 1rem; justify-content: center; } }
+
+        /* Audio Player */
+        .audio-player { position: fixed; bottom: 0; left: 0; right: 0; background: var(--dark-gray); border-top: 2px solid var(--gold); padding: 1rem 2rem; z-index: 1000; display: none; align-items: center; gap: 1rem; box-shadow: 0 -4px 20px rgba(0,0,0,0.5); }
+        .audio-player.active { display: flex; }
+        .audio-controls { display: flex; align-items: center; gap: 1rem; }
+        .audio-btn { background: var(--gold); color: var(--dark); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+        .audio-info { color: var(--light-gray); font-size: 0.875rem; }
+        .audio-close { background: none; border: none; color: var(--light-gray); font-size: 1.5rem; cursor: pointer; margin-left: auto; }
+        .tts-toggle { position: fixed; bottom: 2rem; left: 2rem; background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3); z-index: 100; }
+        .tts-toggle.playing { background: #22c55e; }
+
+        /* Auth Gate Styles */
+        .auth-gate { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--dark); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+        .auth-gate-content { text-align: center; max-width: 500px; }
+        .auth-gate h2 { font-size: 2rem; margin-bottom: 1rem; }
+        .auth-gate p { color: var(--light-gray); margin-bottom: 2rem; }
+        .auth-gate-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .auth-gate-btn { padding: 1rem 2rem; border-radius: 8px; font-weight: 600; text-decoration: none; transition: all 0.3s; }
+        .auth-gate-btn.primary { background: var(--gold); color: var(--dark); }
+        .auth-gate-btn.secondary { background: var(--medium-gray); color: var(--white); border: 1px solid var(--medium-gray); }
+        .auth-gate-btn:hover { transform: translateY(-2px); }
+        .protected-content { display: none; }
+        .protected-content.show { display: block; }
+    </style>
+</head>
+<body>
+    <!-- Auth Gate - Shows if not logged in -->
+    <div class="auth-gate" id="authGate">
+        <div class="auth-gate-content">
+            <h2>Members Only</h2>
+            <p>This study content is exclusively for registered members. Create a free account to access all 21 chapters, quizzes, flashcards, and the practice exam.</p>
+            <div class="auth-gate-buttons">
+                <a href="login.html" class="auth-gate-btn primary">Create Free Account</a>
+                <a href="index.html" class="auth-gate-btn secondary">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Protected Content - Only shows if logged in -->
+    <div class="protected-content" id="protectedContent">
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">Barber Study Pro</a>
+            <a href="index.html#chapters" class="back-link">← Back to Chapters</a>
+        </div>
+    </nav>
+
+    <header class="chapter-header">
+        <span class="chapter-number">CHAPTER 2</span>
+        <h1>Life Skills</h1>
+        <p>Success psychology, goal setting, and effective study habits</p>
+    </header>
+
+    <main class="content">
+        <section class="section">
+            <h2>Why Study Life Skills?</h2>
+            <p>Good technical skills are important, but life skills are equally essential for success in barbering. Barbering is a creative profession that requires artistic talent plus strong:</p>
+            <ul>
+                <li>Communication</li>
+                <li>Decision-making</li>
+                <li>Image-building</li>
+                <li>Customer service</li>
+                <li>Self-actualization</li>
+                <li>Goal-setting</li>
+                <li>Time management</li>
+            </ul>
+            <p>Barbers should study life skills because they lead to a more satisfying and productive career, ensure positive interactions with diverse clients and coworkers, help deal effectively with difficult circumstances, and build self-esteem.</p>
+        </section>
+
+        <section class="section">
+            <h2>Life Skills in Action</h2>
+            <p>Key life skills to put into action:</p>
+            <ul>
+                <li>Being helpful and caring to others</li>
+                <li>Making good friends</li>
+                <li>Feeling good about yourself</li>
+                <li>Having a sense of humor</li>
+                <li>Maintaining a cooperative attitude</li>
+                <li>Approaching work with a strong sense of responsibility</li>
+                <li>Being consistent in your work</li>
+                <li>Adapting successfully to different situations</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Psychology of Success</h2>
+            <p>Success is defined differently by each person. Self-actualization (fulfilling your full potential) requires lifelong commitment.</p>
+            
+            <h3>Action Steps for Success:</h3>
+            <ul>
+                <li><strong>Build self-esteem</strong> — Trust your ability to achieve goals; use positive affirmations</li>
+                <li><strong>Visualize success</strong> — Regularly imagine yourself competently working in your dream barbershop</li>
+                <li><strong>Build on your strengths</strong> — Invest time in activities you enjoy and are good at</li>
+                <li><strong>Be kind to yourself</strong> — Eliminate negative self-talk; view mistakes as learning opportunities</li>
+                <li><strong>Stay true to yourself</strong> — Be authentic and professional; your uniqueness is a valuable asset</li>
+            </ul>
+
+            <h3>Additional Action Steps:</h3>
+            <ul>
+                <li>Practice new behaviors (speak confidently, stand tall, use proper grammar)</li>
+                <li>Keep personal life separate from work → maintain healthy work-life balance</li>
+                <li>Keep your energy up (sleep, healthy food, time management, hobbies, family/friends)</li>
+                <li>Respect others (use "please," "thank you," "excuse me"; be a good listener; don't interrupt)</li>
+            </ul>
+
+            <div class="key-point">
+                <strong>Avoid Three Bad Habits:</strong>
+                <ul style="margin-top: 0.5rem;">
+                    <li><strong>Procrastination</strong> — Putting things off</li>
+                    <li><strong>Perfectionism</strong> — Unhealthy need to do everything perfectly</li>
+                    <li><strong>Lack of a game plan</strong> — No organized goals</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Your Creative Capability</h2>
+            <p>Creativity = talent + unlimited resource of ideas and solutions</p>
+            
+            <h3>Tips to Enhance Creativity:</h3>
+            <ul>
+                <li>Be positive (criticism blocks ideas)</li>
+                <li>Look for creative inspiration (art, music, hair shows, magazines)</li>
+                <li>Improve your vocabulary (use words like explore, analyze, determine)</li>
+                <li>Surround yourself with others who share your passion (teamwork sparks better ideas)</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Design a Mission Statement</h2>
+            <div class="term">
+                <strong>Mission Statement</strong>
+                Defines your purpose, values, and direction. Provides focus and becomes the "cultural pulse" of your life or business.
+            </div>
+            <p><strong>Example:</strong> "I am dedicated to pursuing a successful career with dignity, honesty, and integrity."</p>
+            <p><strong>Tip:</strong> Write it in 1–2 sentences, keep a copy visible, and read it frequently.</p>
+        </section>
+
+        <section class="section">
+            <h2>Set Goals</h2>
+            <p>Goal setting gives direction and helps turn dreams into reality.</p>
+            
+            <div class="term">
+                <strong>Short-term Goals</strong>
+                Accomplished in a year or less (e.g., pass an exam, graduate school)
+            </div>
+            
+            <div class="term">
+                <strong>Long-term Goals</strong>
+                2, 5, 10+ years (e.g., own a barbershop in 5 years)
+            </div>
+
+            <p><strong>Goal Setting Process:</strong></p>
+            <ul>
+                <li>Write goals down</li>
+                <li>Break long-term goals into smaller segments</li>
+                <li>Create action plans</li>
+                <li>Revisit and adjust regularly</li>
+                <li>Set feasible goals and focus on them consistently</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Time Management</h2>
+            <p>Effective time management helps you reach goals faster.</p>
+            
+            <h3>Key Strategies:</h3>
+            <ul>
+                <li>Prioritize tasks (most important to least important)</li>
+                <li>Create flexible schedules (daily, weekly, monthly) — include unstructured time if needed</li>
+                <li>Don't overcommit — learn to say "no" kindly</li>
+                <li>Use to-do lists, planners, or digital tools</li>
+                <li>Reward yourself for good work</li>
+                <li>Schedule physical activity and free time daily</li>
+                <li>Make time management a habit</li>
+            </ul>
+
+            <div class="key-point">
+                <strong>In the Barbershop:</strong> Arrive on time, communicate with the team, stay on schedule, handle add-ons efficiently. Barbershops require team effort for smooth time management (appointments vs. walk-ins).
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Successful Learning Tools</h2>
+            <h3>Good Study Habits:</h3>
+            <ul>
+                <li>Attend all classes and arrive early</li>
+                <li>Have materials ready</li>
+                <li>Listen attentively, take notes, highlight key points</li>
+                <li>Pay attention during reviews</li>
+                <li>Ask for clarification when needed</li>
+            </ul>
+
+            <h3>Memory & Study Techniques:</h3>
+            <ul>
+                <li><strong>Repetition</strong> — Repeat information (aloud, written, hands-on)</li>
+                <li><strong>Organization</strong> — Break large topics into smaller segments</li>
+                <li><strong>Mnemonics:</strong>
+                    <ul>
+                        <li>Word associations</li>
+                        <li>Acronyms (e.g., SHAPES for skin functions)</li>
+                        <li>Songs or rhymes for procedures</li>
+                    </ul>
+                </li>
+                <li><strong>Mind Mapping</strong> — Place main topic in center, branch out with key words, use lines/colors/symbols</li>
+            </ul>
+
+            <h3>Taking Notes Tips:</h3>
+            <ul>
+                <li>Listen for emphasized words and directives ("you need to know")</li>
+                <li>Use templates, key words, symbols, colors</li>
+                <li>Complete sentences when needed</li>
+                <li>Review and transfer notes to long-term memory</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Practice Ethical Standards</h2>
+            <div class="term">
+                <strong>Ethics</strong>
+                Moral principles that guide how we live and work
+            </div>
+
+            <h3>Five Professional Actions:</h3>
+            <ul>
+                <li>Provide skilled and competent services</li>
+                <li>Be honest, courteous, and sincere</li>
+                <li>Keep client information confidential (discretion)</li>
+                <li>Participate in continuing education</li>
+                <li>Give accurate information about treatments and products</li>
+            </ul>
+
+            <h3>Professional Ethics Qualities:</h3>
+            <ul>
+                <li><strong>Self-care</strong> — Take care of yourself first</li>
+                <li><strong>Integrity</strong> — Align actions with your values</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Develop a Positive Personality and Attitude</h2>
+            <p>Barbers deal with diverse people daily — a positive attitude is essential.</p>
+
+            <h3>Characteristics of a Healthy, Positive Attitude:</h3>
+            <ul>
+                <li><strong>Diplomacy (tact)</strong> — Deliver truthful messages kindly</li>
+                <li><strong>Pleasing tone of voice</strong> — Speak clearly/softly; smile when appropriate</li>
+                <li><strong>Emotional stability</strong> — Handle confrontations professionally</li>
+                <li><strong>Sensitivity</strong> — Be compassionate and responsive</li>
+                <li><strong>Values and goals</strong> — Guide your behavior</li>
+                <li><strong>Receptivity</strong> — Listen openly to others' ideas</li>
+                <li><strong>Effective communication skills</strong> — Verbal, nonverbal, and active listening</li>
+            </ul>
+
+            <div class="key-point">
+                <strong>The Whole Person:</strong> Personality = sum of characteristics, attitudes, and behaviors. A pleasing attitude improves both professional and personal life.
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Chapter 2 Key Takeaways</h2>
+            <div class="key-point">
+                <ul style="margin-left: 1rem;">
+                    <li>Life skills are <strong>equally essential</strong> as technical skills for barbering success</li>
+                    <li><strong>Self-actualization</strong> requires lifelong commitment to personal growth</li>
+                    <li>Avoid <strong>procrastination, perfectionism, and lack of game plan</strong></li>
+                    <li>Create a <strong>mission statement</strong> to guide your purpose and values</li>
+                    <li>Set <strong>short-term and long-term goals</strong> with specific action plans</li>
+                    <li>Master <strong>time management</strong> through prioritization and scheduling</li>
+                    <li>Use <strong>repetition, mnemonics, and mind mapping</strong> for effective studying</li>
+                    <li>Practice <strong>ethics, integrity, and self-care</strong> in all professional interactions</li>
+                    <li>Develop a <strong>positive attitude</strong> through diplomacy, emotional stability, and effective communication</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="quiz-section">
+            <h2>Mini Review Quiz</h2>
+            <div class="quiz-question">
+                <p>1. What is self-actualization?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q1" value="a"> Making lots of money</label>
+                    <label><input type="radio" name="q1" value="b"> Fulfilling your full potential</label>
+                    <label><input type="radio" name="q1" value="c"> Getting a job promotion</label>
+                    <label><input type="radio" name="q1" value="d"> Graduating school</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>2. Which is NOT one of the three bad habits to avoid?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q2" value="a"> Procrastination</label>
+                    <label><input type="radio" name="q2" value="b"> Perfectionism</label>
+                    <label><input type="radio" name="q2" value="c"> Lack of game plan</label>
+                    <label><input type="radio" name="q2" value="d"> Time management</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>3. What should a mission statement do?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q3" value="a"> List your daily tasks</label>
+                    <label><input type="radio" name="q3" value="b"> Define your purpose, values, and direction</label>
+                    <label><input type="radio" name="q3" value="c"> Track your income</label>
+                    <label><input type="radio" name="q3" value="d"> List your clients</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>4. How long are short-term goals typically accomplished?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q4" value="a"> 5-10 years</label>
+                    <label><input type="radio" name="q4" value="b"> 2-5 years</label>
+                    <label><input type="radio" name="q4" value="c"> In a year or less</label>
+                    <label><input type="radio" name="q4" value="d"> 10+ years</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>5. What does SHAPES stand for in memory techniques?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q5" value="a"> A mnemonic for skin functions</label>
+                    <label><input type="radio" name="q5" value="b"> A haircutting technique</label>
+                    <label><input type="radio" name="q5" value="c"> A type of comb</label>
+                    <label><input type="radio" name="q5" value="d"> A styling product</label>
+                </div>
+            </div>
+            <button class="quiz-submit" onclick="checkQuiz()">Check Answers</button>
+            <div class="quiz-result" id="quiz-result"></div>
+        </section>
+
+        <div class="nav-chapters">
+            <a href="chapter-01.html">← Chapter 1: History</a>
+            <a href="chapter-03.html">Chapter 3: Professional Image →</a>
+        </div>
+    </main>
+
+    <div class="study-tools">
+        <button class="tool-btn" onclick="openFlashcards()">Flashcards</button>
+        <button class="tool-btn" onclick="openQuiz()">Quiz</button>
+    </div>
+
+    <script>
+        function checkQuiz() {
+            const answers = { q1: 'b', q2: 'd', q3: 'b', q4: 'c', q5: 'a' };
+            let score = 0;
+            let total = 5;
+            for (let q in answers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (selected && selected.value === answers[q]) score++;
+            }
+            const resultDiv = document.getElementById('quiz-result');
+            resultDiv.style.display = 'block';
+            if (score === total) {
+                resultDiv.className = 'quiz-result correct';
+                resultDiv.innerHTML = `<strong>Perfect!</strong> You got ${score}/${total} correct!`;
+            } else {
+                resultDiv.className = 'quiz-result incorrect';
+                resultDiv.innerHTML = `<strong>Keep studying!</strong> You got ${score}/${total} correct.`;
+            }
+        }
+
+        function openFlashcards() {
+            const flashcards = [
+                { term: "Self-actualization", def: "Fulfilling your full potential" },
+                { term: "Procrastination", def: "Putting things off" },
+                { term: "Perfectionism", def: "Unhealthy need to do everything perfectly" },
+                { term: "Mission Statement", def: "Defines your purpose, values, and direction" },
+                { term: "Short-term goals", def: "Accomplished in a year or less" }
+            ];
+            let current = 0;
+            function showCard() {
+                const card = flashcards[current];
+                const action = confirm(`FLASHCARD ${current+1}/${flashcards.length}\n\nTERM: ${card.term}\n\nClick OK for definition, Cancel to exit.`);
+                if (action) {
+                    alert(`DEFINITION:\n${card.def}`);
+                    current = (current + 1) % flashcards.length;
+                    showCard();
+                }
+            }
+            showCard();
+        }
+
+        function openQuiz() {
+            window.location.href = 'chapter-02-quiz.html';
+        }
+
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+            localStorage.setItem('chapter-02-progress', Math.round(scrolled));
+        });
+    </script>
+
+<script>
+// Text-to-Speech functionality
+let speechSynthesis = window.speechSynthesis;
+let currentUtterance = null;
+let isPlaying = false;
+let textChunks = [];
+let currentChunk = 0;
+
+function extractTextContent() {
+    const content = document.querySelector('.content');
+    if (!content) return '';
+    let fullText = '';
+    const sections = content.querySelectorAll('.section');
+    sections.forEach(section => {
+        const headings = section.querySelectorAll('h2, h3');
+        headings.forEach(h => { fullText += h.textContent + '. '; });
+        const paragraphs = section.querySelectorAll('p');
+        paragraphs.forEach(p => { fullText += p.textContent + ' '; });
+        const listItems = section.querySelectorAll('li');
+        listItems.forEach(li => { fullText += li.textContent + '. '; });
+    });
+    return fullText;
+}
+
+function splitTextIntoChunks(text, maxLength = 200) {
+    const sentences = text.match(/[^\.!?]+[\.!?]+/g) || [text];
+    const chunks = [];
+    let currentChunk = '';
+    sentences.forEach(sentence => {
+        if ((currentChunk + sentence).length > maxLength && currentChunk.length > 0) {
+            chunks.push(currentChunk.trim());
+            currentChunk = sentence;
+        } else {
+            currentChunk += sentence + ' ';
+        }
+    });
+    if (currentChunk.trim().length > 0) chunks.push(currentChunk.trim());
+    return chunks;
+}
+
+function toggleTTS() {
+    const player = document.getElementById('audioPlayer');
+    const toggle = document.getElementById('ttsToggle');
+    if (!player.classList.contains('active')) {
+        player.classList.add('active');
+        toggle.classList.add('playing');
+        toggle.innerHTML = 'Stop Listening';
+        const text = extractTextContent();
+        textChunks = splitTextIntoChunks(text);
+        currentChunk = 0;
+        startPlayback();
+    } else {
+        stopPlayback();
+    }
+}
+
+function startPlayback() {
+    if (currentChunk >= textChunks.length) { closeAudioPlayer(); return; }
+    const text = textChunks[currentChunk];
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.rate = 0.9;
+    currentUtterance.pitch = 1;
+    currentUtterance.volume = 1;
+    const voices = speechSynthesis.getVoices();
+    const preferredVoice = voices.find(v => v.name.includes('Google US English')) || voices.find(v => v.name.includes('Samantha')) || voices.find(v => v.lang === 'en-US');
+    if (preferredVoice) currentUtterance.voice = preferredVoice;
+    currentUtterance.onstart = () => { isPlaying = true; updatePlayButton(); };
+    currentUtterance.onend = () => { currentChunk++; if (currentChunk < textChunks.length) startPlayback(); else closeAudioPlayer(); };
+    speechSynthesis.speak(currentUtterance);
+}
+
+function togglePlay() {
+    if (isPlaying) { speechSynthesis.pause(); isPlaying = false; }
+    else { if (speechSynthesis.paused) speechSynthesis.resume(); else startPlayback(); isPlaying = true; }
+    updatePlayButton();
+}
+
+function updatePlayButton() {
+    document.getElementById('playPauseBtn').textContent = isPlaying ? '⏸' : '▶';
+}
+
+function skipBackward() { if (currentChunk > 0) { speechSynthesis.cancel(); currentChunk = Math.max(0, currentChunk - 1); startPlayback(); } }
+function skipForward() { if (currentChunk < textChunks.length - 1) { speechSynthesis.cancel(); currentChunk++; startPlayback(); } }
+
+function closeAudioPlayer() {
+    speechSynthesis.cancel();
+    isPlaying = false;
+    currentChunk = 0;
+    document.getElementById('audioPlayer').classList.remove('active');
+    document.getElementById('ttsToggle').classList.remove('playing');
+    document.getElementById('ttsToggle').innerHTML = '🔊 Listen to Chapter';
+}
+
+function stopPlayback() { speechSynthesis.cancel(); isPlaying = false; closeAudioPlayer(); }
+speechSynthesis.onvoiceschanged = () => { speechSynthesis.getVoices(); };
+</script>
+
+<button class="tts-toggle" id="ttsToggle" onclick="toggleTTS()">Listen to Chapter</button>
+<div class="audio-player" id="audioPlayer">
+    <div class="audio-controls">
+        <button class="audio-btn" id="playPauseBtn" onclick="togglePlay()">▶</button>
+        <button class="audio-btn" onclick="skipBackward()">⏮</button>
+        <button class="audio-btn" onclick="skipForward()">⏭</button>
+    </div>
+    <div class="audio-info">Listen while you study</div>
+    <button class="audio-close" onclick="closeAudioPlayer()">×</button>
+</div>
+
+<!-- Content Protection -->
+<script>
+    // Disable right-click
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Content is protected. Right-click is disabled.');
+        return false;
+    });
+
+    // Disable copy
+    document.addEventListener('copy', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Copying is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable cut
+    document.addEventListener('cut', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Cutting is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable text selection
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable drag
+    document.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable print
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+            e.preventDefault();
+            showProtectionMessage('Printing is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            showProtectionMessage('Saving is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+            e.preventDefault();
+            showProtectionMessage('View source is disabled.');
+            return false;
+        }
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J'))) {
+            e.preventDefault();
+            showProtectionMessage('Developer tools are disabled.');
+            return false;
+        }
+    });
+
+    // Show protection message
+    function showProtectionMessage(message) {
+        const existing = document.querySelector('.protection-message');
+        if (existing) existing.remove();
+
+        const div = document.createElement('div');
+        div.className = 'protection-message';
+        div.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #ef4444; color: white; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
+        div.textContent = message;
+        document.body.appendChild(div);
+
+        setTimeout(() => {
+            div.style.opacity = '0';
+            div.style.transition = 'opacity 0.5s';
+            setTimeout(() => div.remove(), 500);
+        }, 3000);
+    }
+
+    // Console warning
+    console.log('%cCONTENT PROTECTION', 'color: #ef4444; font-size: 24px; font-weight: bold;');
+    console.log('%cThis content is copyrighted and protected. Unauthorized copying, distribution, or reproduction is prohibited.', 'color: #888; font-size: 14px;');
+    console.log('%c© 2026 Barber Study Pro. All rights reserved.', 'color: #D4AF37; font-size: 12px;');
+
+    // Prevent viewing source via right-click on images
+    document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('contextmenu', e => e.preventDefault());
+    });
+</script>
+    </div><!-- End protected content -->
+
+    <!-- Auth Check Script -->
+    <script>
+        function checkAuth() {
+            const session = localStorage.getItem('bsp_session');
+            const authGate = document.getElementById('authGate');
+            const protectedContent = document.getElementById('protectedContent');
+            if (session) {
+                authGate.style.display = 'none';
+                protectedContent.classList.add('show');
+            } else {
+                authGate.style.display = 'flex';
+                protectedContent.classList.remove('show');
+            }
+        }
+        checkAuth();
+    </script>
+</body>
+</html>

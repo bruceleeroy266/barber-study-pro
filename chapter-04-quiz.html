@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 4 Quiz - Infection Control - Barber Study Pro</title>
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --dark: #1a1a1a;
+            --dark-gray: #2d2d2d;
+            --medium-gray: #3d3d3d;
+            --light-gray: #888;
+            --white: #f5f5f5;
+            --success: #22c55e;
+            --danger: #ef4444;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--dark);
+            color: var(--white);
+            line-height: 1.6;
+        }
+        .progress-bar {
+            position: fixed; top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--dark-gray); z-index: 1000;
+        }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.3s; }
+        
+        nav {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: sticky; top: 4px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+        .nav-container {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .back-link:hover { color: var(--gold); }
+
+        .container {
+            max-width: 800px; margin: 0 auto; padding: 3rem 2rem;
+        }
+
+        .quiz-header {
+            text-align: center; margin-bottom: 3rem;
+        }
+        .quiz-header h1 { color: var(--gold); margin-bottom: 1rem; }
+        .quiz-header p { color: var(--light-gray); }
+
+        .quiz-section { background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
+        .quiz-section h2 { color: var(--gold); margin-bottom: 1.5rem; }
+        .quiz-question { margin-bottom: 1.5rem; }
+        .quiz-question p { font-weight: 600; margin-bottom: 0.75rem; color: var(--white); }
+        .quiz-options label { display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .quiz-options label:hover { background: rgba(212, 175, 55, 0.1); }
+        .quiz-options input[type="radio"] { margin-right: 0.75rem; }
+        .quiz-submit { background: var(--gold); color: var(--dark); border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+        .quiz-result { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: none; }
+        .quiz-result.correct { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; }
+        .quiz-result.incorrect { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">⚡ Barber Study Pro</a>
+            <a href="chapter-04.html" class="back-link">← Back to Chapter 4</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="quiz-header">
+            <h1>Chapter 4: Infection Control</h1>
+            <p>Comprehensive Review Quiz - 35 Questions</p>
+        </div>
+
+        <section class="quiz-section">
+            <h2>📝 Chapter 4 Comprehensive Review Quiz</h2>
+            
+            <div class="quiz-question">
+                <p>1. What does OSHA stand for?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q1" value="a"> Office of Safety and Health Administration</label>
+                    <label><input type="radio" name="q1" value="b"> Occupational Safety and Health Administration</label>
+                    <label><input type="radio" name="q1" value="c"> Organization for Safety and Health Affairs</label>
+                    <label><input type="radio" name="q1" value="d"> Operational Safety and Health Agency</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>2. What has replaced Material Safety Data Sheets (MSDS)?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q2" value="a"> Product Data Sheets</label>
+                    <label><input type="radio" name="q2" value="b"> Safety Data Sheets (SDS)</label>
+                    <label><input type="radio" name="q2" value="c"> Chemical Data Sheets</label>
+                    <label><input type="radio" name="q2" value="d"> Hazard Data Sheets</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>3. How many categories of information are required on a Safety Data Sheet?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q3" value="a"> 8</label>
+                    <label><input type="radio" name="q3" value="b"> 12</label>
+                    <label><input type="radio" name="q3" value="c"> 16</label>
+                    <label><input type="radio" name="q3" value="d"> 20</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>4. What should you do before cleaning electrical tools?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q4" value="a"> Wet them down</label>
+                    <label><input type="radio" name="q4" value="b"> Unplug them</label>
+                    <label><input type="radio" name="q4" value="c"> Heat them up</label>
+                    <label><input type="radio" name="q4" value="d"> Nothing special</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>5. What is the maximum safe water temperature for shampooing?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q5" value="a"> 100°F</label>
+                    <label><input type="radio" name="q5" value="b"> 130°F</label>
+                    <label><input type="radio" name="q5" value="c"> 150°F</label>
+                    <label><input type="radio" name="q5" value="d"> 180°F</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>6. What type of electrical outlets should be near water sources?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q6" value="a"> Standard outlets</label>
+                    <label><input type="radio" name="q6" value="b"> GFCI (ground fault circuit interrupter) outlets</label>
+                    <label><input type="radio" name="q6" value="c"> High-voltage outlets</label>
+                    <label><input type="radio" name="q6" value="d"> Extension cords</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>7. How often should you check your state's website for regulation updates?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q7" value="a"> Daily</label>
+                    <label><input type="radio" name="q7" value="b"> Weekly</label>
+                    <label><input type="radio" name="q7" value="c"> Monthly</label>
+                    <label><input type="radio" name="q7" value="d"> Yearly</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>8. What should you never do with cleaning products?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q8" value="a"> Store them properly</label>
+                    <label><input type="radio" name="q8" value="b"> Mix them together</label>
+                    <label><input type="radio" name="q8" value="c"> Read the labels</label>
+                    <label><input type="radio" name="q8" value="d"> Wear gloves when using them</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>9. What should you wear when handling caustic materials?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q9" value="a"> Regular clothes</label>
+                    <label><input type="radio" name="q9" value="b"> Goggles, lab apron, and gloves</label>
+                    <label><input type="radio" name="q9" value="c"> Just gloves</label>
+                    <label><input type="radio" name="q9" value="d"> Nothing special</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>10. Where should fire extinguishers be placed?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q10" value="a"> In a locked cabinet</label>
+                    <label><input type="radio" name="q10" value="b"> Where they are readily accessible</label>
+                    <label><input type="radio" name="q10" value="c"> In the back room</label>
+                    <label><input type="radio" name="q10" value="d"> Outside the building</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>11. What should you do if a tool is dropped on the floor during service?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q11" value="a"> Wipe it off and continue</label>
+                    <label><input type="radio" name="q11" value="b"> Replace it with a disinfected tool or stop and disinfect it</label>
+                    <label><input type="radio" name="q11" value="c"> Ignore it</label>
+                    <label><input type="radio" name="q11" value="d"> Use it on the next client</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>12. Why is proper ventilation important in a barbershop?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q12" value="a"> It is not important</label>
+                    <label><input type="radio" name="q12" value="b"> To remove particles from products that can cause allergies and health problems</label>
+                    <label><input type="radio" name="q12" value="c"> To keep the shop cold</label>
+                    <label><input type="radio" name="q12" value="d"> To save money</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>13. What should you do with leftover chemicals?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q13" value="a"> Store them for later</label>
+                    <label><input type="radio" name="q13" value="b"> Dispose of them properly and do not allow them to stockpile</label>
+                    <label><input type="radio" name="q13" value="c"> Mix them with other chemicals</label>
+                    <label><input type="radio" name="q13" value="d"> Pour them down the drain</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>14. What should you check for on plastic chemical bottles?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q14" value="a"> Color</label>
+                    <label><input type="radio" name="q14" value="b"> Dents or bulges that indicate pressure</label>
+                    <label><input type="radio" name="q14" value="c"> Size</label>
+                    <label><input type="radio" name="q14" value="d"> Brand name</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>15. What type of shoes should be worn in the barbershop?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q15" value="a"> Open-toed sandals</label>
+                    <label><input type="radio" name="q15" value="b"> Nonskid rubber soles with good support</label>
+                    <label><input type="radio" name="q15" value="c"> High heels</label>
+                    <label><input type="radio" name="q15" value="d"> Flip flops</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>16. What should you do with electronic devices during work?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q16" value="a"> Keep them on your station</label>
+                    <label><input type="radio" name="q16" value="b"> Keep them stored away and only check between clients</label>
+                    <label><input type="radio" name="q16" value="c"> Use them during services</label>
+                    <label><input type="radio" name="q16" value="d"> Leave them at home</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>17. What should you post in the reception area regarding children?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q17" value="a"> No children allowed</label>
+                    <label><input type="radio" name="q17" value="b"> Notices that children are not to be left unattended</label>
+                    <label><input type="radio" name="q17" value="c"> Children can play anywhere</label>
+                    <label><input type="radio" name="q17" value="d"> Nothing</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>18. How should you hold a child's head when cutting hair?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q18" value="a"> Ask them to hold it still</label>
+                    <label><input type="radio" name="q18" value="b"> Gently but firmly with one hand while cutting with the other</label>
+                    <label><input type="radio" name="q18" value="c"> Don't touch their head</label>
+                    <label><input type="radio" name="q18" value="d"> Use clips to hold it</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>19. What should you do before inviting a client to sit in a hydraulic chair?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q19" value="a"> Raise it to the highest level</label>
+                    <label><input type="radio" name="q19" value="b"> Lower it to its lowest level and lock it</label>
+                    <label><input type="radio" name="q19" value="c"> Leave it where it is</label>
+                    <label><input type="radio" name="q19" value="d"> Spin it around</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>20. Why should you cushion a client's neck with a folded towel at the shampoo bowl?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q20" value="a"> It looks nice</label>
+                    <label><input type="radio" name="q20" value="b"> It is beneficial for clients with neck injuries such as whiplash</label>
+                    <label><input type="radio" name="q20" value="c"> It is required by law</label>
+                    <label><input type="radio" name="q20" value="d"> It saves water</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>21. Why can't leather strops and holsters be disinfected?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q21" value="a"> They are too expensive</label>
+                    <label><input type="radio" name="q21" value="b"> Leather is a porous material</label>
+                    <label><input type="radio" name="q21" value="c"> They are disposable</label>
+                    <label><input type="radio" name="q21" value="d"> They don't need disinfection</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>22. What should you use to dispense products from multi-use containers?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q22" value="a"> Your fingers</label>
+                    <label><input type="radio" name="q22" value="b"> A pump or shaker</label>
+                    <label><input type="radio" name="q22" value="c"> A comb</label>
+                    <label><input type="radio" name="q22" value="d"> A towel</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>23. What should you wear when disinfecting tools?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q23" value="a"> Regular clothes</label>
+                    <label><input type="radio" name="q23" value="b"> Safety glasses and gloves</label>
+                    <label><input type="radio" name="q23" value="c"> Just an apron</label>
+                    <label><input type="radio" name="q23" value="d"> Nothing special</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>24. What is the first step in handling an exposure incident?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q24" value="a"> Continue the service</label>
+                    <label><input type="radio" name="q24" value="b"> Stop the service immediately</label>
+                    <label><input type="radio" name="q24" value="c"> Call 911</label>
+                    <label><input type="radio" name="q24" value="d"> Clean the wound</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>25. Where should you dispose of a contaminated blade after an exposure incident?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q25" value="a"> In the regular trash</label>
+                    <label><input type="radio" name="q25" value="b"> In a sharps container</label>
+                    <label><input type="radio" name="q25" value="c"> In the sink</label>
+                    <label><input type="radio" name="q25" value="d"> On the counter</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>26. How long should you wash your hands?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q26" value="a"> 5 seconds</label>
+                    <label><input type="radio" name="q26" value="b"> At least 20 seconds</label>
+                    <label><input type="radio" name="q26" value="c"> 1 minute</label>
+                    <label><input type="radio" name="q26" value="d"> 2 minutes</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>27. What should you use to turn off the water after washing hands?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q27" value="a"> Your bare hands</label>
+                    <label><input type="radio" name="q27" value="b"> A paper towel</label>
+                    <label><input type="radio" name="q27" value="c"> Your elbow</label>
+                    <label><input type="radio" name="q27" value="d"> A comb</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>28. What should you do before removing gloves after an exposure incident?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q28" value="a"> Take them off immediately</label>
+                    <label><input type="radio" name="q28" value="b"> Clean and disinfect all tools that came into contact with blood</label>
+                    <label><input type="radio" name="q28" value="c"> Wash your hands first</label>
+                    <label><input type="radio" name="q28" value="d"> Nothing</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>29. What should you do if disinfectant solution becomes visibly dirty?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q29" value="a"> Continue using it</label>
+                    <label><input type="radio" name="q29" value="b"> Replace it</label>
+                    <label><input type="radio" name="q29" value="c"> Add more water</label>
+                    <label><input type="radio" name="q29" value="d"> Strain it</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>30. How should you store clean, disinfected tools?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q30" value="a"> In an open container</label>
+                    <label><input type="radio" name="q30" value="b"> In a clean, covered container</label>
+                    <label><input type="radio" name="q30" value="c"> On the counter</label>
+                    <label><input type="radio" name="q30" value="d"> In a drawer with other items</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>31. What should you do with electrical cords to prevent tangled cord syndrome?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q31" value="a"> Leave them loose</label>
+                    <label><input type="radio" name="q31" value="b"> Use cordless trimmers or well-planned workstation with sufficient outlets</label>
+                    <label><input type="radio" name="q31" value="c"> Wrap them around chairs</label>
+                    <label><input type="radio" name="q31" value="d"> Tape them to the floor</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>32. What should you never put in your mouth or pocket?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q32" value="a"> Money</label>
+                    <label><input type="radio" name="q32" value="b"> Tools or implements</label>
+                    <label><input type="radio" name="q32" value="c"> Combs</label>
+                    <label><input type="radio" name="q32" value="d"> All of the above</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>33. What is the proper way to remove gloves after an exposure?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q33" value="a"> Pull them off with your bare fingers</label>
+                    <label><input type="radio" name="q33" value="b"> Remove one glove by holding it in the other gloved hand, sliding finger under at the base, and pulling it over the other contaminated glove</label>
+                    <label><input type="radio" name="q33" value="c"> Tear them off quickly</label>
+                    <label><input type="radio" name="q33" value="d"> Leave them on</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>34. What should you apply to stop bleeding from a minor cut?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q34" value="a"> Water</label>
+                    <label><input type="radio" name="q34" value="b"> Slight pressure with a moistened cotton round</label>
+                    <label><input type="radio" name="q34" value="c"> Alcohol</label>
+                    <label><input type="radio" name="q34" value="d"> Nothing</label>
+                </div>
+            </div>
+            
+            <div class="quiz-question">
+                <p>35. What should you recommend to a client who has been cut?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q35" value="a"> Continue with the service</label>
+                    <label><input type="radio" name="q35" value="b"> See a physician if any signs of redness, swelling, pain, or irritation develop</label>
+                    <label><input type="radio" name="q35" value="c"> Ignore it</label>
+                    <label><input type="radio" name="q35" value="d"> Apply makeup</label>
+                </div>
+            </div>
+            
+            <button class="quiz-submit" onclick="checkQuiz()">Check Answers</button>
+            <div class="quiz-result" id="quiz-result"></div>
+        </section>
+    </div>
+
+    <script>
+        function checkQuiz() {
+            const answers = { 
+                q1: 'b', q2: 'b', q3: 'c', q4: 'b', q5: 'b',
+                q6: 'b', q7: 'c', q8: 'b', q9: 'b', q10: 'b',
+                q11: 'b', q12: 'b', q13: 'b', q14: 'b', q15: 'b',
+                q16: 'b', q17: 'b', q18: 'b', q19: 'b', q20: 'b',
+                q21: 'b', q22: 'b', q23: 'b', q24: 'b', q25: 'b',
+                q26: 'b', q27: 'b', q28: 'b', q29: 'b', q30: 'b',
+                q31: 'b', q32: 'b', q33: 'b', q34: 'b', q35: 'b'
+            };
+            let score = 0;
+            let total = 35;
+            
+            for (let q in answers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (selected && selected.value === answers[q]) score++;
+            }
+            
+            const resultDiv = document.getElementById('quiz-result');
+            resultDiv.style.display = 'block';
+            if (score === total) {
+                resultDiv.className = 'quiz-result correct';
+                resultDiv.innerHTML = `<strong>Perfect! 🎉</strong> You got ${score}/${total} correct!`;
+            } else {
+                resultDiv.className = 'quiz-result incorrect';
+                resultDiv.innerHTML = `<strong>Keep studying!</strong> You got ${score}/${total} correct.`;
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+        });
+    </script>
+
+<!-- Content Protection -->
+<script>
+    // Disable right-click
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Content is protected. Right-click is disabled.');
+        return false;
+    });
+
+    // Disable copy
+    document.addEventListener('copy', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Copying is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable cut
+    document.addEventListener('cut', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Cutting is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable text selection
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable drag
+    document.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable print
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+            e.preventDefault();
+            showProtectionMessage('Printing is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            showProtectionMessage('Saving is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+            e.preventDefault();
+            showProtectionMessage('View source is disabled.');
+            return false;
+        }
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J'))) {
+            e.preventDefault();
+            showProtectionMessage('Developer tools are disabled.');
+            return false;
+        }
+    });
+
+    // Show protection message
+    function showProtectionMessage(message) {
+        const existing = document.querySelector('.protection-message');
+        if (existing) existing.remove();
+
+        const div = document.createElement('div');
+        div.className = 'protection-message';
+        div.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #ef4444; color: white; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
+        div.textContent = '⚠️ ' + message;
+        document.body.appendChild(div);
+
+        setTimeout(() => {
+            div.style.opacity = '0';
+            div.style.transition = 'opacity 0.5s';
+            setTimeout(() => div.remove(), 500);
+        }, 3000);
+    }
+
+    // Console warning
+    console.log('%c⚠️ CONTENT PROTECTION', 'color: #ef4444; font-size: 24px; font-weight: bold;');
+    console.log('%cThis content is copyrighted and protected. Unauthorized copying, distribution, or reproduction is prohibited.', 'color: #888; font-size: 14px;');
+    console.log('%c© 2026 Barber Study Pro. All rights reserved.', 'color: #D4AF37; font-size: 12px;');
+
+    // Prevent viewing source via right-click on images
+    document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('contextmenu', e => e.preventDefault());
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; --success: #22c55e; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+        
+        /* Layout */
+        .dashboard-layout { display: flex; min-height: 100vh; }
+        
+        /* Sidebar */
+        .sidebar { width: 280px; background: var(--dark-gray); border-right: 1px solid var(--medium-gray); padding: 1.5rem; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar-logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); margin-bottom: 2rem; }
+        
+        .user-profile { display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--medium-gray); border-radius: 12px; margin-bottom: 2rem; }
+        .user-avatar { width: 48px; height: 48px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .user-info h4 { font-size: 0.95rem; margin-bottom: 0.25rem; }
+        .user-info p { font-size: 0.8rem; color: var(--light-gray); }
+        
+        .sidebar-nav { list-style: none; }
+        .sidebar-nav li { margin-bottom: 0.5rem; }
+        .sidebar-nav a { display: flex; align-items: center; gap: 0.75rem; color: var(--light-gray); text-decoration: none; padding: 0.75rem 1rem; border-radius: 8px; transition: all 0.3s; }
+        .sidebar-nav a:hover, .sidebar-nav a.active { background: rgba(212,175,55,0.1); color: var(--gold); }
+        .sidebar-nav a.active { background: rgba(212,175,55,0.15); }
+        
+        .progress-overview { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--medium-gray); }
+        .progress-overview h4 { font-size: 0.875rem; color: var(--light-gray); margin-bottom: 1rem; }
+        .progress-item { display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.875rem; }
+        .progress-bar-bg { background: var(--medium-gray); height: 6px; border-radius: 3px; margin-top: 0.25rem; }
+        .progress-bar-fill { background: var(--gold); height: 100%; border-radius: 3px; transition: width 0.5s; }
+        
+        /* Main Content */
+        .main-content { flex: 1; margin-left: 280px; padding: 2rem; }
+        
+        /* Header */
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .dashboard-header h1 { font-size: 1.75rem; }
+        .header-actions { display: flex; gap: 1rem; }
+        .header-btn { padding: 0.5rem 1rem; background: var(--medium-gray); border: none; border-radius: 6px; color: var(--white); cursor: pointer; }
+        .header-btn.primary { background: var(--gold); color: var(--dark); }
+        
+        /* Stats Cards */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { background: var(--dark-gray); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--medium-gray); }
+        .stat-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+        .stat-value { font-size: 2rem; font-weight: 700; color: var(--gold); margin-bottom: 0.25rem; }
+        .stat-label { font-size: 0.875rem; color: var(--light-gray); }
+        
+        /* Continue Studying */
+        .continue-section { background: linear-gradient(135deg, rgba(212,175,55,0.1), rgba(212,175,55,0.05)); border: 1px solid rgba(212,175,55,0.3); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
+        .continue-section h2 { font-size: 1.25rem; margin-bottom: 1rem; }
+        .continue-card { display: flex; align-items: center; gap: 1rem; background: var(--dark-gray); padding: 1rem; border-radius: 8px; }
+        .continue-info { flex: 1; }
+        .continue-info h4 { margin-bottom: 0.25rem; }
+        .continue-info p { font-size: 0.875rem; color: var(--light-gray); }
+        .continue-btn { background: var(--gold); color: var(--dark); padding: 0.75rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 600; }
+        
+        /* Chapters Grid */
+        .chapters-section h2 { font-size: 1.25rem; margin-bottom: 1rem; }
+        .chapters-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+        .chapter-card { background: var(--dark-gray); border: 1px solid var(--medium-gray); border-radius: 12px; padding: 1.25rem; transition: all 0.3s; }
+        .chapter-card:hover { border-color: var(--gold); }
+        .chapter-card.completed { border-left: 4px solid var(--success); }
+        .chapter-card.in-progress { border-left: 4px solid var(--gold); }
+        .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.75rem; }
+        .chapter-card h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+        .chapter-card p { font-size: 0.875rem; color: var(--light-gray); margin-bottom: 1rem; }
+        .chapter-progress { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+        .chapter-progress-bar { flex: 1; height: 6px; background: var(--medium-gray); border-radius: 3px; }
+        .chapter-progress-fill { height: 100%; background: var(--gold); border-radius: 3px; }
+        .chapter-links { display: flex; gap: 0.5rem; }
+        .chapter-links a { flex: 1; text-align: center; padding: 0.5rem; border-radius: 6px; text-decoration: none; font-size: 0.8rem; font-weight: 500; }
+        .btn-study { background: var(--gold); color: var(--dark); }
+        .btn-quiz { background: var(--medium-gray); color: var(--white); }
+        .btn-flash { background: transparent; border: 1px solid var(--medium-gray); color: var(--white); }
+        
+        /* Recent Activity */
+        .activity-section { margin-top: 2rem; }
+        .activity-section h2 { font-size: 1.25rem; margin-bottom: 1rem; }
+        .activity-list { background: var(--dark-gray); border-radius: 12px; border: 1px solid var(--medium-gray); }
+        .activity-item { display: flex; align-items: center; gap: 1rem; padding: 1rem; border-bottom: 1px solid var(--medium-gray); }
+        .activity-item:last-child { border-bottom: none; }
+        .activity-icon { width: 40px; height: 40px; background: rgba(212,175,55,0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+        .activity-info { flex: 1; }
+        .activity-info h4 { font-size: 0.95rem; margin-bottom: 0.25rem; }
+        .activity-info p { font-size: 0.8rem; color: var(--light-gray); }
+        .activity-time { font-size: 0.8rem; color: var(--light-gray); }
+        
+        /* Mobile */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; }
+        }
+
+        /* Auth Gate Styles */
+        .auth-gate { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--dark); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+        .auth-gate-content { text-align: center; max-width: 500px; }
+        .auth-gate h2 { font-size: 2rem; margin-bottom: 1rem; }
+        .auth-gate p { color: var(--light-gray); margin-bottom: 2rem; }
+        .auth-gate-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .auth-gate-btn { padding: 1rem 2rem; border-radius: 8px; font-weight: 600; text-decoration: none; transition: all 0.3s; }
+        .auth-gate-btn.primary { background: var(--gold); color: var(--dark); }
+        .auth-gate-btn.secondary { background: var(--medium-gray); color: var(--white); border: 1px solid var(--medium-gray); }
+        .protected-content { display: none; }
+        .protected-content.show { display: block; }
+    </style>
+</head>
+<body>
+    <!-- Auth Gate - Shows if not logged in -->
+    <div class="auth-gate" id="authGate">
+        <div class="auth-gate-content">
+            <h2>🔒 Members Only</h2>
+            <p>This study content is exclusively for registered members. Create a free account to access all 21 chapters, quizzes, flashcards, and the practice exam.</p>
+            <div class="auth-gate-buttons">
+                <a href="login.html" class="auth-gate-btn primary">Create Free Account</a>
+                <a href="index.html" class="auth-gate-btn secondary">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Protected Content - Only shows if logged in -->
+    <div class="protected-content" id="protectedContent">
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">Barber Study Pro</div>
+            
+            <div class="user-profile">
+                <div class="user-avatar"></div>
+                <div class="user-info">
+                    <h4 id="userName">Loading...</h4>
+                    <p id="userEmail">Loading...</p>
+                </div>
+            </div>
+            
+            <nav>
+                <ul class="sidebar-nav">
+                    <li><a href="#" class="active">Dashboard</a></li>
+                    <li><a href="chapters.html">All Chapters</a></li>
+                    <li><a href="final-exam.html" style="background:rgba(212,175,55,0.2);color:var(--gold);font-weight:600;">FINAL EXAM</a></li>
+                    <li><a href="#">My Quizzes</a></li>
+                    <li><a href="#">Flashcards</a></li>
+                    <li><a href="#">Progress</a></li>
+                    <li><a href="#">Settings</a></li>
+                    <li><a href="#" onclick="logout()">Logout</a></li>
+                </ul>
+            </nav>
+            
+            <div class="progress-overview">
+                <h4>Overall Progress</h4>
+                <div class="progress-item">
+                    <span>Chapters</span>
+                    <span id="chaptersProgress">0/21</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="chaptersBar" style="width: 0%"></div>
+                </div>
+                
+                <div class="progress-item" style="margin-top: 1rem;">
+                    <span>Quizzes</span>
+                    <span id="quizzesProgress">0/21</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="quizzesBar" style="width: 0%"></div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <h1>My Dashboard</h1>
+                <div class="header-actions">
+                    <button class="header-btn">Notifications</button>
+                    <a href="chapters.html" class="header-btn primary">Continue Studying</a>
+                </div>
+            </header>
+            
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">CH</div>
+                    <div class="stat-value" id="chaptersCompleted">0</div>
+                    <div class="stat-label">Chapters Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">QZ</div>
+                    <div class="stat-value" id="quizzesTaken">0</div>
+                    <div class="stat-label">Quizzes Taken</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">SC</div>
+                    <div class="stat-value" id="avgScore">0%</div>
+                    <div class="stat-label">Average Score</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">TM</div>
+                    <div class="stat-value" id="studyTime">0h</div>
+                    <div class="stat-label">Study Time</div>
+                </div>
+            </div>
+            
+            <!-- Continue Studying -->
+            <div class="continue-section">
+                <h2>Continue Where You Left Off</h2>
+                <div class="continue-card" id="continueCard">
+                    <div class="continue-info">
+                        <h4>Chapter 1: History of Barbering</h4>
+                        <p>You've completed 0% of this chapter</p>
+                    </div>
+                    <a href="chapter-01.html" class="continue-btn">Resume →</a>
+                </div>
+            </div>
+            
+            <!-- Chapters -->
+            <div class="chapters-section">
+                <h2>My Chapters</h2>
+                <div class="chapters-grid" id="chaptersGrid">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="activity-section">
+                <h2>Recent Activity</h2>
+                <div class="activity-list" id="activityList">
+                    <div class="activity-item">
+                        <div class="activity-icon">*</div>
+                        <div class="activity-info">
+                            <h4>Welcome to Barber Study Pro!</h4>
+                            <p>Start your studying journey today</p>
+                        </div>
+                        <div class="activity-time">Just now</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Check if logged in
+        const session = JSON.parse(localStorage.getItem('bsp_session') || sessionStorage.getItem('bsp_session') || '{}');
+        
+        if (!session.isLoggedIn) {
+            window.location.href = 'login.html';
+        }
+        
+        // Load user data
+        function loadUserData() {
+            const users = JSON.parse(localStorage.getItem('bsp_users') || '[]');
+            const user = users.find(u => u.email === session.email);
+            
+            if (user) {
+                document.getElementById('userName').textContent = user.name;
+                document.getElementById('userEmail').textContent = user.email;
+            }
+        }
+        
+        // Calculate progress
+        function calculateProgress() {
+            let chaptersCompleted = 0;
+            let quizzesTaken = 0;
+            let totalScore = 0;
+            let scoreCount = 0;
+            
+            for (let i = 1; i <= 21; i++) {
+                const chapterNum = i.toString().padStart(2, '0');
+                const progress = localStorage.getItem(`chapter-${chapterNum}-progress`);
+                
+                if (progress && parseInt(progress) >= 90) {
+                    chaptersCompleted++;
+                }
+                
+                // Check for quiz scores
+                const quizScore = localStorage.getItem(`chapter-${chapterNum}-quiz-score`);
+                if (quizScore) {
+                    quizzesTaken++;
+                    totalScore += parseInt(quizScore);
+                    scoreCount++;
+                }
+            }
+            
+            // Update stats
+            document.getElementById('chaptersCompleted').textContent = chaptersCompleted;
+            document.getElementById('quizzesTaken').textContent = quizzesTaken;
+            document.getElementById('chaptersProgress').textContent = `${chaptersCompleted}/21`;
+            document.getElementById('quizzesProgress').textContent = `${quizzesTaken}/21`;
+            document.getElementById('chaptersBar').style.width = `${(chaptersCompleted / 21) * 100}%`;
+            document.getElementById('quizzesBar').style.width = `${(quizzesTaken / 21) * 100}%`;
+            
+            const avgScore = scoreCount > 0 ? Math.round(totalScore / scoreCount) : 0;
+            document.getElementById('avgScore').textContent = `${avgScore}%`;
+            
+            // Update continue card
+            updateContinueCard();
+            
+            // Load chapters grid
+            loadChaptersGrid();
+        }
+        
+        // Find where to continue
+        function updateContinueCard() {
+            for (let i = 1; i <= 21; i++) {
+                const chapterNum = i.toString().padStart(2, '0');
+                const progress = localStorage.getItem(`chapter-${chapterNum}-progress`);
+                
+                if (!progress || parseInt(progress) < 90) {
+                    const chapterNames = {
+                        '01': 'History of Barbering',
+                        '02': 'Life Skills',
+                        '03': 'Professional Image',
+                        '04': 'Infection Control',
+                        '05': 'Implements, Tools & Equipment',
+                        '06': 'Anatomy & Physiology',
+                        '07': 'Basics of Chemistry',
+                        '08': 'Basics of Electricity',
+                        '09': 'The Skin',
+                        '10': 'Properties & Disorders of Hair',
+                        '11': 'Treatment of Hair & Scalp',
+                        '12': 'Men\'s Facial Massage',
+                        '13': 'Shaving & Facial-Hair Design',
+                        '14': 'Men\'s Haircutting & Styling',
+                        '15': 'Men\'s Hair Replacement',
+                        '16': 'Women\'s Haircutting & Styling',
+                        '17': 'Chemical Texture Services',
+                        '18': 'Haircoloring & Lightening',
+                        '19': 'Preparing for Licensure',
+                        '20': 'Working Behind the Chair',
+                        '21': 'The Business of Barbering'
+                    };
+                    
+                    const progressPercent = progress ? parseInt(progress) : 0;
+                    
+                    document.getElementById('continueCard').innerHTML = `
+                        <div class="continue-info">
+                            <h4>Chapter ${i}: ${chapterNames[chapterNum]}</h4>
+                            <p>You've completed ${progressPercent}% of this chapter</p>
+                        </div>
+                        <a href="chapter-${chapterNum}.html" class="continue-btn">Resume →</a>
+                    `;
+                    return;
+                }
+            }
+            
+            // All completed
+            document.getElementById('continueCard').innerHTML = `
+                <div class="continue-info">
+                    <h4>🎉 Congratulations!</h4>
+                    <p>You've completed all 21 chapters</p>
+                </div>
+                <a href="chapter-01-quiz.html" class="continue-btn">Review Quizzes →</a>
+            `;
+        }
+        
+        // Load chapters grid
+        function loadChaptersGrid() {
+            const chapterNames = {
+                '01': 'History of Barbering',
+                '02': 'Life Skills',
+                '03': 'Professional Image',
+                '04': 'Infection Control',
+                '05': 'Implements, Tools & Equipment',
+                '06': 'Anatomy & Physiology',
+                '07': 'Basics of Chemistry',
+                '08': 'Basics of Electricity',
+                '09': 'The Skin',
+                '10': 'Properties & Disorders of Hair',
+                '11': 'Treatment of Hair & Scalp',
+                '12': 'Men\'s Facial Massage',
+                '13': 'Shaving & Facial-Hair Design',
+                '14': 'Men\'s Haircutting & Styling',
+                '15': 'Men\'s Hair Replacement',
+                '16': 'Women\'s Haircutting & Styling',
+                '17': 'Chemical Texture Services',
+                '18': 'Haircoloring & Lightening',
+                '19': 'Preparing for Licensure',
+                '20': 'Working Behind the Chair',
+                '21': 'The Business of Barbering'
+            };
+            
+            const grid = document.getElementById('chaptersGrid');
+            let html = '';
+            
+            for (let i = 1; i <= 6; i++) {
+                const chapterNum = i.toString().padStart(2, '0');
+                const progress = localStorage.getItem(`chapter-${chapterNum}-progress`) || '0';
+                const progressInt = parseInt(progress);
+                
+                let statusClass = '';
+                if (progressInt >= 90) statusClass = 'completed';
+                else if (progressInt > 0) statusClass = 'in-progress';
+                
+                html += `
+                    <div class="chapter-card ${statusClass}">
+                        <span class="chapter-number">CHAPTER ${i}</span>
+                        <h3>${chapterNames[chapterNum]}</h3>
+                        <div class="chapter-progress">
+                            <div class="chapter-progress-bar">
+                                <div class="chapter-progress-fill" style="width: ${progress}%"></div>
+                            </div>
+                            <span>${progress}%</span>
+                        </div>
+                        <div class="chapter-links">
+                            <a href="chapter-${chapterNum}.html" class="btn-study">Study</a>
+                            <a href="chapter-${chapterNum}-quiz.html" class="btn-quiz">Quiz</a>
+                            <a href="chapter-${chapterNum}-flashcards.html" class="btn-flash">Cards</a>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            grid.innerHTML = html;
+        }
+        
+        // Logout
+        function logout() {
+            localStorage.removeItem('bsp_session');
+            sessionStorage.removeItem('bsp_session');
+            window.location.href = 'login.html';
+        }
+        
+        // Initialize
+        loadUserData();
+        calculateProgress();
+    </script>
+    </div><!-- End protected content -->
+
+    <!-- Auth Check Script -->
+    <script>
+        function checkAuth() {
+            const session = localStorage.getItem('bsp_session');
+            const authGate = document.getElementById('authGate');
+            const protectedContent = document.getElementById('protectedContent');
+            if (session) {
+                authGate.style.display = 'none';
+                protectedContent.classList.add('show');
+            } else {
+                authGate.style.display = 'flex';
+                protectedContent.classList.remove('show');
+            }
+        }
+        checkAuth();
+    </script>
+</body>
+</html>

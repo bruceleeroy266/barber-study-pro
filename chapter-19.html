@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 19: Preparing for Licensure and Employment | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .chapter-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
+        .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; }
+        .chapter-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
+        .content { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+        .section { margin-bottom: 3rem; }
+        .section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+        .section h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .section p, .section ul { margin-bottom: 1rem; color: #ccc; }
+        .section ul { margin-left: 1.5rem; }
+        .key-point { background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .key-point strong { color: var(--gold); }
+        .term { background: var(--medium-gray); padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 8px; }
+        .term strong { color: var(--gold); display: block; margin-bottom: 0.25rem; }
+        table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+        th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--medium-gray); }
+        th { background: var(--medium-gray); font-weight: 600; color: var(--gold); }
+        .quiz-btn { display: inline-block; background: var(--gold); color: var(--dark); padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; margin: 2rem 0; }
+        .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; }
+        .nav-chapters { display: flex; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--medium-gray); }
+        .nav-chapters a { color: var(--gold); text-decoration: none; font-weight: 600; }
+        .warning { background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .warning strong { color: #ef4444; }
+        .procedure { background: var(--medium-gray); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .procedure h4 { color: var(--gold); margin-bottom: 0.75rem; }
+        .procedure ol { margin-left: 1.5rem; color: #ccc; }
+        .procedure li { margin-bottom: 0.5rem; }
+
+        /* Audio Player */
+        .audio-player { position: fixed; bottom: 0; left: 0; right: 0; background: var(--dark-gray); border-top: 2px solid var(--gold); padding: 1rem 2rem; z-index: 1000; display: none; align-items: center; gap: 1rem; box-shadow: 0 -4px 20px rgba(0,0,0,0.5); }
+        .audio-player.active { display: flex; }
+        .audio-controls { display: flex; align-items: center; gap: 1rem; }
+        .audio-btn { background: var(--gold); color: var(--dark); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+        .audio-info { color: var(--light-gray); font-size: 0.875rem; }
+        .audio-close { background: none; border: none; color: var(--light-gray); font-size: 1.5rem; cursor: pointer; margin-left: auto; }
+        .tts-toggle { position: fixed; bottom: 2rem; left: 2rem; background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3); z-index: 100; }
+        .tts-toggle.playing { background: #22c55e; }
+
+        /* Auth Gate Styles */
+        .auth-gate { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--dark); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+        .auth-gate-content { text-align: center; max-width: 500px; }
+        .auth-gate h2 { font-size: 2rem; margin-bottom: 1rem; }
+        .auth-gate p { color: var(--light-gray); margin-bottom: 2rem; }
+        .auth-gate-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .auth-gate-btn { padding: 1rem 2rem; border-radius: 8px; font-weight: 600; text-decoration: none; transition: all 0.3s; }
+        .auth-gate-btn.primary { background: var(--gold); color: var(--dark); }
+        .auth-gate-btn.secondary { background: var(--medium-gray); color: var(--white); border: 1px solid var(--medium-gray); }
+        .auth-gate-btn:hover { transform: translateY(-2px); }
+        .protected-content { display: none; }
+        .protected-content.show { display: block; }
+    </style>
+</head>
+<body>
+    <!-- Auth Gate - Shows if not logged in -->
+    <div class="auth-gate" id="authGate">
+        <div class="auth-gate-content">
+            <h2>🔒 Members Only</h2>
+            <p>This study content is exclusively for registered members. Create a free account to access all 21 chapters, quizzes, flashcards, and the practice exam.</p>
+            <div class="auth-gate-buttons">
+                <a href="login.html" class="auth-gate-btn primary">Create Free Account</a>
+                <a href="index.html" class="auth-gate-btn secondary">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Protected Content - Only shows if logged in -->
+    <div class="protected-content" id="protectedContent">
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <nav><div class="nav-container"><a href="index.html" class="logo">⚡ Barber Study Pro</a><a href="index.html#chapters" class="back-link">← Back</a></div></nav>
+    <header class="chapter-header">
+        <span class="chapter-number">CHAPTER 19</span>
+        <h1>Preparing for Licensure and Employment</h1>
+        <p>State board exams, job search, and career preparation</p>
+    </header>
+    <main class="content">
+        <section class="section">
+            <h2>🎯 Why Study Licensure and Employment?</h2>
+            <p>Passing your state board examination is required to become a licensed barber. Understanding the process helps you:</p>
+            <ul>
+                <li>Successfully pass both written and practical exams</li>
+                <li>Develop effective study habits and test-taking strategies</li>
+                <li>Navigate the job search process effectively</li>
+                <li>Create professional resumes and portfolios</li>
+                <li>Prepare for interviews and employment</li>
+                <li>Understand legal aspects of employment</li>
+            </ul>
+            <div class="key-point"><strong>Key Point:</strong> Your license is your livelihood. Preparation is essential for passing the exam and starting your career.</div>
+        </section>
+
+        <section class="section">
+            <h2>📝 Preparing for the Written Exam</h2>
+            
+            <h3>Study Habits and Time Management:</h3>
+            <ul>
+                <li><strong>Start early:</strong> Don't wait until the last minute to study</li>
+                <li><strong>Create a schedule:</strong> Set aside specific study times each day</li>
+                <li><strong>Break it down:</strong> Study one chapter or topic at a time</li>
+                <li><strong>Use multiple methods:</strong> Read, write notes, create flashcards, take practice tests</li>
+                <li><strong>Study with others:</strong> Form study groups to review material</li>
+                <li><strong>Take breaks:</strong> Study in 45-50 minute blocks with 10-minute breaks</li>
+                <li><strong>Review regularly:</strong> Don't just cram; review material multiple times</li>
+            </ul>
+
+            <h3>Test-Taking Strategies:</h3>
+            
+            <h4>Multiple Choice Questions:</h4>
+            <ul>
+                <li>Read the entire question carefully before looking at answers</li>
+                <li>Eliminate obviously wrong answers first</li>
+                <li>Watch for key words: "always," "never," "except," "not"</li>
+                <li>If unsure, make an educated guess (no penalty for wrong answers)</li>
+                <li>Don't second-guess yourself unless you're certain</li>
+            </ul>
+
+            <h4>True/False Questions:</h4>
+            <ul>
+                <li>Look for absolute words: "always," "never," "all," "none" (usually false)</li>
+                <li>Watch for qualifying words: "sometimes," "usually," "often" (usually true)</li>
+                <li>If any part is false, the entire statement is false</li>
+            </ul>
+
+            <h4>Matching Questions:</h4>
+            <ul>
+                <li>Read through all items before starting</li>
+                <li>Match the ones you're certain about first</li>
+                <li>Eliminate options as you go</li>
+            </ul>
+
+            <h4>Essay Questions:</h4>
+            <ul>
+                <li>Read the question carefully and identify what's being asked</li>
+                <li>Create a brief outline before writing</li>
+                <li>Answer all parts of the question</li>
+                <li>Use specific examples when possible</li>
+                <li>Write clearly and legibly</li>
+            </ul>
+
+            <h3>Deductive Reasoning:</h3>
+            <p>When you don't know the answer, use logic:</p>
+            <ul>
+                <li>Eliminate answers you know are wrong</li>
+                <li>Look for the most complete or specific answer</li>
+                <li>Consider what makes the most sense based on what you've learned</li>
+                <li>Trust your instincts</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>📅 On Test Day</h2>
+            
+            <h3>Before the Exam:</h3>
+            <ul>
+                <li>Get a good night's sleep</li>
+                <li>Eat a healthy breakfast</li>
+                <li>Arrive early (30 minutes before exam time)</li>
+                <li>Bring required identification and materials</li>
+                <li>Wear comfortable, professional clothing</li>
+                <li>Stay calm and positive</li>
+            </ul>
+
+            <h3>During the Exam:</h3>
+            <ul>
+                <li>Listen carefully to instructions</li>
+                <li>Read all directions before starting</li>
+                <li>Budget your time (know how many questions and how much time)</li>
+                <li>Answer easy questions first</li>
+                <li>Mark difficult questions and return to them</li>
+                <li>Review your answers if time permits</li>
+                <li>Stay focused on your own work</li>
+            </ul>
+
+            <h3>After the Exam:</h3>
+            <ul>
+                <li>Don't dwell on questions you're unsure about</li>
+                <li>Wait for official results</li>
+                <li>If you don't pass, review weak areas and retake</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>⚖️ Barber Law</h2>
+            <p>Understanding barber law is essential for the written exam and your career.</p>
+            
+            <h3>Key Areas to Know:</h3>
+            <table>
+                <tr><th>Topic</th><th>What to Study</th></tr>
+                <tr><td>State Board Structure</td><td>Number of members, terms, qualifications</td></tr>
+                <tr><td>License Requirements</td><td>Age, education, training hours, examinations</td></tr>
+                <tr><td>License Types</td><td>Barber, barber-stylist, instructor, shop</td></tr>
+                <tr><td>License Display</td><td>Where and how licenses must be posted</td></tr>
+                <tr><td>Renewal</td><td>When, how, and fees for renewal</td></tr>
+                <tr><td>Continuing Education</td><td>Requirements for license renewal</td></tr>
+                <tr><td>Sanitation</td><td>State-specific sanitation requirements</td></tr>
+                <tr><td>Prohibited Acts</td><td>What barbers cannot do</td></tr>
+                <tr><td>Penalties</td><td>Fines, suspension, revocation for violations</td></tr>
+                <tr><td>Shop Requirements</td><td>Equipment, space, signage requirements</td></tr>
+            </table>
+            <div class="key-point">Each state has different laws. Obtain a copy of your state's barber laws and study them thoroughly.</div>
+        </section>
+
+        <section class="section">
+            <h2>✂️ The Practical Exam</h2>
+            <p>The practical exam tests your hands-on skills. Requirements vary by state but typically include:</p>
+            
+            <h3>Common Practical Exam Components:</h3>
+            <ul>
+                <li>Haircutting (taper, fade, or specific style)</li>
+                <li>Shaving</li>
+                <li>Shampooing</li>
+                <li>Infection control and safety</li>
+                <li>Proper draping</li>
+                <li>Tool sanitation</li>
+            </ul>
+
+            <h3>Preparation Tips:</h3>
+            <ul>
+                <li>Practice each skill repeatedly until mastered</li>
+                <li>Time yourself to ensure you can complete within exam limits</li>
+                <li>Practice on different hair types and textures</li>
+                <li>Know exactly what supplies to bring</li>
+                <li>Ensure all tools are clean and in good working condition</li>
+                <li>Review the specific requirements for your state</li>
+                <li>Consider observing a practical exam if allowed</li>
+            </ul>
+
+            <h3>During the Practical Exam:</h3>
+            <ul>
+                <li>Listen carefully to examiner instructions</li>
+                <li>Follow all infection control and safety procedures</li>
+                <li>Work confidently but carefully</li>
+                <li>Focus on your own work, not other candidates</li>
+                <li>Look professional and neat</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>💼 Resume Development</h2>
+            
+            <h3>What to Include:</h3>
+            <ul>
+                <li><strong>Contact Information:</strong> Name, address, phone, email</li>
+                <li><strong>Objective:</strong> Brief statement of career goals</li>
+                <li><strong>Education:</strong> Barber school, graduation date, hours completed</li>
+                <li><strong>Licensure:</strong> License number and status (if already licensed)</li>
+                <li><strong>Skills:</strong> Haircutting, shaving, coloring, etc.</li>
+                <li><strong>Experience:</strong> Any relevant work, internships, or school clinic</li>
+                <li><strong>Achievements:</strong> Awards, honors, competitions</li>
+                <li><strong>References:</strong> Professional contacts (instructors, employers)</li>
+            </ul>
+
+            <h3>Resume Tips:</h3>
+            <ul>
+                <li>Keep it to one page</li>
+                <li>Use clear, professional formatting</li>
+                <li>Proofread carefully for errors</li>
+                <li>Be honest and accurate</li>
+                <li>Tailor it to the specific position</li>
+                <li>Include numbers when possible (e.g., "Served 20+ clients daily")</li>
+                <li>Use action verbs: created, developed, managed, increased</li>
+            </ul>
+
+            <h3>Resume Don'ts:</h3>
+            <ul>
+                <li>Don't include salary requirements</li>
+                <li>Don't explain why you left previous jobs</li>
+                <li>Don't stretch the truth or lie</li>
+                <li>Don't include personal information (age, marital status)</li>
+                <li>Don't use unprofessional email addresses</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>📁 Employment Portfolio</h2>
+            <p>A portfolio showcases your skills and professionalism.</p>
+            
+            <h3>What to Include:</h3>
+            <ul>
+                <li>Professional resume</li>
+                <li>Diploma and certificates</li>
+                <li>Before and after photos of your work</li>
+                <li>Awards and achievements</li>
+                <li>Letters of recommendation</li>
+                <li>Continuing education certificates</li>
+                <li>Professional organization memberships</li>
+                <li>Statement about why you chose barbering</li>
+            </ul>
+
+            <h3>Portfolio Tips:</h3>
+            <ul>
+                <li>Keep it organized and professional</li>
+                <li>Use high-quality photos</li>
+                <li>Include variety (different cuts, styles, hair types)</li>
+                <li>Make it easy to carry and present</li>
+                <li>Consider both physical and digital versions</li>
+                <li>Update regularly with new work</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>🔍 Job Search Strategies</h2>
+            
+            <h3>Where to Look:</h3>
+            <ul>
+                <li>Online job boards (Indeed, LinkedIn, industry-specific sites)</li>
+                <li>Barbershop websites</li>
+                <li>Social media (Facebook, Instagram)</li>
+                <li>Networking with classmates and instructors</li>
+                <li>Walk-ins to local barbershops</li>
+                <li>Barber school placement services</li>
+                <li>Industry events and trade shows</li>
+            </ul>
+
+            <h3>Researching Potential Employers:</h3>
+            <ul>
+                <li>Visit the barbershop as a customer</li>
+                <li>Observe the atmosphere and clientele</li>
+                <li>Check online reviews</li>
+                <li>Look at their social media presence</li>
+                <li>Talk to current or former employees if possible</li>
+            </ul>
+
+            <h3>Barbershop Visit Checklist:</h3>
+            <table>
+                <tr><th>Factor</th><th>Questions to Consider</th></tr>
+                <tr><td>Image</td><td>Is the decor and atmosphere appealing? Does it match your style?</td></tr>
+                <tr><td>Professionalism</td><td>How do employees dress and behave? Is it professional?</td></tr>
+                <tr><td>Management</td><td>Is the shop well-organized? Is the phone answered promptly?</td></tr>
+                <tr><td>Client Service</td><td>Are clients greeted warmly? Is the waiting area comfortable?</td></tr>
+                <tr><td>Prices</td><td>Are prices competitive? Do they match the service quality?</td></tr>
+                <tr><td>Retail</td><td>Are products well-displayed? Do barbers promote retail?</td></tr>
+                <tr><td>Marketing</td><td>Does the shop promote itself well? Is there a social media presence?</td></tr>
+                <tr><td>Services</td><td>What services are offered? Do they match your skills?</td></tr>
+            </table>
+        </section>
+
+        <section class="section">
+            <h2>🤝 Interview Preparation</h2>
+            
+            <h3>Before the Interview:</h3>
+            <ul>
+                <li>Research the barbershop thoroughly</li>
+                <li>Prepare questions to ask the employer</li>
+                <li>Practice answering common interview questions</li>
+                <li>Prepare your portfolio</li>
+                <li>Plan your outfit (professional, similar to shop's style)</li>
+                <li>Get directions and plan to arrive early</li>
+            </ul>
+
+            <h3>What to Bring:</h3>
+            <ul>
+                <li>Resume (multiple copies)</li>
+                <li>Portfolio</li>
+                <li>Identification</li>
+                <li>Social Security card</li>
+                <li>Driver's license</li>
+                <li>Professional references</li>
+                <li>Notepad and pen</li>
+            </ul>
+
+            <h3>Common Interview Questions:</h3>
+            <ul>
+                <li>Why do you want to work here?</li>
+                <li>What did you like best about your training?</li>
+                <li>What are your strongest skills?</li>
+                <li>How do you handle difficult clients?</li>
+                <li>What are your career goals?</li>
+                <li>Are you comfortable with retail sales?</li>
+                <li>How do you stay current with trends?</li>
+                <li>What makes you a good fit for our team?</li>
+            </ul>
+
+            <h3>Questions to Ask the Employer:</h3>
+            <ul>
+                <li>What is the commission or pay structure?</li>
+                <li>Are there opportunities for advancement?</li>
+                <li>What continuing education is offered?</li>
+                <li>How does the shop promote itself?</li>
+                <li>What is the typical client volume?</li>
+                <li>Is there a training period?</li>
+                <li>What are the expectations for retail sales?</li>
+            </ul>
+
+            <h3>Interview Appearance:</h3>
+            <ul>
+                <li>Dress professionally and appropriately for the shop's style</li>
+                <li>Ensure your own hair is well-groomed</li>
+                <li>Clean, professional attire</li>
+                <li>Minimal, tasteful accessories</li>
+                <li>Subtle or no fragrance</li>
+                <li>Clean, manicured nails</li>
+            </ul>
+
+            <h3>During the Interview:</h3>
+            <ul>
+                <li>Arrive 10-15 minutes early</li>
+                <li>Turn off your phone</li>
+                <li>Greet with a firm handshake and smile</li>
+                <li>Maintain good eye contact</li>
+                <li>Listen carefully and answer thoughtfully</li>
+                <li>Speak clearly and confidently</li>
+                <li>Show enthusiasm for the position</li>
+                <li>Thank the interviewer for their time</li>
+            </ul>
+
+            <h3>After the Interview:</h3>
+            <ul>
+                <li>Send a thank-you note or email within 24 hours</li>
+                <li>Follow up if you haven't heard back in a week</li>
+                <li>Continue your job search until you have an offer</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>⚖️ Legal Aspects of Employment</h2>
+            
+            <h3>Illegal Interview Questions:</h3>
+            <div class="warning">Employers cannot ask about:
+                <ul>
+                    <li>Age or date of birth (unless verifying you're over 18)</li>
+                    <li>Marital status or family plans</li>
+                    <li>Race, ethnicity, or national origin</li>
+                    <li>Religion</li>
+                    <li>Disabilities or health conditions</li>
+                    <li>Sexual orientation</li>
+                </ul>
+            </div>
+            <p>If asked an illegal question, you can politely redirect: "I'd prefer to focus on my qualifications for this position."</p>
+
+            <h3>Employee Contracts:</h3>
+            <ul>
+                <li>Read any contract thoroughly before signing</li>
+                <li>Understand non-compete clauses (may restrict where you can work after leaving)</li>
+                <li>Know what you're agreeing to regarding:
+                    <ul>
+                        <li>Pay structure (commission vs. hourly)</li>
+                        <li>Booth rental fees (if applicable)</li>
+                        <li>Product sales requirements</li>
+                        <li>Scheduling expectations</li>
+                        <li>Termination conditions</li>
+                    </ul>
+                </li>
+                <li>Consider having a lawyer review before signing</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>🎯 Employment Options</h2>
+            
+            <h3>Types of Employment:</h3>
+            <div class="term">
+                <strong>Commission-Based</strong> — Paid percentage of services performed. Common split is 60/40 or 70/30 (barber/shop).
+            </div>
+            <div class="term">
+                <strong>Hourly/Salary</strong> — Paid set hourly rate or salary regardless of services performed.
+            </div>
+            <div class="term">
+                <strong>Booth Rental</strong> — Rent a station/space and keep all earnings. Most independent option but requires business skills.
+            </div>
+            <div class="term">
+                <strong>Independent Contractor</strong> — Self-employed but working within a shop. Handle own taxes and insurance.
+            </div>
+
+            <h3>Where to Work:</h3>
+            <ul>
+                <li><strong>Traditional Barbershops:</strong> Focus on men's cuts, shaves, beard grooming</li>
+                <li><strong>Unisex Salons:</strong> Serve both men and women; broader service menu</li>
+                <li><strong>Upscale/Grooming Lounges:</strong> Premium services, higher prices</li>
+                <li><strong>Chain Barbershops:</strong> Consistent walk-in traffic, structured environment</li>
+                <li><strong>Mobile/On-Location:</strong> Travel to clients; weddings, events, house calls</li>
+                <li><strong>Hotels/Resorts:</strong> Tourist clientele, steady hours</li>
+                <li><strong>Corporate/On-Site:</strong> Provide services at corporate locations</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>📝 Chapter 19 Key Takeaways</h2>
+            <div class="key-point">
+                <ul style="margin-left: 1rem;">
+                    <li>Passing the <strong>state board exam</strong> is required for licensure</li>
+                    <li>Written exam requires <strong>study habits, time management, test-taking strategies</strong></li>
+                    <li>Know your <strong>state's barber laws</strong> thoroughly</li>
+                    <li>Practical exam tests <strong>hands-on skills</strong> with strict time limits</li>
+                    <li>Create a <strong>professional resume</strong> highlighting skills and achievements</li>
+                    <li>Build an <strong>employment portfolio</strong> with before/after photos</li>
+                    <li><strong>Research employers</strong> before applying and interviewing</li>
+                    <li>Prepare for interviews with <strong>practice questions</strong> and professional appearance</li>
+                    <li>Know your rights regarding <strong>illegal interview questions</strong></li>
+                    <li>Understand <strong>employment contracts</strong> before signing</li>
+                    <li>Choose employment type that fits your goals: <strong>commission, hourly, booth rental</strong></li>
+                    <li>Send <strong>thank-you notes</strong> after interviews</li>
+                </ul>
+            </div>
+        </section>
+
+        <a href="chapter-19-quiz.html" class="quiz-btn">📝 Take Chapter 19 Quiz</a>
+
+        <div class="nav-chapters"><a href="chapter-18.html">← Chapter 18</a><a href="chapter-20.html">Chapter 20 →</a></div>
+    </main>
+    <script>
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+            localStorage.setItem('chapter-19-progress', Math.round(scrolled));
+        });
+    </script>
+
+<script>
+// Text-to-Speech functionality
+let speechSynthesis = window.speechSynthesis;
+let currentUtterance = null;
+let isPlaying = false;
+let textChunks = [];
+let currentChunk = 0;
+
+function extractTextContent() {
+    const content = document.querySelector('.content');
+    if (!content) return '';
+    let fullText = '';
+    const sections = content.querySelectorAll('.section');
+    sections.forEach(section => {
+        const headings = section.querySelectorAll('h2, h3');
+        headings.forEach(h => { fullText += h.textContent + '. '; });
+        const paragraphs = section.querySelectorAll('p');
+        paragraphs.forEach(p => { fullText += p.textContent + ' '; });
+        const listItems = section.querySelectorAll('li');
+        listItems.forEach(li => { fullText += li.textContent + '. '; });
+    });
+    return fullText;
+}
+
+function splitTextIntoChunks(text, maxLength = 200) {
+    const sentences = text.match(/[^\.!?]+[\.!?]+/g) || [text];
+    const chunks = [];
+    let currentChunk = '';
+    sentences.forEach(sentence => {
+        if ((currentChunk + sentence).length > maxLength && currentChunk.length > 0) {
+            chunks.push(currentChunk.trim());
+            currentChunk = sentence;
+        } else {
+            currentChunk += sentence + ' ';
+        }
+    });
+    if (currentChunk.trim().length > 0) chunks.push(currentChunk.trim());
+    return chunks;
+}
+
+function toggleTTS() {
+    const player = document.getElementById('audioPlayer');
+    const toggle = document.getElementById('ttsToggle');
+    if (!player.classList.contains('active')) {
+        player.classList.add('active');
+        toggle.classList.add('playing');
+        toggle.innerHTML = '🔊 Stop Listening';
+        const text = extractTextContent();
+        textChunks = splitTextIntoChunks(text);
+        currentChunk = 0;
+        startPlayback();
+    } else {
+        stopPlayback();
+    }
+}
+
+function startPlayback() {
+    if (currentChunk >= textChunks.length) { closeAudioPlayer(); return; }
+    const text = textChunks[currentChunk];
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.rate = 0.9;
+    currentUtterance.pitch = 1;
+    currentUtterance.volume = 1;
+    const voices = speechSynthesis.getVoices();
+    const preferredVoice = voices.find(v => v.name.includes('Google US English')) || voices.find(v => v.name.includes('Samantha')) || voices.find(v => v.lang === 'en-US');
+    if (preferredVoice) currentUtterance.voice = preferredVoice;
+    currentUtterance.onstart = () => { isPlaying = true; updatePlayButton(); };
+    currentUtterance.onend = () => { currentChunk++; if (currentChunk < textChunks.length) startPlayback(); else closeAudioPlayer(); };
+    speechSynthesis.speak(currentUtterance);
+}
+
+function togglePlay() {
+    if (isPlaying) { speechSynthesis.pause(); isPlaying = false; }
+    else { if (speechSynthesis.paused) speechSynthesis.resume(); else startPlayback(); isPlaying = true; }
+    updatePlayButton();
+}
+
+function updatePlayButton() {
+    document.getElementById('playPauseBtn').textContent = isPlaying ? '⏸' : '▶';
+}
+
+function skipBackward() { if (currentChunk > 0) { speechSynthesis.cancel(); currentChunk = Math.max(0, currentChunk - 1); startPlayback(); } }
+function skipForward() { if (currentChunk < textChunks.length - 1) { speechSynthesis.cancel(); currentChunk++; startPlayback(); } }
+
+function closeAudioPlayer() {
+    speechSynthesis.cancel();
+    isPlaying = false;
+    currentChunk = 0;
+    document.getElementById('audioPlayer').classList.remove('active');
+    document.getElementById('ttsToggle').classList.remove('playing');
+    document.getElementById('ttsToggle').innerHTML = '🔊 Listen to Chapter';
+}
+
+function stopPlayback() { speechSynthesis.cancel(); isPlaying = false; closeAudioPlayer(); }
+speechSynthesis.onvoiceschanged = () => { speechSynthesis.getVoices(); };
+</script>
+
+<button class="tts-toggle" id="ttsToggle" onclick="toggleTTS()">🔊 Listen to Chapter</button>
+<div class="audio-player" id="audioPlayer">
+    <div class="audio-controls">
+        <button class="audio-btn" id="playPauseBtn" onclick="togglePlay()">▶</button>
+        <button class="audio-btn" onclick="skipBackward()">⏮</button>
+        <button class="audio-btn" onclick="skipForward()">⏭</button>
+    </div>
+    <div class="audio-info">Listen while you study</div>
+    <button class="audio-close" onclick="closeAudioPlayer()">×</button>
+</div>
+
+<!-- Content Protection -->
+<script>
+    // Disable right-click
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Content is protected. Right-click is disabled.');
+        return false;
+    });
+
+    // Disable copy
+    document.addEventListener('copy', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Copying is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable cut
+    document.addEventListener('cut', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Cutting is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable text selection
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable drag
+    document.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable print
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+            e.preventDefault();
+            showProtectionMessage('Printing is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            showProtectionMessage('Saving is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+            e.preventDefault();
+            showProtectionMessage('View source is disabled.');
+            return false;
+        }
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J'))) {
+            e.preventDefault();
+            showProtectionMessage('Developer tools are disabled.');
+            return false;
+        }
+    });
+
+    // Show protection message
+    function showProtectionMessage(message) {
+        const existing = document.querySelector('.protection-message');
+        if (existing) existing.remove();
+
+        const div = document.createElement('div');
+        div.className = 'protection-message';
+        div.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #ef4444; color: white; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
+        div.textContent = '⚠️ ' + message;
+        document.body.appendChild(div);
+
+        setTimeout(() => {
+            div.style.opacity = '0';
+            div.style.transition = 'opacity 0.5s';
+            setTimeout(() => div.remove(), 500);
+        }, 3000);
+    }
+
+    // Console warning
+    console.log('%c⚠️ CONTENT PROTECTION', 'color: #ef4444; font-size: 24px; font-weight: bold;');
+    console.log('%cThis content is copyrighted and protected. Unauthorized copying, distribution, or reproduction is prohibited.', 'color: #888; font-size: 14px;');
+    console.log('%c© 2026 Barber Study Pro. All rights reserved.', 'color: #D4AF37; font-size: 12px;');
+
+    // Prevent viewing source via right-click on images
+    document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('contextmenu', e => e.preventDefault());
+    });
+</script>
+    </div><!-- End protected content -->
+
+    <!-- Auth Check Script -->
+    <script>
+        function checkAuth() {
+            const session = localStorage.getItem('bsp_session');
+            const authGate = document.getElementById('authGate');
+            const protectedContent = document.getElementById('protectedContent');
+            if (session) {
+                authGate.style.display = 'none';
+                protectedContent.classList.add('show');
+            } else {
+                authGate.style.display = 'flex';
+                protectedContent.classList.remove('show');
+            }
+        }
+        checkAuth();
+    </script>
+</body>
+</html>

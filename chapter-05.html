@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 5: Implements, Tools & Equipment | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .chapter-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
+        .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; }
+        .chapter-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
+        .content { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+        .section { margin-bottom: 3rem; }
+        .section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+        .section h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .section p, .section ul { margin-bottom: 1rem; color: #ccc; }
+        .section ul { margin-left: 1.5rem; }
+        .key-point { background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .key-point strong { color: var(--gold); }
+        .study-tools { position: fixed; bottom: 2rem; right: 2rem; display: flex; gap: 1rem; }
+        .tool-btn { background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; }
+        .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; }
+        .nav-chapters { display: flex; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--medium-gray); }
+        .nav-chapters a { color: var(--gold); text-decoration: none; font-weight: 600; }
+
+        .quiz-section { background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
+        .quiz-section h2 { color: var(--gold); margin-bottom: 1.5rem; }
+        .quiz-question { margin-bottom: 1.5rem; }
+        .quiz-question p { font-weight: 600; margin-bottom: 0.75rem; color: var(--white); }
+        .quiz-options label { display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .quiz-options label:hover { background: rgba(212, 175, 55, 0.1); }
+        .quiz-options input[type="radio"] { margin-right: 0.75rem; }
+        .quiz-submit { background: var(--gold); color: var(--dark); border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+        .quiz-result { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: none; }
+        .quiz-result.correct { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; }
+        .quiz-result.incorrect { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+
+        /* Audio Player */
+        .audio-player { position: fixed; bottom: 0; left: 0; right: 0; background: var(--dark-gray); border-top: 2px solid var(--gold); padding: 1rem 2rem; z-index: 1000; display: none; align-items: center; gap: 1rem; box-shadow: 0 -4px 20px rgba(0,0,0,0.5); }
+        .audio-player.active { display: flex; }
+        .audio-controls { display: flex; align-items: center; gap: 1rem; }
+        .audio-btn { background: var(--gold); color: var(--dark); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+        .audio-info { color: var(--light-gray); font-size: 0.875rem; }
+        .audio-close { background: none; border: none; color: var(--light-gray); font-size: 1.5rem; cursor: pointer; margin-left: auto; }
+        .tts-toggle { position: fixed; bottom: 2rem; left: 2rem; background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3); z-index: 100; }
+        .tts-toggle.playing { background: #22c55e; }
+
+        /* Auth Gate Styles */
+        .auth-gate { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--dark); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+        .auth-gate-content { text-align: center; max-width: 500px; }
+        .auth-gate h2 { font-size: 2rem; margin-bottom: 1rem; }
+        .auth-gate p { color: var(--light-gray); margin-bottom: 2rem; }
+        .auth-gate-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .auth-gate-btn { padding: 1rem 2rem; border-radius: 8px; font-weight: 600; text-decoration: none; transition: all 0.3s; }
+        .auth-gate-btn.primary { background: var(--gold); color: var(--dark); }
+        .auth-gate-btn.secondary { background: var(--medium-gray); color: var(--white); border: 1px solid var(--medium-gray); }
+        .auth-gate-btn:hover { transform: translateY(-2px); }
+        .protected-content { display: none; }
+        .protected-content.show { display: block; }
+    </style>
+</head>
+<body>
+    <!-- Auth Gate - Shows if not logged in -->
+    <div class="auth-gate" id="authGate">
+        <div class="auth-gate-content">
+            <h2>🔒 Members Only</h2>
+            <p>This study content is exclusively for registered members. Create a free account to access all 21 chapters, quizzes, flashcards, and the practice exam.</p>
+            <div class="auth-gate-buttons">
+                <a href="login.html" class="auth-gate-btn primary">Create Free Account</a>
+                <a href="index.html" class="auth-gate-btn secondary">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Protected Content - Only shows if logged in -->
+    <div class="protected-content" id="protectedContent">
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <nav><div class="nav-container"><a href="index.html" class="logo">⚡ Barber Study Pro</a><a href="index.html#chapters" class="back-link">← Back</a></div></nav>
+    <header class="chapter-header">
+        <span class="chapter-number">CHAPTER 5</span>
+        <h1>Implements, Tools & Equipment</h1>
+        <p>Combs, brushes, shears, clippers, razors, and maintenance</p>
+    </header>
+    <main class="content">
+        <section class="section">
+            <h2>🎯 Why Study This Chapter?</h2>
+            <p>Choosing the right tools, maintaining them properly, and using them safely directly affects the quality of your work, client satisfaction, and your own efficiency and safety.</p>
+            <div class="key-point"><strong>Key Point:</strong> Always invest in good-quality implements. Cheap or poorly maintained tools can damage hair, cause client discomfort, and lead to poor results.</div>
+        </section>
+        <section class="section">
+            <h2>🪮 Combs</h2>
+            <p>A good comb should be durable, slightly flexible, and easy to clean and disinfect.</p>
+            <ul>
+                <li><strong>All-purpose styling comb</strong> — Used for general haircutting and styling; has both wide and fine teeth</li>
+                <li><strong>Tail comb</strong> — Features a long, pointed tail for sectioning and parting long hair</li>
+                <li><strong>Wide-toothed comb</strong> — Ideal for combing through curly or thick hair textures without causing breakage</li>
+                <li><strong>Hard rubber combs</strong> — Durable and slightly flexible; can retain heat but avoid extended contact with strong disinfectants</li>
+            </ul>
+        </section>
+        <section class="section">
+            <h2>🖌️ Brushes</h2>
+            <ul>
+                <li><strong>Synthetic bristle brush</strong> — Made of flexible or rigid nylon bristles; good for general styling</li>
+                <li><strong>Neck brush</strong> — Used to remove loose hair clippings from the client's neck and shoulders</li>
+                <li><strong>Lather brush</strong> — Used to apply and work up shaving cream or soap lather</li>
+            </ul>
+        </section>
+        <section class="section">
+            <h2>✂️ Haircutting Shears (Scissors)</h2>
+            <h3>Parts of Shears:</h3>
+            <ul>
+                <li>Blades (cutting edge)</li>
+                <li>Shank (handle area)</li>
+                <li>Finger grip / thumb grip</li>
+                <li>Finger tang (rest for the little finger to relieve pressure)</li>
+                <li>Tension screw (controls distance and pressure between blades)</li>
+            </ul>
+            <h3>Styles:</h3>
+            <ul>
+                <li><strong>French style</strong> — Has a finger tang</li>
+                <li><strong>Offset handle</strong> — More ergonomic; shorter thumb shank reduces overextension</li>
+            </ul>
+            <div class="key-point"><strong>Key Point:</strong> Even the finest shears perform poorly if not set correctly or if tension is wrong. Regular sharpening and proper tension adjustment are essential.</div>
+        </section>
+        <section class="section">
+            <h2>🔌 Clippers and Trimmers</h2>
+            <h3>Types:</h3>
+            <ul>
+                <li><strong>Adjustable-blade clippers</strong> — Blades attached with screws; blade size can be changed</li>
+                <li><strong>Detachable-blade clippers</strong> — Blades snap on and off; different sizes for different lengths</li>
+                <li><strong>Outliners / trimmers</strong> — Smaller, precise tools for outlining, detailing, and cleaning necklines</li>
+            </ul>
+            <h3>Parts of Clippers:</h3>
+            <ul><li>Blades, motor, housing, cord or battery, switch</li></ul>
+            <div class="key-point"><strong>Key Point:</strong> Clippers cut shorter when used against the grain. Always use the appropriate guard or blade size and keep blades oiled and clean.</div>
+        </section>
+        <section class="section">
+            <h2>🪒 Straight Razors</h2>
+            <h3>Types:</h3>
+            <ul>
+                <li><strong>Conventional straight razor</strong> — Requires honing and stropping</li>
+                <li><strong>Changeable-blade razor</strong> — Uses disposable blades; safer for beginners</li>
+            </ul>
+            <h3>Parts:</h3>
+            <ul>
+                <li>Blade (grind determines shape; width measured in eighths or sixteenths of an inch)</li>
+                <li>Handle</li>
+                <li>Tang (part that extends into the handle)</li>
+                <li>Shank</li>
+                <li>Pivot</li>
+            </ul>
+            <h3>Honing and Stropping:</h3>
+            <ul>
+                <li><strong>Hone</strong> — Abrasive stone that grinds and sharpens the edge; must be perfectly flat</li>
+                <li><strong>Strop</strong> — Leather or canvas strip used to align and polish the edge after honing</li>
+            </ul>
+            <div class="key-point"><strong>Safety Note:</strong> Use a safety guard for beginners. Always keep the razor closed when not in use.</div>
+        </section>
+        <section class="section">
+            <h2>📝 Chapter 5 Key Takeaways</h2>
+            <div class="key-point">
+                <ul style="margin-left: 1rem;">
+                    <li>Principal tools: <strong>combs, brushes, shears, clippers/outliners, and razors</strong></li>
+                    <li>Combs and brushes must be chosen for the <strong>hair texture and service</strong>; disinfect properly</li>
+                    <li>Shears require <strong>correct tension, grip, and maintenance</strong> for smooth cutting</li>
+                    <li>Clippers are versatile; <strong>guards control length</strong>; use with or against the grain as needed</li>
+                    <li>Straight razors demand <strong>quality, proper honing/stropping, and safe handling</strong></li>
+                    <li><strong>Safety and sanitation are non-negotiable</strong> — clean, disinfect, and store tools correctly after every use</li>
+                    <li>Always match the <strong>tool to the job</strong> for best results and client comfort</li>
+                </ul>
+            </div>
+        </section>
+        <section class="quiz-section">
+            <h2>📝 Mini Review Quiz</h2>
+            <div class="quiz-question">
+                <p>1. What controls the distance and pressure between shear blades?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q1" value="a"> Finger tang</label>
+                    <label><input type="radio" name="q1" value="b"> Tension screw</label>
+                    <label><input type="radio" name="q1" value="c"> Thumb grip</label>
+                    <label><input type="radio" name="q1" value="d"> Pivot</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>2. Which clipper type has blades that snap on and off?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q2" value="a"> Adjustable-blade</label>
+                    <label><input type="radio" name="q2" value="b"> Detachable-blade</label>
+                    <label><input type="radio" name="q2" value="c"> Outliner</label>
+                    <label><input type="radio" name="q2" value="d"> Trimmer</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>3. What is used to align and polish a razor edge after honing?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q3" value="a"> Hone</label>
+                    <label><input type="radio" name="q3" value="b"> Strop</label>
+                    <label><input type="radio" name="q3" value="c"> Tension screw</label>
+                    <label><input type="radio" name="q3" value="d"> Guard</label>
+                </div>
+            </div>
+            <button class="quiz-submit" onclick="checkQuiz()">Check Answers</button>
+            <div class="quiz-result" id="quiz-result"></div>
+        </section>
+
+        <div class="nav-chapters"><a href="chapter-04.html">← Chapter 4</a><a href="chapter-06.html">Chapter 6 →</a></div>
+    </main>
+    <div class="study-tools">
+        <button class="tool-btn" onclick="openQuiz()">🎴 Flashcards</button>
+        <button class="tool-btn" onclick="openQuiz()">❓ Quiz</button>
+    </div>
+    <script>
+        function checkQuiz() {
+            const answers = { q1: 'b', q2: 'b', q3: 'b' };
+            let score = 0;
+            let total = 3;
+            for (let q in answers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (selected && selected.value === answers[q]) score++;
+            }
+            const resultDiv = document.getElementById('quiz-result');
+            resultDiv.style.display = 'block';
+            if (score === total) {
+                resultDiv.className = 'quiz-result correct';
+                resultDiv.innerHTML = `<strong>Perfect! 🎉</strong> You got ${score}/${total} correct!`;
+            } else {
+                resultDiv.className = 'quiz-result incorrect';
+                resultDiv.innerHTML = `<strong>Keep studying!</strong> You got ${score}/${total} correct.`;
+            }
+        }
+
+        function openQuiz() {
+            window.location.href = 'chapter-05-quiz.html';
+        }
+
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+            localStorage.setItem('chapter-05-progress', Math.round(scrolled));
+        });
+    </script>
+
+<script>
+// Text-to-Speech functionality
+let speechSynthesis = window.speechSynthesis;
+let currentUtterance = null;
+let isPlaying = false;
+let textChunks = [];
+let currentChunk = 0;
+
+function extractTextContent() {
+    const content = document.querySelector('.content');
+    if (!content) return '';
+    let fullText = '';
+    const sections = content.querySelectorAll('.section');
+    sections.forEach(section => {
+        const headings = section.querySelectorAll('h2, h3');
+        headings.forEach(h => { fullText += h.textContent + '. '; });
+        const paragraphs = section.querySelectorAll('p');
+        paragraphs.forEach(p => { fullText += p.textContent + ' '; });
+        const listItems = section.querySelectorAll('li');
+        listItems.forEach(li => { fullText += li.textContent + '. '; });
+    });
+    return fullText;
+}
+
+function splitTextIntoChunks(text, maxLength = 200) {
+    const sentences = text.match(/[^\.!?]+[\.!?]+/g) || [text];
+    const chunks = [];
+    let currentChunk = '';
+    sentences.forEach(sentence => {
+        if ((currentChunk + sentence).length > maxLength && currentChunk.length > 0) {
+            chunks.push(currentChunk.trim());
+            currentChunk = sentence;
+        } else {
+            currentChunk += sentence + ' ';
+        }
+    });
+    if (currentChunk.trim().length > 0) chunks.push(currentChunk.trim());
+    return chunks;
+}
+
+function toggleTTS() {
+    const player = document.getElementById('audioPlayer');
+    const toggle = document.getElementById('ttsToggle');
+    if (!player.classList.contains('active')) {
+        player.classList.add('active');
+        toggle.classList.add('playing');
+        toggle.innerHTML = '🔊 Stop Listening';
+        const text = extractTextContent();
+        textChunks = splitTextIntoChunks(text);
+        currentChunk = 0;
+        startPlayback();
+    } else {
+        stopPlayback();
+    }
+}
+
+function startPlayback() {
+    if (currentChunk >= textChunks.length) { closeAudioPlayer(); return; }
+    const text = textChunks[currentChunk];
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.rate = 0.9;
+    currentUtterance.pitch = 1;
+    currentUtterance.volume = 1;
+    const voices = speechSynthesis.getVoices();
+    const preferredVoice = voices.find(v => v.name.includes('Google US English')) || voices.find(v => v.name.includes('Samantha')) || voices.find(v => v.lang === 'en-US');
+    if (preferredVoice) currentUtterance.voice = preferredVoice;
+    currentUtterance.onstart = () => { isPlaying = true; updatePlayButton(); };
+    currentUtterance.onend = () => { currentChunk++; if (currentChunk < textChunks.length) startPlayback(); else closeAudioPlayer(); };
+    speechSynthesis.speak(currentUtterance);
+}
+
+function togglePlay() {
+    if (isPlaying) { speechSynthesis.pause(); isPlaying = false; }
+    else { if (speechSynthesis.paused) speechSynthesis.resume(); else startPlayback(); isPlaying = true; }
+    updatePlayButton();
+}
+
+function updatePlayButton() {
+    document.getElementById('playPauseBtn').textContent = isPlaying ? '⏸' : '▶';
+}
+
+function skipBackward() { if (currentChunk > 0) { speechSynthesis.cancel(); currentChunk = Math.max(0, currentChunk - 1); startPlayback(); } }
+function skipForward() { if (currentChunk < textChunks.length - 1) { speechSynthesis.cancel(); currentChunk++; startPlayback(); } }
+
+function closeAudioPlayer() {
+    speechSynthesis.cancel();
+    isPlaying = false;
+    currentChunk = 0;
+    document.getElementById('audioPlayer').classList.remove('active');
+    document.getElementById('ttsToggle').classList.remove('playing');
+    document.getElementById('ttsToggle').innerHTML = '🔊 Listen to Chapter';
+}
+
+function stopPlayback() { speechSynthesis.cancel(); isPlaying = false; closeAudioPlayer(); }
+speechSynthesis.onvoiceschanged = () => { speechSynthesis.getVoices(); };
+</script>
+
+<button class="tts-toggle" id="ttsToggle" onclick="toggleTTS()">🔊 Listen to Chapter</button>
+<div class="audio-player" id="audioPlayer">
+    <div class="audio-controls">
+        <button class="audio-btn" id="playPauseBtn" onclick="togglePlay()">▶</button>
+        <button class="audio-btn" onclick="skipBackward()">⏮</button>
+        <button class="audio-btn" onclick="skipForward()">⏭</button>
+    </div>
+    <div class="audio-info">Listen while you study</div>
+    <button class="audio-close" onclick="closeAudioPlayer()">×</button>
+</div>
+
+<!-- Content Protection -->
+<script>
+    // Disable right-click
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Content is protected. Right-click is disabled.');
+        return false;
+    });
+
+    // Disable copy
+    document.addEventListener('copy', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Copying is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable cut
+    document.addEventListener('cut', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Cutting is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable text selection
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable drag
+    document.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable print
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+            e.preventDefault();
+            showProtectionMessage('Printing is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            showProtectionMessage('Saving is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+            e.preventDefault();
+            showProtectionMessage('View source is disabled.');
+            return false;
+        }
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J'))) {
+            e.preventDefault();
+            showProtectionMessage('Developer tools are disabled.');
+            return false;
+        }
+    });
+
+    // Show protection message
+    function showProtectionMessage(message) {
+        const existing = document.querySelector('.protection-message');
+        if (existing) existing.remove();
+
+        const div = document.createElement('div');
+        div.className = 'protection-message';
+        div.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #ef4444; color: white; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
+        div.textContent = '⚠️ ' + message;
+        document.body.appendChild(div);
+
+        setTimeout(() => {
+            div.style.opacity = '0';
+            div.style.transition = 'opacity 0.5s';
+            setTimeout(() => div.remove(), 500);
+        }, 3000);
+    }
+
+    // Console warning
+    console.log('%c⚠️ CONTENT PROTECTION', 'color: #ef4444; font-size: 24px; font-weight: bold;');
+    console.log('%cThis content is copyrighted and protected. Unauthorized copying, distribution, or reproduction is prohibited.', 'color: #888; font-size: 14px;');
+    console.log('%c© 2026 Barber Study Pro. All rights reserved.', 'color: #D4AF37; font-size: 12px;');
+
+    // Prevent viewing source via right-click on images
+    document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('contextmenu', e => e.preventDefault());
+    });
+</script>
+    </div><!-- End protected content -->
+
+    <!-- Auth Check Script -->
+    <script>
+        function checkAuth() {
+            const session = localStorage.getItem('bsp_session');
+            const authGate = document.getElementById('authGate');
+            const protectedContent = document.getElementById('protectedContent');
+            if (session) {
+                authGate.style.display = 'none';
+                protectedContent.classList.add('show');
+            } else {
+                authGate.style.display = 'flex';
+                protectedContent.classList.remove('show');
+            }
+        }
+        checkAuth();
+    </script>
+</body>
+</html>

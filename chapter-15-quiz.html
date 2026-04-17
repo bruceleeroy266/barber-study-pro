@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 15 Quiz: Men's Hair Replacement | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; --success: #22c55e; --error: #ef4444; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .quiz-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
+        .quiz-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
+        .quiz-container { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+        .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.3s; }
+        .question { background: var(--dark-gray); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; border: 1px solid var(--medium-gray); }
+        .question-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 700; font-size: 0.875rem; margin-bottom: 1rem; }
+        .question-text { font-size: 1.125rem; font-weight: 600; margin-bottom: 1.5rem; }
+        .options label { display: block; padding: 1rem 1.25rem; margin-bottom: 0.75rem; background: var(--medium-gray); border-radius: 8px; cursor: pointer; transition: all 0.3s; border: 2px solid transparent; }
+        .options label:hover { background: rgba(212, 175, 55, 0.1); border-color: var(--gold); }
+        .options input[type="radio"] { margin-right: 0.75rem; }
+        .submit-btn { background: var(--gold); color: var(--dark); border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; width: 100%; margin-top: 2rem; }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3); }
+        .results { background: var(--dark-gray); border-radius: 12px; padding: 2rem; margin-top: 2rem; text-align: center; display: none; }
+        .results.show { display: block; }
+        .score { font-size: 3rem; font-weight: 800; color: var(--gold); margin-bottom: 1rem; }
+        .results-message { font-size: 1.25rem; margin-bottom: 1.5rem; }
+        .review-item { text-align: left; padding: 1rem; margin: 0.5rem 0; border-radius: 8px; }
+        .review-item.correct { background: rgba(34, 197, 94, 0.1); border-left: 4px solid var(--success); }
+        .review-item.incorrect { background: rgba(239, 68, 68, 0.1); border-left: 4px solid var(--error); }
+        .nav-chapters { display: flex; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--medium-gray); }
+        .nav-chapters a { color: var(--gold); text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <nav><div class="nav-container"><a href="index.html" class="logo">⚡ Barber Study Pro</a><a href="chapter-15.html" class="back-link">← Back to Chapter</a></div></nav>
+    <header class="quiz-header">
+        <h1>Chapter 15 Quiz</h1>
+        <p>Men's Hair Replacement</p>
+    </header>
+    <main class="quiz-container">
+        <div id="quiz-form"></div>
+        <button class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+        <div class="results" id="results"></div>
+        <div class="nav-chapters"><a href="chapter-14-quiz.html">← Chapter 14 Quiz</a><a href="chapter-16-quiz.html">Chapter 16 Quiz →</a></div>
+    </main>
+    <script>
+        const quizData = [
+            {
+                question: "What is the most important approach when consulting with a client about hair loss?",
+                options: ["Be direct and blunt", "Approach with empathy and professionalism", "Avoid the subject", "Recommend surgery immediately"],
+                answer: 1
+            },
+            {
+                question: "Which type of hair replacement system features lace material at the front hairline?",
+                options: ["Non-lace-front", "Lace-front system", "Full cap", "Toupee only"],
+                answer: 1
+            },
+            {
+                question: "Which hair type CANNOT be styled with heat?",
+                options: ["Human hair", "Synthetic hair", "Blended hair", "All can use heat"],
+                answer: 1
+            },
+            {
+                question: "What is used to create an exact replica of the client's head shape?",
+                options: ["Template only", "Plaster mold form", "Tape measure only", "Photograph"],
+                answer: 1
+            },
+            {
+                question: "How long should a plaster mold cure before shipping to manufacturer?",
+                options: ["1 hour", "12 hours", "24 hours", "48 hours"],
+                answer: 2
+            },
+            {
+                question: "What should be done 24 hours before applying adhesive for full head bonding?",
+                options: ["Shampoo the hair", "Perform patch test", "Cut the hair", "Apply oil"],
+                answer: 1
+            },
+            {
+                question: "How many coats of adhesive are typically applied to the scalp for bonding?",
+                options: ["One", "Two", "Three", "Four"],
+                answer: 3
+            },
+            {
+                question: "What should clients avoid for 24-48 hours after a bonded system is applied?",
+                options: ["Sleeping", "Shampooing", "Eating", "Talking"],
+                answer: 1
+            },
+            {
+                question: "What is used to loosen a lace-front system for removal?",
+                options: ["Water", "Acetone or solvent", "Oil", "Shampoo"],
+                answer: 1
+            },
+            {
+                question: "Where should tape be applied on a lace-front system?",
+                options: ["Directly on the lace", "On reinforced parts only, never on lace", "Anywhere", "Only on the back"],
+                answer: 1
+            },
+            {
+                question: "What is the purpose of a template in hair replacement?",
+                options: ["To cut hair", "To create a custom-fitting system", "To color the hair", "To wash the system"],
+                answer: 1
+            },
+            {
+                question: "Which hair type requires the most maintenance?",
+                options: ["Synthetic hair", "Human hair", "Blended hair", "All require same maintenance"],
+                answer: 1
+            },
+            {
+                question: "What is a toupee?",
+                options: ["Full head coverage", "Small hairpiece covering bald spots", "Surgical implant", "Medication"],
+                answer: 1
+            },
+            {
+                question: "What is low-light laser therapy?",
+                options: ["Surgical procedure", "Non-surgical treatment to stimulate hair growth", "Hair coloring", "Permanent waving"],
+                answer: 1
+            },
+            {
+                question: "What is finasteride (Propecia)?",
+                options: ["Topical treatment", "Prescription oral medication for hair loss", "Surgical procedure", "Shampoo"],
+                answer: 1
+            },
+            {
+                question: "What should be used to remove old tape from a hair system?",
+                options: ["Water", "Tape removal solvent", "Oil", "Shampoo"],
+                answer: 1
+            },
+            {
+                question: "How long should a hair system soak in cleaning solution?",
+                options: ["30 seconds", "3 to 5 minutes", "30 minutes", "1 hour"],
+                answer: 1
+            },
+            {
+                question: "What should be done if the cleaning solution darkens?",
+                options: ["Continue using it", "Replace with fresh solution and repeat", "Add more water", "Stop cleaning"],
+                answer: 1
+            },
+            {
+                question: "Permanent haircoloring can only be used on what type of hair system?",
+                options: ["Synthetic hair", "100% human hair", "Blended hair", "Any type"],
+                answer: 1
+            },
+            {
+                question: "What type of permanent wave solution should be used on hair systems?",
+                options: ["Strong solution", "Mild solution for bleached or damaged hair", "Any solution", "No solution needed"],
+                answer: 1
+            },
+            {
+                question: "Do hair replacement systems require neutralizing solution after perming?",
+                options: ["Yes, always", "No, they do not require neutralizer", "Only for human hair", "Only for synthetic hair"],
+                answer: 1
+            },
+            {
+                question: "How long should rods stay in after perming a hair system?",
+                options: ["Until dry", "24 hours", "48 hours", "1 hour"],
+                answer: 1
+            },
+            {
+                question: "What should be used to secure a hair system to a wig block?",
+                options: ["Glue", "T-pins", "Tape", "Clips"],
+                answer: 1
+            },
+            {
+                question: "What is the four-finger method used for?",
+                options: ["Measuring hair length", "Locating the front hairline", "Applying adhesive", "Cutting hair"],
+                answer: 1
+            },
+            {
+                question: "What should be done when removing a non-lace-front system?",
+                options: ["Pull hard", "Reach under front section and detach tape", "Cut it off", "Use water only"],
+                answer: 1
+            },
+            {
+                question: "What is the purpose of reconditioning a hair system?",
+                options: ["To change color", "To prevent dryness and brittleness", "To remove tape", "To cut hair"],
+                answer: 1
+            },
+            {
+                question: "How often should a hair system be cleaned after the first week?",
+                options: ["Daily", "Every 3 to 4 weeks", "Every 6 months", "Never"],
+                answer: 1
+            },
+            {
+                question: "What should be used to comb a hair system?",
+                options: ["Fine-tooth comb", "Wide-tooth comb", "Brush only", "Fingers only"],
+                answer: 1
+            },
+            {
+                question: "Should a hair system be folded when not in use?",
+                options: ["Yes, to save space", "No, never fold hair solutions", "Only synthetic", "Only human hair"],
+                answer: 1
+            },
+            {
+                question: "What is the purpose of a full cap system?",
+                options: ["Cover specific areas", "Cover the entire head", "Add volume only", "Change color"],
+                answer: 1
+            },
+            {
+                question: "What should be done with used cleaning solution?",
+                options: ["Pour down drain", "Dispose per manufacturer's recommendation", "Reuse for next client", "Leave in bowl"],
+                answer: 1
+            },
+            {
+                question: "What is minoxidil (Rogaine)?",
+                options: ["Surgical procedure", "Topical treatment for hair loss", "Oral medication", "Shampoo"],
+                answer: 1
+            },
+            {
+                question: "What is the first step in making a template?",
+                options: ["Apply tape", "Perform client consultation", "Cut the hair", "Mix plaster"],
+                answer: 1
+            },
+            {
+                question: "What material is stretched over the client's head when making a template?",
+                options: ["Cloth", "Plastic wrap", "Paper", "Foil"],
+                answer: 1
+            },
+            {
+                question: "How many layers of plaster gauze are typically applied?",
+                options: ["One", "Two", "Three", "Four"],
+                answer: 2
+            },
+            {
+                question: "What should be done after applying each coat of adhesive?",
+                options: ["Apply next coat immediately", "Wait until it dries clear", "Rinse with water", "Comb the hair"],
+                answer: 1
+            },
+            {
+                question: "What is used to distribute adhesive evenly on the scalp?",
+                options: ["Brush", "Makeup sponge", "Comb", "Fingers"],
+                answer: 1
+            },
+            {
+                question: "What should be used to check for wrinkles around the perimeter after bonding?",
+                options: ["Fingers", "Back of comb", "Brush", "Mirror only"],
+                answer: 1
+            },
+            {
+                question: "What is the purpose of a stock (pre-custom) hair replacement system?",
+                options: ["Custom-made only", "Pre-made system that can be customized", "Surgical implant", "Medication"],
+                answer: 1
+            },
+            {
+                question: "What should be done before coloring a hair system?",
+                options: ["Apply heat", "Give strand test", "Cut the hair", "Apply oil"],
+                answer: 1
+            },
+            {
+                question: "How often should hair systems be reconditioned?",
+                options: ["Never", "As often as necessary", "Once a year", "Only when damaged"],
+                answer: 1
+            },
+            {
+                question: "What should be used to set hair systems?",
+                options: ["Hairspray", "Plain water", "Gel", "Oil"],
+                answer: 1
+            },
+            {
+                question: "What is the purpose of a partial system (toupee)?",
+                options: ["Cover entire head", "Cover specific areas of hair loss", "Add color", "Permanent solution"],
+                answer: 1
+            },
+            {
+                question: "What should be done before applying a wig?",
+                options: ["Brush thoroughly to remove surface dirt", "Apply oil", "Cut the hair", "Use heat"],
+                answer: 0
+            },
+            {
+                question: "How should a wig dry after cleaning?",
+                options: ["With hot air", "Naturally, pinned to form", "In the sun", "With a towel only"],
+                answer: 1
+            },
+            {
+                question: "What is the purpose of a canvas block?",
+                options: ["To store systems", "To customize and style hair systems", "To clean systems", "To color hair"],
+                answer: 1
+            },
+            {
+                question: "What should be done if adhesive gets on the lace?",
+                options: ["Leave it", "Clean immediately with solvent", "Cut the lace", "Apply more adhesive"],
+                answer: 1
+            },
+            {
+                question: "What is the purpose of hair transplant surgery?",
+                options: ["Attach a hair system", "Move hair follicles to balding area", "Color the hair", "Style the hair"],
+                answer: 1
+            },
+            {
+                question: "What should be written on the outside of a plaster mold?",
+                options: ["Your name", "Client's name and date", "The price", "The color"],
+                answer: 1
+            }
+        ];
+
+        let userAnswers = new Array(quizData.length).fill(null);
+
+        function renderQuiz() {
+            const form = document.getElementById('quiz-form');
+            form.innerHTML = quizData.map((q, i) => `
+                <div class="question" id="q${i}">
+                    <span class="question-number">Question ${i + 1} of ${quizData.length}</span>
+                    <p class="question-text">${q.question}</p>
+                    <div class="options">
+                        ${q.options.map((opt, j) => `
+                            <label>
+                                <input type="radio" name="q${i}" value="${j}" onchange="selectAnswer(${i}, ${j})">
+                                ${opt}
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectAnswer(questionIndex, optionIndex) {
+            userAnswers[questionIndex] = optionIndex;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answered = userAnswers.filter(a => a !== null).length;
+            const progress = (answered / quizData.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        function submitQuiz() {
+            const answered = userAnswers.filter(a => a !== null).length;
+            if (answered < quizData.length) {
+                alert(`Please answer all questions. You have ${quizData.length - answered} remaining.`);
+                const firstUnanswered = userAnswers.findIndex(a => a === null);
+                document.getElementById(`q${firstUnanswered}`).scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+
+            let score = 0;
+            const review = [];
+
+            quizData.forEach((q, i) => {
+                const correct = userAnswers[i] === q.answer;
+                if (correct) score++;
+                review.push({
+                    question: q.question,
+                    userAnswer: q.options[userAnswers[i]],
+                    correctAnswer: q.options[q.answer],
+                    correct: correct
+                });
+            });
+
+            const percentage = Math.round((score / quizData.length) * 100);
+            let message = '';
+            if (percentage >= 90) message = '🎉 Excellent! You\'re a hair replacement expert!';
+            else if (percentage >= 80) message = '👏 Great job! You know your hair replacement!';
+            else if (percentage >= 70) message = '👍 Good work! Keep studying!';
+            else message = '📚 Keep studying! Review the chapter and try again.';
+
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div class="score">${score}/${quizData.length}</div>
+                <p class="results-message">${percentage}% — ${message}</p>
+                <h3 style="margin: 2rem 0 1rem; color: var(--gold);">Review</h3>
+                ${review.map((r, i) => `
+                    <div class="review-item ${r.correct ? 'correct' : 'incorrect'}">
+                        <strong>Q${i + 1}:</strong> ${r.question}<br>
+                        <span style="color: ${r.correct ? 'var(--success)' : 'var(--error)'}">
+                            Your answer: ${r.userAnswer} ${r.correct ? '✓' : '✗'}
+                        </span>
+                        ${!r.correct ? `<br><span style="color: var(--success)">Correct: ${r.correctAnswer}</span>` : ''}
+                    </div>
+                `).join('')}
+                <button class="submit-btn" onclick="retakeQuiz()" style="margin-top: 2rem;">Retake Quiz</button>
+            `;
+            resultsDiv.classList.add('show');
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function retakeQuiz() {
+            userAnswers = new Array(quizData.length).fill(null);
+            document.getElementById('results').classList.remove('show');
+            renderQuiz();
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        renderQuiz();
+    </script>
+
+<!-- Content Protection -->
+<script>
+    // Disable right-click
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Content is protected. Right-click is disabled.');
+        return false;
+    });
+
+    // Disable copy
+    document.addEventListener('copy', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Copying is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable cut
+    document.addEventListener('cut', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Cutting is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable text selection
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable drag
+    document.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable print
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+            e.preventDefault();
+            showProtectionMessage('Printing is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            showProtectionMessage('Saving is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+            e.preventDefault();
+            showProtectionMessage('View source is disabled.');
+            return false;
+        }
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J'))) {
+            e.preventDefault();
+            showProtectionMessage('Developer tools are disabled.');
+            return false;
+        }
+    });
+
+    // Show protection message
+    function showProtectionMessage(message) {
+        const existing = document.querySelector('.protection-message');
+        if (existing) existing.remove();
+
+        const div = document.createElement('div');
+        div.className = 'protection-message';
+        div.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #ef4444; color: white; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
+        div.textContent = '⚠️ ' + message;
+        document.body.appendChild(div);
+
+        setTimeout(() => {
+            div.style.opacity = '0';
+            div.style.transition = 'opacity 0.5s';
+            setTimeout(() => div.remove(), 500);
+        }, 3000);
+    }
+
+    // Console warning
+    console.log('%c⚠️ CONTENT PROTECTION', 'color: #ef4444; font-size: 24px; font-weight: bold;');
+    console.log('%cThis content is copyrighted and protected. Unauthorized copying, distribution, or reproduction is prohibited.', 'color: #888; font-size: 14px;');
+    console.log('%c© 2026 Barber Study Pro. All rights reserved.', 'color: #D4AF37; font-size: 12px;');
+
+    // Prevent viewing source via right-click on images
+    document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('contextmenu', e => e.preventDefault());
+    });
+</script>
+</body>
+</html>

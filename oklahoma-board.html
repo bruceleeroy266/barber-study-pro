@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oklahoma State Board Info | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; --success: #22c55e; --error: #ef4444; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+        
+        /* Navigation */
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .nav-links { display: flex; gap: 1.5rem; }
+        .nav-links a { color: var(--white); text-decoration: none; font-weight: 500; font-size: 0.9rem; }
+        .nav-links a:hover { color: var(--gold); }
+        
+        /* Header */
+        .page-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
+        .ok-badge { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; }
+        .page-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 0.5rem; }
+        .page-header p { color: var(--light-gray); max-width: 600px; margin: 0 auto; }
+        
+        /* Content */
+        .content { max-width: 900px; margin: 0 auto; padding: 4rem 2rem; }
+        
+        /* Info Cards */
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+        .info-card { background: var(--dark-gray); border: 1px solid var(--medium-gray); border-radius: 12px; padding: 1.5rem; }
+        .info-card h3 { color: var(--gold); font-size: 1.125rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .info-card p, .info-card li { color: #ccc; font-size: 0.95rem; }
+        .info-card ul { margin-left: 1.5rem; margin-top: 0.5rem; }
+        .info-card li { margin-bottom: 0.5rem; }
+        
+        /* Section */
+        .section { margin-bottom: 3rem; }
+        .section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--gold); }
+        .section h3 { font-size: 1.125rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .section p { color: #ccc; margin-bottom: 1rem; }
+        .section ul { margin-left: 1.5rem; color: #ccc; margin-bottom: 1rem; }
+        .section li { margin-bottom: 0.5rem; }
+        
+        /* Highlight Box */
+        .highlight-box { background: rgba(212, 175, 55, 0.1); border-left: 4px solid var(--gold); padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .highlight-box strong { color: var(--gold); }
+        
+        /* Exam Breakdown Table */
+        .exam-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+        .exam-table th { background: var(--medium-gray); padding: 1rem; text-align: left; font-weight: 600; }
+        .exam-table td { padding: 1rem; border-bottom: 1px solid var(--medium-gray); color: #ccc; }
+        .exam-table tr:hover { background: rgba(212,175,55,0.05); }
+        
+        /* CTA */
+        .cta-section { background: var(--dark-gray); padding: 3rem 2rem; text-align: center; border-radius: 12px; margin-top: 3rem; }
+        .cta-section h2 { margin-bottom: 1rem; }
+        .cta-section p { color: #ccc; margin-bottom: 1.5rem; }
+        .cta-btn { display: inline-block; background: var(--gold); color: var(--dark); padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 700; transition: all 0.3s; }
+        .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,175,55,0.3); }
+        
+        /* Contact Info */
+        .contact-box { background: var(--medium-gray); padding: 1.5rem; border-radius: 8px; margin-top: 1rem; }
+        .contact-box p { margin-bottom: 0.5rem; }
+        .contact-box strong { color: var(--gold); }
+        
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+        }
+
+        /* Auth Gate Styles */
+        .auth-gate { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--dark); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+        .auth-gate-content { text-align: center; max-width: 500px; }
+        .auth-gate h2 { font-size: 2rem; margin-bottom: 1rem; }
+        .auth-gate p { color: var(--light-gray); margin-bottom: 2rem; }
+        .auth-gate-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .auth-gate-btn { padding: 1rem 2rem; border-radius: 8px; font-weight: 600; text-decoration: none; transition: all 0.3s; }
+        .auth-gate-btn.primary { background: var(--gold); color: var(--dark); }
+        .auth-gate-btn.secondary { background: var(--medium-gray); color: var(--white); border: 1px solid var(--medium-gray); }
+        .protected-content { display: none; }
+        .protected-content.show { display: block; }
+    </style>
+</head>
+<body>
+    <!-- Auth Gate - Shows if not logged in -->
+    <div class="auth-gate" id="authGate">
+        <div class="auth-gate-content">
+            <h2>🔒 Members Only</h2>
+            <p>This study content is exclusively for registered members. Create a free account to access all 21 chapters, quizzes, flashcards, and the practice exam.</p>
+            <div class="auth-gate-buttons">
+                <a href="login.html" class="auth-gate-btn primary">Create Free Account</a>
+                <a href="index.html" class="auth-gate-btn secondary">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Protected Content - Only shows if logged in -->
+    <div class="protected-content" id="protectedContent">
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">Barber Study Pro</a>
+            <div class="nav-links">
+                <a href="chapters.html">Study</a>
+                <a href="oklahoma-board.html">OK Board Info</a>
+                <a href="login.html">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="page-header">
+        <div class="ok-badge">OKLAHOMA SPECIFIC</div>
+        <h1>Oklahoma State Board of Barbering</h1>
+        <p>Everything you need to know about getting licensed in Oklahoma — requirements, exams, fees, and more.</p>
+    </header>
+
+    <!-- Content -->
+    <main class="content">
+        <!-- Quick Info Cards -->
+        <div class="info-grid">
+            <div class="info-card">
+                <h3>License Requirements</h3>
+                <ul>
+                    <li>1,500 hours of barber school</li>
+                    <li>Pass NIC written exam (70%)</li>
+                    <li>Pass practical exam (70%)</li>
+                    <li>Be at least 16 years old</li>
+                    <li>Have 8th grade education minimum</li>
+                </ul>
+            </div>
+            <div class="info-card">
+                <h3>Fees (2025)</h3>
+                <ul>
+                    <li>Application: $25</li>
+                    <li>Written Exam: $75</li>
+                    <li>Practical Exam: $75</li>
+                    <li>License Fee: $30</li>
+                    <li>Total: ~$205</li>
+                </ul>
+            </div>
+            <div class="info-card">
+                <h3>Renewal</h3>
+                <ul>
+                    <li>Annual renewal required</li>
+                    <li>Fee: $30 per year</li>
+                    <li>No continuing education required</li>
+                    <li>Renew online at OK.gov</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- NIC Exam Info -->
+        <section class="section">
+            <h2>NIC National Exam</h2>
+            <p>Oklahoma uses the <strong>National-Interstate Council (NIC)</strong> standardized exam. This is the same exam used by most states, which means your license is more easily transferable.</p>
+            
+            <div class="highlight-box">
+                <strong>Important:</strong> You must pass BOTH the written and practical exams with a score of 70% or higher to receive your Oklahoma barber license.
+            </div>
+
+            <h3>Written Exam Breakdown</h3>
+            <table class="exam-table">
+                <tr>
+                    <th>Topic Area</th>
+                    <th>% of Exam</th>
+                    <th>Approx. Questions</th>
+                </tr>
+                <tr>
+                    <td>Scientific Concepts</td>
+                    <td>30%</td>
+                    <td>~30 questions</td>
+                </tr>
+                <tr>
+                    <td>Hair Care & Services</td>
+                    <td>25%</td>
+                    <td>~25 questions</td>
+                </tr>
+                <tr>
+                    <td>Facial Hair & Skin Care</td>
+                    <td>20%</td>
+                    <td>~20 questions</td>
+                </tr>
+                <tr>
+                    <td>Infection Control</td>
+                    <td>15%</td>
+                    <td>~15 questions</td>
+                </tr>
+                <tr>
+                    <td>Professional Practice</td>
+                    <td>10%</td>
+                    <td>~10 questions</td>
+                </tr>
+            </table>
+
+            <h3>Practical Exam Skills</h3>
+            <ul>
+                <li><strong>Work Area & Client Preparation</strong> - Sanitation, setup, client protection</li>
+                <li><strong>Haircutting</strong> - Taper, fade, and layered cuts</li>
+                <li><strong>Shaving</strong> - Straight razor shave with proper technique</li>
+                <li><strong>Facial Massage</strong> - Basic massage movements</li>
+                <li><strong>Hair Styling</strong> - Blow-drying and finishing</li>
+                <li><strong>Chemical Services</strong> - Demonstration of safety knowledge</li>
+            </ul>
+        </section>
+
+        <!-- Application Process -->
+        <section class="section">
+            <h2>Application Process</h2>
+            <ol style="margin-left: 1.5rem; color: #ccc;">
+                <li style="margin-bottom: 1rem;"><strong>Complete 1,500 hours</strong> at an approved Oklahoma barber school</li>
+                <li style="margin-bottom: 1rem;"><strong>Submit application</strong> to Oklahoma State Board of Barbering with $25 fee</li>
+                <li style="margin-bottom: 1rem;"><strong>Receive approval</strong> and exam scheduling information (usually 2-3 weeks)</li>
+                <li style="margin-bottom: 1rem;"><strong>Schedule exams</strong> through PSI Services (the testing vendor)</li>
+                <li style="margin-bottom: 1rem;"><strong>Pass both exams</strong> with 70% or higher</li>
+                <li style="margin-bottom: 1rem;"><strong>Pay license fee</strong> ($30) and receive your license!</li>
+            </ol>
+        </section>
+
+        <!-- Reciprocity -->
+        <section class="section">
+            <h2>Reciprocity (Transferring from Another State)</h2>
+            <p>If you're already licensed in another state, you may be eligible for reciprocity in Oklahoma:</p>
+            <ul>
+                <li>Your home state must have equal or greater requirements than Oklahoma (1,500 hours)</li>
+                <li>You must have held your license for at least 1 year</li>
+                <li>Pay reciprocity fee ($50)</li>
+                <li>Submit verification of licensure from your home state</li>
+                <li>No exam required if requirements are equivalent</li>
+            </ul>
+        </section>
+
+        <!-- Contact -->
+        <section class="section">
+            <h2>Contact Information</h2>
+            <div class="contact-box">
+                <p><strong>Oklahoma State Board of Barbering</strong></p>
+                <p>2401 NW 23rd Street, Suite 84</p>
+                <p>Oklahoma City, OK 73107</p>
+                <p>Phone: (405) 521-2444</p>
+                <p>Email: barber@ok.gov</p>
+                <p>Website: <a href="https://www.ok.gov/barbers/" style="color: var(--gold);">www.ok.gov/barbers/</a></p>
+            </div>
+            <div class="contact-box" style="margin-top: 1rem;">
+                <p><strong>PSI Exam Services</strong> (Testing Vendor)</p>
+                <p>Phone: (800) 733-9267</p>
+                <p>Website: <a href="https://www.psiexams.com" style="color: var(--gold);">www.psiexams.com</a></p>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <div class="cta-section">
+            <h2>Ready to Pass Your Exam?</h2>
+            <p>Study all 21 chapters, take practice quizzes, and test your knowledge with our randomized 150-question final exam.</p>
+            <a href="chapters.html" class="cta-btn">Start Studying →</a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer style="background: var(--dark-gray); padding: 2rem; text-align: center; border-top: 1px solid var(--medium-gray); margin-top: 2rem;">
+        <p style="color: var(--light-gray);">© 2026 Barber Study Pro. Not affiliated with Oklahoma State Board of Barbering.</p>
+    </footer>
+
+    <!-- Content Protection -->
+    <script>
+        document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
+        document.addEventListener('copy', e => { e.preventDefault(); return false; });
+        document.addEventListener('cut', e => { e.preventDefault(); return false; });
+        document.addEventListener('selectstart', e => { e.preventDefault(); return false; });
+        document.addEventListener('dragstart', e => { e.preventDefault(); return false; });
+        document.addEventListener('keydown', e => {
+            if ((e.ctrlKey || e.metaKey) && ['p','s','u'].includes(e.key)) { e.preventDefault(); return false; }
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J'].includes(e.key))) { e.preventDefault(); return false; }
+        });
+        console.log('%c⚠️ CONTENT PROTECTION', 'color: #ef4444; font-size: 20px; font-weight: bold;');
+    </script>
+    </div><!-- End protected content -->
+
+    <!-- Auth Check Script -->
+    <script>
+        function checkAuth() {
+            const session = localStorage.getItem('bsp_session');
+            const authGate = document.getElementById('authGate');
+            const protectedContent = document.getElementById('protectedContent');
+            if (session) {
+                authGate.style.display = 'none';
+                protectedContent.classList.add('show');
+            } else {
+                authGate.style.display = 'flex';
+                protectedContent.classList.remove('show');
+            }
+        }
+        checkAuth();
+    </script>
+</body>
+</html>

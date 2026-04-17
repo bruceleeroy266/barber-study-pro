@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 20: Working Behind the Chair | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .chapter-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
+        .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; }
+        .chapter-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
+        .content { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+        .section { margin-bottom: 3rem; }
+        .section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+        .section h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .section p, .section ul { margin-bottom: 1rem; color: #ccc; }
+        .section ul { margin-left: 1.5rem; }
+        .key-point { background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .key-point strong { color: var(--gold); }
+        .term { background: var(--medium-gray); padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 8px; }
+        .term strong { color: var(--gold); display: block; margin-bottom: 0.25rem; }
+        table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+        th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--medium-gray); }
+        th { background: var(--medium-gray); font-weight: 600; color: var(--gold); }
+        .quiz-btn { display: inline-block; background: var(--gold); color: var(--dark); padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; margin: 2rem 0; }
+        .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; }
+        .nav-chapters { display: flex; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--medium-gray); }
+        .nav-chapters a { color: var(--gold); text-decoration: none; font-weight: 600; }
+        .warning { background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .warning strong { color: #ef4444; }
+        .procedure { background: var(--medium-gray); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .procedure h4 { color: var(--gold); margin-bottom: 0.75rem; }
+        .procedure ol { margin-left: 1.5rem; color: #ccc; }
+        .procedure li { margin-bottom: 0.5rem; }
+
+        /* Audio Player */
+        .audio-player { position: fixed; bottom: 0; left: 0; right: 0; background: var(--dark-gray); border-top: 2px solid var(--gold); padding: 1rem 2rem; z-index: 1000; display: none; align-items: center; gap: 1rem; box-shadow: 0 -4px 20px rgba(0,0,0,0.5); }
+        .audio-player.active { display: flex; }
+        .audio-controls { display: flex; align-items: center; gap: 1rem; }
+        .audio-btn { background: var(--gold); color: var(--dark); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+        .audio-info { color: var(--light-gray); font-size: 0.875rem; }
+        .audio-close { background: none; border: none; color: var(--light-gray); font-size: 1.5rem; cursor: pointer; margin-left: auto; }
+        .tts-toggle { position: fixed; bottom: 2rem; left: 2rem; background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3); z-index: 100; }
+        .tts-toggle.playing { background: #22c55e; }
+
+        /* Auth Gate Styles */
+        .auth-gate { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--dark); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+        .auth-gate-content { text-align: center; max-width: 500px; }
+        .auth-gate h2 { font-size: 2rem; margin-bottom: 1rem; }
+        .auth-gate p { color: var(--light-gray); margin-bottom: 2rem; }
+        .auth-gate-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .auth-gate-btn { padding: 1rem 2rem; border-radius: 8px; font-weight: 600; text-decoration: none; transition: all 0.3s; }
+        .auth-gate-btn.primary { background: var(--gold); color: var(--dark); }
+        .auth-gate-btn.secondary { background: var(--medium-gray); color: var(--white); border: 1px solid var(--medium-gray); }
+        .auth-gate-btn:hover { transform: translateY(-2px); }
+        .protected-content { display: none; }
+        .protected-content.show { display: block; }
+    </style>
+</head>
+<body>
+    <!-- Auth Gate - Shows if not logged in -->
+    <div class="auth-gate" id="authGate">
+        <div class="auth-gate-content">
+            <h2>🔒 Members Only</h2>
+            <p>This study content is exclusively for registered members. Create a free account to access all 21 chapters, quizzes, flashcards, and the practice exam.</p>
+            <div class="auth-gate-buttons">
+                <a href="login.html" class="auth-gate-btn primary">Create Free Account</a>
+                <a href="index.html" class="auth-gate-btn secondary">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Protected Content - Only shows if logged in -->
+    <div class="protected-content" id="protectedContent">
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <nav><div class="nav-container"><a href="index.html" class="logo">⚡ Barber Study Pro</a><a href="index.html#chapters" class="back-link">← Back</a></div></nav>
+    <header class="chapter-header">
+        <span class="chapter-number">CHAPTER 20</span>
+        <h1>Working Behind the Chair</h1>
+        <p>Employment, compensation, and building your career</p>
+    </header>
+    <main class="content">
+        <section class="section">
+            <h2>🎯 Why Study Working Behind the Chair?</h2>
+            <p>Understanding what happens after graduation is crucial for your success. This chapter covers:</p>
+            <ul>
+                <li>Transitioning from school to professional work</li>
+                <li>Different employment classifications and compensation structures</li>
+                <li>Financial management and budgeting</li>
+                <li>Building and maintaining a clientele</li>
+                <li>Selling products and services effectively</li>
+                <li>Professional development and career growth</li>
+            </ul>
+            <div class="key-point"><strong>Key Point:</strong> Success in barbering requires both technical skills and business acumen. Understanding employment structures and financial management is essential.</div>
+        </section>
+
+        <section class="section">
+            <h2>🎓 Moving from School to Work</h2>
+            
+            <h3>What to Expect:</h3>
+            <p>Making the transition from school to work can be challenging. While you may be thrilled to have a job, working for a paycheck brings duties and responsibilities you may not have considered.</p>
+            
+            <h3>Key Differences:</h3>
+            <table>
+                <tr><th>Barber School</th><th>Professional Work</th></tr>
+                <tr><td>Forgiving environment</td><td>High expectations</td></tr>
+                <tr><td>Chance to redo procedures</td><td>Must get it right the first time</td></tr>
+                <tr><td>Instructors guide you</td><td>You work independently</td></tr>
+                <tr><td>Flexible scheduling</td><td>Set hours and commitments</td></tr>
+                <tr><td>Learning is the focus</td><td>Service and profit are priorities</td></tr>
+            </table>
+
+            <h3>Job Description:</h3>
+            <p>A job description outlines all the duties and responsibilities of a particular position in a barbershop. When you receive one:</p>
+            <ul>
+                <li>Read it thoroughly</li>
+                <li>Make notes and jot down questions</li>
+                <li>Ask your manager for clarification</li>
+                <li>Understand it is your responsibility to fulfill all functions listed</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>💼 Employment Classifications</h2>
+            <p>Understanding your employment status is crucial for taxes, benefits, and legal responsibilities.</p>
+            
+            <div class="term">
+                <strong>Employee Status</strong>
+                <ul>
+                    <li>Work on salary, commission, or salary-plus-commission basis</li>
+                    <li>Employer tells you when and where to work</li>
+                    <li>Training may be provided or required</li>
+                    <li>Employer withholds income and Medicare taxes</li>
+                    <li>Employer provides Form W-2</li>
+                    <li>May receive benefits (insurance, vacation)</li>
+                    <li>Employer pays portion of Social Security tax</li>
+                </ul>
+            </div>
+
+            <div class="term">
+                <strong>Independent Contractor Status</strong>
+                <ul>
+                    <li>Rent a chair or work for percentage of proceeds</li>
+                    <li>Must apply for tax identification number</li>
+                    <li>Responsible for own taxes, licenses, and insurance</li>
+                    <li>Shop owner provides Form 1099-MISC if you earn over $600/year</li>
+                    <li>No benefits provided</li>
+                    <li>Must have written agreement with shop owner</li>
+                    <li>Sets own hours and schedule</li>
+                </ul>
+            </div>
+
+            <div class="term">
+                <strong>Booth Renter Status</strong>
+                <ul>
+                    <li>Actually setting up a small business within the shop</li>
+                    <li>Requires business license, insurance, and tax ID</li>
+                    <li>Lease space from shop owner</li>
+                    <li>Solely responsible for own clientele, supplies, and bookkeeping</li>
+                    <li>Handle all money transactions</li>
+                    <li>Responsible for booking own appointments</li>
+                    <li>Weekly or monthly rent obligation</li>
+                    <li>Can become self-employed for relatively small investment</li>
+                </ul>
+            </div>
+
+            <h3>Employment Classification Comparison:</h3>
+            <table>
+                <tr><th>Factor</th><th>Employee</th><th>Independent Contractor</th><th>Booth Renter</th></tr>
+                <tr><td>Work Instructions</td><td>Provided</td><td>Not provided</td><td>Not provided</td></tr>
+                <tr><td>Training</td><td>May be provided</td><td>Personal investment</td><td>Personal investment</td></tr>
+                <tr><td>Schedule</td><td>Set by employer</td><td>Sets own hours</td><td>Sets own hours</td></tr>
+                <tr><td>Equipment</td><td>Provided</td><td>May pay for certain items</td><td>Certain equipment in lease</td></tr>
+                <tr><td>Benefits</td><td>May be provided</td><td>No benefits</td><td>No benefits</td></tr>
+                <tr><td>Taxes</td><td>Employer withholds</td><td>Responsible for all taxes</td><td>Responsible for all taxes</td></tr>
+                <tr><td>Form</td><td>W-2</td><td>1099</td><td>1099 for rent</td></tr>
+            </table>
+        </section>
+
+        <section class="section">
+            <h2>💰 Wage Structures</h2>
+            
+            <h3>Types of Compensation:</h3>
+            
+            <div class="term">
+                <strong>Straight or Hourly Salary</strong>
+                — Most often seen in chain or franchise shops. Provides chance to earn fixed income while building clientele.
+            </div>
+
+            <div class="term">
+                <strong>Commission</strong>
+                — Employer pays percentage of gross service sales you generate. Commission percentages vary greatly (40% to 70%). May take 2 years to build clientele for straight commission to be viable.
+            </div>
+
+            <div class="term">
+                <strong>Salary-Plus-Commission (Guarantee)</strong>
+                — Guarantees minimum base salary with percentage of amount over base. Often used to motivate employees.
+            </div>
+
+            <div class="term">
+                <strong>Tips</strong>
+                — Income in addition to regular compensation. Must be tracked and reported for income tax return. Tips of $20+ per month must be reported.
+            </div>
+
+            <h3>Factors Affecting Commission:</h3>
+            <ul>
+                <li>Level of experience</li>
+                <li>Number of clients the shop serves</li>
+                <li>Size of your clientele</li>
+                <li>Services performed</li>
+                <li>Retail sales</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>🏆 Thriving in a Service Profession</h2>
+            
+            <h3>Habits of a Good Barbershop Team Player:</h3>
+            <ul>
+                <li><strong>Put others first:</strong> Put the needs of the barbershop and client ahead of your own feelings or desires</li>
+                <li><strong>Be true to your word:</strong> Choose words carefully and honestly; be someone who can be counted on</li>
+                <li><strong>Be punctual:</strong> Scheduling is central to the business; being late inconveniences clients and coworkers</li>
+                <li><strong>Be a problem solver:</strong> Recognize problems promptly and find ways to resolve them constructively</li>
+                <li><strong>Be a lifelong learner:</strong> Continue to learn throughout your career; thinking you're done learning is limiting</li>
+            </ul>
+
+            <h3>Barbershop Teamwork:</h3>
+            <p>Working in a barbershop requires practicing and perfecting people skills. A barbershop is very much a team environment.</p>
+            
+            <h3>Workplace Principles:</h3>
+            <ul>
+                <li><strong>Strive to help:</strong> Be concerned with the success of others, not just yourself</li>
+                <li><strong>Pitch in:</strong> Help with whatever needs to be done when not busy with clients</li>
+                <li><strong>Share your knowledge:</strong> Be willing to share what you know and learn from coworkers</li>
+                <li><strong>Remain positive:</strong> Resist giving in to maliciousness and gossip</li>
+                <li><strong>Become a relationship builder:</strong> Build good working relationships with all team members</li>
+                <li><strong>Be willing to resolve conflicts:</strong> Discuss conflicts with individuals, not with others in the shop</li>
+                <li><strong>Be willing to be subordinate:</strong> Beginners start lower; work your way up</li>
+                <li><strong>Be sincerely loyal:</strong> Loyalty is vital to the workings of a barbershop</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>📊 Employee Evaluation</h2>
+            
+            <h3>Getting Feedback:</h3>
+            <ul>
+                <li>Ask for feedback from shop manager and key coworkers</li>
+                <li>Evaluations typically scheduled 90 days after hiring, then annually</li>
+                <li>Ask for help and feedback anytime you need it</li>
+                <li>Watch other barbers to identify who is really good</li>
+                <li>Focus on skills of successful barbers</li>
+                <li>Ask senior barbers to sit in on client consultations</li>
+                <li>Ask manager to observe your technical skills</li>
+                <li>Have trusted coworker watch and evaluate your retail selling</li>
+            </ul>
+
+            <h3>Finding a Role Model:</h3>
+            <p>Model your behavior after someone having the kind of success you wish to have. Watch how they:</p>
+            <ul>
+                <li>Treat their clients</li>
+                <li>Treat shop staff and manager</li>
+                <li>Book appointments</li>
+                <li>Formulate color or select products</li>
+                <li>Handle crises or conflict</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>💵 Manage Your Money</h2>
+            
+            <h3>Financial Responsibility:</h3>
+            <p>Many barbering professionals must research and plan for expenses on their own. Managing money is something everyone can learn to do.</p>
+
+            <h3>Personal Budget:</h3>
+            <p>A budget helps you:</p>
+            <ul>
+                <li>Track where your money goes</li>
+                <li>Make sure you always have enough</li>
+                <li>Plan ahead and save for bigger expenses</li>
+                <li>Prepare for vacation, home, or business ownership</li>
+            </ul>
+
+            <h3>Monthly Budget Categories:</h3>
+            <table>
+                <tr><th>Expenses</th><th>Income</th></tr>
+                <tr><td>Monthly rent</td><td>Monthly take-home pay</td></tr>
+                <tr><td>Car payment</td><td>Tips</td></tr>
+                <tr><td>Car insurance</td><td>Other income</td></tr>
+                <tr><td>Auto fuel/upkeep</td><td></td></tr>
+                <tr><td>Electricity</td><td></td></tr>
+                <tr><td>Gas</td><td></td></tr>
+                <tr><td>Health insurance</td><td></td></tr>
+                <tr><td>Entertainment</td><td></td></tr>
+                <tr><td>Groceries</td><td></td></tr>
+                <tr><td>Dry cleaning</td><td></td></tr>
+                <tr><td>Personal grooming</td><td></td></tr>
+                <tr><td>Cell phone</td><td></td></tr>
+                <tr><td>Internet/TV</td><td></td></tr>
+                <tr><td>Student loan</td><td></td></tr>
+                <tr><td>Savings deposit</td><td></td></tr>
+            </table>
+
+            <h3>Repayment of Debts:</h3>
+            <ul>
+                <li>Responsible adults pay back debts (car loans, mortgages, student loans)</li>
+                <li>Not paying back loans is called <strong>defaulting</strong></li>
+                <li>Defaulting can have serious consequences for personal and professional credit</li>
+                <li>Legal action can be taken if you fail to repay</li>
+                <li>Know precisely what you owe and what you earn</li>
+                <li>Understand payment terms, interest rates, and what you can afford</li>
+            </ul>
+
+            <h3>Reporting Your Income:</h3>
+            <div class="warning">
+                <strong>Important:</strong> Serious legal consequences for not reporting income include:
+                <ul>
+                    <li>Fines and potential jail time</li>
+                    <li>Decreasing your borrowing power</li>
+                    <li>Reducing Social Security benefits for retirement</li>
+                    <li>Lowering Bureau of Labor endorsement as sustainable industry</li>
+                </ul>
+            </div>
+
+            <h3>Best Practices for Tracking Income:</h3>
+            <ul>
+                <li>Keep a daily log of tips and additional income</li>
+                <li>Add total for the month on a single page</li>
+                <li>Report total cash income for taxes</li>
+                <li>Ethical barbers report income accurately</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>🛍️ Discover the Selling You</h2>
+            
+            <h3>Upselling and Retailing:</h3>
+            <div class="term">
+                <strong>Upselling Services</strong> — Recommending and selling additional services to clients (also called ticket upgrading).
+            </div>
+            <div class="term">
+                <strong>Retailing</strong> — Recommending and selling products to clients for at-home use.
+            </div>
+
+            <h3>Principles of Selling:</h3>
+            <ul>
+                <li>Be familiar with features and benefits of products</li>
+                <li>Test all products yourself</li>
+                <li>Recommend only what the client really needs</li>
+                <li>Adapt your approach to meet needs and personality of each client</li>
+                <li>Some clients prefer soft sell; others comfortable with hard-sell</li>
+                <li>Self-confidence comes from knowing products and believing they're good</li>
+                <li>Generate interest by asking questions that determine needs</li>
+                <li>Never misrepresent services or products</li>
+                <li>Don't underestimate client's intelligence</li>
+                <li>Deliver sales talk in relaxed, friendly manner</li>
+                <li>Demonstrate product use when possible</li>
+                <li>Recognize right psychological moment to close sale</li>
+                <li>Once client offers to buy, quit selling</li>
+            </ul>
+
+            <h3>The Psychology of Selling:</h3>
+            <p>People buy for different reasons:</p>
+            <ul>
+                <li><strong>Vanity:</strong> Want to look better</li>
+                <li><strong>Personal satisfaction:</strong> Want to feel better about themselves</li>
+                <li><strong>Problem-solving:</strong> Want to spend less time maintaining hair</li>
+            </ul>
+
+            <h3>Overcoming Objections:</h3>
+            <ul>
+                <li>Reword objection in way that addresses client's need</li>
+                <li>Acknowledge what client said</li>
+                <li>State things in terms of client's benefit</li>
+                <li>For price objections, acknowledge price and reiterate benefits</li>
+                <li>Offer free sample if possible</li>
+            </ul>
+
+            <h3>Retailing Tips:</h3>
+            <ul>
+                <li>Ask clients what products they use for home maintenance</li>
+                <li>Discuss products as you use them</li>
+                <li>Place product in client's hands when possible</li>
+                <li>Advise how recommended service provides personal benefit</li>
+                <li>Keep retail areas clean, well lit, and appealing</li>
+                <li>Inform clients of promotions and sales</li>
+                <li>Be informed about merits of professional vs. generic products</li>
+                <li>Offer quick styling lessons if time permits</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>👥 Building Your Clientele</h2>
+            
+            <h3>Strategies for Building Business:</h3>
+            <ul>
+                <li><strong>Word of mouth:</strong> Most effective; provide excellent service</li>
+                <li><strong>Business cards:</strong> Always have them available</li>
+                <li><strong>Social media:</strong> Post before-and-after photos (with permission)</li>
+                <li><strong>Business card referrals:</strong> Give clients cards with their name on them</li>
+                <li><strong>Local business referrals:</strong> Card swap with gyms, tailors, diners near barbershop</li>
+                <li><strong>Public speaking:</strong> Available for speaking at local groups, PTA, organizations</li>
+            </ul>
+
+            <h3>Rebooking Clients:</h3>
+            <p>The best time to get clients back in the shop is while they're still in your chair:</p>
+            <ul>
+                <li>Talk about their next appointment before they leave</li>
+                <li>Ask questions and listen to answers</li>
+                <li>Talk about condition of their hair</li>
+                <li>Discuss hairstyling habits at home</li>
+                <li>Explain benefits of regular maintenance</li>
+                <li>Listen carefully to clues about what's happening in their lives</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>🌟 Keep Current Clients and Expand Your Client Base</h2>
+            
+            <h3>Effective Techniques:</h3>
+            <ul>
+                <li><strong>Send birthday cards:</strong> Ask for birthday info (month and day only), send card with special offer valid for that month</li>
+                <li><strong>Provide consistently good service:</strong> Quality service must always be first concern</li>
+                <li><strong>Be reliable:</strong> Always be courteous, thoughtful, and professional</li>
+                <li><strong>Be respectful:</strong> Do not gossip or make fun of anyone</li>
+                <li><strong>Be positive:</strong> Look for the positive in every situation</li>
+                <li><strong>Be professional:</strong> Keep relationships appropriate; don't cross lines</li>
+                <li><strong>Ask for email addresses:</strong> E-mail is now preferred mode of communication</li>
+            </ul>
+
+            <h3>Building Efficiency:</h3>
+            <ul>
+                <li>Be aware of how much time services take</li>
+                <li>Schedule accordingly</li>
+                <li>As you become more experienced, reduce time per service</li>
+                <li>Increased efficiency increases income</li>
+            </ul>
+
+            <h3>Giving Yourself a Raise:</h3>
+            <ul>
+                <li><strong>Spend less money:</strong> Reduce spending to increase money left over</li>
+                <li><strong>Work more hours:</strong> Choose times when shop is busiest</li>
+                <li><strong>Increase service prices:</strong> After building loyal clientele and mastering services</li>
+                <li><strong>Retail more:</strong> Most barbershops pay commission on product sales</li>
+            </ul>
+
+            <h3>Seek Professional Advice:</h3>
+            <ul>
+                <li>Research and interview financial planners</li>
+                <li>Speak to officers at local bank</li>
+                <li>Don't take anyone's advice without careful consideration</li>
+                <li>Be an informed consumer</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>🚀 On Your Way</h2>
+            <p>Your first job in this industry will most likely be the most difficult. Getting started means spending time on a steep learning curve.</p>
+            
+            <h3>Keys to Success:</h3>
+            <ul>
+                <li>Be patient with yourself as you transition from "school you" to "professional you"</li>
+                <li>Remember practice makes perfect</li>
+                <li>You won't know everything you need to know right at the start</li>
+                <li>Be confident in your solid knowledge base from barbering school</li>
+                <li>Make use of generous and experienced professionals</li>
+                <li>Let them teach you the tricks of the trade</li>
+                <li>Commit to perfecting your technical and customer service skills</li>
+                <li>Always be willing to learn</li>
+                <li>Let the concepts in this book be your guide</li>
+                <li>Enjoy your life and reap the amazing benefits of a career in barbering</li>
+            </ul>
+
+            <div class="key-point"><strong>Remember:</strong> Success in barbering comes from combining technical excellence with business savvy, financial responsibility, and outstanding customer service.</div>
+        </section>
+
+        <section class="section">
+            <h2>📝 Chapter 20 Key Takeaways</h2>
+            <div class="key-point">
+                <ul style="margin-left: 1rem;">
+                    <li><strong>Employment Classifications:</strong> Employee, Independent Contractor, Booth Renter — each with different tax and legal responsibilities</li>
+                    <li><strong>Compensation Types:</strong> Salary, commission, salary-plus-commission, tips</li>
+                    <li><strong>Teamwork:</strong> Put others first, be punctual, be a problem solver, remain positive</li>
+                    <li><strong>Financial Management:</strong> Create and stick to a personal budget</li>
+                    <li><strong>Debt Repayment:</strong> Defaulting on loans has serious consequences</li>
+                    <li><strong>Income Reporting:</strong> Report all income including tips of $20+ per month</li>
+                    <li><strong>Upselling:</strong> Recommending additional services to clients</li>
+                    <li><strong>Retailing:</strong> Selling products for at-home use</li>
+                    <li><strong>Client Building:</strong> Word of mouth, business cards, social media, referrals</li>
+                    <li><strong>Rebooking:</strong> Schedule next appointment while client is still in chair</li>
+                    <li><strong>Client Retention:</strong> Birthday cards, consistent service, reliability, respect</li>
+                    <li><strong>Increasing Income:</strong> Reduce spending, work more hours, raise prices, retail more</li>
+                </ul>
+            </div>
+        </section>
+
+        <a href="chapter-20-quiz.html" class="quiz-btn">📝 Take Chapter 20 Quiz</a>
+
+        <div class="nav-chapters"><a href="chapter-19.html">← Chapter 19</a><a href="chapter-21.html">Chapter 21 →</a></div>
+    </main>
+    <script>
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+            localStorage.setItem('chapter-20-progress', Math.round(scrolled));
+        });
+    </script>
+
+<script>
+// Text-to-Speech functionality
+let speechSynthesis = window.speechSynthesis;
+let currentUtterance = null;
+let isPlaying = false;
+let textChunks = [];
+let currentChunk = 0;
+
+function extractTextContent() {
+    const content = document.querySelector('.content');
+    if (!content) return '';
+    let fullText = '';
+    const sections = content.querySelectorAll('.section');
+    sections.forEach(section => {
+        const headings = section.querySelectorAll('h2, h3');
+        headings.forEach(h => { fullText += h.textContent + '. '; });
+        const paragraphs = section.querySelectorAll('p');
+        paragraphs.forEach(p => { fullText += p.textContent + ' '; });
+        const listItems = section.querySelectorAll('li');
+        listItems.forEach(li => { fullText += li.textContent + '. '; });
+    });
+    return fullText;
+}
+
+function splitTextIntoChunks(text, maxLength = 200) {
+    const sentences = text.match(/[^\.!?]+[\.!?]+/g) || [text];
+    const chunks = [];
+    let currentChunk = '';
+    sentences.forEach(sentence => {
+        if ((currentChunk + sentence).length > maxLength && currentChunk.length > 0) {
+            chunks.push(currentChunk.trim());
+            currentChunk = sentence;
+        } else {
+            currentChunk += sentence + ' ';
+        }
+    });
+    if (currentChunk.trim().length > 0) chunks.push(currentChunk.trim());
+    return chunks;
+}
+
+function toggleTTS() {
+    const player = document.getElementById('audioPlayer');
+    const toggle = document.getElementById('ttsToggle');
+    if (!player.classList.contains('active')) {
+        player.classList.add('active');
+        toggle.classList.add('playing');
+        toggle.innerHTML = '🔊 Stop Listening';
+        const text = extractTextContent();
+        textChunks = splitTextIntoChunks(text);
+        currentChunk = 0;
+        startPlayback();
+    } else {
+        stopPlayback();
+    }
+}
+
+function startPlayback() {
+    if (currentChunk >= textChunks.length) { closeAudioPlayer(); return; }
+    const text = textChunks[currentChunk];
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.rate = 0.9;
+    currentUtterance.pitch = 1;
+    currentUtterance.volume = 1;
+    const voices = speechSynthesis.getVoices();
+    const preferredVoice = voices.find(v => v.name.includes('Google US English')) || voices.find(v => v.name.includes('Samantha')) || voices.find(v => v.lang === 'en-US');
+    if (preferredVoice) currentUtterance.voice = preferredVoice;
+    currentUtterance.onstart = () => { isPlaying = true; updatePlayButton(); };
+    currentUtterance.onend = () => { currentChunk++; if (currentChunk < textChunks.length) startPlayback(); else closeAudioPlayer(); };
+    speechSynthesis.speak(currentUtterance);
+}
+
+function togglePlay() {
+    if (isPlaying) { speechSynthesis.pause(); isPlaying = false; }
+    else { if (speechSynthesis.paused) speechSynthesis.resume(); else startPlayback(); isPlaying = true; }
+    updatePlayButton();
+}
+
+function updatePlayButton() {
+    document.getElementById('playPauseBtn').textContent = isPlaying ? '⏸' : '▶';
+}
+
+function skipBackward() { if (currentChunk > 0) { speechSynthesis.cancel(); currentChunk = Math.max(0, currentChunk - 1); startPlayback(); } }
+function skipForward() { if (currentChunk < textChunks.length - 1) { speechSynthesis.cancel(); currentChunk++; startPlayback(); } }
+
+function closeAudioPlayer() {
+    speechSynthesis.cancel();
+    isPlaying = false;
+    currentChunk = 0;
+    document.getElementById('audioPlayer').classList.remove('active');
+    document.getElementById('ttsToggle').classList.remove('playing');
+    document.getElementById('ttsToggle').innerHTML = '🔊 Listen to Chapter';
+}
+
+function stopPlayback() { speechSynthesis.cancel(); isPlaying = false; closeAudioPlayer(); }
+speechSynthesis.onvoiceschanged = () => { speechSynthesis.getVoices(); };
+</script>
+
+<button class="tts-toggle" id="ttsToggle" onclick="toggleTTS()">🔊 Listen to Chapter</button>
+<div class="audio-player" id="audioPlayer">
+    <div class="audio-controls">
+        <button class="audio-btn" id="playPauseBtn" onclick="togglePlay()">▶</button>
+        <button class="audio-btn" onclick="skipBackward()">⏮</button>
+        <button class="audio-btn" onclick="skipForward()">⏭</button>
+    </div>
+    <div class="audio-info">Listen while you study</div>
+    <button class="audio-close" onclick="closeAudioPlayer()">×</button>
+</div>
+
+<!-- Content Protection -->
+<script>
+    // Disable right-click
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Content is protected. Right-click is disabled.');
+        return false;
+    });
+
+    // Disable copy
+    document.addEventListener('copy', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Copying is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable cut
+    document.addEventListener('cut', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Cutting is disabled to protect our content.');
+        return false;
+    });
+
+    // Disable text selection
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable drag
+    document.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable print
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+            e.preventDefault();
+            showProtectionMessage('Printing is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            showProtectionMessage('Saving is disabled.');
+            return false;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+            e.preventDefault();
+            showProtectionMessage('View source is disabled.');
+            return false;
+        }
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J'))) {
+            e.preventDefault();
+            showProtectionMessage('Developer tools are disabled.');
+            return false;
+        }
+    });
+
+    // Show protection message
+    function showProtectionMessage(message) {
+        const existing = document.querySelector('.protection-message');
+        if (existing) existing.remove();
+
+        const div = document.createElement('div');
+        div.className = 'protection-message';
+        div.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #ef4444; color: white; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
+        div.textContent = '⚠️ ' + message;
+        document.body.appendChild(div);
+
+        setTimeout(() => {
+            div.style.opacity = '0';
+            div.style.transition = 'opacity 0.5s';
+            setTimeout(() => div.remove(), 500);
+        }, 3000);
+    }
+
+    // Console warning
+    console.log('%c⚠️ CONTENT PROTECTION', 'color: #ef4444; font-size: 24px; font-weight: bold;');
+    console.log('%cThis content is copyrighted and protected. Unauthorized copying, distribution, or reproduction is prohibited.', 'color: #888; font-size: 14px;');
+    console.log('%c© 2026 Barber Study Pro. All rights reserved.', 'color: #D4AF37; font-size: 12px;');
+
+    // Prevent viewing source via right-click on images
+    document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('contextmenu', e => e.preventDefault());
+    });
+</script>
+    </div><!-- End protected content -->
+
+    <!-- Auth Check Script -->
+    <script>
+        function checkAuth() {
+            const session = localStorage.getItem('bsp_session');
+            const authGate = document.getElementById('authGate');
+            const protectedContent = document.getElementById('protectedContent');
+            if (session) {
+                authGate.style.display = 'none';
+                protectedContent.classList.add('show');
+            } else {
+                authGate.style.display = 'flex';
+                protectedContent.classList.remove('show');
+            }
+        }
+        checkAuth();
+    </script>
+</body>
+</html>
