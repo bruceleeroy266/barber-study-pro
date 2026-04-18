@@ -3,238 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Barber Study Guide | Pass Your State Board Exam</title>
-    <meta name="description" content="Comprehensive digital study guide for barber licensing exams. 23 chapters covering everything you need to pass your state board exam.">
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>The Barber Study Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: white;
+        }
+
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #a0a0a0;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 25px 30px;
+            border-radius: 16px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .btn-icon {
+            font-size: 2rem;
+        }
+
+        .btn-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .btn-label {
+            font-size: 1.3rem;
+        }
+
+        .btn-desc {
+            font-size: 0.85rem;
+            font-weight: 400;
+            opacity: 0.8;
+            margin-top: 3px;
+        }
+
+        /* Button Colors */
+        .btn-quiz {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .btn-study {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .btn-progress {
+            background: linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%);
+        }
+
+        .btn-exam {
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        @media (min-width: 768px) {
+            .actions {
+                grid-template-columns: 1fr 1fr;
+                max-width: 700px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container">
-            <a href="index.html" class="logo">
-                <span class="logo-icon">✂️</span>
-                <span class="logo-text">The Barber Study Guide</span>
-            </a>
-            <button class="nav-toggle" aria-label="Toggle navigation">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="active">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="chapters.html">Chapters</a></li>
-                <li><a href="sample.html">Sample</a></li>
-                <li><a href="faq.html">FAQ</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
+    <div class="logo">✂️</div>
+    <h1>Barber Study Guide</h1>
+    <p class="subtitle">Master your state board exam</p>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-overlay"></div>
-        <div class="container">
-            <div class="hero-content">
-                <h1 class="hero-title">Master Your Barber License</h1>
-                <p class="hero-subtitle">The comprehensive study guide that helps you pass your state board exam with confidence. Built by a barber student, for barber students.</p>
-                <div class="hero-cta">
-                    <a href="#pricing" class="btn btn-primary">Get the Guide</a>
-                    <a href="sample.html" class="btn btn-secondary">Read Sample Chapter</a>
-                </div>
-                <div class="hero-stats">
-                    <div class="stat">
-                        <span class="stat-number">23</span>
-                        <span class="stat-label">Chapters</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">100%</span>
-                        <span class="stat-label">Comprehensive</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">PDF</span>
-                        <span class="stat-label">Digital Format</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <div class="actions">
+        <a href="quiz.html" class="action-btn btn-quiz">
+            <span class="btn-icon">🧪</span>
+            <span class="btn-text">
+                <span class="btn-label">Start Quiz</span>
+                <span class="btn-desc">Quick practice questions</span>
+            </span>
+        </a>
 
-    <!-- Benefits Section -->
-    <section class="benefits section-padding">
-        <div class="container">
-            <h2 class="section-title">Why Choose This Guide?</h2>
-            <div class="benefits-grid">
-                <div class="benefit-card">
-                    <div class="benefit-icon">🎯</div>
-                    <h3>Pass Your Exam</h3>
-                    <p>Comprehensive coverage of all topics tested on the state board exam. No surprises on test day.</p>
-                </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">📱</div>
-                    <h3>Study Anywhere</h3>
-                    <p>Digital PDF format means you can study on your phone, tablet, or computer—wherever you are.</p>
-                </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">⏱️</div>
-                    <h3>Save Time</h3>
-                    <p>Organized, easy-to-digest chapters help you study efficiently. No more hunting for information.</p>
-                </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">🧠</div>
-                    <h3>Practice Questions</h3>
-                    <p>Test your knowledge with practice questions at the end of each chapter.</p>
-                </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">⭐</div>
-                    <h3>Key Points</h3>
-                    <p>Important concepts highlighted for quick review before your exam.</p>
-                </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">🎖️</div>
-                    <h3>Military Precision</h3>
-                    <p>Created with the discipline and attention to detail that comes from 17 years of military service.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+        <a href="chapters.html" class="action-btn btn-study">
+            <span class="btn-icon">📚</span>
+            <span class="btn-text">
+                <span class="btn-label">Study Topics</span>
+                <span class="btn-desc">23 comprehensive chapters</span>
+            </span>
+        </a>
 
-    <!-- Features Section -->
-    <section class="features section-padding bg-dark">
-        <div class="container">
-            <h2 class="section-title">What's Inside</h2>
-            <div class="features-content">
-                <div class="feature-image">
-                    <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=600&h=400&fit=crop" alt="Barber tools">
-                </div>
-                <div class="feature-list">
-                    <div class="feature-item">
-                        <span class="feature-check">✓</span>
-                        <div>
-                            <h4>23 Comprehensive Chapters</h4>
-                            <p>Covering every topic you need to know for your state board exam</p>
-                        </div>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-check">✓</span>
-                        <div>
-                            <h4>Practice Questions</h4>
-                            <p>Test your knowledge and identify areas that need more study</p>
-                        </div>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-check">✓</span>
-                        <div>
-                            <h4>Key Points Summaries</h4>
-                            <p>Quick reference highlights for last-minute review</p>
-                        </div>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-check">✓</span>
-                        <div>
-                            <h4>Clear & Organized</h4>
-                            <p>Easy-to-follow structure that makes studying less overwhelming</p>
-                        </div>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-check">✓</span>
-                        <div>
-                            <h4>Digital Format</h4>
-                            <p>PDF download available instantly—no waiting for shipping</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        <a href="progress.html" class="action-btn btn-progress">
+            <span class="btn-icon">📊</span>
+            <span class="btn-text">
+                <span class="btn-label">View Progress</span>
+                <span class="btn-desc">Track your learning</span>
+            </span>
+        </a>
 
-    <!-- Chapter Preview Section -->
-    <section class="chapters-preview section-padding">
-        <div class="container">
-            <h2 class="section-title">23 Chapters of Essential Knowledge</h2>
-            <p class="section-subtitle">From sanitation to haircutting techniques, we've got you covered</p>
-            <div class="chapters-list">
-                <div class="chapter-item">1. History of Barbering</div>
-                <div class="chapter-item">2. Professional Ethics</div>
-                <div class="chapter-item">3. Sanitation & Sterilization</div>
-                <div class="chapter-item">4. Anatomy & Physiology</div>
-                <div class="chapter-item">5. Skin Disorders</div>
-                <div class="chapter-item">6. Hair & Scalp Analysis</div>
-                <div class="chapter-item">7. Facial Treatments</div>
-                <div class="chapter-item">8. Shaving & Beard Trimming</div>
-                <div class="chapter-item">9. Haircutting Fundamentals</div>
-                <div class="chapter-item">10. Clipper Techniques</div>
-                <div class="chapter-item">11. Razor Techniques</div>
-                <div class="chapter-item">12. Styling & Finishing</div>
-            </div>
-            <div class="chapters-cta">
-                <a href="chapters.html" class="btn btn-outline">View All 23 Chapters</a>
-            </div>
-        </div>
-    </section>
+        <a href="exam.html" class="action-btn btn-exam">
+            <span class="btn-icon">🎯</span>
+            <span class="btn-text">
+                <span class="btn-label">Practice Exam</span>
+                <span class="btn-desc">Full exam simulation</span>
+            </span>
+        </a>
+    </div>
 
-    <!-- Email Capture Section -->
-    <section id="pricing" class="email-capture section-padding bg-gold">
-        <div class="container">
-            <div class="email-capture-content">
-                <h2>Ready to Pass Your Exam?</h2>
-                <p>Join the list to be notified when The Barber Study Guide launches. Early subscribers get exclusive pricing.</p>
-                <form class="email-form" id="emailForm">
-                    <input type="email" placeholder="Enter your email" required class="email-input">
-                    <button type="submit" class="btn btn-dark">Notify Me</button>
-                </form>
-                <p class="email-disclaimer">No spam. Unsubscribe anytime.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonial Section -->
-    <section class="testimonial section-padding">
-        <div class="container">
-            <blockquote class="testimonial-quote">
-                "This guide breaks down everything you need to know in a way that actually makes sense. The practice questions saved me on exam day."
-            </blockquote>
-            <cite class="testimonial-author">— Future Barber Student</cite>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <span class="logo-icon">✂️</span>
-                    <span class="logo-text">The Barber Study Guide</span>
-                    <p>Built by a barber student, for barber students.</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="about.html">About</a></li>
-                        <li><a href="chapters.html">Chapters</a></li>
-                        <li><a href="sample.html">Sample</a></li>
-                        <li><a href="faq.html">FAQ</a></li>
-                        <li><a href="contact.html">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-contact">
-                    <h4>Contact</h4>
-                    <p>Email: info@barberstudyguide.com</p>
-                    <div class="social-links">
-                        <a href="#" aria-label="Instagram">📷</a>
-                        <a href="#" aria-label="Twitter">🐦</a>
-                        <a href="#" aria-label="Facebook">📘</a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 The Barber Study Guide. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="main.js"></script>
+    <div class="footer">
+        <p>Pass your state board exam with confidence</p>
+    </div>
 </body>
 </html>
