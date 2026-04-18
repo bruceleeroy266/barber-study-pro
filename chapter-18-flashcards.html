@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 18: Men's Chemical Texture Services | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* Sticky Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10,10,10,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #2a2a2a;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+        .logo { font-size: 1.1rem; font-weight: 800; color: #D4AF37; text-decoration: none; }
+        nav { display: none; }
+        nav a { color: #888; text-decoration: none; margin-left: 20px; font-size: 0.85rem; }
+        nav a:hover { color: #D4AF37; }
+        .btn-small {
+            background: #D4AF37;
+            color: #0a0a0a;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 100px 20px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .chapter-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .chapter-header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #D4AF37;
+            margin-bottom: 10px;
+        }
+        .chapter-header p {
+            color: #888;
+            font-size: 1rem;
+        }
+
+        /* Flashcard Grid */
+        .flashcard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        /* Flip Card */
+        .flashcard {
+            perspective: 1000px;
+            height: 180px;
+            cursor: pointer;
+        }
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .flashcard-front {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 2px solid #D4AF37;
+        }
+        .flashcard-back {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8960C 100%);
+            color: #0a0a0a;
+            transform: rotateY(180deg);
+            border: 2px solid #D4AF37;
+        }
+        .flashcard-front h3 {
+            color: #D4AF37;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .flashcard-back p {
+            font-size: 0.9rem;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        /* Navigation */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 40px;
+        }
+        .nav-btn {
+            background: #1a1a1a;
+            color: #D4AF37;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid #D4AF37;
+            transition: all 0.3s;
+        }
+        .nav-btn:hover {
+            background: #D4AF37;
+            color: #0a0a0a;
+        }
+
+        /* Footer */
+        footer {
+            padding: 30px 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.75rem;
+            border-top: 1px solid #1a1a1a;
+            margin-top: 40px;
+        }
+
+        @media (min-width: 768px) {
+            nav { display: block; }
+            .chapter-header h1 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">Barber Study Pro</a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="login.html">Quizzes</a>
+            <a href="flashcards.html">Flashcards</a>
+            <a href="oklahoma-rules.html">Rules</a>
+        </nav>
+        <a href="signup.html" class="btn-small">Start Free</a>
+    </header>
+
+    <div class="main-content">
+        <div class="chapter-header">
+            <h1>Chapter 18: Men's Chemical Texture Services</h1>
+            <p>Click any card to flip and reveal the definition</p>
+        </div>
+
+        <div class="flashcard-grid">
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Chemical Texture Service</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Services that alter the natural wave pattern of hair through chemical processes.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Permanent Waving</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A chemical service that creates curls or waves in straight hair using rods and waving lotion.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Chemical Relaxing</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A process that permanently straightens curly or coily hair using chemical solutions.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Waving Lotion</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A chemical solution that breaks down the hair's disulfide bonds to allow reshaping.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Neutralizer</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A solution that reforms the disulfide bonds in their new position to lock in the curl or straightness.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Disulfide Bonds</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Strong chemical side bonds that join the sulfur atoms of two cysteine amino acids to create cystine.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Perm Rod</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Plastic or foam tools used to wrap hair and determine the size and shape of curls.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>End Papers</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Thin papers used to wrap around hair ends to protect them during the perm process.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Base Section</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The subsection of hair on which the perm rod is placed during wrapping.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Alkaline Perm</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A permanent wave with a pH between 9.0-9.6; processes quickly and produces firm curls.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Acid Perm</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A permanent wave with a pH between 6.5-7.5; gentler on hair and produces softer curls.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Exothermic Perm</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A self-heating permanent wave that produces heat through a chemical reaction.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Thio Relaxer</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A chemical relaxer using ammonium thioglycolate; milder than lye relaxers.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Hydroxide Relaxer</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A strong chemical relaxer using sodium, potassium, or lithium hydroxide; also called lye relaxer.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Base Cream</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A protective cream applied to the scalp before chemical relaxer application.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Processing Time</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The amount of time a chemical solution remains on the hair to achieve desired results.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Test Curl</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Unwrapping one rod during processing to check if the curl pattern is forming properly.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Underprocessed</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Hair that has not been exposed to the chemical solution long enough to achieve desired results.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Overprocessed</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Hair that has been exposed to chemicals too long, resulting in damage and weak curls.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Texture Softener</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A mild chemical service that loosens curl pattern without fully straightening hair.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="chapter-17-flashcards.html" class="nav-btn">← Previous Chapter</a>
+            <a href="flashcards.html" class="nav-btn">All Flashcards</a>
+            <a href="chapter-19-flashcards.html" class="nav-btn">Next Chapter →</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Barber Study Pro. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

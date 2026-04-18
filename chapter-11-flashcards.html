@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 11: Properties and Disorders of the Hair and Scalp | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* Sticky Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10,10,10,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #2a2a2a;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+        .logo { font-size: 1.1rem; font-weight: 800; color: #D4AF37; text-decoration: none; }
+        nav { display: none; }
+        nav a { color: #888; text-decoration: none; margin-left: 20px; font-size: 0.85rem; }
+        nav a:hover { color: #D4AF37; }
+        .btn-small {
+            background: #D4AF37;
+            color: #0a0a0a;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 100px 20px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .chapter-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .chapter-header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #D4AF37;
+            margin-bottom: 10px;
+        }
+        .chapter-header p {
+            color: #888;
+            font-size: 1rem;
+        }
+
+        /* Flashcard Grid */
+        .flashcard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        /* Flip Card */
+        .flashcard {
+            perspective: 1000px;
+            height: 180px;
+            cursor: pointer;
+        }
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .flashcard-front {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 2px solid #D4AF37;
+        }
+        .flashcard-back {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8960C 100%);
+            color: #0a0a0a;
+            transform: rotateY(180deg);
+            border: 2px solid #D4AF37;
+        }
+        .flashcard-front h3 {
+            color: #D4AF37;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .flashcard-back p {
+            font-size: 0.9rem;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        /* Navigation */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 40px;
+        }
+        .nav-btn {
+            background: #1a1a1a;
+            color: #D4AF37;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid #D4AF37;
+            transition: all 0.3s;
+        }
+        .nav-btn:hover {
+            background: #D4AF37;
+            color: #0a0a0a;
+        }
+
+        /* Footer */
+        footer {
+            padding: 30px 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.75rem;
+            border-top: 1px solid #1a1a1a;
+            margin-top: 40px;
+        }
+
+        @media (min-width: 768px) {
+            nav { display: block; }
+            .chapter-header h1 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">Barber Study Pro</a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="login.html">Quizzes</a>
+            <a href="flashcards.html">Flashcards</a>
+            <a href="oklahoma-rules.html">Rules</a>
+        </nav>
+        <a href="signup.html" class="btn-small">Start Free</a>
+    </header>
+
+    <div class="main-content">
+        <div class="chapter-header">
+            <h1>Chapter 11: Properties and Disorders of the Hair and Scalp</h1>
+            <p>Click any card to flip and reveal the definition</p>
+        </div>
+
+        <div class="flashcard-grid">
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Hair Follicle</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The tube-like depression or pocket in the skin or scalp that contains the hair root.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Hair Shaft</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The portion of hair that projects above the epidermis; composed of keratinized cells.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Hair Root</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The part of the hair located below the surface of the epidermis.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Cuticle</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The outermost layer of the hair; consists of overlapping scale-like cells that protect the inner layers.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Cortex</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The middle layer of the hair shaft; provides strength and elasticity and contains melanin for hair color.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Medulla</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The innermost layer of the hair shaft; often absent in fine or vellus hair.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Sebaceous Gland</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Oil glands connected to hair follicles that secrete sebum to lubricate the hair and skin.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Arrector Pili Muscle</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Tiny involuntary muscles that cause goosebumps by contracting and raising hair follicles.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Anagen Phase</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The growth phase of hair that lasts 2-6 years; about 90% of scalp hair is in this phase.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Catagen Phase</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The transitional phase lasting 2-3 weeks when hair growth stops and the follicle shrinks.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Telogen Phase</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The resting phase lasting 3-4 months; hair eventually sheds and new growth begins.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Dandruff</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A common scalp condition causing flaking of dead skin cells; can be caused by fungus or dry skin.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Alopecia</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Partial or complete loss of hair; can be caused by genetics, hormones, or medical conditions.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Trichorrhexis Nodosa</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A hair disorder where nodes form on the hair shaft causing it to break easily.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Tinea Capitis</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Ringworm of the scalp; a contagious fungal infection requiring medical treatment.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Pediculosis Capitis</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Head lice infestation; contagious condition requiring proper treatment and sanitation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Scabies</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A contagious skin condition caused by mites burrowing into the skin; requires medical treatment.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Porosity</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The ability of hair to absorb moisture; determined by the condition of the cuticle layer.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Elasticity</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The ability of hair to stretch and return to its original length without breaking.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Melanin</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Natural pigment found in the cortex of hair that determines hair color.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="chapter-10-flashcards.html" class="nav-btn">← Previous Chapter</a>
+            <a href="flashcards.html" class="nav-btn">All Flashcards</a>
+            <a href="chapter-12-flashcards.html" class="nav-btn">Next Chapter →</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Barber Study Pro. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

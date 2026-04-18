@@ -13,6 +13,11 @@
         .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
         .back-link { color: var(--light-gray); text-decoration: none; }
+        .back-link:hover { color: var(--gold); }
+        .nav-actions { display: flex; align-items: center; gap: 1rem; }
+        .tts-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s; }
+        .tts-btn:hover { background: var(--gold); color: var(--dark); }
+        .tts-btn.playing { background: var(--gold); color: var(--dark); }
         .chapter-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
         .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; }
         .chapter-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
@@ -46,7 +51,7 @@
 </head>
 <body>
     <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
-    <nav><div class="nav-container"><a href="index.html" class="logo">⚡ Barber Study Pro</a><a href="index.html#chapters" class="back-link">← Back</a></div></nav>
+    <nav><div class="nav-container"><a href="index.html" class="logo">⚡ Barber Study Pro</a><div class="nav-actions"><button class="tts-btn" onclick="toggleTTS()" id="tts-btn">🔊 Read Aloud</button><a href="index.html#chapters" class="back-link">← Back</a></div></div></nav>
     <header class="chapter-header">
         <span class="chapter-number">CHAPTER 21</span>
         <h1>The Business of Barbering</h1>
@@ -204,6 +209,68 @@
             document.getElementById('progress').style.width = scrolled + '%';
             localStorage.setItem('chapter-21-progress', Math.round(scrolled));
         });
+
+        // Text-to-Speech functionality
+        let speechSynthesis = window.speechSynthesis;
+        let currentUtterance = null;
+        let isPlaying = false;
+
+        function toggleTTS() {
+            const btn = document.getElementById('tts-btn');
+            
+            if (isPlaying) {
+                stopTTS();
+                btn.innerHTML = '🔊 Read Aloud';
+                btn.classList.remove('playing');
+                isPlaying = false;
+            } else {
+                startTTS();
+                btn.innerHTML = '⏹ Stop';
+                btn.classList.add('playing');
+                isPlaying = true;
+            }
+        }
+
+        function startTTS() {
+            if (speechSynthesis.speaking) {
+                speechSynthesis.resume();
+                return;
+            }
+
+            const content = document.querySelector('main.content');
+            if (!content) return;
+
+            let textToRead = '';
+            const sections = content.querySelectorAll('.section');
+            sections.forEach(section => {
+                if (section.classList.contains('quiz-section')) return;
+                const text = section.innerText || section.textContent;
+                textToRead += text + ' ';
+            });
+
+            if (!textToRead.trim()) return;
+
+            currentUtterance = new SpeechSynthesisUtterance(textToRead);
+            currentUtterance.rate = 0.9;
+            currentUtterance.pitch = 1;
+            
+            currentUtterance.onend = function() {
+                const btn = document.getElementById('tts-btn');
+                btn.innerHTML = '🔊 Read Aloud';
+                btn.classList.remove('playing');
+                isPlaying = false;
+            };
+
+            speechSynthesis.speak(currentUtterance);
+        }
+
+        function stopTTS() {
+            if (speechSynthesis.speaking || speechSynthesis.paused) {
+                speechSynthesis.cancel();
+            }
+        }
+
+        window.addEventListener('beforeunload', stopTTS);
     </script>
 </body>
 </html>
