@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Barber Study Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: white;
+        }
+
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #a0a0a0;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 25px 30px;
+            border-radius: 16px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .btn-icon {
+            font-size: 2rem;
+        }
+
+        .btn-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .btn-label {
+            font-size: 1.3rem;
+        }
+
+        .btn-desc {
+            font-size: 0.85rem;
+            font-weight: 400;
+            opacity: 0.8;
+            margin-top: 3px;
+        }
+
+        /* Button Colors */
+        .btn-quiz {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .btn-study {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .btn-progress {
+            background: linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%);
+        }
+
+        .btn-exam {
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        @media (min-width: 768px) {
+            .actions {
+                grid-template-columns: 1fr 1fr;
+                max-width: 700px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">✂️</div>
+    <h1>Barber Study Guide</h1>
+    <p class="subtitle">Master your state board exam</p>
+
+    <div class="actions">
+        <a href="quiz.html" class="action-btn btn-quiz">
+            <span class="btn-icon">🧪</span>
+            <span class="btn-text">
+                <span class="btn-label">Start Quiz</span>
+                <span class="btn-desc">Quick practice questions</span>
+            </span>
+        </a>
+
+        <a href="chapters.html" class="action-btn btn-study">
+            <span class="btn-icon">📚</span>
+            <span class="btn-text">
+                <span class="btn-label">Study Topics</span>
+                <span class="btn-desc">23 comprehensive chapters</span>
+            </span>
+        </a>
+
+        <a href="progress.html" class="action-btn btn-progress">
+            <span class="btn-icon">📊</span>
+            <span class="btn-text">
+                <span class="btn-label">View Progress</span>
+                <span class="btn-desc">Track your learning</span>
+            </span>
+        </a>
+
+        <a href="exam.html" class="action-btn btn-exam">
+            <span class="btn-icon">🎯</span>
+            <span class="btn-text">
+                <span class="btn-label">Practice Exam</span>
+                <span class="btn-desc">Full exam simulation</span>
+            </span>
+        </a>
+    </div>
+
+    <div class="footer">
+        <p>Pass your state board exam with confidence</p>
+    </div>
+</body>
+</html>
