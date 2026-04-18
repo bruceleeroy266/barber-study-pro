@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Infection Control Quiz | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        /* Sticky Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10,10,10,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #2a2a2a;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+        .logo { font-size: 1.1rem; font-weight: 800; color: #D4AF37; text-decoration: none; }
+        nav { display: none; }
+        nav a { color: #888; text-decoration: none; margin-left: 20px; font-size: 0.85rem; }
+        nav a:hover { color: #D4AF37; }
+        .btn-small {
+            background: #D4AF37;
+            color: #0a0a0a;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        /* Page Header */
+        .page-header {
+            padding: 100px 20px 30px;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .page-header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: #D4AF37;
+        }
+        .page-header p {
+            color: #888;
+            font-size: 1rem;
+        }
+
+        /* Quiz Container */
+        .quiz-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .progress-bar {
+            background: #2a2a2a;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #D4AF37, #B8941F);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #888;
+        }
+        .score-display {
+            color: #D4AF37;
+            font-weight: 600;
+        }
+
+        /* Question Card */
+        .question-card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .question-card.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-number {
+            color: #D4AF37;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        /* Answer Options */
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background: #252525;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            background: #2a2a2a;
+            border-color: #D4AF37;
+        }
+
+        .option.selected {
+            background: #2a2a2a;
+            border-color: #D4AF37;
+        }
+
+        .option.correct {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: #22c55e;
+        }
+
+        .option.incorrect {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+        }
+
+        .option-letter {
+            background: #D4AF37;
+            color: #0a0a0a;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .option.correct .option-letter {
+            background: #22c55e;
+        }
+
+        .option.incorrect .option-letter {
+            background: #ef4444;
+        }
+
+        .option-text {
+            font-size: 1rem;
+        }
+
+        /* Feedback Section */
+        .feedback {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: rgba(34, 197, 94, 0.1);
+            border-left: 4px solid #22c55e;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid #ef4444;
+            display: block;
+        }
+
+        .feedback-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .feedback.correct .feedback-title {
+            color: #22c55e;
+        }
+
+        .feedback.incorrect .feedback-title {
+            color: #ef4444;
+        }
+
+        .feedback-text {
+            color: #aaa;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Navigation Buttons */
+        .quiz-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+
+        .btn-nav {
+            background: #D4AF37;
+            color: #0a0a0a;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-nav:hover {
+            background: #E5C048;
+            transform: translateY(-2px);
+        }
+
+        .btn-nav:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-nav.secondary {
+            background: transparent;
+            color: #888;
+            border: 2px solid #333;
+        }
+
+        .btn-nav.secondary:hover {
+            border-color: #D4AF37;
+            color: #D4AF37;
+        }
+
+        /* Results Screen */
+        .results-card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            display: none;
+        }
+
+        .results-card.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .results-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .results-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .results-score {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #D4AF37;
+            margin: 20px 0;
+        }
+
+        .results-message {
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .results-breakdown {
+            background: #252525;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .results-breakdown h3 {
+            color: #D4AF37;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Start Screen */
+        .start-card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .start-card h2 {
+            color: #D4AF37;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .start-card p {
+            color: #888;
+            margin-bottom: 25px;
+        }
+
+        .quiz-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .quiz-info-item {
+            background: #252525;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .quiz-info-item .number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #D4AF37;
+        }
+
+        .quiz-info-item .label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 30px 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.75rem;
+            border-top: 1px solid #1a1a1a;
+            margin-top: 40px;
+        }
+        footer a { color: #888; text-decoration: none; margin: 0 10px; }
+        footer a:hover { color: #D4AF37; }
+        .disclaimer {
+            background: #1a1a1a;
+            border-left: 4px solid #D4AF37;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: #888;
+        }
+        .disclaimer strong { color: #D4AF37; }
+
+        @media (min-width: 768px) {
+            nav { display: block; }
+            .page-header h1 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo"><img src="logo.png" alt="Barber Study Pro" style="height: 30px; vertical-align: middle; margin-right: 8px;">Barber Study Pro</a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="infection-control-quiz.html">Quizzes</a>
+            <a href="oklahoma-rules.html">Rules</a>
+        </nav>
+        <a href="index.html" class="btn-small">Start Free</a>
+    </header>
+
+    <section class="page-header">
+        <h1>Infection Control & Sanitation Quiz</h1>
+        <p>Test your knowledge with 10 practice questions</p>
+    </section>
+
+    <div class="quiz-container">
+        <!-- Start Screen -->
+        <div class="start-card" id="startScreen">
+            <h2>🧪 Ready to Test Your Knowledge?</h2>
+            <p>This quiz covers essential infection control and sanitation topics you'll need to know for your Oklahoma State Board exam.</p>
+            
+            <div class="quiz-info">
+                <div class="quiz-info-item">
+                    <div class="number">10</div>
+                    <div class="label">Questions</div>
+                </div>
+                <div class="quiz-info-item">
+                    <div class="number">A-D</div>
+                    <div class="label">Multiple Choice</div>
+                </div>
+                <div class="quiz-info-item">
+                    <div class="number">100%</div>
+                    <div class="label">Free</div>
+                </div>
+            </div>
+
+            <p style="color: #666; font-size: 0.9rem; margin-bottom: 25px;">You'll get immediate feedback after each question with detailed explanations.</p>
+            
+            <button class="btn-nav" onclick="startQuiz()">Start Quiz</button>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container" id="progressContainer" style="display: none;">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text">
+                <span>Question <span id="currentQuestion">1</span> of 10</span>
+                <span class="score-display">Score: <span id="currentScore">0</span>/10</span>
+            </div>
+        </div>
+
+        <!-- Question Cards -->
+        <div id="questionsContainer"></div>
+
+        <!-- Results Screen -->
+        <div class="results-card" id="resultsScreen">
+            <div class="results-icon" id="resultsIcon">🎉</div>
+            <h2 class="results-title" id="resultsTitle">Quiz Complete!</h2>
+            <div class="results-score" id="resultsScore">8/10</div>
+            <p class="results-message" id="resultsMessage">Great job! You're on your way to mastering infection control.</p>
+            
+            <div class="results-breakdown">
+                <h3>Question Breakdown</h3>
+                <div id="breakdownContainer"></div>
+            </div>
+
+            <button class="btn-nav" onclick="restartQuiz()" style="margin-top: 20px;">Retake Quiz</button>
+            <a href="index.html" class="btn-nav secondary" style="display: inline-block; text-decoration: none; margin-left: 10px;">Get Full Access</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="disclaimer">
+            <strong>Important Disclaimer:</strong> Barber Study Pro is an independent educational resource and is <strong>NOT affiliated with, endorsed by, or connected to</strong> the Oklahoma State Board of Cosmetology and Barbering, PSI (Psychological Services Inc.), NIC (National-Interstate Council), Prov, or any official licensing authority. All content is for study purposes only. Always verify current requirements with the official Oklahoma State Board.
+        </div>
+        <p>© 2026 Barber Study Pro. All Rights Reserved.</p>
+        <p><a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a> | <a href="oklahoma-rules.html">Oklahoma Rules</a> | <a href="infection-control-quiz.html">Free Quiz</a></p>
+    </footer>
+
+    <script>
+        // Quiz Data - 10 Infection Control Questions
+        const quizData = [
+            {
+                question: "What is the most effective way to kill bacteria, viruses, and fungi on non-porous tools?",
+                options: [
+                    "Washing with soap and water",
+                    "Using an EPA-registered disinfectant",
+                    "Wiping with alcohol",
+                    "Air drying"
+                ],
+                correct: 1,
+                explanation: "EPA-registered disinfectants are specifically formulated and tested to kill microorganisms on non-porous surfaces. Soap and water only clean (remove dirt), while proper disinfection requires chemicals that destroy pathogens."
+            },
+            {
+                question: "How long should tools be immersed in disinfectant solution for proper disinfection?",
+                options: [
+                    "30 seconds",
+                    "1 minute",
+                    "10 minutes or as directed by manufacturer",
+                    "1 hour"
+                ],
+                correct: 2,
+                explanation: "Most EPA-registered disinfectants require 10 minutes of contact time, but always follow the manufacturer's instructions on the product label. Contact time is critical for the chemical to effectively kill microorganisms."
+            },
+            {
+                question: "What is the difference between sanitation, disinfection, and sterilization?",
+                options: [
+                    "They are all the same process",
+                    "Sanitation reduces bacteria, disinfection kills most pathogens, sterilization kills all microorganisms",
+                    "Sanitation kills all germs, disinfection only cleans",
+                    "Sterilization is only for hospitals"
+                ],
+                correct: 1,
+                explanation: "Sanitation reduces the number of bacteria to safe levels. Disinfection destroys most pathogenic microorganisms (but not spores). Sterilization destroys ALL microbial life, including bacterial spores."
+            },
+            {
+                question: "When should you wash your hands during barbering services?",
+                options: [
+                    "Only at the beginning of the day",
+                    "Before and after each client, and after touching contaminated items",
+                    "Only when they look dirty",
+                    "Once per hour"
+                ],
+                correct: 1,
+                explanation: "Proper hand hygiene requires washing before and after each client service, after touching contaminated items, after using the restroom, and before eating. This prevents cross-contamination between clients."
+            },
+            {
+                question: "What should be done with a cut on a barber's hand before providing services?",
+                options: [
+                    "Ignore it if it's small",
+                    "Cover it with a waterproof bandage and wear gloves",
+                    "Just wash it with water",
+                    "Apply makeup to hide it"
+                ],
+                correct: 1,
+                explanation: "Any open cuts, sores, or wounds must be covered with a waterproof bandage or dressing, and gloves should be worn to prevent bloodborne pathogen transmission and protect both the barber and client."
+            },
+            {
+                question: "How should used razor blades be disposed of?",
+                options: [
+                    "In the regular trash",
+                    "In a sharps container",
+                    "Down the drain",
+                    "In a recycling bin"
+                ],
+                correct: 1,
+                explanation: "Used razor blades are considered sharps and must be disposed of in a puncture-resistant sharps container to prevent injury and potential bloodborne pathogen exposure. Never put sharps in regular trash."
+            },
+            {
+                question: "What is Universal Precautions in the barbershop setting?",
+                options: [
+                    "Treating all clients with respect",
+                    "Treating all blood and bodily fluids as potentially infectious",
+                    "Using the same tools for everyone",
+                    "Wearing gloves only when you see blood"
+                ],
+                correct: 1,
+                explanation: "Universal Precautions means treating ALL blood and certain bodily fluids as potentially infectious for bloodborne pathogens like HIV and hepatitis, regardless of whether blood is visible. This includes wearing appropriate PPE."
+            },
+            {
+                question: "How often should disinfectant solutions be changed?",
+                options: [
+                    "Once per week",
+                "When they become visibly dirty or per manufacturer's instructions",
+                    "Only when they smell bad",
+                    "Once per month"
+                ],
+                correct: 1,
+                explanation: "Disinfectant solutions should be changed when they become visibly contaminated with debris, hair, or soil, or according to the manufacturer's recommendations. Contaminated solutions lose effectiveness."
+            },
+            {
+                question: "What is the proper way to clean and disinfect combs and brushes?",
+                options: [
+                    "Wipe with a towel",
+                    "Remove hair, wash with soap and water, then immerse in disinfectant",
+                    "Spray with disinfectant only",
+                    "Rinse with hot water"
+                ],
+                correct: 1,
+                explanation: "The proper procedure is: 1) Remove all hair and debris, 2) Wash with soap and water to clean, 3) Rinse thoroughly, 4) Immerse completely in EPA-registered disinfectant for the required contact time."
+            },
+            {
+                question: "Which of the following is a bloodborne pathogen that barbers must be aware of?",
+                options: [
+                    "Common cold",
+                    "Hepatitis B and C",
+                    "Athlete's foot",
+                    "Dandruff"
+                ],
+                correct: 1,
+                explanation: "Hepatitis B and C are bloodborne pathogens transmitted through contact with infected blood. Barbers must follow strict protocols to prevent exposure, including proper disinfection and use of barriers when blood exposure is possible."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let userAnswers = [];
+        let answered = false;
+
+        function startQuiz() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('progressContainer').style.display = 'block';
+            renderQuestions();
+            showQuestion(0);
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+
+            quizData.forEach((q, index) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                questionCard.id = `question-${index}`;
+
+                let optionsHtml = '';
+                q.options.forEach((opt, optIndex) => {
+                    const letter = String.fromCharCode(65 + optIndex);
+                    optionsHtml += `
+                        <div class="option" onclick="selectOption(${index}, ${optIndex})" id="q${index}-opt${optIndex}">
+                            <div class="option-letter">${letter}</div>
+                            <div class="option-text">${opt}</div>
+                        </div>
+                    `;
+                });
+
+                questionCard.innerHTML = `
+                    <div class="question-number">Question ${index + 1} of 10</div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="options">
+                        ${optionsHtml}
+                    </div>
+                    <div class="feedback" id="feedback-${index}">
+                        <div class="feedback-title" id="feedback-title-${index}"></div>
+                        <div class="feedback-text" id="feedback-text-${index}"></div>
+                    </div>
+                    <div class="quiz-nav">
+                        <button class="btn-nav secondary" onclick="prevQuestion()" id="prevBtn-${index}" style="visibility: ${index === 0 ? 'hidden' : 'visible'}">Previous</button>
+                        <button class="btn-nav" onclick="nextQuestion()" id="nextBtn-${index}" disabled>Next</button>
+                    </div>
+                `;
+
+                container.appendChild(questionCard);
+            });
+        }
+
+        function showQuestion(index) {
+            document.querySelectorAll('.question-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.getElementById(`question-${index}`).classList.add('active');
+            
+            document.getElementById('currentQuestion').textContent = index + 1;
+            
+            const progress = ((index + 1) / quizData.length) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+            
+            answered = userAnswers[index] !== undefined;
+            updateNavButtons(index);
+        }
+
+        function selectOption(questionIndex, optionIndex) {
+            if (userAnswers[questionIndex] !== undefined) return;
+
+            userAnswers[questionIndex] = optionIndex;
+            answered = true;
+
+            const q = quizData[questionIndex];
+            const isCorrect = optionIndex === q.correct;
+
+            // Mark selected option
+            document.querySelectorAll(`#question-${questionIndex} .option`).forEach((opt, idx) => {
+                opt.classList.remove('selected');
+                opt.style.pointerEvents = 'none';
+                if (idx === optionIndex) {
+                    opt.classList.add(isCorrect ? 'correct' : 'incorrect');
+                }
+                if (idx === q.correct && !isCorrect) {
+                    opt.classList.add('correct');
+                }
+            });
+
+            // Show feedback
+            const feedback = document.getElementById(`feedback-${questionIndex}`);
+            const feedbackTitle = document.getElementById(`feedback-title-${questionIndex}`);
+            const feedbackText = document.getElementById(`feedback-text-${questionIndex}`);
+
+            if (isCorrect) {
+                score++;
+                feedback.className = 'feedback correct';
+                feedbackTitle.textContent = '✓ Correct!';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedbackTitle.textContent = '✗ Incorrect';
+            }
+
+            feedbackText.textContent = q.explanation;
+            document.getElementById('currentScore').textContent = score;
+
+            updateNavButtons(questionIndex);
+        }
+
+        function updateNavButtons(index) {
+            const nextBtn = document.getElementById(`nextBtn-${index}`);
+            if (userAnswers[index] !== undefined) {
+                nextBtn.disabled = false;
+                nextBtn.textContent = index === quizData.length - 1 ? 'See Results' : 'Next';
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            } else {
+                showResults();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        }
+
+        function showResults() {
+            document.getElementById('progressContainer').style.display = 'none';
+            document.querySelectorAll('.question-card').forEach(card => {
+                card.classList.remove('active');
+            });
+
+            const resultsScreen = document.getElementById('resultsScreen');
+            resultsScreen.classList.add('active');
+
+            const percentage = (score / quizData.length) * 100;
+            document.getElementById('resultsScore').textContent = `${score}/${quizData.length}`;
+
+            let icon, title, message;
+            if (percentage === 100) {
+                icon = '🏆';
+                title = 'Perfect Score!';
+                message = 'Outstanding! You have mastered infection control and sanitation.';
+            } else if (percentage >= 80) {
+                icon = '🎉';
+                title = 'Great Job!';
+                message = 'Well done! You have a solid understanding of infection control.';
+            } else if (percentage >= 60) {
+                icon = '👍';
+                title = 'Good Effort!';
+                message = 'You\'re on the right track. Review the explanations and try again!';
+            } else {
+                icon = '📚';
+                title = 'Keep Studying!';
+                message = 'Infection control is crucial for your exam. Review the material and retake the quiz.';
+            }
+
+            document.getElementById('resultsIcon').textContent = icon;
+            document.getElementById('resultsTitle').textContent = title;
+            document.getElementById('resultsMessage').textContent = message;
+
+            // Build breakdown
+            let breakdownHtml = '';
+            quizData.forEach((q, index) => {
+                const userAnswer = userAnswers[index];
+                const isCorrect = userAnswer === q.correct;
+                const status = isCorrect ? '✓' : '✗';
+                const statusColor = isCorrect ? '#22c55e' : '#ef4444';
+                
+                breakdownHtml += `
+                    <div class="breakdown-item">
+                        <span>Question ${index + 1}</span>
+                        <span style="color: ${statusColor}; font-weight: 600;">${status}</span>
+                    </div>
+                `;
+            });
+            document.getElementById('breakdownContainer').innerHTML = breakdownHtml;
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            userAnswers = [];
+            answered = false;
+
+            document.getElementById('resultsScreen').classList.remove('active');
+            document.getElementById('currentScore').textContent = '0';
+            
+            startQuiz();
+        }
+    </script>
+</body>
+</html>
