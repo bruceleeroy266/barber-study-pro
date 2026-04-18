@@ -3,209 +3,269 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barber Study Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Barber Study Pro | Pass Your Oklahoma State Board Exam</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
-            background: #0D0D0D;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            color: white;
+            background: #0a0a0a;
+            color: #fff;
+            line-height: 1.5;
         }
 
-        /* Header */
+        /* Sticky Header */
         header {
-            background: #1A1A1A;
-            border-bottom: 1px solid #2D2D2D;
-            padding: 15px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10,10,10,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #2a2a2a;
+            padding: 12px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            z-index: 1000;
         }
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #C9A227;
-            text-decoration: none;
-        }
-        .auth-links a {
-            color: #9CA3AF;
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 0.9rem;
-        }
-        .auth-links a:hover { color: #C9A227; }
-
-        /* Navigation */
-        nav {
-            background: #1A1A1A;
-            padding: 10px 20px;
-            border-bottom: 1px solid #2D2D2D;
-        }
-        nav a {
-            color: #555;
-            text-decoration: none;
-            margin-right: 25px;
-            font-size: 0.9rem;
-            cursor: not-allowed;
-        }
-        nav a.active { color: #C9A227; }
-
-        /* Main Content */
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-        }
-        .hero {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        .hero-icon {
-            font-size: 3rem;
-            margin-bottom: 10px;
-        }
-        h1 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-        .subtitle {
-            color: #9CA3AF;
-            font-size: 0.95rem;
-        }
-
-        /* Action Buttons - Disabled */
-        .actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            width: 100%;
-            max-width: 500px;
-        }
-        .action-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 30px 15px;
-            border-radius: 12px;
-            border: none;
-            font-size: 1rem;
-            font-weight: 600;
-            text-decoration: none;
-            color: white;
-            text-align: center;
-            min-height: 130px;
-            opacity: 0.5;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-        .btn-icon { font-size: 2.5rem; }
-        .btn-quiz { background: linear-gradient(135deg, #C9A227 0%, #A88420 100%); }
-        .btn-study { background: linear-gradient(135deg, #E5C158 0%, #C9A227 100%); color: #0D0D0D; }
-        .btn-progress { background: #1A1A1A; border: 2px solid #C9A227; }
-        .btn-exam { background: linear-gradient(135deg, #A88420 0%, #8B6914 100%); }
-
-        /* Login Prompt */
-        .login-prompt {
-            background: #1A1A1A;
-            border: 1px solid #C9A227;
-            border-radius: 8px;
-            padding: 15px 25px;
-            margin-top: 30px;
-            text-align: center;
-        }
-        .login-prompt p {
-            color: #9CA3AF;
-            margin-bottom: 10px;
-        }
-        .login-prompt a {
-            color: #C9A227;
+        .logo { font-size: 1.1rem; font-weight: 800; color: #D4AF37; text-decoration: none; }
+        nav { display: none; }
+        nav a { color: #888; text-decoration: none; margin-left: 20px; font-size: 0.85rem; }
+        nav a:hover { color: #D4AF37; }
+        .btn-small {
+            background: #D4AF37;
+            color: #0a0a0a;
+            padding: 8px 16px;
+            border-radius: 6px;
             text-decoration: none;
             font-weight: 600;
-        }
-        .login-prompt a:hover { text-decoration: underline; }
-
-        /* Footer */
-        footer {
-            background: #1A1A1A;
-            border-top: 1px solid #2D2D2D;
-            padding: 20px;
-            text-align: center;
-            color: #6B7280;
             font-size: 0.85rem;
         }
 
-        @media (max-width: 500px) {
-            .actions { grid-template-columns: 1fr; }
-            .action-btn { min-height: 80px; flex-direction: row; justify-content: flex-start; padding: 20px; }
-            nav a { margin-right: 15px; font-size: 0.85rem; }
+        /* Hero */
+        .hero {
+            padding: 100px 20px 40px;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .banner {
+            background: linear-gradient(90deg, #ef4444, #dc2626);
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 15px;
+        }
+        .hero p {
+            color: #888;
+            font-size: 1rem;
+            margin-bottom: 25px;
+        }
+        .btn-primary {
+            display: inline-block;
+            background: #D4AF37;
+            color: #0a0a0a;
+            padding: 14px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+        .btn-secondary {
+            display: inline-block;
+            color: #D4AF37;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-left: 15px;
+        }
+
+        /* Trust Bar */
+        .trust {
+            text-align: center;
+            padding: 15px 20px;
+            color: #666;
+            font-size: 0.8rem;
+            border-top: 1px solid #1a1a1a;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        /* Benefits */
+        .benefits {
+            padding: 30px 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .benefits h2 {
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #D4AF37;
+        }
+        .benefit-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .benefit-item {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+        .benefit-item strong {
+            color: #D4AF37;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* Features Grid */
+        .features {
+            padding: 30px 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .features h2 {
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #D4AF37;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+        .feature-item {
+            background: #1a1a1a;
+            padding: 15px 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.75rem;
+        }
+        .feature-icon { font-size: 1.5rem; margin-bottom: 5px; display: block; }
+
+        /* CTA Section */
+        .cta {
+            padding: 40px 20px;
+            text-align: center;
+            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+        }
+        .cta h2 { font-size: 1.5rem; margin-bottom: 10px; }
+        .cta p { color: #888; margin-bottom: 20px; }
+
+        /* Footer */
+        footer {
+            padding: 20px;
+            text-align: center;
+            color: #444;
+            font-size: 0.7rem;
+            border-top: 1px solid #1a1a1a;
+        }
+        footer a { color: #666; text-decoration: none; margin: 0 8px; }
+
+        @media (min-width: 768px) {
+            nav { display: block; }
+            h1 { font-size: 2.5rem; }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header>
         <a href="index.html" class="logo">✂️ Barber Study Pro</a>
-        <div class="auth-links">
-            <a href="login.html">Log In</a>
-            <a href="signup.html">Sign Up</a>
-        </div>
+        <nav>
+            <a href="login.html">Home</a>
+            <a href="login.html">Quizzes</a>
+            <a href="login.html">Flashcards</a>
+            <a href="login.html">Rules</a>
+            <a href="login.html">Exam</a>
+        </nav>
+        <a href="signup.html" class="btn-small">Start Free</a>
     </header>
 
-    <!-- Navigation -->
-    <nav>
-        <a href="login.html" class="active">Home</a>
-        <a href="login.html">Chapters</a>
-        <a href="login.html">Quizzes</a>
-        <a href="login.html">Progress</a>
-        <a href="login.html">Exam</a>
-    </nav>
+    <section class="hero">
+        <div class="banner">🎉 100% FREE During Launch</div>
+        <h1>Pass Your Oklahoma Barber State Board Exam on the First Try</h1>
+        <p>1,050+ Practice Questions • Oklahoma-Specific • Built by a Real Barber & Veteran</p>
+        <a href="signup.html" class="btn-primary">Start Studying Free Now</a>
+        <a href="login.html" class="btn-secondary">Try Free Sanitation Quiz →</a>
+    </section>
 
-    <!-- Main Content -->
-    <main>
-        <div class="hero">
-            <div class="hero-icon">✂️</div>
-            <h1>Master Your Barber License</h1>
-            <p class="subtitle">Pass your state board exam with confidence</p>
-        </div>
+    <div class="trust">
+        Built by a licensed barber • Oklahoma-focused • Mobile + Offline ready
+    </div>
 
-        <div class="actions">
-            <div class="action-btn btn-quiz">
-                <span class="btn-icon">🧪</span>
-                <span>Start Quiz</span>
+    <section class="benefits">
+        <h2>Why Students Choose Us</h2>
+        <div class="benefit-list">
+            <div class="benefit-item">
+                <strong>Oklahoma-Specific</strong>
+                Content tailored for OK state board
             </div>
-            <div class="action-btn btn-study">
-                <span class="btn-icon">📚</span>
-                <span>Study Topics</span>
+            <div class="benefit-item">
+                <strong>Instant Feedback</strong>
+                Detailed explanations for every answer
             </div>
-            <div class="action-btn btn-progress">
-                <span class="btn-icon">📊</span>
-                <span>View Progress</span>
+            <div class="benefit-item">
+                <strong>Progress Tracking</strong>
+                Know your weak areas instantly
             </div>
-            <div class="action-btn btn-exam">
-                <span class="btn-icon">🎯</span>
-                <span>Practice Exam</span>
+            <div class="benefit-item">
+                <strong>1,050+ Questions</strong>
+                21 chapters, 385+ flashcards
             </div>
         </div>
+    </section>
 
-        <div class="login-prompt">
-            <p>Please log in or sign up to access all features</p>
-            <a href="login.html">Log In</a> or <a href="signup.html">Sign Up</a>
+    <section class="features">
+        <h2>Everything You Need to Pass</h2>
+        <div class="feature-grid">
+            <div class="feature-item">
+                <span class="feature-icon">📝</span>
+                <div>Quizzes & Exams</div>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">🗂️</span>
+                <div>Flashcards</div>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">📋</span>
+                <div>OK Rules Guide</div>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">📊</span>
+                <div>Progress</div>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">📱</span>
+                <div>Offline Mode</div>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">🎧</span>
+                <div>Audio Learning</div>
+            </div>
         </div>
-    </main>
+    </section>
 
-    <!-- Footer -->
+    <section class="cta">
+        <h2>Ready to Pass Your Exam?</h2>
+        <p>Join thousands of students who passed on their first try</p>
+        <a href="signup.html" class="btn-primary">Get Free Access Now</a>
+    </section>
+
     <footer>
-        <p>© 2026 Barber Study Pro. Pass your state board exam.</p>
+        <p>© 2026 Barber Study Pro. All Rights Reserved.</p>
+        <p>Not affiliated with the Oklahoma State Board, PSI, NIC, or Prov.</p>
+        <p><a href="privacy.html">Privacy</a> | <a href="terms.html">Terms</a> | Updated: April 2026</p>
     </footer>
 </body>
 </html>
