@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Cuts by Malenny</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-body">
+    <!-- Login Check Script - Must be first -->
+    <script>
+        // Check if user is logged in
+        // NOTE FOR CLAUDE CODE: Replace with secure session validation
+        if (!sessionStorage.getItem('adminLoggedIn')) {
+            window.location.href = 'admin-login.html';
+        }
+    </script>
+    
+    <!-- Admin Header -->
+    <header class="admin-header">
+        <div class="container">
+            <div class="admin-brand">
+                <span class="logo-text">Cuts by Malenny</span>
+                <span class="admin-label">Admin</span>
+            </div>
+            <nav class="admin-nav">
+                <a href="#today" class="active">Today's Appointments</a>
+                <a href="#upcoming">Upcoming</a>
+                <a href="#history">History</a>
+                <a href="#settings">Settings</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Admin Main Content -->
+    <main class="admin-main">
+        <div class="container">
+            
+            <!-- Stats Overview -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-calendar-day"></i>
+                    <div class="stat-info">
+                        <span class="stat-number">5</span>
+                        <span class="stat-label">Today</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-calendar-week"></i>
+                    <div class="stat-info">
+                        <span class="stat-number">18</span>
+                        <span class="stat-label">This Week</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-dollar-sign"></i>
+                    <div class="stat-info">
+                        <span class="stat-number">$450</span>
+                        <span class="stat-label">Today's Revenue</span>
+                    </div>
+                </div>
+                <div class="stat-card warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div class="stat-info">
+                        <span class="stat-number">2</span>
+                        <span class="stat-label">No-Shows (Week)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Today's Appointments -->
+            <section class="appointments-section" id="today">
+                <div class="section-header">
+                    <h2><i class="fas fa-calendar-day"></i> Today's Appointments</h2>
+                    <span class="date-display">Monday, March 24, 2026</span>
+                </div>
+
+                <div class="appointments-list">
+                    <!-- Sample Appointment 1 -->
+                    <div class="appointment-card">
+                        <div class="appointment-time">
+                            <span class="time">9:00 AM</span>
+                            <span class="duration">30 min</span>
+                        </div>
+                        <div class="appointment-details">
+                            <h3>John Smith</h3>
+                            <p class="service">Adult Regular Haircut - $35</p>
+                            <p class="contact"><i class="fas fa-phone"></i> (405) 555-0123</p>
+                            <div class="appointment-status status-confirmed">
+                                <i class="fas fa-check-circle"></i> Confirmed
+                            </div>
+                        </div>
+                        <div class="appointment-actions">
+                            <button class="btn btn-success" onclick="markAsCompleted(this)">
+                                <i class="fas fa-check"></i> Completed
+                            </button>
+                            <button class="btn btn-warning" onclick="markAsNoShow(this)">
+                                <i class="fas fa-times"></i> No-Show
+                            </button>
+                            <button class="btn btn-secondary" onclick="cancelAppointment(this)">
+                                <i class="fas fa-ban"></i> Cancel
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sample Appointment 2 -->
+                    <div class="appointment-card">
+                        <div class="appointment-time">
+                            <span class="time">10:00 AM</span>
+                            <span class="duration">1 hour</span>
+                        </div>
+                        <div class="appointment-details">
+                            <h3>Mike Johnson</h3>
+                            <p class="service">KINGS VIP - $100</p>
+                            <p class="contact"><i class="fas fa-phone"></i> (405) 555-0456</p>
+                            <div class="appointment-status status-confirmed">
+                                <i class="fas fa-check-circle"></i> Confirmed
+                            </div>
+                        </div>
+                        <div class="appointment-actions">
+                            <button class="btn btn-success" onclick="markAsCompleted(this)">
+                                <i class="fas fa-check"></i> Completed
+                            </button>
+                            <button class="btn btn-warning" onclick="markAsNoShow(this)">
+                                <i class="fas fa-times"></i> No-Show
+                            </button>
+                            <button class="btn btn-secondary" onclick="cancelAppointment(this)">
+                                <i class="fas fa-ban"></i> Cancel
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sample Appointment 3 -->
+                    <div class="appointment-card">
+                        <div class="appointment-time">
+                            <span class="time">2:00 PM</span>
+                            <span class="duration">30 min</span>
+                        </div>
+                        <div class="appointment-details">
+                            <h3>Carlos Rodriguez</h3>
+                            <p class="service">Adult Haircut & Beard - $55</p>
+                            <p class="contact"><i class="fas fa-phone"></i> (405) 555-0789</p>
+                            <div class="appointment-status status-confirmed">
+                                <i class="fas fa-check-circle"></i> Confirmed
+                            </div>
+                        </div>
+                        <div class="appointment-actions">
+                            <button class="btn btn-success" onclick="markAsCompleted(this)">
+                                <i class="fas fa-check"></i> Completed
+                            </button>
+                            <button class="btn btn-warning" onclick="markAsNoShow(this)">
+                                <i class="fas fa-times"></i> No-Show
+                            </button>
+                            <button class="btn btn-secondary" onclick="cancelAppointment(this)">
+                                <i class="fas fa-ban"></i> Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Action Legend -->
+            <section class="action-legend">
+                <h3><i class="fas fa-info-circle"></i> How to Manage Appointments</h3>
+                <div class="legend-grid">
+                    <div class="legend-item">
+                        <span class="legend-btn btn-success"><i class="fas fa-check"></i> Completed</span>
+                        <p>Customer showed up and service was completed. Deposit applied to payment.</p>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-btn btn-warning"><i class="fas fa-times"></i> No-Show</span>
+                        <p>Customer didn't arrive within 15 minutes. Deposit forfeited. Future bookings may require prepayment.</p>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-btn btn-secondary"><i class="fas fa-ban"></i> Cancel</span>
+                        <p>Customer cancelled (24+ hrs = refund deposit, &lt;24 hrs = forfeit deposit).</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- No-Show Management -->
+            <section class="noshow-section" id="noshow">
+                <h2><i class="fas fa-exclamation-triangle"></i> No-Show Management</h2>
+                <div class="noshow-table-container">
+                    <table class="noshow-table">
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Service</th>
+                                <th>Deposit</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>David Lee</td>
+                                <td>Mar 22, 2026</td>
+                                <td>Adult Haircut</td>
+                                <td>$10</td>
+                                <td><span class="badge badge-forfeited">Forfeited</span></td>
+                                <td><button class="btn btn-small">Charge Fee</button></td>
+                            </tr>
+                            <tr>
+                                <td>James Wilson</td>
+                                <td>Mar 20, 2026</td>
+                                <td>Beard Trim</td>
+                                <td>$10</td>
+                                <td><span class="badge badge-forfeited">Forfeited</span></td>
+                                <td><button class="btn btn-small">Charge Fee</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="noshow-note">
+                    <p><strong>Note:</strong> No-show deposits are automatically forfeited. You can optionally charge an additional no-show fee to the customer's card on file (requires Stripe backend).</p>
+                </div>
+            </section>
+
+            <!-- Customer Lookup -->
+            <section class="lookup-section">
+                <h2><i class="fas fa-search"></i> Customer Lookup</h2>
+                <div class="lookup-form">
+                    <input type="text" placeholder="Search by name or phone..." class="lookup-input">
+                    <button class="btn btn-primary">Search</button>
+                </div>
+                <p class="lookup-hint">Find customer history, past no-shows, and booking frequency.</p>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title">Confirm Action</h3>
+            <p id="modal-message">Are you sure?</p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" id="modal-confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$100K Barber Pyramid</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .subtitle {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .game-container {
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .screen {
+            display: none;
+        }
+        
+        .screen.active {
+            display: block;
+        }
+        
+        /* Menu Screen */
+        .menu-btn {
+            width: 100%;
+            padding: 20px;
+            margin: 10px 0;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .menu-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        
+        .play-btn {
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: #1a1a2e;
+            font-weight: bold;
+        }
+        
+        .rules-btn {
+            background: linear-gradient(135deg, #4a90d9, #357abd);
+            color: #fff;
+        }
+        
+        /* Category Selection */
+        .category-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .category-btn {
+            padding: 15px 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .category-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .category-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Game Screen */
+        .timer-bar {
+            width: 100%;
+            height: 10px;
+            background: #333;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .timer-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff00, #ffff00, #ff0000);
+            transition: width 0.1s linear;
+        }
+        
+        .word-display {
+            background: linear-gradient(135deg, #2d3748, #1a202c);
+            border: 3px solid #ffd700;
+            border-radius: 15px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .word-display h2 {
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .score-display {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .score-display span {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            padding: 15px 25px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: bold;
+        }
+        
+        .correct-btn {
+            background: linear-gradient(135deg, #00b894, #00a383);
+            color: #fff;
+        }
+        
+        .skip-btn {
+            background: linear-gradient(135deg, #e17055, #d63031);
+            color: #fff;
+        }
+        
+        .start-round-btn {
+            background: linear-gradient(135deg, #00b894, #00a383);
+            color: #fff;
+            width: 100%;
+            padding: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .back-btn {
+            background: #555;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        /* Rules Screen */
+        .rules-content {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            line-height: 1.6;
+        }
+        
+        .rules-content h3 {
+            color: #ffd700;
+            margin: 15px 0 10px;
+        }
+        
+        .rules-content ul {
+            margin-left: 20px;
+        }
+        
+        .rules-content li {
+            margin: 5px 0;
+        }
+        
+        /* Results Screen */
+        .results {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .results h2 {
+            font-size: 2.5rem;
+            color: #ffd700;
+            margin-bottom: 20px;
+        }
+        
+        .final-score {
+            font-size: 3rem;
+            margin: 20px 0;
+        }
+        
+        .word-list {
+            text-align: left;
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .word-list h4 {
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+        
+        .word-item {
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .word-item.correct {
+            color: #00b894;
+        }
+        
+        .word-item.skipped {
+            color: #e17055;
+        }
+    </style>
+</head>
+<body>
+    <h1>💈 $100K Barber Pyramid 💈</h1>
+    <p class="subtitle">Master Your Barbering Terms</p>
+    
+    <div class="game-container">
+        <!-- Menu Screen -->
+        <div id="menuScreen" class="screen active">
+            <button class="menu-btn play-btn" onclick="showCategorySelect()">▶ Play Game</button>
+            <button class="menu-btn rules-btn" onclick="showRules()">📋 Rules</button>
+        </div>
+        
+        <!-- Category Selection -->
+        <div id="categoryScreen" class="screen">
+            <h2 style="text-align:center; margin-bottom:20px;">Select a Category</h2>
+            <div class="category-grid" id="categoryGrid"></div>
+            <button class="back-btn" onclick="showMenu()">← Back to Menu</button>
+        </div>
+        
+        <!-- Game Screen -->
+        <div id="gameScreen" class="screen">
+            <div class="timer-bar">
+                <div class="timer-fill" id="timerFill"></div>
+            </div>
+            <div class="score-display">Score: <span id="score">0</span></div>
+            <div class="word-display">
+                <h2 id="currentWord">Press Start to Begin</h2>
+            </div>
+            <div class="controls">
+                <button class="control-btn start-round-btn" id="startBtn" onclick="startRound()">Start Round</button>
+                <button class="control-btn correct-btn" id="correctBtn" onclick="markCorrect()" style="display:none;">✓ Got It!</button>
+                <button class="control-btn skip-btn" id="skipBtn" onclick="skipWord()" style="display:none;">✗ Skip</button>
+            </div>
+            <button class="back-btn" onclick="endGame()">End Game</button>
+        </div>
+        
+        <!-- Rules Screen -->
+        <div id="rulesScreen" class="screen">
+            <div class="rules-content">
+                <h2 style="text-align:center; margin-bottom:20px; color:#ffd700;">How to Play</h2>
+                
+                <h3>The Goal</h3>
+                <p>Get your partner to guess as many barbering terms as possible before time runs out!</p>
+                
+                <h3>Giving Clues</h3>
+                <p><strong>✓ You CAN:</strong></p>
+                <ul>
+                    <li>Describe the term</li>
+                    <li>Use synonyms</li>
+                    <li>Act it out</li>
+                    <li>Give examples</li>
+                </ul>
+                
+                <p><strong>✗ You CANNOT:</strong></p>
+                <ul>
+                    <li>Say the word itself</li>
+                    <li>Use "rhymes with" or "sounds like"</li>
+                    <li>Use parts of the word (e.g., "hair" for "haircut")</li>
+                    <li>Use gestures that spell out the word</li>
+                </ul>
+                
+                <h3>Scoring</h3>
+                <ul>
+                    <li>Each correct guess: <strong>10 points</strong></li>
+                    <li>Complete all 6 words: <strong>Bonus 20 points</strong></li>
+                    <li>Skipped words: <strong>0 points</strong></li>
+                </ul>
+                
+                <h3>Time Limit</h3>
+                <p>You have <strong>60 seconds</strong> per category. Work fast!</p>
+            </div>
+            <button class="back-btn" onclick="showMenu()">← Back to Menu</button>
+        </div>
+        
+        <!-- Results Screen -->
+        <div id="resultsScreen" class="screen">
+            <div class="results">
+                <h2>Round Complete!</h2>
+                <div class="final-score"><span id="finalScore">0</span> pts</div>
+                <div class="word-list">
+                    <h4>Words Played:</h4>
+                    <div id="wordList"></div>
+                </div>
+                <button class="menu-btn play-btn" onclick="showCategorySelect()">Play Again</button>
+                <button class="back-btn" onclick="showMenu()">Main Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game Data
+        const categories = {
+            haircuts: {
+                name: "Haircutting",
+                words: ["Taper", "Fade", "Blend", "Sectioning", "Overcomb", "Clipper-over-fingers", "Texturizing", "Point cutting", "Layering", "Graduation"]
+            },
+            tools: {
+                name: "Tools & Equipment",
+                words: ["Clippers", "Shears", "Trimmers", "Guards", "Neck duster", "Straight razor", "Barbicide", "Cape", "Comb", "Clipper oil"]
+            },
+            hairTypes: {
+                name: "Hair Types",
+                words: ["Straight", "Wavy", "Curly", "Coily", "Fine", "Medium", "Coarse", "Density", "Porosity", "Elasticity"]
+            },
+            facialHair: {
+                name: "Facial Hair",
+                words: ["Beard", "Mustache", "Goatee", "Sideburns", "Lineup", "Hot towel shave", "Beard oil", "Neck cleanup", "Stubble", "Van Dyke"]
+            },
+            sanitation: {
+                name: "Sanitation",
+                words: ["Disinfection", "Sterilization", "Universal precautions", "Blood spill", "License", "State board", "First aid", "Cross-contamination", "Sanitizer", "Autoclave"]
+            },
+            chemical: {
+                name: "Chemical Services",
+                words: ["Relaxer", "Texturizer", "Perm", "Neutralizer", "Developer", "Bleach", "Toner", "Porosity", "Virgin hair", "Retouch"]
+            },
+            scalp: {
+                name: "Scalp Conditions",
+                words: ["Dandruff", "Alopecia", "Dry scalp", "Oily scalp", "Psoriasis", "Seborrhea", "Folliculitis", "Ringworm", "Lice", "Dry hair"]
+            },
+            history: {
+                name: "Barber History",
+                words: ["Straight razor", "Hot lather", "Barbershop quartet", "Barber pole", "Military cuts", "Fade origin", "Master barber", "Apprenticeship", "Pole colors", "Tonsorial"]
+            }
+        };
+        
+        // Game State
+        let currentCategory = null;
+        let currentWords = [];
+        let currentWordIndex = 0;
+        let score = 0;
+        let timer = null;
+        let timeLeft = 60;
+        let wordResults = [];
+        let isPlaying = false;
+        
+        // Screen Navigation
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+        
+        function showMenu() {
+            showScreen('menuScreen');
+        }
+        
+        function showRules() {
+            showScreen('rulesScreen');
+        }
+        
+        function showCategorySelect() {
+            const grid = document.getElementById('categoryGrid');
+            grid.innerHTML = '';
+            
+            Object.keys(categories).forEach(key => {
+                const btn = document.createElement('button');
+                btn.className = 'category-btn';
+                btn.textContent = categories[key].name;
+                btn.onclick = () => startGame(key);
+                grid.appendChild(btn);
+            });
+            
+            showScreen('categoryScreen');
+        }
+        
+        function startGame(categoryKey) {
+            currentCategory = categories[categoryKey];
+            currentWords = [...currentCategory.words].sort(() => Math.random() - 0.5).slice(0, 6);
+            currentWordIndex = 0;
+            score = 0;
+            wordResults = [];
+            timeLeft = 60;
+            isPlaying = false;
+            
+            document.getElementById('score').textContent = '0';
+            document.getElementById('currentWord').textContent = 'Press Start to Begin';
+            document.getElementById('timerFill').style.width = '100%';
+            document.getElementById('startBtn').style.display = 'block';
+            document.getElementById('correctBtn').style.display = 'none';
+            document.getElementById('skipBtn').style.display = 'none';
+            
+            showScreen('gameScreen');
+        }
+        
+        function startRound() {
+            isPlaying = true;
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('correctBtn').style.display = 'inline-block';
+            document.getElementById('skipBtn').style.display = 'inline-block';
+            
+            showNextWord();
+            
+            timer = setInterval(() => {
+                timeLeft -= 0.1;
+                const pct = (timeLeft / 60) * 100;
+                document.getElementById('timerFill').style.width = pct + '%';
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 100);
+        }
+        
+        function showNextWord() {
+            if (currentWordIndex >= currentWords.length) {
+                // Bonus for completing all words
+                score += 20;
+                document.getElementById('score').textContent = score;
+                endGame();
+                return;
+            }
+            
+            document.getElementById('currentWord').textContent = currentWords[currentWordIndex];
+        }
+        
+        function markCorrect() {
+            if (!isPlaying) return;
+            
+            wordResults.push({ word: currentWords[currentWordIndex], correct: true });
+            score += 10;
+            document.getElementById('score').textContent = score;
+            currentWordIndex++;
+            showNextWord();
+        }
+        
+        function skipWord() {
+            if (!isPlaying) return;
+            
+            wordResults.push({ word: currentWords[currentWordIndex], correct: false });
+            currentWordIndex++;
+            showNextWord();
+        }
+        
+        function endGame() {
+            isPlaying = false;
+            clearInterval(timer);
+            
+            document.getElementById('finalScore').textContent = score;
+            
+            const wordListDiv = document.getElementById('wordList');
+            wordListDiv.innerHTML = '';
+            
+            wordResults.forEach(result => {
+                const div = document.createElement('div');
+                div.className = 'word-item ' + (result.correct ? 'correct' : 'skipped');
+                div.textContent = (result.correct ? '✓ ' : '✗ ') + result.word;
+                wordListDiv.appendChild(div);
+            });
+            
+            // Add unplayed words if time ran out
+            for (let i = currentWordIndex; i < currentWords.length; i++) {
+                const div = document.createElement('div');
+                div.className = 'word-item skipped';
+                div.textContent = '○ ' + currentWords[i] + ' (unplayed)';
+                wordListDiv.appendChild(div);
+            }
+            
+            showScreen('resultsScreen');
+        }
+    </script>
+</body>
+</html>

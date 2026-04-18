@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barber Pyramid - Printable Cards</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        @page {
+            size: letter;
+            margin: 0.5in;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 30px;
+            background: #2d3748;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .print-btn:hover {
+            background: #1a202c;
+        }
+        
+        @media print {
+            .print-btn {
+                display: none;
+            }
+            body {
+                background: white;
+                padding: 0;
+            }
+        }
+        
+        .page {
+            width: 8.5in;
+            min-height: 11in;
+            background: white;
+            margin: 0 auto 20px;
+            padding: 0.5in;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            page-break-after: always;
+        }
+        
+        .page:last-child {
+            page-break-after: auto;
+        }
+        
+        .title-page {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 10in;
+        }
+        
+        .title-page h1 {
+            font-size: 3rem;
+            color: #1a202c;
+            margin-bottom: 20px;
+        }
+        
+        .title-page .subtitle {
+            font-size: 1.5rem;
+            color: #666;
+            margin-bottom: 40px;
+        }
+        
+        .title-page .info {
+            font-size: 1rem;
+            color: #888;
+            line-height: 1.8;
+        }
+        
+        .category-page h2 {
+            text-align: center;
+            font-size: 2rem;
+            color: #1a202c;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #ffd700;
+        }
+        
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .card {
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            height: 3.5in;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .card-header {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .card-word {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #1a202c;
+            text-transform: uppercase;
+        }
+        
+        .card-footer {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #999;
+            margin-top: 10px;
+        }
+        
+        .card-back {
+            background: linear-gradient(135deg, #1a202c, #2d3748);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .card-back-content {
+            text-align: center;
+        }
+        
+        .card-back-content h3 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .card-back-content p {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        
+        .rules-page h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #1a202c;
+        }
+        
+        .rules-section {
+            margin-bottom: 25px;
+        }
+        
+        .rules-section h3 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .rules-section ul {
+            margin-left: 25px;
+        }
+        
+        .rules-section li {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+        
+        .checklist {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .checklist h3 {
+            margin-bottom: 15px;
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #333;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn" onclick="window.print()">🖨️ Print Cards</button>
+    
+    <!-- Title Page -->
+    <div class="page title-page">
+        <h1>💈 $100K BARBER PYRAMID 💈</h1>
+        <p class="subtitle">Printable Card Deck</p>
+        <div class="info">
+            <p>8 Categories • 80 Terms</p>
+            <p>Study Guide & Game Cards</p>
+            <p style="margin-top: 30px;">For Barber & Cosmetology Students</p>
+        </div>
+    </div>
+    
+    <!-- Rules Page -->
+    <div class="page rules-page">
+        <h2>📋 How to Play</h2>
+        
+        <div class="rules-section">
+            <h3>The Goal</h3>
+            <p>Get your partner to guess as many barbering terms as possible before time runs out!</p>
+        </div>
+        
+        <div class="rules-section">
+            <h3>✓ You CAN:</h3>
+            <ul>
+                <li>Describe the term</li>
+                <li>Use synonyms</li>
+                <li>Act it out</li>
+                <li>Give examples</li>
+            </ul>
+        </div>
+        
+        <div class="rules-section">
+            <h3>✗ You CANNOT:</h3>
+            <ul>
+                <li>Say the word itself</li>
+                <li>Use "rhymes with" or "sounds like"</li>
+                <li>Use parts of the word (e.g., "hair" for "haircut")</li>
+                <li>Use gestures that spell out the word</li>
+            </ul>
+        </div>
+        
+        <div class="rules-section">
+            <h3>Scoring</h3>
+            <ul>
+                <li>Each correct guess: <strong>10 points</strong></li>
+                <li>Complete all 6 words: <strong>Bonus 20 points</strong></li>
+                <li>Time limit: <strong>60 seconds per round</strong></li>
+            </ul>
+        </div>
+        
+        <div class="checklist">
+            <h3>Categories Included:</h3>
+            <div class="checklist-item"><div class="checkbox"></div> Haircutting Fundamentals</div>
+            <div class="checklist-item"><div class="checkbox"></div> Tools & Equipment</div>
+            <div class="checklist-item"><div class="checkbox"></div> Hair Types & Textures</div>
+            <div class="checklist-item"><div class="checkbox"></div> Facial Hair</div>
+            <div class="checklist-item"><div class="checkbox"></div> Sanitation & Safety</div>
+            <div class="checklist-item"><div class="checkbox"></div> Chemical Services</div>
+            <div class="checklist-item"><div class="checkbox"></div> Scalp & Hair Conditions</div>
+            <div class="checklist-item"><div class="checkbox"></div> Barber History & Culture</div>
+        </div>
+    </div>
+    
+    <!-- Category 1: Haircutting -->
+    <div class="page category-page">
+        <h2>✂️ HAIRCUTTING FUNDAMENTALS</h2>
+        <div class="cards-grid">
+            <div class="card"><div class="card-header">Category 1</div><div class="card-word">Taper</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 1</div><div class="card-word">Fade</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 1</div><div class="card-word">Blend</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 1</div><div class="card-word">Sectioning</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 1</div><div class="card-word">Overcomb</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 1</div><div class="card-word">Clipper-over-fingers</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 1</div><div class="card-word">Texturizing</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 1</div><div class="card-word">Point Cutting</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 1</div><div class="card-word">Layering</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 1</div><div class="card-word">Graduation</div><div class="card-footer">$100K Barber Pyramid</div></div>
+        </div>
+    </div>
+    
+    <!-- Category 2: Tools -->
+    <div class="page category-page">
+        <h2>🔧 TOOLS & EQUIPMENT</h2>
+        <div class="cards-grid">
+            <div class="card"><div class="card-header">Category 2</div><div class="card-word">Clippers</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 2</div><div class="card-word">Shears</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 2</div><div class="card-word">Trimmers</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 2</div><div class="card-word">Guards</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 2</div><div class="card-word">Neck Duster</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 2</div><div class="card-word">Straight Razor</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 2</div><div class="card-word">Barbicide</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 2</div><div class="card-word">Cape</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 2</div><div class="card-word">Comb</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 2</div><div class="card-word">Clipper Oil</div><div class="card-footer">$100K Barber Pyramid</div></div>
+        </div>
+    </div>
+    
+    <!-- Category 3: Hair Types -->
+    <div class="page category-page">
+        <h2>🌀 HAIR TYPES & TEXTURES</h2>
+        <div class="cards-grid">
+            <div class="card"><div class="card-header">Category 3</div><div class="card-word">Straight</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 3</div><div class="card-word">Wavy</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 3</div><div class="card-word">Curly</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 3</div><div class="card-word">Coily</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 3</div><div class="card-word">Fine</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 3</div><div class="card-word">Medium</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 3</div><div class="card-word">Coarse</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 3</div><div class="card-word">Density</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 3</div><div class="card-word">Porosity</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 3</div><div class="card-word">Elasticity</div><div class="card-footer">$100K Barber Pyramid</div></div>
+        </div>
+    </div>
+    
+    <!-- Category 4: Facial Hair -->
+    <div class="page category-page">
+        <h2>🧔 FACIAL HAIR</h2>
+        <div class="cards-grid">
+            <div class="card"><div class="card-header">Category 4</div><div class="card-word">Beard</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 4</div><div class="card-word">Mustache</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 4</div><div class="card-word">Goatee</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 4</div><div class="card-word">Sideburns</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 4</div><div class="card-word">Lineup</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 4</div><div class="card-word">Hot Towel Shave</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 4</div><div class="card-word">Beard Oil</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 4</div><div class="card-word">Neck Cleanup</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 4</div><div class="card-word">Stubble</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 4</div><div class="card-word">Van Dyke</div><div class="card-footer">$100K Barber Pyramid</div></div>
+        </div>
+    </div>
+    
+    <!-- Category 5: Sanitation -->
+    <div class="page category-page">
+        <h2>🧼 SANITATION & SAFETY</h2>
+        <div class="cards-grid">
+            <div class="card"><div class="card-header">Category 5</div><div class="card-word">Disinfection</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 5</div><div class="card-word">Sterilization</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 5</div><div class="card-word">Universal Precautions</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 5</div><div class="card-word">Blood Spill</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 5</div><div class="card-word">License</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 5</div><div class="card-word">State Board</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 5</div><div class="card-word">First Aid</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 5</div><div class="card-word">Cross-Contamination</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 5</div><div class="card-word">Sanitizer</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 5</div><div class="card-word">Autoclave</div><div class="card-footer">$100K Barber Pyramid</div></div>
+        </div>
+    </div>
+    
+    <!-- Category 6: Chemical Services -->
+    <div class="page category-page">
+        <h2>⚗️ CHEMICAL SERVICES</h2>
+        <div class="cards-grid">
+            <div class="card"><div class="card-header">Category 6</div><div class="card-word">Relaxer</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 6</div><div class="card-word">Texturizer</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 6</div><div class="card-word">Perm</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 6</div><div class="card-word">Neutralizer</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 6</div><div class="card-word">Developer</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 6</div><div class="card-word">Bleach</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 6</div><div class="card-word">Toner</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 6</div><div class="card-word">Virgin Hair</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 6</div><div class="card-word">Retouch</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 6</div><div class="card-word">Processing Time</div><div class="card-footer">$100K Barber Pyramid</div></div>
+        </div>
+    </div>
+    
+    <!-- Category 7: Scalp Conditions -->
+    <div class="page category-page">
+        <h2>🔬 SCALP & HAIR CONDITIONS</h2>
+        <div class="cards-grid">
+            <div class="card"><div class="card-header">Category 7</div><div class="card-word">Dandruff</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 7</div><div class="card-word">Alopecia</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 7</div><div class="card-word">Dry Scalp</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 7</div><div class="card-word">Oily Scalp</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 7</div><div class="card-word">Psoriasis</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 7</div><div class="card-word">Seborrhea</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 7</div><div class="card-word">Folliculitis</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 7</div><div class="card-word">Ringworm</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 7</div><div class="card-word">Lice</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 7</div><div class="card-word">Dry Hair</div><div class="card-footer">$100K Barber Pyramid</div></div>
+        </div>
+    </div>
+    
+    <!-- Category 8: Barber History -->
+    <div class="page category-page">
+        <h2>📜 BARBER HISTORY & CULTURE</h2>
+        <div class="cards-grid">
+            <div class="card"><div class="card-header">Category 8</div><div class="card-word">Straight Razor</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 8</div><div class="card-word">Hot Lather</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 8</div><div class="card-word">Barbershop Quartet</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 8</div><div class="card-word">Barber Pole</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 8</div><div class="card-word">Military Cuts</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 8</div><div class="card-word">Fade Origin</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 8</div><div class="card-word">Master Barber</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 8</div><div class="card-word">Apprenticeship</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 8</div><div class="card-word">Pole Colors</div><div class="card-footer">$100K Barber Pyramid</div></div>
+            <div class="card"><div class="card-header">Category 8</div><div class="card-word">Tonsorial</div><div class="card-footer">$100K Barber Pyramid</div></div>
+        </div>
+    </div>
+    
+    <!-- Card Backs Page -->
+    <div class="page category-page">
+        <h2 style="text-align:center; margin-bottom:30px;">Card Backs (Print on Reverse)</h2>
+        <div class="cards-grid">
+            <div class="card card-back"><div class="card-back-content"><h3>💈</h3><p>$100K<br>BARBER<br>PYRAMID</p></div></div>
+            <div class="card card-back"><div class="card-back-content"><h3>💈</h3><p>$100K<br>BARBER<br>PYRAMID</p></div></div>
+            <div class="card card-back"><div class="card-back-content"><h3>💈</h3><p>$100K<br>BARBER<br>PYRAMID</p></div></div>
+            <div class="card card-back"><div class="card-back-content"><h3>💈</h3><p>$100K<br>BARBER<br>PYRAMID</p></div></div>
+            <div class="card card-back"><div class="card-back-content"><h3>💈</h3><p>$100K<br>BARBER<br>PYRAMID</p></div></div>
+            <div class="card card-back"><div class="card-back-content"><h3>💈</h3><p>$100K<br>BARBER<br>PYRAMID</p></div></div>
+            <div class="card card-back"><div class="card-back-content"><h3>💈</h3><p>$100K<br>BARBER<br>PYRAMID</p></div></div>
+            <div class="card card-back"><div class="card-back-content"><h3>💈</h3><p>$100K<br>BARBER<br>PYRAMID</p></div></div>
+            <div class="card card-back"><div class="card-back-content"><h3>💈</h3><p>$100K<br>BARBER<br>PYRAMID</p></div></div>
+            <div class="card card-back"><div class="card-back-content"><h3>💈</h3><p>$100K<br>BARBER<br>PYRAMID</p></div></div>
+        </div>
+    </div>
+</body>
+</html>

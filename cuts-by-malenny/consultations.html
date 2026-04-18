@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Consultations - Cuts by Malenny</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <style>
+        .consultation-form {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .form-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-section:last-child {
+            border-bottom: none;
+        }
+        
+        .form-section h3 {
+            color: #d4af37;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin: 1rem 0;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+        }
+        
+        .previous-service {
+            background: #f9f9f9;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        
+        .previous-service label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .previous-service-details {
+            display: none;
+            margin-top: 0.5rem;
+            padding-left: 1.5rem;
+        }
+        
+        .previous-service-details.visible {
+            display: block;
+        }
+        
+        .allergy-alert {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 4px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .allergy-alert.severe {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        
+        .allergy-alert h4 {
+            margin: 0 0 0.5rem 0;
+            color: #856404;
+        }
+        
+        .allergy-alert.severe h4 {
+            color: #721c24;
+        }
+        
+        .client-search {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .client-search input {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .client-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+        }
+        
+        .client-results.visible {
+            display: block;
+        }
+        
+        .client-result-item {
+            padding: 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .client-result-item:hover {
+            background: #f5f5f5;
+        }
+        
+        .client-result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .client-info-display {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 2rem;
+        }
+        
+        .client-info-display h3 {
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .client-info-display p {
+            margin: 0;
+            color: #666;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #666;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+        
+        .tab.active {
+            color: #d4af37;
+            border-bottom-color: #d4af37;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .chemical-service-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #d4af37;
+        }
+        
+        .chemical-service-card h4 {
+            margin: 0 0 0.5rem 0;
+            color: #333;
+        }
+        
+        .chemical-service-card .formula {
+            font-family: monospace;
+            background: #fff;
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+        }
+        
+        .chemical-service-card .meta {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .satisfaction-stars {
+            color: #ffc107;
+        }
+        
+        .formula-template-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .formula-template-card:hover {
+            border-color: #d4af37;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .formula-template-card.favorite {
+            border-left: 4px solid #d4af37;
+        }
+        
+        .formula-template-card h4 {
+            margin: 0 0 0.25rem 0;
+        }
+        
+        .formula-template-card .formula {
+            font-family: monospace;
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <nav class="sidebar">
+            <div class="logo">
+                <h2>✂️ Cuts by Malenny</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="admin.html">📅 Appointments</a></li>
+                <li><a href="consultations.html" class="active">📝 Consultations</a></li>
+                <li><a href="#" onclick="logout()">🚪 Logout</a></li>
+            </ul>
+        </nav>
+        
+        <main class="main-content">
+            <header>
+                <h1>Client Consultations & Chemical Services</h1>
+            </header>
+            
+            <div class="client-search">
+                <input type="text" id="clientSearch" placeholder="Search for client by name or phone..." autocomplete="off">
+                <div class="client-results" id="clientResults"></div>
+            </div>
+            
+            <div id="selectedClientInfo" style="display: none;">
+                <div class="client-info-display">
+                    <h3 id="clientName"></h3>
+                    <p id="clientContact"></p>
+                </div>
+                
+                <div id="allergyAlerts"></div>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('consultation')">📝 New Consultation</button>
+                    <button class="tab" onclick="showTab('chemical')">🧪 Chemical Service</button>
+                    <button class="tab" onclick="showTab('history')">📋 History</button>
+                </div>
+                
+                <!-- Consultation Tab -->
+                <div id="consultationTab" class="tab-content active">
+                    <form class="consultation-form" id="consultationForm">
+                        <input type="hidden" id="customerId" name="customerId">
+                        
+                        <div class="form-section">
+                            <h3>Consultation Type</h3>
+                            <div class="form-row">
+                                <div>
+                                    <label>Consultation Type</label>
+                                    <select name="consultationType" id="consultationType">
+                                        <option value="initial">Initial Consultation</option>
+                                        <option value="follow_up">Follow-up</option>
+                                        <option value="chemical_service">Pre-Chemical Service</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Performed By</label>
+                                    <input type="text" name="performedBy" placeholder="Your name">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Hair Assessment</h3>
+                            <div class="form-row">
+                                <div>
+                                    <label>Hair Type</label>
+                                    <select name="hairType">
+                                        <option value="">Select...</option>
+                                        <option value="fine">Fine</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="coarse">Coarse</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Hair Texture</label>
+                                    <select name="hairTexture">
+                                        <option value="">Select...</option>
+                                        <option value="straight">Straight</option>
+                                        <option value="wavy">Wavy</option>
+                                        <option value="curly">Curly</option>
+                                        <option value="coily">Coily</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Hair Density</label>
+                                    <select name="hairDensity">
+                                        <option value="">Select...</option>
+                                        <option value="thin">Thin</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="thick">Thick</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div>
+                                    <label>Scalp Condition</label>
+                                    <select name="scalpCondition">
+                                        <option value="">Select...</option>
+                                        <option value="normal">Normal</option>
+                                        <option value="dry">Dry</option>
+                                        <option value="oily">Oily</option>
+                                        <option value="dandruff">Dandruff</option>
+                                        <option value="sensitive">Sensitive</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label>Hair Condition Notes</label>
+                                <textarea name="hairCondition" rows="2" placeholder="Overall condition, damage, porosity, etc."></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Previous Chemical Services</h3>
+                            
+                            <div class="previous-service">
+                                <label>
+                                    <input type="checkbox" name="previousColor" id="previousColor">
+                                    Previous Hair Color
+                                </label>
+                                <div class="previous-service-details" id="colorDetails">
+                                    <input type="date" name="previousColorDate" placeholder="Date">
+                                    <textarea name="previousColorNotes" rows="2" placeholder="Color used, results, any issues..."></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="previous-service">
+                                <label>
+                                    <input type="checkbox" name="previousRelaxer" id="previousRelaxer">
+                                    Previous Relaxer
+                                </label>
+                                <div class="previous-service-details" id="relaxerDetails">
+                                    <input type="date" name="previousRelaxerDate" placeholder="Date">
+                                    <textarea name="previousRelaxerNotes" rows="2" placeholder="Product used, results, any issues..."></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="previous-service">
+                                <label>
+                                    <input type="checkbox" name="previousPerm" id="previousPerm">
+                                    Previous Perm
+                                </label>
+                                <div class="previous-service-details" id="permDetails">
+                                    <input type="date" name="previousPermDate" placeholder="Date">
+                                    <textarea name="previousPermNotes" rows="2" placeholder="Product used, results, any issues..."></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="previous-service">
+                                <label>
+                                    <input type="checkbox" name="previousBleach" id="previousBleach">
+                                    Previous Bleach/Lightening
+                                </label>
+                                <div class="previous-service-details" id="bleachDetails">
+                                    <input type="date" name="previousBleachDate" placeholder="Date">
+                                    <textarea name="previousBleachNotes" rows="2" placeholder="Product used, results, any issues..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Allergies & Sensitivities</h3>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" name="hasAllergies" id="hasAllergies">
+                                    <label for="hasAllergies">Known Allergies</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" name="sensitiveScalp" id="sensitiveScalp">
+                                    <label for="sensitiveScalp">Sensitive Scalp</label>
+                                </div>
+                            </div>
+                            <div id="allergyDetailsSection" style="display: none;">
+                                <label>Allergy Details</label>
+                                <textarea name="allergyDetails" rows="3" placeholder="List all known allergies (PPD, ammonia, fragrances, specific brands, etc.)"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Goals & Lifestyle</h3>
+                            <div>
+                                <label>Desired Outcome</label>
+                                <textarea name="desiredOutcome" rows="3" placeholder="What does the client want to achieve?"></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div>
+                                    <label>Maintenance Commitment</label>
+                                    <select name="maintenanceCommitment">
+                                        <option value="">Select...</option>
+                                        <option value="low">Low (wash & go)</option>
+                                        <option value="medium">Medium (some styling)</option>
+                                        <option value="high">High (daily styling)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label>Lifestyle Notes</label>
+                                <textarea name="lifestyleNotes" rows="2" placeholder="How often they wash, exercise routine, styling habits..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Recommendations</h3>
+                            <div>
+                                <label>Consultation Notes</label>
+                                <textarea name="notes" rows="3" placeholder="Additional notes from consultation..."></textarea>
+                            </div>
+                            <div>
+                                <label>Your Recommendations</label>
+                                <textarea name="recommendations" rows="3" placeholder="Services recommended, products suggested, next steps..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Save Consultation</button>
+                    </form>
+                </div>
+                
+                <!-- Chemical Service Tab -->
+                <div id="chemicalTab" class="tab-content">
+                    <form class="consultation-form" id="chemicalForm">
+                        <input type="hidden" name="customerId" id="chemicalCustomerId">
+                        
+                        <div class="form-section">
+                            <h3>Service Details</h3>
+                            <div class="form-row">
+                                <div>
+                                    <label>Service Type *</label>
+                                    <select name="serviceType" required>
+                                        <option value="">Select...</option>
+                                        <option value="hair_color">Full Hair Color</option>
+                                        <option value="root_touchup">Root Touch-up</option>
+                                        <option value="highlights">Highlights</option>
+                                        <option value="balayage">Balayage</option>
+                                        <option value="bleach">Bleach/Lightening</option>
+                                        <option value="toner">Toner</option>
+                                        <option value="relaxer">Relaxer</option>
+                                        <option value="keratin_treatment">Keratin Treatment</option>
+                                        <option value="perm">Perm</option>
+                                        <option value="color_correction">Color Correction</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Service Date</label>
+                                    <input type="date" name="serviceDate" id="serviceDate">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Quick Formula Templates</h3>
+                            <div id="formulaTemplates"></div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Product & Formula</h3>
+                            <div class="form-row">
+                                <div>
+                                    <label>Brand</label>
+                                    <input type="text" name="brandName" placeholder="e.g., Wella, Redken">
+                                </div>
+                                <div>
+                                    <label>Product Line</label>
+                                    <input type="text" name="productLine" placeholder="e.g., Koleston Perfect">
+                                </div>
+                            </div>
+                            <div>
+                                <label>Formula *</label>
+                                <input type="text" name="formula" placeholder="e.g., 6N + 7G 1:1" required>
+                            </div>
+                            <div class="form-row">
+                                <div>
+                                    <label>Developer Volume</label>
+                                    <select name="developerVolume">
+                                        <option value="">Select...</option>
+                                        <option value="10vol">10 Volume</option>
+                                        <option value="20vol">20 Volume</option>
+                                        <option value="30vol">30 Volume</option>
+                                        <option value="40vol">40 Volume</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Mixing Ratio</label>
+                                    <input type="text" name="mixingRatio" placeholder="e.g., 1:1, 1:2">
+                                </div>
+                                <div>
+                                    <label>Processing Time (minutes)</label>
+                                    <input type="number" name="processingTimeMinutes" min="1">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Application</h3>
+                            <div class="form-row">
+                                <div>
+                                    <label>Application Method</label>
+                                    <select name="applicationMethod">
+                                        <option value="">Select...</option>
+                                        <option value="all_over">All Over</option>
+                                        <option value="roots_only">Roots Only</option>
+                                        <option value="ends_only">Ends Only</option>
+                                        <option value="foils">Foils</option>
+                                        <option value="balayage">Balayage</option>
+                                        <option value="cap">Cap</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label>Processing Notes</label>
+                                <textarea name="processingNotes" rows="2" placeholder="Heat used, processing adjustments, observations..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Results</h3>
+                            <div class="form-row">
+                                <div>
+                                    <label>Result Color</label>
+                                    <input type="text" name="resultColor" placeholder="e.g., Medium Brown with Warm Tones">
+                                </div>
+                                <div>
+                                    <label>Client Satisfaction (1-5)</label>
+                                    <select name="clientSatisfaction">
+                                        <option value="">Select...</option>
+                                        <option value="5">5 - Very Satisfied</option>
+                                        <option value="4">4 - Satisfied</option>
+                                        <option value="3">3 - Neutral</option>
+                                        <option value="2">2 - Dissatisfied</option>
+                                        <option value="1">1 - Very Dissatisfied</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label>Result Notes</label>
+                                <textarea name="resultNotes" rows="2" placeholder="Final results, any adjustments made..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Follow-up</h3>
+                            <div class="form-row">
+                                <div>
+                                    <label>Next Service Recommended</label>
+                                    <input type="date" name="nextServiceRecommended">
+                                </div>
+                                <div>
+                                    <label>Next Service Type</label>
+                                    <input type="text" name="nextServiceType" placeholder="e.g., Root Touch-up">
+                                </div>
+                            </div>
+                            <div>
+                                <label>Home Care Instructions</label>
+                                <textarea name="homeCareInstructions" rows="2" placeholder="Products recommended, care instructions given to client..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Pricing</h3>
+                            <div class="form-row">
+                                <div>
+                                    <label>Service Cost ($)</label>
+                                    <input type="number" name="serviceCost" step="0.01" min="0">
+                                </div>
+                                <div>
+                                    <label>Product Cost ($)</label>
+                                    <input type="number" name="productCost" step="0.01" min="0">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Save Chemical Service Record</button>
+                    </form>
+                </div>
+                
+                <!-- History Tab -->
+                <div id="historyTab" class="tab-content">
+                    <div id="consultationHistory">
+                        <h3>Consultation History</h3>
+                        <div id="consultationList"></div>
+                    </div>
+                    
+                    <div id="chemicalHistory" style="margin-top: 2rem;">
+                        <h3>Chemical Service History</h3>
+                        <div id="chemicalList"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="js/consultations.js"></script>
+</body>
+</html>

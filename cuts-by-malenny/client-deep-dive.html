@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Deep Dive - Cuts by Malenny</title>
+    <link rel="stylesheet" href="admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>✂️ Cuts by Malenny</h2>
+                <p>Admin Panel</p>
+            </div>
+            <nav class="nav-menu">
+                <a href="admin.html" class="nav-item">
+                    <span class="icon">📊</span>
+                    Dashboard
+                </a>
+                <a href="appointments.html" class="nav-item">
+                    <span class="icon">📅</span>
+                    Appointments
+                </a>
+                <a href="consultations.html" class="nav-item">
+                    <span class="icon">📝</span>
+                    Consultations
+                </a>
+                <a href="client-deep-dive.html" class="nav-item active">
+                    <span class="icon">🔍</span>
+                    Deep Dive
+                </a>
+                <a href="chemical-services.html" class="nav-item">
+                    <span class="icon">🧪</span>
+                    Chemical Services
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <span class="icon">⚙️</span>
+                    Settings
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="page-header">
+                <h1>Client Deep Dive</h1>
+                <p>Comprehensive client profiles with full history</p>
+            </header>
+
+            <!-- Search Section -->
+            <section class="search-section">
+                <div class="search-box">
+                    <input type="text" id="clientSearch" placeholder="Search by name, phone, or email...">
+                    <button class="btn btn-primary" onclick="searchClient()">
+                        <span class="icon">🔍</span> Search
+                    </button>
+                </div>
+                <div class="search-filters">
+                    <label><input type="checkbox" id="filterNoShows"> Show no-shows only</label>
+                    <label><input type="checkbox" id="filterAllergies"> Has allergies</label>
+                    <label><input type="checkbox" id="filterChemical"> Chemical service history</label>
+                </div>
+            </section>
+
+            <!-- Client Results -->
+            <section class="client-results" id="clientResults">
+                <!-- Search results will appear here -->
+            </section>
+
+            <!-- Client Deep Dive View (hidden by default) -->
+            <section class="deep-dive-view" id="deepDiveView" style="display: none;">
+                <!-- Alerts Banner -->
+                <div class="alerts-banner" id="alertsBanner"></div>
+
+                <!-- Client Header -->
+                <div class="client-header">
+                    <div class="client-info">
+                        <h2 id="clientName">Client Name</h2>
+                        <p class="client-contact">
+                            <span id="clientPhone">📞 (555) 123-4567</span>
+                            <span id="clientEmail">✉️ client@email.com</span>
+                        </p>
+                        <div class="client-tags" id="clientTags"></div>
+                    </div>
+                    <div class="client-stats">
+                        <div class="stat-card">
+                            <span class="stat-value" id="totalVisits">0</span>
+                            <span class="stat-label">Total Visits</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value" id="chemicalCount">0</span>
+                            <span class="stat-label">Chemical Services</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value" id="lastVisit">-</span>
+                            <span class="stat-label">Last Visit</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value" id="clientSince">-</span>
+                            <span class="stat-label">Client Since</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <button class="btn btn-primary" onclick="bookAppointment()">
+                        <span class="icon">📅</span> Book Appointment
+                    </button>
+                    <button class="btn btn-secondary" onclick="addConsultation()">
+                        <span class="icon">📝</span> Add Consultation
+                    </button>
+                    <button class="btn btn-secondary" onclick="recordChemicalService()">
+                        <span class="icon">🧪</span> Record Chemical Service
+                    </button>
+                    <button class="btn btn-secondary" onclick="printSummary()">
+                        <span class="icon">🖨️</span> Print Summary
+                    </button>
+                </div>
+
+                <!-- Profile Sections -->
+                <div class="profile-grid">
+                    <!-- Hair Profile -->
+                    <div class="profile-card">
+                        <h3>💇 Hair Profile</h3>
+                        <div class="profile-content" id="hairProfile">
+                            <p class="empty-state">No hair profile recorded yet</p>
+                        </div>
+                    </div>
+
+                    <!-- Allergies & Sensitivities -->
+                    <div class="profile-card">
+                        <h3>⚠️ Allergies & Sensitivities</h3>
+                        <div class="profile-content" id="allergiesSection">
+                            <p class="empty-state">No allergies recorded</p>
+                        </div>
+                    </div>
+
+                    <!-- Hair Goals -->
+                    <div class="profile-card">
+                        <h3>🎯 Hair Goals</h3>
+                        <div class="profile-content" id="hairGoals">
+                            <p class="empty-state">No goals recorded yet</p>
+                        </div>
+                    </div>
+
+                    <!-- Latest Consultation -->
+                    <div class="profile-card">
+                        <h3>📝 Latest Consultation</h3>
+                        <div class="profile-content" id="latestConsultation">
+                            <p class="empty-state">No consultation on record</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chemical Service Timeline -->
+                <div class="timeline-section">
+                    <h3>🧪 Chemical Service History</h3>
+                    <div class="timeline" id="chemicalTimeline">
+                        <p class="empty-state">No chemical services recorded</p>
+                    </div>
+                </div>
+
+                <!-- Appointment History -->
+                <div class="history-section">
+                    <h3>📅 Appointment History</h3>
+                    <div class="history-table-container">
+                        <table class="history-table" id="appointmentHistory">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Service</th>
+                                    <th>Status</th>
+                                    <th>Notes</th>
+                                    <th>Satisfaction</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal for Book Appointment -->
+    <div class="modal" id="bookModal" style="display: none;">
+        <div class="modal-content">
+            <h3>Book Appointment</h3>
+            <form id="bookForm">
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="bookDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Time</label>
+                    <input type="time" id="bookTime" required>
+                </div>
+                <div class="form-group">
+                    <label>Service</label>
+                    <select id="bookService">
+                        <option value="haircut">Haircut</option>
+                        <option value="color">Color</option>
+                        <option value="highlights">Highlights</option>
+                        <option value="balayage">Balayage</option>
+                        <option value="perm">Perm</option>
+                        <option value="relaxer">Relaxer</option>
+                        <option value="treatment">Treatment</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="bookNotes" rows="3"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('bookModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Book</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Add Consultation -->
+    <div class="modal" id="consultationModal" style="display: none;">
+        <div class="modal-content">
+            <h3>Add Consultation</h3>
+            <form id="consultationForm">
+                <div class="form-group">
+                    <label>Hair Type/Texture</label>
+                    <input type="text" id="hairType" placeholder="e.g., Fine, curly, coarse">
+                </div>
+                <div class="form-group">
+                    <label>Current Condition</label>
+                    <textarea id="currentCondition" rows="2" placeholder="Damage, dryness, etc."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Desired Outcome</label>
+                    <textarea id="desiredOutcome" rows="2" placeholder="What does the client want?"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Allergies/Sensitivities</label>
+                    <textarea id="consultAllergies" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Previous Chemical Services</label>
+                    <textarea id="previousChemical" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>At-Home Care</label>
+                    <textarea id="homeCare" rows="2" placeholder="Products they use"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Recommendations</label>
+                    <textarea id="recommendations" rows="3"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('consultationModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Consultation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Record Chemical Service -->
+    <div class="modal" id="chemicalModal" style="display: none;">
+        <div class="modal-content">
+            <h3>Record Chemical Service</h3>
+            <form id="chemicalForm">
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="chemicalDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Service Type</label>
+                    <select id="chemicalType" required>
+                        <option value="color">Color</option>
+                        <option value="highlights">Highlights</option>
+                        <option value="balayage">Balayage</option>
+                        <option value="perm">Perm</option>
+                        <option value="relaxer">Relaxer</option>
+                        <option value="keratin">Keratin Treatment</option>
+                        <option value="bleach">Bleach</option>
+                        <option value="toner">Toner</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Formula (detailed)</label>
+                    <textarea id="formula" rows="4" placeholder="e.g., 6N + 20vol, 1:1 ratio, roots only"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Developer Volume</label>
+                    <input type="text" id="developer" placeholder="e.g., 10vol, 20vol, 30vol">
+                </div>
+                <div class="form-group">
+                    <label>Processing Time</label>
+                    <input type="text" id="processTime" placeholder="e.g., 35 minutes">
+                </div>
+                <div class="form-group">
+                    <label>Starting Level/Color</label>
+                    <input type="text" id="startingLevel" placeholder="e.g., Level 6 natural brown">
+                </div>
+                <div class="form-group">
+                    <label>Ending Level/Color</label>
+                    <input type="text" id="endingLevel" placeholder="e.g., Level 8 golden blonde">
+                </div>
+                <div class="form-group">
+                    <label>Technique Notes</label>
+                    <textarea id="techniqueNotes" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Client Satisfaction</label>
+                    <div class="star-rating">
+                        <input type="radio" name="satisfaction" value="5" id="star5"><label for="star5">★</label>
+                        <input type="radio" name="satisfaction" value="4" id="star4"><label for="star4">★</label>
+                        <input type="radio" name="satisfaction" value="3" id="star3"><label for="star3">★</label>
+                        <input type="radio" name="satisfaction" value="2" id="star2"><label for="star2">★</label>
+                        <input type="radio" name="satisfaction" value="1" id="star1"><label for="star1">★</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Before/After Photos</label>
+                    <input type="file" id="servicePhotos" multiple accept="image/*">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('chemicalModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Record Service</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="client-deep-dive.js"></script>
+</body>
+</html>

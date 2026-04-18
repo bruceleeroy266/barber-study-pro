@@ -1,0 +1,806 @@
+/* Cuts by Malenny - Professional Barber Theme */
+/* Inspired by top barbershop websites */
+
+:root {
+    --black: #0a0a0a;
+    --charcoal: #1a1a1a;
+    --gray-dark: #2d2d2d;
+    --gray: #666666;
+    --gray-light: #999999;
+    --white: #ffffff;
+    --cream: #f5f5f5;
+    --gold: #c9a962;
+    --red: #c41e3a;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--charcoal);
+    line-height: 1.6;
+    background: var(--white);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Navigation - Dark & Minimal */
+.navbar {
+    background: var(--black);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: var(--white);
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: 1px;
+}
+
+.logo-icon {
+    font-size: 1.5rem;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 2.5rem;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--gray-light);
+    font-weight: 500;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    transition: color 0.3s;
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--gold);
+    transition: width 0.3s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--white);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+}
+
+.btn-primary {
+    background: var(--gold);
+    color: var(--black);
+}
+
+.btn-primary:hover {
+    background: var(--white);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--charcoal);
+    border: 2px solid var(--charcoal);
+}
+
+.btn-outline:hover {
+    background: var(--charcoal);
+    color: var(--white);
+}
+
+/* Hero Section - Full Screen with Overlay */
+.hero {
+    height: 100vh;
+    min-height: 700px;
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                url('https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1920') center/cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--white);
+    position: relative;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    padding: 0 2rem;
+}
+
+.hero-location {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+}
+
+.hero h1 {
+    font-size: 4.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    letter-spacing: -2px;
+}
+
+.hero-tagline {
+    font-size: 1.25rem;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+}
+
+/* About Barber Section */
+.about-barber {
+    padding: 8rem 0;
+    background: var(--white);
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+}
+
+.about-image {
+    position: relative;
+}
+
+.about-image::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: -20px;
+    bottom: -20px;
+    border: 3px solid var(--gold);
+    z-index: -1;
+}
+
+.about-img {
+    width: 100%;
+    height: 600px;
+    object-fit: cover;
+}
+
+.about-content h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.about-subtitle {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+}
+
+.about-content > p {
+    font-size: 1.125rem;
+    color: var(--gray);
+    margin-bottom: 2rem;
+    line-height: 1.8;
+}
+
+.about-features {
+    list-style: none;
+    margin-bottom: 2rem;
+}
+
+.about-features li {
+    padding: 0.75rem 0;
+    font-size: 1rem;
+    color: var(--charcoal);
+    border-bottom: 1px solid var(--cream);
+}
+
+/* Services Section */
+.services-section {
+    padding: 8rem 0;
+    background: var(--cream);
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 4rem;
+    color: var(--charcoal);
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.service-card {
+    background: var(--white);
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+}
+
+.service-image {
+    height: 250px;
+    overflow: hidden;
+}
+
+.service-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.service-card:hover .service-image img {
+    transform: scale(1.1);
+}
+
+.service-card h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    padding: 1.5rem 1.5rem 0.5rem;
+}
+
+.service-card .price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--gold);
+    padding: 0 1.5rem;
+}
+
+.service-card .desc {
+    color: var(--gray);
+    padding: 0.5rem 1.5rem 1.5rem;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Shop Section */
+.shop-section {
+    padding: 8rem 0;
+    background: var(--charcoal);
+    color: var(--white);
+}
+
+.shop-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+}
+
+.shop-content h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.shop-name {
+    font-size: 1.5rem;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+}
+
+.shop-address {
+    font-size: 1.125rem;
+    color: var(--gray-light);
+    margin-bottom: 1.5rem;
+}
+
+.shop-phone {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.shop-phone a {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.shop-phone a:hover {
+    color: var(--gold);
+}
+
+.hours {
+    margin-bottom: 2rem;
+}
+
+.hours p {
+    padding: 0.5rem 0;
+    color: var(--gray-light);
+    border-bottom: 1px solid var(--gray-dark);
+}
+
+.hours strong {
+    color: var(--white);
+    display: inline-block;
+    width: 120px;
+}
+
+.shop-image img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+}
+
+/* Footer */
+.footer {
+    background: var(--black);
+    color: var(--white);
+    padding: 3rem 0 1.5rem;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--gray-dark);
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 700;
+    font-size: 1.125rem;
+}
+
+.footer-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.footer-links a {
+    color: var(--gray-light);
+    text-decoration: none;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: var(--gold);
+}
+
+.footer-contact a {
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.125rem;
+}
+
+.footer-bottom {
+    text-align: center;
+    color: var(--gray);
+    font-size: 0.875rem;
+}
+
+/* Page Header */
+.page-header {
+    background: var(--charcoal);
+    color: var(--white);
+    padding: 10rem 0 4rem;
+    text-align: center;
+}
+
+.page-header h1 {
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+/* Services Page */
+.services-page {
+    padding: 5rem 0;
+    background: var(--cream);
+    min-height: 100vh;
+}
+
+.service-category-simple {
+    background: var(--white);
+    margin-bottom: 2rem;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.category-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem 2rem;
+    background: var(--charcoal);
+    color: var(--white);
+}
+
+.category-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.category-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.service-list-simple {
+    padding: 1rem 2rem;
+}
+
+.service-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--cream);
+}
+
+.service-row:last-child {
+    border-bottom: none;
+}
+
+.service-row.featured {
+    background: rgba(201, 169, 98, 0.1);
+    margin: 0 -2rem;
+    padding: 1.25rem 2rem;
+}
+
+.service-name {
+    font-weight: 500;
+    font-size: 1.125rem;
+}
+
+.service-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gold);
+}
+
+.services-cta {
+    text-align: center;
+    margin-top: 4rem;
+}
+
+/* Booking Page */
+.booking-simple {
+    padding: 5rem 0;
+    background: var(--cream);
+    min-height: 100vh;
+}
+
+.booking-form-simple {
+    max-width: 600px;
+    margin: 0 auto;
+    background: var(--white);
+    padding: 3rem;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+
+.form-group-simple {
+    margin-bottom: 2rem;
+}
+
+.form-group-simple label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--charcoal);
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 1px;
+}
+
+.form-group-simple input,
+.form-group-simple select,
+.form-group-simple textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid var(--cream);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.3s;
+}
+
+.form-group-simple input:focus,
+.form-group-simple select:focus,
+.form-group-simple textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+}
+
+.form-row-simple {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.service-select-simple {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.service-option-simple {
+    display: block;
+    cursor: pointer;
+}
+
+.service-option-simple input {
+    display: none;
+}
+
+.service-option-simple span {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    border: 2px solid var(--cream);
+    transition: all 0.3s;
+}
+
+.service-option-simple input:checked + span {
+    border-color: var(--gold);
+    background: rgba(201, 169, 98, 0.1);
+}
+
+.service-option-simple strong {
+    color: var(--gold);
+    font-weight: 700;
+}
+
+.deposit-notice {
+    background: var(--cream);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-left: 4px solid var(--gold);
+}
+
+.deposit-notice p {
+    margin: 0;
+}
+
+.deposit-sub {
+    font-size: 0.875rem;
+    color: var(--gray);
+    margin-top: 0.5rem;
+}
+
+.booking-contact {
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+}
+
+.booking-contact h3 {
+    margin-bottom: 1rem;
+    color: var(--charcoal);
+}
+
+.booking-contact a {
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* Contact Page */
+.contact-simple {
+    padding: 5rem 0;
+    background: var(--cream);
+    min-height: 100vh;
+}
+
+.contact-grid-simple {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    margin-bottom: 4rem;
+}
+
+.contact-block {
+    margin-bottom: 2.5rem;
+}
+
+.contact-block h3 {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+}
+
+.contact-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--charcoal);
+    margin-bottom: 0.5rem;
+}
+
+.phone-big {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.phone-big a {
+    color: var(--charcoal);
+    text-decoration: none;
+}
+
+.phone-big a:hover {
+    color: var(--gold);
+}
+
+.contact-note {
+    color: var(--gray);
+}
+
+.map-link {
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.hours-list-simple p {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--cream);
+    color: var(--gray);
+}
+
+.hours-list-simple strong {
+    color: var(--charcoal);
+    display: inline-block;
+    width: 140px;
+}
+
+.contact-image {
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+
+.contact-img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+}
+
+.contact-cta {
+    text-align: center;
+    padding: 4rem;
+    background: var(--white);
+}
+
+.contact-cta h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: var(--charcoal);
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    .hero h1 {
+        font-size: 3rem;
+    }
+    
+    .about-grid,
+    .shop-grid,
+    .contact-grid-simple {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+    
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .about-img,
+    .shop-image img {
+        height: 400px;
+    }
+    
+    .form-row-simple {
+        grid-template-columns: 1fr;
+    }
+    
+    .nav-menu {
+        display: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+    
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .booking-form-simple {
+        padding: 2rem;
+    }
+}

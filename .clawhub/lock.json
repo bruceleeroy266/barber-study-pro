@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "skills": {
+    "resend-email": {
+      "version": "1.0.3",
+      "installedAt": 1775758921264
+    }
+  }
+}
