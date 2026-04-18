@@ -46,12 +46,13 @@
             border-bottom: 1px solid #2D2D2D;
         }
         nav a {
-            color: #9CA3AF;
+            color: #555;
             text-decoration: none;
             margin-right: 25px;
             font-size: 0.9rem;
+            cursor: not-allowed;
         }
-        nav a:hover, nav a.active { color: #C9A227; }
+        nav a.active { color: #C9A227; }
 
         /* Main Content */
         main {
@@ -80,7 +81,7 @@
             font-size: 0.95rem;
         }
 
-        /* Action Buttons */
+        /* Action Buttons - Disabled */
         .actions {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -97,21 +98,41 @@
             padding: 30px 15px;
             border-radius: 12px;
             border: none;
-            cursor: pointer;
             font-size: 1rem;
             font-weight: 600;
             text-decoration: none;
-            transition: all 0.2s ease;
             color: white;
             text-align: center;
             min-height: 130px;
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
         }
-        .action-btn:hover { transform: scale(1.03); }
         .btn-icon { font-size: 2.5rem; }
         .btn-quiz { background: linear-gradient(135deg, #C9A227 0%, #A88420 100%); }
         .btn-study { background: linear-gradient(135deg, #E5C158 0%, #C9A227 100%); color: #0D0D0D; }
         .btn-progress { background: #1A1A1A; border: 2px solid #C9A227; }
         .btn-exam { background: linear-gradient(135deg, #A88420 0%, #8B6914 100%); }
+
+        /* Login Prompt */
+        .login-prompt {
+            background: #1A1A1A;
+            border: 1px solid #C9A227;
+            border-radius: 8px;
+            padding: 15px 25px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        .login-prompt p {
+            color: #9CA3AF;
+            margin-bottom: 10px;
+        }
+        .login-prompt a {
+            color: #C9A227;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .login-prompt a:hover { text-decoration: underline; }
 
         /* Footer */
         footer {
@@ -142,11 +163,11 @@
 
     <!-- Navigation -->
     <nav>
-        <a href="index.html" class="active">Home</a>
-        <a href="chapters.html">Chapters</a>
-        <a href="quizzes.html">Quizzes</a>
-        <a href="progress.html">Progress</a>
-        <a href="exam.html">Exam</a>
+        <a href="login.html" class="active">Home</a>
+        <a href="login.html">Chapters</a>
+        <a href="login.html">Quizzes</a>
+        <a href="login.html">Progress</a>
+        <a href="login.html">Exam</a>
     </nav>
 
     <!-- Main Content -->
@@ -158,22 +179,27 @@
         </div>
 
         <div class="actions">
-            <a href="chapter-01-quiz.html" class="action-btn btn-quiz">
+            <div class="action-btn btn-quiz">
                 <span class="btn-icon">🧪</span>
                 <span>Start Quiz</span>
-            </a>
-            <a href="chapter-01.html" class="action-btn btn-study">
+            </div>
+            <div class="action-btn btn-study">
                 <span class="btn-icon">📚</span>
                 <span>Study Topics</span>
-            </a>
-            <a href="my-progress.html" class="action-btn btn-progress">
+            </div>
+            <div class="action-btn btn-progress">
                 <span class="btn-icon">📊</span>
                 <span>View Progress</span>
-            </a>
-            <a href="final-exam.html" class="action-btn btn-exam">
+            </div>
+            <div class="action-btn btn-exam">
                 <span class="btn-icon">🎯</span>
                 <span>Practice Exam</span>
-            </a>
+            </div>
+        </div>
+
+        <div class="login-prompt">
+            <p>Please log in or sign up to access all features</p>
+            <a href="login.html">Log In</a> or <a href="signup.html">Sign Up</a>
         </div>
     </main>
 
