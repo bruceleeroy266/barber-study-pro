@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barber Study Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -13,14 +13,74 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 30px 20px;
             color: white;
         }
-        .header { text-align: center; margin-bottom: 30px; }
-        .logo { font-size: 2.5rem; margin-bottom: 5px; }
-        h1 { font-size: 1.5rem; font-weight: 700; }
+
+        /* Header */
+        header {
+            background: #1A1A1A;
+            border-bottom: 1px solid #2D2D2D;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #C9A227;
+            text-decoration: none;
+        }
+        .auth-links a {
+            color: #9CA3AF;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 0.9rem;
+        }
+        .auth-links a:hover { color: #C9A227; }
+
+        /* Navigation */
+        nav {
+            background: #1A1A1A;
+            padding: 10px 20px;
+            border-bottom: 1px solid #2D2D2D;
+        }
+        nav a {
+            color: #9CA3AF;
+            text-decoration: none;
+            margin-right: 25px;
+            font-size: 0.9rem;
+        }
+        nav a:hover, nav a.active { color: #C9A227; }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            color: #9CA3AF;
+            font-size: 0.95rem;
+        }
+
+        /* Action Buttons */
         .actions {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -34,7 +94,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 25px 15px;
+            padding: 30px 15px;
             border-radius: 12px;
             border: none;
             cursor: pointer;
@@ -44,7 +104,7 @@
             transition: all 0.2s ease;
             color: white;
             text-align: center;
-            min-height: 120px;
+            min-height: 130px;
         }
         .action-btn:hover { transform: scale(1.03); }
         .btn-icon { font-size: 2.5rem; }
@@ -52,34 +112,74 @@
         .btn-study { background: linear-gradient(135deg, #E5C158 0%, #C9A227 100%); color: #0D0D0D; }
         .btn-progress { background: #1A1A1A; border: 2px solid #C9A227; }
         .btn-exam { background: linear-gradient(135deg, #A88420 0%, #8B6914 100%); }
-        @media (max-width: 400px) {
+
+        /* Footer */
+        footer {
+            background: #1A1A1A;
+            border-top: 1px solid #2D2D2D;
+            padding: 20px;
+            text-align: center;
+            color: #6B7280;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 500px) {
             .actions { grid-template-columns: 1fr; }
             .action-btn { min-height: 80px; flex-direction: row; justify-content: flex-start; padding: 20px; }
+            nav a { margin-right: 15px; font-size: 0.85rem; }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="logo">✂️</div>
-        <h1>Barber Study Pro</h1>
-    </div>
-    <div class="actions">
-        <a href="chapter-01-quiz.html" class="action-btn btn-quiz">
-            <span class="btn-icon">🧪</span>
-            <span>Start Quiz</span>
-        </a>
-        <a href="chapter-01.html" class="action-btn btn-study">
-            <span class="btn-icon">📚</span>
-            <span>Study Topics</span>
-        </a>
-        <a href="my-progress.html" class="action-btn btn-progress">
-            <span class="btn-icon">📊</span>
-            <span>Progress</span>
-        </a>
-        <a href="final-exam.html" class="action-btn btn-exam">
-            <span class="btn-icon">🎯</span>
-            <span>Practice Exam</span>
-        </a>
-    </div>
+    <!-- Header -->
+    <header>
+        <a href="index.html" class="logo">✂️ Barber Study Pro</a>
+        <div class="auth-links">
+            <a href="login.html">Log In</a>
+            <a href="signup.html">Sign Up</a>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="index.html" class="active">Home</a>
+        <a href="chapters.html">Chapters</a>
+        <a href="quizzes.html">Quizzes</a>
+        <a href="progress.html">Progress</a>
+        <a href="exam.html">Exam</a>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="hero">
+            <div class="hero-icon">✂️</div>
+            <h1>Master Your Barber License</h1>
+            <p class="subtitle">Pass your state board exam with confidence</p>
+        </div>
+
+        <div class="actions">
+            <a href="chapter-01-quiz.html" class="action-btn btn-quiz">
+                <span class="btn-icon">🧪</span>
+                <span>Start Quiz</span>
+            </a>
+            <a href="chapter-01.html" class="action-btn btn-study">
+                <span class="btn-icon">📚</span>
+                <span>Study Topics</span>
+            </a>
+            <a href="my-progress.html" class="action-btn btn-progress">
+                <span class="btn-icon">📊</span>
+                <span>View Progress</span>
+            </a>
+            <a href="final-exam.html" class="action-btn btn-exam">
+                <span class="btn-icon">🎯</span>
+                <span>Practice Exam</span>
+            </a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 Barber Study Pro. Pass your state board exam.</p>
+    </footer>
 </body>
 </html>
