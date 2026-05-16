@@ -98,7 +98,7 @@ export const chapter9QualityMetrics = {
   averageCardLength: Math.round(
     chapter9AllEnhanced.reduce((sum, card) => sum + card.back.length, 0) / chapter9AllEnhanced.length
   ),
-  categoriesC overed: Object.keys(chapter9Categories).length,
+  categoriesCovered: Object.keys(chapter9Categories).length,
   safetyCriticalPercentage: Math.round(
     (chapter9EnhancedStats.safetyCritical / chapter9AllEnhanced.length) * 100
   ),
