@@ -1,0 +1,198 @@
+import { createClient } from '@/lib/supabase-server'
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import FlashcardClient from '@/components/FlashcardClient'
+import QuizClient from '@/components/QuizClient'
+
+interface ChapterPageProps {
+  params: Promise<{
+    chapterNumber: string
+  }>
+}
+
+export default async function ChapterPage({ params }: ChapterPageProps) {
+  const { chapterNumber } = await params
+  const num = parseInt(chapterNumber)
+  
+  if (isNaN(num)) {
+    notFound()
+  }
+
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  // Get chapter
+  const { data: chapter } = await supabase
+    .from('chapters')
+    .select('*')
+    .eq('chapter_number', num)
+    .eq('is_active', true)
+    .single()
+
+  if (!chapter) {
+    notFound()
+  }
+
+  // Get flashcards
+  const { data: flashcards } = await supabase
+    .from('flashcards')
+    .select('*')
+    .eq('chapter_id', chapter.id)
+    .eq('is_active', true)
+    .order('order_index', { ascending: true })
+
+  // Get quiz
+  const { data: quiz } = await supabase
+    .from('quizzes')
+    .select('*')
+    .eq('chapter_id', chapter.id)
+    .eq('is_active', true)
+    .single()
+
+  // Get quiz questions
+  const { data: questions } = await supabase
+    .from('quiz_questions')
+    .select('*')
+    .eq('quiz_id', quiz?.id)
+    .order('order_index', { ascending: true })
+
+  // Get user progress
+  const { data: progress } = await supabase
+    .from('student_progress')
+    .select('*')
+    .eq('user_id', user?.id)
+    .eq('chapter_id', chapter.id)
+    .single()
+
+  // Get best quiz attempt
+  const { data: bestAttempt } = await supabase
+    .from('quiz_attempts')
+    .select('*')
+    .eq('user_id', user?.id)
+    .eq('quiz_id', quiz?.id)
+    .order('percentage', { ascending: false })
+    .limit(1)
+    .single()
+
+  return (
+    <div className="space-y-8">
+      {/* Breadcrumb */}
+      <div className="flex items-center gap-2 text-sm text-gray-400">
+        <Link href="/dashboard/chapters" className="hover:text-[#D4AF37] transition-colors">
+          Chapters
+        </Link>
+        <span>/</span>
+        <span className="text-white">Chapter {num}</span>
+      </div>
+
+      {/* Header */}
+      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
+        <div className="flex items-center gap-4 mb-4">
+          <span className="text-5xl font-bold text-[#D4AF37]">
+            {String(num).padStart(2, '0')}
+          </span>
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-white">{chapter.title}</h1>
+            <p className="text-gray-400 mt-1">{chapter.description}</p>
+          </div>
+        </div>
+
+        {/* Progress Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-800">
+          <div className="flex items-center gap-3">
+            <div className="text-2xl">📖</div>
+            <div>
+              <div className="text-sm text-gray-400">Flashcards</div>
+              <div className="font-semibold text-white">{flashcards?.length || 0} cards</div>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="text-2xl">✅</div>
+            <div>
+              <div className="text-sm text-gray-400">Quiz Questions</div>
+              <div className="font-semibold text-white">{questions?.length || 0} questions</div>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="text-2xl">🏆</div>
+            <div>
+              <div className="text-sm text-gray-400">Best Score</div>
+              <div className="font-semibold text-white">
+                {bestAttempt ? `${bestAttempt.percentage}%` : 'Not taken'}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Flashcards Section */}
+      {flashcards && flashcards.length > 0 && (
+        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-xl font-semibold text-white">Flashcards</h2>
+              <p className="text-gray-400 text-sm">Master key concepts with interactive flashcards</p>
+            </div>
+            {progress?.flashcards_completed && (
+              <span className="px-3 py-1 bg-green-500/10 text-green-400 text-sm rounded-full">
+                ✓ Completed
+              </span>
+            )}
+          </div>
+          
+          <FlashcardClient 
+            flashcards={flashcards} 
+            chapterId={chapter.id}
+            userId={user?.id}
+            isCompleted={progress?.flashcards_completed || false}
+          />
+        </div>
+      )}
+
+      {/* Quiz Section */}
+      {quiz && questions && questions.length > 0 && (
+        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-xl font-semibold text-white">Chapter Quiz</h2>
+              <p className="text-gray-400 text-sm">Test your knowledge with {questions.length} questions</p>
+            </div>
+            {progress?.quiz_completed && (
+              <span className="px-3 py-1 bg-green-500/10 text-green-400 text-sm rounded-full">
+                ✓ Completed
+              </span>
+            )}
+          </div>
+
+          <QuizClient
+            quiz={quiz}
+            questions={questions}
+            chapterId={chapter.id}
+            userId={user?.id}
+            bestAttempt={bestAttempt}
+          />
+        </div>
+      )}
+
+      {/* Navigation */}
+      <div className="flex items-center justify-between pt-4">
+        {num > 1 && (
+          <Link
+            href={`/dashboard/chapters/${num - 1}`}
+            className="flex items-center gap-2 text-gray-400 hover:text-[#D4AF37] transition-colors"
+          >
+            ← Chapter {num - 1}
+          </Link>
+        )}
+        {num < 21 && (
+          <Link
+            href={`/dashboard/chapters/${num + 1}`}
+            className="flex items-center gap-2 text-gray-400 hover:text-[#D4AF37] transition-colors ml-auto"
+          >
+            Chapter {num + 1} →
+          </Link>
+        )}
+      </div>
+    </div>
+  )
+}
