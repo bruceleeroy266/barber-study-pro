@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 17: Hair Replacement | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* Sticky Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10,10,10,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #2a2a2a;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+        .logo { font-size: 1.1rem; font-weight: 800; color: #D4AF37; text-decoration: none; }
+        nav { display: none; }
+        nav a { color: #888; text-decoration: none; margin-left: 20px; font-size: 0.85rem; }
+        nav a:hover { color: #D4AF37; }
+        .btn-small {
+            background: #D4AF37;
+            color: #0a0a0a;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 100px 20px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .chapter-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .chapter-header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #D4AF37;
+            margin-bottom: 10px;
+        }
+        .chapter-header p {
+            color: #888;
+            font-size: 1rem;
+        }
+
+        /* Flashcard Grid */
+        .flashcard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        /* Flip Card */
+        .flashcard {
+            perspective: 1000px;
+            height: 180px;
+            cursor: pointer;
+        }
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .flashcard-front {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 2px solid #D4AF37;
+        }
+        .flashcard-back {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8960C 100%);
+            color: #0a0a0a;
+            transform: rotateY(180deg);
+            border: 2px solid #D4AF37;
+        }
+        .flashcard-front h3 {
+            color: #D4AF37;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .flashcard-back p {
+            font-size: 0.9rem;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        /* Navigation */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 40px;
+        }
+        .nav-btn {
+            background: #1a1a1a;
+            color: #D4AF37;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid #D4AF37;
+            transition: all 0.3s;
+        }
+        .nav-btn:hover {
+            background: #D4AF37;
+            color: #0a0a0a;
+        }
+
+        /* Footer */
+        footer {
+            padding: 30px 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.75rem;
+            border-top: 1px solid #1a1a1a;
+            margin-top: 40px;
+        }
+
+        @media (min-width: 768px) {
+            nav { display: block; }
+            .chapter-header h1 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">Barber Study Pro</a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="login.html">Quizzes</a>
+            <a href="flashcards.html">Flashcards</a>
+            <a href="oklahoma-rules.html">Rules</a>
+        </nav>
+        <a href="signup.html" class="btn-small">Start Free</a>
+    </header>
+
+    <div class="main-content">
+        <div class="chapter-header">
+            <h1>Chapter 17: Hair Replacement</h1>
+            <p>Click any card to flip and reveal the definition</p>
+        </div>
+
+        <div class="flashcard-grid">
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Hair Replacement</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Methods and systems used to add hair or cover areas of hair loss on the scalp.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Hair System</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A non-surgical hair replacement option consisting of a base material with attached hair.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Toupee</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A small hairpiece designed to cover a specific area of hair loss on the top of the head.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Wig</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A full head covering made of human or synthetic hair worn to conceal baldness.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Lace Front</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A hair system with a fine lace material at the front hairline for a natural appearance.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Monofilament Base</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A thin, breathable mesh material used as the foundation for hair systems.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Polyurethane Base</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A thin, skin-like material that creates an invisible base for hair attachment.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Human Hair</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Natural hair used in systems that can be styled with heat and colored like natural hair.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Synthetic Hair</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Man-made fiber used in hair systems; holds style well but cannot withstand high heat.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Hair Integration</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A system that blends with the client's existing hair for a natural look.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Adhesive</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A bonding agent used to attach hair systems to the scalp or skin.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Tape Tabs</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Double-sided adhesive strips used to secure hair systems to the scalp.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Clip Attachment</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Small clips sewn into hair systems that attach to existing hair for temporary wear.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Hair Weaving</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A technique of adding hair by braiding or weaving extensions into existing hair.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Hair Extensions</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Additional hair strands attached to existing hair to add length or volume.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Scalp Micropigmentation</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A cosmetic tattoo procedure that creates the appearance of hair follicles on the scalp.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Density</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The amount of hair per square inch on a hair system; affects the natural appearance.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Hairline</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The front edge of a hair system that frames the face; crucial for a natural look.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Ventilating</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The process of knotting individual hairs into the base material of a hair system.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Maintenance</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Regular care and servicing of hair systems including cleaning, reattachment, and styling.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="chapter-16-flashcards.html" class="nav-btn">← Previous Chapter</a>
+            <a href="flashcards.html" class="nav-btn">All Flashcards</a>
+            <a href="chapter-18-flashcards.html" class="nav-btn">Next Chapter →</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Barber Study Pro. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

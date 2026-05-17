@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 5 Flashcards - Implements, Tools & Equipment | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F4E4A6;
+            --dark: #0a0a0a;
+            --dark-gray: #1a1a1a;
+            --medium-gray: #2a2a2a;
+            --light-gray: #888;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.6; min-height: 100vh; }
+
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .back-link:hover { color: var(--gold); }
+
+        .header { padding: 7rem 2rem 2rem; text-align: center; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); }
+        .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; font-size: 0.9rem; }
+        .header h1 { font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 700; margin-bottom: 0.5rem; }
+        .header p { color: var(--light-gray); max-width: 600px; margin: 0 auto; }
+
+        .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.3s; }
+
+        .controls { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+        .control-btn { background: var(--medium-gray); color: var(--white); border: 1px solid var(--gold); padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
+        .control-btn:hover { background: var(--gold); color: var(--dark); }
+
+        .flashcard-container { max-width: 900px; margin: 0 auto; padding: 2rem; perspective: 1000px; }
+        
+        .flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        
+        .flashcard { height: 200px; position: relative; cursor: pointer; }
+        .flashcard-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
+        .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+        
+        .flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .flashcard-front { background: linear-gradient(135deg, var(--dark-gray) 0%, var(--medium-gray) 100%); border: 2px solid var(--gold); }
+        .flashcard-back { background: linear-gradient(135deg, var(--gold) 0%, #B8960C 100%); color: var(--dark); transform: rotateY(180deg); border: 2px solid var(--gold); }
+        
+        .flashcard-front h3 { color: var(--gold); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .flashcard-front .hint { color: var(--light-gray); font-size: 0.8rem; }
+        .flashcard-back p { font-size: 0.95rem; font-weight: 500; line-height: 1.5; }
+        
+        .card-number { position: absolute; top: 10px; right: 15px; font-size: 0.75rem; opacity: 0.6; }
+
+        .nav-footer { max-width: 800px; margin: 3rem auto; padding: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--medium-gray); }
+        .nav-footer a { color: var(--gold); text-decoration: none; font-weight: 600; }
+        .nav-footer a:hover { text-decoration: underline; }
+
+        @media (max-width: 768px) {
+            .flashcard-container { padding: 1rem; }
+            .flashcard { height: 180px; }
+            .flashcard-front, .flashcard-back { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">⚡ Barber Study Pro</a>
+            <a href="chapter-05.html" class="back-link">← Back to Chapter 5</a>
+        </div>
+    </nav>
+
+    <header class="header">
+        <span class="chapter-number">CHAPTER 5</span>
+        <h1>Implements, Tools & Equipment</h1>
+        <p>Click any card to flip and reveal the definition</p>
+    </header>
+
+    <div class="controls">
+        <button class="control-btn" onclick="flipAll()">🔄 Flip All</button>
+        <button class="control-btn" onclick="resetAll()">↩️ Reset All</button>
+    </div>
+
+    <div class="flashcard-container">
+        <div class="flashcard-grid">
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">1/18</span>
+                        <h3>Straight Razor</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A sharp blade that folds into its handle. Used for shaving facial hair. Requires skill and proper sanitation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">2/18</span>
+                        <h3>Shears</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Cutting instruments with two blades joined by a screw. Used for cutting hair. Various sizes for different techniques.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">3/18</span>
+                        <h3>Thinning Shears</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Shears with teeth on one blade used to remove bulk and blend hair without changing the overall length.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">4/18</span>
+                        <h3>Clippers</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Electric or manual cutting tools with oscillating blades. Used for cutting large amounts of hair quickly.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">5/18</span>
+                        <h3>Trimmers</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Smaller electric cutting tools for detailed work. Used for outlining, edging, and detailing haircuts.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">6/18</span>
+                        <h3>Clipper Guards</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Attachments that fit over clipper blades to control cutting length. Numbered by length (e.g., #1, #2, #3).</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">7/18</span>
+                        <h3>Comb</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Tool with teeth used for detangling, sectioning, and guiding hair during cutting. Various types for different purposes.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">8/18</span>
+                        <h3>Barber Chair</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Specialized chair that adjusts for height and reclines. Should be sanitized between each client.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">9/18</span>
+                        <h3>Neck Strips</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Paper or tissue strips placed around the neck before the cape. Provides hygiene barrier and absorbs moisture.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">10/18</span>
+                        <h3>Barber Cape</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Protective cloth worn by clients during services. Should be changed or sanitized between clients.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">11/18</span>
+                        <h3>Lather Brush</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Brush used to apply shaving cream or lather. Typically made with boar or synthetic bristles.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">12/18</span>
+                        <h3>Strop</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Leather strap used to sharpen and smooth razor blades before shaving. Maintains blade edge.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">13/18</span>
+                        <h3>Hot Towel Cabinet</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Heated cabinet that keeps towels warm and moist. Used for facial treatments and preparing skin for shaving.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">14/18</span>
+                        <h3>Sanitizing Jar</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Container filled with disinfectant solution for storing and sanitizing combs and implements between uses.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">15/18</span>
+                        <h3>Neck Duster</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Soft-bristled brush used to remove loose hair from client's neck and face after cutting.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">16/18</span>
+                        <h3>Hair Dryer</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Electric device that blows heated air to dry hair. Nozzle directs airflow for styling control.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">17/18</span>
+                        <h3>Sectioning Clips</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Clips used to hold sections of hair out of the way while working on other areas. Keeps work organized.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">18/18</span>
+                        <h3>Blade Disposal Container</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Puncture-resistant container for safe disposal of used razor blades. Required for OSHA compliance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-footer">
+        <a href="chapter-04-flashcards.html">← Chapter 4 Flashcards</a>
+        <a href="chapter-06-flashcards.html">Chapter 6 Flashcards →</a>
+    </div>
+
+    <script>
+        function flipAll() {
+            document.querySelectorAll('.flashcard').forEach(card => card.classList.add('flipped'));
+        }
+        function resetAll() {
+            document.querySelectorAll('.flashcard').forEach(card => card.classList.remove('flipped'));
+        }
+        
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html>

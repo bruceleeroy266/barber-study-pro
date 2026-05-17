@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 4 Flashcards - Infection Control | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F4E4A6;
+            --dark: #0a0a0a;
+            --dark-gray: #1a1a1a;
+            --medium-gray: #2a2a2a;
+            --light-gray: #888;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.6; min-height: 100vh; }
+
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .back-link:hover { color: var(--gold); }
+
+        .header { padding: 7rem 2rem 2rem; text-align: center; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); }
+        .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; font-size: 0.9rem; }
+        .header h1 { font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 700; margin-bottom: 0.5rem; }
+        .header p { color: var(--light-gray); max-width: 600px; margin: 0 auto; }
+
+        .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.3s; }
+
+        .controls { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+        .control-btn { background: var(--medium-gray); color: var(--white); border: 1px solid var(--gold); padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
+        .control-btn:hover { background: var(--gold); color: var(--dark); }
+
+        .flashcard-container { max-width: 900px; margin: 0 auto; padding: 2rem; perspective: 1000px; }
+        
+        .flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        
+        .flashcard { height: 200px; position: relative; cursor: pointer; }
+        .flashcard-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
+        .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+        
+        .flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .flashcard-front { background: linear-gradient(135deg, var(--dark-gray) 0%, var(--medium-gray) 100%); border: 2px solid var(--gold); }
+        .flashcard-back { background: linear-gradient(135deg, var(--gold) 0%, #B8960C 100%); color: var(--dark); transform: rotateY(180deg); border: 2px solid var(--gold); }
+        
+        .flashcard-front h3 { color: var(--gold); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .flashcard-front .hint { color: var(--light-gray); font-size: 0.8rem; }
+        .flashcard-back p { font-size: 0.95rem; font-weight: 500; line-height: 1.5; }
+        
+        .card-number { position: absolute; top: 10px; right: 15px; font-size: 0.75rem; opacity: 0.6; }
+
+        .nav-footer { max-width: 800px; margin: 3rem auto; padding: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--medium-gray); }
+        .nav-footer a { color: var(--gold); text-decoration: none; font-weight: 600; }
+        .nav-footer a:hover { text-decoration: underline; }
+
+        @media (max-width: 768px) {
+            .flashcard-container { padding: 1rem; }
+            .flashcard { height: 180px; }
+            .flashcard-front, .flashcard-back { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">⚡ Barber Study Pro</a>
+            <a href="chapter-04.html" class="back-link">← Back to Chapter 4</a>
+        </div>
+    </nav>
+
+    <header class="header">
+        <span class="chapter-number">CHAPTER 4</span>
+        <h1>Infection Control</h1>
+        <p>Click any card to flip and reveal the definition</p>
+    </header>
+
+    <div class="controls">
+        <button class="control-btn" onclick="flipAll()">🔄 Flip All</button>
+        <button class="control-btn" onclick="resetAll()">↩️ Reset All</button>
+    </div>
+
+    <div class="flashcard-container">
+        <div class="flashcard-grid">
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">1/20</span>
+                        <h3>Microorganism</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Any organism of microscopic or submicroscopic size. Includes bacteria, viruses, fungi, and parasites that can cause infection.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">2/20</span>
+                        <h3>Pathogen</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A disease-causing microorganism. Can be bacteria, viruses, fungi, or parasites that invade the body and cause illness.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">3/20</span>
+                        <h3>Bacteria</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>One-celled microorganisms that can be beneficial or harmful. Some cause disease (pathogenic) while others are harmless.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">4/20</span>
+                        <h3>Virus</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A submicroscopic infectious particle that replicates only inside living cells. Smaller than bacteria and harder to kill.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">5/20</span>
+                        <h3>Fungi</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Simple organisms including molds and yeasts. Can cause infections like ringworm and athlete's foot.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">6/20</span>
+                        <h3>Parasites</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Organisms that live on or in a host and derive nutrients at the host's expense. Includes lice and mites.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">7/20</span>
+                        <h3>Direct Transmission</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Transfer of pathogens through direct contact like touching, kissing, or contact with open wounds or bodily fluids.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">8/20</span>
+                        <h3>Indirect Transmission</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Transfer of pathogens through contaminated objects, airborne particles, vectors, or contaminated food and water.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">9/20</span>
+                        <h3>Cross-Contamination</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The spread of bacteria or other microorganisms from one surface to another, or from person to person.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">10/20</span>
+                        <h3>Contamination</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The presence of blood or other potentially infectious materials on an item or surface.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">11/20</span>
+                        <h3>Sanitation</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Cleaning to remove visible dirt and debris. Lowers bacterial count but does not kill all microorganisms.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">12/20</span>
+                        <h3>Disinfection</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Kills most microorganisms on non-porous surfaces. Required for tools and surfaces in barbering. Does not kill spores.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">13/20</span>
+                        <h3>Sterilization</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Destroys all microbial life including bacterial spores. Required for instruments that penetrate skin.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">14/20</span>
+                        <h3>EPA-Registered Disinfectant</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Disinfectants approved by the Environmental Protection Agency that are proven effective against specific pathogens.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">15/20</span>
+                        <h3>Bloodborne Pathogens</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Disease-causing microorganisms spread through contact with blood or bodily fluids. Includes HIV, HBV, and HCV.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">16/20</span>
+                        <h3>Universal Precautions</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Treating all blood and bodily fluids as if they are infectious. Standard safety approach to prevent disease transmission.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">17/20</span>
+                        <h3>Autoclave</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Device that uses steam under pressure to sterilize tools and equipment. Most effective sterilization method.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">18/20</span>
+                        <h3>Ultrasonic Cleaner</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Device that uses high-frequency sound waves to clean debris from tools before disinfection or sterilization.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">19/20</span>
+                        <h3>Biohazard</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Any biological material that poses a threat to human health. Includes blood, bodily fluids, and contaminated items.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-number">20/20</span>
+                        <h3>OSHA</h3>
+                        <span class="hint">Click to reveal</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Occupational Safety and Health Administration. Sets standards for workplace safety including bloodborne pathogen exposure.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-footer">
+        <a href="chapter-03-flashcards.html">← Chapter 3 Flashcards</a>
+        <a href="chapter-05-flashcards.html">Chapter 5 Flashcards →</a>
+    </div>
+
+    <script>
+        function flipAll() {
+            document.querySelectorAll('.flashcard').forEach(card => card.classList.add('flipped'));
+        }
+        function resetAll() {
+            document.querySelectorAll('.flashcard').forEach(card => card.classList.remove('flipped'));
+        }
+        
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html>

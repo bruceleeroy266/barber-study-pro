@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 14: Shaving and Facial Hair Design | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* Sticky Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10,10,10,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #2a2a2a;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+        .logo { font-size: 1.1rem; font-weight: 800; color: #D4AF37; text-decoration: none; }
+        nav { display: none; }
+        nav a { color: #888; text-decoration: none; margin-left: 20px; font-size: 0.85rem; }
+        nav a:hover { color: #D4AF37; }
+        .btn-small {
+            background: #D4AF37;
+            color: #0a0a0a;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 100px 20px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .chapter-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .chapter-header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #D4AF37;
+            margin-bottom: 10px;
+        }
+        .chapter-header p {
+            color: #888;
+            font-size: 1rem;
+        }
+
+        /* Flashcard Grid */
+        .flashcard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        /* Flip Card */
+        .flashcard {
+            perspective: 1000px;
+            height: 180px;
+            cursor: pointer;
+        }
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .flashcard-front {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 2px solid #D4AF37;
+        }
+        .flashcard-back {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8960C 100%);
+            color: #0a0a0a;
+            transform: rotateY(180deg);
+            border: 2px solid #D4AF37;
+        }
+        .flashcard-front h3 {
+            color: #D4AF37;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .flashcard-back p {
+            font-size: 0.9rem;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        /* Navigation */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 40px;
+        }
+        .nav-btn {
+            background: #1a1a1a;
+            color: #D4AF37;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid #D4AF37;
+            transition: all 0.3s;
+        }
+        .nav-btn:hover {
+            background: #D4AF37;
+            color: #0a0a0a;
+        }
+
+        /* Footer */
+        footer {
+            padding: 30px 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.75rem;
+            border-top: 1px solid #1a1a1a;
+            margin-top: 40px;
+        }
+
+        @media (min-width: 768px) {
+            nav { display: block; }
+            .chapter-header h1 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">Barber Study Pro</a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="login.html">Quizzes</a>
+            <a href="flashcards.html">Flashcards</a>
+            <a href="oklahoma-rules.html">Rules</a>
+        </nav>
+        <a href="signup.html" class="btn-small">Start Free</a>
+    </header>
+
+    <div class="main-content">
+        <div class="chapter-header">
+            <h1>Chapter 14: Shaving and Facial Hair Design</h1>
+            <p>Click any card to flip and reveal the definition</p>
+        </div>
+
+        <div class="flashcard-grid">
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Straight Razor</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A traditional shaving tool with a single blade that folds into the handle; requires skill and proper sanitation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Safety Razor</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A razor with a protective guard to reduce the risk of cuts; uses disposable blades.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Shaving Cream</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A product applied to the skin to provide lubrication and protection during shaving.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Shaving Soap</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A hard soap that is lathered with a brush to create rich foam for traditional shaving.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Shaving Brush</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A brush used to apply lather and lift beard hair for a closer shave.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Strop</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A leather strap used to sharpen and polish a straight razor blade before use.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Honing</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The process of sharpening a straight razor on a whetstone to maintain the blade edge.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Grain of the Beard</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The direction in which facial hair grows; important for determining shaving technique.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>With the Grain</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Shaving in the same direction as hair growth; reduces irritation and ingrown hairs.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Against the Grain</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Shaving opposite to the direction of hair growth; provides the closest shave but may cause irritation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Aftershave</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A product applied after shaving to soothe skin, close pores, and provide fragrance.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Alum Block</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A natural mineral block used to stop bleeding from minor nicks and cuts after shaving.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Beard Design</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The art of shaping and styling facial hair to complement a client's facial features.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Mustache</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Facial hair grown on the upper lip; can be styled in various shapes and sizes.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Goatee</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A beard style featuring hair on the chin only, often combined with a mustache.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Sideburns</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Facial hair grown on the sides of the face in front of the ears.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Neckline</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The defined edge where beard hair ends on the neck; proper shaping is essential for a clean look.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Cheek Line</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The upper boundary of beard growth on the cheeks; should follow natural growth patterns.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Ingrown Hair</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A hair that grows back into the skin causing inflammation; common after improper shaving.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Razor Burn</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Skin irritation caused by shaving; appears as redness, burning, or small bumps.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="chapter-13-flashcards.html" class="nav-btn">← Previous Chapter</a>
+            <a href="flashcards.html" class="nav-btn">All Flashcards</a>
+            <a href="chapter-15-flashcards.html" class="nav-btn">Next Chapter →</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Barber Study Pro. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

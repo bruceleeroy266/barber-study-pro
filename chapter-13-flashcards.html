@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 13: Men's Facial Massage and Treatments | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* Sticky Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10,10,10,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #2a2a2a;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+        .logo { font-size: 1.1rem; font-weight: 800; color: #D4AF37; text-decoration: none; }
+        nav { display: none; }
+        nav a { color: #888; text-decoration: none; margin-left: 20px; font-size: 0.85rem; }
+        nav a:hover { color: #D4AF37; }
+        .btn-small {
+            background: #D4AF37;
+            color: #0a0a0a;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 100px 20px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .chapter-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .chapter-header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #D4AF37;
+            margin-bottom: 10px;
+        }
+        .chapter-header p {
+            color: #888;
+            font-size: 1rem;
+        }
+
+        /* Flashcard Grid */
+        .flashcard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        /* Flip Card */
+        .flashcard {
+            perspective: 1000px;
+            height: 180px;
+            cursor: pointer;
+        }
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .flashcard-front {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 2px solid #D4AF37;
+        }
+        .flashcard-back {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8960C 100%);
+            color: #0a0a0a;
+            transform: rotateY(180deg);
+            border: 2px solid #D4AF37;
+        }
+        .flashcard-front h3 {
+            color: #D4AF37;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .flashcard-back p {
+            font-size: 0.9rem;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        /* Navigation */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 40px;
+        }
+        .nav-btn {
+            background: #1a1a1a;
+            color: #D4AF37;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid #D4AF37;
+            transition: all 0.3s;
+        }
+        .nav-btn:hover {
+            background: #D4AF37;
+            color: #0a0a0a;
+        }
+
+        /* Footer */
+        footer {
+            padding: 30px 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.75rem;
+            border-top: 1px solid #1a1a1a;
+            margin-top: 40px;
+        }
+
+        @media (min-width: 768px) {
+            nav { display: block; }
+            .chapter-header h1 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">Barber Study Pro</a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="login.html">Quizzes</a>
+            <a href="flashcards.html">Flashcards</a>
+            <a href="oklahoma-rules.html">Rules</a>
+        </nav>
+        <a href="signup.html" class="btn-small">Start Free</a>
+    </header>
+
+    <div class="main-content">
+        <div class="chapter-header">
+            <h1>Chapter 13: Men's Facial Massage and Treatments</h1>
+            <p>Click any card to flip and reveal the definition</p>
+        </div>
+
+        <div class="flashcard-grid">
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Facial Massage</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Manipulation of facial muscles and skin to improve circulation, tone muscles, and promote relaxation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Facial Treatment</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A service designed to cleanse, exfoliate, and improve the condition of facial skin.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Hot Towel Treatment</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The application of warm, moist towels to soften beard hair and open pores before shaving.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Facial Steam</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The use of warm steam to open pores, soften skin, and prepare the face for treatment.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Exfoliation</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>The removal of dead skin cells from the surface of the skin to reveal fresher skin beneath.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Facial Mask</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A product applied to the face to treat specific skin conditions such as dryness or oiliness.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Moisturizer</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A product that hydrates the skin and helps maintain its natural moisture barrier.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Toner</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A liquid product used after cleansing to restore the skin's pH balance and tighten pores.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Astringent</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A solution that tightens skin and reduces oil production; often contains alcohol.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Massage Cream</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A lubricating product used during facial massage to reduce friction and nourish skin.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Beard Oil</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A conditioning product that moisturizes facial hair and the skin beneath the beard.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Beard Balm</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A styling and conditioning product that provides light hold while moisturizing beard hair.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Skin Analysis</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Examination of the skin to determine type, condition, and appropriate treatments.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Oily Skin</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Skin type characterized by overactive sebaceous glands producing excess oil.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Dry Skin</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Skin type lacking sufficient moisture, often feeling tight and showing fine lines.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Combination Skin</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Skin type with both oily and dry areas, typically oily in T-zone and dry on cheeks.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Sensitive Skin</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Skin type that reacts easily to products or environmental factors with redness or irritation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Normal Skin</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Balanced skin type with good oil-moisture balance, small pores, and even texture.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Comedone</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A clogged pore; blackheads (open) and whiteheads (closed) are types of comedones.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>Acne</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>A skin condition characterized by inflamed pores, pimples, and sometimes cysts.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="chapter-12-flashcards.html" class="nav-btn">← Previous Chapter</a>
+            <a href="flashcards.html" class="nav-btn">All Flashcards</a>
+            <a href="chapter-14-flashcards.html" class="nav-btn">Next Chapter →</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Barber Study Pro. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
