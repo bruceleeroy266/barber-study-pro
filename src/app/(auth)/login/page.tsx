@@ -21,6 +21,14 @@ function LoginForm() {
     setError(null)
 
     try {
+      const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+
+      if (isDemoMode) {
+        router.push(redirect)
+        router.refresh()
+        return
+      }
+
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -61,7 +69,6 @@ function LoginForm() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
             className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-colors"
             placeholder="you@example.com"
           />
@@ -76,7 +83,6 @@ function LoginForm() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
             className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-colors"
             placeholder="••••••••"
           />
@@ -84,10 +90,17 @@ function LoginForm() {
 
         <div className="flex items-center justify-between text-sm">
           <label className="flex items-center text-gray-400">
-            <input type="checkbox" className="mr-2 rounded border-gray-700 bg-gray-800 text-[#D4AF37] focus:ring-[#D4AF37]" />
+            <input
+              type="checkbox"
+              className="mr-2 rounded border-gray-700 bg-gray-800 text-[#D4AF37] focus:ring-[#D4AF37]"
+            />
             Remember me
           </label>
-          <Link href="/reset-password" className="text-[#D4AF37] hover:text-[#F4E4A6] transition-colors">
+
+          <Link
+            href="/reset-password"
+            className="text-[#D4AF37] hover:text-[#F4E4A6] transition-colors"
+          >
             Forgot password?
           </Link>
         </div>
@@ -103,13 +116,19 @@ function LoginForm() {
 
       <div className="mt-6 text-center text-sm text-gray-400">
         Don&apos;t have an account?{' '}
-        <Link href="/signup" className="text-[#D4AF37] hover:text-[#F4E4A6] font-medium transition-colors">
+        <Link
+          href="/signup"
+          className="text-[#D4AF37] hover:text-[#F4E4A6] font-medium transition-colors"
+        >
           Sign up
         </Link>
       </div>
 
       <div className="mt-8 pt-6 border-t border-gray-800 text-center">
-        <Link href="/" className="text-gray-500 hover:text-gray-300 text-sm transition-colors">
+        <Link
+          href="/"
+          className="text-gray-500 hover:text-gray-300 text-sm transition-colors"
+        >
           ← Back to home
         </Link>
       </div>
@@ -119,15 +138,19 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={
-      <div className="bg-gray-900/80 backdrop-blur-sm border border-gray-800 rounded-2xl p-8 shadow-2xl">
-        <div className="text-center">
-          <div className="text-5xl mb-4">✂️</div>
-          <h1 className="text-2xl font-bold text-white mb-2">Welcome Back</h1>
-          <p className="text-gray-400">Loading...</p>
+    <Suspense
+      fallback={
+        <div className="bg-gray-900/80 backdrop-blur-sm border border-gray-800 rounded-2xl p-8 shadow-2xl">
+          <div className="text-center">
+            <div className="text-5xl mb-4">✂️</div>
+            <h1 className="text-2xl font-bold text-white mb-2">
+              Welcome Back
+            </h1>
+            <p className="text-gray-400">Loading...</p>
+          </div>
         </div>
-      </div>
-    }>
+      }
+    >
       <LoginForm />
     </Suspense>
   )

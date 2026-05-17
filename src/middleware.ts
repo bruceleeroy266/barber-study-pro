@@ -2,6 +2,12 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
+  // Soft launch/demo mode: skip Supabase auth checks completely.
+  // This lets V2 be previewed without Supabase being fully configured.
+  if (process.env.NEXT_PUBLIC_DEMO_MODE === 'true') {
+    return NextResponse.next()
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   })
@@ -15,10 +21,14 @@ export async function middleware(request: NextRequest) {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
+          cookiesToSet.forEach(({ name, value }) =>
+            request.cookies.set(name, value)
+          )
+
           supabaseResponse = NextResponse.next({
             request,
           })
+
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           )
@@ -27,21 +37,17 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  // Do not run code between createServerClient and supabase.auth.getUser().
-  // A simple mistake could make it very hard to debug auth issues.
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Protected routes
   const protectedRoutes = ['/dashboard', '/instructor', '/admin']
-  const isProtectedRoute = protectedRoutes.some(route => 
+  const isProtectedRoute = protectedRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
   )
 
-  // Auth routes (redirect if already logged in)
   const authRoutes = ['/login', '/signup', '/reset-password']
-  const isAuthRoute = authRoutes.some(route => 
+  const isAuthRoute = authRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
   )
 
@@ -58,14 +64,13 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // Role-based access control
   if (request.nextUrl.pathname.startsWith('/instructor') && user) {
     const { data: profile } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
       .single()
-    
+
     if (!profile || (profile.role !== 'instructor' && profile.role !== 'admin')) {
       const url = request.nextUrl.clone()
       url.pathname = '/dashboard'
@@ -79,7 +84,7 @@ export async function middleware(request: NextRequest) {
       .select('role')
       .eq('id', user.id)
       .single()
-    
+
     if (!profile || profile.role !== 'admin') {
       const url = request.nextUrl.clone()
       url.pathname = '/dashboard'
