@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
+import { Profile, Chapter } from '@/types'
 
 export default async function InstructorDashboard() {
   const supabase = await createClient()
@@ -25,14 +26,14 @@ export default async function InstructorDashboard() {
     .from('profiles')
     .select('*')
     .eq('school_id', profile.school_id)
-    .eq('role', 'student')
+    .eq('role', 'student') as { data: Profile[] | null; error: any }
 
   // Get all chapters
   const { data: chapters } = await supabase
     .from('chapters')
     .select('*')
     .eq('is_active', true)
-    .order('chapter_number', { ascending: true })
+    .order('chapter_number', { ascending: true }) as { data: Chapter[] | null; error: any }
 
   return (
     <div className="min-h-screen bg-gray-950 p-8">

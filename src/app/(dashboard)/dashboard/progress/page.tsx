@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase-server'
+import { Chapter, StudentProgress, QuizAttempt } from '@/types'
 
 export default async function ProgressPage() {
   const supabase = await createClient()
@@ -9,20 +10,20 @@ export default async function ProgressPage() {
     .from('chapters')
     .select('*')
     .eq('is_active', true)
-    .order('chapter_number', { ascending: true })
+    .order('chapter_number', { ascending: true }) as { data: Chapter[] | null; error: any }
 
   // Get user progress
   const { data: progress } = await supabase
     .from('student_progress')
     .select('*')
-    .eq('user_id', user?.id)
+    .eq('user_id', user?.id) as { data: StudentProgress[] | null; error: any }
 
   // Get quiz attempts
   const { data: attempts } = await supabase
     .from('quiz_attempts')
     .select('*, quizzes(chapter_id)')
     .eq('user_id', user?.id)
-    .order('completed_at', { ascending: false })
+    .order('completed_at', { ascending: false }) as { data: QuizAttempt[] | null; error: any }
 
   // Calculate stats
   const totalChapters = chapters?.length || 0

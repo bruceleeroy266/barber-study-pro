@@ -13,13 +13,13 @@ export default async function DashboardPage() {
     .from('chapters')
     .select('*')
     .eq('is_active', true)
-    .order('chapter_number', { ascending: true })
+    .order('chapter_number', { ascending: true }) as { data: Chapter[] | null; error: any }
 
   // Get user progress
   const { data: progress } = await supabase
     .from('student_progress')
     .select('*')
-    .eq('user_id', user?.id)
+    .eq('user_id', user?.id) as { data: StudentProgress[] | null; error: any }
 
   // Calculate stats
   const totalChapters = chapters?.length || 0

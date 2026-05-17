@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase-server'
 import Link from 'next/link'
+import { Chapter, StudentProgress } from '@/types'
 
 export default async function ChaptersPage() {
   const supabase = await createClient()
@@ -10,12 +11,12 @@ export default async function ChaptersPage() {
     .from('chapters')
     .select('*')
     .eq('is_active', true)
-    .order('chapter_number', { ascending: true })
+    .order('chapter_number', { ascending: true }) as { data: Chapter[] | null; error: any }
 
   const { data: progress } = await supabase
     .from('student_progress')
     .select('*')
-    .eq('user_id', user?.id)
+    .eq('user_id', user?.id) as { data: StudentProgress[] | null; error: any }
 
   return (
     <div className="space-y-8">
