@@ -4,6 +4,15 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 const demoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
 
+// Check if Supabase is properly configured
+const isSupabaseConfigured =
+  supabaseUrl &&
+  supabaseKey &&
+  supabaseUrl.startsWith('https://') &&
+  !supabaseUrl.includes('your-project') &&
+  !supabaseUrl.includes('example.supabase.co') &&
+  supabaseKey.length > 20
+
 const mockSupabase = {
   auth: {
     signOut: async () => ({ error: null }),
@@ -46,8 +55,16 @@ const mockSupabase = {
 }
 
 function createClient() {
-  if (demoMode || !supabaseUrl || !supabaseKey || supabaseUrl.includes('example.supabase.co')) {
-    console.warn('Demo mode: Supabase disabled')
+  // Only use demo mode if explicitly enabled AND Supabase is not configured
+  if (demoMode && !isSupabaseConfigured) {
+    console.warn('[Barber Study Pro] Demo mode active — Supabase not configured')
+    return mockSupabase as any
+  }
+
+  // Production: require real Supabase
+  if (!isSupabaseConfigured) {
+    console.error('[Barber Study Pro] ERROR: Supabase not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY, or enable demo mode.')
+    // Return mock to prevent crashes, but log error
     return mockSupabase as any
   }
 

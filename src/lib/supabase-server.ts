@@ -13,6 +13,17 @@ import {
 
 const demoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
 
+// Check if Supabase is properly configured
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+const isSupabaseConfigured =
+  supabaseUrl &&
+  supabaseKey &&
+  supabaseUrl.startsWith('https://') &&
+  !supabaseUrl.includes('your-project') &&
+  !supabaseUrl.includes('example.supabase.co') &&
+  supabaseKey.length > 20
+
 // Demo user/session for server-side mock
 const demoSession = {
   access_token: 'demo-server-token',
@@ -312,8 +323,16 @@ function createMockServerClient() {
 }
 
 export async function createClient() {
-  // Demo mode: return mock client without requiring real Supabase credentials
-  if (demoMode) {
+  // Demo mode: return mock client only if explicitly enabled AND Supabase not configured
+  if (demoMode && !isSupabaseConfigured) {
+    console.warn('[Barber Study Pro] Server demo mode active — Supabase not configured')
+    return createMockServerClient() as any
+  }
+
+  // Production: require real Supabase
+  if (!isSupabaseConfigured) {
+    console.error('[Barber Study Pro] Server ERROR: Supabase not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY, or enable demo mode.')
+    // Return mock to prevent crashes during build/startup
     return createMockServerClient() as any
   }
 
@@ -321,8 +340,8 @@ export async function createClient() {
   const cookieStore = await cookies()
 
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseKey,
     {
       cookies: {
         getAll() {

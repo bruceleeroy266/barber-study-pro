@@ -1,10 +1,23 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+// Check if Supabase is properly configured
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+const demoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+
+const isSupabaseConfigured =
+  supabaseUrl &&
+  supabaseKey &&
+  supabaseUrl.startsWith('https://') &&
+  !supabaseUrl.includes('your-project') &&
+  !supabaseUrl.includes('example.supabase.co') &&
+  supabaseKey.length > 20
+
 export async function middleware(request: NextRequest) {
-  // Soft launch/demo mode: skip Supabase auth checks completely.
-  // This lets V2 be previewed without Supabase being fully configured.
-  if (process.env.NEXT_PUBLIC_DEMO_MODE === 'true') {
+  // Demo mode: skip auth checks ONLY if explicitly enabled AND Supabase not configured
+  if (demoMode && !isSupabaseConfigured) {
+    console.warn('[Middleware] Demo mode — auth bypassed')
     return NextResponse.next()
   }
 
@@ -12,9 +25,26 @@ export async function middleware(request: NextRequest) {
     request,
   })
 
+  // If Supabase not configured and demo mode is off, block protected routes
+  if (!isSupabaseConfigured) {
+    const protectedRoutes = ['/dashboard', '/instructor', '/admin']
+    const isProtectedRoute = protectedRoutes.some((route) =>
+      request.nextUrl.pathname.startsWith(route)
+    )
+
+    if (isProtectedRoute) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/login'
+      url.searchParams.set('error', 'supabase_not_configured')
+      return NextResponse.redirect(url)
+    }
+
+    return supabaseResponse
+  }
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseKey,
     {
       cookies: {
         getAll() {
