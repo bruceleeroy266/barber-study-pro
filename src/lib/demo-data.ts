@@ -2,6 +2,9 @@
 // This provides safe mock data when NEXT_PUBLIC_DEMO_MODE=true
 
 import { Chapter, Flashcard, Quiz, QuizQuestion, QuizAttempt, StudentProgress, Profile } from '@/types'
+import { chapterFlashcards as realFlashcards } from './flashcards-data'
+import { batch1Flashcards, batch2Flashcards, batch3Flashcards, batch4Flashcards } from './orphaned-flashcards'
+import { allQuizQuestions } from './quiz-data'
 
 export const demoUser = {
   id: 'demo-user',
@@ -44,24 +47,90 @@ export const demoChapters: Chapter[] = [
   { id: 'ch-21', chapter_number: 21, title: 'Final Exam Preparation', description: 'Comprehensive final exam preparation with practice tests and review materials.', content: null, order_index: 21, is_active: true },
 ]
 
-export const demoFlashcards: Record<string, Flashcard[]> = {
-  'ch-1': [
-    { id: 'fc-1-1', chapter_id: 'ch-1', front: 'What is the origin of the word "barber"?', back: 'From the Latin word "barba" meaning beard.', category: 'History', difficulty: 'easy', order_index: 1, is_active: true },
-    { id: 'fc-1-2', chapter_id: 'ch-1', front: 'When did barbering begin?', back: 'Barbering dates back to ancient Egypt around 5000 BC.', category: 'History', difficulty: 'easy', order_index: 2, is_active: true },
-    { id: 'fc-1-3', chapter_id: 'ch-1', front: 'What was a barber-surgeon?', back: 'A practitioner who performed both haircuts and medical procedures like bloodletting and dentistry.', category: 'History', difficulty: 'medium', order_index: 3, is_active: true },
-    { id: 'fc-1-4', chapter_id: 'ch-1', front: 'What does the barber pole represent?', back: 'The red and white stripes represent blood and bandages from the barber-surgeon era.', category: 'History', difficulty: 'medium', order_index: 4, is_active: true },
-    { id: 'fc-1-5', chapter_id: 'ch-1', front: 'When did barbering become a separate profession from surgery?', back: 'In 1745 in England, when barbers and surgeons formed separate guilds.', category: 'History', difficulty: 'hard', order_index: 5, is_active: true },
-  ],
-  'ch-2': [
-    { id: 'fc-2-1', chapter_id: 'ch-2', front: 'What are the key life skills for a barber?', back: 'Communication, time management, goal setting, and stress management.', category: 'Life Skills', difficulty: 'easy', order_index: 1, is_active: true },
-    { id: 'fc-2-2', chapter_id: 'ch-2', front: 'Why is time management important in barbering?', back: 'It ensures efficient scheduling, reduces client wait times, and maximizes income.', category: 'Life Skills', difficulty: 'easy', order_index: 2, is_active: true },
-    { id: 'fc-2-3', chapter_id: 'ch-2', front: 'What is SMART goal setting?', back: 'Specific, Measurable, Achievable, Relevant, Time-bound goals.', category: 'Life Skills', difficulty: 'medium', order_index: 3, is_active: true },
-  ],
+// Use real flashcards for chapters 1-3, demo for rest
+export const demoFlashcards: Record<string, Flashcard[]> = {}
+
+// Load real flashcards for chapters 1-4 and 16
+const realChapters = [1, 2, 3, 4, 16]
+for (const i of realChapters) {
+  const chId = `ch-${i}`
+  if (realFlashcards[chId]) {
+    demoFlashcards[chId] = realFlashcards[chId].map((fc, idx) => ({
+      ...fc,
+      order_index: idx + 1,
+      is_active: true,
+    }))
+  }
 }
 
-// Generate flashcards for remaining chapters (minimal)
-for (let i = 3; i <= 21; i++) {
+// BATCH 1: Merge orphaned flashcards for Ch 2, 5, 6
+// Chapter 2: Merge active + orphaned
+if (batch1Flashcards['ch-2'] && batch1Flashcards['ch-2'].length > 0) {
+  const existing = demoFlashcards['ch-2'] || []
+  const orphaned = batch1Flashcards['ch-2']
+  // Re-index merged set
+  demoFlashcards['ch-2'] = [...existing, ...orphaned].map((fc, idx) => ({
+    ...fc,
+    id: `fc-2-${String(idx + 1).padStart(3, '0')}`,
+    order_index: idx + 1,
+  }))
+}
+
+// Chapter 5: Replace placeholder with orphaned
+if (batch1Flashcards['ch-5'] && batch1Flashcards['ch-5'].length > 0) {
+  demoFlashcards['ch-5'] = batch1Flashcards['ch-5']
+}
+
+// Chapter 6: Replace placeholder with orphaned
+if (batch1Flashcards['ch-6'] && batch1Flashcards['ch-6'].length > 0) {
+  demoFlashcards['ch-6'] = batch1Flashcards['ch-6']
+}
+
+// BATCH 2: Wire orphaned flashcards for Ch 7, 8, 9
+// Chapter 7: Replace placeholder with orphaned
+if (batch2Flashcards['ch-7'] && batch2Flashcards['ch-7'].length > 0) {
+  demoFlashcards['ch-7'] = batch2Flashcards['ch-7']
+}
+
+// Chapter 8: Replace placeholder with orphaned
+if (batch2Flashcards['ch-8'] && batch2Flashcards['ch-8'].length > 0) {
+  demoFlashcards['ch-8'] = batch2Flashcards['ch-8']
+}
+
+// Chapter 9: Replace placeholder with orphaned
+if (batch2Flashcards['ch-9'] && batch2Flashcards['ch-9'].length > 0) {
+  demoFlashcards['ch-9'] = batch2Flashcards['ch-9']
+}
+
+// BATCH 3: Wire orphaned flashcards for Ch 10, 11, 12
+// Chapter 10: Replace placeholder with orphaned
+if (batch3Flashcards['ch-10'] && batch3Flashcards['ch-10'].length > 0) {
+  demoFlashcards['ch-10'] = batch3Flashcards['ch-10']
+}
+
+// Chapter 11: Replace placeholder with orphaned
+if (batch3Flashcards['ch-11'] && batch3Flashcards['ch-11'].length > 0) {
+  demoFlashcards['ch-11'] = batch3Flashcards['ch-11']
+}
+
+// Chapter 12: Replace placeholder with orphaned
+if (batch3Flashcards['ch-12'] && batch3Flashcards['ch-12'].length > 0) {
+  demoFlashcards['ch-12'] = batch3Flashcards['ch-12']
+}
+
+// BATCH 4: Wire orphaned flashcards for Ch 13, 14, 15, 17, 18, 19, 20, 21
+const batch4Chapters = ['ch-13', 'ch-14', 'ch-15', 'ch-17', 'ch-18', 'ch-19', 'ch-20', 'ch-21']
+for (const chId of batch4Chapters) {
+  if (batch4Flashcards[chId] && batch4Flashcards[chId].length > 0) {
+    demoFlashcards[chId] = batch4Flashcards[chId]
+  }
+}
+
+// Generate placeholder flashcards for remaining chapters (16)
+for (let i = 5; i <= 21; i++) {
   const chId = `ch-${i}`
+  // Skip chapters that now have real data
+  if (demoFlashcards[chId] && demoFlashcards[chId].length > 3) continue
   if (!demoFlashcards[chId]) {
     demoFlashcards[chId] = [
       { id: `fc-${i}-1`, chapter_id: chId, front: `Key concept from Chapter ${i}`, back: `This is a demo flashcard for Chapter ${i}. Real content will be loaded when Supabase is connected.`, category: 'General', difficulty: 'easy', order_index: 1, is_active: true },
@@ -84,13 +153,8 @@ for (let i = 3; i <= 21; i++) {
 }
 
 export const demoQuizQuestions: Record<string, QuizQuestion[]> = {
-  'quiz-1': [
-    { id: 'qq-1-1', quiz_id: 'quiz-1', question: 'What is the origin of the word "barber"?', answer_a: 'Greek word for "hair"', answer_b: 'Latin word "barba" meaning beard', answer_c: 'French word for "cutter"', answer_d: 'English word for "stylist"', correct_answer: 'b', explanation: 'The word barber comes from the Latin "barba" meaning beard.', difficulty: 'easy', order_index: 1 },
-    { id: 'qq-1-2', quiz_id: 'quiz-1', question: 'When did barber-surgeons exist?', answer_a: '19th century', answer_b: 'Renaissance period through 18th century', answer_c: 'Ancient Egypt only', answer_d: '20th century', correct_answer: 'b', explanation: 'Barber-surgeons existed from the Renaissance period until they were separated into distinct professions in 1745.', difficulty: 'medium', order_index: 2 },
-    { id: 'qq-1-3', quiz_id: 'quiz-1', question: 'What do the colors on a barber pole represent?', answer_a: 'American flag colors', answer_b: 'Blood and bandages from barber-surgeons', answer_c: 'Hair colors', answer_d: 'Shop branding', correct_answer: 'b', explanation: 'The red represents blood and white represents bandages from the barber-surgeon era.', difficulty: 'easy', order_index: 3 },
-    { id: 'qq-1-4', quiz_id: 'quiz-1', question: 'In what year did barbers and surgeons separate in England?', answer_a: '1600', answer_b: '1745', answer_c: '1900', answer_d: '1500', correct_answer: 'b', explanation: 'Barbers and surgeons formed separate guilds in England in 1745.', difficulty: 'medium', order_index: 4 },
-    { id: 'qq-1-5', quiz_id: 'quiz-1', question: 'Which ancient civilization practiced barbering around 5000 BC?', answer_a: 'Rome', answer_b: 'Greece', answer_c: 'Egypt', answer_d: 'China', correct_answer: 'c', explanation: 'Ancient Egyptians practiced barbering as early as 5000 BC.', difficulty: 'easy', order_index: 5 },
-  ],
+  // Real quiz questions from quiz-data.ts
+  ...allQuizQuestions,
   'quiz-2': [
     { id: 'qq-2-1', quiz_id: 'quiz-2', question: 'What does the "S" in SMART goals stand for?', answer_a: 'Simple', answer_b: 'Specific', answer_c: 'Strategic', answer_d: 'Short-term', correct_answer: 'b', explanation: 'SMART stands for Specific, Measurable, Achievable, Relevant, Time-bound.', difficulty: 'easy', order_index: 1 },
     { id: 'qq-2-2', quiz_id: 'quiz-2', question: 'Why is communication important for barbers?', answer_a: 'Only for scheduling', answer_b: 'To understand client needs and build relationships', answer_c: 'Not important', answer_d: 'Only for complaints', correct_answer: 'b', explanation: 'Good communication helps barbers understand client needs and build lasting relationships.', difficulty: 'easy', order_index: 2 },
