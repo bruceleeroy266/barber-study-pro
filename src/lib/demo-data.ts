@@ -155,10 +155,6 @@ for (let i = 3; i <= 21; i++) {
 export const demoQuizQuestions: Record<string, QuizQuestion[]> = {
   // Real quiz questions from quiz-data.ts
   ...allQuizQuestions,
-  'quiz-2': [
-    { id: 'qq-2-1', quiz_id: 'quiz-2', question: 'What does the "S" in SMART goals stand for?', answer_a: 'Simple', answer_b: 'Specific', answer_c: 'Strategic', answer_d: 'Short-term', correct_answer: 'b', explanation: 'SMART stands for Specific, Measurable, Achievable, Relevant, Time-bound.', difficulty: 'easy', order_index: 1 },
-    { id: 'qq-2-2', quiz_id: 'quiz-2', question: 'Why is communication important for barbers?', answer_a: 'Only for scheduling', answer_b: 'To understand client needs and build relationships', answer_c: 'Not important', answer_d: 'Only for complaints', correct_answer: 'b', explanation: 'Good communication helps barbers understand client needs and build lasting relationships.', difficulty: 'easy', order_index: 2 },
-  ],
 }
 
 for (let i = 3; i <= 21; i++) {

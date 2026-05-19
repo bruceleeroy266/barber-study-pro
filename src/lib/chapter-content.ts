@@ -294,6 +294,79 @@ export const chapter1Theme: ChapterTheme = {
 }
 
 // ───────────────────────────────────────────────
+// Chapter 2: Life Skills — Professional Growth Theme
+// Navy blue / Steel blue / Amber-Gold
+// ───────────────────────────────────────────────
+
+export const chapter2Theme: ChapterTheme = {
+  // Core: professional navy palette
+  primary: '#4A90D9',           // Steel blue — trustworthy, professional
+  primaryLight: '#7AB8E8',      // Light steel blue
+  primaryDark: '#2E5A8C',       // Deep navy
+  secondary: '#F5A623',         // Amber/Gold — success, achievement
+  background: 'rgba(15, 30, 55, 0.85)',   // Deep navy
+  backgroundAlt: 'rgba(25, 45, 75, 0.7)', // Lighter navy
+  surface: '#0A1628',           // Very dark navy
+  border: 'rgba(74, 144, 217, 0.25)',     // Steel blue border
+  text: '#E8F0FE',              // Clean white-blue
+  textMuted: '#8BA4C7',         // Soft blue-gray
+  highlight: '#F5A623',         // Amber highlight
+  // Timeline: professional navy feel
+  timeline: {
+    line: 'rgba(74, 144, 217, 0.3)',
+    iconBg: '#0F1E37',
+    iconBorder: '#4A90D9',
+  },
+  // Quote: elegant steel border
+  quote: {
+    border: 'rgba(74, 144, 217, 0.4)',
+    icon: 'rgba(74, 144, 217, 0.3)',
+    bg: 'rgba(15, 30, 55, 0.6)',
+  },
+  // Tabbed: corporate navy
+  tabbed: {
+    activeBg: 'rgba(74, 144, 217, 0.15)',
+    activeBorder: 'rgba(74, 144, 217, 0.5)',
+    activeText: '#7AB8E8',
+    inactiveBg: 'rgba(15, 30, 55, 0.6)',
+    inactiveBorder: 'rgba(74, 144, 217, 0.15)',
+    inactiveText: '#8BA4C7',
+    panelBg: 'rgba(15, 30, 55, 0.7)',
+    panelBorder: 'rgba(74, 144, 217, 0.2)',
+  },
+  // Tool cards: steel and amber
+  toolCard: {
+    headerBg: 'rgba(245, 166, 35, 0.15)',
+    headerText: '#F5A623',
+    dot: 'rgba(74, 144, 217, 0.6)',
+    line: 'rgba(74, 144, 217, 0.25)',
+  },
+  // Feature grid: professional steel
+  featureGrid: {
+    iconBg: 'rgba(74, 144, 217, 0.15)',
+    iconColor: '#4A90D9',
+    cardBorder: 'rgba(74, 144, 217, 0.2)',
+  },
+  // Milestones: amber accent
+  milestone: {
+    yearColor: '#F5A623',
+    border: 'rgba(74, 144, 217, 0.2)',
+  },
+  // Checklist: professional
+  checklist: {
+    checkBorder: 'rgba(74, 144, 217, 0.4)',
+    checkColor: '#4A90D9',
+    bg: 'rgba(15, 30, 55, 0.6)',
+  },
+  // Content block: navy
+  contentBlock: {
+    bg: 'rgba(15, 30, 55, 0.6)',
+    border: 'rgba(74, 144, 217, 0.2)',
+    highlightColor: '#F5A623',
+  },
+}
+
+// ───────────────────────────────────────────────
 // Chapter Content Data
 // ───────────────────────────────────────────────
 
@@ -563,6 +636,367 @@ export const chapterContentData: Record<string, ChapterContent> = {
         type: 'quote',
         id: 'legacy-quote',
         quote: 'From prehistoric flint blades to precision electric clippers, from bloodletting to hot towel shaves, the barber\'s role has evolved dramatically. Yet the core remains unchanged: transforming how people look and feel.',
+      },
+    ],
+  },
+  'ch-2': {
+    chapterNumber: 2,
+    title: 'Life Skills for Barbers',
+    subtitle: 'Building the Foundation for a Successful Career Beyond the Chair',
+    theme: chapter2Theme,
+    sections: [
+      // Section 1: Why Life Skills Matter
+      {
+        type: 'contentBlock',
+        id: 'why-life-skills',
+        title: 'Why Life Skills Matter for Barber Success',
+        content: "Technical skill gets you the license. Life skills build your career. The difference between a barber who struggles and one who thrives often has nothing to do with how well they fade. Most barber school graduates have similar technical training. What separates the successful from the struggling comes down to showing up consistently and on time, managing money wisely, building genuine client relationships, and handling stress without burning out.",
+        highlight: 'Life skills build your career.',
+      },
+      {
+        type: 'checklist',
+        id: 'success-separators',
+        title: 'What Separates Successful Barbers',
+        items: [
+          { text: 'Showing up consistently and on time' },
+          { text: 'Managing money wisely' },
+          { text: 'Building genuine client relationships' },
+          { text: 'Handling stress without burning out' },
+        ],
+      },
+      {
+        type: 'quote',
+        id: 'clippers-quote',
+        quote: "Your clippers are just tools. You are the business.",
+      },
+
+      // Section 2: Setting and Achieving Goals (Tabbed)
+      {
+        type: 'tabbed',
+        id: 'goal-setting',
+        title: 'Setting and Achieving Goals',
+        subtitle: "Dreams without plans are just wishes. Let's build your roadmap.",
+        tabs: [
+          {
+            id: 'smart-goals',
+            label: 'SMART Goals',
+            title: 'The SMART Framework',
+            bullets: [
+              { label: 'S — Specific', description: 'Not "get better" but "master skin fades on all hair types"' },
+              { label: 'M — Measurable', description: '"Build to 20 regular clients" not "get more customers"' },
+              { label: 'A — Achievable', description: 'Challenging but realistic given your current situation' },
+              { label: 'R — Relevant', description: 'Aligns with your bigger career vision' },
+              { label: 'T — Time-Bound', description: '"By December 31st" creates urgency and focus' },
+            ],
+          },
+          {
+            id: 'short-vs-long',
+            label: 'Short vs Long',
+            title: 'Short-Term vs Long-Term Goals',
+            bullets: [
+              { label: 'Short-Term (1-12 months)', description: 'Pass state board exam, complete 100 practice cuts, build Instagram portfolio, save $2,000 emergency fund' },
+              { label: 'Long-Term (2-10 years)', description: 'Open your own barbershop, build clientele of 200+ regulars, hire and mentor apprentices, achieve financial independence' },
+            ],
+          },
+          {
+            id: 'action-steps',
+            label: 'Action Steps',
+            title: 'Breaking Goals Into Action Steps',
+            bullets: [
+              { label: 'Step 1: Write down your big goal', description: 'Example: "Open my own barbershop in 3 years"' },
+              { label: 'Step 2: Work backward', description: 'Get licensed → Build clientele → Save money → Find location' },
+              { label: 'Step 3: Break into weekly tasks', description: '"This week: Practice 5 fades, post 3 cuts on social media, save $50"' },
+              { label: 'Step 4: Schedule it like an appointment', description: 'Put practice time on your calendar. Treat it like a paid client.' },
+            ],
+          },
+          {
+            id: 'track-progress',
+            label: 'Track Progress',
+            title: 'Tracking Your Progress',
+            bullets: [
+              { label: 'Keep a Progress Journal', description: 'Write down what you accomplished each day. Seeing progress builds momentum.' },
+              { label: 'Use Visual Trackers', description: 'Charts, calendars, or apps that show your streaks and milestones.' },
+              { label: 'Find an Accountability Partner', description: 'Share goals with a classmate or mentor who will check in on your progress.' },
+            ],
+          },
+        ],
+      },
+
+      // Section 3: Time Management
+      {
+        type: 'contentBlock',
+        id: 'time-challenge',
+        title: 'Time Management for Students',
+        content: "You're juggling school, possibly work, family, and trying to have a life. Without a system, something always suffers — usually your progress. The barber student's challenge is real: every hour counts, and how you spend your time directly impacts how fast you grow.",
+        highlight: 'every hour counts',
+      },
+      {
+        type: 'checklist',
+        id: 'time-traps',
+        title: 'Common Time Traps',
+        items: [
+          { text: '"I\'ll practice later" (later never comes)' },
+          { text: 'Scrolling social media "for just a minute"' },
+          { text: 'Saying yes to everything and everyone' },
+          { text: 'Not planning tomorrow before bed' },
+        ],
+      },
+      {
+        type: 'featureGrid',
+        id: 'time-tools',
+        title: 'Time Management Tools',
+        features: [
+          {
+            icon: 'Wrench',
+            title: 'The Time Block Method',
+            description: 'Divide your day into blocks: School (8am-3pm), Practice (4pm-6pm), Family (6pm-8pm), Personal (8pm-10pm). Protect each block.',
+          },
+          {
+            icon: 'Lightbulb',
+            title: 'The 2-Minute Rule',
+            description: 'If a task takes less than 2 minutes, do it immediately. Don\'t let small tasks pile up.',
+          },
+          {
+            icon: 'Calendar',
+            title: 'The Sunday Planning Session',
+            description: 'Spend 30 minutes every Sunday mapping out your week. Know your priorities before Monday hits.',
+          },
+        ],
+      },
+      {
+        type: 'contentBlock',
+        id: 'sample-schedule',
+        title: 'Sample Weekly Schedule for Barber Students',
+        content: "A well-structured week balances school, practice, study, family, and rest. Here's a sample framework: School hours (8am-3pm) Monday through Friday. Practice time (4pm-6pm) on Mondays, Wednesdays, and Fridays. Study blocks (4pm-6pm) on Tuesdays and Thursdays. Evenings reserved for family time. Saturdays for extended practice or portfolio work. Sundays for the weekly planning session and rest. Adjust based on your specific school schedule and commitments, but protect your practice and study blocks like paid appointments.",
+        highlight: 'protect your practice and study blocks like paid appointments',
+      },
+
+      // Section 4: Effective Study Habits
+      {
+        type: 'featureGrid',
+        id: 'study-habits',
+        title: 'Effective Study Habits',
+        features: [
+          {
+            icon: 'BookOpen',
+            title: 'Active Learning',
+            description: "Don't just read — do. Practice cuts while explaining what you're doing out loud. Teach a classmate. Create flashcards.",
+          },
+          {
+            icon: 'Redo',
+            title: 'Spaced Repetition',
+            description: 'Review material multiple times over days/weeks, not just once. Your brain remembers better with spaced exposure.',
+          },
+          {
+            icon: 'Hand',
+            title: 'Muscle Memory',
+            description: 'Barbering is physical. Repetition builds automatic movements. Practice the same technique until it feels natural.',
+          },
+        ],
+      },
+      {
+        type: 'contentBlock',
+        id: 'study-system',
+        title: 'The Barber Student Study System',
+        content: "For Theory (State Board Prep): Create flashcards for terms and definitions. Study in 25-minute focused blocks (Pomodoro Technique). Take practice exams under timed conditions. Review wrong answers and understand why. Study with a partner and quiz each other. For Practical Skills: Film yourself cutting and review the footage. Practice on mannequins with different textures. Ask instructors for specific feedback. Shadow barbers whose work you admire. Keep a portfolio of before/after photos.",
+        highlight: 'Study in 25-minute focused blocks',
+      },
+
+      // Section 5: Stress Management & Work-Life Balance
+      {
+        type: 'contentBlock',
+        id: 'stress-intro',
+        title: 'Stress Management & Work-Life Balance',
+        content: "Barbering is physically demanding and emotionally draining. Standing all day, making constant conversation, and managing client expectations takes a toll. Your well-being is your most important business asset. Without it, your technical skills don't matter.",
+        highlight: 'Your well-being is your most important business asset.',
+      },
+      {
+        type: 'featureGrid',
+        id: 'physical-self-care',
+        title: 'Physical Self-Care',
+        features: [
+          {
+            icon: 'ShoePrints',
+            title: 'Invest in Quality Shoes',
+            description: 'Your feet are your foundation. Good shoes prevent back and knee problems.',
+          },
+          {
+            icon: 'Dumbbell',
+            title: 'Stretch and Strengthen',
+            description: 'Do wrist stretches, shoulder rolls, and back exercises daily.',
+          },
+          {
+            icon: 'Bed',
+            title: 'Prioritize Sleep',
+            description: "7-8 hours isn't optional — it's when your body repairs itself.",
+          },
+          {
+            icon: 'Utensils',
+            title: 'Eat Real Food',
+            description: "Pack meals. Don't rely on vending machines and fast food between clients.",
+          },
+        ],
+      },
+      {
+        type: 'featureGrid',
+        id: 'mental-health',
+        title: 'Mental & Emotional Health',
+        features: [
+          {
+            icon: 'Ban',
+            title: 'Set Boundaries',
+            description: "Learn to say no. You don't have to take every walk-in or stay late every day.",
+          },
+          {
+            icon: 'Users',
+            title: 'Build a Support Network',
+            description: 'Connect with other barbers who understand the unique stresses of the job.',
+          },
+          {
+            icon: 'Palette',
+            title: 'Have Hobbies Outside Barbering',
+            description: "You're more than your job. Maintain interests that recharge you.",
+          },
+          {
+            icon: 'HeartPulse',
+            title: 'Know When to Seek Help',
+            description: "Therapy isn't weakness. If stress is overwhelming, talk to a professional.",
+          },
+        ],
+      },
+      {
+        type: 'checklist',
+        id: 'burnout-signs',
+        title: 'Warning Signs of Burnout',
+        items: [
+          { text: 'Dreading work' },
+          { text: 'Chronic fatigue' },
+          { text: 'Irritability with clients' },
+          { text: 'Physical aches' },
+          { text: 'Loss of creativity' },
+        ],
+      },
+
+      // Section 6: Building Professional Relationships
+      {
+        type: 'contentBlock',
+        id: 'networking-intro',
+        title: 'Building Professional Relationships & Networking',
+        content: "In barbering, who you know opens doors. A connection can lead to a job, a shop partnership, or a mentorship opportunity. Your network is your net worth. Real networking is just building genuine relationships — not sleazy or fake. Start now — people love helping students. Even 10 minutes a day on social media counts.",
+        highlight: 'Your network is your net worth.',
+      },
+      {
+        type: 'checklist',
+        id: 'networking-myths',
+        title: 'Networking Myths Debunked',
+        items: [
+          { text: '❌ "Networking is sleazy and fake" → Real networking is just building genuine relationships' },
+          { text: '❌ "I\'m too new to network" → Start now — people love helping students' },
+          { text: '❌ "I don\'t have time" → 10 minutes a day on social media counts' },
+        ],
+      },
+      {
+        type: 'featureGrid',
+        id: 'where-to-network',
+        title: 'Where to Network',
+        features: [
+          {
+            icon: 'MessageCircle',
+            title: 'Social Media',
+            description: 'Follow, comment, and engage with barbers you admire.',
+          },
+          {
+            icon: 'Award',
+            title: 'Barber Battles & Competitions',
+            description: 'Meet barbers from all over your region.',
+          },
+          {
+            icon: 'Store',
+            title: 'Local Barber Shops',
+            description: 'Visit shops, introduce yourself, get haircuts.',
+          },
+          {
+            icon: 'GraduationCap',
+            title: 'School Events & Alumni',
+            description: 'Connect with graduates who are now working.',
+          },
+        ],
+      },
+      {
+        type: 'featureGrid',
+        id: 'building-relationships',
+        title: 'The Art of Building Relationships',
+        features: [
+          {
+            icon: 'Heart',
+            title: 'Be Genuine',
+            description: "People can smell fake interest. Actually care about others' work and journey.",
+          },
+          {
+            icon: 'Gift',
+            title: 'Give First',
+            description: 'Share knowledge, make introductions, offer help before asking for anything.',
+          },
+          {
+            icon: 'MessageCircle',
+            title: 'Stay in Touch',
+            description: 'A quick comment on their post or occasional check-in keeps connections alive.',
+          },
+          {
+            icon: 'Star',
+            title: 'Show Gratitude',
+            description: 'Thank people who help you. Public shoutouts and private messages both matter.',
+          },
+        ],
+      },
+
+      // Section 7: Financial Literacy
+      {
+        type: 'contentBlock',
+        id: 'financial-truth',
+        title: 'Basic Financial Literacy for Barbers',
+        content: "Hard Truth: Most barbers struggle financially not because they can't cut hair, but because they never learned money management. Technical skill earns income. Financial literacy keeps it.",
+        highlight: "never learned money management",
+      },
+      {
+        type: 'featureGrid',
+        id: 'financial-rules',
+        title: 'Financial Foundations',
+        features: [
+          {
+            icon: 'PiggyBank',
+            title: 'The 50/30/20 Rule',
+            description: '50% Needs (rent, food, utilities), 30% Wants (entertainment), 20% Savings & Debt.',
+          },
+          {
+            icon: 'ShieldCheck',
+            title: 'Emergency Fund',
+            description: 'Start with $1,000 mini-fund. Build to 3 months of expenses. Eventually aim for 6 months.',
+          },
+          {
+            icon: 'ChartLine',
+            title: 'Track Everything',
+            description: "Use apps like Mint or YNAB, or a simple spreadsheet. Review weekly, not monthly. Categorize every dollar.",
+          },
+        ],
+      },
+      {
+        type: 'contentBlock',
+        id: 'barber-finances',
+        title: 'Barber-Specific Financial Considerations',
+        content: "If You're a Booth Renter: Set aside 25-30% for taxes (you're self-employed). Track all business expenses (supplies, tools, education). Pay quarterly estimated taxes to avoid penalties. Consider forming an LLC for liability protection. If You're an Employee: Understand your commission structure completely. Track tips separately — they're taxable income too. Ask about benefits (health insurance, retirement). Know when you're eligible for raises.",
+        highlight: 'Set aside 25-30% for taxes',
+      },
+      {
+        type: 'milestoneList',
+        id: 'money-goals',
+        title: 'Money Goals for New Barbers',
+        milestones: [
+          { year: 'Month 1', title: 'Separate Business Account', description: 'Open a separate business checking account to keep personal and business finances apart.' },
+          { year: 'Month 3', title: '$1,000 Emergency Fund', description: 'Build a $1,000 mini emergency fund for unexpected expenses.' },
+          { year: 'Month 6', title: 'Consistently Save 20%', description: 'Make saving 20% of your income a consistent habit.' },
+          { year: 'Year 1', title: '3 Months Expenses Saved', description: 'Have 3 months of living expenses saved in your emergency fund.' },
+        ],
       },
     ],
   },

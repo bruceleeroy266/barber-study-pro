@@ -1,6 +1,6 @@
 'use client'
 
-import { Lightbulb, Users, Award, Wrench, HeartPulse, ShieldCheck, Scale, Sparkles, Palette, MessageCircle, type LucideIcon } from 'lucide-react'
+import { Lightbulb, Users, Award, Wrench, HeartPulse, ShieldCheck, Scale, Sparkles, Palette, MessageCircle, BookOpen, RotateCcw, Hand, Footprints, Dumbbell, BedDouble, Utensils, CircleOff, Heart, Gift, Star, PiggyBank, TrendingUp, CalendarDays, GraduationCap, Store, type LucideIcon } from 'lucide-react'
 import type { FeatureItem, ChapterTheme } from '@/lib/chapter-content'
 import { defaultTheme } from '@/lib/chapter-content'
 
@@ -15,6 +15,22 @@ const iconMap: Record<string, LucideIcon> = {
   Sparkles,
   Palette,
   MessageCircle,
+  BookOpen,
+  Redo: RotateCcw,
+  Hand,
+  ShoePrints: Footprints,
+  Dumbbell,
+  Bed: BedDouble,
+  Utensils,
+  Ban: CircleOff,
+  Heart,
+  Gift,
+  Star,
+  PiggyBank,
+  ChartLine: TrendingUp,
+  Calendar: CalendarDays,
+  GraduationCap,
+  Store,
 }
 
 function getIcon(name: string): LucideIcon {
