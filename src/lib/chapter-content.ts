@@ -367,6 +367,79 @@ export const chapter2Theme: ChapterTheme = {
 }
 
 // ───────────────────────────────────────────────
+// Chapter 3: Professional Image — Corporate Luxury Theme
+// Deep navy / midnight blue / platinum silver
+// ───────────────────────────────────────────────
+
+export const chapter3Theme: ChapterTheme = {
+  // Core: luxury corporate palette
+  primary: '#3B5B8C',           // Deep navy blue — trust, professionalism
+  primaryLight: '#7BA4E0',      // Light steel blue
+  primaryDark: '#1E3A5F',       // Dark midnight navy
+  secondary: '#C0C0C0',         // Platinum / silver — premium, polished
+  background: 'rgba(10, 20, 40, 0.85)',   // Very dark navy
+  backgroundAlt: 'rgba(20, 35, 60, 0.7)', // Lighter midnight
+  surface: '#060F1E',           // Deepest navy
+  border: 'rgba(59, 91, 140, 0.25)',      // Navy border
+  text: '#F0F4FA',              // Clean white
+  textMuted: '#8BA3C7',         // Soft silver-blue
+  highlight: '#C0C0C0',         // Platinum highlight
+  // Timeline: corporate navy feel
+  timeline: {
+    line: 'rgba(59, 91, 140, 0.3)',
+    iconBg: '#0A1428',
+    iconBorder: '#3B5B8C',
+  },
+  // Quote: elegant platinum border
+  quote: {
+    border: 'rgba(192, 192, 192, 0.4)',
+    icon: 'rgba(192, 192, 192, 0.3)',
+    bg: 'rgba(10, 20, 40, 0.6)',
+  },
+  // Tabbed: corporate navy
+  tabbed: {
+    activeBg: 'rgba(59, 91, 140, 0.15)',
+    activeBorder: 'rgba(59, 91, 140, 0.5)',
+    activeText: '#7BA4E0',
+    inactiveBg: 'rgba(10, 20, 40, 0.6)',
+    inactiveBorder: 'rgba(59, 91, 140, 0.15)',
+    inactiveText: '#8BA3C7',
+    panelBg: 'rgba(10, 20, 40, 0.7)',
+    panelBorder: 'rgba(59, 91, 140, 0.2)',
+  },
+  // Tool cards: steel and platinum
+  toolCard: {
+    headerBg: 'rgba(192, 192, 192, 0.1)',
+    headerText: '#C0C0C0',
+    dot: 'rgba(59, 91, 140, 0.6)',
+    line: 'rgba(59, 91, 140, 0.25)',
+  },
+  // Feature grid: professional steel
+  featureGrid: {
+    iconBg: 'rgba(59, 91, 140, 0.15)',
+    iconColor: '#3B5B8C',
+    cardBorder: 'rgba(59, 91, 140, 0.2)',
+  },
+  // Milestones: platinum accent
+  milestone: {
+    yearColor: '#C0C0C0',
+    border: 'rgba(59, 91, 140, 0.2)',
+  },
+  // Checklist: professional
+  checklist: {
+    checkBorder: 'rgba(59, 91, 140, 0.4)',
+    checkColor: '#3B5B8C',
+    bg: 'rgba(10, 20, 40, 0.6)',
+  },
+  // Content block: navy
+  contentBlock: {
+    bg: 'rgba(10, 20, 40, 0.6)',
+    border: 'rgba(59, 91, 140, 0.2)',
+    highlightColor: '#C0C0C0',
+  },
+}
+
+// ───────────────────────────────────────────────
 // Chapter Content Data
 // ───────────────────────────────────────────────
 
@@ -996,6 +1069,414 @@ export const chapterContentData: Record<string, ChapterContent> = {
           { year: 'Month 3', title: '$1,000 Emergency Fund', description: 'Build a $1,000 mini emergency fund for unexpected expenses.' },
           { year: 'Month 6', title: 'Consistently Save 20%', description: 'Make saving 20% of your income a consistent habit.' },
           { year: 'Year 1', title: '3 Months Expenses Saved', description: 'Have 3 months of living expenses saved in your emergency fund.' },
+        ],
+      },
+    ],
+  },
+  'ch-3': {
+    chapterNumber: 3,
+    title: 'Professional Image',
+    subtitle: 'Building trust, credibility, and success through personal excellence',
+    theme: chapter3Theme,
+    sections: [
+      // Section 1: Why Professional Image Matters
+      {
+        type: 'infoCards',
+        id: 'why-image-matters',
+        title: 'Why Professional Image Matters',
+        subtitle: 'Your image is your silent ambassador — it speaks before you do',
+        cards: [
+          {
+            icon: 'Handshake',
+            title: 'First Impressions Are Everything',
+            text: 'Clients decide if they trust you within the first 7 seconds. A clean, professional appearance signals competence, attention to detail, and respect for your craft. When you look the part, clients relax and feel confident in your hands.',
+          },
+          {
+            icon: 'TrendingUp',
+            title: 'Your Brand, Your Business',
+            text: 'You are your own walking advertisement. Every client who leaves your chair becomes a potential referral. A polished image encourages clients to recommend you to friends, family, and colleagues — building your reputation and income.',
+          },
+          {
+            icon: 'ShieldCheck',
+            title: 'Health and Safety Standards',
+            text: 'Professional image isn\'t just about looks — it\'s about demonstrating your commitment to sanitation and safety. Clean hands, fresh linens, and organized tools show clients you take their health seriously.',
+          },
+          {
+            icon: 'Trophy',
+            title: 'Industry Respect',
+            text: 'Barbering is a respected profession with deep traditions. Maintaining high standards elevates the entire industry and positions you as a serious professional, not just someone who "cuts hair."',
+          },
+        ],
+      },
+
+      // Section 2: Personal Hygiene & Grooming Standards (Tabbed)
+      {
+        type: 'tabbed',
+        id: 'hygiene-grooming',
+        title: 'Personal Hygiene & Grooming Standards',
+        subtitle: 'The foundation of professional trust',
+        tabs: [
+          {
+            id: 'daily-care',
+            label: 'Daily Care',
+            title: 'Daily Personal Care Routine',
+            bullets: [
+              { label: 'Shower Before Work', description: 'Start each day fresh. Working in close proximity to clients means body odor is unacceptable.' },
+              { label: 'Clean Uniform Daily', description: 'Hair clippings, product residue, and stains must be removed. Have multiple uniforms ready.' },
+              { label: 'Hand Washing', description: 'Wash hands thoroughly before and after every client. Use antibacterial soap.' },
+              { label: 'Face Care', description: 'Keep facial hair trimmed and neat. If clean-shaven, maintain it daily.' },
+            ],
+          },
+          {
+            id: 'hair-nails',
+            label: 'Hair & Nails',
+            title: 'Hair and Nail Standards',
+            bullets: [
+              { label: 'Your Hair Speaks Volumes', description: 'As a barber, your hairstyle is your best advertisement. Keep it freshly cut, styled, and appropriate. Never let your own hair look neglected.' },
+              { label: 'Nail Care Essentials', description: 'Keep nails trimmed short — long nails harbor bacteria and can scratch clients. Clean under nails thoroughly. No chipped polish. Avoid artificial nails that trap bacteria.' },
+            ],
+          },
+          {
+            id: 'breath-body',
+            label: 'Breath & Body',
+            title: 'Breath and Body Awareness',
+            bullets: [
+              { label: 'Avoid Strong Scents', description: 'Heavy cologne, perfume, or aftershave can trigger allergies and overwhelm clients in close quarters. Use lightly scented or unscented products.' },
+              { label: 'Fresh Breath Matters', description: 'Brush teeth before work, keep mints handy (sugar-free), and avoid strong-smelling foods like garlic or onions during work hours.' },
+              { label: 'Deodorant is Essential', description: 'Apply antiperspirant/deodorant daily. Physical work and stress can cause perspiration — stay fresh for every client.' },
+              { label: 'No Smoking Smell', description: 'Smoke odor clings to hair, clothes, and hands. If you smoke, do so away from the shop and wash hands thoroughly afterward.' },
+            ],
+          },
+          {
+            id: 'workplace-hygiene',
+            label: 'Workplace',
+            title: 'Workplace Hygiene Standards',
+            bullets: [
+              { label: 'Sweep After Each Cut', description: 'Sweep hair immediately after each cut — never let it accumulate.' },
+              { label: 'Disinfect Tools', description: 'Disinfect tools between every client: clippers, shears, combs.' },
+              { label: 'Fresh Capes & Neck Strips', description: 'Use fresh capes and neck strips for each client.' },
+              { label: 'Hand Sanitizer', description: 'Keep hand sanitizer visible and use it.' },
+              { label: 'Organized Products', description: 'Store products in clean, organized containers — no dust or residue.' },
+            ],
+          },
+        ],
+      },
+
+      // Section 3: Exercise & Physical Health
+      {
+        type: 'featureGrid',
+        id: 'physical-health',
+        title: 'Exercise & Physical Health',
+        subtitle: 'Barbering is physically demanding — your body is your tool',
+        features: [
+          {
+            icon: 'Dumbbell',
+            title: 'Strength Training',
+            description: 'Barbering requires holding your arms up for hours. Shoulder, back, and core strength prevent fatigue and injury. Focus on exercises that build endurance, not just bulk.',
+          },
+          {
+            icon: 'HeartPulse',
+            title: 'Cardiovascular Health',
+            description: 'Standing all day is taxing on your cardiovascular system. Regular cardio — walking, jogging, cycling — keeps your energy up and supports heart health for a long career.',
+          },
+          {
+            icon: 'Sparkles',
+            title: 'Flexibility & Recovery',
+            description: 'Stretching, yoga, or simple mobility work keeps joints healthy and prevents the stiffness that comes from repetitive motions. Recovery is as important as the work itself.',
+          },
+        ],
+      },
+      {
+        type: 'contentBlock',
+        id: 'health-tips',
+        title: 'Practical Health Tips for Barbers',
+        content: '1) Stay Hydrated — Keep a water bottle at your station. Dehydration causes fatigue, headaches, and poor concentration. 2) Pack Healthy Snacks — Avoid energy crashes by eating protein-rich snacks between clients instead of sugary foods. 3) Protect Your Hearing — Clipper noise adds up over years. Consider ear protection if you work in a loud environment. 4) Get Regular Checkups — Physical labor takes a toll. Annual physicals catch problems early. Don\'t ignore pain.',
+        highlight: 'Stay Hydrated',
+      },
+
+      // Section 4: Stress Management Techniques
+      {
+        type: 'contentBlock',
+        id: 'stress-intro',
+        title: 'Recognize Barbering Stressors',
+        content: 'Barbering comes with unique pressures: difficult clients, time constraints, physical demands, financial uncertainty, and the need to constantly stay creative. Acknowledging these stressors is the first step to managing them.',
+        highlight: 'Acknowledging these stressors',
+      },
+      {
+        type: 'featureGrid',
+        id: 'moment-techniques',
+        title: 'In-the-Moment Techniques',
+        features: [
+          {
+            icon: 'Wind',
+            title: 'Deep Breathing',
+            description: '4 counts in, hold, out, hold. Calms your nervous system instantly.',
+          },
+          {
+            icon: 'Clock',
+            title: 'Micro-Breaks',
+            description: '30 seconds between clients to reset. Step back, breathe, and refocus.',
+          },
+          {
+            icon: 'RotateCcw',
+            title: 'Shoulder Rolls',
+            description: 'Release physical tension. Roll shoulders backward 5 times.',
+          },
+          {
+            icon: 'MessageCircle',
+            title: 'Positive Self-Talk',
+            description: '"I\'ve got this." Simple affirmations reframe anxiety into confidence.',
+          },
+        ],
+      },
+      {
+        type: 'featureGrid',
+        id: 'long-term-strategies',
+        title: 'Long-Term Strategies',
+        features: [
+          {
+            icon: 'Ban',
+            title: 'Set Boundaries',
+            description: 'Learn to say no. Protect your days off. Your health is your business asset.',
+          },
+          {
+            icon: 'Calendar',
+            title: 'Schedule Rest',
+            description: 'Block rest days like appointments. Recovery prevents burnout.',
+          },
+          {
+            icon: 'Palette',
+            title: 'Hobbies Outside Work',
+            description: 'Maintain interests that recharge you. You are more than your job.',
+          },
+          {
+            icon: 'Users',
+            title: 'Talk to Someone',
+            description: 'Don\'t bottle it up. A mentor, therapist, or friend can help.',
+          },
+        ],
+      },
+      {
+        type: 'featureGrid',
+        id: 'burnout-signs',
+        title: 'Warning Signs of Burnout',
+        features: [
+          {
+            icon: 'AlertTriangle',
+            title: 'Physical',
+            description: 'Chronic fatigue, headaches, muscle pain, sleep problems, getting sick often.',
+          },
+          {
+            icon: 'Frown',
+            title: 'Emotional',
+            description: 'Irritability, cynicism, feeling detached, loss of enjoyment, anxiety.',
+          },
+          {
+            icon: 'TrendingDown',
+            title: 'Performance',
+            description: 'Declining quality, missed appointments, difficulty concentrating, procrastination.',
+          },
+        ],
+      },
+
+      // Section 5: Dress & Appearance Standards (Tabbed)
+      {
+        type: 'tabbed',
+        id: 'dress-standards',
+        title: 'Dress & Appearance Standards',
+        subtitle: 'Dress for the professional you want to be',
+        tabs: [
+          {
+            id: 'uniforms',
+            label: 'Uniforms',
+            title: 'Professional Uniforms',
+            bullets: [
+              { label: 'Classic Barber Attire', description: 'Traditional barber smocks, vests, or aprons in black, white, or navy project professionalism. A clean, well-fitted uniform shows you take your role seriously.' },
+              { label: 'Do', description: 'Wear clean, pressed uniforms daily. Ensure proper fit — not too tight or loose. Have backup uniforms ready. Follow shop dress code exactly.' },
+              { label: 'Don\'t', description: 'Wear stained or torn clothing. Show excessive skin or wear revealing clothes. Wear clothes with offensive graphics. Wear the same uniform multiple days.' },
+            ],
+          },
+          {
+            id: 'footwear',
+            label: 'Footwear',
+            title: 'Footwear for the Long Haul',
+            bullets: [
+              { label: 'Comfort First', description: 'Cushioned insoles, arch support, and proper fit. You\'ll be on your feet 8+ hours a day.' },
+              { label: 'Closed-Toe Required', description: 'Protect feet from dropped tools and hair clippings. Safety first.' },
+              { label: 'Easy to Clean', description: 'Leather or synthetic materials that wipe clean. Hair and product residue happens.' },
+            ],
+          },
+          {
+            id: 'accessories',
+            label: 'Accessories',
+            title: 'Accessories & Jewelry',
+            bullets: [
+              { label: 'Keep It Minimal', description: 'Accessories should complement, not distract. A simple watch, small earrings, or a subtle necklace is fine. Avoid anything that jingles, dangles, or could catch on tools.' },
+              { label: 'Safety Considerations', description: 'No dangling bracelets near clippers. Rings can harbor bacteria. Long necklaces can swing into your work.' },
+            ],
+          },
+          {
+            id: 'personal-style',
+            label: 'Style',
+            title: 'Personal Style Within Professional Bounds',
+            bullets: [
+              { label: 'Express Yourself Professionally', description: 'Your personal style can be part of your brand — but always within professional boundaries. Creative hair, tattoos, and unique fashion can attract certain clients, but cleanliness and neatness must never be compromised.' },
+              { label: 'Key Principle', description: 'Your appearance should never make a client uncomfortable. Express yourself, but remember you\'re creating a safe, welcoming space for everyone who sits in your chair.' },
+            ],
+          },
+        ],
+      },
+
+      // Section 6: Ergonomics & Body Mechanics
+      {
+        type: 'contentBlock',
+        id: 'client-chair',
+        title: 'Client Chair Position',
+        content: 'Adjust chair height so client\'s head is at your elbow level. Use a chair that raises/lowers easily throughout the cut. Position client so you don\'t have to bend or reach.',
+        highlight: 'head is at your elbow level',
+      },
+      {
+        type: 'contentBlock',
+        id: 'your-position',
+        title: 'Your Body Position',
+        content: 'Keep feet shoulder-width apart for stability. Stand close to the client — don\'t overreach. Move your feet instead of twisting your back.',
+        highlight: 'Move your feet',
+      },
+      {
+        type: 'featureGrid',
+        id: 'common-injuries',
+        title: 'Common Barbering Injuries to Prevent',
+        features: [
+          {
+            icon: 'AlertTriangle',
+            title: 'Carpal Tunnel',
+            description: 'From repetitive clipper and shear use. Take breaks, stretch wrists, use ergonomic tools.',
+          },
+          {
+            icon: 'AlertTriangle',
+            title: 'Lower Back Pain',
+            description: 'From poor posture and bending. Maintain neutral spine, use anti-fatigue mats.',
+          },
+          {
+            icon: 'AlertTriangle',
+            title: 'Shoulder/Neck Strain',
+            description: 'From holding arms up. Lower chair, adjust position, strengthen shoulder muscles.',
+          },
+        ],
+      },
+      {
+        type: 'featureGrid',
+        id: 'equipment-ergonomics',
+        title: 'Equipment Ergonomics',
+        features: [
+          {
+            icon: 'Scissors',
+            title: 'Lightweight Tools',
+            description: 'Choose clippers and shears that reduce hand fatigue.',
+          },
+          {
+            icon: 'Square',
+            title: 'Anti-Fatigue Mats',
+            description: 'Cushioned flooring reduces leg and back strain.',
+          },
+          {
+            icon: 'Lightbulb',
+            title: 'Proper Lighting',
+            description: 'Good lighting prevents leaning in and eye strain.',
+          },
+          {
+            icon: 'MoveHorizontal',
+            title: 'Adjustable Stations',
+            description: 'Everything within easy reach prevents overreaching.',
+          },
+        ],
+      },
+
+      // Section 7: Communication & Human Relations (Tabbed)
+      {
+        type: 'tabbed',
+        id: 'communication',
+        title: 'Communication & Human Relations',
+        subtitle: 'Technical skill gets clients in the chair — people skills keep them coming back',
+        tabs: [
+          {
+            id: 'consultation',
+            label: 'Consultation',
+            title: 'The Art of Consultation',
+            bullets: [
+              { label: '1. Greet Warmly', description: 'Make eye contact, smile, use their name.' },
+              { label: '2. Ask Open Questions', description: '"What are we doing today?" "How do you want to look?"' },
+              { label: '3. Assess Hair & Face', description: 'Explain what will work with their hair type and face shape.' },
+              { label: '4. Confirm Understanding', description: 'Repeat back what you heard — "So you want..."' },
+            ],
+          },
+          {
+            id: 'active-listening',
+            label: 'Listening',
+            title: 'Active Listening Skills',
+            bullets: [
+              { label: 'What Active Listening Looks Like', description: 'Maintain appropriate eye contact. Nod and give verbal acknowledgments. Don\'t interrupt — let them finish. Ask clarifying questions.' },
+              { label: 'Reading Non-Verbal Cues', description: 'Facial expressions show satisfaction or concern. Fidgeting might indicate discomfort. Watching the mirror closely = they care about details.' },
+            ],
+          },
+          {
+            id: 'difficult-situations',
+            label: 'Difficult Clients',
+            title: 'Handling Difficult Situations',
+            bullets: [
+              { label: 'The Unhappy Client', description: 'Stay calm, listen without defending, apologize sincerely, and offer a solution. "I\'m sorry you\'re not happy. Let me fix this for you right now."' },
+              { label: 'The Talkative Client', description: 'Engage politely but keep working. Use brief responses and redirect to the cut: "That\'s interesting — tilt your head down for me."' },
+              { label: 'The Silent Client', description: 'Respect their quiet. Some people want peace during their cut. A simple "Comfortable?" check-in is enough.' },
+            ],
+          },
+          {
+            id: 'building-loyalty',
+            label: 'Building Loyalty',
+            title: 'Building Client Loyalty',
+            bullets: [
+              { label: 'Remember the Details', description: 'Take notes if needed — their kids\' names, their job, their last vacation. Bringing up past conversations shows you see them as a person, not just a paycheck.' },
+              { label: 'Be Consistent', description: 'Deliver the same quality every time. Reliability builds trust faster than anything else.' },
+              { label: 'Go the Extra Mile', description: 'Offer a hot towel at the end. Remember their preferred products. Send birthday messages. Recommend products that actually help. Thank them sincerely every time.' },
+            ],
+          },
+        ],
+      },
+
+      // Section 8: Social Media Professionalism
+      {
+        type: 'contentBlock',
+        id: 'showcasing-work',
+        title: 'Showcasing Your Work',
+        content: 'Social media is a powerful marketing tool. Post before/after photos, showcase your best cuts, and demonstrate your skills. This builds your brand and attracts new clients. Best practices: Use good lighting for photos. Get client permission before posting. Post consistently, not sporadically. Use relevant hashtags. Engage with comments professionally.',
+        highlight: 'Get client permission before posting',
+      },
+      {
+        type: 'contentBlock',
+        id: 'what-to-avoid',
+        title: 'What to Avoid',
+        content: 'One unprofessional post can damage your reputation. Remember: clients, employers, and potential business partners can see everything you post. Red flags: Complaining about clients or coworkers. Posting while under the influence. Sharing controversial opinions. Inappropriate language or content. Posting client photos without consent.',
+        highlight: 'One unprofessional post can damage your reputation',
+      },
+      {
+        type: 'featureGrid',
+        id: 'social-guidelines',
+        title: 'Professional Social Media Guidelines',
+        features: [
+          {
+            icon: 'UserCircle',
+            title: 'Separate Accounts',
+            description: 'Consider keeping personal and professional accounts separate. What your friends find funny, clients might find unprofessional.',
+          },
+          {
+            icon: 'Lock',
+            title: 'Privacy Settings',
+            description: 'Review your privacy settings regularly. Assume anything you post could become public.',
+          },
+          {
+            icon: 'MessageSquare',
+            title: 'Think Before Posting',
+            description: 'Ask: "Would I want my grandmother, my boss, and my best client to see this?" If no, don\'t post it.',
+          },
         ],
       },
     ],
