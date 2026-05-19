@@ -166,11 +166,131 @@ export type ChapterSection =
   | ChecklistSection
   | ContentBlockSection
 
+// ───────────────────────────────────────────────
+// Chapter Theme System
+// ───────────────────────────────────────────────
+
+export interface ChapterTheme {
+  // Core palette
+  primary: string          // Main accent (gold, blue, green, etc.)
+  primaryLight: string     // Lighter variant for hover states
+  primaryDark: string      // Darker variant for borders
+  secondary: string        // Secondary accent
+  background: string       // Section card backgrounds
+  backgroundAlt: string    // Alternate background
+  surface: string          // Elevated surfaces
+  border: string           // Border color
+  text: string            // Primary text
+  textMuted: string       // Secondary/muted text
+  highlight: string       // Highlighted terms
+  // Section-specific overrides (use Record for flexibility)
+  timeline?: Record<string, string>
+  quote?: Record<string, string>
+  tabbed?: Record<string, string>
+  toolCard?: Record<string, string>
+  featureGrid?: Record<string, string>
+  milestone?: Record<string, string>
+  checklist?: Record<string, string>
+  contentBlock?: Record<string, string>
+}
+
 export interface ChapterContent {
   chapterNumber: number
   title: string
   subtitle: string
+  theme?: ChapterTheme
   sections: ChapterSection[]
+}
+
+// ───────────────────────────────────────────────
+// Default Theme (fallback for chapters without custom theme)
+// ───────────────────────────────────────────────
+
+export const defaultTheme: ChapterTheme = {
+  primary: '#D4AF37',
+  primaryLight: '#F4E4A6',
+  primaryDark: '#B8941F',
+  secondary: '#8B7355',
+  background: 'rgba(17, 24, 39, 0.8)',
+  backgroundAlt: 'rgba(17, 24, 39, 0.6)',
+  surface: '#111827',
+  border: 'rgba(31, 41, 55, 0.5)',
+  text: '#ffffff',
+  textMuted: '#9CA3AF',
+  highlight: '#D4AF37',
+}
+
+// ───────────────────────────────────────────────
+// Chapter 1: History of Barbering — Ancient Legacy Theme
+// Deep brown, bronze, aged gold, parchment, burnt orange
+// ───────────────────────────────────────────────
+
+export const chapter1Theme: ChapterTheme = {
+  // Core: warm ancient palette
+  primary: '#C9A84C',           // Aged gold (slightly muted from bright gold)
+  primaryLight: '#E8D5A3',      // Light parchment gold
+  primaryDark: '#8B6914',       // Dark bronze gold
+  secondary: '#A0522D',         // Burnt sienna / bronze
+  background: 'rgba(44, 30, 20, 0.85)',   // Deep espresso brown
+  backgroundAlt: 'rgba(60, 40, 25, 0.7)', // Lighter brown
+  surface: '#1E1410',           // Very dark brown
+  border: 'rgba(139, 105, 20, 0.3)',      // Bronze border
+  text: '#F5E6D3',              // Parchment cream
+  textMuted: '#B8A088',         // Muted warm gray
+  highlight: '#D4A574',         // Bronze highlight
+  // Timeline: ancient parchment feel
+  timeline: {
+    line: 'rgba(139, 105, 20, 0.4)',
+    iconBg: '#2C1E14',
+    iconBorder: '#8B6914',
+  },
+  // Quote: elegant gold border
+  quote: {
+    border: 'rgba(201, 168, 76, 0.4)',
+    icon: 'rgba(201, 168, 76, 0.3)',
+    bg: 'rgba(44, 30, 20, 0.6)',
+  },
+  // Tabbed: leather and bronze
+  tabbed: {
+    activeBg: 'rgba(201, 168, 76, 0.15)',
+    activeBorder: 'rgba(201, 168, 76, 0.5)',
+    activeText: '#E8D5A3',
+    inactiveBg: 'rgba(44, 30, 20, 0.6)',
+    inactiveBorder: 'rgba(139, 105, 20, 0.2)',
+    inactiveText: '#B8A088',
+    panelBg: 'rgba(44, 30, 20, 0.7)',
+    panelBorder: 'rgba(139, 105, 20, 0.25)',
+  },
+  // Tool cards: steel and bronze
+  toolCard: {
+    headerBg: 'rgba(160, 82, 45, 0.2)',
+    headerText: '#D4A574',
+    dot: 'rgba(201, 168, 76, 0.6)',
+    line: 'rgba(139, 105, 20, 0.3)',
+  },
+  // Feature grid: warm bronze
+  featureGrid: {
+    iconBg: 'rgba(201, 168, 76, 0.15)',
+    iconColor: '#C9A84C',
+    cardBorder: 'rgba(139, 105, 20, 0.3)',
+  },
+  // Milestones: official gold
+  milestone: {
+    yearColor: '#C9A84C',
+    border: 'rgba(139, 105, 20, 0.3)',
+  },
+  // Checklist: warm
+  checklist: {
+    checkBorder: 'rgba(201, 168, 76, 0.5)',
+    checkColor: '#C9A84C',
+    bg: 'rgba(44, 30, 20, 0.6)',
+  },
+  // Content block: parchment
+  contentBlock: {
+    bg: 'rgba(44, 30, 20, 0.6)',
+    border: 'rgba(139, 105, 20, 0.25)',
+    highlightColor: '#D4A574',
+  },
 }
 
 // ───────────────────────────────────────────────
@@ -182,6 +302,7 @@ export const chapterContentData: Record<string, ChapterContent> = {
     chapterNumber: 1,
     title: 'History of Barbering',
     subtitle: 'From Ancient Rituals to Modern Mastery',
+    theme: chapter1Theme,
     sections: [
       // Section 1: Why Study Barbering History?
       {

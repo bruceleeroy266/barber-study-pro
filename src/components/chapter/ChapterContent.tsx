@@ -1,6 +1,7 @@
 'use client'
 
-import type { ChapterSection } from '@/lib/chapter-content'
+import type { ChapterSection, ChapterTheme } from '@/lib/chapter-content'
+import { defaultTheme } from '@/lib/chapter-content'
 import InfoCard from './InfoCard'
 import Timeline from './Timeline'
 import TabbedContent from './TabbedContent'
@@ -13,23 +14,26 @@ import ContentBlock from './ContentBlock'
 
 interface ChapterContentProps {
   sections: ChapterSection[]
+  theme?: ChapterTheme
 }
 
 function SectionWrapper({
   title,
   subtitle,
+  theme,
   children,
 }: {
   title?: string
   subtitle?: string
+  theme: ChapterTheme
   children: React.ReactNode
 }) {
   return (
     <div className="space-y-4">
       {title && (
         <div>
-          <h2 className="text-xl font-semibold text-white">{title}</h2>
-          {subtitle && <p className="text-gray-400 text-sm mt-1">{subtitle}</p>}
+          <h2 className="text-xl font-semibold" style={{ color: theme.text }}>{title}</h2>
+          {subtitle && <p className="text-sm mt-1" style={{ color: theme.textMuted }}>{subtitle}</p>}
         </div>
       )}
       {children}
@@ -37,76 +41,77 @@ function SectionWrapper({
   )
 }
 
-export default function ChapterContent({ sections }: ChapterContentProps) {
+export default function ChapterContent({ sections, theme }: ChapterContentProps) {
+  const t = theme || defaultTheme
+
   return (
     <div className="space-y-10">
       {sections.map((section) => {
         switch (section.type) {
           case 'infoCards':
             return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle}>
-                <InfoCard cards={section.cards} />
+              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+                <InfoCard cards={section.cards} theme={t} />
               </SectionWrapper>
             )
 
           case 'timeline':
             return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle}>
-                <Timeline items={section.items} />
+              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+                <Timeline items={section.items} theme={t} />
               </SectionWrapper>
             )
 
           case 'tabbed':
             return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle}>
-                <TabbedContent tabs={section.tabs} />
+              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+                <TabbedContent tabs={section.tabs} theme={t} />
               </SectionWrapper>
             )
 
           case 'toolCards':
             return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle}>
-                <ToolCard tools={section.tools} />
+              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+                <ToolCard tools={section.tools} theme={t} />
               </SectionWrapper>
             )
 
           case 'quote':
             return (
               <div key={section.id}>
-                <QuoteBlock quote={section.quote} attribution={section.attribution} />
+                <QuoteBlock quote={section.quote} attribution={section.attribution} theme={t} />
               </div>
             )
 
           case 'featureGrid':
             return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle}>
-                <FeatureGrid features={section.features} />
+              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+                <FeatureGrid features={section.features} theme={t} />
               </SectionWrapper>
             )
 
           case 'milestoneList':
             return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle}>
-                <MilestoneList milestones={section.milestones} />
+              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+                <MilestoneList milestones={section.milestones} theme={t} />
               </SectionWrapper>
             )
 
           case 'checklist':
             return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle}>
-                <Checklist items={section.items} />
+              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+                <Checklist items={section.items} theme={t} />
               </SectionWrapper>
             )
 
           case 'contentBlock':
             return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle}>
-                <ContentBlock content={section.content} highlight={section.highlight} />
+              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+                <ContentBlock content={section.content} highlight={section.highlight} theme={t} />
               </SectionWrapper>
             )
 
           default:
-            // Exhaustive check — TypeScript ensures we handle all cases
             return null
         }
       })}

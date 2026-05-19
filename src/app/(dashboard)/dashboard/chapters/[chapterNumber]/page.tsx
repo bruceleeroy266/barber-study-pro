@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import FlashcardClient from '@/components/FlashcardClient'
 import QuizClient from '@/components/QuizClient'
 import ChapterContent from '@/components/chapter/ChapterContent'
+import ChapterHeader from '@/components/chapter/ChapterHeader'
 import { getChapterContent } from '@/lib/chapter-content'
 
 interface ChapterPageProps {
@@ -87,48 +88,22 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
         <span className="text-white">Chapter {num}</span>
       </div>
 
-      {/* Header */}
-      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
-        <div className="flex items-center gap-4 mb-4">
-          <span className="text-5xl font-bold text-[#D4AF37]">
-            {String(num).padStart(2, '0')}
-          </span>
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-white">{chapter.title}</h1>
-            <p className="text-gray-400 mt-1">{chapter.description}</p>
-          </div>
-        </div>
-
-        {/* Progress Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-800">
-          <div className="flex items-center gap-3">
-            <div className="text-2xl">📖</div>
-            <div>
-              <div className="text-sm text-gray-400">Flashcards</div>
-              <div className="font-semibold text-white">{flashcards?.length || 0} cards</div>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="text-2xl">✅</div>
-            <div>
-              <div className="text-sm text-gray-400">Quiz Questions</div>
-              <div className="font-semibold text-white">{questions?.length || 0} questions</div>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="text-2xl">🏆</div>
-            <div>
-              <div className="text-sm text-gray-400">Best Score</div>
-              <div className="font-semibold text-white">
-                {bestAttempt ? `${bestAttempt.percentage}%` : 'Not taken'}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Themed Header */}
+      <ChapterHeader 
+        num={num} 
+        title={chapter.title} 
+        description={chapter.description}
+        flashcardsCount={flashcards?.length || 0}
+        questionsCount={questions?.length || 0}
+        bestAttempt={bestAttempt}
+        theme={getChapterContent(num)?.theme}
+      />
 
       {/* Chapter Content */}
-      <ChapterContent sections={getChapterContent(num)?.sections || []} />
+      <ChapterContent 
+        sections={getChapterContent(num)?.sections || []} 
+        theme={getChapterContent(num)?.theme}
+      />
 
       {/* Flashcards Section */}
       {flashcards && flashcards.length > 0 && (

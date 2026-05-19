@@ -1,14 +1,18 @@
 'use client'
 
 import { useState } from 'react'
-import type { TabContent } from '@/lib/chapter-content'
+import type { TabContent, ChapterTheme } from '@/lib/chapter-content'
+import { defaultTheme } from '@/lib/chapter-content'
 
 interface TabbedContentProps {
   tabs: TabContent[]
+  theme?: ChapterTheme
 }
 
-export default function TabbedContent({ tabs }: TabbedContentProps) {
+export default function TabbedContent({ tabs, theme }: TabbedContentProps) {
   const [activeTab, setActiveTab] = useState(tabs[0]?.id || '')
+  const t = theme || defaultTheme
+  const tt = t.tabbed || {}
 
   const currentTab = tabs.find((t) => t.id === activeTab) || tabs[0]
 
@@ -20,11 +24,20 @@ export default function TabbedContent({ tabs }: TabbedContentProps) {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              tab.id === activeTab
-                ? 'bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/30'
-                : 'bg-gray-900/60 text-gray-400 border border-gray-800/50 hover:text-white hover:border-gray-700'
-            }`}
+            className="px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+            style={{
+              backgroundColor: tab.id === activeTab 
+                ? ((tt && tt.activeBg) || 'rgba(212, 175, 55, 0.1)') 
+                : ((tt && tt.inactiveBg) || t.backgroundAlt),
+              color: tab.id === activeTab 
+                ? ((tt && tt.activeText) || t.primary) 
+                : ((tt && tt.inactiveText) || t.textMuted),
+              borderColor: tab.id === activeTab 
+                ? ((tt && tt.activeBorder) || t.primary) 
+                : ((tt && tt.inactiveBorder) || t.border),
+              borderWidth: '1px',
+              borderStyle: 'solid'
+            }}
           >
             {tab.label}
           </button>
@@ -33,9 +46,17 @@ export default function TabbedContent({ tabs }: TabbedContentProps) {
 
       {/* Tab content */}
       {currentTab && (
-        <div className="bg-gray-900/60 border border-gray-800/50 rounded-xl p-6">
+        <div 
+          className="rounded-xl p-6"
+          style={{
+            backgroundColor: (tt && tt.panelBg) || t.backgroundAlt,
+            borderColor: (tt && tt.panelBorder) || t.border,
+            borderWidth: '1px',
+            borderStyle: 'solid'
+          }}
+        >
           {currentTab.title && (
-            <h3 className="text-lg font-semibold text-white mb-4">{currentTab.title}</h3>
+            <h3 className="text-lg font-semibold mb-4" style={{ color: t.text }}>{currentTab.title}</h3>
           )}
 
           {/* Bullets */}
@@ -43,10 +64,13 @@ export default function TabbedContent({ tabs }: TabbedContentProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
               {currentTab.bullets.map((bullet, idx) => (
                 <div key={idx} className="flex gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] mt-2 flex-shrink-0" />
+                  <div 
+                    className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0"
+                    style={{ backgroundColor: t.primary }}
+                  />
                   <div>
-                    <span className="text-white font-medium text-sm">{bullet.label}</span>
-                    <p className="text-gray-400 text-sm">{bullet.description}</p>
+                    <span className="font-medium text-sm" style={{ color: t.text }}>{bullet.label}</span>
+                    <p className="text-sm" style={{ color: t.textMuted }}>{bullet.description}</p>
                   </div>
                 </div>
               ))}
@@ -55,14 +79,20 @@ export default function TabbedContent({ tabs }: TabbedContentProps) {
 
           {/* Facts */}
           {currentTab.facts && currentTab.facts.length > 0 && (
-            <div className="bg-gray-800/40 rounded-lg p-4 mt-4">
-              <div className="text-xs font-semibold text-[#D4AF37] uppercase tracking-wide mb-2">
+            <div 
+              className="rounded-lg p-4 mt-4"
+              style={{ backgroundColor: t.background }}
+            >
+              <div 
+                className="text-xs font-semibold uppercase tracking-wide mb-2"
+                style={{ color: t.primary }}
+              >
                 Historical Facts
               </div>
               <ul className="space-y-2">
                 {currentTab.facts.map((fact, idx) => (
-                  <li key={idx} className="text-gray-300 text-sm flex gap-2">
-                    <span className="text-[#D4AF37]">•</span>
+                  <li key={idx} className="text-sm flex gap-2" style={{ color: t.textMuted }}>
+                    <span style={{ color: t.primary }}>•</span>
                     {fact.text}
                   </li>
                 ))}
@@ -74,9 +104,13 @@ export default function TabbedContent({ tabs }: TabbedContentProps) {
           {currentTab.eras && currentTab.eras.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
               {currentTab.eras.map((era, idx) => (
-                <div key={idx} className="bg-gray-800/40 rounded-lg p-4">
-                  <div className="text-sm font-semibold text-[#D4AF37] mb-1">{era.name}</div>
-                  <p className="text-gray-400 text-sm">{era.description}</p>
+                <div 
+                  key={idx} 
+                  className="rounded-lg p-4"
+                  style={{ backgroundColor: t.background }}
+                >
+                  <div className="text-sm font-semibold mb-1" style={{ color: t.primary }}>{era.name}</div>
+                  <p className="text-sm" style={{ color: t.textMuted }}>{era.description}</p>
                 </div>
               ))}
             </div>
@@ -84,8 +118,11 @@ export default function TabbedContent({ tabs }: TabbedContentProps) {
 
           {/* Quote */}
           {currentTab.quote && (
-            <blockquote className="border-l-2 border-[#D4AF37] pl-4 mt-4">
-              <p className="text-gray-300 text-sm italic">{currentTab.quote}</p>
+            <blockquote 
+              className="border-l-2 pl-4 mt-4"
+              style={{ borderColor: t.primary }}
+            >
+              <p className="text-sm italic" style={{ color: t.textMuted }}>{currentTab.quote}</p>
             </blockquote>
           )}
 
@@ -93,16 +130,24 @@ export default function TabbedContent({ tabs }: TabbedContentProps) {
           {currentTab.trends && currentTab.trends.length > 0 && (
             <div className="space-y-3">
               {currentTab.trends.map((trend, idx) => (
-                <div key={idx} className="bg-gray-800/40 rounded-lg p-4">
+                <div 
+                  key={idx} 
+                  className="rounded-lg p-4"
+                  style={{ backgroundColor: t.background }}
+                >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-white font-medium text-sm">{trend.name}</span>
-                    <span className="text-[#D4AF37] text-sm font-semibold">{trend.percentage}</span>
+                    <span className="font-medium text-sm" style={{ color: t.text }}>{trend.name}</span>
+                    <span className="text-sm font-semibold" style={{ color: t.primary }}>{trend.percentage}</span>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {trend.eras.map((era, eidx) => (
                       <span
                         key={eidx}
-                        className="px-2 py-1 bg-gray-700/50 rounded text-xs text-gray-300"
+                        className="px-2 py-1 rounded text-xs"
+                        style={{ 
+                          backgroundColor: t.backgroundAlt,
+                          color: t.textMuted 
+                        }}
                       >
                         {era}
                       </span>
