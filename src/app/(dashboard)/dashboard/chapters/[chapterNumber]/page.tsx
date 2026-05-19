@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import FlashcardClient from '@/components/FlashcardClient'
 import QuizClient from '@/components/QuizClient'
+import ChapterContent from '@/components/chapter/ChapterContent'
+import { getChapterContent } from '@/lib/chapter-content'
 
 interface ChapterPageProps {
   params: Promise<{
@@ -124,6 +126,9 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
           </div>
         </div>
       </div>
+
+      {/* Chapter Content */}
+      <ChapterContent sections={getChapterContent(num)?.sections || []} />
 
       {/* Flashcards Section */}
       {flashcards && flashcards.length > 0 && (
