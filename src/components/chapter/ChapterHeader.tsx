@@ -7,6 +7,7 @@ interface ChapterHeaderProps {
   num: number
   title: string
   description: string
+  subtitle?: string
   flashcardsCount: number
   questionsCount: number
   bestAttempt: { percentage: number } | null
@@ -17,6 +18,7 @@ export default function ChapterHeader({
   num,
   title,
   description,
+  subtitle,
   flashcardsCount,
   questionsCount,
   bestAttempt,
@@ -55,6 +57,11 @@ export default function ChapterHeader({
             >
               {title}
             </h1>
+            {subtitle && (
+              <p className="mt-1 text-sm font-medium" style={{ color: t.primaryLight }}>
+                {subtitle}
+              </p>
+            )}
             <p className="mt-1" style={{ color: t.textMuted }}>
               {description}
             </p>

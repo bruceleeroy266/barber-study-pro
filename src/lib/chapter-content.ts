@@ -1071,6 +1071,444 @@ export const chapterContentData: Record<string, ChapterContent> = {
           { year: 'Year 1', title: '3 Months Expenses Saved', description: 'Have 3 months of living expenses saved in your emergency fund.' },
         ],
       },
+
+      // ============================================================
+      // NEW SECTION 8: Communication Skills & Client Consultation
+      // ============================================================
+      {
+        type: 'contentBlock',
+        id: 'communication-intro',
+        title: 'Mastering Communication in the Barbershop',
+        content: "Your shears can be sharp, but your words need to be sharper. Communication is the invisible tool that turns a one-time walk-in into a client for life. The consultation — that first 60 seconds of conversation — determines whether the client walks out thrilled or disappointed. Most complaints don't come from bad technique; they come from misunderstood expectations.",
+        highlight: 'Communication is the invisible tool',
+      },
+      {
+        type: 'checklist',
+        id: 'active-listening',
+        title: 'The Art of Active Listening',
+        items: [
+          { text: 'Maintain eye contact — it shows respect and attention' },
+          { text: 'Nod and use verbal cues ("I see," "Got it") to confirm understanding' },
+          { text: 'Repeat back what you heard: "So you want a low fade with about an inch on top — is that right?"' },
+          { text: 'Never interrupt while the client is describing what they want' },
+          { text: 'Ask clarifying questions before picking up any tool' },
+        ],
+      },
+      {
+        type: 'featureGrid',
+        id: 'consultation-skills',
+        title: 'Consultation Confidence Builders',
+        features: [
+          {
+            icon: 'MessageCircle',
+            title: 'Ask Open-Ended Questions',
+            description: '"What look are you going for?" gets better answers than "Short on the sides?" Open questions reveal the full picture.',
+          },
+          {
+            icon: 'Camera',
+            title: 'Use Reference Photos',
+            description: "Ask clients to show photos of styles they like. Photos eliminate guesswork and give you a visual target.",
+          },
+          {
+            icon: 'Scissors',
+            title: 'Set Realistic Expectations',
+            description: "If a style won't work with their hair type, explain why and offer alternatives. Honesty builds more trust than false promises.",
+          },
+          {
+            icon: 'CheckCircle',
+            title: 'Confirm Before Cutting',
+            description: 'Before the first snip, summarize the plan. "Just to confirm: textured crop, faded to skin at the neckline, about two inches on top."',
+          },
+        ],
+      },
+      {
+        type: 'contentBlock',
+        id: 'communication-mistakes',
+        title: 'Common Communication Mistakes to Avoid',
+        content: "❌ Assuming you know what they want without asking. ❌ Using technical jargon clients don't understand. ❌ Talking over the client or finishing their sentences. ❌ Checking your phone during the consultation. ❌ Dismissing their concerns with 'trust me, I got you' before understanding them. ✅ Instead: Ask, listen, confirm, then execute. The 30 seconds you spend on a thorough consultation saves 30 minutes of fixing mistakes.",
+        highlight: 'Ask, listen, confirm, then execute',
+      },
+
+      // ============================================================
+      // NEW SECTION 9: Professional Ethics & Integrity
+      // ============================================================
+      {
+        type: 'contentBlock',
+        id: 'ethics-intro',
+        title: 'Professional Ethics: The Foundation of Trust',
+        content: "Ethics aren't just rules on a wall — they're the daily decisions that build or destroy your reputation. Every time you're honest about what a client needs (or doesn't need), every time you protect someone's privacy, every time you show up on time, you're depositing trust into your professional bank account. That trust compounds over time into the most valuable asset any barber can have: a loyal clientele.",
+        highlight: "Ethics aren't just rules on a wall",
+      },
+      {
+        type: 'infoCards',
+        id: 'ethical-principles',
+        title: 'Core Ethical Principles for Barbers',
+        cards: [
+          {
+            icon: 'ShieldCheck',
+            title: 'Honesty First',
+            text: "If a product won't help their hair, don't sell it. If a style won't suit their face shape, say so tactfully. Clients can sense when you're prioritizing their best interest over your bottom line.",
+          },
+          {
+            icon: 'Lock',
+            title: 'Confidentiality Matters',
+            text: "What happens in your chair stays in your chair. Never share client personal information, health details, or private conversations — not even with coworkers or friends.",
+          },
+          {
+            icon: 'Clock',
+            title: 'Punctuality is Respect',
+            text: "Being on time shows you value your client's schedule. Chronic lateness signals disrespect and costs you more than just one appointment.",
+          },
+          {
+            icon: 'Award',
+            title: 'Competence & Continuing Education',
+            text: "Stay current. An ethical barber doesn't let skills stagnate. Attend workshops, watch tutorials, and seek feedback to keep your craft sharp.",
+          },
+        ],
+      },
+      {
+        type: 'checklist',
+        id: 'ethical-checklist',
+        title: 'Daily Ethics Checklist',
+        items: [
+          { text: 'Did I give honest recommendations about products and services?' },
+          { text: 'Did I protect client privacy today?' },
+          { text: 'Was I on time for every appointment?' },
+          { text: 'Did I maintain professional boundaries?' },
+          { text: 'Did I treat every client with equal respect regardless of background?' },
+        ],
+      },
+
+      // ============================================================
+      // NEW SECTION 10: Problem-Solving & Conflict Resolution
+      // ============================================================
+      {
+        type: 'contentBlock',
+        id: 'conflict-intro',
+        title: 'Turning Complaints into Loyalty',
+        content: "Sooner or later, every barber faces an unhappy client. Maybe the fade is higher than they expected. Maybe the texture came out differently. Maybe they just had a bad day and took it out on you. The difference between a good barber and a great one isn't avoiding mistakes — it's how you recover. Handle a complaint well, and that client becomes more loyal than if nothing ever went wrong.",
+        highlight: "how you recover",
+      },
+      {
+        type: 'tabbed',
+        id: 'conflict-resolution',
+        title: 'The Complaint Recovery System',
+        subtitle: 'A step-by-step framework for handling dissatisfied clients',
+        tabs: [
+          {
+            id: 'step-1-listen',
+            label: 'Step 1: Listen',
+            title: 'Listen Without Defending',
+            bullets: [
+              { label: 'Stay Calm', description: 'Take a breath. Their frustration is about the cut, not about you as a person.' },
+              { label: 'Let Them Finish', description: "Don't interrupt. Let them say everything they need to say. Often, feeling heard resolves half the issue." },
+              { label: 'Body Language Matters', description: 'Maintain open posture, make eye contact, and nod to show you are genuinely listening.' },
+            ],
+          },
+          {
+            id: 'step-2-empathize',
+            label: 'Step 2: Empathize',
+            title: 'Acknowledge Their Feelings',
+            bullets: [
+              { label: 'Validate Their Experience', description: '"I completely understand why you\'re disappointed. That\'s not the look we discussed."' },
+              { label: 'Take Responsibility', description: 'Even if it was a miscommunication, own it. "I should have confirmed that detail before cutting."' },
+              { label: 'Avoid Blame', description: 'Never blame the client. Phrases like "You said..." or "You moved" escalate tension.' },
+            ],
+          },
+          {
+            id: 'step-3-fix',
+            label: 'Step 3: Fix It',
+            title: 'Offer a Clear Solution',
+            bullets: [
+              { label: 'Present Options', description: '"Here\'s what I can do: I can blend the fade lower, or I can reshape the top to balance it out. Which would you prefer?"' },
+              { label: 'Be Realistic', description: "Don't promise what you can't deliver. If it needs to grow out, be honest about the timeline." },
+              { label: 'Act Quickly', description: 'Fix it immediately if possible. Waiting makes the situation worse.' },
+            ],
+          },
+          {
+            id: 'step-4-follow-up',
+            label: 'Step 4: Follow Up',
+            title: 'The Follow-Up That Wins Clients',
+            bullets: [
+              { label: 'Check In After the Fix', description: '"How does this feel? Is this closer to what you had in mind?"' },
+              { label: 'Offer a Gesture', description: 'A complimentary neck trim, a discount on the next visit, or product sample shows you care.' },
+              { label: 'Learn and Document', description: 'Note what went wrong in your client records so you never repeat the same mistake.' },
+            ],
+          },
+        ],
+      },
+      {
+        type: 'contentBlock',
+        id: 'conflict-pro-tip',
+        title: 'Pro Tip: The Complaint Recovery Paradox',
+        content: "Research shows that clients who experience a problem that gets resolved quickly and professionally become more loyal than clients who never had a problem at all. This is the service recovery paradox. A complaint handled with grace becomes a story they tell about how much you care — not about the mistake.",
+        highlight: 'the service recovery paradox',
+      },
+
+      // ============================================================
+      // NEW SECTION 11: Self-Motivation & Success Mindset
+      // ============================================================
+      {
+        type: 'contentBlock',
+        id: 'mindset-intro',
+        title: 'Building a Success Mindset That Lasts',
+        content: "Motivation is like a spark — it ignites quickly but burns out just as fast. Discipline is the fuel that keeps the fire going. Every successful barber has days when they don't feel like showing up, practicing, or studying. What separates them is a system of habits that carries them through low-motivation periods. You don't need to feel inspired every day. You need a routine that works even when inspiration is gone.",
+        highlight: 'Discipline is the fuel that keeps the fire going',
+      },
+      {
+        type: 'featureGrid',
+        id: 'mindset-pillars',
+        title: 'The Six Pillars of Barber Success',
+        features: [
+          {
+            icon: 'Target',
+            title: 'Consistency Over Intensity',
+            description: 'Practicing 30 minutes daily beats 5 hours once a week. Small, repeated efforts compound into mastery.',
+          },
+          {
+            icon: 'TrendingUp',
+            title: 'Embrace the Plateau',
+            description: "Progress isn't linear. You'll hit periods where skills don't seem to improve. This is normal. Keep going — breakthroughs follow plateaus.",
+          },
+          {
+            icon: 'RefreshCw',
+            title: 'Reframe Setbacks',
+            description: "A bad cut isn't failure — it's data. Analyze what went wrong, adjust, and try again. Every master barber has thousands of 'learning cuts' behind them.",
+          },
+          {
+            icon: 'Zap',
+            title: 'Visualize Your Success',
+            description: 'Spend 5 minutes daily imagining yourself working in your dream shop, handling clients confidently, and loving your craft.',
+          },
+        ],
+      },
+      {
+        type: 'checklist',
+        id: 'daily-discipline',
+        title: 'Daily Discipline Checklist',
+        items: [
+          { text: 'Showed up on time, even when I did not feel like it' },
+          { text: 'Practiced at least one technique today, even if just for 15 minutes' },
+          { text: 'Reviewed flashcards or studied theory material' },
+          { text: 'Reflected on what went well and what to improve' },
+          { text: 'Took care of my physical health (sleep, food, movement)' },
+        ],
+      },
+
+      // ============================================================
+      // NEW SECTION 12: Cultural Competence & Inclusive Service
+      // ============================================================
+      {
+        type: 'contentBlock',
+        id: 'cultural-competence-intro',
+        title: 'Cultural Competence: Serving Every Client with Respect',
+        content: "Barbershops are community hubs that welcome people from every background, culture, and walk of life. Your chair will hold clients with different hair textures, cultural traditions, communication styles, and personal preferences. Cultural competence isn't about knowing everything — it's about approaching every client with curiosity, respect, and a willingness to learn. The barber who makes everyone feel welcome builds a clientele that no marketing budget can buy.",
+        highlight: "approaching every client with curiosity, respect, and a willingness to learn",
+      },
+      {
+        type: 'infoCards',
+        id: 'inclusive-practices',
+        title: 'Inclusive Barbering Practices',
+        cards: [
+          {
+            icon: 'Globe',
+            title: 'Respect Hair Texture Diversity',
+            text: "Different hair types require different techniques, tools, and products. Never assume one approach works for everyone. Ask about their hair history and preferences.",
+          },
+          {
+            icon: 'MessageSquare',
+            title: 'Adapt Your Communication Style',
+            text: 'Some clients want detailed consultation. Others prefer minimal conversation. Read cues and adjust. Not everyone communicates the same way.',
+          },
+          {
+            icon: 'Heart',
+            title: 'Avoid Assumptions',
+            text: "Don't assume someone's background, preferences, or style based on appearance. Ask respectful questions and let them guide the conversation.",
+          },
+          {
+            icon: 'Users',
+            title: 'Create a Welcoming Environment',
+            text: 'Your shop should feel safe and inclusive for everyone. The music, decor, and conversation all signal who belongs there. Make sure the signal says "everyone."',
+          },
+        ],
+      },
+      {
+        type: 'checklist',
+        id: 'cultural-awareness',
+        title: 'Cultural Awareness Quick Check',
+        items: [
+          { text: 'Did I ask about their hair history and preferences before starting?' },
+          { text: 'Did I use respectful language and avoid stereotypes?' },
+          { text: 'Did I adapt my communication style to match their comfort level?' },
+          { text: 'Did I make them feel welcome and comfortable in my space?' },
+          { text: 'Did I seek to learn something new from this client?' },
+        ],
+      },
+
+      // ============================================================
+      // NEW SECTION 13: Personal Development & Career Planning
+      // ============================================================
+      {
+        type: 'contentBlock',
+        id: 'career-planning-intro',
+        title: 'Designing Your Barber Career Roadmap',
+        content: "Most barbers don't fail because they lack talent — they fail because they never planned. A career roadmap gives you direction, helps you make better decisions, and keeps you motivated when progress feels slow. Your plan doesn't need to be perfect. It just needs to exist, and it needs to be reviewed regularly. Think of it as a living document that grows with you.",
+        highlight: "A career roadmap gives you direction",
+      },
+      {
+        type: 'milestoneList',
+        id: 'career-milestones',
+        title: 'Your Barber Career Milestones',
+        milestones: [
+          { year: 'Year 1', title: 'Foundation Builder', description: 'Get licensed. Build a clientele of 50+ regulars. Master 5 core cuts. Save 3 months of expenses. Create a professional portfolio.' },
+          { year: 'Year 2', title: 'Skill Refiner', description: 'Specialize in one technique (fades, beard sculpting, designs). Attend 2 industry events. Build social media presence. Start mentoring newer barbers.' },
+          { year: 'Year 3', title: 'Brand Builder', description: 'Develop your personal brand. Launch a signature style or service. Build to 150+ regular clients. Consider booth rental vs. employment.' },
+          { year: 'Year 5', title: 'Shop Owner or Senior Barber', description: 'Open your own shop OR become a senior barber with premium pricing. Hire apprentices. Build passive income streams (products, education).' },
+        ],
+      },
+      {
+        type: 'featureGrid',
+        id: 'specialization-paths',
+        title: 'Specialization Opportunities',
+        features: [
+          {
+            icon: 'Scissors',
+            title: 'Precision Fades',
+            description: 'Become known for the cleanest fades in your city. Specialization commands premium pricing.',
+          },
+          {
+            icon: 'Palette',
+            title: 'Hair Art & Designs',
+            description: 'Develop artistic shaving and design skills. This niche attracts clients willing to pay for unique work.',
+          },
+          {
+            icon: 'Beard',
+            title: 'Beard Sculpting',
+            description: 'Master beard shaping, conditioning, and maintenance. The beard trend shows no signs of slowing.',
+          },
+          {
+            icon: 'GraduationCap',
+            title: 'Barber Educator',
+            description: 'Teach the next generation. Many successful barbers transition into education, workshops, or online courses.',
+          },
+        ],
+      },
+
+      // ============================================================
+      // NEW SECTION 14: Leadership & Mentorship
+      // ============================================================
+      {
+        type: 'contentBlock',
+        id: 'leadership-intro',
+        title: 'Leadership in the Barbershop: From Student to Mentor',
+        content: "Leadership isn't about having a title — it's about influence. The moment you help a classmate with a technique, you become a leader. The moment you set a positive example in the shop, you become a leader. Great barbers don't just build their own careers; they lift others as they climb. Mentorship creates a legacy that outlasts any single haircut.",
+        highlight: "Mentorship creates a legacy",
+      },
+      {
+        type: 'featureGrid',
+        id: 'leadership-qualities',
+        title: 'Qualities of a Barber Leader',
+        features: [
+          {
+            icon: 'Star',
+            title: 'Leads by Example',
+            description: 'Show up early, stay late, practice consistently, and treat everyone with respect. Your actions teach louder than your words.',
+          },
+          {
+            icon: 'Heart',
+            title: 'Gives Constructive Feedback',
+            description: "When helping others, focus on what's working and what to adjust. Criticism without guidance destroys confidence.",
+          },
+          {
+            icon: 'Users',
+            title: 'Builds Team Culture',
+            description: 'In a shop, attitude is contagious. A leader sets the tone — positive, collaborative, and growth-oriented.',
+          },
+          {
+            icon: 'TrendingUp',
+            title: 'Invests in Others',
+            description: "Share knowledge freely. The barber who hoards techniques stays small. The barber who teaches builds an empire.",
+          },
+        ],
+      },
+      {
+        type: 'checklist',
+        id: 'mentorship-actions',
+        title: 'Ways to Start Mentoring Today',
+        items: [
+          { text: 'Help a struggling classmate with a technique you have mastered' },
+          { text: 'Share study resources and flashcard decks with your peers' },
+          { text: 'Offer to practice on each other and give honest, kind feedback' },
+          { text: 'Introduce newer students to barbers you admire in the community' },
+          { text: 'Document your learning journey so others can learn from your mistakes' },
+        ],
+      },
+
+      // ============================================================
+      // NEW SECTION 15: Workplace Professionalism & Shop Etiquette
+      // ============================================================
+      {
+        type: 'contentBlock',
+        id: 'workplace-intro',
+        title: 'Workplace Professionalism: Thriving in Any Shop Environment',
+        content: "Every shop has its own culture, but certain professional standards are universal. Whether you're in a high-end suite, a neighborhood shop, or a school clinic, your behavior affects everyone around you. Workplace professionalism isn't about being stiff or formal — it's about creating an environment where clients feel comfortable, coworkers feel respected, and the business runs smoothly.",
+        highlight: "creating an environment where clients feel comfortable",
+      },
+      {
+        type: 'tabbed',
+        id: 'shop-etiquette',
+        title: 'Shop Etiquette Essentials',
+        subtitle: 'The unwritten rules that separate professionals from amateurs',
+        tabs: [
+          {
+            id: 'station-respect',
+            label: 'Station Respect',
+            title: 'Your Station, Your Responsibility',
+            bullets: [
+              { label: 'Clean as You Go', description: 'Sweep hair immediately after each cut. Wipe down your chair and station between clients.' },
+              { label: 'Organized Tools', description: 'Keep your shears, clippers, and combs in designated spots. A messy station signals a messy barber.' },
+              { label: 'Shared Spaces', description: 'Clean the bathroom, break room, and waiting area on your assigned days. Shared responsibility keeps the shop pristine.' },
+            ],
+          },
+          {
+            id: 'coworker-conduct',
+            label: 'Coworker Conduct',
+            title: 'Building Positive Colleague Relationships',
+            bullets: [
+              { label: 'No Poaching Clients', description: "Never solicit another barber's regular clients. If their client asks you for a cut, redirect them back to their barber." },
+              { label: 'Share the Floor', description: 'In walk-in shops, rotate fairly. No one likes the barber who hogs every walk-in.' },
+              { label: 'Keep Drama Out', description: 'Personal conflicts stay outside the shop. Clients can sense tension, and it makes the environment uncomfortable.' },
+            ],
+          },
+          {
+            id: 'busy-days',
+            label: 'Busy Days',
+            title: 'Handling High-Volume Days',
+            bullets: [
+              { label: 'Stay Calm Under Pressure', description: 'Rushing leads to mistakes. Breathe, focus on one client at a time, and communicate wait times clearly.' },
+              { label: 'Support Each Other', description: 'On slammed days, help coworkers sweep, sanitize, or greet clients. Teamwork makes the shop run.' },
+              { label: 'Know When to Say No', description: "If you're fully booked and exhausted, it's better to reschedule than to deliver a rushed, poor-quality cut." },
+            ],
+          },
+        ],
+      },
+      {
+        type: 'checklist',
+        id: 'professional-daily',
+        title: 'Daily Professionalism Checklist',
+        items: [
+          { text: 'Arrived on time and prepared for the day' },
+          { text: 'Station is clean and organized before the first client' },
+          { text: 'Treated every coworker with respect and fairness' },
+          { text: 'Maintained professional boundaries with clients' },
+          { text: 'Left the shop cleaner than I found it' },
+        ],
+      },
+      {
+        type: 'quote',
+        id: 'closing-quote',
+        quote: "The barber who masters life skills doesn't just build a career — they build a legacy. Technical skill opens the door. Character, discipline, and integrity keep you in the room.",
+      },
     ],
   },
   'ch-3': {
@@ -1478,6 +1916,329 @@ export const chapterContentData: Record<string, ChapterContent> = {
             description: 'Ask: "Would I want my grandmother, my boss, and my best client to see this?" If no, don\'t post it.',
           },
         ],
+      },
+
+      // ============================================================
+      // NEW SECTION 9: Posture & Body Alignment
+      // ============================================================
+      {
+        type: 'contentBlock',
+        id: 'posture-intro',
+        title: 'Posture: The Foundation of Longevity',
+        content: "Your posture determines how long your career lasts. Poor alignment doesn't just cause pain — it shortens careers. The textbook identifies four common posture problems that barbers develop over time: hunchback (rounded upper back), swayback (excessive lower back curve), flat back (loss of natural curves), and combined hunchback-swayback. Recognizing these patterns early and correcting them through awareness and exercise is essential for a sustainable career.",
+        highlight: 'Your posture determines how long your career lasts',
+      },
+      {
+        type: 'tabbed',
+        id: 'posture-guidelines',
+        title: 'Proper Posture Guidelines',
+        subtitle: 'Standing and sitting alignment for barbers',
+        tabs: [
+          {
+            id: 'standing-posture',
+            label: 'Standing',
+            title: 'Standing Posture Checklist',
+            bullets: [
+              { label: 'Head Position', description: 'Keep head up with chin parallel to the floor. Avoid jutting the chin forward or looking down for extended periods.' },
+              { label: 'Neck Alignment', description: 'Neck elongated and balanced directly above shoulders. Imagine a string pulling the crown of your head toward the ceiling.' },
+              { label: 'Upper Body', description: 'Chest up and out — no slouching. Upper body lifted with shoulders level and relaxed, not hunched toward the ears.' },
+              { label: 'Spine Straight', description: 'Maintain the natural curves of your spine. Avoid excessive arching or flattening of the lower back.' },
+            ],
+          },
+          {
+            id: 'sitting-posture',
+            label: 'Sitting',
+            title: 'Sitting Posture for Barbering',
+            bullets: [
+              { label: 'Hips Level', description: 'Hips level and horizontal — not tilted forward or backward. Both sitting bones should bear equal weight.' },
+              { label: 'Knee Position', description: 'Knees flexed slightly, positioned directly over the feet. Avoid crossing legs for extended periods.' },
+              { label: 'Feet Placement', description: 'Soles of feet flat on the floor directly under knees. Seat height should be even with knees to create a 90-degree angle.' },
+              { label: 'Weight Distribution', description: 'Torso weight on thigh bones, not the tailbone or spine. Back straight with torso kept erect.' },
+              { label: 'Arm Angle', description: 'Desk or work surface height should allow a 90-degree arm angle when writing or working with tools.' },
+            ],
+          },
+        ],
+      },
+      {
+        type: 'infoCards',
+        id: 'common-posture-problems',
+        title: 'Common Posture Problems to Avoid',
+        cards: [
+          {
+            icon: 'AlertTriangle',
+            title: 'Hunchback (Rounded Back)',
+            text: 'Shoulders roll forward, upper back rounds. Caused by leaning over clients and looking down. Leads to neck pain, headaches, and restricted breathing.',
+          },
+          {
+            icon: 'AlertTriangle',
+            title: 'Swayback (Excessive Arch)',
+            text: 'Lower back arches excessively, pelvis tilts forward. Caused by standing with weight shifted back. Leads to lower back pain and hip issues.',
+          },
+          {
+            icon: 'AlertTriangle',
+            title: 'Flat Back (Lost Curves)',
+            text: 'Natural spinal curves flatten. Caused by rigid standing posture. Leads to stiffness, reduced shock absorption, and spinal compression.',
+          },
+          {
+            icon: 'AlertTriangle',
+            title: 'Combined Hunchback-Swayback',
+            text: 'Upper back rounds while lower back over-arches. The most common barber posture problem. Leads to pain in both upper and lower back.',
+          },
+        ],
+      },
+
+      // ============================================================
+      // NEW SECTION 10: Stress-Relief Exercises
+      // ============================================================
+      {
+        type: 'contentBlock',
+        id: 'stress-relief-intro',
+        title: 'Daily Stress-Relief Exercises for Barbers',
+        content: 'Repetitive motions and sustained positions create cumulative stress on your body. The textbook recommends specific exercises targeting the areas most affected by barbering: wrists, fingers, and shoulders. These exercises take less than 5 minutes and should be performed between clients or during breaks. Prevention is always easier than recovery.',
+        highlight: 'Prevention is always easier than recovery',
+      },
+      {
+        type: 'tabbed',
+        id: 'stress-relief-exercises',
+        title: 'Targeted Stress-Relief Exercises',
+        subtitle: 'Simple movements that prevent repetitive strain injuries',
+        tabs: [
+          {
+            id: 'wrist-exercises',
+            label: 'Wrists',
+            title: 'Wrist Flexor & Extensor Stretches',
+            bullets: [
+              { label: 'Starting Position', description: 'Stand straight with arms extended out in front of you, palms facing down.' },
+              { label: 'Upward Bend', description: 'Bend wrists upward, pulling fingers back gently. Hold for 5 seconds. Feel the stretch along the underside of the forearm.' },
+              { label: 'Downward Bend', description: 'Turn hands so palms face up, then bend wrists downward. Hold for 5 seconds. Feel the stretch along the top of the forearm.' },
+              { label: 'Repeat', description: 'Perform 5 complete cycles of upward and downward bends. Do this between every 2-3 clients.' },
+            ],
+          },
+          {
+            id: 'finger-exercises',
+            label: 'Fingers',
+            title: 'Finger Grip Strengthening & Release',
+            bullets: [
+              { label: 'Grip & Release', description: 'Squeeze a tennis ball or tension ball tightly for 5 counts, then release completely.' },
+              { label: 'Repeat', description: 'Perform 5 repetitions per hand. This strengthens grip while promoting blood flow.' },
+              { label: 'Finger Spreads', description: 'Spread fingers wide apart, hold for 5 seconds, then relax. Repeat 5 times to counteract the closed grip of holding clippers.' },
+            ],
+          },
+          {
+            id: 'shoulder-exercises',
+            label: 'Shoulders',
+            title: 'Shoulder Rolls & Shrugs',
+            bullets: [
+              { label: 'Shrug Up', description: 'Lift shoulders up toward ears. Hold for 5 counts.' },
+              { label: 'Roll Back', description: 'Roll shoulders backward in a circular motion. Hold for 5 counts at the rearmost position.' },
+              { label: 'Roll Forward', description: 'Roll shoulders forward in a circular motion. Hold for 5 counts at the frontmost position.' },
+              { label: 'Repeat', description: 'Perform 5 complete cycles. Do this hourly to release tension from holding arms raised during cuts.' },
+            ],
+          },
+        ],
+      },
+
+      // ============================================================
+      // NEW SECTION 11: Good Manners & Professional Mannerisms
+      // ============================================================
+      {
+        type: 'contentBlock',
+        id: 'manners-intro',
+        title: 'Good Manners: The Invisible Professional Edge',
+        content: "Good manners reflect thoughtfulness, respect, and tolerance toward others. In barbering, they include exercising care of others' property, being considerate of coworkers, and showing courtesy to every person who enters the shop. Mannerisms — your habitual behaviors and gestures — either reinforce your professional image or undermine it. The textbook specifically warns against gum chewing, nervous habits, and negative body language that clients notice instantly.",
+        highlight: 'Mannerisms either reinforce your image or undermine it',
+      },
+      {
+        type: 'featureGrid',
+        id: 'mannerisms-do-dont',
+        title: 'Mannerisms: Do\'s and Don\'ts',
+        features: [
+          {
+            icon: 'CheckCircle',
+            title: 'DO: Conceal Disruptions',
+            description: 'If you need to yawn, cough, or sneeze, turn away from the client and cover with your hand or elbow. Excuse yourself briefly if needed.',
+          },
+          {
+            icon: 'CheckCircle',
+            title: 'DO: Exhibit Pleasant Gestures',
+            description: 'Use open, welcoming body language. Smile genuinely. Maintain appropriate eye contact. These small signals make clients feel valued.',
+          },
+          {
+            icon: 'XCircle',
+            title: 'DON\'T: Chew Gum',
+            description: 'Gum chewing is universally unprofessional in service industries. It distracts clients, affects speech clarity, and looks careless.',
+          },
+          {
+            icon: 'XCircle',
+            title: 'DON\'T: Display Nervous Habits',
+            description: 'Tapping feet, playing with hair, fidgeting with tools, or other nervous habits signal anxiety and distract from your professionalism.',
+          },
+        ],
+      },
+      {
+        type: 'checklist',
+        id: 'good-manners-checklist',
+        title: 'Daily Good Manners Checklist',
+        items: [
+          { text: 'Greeted every client and coworker with a warm, genuine welcome' },
+          { text: 'Respected others\' personal space and property' },
+          { text: 'Avoided gum chewing and nervous habits during services' },
+          { text: 'Concealed yawns, coughs, and sneezes appropriately' },
+          { text: 'Used please, thank you, and excuse me consistently' },
+          { text: 'Showed tolerance and respect for different viewpoints and backgrounds' },
+        ],
+      },
+
+      // ============================================================
+      // NEW SECTION 12: Communication Framework
+      // ============================================================
+      {
+        type: 'contentBlock',
+        id: 'communication-framework-intro',
+        title: 'The Three-Step Communication Framework',
+        content: 'Effective communication in barbering follows a simple but powerful framework: Organize, Clarify, Repeat. This three-step process ensures you fully understand what the client wants before you pick up any tool. Miscommunication is the leading cause of client dissatisfaction, and this framework eliminates most misunderstandings before they become problems.',
+        highlight: 'Organize, Clarify, Repeat',
+      },
+      {
+        type: 'milestoneList',
+        id: 'communication-steps',
+        title: 'The Communication Process',
+        milestones: [
+          { year: 'Step 1', title: 'Organize Your Thoughts', description: 'Before speaking with the client, determine what information you need. What questions will clarify their desired outcome? What terminology might be ambiguous? For example, when a client says "trim," do they mean a light cleanup or a significant length reduction?' },
+          { year: 'Step 2', title: 'Clarify Terminology', description: 'Ensure you understand the client\'s specific terminology. When they say "over the ears," do they mean covering the tops of the ears or cut around the ears? Ask follow-up questions until you can visualize exactly what they want. Never assume you know what they mean.' },
+          { year: 'Step 3', title: 'Repeat for Confirmation', description: 'Restate your interpretation to the client for confirmation. "So you want a fade starting at a #1 on the sides, blended up to finger length on top, with the neckline tapered — is that right?" This gives the client a chance to correct any misunderstanding before you begin.' },
+        ],
+      },
+      {
+        type: 'contentBlock',
+        id: 'communication-pro-tip',
+        title: 'Pro Tip: The Power of Visual References',
+        content: 'Words alone are often insufficient for describing hairstyles. Keep a portfolio of your work or reference photos on your phone. When a client describes what they want, show them a similar style and ask, "Is this the direction you\'re thinking?" Visual confirmation eliminates the gap between what the client imagines and what you plan to deliver.',
+        highlight: 'Visual confirmation eliminates the gap',
+      },
+
+      // ============================================================
+      // NEW SECTION 13: Conversation Guidelines & Confidentiality
+      // ============================================================
+      {
+        type: 'contentBlock',
+        id: 'conversation-intro',
+        title: 'Conversation Topics: What to Discuss and What to Avoid',
+        content: "The barber chair is a place of trust. Clients share their lives with you, and how you handle that trust defines your professionalism. The textbook specifically identifies topics that should never be discussed in the barbershop: religion, politics, personal problems, and gossip about other clients or coworkers. These topics create division, discomfort, and can damage the welcoming atmosphere every shop needs.",
+        highlight: 'The barber chair is a place of trust',
+      },
+      {
+        type: 'infoCards',
+        id: 'conversation-topics',
+        title: 'Conversation Guidelines',
+        cards: [
+          {
+            icon: 'MessageCircle',
+            title: 'Safe Topics',
+            text: 'Sports, local events, hobbies, travel, movies, music, food recommendations, and light personal updates ("How was your vacation?"). These build rapport without risk.',
+          },
+          {
+            icon: 'AlertTriangle',
+            title: 'Topics to Avoid',
+            text: 'Religion, politics, personal problems, other people\'s business, gossip about clients or coworkers, and controversial social issues. These create division and discomfort.',
+          },
+          {
+            icon: 'Lock',
+            title: 'Confidentiality Rule',
+            text: 'Never discuss personal wages, tips, rent, or tax information with coworkers. Never repeat what one client tells you to another person. What happens in the chair stays in the chair.',
+          },
+          {
+            icon: 'Heart',
+            title: 'Reading the Room',
+            text: 'Some clients want conversation; others want quiet. Pay attention to cues. A client who gives short answers and closes their eyes probably wants peace. Respect their preference.',
+          },
+        ],
+      },
+      {
+        type: 'checklist',
+        id: 'confidentiality-checklist',
+        title: 'Confidentiality & Professional Boundaries Checklist',
+        items: [
+          { text: 'Never gossip about other clients or coworkers' },
+          { text: 'Never discuss religion or politics in the shop' },
+          { text: 'Never share personal financial information (wages, tips, rent)' },
+          { text: 'Respect client privacy — what they share stays with you' },
+          { text: 'Read client cues and adapt conversation to their preference' },
+          { text: 'Address disputes and differences in private, not in front of others' },
+        ],
+      },
+
+      // ============================================================
+      // NEW SECTION 14: Social Media Best Practices
+      // ============================================================
+      {
+        type: 'contentBlock',
+        id: 'social-media-expanded',
+        title: 'Social Media: Building Your Brand the Right Way',
+        content: "Social media is one of the most powerful tools for building your barbering career — but it's also one of the fastest ways to damage it. The textbook emphasizes that maintaining a professional online image is a daily process that requires intention. Your social media presence should reflect the same standards you maintain in the shop: professionalism, positivity, and respect.",
+        highlight: 'Maintaining a professional online image is a daily process',
+      },
+      {
+        type: 'tabbed',
+        id: 'social-media-dos-donts',
+        title: 'Social Media DO\'s and DON\'Ts',
+        subtitle: 'Rules for maintaining professional image online',
+        tabs: [
+          {
+            id: 'social-dos',
+            label: 'DO\'s',
+            title: 'Social Media Best Practices',
+            bullets: [
+              { label: 'Manage Your Pages', description: 'Regularly review and curate your personal and professional pages. Remove content that no longer reflects your brand.' },
+              { label: 'Post Helpful Content', description: 'Share tips, before/after photos (with permission), product recommendations, and educational content that helps clients and peers.' },
+              { label: 'Engage Professionally', description: 'Respond to comments and messages promptly and professionally. Thank clients for positive reviews and address concerns privately.' },
+              { label: 'Build Community', description: 'Use social media to connect with peers, mentors, and potential clients. Networking online can lead to real-world opportunities.' },
+            ],
+          },
+          {
+            id: 'social-donts',
+            label: 'DON\'Ts',
+            title: 'Social Media Pitfalls to Avoid',
+            bullets: [
+              { label: 'No Profanity', description: 'Profane language diminishes your professional image instantly. Keep all public communication clean and respectful.' },
+              { label: 'No Online Arguments', description: 'Never participate in or entertain arguments online. If someone posts something negative, respond calmly or not at all.' },
+              { label: 'No Embarrassing Photos', description: 'Never post rude, embarrassing, or unprofessional photographs. This includes photos of clients without permission.' },
+              { label: 'No Spam', description: 'Don\'t forward chain messages, spam, or irrelevant content. Your feed should be valuable, not cluttered.' },
+            ],
+          },
+        ],
+      },
+      {
+        type: 'featureGrid',
+        id: 'social-media-activities',
+        title: 'Communication Activities for Barber Success',
+        features: [
+          {
+            icon: 'Phone',
+            title: 'Telephone & Booking',
+            description: 'Answer calls promptly, speak clearly, confirm appointments, and handle rescheduling professionally. Your phone voice is part of your image.',
+          },
+          {
+            icon: 'Users',
+            title: 'Networking & Contacts',
+            description: 'Build relationships with other barbers, shop owners, product vendors, and industry professionals. Your network is your net worth.',
+          },
+          {
+            icon: 'TrendingUp',
+            title: 'Self-Promotion',
+            description: 'Share your work, skills, and creativity online. A strong personal brand attracts clients who value what you offer.',
+          },
+          {
+            icon: 'ShoppingBag',
+            title: 'Product Recommendations',
+            description: 'Recommend products that genuinely help clients. Ethical product suggestions build trust and can create additional income streams.',
+          },
+        ],
+      },
+      {
+        type: 'quote',
+        id: 'ch3-closing-quote',
+        quote: 'Maintaining a professional image is a daily process. The time you invest in your image today will have long-term returns for your business tomorrow. Your image is your brand — make it your best.',
       },
     ],
   },

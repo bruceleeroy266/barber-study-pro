@@ -93,6 +93,7 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
         num={num} 
         title={chapter.title} 
         description={chapter.description}
+        subtitle={getChapterContent(num)?.subtitle}
         flashcardsCount={flashcards?.length || 0}
         questionsCount={questions?.length || 0}
         bestAttempt={bestAttempt}
