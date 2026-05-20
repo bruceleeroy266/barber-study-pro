@@ -21,6 +21,12 @@ export type SectionType =
   | 'scenarioBlock'
   | 'levelUp'
   | 'actionPrompt'
+  | 'proScenario'
+  | 'confidenceBuilder'
+  | 'proLevelSystem'
+  | 'appearanceChecklist'
+  | 'proTip'
+  | 'reflectionBlock'
 
 export interface BaseSection {
   type: SectionType
@@ -214,6 +220,104 @@ export interface ActionPromptSection extends BaseSection {
 }
 
 // ───────────────────────────────────────────────
+// CHAPTER 3 PREMIUM INTERACTIVE SECTIONS
+// ───────────────────────────────────────────────
+
+// Professional Scenario — luxury client-service simulations
+export interface ProScenarioOption {
+  letter: string
+  text: string
+  feedback: string
+  isPremium?: boolean
+}
+
+export interface ProScenarioItem {
+  situation: string
+  context?: string
+  options: ProScenarioOption[]
+  correctAnswer: string
+  proTip: string
+}
+
+export interface ProScenarioSection extends BaseSection {
+  type: 'proScenario'
+  scenarios: ProScenarioItem[]
+}
+
+// Confidence Builder — "How would you respond?" interactive cards
+export interface ConfidenceResponse {
+  text: string
+  isProfessional: boolean
+  feedback: string
+}
+
+export interface ConfidenceCard {
+  situation: string
+  question: string
+  responses: ConfidenceResponse[]
+  insight: string
+}
+
+export interface ConfidenceBuilderSection extends BaseSection {
+  type: 'confidenceBuilder'
+  cards: ConfidenceCard[]
+}
+
+// Professional Level System — elegant progression (Apprentice → Shop Leader)
+export interface ProLevel {
+  level: string
+  title: string
+  description: string
+  standards: string[]
+  reward: string
+}
+
+export interface ProLevelSystemSection extends BaseSection {
+  type: 'proLevelSystem'
+  levels: ProLevel[]
+}
+
+// Appearance Checklist — interactive professional standards checklist
+export interface ChecklistItemEnhanced {
+  text: string
+  isEssential: boolean
+}
+
+export interface ChecklistCategory {
+  category: string
+  icon: string
+  items: ChecklistItemEnhanced[]
+}
+
+export interface AppearanceChecklistSection extends BaseSection {
+  type: 'appearanceChecklist'
+  categories: ChecklistCategory[]
+}
+
+// Pro Tip — expandable luxury tips
+export interface ProTipItem {
+  category: string
+  tips: string[]
+}
+
+export interface ProTipSection extends BaseSection {
+  type: 'proTip'
+  items: ProTipItem[]
+}
+
+// Reflection Block — interactive journaling prompts
+export interface ReflectionQuestion {
+  question: string
+  placeholder: string
+  insight: string
+}
+
+export interface ReflectionBlockSection extends BaseSection {
+  type: 'reflectionBlock'
+  questions: ReflectionQuestion[]
+}
+
+// ───────────────────────────────────────────────
 // Chapter Content Type
 // ───────────────────────────────────────────────
 
@@ -231,6 +335,12 @@ export type ChapterSection =
   | ScenarioBlockSection
   | LevelUpSection
   | ActionPromptSection
+  | ProScenarioSection
+  | ConfidenceBuilderSection
+  | ProLevelSystemSection
+  | AppearanceChecklistSection
+  | ProTipSection
+  | ReflectionBlockSection
 
 // ───────────────────────────────────────────────
 // Chapter Theme System
@@ -258,6 +368,11 @@ export interface ChapterTheme {
   milestone?: Record<string, string>
   checklist?: Record<string, string>
   contentBlock?: Record<string, string>
+  // Interactive section themes
+  challengeCard?: Record<string, string>
+  scenarioBlock?: Record<string, string>
+  levelUp?: Record<string, string>
+  actionPrompt?: Record<string, string>
 }
 
 export interface ChapterContent {
@@ -433,75 +548,105 @@ export const chapter2Theme: ChapterTheme = {
 }
 
 // ───────────────────────────────────────────────
-// Chapter 3: Professional Image — Corporate Luxury Theme
-// Deep navy / midnight blue / platinum silver
+// Chapter 3: Professional Image — LUXURY ACADEMY THEME
+// Deep navy / platinum silver / chrome / glassmorphism
+// Premium grooming institute aesthetic — elite, polished, refined
 // ───────────────────────────────────────────────
 
 export const chapter3Theme: ChapterTheme = {
-  // Core: luxury corporate palette
-  primary: '#3B5B8C',           // Deep navy blue — trust, professionalism
-  primaryLight: '#7BA4E0',      // Light steel blue
-  primaryDark: '#1E3A5F',       // Dark midnight navy
-  secondary: '#C0C0C0',         // Platinum / silver — premium, polished
-  background: 'rgba(10, 20, 40, 0.85)',   // Very dark navy
-  backgroundAlt: 'rgba(20, 35, 60, 0.7)', // Lighter midnight
-  surface: '#060F1E',           // Deepest navy
-  border: 'rgba(59, 91, 140, 0.25)',      // Navy border
-  text: '#F0F4FA',              // Clean white
-  textMuted: '#8BA3C7',         // Soft silver-blue
-  highlight: '#C0C0C0',         // Platinum highlight
-  // Timeline: corporate navy feel
+  // Core: luxury academy palette
+  primary: '#C0A062',           // Warm champagne gold — premium, refined
+  primaryLight: '#E8D5A3',      // Light champagne
+  primaryDark: '#8B7355',       // Deep bronze gold
+  secondary: '#E8E8E8',         // Platinum silver — polished, clean
+  background: 'rgba(12, 18, 35, 0.92)',   // Deep midnight navy
+  backgroundAlt: 'rgba(20, 28, 50, 0.85)', // Lighter navy with depth
+  surface: '#080E1C',           // Deepest midnight
+  border: 'rgba(192, 160, 98, 0.25)',      // Champagne gold border
+  text: '#F8F6F3',              // Warm white — softer than pure white
+  textMuted: '#A0A8B8',         // Soft platinum-gray
+  highlight: '#C0A062',         // Champagne gold highlight
+  // Timeline: luxury progression
   timeline: {
-    line: 'rgba(59, 91, 140, 0.3)',
-    iconBg: '#0A1428',
-    iconBorder: '#3B5B8C',
+    line: 'rgba(192, 160, 98, 0.35)',
+    iconBg: '#0C1223',
+    iconBorder: '#C0A062',
   },
-  // Quote: elegant platinum border
+  // Quote: elegant gold border with glassmorphism
   quote: {
-    border: 'rgba(192, 192, 192, 0.4)',
-    icon: 'rgba(192, 192, 192, 0.3)',
-    bg: 'rgba(10, 20, 40, 0.6)',
+    border: 'rgba(192, 160, 98, 0.45)',
+    icon: 'rgba(192, 160, 98, 0.35)',
+    bg: 'rgba(12, 18, 35, 0.7)',
   },
-  // Tabbed: corporate navy
+  // Tabbed: luxury lounge tabs
   tabbed: {
-    activeBg: 'rgba(59, 91, 140, 0.15)',
-    activeBorder: 'rgba(59, 91, 140, 0.5)',
-    activeText: '#7BA4E0',
-    inactiveBg: 'rgba(10, 20, 40, 0.6)',
-    inactiveBorder: 'rgba(59, 91, 140, 0.15)',
-    inactiveText: '#8BA3C7',
-    panelBg: 'rgba(10, 20, 40, 0.7)',
-    panelBorder: 'rgba(59, 91, 140, 0.2)',
+    activeBg: 'rgba(192, 160, 98, 0.18)',
+    activeBorder: 'rgba(192, 160, 98, 0.55)',
+    activeText: '#E8D5A3',
+    inactiveBg: 'rgba(12, 18, 35, 0.7)',
+    inactiveBorder: 'rgba(192, 160, 98, 0.15)',
+    inactiveText: '#A0A8B8',
+    panelBg: 'rgba(12, 18, 35, 0.8)',
+    panelBorder: 'rgba(192, 160, 98, 0.2)',
   },
-  // Tool cards: steel and platinum
+  // Tool cards: chrome and platinum
   toolCard: {
-    headerBg: 'rgba(192, 192, 192, 0.1)',
-    headerText: '#C0C0C0',
-    dot: 'rgba(59, 91, 140, 0.6)',
-    line: 'rgba(59, 91, 140, 0.25)',
+    headerBg: 'rgba(192, 160, 98, 0.12)',
+    headerText: '#E8D5A3',
+    dot: 'rgba(192, 160, 98, 0.65)',
+    line: 'rgba(192, 160, 98, 0.3)',
   },
-  // Feature grid: professional steel
+  // Feature grid: luxury cards
   featureGrid: {
-    iconBg: 'rgba(59, 91, 140, 0.15)',
-    iconColor: '#3B5B8C',
-    cardBorder: 'rgba(59, 91, 140, 0.2)',
+    iconBg: 'rgba(192, 160, 98, 0.18)',
+    iconColor: '#C0A062',
+    cardBorder: 'rgba(192, 160, 98, 0.22)',
   },
-  // Milestones: platinum accent
+  // Milestones: champagne accent
   milestone: {
-    yearColor: '#C0C0C0',
-    border: 'rgba(59, 91, 140, 0.2)',
+    yearColor: '#C0A062',
+    border: 'rgba(192, 160, 98, 0.25)',
   },
-  // Checklist: professional
+  // Checklist: luxury
   checklist: {
-    checkBorder: 'rgba(59, 91, 140, 0.4)',
-    checkColor: '#3B5B8C',
-    bg: 'rgba(10, 20, 40, 0.6)',
+    checkBorder: 'rgba(192, 160, 98, 0.45)',
+    checkColor: '#C0A062',
+    bg: 'rgba(12, 18, 35, 0.7)',
   },
-  // Content block: navy
+  // Content block: refined navy
   contentBlock: {
-    bg: 'rgba(10, 20, 40, 0.6)',
-    border: 'rgba(59, 91, 140, 0.2)',
-    highlightColor: '#C0C0C0',
+    bg: 'rgba(12, 18, 35, 0.7)',
+    border: 'rgba(192, 160, 98, 0.2)',
+    highlightColor: '#E8D5A3',
+  },
+  // Challenge cards: premium styling
+  challengeCard: {
+    badgeBg: 'rgba(192, 160, 98, 0.2)',
+    badgeText: '#E8D5A3',
+    cardBorder: 'rgba(192, 160, 98, 0.25)',
+    completedBg: 'rgba(16, 185, 129, 0.1)',
+    completedBorder: 'rgba(16, 185, 129, 0.3)',
+  },
+  // Scenario blocks: polished
+  scenarioBlock: {
+    situationBg: 'rgba(192, 160, 98, 0.1)',
+    optionBorder: 'rgba(192, 160, 98, 0.2)',
+    correctBg: 'rgba(16, 185, 129, 0.12)',
+    incorrectBg: 'rgba(239, 68, 68, 0.1)',
+  },
+  // Level up: elegant progression
+  levelUp: {
+    levelBadgeBg: 'rgba(192, 160, 98, 0.2)',
+    levelBadgeText: '#E8D5A3',
+    rewardBg: 'rgba(16, 185, 129, 0.12)',
+    rewardText: '#10B981',
+  },
+  // Action prompts: premium
+  actionPrompt: {
+    cardBorder: 'rgba(192, 160, 98, 0.2)',
+    completedBorder: 'rgba(16, 185, 129, 0.35)',
+    benefitBg: 'rgba(192, 160, 98, 0.1)',
+    benefitBorder: 'rgba(192, 160, 98, 0.3)',
   },
 }
 
@@ -1900,6 +2045,49 @@ export const chapterContentData: Record<string, ChapterContent> = {
         ],
       },
 
+      // 💎 INTERACTIVE: Professional Standards Checklist
+      {
+        type: 'appearanceChecklist',
+        id: 'daily-prep-checklist',
+        title: 'Opening Shift Preparation',
+        subtitle: 'The elite barber\'s daily readiness protocol',
+        categories: [
+          {
+            category: 'Personal Grooming',
+            icon: 'Sparkles',
+            items: [
+              { text: 'Showered and applied deodorant', isEssential: true },
+              { text: 'Hair styled and professional', isEssential: true },
+              { text: 'Nails clean, trimmed, and polished', isEssential: true },
+              { text: 'Facial hair groomed or clean-shaven', isEssential: false },
+              { text: 'Breath fresh — brushed teeth, mints ready', isEssential: true },
+              { text: 'Minimal or no strong fragrance', isEssential: true },
+            ],
+          },
+          {
+            category: 'Professional Attire',
+            icon: 'Shirt',
+            items: [
+              { text: 'Clean, pressed uniform or professional attire', isEssential: true },
+              { text: 'Closed-toe, comfortable footwear', isEssential: true },
+              { text: 'Minimal jewelry — nothing that dangles or distracts', isEssential: false },
+              { text: 'Watch is clean and professional', isEssential: false },
+            ],
+          },
+          {
+            category: 'Station Readiness',
+            icon: 'Scissors',
+            items: [
+              { text: 'Tools sanitized and organized', isEssential: true },
+              { text: 'Fresh capes, neck strips, and towels', isEssential: true },
+              { text: 'Products stocked and within reach', isEssential: true },
+              { text: 'Chair and station wiped down', isEssential: true },
+              { text: 'Trash emptied and floor swept', isEssential: false },
+            ],
+          },
+        ],
+      },
+
       // Section 3: Exercise & Physical Health
       {
         type: 'featureGrid',
@@ -1930,6 +2118,81 @@ export const chapterContentData: Record<string, ChapterContent> = {
         title: 'Practical Health Tips for Barbers',
         content: '1) Stay Hydrated — Keep a water bottle at your station. Dehydration causes fatigue, headaches, and poor concentration. 2) Pack Healthy Snacks — Avoid energy crashes by eating protein-rich snacks between clients instead of sugary foods. 3) Protect Your Hearing — Clipper noise adds up over years. Consider ear protection if you work in a loud environment. 4) Get Regular Checkups — Physical labor takes a toll. Annual physicals catch problems early. Don\'t ignore pain.',
         highlight: 'Stay Hydrated',
+      },
+
+      // 💎 INTERACTIVE: Professionalism Level System
+      {
+        type: 'proLevelSystem',
+        id: 'professionalism-levels',
+        title: '🏆 The Professionalism Progression',
+        subtitle: 'From Apprentice to Shop Leader — elevate your professional standards',
+        levels: [
+          {
+            level: 'Level 1: Apprentice',
+            title: 'Foundation Builder',
+            description: 'You are learning the basics of professional image. Every day is an opportunity to build good habits that will serve your entire career.',
+            standards: [
+              'Arrive on time, every day, without exception',
+              'Maintain basic hygiene: showered, clean uniform, fresh breath',
+              'Keep your station organized and tools sanitized',
+              'Listen more than you speak during consultations',
+              'Ask questions when you do not understand',
+            ],
+            reward: 'Client Trust Badge — Clients notice your consistency',
+          },
+          {
+            level: 'Level 2: Reliable Professional',
+            title: 'The Consistent Performer',
+            description: 'You have established routines that clients and coworkers can depend on. Your reliability is becoming your reputation.',
+            standards: [
+              'Deliver consistent quality on every single cut',
+              'Remember client preferences and details',
+              'Handle scheduling and cancellations professionally',
+              'Maintain composure during busy or stressful periods',
+              'Support coworkers without being asked',
+            ],
+            reward: 'Referral Ready — Clients recommend you to friends',
+          },
+          {
+            level: 'Level 3: Trusted Barber',
+            title: 'The Client Favorite',
+            description: 'Clients specifically request you. Your professionalism has created loyalty that transcends price or convenience.',
+            standards: [
+              'Clients book weeks in advance to secure your chair',
+              'You handle difficult situations with grace and confidence',
+              'Your personal brand is recognizable and respected',
+              'You mentor newer barbers by example',
+              'Your station is a model of organization and cleanliness',
+            ],
+            reward: 'Premium Pricing Power — You have earned the right to charge more',
+          },
+          {
+            level: 'Level 4: Elite Professional',
+            title: 'The Industry Standard',
+            description: 'You are known beyond your shop. Other barbers study your work. Your professionalism sets the bar for everyone around you.',
+            standards: [
+              'Your social media presence attracts clients and respect',
+              'You represent the shop at events, competitions, and media',
+              'Your consultation process is a masterclass in client care',
+              'You have developed signature techniques or styles',
+              'Your reputation precedes you — people know your name',
+            ],
+            reward: 'Industry Recognition — Your name carries weight',
+          },
+          {
+            level: 'Level 5: Shop Leader',
+            title: 'The Legacy Builder',
+            description: 'You shape the culture of your shop. Your standards become the shop\'s standards. You are building something that outlasts your time in the chair.',
+            standards: [
+              'You set and enforce professional standards for the team',
+              'Your mentorship produces the next generation of elite barbers',
+              'Your business acumen drives shop growth and profitability',
+              'Your community presence elevates the entire profession',
+              'Your legacy is measured in the success of those you trained',
+            ],
+            reward: 'Legacy Status — Your influence extends beyond your career',
+          },
+        ],
       },
 
       // Section 4: Stress Management Techniques
@@ -2065,6 +2328,40 @@ export const chapterContentData: Record<string, ChapterContent> = {
         ],
       },
 
+      // 💎 INTERACTIVE: Professional Scenarios
+      {
+        type: 'proScenario',
+        id: 'consultation-scenarios',
+        title: '🎭 Client Consultation Scenarios',
+        subtitle: 'Navigate real client interactions with confidence and professionalism',
+        scenarios: [
+          {
+            situation: 'A new client sits in your chair and says, "Just do whatever you think looks best." They seem nervous and are not making eye contact.',
+            context: 'This is a trust-building moment. How you respond will determine whether they become a regular client.',
+            options: [
+              { letter: 'A', text: 'Start cutting immediately — they said do whatever you want', feedback: '❌ Rushing into a cut without understanding the client\'s preferences shows overconfidence. Nervous clients need reassurance, not assumptions.', isPremium: false },
+              { letter: 'B', text: 'Ask open-ended questions about their lifestyle, hair history, and what they liked about past cuts. Show reference photos.', feedback: '✅ Correct! Even when clients defer to your expertise, gathering context ensures the result matches their reality. Reference photos bridge the gap between imagination and execution.', isPremium: true },
+              { letter: 'C', text: 'Give them the same cut you give everyone — it works on most people', feedback: '❌ One-size-fits-all barbering ignores individual face shapes, hair textures, and personal style. Every client deserves a customized approach.', isPremium: false },
+              { letter: 'D', text: 'Tell them you need more direction and ask them to come back when they know what they want', feedback: '❌ Turning away a nervous client wastes a trust-building opportunity. Your job is to guide them, not demand they arrive with a vision board.', isPremium: false },
+            ],
+            correctAnswer: 'B',
+            proTip: 'Elite barbers treat "do whatever" as an invitation to demonstrate expertise through questions, not as permission to skip the consultation.',
+          },
+          {
+            situation: 'A regular client shows you a photo of a celebrity haircut and says, "I want this exact style." Their hair texture and face shape are completely different from the person in the photo.',
+            context: 'Managing expectations while preserving the client relationship requires diplomacy and expertise.',
+            options: [
+              { letter: 'A', text: 'Agree to do it exactly like the photo and hope for the best', feedback: '❌ False promises damage trust. When the result inevitably differs, the client will feel deceived, not disappointed.', isPremium: false },
+              { letter: 'B', text: 'Explain that their hair texture and face shape differ from the reference, then suggest an adapted version that captures the essence while suiting them', feedback: '✅ Correct! Honest expertise builds more trust than false agreement. Clients appreciate when you educate them rather than just saying yes.', isPremium: true },
+              { letter: 'C', text: 'Tell them the photo is unrealistic and they should pick something else', feedback: '❌ Dismissing their inspiration feels condescending. The goal is adaptation, not rejection.', isPremium: false },
+              { letter: 'D', text: 'Do the cut silently and let them discover the mismatch in the mirror', feedback: '❌ Silence is not professionalism. Clients deserve to understand the process and give informed consent.', isPremium: false },
+            ],
+            correctAnswer: 'B',
+            proTip: 'Luxury service means guiding clients to the best version of their vision — not blindly executing it or dismissing it.',
+          },
+        ],
+      },
+
       // Section 6: Ergonomics & Body Mechanics
       {
         type: 'contentBlock',
@@ -2126,6 +2423,38 @@ export const chapterContentData: Record<string, ChapterContent> = {
             icon: 'MoveHorizontal',
             title: 'Adjustable Stations',
             description: 'Everything within easy reach prevents overreaching.',
+          },
+        ],
+      },
+
+      // 💎 INTERACTIVE: Confidence Builder
+      {
+        type: 'confidenceBuilder',
+        id: 'client-confidence',
+        title: '💎 Confidence Builder: Client Trust Moments',
+        subtitle: 'Choose the response that builds lasting client relationships',
+        cards: [
+          {
+            situation: 'A client is clearly unhappy with their haircut but has not said anything. They are staring at the mirror with a disappointed expression.',
+            question: 'How do you respond?',
+            responses: [
+              { text: 'Pretend not to notice and finish the service normally', isProfessional: false, feedback: 'Ignoring client discomfort signals indifference. Clients remember when you did not care.' },
+              { text: 'Ask directly: "I want to make sure you love this. Is there anything you\'d like me to adjust?"', isProfessional: true, feedback: 'Proactive concern shows confidence and integrity. Clients trust barbers who invite feedback.' },
+              { text: 'Wait for them to complain, then offer a discount', isProfessional: false, feedback: 'Waiting for complaints puts the burden on the client. Discounts do not fix disappointment.' },
+              { text: 'Tell them it looks great and they will get used to it', isProfessional: false, feedback: 'Dismissing client feelings destroys trust. Never gaslight a client about their own appearance.' },
+            ],
+            insight: 'Elite barbers read discomfort before words are spoken. Addressing concerns proactively transforms potential complaints into loyalty.',
+          },
+          {
+            situation: 'A client arrives 20 minutes late for their appointment. You have another client in 30 minutes.',
+            question: 'What is the most professional approach?',
+            responses: [
+              { text: 'Refuse to serve them — lateness shows disrespect', isProfessional: false, feedback: 'Rigid policies alienate good clients who had genuine delays. Flexibility builds loyalty.' },
+              { text: 'Politely acknowledge the delay, confirm what they need, and deliver the best version of that service within the remaining time', isProfessional: true, feedback: 'Professional grace under pressure demonstrates maturity. Clients remember how you handled the situation, not just the cut.' },
+              { text: 'Rush through the cut to stay on schedule', isProfessional: false, feedback: 'Rushed work damages your reputation. Quality should never be sacrificed for speed.' },
+              { text: 'Make them wait until your next opening', isProfessional: false, feedback: 'Passive-aggressive scheduling punishes the client and wastes your own time.' },
+            ],
+            insight: 'Time management is a professional skill. The best barbers balance respect for their schedule with grace for their clients.',
           },
         ],
       },
@@ -2287,6 +2616,52 @@ export const chapterContentData: Record<string, ChapterContent> = {
         ],
       },
 
+      // 💎 INTERACTIVE: Pro Tips
+      {
+        type: 'proTip',
+        id: 'luxury-tips',
+        title: '💎 Luxury Standards: Pro Tips',
+        subtitle: 'Expand for elite insights from master barbers',
+        items: [
+          {
+            category: 'Attention to Detail',
+            tips: [
+              'Check your client\'s neck and ears for stray hairs before they leave the chair — every time',
+              'Wipe the mirror clean between clients. A smudged mirror undermines an otherwise perfect cut',
+              'Align the cape so the logo (if any) faces the client, not backward',
+              'Offer a handheld mirror for the back-of-head inspection — never assume they trust what they cannot see',
+            ],
+          },
+          {
+            category: 'Consistency',
+            tips: [
+              'Document each client\'s preferences: guard numbers, product choices, conversation style. Review before they arrive',
+              'Perform your setup ritual identically for every client. Consistency signals professionalism',
+              'Use the same greeting, consultation structure, and closing for every client until it becomes muscle memory',
+              'If you run late, communicate proactively. Silence breeds anxiety',
+            ],
+          },
+          {
+            category: 'Client Trust',
+            tips: [
+              'Remember names — not just the client\'s, but their family members\' names too',
+              'Take notes after each cut: "Prefers quiet," "Loves talking sports," "Sensitive about recession." Review before their next visit',
+              'Never discuss other clients while a client is in your chair. Confidentiality is sacred',
+              'If you make a mistake, own it immediately. "I need to fix this" builds more trust than pretending it is fine',
+            ],
+          },
+          {
+            category: 'Reputation Building',
+            tips: [
+              'Your social media should look like a portfolio, not a personal diary. Curate every post',
+              'Respond to every review — positive and negative — within 24 hours',
+              'Thank clients for referrals with a handwritten note or a complimentary service upgrade',
+              'Invest in continuing education. The best barbers never stop learning',
+            ],
+          },
+        ],
+      },
+
       // ============================================================
       // NEW SECTION 10: Stress-Relief Exercises
       // ============================================================
@@ -2417,6 +2792,31 @@ export const chapterContentData: Record<string, ChapterContent> = {
         highlight: 'Visual confirmation eliminates the gap',
       },
 
+      // 💎 INTERACTIVE: Reflection Blocks
+      {
+        type: 'reflectionBlock',
+        id: 'professional-reflections',
+        title: '🪞 Professional Reflections',
+        subtitle: 'Reflect on your approach to build deeper professional awareness',
+        questions: [
+          {
+            question: 'Think about your last difficult client interaction. What could you have done differently to turn the situation into a trust-building moment?',
+            placeholder: 'Describe the situation and your revised approach...',
+            insight: 'Elite barbers view difficult interactions as opportunities, not obstacles. Every challenge handled well creates a more loyal client than one who never had a problem.',
+          },
+          {
+            question: 'What is one aspect of your professional image that you have been neglecting? Why has it been overlooked, and what is your plan to address it?',
+            placeholder: 'Be honest with yourself — this reflection is private...',
+            insight: 'Self-awareness is the foundation of growth. The barbers who improve fastest are those who can honestly assess their own gaps without defensiveness.',
+          },
+          {
+            question: 'How would you want a client to describe you to their friend? What three words would you hope they use?',
+            placeholder: 'Choose three words and explain why they matter to you...',
+            insight: 'Your reputation is built one client at a time. Defining how you want to be remembered helps you make intentional choices in every interaction.',
+          },
+        ],
+      },
+
       // ============================================================
       // NEW SECTION 13: Conversation Guidelines & Confidentiality
       // ============================================================
@@ -2539,6 +2939,40 @@ export const chapterContentData: Record<string, ChapterContent> = {
         type: 'quote',
         id: 'ch3-closing-quote',
         quote: 'Maintaining a professional image is a daily process. The time you invest in your image today will have long-term returns for your business tomorrow. Your image is your brand — make it your best.',
+      },
+
+      // 💎 INTERACTIVE: Final Professional Challenge
+      {
+        type: 'proScenario',
+        id: 'final-professional-scenarios',
+        title: '👑 The Professional Excellence Challenge',
+        subtitle: 'Master these final scenarios to earn your Professional Image certification',
+        scenarios: [
+          {
+            situation: 'A well-known local influencer sits in your chair. During the cut, they start recording a video for their social media without asking your permission. You are visible in the background and your station is identifiable.',
+            context: 'Your professional image and the shop\'s reputation are at stake. How you handle this sets a precedent for all future clients.',
+            options: [
+              { letter: 'A', text: 'Say nothing — the exposure is good for business', feedback: '❌ Uncontrolled exposure can backfire. Your work, station, and shop are being represented without your input. What if the video goes viral for the wrong reasons?', isPremium: false },
+              { letter: 'B', text: 'Politely pause and say: "I\'m happy to be part of your content, but could we quickly discuss what you\'re recording so I can make sure my station looks its best?"', feedback: '✅ Correct! Professional assertiveness protects your image while respecting the client. You are not saying no — you are saying "let\'s do this right."', isPremium: true },
+              { letter: 'C', text: 'Ask them to stop recording immediately', feedback: '❌ A hard stop feels confrontational and may damage the relationship. There is a middle ground between silence and refusal.', isPremium: false },
+              { letter: 'D', text: 'Make a funny face in the background to "go viral"', feedback: '❌ Unprofessional behavior in someone else\'s content reflects poorly on you. Your brand is not a joke.', isPremium: false },
+            ],
+            correctAnswer: 'B',
+            proTip: 'Elite professionals control their narrative. When others represent you, ensure it aligns with your standards — graciously but firmly.',
+          },
+          {
+            situation: 'You overhear a coworker making inappropriate comments about a client\'s appearance after they left. Other coworkers are laughing. The client is a regular who tips well.',
+            context: 'Workplace culture is shaped by what is tolerated, not just what is said. Your response matters.',
+            options: [
+              { letter: 'A', text: 'Laugh along — it is just shop banter', feedback: '❌ Tolerance becomes complicity. Every time you laugh, you signal that disrespect is acceptable in your shop.', isPremium: false },
+              { letter: 'B', text: 'Stay silent but feel uncomfortable', feedback: '❌ Silence implies consent. Your discomfort is a signal that your professional standards are being violated.', isPremium: false },
+              { letter: 'C', text: 'Say: "That is not how we talk about clients here. They trust us."', feedback: '✅ Correct! Courageous professionalism sets the standard. One person speaking up shifts the culture. Clients deserve your respect even when they cannot hear it.', isPremium: true },
+              { letter: 'D', text: 'Report it to the owner later', feedback: '❌ Reporting is appropriate for repeated violations, but addressing it in the moment is more effective and shows leadership.', isPremium: false },
+            ],
+            correctAnswer: 'C',
+            proTip: 'Luxury service culture is built on respect — for clients, for coworkers, and for yourself. Never compromise on this.',
+          },
+        ],
       },
     ],
   },

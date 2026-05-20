@@ -15,6 +15,12 @@ import ChallengeCard from './ChallengeCard'
 import ScenarioBlock from './ScenarioBlock'
 import LevelUp from './LevelUp'
 import ActionPrompt from './ActionPrompt'
+import ProScenario from './ProScenario'
+import ConfidenceBuilder from './ConfidenceBuilder'
+import ProLevelSystem from './ProLevelSystem'
+import AppearanceChecklist from './AppearanceChecklist'
+import ProTip from './ProTip'
+import ReflectionBlock from './ReflectionBlock'
 
 interface ChapterContentProps {
   sections: ChapterSection[]
@@ -140,6 +146,53 @@ export default function ChapterContent({ sections, theme }: ChapterContentProps)
             return (
               <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
                 <ActionPrompt prompts={section.prompts} theme={t} />
+              </SectionWrapper>
+            )
+
+          case 'proScenario':
+            return (
+              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+                <ProScenario scenarios={section.scenarios} theme={t} />
+              </SectionWrapper>
+            )
+
+          case 'confidenceBuilder':
+            return (
+              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+                <ConfidenceBuilder cards={section.cards} theme={t} />
+              </SectionWrapper>
+            )
+
+          case 'proLevelSystem':
+            return (
+              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+                <ProLevelSystem levels={section.levels} theme={t} />
+              </SectionWrapper>
+            )
+
+          case 'appearanceChecklist':
+            return (
+              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+                <AppearanceChecklist
+                  title={section.title || 'Professional Standards'}
+                  subtitle={section.subtitle}
+                  categories={section.categories}
+                  theme={t}
+                />
+              </SectionWrapper>
+            )
+
+          case 'proTip':
+            return (
+              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+                <ProTip items={section.items} theme={t} />
+              </SectionWrapper>
+            )
+
+          case 'reflectionBlock':
+            return (
+              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+                <ReflectionBlock questions={section.questions} theme={t} />
               </SectionWrapper>
             )
 
