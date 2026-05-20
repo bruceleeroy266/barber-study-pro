@@ -1,25 +1,25 @@
-// Chapter 4: Infection Control — Clinical Lab Theme
-// Sterile teal, warning amber, clinical white
-// This file contains the theme and content for Chapter 4
-// It is imported and merged into chapter-content.ts
+// Chapter 4: Infection Control — PREMIUM IMMERSIVE SAFETY EXPERIENCE
+// Deep navy/charcoal | Clinical teal/cyan | Warning amber | Biohazard red | Sterile white
+// Professional barber safety certification atmosphere
+// OSHA training simulation | Contamination response environment
 
 import type { ChapterTheme, ChapterContent } from './chapter-content'
 
 // ───────────────────────────────────────────────
-// Chapter 4: Infection Control — Clinical Lab Theme
-// Sterile teal / Warning amber / Clinical white
+// Chapter 4: Infection Control — PREMIUM SAFETY LAB
+// Deep navy / Clinical teal / Warning amber / Biohazard red
 // ───────────────────────────────────────────────
 
 export const chapter4Theme: ChapterTheme = {
-  primary: '#0EA5A5',
-  primaryLight: '#5EEAD4',
-  primaryDark: '#0F766E',
+  primary: '#0891B2',
+  primaryLight: '#22D3EE',
+  primaryDark: '#164E63',
   secondary: '#F59E0B',
-  background: 'rgba(10, 25, 30, 0.92)',
-  backgroundAlt: 'rgba(15, 40, 45, 0.85)',
-  surface: '#071518',
-  border: 'rgba(14, 165, 165, 0.25)',
-  text: '#F0FDFC',
+  background: 'rgba(8, 20, 35, 0.95)',
+  backgroundAlt: 'rgba(12, 30, 50, 0.90)',
+  surface: '#0A1628',
+  border: 'rgba(8, 145, 178, 0.30)',
+  text: '#F0F9FF',
   textMuted: '#94A3B8',
   highlight: '#F59E0B',
   timeline: {

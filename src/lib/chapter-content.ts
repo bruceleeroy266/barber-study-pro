@@ -3,6 +3,7 @@
 
 import { LucideIcon } from 'lucide-react'
 import { chapter4Content, chapter4Theme } from './chapter-4-content'
+import { chapter4PremiumContent, chapter4PremiumTheme } from './chapter-4-premium'
 
 // ───────────────────────────────────────────────
 // Section Types (discriminated union)
@@ -187,6 +188,7 @@ export interface ScenarioBlockItem {
   situation: string
   options: ScenarioOption[]
   correctAnswer: string
+  timeLimit?: number // Optional countdown timer in seconds
 }
 
 export interface ScenarioBlockSection extends BaseSection {
@@ -2977,7 +2979,7 @@ export const chapterContentData: Record<string, ChapterContent> = {
       },
     ],
   },
-  'ch-4': chapter4Content,
+  'ch-4': chapter4PremiumContent,
 }
 
 // ───────────────────────────────────────────────

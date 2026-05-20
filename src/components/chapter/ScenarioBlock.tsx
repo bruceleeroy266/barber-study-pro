@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { MessageSquare, CheckCircle, XCircle, Lightbulb } from 'lucide-react'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { MessageSquare, CheckCircle, XCircle, Lightbulb, Timer, AlertTriangle } from 'lucide-react'
 import type { ChapterTheme } from '@/lib/chapter-content'
 import { defaultTheme } from '@/lib/chapter-content'
 
@@ -15,6 +15,7 @@ interface Scenario {
   situation: string
   options: ScenarioOption[]
   correctAnswer: string
+  timeLimit?: number
 }
 
 interface ScenarioBlockProps {
@@ -26,6 +27,45 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
   const t = theme || defaultTheme
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({})
   const [revealed, setRevealed] = useState<Set<number>>(new Set())
+  const [timeLeft, setTimeLeft] = useState<Record<number, number>>({})
+  const [timerExpired, setTimerExpired] = useState<Set<number>>(new Set())
+  const intervalRefs = useRef<Record<number, NodeJS.Timeout>>({})
+
+  // Cleanup all intervals on unmount
+  useEffect(() => {
+    return () => {
+      Object.values(intervalRefs.current).forEach(clearInterval)
+    }
+  }, [])
+
+  const startTimer = useCallback((scenarioIdx: number, seconds: number) => {
+    // Clear any existing timer for this scenario
+    if (intervalRefs.current[scenarioIdx]) {
+      clearInterval(intervalRefs.current[scenarioIdx])
+    }
+
+    setTimeLeft(prev => ({ ...prev, [scenarioIdx]: seconds }))
+    setTimerExpired(prev => {
+      const next = new Set(prev)
+      next.delete(scenarioIdx)
+      return next
+    })
+
+    intervalRefs.current[scenarioIdx] = setInterval(() => {
+      setTimeLeft(prev => {
+        const current = prev[scenarioIdx] ?? 0
+        if (current <= 1) {
+          // Timer expired
+          clearInterval(intervalRefs.current[scenarioIdx])
+          delete intervalRefs.current[scenarioIdx]
+          setTimerExpired(expired => new Set(expired).add(scenarioIdx))
+          setRevealed(rev => new Set(rev).add(scenarioIdx))
+          return { ...prev, [scenarioIdx]: 0 }
+        }
+        return { ...prev, [scenarioIdx]: current - 1 }
+      })
+    }, 1000)
+  }, [])
 
   const selectAnswer = (scenarioIdx: number, letter: string) => {
     if (revealed.has(scenarioIdx)) return
@@ -33,7 +73,61 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
   }
 
   const revealAnswer = (scenarioIdx: number) => {
+    // Stop timer if running
+    if (intervalRefs.current[scenarioIdx]) {
+      clearInterval(intervalRefs.current[scenarioIdx])
+      delete intervalRefs.current[scenarioIdx]
+    }
     setRevealed(prev => new Set(prev).add(scenarioIdx))
+  }
+
+  const resetScenario = (scenarioIdx: number) => {
+    // Clear timer
+    if (intervalRefs.current[scenarioIdx]) {
+      clearInterval(intervalRefs.current[scenarioIdx])
+      delete intervalRefs.current[scenarioIdx]
+    }
+    setSelectedAnswers(prev => {
+      const next = { ...prev }
+      delete next[scenarioIdx]
+      return next
+    })
+    setRevealed(prev => {
+      const next = new Set(prev)
+      next.delete(scenarioIdx)
+      return next
+    })
+    setTimerExpired(prev => {
+      const next = new Set(prev)
+      next.delete(scenarioIdx)
+      return next
+    })
+    setTimeLeft(prev => {
+      const next = { ...prev }
+      delete next[scenarioIdx]
+      return next
+    })
+
+    // Restart timer if scenario has timeLimit
+    const scenario = scenarios[scenarioIdx]
+    if (scenario?.timeLimit && scenario.timeLimit > 0) {
+      startTimer(scenarioIdx, scenario.timeLimit)
+    }
+  }
+
+  // Auto-start timers for scenarios with timeLimit when not yet started
+  useEffect(() => {
+    scenarios.forEach((scenario, idx) => {
+      if (scenario.timeLimit && scenario.timeLimit > 0 && !revealed.has(idx) && timeLeft[idx] === undefined) {
+        startTimer(idx, scenario.timeLimit)
+      }
+    })
+  }, [scenarios, revealed, timeLeft, startTimer])
+
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
   return (
@@ -42,6 +136,10 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
         const isRevealed = revealed.has(sIdx)
         const selected = selectedAnswers[sIdx]
         const isCorrect = selected === scenario.correctAnswer
+        const isExpired = timerExpired.has(sIdx)
+        const currentTimeLeft = timeLeft[sIdx]
+        const hasTimer = scenario.timeLimit && scenario.timeLimit > 0
+        const isUrgent = hasTimer && currentTimeLeft !== undefined && currentTimeLeft <= 10 && !isRevealed
 
         return (
           <div
@@ -67,6 +165,32 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
                 <span className="text-xs font-bold uppercase tracking-wide" style={{ color: t.primary }}>
                   Real Shop Scenario
                 </span>
+                {hasTimer && !isRevealed && (
+                  <div
+                    className="ml-auto flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold"
+                    style={{
+                      backgroundColor: isUrgent ? 'rgba(239, 68, 68, 0.15)' : 'rgba(8, 145, 178, 0.15)',
+                      color: isUrgent ? '#EF4444' : t.primaryLight,
+                      border: `1px solid ${isUrgent ? 'rgba(239, 68, 68, 0.3)' : t.border}`,
+                    }}
+                  >
+                    <Timer className="w-3 h-3" />
+                    {formatTime(currentTimeLeft ?? scenario.timeLimit!)}
+                  </div>
+                )}
+                {hasTimer && isRevealed && (
+                  <div
+                    className="ml-auto flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold"
+                    style={{
+                      backgroundColor: isExpired ? 'rgba(239, 68, 68, 0.15)' : 'rgba(16, 185, 129, 0.15)',
+                      color: isExpired ? '#EF4444' : '#10B981',
+                      border: `1px solid ${isExpired ? 'rgba(239, 68, 68, 0.3)' : 'rgba(16, 185, 129, 0.3)'}`,
+                    }}
+                  >
+                    <Timer className="w-3 h-3" />
+                    {isExpired ? 'TIME EXPIRED' : 'COMPLETED'}
+                  </div>
+                )}
               </div>
               <p className="text-sm font-medium" style={{ color: t.text }}>
                 {scenario.situation}
@@ -75,6 +199,27 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
 
             {/* Options */}
             <div className="p-5">
+              {/* Timer Expired Warning */}
+              {isExpired && (
+                <div
+                  className="rounded-lg p-4 mb-4"
+                  style={{
+                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    border: '1px solid rgba(239, 68, 68, 0.3)',
+                  }}
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <AlertTriangle className="w-4 h-4" style={{ color: '#EF4444' }} />
+                    <span className="text-xs font-bold uppercase" style={{ color: '#EF4444' }}>
+                      Time Expired — Safety Response Required
+                    </span>
+                  </div>
+                  <p className="text-sm" style={{ color: t.textMuted }}>
+                    In a real emergency, every second counts. You must act within 60 seconds to prevent bloodborne pathogen exposure. Review the correct response below.
+                  </p>
+                </div>
+              )}
+
               <div className="space-y-2 mb-4">
                 {scenario.options.map((option) => {
                   const isSelected = selected === option.letter
@@ -163,6 +308,21 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
                     {scenario.options.find(o => o.letter === selected)?.feedback}
                   </p>
                 </div>
+              )}
+
+              {/* Reset Button (shown after reveal) */}
+              {isRevealed && (
+                <button
+                  onClick={() => resetScenario(sIdx)}
+                  className="w-full mt-4 rounded-lg py-2 text-sm font-medium transition-all"
+                  style={{
+                    backgroundColor: 'transparent',
+                    color: t.primaryLight,
+                    border: `1px solid ${t.border}`,
+                  }}
+                >
+                  Try Again
+                </button>
               )}
             </div>
           </div>
