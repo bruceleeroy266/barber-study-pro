@@ -125,11 +125,9 @@ export default function AppearanceChecklist({ title, subtitle, categories, theme
                     </div>
                     <div className="flex-1">
                       <span
-                        className="text-sm transition-all"
+                        className={`text-sm transition-all ${isChecked ? 'line-through' : ''}`}
                         style={{
                           color: isChecked ? t.text : t.textMuted,
-                          textDecoration: isChecked ? 'line-through' : 'none',
-                          textDecorationColor: `${t.primary}50`,
                         }}
                       >
                         {item.text}

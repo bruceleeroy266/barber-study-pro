@@ -61,11 +61,9 @@ export default function ActionPrompt({ prompts, theme }: ActionPromptProps) {
 
               <div className="flex-1 min-w-0">
                 <p
-                  className="text-sm font-semibold mb-1"
+                  className={`text-sm font-semibold mb-1 ${isCompleted ? 'line-through' : ''}`}
                   style={{
                     color: isCompleted ? '#10B981' : t.text,
-                    textDecoration: isCompleted ? 'line-through' : 'none',
-                    textDecorationColor: '#10B981',
                   }}
                 >
                   {prompt.action}

@@ -138,7 +138,7 @@ export default function ProScenario({ scenarios, theme }: ProScenarioProps) {
                       </span>
                       <div className="flex-1 min-w-0">
                         <span style={{ color: t.text }}>{option.text}</span>
-                        {option.isPremium && (
+                        {isRevealed && option.isPremium && (
                           <span
                             className="ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide"
                             style={{
