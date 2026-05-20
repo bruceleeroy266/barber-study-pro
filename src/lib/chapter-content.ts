@@ -2,6 +2,7 @@
 // This is the FOUNDATION file for ALL chapters — reusable typed structures
 
 import { LucideIcon } from 'lucide-react'
+import { chapter4Content, chapter4Theme } from './chapter-4-content'
 
 // ───────────────────────────────────────────────
 // Section Types (discriminated union)
@@ -2976,6 +2977,7 @@ export const chapterContentData: Record<string, ChapterContent> = {
       },
     ],
   },
+  'ch-4': chapter4Content,
 }
 
 // ───────────────────────────────────────────────
