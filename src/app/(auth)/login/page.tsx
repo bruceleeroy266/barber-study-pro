@@ -29,12 +29,19 @@ function LoginForm() {
         return
       }
 
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
 
       if (error) throw error
+
+      // Check if email is verified (if email confirmation is required)
+      if (data.user && data.user.email_confirmed_at === null) {
+        setError('Please verify your email before signing in. Check your inbox for the verification link.')
+        setLoading(false)
+        return
+      }
 
       router.push(redirect)
       router.refresh()

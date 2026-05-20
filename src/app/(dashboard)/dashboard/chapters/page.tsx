@@ -1,11 +1,16 @@
 import { createClient } from '@/lib/supabase-server'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { Chapter, StudentProgress } from '@/types'
 
 export default async function ChaptersPage() {
   const supabase = await createClient()
   
   const { data: { user } } = await supabase.auth.getUser()
+  
+  if (!user) {
+    redirect('/login')
+  }
   
   const { data: chapters } = await supabase
     .from('chapters')

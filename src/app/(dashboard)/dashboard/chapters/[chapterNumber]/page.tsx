@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase-server'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import FlashcardClient from '@/components/FlashcardClient'
 import QuizClient from '@/components/QuizClient'
 import ChapterContent from '@/components/chapter/ChapterContent'
@@ -23,6 +23,10 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
 
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect('/login')
+  }
 
   // Get chapter
   const { data: chapter } = await supabase

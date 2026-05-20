@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase-server'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { Chapter, StudentProgress } from '@/types'
 
 export default async function DashboardPage() {
@@ -7,6 +8,10 @@ export default async function DashboardPage() {
   
   // Get current user
   const { data: { user } } = await supabase.auth.getUser()
+  
+  if (!user) {
+    redirect('/login')
+  }
   
   // Get all chapters
   const { data: chapters } = await supabase

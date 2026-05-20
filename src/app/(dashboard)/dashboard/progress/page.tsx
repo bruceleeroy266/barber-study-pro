@@ -1,9 +1,14 @@
 import { createClient } from '@/lib/supabase-server'
+import { redirect } from 'next/navigation'
 import { Chapter, StudentProgress, QuizAttempt } from '@/types'
 
 export default async function ProgressPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect('/login')
+  }
 
   // Get all chapters
   const { data: chapters } = await supabase
