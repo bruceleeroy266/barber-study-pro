@@ -11,6 +11,10 @@ import FeatureGrid from './FeatureGrid'
 import MilestoneList from './MilestoneList'
 import Checklist from './Checklist'
 import ContentBlock from './ContentBlock'
+import ChallengeCard from './ChallengeCard'
+import ScenarioBlock from './ScenarioBlock'
+import LevelUp from './LevelUp'
+import ActionPrompt from './ActionPrompt'
 
 interface ChapterContentProps {
   sections: ChapterSection[]
@@ -108,6 +112,34 @@ export default function ChapterContent({ sections, theme }: ChapterContentProps)
             return (
               <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
                 <ContentBlock content={section.content} highlight={section.highlight} theme={t} />
+              </SectionWrapper>
+            )
+
+          case 'challengeCard':
+            return (
+              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+                <ChallengeCard challenges={section.challenges} theme={t} />
+              </SectionWrapper>
+            )
+
+          case 'scenarioBlock':
+            return (
+              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+                <ScenarioBlock scenarios={section.scenarios} theme={t} />
+              </SectionWrapper>
+            )
+
+          case 'levelUp':
+            return (
+              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+                <LevelUp levels={section.levels} theme={t} />
+              </SectionWrapper>
+            )
+
+          case 'actionPrompt':
+            return (
+              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+                <ActionPrompt prompts={section.prompts} theme={t} />
               </SectionWrapper>
             )
 

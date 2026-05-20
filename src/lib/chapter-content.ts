@@ -17,6 +17,10 @@ export type SectionType =
   | 'milestoneList'
   | 'checklist'
   | 'contentBlock'
+  | 'challengeCard'
+  | 'scenarioBlock'
+  | 'levelUp'
+  | 'actionPrompt'
 
 export interface BaseSection {
   type: SectionType
@@ -151,6 +155,64 @@ export interface ContentBlockSection extends BaseSection {
   highlight?: string
 }
 
+// Challenge Card Section — interactive "Try This" challenges
+export interface ChallengeCardItem {
+  badge: string
+  title: string
+  description: string
+  action: string
+  difficulty: 'easy' | 'medium' | 'hard'
+}
+
+export interface ChallengeCardSection extends BaseSection {
+  type: 'challengeCard'
+  challenges: ChallengeCardItem[]
+}
+
+// Scenario Block Section — "Real Shop Scenario" interactive blocks
+export interface ScenarioOption {
+  letter: string
+  text: string
+  feedback: string
+}
+
+export interface ScenarioBlockItem {
+  situation: string
+  options: ScenarioOption[]
+  correctAnswer: string
+}
+
+export interface ScenarioBlockSection extends BaseSection {
+  type: 'scenarioBlock'
+  scenarios: ScenarioBlockItem[]
+}
+
+// Level Up Section — achievement-style callouts
+export interface LevelUpItem {
+  level: string
+  title: string
+  description: string
+  reward: string
+}
+
+export interface LevelUpSection extends BaseSection {
+  type: 'levelUp'
+  levels: LevelUpItem[]
+}
+
+// Action Prompt Section — "Try This Today" cards
+export interface ActionPromptItem {
+  action: string
+  description: string
+  benefit: string
+  timeframe: string
+}
+
+export interface ActionPromptSection extends BaseSection {
+  type: 'actionPrompt'
+  prompts: ActionPromptItem[]
+}
+
 // ───────────────────────────────────────────────
 // Chapter Content Type
 // ───────────────────────────────────────────────
@@ -165,6 +227,10 @@ export type ChapterSection =
   | MilestoneListSection
   | ChecklistSection
   | ContentBlockSection
+  | ChallengeCardSection
+  | ScenarioBlockSection
+  | LevelUpSection
+  | ActionPromptSection
 
 // ───────────────────────────────────────────────
 // Chapter Theme System
@@ -294,75 +360,75 @@ export const chapter1Theme: ChapterTheme = {
 }
 
 // ───────────────────────────────────────────────
-// Chapter 2: Life Skills — Professional Growth Theme
-// Navy blue / Steel blue / Amber-Gold
+// Chapter 2: Life Skills — Vibrant Success Game Plan Theme
+// Electric blue / Gold / Emerald / Bold gradients
 // ───────────────────────────────────────────────
 
 export const chapter2Theme: ChapterTheme = {
-  // Core: professional navy palette
-  primary: '#4A90D9',           // Steel blue — trustworthy, professional
-  primaryLight: '#7AB8E8',      // Light steel blue
-  primaryDark: '#2E5A8C',       // Deep navy
-  secondary: '#F5A623',         // Amber/Gold — success, achievement
-  background: 'rgba(15, 30, 55, 0.85)',   // Deep navy
-  backgroundAlt: 'rgba(25, 45, 75, 0.7)', // Lighter navy
-  surface: '#0A1628',           // Very dark navy
-  border: 'rgba(74, 144, 217, 0.25)',     // Steel blue border
-  text: '#E8F0FE',              // Clean white-blue
+  // Core: vibrant energetic palette
+  primary: '#00D4FF',           // Electric cyan — energy, action, growth
+  primaryLight: '#7EE8FF',      // Light electric blue
+  primaryDark: '#0099CC',       // Deep cyan
+  secondary: '#FFD700',         // Gold — success, achievement, badges
+  background: 'rgba(10, 15, 35, 0.9)',    // Deep space blue
+  backgroundAlt: 'rgba(20, 30, 60, 0.8)', // Lighter space blue
+  surface: '#070D1A',           // Deepest space
+  border: 'rgba(0, 212, 255, 0.3)',       // Electric cyan border
+  text: '#F0F8FF',              // Clean white
   textMuted: '#8BA4C7',         // Soft blue-gray
-  highlight: '#F5A623',         // Amber highlight
-  // Timeline: professional navy feel
+  highlight: '#FFD700',         // Gold highlight
+  // Timeline: vibrant level-up feel
   timeline: {
-    line: 'rgba(74, 144, 217, 0.3)',
-    iconBg: '#0F1E37',
-    iconBorder: '#4A90D9',
+    line: 'rgba(0, 212, 255, 0.4)',
+    iconBg: '#0A1A2E',
+    iconBorder: '#00D4FF',
   },
-  // Quote: elegant steel border
+  // Quote: electric border with gold accent
   quote: {
-    border: 'rgba(74, 144, 217, 0.4)',
-    icon: 'rgba(74, 144, 217, 0.3)',
-    bg: 'rgba(15, 30, 55, 0.6)',
+    border: 'rgba(0, 212, 255, 0.5)',
+    icon: 'rgba(255, 215, 0, 0.4)',
+    bg: 'rgba(10, 15, 35, 0.7)',
   },
-  // Tabbed: corporate navy
+  // Tabbed: game-like tabs
   tabbed: {
-    activeBg: 'rgba(74, 144, 217, 0.15)',
-    activeBorder: 'rgba(74, 144, 217, 0.5)',
-    activeText: '#7AB8E8',
-    inactiveBg: 'rgba(15, 30, 55, 0.6)',
-    inactiveBorder: 'rgba(74, 144, 217, 0.15)',
+    activeBg: 'rgba(0, 212, 255, 0.2)',
+    activeBorder: 'rgba(0, 212, 255, 0.6)',
+    activeText: '#7EE8FF',
+    inactiveBg: 'rgba(10, 15, 35, 0.7)',
+    inactiveBorder: 'rgba(0, 212, 255, 0.15)',
     inactiveText: '#8BA4C7',
-    panelBg: 'rgba(15, 30, 55, 0.7)',
-    panelBorder: 'rgba(74, 144, 217, 0.2)',
+    panelBg: 'rgba(10, 15, 35, 0.8)',
+    panelBorder: 'rgba(0, 212, 255, 0.25)',
   },
-  // Tool cards: steel and amber
+  // Tool cards: gold and electric
   toolCard: {
-    headerBg: 'rgba(245, 166, 35, 0.15)',
-    headerText: '#F5A623',
-    dot: 'rgba(74, 144, 217, 0.6)',
-    line: 'rgba(74, 144, 217, 0.25)',
+    headerBg: 'rgba(255, 215, 0, 0.15)',
+    headerText: '#FFD700',
+    dot: 'rgba(0, 212, 255, 0.7)',
+    line: 'rgba(0, 212, 255, 0.3)',
   },
-  // Feature grid: professional steel
+  // Feature grid: vibrant cards
   featureGrid: {
-    iconBg: 'rgba(74, 144, 217, 0.15)',
-    iconColor: '#4A90D9',
-    cardBorder: 'rgba(74, 144, 217, 0.2)',
+    iconBg: 'rgba(0, 212, 255, 0.2)',
+    iconColor: '#00D4FF',
+    cardBorder: 'rgba(0, 212, 255, 0.25)',
   },
-  // Milestones: amber accent
+  // Milestones: gold level-up
   milestone: {
-    yearColor: '#F5A623',
-    border: 'rgba(74, 144, 217, 0.2)',
+    yearColor: '#FFD700',
+    border: 'rgba(0, 212, 255, 0.3)',
   },
-  // Checklist: professional
+  // Checklist: energetic
   checklist: {
-    checkBorder: 'rgba(74, 144, 217, 0.4)',
-    checkColor: '#4A90D9',
-    bg: 'rgba(15, 30, 55, 0.6)',
+    checkBorder: 'rgba(0, 212, 255, 0.5)',
+    checkColor: '#00D4FF',
+    bg: 'rgba(10, 15, 35, 0.7)',
   },
-  // Content block: navy
+  // Content block: vibrant
   contentBlock: {
-    bg: 'rgba(15, 30, 55, 0.6)',
-    border: 'rgba(74, 144, 217, 0.2)',
-    highlightColor: '#F5A623',
+    bg: 'rgba(10, 15, 35, 0.7)',
+    border: 'rgba(0, 212, 255, 0.2)',
+    highlightColor: '#FFD700',
   },
 }
 
@@ -795,6 +861,35 @@ export const chapterContentData: Record<string, ChapterContent> = {
         ],
       },
 
+      // 🎮 INTERACTIVE: Level Up Your Goal-Setting Skills
+      {
+        type: 'levelUp',
+        id: 'goal-levels',
+        title: '📈 Level Up: From Dreamer to Doer',
+        subtitle: 'Progress through each level to master goal-setting',
+        levels: [
+          { level: 'Level 1: Rookie Planner', title: 'Write Down ONE Goal', description: 'Pick one specific goal for this month. Write it on paper and put it where you will see it daily.', reward: 'Unlock: Focus Badge 🎯' },
+          { level: 'Level 2: Smart Setter', title: 'Apply the SMART Framework', description: 'Rewrite your goal using all 5 SMART criteria. If it is missing any element, refine it until it passes the test.', reward: 'Unlock: Strategy Badge 🧠' },
+          { level: 'Level 3: Action Taker', title: 'Create 3 Action Steps', description: 'Break your goal into 3 concrete actions you can take this week. Schedule them like appointments.', reward: 'Unlock: Momentum Badge ⚡' },
+          { level: 'Level 4: Progress Tracker', title: 'Build a Tracking System', description: 'Create a simple tracker (notebook, app, or calendar) and update it daily. Review weekly.', reward: 'Unlock: Consistency Badge 🔥' },
+          { level: 'Level 5: Goal Master', title: 'Achieve and Celebrate', description: 'Hit your goal, reflect on what worked, and set the next one. Share your win with someone.', reward: 'Unlock: Champion Badge 🏆' },
+        ],
+      },
+
+      // 🎮 INTERACTIVE: Try This Today Challenges
+      {
+        type: 'challengeCard',
+        id: 'goal-challenges',
+        title: '🎯 Challenge Zone: Goal-Setting Drills',
+        subtitle: 'Tap a challenge to accept it. Complete it to earn XP.',
+        challenges: [
+          { badge: 'Quick Win', title: 'The 5-Minute Goal Audit', description: 'Pull out your phone or notebook and write down your top 3 goals for the next 90 days.', action: 'Set a timer for 5 minutes and write without stopping. No editing — just dump every goal on your mind, then circle the top 3.', difficulty: 'easy' },
+          { badge: 'Smart Check', title: 'SMART-ify Your Weak Goal', description: 'Find a vague goal like "get better at fades" and rewrite it into a SMART goal.', action: 'Rewrite it as: "Master skin fades on all hair types by practicing 5 fades per week for 8 weeks, tracked in my practice journal."', difficulty: 'medium' },
+          { badge: 'Deep Work', title: 'The Sunday Planning Ritual', description: 'Spend 30 minutes this Sunday mapping out your entire week.', action: 'Block school hours, practice time, study blocks, family time, and rest. Put it on a calendar and treat each block as a non-negotiable appointment.', difficulty: 'medium' },
+          { badge: 'Boss Mode', title: 'Create Your 5-Year Vision Board', description: 'Visualize where you want to be in 5 years and create a physical or digital vision board.', action: 'Include: shop ownership, income goals, skill milestones, family goals, and health targets. Review it every 90 days.', difficulty: 'hard' },
+        ],
+      },
+
       // Section 3: Time Management
       {
         type: 'contentBlock',
@@ -1023,6 +1118,50 @@ export const chapterContentData: Record<string, ChapterContent> = {
         ],
       },
 
+      // 🎮 INTERACTIVE: Real Shop Scenarios
+      {
+        type: 'scenarioBlock',
+        id: 'time-scenarios',
+        title: '🎬 Real Shop Scenarios: Time Crunch Moments',
+        subtitle: 'Test your decision-making under pressure',
+        scenarios: [
+          {
+            situation: "You're 30 minutes behind schedule. Your next client is waiting, and the current cut is taking longer than expected. What do you do?",
+            options: [
+              { letter: 'A', text: 'Rush the current cut to get back on schedule', feedback: "❌ Rushing leads to mistakes. The client in your chair deserves your full attention." },
+              { letter: 'B', text: 'Apologize to the waiting client, offer a beverage, and explain the delay', feedback: "✅ Correct! Communication is key. Most clients appreciate honesty and a small gesture of hospitality." },
+              { letter: 'C', text: 'Ask the waiting client to reschedule for another day', feedback: "❌ Only as a last resort. If they can wait a few extra minutes, it's better than sending them away." },
+              { letter: 'D', text: 'Skip the consultation with the current client to save time', feedback: "❌ Never skip the consultation. It's the most important part of the service." },
+            ],
+            correctAnswer: 'B',
+          },
+          {
+            situation: "A walk-in client arrives during your lunch break. You're hungry and tired. How do you handle it?",
+            options: [
+              { letter: 'A', text: 'Tell them you are on break and they need to come back', feedback: "❌ This loses business. Walk-ins are valuable opportunities." },
+              { letter: 'B', text: 'Take the client and eat lunch later', feedback: "✅ Correct! Flexibility builds clientele. Eat after — the client comes first." },
+              { letter: 'C', text: 'Eat while cutting their hair', feedback: "❌ Unprofessional and unsanitary. Never eat while working." },
+              { letter: 'D', text: 'Ask a coworker to take them without introducing yourself', feedback: "❌ Passing off clients without a proper handoff looks unprofessional." },
+            ],
+            correctAnswer: 'B',
+          },
+        ],
+      },
+
+      // 🎮 INTERACTIVE: Action Prompts
+      {
+        type: 'actionPrompt',
+        id: 'time-actions',
+        title: '⚡ Try This Today: Time Mastery Actions',
+        subtitle: 'Pick one action and commit to it this week',
+        prompts: [
+          { action: 'Time Audit', description: 'Track every hour for 3 days. Write down what you actually do vs. what you planned. You will be shocked at where your time goes.', benefit: 'Reveals hidden time-wasters and shows where you can reclaim 5+ hours per week.', timeframe: 'This Week' },
+          { action: 'The 2-Minute Rule', description: 'If a task takes less than 2 minutes, do it immediately. Do not add it to a list.', benefit: 'Eliminates tiny tasks that clutter your mind and to-do lists.', timeframe: 'Start Today' },
+          { action: 'Sunday Planning Session', description: 'Every Sunday, plan your entire week. Block school, practice, study, and rest time.', benefit: 'Removes daily decision fatigue and ensures priorities get scheduled first.', timeframe: 'This Sunday' },
+          { action: 'Phone Jail', description: 'Put your phone in another room during practice and study sessions. Use an app blocker if needed.', benefit: 'Recovers 1-2 hours daily of focused, distraction-free work time.', timeframe: 'Start Tomorrow' },
+        ],
+      },
+
       // Section 7: Financial Literacy
       {
         type: 'contentBlock',
@@ -1069,6 +1208,21 @@ export const chapterContentData: Record<string, ChapterContent> = {
           { year: 'Month 3', title: '$1,000 Emergency Fund', description: 'Build a $1,000 mini emergency fund for unexpected expenses.' },
           { year: 'Month 6', title: 'Consistently Save 20%', description: 'Make saving 20% of your income a consistent habit.' },
           { year: 'Year 1', title: '3 Months Expenses Saved', description: 'Have 3 months of living expenses saved in your emergency fund.' },
+        ],
+      },
+
+      // 🎮 INTERACTIVE: Money Mastery Level Up
+      {
+        type: 'levelUp',
+        id: 'money-levels',
+        title: '💰 Level Up: From Broke Barber to Money Smart',
+        subtitle: 'Progress through each level to master barber finances',
+        levels: [
+          { level: 'Level 1: Aware', title: 'Track Every Dollar', description: 'For one week, write down every single purchase. Coffee, gas, snacks — everything. Awareness is the first step.', reward: 'Unlock: Awareness Badge 👁️' },
+          { level: 'Level 2: Organized', title: 'Separate Business & Personal', description: 'Open a separate checking account for barber income and expenses. Never mix them again.', reward: 'Unlock: Organization Badge 📁' },
+          { level: 'Level 3: Protected', title: 'Build Your $1,000 Emergency Fund', description: 'Save $1,000 as fast as possible. Sell stuff, pick up extra cuts, eat cheap. This fund prevents debt.', reward: 'Unlock: Security Badge 🛡️' },
+          { level: 'Level 4: Growing', title: 'Save 20% Consistently', description: 'Automate 20% of every check into savings. Pay yourself first, before any bills or fun money.', reward: 'Unlock: Growth Badge 📈' },
+          { level: 'Level 5: Wealth Builder', title: 'Invest in Your Future', description: 'Open a Roth IRA or investment account. Start with $50/month. Time + compound interest = wealth.', reward: 'Unlock: Wealth Badge 💎' },
         ],
       },
 
@@ -1129,6 +1283,20 @@ export const chapterContentData: Record<string, ChapterContent> = {
         highlight: 'Ask, listen, confirm, then execute',
       },
 
+      // 🎮 INTERACTIVE: Communication Challenge Cards
+      {
+        type: 'challengeCard',
+        id: 'comm-challenges',
+        title: '🗣️ Challenge Zone: Communication Drills',
+        subtitle: 'Master the art of client conversation',
+        challenges: [
+          { badge: 'Quick Win', title: 'The Perfect Consultation', description: 'Practice your consultation script on a friend or family member. Ask open-ended questions, use reference photos, and confirm before "cutting."', action: 'Record yourself (audio only) and listen back. Count how many times you interrupted vs. listened. Aim for 80% listening.', difficulty: 'easy' },
+          { badge: 'Role Play', title: 'Handle the Difficult Client', description: 'Have a friend pretend to be an unhappy client. Practice the 4-step recovery: Listen, Empathize, Fix, Follow Up.', action: 'Do this role-play 3 times. Each time, focus on a different step. Film it and review your body language.', difficulty: 'medium' },
+          { badge: 'Deep Work', title: 'Build Your Communication Playbook', description: 'Write out scripts for 5 common situations: consultation, unhappy client, price objection, no-show follow-up, and referral request.', action: 'Keep these on your phone. Review and refine them monthly based on real interactions.', difficulty: 'medium' },
+          { badge: 'Boss Mode', title: 'The Silent Cut Challenge', description: 'Give a full haircut without speaking unless the client speaks first. Focus entirely on your technique and their non-verbal cues.', action: 'This builds your ability to read clients and work with minimal direction. Debrief afterward: Did they seem comfortable?', difficulty: 'hard' },
+        ],
+      },
+
       // ============================================================
       // NEW SECTION 9: Professional Ethics & Integrity
       // ============================================================
@@ -1176,6 +1344,36 @@ export const chapterContentData: Record<string, ChapterContent> = {
           { text: 'Was I on time for every appointment?' },
           { text: 'Did I maintain professional boundaries?' },
           { text: 'Did I treat every client with equal respect regardless of background?' },
+        ],
+      },
+
+      // 🎮 INTERACTIVE: Ethics Scenario Block
+      {
+        type: 'scenarioBlock',
+        id: 'ethics-scenarios',
+        title: '🎬 Real Shop Scenarios: Ethics Under Pressure',
+        subtitle: 'What would you do when no one is watching?',
+        scenarios: [
+          {
+            situation: "A client asks you to cut their hair even though they have an obvious scalp infection. They say it's 'not a big deal' and offer to pay double. What do you do?",
+            options: [
+              { letter: 'A', text: 'Take the money and do the cut carefully', feedback: "❌ Never compromise health and safety. This violates sanitation laws and could spread infection." },
+              { letter: 'B', text: 'Refuse politely and explain why, then refer them to a dermatologist', feedback: "✅ Correct! Professional integrity means prioritizing client health over short-term profit." },
+              { letter: 'C', text: 'Do the cut but charge triple for the risk', feedback: "❌ Charging more doesn't make it ethical. This is still a health code violation." },
+              { letter: 'D', text: 'Tell them to come back when it looks better without explaining why', feedback: "❌ Vague responses don't educate the client. Explain the health risk clearly and compassionately." },
+            ],
+            correctAnswer: 'B',
+          },
+          {
+            situation: "You overhear a coworker gossiping about a client's personal life. The details are juicy and everyone is listening. What do you do?",
+            options: [
+              { letter: 'A', text: 'Listen quietly but do not participate', feedback: "❌ Silence implies consent. You're still part of the problem." },
+              { letter: 'B', text: 'Change the subject or walk away', feedback: "❌ Better than participating, but it doesn't address the behavior." },
+              { letter: 'C', text: 'Speak up: "We should not be talking about clients like this. It is unprofessional."', feedback: "✅ Correct! Protecting client confidentiality is everyone's responsibility. Courageous professionalism." },
+              { letter: 'D', text: 'Report it to the shop owner later', feedback: "❌ Reporting is appropriate for repeated violations, but addressing it in the moment is more effective." },
+            ],
+            correctAnswer: 'C',
+          },
         ],
       },
 
@@ -1245,6 +1443,20 @@ export const chapterContentData: Record<string, ChapterContent> = {
         highlight: 'the service recovery paradox',
       },
 
+      // 🎮 INTERACTIVE: Conflict Resolution Action Prompts
+      {
+        type: 'actionPrompt',
+        id: 'conflict-actions',
+        title: '⚡ Try This Today: Conflict Mastery Actions',
+        subtitle: 'Build your complaint-handling muscle',
+        prompts: [
+          { action: 'The Apology Script', description: 'Write out your go-to apology script for when things go wrong. Practice saying it out loud until it feels natural.', benefit: 'Removes the panic of "what do I say?" in the moment. You will respond calmly and professionally.', timeframe: 'This Week' },
+          { action: 'Complaint Role-Play', description: 'Ask a friend to give you fake complaints about a haircut. Practice the 4-step recovery on each one.', benefit: 'Builds muscle memory for handling real complaints under pressure.', timeframe: 'This Weekend' },
+          { action: 'The Follow-Up Log', description: 'Create a simple note system to track complaints and how you resolved them. Review monthly.', benefit: 'Identifies patterns and prevents repeat mistakes. Shows growth over time.', timeframe: 'Start Today' },
+          { action: 'Service Recovery Kit', description: 'Prepare 3 "make-it-right" gestures: a free neck trim, a product sample, or a discount card.', benefit: 'Having options ready means you can act fast instead of scrambling for solutions.', timeframe: 'This Week' },
+        ],
+      },
+
       // ============================================================
       // NEW SECTION 11: Self-Motivation & Success Mindset
       // ============================================================
@@ -1292,6 +1504,20 @@ export const chapterContentData: Record<string, ChapterContent> = {
           { text: 'Reviewed flashcards or studied theory material' },
           { text: 'Reflected on what went well and what to improve' },
           { text: 'Took care of my physical health (sleep, food, movement)' },
+        ],
+      },
+
+      // 🎮 INTERACTIVE: Mindset Mastery Challenges
+      {
+        type: 'challengeCard',
+        id: 'mindset-challenges',
+        title: '🧠 Challenge Zone: Build Unbreakable Discipline',
+        subtitle: 'These challenges forge the mental toughness of elite barbers',
+        challenges: [
+          { badge: 'Daily Habit', title: 'The 5-Minute Morning Ritual', description: 'Before checking your phone, spend 5 minutes visualizing your goals and repeating your personal mission statement.', action: 'Write your mission statement: "I am becoming the barber who _______." Read it every morning for 30 days.', difficulty: 'easy' },
+          { badge: 'Resilience', title: 'The Failure Reframe', description: 'The next time you make a mistake (bad cut, missed appointment, etc.), write down 3 things you learned from it.', action: 'Keep a "Failure Journal." Each entry = one mistake + three lessons. Review it monthly to see your growth.', difficulty: 'medium' },
+          { badge: 'Deep Work', title: 'The 30-Day Consistency Challenge', description: 'Pick ONE skill and practice it for 30 minutes every single day for 30 days. No exceptions.', action: 'Track it on a calendar. Put an X on every day you complete it. Do not break the chain. Missing one day is allowed — but never two.', difficulty: 'medium' },
+          { badge: 'Boss Mode', title: 'The Comfort Zone Destroyer', description: 'Do one thing every week that scares you professionally: enter a competition, post your work online, ask for a raise.', action: 'Fear is a compass pointing to growth. Document each scary action and the result. You will be amazed how much fear was just a story.', difficulty: 'hard' },
         ],
       },
 
@@ -1345,6 +1571,36 @@ export const chapterContentData: Record<string, ChapterContent> = {
         ],
       },
 
+      // 🎮 INTERACTIVE: Cultural Competence Scenarios
+      {
+        type: 'scenarioBlock',
+        id: 'cultural-scenarios',
+        title: '🎬 Real Shop Scenarios: Cultural Sensitivity',
+        subtitle: 'Navigate diverse clients with confidence and respect',
+        scenarios: [
+          {
+            situation: "A client with a different hair texture than you're used to sits in your chair. You're unsure which techniques work best. What do you do?",
+            options: [
+              { letter: 'A', text: 'Use the same techniques you always use and hope for the best', feedback: "❌ Different hair textures require different approaches. Guessing can damage hair and lose trust." },
+              { letter: 'B', text: 'Ask the client about their hair history and preferences, then research techniques before cutting', feedback: "✅ Correct! Humility and curiosity build more trust than false confidence. Clients appreciate being asked." },
+              { letter: 'C', text: 'Refer them to another barber who specializes in their hair type', feedback: "❌ Referring is fine if you're truly unqualified, but learning new textures expands your skills and clientele." },
+              { letter: 'D', text: 'Tell them you have never worked with their hair type and ask if they want to risk it', feedback: "❌ Framing it as 'risk' undermines confidence. Be honest but positive: 'I want to learn — can you teach me about your hair?'" },
+            ],
+            correctAnswer: 'B',
+          },
+          {
+            situation: "A client asks you to use a term or pronoun you're not familiar with. You don't want to offend them. What's the best approach?",
+            options: [
+              { letter: 'A', text: 'Ignore it and use the terms you are comfortable with', feedback: "❌ Dismissing a client's identity is disrespectful and damages trust permanently." },
+              { letter: 'B', text: 'Ask them politely to explain and then use their preferred terms', feedback: "✅ Correct! Asking respectfully shows you care about their comfort. Most people appreciate the effort." },
+              { letter: 'C', text: 'Apologize in advance and say you will probably mess it up', feedback: "❌ Self-deprecating apologies put the burden on them. Just ask, listen, and do your best." },
+              { letter: 'D', text: 'Avoid the topic entirely and focus only on the haircut', feedback: "❌ Avoidance feels awkward and inauthentic. A simple 'What should I call you?' solves it." },
+            ],
+            correctAnswer: 'B',
+          },
+        ],
+      },
+
       // ============================================================
       // NEW SECTION 13: Personal Development & Career Planning
       // ============================================================
@@ -1391,6 +1647,21 @@ export const chapterContentData: Record<string, ChapterContent> = {
             title: 'Barber Educator',
             description: 'Teach the next generation. Many successful barbers transition into education, workshops, or online courses.',
           },
+        ],
+      },
+
+      // 🎮 INTERACTIVE: Career Roadmap Level Up
+      {
+        type: 'levelUp',
+        id: 'career-levels',
+        title: '🚀 Level Up: Your Barber Career Roadmap',
+        subtitle: 'From first cut to shop owner — level up your career',
+        levels: [
+          { level: 'Level 1: Student Barber', title: 'Master the Basics', description: 'Get licensed. Learn 5 core cuts by heart. Build a portfolio of 20 before/after photos. Start a social media page.', reward: 'Unlock: Licensed Badge 📜' },
+          { level: 'Level 2: Junior Barber', title: 'Build Your Clientele', description: 'Reach 50 regular clients. Master one specialty (fades, beards, designs). Save 3 months of expenses.', reward: 'Unlock: Hustler Badge 💼' },
+          { level: 'Level 3: Established Barber', title: 'Raise Your Prices', description: 'Increase prices based on skill, not time. Build to 150+ regulars. Attend 2 industry events per year.', reward: 'Unlock: Pro Badge ⭐' },
+          { level: 'Level 4: Senior Barber', title: 'Mentor Others', description: 'Take an apprentice. Teach a workshop. Build passive income (products, online content).', reward: 'Unlock: Mentor Badge 🎓' },
+          { level: 'Level 5: Shop Owner', title: 'Build Your Empire', description: 'Open your own shop. Hire a team. Create systems that run without you. Build generational wealth.', reward: 'Unlock: Empire Badge 🏢' },
         ],
       },
 
@@ -1441,6 +1712,20 @@ export const chapterContentData: Record<string, ChapterContent> = {
           { text: 'Offer to practice on each other and give honest, kind feedback' },
           { text: 'Introduce newer students to barbers you admire in the community' },
           { text: 'Document your learning journey so others can learn from your mistakes' },
+        ],
+      },
+
+      // 🎮 INTERACTIVE: Leadership Action Prompts
+      {
+        type: 'actionPrompt',
+        id: 'leadership-actions',
+        title: '⚡ Try This Today: Lead from Your Chair',
+        subtitle: 'Leadership starts now — not when you have a title',
+        prompts: [
+          { action: 'The Knowledge Share', description: 'Teach one technique to a classmate this week. Do not just demonstrate — have them practice while you coach.', benefit: 'Teaching reinforces your own knowledge and builds your reputation as a generous professional.', timeframe: 'This Week' },
+          { action: 'The Positive Influence', description: 'Every day this week, compliment one coworker or classmate on something specific they did well.', benefit: 'Positivity is contagious. You become the person others want to be around and work with.', timeframe: 'This Week' },
+          { action: 'The Feedback Loop', description: 'Ask two people for honest feedback on your work this week. Listen without defending. Take notes.', benefit: 'Feedback is a gift. The barbers who grow fastest are the ones who seek criticism, not praise.', timeframe: 'This Week' },
+          { action: 'The Documentation Habit', description: 'Start a "lessons learned" document. Every mistake, breakthrough, and insight goes in one place.', benefit: 'Creates a personal knowledge base you can share with apprentices someday. Your legacy starts now.', timeframe: 'Start Today' },
         ],
       },
 
@@ -1508,6 +1793,21 @@ export const chapterContentData: Record<string, ChapterContent> = {
         type: 'quote',
         id: 'closing-quote',
         quote: "The barber who masters life skills doesn't just build a career — they build a legacy. Technical skill opens the door. Character, discipline, and integrity keep you in the room.",
+      },
+
+      // 🎮 INTERACTIVE: Final Boss Challenge
+      {
+        type: 'challengeCard',
+        id: 'final-boss',
+        title: '👑 Final Boss: The 30-Day Life Skills Challenge',
+        subtitle: 'Complete all 5 challenges to earn the Life Skills Master badge',
+        challenges: [
+          { badge: 'Week 1', title: 'Goal Crusher', description: 'Set 3 SMART goals for the month. Write them down and read them every morning. Track daily progress.', action: 'Use a notebook or app. At the end of each day, rate your progress 1-10. Average above 7 = win.', difficulty: 'medium' },
+          { badge: 'Week 2', title: 'Time Lord', description: 'Do a full time audit. Plan every day in advance using time blocking. Zero unplanned social media during work/study blocks.', action: 'Use Google Calendar or a paper planner. Color-code: school (blue), practice (green), study (purple), rest (gray).', difficulty: 'medium' },
+          { badge: 'Week 3', title: 'Network Ninja', description: 'Reach out to 3 people in the barber industry. Introduce yourself, ask one question, and offer value (share a resource, compliment their work).', action: 'DM on Instagram, email a shop owner, or attend a local barber event. Document responses in a networking log.', difficulty: 'medium' },
+          { badge: 'Week 4', title: 'Money Master — Financial Foundation', description: 'Track every dollar for 7 days. Create a simple budget. Open a separate business account if you do not have one.', action: 'Use a spreadsheet or app like YNAB. Identify your top 3 spending leaks and commit to fixing one.', difficulty: 'hard' },
+          { badge: 'BOSS MODE', title: 'Legacy Builder', description: 'Combine everything: set a 90-day goal, create a weekly schedule, reach out to a mentor, and track your finances for a full month.', action: 'This is the capstone. Document your entire system in one place. This is your blueprint for barber success.', difficulty: 'hard' },
+        ],
       },
     ],
   },
