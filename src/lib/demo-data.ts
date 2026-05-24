@@ -47,11 +47,11 @@ export const demoChapters: Chapter[] = [
   { id: 'ch-21', chapter_number: 21, title: 'Final Exam Preparation', description: 'Comprehensive final exam preparation with practice tests and review materials.', content: null, order_index: 21, is_active: true },
 ]
 
-// Use real flashcards for chapters 1-3, demo for rest
+// Use real flashcards for chapters 1, 3-4, demo for rest
 export const demoFlashcards: Record<string, Flashcard[]> = {}
 
-// Load real flashcards for chapters 1-4 and 16
-const realChapters = [1, 2, 3, 4, 16]
+// Load real flashcards for chapters 1, 3-4 and 16
+const realChapters = [1, 3, 4, 16]
 for (const i of realChapters) {
   const chId = `ch-${i}`
   if (realFlashcards[chId]) {
@@ -63,18 +63,8 @@ for (const i of realChapters) {
   }
 }
 
-// BATCH 1: Merge orphaned flashcards for Ch 2, 5, 6
-// Chapter 2: Merge active + orphaned
-if (batch1Flashcards['ch-2'] && batch1Flashcards['ch-2'].length > 0) {
-  const existing = demoFlashcards['ch-2'] || []
-  const orphaned = batch1Flashcards['ch-2']
-  // Re-index merged set
-  demoFlashcards['ch-2'] = [...existing, ...orphaned].map((fc, idx) => ({
-    ...fc,
-    id: `fc-2-${String(idx + 1).padStart(3, '0')}`,
-    order_index: idx + 1,
-  }))
-}
+// BATCH 1: Merge orphaned flashcards for Ch 5, 6
+// Chapter 2: Reset — skip orphaned flashcards
 
 // Chapter 5: Replace placeholder with orphaned
 if (batch1Flashcards['ch-5'] && batch1Flashcards['ch-5'].length > 0) {
@@ -141,8 +131,10 @@ for (let i = 5; i <= 21; i++) {
 }
 
 export const demoQuizzes: Record<string, Quiz> = {
-  'ch-1': { id: 'quiz-1', chapter_id: 'ch-1', title: 'History of Barbering Quiz', description: 'Test your knowledge of barbering history.', is_active: true },
-  'ch-2': { id: 'quiz-2', chapter_id: 'ch-2', title: 'Life Skills Quiz', description: 'Test your understanding of essential life skills.', is_active: true },
+  // Chapter 1: Premium flashcard-driven quiz (30 questions)
+  'ch-1': { id: 'quiz-1', chapter_id: 'ch-1', title: 'History of Barbering — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true },
+  // Chapter 2: Premium flashcard-driven quiz (30 questions)
+  'ch-2': { id: 'quiz-2', chapter_id: 'ch-2', title: 'Life Skills — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true },
 }
 
 for (let i = 3; i <= 21; i++) {
@@ -155,6 +147,7 @@ for (let i = 3; i <= 21; i++) {
 export const demoQuizQuestions: Record<string, QuizQuestion[]> = {
   // Real quiz questions from quiz-data.ts
   ...allQuizQuestions,
+  // Chapter 1: Premium quiz questions now active (30 questions)
 }
 
 for (let i = 3; i <= 21; i++) {
@@ -170,7 +163,7 @@ for (let i = 3; i <= 21; i++) {
 
 export const demoProgress: StudentProgress[] = [
   { id: 'prog-1', user_id: 'demo-user', chapter_id: 'ch-1', flashcards_completed: true, quiz_completed: true, best_quiz_score: 100, last_studied_at: '2026-05-17T10:00:00Z', progress_percentage: 100 },
-  { id: 'prog-2', user_id: 'demo-user', chapter_id: 'ch-2', flashcards_completed: true, quiz_completed: false, best_quiz_score: null, last_studied_at: '2026-05-17T11:00:00Z', progress_percentage: 50 },
+  // Chapter 2 progress removed during reset
 ]
 
 export const demoQuizAttempts: QuizAttempt[] = [
