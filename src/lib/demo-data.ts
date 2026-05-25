@@ -85,8 +85,8 @@ export const demoChapters: Chapter[] = [
 // Use real flashcards for chapters 1, 3, 4, demo for rest
 export const demoFlashcards: Record<string, Flashcard[]> = {}
 
-// Load real flashcards for chapters 1, 3, 4, 7 and 16
-const realChapters = [1, 3, 4, 7, 16]
+// Load real flashcards for chapters 1, 3, 4, 7, 8 and 16
+const realChapters = [1, 3, 4, 7, 8, 16]
 for (const i of realChapters) {
   const chId = `ch-${i}`
   if (realFlashcards[chId]) {
@@ -172,12 +172,14 @@ export const demoQuizzes: Record<string, Quiz> = {
   'ch-6': { id: 'quiz-6', chapter_id: 'ch-6', title: 'General Anatomy and Physiology — Premium Quiz', description: '50 board-exam style questions. Passing score: 75%.', is_active: true },
   // Chapter 7: Premium flashcard-driven quiz (50 questions)
   'ch-7': { id: 'quiz-7', chapter_id: 'ch-7', title: 'Basics of Chemistry — Premium Quiz', description: '50 board-exam style questions. Passing score: 75%.', is_active: true },
+  // Chapter 8: Premium flashcard-driven quiz (30 questions)
+  'ch-8': { id: 'quiz-8', chapter_id: 'ch-8', title: 'Basics of Electricity — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true },
 }
 
 for (let i = 3; i <= 21; i++) {
   const chId = `ch-${i}`
-  // Skip Chapters 3–7 — already registered above with premium titles
-  if (i >= 3 && i <= 7) continue
+  // Skip Chapters 3–8 — already registered above with premium titles
+  if (i >= 3 && i <= 8) continue
   if (!demoQuizzes[chId]) {
     demoQuizzes[chId] = { id: `quiz-${i}`, chapter_id: chId, title: `Chapter ${i} Quiz`, description: `Test your knowledge of Chapter ${i}.`, is_active: true }
   }
@@ -191,8 +193,8 @@ export const demoQuizQuestions: Record<string, QuizQuestion[]> = {
 
 for (let i = 3; i <= 21; i++) {
   const quizId = `quiz-${i}`
-  // Skip Chapters 3–7 — already in allQuizQuestions
-  if (i >= 3 && i <= 7) continue
+  // Skip Chapters 3–8 — already in allQuizQuestions
+  if (i >= 3 && i <= 8) continue
   if (!demoQuizQuestions[quizId]) {
     demoQuizQuestions[quizId] = [
       { id: `qq-${i}-1`, quiz_id: quizId, question: `Demo question 1 for Chapter ${i}`, answer_a: 'Option A', answer_b: 'Option B', answer_c: 'Option C', answer_d: 'Option D', correct_answer: 'a', explanation: `This is a demo question for Chapter ${i}.`, difficulty: 'easy', order_index: 1 },
