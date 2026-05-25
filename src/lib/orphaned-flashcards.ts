@@ -11,7 +11,6 @@ import { chapter6Flashcards as ch6Exp } from './flashcard-expansion-part2'
 import { chapter6AllEnhanced } from './chapter6-enhanced-flashcards'
 
 // Batch 2 imports
-import { chapter8AllEnhanced } from './chapter8-enhanced-flashcards'
 import {
   chapter9Epidermis,
   chapter9DermisSubcutaneous,
@@ -122,13 +121,7 @@ const ch6Unique = ch6Combined.filter(
 )
 export const ch6Orphaned = transform(ch6Unique, 6, '6o')
 
-// Batch 2: Chapters 8, 9
-const ch8Combined = [...chapter8AllEnhanced]
-const ch8Unique = ch8Combined.filter(
-  (card, idx, self) => idx === self.findIndex(c => c.front === card.front)
-)
-export const ch8Orphaned = transform(ch8Unique, 8, '8o')
-
+// Batch 2: Chapter 9
 const ch9Combined = [
   ...chapter9Epidermis,
   ...chapter9DermisSubcutaneous,
@@ -202,7 +195,6 @@ export const ch12Orphaned = transform(ch12Unique, 12, '12o')
 
 // Export all for Batch 2
 export const batch2Flashcards: Record<string, Flashcard[]> = {
-  'ch-8': ch8Orphaned,
   'ch-9': ch9Orphaned,
 }
 
@@ -284,9 +276,8 @@ export const batch1Stats = {
 }
 
 export const batch2Stats = {
-  ch8: ch8Orphaned.length,
   ch9: ch9Orphaned.length,
-  total: ch8Orphaned.length + ch9Orphaned.length,
+  total: ch9Orphaned.length,
 }
 
 export const batch3Stats = {

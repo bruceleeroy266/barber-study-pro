@@ -113,12 +113,7 @@ if (batch1Flashcards['ch-6'] && batch1Flashcards['ch-6'].length > 0) {
 
 // Chapter 7: Already loaded from real flashcards above (ch-7 premium)
 
-// BATCH 2: Wire orphaned flashcards for Ch 8, 9
-// Chapter 8: Replace placeholder with orphaned
-if (batch2Flashcards['ch-8'] && batch2Flashcards['ch-8'].length > 0) {
-  demoFlashcards['ch-8'] = batch2Flashcards['ch-8']
-}
-
+// BATCH 2: Wire orphaned flashcards for Ch 9
 // Chapter 9: Replace placeholder with orphaned
 if (batch2Flashcards['ch-9'] && batch2Flashcards['ch-9'].length > 0) {
   demoFlashcards['ch-9'] = batch2Flashcards['ch-9']
