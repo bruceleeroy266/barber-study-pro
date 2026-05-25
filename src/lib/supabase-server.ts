@@ -3,6 +3,9 @@ import { cookies } from 'next/headers'
 import {
   demoUser,
   demoProfile,
+  demoInstructorProfile,
+  demoApprenticeProfile,
+  demoSchool,
   demoChapters,
   getDemoFlashcards,
   getDemoQuiz,
@@ -50,7 +53,10 @@ function createMockQueryBuilder(tableName: string) {
   // Load initial data based on table
   switch (tableName) {
     case 'profiles':
-      currentData = [demoProfile]
+      currentData = [demoProfile, demoInstructorProfile, demoApprenticeProfile]
+      break
+    case 'schools':
+      currentData = [demoSchool]
       break
     case 'chapters':
       currentData = [...demoChapters]

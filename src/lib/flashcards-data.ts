@@ -20,38 +20,32 @@ export { chapter1PremiumFlashcards } from './chapter-1-premium-flashcards'
 // Re-export Chapter 2 premium flashcards
 export { chapter2PremiumFlashcards } from './chapter-2-premium-flashcards'
 
+// Re-export Chapter 3 premium flashcards
+export { chapter3PremiumFlashcards } from './chapter-3-premium-flashcards'
+
+// Re-export Chapter 4 premium flashcards
+export { chapter4PremiumFlashcards } from './chapter-4-premium-flashcards'
+
+// Re-export Chapter 5 premium flashcards
+export { chapter5PremiumFlashcards } from './chapter-5-premium-flashcards'
+
+// Re-export Chapter 7 premium flashcards
+export { chapter7PremiumFlashcards } from './chapter-7-premium-flashcards'
+
 import { chapter1PremiumFlashcards } from './chapter-1-premium-flashcards'
 import { chapter2PremiumFlashcards } from './chapter-2-premium-flashcards'
+import { chapter3PremiumFlashcards } from './chapter-3-premium-flashcards'
+import { chapter4PremiumFlashcards } from './chapter-4-premium-flashcards'
+import { chapter5PremiumFlashcards } from './chapter-5-premium-flashcards'
+import { chapter7PremiumFlashcards } from './chapter-7-premium-flashcards'
 
 export const chapterFlashcards: Record<string, Flashcard[]> = {
   'ch-1': chapter1PremiumFlashcards,
   'ch-2': chapter2PremiumFlashcards,
-  'ch-3': [
-    // Legacy Chapter 3 flashcards
-    {
-      id: 'fc-3-001',
-      chapter_id: 'ch-3',
-      front: 'What are the key elements of professional image?',
-      back: 'Professional image includes personal grooming, attire, communication skills, and attitude.',
-      category: 'Professional Image',
-      difficulty: 'easy',
-      order_index: 1,
-      is_active: true,
-    },
-  ],
-  'ch-4': [
-    // Legacy Chapter 4 flashcards
-    {
-      id: 'fc-4-001',
-      chapter_id: 'ch-4',
-      front: 'What is the first step in infection control?',
-      back: 'Hand washing is the first and most important step in infection control.',
-      category: 'Infection Control',
-      difficulty: 'easy',
-      order_index: 1,
-      is_active: true,
-    },
-  ],
+  'ch-3': chapter3PremiumFlashcards,
+  'ch-4': chapter4PremiumFlashcards,
+  'ch-5': chapter5PremiumFlashcards,
+  'ch-7': chapter7PremiumFlashcards,
 }
 
 export default chapterFlashcards

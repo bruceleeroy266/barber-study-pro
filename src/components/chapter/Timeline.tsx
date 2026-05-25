@@ -52,7 +52,7 @@ export default function Timeline({ items, theme }: TimelineProps) {
 
               {/* Content */}
               <div 
-                className="flex-1 rounded-xl p-5 -mt-10 md:mt-0 ml-0 md:ml-0"
+                className="flex-1 rounded-xl p-5 mt-2 md:mt-0"
                 style={{
                   backgroundColor: t.backgroundAlt,
                   borderColor: t.border,

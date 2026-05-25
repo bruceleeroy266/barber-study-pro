@@ -58,6 +58,24 @@ export default async function ProfilePage() {
                   </div>
                 </div>
               )}
+
+              {profile?.barber_shop_name && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-1">Barber Shop</label>
+                  <div className="px-4 py-3 bg-gray-800 rounded-lg text-white">
+                    {profile.barber_shop_name}
+                  </div>
+                </div>
+              )}
+
+              {profile?.mentor_name && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-1">Mentor</label>
+                  <div className="px-4 py-3 bg-gray-800 rounded-lg text-white">
+                    {profile.mentor_name}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

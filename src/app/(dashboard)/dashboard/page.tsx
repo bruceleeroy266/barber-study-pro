@@ -12,7 +12,14 @@ export default async function DashboardPage() {
   if (!user) {
     redirect('/login')
   }
-  
+
+  // Get user profile (for apprentice null-school handling)
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role, school_id, barber_shop_name, mentor_name')
+    .eq('id', user.id)
+    .single()
+
   // Get all chapters
   const { data: chapters } = await supabase
     .from('chapters')
@@ -30,8 +37,10 @@ export default async function DashboardPage() {
   const totalChapters = chapters?.length || 0
   const completedChapters = progress?.filter(p => p.progress_percentage === 100).length || 0
   const inProgressChapters = progress?.filter(p => p.progress_percentage > 0 && p.progress_percentage < 100).length || 0
-  const averageProgress = progress?.length 
-    ? Math.round(progress.reduce((acc, p) => acc + p.progress_percentage, 0) / progress.length)
+  // Overall progress = average across ALL chapters (including 0% for not started)
+  const totalProgressSum = progress?.reduce((acc, p) => acc + p.progress_percentage, 0) || 0
+  const averageProgress = totalChapters > 0
+    ? Math.round(totalProgressSum / totalChapters)
     : 0
 
   // Find continue chapter (first incomplete)
@@ -46,6 +55,23 @@ export default async function DashboardPage() {
       <div>
         <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
         <p className="text-gray-400">Track your progress through all 21 barbering chapters</p>
+        {profile?.role === 'apprentice' && (
+          <div className="mt-2 flex flex-wrap gap-2 text-sm">
+            <span className="px-2 py-1 bg-purple-500/10 text-purple-400 rounded-full">
+              Apprentice
+            </span>
+            {profile.barber_shop_name && (
+              <span className="px-2 py-1 bg-gray-800 text-gray-400 rounded-full">
+                {profile.barber_shop_name}
+              </span>
+            )}
+            {profile.mentor_name && (
+              <span className="px-2 py-1 bg-gray-800 text-gray-400 rounded-full">
+                Mentor: {profile.mentor_name}
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Stats Cards */}

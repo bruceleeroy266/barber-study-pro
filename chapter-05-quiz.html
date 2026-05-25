@@ -1,256 +1,603 @@
-                <p>19. Which clipper motor type is best for thick, coarse, or damp hair?</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 5 Quiz: Implements, Tools & Equipment | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .back-link:hover { color: var(--gold); }
+        .chapter-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
+        .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; }
+        .chapter-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
+        .content { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+        .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; }
+
+        .quiz-section { background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 2rem 0; border: 1px solid var(--gold); }
+        .quiz-section h2 { color: var(--gold); margin-bottom: 1.5rem; }
+        .quiz-question { margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--dark-gray); }
+        .quiz-question p { font-weight: 600; margin-bottom: 0.75rem; color: var(--white); }
+        .quiz-options label { display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .quiz-options label:hover { background: rgba(212, 175, 55, 0.1); }
+        .quiz-options input[type="radio"] { margin-right: 0.75rem; }
+        .quiz-options label.correct { background: rgba(34, 197, 94, 0.3); border: 1px solid #22c55e; }
+        .quiz-options label.incorrect { background: rgba(239, 68, 68, 0.3); border: 1px solid #ef4444; }
+        .quiz-submit { background: var(--gold); color: var(--dark); border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+        .quiz-result { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: none; }
+        .quiz-result.correct { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; }
+        .quiz-result.incorrect { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+        .explanation { display: none; margin-top: 0.5rem; padding: 0.75rem; background: rgba(212,175,55,0.1); border-radius: 6px; font-size: 0.9rem; color: #ccc; }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <nav><div class="nav-container"><a href="index.html" class="logo">⚡ Barber Study Pro</a><a href="chapter-05.html" class="back-link">← Back to Chapter 5</a></div></nav>
+    <header class="chapter-header">
+        <span class="chapter-number">CHAPTER 5 QUIZ</span>
+        <h1>Implements, Tools & Equipment</h1>
+        <p>Test your knowledge — 40 questions</p>
+    </header>
+    <main class="content">
+        <section class="quiz-section">
+            <h2>📝 Chapter 5 Review Quiz</h2>
+
+            <!-- Q1 -->
+            <div class="quiz-question" data-answer="b">
+                <p>1. What is the difference between cast and forged shears?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q19" value="a"> Magnetic motor</label>
-                    <label><input type="radio" name="q19" value="b"> Pivot motor</label>
-                    <label><input type="radio" name="q19" value="c"> Rotary motor</label>
-                    <label><input type="radio" name="q19" value="d"> Electric motor</label>
+                    <label><input type="radio" name="q1" value="a"> Cast is more expensive and durable</label>
+                    <label><input type="radio" name="q1" value="b"> Cast: cheaper, porous, less sharp; Forged: denser, more durable, stays sharp longer</label>
+                    <label><input type="radio" name="q1" value="c"> There is no difference</label>
+                    <label><input type="radio" name="q1" value="d"> Forged is cheaper and lighter</label>
                 </div>
+                <div class="explanation">Forged shears are hammered/compressed, making them denser and more durable. Cast shears are cheaper but more porous and weaker.</div>
             </div>
-            
-            <div class="quiz-question">
-                <p>20. What is a disadvantage of cordless clippers?</p>
+
+            <!-- Q2 -->
+            <div class="quiz-question" data-answer="b">
+                <p>2. What are the two main types of clipper blades?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q20" value="a"> They are too heavy</label>
-                    <label><input type="radio" name="q20" value="b"> They may not have the same power as corded models</label>
-                    <label><input type="radio" name="q20" value="c"> They are too expensive</label>
-                    <label><input type="radio" name="q20" value="d"> They cannot be disinfected</label>
+                    <label><input type="radio" name="q2" value="a"> Rotary and magnetic</label>
+                    <label><input type="radio" name="q2" value="b"> Detachable-blade and adjustable-blade</label>
+                    <label><input type="radio" name="q2" value="c"> Carbon and ceramic</label>
+                    <label><input type="radio" name="q2" value="d"> French and German</label>
                 </div>
+                <div class="explanation">Detachable-blade clippers have blades that snap on/off; adjustable-blade clippers use a lever to open/close the blade.</div>
             </div>
-            
-            <div class="quiz-question">
-                <p>21. What is the main difference between a barber chair and a styling chair?</p>
+
+            <!-- Q3 -->
+            <div class="quiz-question" data-answer="c">
+                <p>3. What are the three motor types in clippers?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q21" value="a"> The color</label>
-                    <label><input type="radio" name="q21" value="b"> Barber chairs are larger, have a headrest, and enable clients to fully recline</label>
-                    <label><input type="radio" name="q21" value="c"> The price</label>
-                    <label><input type="radio" name="q21" value="d"> The brand</label>
+                    <label><input type="radio" name="q3" value="a"> Electric, battery, and solar</label>
+                    <label><input type="radio" name="q3" value="b"> Fast, medium, and slow</label>
+                    <label><input type="radio" name="q3" value="c"> Rotary, pivot, and magnetic</label>
+                    <label><input type="radio" name="q3" value="d"> AC, DC, and wireless</label>
                 </div>
+                <div class="explanation">Rotary motors are high power/speed; pivot motors are quieter and good for thick hair; magnetic motors are reliable for fine textures.</div>
             </div>
-            
-            <div class="quiz-question">
-                <p>22. What are shampoo capes typically made of?</p>
+
+            <!-- Q4 -->
+            <div class="quiz-question" data-answer="a">
+                <p>4. Which blade edge is better for slide cutting?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q22" value="a"> Cotton</label>
-                    <label><input type="radio" name="q22" value="b"> Waterproof vinyl</label>
-                    <label><input type="radio" name="q22" value="c"> Silk</label>
-                    <label><input type="radio" name="q22" value="d"> Wool</label>
+                    <label><input type="radio" name="q4" value="a"> Convex edge</label>
+                    <label><input type="radio" name="q4" value="b"> Beveled edge</label>
+                    <label><input type="radio" name="q4" value="c"> Serrated edge</label>
+                    <label><input type="radio" name="q4" value="d"> Both A and B</label>
                 </div>
+                <div class="explanation">Convex edges are very sharp and glide easily, making them ideal for slide cutting. Beveled edges are serrated and grip hair.</div>
             </div>
-            
-            <div class="quiz-question">
-                <p>23. Why are terry cloth towels preferred for shampooing?</p>
+
+            <!-- Q5 -->
+            <div class="quiz-question" data-answer="b">
+                <p>5. Why are changeable-blade razors preferred in shops?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q23" value="a"> They are cheaper</label>
-                    <label><input type="radio" name="q23" value="b"> Their absorbent qualities and ability to hold heat and moisture</label>
-                    <label><input type="radio" name="q23" value="c"> They are disposable</label>
-                    <label><input type="radio" name="q23" value="d"> They are lighter</label>
+                    <label><input type="radio" name="q5" value="a"> They are cheaper</label>
+                    <label><input type="radio" name="q5" value="b"> Better infection control and convenience</label>
+                    <label><input type="radio" name="q5" value="c"> They cut closer</label>
+                    <label><input type="radio" name="q5" value="d"> They require honing</label>
                 </div>
+                <div class="explanation">Changeable-blade (disposable) razors are preferred for infection control and convenience — no honing or stropping needed.</div>
             </div>
-            
-            <div class="quiz-question">
-                <p>24. What is the minimum size for disposable paper towels?</p>
+
+            <!-- Q6 -->
+            <div class="quiz-question" data-answer="b">
+                <p>6. What is the purpose of a strop?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q24" value="a"> 8" × 10"</label>
-                    <label><input type="radio" name="q24" value="b"> 12" × 24"</label>
-                    <label><input type="radio" name="q24" value="c"> 16" × 32"</label>
-                    <label><input type="radio" name="q24" value="d"> 20" × 40"</label>
+                    <label><input type="radio" name="q6" value="a"> To grind the razor edge</label>
+                    <label><input type="radio" name="q6" value="b"> To smooth and polish the razor edge after honing</label>
+                    <label><input type="radio" name="q6" value="c"> To clean the razor</label>
+                    <label><input type="radio" name="q6" value="d"> To store the razor</label>
                 </div>
+                <div class="explanation">A strop (leather or canvas) smooths and polishes the razor edge after honing. Honing grinds the edge; stropping finishes it.</div>
             </div>
-            
-            <div class="quiz-question">
-                <p>25. What is the purpose of neck strips?</p>
+
+            <!-- Q7 -->
+            <div class="quiz-question" data-answer="b">
+                <p>7. What are modern safe methods for removing hair clippings?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q25" value="a"> To dry the hair</label>
-                    <label><input type="radio" name="q25" value="b"> To provide a barrier between neckband of cape and client's neck</label>
-                    <label><input type="radio" name="q25" value="c"> To style the hair</label>
-                    <label><input type="radio" name="q25" value="d"> To cut hair</label>
+                    <label><input type="radio" name="q7" value="a"> Neck duster brush</label>
+                    <label><input type="radio" name="q7" value="b"> Towel, paper neck strips, vacuum systems</label>
+                    <label><input type="radio" name="q7" value="c"> Compressed air</label>
+                    <label><input type="radio" name="q7" value="d"> Water rinse</label>
                 </div>
+                <div class="explanation">Modern safe methods include towel folded around hand, paper neck strips, and vacuum systems. Traditional neck dusters can spread germs unless disinfected after each use.</div>
             </div>
-            
-            <div class="quiz-question">
-                <p>26. What is an electric latherizer?</p>
+
+            <!-- Q8 -->
+            <div class="quiz-question" data-answer="c">
+                <p>8. What size shear do most barbers prefer?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q26" value="a"> A type of razor</label>
-                    <label><input type="radio" name="q26" value="b"> A lather-making device that is sanitary, convenient, and easy to operate</label>
-                    <label><input type="radio" name="q26" value="c"> A hair dryer</label>
-                    <label><input type="radio" name="q26" value="d"> A type of comb</label>
+                    <label><input type="radio" name="q8" value="a"> 5" – 6"</label>
+                    <label><input type="radio" name="q8" value="b"> 7" – 8"</label>
+                    <label><input type="radio" name="q8" value="c"> 6½" – 7½"</label>
+                    <label><input type="radio" name="q8" value="d"> 8" – 9"</label>
                 </div>
+                <div class="explanation">Most barbers prefer shears between 6½" and 7½" for optimal control and versatility.</div>
             </div>
-            
-            <div class="quiz-question">
-                <p>27. What ingredient in shaving soap improves lathering qualities?</p>
+
+            <!-- Q9 -->
+            <div class="quiz-question" data-answer="a">
+                <p>9. Which comb material is antistatic and heat/chemical resistant?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q27" value="a"> Alcohol</label>
-                    <label><input type="radio" name="q27" value="b"> Coconut oil</label>
-                    <label><input type="radio" name="q27" value="c"> Perfume</label>
-                    <label><input type="radio" name="q27" value="d"> Water</label>
+                    <label><input type="radio" name="q9" value="a"> Carbon</label>
+                    <label><input type="radio" name="q9" value="b"> Hard rubber</label>
+                    <label><input type="radio" name="q9" value="c"> Graphite</label>
+                    <label><input type="radio" name="q9" value="d"> Metal</label>
                 </div>
+                <div class="explanation">Carbon combs are antistatic and resistant to heat and chemicals. Hard rubber is flexible but deteriorates in disinfectant.</div>
             </div>
-            
-            <div class="quiz-question">
-                <p>28. What should you check on blowdryer attachments before use?</p>
+
+            <!-- Q10 -->
+            <div class="quiz-question" data-answer="c">
+                <p>10. What does the tension screw on shears control?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q28" value="a"> The color</label>
-                    <label><input type="radio" name="q28" value="b"> Comb teeth and brush bristles for sharp points</label>
-                    <label><input type="radio" name="q28" value="c"> The brand name</label>
-                    <label><input type="radio" name="q28" value="d"> The price</label>
+                    <label><input type="radio" name="q10" value="a"> The length of the blade</label>
+                    <label><input type="radio" name="q10" value="b"> The color of the shears</label>
+                    <label><input type="radio" name="q10" value="c"> The distance and pressure between blades</label>
+                    <label><input type="radio" name="q10" value="d"> The handle size</label>
                 </div>
+                <div class="explanation">The tension screw adjusts the distance and pressure between the blades. Proper tension is critical for smooth cutting.</div>
             </div>
-            
-            <div class="quiz-question">
-                <p>29. What should you never do with a blowdryer?</p>
+
+            <!-- Q11 -->
+            <div class="quiz-question" data-answer="b">
+                <p>11. Which handle design reduces stress on the hand and wrist?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q29" value="a"> Use it on dry hair</label>
-                    <label><input type="radio" name="q29" value="b"> Use it near water</label>
-                    <label><input type="radio" name="q29" value="c"> Use it on short hair</label>
-                    <label><input type="radio" name="q29" value="d"> Use it with attachments</label>
+                    <label><input type="radio" name="q11" value="a"> Opposing</label>
+                    <label><input type="radio" name="q11" value="b"> Crane</label>
+                    <label><input type="radio" name="q11" value="c"> Traditional</label>
+                    <label><input type="radio" name="q11" value="d"> Straight</label>
                 </div>
+                <div class="explanation">The crane handle design reduces stress on the hand and wrist. Offset is ergonomic; opposing is traditional.</div>
             </div>
-            
-            <div class="quiz-question">
-                <p>30. What are the four basic parts of thermal irons?</p>
+
+            <!-- Q12 -->
+            <div class="quiz-question" data-answer="a">
+                <p>12. What blade size gives the closest cut?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q30" value="a"> Handle, cord, plug, and barrel</label>
-                    <label><input type="radio" name="q30" value="b"> Rod handle, shell handle, barrel, and shell</label>
-                    <label><input type="radio" name="q30" value="c"> Metal, plastic, rubber, and wood</label>
-                    <label><input type="radio" name="q30" value="d"> Top, bottom, left, and right</label>
+                    <label><input type="radio" name="q12" value="a"> 00000</label>
+                    <label><input type="radio" name="q12" value="b"> 1</label>
+                    <label><input type="radio" name="q12" value="c"> 3</label>
+                    <label><input type="radio" name="q12" value="d"> 000</label>
                 </div>
+                <div class="explanation">The 00000 blade size gives the closest cut. Blade sizes vary, with more zeros indicating a closer cut.</div>
             </div>
-            
-            <div class="quiz-question">
-                <p>31. How do you test if a thermal iron is too hot?</p>
+
+            <!-- Q13 -->
+            <div class="quiz-question" data-answer="c">
+                <p>13. Which clipper motor type is best for thick, coarse, or damp hair?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q31" value="a"> Touch it with your hand</label>
-                    <label><input type="radio" name="q31" value="b"> Clamp on tissue paper for 5 seconds; if it scorches or turns brown, it's too hot</label>
-                    <label><input type="radio" name="q31" value="c"> Look at the color</label>
-                    <label><input type="radio" name="q31" value="d"> Smell it</label>
+                    <label><input type="radio" name="q13" value="a"> Magnetic motor</label>
+                    <label><input type="radio" name="q13" value="b"> Pivot motor</label>
+                    <label><input type="radio" name="q13" value="c"> Rotary motor</label>
+                    <label><input type="radio" name="q13" value="d"> Electric motor</label>
                 </div>
+                <div class="explanation">Rotary motors have high power and speed, making them ideal for thick, coarse, or damp hair. Pivot motors are quieter; magnetic motors are for fine textures.</div>
             </div>
-            
-            <div class="quiz-question">
-                <p>32. What should you place between the client's scalp and a thermal iron?</p>
+
+            <!-- Q14 -->
+            <div class="quiz-question" data-answer="b">
+                <p>14. What is a disadvantage of cordless clippers?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q32" value="a"> A metal comb</label>
-                    <label><input type="radio" name="q32" value="b"> A hand rubber comb</label>
-                    <label><input type="radio" name="q32" value="c"> Nothing</label>
-                    <label><input type="radio" name="q32" value="d"> A towel</label>
+                    <label><input type="radio" name="q14" value="a"> They are too heavy</label>
+                    <label><input type="radio" name="q14" value="b"> They may not have the same power as corded models</label>
+                    <label><input type="radio" name="q14" value="c"> They are too expensive</label>
+                    <label><input type="radio" name="q14" value="d"> They cannot be disinfected</label>
                 </div>
+                <div class="explanation">Cordless clippers are convenient and portable but may have less power than corded models. Battery life can also be a concern.</div>
             </div>
-            
-            <div class="quiz-question">
-                <p>33. Who discovered the high-frequency machine?</p>
+
+            <!-- Q15 -->
+            <div class="quiz-question" data-answer="b">
+                <p>15. What is the main difference between a barber chair and a styling chair?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q33" value="a"> Thomas Edison</label>
-                    <label><input type="radio" name="q33" value="b"> Nikola Tesla</label>
-                    <label><input type="radio" name="q33" value="c"> Alexander Graham Bell</label>
-                    <label><input type="radio" name="q33" value="d"> Benjamin Franklin</label>
+                    <label><input type="radio" name="q15" value="a"> The color</label>
+                    <label><input type="radio" name="q15" value="b"> Barber chairs are larger, have a headrest, and enable clients to fully recline</label>
+                    <label><input type="radio" name="q15" value="c"> The price</label>
+                    <label><input type="radio" name="q15" value="d"> The brand</label>
                 </div>
+                <div class="explanation">Barber chairs are hydraulic/motorized, reclining, with headrest and footrest — designed for shaves and full services.</div>
             </div>
-            
-            <div class="quiz-question">
-                <p>34. What is a comedone extractor used for?</p>
+
+            <!-- Q16 -->
+            <div class="quiz-question" data-answer="b">
+                <p>16. What are shampoo capes typically made of?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q34" value="a"> Cutting hair</label>
-                    <label><input type="radio" name="q34" value="b"> Pressing out blackheads</label>
-                    <label><input type="radio" name="q34" value="c"> Drying hair</label>
-                    <label><input type="radio" name="q34" value="d"> Shaving</label>
+                    <label><input type="radio" name="q16" value="a"> Cotton</label>
+                    <label><input type="radio" name="q16" value="b"> Waterproof vinyl</label>
+                    <label><input type="radio" name="q16" value="c"> Silk</label>
+                    <label><input type="radio" name="q16" value="d"> Wool</label>
                 </div>
+                <div class="explanation">Shampoo capes are made of waterproof vinyl to protect clients from water and products. Haircutting capes use nylon/synthetic for comfort.</div>
             </div>
-            
-            <div class="quiz-question">
-                <p>35. Why is the neck duster no longer considered safe?</p>
+
+            <!-- Q17 -->
+            <div class="quiz-question" data-answer="b">
+                <p>17. Why are terry cloth towels preferred for shampooing?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q35" value="a"> It is too expensive</label>
-                    <label><input type="radio" name="q35" value="b"> Unless cleaned and disinfected after each use, it can spread germs</label>
-                    <label><input type="radio" name="q35" value="c"> It is too heavy</label>
-                    <label><input type="radio" name="q35" value="d"> It doesn't work well</label>
+                    <label><input type="radio" name="q17" value="a"> They are cheaper</label>
+                    <label><input type="radio" name="q17" value="b"> Their absorbent qualities and ability to hold heat and moisture</label>
+                    <label><input type="radio" name="q17" value="c"> They are disposable</label>
+                    <label><input type="radio" name="q17" value="d"> They are lighter</label>
                 </div>
+                <div class="explanation">Cotton terry towels are absorbent and hold heat well, making them ideal for shampooing and hot towel services.</div>
             </div>
-            
-            <div class="quiz-question">
-                <p>36. What is a safe alternative to neck dusters?</p>
+
+            <!-- Q18 -->
+            <div class="quiz-question" data-answer="b">
+                <p>18. What is the minimum size for disposable paper towels?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q36" value="a"> Using your hands</label>
-                    <label><input type="radio" name="q36" value="b"> Paper or cloth towel folded around barber's hand, paper neck strips, or vacuum systems</label>
-                    <label><input type="radio" name="q36" value="c"> A comb</label>
-                    <label><input type="radio" name="q36" value="d"> Nothing</label>
+                    <label><input type="radio" name="q18" value="a"> 8" × 10"</label>
+                    <label><input type="radio" name="q18" value="b"> 12" × 24"</label>
+                    <label><input type="radio" name="q18" value="c"> 16" × 32"</label>
+                    <label><input type="radio" name="q18" value="d"> 20" × 40"</label>
                 </div>
+                <div class="explanation">Disposable paper towels for barbering should be at least 12" × 24" — used as neck barriers, for wiping, and sanitary surfaces.</div>
             </div>
-            
-            <div class="quiz-question">
-                <p>37. What are the two main towel wrapping methods?</p>
+
+            <!-- Q19 -->
+            <div class="quiz-question" data-answer="b">
+                <p>19. What is the purpose of neck strips?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q37" value="a"> Wet and dry</label>
-                    <label><input type="radio" name="q37" value="b"> Cloth towel wrap and paper towel wrap</label>
-                    <label><input type="radio" name="q37" value="c"> Large and small</label>
-                    <label><input type="radio" name="q37" value="d"> Hot and cold</label>
+                    <label><input type="radio" name="q19" value="a"> To dry the hair</label>
+                    <label><input type="radio" name="q19" value="b"> To provide a barrier between neckband of cape and client's neck</label>
+                    <label><input type="radio" name="q19" value="c"> To style the hair</label>
+                    <label><input type="radio" name="q19" value="d"> To cut hair</label>
                 </div>
+                <div class="explanation">Neck strips create a sanitary barrier between the cape's neckband and the client's skin, preventing irritation and cross-contamination.</div>
             </div>
-            
-            <div class="quiz-question">
-                <p>38. What should you do before using thermal irons on a client?</p>
+
+            <!-- Q20 -->
+            <div class="quiz-question" data-answer="b">
+                <p>20. What is an electric latherizer?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q38" value="a"> Heat them to maximum temperature</label>
-                    <label><input type="radio" name="q38" value="b"> Test the temperature and receive instructions on their use</label>
-                    <label><input type="radio" name="q38" value="c"> Oil them</label>
-                    <label><input type="radio" name="q38" value="d"> Cool them down</label>
+                    <label><input type="radio" name="q20" value="a"> A type of razor</label>
+                    <label><input type="radio" name="q20" value="b"> A lather-making device that is sanitary, convenient, and easy to operate</label>
+                    <label><input type="radio" name="q20" value="c"> A hair dryer</label>
+                    <label><input type="radio" name="q20" value="d"> A type of comb</label>
                 </div>
+                <div class="explanation">Electric latherizers create shaving lather quickly and hygienically. Traditional lather mugs and brushes (#3 size) are also used.</div>
             </div>
-            
-            <div class="quiz-question">
-                <p>39. What type of hair withstands less heat than normal hair?</p>
+
+            <!-- Q21 -->
+            <div class="quiz-question" data-answer="b">
+                <p>21. What ingredient in shaving soap improves lathering qualities?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q39" value="a"> Thick hair</label>
-                    <label><input type="radio" name="q39" value="b"> Fine, lightened, or badly damaged hair</label>
-                    <label><input type="radio" name="q39" value="c"> Curly hair</label>
-                    <label><input type="radio" name="q39" value="d"> Straight hair</label>
+                    <label><input type="radio" name="q21" value="a"> Alcohol</label>
+                    <label><input type="radio" name="q21" value="b"> Coconut oil</label>
+                    <label><input type="radio" name="q21" value="c"> Perfume</label>
+                    <label><input type="radio" name="q21" value="d"> Water</label>
                 </div>
+                <div class="explanation">Coconut oil is a key ingredient in shaving soap that improves lathering qualities and provides skin conditioning.</div>
             </div>
-            
-            <div class="quiz-question">
-                <p>40. What is the main function of a galvanic machine?</p>
+
+            <!-- Q22 -->
+            <div class="quiz-question" data-answer="b">
+                <p>22. What should you check on blowdryer attachments before use?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q40" value="a"> To cut hair</label>
-                    <label><input type="radio" name="q40" value="b"> To introduce water-soluble products into the skin during a facial</label>
-                    <label><input type="radio" name="q40" value="c"> To dry hair</label>
-                    <label><input type="radio" name="q40" value="d"> To heat towels</label>
+                    <label><input type="radio" name="q22" value="a"> The color</label>
+                    <label><input type="radio" name="q22" value="b"> Comb teeth and brush bristles for sharp points</label>
+                    <label><input type="radio" name="q22" value="c"> The brand name</label>
+                    <label><input type="radio" name="q22" value="d"> The price</label>
                 </div>
+                <div class="explanation">Always check blowdryer attachments for sharp points on comb teeth or bristles that could scratch or irritate the client's scalp.</div>
             </div>
-            
+
+            <!-- Q23 -->
+            <div class="quiz-question" data-answer="b">
+                <p>23. What should you never do with a blowdryer?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q23" value="a"> Use it on dry hair</label>
+                    <label><input type="radio" name="q23" value="b"> Use it near water</label>
+                    <label><input type="radio" name="q23" value="c"> Use it on short hair</label>
+                    <label><input type="radio" name="q23" value="d"> Use it with attachments</label>
+                </div>
+                <div class="explanation">Never use a blowdryer near water — risk of electric shock. Always keep it moving, use protective agents, and avoid contact with water.</div>
+            </div>
+
+            <!-- Q24 -->
+            <div class="quiz-question" data-answer="b">
+                <p>24. What are the four basic parts of thermal irons?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q24" value="a"> Handle, cord, plug, and barrel</label>
+                    <label><input type="radio" name="q24" value="b"> Rod handle, shell handle, barrel, and shell</label>
+                    <label><input type="radio" name="q24" value="c"> Metal, plastic, rubber, and wood</label>
+                    <label><input type="radio" name="q24" value="d"> Top, bottom, left, and right</label>
+                </div>
+                <div class="explanation">Thermal irons (curling/flat/Marcel) have rod handle, shell handle, barrel, and shell. Test temperature on tissue before use.</div>
+            </div>
+
+            <!-- Q25 -->
+            <div class="quiz-question" data-answer="b">
+                <p>25. How do you test if a thermal iron is too hot?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q25" value="a"> Touch it with your hand</label>
+                    <label><input type="radio" name="q25" value="b"> Clamp on tissue paper for 5 seconds; if it scorches or turns brown, it's too hot</label>
+                    <label><input type="radio" name="q25" value="c"> Look at the color</label>
+                    <label><input type="radio" name="q25" value="d"> Smell it</label>
+                </div>
+                <div class="explanation">Always test thermal iron temperature on tissue paper. If it scorches or browns in 5 seconds, it's too hot for hair.</div>
+            </div>
+
+            <!-- Q26 -->
+            <div class="quiz-question" data-answer="b">
+                <p>26. What should you place between the client's scalp and a thermal iron?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q26" value="a"> A metal comb</label>
+                    <label><input type="radio" name="q26" value="b"> A hard rubber comb</label>
+                    <label><input type="radio" name="q26" value="c"> Nothing</label>
+                    <label><input type="radio" name="q26" value="d"> A towel</label>
+                </div>
+                <div class="explanation">Use a hard rubber comb as a barrier between the scalp and thermal iron. Never use metal combs — they conduct heat and can burn the scalp.</div>
+            </div>
+
+            <!-- Q27 -->
+            <div class="quiz-question" data-answer="b">
+                <p>27. Who discovered the high-frequency machine?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q27" value="a"> Thomas Edison</label>
+                    <label><input type="radio" name="q27" value="b"> Nikola Tesla</label>
+                    <label><input type="radio" name="q27" value="c"> Alexander Graham Bell</label>
+                    <label><input type="radio" name="q27" value="d"> Benjamin Franklin</label>
+                </div>
+                <div class="explanation">Nikola Tesla discovered high-frequency current. High-frequency machines stimulate blood flow and product absorption.</div>
+            </div>
+
+            <!-- Q28 -->
+            <div class="quiz-question" data-answer="b">
+                <p>28. What is a comedone extractor used for?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q28" value="a"> Cutting hair</label>
+                    <label><input type="radio" name="q28" value="b"> Pressing out blackheads</label>
+                    <label><input type="radio" name="q28" value="c"> Drying hair</label>
+                    <label><input type="radio" name="q28" value="d"> Shaving</label>
+                </div>
+                <div class="explanation">A comedone extractor is a small metal tool with a loop used to press out blackheads during facials. Requires proper training.</div>
+            </div>
+
+            <!-- Q29 -->
+            <div class="quiz-question" data-answer="b">
+                <p>29. Why is the neck duster no longer considered safe?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q29" value="a"> It is too expensive</label>
+                    <label><input type="radio" name="q29" value="b"> Unless cleaned and disinfected after each use, it can spread germs</label>
+                    <label><input type="radio" name="q29" value="c"> It is too heavy</label>
+                    <label><input type="radio" name="q29" value="d"> It doesn't work well</label>
+                </div>
+                <div class="explanation">Traditional neck dusters can harbor bacteria and spread germs between clients unless thoroughly disinfected after each use. Modern methods are safer.</div>
+            </div>
+
+            <!-- Q30 -->
+            <div class="quiz-question" data-answer="b">
+                <p>30. What is a safe alternative to neck dusters?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q30" value="a"> Using your hands</label>
+                    <label><input type="radio" name="q30" value="b"> Paper or cloth towel folded around barber's hand, paper neck strips, or vacuum systems</label>
+                    <label><input type="radio" name="q30" value="c"> A comb</label>
+                    <label><input type="radio" name="q30" value="d"> Nothing</label>
+                </div>
+                <div class="explanation">Safe alternatives include towel-wrapped hand, paper neck strips, and vacuum systems. These are either disposable or easily sanitized.</div>
+            </div>
+
+            <!-- Q31 -->
+            <div class="quiz-question" data-answer="b">
+                <p>31. What are the two main towel wrapping methods?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q31" value="a"> Wet and dry</label>
+                    <label><input type="radio" name="q31" value="b"> Cloth towel wrap and paper towel wrap</label>
+                    <label><input type="radio" name="q31" value="c"> Large and small</label>
+                    <label><input type="radio" name="q31" value="d"> Hot and cold</label>
+                </div>
+                <div class="explanation">The two main towel wrapping methods are cloth towel wrap and paper towel wrap — both protect the hand during services.</div>
+            </div>
+
+            <!-- Q32 -->
+            <div class="quiz-question" data-answer="b">
+                <p>32. What should you do before using thermal irons on a client?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q32" value="a"> Heat them to maximum temperature</label>
+                    <label><input type="radio" name="q32" value="b"> Test the temperature and receive instructions on their use</label>
+                    <label><input type="radio" name="q32" value="c"> Oil them</label>
+                    <label><input type="radio" name="q32" value="d"> Cool them down</label>
+                </div>
+                <div class="explanation">Always test thermal iron temperature on tissue paper and ensure you've received proper training before using on clients.</div>
+            </div>
+
+            <!-- Q33 -->
+            <div class="quiz-question" data-answer="b">
+                <p>33. What type of hair withstands less heat than normal hair?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q33" value="a"> Thick hair</label>
+                    <label><input type="radio" name="q33" value="b"> Fine, lightened, or badly damaged hair</label>
+                    <label><input type="radio" name="q33" value="c"> Curly hair</label>
+                    <label><input type="radio" name="q33" value="d"> Straight hair</label>
+                </div>
+                <div class="explanation">Fine, lightened, or badly damaged hair is more fragile and withstands less heat. Use lower temperatures and extra care.</div>
+            </div>
+
+            <!-- Q34 -->
+            <div class="quiz-question" data-answer="b">
+                <p>34. What is the main function of a galvanic machine?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q34" value="a"> To cut hair</label>
+                    <label><input type="radio" name="q34" value="b"> To introduce water-soluble products into the skin during a facial</label>
+                    <label><input type="radio" name="q34" value="c"> To dry hair</label>
+                    <label><input type="radio" name="q34" value="d"> To heat towels</label>
+                </div>
+                <div class="explanation">Galvanic machines use direct current to introduce water-soluble products into the skin during facial treatments. Requires training.</div>
+            </div>
+
+            <!-- Q35 -->
+            <div class="quiz-question" data-answer="a">
+                <p>35. Which shear edge needs sharpening every 4–6 months?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q35" value="a"> Convex edge</label>
+                    <label><input type="radio" name="q35" value="b"> Beveled edge</label>
+                    <label><input type="radio" name="q35" value="c"> Both need the same frequency</label>
+                    <label><input type="radio" name="q35" value="d"> Neither needs sharpening</label>
+                </div>
+                <div class="explanation">Convex edges are very sharp but need sharpening every 4–6 months. Beveled edges last 9–12 months but can't be used for slide cutting.</div>
+            </div>
+
+            <!-- Q36 -->
+            <div class="quiz-question" data-answer="c">
+                <p>36. What is the proper finger position for holding shears?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q36" value="a"> Thumb in finger grip, ring finger in thumb grip</label>
+                    <label><input type="radio" name="q36" value="b"> Index finger in finger grip</label>
+                    <label><input type="radio" name="q36" value="c"> Ring finger in finger grip (still blade), thumb in thumb grip (moving blade)</label>
+                    <label><input type="radio" name="q36" value="d"> Little finger controls the blades</label>
+                </div>
+                <div class="explanation">Ring finger goes in the finger grip (still blade), thumb in thumb grip (moving blade). Little finger rests on the brace/tang.</div>
+            </div>
+
+            <!-- Q37 -->
+            <div class="quiz-question" data-answer="a">
+                <p>37. What is the "set" of shears?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q37" value="a"> Blade alignment</label>
+                    <label><input type="radio" name="q37" value="b"> Handle color</label>
+                    <label><input type="radio" name="q37" value="c"> Length of the blade</label>
+                    <label><input type="radio" name="q37" value="d"> Type of metal used</label>
+                </div>
+                <div class="explanation">The "set" refers to blade alignment — how the two blades meet and overlap. Proper set is essential for clean cuts.</div>
+            </div>
+
+            <!-- Q38 -->
+            <div class="quiz-question" data-answer="b">
+                <p>38. Which razor grind is preferred for sharpening and detecting resistance?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q38" value="a"> Wedge grind</label>
+                    <label><input type="radio" name="q38" value="b"> Concave (hollow-ground)</label>
+                    <label><input type="radio" name="q38" value="c"> Flat grind</label>
+                    <label><input type="radio" name="q38" value="d"> Convex grind</label>
+                </div>
+                <div class="explanation">Concave (hollow-ground) razors are preferred for sharpening and detecting resistance during the shave. Wedge grinds are for coarse beards.</div>
+            </div>
+
+            <!-- Q39 -->
+            <div class="quiz-question" data-answer="c">
+                <p>39. What is the premium finish for conventional straight razors?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q39" value="a"> Chrome finish</label>
+                    <label><input type="radio" name="q39" value="b"> Matte finish</label>
+                    <label><input type="radio" name="q39" value="c"> Crocus finish</label>
+                    <label><input type="radio" name="q39" value="d"> Polish finish</label>
+                </div>
+                <div class="explanation">Crocus finish is the premium finish for conventional straight razors, indicating high-quality craftsmanship.</div>
+            </div>
+
+            <!-- Q40 -->
+            <div class="quiz-question" data-answer="b">
+                <p>40. What should you do if you drop your shears?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q40" value="a"> Pick them up and continue using</label>
+                    <label><input type="radio" name="q40" value="b"> Inspect for damage and have them professionally checked if needed</label>
+                    <label><input type="radio" name="q40" value="c"> Sharpen them immediately</label>
+                    <label><input type="radio" name="q40" value="d"> Replace them automatically</label>
+                </div>
+                <div class="explanation">Never drop shears — it can damage the alignment, edges, or tension. If dropped, inspect carefully and have them professionally checked.</div>
+            </div>
+
             <button class="quiz-submit" onclick="checkQuiz()">Check Answers</button>
             <div class="quiz-result" id="quiz-result"></div>
         </section>
-    </div>
+    </main>
 
     <script>
         function checkQuiz() {
-            const answers = { 
-                q1: 'b', q2: 'b', q3: 'b', q4: 'b', q5: 'b',
-                q6: 'b', q7: 'b', q8: 'b', q9: 'b', q10: 'b',
-                q11: 'b', q12: 'b', q13: 'b', q14: 'b', q15: 'b',
-                q16: 'b', q17: 'b', q18: 'b', q19: 'b', q20: 'b',
-                q21: 'b', q22: 'b', q23: 'b', q24: 'b', q25: 'b',
-                q26: 'b', q27: 'b', q28: 'b', q29: 'b', q30: 'b',
-                q31: 'b', q32: 'b', q33: 'b', q34: 'b', q35: 'b',
-                q36: 'b', q37: 'b', q38: 'b', q39: 'b', q40: 'b'
-            };
+            const questions = document.querySelectorAll('.quiz-question');
             let score = 0;
-            let total = 40;
-            
-            for (let q in answers) {
-                const selected = document.querySelector(`input[name="${q}"]:checked`);
-                if (selected && selected.value === answers[q]) score++;
-            }
-            
+            let total = questions.length;
+            let unanswered = 0;
+
+            questions.forEach(q => {
+                const correctAnswer = q.dataset.answer;
+                const selected = q.querySelector('input[type="radio"]:checked');
+                const labels = q.querySelectorAll('label');
+                const explanation = q.querySelector('.explanation');
+
+                // Reset styles
+                labels.forEach(l => {
+                    l.classList.remove('correct', 'incorrect');
+                });
+
+                if (!selected) {
+                    unanswered++;
+                    return;
+                }
+
+                if (selected.value === correctAnswer) {
+                    score++;
+                    selected.parentElement.classList.add('correct');
+                } else {
+                    selected.parentElement.classList.add('incorrect');
+                    // Highlight correct answer
+                    labels.forEach(l => {
+                        if (l.querySelector('input')?.value === correctAnswer) {
+                            l.classList.add('correct');
+                        }
+                    });
+                }
+
+                // Show explanation
+                if (explanation) {
+                    explanation.style.display = 'block';
+                }
+            });
+
             const resultDiv = document.getElementById('quiz-result');
             resultDiv.style.display = 'block';
-            if (score === total) {
+
+            if (unanswered > 0) {
+                resultDiv.className = 'quiz-result incorrect';
+                resultDiv.innerHTML = `<strong>Almost there!</strong> You answered ${total - unanswered}/${total} questions. Score so far: ${score}/${total - unanswered}. Please answer all questions.`;
+            } else if (score === total) {
                 resultDiv.className = 'quiz-result correct';
-                resultDiv.innerHTML = `<strong>Perfect! 🎉</strong> You got ${score}/${total} correct!`;
+                resultDiv.innerHTML = `<strong>Perfect! 🎉</strong> You got ${score}/${total} correct! Excellent work!`;
+            } else if (score >= total * 0.8) {
+                resultDiv.className = 'quiz-result correct';
+                resultDiv.innerHTML = `<strong>Great job!</strong> You got ${score}/${total} correct (${Math.round(score/total*100)}%). Keep studying the ones you missed!`;
+            } else if (score >= total * 0.6) {
+                resultDiv.className = 'quiz-result incorrect';
+                resultDiv.innerHTML = `<strong>Good effort!</strong> You got ${score}/${total} correct (${Math.round(score/total*100)}%). Review the material and try again!`;
             } else {
                 resultDiv.className = 'quiz-result incorrect';
-                resultDiv.innerHTML = `<strong>Keep studying!</strong> You got ${score}/${total} correct.`;
+                resultDiv.innerHTML = `<strong>Keep studying!</strong> You got ${score}/${total} correct (${Math.round(score/total*100)}%). Review Chapter 5 and try again!`;
             }
+
+            // Scroll to result
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         window.addEventListener('scroll', () => {

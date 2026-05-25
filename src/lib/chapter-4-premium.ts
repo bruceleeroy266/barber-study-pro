@@ -484,7 +484,91 @@ export const chapter4PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 14: FINAL SAFETY PLEDGE
+    // SECTION 14: SANITATION SCORECARD
+    // ═══════════════════════════════════════════
+    {
+      type: 'checklist',
+      id: 'sanitation-scorecard',
+      title: '📊 SANITATION SCORECARD',
+      subtitle: 'Grade your station. 100% = Inspection Ready. Below 80% = Risk of Closure.',
+      items: [
+        { text: '✓ Tools cleaned AND disinfected between EVERY client (10 pts)' },
+        { text: '✓ Fresh cape and neck strip for each client (10 pts)' },
+        { text: '✓ Disinfectant solution is clear, fresh, and at proper concentration (10 pts)' },
+        { text: '✓ Sharps container accessible and not overfilled (10 pts)' },
+        { text: '✓ Hand washing station stocked with soap and paper towels (10 pts)' },
+        { text: '✓ SDS binder accessible and up to date (10 pts)' },
+        { text: '✓ PPE available: gloves, eye protection, apron (10 pts)' },
+        { text: '✓ Work surfaces disinfected between clients (10 pts)' },
+        { text: '✓ Trash emptied and lined with fresh bag (10 pts)' },
+        { text: '✓ First aid kit stocked and accessible (10 pts)' },
+      ],
+    },
+
+    // ═══════════════════════════════════════════
+    // SECTION 15: INFECTION CONTROL TIMELINE
+    // ═══════════════════════════════════════════
+    {
+      type: 'milestoneList',
+      id: 'infection-timeline',
+      title: '⏱️ INFECTION CONTROL TIMELINE',
+      subtitle: 'What happens when you skip steps — minute by minute',
+      milestones: [
+        { year: '0 min', title: 'Client leaves chair', description: 'Tools are contaminated with hair, skin cells, oils, and potential pathogens.' },
+        { year: '2 min', title: 'You wipe tools with a towel', description: 'Towel spreads contamination. Pathogens transfer to towel surface. Towel becomes a vector.' },
+        { year: '5 min', title: 'You spray disinfectant for 30 seconds', description: 'Disinfectant needs 10 MINUTES. At 30 seconds, you have killed less than 10% of pathogens.' },
+        { year: '10 min', title: 'Next client sits down', description: 'Contaminated tools touch new client. Pathogens transfer to scalp, face, neck.' },
+        { year: '3 days', title: 'Client develops infection', description: 'Painful boil, rash, or worse. Client visits doctor. Doctor asks: "Where did you get your hair cut?"' },
+        { year: '1 week', title: 'State board investigation', description: 'Inspector visits your shop. Finds violations. Issues citation. License at risk.' },
+        { year: '2 weeks', title: 'Lawsuit filed', description: 'Client sues for negligence. Medical bills, lost wages, pain and suffering. Your insurance may not cover it.' },
+        { year: '1 month', title: 'Shop closes', description: 'Reputation destroyed. License revoked. Career over. All because of one skipped step.' },
+      ],
+    },
+
+    // ═══════════════════════════════════════════
+    // SECTION 16: SAFETY LEVEL SYSTEM
+    // ═══════════════════════════════════════════
+    {
+      type: 'levelUp',
+      id: 'safety-levels',
+      title: '🏆 SAFETY CERTIFICATION LEVELS',
+      subtitle: 'Progress from Apprentice to Master Sanitation Officer',
+      levels: [
+        {
+          level: 'Level 1: Apprentice',
+          title: 'Basic Awareness',
+          description: 'You understand that safety matters but are still learning the protocols. Standards: Wash hands before and after every client. Wear gloves when handling chemicals. Clean tools between clients. Know where the first aid kit is.',
+          reward: '🛡️ Safety Aware Badge',
+        },
+        {
+          level: 'Level 2: Technician',
+          title: 'Protocol Follower',
+          description: 'You consistently follow the 8-step disinfection protocol and understand OSHA basics. Standards: Complete 8-step disinfection protocol every time. Know SDS location and contents. Properly dispose of sharps. Document exposure incidents.',
+          reward: '🔬 Protocol Master Badge',
+        },
+        {
+          level: 'Level 3: Specialist',
+          title: 'Contamination Preventer',
+          description: 'You spot violations before they happen and train others on proper procedures. Standards: Identify cross-contamination risks instantly. Train new barbers on safety protocols. Maintain inspection-ready station at all times. Handle blood exposure incidents correctly.',
+          reward: '🔍 Inspector Ready Badge',
+        },
+        {
+          level: 'Level 4: Officer',
+          title: 'Safety Leader',
+          description: 'You set the safety standard for your shop. Other barbers look to you for guidance. Standards: Develop shop-specific safety protocols. Conduct monthly safety audits. Ensure OSHA compliance across all stations. Mentor apprentices in safety culture.',
+          reward: '🛡️ Safety Officer Badge',
+        },
+        {
+          level: 'Level 5: Master',
+          title: 'Sanitation Master',
+          description: 'You are the gold standard. State boards use your shop as an example. Your safety record is flawless. Standards: Zero violations in 5+ years. Industry speaker on barber safety. Developed innovative safety systems. All apprentices become safety leaders.',
+          reward: '🏆 Master Sanitation Officer Badge',
+        },
+      ],
+    },
+
+    // ═══════════════════════════════════════════
+    // SECTION 17: FINAL SAFETY PLEDGE
     // ═══════════════════════════════════════════
     {
       type: 'quote',

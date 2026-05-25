@@ -92,6 +92,16 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
         <span className="text-white">Chapter {num}</span>
       </div>
 
+      {/* Back to Dashboard */}
+      <div>
+        <Link
+          href="/dashboard"
+          className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-[#D4AF37] transition-colors"
+        >
+          ← Back to Dashboard
+        </Link>
+      </div>
+
       {/* Themed Header */}
       <ChapterHeader 
         num={num} 

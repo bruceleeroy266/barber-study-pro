@@ -95,15 +95,7 @@ function LoginForm() {
           />
         </div>
 
-        <div className="flex items-center justify-between text-sm">
-          <label className="flex items-center text-gray-400">
-            <input
-              type="checkbox"
-              className="mr-2 rounded border-gray-700 bg-gray-800 text-[#D4AF37] focus:ring-[#D4AF37]"
-            />
-            Remember me
-          </label>
-
+        <div className="flex items-center justify-end text-sm">
           <Link
             href="/reset-password"
             className="text-[#D4AF37] hover:text-[#F4E4A6] transition-colors"

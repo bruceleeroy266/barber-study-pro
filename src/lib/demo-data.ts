@@ -12,12 +12,47 @@ export const demoUser = {
   role: 'admin' as const,
 }
 
+export const demoSchool = {
+  id: 'demo-school',
+  name: 'Demo Barber Academy',
+  created_by: 'demo-instructor',
+  created_at: '2026-01-01T00:00:00Z',
+}
+
+export const demoInstructorProfile: Profile = {
+  id: 'demo-instructor',
+  email: 'instructor@barberstudypro.test',
+  full_name: 'Demo Instructor',
+  role: 'instructor',
+  school_id: 'demo-school',
+  barber_shop_name: null,
+  mentor_name: null,
+  avatar_url: null,
+  created_at: '2026-01-01T00:00:00Z',
+  updated_at: '2026-01-01T00:00:00Z',
+}
+
 export const demoProfile: Profile = {
   id: 'demo-user',
   email: 'demo@barberstudypro.test',
   full_name: 'Demo Student',
-  role: 'admin',
+  role: 'student',
+  school_id: 'demo-school',
+  barber_shop_name: null,
+  mentor_name: null,
+  avatar_url: null,
+  created_at: '2026-01-01T00:00:00Z',
+  updated_at: '2026-01-01T00:00:00Z',
+}
+
+export const demoApprenticeProfile: Profile = {
+  id: 'demo-apprentice',
+  email: 'apprentice@barberstudypro.test',
+  full_name: 'Demo Apprentice',
+  role: 'apprentice',
   school_id: null,
+  barber_shop_name: "Razor Kings",
+  mentor_name: "Malenny",
   avatar_url: null,
   created_at: '2026-01-01T00:00:00Z',
   updated_at: '2026-01-01T00:00:00Z',
@@ -47,11 +82,11 @@ export const demoChapters: Chapter[] = [
   { id: 'ch-21', chapter_number: 21, title: 'Final Exam Preparation', description: 'Comprehensive final exam preparation with practice tests and review materials.', content: null, order_index: 21, is_active: true },
 ]
 
-// Use real flashcards for chapters 1, 3-4, demo for rest
+// Use real flashcards for chapters 1, 3, 4, demo for rest
 export const demoFlashcards: Record<string, Flashcard[]> = {}
 
-// Load real flashcards for chapters 1, 3-4 and 16
-const realChapters = [1, 3, 4, 16]
+// Load real flashcards for chapters 1, 3, 4, 7 and 16
+const realChapters = [1, 3, 4, 7, 16]
 for (const i of realChapters) {
   const chId = `ch-${i}`
   if (realFlashcards[chId]) {
@@ -76,12 +111,9 @@ if (batch1Flashcards['ch-6'] && batch1Flashcards['ch-6'].length > 0) {
   demoFlashcards['ch-6'] = batch1Flashcards['ch-6']
 }
 
-// BATCH 2: Wire orphaned flashcards for Ch 7, 8, 9
-// Chapter 7: Replace placeholder with orphaned
-if (batch2Flashcards['ch-7'] && batch2Flashcards['ch-7'].length > 0) {
-  demoFlashcards['ch-7'] = batch2Flashcards['ch-7']
-}
+// Chapter 7: Already loaded from real flashcards above (ch-7 premium)
 
+// BATCH 2: Wire orphaned flashcards for Ch 8, 9
 // Chapter 8: Replace placeholder with orphaned
 if (batch2Flashcards['ch-8'] && batch2Flashcards['ch-8'].length > 0) {
   demoFlashcards['ch-8'] = batch2Flashcards['ch-8']
@@ -135,10 +167,22 @@ export const demoQuizzes: Record<string, Quiz> = {
   'ch-1': { id: 'quiz-1', chapter_id: 'ch-1', title: 'History of Barbering — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true },
   // Chapter 2: Premium flashcard-driven quiz (30 questions)
   'ch-2': { id: 'quiz-2', chapter_id: 'ch-2', title: 'Life Skills — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true },
+  // Chapter 3: Premium flashcard-driven quiz (30 questions)
+  'ch-3': { id: 'quiz-3', chapter_id: 'ch-3', title: 'Professional Image — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true },
+  // Chapter 4: Premium flashcard-driven quiz (30 questions)
+  'ch-4': { id: 'quiz-4', chapter_id: 'ch-4', title: 'Infection Control — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true },
+  // Chapter 5: Premium flashcard-driven quiz (50 questions)
+  'ch-5': { id: 'quiz-5', chapter_id: 'ch-5', title: 'Implements, Tools, and Equipment — Premium Quiz', description: '50 board-exam style questions. Passing score: 75%.', is_active: true },
+  // Chapter 6: Premium flashcard-driven quiz (50 questions)
+  'ch-6': { id: 'quiz-6', chapter_id: 'ch-6', title: 'General Anatomy and Physiology — Premium Quiz', description: '50 board-exam style questions. Passing score: 75%.', is_active: true },
+  // Chapter 7: Premium flashcard-driven quiz (50 questions)
+  'ch-7': { id: 'quiz-7', chapter_id: 'ch-7', title: 'Basics of Chemistry — Premium Quiz', description: '50 board-exam style questions. Passing score: 75%.', is_active: true },
 }
 
 for (let i = 3; i <= 21; i++) {
   const chId = `ch-${i}`
+  // Skip Chapters 3–7 — already registered above with premium titles
+  if (i >= 3 && i <= 7) continue
   if (!demoQuizzes[chId]) {
     demoQuizzes[chId] = { id: `quiz-${i}`, chapter_id: chId, title: `Chapter ${i} Quiz`, description: `Test your knowledge of Chapter ${i}.`, is_active: true }
   }
@@ -152,6 +196,8 @@ export const demoQuizQuestions: Record<string, QuizQuestion[]> = {
 
 for (let i = 3; i <= 21; i++) {
   const quizId = `quiz-${i}`
+  // Skip Chapters 3–7 — already in allQuizQuestions
+  if (i >= 3 && i <= 7) continue
   if (!demoQuizQuestions[quizId]) {
     demoQuizQuestions[quizId] = [
       { id: `qq-${i}-1`, quiz_id: quizId, question: `Demo question 1 for Chapter ${i}`, answer_a: 'Option A', answer_b: 'Option B', answer_c: 'Option C', answer_d: 'Option D', correct_answer: 'a', explanation: `This is a demo question for Chapter ${i}.`, difficulty: 'easy', order_index: 1 },

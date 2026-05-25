@@ -21,20 +21,32 @@
         .chapter-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
         .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; }
         .chapter-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
-        .content { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+        .content { max-width: 900px; margin: 0 auto; padding: 4rem 2rem; }
         .section { margin-bottom: 3rem; }
         .section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
-        .section h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .section h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; color: #ddd; }
+        .section h4 { font-size: 1.1rem; font-weight: 600; margin: 1.25rem 0 0.5rem; color: #bbb; }
         .section p, .section ul { margin-bottom: 1rem; color: #ccc; }
         .section ul { margin-left: 1.5rem; }
         .key-point { background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
         .key-point strong { color: var(--gold); }
+        .warning { background: rgba(239,68,68,0.1); border-left: 4px solid #ef4444; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .warning strong { color: #ef4444; }
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; background: var(--dark-gray); border-radius: 8px; overflow: hidden; }
+        th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--medium-gray); }
+        th { background: var(--medium-gray); color: var(--gold); font-weight: 600; }
+        tr:hover { background: rgba(212,175,55,0.05); }
         .study-tools { position: fixed; bottom: 2rem; right: 2rem; display: flex; gap: 1rem; }
         .tool-btn { background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; }
         .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
         .progress-fill { height: 100%; background: var(--gold); width: 0%; }
         .nav-chapters { display: flex; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--medium-gray); }
         .nav-chapters a { color: var(--gold); text-decoration: none; font-weight: 600; }
+        .lo-badge { display: inline-block; background: rgba(212,175,55,0.2); color: var(--gold); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .procedure { background: var(--dark-gray); border: 1px solid var(--medium-gray); border-radius: 8px; padding: 1.5rem; margin: 1rem 0; }
+        .procedure h4 { color: var(--gold); margin-top: 0; }
+        .procedure ol { margin-left: 1.5rem; color: #ccc; }
+        .procedure li { margin-bottom: 0.5rem; }
 
         .quiz-section { background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
         .quiz-section h2 { color: var(--gold); margin-bottom: 1.5rem; }
@@ -55,97 +67,509 @@
     <header class="chapter-header">
         <span class="chapter-number">CHAPTER 5</span>
         <h1>Implements, Tools & Equipment</h1>
-        <p>Combs, brushes, shears, clippers, razors, and maintenance</p>
+        <p>Master the tools of the trade — combs, brushes, shears, clippers, razors, and maintenance</p>
     </header>
     <main class="content">
+
+        <!-- INTRODUCTION -->
         <section class="section">
-            <h2>🎯 Why Study This Chapter?</h2>
-            <p>Choosing the right tools, maintaining them properly, and using them safely directly affects the quality of your work, client satisfaction, and your own efficiency and safety.</p>
-            <div class="key-point"><strong>Key Point:</strong> Always invest in good-quality implements. Cheap or poorly maintained tools can damage hair, cause client discomfort, and lead to poor results.</div>
-        </section>
-        <section class="section">
-            <h2>🪮 Combs</h2>
-            <p>A good comb should be durable, slightly flexible, and easy to clean and disinfect.</p>
+            <h2>📋 Introduction</h2>
+            <p>The practice of barbering requires a variety of <strong>implements, tools, and equipment</strong>.</p>
             <ul>
-                <li><strong>All-purpose styling comb</strong> — Used for general haircutting and styling; has both wide and fine teeth</li>
-                <li><strong>Tail comb</strong> — Features a long, pointed tail for sectioning and parting long hair</li>
-                <li><strong>Wide-toothed comb</strong> — Ideal for combing through curly or thick hair textures without causing breakage</li>
-                <li><strong>Hard rubber combs</strong> — Durable and slightly flexible; can retain heat but avoid extended contact with strong disinfectants</li>
+                <li>Strive to purchase <strong>high-quality items</strong> that perform effectively and safely</li>
+                <li>Avoid cheap "bargains" — low-quality tools bend, break, or wear out quickly and end up costing more to replace</li>
+                <li>Well-made, properly maintained tools provide <strong>years of dependable service</strong></li>
+                <li>Ask your instructor or experienced barbers for guidance when selecting new items</li>
+            </ul>
+            <div class="key-point"><strong>Why Study Implements, Tools, and Equipment?</strong> Understanding purpose and capabilities helps <strong>select the right tool for the job</strong>. Knowing parts helps follow instructions, comply with infection control, and recognize when repair/replacement is needed. Proper holding and use is <strong>critical for achieving desired results</strong> and protects <strong>you and your clients</strong>.</div>
+        </section>
+
+        <!-- LO1: PRINCIPAL TOOLS -->
+        <section class="section">
+            <span class="lo-badge">LO1</span>
+            <h2>🔧 Principal Tools of the Trade</h2>
+            <ul>
+                <li><strong>Combs</strong></li>
+                <li><strong>Brushes</strong></li>
+                <li><strong>Shears</strong></li>
+                <li><strong>Clippers</strong></li>
+                <li><strong>Outliners (trimmers)</strong></li>
+                <li><strong>Razors</strong></li>
+            </ul>
+            <p><strong>Additional appliances:</strong> Blowdryers, thermal styling tools</p>
+            <p>Choosing the right tool depends on understanding its <strong>functions, characteristics, and safe/effective use</strong>.</p>
+        </section>
+
+        <!-- LO2: COMBS AND BRUSHES -->
+        <section class="section">
+            <span class="lo-badge">LO2</span>
+            <h2>🪮 Combs and Brushes</h2>
+
+            <h3>Comb Basics</h3>
+            <ul>
+                <li>Good combs are <strong>slightly flexible</strong> with smooth, rounded teeth that glide without snagging</li>
+                <li>Most haircutting combs: <strong>7–8 inches long</strong> (straight, tapered, or handled)</li>
+            </ul>
+
+            <h4>Comb Materials</h4>
+            <table>
+                <tr><th>Material</th><th>Characteristics</th></tr>
+                <tr><td><strong>Hard rubber</strong></td><td>Flexible/durable but deteriorates in disinfectant</td></tr>
+                <tr><td><strong>Carbon</strong></td><td>Antistatic, heat/chemical resistant</td></tr>
+                <tr><td><strong>Graphite</strong></td><td>Less rigid</td></tr>
+                <tr><td><strong>Metal</strong></td><td>Retains heat but may corrode</td></tr>
+            </table>
+
+            <h4>Comb Teeth & Styles</h4>
+            <table>
+                <tr><th>Comb Type</th><th>Use</th></tr>
+                <tr><td><strong>Narrow/fine teeth</strong></td><td>Merge strands for precision cutting/detail</td></tr>
+                <tr><td><strong>Wide/coarse teeth</strong></td><td>Detangle, distribute product, handle large amounts of hair</td></tr>
+                <tr><td><strong>Combination combs</strong></td><td>Versatility without switching tools</td></tr>
+                <tr><td><strong>All-purpose/styling combs</strong></td><td>General cutting/styling</td></tr>
+                <tr><td><strong>Taper combs</strong></td><td>Blending, necklines, mustaches, ears</td></tr>
+                <tr><td><strong>Wide-tooth combs</strong></td><td>Detangling curly hair, applying relaxer</td></tr>
+                <tr><td><strong>Tail combs</strong></td><td>Sectioning, partings, wrapping, color</td></tr>
+                <tr><td><strong>Pick combs</strong></td><td>Textured or tightly curled hair</td></tr>
+            </table>
+
+            <h4>Holding the Comb</h4>
+            <ul>
+                <li>Practice proper vs. improper grips for <strong>control and comfort</strong></li>
+                <li>Shear-over-comb technique requires proper comb positioning</li>
+            </ul>
+
+            <h3>Brushes</h3>
+            <p>Styling brushes <strong>control, smooth, wave, add fullness, or stimulate scalp</strong>.</p>
+            <table>
+                <tr><th>Brush Type</th><th>Use</th></tr>
+                <tr><td><strong>Synthetic bristle</strong></td><td>General brushing/detangling</td></tr>
+                <tr><td><strong>Natural (boar)</strong></td><td>Polishes hair, distributes sebum; best for fine/delicate hair</td></tr>
+                <tr><td><strong>Mixed, paddle, round, vented, wet brushes</strong></td><td>Each for specific needs</td></tr>
+            </table>
+        </section>
+
+        <!-- LO3 & LO4: SHEARS -->
+        <section class="section">
+            <span class="lo-badge">LO3 & LO4</span>
+            <h2>✂️ Haircutting Shears</h2>
+            <p>One of the <strong>most important tools</strong> — proper selection and fit are vital.</p>
+
+            <h3>Shear Styles</h3>
+            <ul>
+                <li><strong>French style</strong> — With finger rest/tang (preferred for balance/control)</li>
+                <li><strong>German style</strong> — No tang</li>
+            </ul>
+
+            <h3>Cast vs. Forged Shears</h3>
+            <table>
+                <tr><th>Type</th><th>Characteristics</th></tr>
+                <tr><td><strong>Cast</strong></td><td>Cheaper, more porous/weak, less sharp</td></tr>
+                <tr><td><strong>Forged</strong></td><td>Hammered/compressed; denser, more durable, stays sharp longer, higher quality</td></tr>
+            </table>
+
+            <h3>Basic Parts</h3>
+            <ul>
+                <li>Moving blade + still blade</li>
+                <li>Tension/pivot screw</li>
+                <li>Points</li>
+                <li>Cutting edges</li>
+                <li>Shanks</li>
+                <li>Bumper</li>
+                <li>Finger grip</li>
+                <li>Thumb grip</li>
+                <li>Finger rest/tang</li>
+            </ul>
+
+            <h3>Blade Edges</h3>
+            <table>
+                <tr><th>Edge Type</th><th>Characteristics</th></tr>
+                <tr><td><strong>Convex</strong></td><td>Very sharp, glides easily, clean cuts, less tension, quieter, good for slide cutting; sharpen every 4–6 months</td></tr>
+                <tr><td><strong>Beveled</strong></td><td>Serrated, grips hair, more tension, durable, stays sharp longer (9–12 months); <strong>not for slide cutting</strong></td></tr>
+            </table>
+
+            <h3>Other Features</h3>
+            <ul>
+                <li><strong>Set</strong> — Blade alignment</li>
+                <li><strong>Tension screw</strong> — Adjusts blade pressure</li>
+                <li><strong>Shank</strong> — Connects blade to handle</li>
+                <li><strong>Size</strong> — Most prefer 6½"–7½"</li>
+            </ul>
+
+            <h3>Handle Designs</h3>
+            <table>
+                <tr><th>Design</th><th>Benefit</th></tr>
+                <tr><td><strong>Opposing</strong></td><td>Traditional</td></tr>
+                <tr><td><strong>Offset</strong></td><td>Ergonomic</td></tr>
+                <tr><td><strong>Crane</strong></td><td>Reduces stress on hand/wrist</td></tr>
+            </table>
+
+            <h3>Texturizing, Thinning, and Blending Shears</h3>
+            <table>
+                <tr><th>Type</th><th>Use</th></tr>
+                <tr><td><strong>Texturizing/chunking</strong></td><td>Wider teeth for patterns/texture</td></tr>
+                <tr><td><strong>Thinning/blending</strong></td><td>Many narrow teeth to remove bulk without lines</td></tr>
+            </table>
+        </section>
+
+        <!-- LO5 & LO6: HOLDING SHEARS -->
+        <section class="section">
+            <span class="lo-badge">LO5 & LO6</span>
+            <h2>🤲 Holding Shears and Comb</h2>
+            <p>Proper holding gives <strong>maximum control and prevents strain</strong>.</p>
+            <ul>
+                <li><strong>Ring finger</strong> in finger grip (still blade)</li>
+                <li><strong>Little finger</strong> on brace</li>
+                <li><strong>Thumb</strong> in thumb grip (moving blade) — not past cuticle</li>
+            </ul>
+
+            <h3>Palming Techniques</h3>
+            <ul>
+                <li><strong>Palming the shears</strong> — Pivot into palm while combing</li>
+                <li><strong>Palming the comb</strong> — Transfer after combing to free fingers</li>
+            </ul>
+            <div class="warning"><strong>Note:</strong> Right-handed vs. left-handed shears have <strong>reversed assembly</strong>.</div>
+
+            <h3>Maintaining Shears</h3>
+            <ul>
+                <li>Clean/disinfect after each use</li>
+                <li>Adjust tension daily (25–35% drop test)</li>
+                <li><strong>Never:</strong>
+                    <ul>
+                        <li>Drop them</li>
+                        <li>Cut anything but human hair</li>
+                        <li>Use harsh chemicals</li>
+                    </ul>
+                </li>
+                <li>Protect in transport</li>
             </ul>
         </section>
+
+        <!-- LO7 & LO8: CLIPPERS -->
         <section class="section">
-            <h2>🖌️ Brushes</h2>
+            <span class="lo-badge">LO7 & LO8</span>
+            <h2>🔌 Clippers and Outliners</h2>
+            <p>Essential for <strong>blending, texturizing, finishing, and detail</strong>.</p>
+
+            <h3>Two Main Clipper Types</h3>
+            <table>
+                <tr><th>Type</th><th>Description</th></tr>
+                <tr><td><strong>Detachable-blade</strong></td><td>Blades removed/attached while running</td></tr>
+                <tr><td><strong>Adjustable-blade</strong></td><td>Open/close with lever; guards extend length</td></tr>
+            </table>
+
+            <h3>Parts</h3>
             <ul>
-                <li><strong>Synthetic bristle brush</strong> — Made of flexible or rigid nylon bristles; good for general styling</li>
-                <li><strong>Neck brush</strong> — Used to remove loose hair clippings from the client's neck and shoulders</li>
-                <li><strong>Lather brush</strong> — Used to apply and work up shaving cream or soap lather</li>
+                <li>Still blade</li>
+                <li>Moving blade</li>
+                <li>Heel</li>
+                <li>On/off switch</li>
+                <li>Blade adjustment lever</li>
             </ul>
+
+            <h3>Motor Types</h3>
+            <table>
+                <tr><th>Type</th><th>Characteristics</th></tr>
+                <tr><td><strong>Rotary</strong></td><td>High power/speed, heavy-duty</td></tr>
+                <tr><td><strong>Pivot</strong></td><td>Quieter, good for thick/coarse hair</td></tr>
+                <tr><td><strong>Magnetic</strong></td><td>Reliable for fine textures</td></tr>
+            </table>
+
+            <h3>Outliners/Trimmers</h3>
+            <ul>
+                <li>Fine blades</li>
+                <li><strong>Light pressure</strong> to avoid irritation/ingrown hairs</li>
+                <li>Straight or <strong>T-shaped blade</strong> (T-blade preferred for rounded areas)</li>
+                <li>Essential for precision and facial hair</li>
+            </ul>
+            <div class="key-point"><strong>Cordless Models:</strong> Convenient/portable but may have less power.</div>
         </section>
+
+        <!-- LO9: BLADES AND GUARDS -->
         <section class="section">
-            <h2>✂️ Haircutting Shears (Scissors)</h2>
-            <h3>Parts of Shears:</h3>
+            <span class="lo-badge">LO9</span>
+            <h2>⚙️ Blades and Guards</h2>
+
+            <h3>Blades</h3>
             <ul>
-                <li>Blades (cutting edge)</li>
-                <li>Shank (handle area)</li>
-                <li>Finger grip / thumb grip</li>
-                <li>Finger tang (rest for the little finger to relieve pressure)</li>
-                <li>Tension screw (controls distance and pressure between blades)</li>
+                <li>Materials: <strong>carbon steel</strong> or <strong>ceramic</strong></li>
+                <li>Various sizes (<strong>00000 = closest</strong>)</li>
             </ul>
-            <h3>Styles:</h3>
+
+            <h3>Guards (Attachment Combs)</h3>
             <ul>
-                <li><strong>French style</strong> — Has a finger tang</li>
-                <li><strong>Offset handle</strong> — More ergonomic; shorter thumb shank reduces overextension</li>
+                <li>Materials: plastic/rubber/steel</li>
+                <li>Allow longer lengths than bare blades</li>
+                <li><strong>Supplemental only</strong> — not for infection control</li>
             </ul>
-            <div class="key-point"><strong>Key Point:</strong> Even the finest shears perform poorly if not set correctly or if tension is wrong. Regular sharpening and proper tension adjustment are essential.</div>
+
+            <h3>Holding Clippers/Trimmers</h3>
+            <ul>
+                <li>Technique varies by head section</li>
+                <li>Use <strong>free wrist movement</strong> and <strong>light hand</strong> for outliners</li>
+            </ul>
+            <div class="warning"><strong>Caution:</strong> Never adjust outliner blades flush; follow manufacturer guidelines.</div>
         </section>
+
+        <!-- LO10 & LO11: STRAIGHT RAZORS -->
         <section class="section">
-            <h2>🔌 Clippers and Trimmers</h2>
-            <h3>Types:</h3>
-            <ul>
-                <li><strong>Adjustable-blade clippers</strong> — Blades attached with screws; blade size can be changed</li>
-                <li><strong>Detachable-blade clippers</strong> — Blades snap on and off; different sizes for different lengths</li>
-                <li><strong>Outliners / trimmers</strong> — Smaller, precise tools for outlining, detailing, and cleaning necklines</li>
-            </ul>
-            <h3>Parts of Clippers:</h3>
-            <ul><li>Blades, motor, housing, cord or battery, switch</li></ul>
-            <div class="key-point"><strong>Key Point:</strong> Clippers cut shorter when used against the grain. Always use the appropriate guard or blade size and keep blades oiled and clean.</div>
-        </section>
-        <section class="section">
+            <span class="lo-badge">LO10 & LO11</span>
             <h2>🪒 Straight Razors</h2>
-            <h3>Types:</h3>
+            <p><strong>Sharpest tool</strong> for facial/head/neck shaves and finish work.</p>
+
+            <h3>Two Types</h3>
+            <table>
+                <tr><th>Type</th><th>Description</th></tr>
+                <tr><td><strong>Changeable-blade (disposable blade)</strong></td><td>Preferred in shops for infection control and convenience</td></tr>
+                <tr><td><strong>Conventional</strong></td><td>Requires honing and stropping</td></tr>
+            </table>
+
+            <h3>Parts</h3>
             <ul>
-                <li><strong>Conventional straight razor</strong> — Requires honing and stropping</li>
-                <li><strong>Changeable-blade razor</strong> — Uses disposable blades; safer for beginners</li>
+                <li>Head, back, shoulder, tang, handle, point, edge, blade, heel, shank, pivot</li>
             </ul>
-            <h3>Parts:</h3>
+
+            <h3>Razor Shapers/Hair Razors</h3>
             <ul>
-                <li>Blade (grind determines shape; width measured in eighths or sixteenths of an inch)</li>
-                <li>Handle</li>
-                <li>Tang (part that extends into the handle)</li>
-                <li>Shank</li>
-                <li>Pivot</li>
+                <li>Lightweight for <strong>texturizing</strong></li>
             </ul>
-            <h3>Honing and Stropping:</h3>
-            <ul>
-                <li><strong>Hone</strong> — Abrasive stone that grinds and sharpens the edge; must be perfectly flat</li>
-                <li><strong>Strop</strong> — Leather or canvas strip used to align and polish the edge after honing</li>
-            </ul>
-            <div class="key-point"><strong>Safety Note:</strong> Use a safety guard for beginners. Always keep the razor closed when not in use.</div>
         </section>
+
+        <!-- LO12-15: HOLDING RAZORS -->
         <section class="section">
-            <h2>📝 Chapter 5 Key Takeaways</h2>
-            <div class="key-point">
-                <ul style="margin-left: 1rem;">
-                    <li>Principal tools: <strong>combs, brushes, shears, clippers/outliners, and razors</strong></li>
-                    <li>Combs and brushes must be chosen for the <strong>hair texture and service</strong>; disinfect properly</li>
-                    <li>Shears require <strong>correct tension, grip, and maintenance</strong> for smooth cutting</li>
-                    <li>Clippers are versatile; <strong>guards control length</strong>; use with or against the grain as needed</li>
-                    <li>Straight razors demand <strong>quality, proper honing/stropping, and safe handling</strong></li>
-                    <li><strong>Safety and sanitation are non-negotiable</strong> — clean, disinfect, and store tools correctly after every use</li>
-                    <li>Always match the <strong>tool to the job</strong> for best results and client comfort</li>
-                </ul>
+            <span class="lo-badge">LO12–LO15</span>
+            <h2>🤲 Holding a Straight Razor</h2>
+            <p>Holding varies by service:</p>
+            <table>
+                <tr><th>Service</th><th>Grip</th></tr>
+                <tr><td><strong>Shaving</strong></td><td>Ball of thumb + first two fingers on shank; little finger on tang</td></tr>
+                <tr><td><strong>Honing/stropping</strong></td><td>Flat sides of shank</td></tr>
+                <tr><td><strong>Haircutting</strong></td><td>Thumb at bottom or handle straightened</td></tr>
+                <tr><td><strong>Palming with comb</strong></td><td>Blade away from comb</td></tr>
+            </table>
+            <div class="warning"><strong>State Regulatory Alert:</strong> Some boards prohibit conventional straight razors — <strong>check local rules</strong>.</div>
+        </section>
+
+        <!-- CONVENTIONAL STRAIGHT RAZORS -->
+        <section class="section">
+            <h2>🔨 Conventional Straight Razors</h2>
+            <p>Requires <strong>honing and stropping</strong>.</p>
+
+            <h3>Quality Factors</h3>
+            <ul>
+                <li>Balance</li>
+                <li>Temper</li>
+                <li>Grind</li>
+                <li>Finish</li>
+                <li>Size</li>
+                <li>Style</li>
+            </ul>
+
+            <h3>Grinds</h3>
+            <table>
+                <tr><th>Grind</th><th>Description</th></tr>
+                <tr><td><strong>Concave (hollow-ground)</strong></td><td>Preferred for sharpening and detecting resistance</td></tr>
+                <tr><td><strong>Wedge</strong></td><td>Sharp angle; excellent for coarse beards but challenging</td></tr>
+            </table>
+
+            <h3>Finish, Size, Style, Care</h3>
+            <ul>
+                <li><strong>Crocus finish</strong> is premium</li>
+                <li>Common sizes: ⅝", ⅞", etc.</li>
+                <li><strong>Care:</strong> Clean, strop, oil edge; avoid dropping</li>
+            </ul>
+
+            <h3>Accessories for Conventional Straight Razors</h3>
+            <table>
+                <tr><th>Tool</th><th>Purpose</th></tr>
+                <tr><td><strong>Hone</strong></td><td>Grinds sharp edge (natural, synthetic, combination)</td></tr>
+                <tr><td><strong>Strop</strong></td><td>Smooths/polishes (combination, canvas, Russian, shell)</td></tr>
+            </table>
+
+            <div class="procedure">
+                <h4>Procedure 5-1: Honing</h4>
+                <ol>
+                    <li>Detailed steps with even pressure</li>
+                    <li>Diagonal strokes</li>
+                    <li>Equal sides</li>
+                    <li>Gradual lightening</li>
+                    <li>Test on moistened thumbnail</li>
+                </ol>
+            </div>
+
+            <div class="procedure">
+                <h4>Procedure 5-2: Stropping</h4>
+                <ol>
+                    <li>Attach to chair</li>
+                    <li>Reverse direction from honing</li>
+                    <li>Roll on back</li>
+                    <li>Even diagonal strokes</li>
+                    <li>Test on thumb</li>
+                </ol>
             </div>
         </section>
+
+        <!-- LO16: EQUIPMENT -->
+        <section class="section">
+            <span class="lo-badge">LO16</span>
+            <h2>🏪 Equipment and Supplies</h2>
+
+            <h3>Barber Chair</h3>
+            <ul>
+                <li>Hydraulic/motorized</li>
+                <li>Reclining</li>
+                <li>Stable base with headrest, footrest, etc.</li>
+            </ul>
+
+            <h3>Drapes/Capes</h3>
+            <table>
+                <tr><th>Type</th><th>Material</th></tr>
+                <tr><td><strong>Shampoo capes</strong></td><td>Waterproof vinyl</td></tr>
+                <tr><td><strong>Haircutting capes</strong></td><td>Nylon/synthetic, more comfortable</td></tr>
+            </table>
+
+            <h3>Towels & Linens</h3>
+            <ul>
+                <li><strong>Cotton terry:</strong> Absorbent, holds heat</li>
+                <li><strong>Disposable paper (12"×24"):</strong> Neck barrier, wiping, sanitary surfaces</li>
+                <li><strong>Towel-wrap hand</strong> for face work</li>
+            </ul>
+
+            <h3>Neck Strips</h3>
+            <ul>
+                <li>Barrier between cape and skin</li>
+            </ul>
+
+            <h3>Hot Towel Cabinet</h3>
+            <ul>
+                <li>Warm towels for facials/shaves</li>
+            </ul>
+
+            <h3>Latherizers</h3>
+            <ul>
+                <li>Electric or press-button</li>
+                <li>Lather mugs and brushes (#3 size preferred)</li>
+            </ul>
+
+            <h3>Blowdryers</h3>
+            <ul>
+                <li>Nozzle, controls, attachments</li>
+                <li><strong>Safety precautions:</strong>
+                    <ul>
+                        <li>Use protective agent</li>
+                        <li>Keep moving</li>
+                        <li>Avoid water</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>Electric Massager</h3>
+            <ul>
+                <li>Vibrator for facial/scalp/shoulder massage</li>
+            </ul>
+
+            <h3>Thermal Styling Tools</h3>
+            <ul>
+                <li>Thermal irons (curling/flat/Marcel)</li>
+                <li>Pressing combs</li>
+                <li>Electric stove</li>
+                <li><strong>Test temperature on tissue</strong></li>
+                <li><strong>Never use metal comb on scalp</strong></li>
+            </ul>
+
+            <h3>Electrotherapy/Light Therapy</h3>
+            <table>
+                <tr><th>Type</th><th>Use</th></tr>
+                <tr><td><strong>High-frequency</strong></td><td>Stimulates blood flow/product absorption</td></tr>
+                <tr><td><strong>Galvanic</strong></td><td>Introduces water-soluble products</td></tr>
+            </table>
+            <div class="key-point"><strong>Training recommended.</strong></div>
+
+            <h3>Other Accessories</h3>
+            <ul>
+                <li>Comedone extractor</li>
+                <li>Tweezers (<strong>check state rules</strong>)</li>
+            </ul>
+        </section>
+
+        <!-- LO17 & LO18: REMOVING CLIPPINGS -->
+        <section class="section">
+            <span class="lo-badge">LO17 & LO18</span>
+            <h2>🧹 Removing Hair Clippings</h2>
+            <p><strong>Modern safe methods</strong> (no traditional neck duster unless disinfected):</p>
+            <ul>
+                <li>Towel folded around hand</li>
+                <li>Paper neck strips</li>
+                <li>Vacuum systems (clean/disinfect)</li>
+            </ul>
+
+            <div class="procedure">
+                <h4>Procedure 5-3: Towel Wrapping</h4>
+                <ol>
+                    <li>Detailed cloth and paper towel wraps for hand protection during services</li>
+                </ol>
+            </div>
+
+            <div class="procedure">
+                <h4>Procedure 5-4: Thermal Iron Manipulation</h4>
+                <ol>
+                    <li>Step-by-step for safe curling/styling with electric curling iron</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- KEY POINTS -->
+        <section class="section">
+            <h2>🔑 Key Points to Remember</h2>
+            <div class="key-point">
+                <ol>
+                    <li><strong>Avoid cheap tools</strong> — they cost more to replace than quality tools</li>
+                    <li><strong>Principal tools:</strong> Combs, brushes, shears, clippers, outliners, razors</li>
+                    <li><strong>Comb materials:</strong> Hard rubber, carbon, graphite, metal</li>
+                    <li><strong>Forged shears</strong> are higher quality than cast shears</li>
+                    <li><strong>Convex edges</strong> are sharper but need more frequent sharpening; <strong>beveled edges</strong> last longer but can't slide cut</li>
+                    <li><strong>Three handle designs:</strong> Opposing, Offset, Crane</li>
+                    <li><strong>Two clipper types:</strong> Detachable-blade and Adjustable-blade</li>
+                    <li><strong>Three motor types:</strong> Rotary, Pivot, Magnetic</li>
+                    <li><strong>00000 blade</strong> = closest cut</li>
+                    <li><strong>Changeable-blade razors</strong> preferred for infection control; <strong>conventional razors</strong> require honing/stropping</li>
+                    <li><strong>Some states prohibit conventional straight razors</strong> — check local rules</li>
+                    <li><strong>Modern clipper removal methods:</strong> Towel, neck strips, vacuum (no traditional neck duster)</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- PRACTICE QUESTIONS -->
+        <section class="section">
+            <h2>📝 Practice Questions</h2>
+            <div class="key-point">
+                <p><strong>1. What is the difference between cast and forged shears?</strong><br>
+                → Cast: cheaper, porous, less sharp; Forged: denser, more durable, stays sharp longer</p>
+
+                <p><strong>2. What are the two main types of clipper blades?</strong><br>
+                → Detachable-blade and Adjustable-blade</p>
+
+                <p><strong>3. What are the three motor types in clippers?</strong><br>
+                → Rotary, Pivot, Magnetic</p>
+
+                <p><strong>4. Which blade edge is better for slide cutting?</strong><br>
+                → Convex edge</p>
+
+                <p><strong>5. Why are changeable-blade razors preferred in shops?</strong><br>
+                → Better infection control and convenience</p>
+
+                <p><strong>6. What is the purpose of a strop?</strong><br>
+                → Smooths and polishes the razor edge after honing</p>
+
+                <p><strong>7. What are modern safe methods for removing hair clippings?</strong><br>
+                → Towel, paper neck strips, vacuum systems</p>
+
+                <p><strong>8. What size shear do most barbers prefer?</strong><br>
+                → 6½"–7½"</p>
+            </div>
+        </section>
+
+        <!-- QUIZ -->
         <section class="quiz-section">
             <h2>📝 Mini Review Quiz</h2>
             <div class="quiz-question">
@@ -175,6 +599,24 @@
                     <label><input type="radio" name="q3" value="d"> Guard</label>
                 </div>
             </div>
+            <div class="quiz-question">
+                <p>4. Which shear edge is NOT suitable for slide cutting?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q4" value="a"> Convex</label>
+                    <label><input type="radio" name="q4" value="b"> Beveled</label>
+                    <label><input type="radio" name="q4" value="c"> Forged</label>
+                    <label><input type="radio" name="q4" value="d"> Both A and B</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>5. What does a 00000 blade represent?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q5" value="a"> Longest cut</label>
+                    <label><input type="radio" name="q5" value="b"> Closest cut</label>
+                    <label><input type="radio" name="q5" value="c"> Medium length</label>
+                    <label><input type="radio" name="q5" value="d"> Guard size</label>
+                </div>
+            </div>
             <button class="quiz-submit" onclick="checkQuiz()">Check Answers</button>
             <div class="quiz-result" id="quiz-result"></div>
         </section>
@@ -182,14 +624,14 @@
         <div class="nav-chapters"><a href="chapter-04.html">← Chapter 4</a><a href="chapter-06.html">Chapter 6 →</a></div>
     </main>
     <div class="study-tools">
-        <button class="tool-btn" onclick="openQuiz()">🎴 Flashcards</button>
-        <button class="tool-btn" onclick="openQuiz()">❓ Quiz</button>
+        <button class="tool-btn" onclick="openFlashcards()">🎴 Flashcards</button>
+        <button class="tool-btn" onclick="openQuizFull()">❓ Full Quiz</button>
     </div>
     <script>
         function checkQuiz() {
-            const answers = { q1: 'b', q2: 'b', q3: 'b' };
+            const answers = { q1: 'b', q2: 'b', q3: 'b', q4: 'b', q5: 'b' };
             let score = 0;
-            let total = 3;
+            let total = 5;
             for (let q in answers) {
                 const selected = document.querySelector(`input[name="${q}"]:checked`);
                 if (selected && selected.value === answers[q]) score++;
@@ -205,7 +647,11 @@
             }
         }
 
-        function openQuiz() {
+        function openFlashcards() {
+            window.location.href = 'chapter-05-flashcards.html';
+        }
+
+        function openQuizFull() {
             window.location.href = 'chapter-05-quiz.html';
         }
 
@@ -242,18 +688,13 @@
                 return;
             }
 
-            // Get all text content from the main content area
             const content = document.querySelector('main.content');
             if (!content) return;
 
-            // Extract readable text, excluding quiz sections and navigation
             let textToRead = '';
             const sections = content.querySelectorAll('.section');
             sections.forEach(section => {
-                // Skip quiz sections
                 if (section.classList.contains('quiz-section')) return;
-                
-                // Get text content
                 const text = section.innerText || section.textContent;
                 textToRead += text + ' ';
             });
@@ -280,7 +721,6 @@
             }
         }
 
-        // Stop TTS when leaving the page
         window.addEventListener('beforeunload', stopTTS);
     </script>
 </body>

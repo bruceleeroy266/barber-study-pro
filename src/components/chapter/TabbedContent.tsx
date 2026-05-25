@@ -19,7 +19,7 @@ export default function TabbedContent({ tabs, theme }: TabbedContentProps) {
   return (
     <div>
       {/* Tab buttons */}
-      <div className="flex flex-wrap gap-2 mb-6">
+      <div className="flex flex-nowrap gap-2 mb-6 overflow-x-auto pb-2 -mx-2 px-2 scrollbar-thin">
         {tabs.map((tab) => (
           <button
             key={tab.id}

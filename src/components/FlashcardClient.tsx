@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Flashcard } from '@/types'
 
@@ -11,11 +11,48 @@ interface FlashcardClientProps {
   isCompleted: boolean
 }
 
+function getStorageKey(chapterId: string) {
+  return `flashcard-index-${chapterId}`
+}
+
 export default function FlashcardClient({ flashcards, chapterId, userId, isCompleted }: FlashcardClientProps) {
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(() => {
+    if (typeof window === 'undefined') return 0
+    const saved = localStorage.getItem(getStorageKey(chapterId))
+    const parsed = saved ? parseInt(saved, 10) : 0
+    return Math.min(Math.max(parsed, 0), flashcards.length - 1)
+  })
   const [isFlipped, setIsFlipped] = useState(false)
   const [completed, setCompleted] = useState(isCompleted)
   const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    localStorage.setItem(getStorageKey(chapterId), String(currentIndex))
+  }, [currentIndex, chapterId])
+
+  // Keyboard shortcuts: Space to flip, Arrow keys to navigate
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault()
+        setIsFlipped((prev) => !prev)
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault()
+        if (currentIndex < flashcards.length - 1) {
+          setIsFlipped(false)
+          setCurrentIndex((prev) => prev + 1)
+        }
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault()
+        if (currentIndex > 0) {
+          setIsFlipped(false)
+          setCurrentIndex((prev) => prev - 1)
+        }
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [currentIndex, flashcards.length])
 
   const currentCard = flashcards[currentIndex]
   const progress = ((currentIndex + 1) / flashcards.length) * 100

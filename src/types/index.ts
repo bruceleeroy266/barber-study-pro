@@ -2,8 +2,10 @@ export interface Profile {
   id: string
   email: string
   full_name: string
-  role: 'student' | 'instructor' | 'admin'
+  role: 'student' | 'instructor' | 'apprentice' | 'admin'
   school_id: string | null
+  barber_shop_name: string | null
+  mentor_name: string | null
   avatar_url: string | null
   created_at: string
   updated_at: string

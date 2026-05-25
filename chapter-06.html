@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chapter 6: Anatomy & Physiology | Barber Study Pro</title>
+    <title>Chapter 6: General Anatomy & Physiology | Barber Study Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
@@ -21,43 +21,30 @@
         .chapter-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
         .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; }
         .chapter-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
-        .content { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+        .content { max-width: 900px; margin: 0 auto; padding: 4rem 2rem; }
         .section { margin-bottom: 3rem; }
         .section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
-        .section h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .section h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; color: #ddd; }
+        .section h4 { font-size: 1.1rem; font-weight: 600; margin: 1.25rem 0 0.5rem; color: #bbb; }
         .section p, .section ul { margin-bottom: 1rem; color: #ccc; }
         .section ul { margin-left: 1.5rem; }
         .key-point { background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
         .key-point strong { color: var(--gold); }
-        .term { background: var(--medium-gray); padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 8px; }
-        .term strong { color: var(--gold); display: block; margin-bottom: 0.25rem; }
-        table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; background: var(--dark-gray); border-radius: 8px; overflow: hidden; }
         th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--medium-gray); }
-        th { background: var(--medium-gray); font-weight: 600; color: var(--gold); }
+        th { background: var(--medium-gray); color: var(--gold); font-weight: 600; }
+        tr:hover { background: rgba(212,175,55,0.05); }
         .study-tools { position: fixed; bottom: 2rem; right: 2rem; display: flex; gap: 1rem; }
         .tool-btn { background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; }
         .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
         .progress-fill { height: 100%; background: var(--gold); width: 0%; }
         .nav-chapters { display: flex; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--medium-gray); }
         .nav-chapters a { color: var(--gold); text-decoration: none; font-weight: 600; }
-        .image-container { margin: 2rem 0; text-align: center; }
-        .image-container img { max-width: 100%; height: auto; border-radius: 8px; border: 2px solid var(--gold); }
-        .image-caption { color: var(--light-gray); font-size: 0.9rem; margin-top: 0.5rem; font-style: italic; }
-        .image-placeholder { background: var(--medium-gray); border: 2px dashed var(--gold); border-radius: 8px; padding: 2rem; text-align: center; margin: 2rem 0; }
-        .image-placeholder a { color: var(--gold); text-decoration: none; }
-        .image-placeholder a:hover { text-decoration: underline; }
-
-        .quiz-section { background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
-        .quiz-section h2 { color: var(--gold); margin-bottom: 1.5rem; }
-        .quiz-question { margin-bottom: 1.5rem; }
-        .quiz-question p { font-weight: 600; margin-bottom: 0.75rem; color: var(--white); }
-        .quiz-options label { display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer; transition: all 0.3s; }
-        .quiz-options label:hover { background: rgba(212, 175, 55, 0.1); }
-        .quiz-options input[type="radio"] { margin-right: 0.75rem; }
-        .quiz-submit { background: var(--gold); color: var(--dark); border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
-        .quiz-result { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: none; }
-        .quiz-result.correct { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; }
-        .quiz-result.incorrect { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+        .lo-badge { display: inline-block; background: rgba(212,175,55,0.2); color: var(--gold); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .stat-box { background: var(--dark-gray); border: 1px solid var(--medium-gray); border-radius: 8px; padding: 1rem; margin: 0.5rem; text-align: center; }
+        .stat-box .number { font-size: 2rem; font-weight: 800; color: var(--gold); }
+        .stat-box .label { font-size: 0.85rem; color: var(--light-gray); }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
     </style>
 </head>
 <body>
@@ -65,51 +52,27 @@
     <nav><div class="nav-container"><a href="index.html" class="logo">⚡ Barber Study Pro</a><div class="nav-actions"><button class="tts-btn" onclick="toggleTTS()" id="tts-btn">🔊 Read Aloud</button><a href="index.html#chapters" class="back-link">← Back</a></div></div></nav>
     <header class="chapter-header">
         <span class="chapter-number">CHAPTER 6</span>
-        <h1>Anatomy & Physiology</h1>
-        <p>Cells, tissues, body systems, and structures relevant to barbering</p>
+        <h1>General Anatomy & Physiology</h1>
+        <p>Cells, tissues, organs, and the 11 body systems relevant to barbering</p>
     </header>
     <main class="content">
-        
-        <!-- Visual Learning Resources -->
-        <section class="section" style="background: rgba(212,175,55,0.05); border: 1px solid var(--gold); border-radius: 12px; padding: 2rem;">
-            <h2>📚 Visual Learning Resources</h2>
-            <p>Enhance your understanding with these free visual resources:</p>
-            
-            <div class="image-placeholder">
-                <p><strong>🦴 Human Skeleton Diagram</strong></p>
-                <p>View: <a href="https://unsplash.com/s/photos/human-skeleton-anatomy" target="_blank">Free Skeleton Images on Unsplash</a></p>
-                <p>Search: "human skeleton anatomy diagram" on <a href="https://pixabay.com/images/search/human%20skeleton/" target="_blank">Pixabay</a></p>
-            </div>
-            
-            <div class="image-placeholder">
-                <p><strong>🧠 Cranial Nerves Diagram</strong></p>
-                <p>View: <a href="https://commons.wikimedia.org/wiki/File:Brain_human_normal_inferior_view_with_labels_en.svg" target="_blank">Wikimedia Commons - Brain Anatomy</a></p>
-                <p>Educational resource: <a href="https://www.visiblebody.com/learn/nervous/cranial-nerves" target="_blank">Visible Body - Cranial Nerves</a></p>
-            </div>
-            
-            <div class="image-placeholder">
-                <p><strong>💪 Facial Muscles Chart</strong></p>
-                <p>View: <a href="https://unsplash.com/s/photos/facial-muscles" target="_blank">Facial Muscles on Unsplash</a></p>
-                <p>Search: "facial muscles anatomy" on <a href="https://www.pexels.com/search/anatomy/" target="_blank">Pexels</a></p>
-            </div>
-            
-            <div class="key-point">
-                <strong>💡 Tip:</strong> Save these images to your <code>images/chapter-06/</code> folder to view them offline while studying!
-            </div>
-        </section>
 
+        <!-- INTRODUCTION -->
         <section class="section">
-            <h2>🎯 Why Study Anatomy & Physiology?</h2>
+            <h2>📋 Introduction</h2>
+            <p>Understanding anatomy and physiology is essential for barbers to:</p>
             <ul>
-                <li>Perform services safely and effectively</li>
+                <li>Perform services <strong>safely and effectively</strong></li>
                 <li>Recognize normal versus abnormal conditions</li>
                 <li>Avoid causing injury or discomfort to clients</li>
                 <li>Make informed decisions about when to refer a client to a physician</li>
             </ul>
-            <div class="key-point"><strong>Key Point:</strong> Anatomy tells you "what" the body is made of; physiology tells you "how" it works. Together, they form the foundation for safe, professional barbering.</div>
+            <div class="key-point"><strong>Anatomy</strong> = the study of body structure (what it's made of)<br><strong>Physiology</strong> = the study of body function (how it works)</div>
         </section>
+
+        <!-- CELLS -->
         <section class="section">
-            <h2>🔬 Cells – Basic Unit of Life</h2>
+            <h2>🔬 Cells — The Basic Unit of Life</h2>
             <p>All living organisms are composed of cells. A typical cell contains:</p>
             <ul>
                 <li><strong>Protoplasm</strong> — Colorless, jelly-like substance containing proteins, fats, carbohydrates, mineral salts, and water</li>
@@ -119,106 +82,443 @@
             </ul>
             <p>Cells reproduce by <strong>mitosis</strong> (cell division), allowing tissues to grow and repair.</p>
         </section>
+
+        <!-- TISSUES -->
         <section class="section">
-            <h2>🧬 Tissues – Groups of Similar Cells</h2>
+            <h2>🧬 Tissues — Groups of Similar Cells</h2>
             <table>
                 <tr><th>Type</th><th>Function</th><th>Examples</th></tr>
-                <tr><td>Epithelial</td><td>Protective covering</td><td>Skin, mucous membranes, glands</td></tr>
-                <tr><td>Connective</td><td>Supports, protects, binds</td><td>Bone, cartilage, fat, blood</td></tr>
-                <tr><td>Muscular</td><td>Contracts and moves</td><td>Skeletal, smooth, cardiac muscle</td></tr>
-                <tr><td>Nervous</td><td>Carries messages</td><td>Neurons, brain, spinal cord</td></tr>
+                <tr><td><strong>Epithelial</strong></td><td>Protective covering</td><td>Skin, mucous membranes, glands</td></tr>
+                <tr><td><strong>Connective</strong></td><td>Supports, protects, binds</td><td>Bone, cartilage, fat, blood</td></tr>
+                <tr><td><strong>Muscular</strong></td><td>Contracts and moves</td><td>Skeletal, smooth, cardiac muscle</td></tr>
+                <tr><td><strong>Nervous</strong></td><td>Carries messages</td><td>Neurons, brain, spinal cord</td></tr>
             </table>
             <div class="key-point">In barbering, you work most directly with <strong>epithelial tissue</strong> (skin and hair) and <strong>muscular tissue</strong> (facial and neck muscles during massage and shaving).</div>
         </section>
+
+        <!-- BODY SYSTEMS OVERVIEW -->
         <section class="section">
-            <h2>🏗️ Body Systems Relevant to Barbering</h2>
-            <h3>Skeletal System</h3>
+            <h2>🏗️ The 11 Body Systems</h2>
+            <div class="stats-grid">
+                <div class="stat-box"><div class="number">206</div><div class="label">Bones in Adult Skeleton</div></div>
+                <div class="stat-box"><div class="number">600+</div><div class="label">Muscles in Body</div></div>
+                <div class="stat-box"><div class="number">11</div><div class="label">Body Systems</div></div>
+                <div class="stat-box"><div class="number">30-40K</div><div class="label">Skin Cells Shed/Minute</div></div>
+            </div>
+
+            <h3>Systems Relevant to Barbering:</h3>
+            <table>
+                <tr><th>System</th><th>Primary Function</th><th>Barbering Relevance</th></tr>
+                <tr><td><strong>Skeletal</strong></td><td>Support, protection, shape</td><td>Skull shape, facial bones, jaw</td></tr>
+                <tr><td><strong>Muscular</strong></td><td>Movement</td><td>Facial massage, shaving technique</td></tr>
+                <tr><td><strong>Nervous</strong></td><td>Control and coordination</td><td>Cranial nerves, sensation</td></tr>
+                <tr><td><strong>Circulatory</strong></td><td>Transport blood, oxygen, nutrients</td><td>Scalp blood flow, facial arteries</td></tr>
+                <tr><td><strong>Lymphatic/Immune</strong></td><td>Drainage, immunity</td><td>Facial lymph nodes</td></tr>
+                <tr><td><strong>Integumentary</strong></td><td>Protection, temperature regulation</td><td>Skin, hair, nails, glands</td></tr>
+                <tr><td><strong>Endocrine</strong></td><td>Hormone regulation</td><td>Hair growth, skin condition</td></tr>
+                <tr><td><strong>Respiratory</strong></td><td>Gas exchange</td><td>Client breathing during services</td></tr>
+                <tr><td><strong>Digestive</strong></td><td>Nutrient absorption</td><td>Indirect — affects hair/skin health</td></tr>
+                <tr><td><strong>Excretory</strong></td><td>Waste removal</td><td>Sweat glands</td></tr>
+                <tr><td><strong>Reproductive</strong></td><td>Offspring, hormones</td><td>Sex hormones affect skin/hair</td></tr>
+            </table>
+        </section>
+
+        <!-- SKELETAL SYSTEM -->
+        <section class="section">
+            <h2>🦴 Skeletal System</h2>
+            <p>The skeletal system provides:</p>
             <ul>
-                <li>Provides framework, support, and protection</li>
-                <li>Key areas: skull (cranium and facial bones), cervical vertebrae (neck), mandible (lower jaw)</li>
+                <li><strong>Shape and support</strong> for the body</li>
+                <li><strong>Protection</strong> for internal organs</li>
+                <li><strong>Attachment points</strong> for muscles</li>
+                <li>Storage for minerals (calcium, phosphorus)</li>
+                <li>Blood cell production in bone marrow</li>
             </ul>
-            <h3>Muscular System</h3>
+            <h3>Key Bones for Barbers:</h3>
+            <table>
+                <tr><th>Bone</th><th>Location</th><th>Relevance</th></tr>
+                <tr><td><strong>Cranium</strong></td><td>Skull (top and back)</td><td>Protects brain; shapes head</td></tr>
+                <tr><td><strong>Frontal bone</strong></td><td>Forehead</td><td>Facial structure</td></tr>
+                <tr><td><strong>Parietal bones</strong></td><td>Sides of cranium</td><td>Head shape</td></tr>
+                <tr><td><strong>Temporal bones</strong></td><td>Sides of head (temples)</td><td>Hearing, jaw movement</td></tr>
+                <tr><td><strong>Occipital bone</strong></td><td>Back of skull</td><td>Lower neckline area</td></tr>
+                <tr><td><strong>Mandible</strong></td><td>Lower jaw</td><td>Beard line, shaving</td></tr>
+                <tr><td><strong>Maxilla</strong></td><td>Upper jaw</td><td>Mustache area</td></tr>
+                <tr><td><strong>Zygomatic bones</strong></td><td>Cheekbones</td><td>Facial structure</td></tr>
+                <tr><td><strong>Nasal bones</strong></td><td>Bridge of nose</td><td>Facial contour</td></tr>
+                <tr><td><strong>Cervical vertebrae</strong></td><td>Neck (7 bones)</td><td>Neck massage, shaving</td></tr>
+            </table>
+        </section>
+
+        <!-- MUSCULAR SYSTEM -->
+        <section class="section">
+            <h2>💪 Muscular System</h2>
+            <p>Muscles produce movement by contracting and relaxing. Three types:</p>
+            <table>
+                <tr><th>Type</th><th>Control</th><th>Location</th><th>Examples</th></tr>
+                <tr><td><strong>Striated (Skeletal)</strong></td><td>Voluntary</td><td>Attached to bones</td><td>Facial muscles, arm muscles</td></tr>
+                <tr><td><strong>Smooth (Visceral)</strong></td><td>Involuntary</td><td>Internal organs</td><td>Digestive tract, blood vessels</td></tr>
+                <tr><td><strong>Cardiac</strong></td><td>Involuntary</td><td>Heart only</td><td>Heart muscle</td></tr>
+            </table>
+
+            <h3>Key Facial and Neck Muscles for Barbers:</h3>
+            <table>
+                <tr><th>Muscle</th><th>Location</th><th>Function</th><th>Barbering Relevance</th></tr>
+                <tr><td><strong>Frontalis</strong></td><td>Forehead</td><td>Raises eyebrows, wrinkles forehead</td><td>Facial massage</td></tr>
+                <tr><td><strong>Occipitalis</strong></td><td>Back of scalp</td><td>Pulls scalp backward</td><td>Scalp massage</td></tr>
+                <tr><td><strong>Orbicularis oculi</strong></td><td>Around eyes</td><td>Closes eyelids</td><td>Facial services</td></tr>
+                <tr><td><strong>Orbicularis oris</strong></td><td>Around mouth</td><td>Closes lips, puckering</td><td>Mustache area</td></tr>
+                <tr><td><strong>Masseter</strong></td><td>Jaw (cheek area)</td><td>Closes jaw, chewing</td><td>Beard shaping, massage</td></tr>
+                <tr><td><strong>Platysma</strong></td><td>Front of neck</td><td>Pulls lower lip down, tenses neck</td><td>Neck shaving</td></tr>
+                <tr><td><strong>Sternocleidomastoid</strong></td><td>Side of neck</td><td>Turns and tilts head</td><td>Neck massage, shaving</td></tr>
+                <tr><td><strong>Temporalis</strong></td><td>Temple area</td><td>Closes jaw, retracts mandible</td><td>Sideburn area</td></tr>
+            </table>
+        </section>
+
+        <!-- NERVOUS SYSTEM -->
+        <section class="section">
+            <h2>🧠 Nervous System</h2>
+            <p>The nervous system controls and coordinates all body functions. Divided into:</p>
             <ul>
-                <li>Produces movement</li>
-                <li>Key muscles: frontalis, occipitalis, orbicularis oculi, masseter, platysma, sternocleidomastoid</li>
+                <li><strong>Central Nervous System (CNS)</strong> — Brain and spinal cord</li>
+                <li><strong>Peripheral Nervous System (PNS)</strong> — Nerves connecting CNS to rest of body</li>
             </ul>
-            <h3>Nervous System</h3>
+
+            <h3>Cranial Nerves (Most Relevant for Barbers)</h3>
+            <p>There are 12 pairs of cranial nerves. The most relevant for barbering:</p>
+            <table>
+                <tr><th>Nerve</th><th>Roman Numeral</th><th>Function</th><th>Barbering Relevance</th></tr>
+                <tr><td><strong>Trigeminal</strong></td><td>V</td><td>Sensation to face, scalp, teeth; chewing muscles</td><td>Facial sensation, shaving</td></tr>
+                <tr><td><strong>Facial</strong></td><td>VII</td><td>Controls facial expressions, taste (front tongue)</td><td>Facial massage, shaving comfort</td></tr>
+            </table>
+            <div class="key-point"><strong>Important:</strong> The trigeminal nerve (V) is the largest cranial nerve and provides sensation to most of the face and scalp. Understanding its pathways helps avoid causing discomfort during services.</div>
+        </section>
+
+        <!-- CIRCULATORY SYSTEM -->
+        <section class="section">
+            <h2>❤️ Circulatory System</h2>
+            <p>The circulatory system transports blood, oxygen, nutrients, and waste throughout the body.</p>
             <ul>
-                <li>Controls and coordinates body activities</li>
-                <li>Cranial nerves V (trigeminal) and VII (facial) supply sensation and motor function to face and scalp</li>
+                <li><strong>Heart</strong> — Pumps blood through the system</li>
+                <li><strong>Arteries</strong> — Carry blood <em>away</em> from the heart</li>
+                <li><strong>Capillaries</strong> — Tiny vessels where exchange occurs</li>
+                <li><strong>Veins</strong> — Carry blood <em>back</em> to the heart</li>
             </ul>
-            <h3>Circulatory System</h3>
+
+            <h3>Principal Veins of the Head, Face, and Neck</h3>
+            <p>Blood returns to the heart via <strong>two principal veins</strong> on each side of the neck:</p>
+            <table>
+                <tr><th>Vein</th><th>Location</th><th>Function</th></tr>
+                <tr><td><strong>Internal jugular vein</strong></td><td>Side of the neck</td><td>Collects blood from the brain and parts of the face and neck</td></tr>
+                <tr><td><strong>External jugular vein</strong></td><td>Side of the neck</td><td>Carries blood returning to the heart from the head, face, and neck</td></tr>
+            </table>
+            <div class="key-point"><strong>Important:</strong> The most important veins of the face and neck <strong>parallel the arteries</strong> and take the same names.</div>
+        </section>
+
+        <!-- LYMPHATIC/IMMUNE SYSTEM -->
+        <section class="section">
+            <h2>🛡️ Lymphatic/Immune System</h2>
+            <p>The lymphatic/immune system is made up of:</p>
             <ul>
-                <li>Transports blood, oxygen, nutrients, and waste</li>
-                <li>Blood supply nourishes skin and hair follicles</li>
+                <li>Lymph</li>
+                <li>Lymph nodes</li>
+                <li>Thymus gland</li>
+                <li>Spleen</li>
+                <li>Lymph vessels</li>
             </ul>
-            <h3>Integumentary System</h3>
+
+            <h3>Function</h3>
+            <p>Carries waste and impurities away from the cells and protects the body from disease by:</p>
             <ul>
-                <li>Skin and accessory organs: hair, nails, sweat and oil glands</li>
-                <li>This is the system barbers interact with most directly</li>
+                <li>Developing immunity</li>
+                <li>Destroying disease-causing microorganisms</li>
             </ul>
-            <h3>Endocrine System</h3>
+
+            <h3>Lymph</h3>
             <ul>
-                <li>Glands that secrete hormones affecting hair growth, skin condition, oil/sweat gland activity</li>
-                <li>Major glands: pituitary, thyroid, adrenals, gonads</li>
+                <li><strong>Clear fluid</strong> that circulates in the lymph spaces (lymphatics) of the body</li>
+                <li>Helps carry wastes and impurities away from the cells before returning to the circulatory system</li>
+            </ul>
+
+            <h3>Connection to Cardiovascular System</h3>
+            <ul>
+                <li>The lymphatic system <strong>drains tissue spaces</strong> of excess interstitial fluid</li>
+                <li><strong>Closely connected</strong> to the cardiovascular system</li>
+                <li>Both transport fluids; lymphatic system transports <strong>lymph</strong>, which eventually returns to the blood</li>
+            </ul>
+
+            <h3>Primary Functions:</h3>
+            <ol>
+                <li>Carry nourishment from the blood to the body cells</li>
+                <li>Act as a defense against toxins and bacteria</li>
+                <li>Remove by-products of infection such as pus and dead tissue</li>
+                <li>Remove waste material from the body cells to the blood</li>
+                <li>Provide a suitable fluid environment for the cells</li>
+            </ol>
+        </section>
+
+        <!-- INTEGUMENTARY SYSTEM -->
+        <section class="section">
+            <h2>🧴 Integumentary System</h2>
+            <p>The integumentary system consists of:</p>
+            <ul>
+                <li>Skin</li>
+                <li>Accessory organs (oil and sweat glands, sensory receptors, hair, and nails)</li>
+            </ul>
+            <p><strong>Function:</strong> Protective covering and helps regulate the body's temperature.</p>
+            <p><em>Integument</em> = "a natural covering"</p>
+
+            <h3>Skin as Protection</h3>
+            <p>Think of skin as a <strong>protective overcoat</strong> against:</p>
+            <ul>
+                <li>Germs</li>
+                <li>Chemicals</li>
+                <li>Sun exposure</li>
+            </ul>
+            <div class="key-point"><strong>Skin is water resistant.</strong></div>
+
+            <h3>Skin Structures (in 1 square centimeter):</h3>
+            <table>
+                <tr><th>Structure</th><th>Count</th></tr>
+                <tr><td>Cells</td><td>3,000,000</td></tr>
+                <tr><td>Nerves</td><td>4 yards</td></tr>
+                <tr><td>Sensory cells at nerve fiber ends</td><td>3,000</td></tr>
+                <tr><td>Nerve endings for pain</td><td>200</td></tr>
+                <tr><td>Sweat glands</td><td>700</td></tr>
+                <tr><td>Sebaceous glands</td><td>15</td></tr>
+                <tr><td>Hairs</td><td>10</td></tr>
+                <tr><td>Pressure apparatus for touch</td><td>25</td></tr>
+                <tr><td>Sensory apparatus for heat</td><td>12</td></tr>
+                <tr><td>Sensory apparatus for cold</td><td>2</td></tr>
+            </table>
+            <div class="key-point"><strong>Did You Know?</strong> Every minute, you shed about <strong>30,000 to 40,000 dead skin cells</strong>. That can total up to about <strong>40 pounds of skin</strong> in your lifetime.</div>
+            <p><em>Note: Skin structure and growth are discussed in detail in Chapter 9, The Skin — Structures, Disorders, and Diseases.</em></p>
+        </section>
+
+        <!-- ENDOCRINE SYSTEM -->
+        <section class="section">
+            <h2>🔮 Endocrine System</h2>
+            <p>The endocrine system is a group of <strong>specialized glands</strong> that affect:</p>
+            <ul>
+                <li>Growth</li>
+                <li>Development</li>
+                <li>Sexual functions</li>
+                <li>Health of the entire body</li>
+            </ul>
+
+            <h3>Glands</h3>
+            <p>Glands are secretory organs that remove and release certain elements from the blood to convert them into new compounds.</p>
+
+            <h3>Two Main Types of Glands:</h3>
+            <table>
+                <tr><th>Type</th><th>Description</th><th>Examples</th></tr>
+                <tr><td><strong>Endocrine glands</strong> (ductless)</td><td>Release hormonal secretions directly into bloodstream</td><td>Thyroid, pituitary glands</td></tr>
+                <tr><td><strong>Exocrine glands</strong> (duct)</td><td>Produce substance that travels through small tubelike ducts</td><td>Sweat and oil glands of skin</td></tr>
+            </table>
+
+            <h3>Hormones</h3>
+            <ul>
+                <li>Secretions (insulin, adrenaline, estrogen) that stimulate functional activity or other secretions in the body</li>
+                <li><strong>Influence the welfare of the entire body</strong></li>
+            </ul>
+
+            <h3>Major Endocrine Glands:</h3>
+            <table>
+                <tr><th>Gland</th><th>Location</th><th>Key Hormones</th><th>Effects on Skin/Hair</th></tr>
+                <tr><td><strong>Pituitary</strong></td><td>Base of brain</td><td>Growth hormone, others</td><td>Regulates other glands; affects growth</td></tr>
+                <tr><td><strong>Thyroid</strong></td><td>Neck</td><td>Thyroxine</td><td>Metabolism; affects hair texture and moisture</td></tr>
+                <tr><td><strong>Parathyroid</strong></td><td>Near thyroid</td><td>Parathyroid hormone</td><td>Calcium balance; affects skin health</td></tr>
+                <tr><td><strong>Adrenal</strong></td><td>Above kidneys</td><td>Adrenaline, cortisol</td><td>Stress response; affects skin conditions</td></tr>
+                <tr><td><strong>Pancreas</strong></td><td>Behind stomach</td><td>Insulin, glucagon</td><td>Blood sugar; affects skin healing</td></tr>
+                <tr><td><strong>Ovaries (female)</strong></td><td>Pelvic area</td><td>Estrogen, progesterone</td><td>Affects skin moisture, hair growth</td></tr>
+                <tr><td><strong>Testes (male)</strong></td><td>Scrotum</td><td>Testosterone</td><td>Facial hair growth, sebum production</td></tr>
+            </table>
+        </section>
+
+        <!-- REPRODUCTIVE SYSTEM -->
+        <section class="section">
+            <h2>🧬 Reproductive System</h2>
+            <h3>Female:</h3>
+            <ul>
+                <li>Ovaries</li>
+                <li>Uterine tubes</li>
+                <li>Uterus</li>
+                <li>Vagina</li>
+            </ul>
+
+            <h3>Male:</h3>
+            <ul>
+                <li>Testes</li>
+                <li>Prostate gland</li>
+                <li>Penis</li>
+                <li>Urethra</li>
+            </ul>
+
+            <h3>Function</h3>
+            <p>Produces offspring and passes on the genetic code from one generation to another.</p>
+
+            <h3>Hormones and Skin/Hair</h3>
+            <p>The reproductive system produces hormones:</p>
+            <ul>
+                <li><strong>Females:</strong> Primarily estrogen</li>
+                <li><strong>Males:</strong> Primarily testosterone</li>
+            </ul>
+
+            <h3>These hormones affect and change the skin:</h3>
+            <ul>
+                <li>Acne</li>
+                <li>Loss of scalp hair</li>
+                <li>Facial hair growth and color</li>
+                <li>Darker skin pigmentations</li>
+            </ul>
+            <div class="key-point"><strong>Barbering relevance:</strong> Hormonal changes (puberty, aging, medical conditions) directly affect the services you provide — hair growth patterns, skin conditions, and hair texture changes.</div>
+        </section>
+
+        <!-- RESPIRATORY & EXCRETORY -->
+        <section class="section">
+            <h2>🫁 Respiratory & Excretory Systems</h2>
+            <h3>Respiratory System</h3>
+            <ul>
+                <li>Lungs and air passages</li>
+                <li>Function: Brings oxygen into the body and removes carbon dioxide</li>
+                <li><strong>Barbering relevance:</strong> Be aware of client breathing during facial services; some products/fragrances may affect sensitive individuals</li>
+            </ul>
+
+            <h3>Excretory System</h3>
+            <ul>
+                <li>Skin (sweat glands), kidneys, lungs, liver</li>
+                <li>Function: Removes waste products from the body</li>
+                <li><strong>Barbering relevance:</strong> Sweat glands are part of both excretory and integumentary systems; understanding perspiration helps with product recommendations</li>
             </ul>
         </section>
+
+        <!-- DIGESTIVE SYSTEM -->
         <section class="section">
-            <h2>📝 Chapter 6 Key Takeaways</h2>
+            <h2>🍽️ Digestive System</h2>
+            <ul>
+                <li>Mouth, esophagus, stomach, intestines, liver, pancreas</li>
+                <li>Function: Breaks down food into nutrients the body can use</li>
+                <li><strong>Barbering relevance (indirect):</strong>
+                    <ul>
+                        <li>Nutrition affects hair and skin health</li>
+                        <li>Protein, vitamins, and minerals from diet support hair growth</li>
+                        <li>Poor nutrition can lead to dry, brittle hair and skin problems</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <!-- FULL SUMMARY -->
+        <section class="section">
+            <h2>📊 Full Chapter 6 Summary</h2>
+            <table>
+                <tr><th>Topic</th><th>Key Points</th></tr>
+                <tr><td><strong>Cells</strong></td><td>Basic units of life; composed of protoplasm with nucleus and cytoplasm; reproduce via mitosis</td></tr>
+                <tr><td><strong>Tissues</strong></td><td>Connective, epithelial, muscle, nerve</td></tr>
+                <tr><td><strong>Body Systems</strong></td><td>11 total: circulatory, digestive, endocrine, excretory, integumentary, immune/lymphatic, muscular, nervous, reproductive, respiratory, skeletal</td></tr>
+                <tr><td><strong>Skeletal System</strong></td><td>206 bones; provides shape, support, protection, and attachment for muscles</td></tr>
+                <tr><td><strong>Muscular System</strong></td><td>Covers and moves skeleton; three types (striated/voluntary, smooth/involuntary, cardiac)</td></tr>
+                <tr><td><strong>Nervous System</strong></td><td>Controls and coordinates all body functions; CNS (brain/spinal cord) and PNS (sensory/motor nerves)</td></tr>
+                <tr><td><strong>Circulatory System</strong></td><td>Heart pumps blood through arteries → capillaries → veins; carries oxygen/nutrients and removes waste</td></tr>
+                <tr><td><strong>Lymphatic/Immune System</strong></td><td>Drains excess fluid, fights infection, returns lymph to blood</td></tr>
+                <tr><td><strong>Integumentary System</strong></td><td>Skin + accessories; protective barrier and temperature regulator</td></tr>
+                <tr><td><strong>Endocrine System</strong></td><td>Ductless glands release hormones directly into blood</td></tr>
+                <tr><td><strong>Reproductive System</strong></td><td>Produces offspring and sex hormones that affect skin/hair</td></tr>
+            </table>
+        </section>
+
+        <!-- KEY POINTS -->
+        <section class="section">
+            <h2>🔑 Key Points to Remember</h2>
             <div class="key-point">
-                <ul style="margin-left: 1rem;">
-                    <li><strong>Anatomy</strong> studies body structures; <strong>physiology</strong> studies how they function</li>
-                    <li>The <strong>cell</strong> is the basic unit of life; <strong>tissues</strong> are groups of similar cells; <strong>organs</strong> are groups of tissues</li>
-                    <li>Barbers focus on the <strong>head, face, neck, skin, and hair</strong></li>
-                    <li>The <strong>integumentary system</strong> (skin, hair, glands) is most relevant for daily services</li>
-                    <li><strong>Muscular and nervous systems</strong> are critical for facial massage and shaving</li>
-                    <li>The <strong>endocrine system</strong> influences hair growth, skin condition, and oil production</li>
-                    <li>Understanding anatomy helps perform services <strong>safely</strong> and recognize problems</li>
-                </ul>
+                <ol>
+                    <li><strong>Two principal neck veins:</strong> Internal jugular and External jugular</li>
+                    <li><strong>Lymph</strong> = clear fluid that carries waste away from cells</li>
+                    <li><strong>Integumentary system</strong> = skin + accessory organs (glands, hair, nails)</li>
+                    <li><strong>You shed 30,000-40,000 skin cells per minute</strong> (40 pounds in a lifetime)</li>
+                    <li><strong>Two gland types:</strong> Endocrine (ductless, hormones to blood) and Exocrine (ducts, to surface)</li>
+                    <li><strong>Hormones</strong> influence the entire body's welfare</li>
+                    <li><strong>Reproductive hormones</strong> (estrogen/testosterone) affect skin and hair</li>
+                    <li><strong>11 body systems</strong> — know them all</li>
+                    <li><strong>206 bones</strong> in the adult skeleton</li>
+                    <li><strong>Three muscle types:</strong> Striated (voluntary), Smooth (involuntary), Cardiac</li>
+                </ol>
             </div>
         </section>
-        <section class="quiz-section">
-            <h2>📝 Mini Review Quiz</h2>
-            <div class="quiz-question">
-                <p>1. What is the basic unit of life?</p>
+
+        <!-- PRACTICE QUESTIONS -->
+        <section class="section">
+            <h2>📝 Practice Questions</h2>
+            <div class="key-point">
+                <p><strong>1. What are the two principal veins that return blood from the head, face, and neck?</strong><br>
+                → Internal jugular vein and External jugular vein</p>
+
+                <p><strong>2. What is the function of the lymphatic/immune system?</strong><br>
+                → Carries waste away from cells, protects body from disease, develops immunity</p>
+
+                <p><strong>3. What does the integumentary system consist of?</strong><br>
+                → Skin and accessory organs (oil/sweat glands, sensory receptors, hair, nails)</p>
+
+                <p><strong>4. What is the difference between endocrine and exocrine glands?</strong><br>
+                → Endocrine: ductless, release hormones into blood; Exocrine: have ducts, release to surface</p>
+
+                <p><strong>5. How many skin cells do you shed per minute?</strong><br>
+                → 30,000 to 40,000</p>
+
+                <p><strong>6. What hormones does the reproductive system produce and how do they affect barbering?</strong><br>
+                → Estrogen (females) and testosterone (males); affect acne, hair loss, facial hair growth</p>
+
+                <p><strong>7. How many bones are in the adult skeleton?</strong><br>
+                → 206</p>
+
+                <p><strong>8. What are the three types of muscle tissue?</strong><br>
+                → Striated/voluntary, smooth/involuntary, cardiac</p>
+            </div>
+        </section>
+
+        <!-- MINI QUIZ -->
+        <section class="quiz-section" style="background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold);">
+            <h2 style="color: var(--gold); margin-bottom: 1.5rem;">📝 Mini Review Quiz</h2>
+            <div class="quiz-question" style="margin-bottom: 1.5rem;">
+                <p style="font-weight: 600; margin-bottom: 0.75rem; color: var(--white);">1. What is the basic unit of life?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q1" value="a"> Tissue</label>
-                    <label><input type="radio" name="q1" value="b"> Organ</label>
-                    <label><input type="radio" name="q1" value="c"> Cell</label>
-                    <label><input type="radio" name="q1" value="d"> System</label>
+                    <label style="display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer;"><input type="radio" name="q1" value="a" style="margin-right: 0.75rem;"> Tissue</label>
+                    <label style="display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer;"><input type="radio" name="q1" value="b" style="margin-right: 0.75rem;"> Organ</label>
+                    <label style="display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer;"><input type="radio" name="q1" value="c" style="margin-right: 0.75rem;"> Cell</label>
+                    <label style="display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer;"><input type="radio" name="q1" value="d" style="margin-right: 0.75rem;"> System</label>
                 </div>
             </div>
-            <div class="quiz-question">
-                <p>2. Which system includes skin, hair, and glands?</p>
+            <div class="quiz-question" style="margin-bottom: 1.5rem;">
+                <p style="font-weight: 600; margin-bottom: 0.75rem; color: var(--white);">2. Which system includes skin, hair, and glands?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q2" value="a"> Nervous system</label>
-                    <label><input type="radio" name="q2" value="b"> Integumentary system</label>
-                    <label><input type="radio" name="q2" value="c"> Circulatory system</label>
-                    <label><input type="radio" name="q2" value="d"> Endocrine system</label>
+                    <label style="display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer;"><input type="radio" name="q2" value="a" style="margin-right: 0.75rem;"> Nervous system</label>
+                    <label style="display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer;"><input type="radio" name="q2" value="b" style="margin-right: 0.75rem;"> Integumentary system</label>
+                    <label style="display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer;"><input type="radio" name="q2" value="c" style="margin-right: 0.75rem;"> Circulatory system</label>
+                    <label style="display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer;"><input type="radio" name="q2" value="d" style="margin-right: 0.75rem;"> Endocrine system</label>
                 </div>
             </div>
-            <div class="quiz-question">
-                <p>3. What is the outermost layer of skin called?</p>
+            <div class="quiz-question" style="margin-bottom: 1.5rem;">
+                <p style="font-weight: 600; margin-bottom: 0.75rem; color: var(--white);">3. How many bones are in the adult human skeleton?</p>
                 <div class="quiz-options">
-                    <label><input type="radio" name="q3" value="a"> Dermis</label>
-                    <label><input type="radio" name="q3" value="b"> Hypodermis</label>
-                    <label><input type="radio" name="q3" value="c"> Epidermis</label>
-                    <label><input type="radio" name="q3" value="d"> Subcutaneous</label>
+                    <label style="display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer;"><input type="radio" name="q3" value="a" style="margin-right: 0.75rem;"> 186</label>
+                    <label style="display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer;"><input type="radio" name="q3" value="b" style="margin-right: 0.75rem;"> 206</label>
+                    <label style="display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer;"><input type="radio" name="q3" value="c" style="margin-right: 0.75rem;"> 216</label>
+                    <label style="display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer;"><input type="radio" name="q3" value="d" style="margin-right: 0.75rem;"> 256</label>
                 </div>
             </div>
-            <button class="quiz-submit" onclick="checkQuiz()">Check Answers</button>
-            <div class="quiz-result" id="quiz-result"></div>
+            <button style="background: var(--gold); color: var(--dark); border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 1rem;" onclick="checkQuiz()">Check Answers</button>
+            <div id="quiz-result" style="margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: none;"></div>
         </section>
 
         <div class="nav-chapters"><a href="chapter-05.html">← Chapter 5</a><a href="chapter-07.html">Chapter 7 →</a></div>
     </main>
     <div class="study-tools">
-        <button class="tool-btn" onclick="openQuiz()">🎴 Flashcards</button>
-        <button class="tool-btn" onclick="openQuiz()">❓ Quiz</button>
+        <button class="tool-btn" onclick="window.location.href='chapter-06-flashcards.html'">🎴 Flashcards</button>
+        <button class="tool-btn" onclick="window.location.href='chapter-06-quiz.html'">❓ Full Quiz</button>
     </div>
     <script>
         function checkQuiz() {
-            const answers = { q1: 'c', q2: 'b', q3: 'c' };
+            const answers = { q1: 'c', q2: 'b', q3: 'b' };
             let score = 0;
             let total = 3;
             for (let q in answers) {
@@ -228,16 +528,12 @@
             const resultDiv = document.getElementById('quiz-result');
             resultDiv.style.display = 'block';
             if (score === total) {
-                resultDiv.className = 'quiz-result correct';
+                resultDiv.style.cssText = 'margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: block; background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e;';
                 resultDiv.innerHTML = `<strong>Perfect! 🎉</strong> You got ${score}/${total} correct!`;
             } else {
-                resultDiv.className = 'quiz-result incorrect';
+                resultDiv.style.cssText = 'margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: block; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444;';
                 resultDiv.innerHTML = `<strong>Keep studying!</strong> You got ${score}/${total} correct.`;
             }
-        }
-
-        function openQuiz() {
-            window.location.href = 'chapter-06-quiz.html';
         }
 
         window.addEventListener('scroll', () => {
@@ -253,7 +549,6 @@
 
         function toggleTTS() {
             const btn = document.getElementById('tts-btn');
-            
             if (isPlaying) {
                 stopTTS();
                 btn.innerHTML = '🔊 Read Aloud';
@@ -272,36 +567,25 @@
                 speechSynthesis.resume();
                 return;
             }
-
-            // Get all text content from the main content area
             const content = document.querySelector('main.content');
             if (!content) return;
-
-            // Extract readable text, excluding quiz sections and navigation
             let textToRead = '';
             const sections = content.querySelectorAll('.section');
             sections.forEach(section => {
-                // Skip quiz sections
-                if (section.classList.contains('quiz-section')) return;
-                
-                // Get text content
+                if (section.querySelector('.quiz-section')) return;
                 const text = section.innerText || section.textContent;
                 textToRead += text + ' ';
             });
-
             if (!textToRead.trim()) return;
-
             currentUtterance = new SpeechSynthesisUtterance(textToRead);
             currentUtterance.rate = 0.9;
             currentUtterance.pitch = 1;
-            
             currentUtterance.onend = function() {
                 const btn = document.getElementById('tts-btn');
                 btn.innerHTML = '🔊 Read Aloud';
                 btn.classList.remove('playing');
                 isPlaying = false;
             };
-
             speechSynthesis.speak(currentUtterance);
         }
 
@@ -311,7 +595,6 @@
             }
         }
 
-        // Stop TTS when leaving the page
         window.addEventListener('beforeunload', stopTTS);
     </script>
 </body>
