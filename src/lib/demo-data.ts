@@ -3,7 +3,7 @@
 
 import { Chapter, Flashcard, Quiz, QuizQuestion, QuizAttempt, StudentProgress, Profile } from '@/types'
 import { chapterFlashcards as realFlashcards } from './flashcards-data'
-import { batch1Flashcards, batch2Flashcards, batch3Flashcards, batch4Flashcards } from './orphaned-flashcards'
+import { batch1Flashcards, batch3Flashcards, batch4Flashcards } from './orphaned-flashcards'
 import { allQuizQuestions } from './quiz-data'
 
 export const demoUser = {
@@ -85,8 +85,8 @@ export const demoChapters: Chapter[] = [
 // Use real flashcards for chapters 1, 3, 4, demo for rest
 export const demoFlashcards: Record<string, Flashcard[]> = {}
 
-// Load real flashcards for chapters 1, 2, 3, 4, 7, 8 and 16
-const realChapters = [1, 2, 3, 4, 7, 8, 16]
+// Load real flashcards for chapters 1, 2, 3, 4, 7, 8, 9 and 16
+const realChapters = [1, 2, 3, 4, 7, 8, 9, 16]
 for (const i of realChapters) {
   const chId = `ch-${i}`
   if (realFlashcards[chId]) {
@@ -112,12 +112,6 @@ if (batch1Flashcards['ch-6'] && batch1Flashcards['ch-6'].length > 0) {
 }
 
 // Chapter 7: Already loaded from real flashcards above (ch-7 premium)
-
-// BATCH 2: Wire orphaned flashcards for Ch 9
-// Chapter 9: Replace placeholder with orphaned
-if (batch2Flashcards['ch-9'] && batch2Flashcards['ch-9'].length > 0) {
-  demoFlashcards['ch-9'] = batch2Flashcards['ch-9']
-}
 
 // BATCH 3: Wire orphaned flashcards for Ch 10, 11, 12
 // Chapter 10: Replace placeholder with orphaned
@@ -174,12 +168,14 @@ export const demoQuizzes: Record<string, Quiz> = {
   'ch-7': { id: 'quiz-7', chapter_id: 'ch-7', title: 'Basics of Chemistry — Premium Quiz', description: '50 board-exam style questions. Passing score: 75%.', is_active: true },
   // Chapter 8: Premium flashcard-driven quiz (30 questions)
   'ch-8': { id: 'quiz-8', chapter_id: 'ch-8', title: 'Basics of Electricity — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true },
+  // Chapter 9: Premium flashcard-driven quiz (30 questions)
+  'ch-9': { id: 'quiz-9', chapter_id: 'ch-9', title: 'The Skin — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true },
 }
 
 for (let i = 3; i <= 21; i++) {
   const chId = `ch-${i}`
-  // Skip Chapters 3–8 — already registered above with premium titles
-  if (i >= 3 && i <= 8) continue
+  // Skip Chapters 3–9 — already registered above with premium titles
+  if (i >= 3 && i <= 9) continue
   if (!demoQuizzes[chId]) {
     demoQuizzes[chId] = { id: `quiz-${i}`, chapter_id: chId, title: `Chapter ${i} Quiz`, description: `Test your knowledge of Chapter ${i}.`, is_active: true }
   }
@@ -193,8 +189,8 @@ export const demoQuizQuestions: Record<string, QuizQuestion[]> = {
 
 for (let i = 3; i <= 21; i++) {
   const quizId = `quiz-${i}`
-  // Skip Chapters 3–8 — already in allQuizQuestions
-  if (i >= 3 && i <= 8) continue
+  // Skip Chapters 3–9 — already in allQuizQuestions
+  if (i >= 3 && i <= 9) continue
   if (!demoQuizQuestions[quizId]) {
     demoQuizQuestions[quizId] = [
       { id: `qq-${i}-1`, quiz_id: quizId, question: `Demo question 1 for Chapter ${i}`, answer_a: 'Option A', answer_b: 'Option B', answer_c: 'Option C', answer_d: 'Option D', correct_answer: 'a', explanation: `This is a demo question for Chapter ${i}.`, difficulty: 'easy', order_index: 1 },
