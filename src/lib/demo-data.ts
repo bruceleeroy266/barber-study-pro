@@ -85,8 +85,8 @@ export const demoChapters: Chapter[] = [
 // Use real flashcards for chapters 1, 3, 4, demo for rest
 export const demoFlashcards: Record<string, Flashcard[]> = {}
 
-// Load real flashcards for chapters 1, 3, 4, 7, 8 and 16
-const realChapters = [1, 3, 4, 7, 8, 16]
+// Load real flashcards for chapters 1, 2, 3, 4, 7, 8 and 16
+const realChapters = [1, 2, 3, 4, 7, 8, 16]
 for (const i of realChapters) {
   const chId = `ch-${i}`
   if (realFlashcards[chId]) {
