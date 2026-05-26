@@ -356,7 +356,129 @@ export const chapter8PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 8: SAFETY DEVICES
+    // SECTION 8: ELECTRICAL FORMULA FOUNDATIONS
+    // ═══════════════════════════════════════════
+    {
+      type: 'contentBlock',
+      id: 'electrical-formula-foundations',
+      title: '⚡ ELECTRICAL FORMULA FOUNDATIONS',
+      content: 'Before you face the Circuit Breaker Challenge, you need the formulas that make load calculations possible. These four terms — volt, amp, watt, and ohm — are the building blocks of every electrical decision in your shop. Master them now, and the challenge becomes simple arithmetic.',
+      highlight: 'FORMULAS FIRST — CHALLENGE SECOND',
+    },
+
+    // ═══════════════════════════════════════════
+    // SECTION 8A: THE FOUR TERMS
+    // ═══════════════════════════════════════════
+    {
+      type: 'featureGrid',
+      id: 'four-terms-grid',
+      title: 'THE FOUR TERMS — WHAT THEY MEAN',
+      subtitle: 'Know the language before you do the math',
+      features: [
+        {
+          icon: 'Gauge',
+          title: 'VOLT (V) — ELECTRICAL PRESSURE',
+          description: 'Think of voltage like water pressure in a pipe. Higher voltage pushes harder. US standard outlets deliver 110–120V.',
+        },
+        {
+          icon: 'ArrowRightLeft',
+          title: 'AMP / AMPERE (A) — ELECTRICAL CURRENT',
+          description: 'Think of amps like the volume of water flowing through the pipe. More amps = more electricity moving through the wire.',
+        },
+        {
+          icon: 'Lightbulb',
+          title: 'WATT (W) — ELECTRICAL POWER',
+          description: 'Think of watts as the actual work being done. A 1,800W hair dryer does more work (produces more heat) than a 600W steamer.',
+        },
+        {
+          icon: 'Shield',
+          title: 'OHM (Ω) — ELECTRICAL RESISTANCE',
+          description: 'Think of ohms like a narrow section of pipe that restricts flow. More resistance = less current gets through.',
+        },
+      ],
+    },
+
+    // ═══════════════════════════════════════════
+    // SECTION 8B: THE THREE FORMULAS
+    // ═══════════════════════════════════════════
+    {
+      type: 'contentBlock',
+      id: 'three-formulas',
+      title: 'THE THREE FORMULAS YOU MUST KNOW',
+      content: 'Every circuit calculation uses one of these three formulas. Memorize them. They will appear on your board exam and in your shop every single day.\n\nFORMULA 1 — FIND POWER (WATTS):\nWatts = Volts × Amps\n\nFORMULA 2 — FIND CURRENT (AMPS):\nAmps = Watts ÷ Volts\n\nFORMULA 3 — FIND PRESSURE (VOLTS):\nVolts = Watts ÷ Amps\n\nBOARD EXAM ALERT: Watts = Volts × Amps is the most tested formula. If you know two values, you can always find the third.',
+      highlight: 'WATTS = VOLTS × AMPS | AMPS = WATTS ÷ VOLTS | VOLTS = WATTS ÷ AMPS',
+    },
+
+    // ═══════════════════════════════════════════
+    // SECTION 8C: WORKED EXAMPLES
+    // ═══════════════════════════════════════════
+    {
+      type: 'tabbed',
+      id: 'worked-examples',
+      title: 'WORKED EXAMPLES — STEP BY STEP',
+      subtitle: 'See the formulas in action with real barber shop tools',
+      tabs: [
+        {
+          id: 'example-1',
+          label: 'EXAMPLE 1',
+          title: 'EXAMPLE 1: FIND WATTS',
+          bullets: [
+            { label: 'THE PROBLEM', description: 'Your clipper is rated 120V and draws 2A. How many watts does it use?' },
+            { label: 'THE FORMULA', description: 'Watts = Volts × Amps' },
+            { label: 'PLUG IN', description: '120V × 2A = 240W' },
+            { label: 'ANSWER', description: 'The clipper uses 240 watts of power.' },
+          ],
+          facts: [
+            { text: 'This is a low-wattage tool. A 240W clipper will not trip any breaker on its own.' },
+            { text: 'BOARD EXAM TIP: When you see "V" and "A" given, multiply to find watts.' },
+          ],
+        },
+        {
+          id: 'example-2',
+          label: 'EXAMPLE 2',
+          title: 'EXAMPLE 2: FIND AMPS',
+          bullets: [
+            { label: 'THE PROBLEM', description: 'Your hair dryer is rated 600W on a 120V circuit. How many amps does it draw?' },
+            { label: 'THE FORMULA', description: 'Amps = Watts ÷ Volts' },
+            { label: 'PLUG IN', description: '600W ÷ 120V = 5A' },
+            { label: 'ANSWER', description: 'The dryer draws 5 amps of current.' },
+          ],
+          facts: [
+            { text: 'A 20-amp breaker can safely handle four of these dryers (4 × 5A = 20A).' },
+            { text: 'BOARD EXAM TIP: When you see "W" and "V" given, divide watts by volts to find amps.' },
+          ],
+        },
+        {
+          id: 'example-3',
+          label: 'EXAMPLE 3',
+          title: 'EXAMPLE 3: STATION LOAD',
+          bullets: [
+            { label: 'THE PROBLEM', description: 'Your station has a 1,200W dryer, a 240W clipper, and a 100W lamp on one 20-amp circuit at 120V. Will the breaker trip?' },
+            { label: 'STEP 1', description: 'Add total watts: 1,200W + 240W + 100W = 1,540W' },
+            { label: 'STEP 2', description: 'Find total amps: 1,540W ÷ 120V = 12.8A' },
+            { label: 'ANSWER', description: '12.8A is under 20A. The breaker will NOT trip.' },
+          ],
+          facts: [
+            { text: 'You still have room (about 7 amps) before the breaker trips. But add another 1,200W dryer and you hit 22.8A — TRIP.' },
+            { text: 'SAFETY RULE: Stay under 80% of breaker rating. For a 20A breaker, keep load under 16A.' },
+          ],
+        },
+      ],
+    },
+
+    // ═══════════════════════════════════════════
+    // SECTION 8D: BARBER SHOP SAFETY MEANING
+    // ═══════════════════════════════════════════
+    {
+      type: 'contentBlock',
+      id: 'barber-safety-meaning',
+      title: '🔌 WHY THIS MATTERS IN YOUR SHOP',
+      content: 'These formulas are not just exam trivia — they are survival skills for your station.\n\nOVERLOADED CIRCUITS: Too many high-watt devices on one circuit draw more amps than the breaker allows. The breaker trips to prevent fire. If the breaker fails, the wiring overheats and can ignite.\n\nYOUR TOOLS: Clippers, dryers, steamers, hot towel cabinets, LED lamps, and UV sterilizers all draw power. A single station might have 3,000+ watts running simultaneously. On a 120V circuit, that is 25 amps — enough to trip a 20-amp breaker instantly.\n\nTHE REAL COST: A tripped breaker means a halted service, an unhappy client, and potential equipment damage. A fire means injury, lost income, and legal liability.\n\nTHE SOLUTION: Calculate before you plug in. Spread high-draw tools across multiple circuits. Know your shop\'s electrical layout. Respect the math — it protects your clients, your tools, and your livelihood.',
+      highlight: 'CALCULATE BEFORE YOU PLUG — SPREAD THE LOAD — RESPECT THE MATH',
+    },
+
+    // ═══════════════════════════════════════════
+    // SECTION 9: SAFETY DEVICES
     // ═══════════════════════════════════════════
     {
       type: 'featureGrid',
@@ -398,40 +520,40 @@ export const chapter8PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 9: CIRCUIT BREAKER CHALLENGE
+    // SECTION 10: CIRCUIT BREAKER CHALLENGE
     // ═══════════════════════════════════════════
     {
       type: 'challengeCard',
       id: 'circuit-breaker-challenge',
       title: '⚡ CIRCUIT BREAKER CHALLENGE',
-      subtitle: 'Test your load calculation skills before the exam',
+      subtitle: 'Test your load calculation skills — calculate first, then check your work',
       challenges: [
         {
           badge: 'EASY',
           title: 'Single Tool Check',
-          description: 'Your clipper is rated 120V, 0.5A. How many watts does it draw?',
-          action: 'Calculate: 120V × 0.5A = 60W',
+          description: 'Your clipper is rated 120V and draws 0.5A. How many watts does it draw?\n\n📝 DO THE MATH FIRST — Then scroll down to check your work.',
+          action: 'CHECK YOUR WORK:\n\nFormula: Watts = Volts × Amps\n120V × 0.5A = 60W\n\n✅ The clipper draws 60 watts.',
           difficulty: 'easy',
         },
         {
           badge: 'MEDIUM',
           title: 'Station Load Test',
-          description: 'Your station has a 1,800W dryer, a 60W clipper, and a 100W steamer on a 20-amp circuit. Will the breaker trip?',
-          action: 'Total: 1,960W ÷ 120V = 16.3A. Under 20A = SAFE. But add another dryer and it trips.',
+          description: 'Your station has a 1,800W dryer, a 60W clipper, and a 100W steamer all plugged into one 20-amp circuit at 120V. Will the breaker trip?\n\n📝 DO THE MATH FIRST — Then scroll down to check your work.',
+          action: 'CHECK YOUR WORK:\n\nStep 1: Add total watts\n1,800W + 60W + 100W = 1,960W\n\nStep 2: Find total amps\n1,960W ÷ 120V = 16.3A\n\nStep 3: Compare to breaker rating\n16.3A < 20A\n\n✅ The breaker will NOT trip. But add another 1,800W dryer (total 3,760W = 31.3A) and it WILL trip.',
           difficulty: 'medium',
         },
         {
           badge: 'HARD',
           title: 'Shop Wiring Puzzle',
-          description: 'Your shop has three 20-amp circuits. You need to place six 1,800W dryers. How do you distribute them so no breaker trips?',
-          action: 'Each dryer = 15A. Two per circuit = 30A > 20A (TRIPS). Max one dryer + small tools per circuit. You need six circuits or lower-wattage dryers.',
+          description: 'Your shop has three 20-amp circuits at 120V. You need to power six 1,800W hair dryers. How do you distribute them so no breaker trips?\n\n📝 DO THE MATH FIRST — Then scroll down to check your work.',
+          action: 'CHECK YOUR WORK:\n\nStep 1: Find amps per dryer\n1,800W ÷ 120V = 15A per dryer\n\nStep 2: Check capacity per circuit\nTwo dryers = 30A > 20A (TRIPS)\nOne dryer + small tools = ~16A < 20A (SAFE)\n\nStep 3: Evaluate the puzzle\nThree circuits can each safely handle ONE dryer plus small tools.\n\n❌ You CANNOT fit six 1,800W dryers on three 20-amp circuits without tripping breakers.\n\n✅ SOLUTION: You need six separate 20-amp circuits, OR lower-wattage dryers (e.g., 1,200W dryers draw 10A each — two per circuit = 20A, which fits safely).',
           difficulty: 'hard',
         },
       ],
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 10: NON-NEGOTIABLE SAFETY RULES
+    // SECTION 11: NON-NEGOTIABLE SAFETY RULES
     // ═══════════════════════════════════════════
     {
       type: 'checklist',
@@ -454,7 +576,7 @@ export const chapter8PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 11: ELECTROTHERAPY INTRO
+    // SECTION 12: ELECTROTHERAPY INTRO
     // ═══════════════════════════════════════════
     {
       type: 'contentBlock',
@@ -465,7 +587,7 @@ export const chapter8PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 12: POLARITY & ELECTRODES
+    // SECTION 13: POLARITY & ELECTRODES
     // ═══════════════════════════════════════════
     {
       type: 'featureGrid',
@@ -497,7 +619,7 @@ export const chapter8PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 13: GALVANIC CURRENT DEEP DIVE
+    // SECTION 14: GALVANIC CURRENT DEEP DIVE
     // ═══════════════════════════════════════════
     {
       type: 'tabbed',
@@ -573,7 +695,7 @@ export const chapter8PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 14: MICROCURRENT & TESLA
+    // SECTION 15: MICROCURRENT & TESLA
     // ═══════════════════════════════════════════
     {
       type: 'featureGrid',
@@ -605,7 +727,7 @@ export const chapter8PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 15: ELECTROMAGNETIC SPECTRUM
+    // SECTION 16: ELECTROMAGNETIC SPECTRUM
     // ═══════════════════════════════════════════
     {
       type: 'contentBlock',
@@ -616,7 +738,7 @@ export const chapter8PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 16: VISIBLE & INVISIBLE LIGHT
+    // SECTION 17: VISIBLE & INVISIBLE LIGHT
     // ═══════════════════════════════════════════
     {
       type: 'tabbed',
@@ -673,7 +795,7 @@ export const chapter8PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 17: LIGHT THERAPY INTRO
+    // SECTION 18: LIGHT THERAPY INTRO
     // ═══════════════════════════════════════════
     {
       type: 'contentBlock',
@@ -684,7 +806,7 @@ export const chapter8PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 18: LED LIGHT THERAPY
+    // SECTION 19: LED LIGHT THERAPY
     // ═══════════════════════════════════════════
     {
       type: 'featureGrid',
@@ -716,7 +838,7 @@ export const chapter8PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 19: THERAPEUTIC LAMPS
+    // SECTION 20: THERAPEUTIC LAMPS
     // ═══════════════════════════════════════════
     {
       type: 'tabbed',
@@ -799,7 +921,7 @@ export const chapter8PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 20: LIGHT THERAPY SAFETY
+    // SECTION 21: LIGHT THERAPY SAFETY
     // ═══════════════════════════════════════════
     {
       type: 'checklist',
@@ -818,7 +940,7 @@ export const chapter8PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 21: LASERS
+    // SECTION 22: LASERS
     // ═══════════════════════════════════════════
     {
       type: 'contentBlock',
@@ -829,7 +951,7 @@ export const chapter8PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 22: COMMON CONFUSIONS & MEMORY AIDS
+    // SECTION 23: COMMON CONFUSIONS & MEMORY AIDS
     // ═══════════════════════════════════════════
     {
       type: 'tabbed',
@@ -893,7 +1015,7 @@ export const chapter8PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 23: BOARD EXAM CRITICAL ALERTS
+    // SECTION 24: BOARD EXAM CRITICAL ALERTS
     // ═══════════════════════════════════════════
     {
       type: 'contentBlock',
@@ -904,7 +1026,7 @@ export const chapter8PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 24: ELECTRICAL HAZARD SCENARIOS
+    // SECTION 25: ELECTRICAL HAZARD SCENARIOS
     // ═══════════════════════════════════════════
     {
       type: 'scenarioBlock',
@@ -936,7 +1058,7 @@ export const chapter8PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 25: ACTION PROMPTS
+    // SECTION 26: ACTION PROMPTS
     // ═══════════════════════════════════════════
     {
       type: 'actionPrompt',
@@ -972,7 +1094,7 @@ export const chapter8PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 26: FINAL POWER PLEDGE
+    // SECTION 27: FINAL POWER PLEDGE
     // ═══════════════════════════════════════════
     {
       type: 'quote',
