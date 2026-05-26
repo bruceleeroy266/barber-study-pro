@@ -10,17 +10,6 @@ import { chapter2Flashcards, chapter5Flashcards } from './flashcard-expansion'
 import { chapter6Flashcards as ch6Exp } from './flashcard-expansion-part2'
 import { chapter6AllEnhanced } from './chapter6-enhanced-flashcards'
 
-// Batch 2 imports
-import {
-  chapter9Epidermis,
-  chapter9DermisSubcutaneous,
-  chapter9Functions,
-  chapter9Glands,
-  chapter9PrimaryLesions,
-  chapter9SecondaryLesions,
-} from './chapter9-enhanced-flashcards'
-import { chapter9AllEnhancedPart2 } from './chapter9-enhanced-flashcards-part2'
-
 // Batch 3 imports
 import {
   chapter10Structure,
@@ -121,21 +110,6 @@ const ch6Unique = ch6Combined.filter(
 )
 export const ch6Orphaned = transform(ch6Unique, 6, '6o')
 
-// Batch 2: Chapter 9
-const ch9Combined = [
-  ...chapter9Epidermis,
-  ...chapter9DermisSubcutaneous,
-  ...chapter9Functions,
-  ...chapter9Glands,
-  ...chapter9PrimaryLesions,
-  ...chapter9SecondaryLesions,
-  ...chapter9AllEnhancedPart2,
-]
-const ch9Unique = ch9Combined.filter(
-  (card, idx, self) => idx === self.findIndex(c => c.front === card.front)
-)
-export const ch9Orphaned = transform(ch9Unique, 9, '9o')
-
 // Export all for Batch 1
 export const batch1Flashcards: Record<string, Flashcard[]> = {
   'ch-2': ch2Orphaned,
@@ -192,11 +166,6 @@ const ch12Unique = ch12Combined.filter(
   (card, idx, self) => idx === self.findIndex(c => c.front === card.front)
 )
 export const ch12Orphaned = transform(ch12Unique, 12, '12o')
-
-// Export all for Batch 2
-export const batch2Flashcards: Record<string, Flashcard[]> = {
-  'ch-9': ch9Orphaned,
-}
 
 // Batch 4: Chapters 13, 14, 15, 17, 18, 19, 20, 21
 const ch13Combined = [...chapter13Flashcards]
@@ -276,8 +245,7 @@ export const batch1Stats = {
 }
 
 export const batch2Stats = {
-  ch9: ch9Orphaned.length,
-  total: ch9Orphaned.length,
+  total: 0,
 }
 
 export const batch3Stats = {
