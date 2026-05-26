@@ -1043,13 +1043,187 @@ export const chapter9PremiumContent: ChapterContent = {
     // ═══════════════════════════════════════════
     // SECTION 29: BOARD EXAM CRITICAL ALERTS
     // ═══════════════════════════════════════════
+
+    // ─── 29A: Skin Structure Must-Knows ───
     {
-      type: 'contentBlock',
-      id: 'board-exam-alerts',
-      title: '🚨 BOARD EXAM CRITICAL ALERTS',
-      content: 'These skin science concepts appear on EVERY state board exam. Miss them, and you fail.\n\n1. SKIN = largest organ; first line of defense; renews itself constantly.\n\n2. EPIDERMIS = outermost, NO blood vessels, 5 layers (germinativum → spinosum → granulosum → lucidum → corneum).\n\n3. DERMIS = 25× thicker than epidermis; contains glands, vessels, follicles, nerves.\n\n4. MELANIN = pigment from melanocytes in basal layer; protects against UV damage.\n\n5. SEBACEOUS GLANDS = oil/sebum; SUDORIFEROUS GLANDS = sweat.\n\n6. SHAPES = Skin functions (Sensation, Heat regulation, Absorption, Protection, Excretion, Secretion).\n\n7. PRIMARY LESIONS = original (bullae, papules, pustules, vesicles, wheals, macules, nodules, cysts, tumors).\n\n8. SECONDARY LESIONS = evolved (crusts, scales, scars, excoriations, fissures, keloids, ulcers).\n\n9. ACNE = grades I–IV; caused by Propionibacterium acnes in clogged follicles.\n\n10. ROSACEA = chronic flushing, redness, triggers include sun/spicy food/alcohol.\n\n11. THREE SKIN CANCERS: Basal cell (most common, least severe), Squamous cell (more serious), Melanoma (most dangerous).\n\n12. ABCDE = Melanoma detection (Asymmetry, Border, Color, Diameter, Evolution).\n\n13. NEVER TREAT infectious/contagious conditions — REFER to physician.\n\n14. CALLUSES = natural defense from pressure; do NOT remove.\n\n15. BLACKHEADS = oxidized sebum, NOT dirt.\n\n16. SKIN pH = slightly acidic (~5.5); protects against microorganisms.\n\n17. COLLAGEN = strength/support; ELASTIN = elasticity.\n\n18. BARBERS often first to notice skin/scalp changes — report and suggest dermatologist visit.\n\n19. HERPES SIMPLEX = contagious; never shave over active lesions.\n\n20. VERRUCA (WART) = viral, contagious; refer for medical treatment.\n\n21. DERMATOLOGY = branch of medical science studying skin, hair, and nails.\n\n22. LESION = any mark on skin indicating injury, damage, or disease.\n\n23. PRIMARY LESIONS = original, different color, raised above surface.\n\n24. SECONDARY LESIONS = evolved from primary lesions through accumulation or healing.\n\n25. SEBACEOUS CYST = STEATOMA = same condition, different name.\n\n26. BLOOD & LYMPH = supply nourishment; half the body\'s blood supply goes to skin.\n\n27. SKIN ABSORPTION = limited beyond stratum corneum; depends on thickness and concentration.\n\n28. AMERICAN CANCER SOCIETY recommends regular self-exams and professional checkups.\n\n29. BARBERS are often first to notice skin/scalp changes — report and suggest dermatologist visit.\n\n30. WHEN IN DOUBT, STOP AND REFER — your license and client health matter more than one appointment.',
-      highlight: 'MEMORIZE THESE 30 POINTS',
+      type: 'featureGrid',
+      id: 'board-exam-structure',
+      title: '🚨 BOARD EXAM ALERTS — SKIN STRUCTURE',
+      subtitle: 'The facts that show up on every test',
+      features: [
+        { icon: 'Shield', title: 'SKIN', description: 'Largest organ. First line of defense. Renews constantly.' },
+        { icon: 'Layers', title: 'EPIDERMIS', description: 'Outermost layer. NO blood vessels. 5 layers: germinativum → spinosum → granulosum → lucidum → corneum.' },
+        { icon: 'Activity', title: 'DERMIS', description: '25× thicker than epidermis. Contains glands, vessels, follicles, nerves.' },
+        { icon: 'Sun', title: 'MELANIN', description: 'Produced by melanocytes in basal layer. Protects against UV damage.' },
+        { icon: 'Droplets', title: 'COLLAGEN & ELASTIN', description: 'Collagen = strength and support. Elastin = elasticity and bounce-back.' },
+        { icon: 'Thermometer', title: 'SKIN pH', description: 'Slightly acidic (~5.5). Protects against microorganisms.' },
+      ],
     },
+
+    // ─── 29B: Glands & Functions ───
+    {
+      type: 'featureGrid',
+      id: 'board-exam-glands',
+      title: '🚨 BOARD EXAM ALERTS — GLANDS & FUNCTIONS',
+      subtitle: 'Know what each gland does and what it produces',
+      features: [
+        { icon: 'Droplet', title: 'SEBACEOUS GLANDS', description: 'Produce oil (sebum). Connected to hair follicles. Most active on face and scalp.' },
+        { icon: 'Wind', title: 'SUDORIFEROUS GLANDS', description: 'Produce sweat. Regulate body temperature. 2–4 million in the body.' },
+        { icon: 'Hand', title: 'S — SENSATION', description: 'Skin detects touch, pressure, pain, heat, and cold.' },
+        { icon: 'Thermometer', title: 'H — HEAT REGULATION', description: 'Maintains ~98.6°F through blood flow and sweat evaporation.' },
+        { icon: 'Droplets', title: 'A — ABSORPTION', description: 'Limited beyond stratum corneum. Depends on thickness and concentration.' },
+        { icon: 'Shield', title: 'P — PROTECTION', description: 'Barrier against pathogens, injury, and chemicals. Sebum waterproofs the surface.' },
+        { icon: 'ArrowUp', title: 'E — EXCRETION', description: 'Perspiration removes salts, urea, and toxins.' },
+        { icon: 'Sparkles', title: 'S — SECRETION', description: 'Sebum lubricates skin and hair, maintaining moisture balance.' },
+      ],
+    },
+
+    // ─── 29C: Lesions & Disorders ───
+    {
+      type: 'tabbed',
+      id: 'board-exam-lesions',
+      title: '🚨 BOARD EXAM ALERTS — LESIONS & DISORDERS',
+      subtitle: 'Primary, secondary, and the conditions you will see in the chair',
+      tabs: [
+        {
+          id: 'primary',
+          label: 'PRIMARY LESIONS',
+          title: 'PRIMARY LESIONS — ORIGINAL',
+          bullets: [
+            { label: 'BULLA', description: 'Large blister with watery fluid.' },
+            { label: 'VESICLE', description: 'Small blister with clear fluid.' },
+            { label: 'PUSTULE', description: 'Raised, inflamed, contains pus.' },
+            { label: 'WHEAL', description: 'Itchy, swollen, fluid accumulation.' },
+            { label: 'PAPULE', description: 'Small elevation, no pus.' },
+            { label: 'NODULE', description: 'Solid bump >0.4 inch, deep.' },
+            { label: 'MACULE', description: 'Flat spot, discoloration only.' },
+            { label: 'CYST / TUMOR', description: 'Closed sac or abnormal mass.' },
+          ],
+          facts: [
+            { text: 'Primary lesions are the first signs. They appear directly from disease or injury.' },
+          ],
+        },
+        {
+          id: 'secondary',
+          label: 'SECONDARY LESIONS',
+          title: 'SECONDARY LESIONS — EVOLVED',
+          bullets: [
+            { label: 'CRUST', description: 'Dead cells and dried fluid = scab.' },
+            { label: 'SCALE', description: 'Thin, dry, or oily flakes.' },
+            { label: 'SCAR', description: 'Mark left after healing. Permanent fibrous tissue.' },
+            { label: 'EXCORIATION', description: 'Abrasion from scratching.' },
+            { label: 'FISSURE', description: 'Crack penetrating into dermis.' },
+            { label: 'KELOID', description: 'Thick scar from excessive tissue growth.' },
+            { label: 'ULCER', description: 'Open lesion with loss of skin depth.' },
+          ],
+          facts: [
+            { text: 'Secondary lesions evolve from primary lesions through accumulation, infection, or healing.' },
+          ],
+        },
+        {
+          id: 'disorders',
+          label: 'DISORDERS',
+          title: 'COMMON DISORDERS ON THE EXAM',
+          bullets: [
+            { label: 'ACNE', description: 'Grades I–IV. Caused by Propionibacterium acnes in clogged follicles.' },
+            { label: 'ROSACEA', description: 'Chronic flushing, redness. Triggers: sun, spicy food, alcohol, stress.' },
+            { label: 'SEBORRHEIC DERMATITIS', description: 'Oily, red, scaly patches. Dandruff-like on scalp.' },
+            { label: 'ECZEMA / PSORIASIS', description: 'Chronic, not contagious. Can be irritated by harsh products.' },
+            { label: 'HERPES SIMPLEX', description: 'Contagious. Never shave over active lesions.' },
+            { label: 'VERRUCA (WART)', description: 'Viral, contagious. Refer for medical treatment.' },
+          ],
+          facts: [
+            { text: 'BOARD EXAM ALERT: Blackheads are oxidized sebum — NOT dirt.' },
+            { text: 'BOARD EXAM ALERT: Sebaceous cyst and steatoma are the SAME condition.' },
+          ],
+        },
+      ],
+    },
+
+    // ─── 29D: Skin Cancer Alerts ───
+    {
+      type: 'featureGrid',
+      id: 'board-exam-cancer',
+      title: '🚨 BOARD EXAM ALERTS — SKIN CANCER',
+      subtitle: 'Three types. One mnemonic. Zero excuses for missing this.',
+      features: [
+        { icon: 'Circle', title: 'BASAL CELL', description: 'Most common, least severe. Pearly, waxy nodules. Rarely spreads.' },
+        { icon: 'Triangle', title: 'SQUAMOUS CELL', description: 'More serious. Scaly red papules or non-healing sores. Can metastasize.' },
+        { icon: 'AlertOctagon', title: 'MELANOMA', description: 'Most dangerous. 100% fatal if untreated. Early detection = 99% survival.' },
+        { icon: 'Asterisk', title: 'A — ASYMMETRY', description: 'One half does not match the other.' },
+        { icon: 'Square', title: 'B — BORDER', description: 'Irregular, notched, or blurred edges.' },
+        { icon: 'Palette', title: 'C — COLOR', description: 'Multiple colors or uneven distribution.' },
+        { icon: 'Ruler', title: 'D — DIAMETER', description: 'Larger than 6mm (pencil eraser size).' },
+        { icon: 'RefreshCw', title: 'E — EVOLUTION', description: 'Any change in size, shape, color, or new symptoms.' },
+      ],
+    },
+
+    // ─── 29E: Service Safety / Referral Rules ───
+    {
+      type: 'checklist',
+      id: 'board-exam-safety',
+      title: '🚨 BOARD EXAM ALERTS — SERVICE SAFETY RULES',
+      subtitle: 'Non-negotiables that protect your license and your client',
+      items: [
+        { text: 'NEVER treat infectious or contagious conditions — REFER to a physician' },
+        { text: 'NEVER shave over active herpes lesions, warts, or open ulcers' },
+        { text: 'CALLUSES are natural defense — do NOT remove' },
+        { text: 'BLACKHEADS = oxidized sebum, NOT dirt' },
+        { text: 'When in doubt, STOP and REFER' },
+        { text: 'Document any suspicious moles or growths you observe' },
+        { text: 'Stay in your scope — recognize, refer, educate. Never diagnose or treat.' },
+      ],
+    },
+
+    // ─── 29F: State Board Traps ───
+    {
+      type: 'tabbed',
+      id: 'board-exam-traps',
+      title: '🚨 STATE BOARD TRAPS — DO NOT FALL FOR THESE',
+      subtitle: 'The questions designed to trip you up',
+      tabs: [
+        {
+          id: 'trap-structure',
+          label: 'STRUCTURE TRAPS',
+          title: 'STRUCTURE TRAPS',
+          bullets: [
+            { label: 'EPIDERMIS HAS NO BLOOD VESSELS', description: 'Exam questions ask what the epidermis contains. Blood vessels are NOT on that list.' },
+            { label: 'DERMIS IS 25× THICKER', description: 'Not 2×. Not 5×. Twenty-five times thicker. Memorize the number.' },
+            { label: 'HALF THE BODY\'S BLOOD SUPPLY', description: 'Approximately 50% of blood flows through skin. This demonstrates it is an organ.' },
+          ],
+          facts: [
+            { text: 'Trap: "The epidermis receives nutrients directly from blood vessels." FALSE. It gets nutrients by diffusion from the dermis.' },
+          ],
+        },
+        {
+          id: 'trap-lesions',
+          label: 'LESION TRAPS',
+          title: 'LESION TRAPS',
+          bullets: [
+            { label: 'PRIMARY vs SECONDARY', description: 'Primary = original. Secondary = evolved. Do not confuse them.' },
+            { label: 'BULLA vs VESICLE', description: 'Bulla = LARGE blister. Vesicle = SMALL blister. Size is the only difference.' },
+            { label: 'MACULE = FLAT', description: 'If you can feel it, it is not a macule. Macules are non-palpable discolorations.' },
+          ],
+          facts: [
+            { text: 'Trap: "A papule is a primary lesion filled with pus." FALSE. A papule has no pus. A pustule has pus.' },
+          ],
+        },
+        {
+          id: 'trap-safety',
+          label: 'SAFETY TRAPS',
+          title: 'SAFETY TRAPS',
+          bullets: [
+            { label: 'BLACKHEADS ARE NOT DIRT', description: 'The dark color is oxidized sebum and melanin. Hygiene is not the issue.' },
+            { label: 'CALLUSES ARE PROTECTIVE', description: 'Removing calluses exposes underlying tissue to injury. Do not remove them.' },
+            { label: 'HERPES IS CONTAGIOUS', description: 'Even before blisters appear (prodrome), the virus can spread. Postpone facial services.' },
+          ],
+          facts: [
+            { text: 'Trap: "A waiver protects you from liability for shaving over a contagious condition." FALSE. Waivers do not override sanitation standards.' },
+          ],
+        },
+      ],
+    },
+
 
     // ═══════════════════════════════════════════
     // SECTION 30: SKIN SCENARIO
