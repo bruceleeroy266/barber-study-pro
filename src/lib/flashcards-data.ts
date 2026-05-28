@@ -37,6 +37,8 @@ export { chapter8PremiumFlashcards } from './chapter-8-premium-flashcards'
 
 // Re-export Chapter 9 premium flashcards
 export { chapter9PremiumFlashcards } from './chapter-9-premium-flashcards'
+// Re-export Chapter 10 premium flashcards
+export { chapter10PremiumFlashcards } from './chapter-10-premium-flashcards'
 
 import { chapter1PremiumFlashcards } from './chapter-1-premium-flashcards'
 import { chapter2PremiumFlashcards } from './chapter-2-premium-flashcards'
@@ -46,6 +48,7 @@ import { chapter5PremiumFlashcards } from './chapter-5-premium-flashcards'
 import { chapter7PremiumFlashcards } from './chapter-7-premium-flashcards'
 import { chapter8PremiumFlashcards } from './chapter-8-premium-flashcards'
 import { chapter9PremiumFlashcards } from './chapter-9-premium-flashcards'
+import { chapter10PremiumFlashcards } from './chapter-10-premium-flashcards'
 
 export const chapterFlashcards: Record<string, Flashcard[]> = {
   'ch-1': chapter1PremiumFlashcards,
@@ -56,6 +59,7 @@ export const chapterFlashcards: Record<string, Flashcard[]> = {
   'ch-7': chapter7PremiumFlashcards,
   'ch-8': chapter8PremiumFlashcards,
   'ch-9': chapter9PremiumFlashcards,
+  'ch-10': chapter10PremiumFlashcards,
 }
 
 export default chapterFlashcards

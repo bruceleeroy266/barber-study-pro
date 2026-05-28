@@ -113,10 +113,13 @@ if (batch1Flashcards['ch-6'] && batch1Flashcards['ch-6'].length > 0) {
 
 // Chapter 7: Already loaded from real flashcards above (ch-7 premium)
 
-// BATCH 3: Wire orphaned flashcards for Ch 10, 11, 12
-// Chapter 10: Replace placeholder with orphaned
-if (batch3Flashcards['ch-10'] && batch3Flashcards['ch-10'].length > 0) {
-  demoFlashcards['ch-10'] = batch3Flashcards['ch-10']
+// Chapter 10: Use premium flashcards (real content)
+if (realFlashcards['ch-10'] && realFlashcards['ch-10'].length > 0) {
+  demoFlashcards['ch-10'] = realFlashcards['ch-10'].map((fc, idx) => ({
+    ...fc,
+    order_index: idx + 1,
+    is_active: true,
+  }))
 }
 
 // Chapter 11: Replace placeholder with orphaned
@@ -170,12 +173,14 @@ export const demoQuizzes: Record<string, Quiz> = {
   'ch-8': { id: 'quiz-8', chapter_id: 'ch-8', title: 'Basics of Electricity — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true },
   // Chapter 9: Premium flashcard-driven quiz (30 questions)
   'ch-9': { id: 'quiz-9', chapter_id: 'ch-9', title: 'The Skin — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true },
+  // Chapter 10: Premium flashcard-driven quiz (65 questions)
+  'ch-10': { id: 'quiz-10', chapter_id: 'ch-10', title: 'Properties and Disorders of the Hair and Scalp — Premium Quiz', description: '65 board-exam style questions. Passing score: 75%.', is_active: true },
 }
 
 for (let i = 3; i <= 21; i++) {
   const chId = `ch-${i}`
-  // Skip Chapters 3–9 — already registered above with premium titles
-  if (i >= 3 && i <= 9) continue
+  // Skip Chapters 3–10 — already registered above with premium titles
+  if (i >= 3 && i <= 10) continue
   if (!demoQuizzes[chId]) {
     demoQuizzes[chId] = { id: `quiz-${i}`, chapter_id: chId, title: `Chapter ${i} Quiz`, description: `Test your knowledge of Chapter ${i}.`, is_active: true }
   }
@@ -189,8 +194,8 @@ export const demoQuizQuestions: Record<string, QuizQuestion[]> = {
 
 for (let i = 3; i <= 21; i++) {
   const quizId = `quiz-${i}`
-  // Skip Chapters 3–9 — already in allQuizQuestions
-  if (i >= 3 && i <= 9) continue
+  // Skip Chapters 3–10 — already in allQuizQuestions
+  if (i >= 3 && i <= 10) continue
   if (!demoQuizQuestions[quizId]) {
     demoQuizQuestions[quizId] = [
       { id: `qq-${i}-1`, quiz_id: quizId, question: `Demo question 1 for Chapter ${i}`, answer_a: 'Option A', answer_b: 'Option B', answer_c: 'Option C', answer_d: 'Option D', correct_answer: 'a', explanation: `This is a demo question for Chapter ${i}.`, difficulty: 'easy', order_index: 1 },

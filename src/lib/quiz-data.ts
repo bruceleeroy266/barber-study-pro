@@ -16,6 +16,7 @@ import { chapter6PremiumQuizQuestions } from './chapter-6-premium-quiz'
 import { chapter7PremiumQuizQuestions } from './chapter-7-premium-quiz'
 import { chapter8PremiumQuizQuestions } from './chapter-8-premium-quiz'
 import { chapter9PremiumQuizQuestions } from './chapter-9-premium-quiz'
+import { chapter10PremiumQuizQuestions } from './chapter-10-premium-quiz'
 
 // ───────────────────────────────────────────────
 // CHAPTER 1: History of Barbering — PREMIUM QUIZ
@@ -72,6 +73,12 @@ export const chapter8QuizQuestions: QuizQuestion[] = chapter8PremiumQuizQuestion
 export const chapter9QuizQuestions: QuizQuestion[] = chapter9PremiumQuizQuestions
 
 // ───────────────────────────────────────────────
+// CHAPTER 10: Properties and Disorders of the Hair and Scalp — PREMIUM QUIZ
+// 65 questions generated from flashcard curriculum
+// ───────────────────────────────────────────────
+export const chapter10QuizQuestions: QuizQuestion[] = chapter10PremiumQuizQuestions
+
+// ───────────────────────────────────────────────
 // Export all quiz questions by chapter
 // ───────────────────────────────────────────────
 export const allQuizQuestions: Record<string, QuizQuestion[]> = {
@@ -84,4 +91,5 @@ export const allQuizQuestions: Record<string, QuizQuestion[]> = {
   'quiz-7': chapter7QuizQuestions,
   'quiz-8': chapter8QuizQuestions,
   'quiz-9': chapter9QuizQuestions,
+  'quiz-10': chapter10QuizQuestions,
 }
