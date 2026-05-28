@@ -122,9 +122,13 @@ if (realFlashcards['ch-10'] && realFlashcards['ch-10'].length > 0) {
   }))
 }
 
-// Chapter 11: Replace placeholder with orphaned
-if (batch3Flashcards['ch-11'] && batch3Flashcards['ch-11'].length > 0) {
-  demoFlashcards['ch-11'] = batch3Flashcards['ch-11']
+// Chapter 11: Use premium flashcards (real content)
+if (realFlashcards['ch-11'] && realFlashcards['ch-11'].length > 0) {
+  demoFlashcards['ch-11'] = realFlashcards['ch-11'].map((fc, idx) => ({
+    ...fc,
+    order_index: idx + 1,
+    is_active: true,
+  }))
 }
 
 // Chapter 12: Replace placeholder with orphaned
@@ -175,6 +179,8 @@ export const demoQuizzes: Record<string, Quiz> = {
   'ch-9': { id: 'quiz-9', chapter_id: 'ch-9', title: 'The Skin — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true },
   // Chapter 10: Premium flashcard-driven quiz (65 questions)
   'ch-10': { id: 'quiz-10', chapter_id: 'ch-10', title: 'Properties and Disorders of the Hair and Scalp — Premium Quiz', description: '65 board-exam style questions. Passing score: 75%.', is_active: true },
+  // Chapter 11: Premium flashcard-driven quiz (50 questions)
+  'ch-11': { id: 'quiz-11', chapter_id: 'ch-11', title: 'Treatment of the Hair and Scalp — Premium Quiz', description: '50 board-exam style questions. Passing score: 75%.', is_active: true },
 }
 
 for (let i = 3; i <= 21; i++) {

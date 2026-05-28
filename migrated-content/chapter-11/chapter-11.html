@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 11: Treatment of the Hair and Scalp - Interactive Study Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#7c3aed', // Violet
+                        secondary: '#a78bfa', // Light violet
+                        accent: '#fde047', // Yellow
+                        bgLight: '#f5f3ff', // Very light violet
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Segoe UI', 'Helvetica Neue', sans-serif; background-color: #f8fafc; }
+        .glass-card { background: #ffffff; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); border-radius: 1rem; border: 1px solid #f1f5f9; }
+        .highlight-text { background: linear-gradient(transparent 60%, #fde047 60%); display: inline; padding: 0 4px; }
+        .gradient-header { background: linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%); }
+        
+        /* Animations */
+        .fade-in { animation: fadeIn 0.4s ease-in-out forwards; }
+        .expand-content { transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out; overflow: hidden; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Hide scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="text-gray-800 antialiased leading-relaxed pb-20">
+
+    <!-- Header -->
+    <header class="gradient-header text-white py-16 px-6 shadow-2xl relative overflow-hidden text-center">
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CgkJPGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNmZmYiLz4KCTwvc3ZnPg==')]"></div>
+        <div class="max-w-5xl mx-auto relative z-10">
+            <div class="inline-block bg-accent text-primary font-bold px-4 py-1.5 rounded-full text-sm md:text-base mb-6 shadow-md">
+                <i class="fas fa-graduation-cap mr-2"></i> Barber School - Chapter 11
+            </div>
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-5 tracking-tight">Treatment of the Hair and Scalp</h1>
+            <p class="text-violet-100 text-xl md:text-2xl font-light">Master scalp health, therapeutic treatments, and client consultation skills</p>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto p-4 md:p-6 space-y-12 -mt-10 relative z-20">
+
+        <!-- Section 1: Why Treat Hair and Scalp Conditions -->
+        <section class="glass-card p-8 md:p-10">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-primary inline-block relative">
+                    <i class="fas fa-heart-pulse mr-3"></i>Why Treat Hair and Scalp Conditions?
+                    <div class="absolute -bottom-3 left-1/4 right-1/4 h-1 bg-violet-200 rounded"></div>
+                </h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-violet-50 p-6 rounded-xl border-l-4 border-primary">
+                    <h3 class="font-bold text-xl text-gray-800 mb-3"><i class="fas fa-shield-heart text-primary mr-2"></i>Client Health & Comfort</h3>
+                    <p class="text-gray-600 leading-relaxed">Healthy hair begins at the scalp. When clients experience itching, flaking, or irritation, it affects their daily comfort and confidence. As barbers, we provide relief and improve quality of life through proper treatment.</p>
+                </div>
+                
+                <div class="bg-violet-50 p-6 rounded-xl border-l-4 border-primary">
+                    <h3 class="font-bold text-xl text-gray-800 mb-3"><i class="fas fa-wand-magic-sparkles text-primary mr-2"></i>Hair Appearance & Manageability</h3>
+                    <p class="text-gray-600 leading-relaxed">Treated hair looks better, feels softer, and styles more easily. Scalp treatments remove buildup that weighs hair down, allowing natural movement and shine to come through.</p>
+                </div>
+                
+                <div class="bg-violet-50 p-6 rounded-xl border-l-4 border-primary">
+                    <h3 class="font-bold text-xl text-gray-800 mb-3"><i class="fas fa-hand-holding-dollar text-primary mr-2"></i>Professional Revenue</h3>
+                    <p class="text-gray-600 leading-relaxed">Treatment services represent additional income streams. Clients who understand scalp health become repeat customers for maintenance treatments and retail product purchases.</p>
+                </div>
+                
+                <div class="bg-violet-50 p-6 rounded-xl border-l-4 border-primary">
+                    <h3 class="font-bold text-xl text-gray-800 mb-3"><i class="fas fa-user-doctor text-primary mr-2"></i>Early Problem Detection</h3>
+                    <p class="text-gray-600 leading-relaxed">Regular scalp examination helps identify conditions before they worsen. Barbers often spot issues clients haven't noticed, enabling early intervention and referrals when needed.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Types of Scalp Treatments -->
+        <section class="glass-card p-8 md:p-10">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-primary inline-block relative">
+                    <i class="fas fa-head-side-virus mr-3"></i>Types of Scalp Treatments
+                    <div class="absolute -bottom-3 left-1/4 right-1/4 h-1 bg-violet-200 rounded"></div>
+                </h2>
+                <p class="mt-4 text-gray-500 text-lg">Click each treatment type to learn more</p>
+            </div>
+            
+            <!-- Tabs Navigation -->
+            <div class="flex flex-wrap justify-center gap-3 mb-8">
+                <button onclick="showTab('scalp1')" id="btn-scalp1" class="tab-btn-scalp py-3 px-6 rounded-lg font-bold text-lg bg-primary text-white shadow-md transition-all transform hover:scale-105">
+                    <i class="fas fa-droplet mr-2"></i>Moisturizing
+                </button>
+                <button onclick="showTab('scalp2')" id="btn-scalp2" class="tab-btn-scalp py-3 px-6 rounded-lg font-bold text-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all transform hover:scale-105">
+                    <i class="fas fa-pump-soap mr-2"></i>Clarifying
+                </button>
+                <button onclick="showTab('scalp3')" id="btn-scalp3" class="tab-btn-scalp py-3 px-6 rounded-lg font-bold text-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all transform hover:scale-105">
+                    <i class="fas fa-leaf mr-2"></i>Stimulating
+                </button>
+                <button onclick="showTab('scalp4')" id="btn-scalp4" class="tab-btn-scalp py-3 px-6 rounded-lg font-bold text-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all transform hover:scale-105">
+                    <i class="fas fa-ban mr-2"></i>Dandruff Control
+                </button>
+            </div>
+
+            <!-- Tabs Content -->
+            <div class="min-h-[280px] bg-gray-50 rounded-xl p-8 border-2 border-dashed border-gray-200">
+                
+                <!-- Moisturizing -->
+                <div id="scalp1" class="tab-content-scalp fade-in">
+                    <div class="flex items-center mb-4">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-droplet text-3xl text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-2xl text-gray-800">Moisturizing Treatments</h3>
+                            <p class="text-gray-500">For dry, tight, or flaky scalps</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-violet-100">
+                        <p class="text-gray-700 mb-4"><strong>Purpose:</strong> Restore hydration balance to parched scalp tissue and relieve tightness or itching caused by dryness.</p>
+                        <p class="text-gray-700 mb-4"><strong>Key Ingredients:</strong> Aloe vera, glycerin, hyaluronic acid, natural oils (jojoba, coconut, argan), shea butter.</p>
+                        <p class="text-gray-700"><strong>Application:</strong> Apply to clean scalp, massage gently, leave for 10-15 minutes under warm towel or steamer. Rinse thoroughly.</p>
+                    </div>
+                </div>
+
+                <!-- Clarifying -->
+                <div id="scalp2" class="tab-content-scalp hidden fade-in">
+                    <div class="flex items-center mb-4">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-pump-soap text-3xl text-green-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-2xl text-gray-800">Clarifying Treatments</h3>
+                            <p class="text-gray-500">For product buildup and oily scalps</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-violet-100">
+                        <p class="text-gray-700 mb-4"><strong>Purpose:</strong> Remove accumulated product residue, excess oil, hard water minerals, and environmental pollutants from the scalp.</p>
+                        <p class="text-gray-700 mb-4"><strong>Key Ingredients:</strong> Apple cider vinegar, salicylic acid, tea tree oil, citrus extracts, activated charcoal.</p>
+                        <p class="text-gray-700"><strong>Application:</strong> Use before other treatments to ensure maximum penetration. Massage into scalp, leave 3-5 minutes, rinse with warm water. Follow with conditioner on hair only.</p>
+                    </div>
+                </div>
+
+                <!-- Stimulating -->
+                <div id="scalp3" class="tab-content-scalp hidden fade-in">
+                    <div class="flex items-center mb-4">
+                        <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-leaf text-3xl text-orange-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-2xl text-gray-800">Stimulating Treatments</h3>
+                            <p class="text-gray-500">For thinning hair and circulation improvement</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-violet-100">
+                        <p class="text-gray-700 mb-4"><strong>Purpose:</strong> Increase blood flow to hair follicles, encouraging healthy growth and awakening dormant follicles.</p>
+                        <p class="text-gray-700 mb-4"><strong>Key Ingredients:</strong> Peppermint oil, rosemary extract, biotin, caffeine, niacin (vitamin B3), eucalyptus.</p>
+                        <p class="text-gray-700"><strong>Application:</strong> Apply to scalp using fingertips or applicator brush. Massage vigorously for 5-10 minutes to generate heat and tingling sensation. Do not rinse immediately.</p>
+                    </div>
+                </div>
+
+                <!-- Dandruff Control -->
+                <div id="scalp4" class="tab-content-scalp hidden fade-in">
+                    <div class="flex items-center mb-4">
+                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-ban text-3xl text-purple-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-2xl text-gray-800">Dandruff Control Treatments</h3>
+                            <p class="text-gray-500">For flaking, itching, and microbial imbalance</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-violet-100">
+                        <p class="text-gray-700 mb-4"><strong>Purpose:</strong> Control Malassezia yeast overgrowth, reduce inflammation, and normalize skin cell turnover rate.</p>
+                        <p class="text-gray-700 mb-4"><strong>Key Ingredients:</strong> Pyrithione zinc, ketoconazole, selenium sulfide, coal tar, salicylic acid, sulfur.</p>
+                        <p class="text-gray-700"><strong>Application:</strong> Apply to affected areas, massage gently, leave for 3-5 minutes (or as directed). Use 2-3 times weekly until controlled, then weekly for maintenance.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Types of Hair Treatments -->
+        <section class="glass-card p-8 md:p-10">
+            <div class="flex flex-col md:flex-row justify-between items-center border-b-2 border-violet-100 pb-4 mb-8">
+                <h2 class="text-3xl font-bold text-primary flex items-center">
+                    <i class="fas fa-spray-can-sparkles mr-4"></i>Types of Hair Treatments
+                </h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-water text-pink-600 text-xl"></i>
+                        </div>
+                        <h3 class="font-bold text-xl text-gray-800">Deep Conditioning</h3>
+                    </div>
+                    <p class="text-gray-600">Intensive moisture treatment that penetrates the hair shaft to repair damage, improve elasticity, and restore softness. Ideal for dry, brittle, or chemically treated hair.</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-sun text-yellow-600 text-xl"></i>
+                        </div>
+                        <h3 class="font-bold text-xl text-gray-800">Protein Reconstruction</h3>
+                    </div>
+                    <p class="text-gray-600">Strengthens hair by depositing hydrolyzed proteins that fill gaps in the cuticle layer. Essential for severely damaged, over-processed, or breaking hair. Use sparingly to avoid protein overload.</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-shield-alt text-blue-600 text-xl"></i>
+                        </div>
+                        <h3 class="font-bold text-xl text-gray-800">Hot Oil Treatments</h3>
+                    </div>
+                    <p class="text-gray-600">Warm oil penetrates the cuticle to lubricate, seal in moisture, and add shine. Excellent for natural hair, protective styles, and preventing breakage. Oils include coconut, olive, and argan.</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-cut text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="font-bold text-xl text-gray-800">Bond Builders</h3>
+                    </div>
+                    <p class="text-gray-600">Advanced treatments that repair disulfide bonds broken during chemical services. Can be added to color or lightening formulas or used as standalone treatments to prevent and reverse damage.</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-wind text-purple-600 text-xl"></i>
+                        </div>
+                        <h3 class="font-bold text-xl text-gray-800">Keratin Smoothing</h3>
+                    </div>
+                    <p class="text-gray-600">Semi-permanent treatment that coats the hair with keratin protein to reduce frizz, increase manageability, and create a smooth, shiny finish. Results last 2-4 months with proper care.</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-fire text-red-600 text-xl"></i>
+                        </div>
+                        <h3 class="font-bold text-xl text-gray-800">Color-Protecting Treatments</h3>
+                    </div>
+                    <p class="text-gray-600">Specially formulated to seal the cuticle after color services, lock in pigment molecules, and prevent fading. Often contain UV filters and antioxidants to maintain vibrancy.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Product Selection Based on Hair Analysis -->
+        <section class="glass-card p-8 md:p-10 border-t-8 border-primary">
+            <h2 class="text-3xl font-bold text-primary mb-8 flex items-center">
+                <i class="fas fa-microscope mr-4"></i>Product Selection Based on Hair Analysis
+            </h2>
+            
+            <div class="bg-violet-50 rounded-xl p-6 mb-8 border border-violet-200">
+                <h3 class="font-bold text-xl text-gray-800 mb-4"><i class="fas fa-clipboard-check text-primary mr-2"></i>The Analysis Process</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="bg-white p-4 rounded-lg text-center">
+                        <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-2 font-bold">1</div>
+                        <p class="font-semibold">Visual Exam</p>
+                        <p class="text-sm text-gray-500">Look for shine, damage, breakage patterns</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg text-center">
+                        <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-2 font-bold">2</div>
+                        <p class="font-semibold">Touch Test</p>
+                        <p class="text-sm text-gray-500">Feel texture, thickness, elasticity</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg text-center">
+                        <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-2 font-bold">3</div>
+                        <p class="font-semibold">Wet Assessment</p>
+                        <p class="text-sm text-gray-500">Observe porosity and curl pattern</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg text-center">
+                        <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-2 font-bold">4</div>
+                        <p class="font-semibold">Scalp Check</p>
+                        <p class="text-sm text-gray-500">Identify oiliness, dryness, or conditions</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Matching Test -->
+            <div class="bg-gray-800 rounded-xl p-6 mb-8 text-white shadow-lg">
+                <h3 class="text-xl font-bold mb-4 text-accent"><i class="fas fa-puzzle-piece mr-2"></i>Interactive Matching: Select a client concern to see recommended treatments</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <button onclick="highlightTreatment([1])" class="text-left bg-gray-700 hover:bg-gray-600 px-4 py-3 rounded-lg transition border border-gray-600 focus:outline-none focus:ring-2 focus:ring-accent">
+                        🔍 Client has dry, brittle hair with split ends
+                    </button>
+                    <button onclick="highlightTreatment([2])" class="text-left bg-gray-700 hover:bg-gray-600 px-4 py-3 rounded-lg transition border border-gray-600 focus:outline-none focus:ring-2 focus:ring-accent">
+                        🔍 Client has oily scalp with heavy product buildup
+                    </button>
+                    <button onclick="highlightTreatment([3])" class="text-left bg-gray-700 hover:bg-gray-600 px-4 py-3 rounded-lg transition border border-gray-600 focus:outline-none focus:ring-2 focus:ring-accent">
+                        🔍 Client has thinning hair and wants growth stimulation
+                    </button>
+                    <button onclick="highlightTreatment([4])" class="text-left bg-gray-700 hover:bg-gray-600 px-4 py-3 rounded-lg transition border border-gray-600 focus:outline-none focus:ring-2 focus:ring-accent">
+                        🔍 Client has visible white flakes and scalp itching
+                    </button>
+                    <button onclick="highlightTreatment([5])" class="text-left bg-gray-700 hover:bg-gray-600 px-4 py-3 rounded-lg transition border border-gray-600 focus:outline-none focus:ring-2 focus:ring-accent">
+                        🔍 Client has color-treated hair that's fading quickly
+                    </button>
+                    <button onclick="highlightTreatment([6])" class="text-left bg-gray-700 hover:bg-gray-600 px-4 py-3 rounded-lg transition border border-gray-600 focus:outline-none focus:ring-2 focus:ring-accent">
+                        🔍 Client has severely damaged, breaking hair
+                    </button>
+                </div>
+                <div class="mt-4 text-center">
+                    <button onclick="resetTreatments()" class="text-sm text-gray-400 hover:text-white underline">Reset Selection</button>
+                </div>
+            </div>
+
+            <!-- Treatment Recommendations Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="treatments-container">
+                <div class="treatment-card bg-white p-4 border border-gray-200 rounded-lg transition-all duration-300" id="tr-1">
+                    <span class="inline-block bg-gray-100 text-gray-500 rounded-full w-6 h-6 text-center text-sm mr-2">1</span>
+                    <strong>Deep Conditioning + Hot Oil Treatment</strong>
+                    <p class="text-sm text-gray-500 mt-1">For dry, brittle hair - restores moisture and seals cuticle</p>
+                </div>
+                <div class="treatment-card bg-white p-4 border border-gray-200 rounded-lg transition-all duration-300" id="tr-2">
+                    <span class="inline-block bg-gray-100 text-gray-500 rounded-full w-6 h-6 text-center text-sm mr-2">2</span>
+                    <strong>Clarifying Treatment + Lightweight Conditioner</strong>
+                    <p class="text-sm text-gray-500 mt-1">For oily buildup - removes residue without weighing down</p>
+                </div>
+                <div class="treatment-card bg-white p-4 border border-gray-200 rounded-lg transition-all duration-300" id="tr-3">
+                    <span class="inline-block bg-gray-100 text-gray-500 rounded-full w-6 h-6 text-center text-sm mr-2">3</span>
+                    <strong>Stimulating Scalp Treatment + Scalp Massage</strong>
+                    <p class="text-sm text-gray-500 mt-1">For thinning hair - increases circulation to follicles</p>
+                </div>
+                <div class="treatment-card bg-white p-4 border border-gray-200 rounded-lg transition-all duration-300" id="tr-4">
+                    <span class="inline-block bg-gray-100 text-gray-500 rounded-full w-6 h-6 text-center text-sm mr-2">4</span>
+                    <strong>Anti-Dandruff Treatment + Medicated Shampoo</strong>
+                    <p class="text-sm text-gray-500 mt-1">For flaking - controls yeast and normalizes cell turnover</p>
+                </div>
+                <div class="treatment-card bg-white p-4 border border-gray-200 rounded-lg transition-all duration-300" id="tr-5">
+                    <span class="inline-block bg-gray-100 text-gray-500 rounded-full w-6 h-6 text-center text-sm mr-2">5</span>
+                    <strong>Color-Protecting Treatment + UV Protection</strong>
+                    <p class="text-sm text-gray-500 mt-1">For color-treated hair - seals cuticle and prevents fading</p>
+                </div>
+                <div class="treatment-card bg-white p-4 border border-gray-200 rounded-lg transition-all duration-300" id="tr-6">
+                    <span class="inline-block bg-gray-100 text-gray-500 rounded-full w-6 h-6 text-center text-sm mr-2">6</span>
+                    <strong>Protein Reconstruction + Bond Builder</strong>
+                    <p class="text-sm text-gray-500 mt-1">For damaged hair - repairs bonds and strengthens structure</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Treatment Procedures and Techniques -->
+        <section class="glass-card p-8 md:p-10">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-primary inline-block relative">
+                    <i class="fas fa-list-ol mr-3"></i>Treatment Procedures & Techniques
+                    <div class="absolute -bottom-3 left-1/4 right-1/4 h-1 bg-violet-200 rounded"></div>
+                </h2>
+            </div>
+            
+            <div class="space-y-6">
+                <!-- Step 1 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                    <div class="bg-violet-100 px-6 py-4 flex items-center">
+                        <div class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold mr-4">1</div>
+                        <h3 class="font-bold text-xl text-gray-800">Consultation & Analysis</h3>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-700">Begin with thorough hair and scalp analysis. Ask about allergies, sensitivities, previous chemical services, and current home care routine. Document findings and explain recommended treatment to client.</p>
+                    </div>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                    <div class="bg-violet-100 px-6 py-4 flex items-center">
+                        <div class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold mr-4">2</div>
+                        <h3 class="font-bold text-xl text-gray-800">Shampoo & Prep</h3>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-700">Shampoo with appropriate cleanser for scalp condition. Use clarifying shampoo for buildup, moisturizing for dryness. Rinse thoroughly with warm water. Towel dry to remove excess moisture before treatment application.</p>
+                    </div>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                    <div class="bg-violet-100 px-6 py-4 flex items-center">
+                        <div class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold mr-4">3</div>
+                        <h3 class="font-bold text-xl text-gray-800">Application</h3>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-700">Section hair into 4-6 parts. Apply treatment product directly to scalp (for scalp treatments) or from roots to ends (for hair treatments). Use applicator brush or fingertips for even distribution. Ensure complete coverage.</p>
+                    </div>
+                </div>
+                
+                <!-- Step 4 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                    <div class="bg-violet-100 px-6 py-4 flex items-center">
+                        <div class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold mr-4">4</div>
+                        <h3 class="font-bold text-xl text-gray-800">Processing</h3>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-700">Cover with plastic cap and warm towel, or place under hood dryer/steamer for 10-20 minutes depending on product instructions. Heat opens cuticle and enhances penetration. Monitor client for any adverse reactions.</p>
+                    </div>
+                </div>
+                
+                <!-- Step 5 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                    <div class="bg-violet-100 px-6 py-4 flex items-center">
+                        <div class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold mr-4">5</div>
+                        <h3 class="font-bold text-xl text-gray-800">Rinse & Style</h3>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-700">Rinse thoroughly with cool to lukewarm water. Cool water seals the cuticle. Apply conditioner if needed (avoid scalp for oily conditions). Towel dry, detangle gently, and proceed with desired styling service.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Massage During Treatments -->
+        <section class="glass-card p-8 md:p-10 border-t-8 border-pink-500">
+            <h2 class="text-3xl font-bold text-primary mb-8 flex items-center">
+                <i class="fas fa-hand-sparkles mr-4"></i>Massage During Treatments
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="font-bold text-xl text-gray-800 mb-4"><i class="fas fa-star text-pink-500 mr-2"></i>Benefits of Scalp Massage</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                            <span class="text-gray-700">Increases blood circulation to hair follicles</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                            <span class="text-gray-700">Distributes natural oils (sebum) along hair shaft</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                            <span class="text-gray-700">Enhances product penetration and effectiveness</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                            <span class="text-gray-700">Relieves tension and promotes relaxation</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                            <span class="text-gray-700">Exfoliates scalp by loosening dead skin cells</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                            <span class="text-gray-700">Creates memorable, luxurious service experience</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold text-xl text-gray-800 mb-4"><i class="fas fa-hands text-pink-500 mr-2"></i>Massage Techniques</h3>
+                    <div class="space-y-4">
+                        <div class="bg-pink-50 p-4 rounded-lg border-l-4 border-pink-400">
+                            <h4 class="font-bold text-gray-800">Effleurage (Stroking)</h4>
+                            <p class="text-gray-600 text-sm">Long, smooth, gliding movements to relax and spread product. Use palms and fingertips.</p>
+                        </div>
+                        <div class="bg-pink-50 p-4 rounded-lg border-l-4 border-pink-400">
+                            <h4 class="font-bold text-gray-800">Petrissage (Kneading)</h4>
+                            <p class="text-gray-600 text-sm">Circular pressure and lifting motions with fingertips. Stimulates circulation deeply.</p>
+                        </div>
+                        <div class="bg-pink-50 p-4 rounded-lg border-l-4 border-pink-400">
+                            <h4 class="font-bold text-gray-800">Friction (Rubbing)</h4>
+                            <p class="text-gray-600 text-sm">Small circular movements using fingertips or pads. Creates heat and stimulates follicles.</p>
+                        </div>
+                        <div class="bg-pink-50 p-4 rounded-lg border-l-4 border-pink-400">
+                            <h4 class="font-bold text-gray-800">Tapotement (Tapping)</h4>
+                            <p class="text-gray-600 text-sm">Light, rapid tapping with fingertips. Invigorates scalp and awakens nerve endings.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 bg-yellow-50 p-6 rounded-xl border-2 border-yellow-200">
+                <h4 class="font-bold text-lg text-gray-800 mb-2"><i class="fas fa-lightbulb text-yellow-500 mr-2"></i>Pro Tip</h4>
+                <p class="text-gray-700">Always use your fingertips, not nails. Work from hairline toward crown, then down to nape. Vary pressure based on client preference—some prefer gentle touch, others want firm stimulation. Ask for feedback!</p>
+            </div>
+        </section>
+
+        <!-- Section 7: Home Care Recommendations -->
+        <section class="glass-card p-8 md:p-10">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-primary inline-block relative">
+                    <i class="fas fa-house-user mr-3"></i>Home Care Recommendations
+                    <div class="absolute -bottom-3 left-1/4 right-1/4 h-1 bg-violet-200 rounded"></div>
+                </h2>
+            </div>
+            
+            <div class="bg-gray-800 rounded-xl p-6 mb-8 text-white shadow-lg">
+                <h3 class="text-xl font-bold mb-4 text-accent"><i class="fas fa-comments mr-2"></i>Client Education is Key</h3>
+                <p class="text-gray-300 mb-4">Professional treatments deliver immediate results, but home maintenance determines long-term success. Teach clients how to care for their hair between visits.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                    <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-shower text-2xl text-blue-600"></i>
+                    </div>
+                    <h3 class="font-bold text-xl text-gray-800 mb-3">Cleansing Routine</h3>
+                    <ul class="text-gray-600 space-y-2 text-sm">
+                        <li>• Shampoo frequency based on scalp type</li>
+                        <li>• Use lukewarm water, not hot</li>
+                        <li>• Focus shampoo on scalp, not ends</li>
+                        <li>• Rinse thoroughly to prevent buildup</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                    <div class="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-pump-soap text-2xl text-green-600"></i>
+                    </div>
+                    <h3 class="font-bold text-xl text-gray-800 mb-3">Conditioning Habits</h3>
+                    <ul class="text-gray-600 space-y-2 text-sm">
+                        <li>• Condition after every shampoo</li>
+                        <li>• Apply from mid-lengths to ends</li>
+                        <li>• Leave in 2-3 minutes minimum</li>
+                        <li>• Use deep conditioner weekly</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                    <div class="w-14 h-14 bg-orange-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-sun text-2xl text-orange-600"></i>
+                    </div>
+                    <h3 class="font-bold text-xl text-gray-800 mb-3">Protection Practices</h3>
+                    <ul class="text-gray-600 space-y-2 text-sm">
+                        <li>• Use heat protectant before styling</li>
+                        <li>• Wear hat in direct sun</li>
+                        <li>• Rinse hair after swimming</li>
+                        <li>• Sleep on silk or satin pillowcase</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-8 bg-violet-50 p-6 rounded-xl border border-violet-200">
+                <h3 class="font-bold text-xl text-gray-800 mb-4"><i class="fas fa-calendar-alt text-primary mr-2"></i>Maintenance Schedule</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white p-4 rounded-lg">
+                        <h4 class="font-bold text-gray-800 mb-2">Daily</h4>
+                        <p class="text-gray-600 text-sm">Gentle brushing to distribute oils, scalp massage (2-3 minutes)</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg">
+                        <h4 class="font-bold text-gray-800 mb-2">Weekly</h4>
+                        <p class="text-gray-600 text-sm">Deep conditioning treatment, clarifying shampoo (if needed)</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg">
+                        <h4 class="font-bold text-gray-800 mb-2">Monthly</h4>
+                        <p class="text-gray-600 text-sm">Protein treatment, trim split ends, scalp exfoliation</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg">
+                        <h4 class="font-bold text-gray-800 mb-2">Quarterly</h4>
+                        <p class="text-gray-600 text-sm">Professional salon treatment, hair analysis, product review</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 8: Retail Product Sales -->
+        <section class="glass-card p-8 md:p-10 border-t-8 border-green-500">
+            <h2 class="text-3xl font-bold text-primary mb-8 flex items-center">
+                <i class="fas fa-store mr-4"></i>Retail Product Sales
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="font-bold text-xl text-gray-800 mb-4"><i class="fas fa-handshake text-green-500 mr-2"></i>The Consultation-Sale Connection</h3>
+                    <p class="text-gray-700 mb-4">Every service is a sales opportunity. When you analyze a client's hair and scalp, you're identifying problems they need solutions for. The products you recommend are those solutions.</p>
+                    <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
+                        <p class="text-gray-700 italic">"Based on what I'm seeing with your dry scalp, I'd recommend our moisturizing shampoo with tea tree oil. It'll help with the flaking between visits."</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold text-xl text-gray-800 mb-4"><i class="fas fa-chart-line text-green-500 mr-2"></i>Benefits of Retail Sales</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-dollar-sign text-green-500 mr-3 mt-1"></i>
+                            <span class="text-gray-700"><strong>Increased Revenue:</strong> Retail can add 15-30% to service income</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-smile text-green-500 mr-3 mt-1"></i>
+                            <span class="text-gray-700"><strong>Client Retention:</strong> Clients who buy products return more frequently</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-trophy text-green-500 mr-3 mt-1"></i>
+                            <span class="text-gray-700"><strong>Professional Authority:</strong> Builds trust as an expert</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-sync text-green-500 mr-3 mt-1"></i>
+                            <span class="text-gray-700"><strong>Consistent Results:</strong> Clients maintain salon quality at home</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                <div class="bg-green-100 px-6 py-4">
+                    <h3 class="font-bold text-xl text-gray-800"><i class="fas fa-comments text-green-600 mr-2"></i>Effective Selling Techniques</h3>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-bold text-gray-800 mb-2">1. Educate, Don't Push</h4>
+                            <p class="text-gray-600 text-sm mb-4">Explain why the product helps their specific concern. Knowledge builds confidence in the purchase.</p>
+                            
+                            <h4 class="font-bold text-gray-800 mb-2">2. Let Them Experience It</h4>
+                            <p class="text-gray-600 text-sm mb-4">Use products during service. When clients feel and smell the difference, they want to take it home.</p>
+                            
+                            <h4 class="font-bold text-gray-800 mb-2">3. Make Specific Recommendations</h4>
+                            <p class="text-gray-600 text-sm">Don't ask "Do you want shampoo?" Say "I'm using our volumizing line on you today—it's perfect for your fine hair."</p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800 mb-2">4. Create Systems</h4>
+                            <p class="text-gray-600 text-sm mb-4">Recommend complete systems (shampoo + conditioner + styling) rather than single items.</p>
+                            
+                            <h4 class="font-bold text-gray-800 mb-2">5. Follow Up</h4>
+                            <p class="text-gray-600 text-sm mb-4">Ask about product use at next visit. Shows you care and opens door to additional recommendations.</p>
+                            
+                            <h4 class="font-bold text-gray-800 mb-2">6. Display Strategically</h4>
+                            <p class="text-gray-600 text-sm">Keep retail area clean, organized, and well-lit. Rotate displays to feature seasonal or promotional items.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section class="glass-card p-8 md:p-10 border-t-8 border-accent">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-primary inline-block relative">
+                    <i class="fas fa-clipboard-question mr-3"></i>Chapter 11 Quiz
+                    <div class="absolute -bottom-3 left-1/4 right-1/4 h-1 bg-violet-200 rounded"></div>
+                </h2>
+                <p class="mt-4 text-gray-500 text-lg">Test your knowledge! Click to reveal answers</p>
+            </div>
+            
+            <div class="space-y-6">
+                <!-- Question 1 -->
+                <div class="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-4 flex items-start">
+                        <span class="bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-sm mr-3 flex-shrink-0">1</span>
+                        What is the primary purpose of a clarifying treatment?
+                    </h3>
+                    <button onclick="toggleQuizAnswer('quiz-1', this)" class="text-primary font-bold text-sm bg-violet-50 px-4 py-2 rounded hover:bg-violet-100 transition">
+                        <i class="fas fa-eye mr-1"></i> Show Answer
+                    </button>
+                    <div id="quiz-1" class="hidden mt-4 p-4 bg-violet-50 border-l-4 border-primary rounded text-gray-800">
+                        To remove product buildup, excess oil, hard water minerals, and environmental pollutants from the scalp and hair.
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-4 flex items-start">
+                        <span class="bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-sm mr-3 flex-shrink-0">2</span>
+                        Which massage technique involves circular pressure and lifting motions?
+                    </h3>
+                    <button onclick="toggleQuizAnswer('quiz-2', this)" class="text-primary font-bold text-sm bg-violet-50 px-4 py-2 rounded hover:bg-violet-100 transition">
+                        <i class="fas fa-eye mr-1"></i> Show Answer
+                    </button>
+                    <div id="quiz-2" class="hidden mt-4 p-4 bg-violet-50 border-l-4 border-primary rounded text-gray-800">
+                        Petrissage (kneading).
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-4 flex items-start">
+                        <span class="bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-sm mr-3 flex-shrink-0">3</span>
+                        What ingredient is commonly found in anti-dandruff treatments to control yeast overgrowth?
+                    </h3>
+                    <button onclick="toggleQuizAnswer('quiz-3', this)" class="text-primary font-bold text-sm bg-violet-50 px-4 py-2 rounded hover:bg-violet-100 transition">
+                        <i class="fas fa-eye mr-1"></i> Show Answer
+                    </button>
+                    <div id="quiz-3" class="hidden mt-4 p-4 bg-violet-50 border-l-4 border-primary rounded text-gray-800">
+                        Pyrithione zinc, ketoconazole, or selenium sulfide.
+                    </div>
+                </div>
+
+                <!-- Question 4 -->
+                <div class="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-4 flex items-start">
+                        <span class="bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-sm mr-3 flex-shrink-0">4</span>
+                        Why should you use cool water for the final rinse after a treatment?
+                    </h3>
+                    <button onclick="toggleQuizAnswer('quiz-4', this)" class="text-primary font-bold text-sm bg-violet-50 px-4 py-2 rounded hover:bg-violet-100 transition">
+                        <i class="fas fa-eye mr-1"></i> Show Answer
+                    </button>
+                    <div id="quiz-4" class="hidden mt-4 p-4 bg-violet-50 border-l-4 border-primary rounded text-gray-800">
+                        Cool water seals the cuticle, locks in moisture, and adds shine to the hair.
+                    </div>
+                </div>
+
+                <!-- Question 5 -->
+                <div class="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-4 flex items-start">
+                        <span class="bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-sm mr-3 flex-shrink-0">5</span>
+                        What is protein overload and how can it be avoided?
+                    </h3>
+                    <button onclick="toggleQuizAnswer('quiz-5', this)" class="text-primary font-bold text-sm bg-violet-50 px-4 py-2 rounded hover:bg-violet-100 transition">
+                        <i class="fas fa-eye mr-1"></i> Show Answer
+                    </button>
+                    <div id="quiz-5" class="hidden mt-4 p-4 bg-violet-50 border-l-4 border-primary rounded text-gray-800">
+                        Protein overload occurs when hair receives too much protein, becoming stiff and brittle. Avoid by balancing protein treatments with moisturizing treatments and not overusing protein products.
+                    </div>
+                </div>
+
+                <!-- Question 6 -->
+                <div class="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-4 flex items-start">
+                        <span class="bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-sm mr-3 flex-shrink-0">6</span>
+                        List three benefits of scalp massage during treatments.
+                    </h3>
+                    <button onclick="toggleQuizAnswer('quiz-6', this)" class="text-primary font-bold text-sm bg-violet-50 px-4 py-2 rounded hover:bg-violet-100 transition">
+                        <i class="fas fa-eye mr-1"></i> Show Answer
+                    </button>
+                    <div id="quiz-6" class="hidden mt-4 p-4 bg-violet-50 border-l-4 border-primary rounded text-gray-800">
+                        Increases blood circulation, distributes natural oils, enhances product penetration, relieves tension, exfoliates scalp, and creates a luxurious service experience.
+                    </div>
+                </div>
+
+                <!-- Question 7 -->
+                <div class="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-4 flex items-start">
+                        <span class="bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-sm mr-3 flex-shrink-0">7</span>
+                        What is the difference between a moisturizing treatment and a protein reconstruction?
+                    </h3>
+                    <button onclick="toggleQuizAnswer('quiz-7', this)" class="text-primary font-bold text-sm bg-violet-50 px-4 py-2 rounded hover:bg-violet-100 transition">
+                        <i class="fas fa-eye mr-1"></i> Show Answer
+                    </button>
+                    <div id="quiz-7" class="hidden mt-4 p-4 bg-violet-50 border-l-4 border-primary rounded text-gray-800">
+                        Moisturizing treatments restore hydration and softness to dry hair. Protein reconstructions strengthen hair by filling gaps in the cuticle with hydrolyzed proteins.
+                    </div>
+                </div>
+
+                <!-- Question 8 -->
+                <div class="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-4 flex items-start">
+                        <span class="bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-sm mr-3 flex-shrink-0">8</span>
+                        Why is client consultation important before performing a treatment?
+                    </h3>
+                    <button onclick="toggleQuizAnswer('quiz-8', this)" class="text-primary font-bold text-sm bg-violet-50 px-4 py-2 rounded hover:bg-violet-100 transition">
+                        <i class="fas fa-eye mr-1"></i> Show Answer
+                    </button>
+                    <div id="quiz-8" class="hidden mt-4 p-4 bg-violet-50 border-l-4 border-primary rounded text-gray-800">
+                        To identify allergies, sensitivities, previous chemical services, scalp conditions, and to determine the appropriate treatment for their specific needs.
+                    </div>
+                </div>
+
+                <!-- Question 9 -->
+                <div class="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-4 flex items-start">
+                        <span class="bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-sm mr-3 flex-shrink-0">9</span>
+                        What are bond builders and when should they be used?
+                    </h3>
+                    <button onclick="toggleQuizAnswer('quiz-9', this)" class="text-primary font-bold text-sm bg-violet-50 px-4 py-2 rounded hover:bg-violet-100 transition">
+                        <i class="fas fa-eye mr-1"></i> Show Answer
+                    </button>
+                    <div id="quiz-9" class="hidden mt-4 p-4 bg-violet-50 border-l-4 border-primary rounded text-gray-800">
+                        Bond builders repair disulfide bonds broken during chemical services. Use during color/lightening or as standalone treatments for damaged hair.
+                    </div>
+                </div>
+
+                <!-- Question 10 -->
+                <div class="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-4 flex items-start">
+                        <span class="bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-sm mr-3 flex-shrink-0">10</span>
+                        How often should a client with dandruff use anti-dandruff treatment initially?
+                    </h3>
+                    <button onclick="toggleQuizAnswer('quiz-10', this)" class="text-primary font-bold text-sm bg-violet-50 px-4 py-2 rounded hover:bg-violet-100 transition">
+                        <i class="fas fa-eye mr-1"></i> Show Answer
+                    </button>
+                    <div id="quiz-10" class="hidden mt-4 p-4 bg-violet-50 border-l-4 border-primary rounded text-gray-800">
+                        2-3 times per week until controlled, then weekly for maintenance.
+                    </div>
+                </div>
+
+                <!-- Question 11 -->
+                <div class="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-4 flex items-start">
+                        <span class="bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-sm mr-3 flex-shrink-0">11</span>
+                        What is the "touch test" during hair analysis?
+                    </h3>
+                    <button onclick="toggleQuizAnswer('quiz-11', this)" class="text-primary font-bold text-sm bg-violet-50 px-4 py-2 rounded hover:bg-violet-100 transition">
+                        <i class="fas fa-eye mr-1"></i> Show Answer
+                    </button>
+                    <div id="quiz-11" class="hidden mt-4 p-4 bg-violet-50 border-l-4 border-primary rounded text-gray-800">
+                        Feeling the hair's texture, thickness, and elasticity to assess its condition and porosity.
+                    </div>
+                </div>
+
+                <!-- Question 12 -->
+                <div class="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-4 flex items-start">
+                        <span class="bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-sm mr-3 flex-shrink-0">12</span>
+                        Why is retail product sales beneficial for client retention?
+                    </h3>
+                    <button onclick="toggleQuizAnswer('quiz-12', this)" class="text-primary font-bold text-sm bg-violet-50 px-4 py-2 rounded hover:bg-violet-100 transition">
+                        <i class="fas fa-eye mr-1"></i> Show Answer
+                    </button>
+                    <div id="quiz-12" class="hidden mt-4 p-4 bg-violet-50 border-l-4 border-primary rounded text-gray-800">
+                        Clients who purchase products return more frequently for services and maintain better results, building loyalty to the barber/stylist.
+                    </div>
+                </div>
+
+                <!-- Question 13 -->
+                <div class="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-4 flex items-start">
+                        <span class="bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-sm mr-3 flex-shrink-0">13</span>
+                        What ingredients are commonly found in stimulating scalp treatments?
+                    </h3>
+                    <button onclick="toggleQuizAnswer('quiz-13', this)" class="text-primary font-bold text-sm bg-violet-50 px-4 py-2 rounded hover:bg-violet-100 transition">
+                        <i class="fas fa-eye mr-1"></i> Show Answer
+                    </button>
+                    <div id="quiz-13" class="hidden mt-4 p-4 bg-violet-50 border-l-4 border-primary rounded text-gray-800">
+                        Peppermint oil, rosemary extract, biotin, caffeine, niacin (vitamin B3), and eucalyptus.
+                    </div>
+                </div>
+
+                <!-- Question 14 -->
+                <div class="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-4 flex items-start">
+                        <span class="bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-sm mr-3 flex-shrink-0">14</span>
+                        What is the proper way to apply shampoo during the prep phase?
+                    </h3>
+                    <button onclick="toggleQuizAnswer('quiz-14', this)" class="text-primary font-bold text-sm bg-violet-50 px-4 py-2 rounded hover:bg-violet-100 transition">
+                        <i class="fas fa-eye mr-1"></i> Show Answer
+                    </button>
+                    <div id="quiz-14" class="hidden mt-4 p-4 bg-violet-50 border-l-4 border-primary rounded text-gray-800">
+                        Focus shampoo on the scalp where oil and buildup accumulate, not the ends. Rinse thoroughly with warm water.
+                    </div>
+                </div>
+
+                <!-- Question 15 -->
+                <div class="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-4 flex items-start">
+                        <span class="bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-sm mr-3 flex-shrink-0">15</span>
+                        What is the "education, not push" approach to retail sales?
+                    </h3>
+                    <button onclick="toggleQuizAnswer('quiz-15', this)" class="text-primary font-bold text-sm bg-violet-50 px-4 py-2 rounded hover:bg-violet-100 transition">
+                        <i class="fas fa-eye mr-1"></i> Show Answer
+                    </button>
+                    <div id="quiz-15" class="hidden mt-4 p-4 bg-violet-50 border-l-4 border-primary rounded text-gray-800">
+                        Explaining why a product helps the client's specific concern rather than aggressively pushing for a sale. Knowledge builds confidence in the purchase.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center py-8 text-gray-500">
+            <p><i class="fas fa-graduation-cap mr-2"></i>Chapter 11: Treatment of the Hair and Scalp - Study Guide</p>
+            <p class="text-sm mt-2">Created for Barber School Students</p>
+        </footer>
+
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        // Scalp Treatment Tabs
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content-scalp').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('fade-in');
+            });
+            document.querySelectorAll('.tab-btn-scalp').forEach(el => {
+                el.classList.remove('bg-primary', 'text-white', 'shadow-md');
+                el.classList.add('bg-gray-100', 'text-gray-600');
+            });
+            
+            const content = document.getElementById(tabId);
+            content.classList.remove('hidden');
+            void content.offsetWidth;
+            content.classList.add('fade-in');
+            
+            const btn = document.getElementById('btn-' + tabId);
+            btn.classList.remove('bg-gray-100', 'text-gray-600');
+            btn.classList.add('bg-primary', 'text-white', 'shadow-md');
+        }
+
+        // Treatment Highlight Logic
+        function resetTreatments() {
+            document.querySelectorAll('.treatment-card').forEach(el => {
+                el.classList.remove('bg-violet-50', 'border-primary', 'scale-105', 'shadow-md');
+                el.classList.add('bg-white', 'border-gray-200');
+                const badge = el.querySelector('span');
+                badge.classList.remove('bg-primary', 'text-white');
+                badge.classList.add('bg-gray-100', 'text-gray-500');
+            });
+        }
+
+        function highlightTreatment(ids) {
+            resetTreatments();
+            ids.forEach(id => {
+                const el = document.getElementById('tr-' + id);
+                if(el) {
+                    el.classList.remove('bg-white', 'border-gray-200');
+                    el.classList.add('bg-violet-50', 'border-primary', 'scale-105', 'shadow-md');
+                    const badge = el.querySelector('span');
+                    badge.classList.remove('bg-gray-100', 'text-gray-500');
+                    badge.classList.add('bg-primary', 'text-white');
+                }
+            });
+        }
+
+        // Quiz Toggle Logic
+        function toggleQuizAnswer(id, btnElement) {
+            const content = document.getElementById(id);
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                content.classList.add('fade-in');
+                btnElement.innerHTML = '<i class="fas fa-eye-slash mr-1"></i> Hide Answer';
+                btnElement.classList.replace('bg-violet-50', 'bg-gray-100');
+                btnElement.classList.replace('hover:bg-violet-100', 'hover:bg-gray-200');
+                btnElement.classList.replace('text-primary', 'text-gray-600');
+            } else {
+                content.classList.add('hidden');
+                content.classList.remove('fade-in');
+                btnElement.innerHTML = '<i class="fas fa-eye mr-1"></i> Show Answer';
+                btnElement.classList.replace('bg-gray-100', 'bg-violet-50');
+                btnElement.classList.replace('hover:bg-gray-200', 'hover:bg-violet-100');
+                btnElement.classList.replace('text-gray-600', 'text-primary');
+            }
+        }
+    </script>
+</body>
+</html>

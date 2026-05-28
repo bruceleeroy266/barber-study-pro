@@ -1117,6 +1117,220 @@ export const chapter10PremiumFlashcards: Flashcard[] = [
     order_index: 100,
     is_active: true,
   },
+
+  // ═══════════════════════════════════════════════
+  // ENHANCEMENT PASS — GAPS FOUND FROM TEXTBOOK REVIEW
+  // ═══════════════════════════════════════════════
+
+  // ── SEBACEOUS GLAND ──
+  {
+    id: 'fc-10-111',
+    chapter_id: 'ch-10',
+    front: 'What is the sebaceous gland and what does it produce?',
+    back: 'The sebaceous gland is a small oil-producing gland connected to EACH hair follicle. It produces SEBUM — a natural oil that lubricates the hair and skin, keeping both soft and pliable. Overproduction = oily scalp. Underproduction = dryness and brittleness.',
+    category: 'Hair Structure',
+    difficulty: 'easy',
+    order_index: 111,
+    is_active: true,
+  },
+  {
+    id: 'fc-10-112',
+    chapter_id: 'ch-10',
+    front: 'What factors influence sebum production?',
+    back: 'Sebum production is influenced by: DIET (sweet/starchy/fatty foods cause overactivity), BLOOD CIRCULATION, EMOTIONAL DISTURBANCE (stress), ENDOCRINE GLANDS (hormonal changes, especially during adolescence), and CERTAIN DRUGS/MEDICATIONS.',
+    category: 'Hair Structure',
+    difficulty: 'medium',
+    order_index: 112,
+    is_active: true,
+  },
+
+  // ── PEPTIDE BONDS ──
+  {
+    id: 'fc-10-113',
+    chapter_id: 'ch-10',
+    front: 'What is a peptide bond and how is it different from side bonds?',
+    back: 'A peptide bond (also called an END BOND) joins amino acids together into polypeptide chains. It is STRONG and only broken by cutting or depilatories. SIDE BONDS (hydrogen, salt, disulfide) cross-link polypeptide chains and CAN be temporarily or chemically broken and re-formed.',
+    category: 'Hair Structure',
+    difficulty: 'medium',
+    order_index: 113,
+    is_active: true,
+  },
+
+  // ── RINGED HAIR ──
+  {
+    id: 'fc-10-114',
+    chapter_id: 'ch-10',
+    front: 'What is ringed hair?',
+    back: 'Ringed hair is a variation of canities (gray hair) characterized by alternating bands of GRAY and PIGMENTED hair throughout the length of the hair strand. It is purely cosmetic and requires no medical treatment.',
+    category: 'Hair Disorders',
+    difficulty: 'easy',
+    order_index: 114,
+    is_active: true,
+  },
+
+  // ── HAIR GROWTH PATTERNS ──
+  {
+    id: 'fc-10-115',
+    chapter_id: 'ch-10',
+    front: 'What is the difference between a hair stream, a whorl, and a cowlick?',
+    back: 'HAIR STREAM: hair flowing in the same direction; two opposing streams form a natural part. WHORL: hair growing in a circular/swirl pattern, usually at the crown. COWLICK: a tuft of hair that stands straight up, usually at the front hairline.',
+    category: 'Hair Analysis',
+    difficulty: 'easy',
+    order_index: 115,
+    is_active: true,
+  },
+
+  // ── TINEA SYCOSIS ──
+  {
+    id: 'fc-10-116',
+    chapter_id: 'ch-10',
+    front: 'What is tinea sycosis and what causes it?',
+    back: 'Tinea sycosis (also called sycosis barbae) is a fungal infection of the bearded area caused by RINGWORM fungus (dermatophytes). It is characterized by dry, scaly, inflamed patches with pustules. It is HIGHLY CONTAGIOUS and requires medical treatment. Do not confuse it with bacterial folliculitis.',
+    category: 'Scalp Disorders',
+    difficulty: 'medium',
+    order_index: 116,
+    is_active: true,
+  },
+
+  // ── MEMORY REINFORCEMENT ──
+  {
+    id: 'fc-10-117',
+    chapter_id: 'ch-10',
+    front: 'Remember this: How do you remember the difference between peptide bonds and side bonds?',
+    back: 'Think: "PEPTIDE bonds are the BACKBONE — they hold the chain together and are permanent. SIDE bonds are the CROSS-LINKS — they connect chains and can be broken and re-formed." Peptide = permanent backbone. Side = adjustable cross-links.',
+    category: 'Memory Reinforcement',
+    difficulty: 'easy',
+    order_index: 117,
+    is_active: true,
+  },
+  {
+    id: 'fc-10-118',
+    chapter_id: 'ch-10',
+    front: 'Remember this: What is the sebaceous gland\'s connection to goose bumps?',
+    back: 'When the arrector pili muscle contracts (causing goose bumps), it also SQUEEZES the sebaceous gland, releasing sebum onto the hair. Think: "Goose bumps = oil pump activated." This is why hair may appear oilier after cold or emotional stimulation.',
+    category: 'Memory Reinforcement',
+    difficulty: 'easy',
+    order_index: 118,
+    is_active: true,
+  },
+
+  // ── HYPERTROPHIES & SKIN CANCER DETECTION ──
+  {
+    id: 'fc-10-101',
+    chapter_id: 'ch-10',
+    front: 'What are hypertrophies and why should barbers be careful when combing through hair?',
+    back: 'Hypertrophies are abnormal skin growths such as MOLES or WARTS on the scalp. Barbers must use extreme care when combing through hair to avoid catching the comb on these growths. If changes in a hypertrophy occur from one visit to another, suggest the client see a physician. Barbers play a significant role in early detection of skin cancers.',
+    category: 'Scalp Disorders',
+    difficulty: 'medium',
+    order_index: 101,
+    is_active: true,
+  },
+
+  // ── SCALP ANALYSIS PROCEDURE ──
+  {
+    id: 'fc-10-102',
+    chapter_id: 'ch-10',
+    front: 'What should you do and NOT do during a scalp analysis?',
+    back: 'DO: Comb through hair gently while parting to check for hypertrophies, abrasions, and parasites. DO NOT scrape the scalp during analysis. DO NOT begin service if parasites are present. DO NOT proceed with chemical services if signs of irritation or abrasions exist.',
+    category: 'Practical Application',
+    difficulty: 'easy',
+    order_index: 102,
+    is_active: true,
+  },
+
+  // ── HAIR TEXTURE TYPES DETAIL ──
+  {
+    id: 'fc-10-103',
+    chapter_id: 'ch-10',
+    front: 'What are the three hair texture types and how do they differ in chemical processing?',
+    back: 'COARSE hair has the LARGEST diameter, is strongest, and is hardest for chemicals to penetrate. MEDIUM hair is most common, the standard, and usually poses no special problems. FINE hair has the SMALLEST diameter, is most fragile, easiest to process, and most susceptible to chemical damage.',
+    category: 'Hair Analysis',
+    difficulty: 'medium',
+    order_index: 103,
+    is_active: true,
+  },
+
+  // ── ELASTICITY TESTING METHOD ──
+  {
+    id: 'fc-10-104',
+    chapter_id: 'ch-10',
+    front: 'How do you test hair elasticity and what should you observe?',
+    back: 'Gently TUG a few strands of CLEAN, WET hair. NORMAL elasticity: hair stretches and returns to original length without breaking. CURLY/WAVY hair may stretch up to 50% of its original length and return. LOW elasticity: hair breaks easily or fails to return to normal length.',
+    category: 'Hair Analysis',
+    difficulty: 'easy',
+    order_index: 104,
+    is_active: true,
+  },
+
+  // ── POROSITY TESTING METHOD ──
+  {
+    id: 'fc-10-105',
+    chapter_id: 'ch-10',
+    front: 'How do you test hair porosity and what does each result mean?',
+    back: 'Hold multiple strands of DRY hair between fingers and slide thumb and forefinger DOWN toward the scalp. RESISTANT (low porosity): hair feels SMOOTH, cuticle is compact. POROUS (high porosity): can feel slight ROUGHNESS or imbrications of cuticle scales. OVER-POROUS: hair BREAKS or feels very rough.',
+    category: 'Hair Analysis',
+    difficulty: 'easy',
+    order_index: 105,
+    is_active: true,
+  },
+
+  // ── CYSTEINE & CYSTINE ──
+  {
+    id: 'fc-10-106',
+    chapter_id: 'ch-10',
+    front: 'What is the difference between cysteine and cystine in hair structure?',
+    back: 'CYSTEINE is an amino acid containing sulfur. CYSTINE is formed when TWO cysteine molecules join via a disulfide bond. Cystine joins two polypeptide strands together. Think: "Cysteine is single; cystine is the pair."',
+    category: 'Hair Structure',
+    difficulty: 'medium',
+    order_index: 106,
+    is_active: true,
+  },
+
+  // ── BARBER'S ITCH HISTORICAL NOTE ──
+  {
+    id: 'fc-10-107',
+    chapter_id: 'ch-10',
+    front: 'BOARD EXAM ALERT: What skin conditions has "barber\'s itch" been used to describe historically?',
+    back: 'Historically, "barber\'s itch" described many conditions: folliculitis, tinea barbae (ringworm), and sycosis barbae. TODAY it most frequently describes FOLLICULITIS BARBAE. Sycosis barbae is caused by ringworm FUNGUS, not bacteria — do not confuse them.',
+    category: 'Board Exam Alert',
+    difficulty: 'medium',
+    order_index: 107,
+    is_active: true,
+  },
+
+  // ── SCALP ANALYSIS SENSES ──
+  {
+    id: 'fc-10-108',
+    chapter_id: 'ch-10',
+    front: 'Why is the sense of TOUCH considered the most important for hair analysis, and what are the four senses used?',
+    back: 'The four senses are: SIGHT (observe wet, dry, oily), HEARING (listen to client about health and products), SMELL (detect scalp disorder odors), and TOUCH (most important — analyze texture, porosity, elasticity). Touch needs to be developed to its fullest capacity for truly professional services.',
+    category: 'Practical Application',
+    difficulty: 'easy',
+    order_index: 108,
+    is_active: true,
+  },
+
+  // ── MEMORY REINFORCEMENT ──
+  {
+    id: 'fc-10-109',
+    chapter_id: 'ch-10',
+    front: 'Remember this: How do you remember the elasticity test and what normal vs low elasticity looks like?',
+    back: 'Think: "WET TUG TEST." Wet hair + gentle tug = elasticity check. NORMAL: stretches and bounces back like a rubber band. LOW: breaks or stays stretched like old gum. Curly hair can stretch up to 50% — that\'s normal for curls!',
+    category: 'Memory Reinforcement',
+    difficulty: 'easy',
+    order_index: 109,
+    is_active: true,
+  },
+  {
+    id: 'fc-10-110',
+    chapter_id: 'ch-10',
+    front: 'Remember this: How do you remember cysteine vs cystine?',
+    back: 'Think: "CysteINE is ONE amino acid. CystINE is the TWINE that binds two together." Cysteine = single. Cystine = pair (joined by disulfide bond).',
+    category: 'Memory Reinforcement',
+    difficulty: 'easy',
+    order_index: 110,
+    is_active: true,
+  },
 ]
 
 export default chapter10PremiumFlashcards

@@ -259,6 +259,20 @@ export const chapter10PremiumContent: ChapterContent = {
             { text: 'When the muscle contracts, it also squeezes the sebaceous gland, releasing sebum onto the hair.' },
           ],
         },
+        {
+          id: 'sebaceous',
+          label: 'SEBACEOUS GLAND',
+          title: 'SEBACEOUS GLAND — THE NATURAL OIL FACTORY',
+          bullets: [
+            { label: 'DEFINITION', description: 'A small oil-producing gland connected to each hair follicle' },
+            { label: 'FUNCTION', description: 'Produces sebum — a natural oil that lubricates the hair and skin, keeping both soft and pliable' },
+            { label: 'BARBER RELEVANCE', description: 'Sebum production affects hair condition. Overproduction = oily scalp and hair. Underproduction = dryness and brittleness. Proper cleansing and conditioning balance sebum levels.' },
+          ],
+          facts: [
+            { text: 'BOARD EXAM ALERT: Sebaceous glands are attached to EVERY hair follicle. They secrete sebum through the same duct the hair emerges from.' },
+            { text: 'Hormonal changes (especially during puberty) can cause sebaceous glands to become overactive, leading to oily scalp and acne.' },
+          ],
+        },
       ],
     },
 
@@ -314,6 +328,17 @@ export const chapter10PremiumContent: ChapterContent = {
           ],
         },
       ],
+    },
+
+    // ═══════════════════════════════════════════
+    // SECTION 6B: PEPTIDE (END) BONDS
+    // ═══════════════════════════════════════════
+    {
+      type: 'contentBlock',
+      id: 'peptide-bonds',
+      title: 'PEPTIDE BONDS — THE BACKBONE OF HAIR',
+      content: 'Before the side bonds cross-link polypeptide chains, those chains must exist. PEPTIDE BONDS (also called END BONDS) are the strong chemical bonds that join amino acids together end-to-end in a definite order. Think of them as the backbone of the hair structure.\n\nUnlike side bonds, peptide bonds are NOT broken by water, heat, or normal chemical services. They are only broken by cutting the hair or by depilatory chemicals — which literally dissolve the hair by destroying these bonds permanently.\n\nBOARD EXAM ALERT: Peptide bonds join amino acids into polypeptide chains. Side bonds (hydrogen, salt, disulfide) cross-link those chains. Peptide bonds are strong and permanent; side bonds can be temporarily or chemically altered.',
+      highlight: 'PEPTIDE BONDS = THE CHAIN | SIDE BONDS = THE CROSS-LINKS',
     },
 
     // ═══════════════════════════════════════════
@@ -384,6 +409,48 @@ export const chapter10PremiumContent: ChapterContent = {
             { text: 'BOARD EXAM ALERT: Wave pattern is determined by cross-section shape — Round = straight, Oval = wavy, Elliptical = curly.' },
             { text: 'Extremely curly hair has LOW ELASTICITY and breaks easily. It requires extra conditioning and gentle handling.' },
           ],
+        },
+      ],
+    },
+
+    // ═══════════════════════════════════════════
+    // SECTION 8B: KERATINIZATION & COHNS ELEMENTS
+    // ═══════════════════════════════════════════
+    {
+      type: 'featureGrid',
+      id: 'keratinization-cohns',
+      title: 'KERATINIZATION & THE COHNS ELEMENTS',
+      subtitle: 'How living cells become dead protein — and what hair is made of',
+      features: [
+        {
+          icon: 'Sparkles',
+          title: 'KERATINIZATION',
+          description: 'The process where living cells in the hair bulb mature, fill with fibrous keratin protein, lose their nuclei, and die. By the time hair emerges from the scalp, it is completely keratinized and non-living.',
+        },
+        {
+          icon: 'FlaskConical',
+          title: 'CARBON — 51%',
+          description: 'The primary building block of hair protein. Carbon atoms form the backbone of every amino acid in the hair structure.',
+        },
+        {
+          icon: 'Droplets',
+          title: 'OXYGEN — 21%',
+          description: 'Essential for the chemical structure of keratin. Oxygen helps form the bonds that give hair its strength and stability.',
+        },
+        {
+          icon: 'Zap',
+          title: 'HYDROGEN — 6%',
+          description: 'Critical for hydrogen bonding — one of the three side bonds that allow temporary styling and shape changes.',
+        },
+        {
+          icon: 'Atom',
+          title: 'NITROGEN — 17%',
+          description: 'Found in the amino groups of amino acids. Nitrogen is essential for protein synthesis and hair formation.',
+        },
+        {
+          icon: 'Circle',
+          title: 'SULFUR — 5%',
+          description: 'The key element in disulfide bonds — the strongest bond type. More sulfur = stronger, more resistant hair.',
         },
       ],
     },
@@ -564,6 +631,38 @@ export const chapter10PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
+    // SECTION 13B: HAIR GROWTH PATTERNS
+    // ═══════════════════════════════════════════
+    {
+      type: 'featureGrid',
+      id: 'growth-patterns',
+      title: 'HAIR GROWTH PATTERNS',
+      subtitle: 'How hair flows, swirls, and stands — and what it means for your cuts',
+      features: [
+        {
+          icon: 'ArrowRight',
+          title: 'HAIR STREAM',
+          description: 'Hair that flows in the same direction, resulting from follicles arranged and sloping uniformly. When two streams slope in opposite directions, they form a natural part.',
+        },
+        {
+          icon: 'RotateCw',
+          title: 'WHORL',
+          description: 'Hair that grows in a circular or swirl pattern. Most commonly seen at the crown of the head. Every client has at least one whorl — know where it is before you cut.',
+        },
+        {
+          icon: 'ArrowUp',
+          title: 'COWLICK',
+          description: 'A tuft of hair that stands straight up, usually at the front hairline but can be anywhere. Choose styles that minimize the upright effect — fighting a cowlick is a losing battle.',
+        },
+        {
+          icon: 'AlertTriangle',
+          title: 'BOARD EXAM ALERT',
+          description: 'Shaving or cutting hair does NOT make it grow back faster, darker, or coarser. This is a myth. Blunt cutting may make hair appear thicker temporarily, but growth rate and texture are genetically determined.',
+        },
+      ],
+    },
+
+    // ═══════════════════════════════════════════
     // SECTION 14: COMMON HAIR DISORDERS
     // ═══════════════════════════════════════════
     {
@@ -592,7 +691,23 @@ export const chapter10PremiumContent: ChapterContent = {
           title: 'MONILETHRIX',
           description: 'Beaded hair — alternating thick and thin segments along the strand. Genetic. Fragile and breaks easily. Be extremely gentle. No chemical services.',
         },
+        {
+          icon: 'CircleDot',
+          title: 'RINGED HAIR',
+          description: 'A variation of canities (graying) with alternating bands of gray and pigmented hair throughout the strand. Purely cosmetic — no treatment needed, but clients may ask about color options.',
+        },
       ],
+    },
+
+    // ═══════════════════════════════════════════
+    // SECTION 14B: HYPERTROPHIES — ABNORMAL GROWTHS
+    // ═══════════════════════════════════════════
+    {
+      type: 'contentBlock',
+      id: 'hypertrophies',
+      title: 'HYPERTROPHIES — ABNORMAL SKIN GROWTHS',
+      content: 'Hypertrophies are abnormal growths on the skin such as moles, warts, or skin tags. They can appear anywhere on the scalp and are usually harmless — but barbers play a critical role in early detection of skin cancer.\n\nWHY IT MATTERS: When combing through hair, you must use extreme care to avoid catching the comb on these growths. Painful or bleeding growths should never be ignored.\n\nRED FLAGS: If a client\'s mole or growth has changed color, size, shape, or texture since their last visit, gently suggest they see a physician. You are not diagnosing — you are observing. That observation could save a life.\n\nBOARD EXAM ALERT: Barbers should never scrape the scalp during analysis. Always comb gently while parting hair to check for hypertrophies, abrasions, and parasites.',
+      highlight: 'OBSERVE — PROTECT — REFER WHEN CHANGES APPEAR',
     },
 
     // ═══════════════════════════════════════════
@@ -653,6 +768,28 @@ export const chapter10PremiumContent: ChapterContent = {
       title: '⚖️ THE BARBER\'S DECISION FRAMEWORK',
       content: 'When you spot something abnormal on a client\'s scalp or hair, you have a professional obligation to act. Here is your decision tree:\n\nSTEP 1 — ASSESS: Is this normal variation or a potential problem? When in doubt, assume it needs attention.\n\nSTEP 2 — CLASSIFY: Is this contagious or non-contagious? If contagious, STOP SERVICE IMMEDIATELY.\n\nSTEP 3 — ACT: For contagious conditions — politely explain, do not embarrass, sanitize your tools and station, and refer to a physician. For non-contagious conditions — proceed with caution, adjust technique, and suggest appropriate products or referrals.\n\nSTEP 4 — DOCUMENT: Note what you observed and what you recommended. Documentation protects you professionally.\n\nSTEP 5 — FOLLOW UP: On the client\'s next visit, ask about the condition. Show you care. Build trust.\n\nBOARD EXAM ALERT: Performing services on contagious scalp conditions is a sanitation violation that can result in license suspension.',
       highlight: 'WHEN IN DOUBT, STOP AND REFER',
+    },
+
+    // ═══════════════════════════════════════════
+    // SECTION 17B: SCALP ANALYSIS DO'S AND DON'TS
+    // ═══════════════════════════════════════════
+    {
+      type: 'checklist',
+      id: 'scalp-analysis-rules',
+      title: 'SCALP ANALYSIS — DO\'S AND DON\'TS',
+      subtitle: 'Professional protocol for every pre-service examination',
+      items: [
+        { text: 'DO: Comb through hair gently while parting to check for hypertrophies, abrasions, and parasites' },
+        { text: 'DO: Check the SCALP first before analyzing the hair — scalp disorders can prohibit any service' },
+        { text: 'DO: Use all four senses: sight, hearing, smell, and touch (touch is most important)' },
+        { text: 'DO: Document what you observe and what you recommended' },
+        { text: 'DO: Refer to a physician when contagious conditions, unknown lesions, or severe irritation is present' },
+        { text: 'DON\'T: Scrape the scalp during analysis — this can cause irritation and spread infection' },
+        { text: 'DON\'T: Begin any service if parasites are present — stop and refer immediately' },
+        { text: 'DON\'T: Proceed with chemical services if signs of irritation, abrasions, or inflammation exist' },
+        { text: 'DON\'T: Diagnose — recognize, refer, but never claim medical authority' },
+        { text: 'DON\'T: Embarrass the client — explain discreetly and professionally' },
+      ],
     },
 
     // ═══════════════════════════════════════════
