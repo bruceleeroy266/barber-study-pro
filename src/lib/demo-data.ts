@@ -3,7 +3,7 @@
 
 import { Chapter, Flashcard, Quiz, QuizQuestion, QuizAttempt, StudentProgress, Profile } from '@/types'
 import { chapterFlashcards as realFlashcards } from './flashcards-data'
-import { batch1Flashcards, batch3Flashcards, batch4Flashcards } from './orphaned-flashcards'
+import { batch1Flashcards, batch4Flashcards } from './orphaned-flashcards'
 import { allQuizQuestions } from './quiz-data'
 
 export const demoUser = {
@@ -131,9 +131,13 @@ if (realFlashcards['ch-11'] && realFlashcards['ch-11'].length > 0) {
   }))
 }
 
-// Chapter 12: Replace placeholder with orphaned
-if (batch3Flashcards['ch-12'] && batch3Flashcards['ch-12'].length > 0) {
-  demoFlashcards['ch-12'] = batch3Flashcards['ch-12']
+// Chapter 12: Use premium flashcards (real content)
+if (realFlashcards['ch-12'] && realFlashcards['ch-12'].length > 0) {
+  demoFlashcards['ch-12'] = realFlashcards['ch-12'].map((fc, idx) => ({
+    ...fc,
+    order_index: idx + 1,
+    is_active: true,
+  }))
 }
 
 // BATCH 4: Wire orphaned flashcards for Ch 13, 14, 15, 17, 18, 19, 20, 21
@@ -181,12 +185,14 @@ export const demoQuizzes: Record<string, Quiz> = {
   'ch-10': { id: 'quiz-10', chapter_id: 'ch-10', title: 'Properties and Disorders of the Hair and Scalp — Premium Quiz', description: '65 board-exam style questions. Passing score: 75%.', is_active: true },
   // Chapter 11: Premium flashcard-driven quiz (50 questions)
   'ch-11': { id: 'quiz-11', chapter_id: 'ch-11', title: 'Treatment of the Hair and Scalp — Premium Quiz', description: '50 board-exam style questions. Passing score: 75%.', is_active: true },
+  // Chapter 12: Premium flashcard-driven quiz (45 questions)
+  'ch-12': { id: 'quiz-12', chapter_id: 'ch-12', title: "Men's Facial Massage and Treatments — Premium Quiz", description: '45 board-exam style questions. Passing score: 75%.', is_active: true },
 }
 
 for (let i = 3; i <= 21; i++) {
   const chId = `ch-${i}`
-  // Skip Chapters 3–10 — already registered above with premium titles
-  if (i >= 3 && i <= 10) continue
+  // Skip Chapters 3–12 — already registered above with premium titles
+  if (i >= 3 && i <= 12) continue
   if (!demoQuizzes[chId]) {
     demoQuizzes[chId] = { id: `quiz-${i}`, chapter_id: chId, title: `Chapter ${i} Quiz`, description: `Test your knowledge of Chapter ${i}.`, is_active: true }
   }

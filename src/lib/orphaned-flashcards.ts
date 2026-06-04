@@ -40,22 +40,7 @@ import {
   chapter11Protocols,
   chapter11AllPart2,
 } from './chapter11-enhanced-flashcards-part2'
-import {
-  chapter12FacialMuscles,
-} from './chapter12-enhanced-flashcards-part1'
-import {
-  chapter12FacialNerves,
-  chapter12FacialCirculation,
-  chapter12Part2All,
-} from './chapter12-enhanced-flashcards-part2'
-import {
-  chapter12MassageManipulations,
-} from './chapter12-enhanced-flashcards-part3'
-import {
-  chapter12Modalities,
-  chapter12TreatmentProtocols,
-  chapter12Part4All,
-} from './chapter12-enhanced-flashcards-part4'
+// Chapter 12 orphaned flashcards removed during hard reset
 
 // Batch 4 imports
 import {
@@ -152,21 +137,6 @@ const ch11Unique = ch11Combined.filter(
 )
 export const ch11Orphaned = transform(ch11Unique, 11, '11o')
 
-const ch12Combined = [
-  ...chapter12FacialMuscles,
-  ...chapter12FacialNerves,
-  ...chapter12FacialCirculation,
-  ...chapter12Part2All,
-  ...chapter12MassageManipulations,
-  ...chapter12Modalities,
-  ...chapter12TreatmentProtocols,
-  ...chapter12Part4All,
-]
-const ch12Unique = ch12Combined.filter(
-  (card, idx, self) => idx === self.findIndex(c => c.front === card.front)
-)
-export const ch12Orphaned = transform(ch12Unique, 12, '12o')
-
 // Batch 4: Chapters 13, 14, 15, 17, 18, 19, 20, 21
 const ch13Combined = [...chapter13Flashcards]
 const ch13Unique = ch13Combined.filter(
@@ -220,7 +190,6 @@ export const ch21Orphaned = transform(ch21Unique, 21, '21o')
 export const batch3Flashcards: Record<string, Flashcard[]> = {
   'ch-10': ch10Orphaned,
   'ch-11': ch11Orphaned,
-  'ch-12': ch12Orphaned,
 }
 
 // Export all for Batch 4
@@ -251,8 +220,7 @@ export const batch2Stats = {
 export const batch3Stats = {
   ch10: ch10Orphaned.length,
   ch11: ch11Orphaned.length,
-  ch12: ch12Orphaned.length,
-  total: ch10Orphaned.length + ch11Orphaned.length + ch12Orphaned.length,
+  total: ch10Orphaned.length + ch11Orphaned.length,
 }
 
 export const batch4Stats = {
