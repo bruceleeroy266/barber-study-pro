@@ -140,8 +140,17 @@ if (realFlashcards['ch-12'] && realFlashcards['ch-12'].length > 0) {
   }))
 }
 
-// BATCH 4: Wire orphaned flashcards for Ch 13, 14, 15, 17, 18, 19, 20, 21
-const batch4Chapters = ['ch-13', 'ch-14', 'ch-15', 'ch-17', 'ch-18', 'ch-19', 'ch-20', 'ch-21']
+// Chapter 13: Use premium flashcards (real content)
+if (realFlashcards['ch-13'] && realFlashcards['ch-13'].length > 0) {
+  demoFlashcards['ch-13'] = realFlashcards['ch-13'].map((fc, idx) => ({
+    ...fc,
+    order_index: idx + 1,
+    is_active: true,
+  }))
+}
+
+// BATCH 4: Wire orphaned flashcards for Ch 14, 15, 17, 18, 19, 20, 21
+const batch4Chapters = ['ch-14', 'ch-15', 'ch-17', 'ch-18', 'ch-19', 'ch-20', 'ch-21']
 for (const chId of batch4Chapters) {
   if (batch4Flashcards[chId] && batch4Flashcards[chId].length > 0) {
     demoFlashcards[chId] = batch4Flashcards[chId]
@@ -187,12 +196,14 @@ export const demoQuizzes: Record<string, Quiz> = {
   'ch-11': { id: 'quiz-11', chapter_id: 'ch-11', title: 'Treatment of the Hair and Scalp — Premium Quiz', description: '50 board-exam style questions. Passing score: 75%.', is_active: true },
   // Chapter 12: Premium flashcard-driven quiz (45 questions)
   'ch-12': { id: 'quiz-12', chapter_id: 'ch-12', title: "Men's Facial Massage and Treatments — Premium Quiz", description: '45 board-exam style questions. Passing score: 75%.', is_active: true },
+  // Chapter 13: Premium flashcard-driven quiz (45 questions)
+  'ch-13': { id: 'quiz-13', chapter_id: 'ch-13', title: 'Shaving and Facial-Hair Design — Premium Quiz', description: '45 board-exam style questions. Passing score: 75%.', is_active: true },
 }
 
 for (let i = 3; i <= 21; i++) {
   const chId = `ch-${i}`
-  // Skip Chapters 3–12 — already registered above with premium titles
-  if (i >= 3 && i <= 12) continue
+  // Skip Chapters 3–13 — already registered above with premium titles
+  if (i >= 3 && i <= 13) continue
   if (!demoQuizzes[chId]) {
     demoQuizzes[chId] = { id: `quiz-${i}`, chapter_id: chId, title: `Chapter ${i} Quiz`, description: `Test your knowledge of Chapter ${i}.`, is_active: true }
   }
@@ -206,8 +217,8 @@ export const demoQuizQuestions: Record<string, QuizQuestion[]> = {
 
 for (let i = 3; i <= 21; i++) {
   const quizId = `quiz-${i}`
-  // Skip Chapters 3–10 — already in allQuizQuestions
-  if (i >= 3 && i <= 10) continue
+  // Skip Chapters 3–13 — already in allQuizQuestions
+  if (i >= 3 && i <= 13) continue
   if (!demoQuizQuestions[quizId]) {
     demoQuizQuestions[quizId] = [
       { id: `qq-${i}-1`, quiz_id: quizId, question: `Demo question 1 for Chapter ${i}`, answer_a: 'Option A', answer_b: 'Option B', answer_c: 'Option C', answer_d: 'Option D', correct_answer: 'a', explanation: `This is a demo question for Chapter ${i}.`, difficulty: 'easy', order_index: 1 },

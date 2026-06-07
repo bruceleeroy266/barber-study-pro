@@ -185,7 +185,7 @@ export default function DemoClient() {
               Schools lose students who fail the board exam. Instructors spend hours creating quizzes and grading papers. Students have no visibility into what they actually know.
             </p>
             <p className="text-[#3a4a5a] leading-relaxed text-sm sm:text-base">
-              Barber Study Pro changes that. Students learn, reinforce, test, and improve — with every step measured and every gap identified.
+              Barber Study Pro changes that. Students learn, reinforce, test, and improve—with every step measured and every gap identified.
             </p>
           </div>
 
@@ -316,7 +316,7 @@ export default function DemoClient() {
               <div className="space-y-3">
                 <div>
                   <div className="flex items-center justify-between text-sm mb-1">
-                    <span className="text-[#3a4a5a]">Hair Disorders</span>
+                    <span className="text-[#3a4a5a]">Hair &amp; Scalp Disorders</span>
                     <span className="text-[#c45c4a] font-medium">62%</span>
                   </div>
                   <div className="w-full bg-[#e8e6e1] rounded-full h-2">
@@ -739,7 +739,7 @@ export default function DemoClient() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10 sm:mb-12">
             <div className="text-xs uppercase tracking-widest text-[#B8860B] mb-3">
-              Step 3
+              Step 4
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold text-[#1a2332] mb-3">
               Knowledge Reinforcement
@@ -826,7 +826,7 @@ export default function DemoClient() {
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-10 sm:mb-12">
             <div className="text-xs uppercase tracking-widest text-[#B8860B] mb-3">
-              Step 4
+              Step 5
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold text-[#1a2332] mb-3">
               Board Style Assessment
@@ -936,7 +936,7 @@ export default function DemoClient() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-10 sm:mb-12">
             <div className="text-xs uppercase tracking-widest text-[#B8860B] mb-3">
-              Step 5
+              Step 6
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold text-[#1a2332] mb-3">
               Learn From Mistakes
@@ -1058,10 +1058,10 @@ export default function DemoClient() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-10 sm:mb-12">
             <div className="text-xs uppercase tracking-widest text-[#B8860B] mb-3">
-              Step 6
+              Step 7
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold text-[#1a2332] mb-3">
-              Progress Tracking
+              Mastery & Readiness
             </h2>
             <p className="text-[#5a6a7a] max-w-2xl mx-auto text-sm sm:text-base">
               Students, instructors, and schools can measure improvement over
@@ -1244,9 +1244,9 @@ export default function DemoClient() {
               },
               {
                 icon: Target,
-                title: "Weak Area Tracking",
+                title: "AI-Powered Study Coaching",
                 description:
-                  "Automated identification and targeted remediation of individual student knowledge gaps.",
+                  "Automatically generates personalized study plans and adjusts learning paths based on student performance.",
               },
               {
                 icon: MapPin,
