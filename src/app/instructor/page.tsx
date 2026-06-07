@@ -32,6 +32,12 @@ interface StudentStat extends Profile {
   lastStudiedAt: string | null
   riskFactors: string[]
   riskLevel: 'none' | 'low' | 'medium' | 'high'
+  healthScore: number
+  healthCategory: 'excellent' | 'healthy' | 'watch' | 'intervention' | 'critical'
+  activityScore: number
+  consistencyScore: number
+  daysSinceActive: number | null
+  insight: string | null
 }
 
 export default async function InstructorDashboard() {
@@ -107,20 +113,90 @@ export default async function InstructorDashboard() {
       .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
     const lastStudiedAt = lastStudiedDates[0] || null
 
-    // Risk factors
+    // ── Health Score Calculation ──
+    // 40% Quiz Performance + 30% Chapter Completion + 20% Activity Level + 10% Consistency
+
+    // Quiz Performance (40%): average quiz score, 0 if no quizzes
+    const quizPerformance = avgQuizScore
+
+    // Chapter Completion (30%): overall progress percentage
+    const chapterCompletion = overallProgress
+
+    // Activity Level (20%): based on days since last study
+    const daysSinceActive = lastStudiedAt
+      ? Math.floor((Date.now() - new Date(lastStudiedAt).getTime()) / (1000 * 60 * 60 * 24))
+      : null
+
+    let activityScore = 0
+    if (daysSinceActive === null) {
+      activityScore = 0
+    } else if (daysSinceActive === 0) {
+      activityScore = 100
+    } else if (daysSinceActive <= 7) {
+      activityScore = 90
+    } else if (daysSinceActive <= 14) {
+      activityScore = 70
+    } else if (daysSinceActive <= 30) {
+      activityScore = 50
+    } else {
+      activityScore = 25
+    }
+
+    // Consistency (10%): based on quiz frequency and progress distribution
+    // Simple model: more quizzes = more consistent, some progress = baseline
+    let consistencyScore = 0
+    if (quizzesTaken >= 10) {
+      consistencyScore = 100
+    } else if (quizzesTaken >= 5) {
+      consistencyScore = 80
+    } else if (quizzesTaken >= 2) {
+      consistencyScore = 60
+    } else if (quizzesTaken >= 1) {
+      consistencyScore = 40
+    } else if (completedChapters >= 1) {
+      consistencyScore = 20
+    } else {
+      consistencyScore = 0
+    }
+
+    // Weighted Health Score
+    const healthScore = Math.round(
+      quizPerformance * 0.40 +
+      chapterCompletion * 0.30 +
+      activityScore * 0.20 +
+      consistencyScore * 0.10
+    )
+
+    // Health Category
+    let healthCategory: StudentStat['healthCategory']
+    if (healthScore >= 90) healthCategory = 'excellent'
+    else if (healthScore >= 75) healthCategory = 'healthy'
+    else if (healthScore >= 60) healthCategory = 'watch'
+    else if (healthScore >= 40) healthCategory = 'intervention'
+    else healthCategory = 'critical'
+
+    // Generate insight based on real data
+    let insight: string | null = null
+    if (daysSinceActive !== null && daysSinceActive > 14) {
+      insight = `Inactive for ${daysSinceActive} days`
+    } else if (avgQuizScore > 0 && avgQuizScore < 60 && quizzesTaken >= 3) {
+      insight = 'Quiz scores declining'
+    } else if (quizzesTaken === 0 && completedChapters >= 3) {
+      insight = 'Progressing but no quiz attempts'
+    } else if (overallProgress < 25 && quizzesTaken >= 5) {
+      insight = 'Quizzing but low completion'
+    }
+
+    // Risk factors (legacy, kept for compatibility)
     const riskFactors: string[] = []
     if (overallProgress < RISK_LOW_PROGRESS) riskFactors.push('Low Progress')
     if (avgQuizScore < RISK_LOW_QUIZ_SCORE && quizzesTaken > 0) riskFactors.push('Low Quiz Scores')
     if (avgQuizScore < RISK_LOW_QUIZ_SCORE && quizzesTaken === 0) riskFactors.push('No Quizzes Taken')
-
-    const daysSinceActive = lastStudiedAt
-      ? Math.floor((Date.now() - new Date(lastStudiedAt).getTime()) / (1000 * 60 * 60 * 24))
-      : Infinity
-    if (daysSinceActive > RISK_INACTIVE_DAYS) riskFactors.push('Inactive')
+    if (daysSinceActive !== null && daysSinceActive > RISK_INACTIVE_DAYS) riskFactors.push('Inactive')
 
     // Risk level
     let riskLevel: StudentStat['riskLevel'] = 'none'
-    if (riskFactors.length >= 3 || (overallProgress < 25 && daysSinceActive > RISK_INACTIVE_DAYS)) {
+    if (riskFactors.length >= 3 || (overallProgress < 25 && daysSinceActive !== null && daysSinceActive > RISK_INACTIVE_DAYS)) {
       riskLevel = 'high'
     } else if (riskFactors.length === 2 || overallProgress < RISK_LOW_PROGRESS) {
       riskLevel = 'medium'
@@ -138,6 +214,12 @@ export default async function InstructorDashboard() {
       lastStudiedAt,
       riskFactors,
       riskLevel,
+      healthScore,
+      healthCategory,
+      activityScore,
+      consistencyScore,
+      daysSinceActive,
+      insight,
     }
   })
 
@@ -237,6 +319,18 @@ export default async function InstructorDashboard() {
 
   const atRiskCount = studentStats.filter((s) => s.riskLevel !== 'none').length
 
+  // ── Health Score Summary ──
+  const healthSummary = {
+    excellent: studentStats.filter((s) => s.healthCategory === 'excellent').length,
+    healthy: studentStats.filter((s) => s.healthCategory === 'healthy').length,
+    watch: studentStats.filter((s) => s.healthCategory === 'watch').length,
+    intervention: studentStats.filter((s) => s.healthCategory === 'intervention').length,
+    critical: studentStats.filter((s) => s.healthCategory === 'critical').length,
+  }
+
+  // Sort all students by health score (lowest first)
+  const studentsByHealth = [...studentStats].sort((a, b) => a.healthScore - b.healthScore)
+
   // ── At-Risk List (sorted by risk severity) ──
   const atRiskStudents = studentStats
     .filter((s) => s.riskLevel !== 'none')
@@ -293,6 +387,143 @@ export default async function InstructorDashboard() {
             <div className="text-3xl font-bold text-red-400">{atRiskCount}</div>
             <div className="text-sm text-red-300">At-Risk Students</div>
           </div>
+        </div>
+
+        {/* Student Health Overview */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+          <div className="p-6 border-b border-gray-800">
+            <h2 className="text-xl font-semibold text-white">Student Health Overview</h2>
+            <p className="text-sm text-gray-400 mt-1">
+              Sorted by health score — lowest first. Who needs help right now?
+            </p>
+          </div>
+
+          {/* Health Summary Bar */}
+          <div className="grid grid-cols-5 divide-x divide-gray-800 border-b border-gray-800">
+            <div className="p-4 text-center">
+              <div className="text-xl font-bold text-green-400">{healthSummary.excellent}</div>
+              <div className="text-xs text-gray-500 mt-1">Excellent</div>
+              <div className="text-xs text-green-500">90–100</div>
+            </div>
+            <div className="p-4 text-center">
+              <div className="text-xl font-bold text-green-300">{healthSummary.healthy}</div>
+              <div className="text-xs text-gray-500 mt-1">Healthy</div>
+              <div className="text-xs text-green-400">75–89</div>
+            </div>
+            <div className="p-4 text-center">
+              <div className="text-xl font-bold text-yellow-400">{healthSummary.watch}</div>
+              <div className="text-xs text-gray-500 mt-1">Watch List</div>
+              <div className="text-xs text-yellow-500">60–74</div>
+            </div>
+            <div className="p-4 text-center">
+              <div className="text-xl font-bold text-orange-400">{healthSummary.intervention}</div>
+              <div className="text-xs text-gray-500 mt-1">Intervention</div>
+              <div className="text-xs text-orange-500">40–59</div>
+            </div>
+            <div className="p-4 text-center">
+              <div className="text-xl font-bold text-red-400">{healthSummary.critical}</div>
+              <div className="text-xs text-gray-500 mt-1">Critical</div>
+              <div className="text-xs text-red-500">0–39</div>
+            </div>
+          </div>
+
+          {studentsByHealth.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="text-left text-sm text-gray-400 border-b border-gray-800">
+                    <th className="p-4">Student</th>
+                    <th className="p-4">Health Score</th>
+                    <th className="p-4">Category</th>
+                    <th className="p-4">Completion</th>
+                    <th className="p-4">Avg Quiz</th>
+                    <th className="p-4">Last Active</th>
+                    <th className="p-4">Insight</th>
+                    <th className="p-4">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="text-sm">
+                  {studentsByHealth.map((student) => {
+                    const categoryConfig = {
+                      excellent: { label: 'Excellent', color: 'bg-green-500/20 text-green-400 border-green-500/30' },
+                      healthy: { label: 'Healthy', color: 'bg-green-400/20 text-green-300 border-green-400/30' },
+                      watch: { label: 'Watch List', color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' },
+                      intervention: { label: 'Intervention', color: 'bg-orange-500/20 text-orange-400 border-orange-500/30' },
+                      critical: { label: 'Critical', color: 'bg-red-500/20 text-red-400 border-red-500/30' },
+                    }
+                    const config = categoryConfig[student.healthCategory]
+                    return (
+                      <tr key={student.id} className="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors">
+                        <td className="p-4">
+                          <div className="text-white font-medium">{student.full_name}</div>
+                          <div className="text-gray-500 text-xs">{student.email}</div>
+                        </td>
+                        <td className="p-4">
+                          <div className={`text-xl font-bold ${
+                            student.healthScore >= 75 ? 'text-green-400' :
+                            student.healthScore >= 60 ? 'text-yellow-400' :
+                            student.healthScore >= 40 ? 'text-orange-400' : 'text-red-400'
+                          }`}>
+                            {student.healthScore}
+                          </div>
+                        </td>
+                        <td className="p-4">
+                          <span className={`px-2 py-1 rounded-full text-xs font-semibold uppercase border ${config.color}`}>
+                            {config.label}
+                          </span>
+                        </td>
+                        <td className="p-4">
+                          <div className="flex items-center gap-2">
+                            <div className="flex-1 bg-gray-800 rounded-full h-2 w-20">
+                              <div
+                                className={`h-2 rounded-full ${
+                                  student.overallProgress >= 75 ? 'bg-green-500' :
+                                  student.overallProgress >= 50 ? 'bg-yellow-500' : 'bg-red-500'
+                                }`}
+                                style={{ width: `${student.overallProgress}%` }}
+                              />
+                            </div>
+                            <span className="text-gray-300 text-xs">{student.overallProgress}%</span>
+                          </div>
+                        </td>
+                        <td className="p-4">
+                          <span className={`font-semibold ${
+                            student.avgQuizScore >= 75 ? 'text-green-400' :
+                            student.avgQuizScore >= 60 ? 'text-yellow-400' :
+                            student.avgQuizScore > 0 ? 'text-red-400' : 'text-gray-500'
+                          }`}>
+                            {student.avgQuizScore > 0 ? `${student.avgQuizScore}%` : '—'}
+                          </span>
+                        </td>
+                        <td className="p-4 text-gray-400">
+                          {student.daysSinceActive !== null ? `${student.daysSinceActive}d ago` : 'Never'}
+                        </td>
+                        <td className="p-4">
+                          {student.insight ? (
+                            <span className="text-xs text-[#D4AF37]">{student.insight}</span>
+                          ) : (
+                            <span className="text-xs text-gray-600">—</span>
+                          )}
+                        </td>
+                        <td className="p-4">
+                          <Link
+                            href={`/instructor/student/${student.id}`}
+                            className="text-[#D4AF37] hover:text-[#F4E4A6] font-medium"
+                          >
+                            View →
+                          </Link>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="p-8 text-center text-gray-400">
+              No students found.
+            </div>
+          )}
         </div>
 
         {/* At-Risk Students Panel */}
