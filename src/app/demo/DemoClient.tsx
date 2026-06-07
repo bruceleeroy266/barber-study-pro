@@ -23,6 +23,8 @@ import {
   Users,
   School,
   Award,
+  Menu,
+  X,
 } from "lucide-react";
 
 const navItems = [
@@ -48,6 +50,7 @@ export default function DemoClient() {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [selectedConsultAnswer, setSelectedConsultAnswer] = useState<number | null>(null);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const quizQuestion = {
     question:
@@ -94,13 +97,15 @@ export default function DemoClient() {
     <main className="min-h-screen bg-[#FAFAF8] text-[#1a2332] scroll-smooth">
       {/* ── STICKY NAVIGATION ── */}
       <nav className="sticky top-0 z-50 bg-[#FAFAF8]/95 backdrop-blur-md border-b border-[#1a2332]/8">
-        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <GraduationCap className="w-5 h-5 text-[#B8860B]" />
             <span className="font-semibold tracking-tight text-sm text-[#1a2332]">
               Barber Study Pro
             </span>
           </div>
+
+          {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-1">
             {navItems.map((item) => (
               <button
@@ -112,10 +117,45 @@ export default function DemoClient() {
               </button>
             ))}
           </div>
-          <span className="text-xs uppercase tracking-widest text-[#8a9aaa]">
-            Demo
-          </span>
+
+          <div className="flex items-center gap-3">
+            <span className="hidden sm:inline text-xs uppercase tracking-widest text-[#8a9aaa]">
+              Demo
+            </span>
+            {/* Mobile hamburger */}
+            <button
+              onClick={() => setMobileNavOpen((v) => !v)}
+              className="md:hidden p-2 rounded-md hover:bg-[#1a2332]/5"
+              aria-label="Toggle menu"
+            >
+              {mobileNavOpen ? (
+                <X className="w-5 h-5 text-[#5a6a7a]" />
+              ) : (
+                <Menu className="w-5 h-5 text-[#5a6a7a]" />
+              )}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile nav dropdown */}
+        {mobileNavOpen && (
+          <div className="md:hidden border-t border-[#1a2332]/8 bg-[#FAFAF8]/95 backdrop-blur-md px-4 pb-4">
+            <div className="flex flex-col gap-1 pt-2">
+              {navItems.map((item) => (
+                <button
+                  key={item.href}
+                  onClick={() => {
+                    scrollToSection(item.href);
+                    setMobileNavOpen(false);
+                  }}
+                  className="text-left px-3 py-2.5 text-sm text-[#5a6a7a] hover:text-[#B8860B] transition-colors rounded-md hover:bg-[#1a2332]/5"
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* ═══════════════════════════════════════════ */}
@@ -123,33 +163,33 @@ export default function DemoClient() {
       {/* ═══════════════════════════════════════════ */}
       <section
         id="welcome"
-        className="min-h-[90vh] flex flex-col items-center justify-center px-6 py-20"
+        className="min-h-[90vh] flex flex-col items-center justify-center px-4 sm:px-6 py-16 sm:py-20"
       >
-        <div className="max-w-4xl mx-auto text-center space-y-8">
+        <div className="max-w-4xl mx-auto text-center space-y-6 sm:space-y-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#B8860B]/8 border border-[#B8860B]/20 rounded-full text-[#B8860B] text-sm font-medium">
             <Sparkles className="w-4 h-4" />
             Board-Aligned Curriculum
           </div>
 
-          <h1 className="text-5xl md:text-6xl font-bold text-[#1a2332] leading-tight">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-[#1a2332] leading-tight">
             Helping Barber Students
             <br />
             <span className="text-[#B8860B]">Become Board Ready</span>
           </h1>
 
           <div className="max-w-2xl mx-auto space-y-4">
-            <p className="text-[#3a4a5a] text-lg leading-relaxed">
+            <p className="text-[#3a4a5a] text-base sm:text-lg leading-relaxed">
               Barber students read the textbook. Then they forget 70% of it within 24 hours.
             </p>
-            <p className="text-[#5a6a7a] leading-relaxed">
+            <p className="text-[#5a6a7a] leading-relaxed text-sm sm:text-base">
               Schools lose students who fail the board exam. Instructors spend hours creating quizzes and grading papers. Students have no visibility into what they actually know.
             </p>
-            <p className="text-[#3a4a5a] leading-relaxed">
+            <p className="text-[#3a4a5a] leading-relaxed text-sm sm:text-base">
               Barber Study Pro changes that. Students learn, reinforce, test, and improve — with every step measured and every gap identified.
             </p>
           </div>
 
-          <div className="flex items-center justify-center gap-6 text-sm text-[#5a6a7a] pt-4">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm text-[#5a6a7a] pt-4">
             <span className="flex items-center gap-2">
               <BookOpen className="w-4 h-4 text-[#B8860B]" />
               Structured Lessons
@@ -170,7 +210,7 @@ export default function DemoClient() {
 
           <button
             onClick={() => scrollToSection("#dashboard")}
-            className="inline-flex items-center gap-2 px-8 py-4 bg-[#B8860B] text-white font-semibold rounded-lg hover:bg-[#a07800] transition-colors text-base"
+            className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-[#B8860B] text-white font-semibold rounded-lg hover:bg-[#a07800] transition-colors text-sm sm:text-base"
           >
             See How It Works
             <ArrowRight className="w-5 h-5" />
@@ -181,31 +221,31 @@ export default function DemoClient() {
       {/* ═══════════════════════════════════════════ */}
       {/* SECTION 1 — STUDENT DASHBOARD              */}
       {/* ═══════════════════════════════════════════ */}
-      <section id="dashboard" className="py-24 px-6 border-t border-[#1a2332]/8">
+      <section id="dashboard" className="py-16 sm:py-24 px-4 sm:px-6 border-t border-[#1a2332]/8">
         <div className="max-w-7xl mx-auto space-y-6">
-          <div className="text-center mb-12">
+          <div className="text-center mb-10 sm:mb-12">
             <div className="text-xs uppercase tracking-widest text-[#B8860B] mb-3">
               Step 1
             </div>
-            <h2 className="text-3xl font-bold text-[#1a2332] mb-3">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#1a2332] mb-3">
               Student Dashboard
             </h2>
-            <p className="text-[#5a6a7a] max-w-2xl mx-auto">
+            <p className="text-[#5a6a7a] max-w-2xl mx-auto text-sm sm:text-base">
               Every student sees exactly where they stand — and what to study next.
               No guessing. No surprises. Just measurable readiness.
             </p>
           </div>
 
           {/* ── ROW 1: Board Readiness + Chapter Progress + Study Consistency ── */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
             {/* Card 1: Board Readiness Score */}
-            <div className="lg:col-span-1 bg-white border border-[#1a2332]/10 rounded-xl p-6 flex flex-col justify-between shadow-sm">
+            <div className="lg:col-span-1 bg-white border border-[#1a2332]/10 rounded-xl p-5 sm:p-6 flex flex-col justify-between shadow-sm">
               <div>
                 <div className="flex items-center gap-2 text-[#5a6a7a] text-xs uppercase tracking-wider mb-4">
                   <Brain className="w-4 h-4 text-[#B8860B]" />
                   Board Readiness Score
                 </div>
-                <div className="text-6xl font-bold text-[#c9a000]">78%</div>
+                <div className="text-5xl sm:text-6xl font-bold text-[#c9a000]">78%</div>
                 <div className="text-sm font-medium text-[#c9a000] mt-1">
                   Approaching Readiness
                 </div>
@@ -217,7 +257,7 @@ export default function DemoClient() {
             </div>
 
             {/* Card 2: Chapter Progress */}
-            <div className="lg:col-span-1 bg-white border border-[#1a2332]/10 rounded-xl p-6 shadow-sm">
+            <div className="lg:col-span-1 bg-white border border-[#1a2332]/10 rounded-xl p-5 sm:p-6 shadow-sm">
               <div className="flex items-center gap-2 text-[#5a6a7a] text-xs uppercase tracking-wider mb-4">
                 <BookOpen className="w-4 h-4 text-[#B8860B]" />
                 Chapter Progress
@@ -241,7 +281,7 @@ export default function DemoClient() {
             </div>
 
             {/* Card 3: Study Consistency */}
-            <div className="lg:col-span-1 bg-white border border-[#1a2332]/10 rounded-xl p-6 shadow-sm">
+            <div className="lg:col-span-1 bg-white border border-[#1a2332]/10 rounded-xl p-5 sm:p-6 shadow-sm">
               <div className="flex items-center gap-2 text-[#5a6a7a] text-xs uppercase tracking-wider mb-4">
                 <TrendingUp className="w-4 h-4 text-[#B8860B]" />
                 Study Consistency
@@ -263,9 +303,9 @@ export default function DemoClient() {
           </div>
 
           {/* ── ROW 2: Focus Areas + Recommended Next Step ── */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             {/* Card 4: Focus Areas */}
-            <div className="bg-white border border-[#1a2332]/10 rounded-xl p-6 shadow-sm">
+            <div className="bg-white border border-[#1a2332]/10 rounded-xl p-5 sm:p-6 shadow-sm">
               <div className="flex items-center gap-2 text-[#5a6a7a] text-xs uppercase tracking-wider mb-4">
                 <Target className="w-4 h-4 text-[#c45c4a]" />
                 Focus Areas
@@ -314,13 +354,13 @@ export default function DemoClient() {
             </div>
 
             {/* Card 5: Recommended Next Step */}
-            <div className="bg-white border border-[#1a2332]/10 rounded-xl p-6 shadow-sm">
+            <div className="bg-white border border-[#1a2332]/10 rounded-xl p-5 sm:p-6 shadow-sm">
               <div className="flex items-center gap-2 text-[#5a6a7a] text-xs uppercase tracking-wider mb-4">
                 <ChevronRight className="w-4 h-4 text-[#4a8a6a]" />
                 Recommended Next Step
               </div>
               <div className="mb-4">
-                <div className="text-lg font-semibold text-[#1a2332]">
+                <div className="text-base sm:text-lg font-semibold text-[#1a2332]">
                   Chapter 10 — Hair &amp; Scalp Disorders
                 </div>
                 <p className="text-sm text-[#5a6a7a] mt-1">
@@ -341,7 +381,7 @@ export default function DemoClient() {
           </div>
 
           {/* Stakeholder value row */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
             <div className="bg-[#f5f3ef] border border-[#1a2332]/8 rounded-lg p-4">
               <div className="flex items-center gap-2 text-[#B8860B] text-xs uppercase tracking-wider mb-2">
                 <School className="w-4 h-4" />
@@ -376,22 +416,22 @@ export default function DemoClient() {
       {/* ═══════════════════════════════════════════ */}
       {/* SECTION 2 — CHAPTER 10 LESSON              */}
       {/* ═══════════════════════════════════════════ */}
-      <section id="chapter10" className="py-24 px-6 border-t border-[#1a2332]/8">
+      <section id="chapter10" className="py-16 sm:py-24 px-4 sm:px-6 border-t border-[#1a2332]/8">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center mb-10 sm:mb-12">
             <div className="text-xs uppercase tracking-widest text-[#B8860B] mb-3">
               Step 2
             </div>
-            <h2 className="text-3xl font-bold text-[#1a2332] mb-3">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#1a2332] mb-3">
               Interactive Lesson
             </h2>
-            <p className="text-xl text-[#3a4a5a]">
+            <p className="text-lg sm:text-xl text-[#3a4a5a]">
               Chapter 10 — Properties and Disorders of the Hair and Scalp
             </p>
           </div>
 
           {/* Problem statement */}
-          <div className="bg-[#c45c4a]/6 border border-[#c45c4a]/15 rounded-xl p-6 mb-10">
+          <div className="bg-[#c45c4a]/6 border border-[#c45c4a]/15 rounded-xl p-4 sm:p-6 mb-8 sm:mb-10">
             <div className="flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-[#c45c4a] mt-0.5 shrink-0" />
               <div>
@@ -399,16 +439,16 @@ export default function DemoClient() {
                   The Problem: Passive Reading Does Not Retain
                 </h3>
                 <p className="text-sm text-[#5a6a7a] leading-relaxed">
-                  Students read the textbook and forget 70% within 24 hours. Highlighting and re-reading create familiarity, not memory. 
+                  Students read the textbook and forget 70% within 24 hours. Highlighting and re-reading create familiarity, not memory.
                   When the board exam asks about contagious scalp conditions, students who only read cannot reliably recall what they need to know.
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            <div className="bg-white border border-[#1a2332]/10 rounded-xl p-6 shadow-sm">
-              <h3 className="text-lg font-semibold text-[#1a2332] mb-3 flex items-center gap-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-10 sm:mb-12">
+            <div className="bg-white border border-[#1a2332]/10 rounded-xl p-5 sm:p-6 shadow-sm">
+              <h3 className="text-base sm:text-lg font-semibold text-[#1a2332] mb-3 flex items-center gap-2">
                 <Target className="w-5 h-5 text-[#B8860B]" />
                 Why This Chapter Matters
               </h3>
@@ -432,8 +472,8 @@ export default function DemoClient() {
               </ul>
             </div>
 
-            <div className="bg-white border border-[#1a2332]/10 rounded-xl p-6 shadow-sm">
-              <h3 className="text-lg font-semibold text-[#1a2332] mb-3 flex items-center gap-2">
+            <div className="bg-white border border-[#1a2332]/10 rounded-xl p-5 sm:p-6 shadow-sm">
+              <h3 className="text-base sm:text-lg font-semibold text-[#1a2332] mb-3 flex items-center gap-2">
                 <Eye className="w-5 h-5 text-[#B8860B]" />
                 Why Barber Safety Depends on It
               </h3>
@@ -457,12 +497,12 @@ export default function DemoClient() {
           </div>
 
           {/* Representative Lesson Content */}
-          <div className="bg-white border border-[#1a2332]/10 rounded-xl p-8 shadow-sm">
+          <div className="bg-white border border-[#1a2332]/10 rounded-xl p-5 sm:p-8 shadow-sm">
             <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#B8860B] mb-4">
               <BookOpen className="w-4 h-4" />
               Lesson Content Preview
             </div>
-            <h3 className="text-xl font-semibold text-[#1a2332] mb-4">
+            <h3 className="text-lg sm:text-xl font-semibold text-[#1a2332] mb-4">
               Understanding Hair Loss: Types of Alopecia
             </h3>
 
@@ -519,9 +559,9 @@ export default function DemoClient() {
       {/* ═══════════════════════════════════════════ */}
       {/* SECTION 3 — CLIENT CONSULTATION CHALLENGE  */}
       {/* ═══════════════════════════════════════════ */}
-      <section id="consultation" className="py-24 px-6 border-t border-[#1a2332]/8">
+      <section id="consultation" className="py-16 sm:py-24 px-4 sm:px-6 border-t border-[#1a2332]/8">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center mb-10 sm:mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#B8860B]/8 border border-[#B8860B]/20 rounded-full text-[#B8860B] text-sm font-medium mb-4">
               <Users className="w-4 h-4" />
               Professional Decision Making
@@ -529,25 +569,25 @@ export default function DemoClient() {
             <div className="text-xs uppercase tracking-widest text-[#B8860B] mb-3">
               Step 3
             </div>
-            <h2 className="text-3xl font-bold text-[#1a2332] mb-3">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#1a2332] mb-3">
               Client Consultation Challenge
             </h2>
-            <p className="text-[#5a6a7a] max-w-2xl mx-auto">
+            <p className="text-[#5a6a7a] max-w-2xl mx-auto text-sm sm:text-base">
               Can this student apply what they learned in a real barber situation?
             </p>
           </div>
 
           {/* Scenario Card */}
-          <div className="bg-white border border-[#B8860B]/30 rounded-xl p-8 mb-8 shadow-sm">
+          <div className="bg-white border border-[#B8860B]/30 rounded-xl p-5 sm:p-8 mb-6 sm:mb-8 shadow-sm">
             <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#B8860B] mb-4">
               <AlertTriangle className="w-4 h-4" />
               Scenario
             </div>
-            <p className="text-[#1a2332] text-lg leading-relaxed mb-4">
+            <p className="text-[#1a2332] text-base sm:text-lg leading-relaxed mb-4">
               A client sits in your chair with <span className="text-[#B8860B] font-medium">circular patches of hair loss</span> on the scalp.
             </p>
             <div className="bg-[#f5f3ef] rounded-lg p-4 border border-[#1a2332]/8">
-              <p className="text-[#3a4a5a] italic">
+              <p className="text-[#3a4a5a] italic text-sm sm:text-base">
                 &ldquo;Can we continue with today&apos;s service?&rdquo;
               </p>
             </div>
@@ -555,7 +595,7 @@ export default function DemoClient() {
 
           {/* Question */}
           <div className="mb-6">
-            <p className="text-[#1a2332] font-medium text-lg mb-4">
+            <p className="text-[#1a2332] font-medium text-base sm:text-lg mb-4">
               What is the MOST professional response?
             </p>
 
@@ -609,8 +649,8 @@ export default function DemoClient() {
                       disabled={showResult}
                       className={btnClass}
                     >
-                      <div className="flex items-center gap-3">
-                        <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium shrink-0 ${
+                      <div className="flex items-start gap-3">
+                        <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium shrink-0 mt-0.5 ${
                           showResult && isCorrect
                             ? "bg-[#4a8a6a]/15 text-[#4a8a6a]"
                             : showResult && isSelected && !isCorrect
@@ -619,12 +659,12 @@ export default function DemoClient() {
                         }`}>
                           {option.letter}
                         </span>
-                        <span>{option.text}</span>
+                        <span className="pt-0.5">{option.text}</span>
                         {showResult && isCorrect && (
-                          <CheckCircle className="w-5 h-5 ml-auto shrink-0" />
+                          <CheckCircle className="w-5 h-5 ml-auto shrink-0 mt-0.5" />
                         )}
                         {showResult && isSelected && !isCorrect && (
-                          <XCircle className="w-5 h-5 ml-auto shrink-0" />
+                          <XCircle className="w-5 h-5 ml-auto shrink-0 mt-0.5" />
                         )}
                       </div>
                     </button>
@@ -665,7 +705,7 @@ export default function DemoClient() {
 
           {/* Key Takeaways */}
           {selectedConsultAnswer !== null && (
-            <div className="mt-8 bg-[#B8860B]/5 border border-[#B8860B]/20 rounded-xl p-6">
+            <div className="mt-8 bg-[#B8860B]/5 border border-[#B8860B]/20 rounded-xl p-5 sm:p-6">
               <h4 className="text-sm font-semibold text-[#B8860B] mb-4 flex items-center gap-2">
                 <Award className="w-4 h-4" />
                 Key Takeaways
@@ -695,23 +735,23 @@ export default function DemoClient() {
       {/* ═══════════════════════════════════════════ */}
       {/* SECTION 4 — FLASHCARDS                     */}
       {/* ═══════════════════════════════════════════ */}
-      <section id="flashcards" className="py-24 px-6 border-t border-[#1a2332]/8">
+      <section id="flashcards" className="py-16 sm:py-24 px-4 sm:px-6 border-t border-[#1a2332]/8">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center mb-10 sm:mb-12">
             <div className="text-xs uppercase tracking-widest text-[#B8860B] mb-3">
               Step 3
             </div>
-            <h2 className="text-3xl font-bold text-[#1a2332] mb-3">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#1a2332] mb-3">
               Knowledge Reinforcement
             </h2>
-            <p className="text-[#5a6a7a] max-w-2xl mx-auto">
+            <p className="text-[#5a6a7a] max-w-2xl mx-auto text-sm sm:text-base">
               Students use active recall to strengthen memory retention and
               reinforce board-tested concepts.
             </p>
           </div>
 
           {/* Problem statement */}
-          <div className="bg-[#c45c4a]/6 border border-[#c45c4a]/15 rounded-xl p-6 mb-10 max-w-3xl mx-auto">
+          <div className="bg-[#c45c4a]/6 border border-[#c45c4a]/15 rounded-xl p-4 sm:p-6 mb-8 sm:mb-10 max-w-3xl mx-auto">
             <div className="flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-[#c45c4a] mt-0.5 shrink-0" />
               <div>
@@ -719,14 +759,14 @@ export default function DemoClient() {
                   The Problem: Re-Reading Creates False Confidence
                 </h3>
                 <p className="text-sm text-[#5a6a7a] leading-relaxed">
-                  Students highlight, re-read, and think they know the material. But recognition is not recall. 
+                  Students highlight, re-read, and think they know the material. But recognition is not recall.
                   When the exam asks them to produce the answer from memory, they draw a blank. Active recall — forcing the brain to retrieve information — is the only proven method for building durable memory.
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
             {flashcards.map((card, idx) => (
               <div
                 key={idx}
@@ -734,7 +774,7 @@ export default function DemoClient() {
                 className="cursor-pointer group"
               >
                 <div
-                  className={`bg-white border border-[#1a2332]/10 rounded-xl p-6 min-h-[200px] flex flex-col justify-center transition-all duration-300 hover:border-[#B8860B]/30 shadow-sm ${
+                  className={`bg-white border border-[#1a2332]/10 rounded-xl p-5 sm:p-6 min-h-[180px] sm:min-h-[200px] flex flex-col justify-center transition-all duration-300 hover:border-[#B8860B]/30 shadow-sm ${
                     flippedCards[idx] ? "border-[#B8860B]/50" : ""
                   }`}
                 >
@@ -744,11 +784,11 @@ export default function DemoClient() {
                         <Layers className="w-4 h-4" />
                         Flashcard {idx + 1}
                       </div>
-                      <p className="text-[#1a2332] font-medium text-lg leading-relaxed">
+                      <p className="text-[#1a2332] font-medium text-base sm:text-lg leading-relaxed">
                         {card.front}
                       </p>
                       <p className="text-xs text-[#8a9aaa] mt-4">
-                        Click to reveal answer
+                        Tap to reveal answer
                       </p>
                     </>
                   ) : (
@@ -761,7 +801,7 @@ export default function DemoClient() {
                         {card.back}
                       </p>
                       <p className="text-xs text-[#8a9aaa] mt-4">
-                        Click to flip back
+                        Tap to flip back
                       </p>
                     </>
                   )}
@@ -770,9 +810,9 @@ export default function DemoClient() {
             ))}
           </div>
 
-          <div className="mt-8 text-center max-w-2xl mx-auto">
+          <div className="mt-6 sm:mt-8 text-center max-w-2xl mx-auto">
             <p className="text-[#8a9aaa] text-sm">
-              Each chapter includes 80–120 flashcards covering key terms, board exam alerts, 
+              Each chapter includes 80–120 flashcards covering key terms, board exam alerts,
               common confusions, and practical application scenarios.
             </p>
           </div>
@@ -782,22 +822,22 @@ export default function DemoClient() {
       {/* ═══════════════════════════════════════════ */}
       {/* SECTION 4 — QUIZ                           */}
       {/* ═══════════════════════════════════════════ */}
-      <section id="quiz" className="py-24 px-6 border-t border-[#1a2332]/8">
+      <section id="quiz" className="py-16 sm:py-24 px-4 sm:px-6 border-t border-[#1a2332]/8">
         <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center mb-10 sm:mb-12">
             <div className="text-xs uppercase tracking-widest text-[#B8860B] mb-3">
               Step 4
             </div>
-            <h2 className="text-3xl font-bold text-[#1a2332] mb-3">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#1a2332] mb-3">
               Board Style Assessment
             </h2>
-            <p className="text-[#5a6a7a] max-w-2xl mx-auto">
+            <p className="text-[#5a6a7a] max-w-2xl mx-auto text-sm sm:text-base">
               Students test understanding using randomized board-style questions.
             </p>
           </div>
 
           {/* Problem statement */}
-          <div className="bg-[#c45c4a]/6 border border-[#c45c4a]/15 rounded-xl p-6 mb-10">
+          <div className="bg-[#c45c4a]/6 border border-[#c45c4a]/15 rounded-xl p-4 sm:p-6 mb-8 sm:mb-10">
             <div className="flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-[#c45c4a] mt-0.5 shrink-0" />
               <div>
@@ -805,20 +845,20 @@ export default function DemoClient() {
                   The Problem: Unfamiliar Question Formats Cause Panic
                 </h3>
                 <p className="text-sm text-[#5a6a7a] leading-relaxed">
-                  Students who have never seen board-style questions panic on exam day. The wording is different. The distractors are tricky. 
+                  Students who have never seen board-style questions panic on exam day. The wording is different. The distractors are tricky.
                   Without practice, even students who know the material second-guess themselves and lose points.
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white border border-[#1a2332]/10 rounded-xl p-8 shadow-sm">
+          <div className="bg-white border border-[#1a2332]/10 rounded-xl p-5 sm:p-8 shadow-sm">
             <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#8a9aaa] mb-6">
               <Zap className="w-4 h-4" />
               Chapter 10 — Sample Question
             </div>
 
-            <p className="text-lg text-[#1a2332] font-medium mb-8 leading-relaxed">
+            <p className="text-base sm:text-lg text-[#1a2332] font-medium mb-6 sm:mb-8 leading-relaxed">
               {quizQuestion.question}
             </p>
 
@@ -850,18 +890,18 @@ export default function DemoClient() {
                     disabled={selectedAnswer !== null}
                     className={btnClass}
                   >
-                    <div className="flex items-center gap-3">
-                      <span className="w-8 h-8 rounded-full bg-[#1a2332]/5 flex items-center justify-center text-sm font-medium shrink-0">
+                    <div className="flex items-start gap-3">
+                      <span className="w-8 h-8 rounded-full bg-[#1a2332]/5 flex items-center justify-center text-sm font-medium shrink-0 mt-0.5">
                         {String.fromCharCode(65 + idx)}
                       </span>
-                      <span>{option}</span>
+                      <span className="pt-0.5">{option}</span>
                       {selectedAnswer !== null &&
                         idx === quizQuestion.correct && (
-                          <CheckCircle className="w-5 h-5 ml-auto shrink-0" />
+                          <CheckCircle className="w-5 h-5 ml-auto shrink-0 mt-0.5" />
                         )}
                       {selectedAnswer === idx &&
                         idx !== quizQuestion.correct && (
-                          <XCircle className="w-5 h-5 ml-auto shrink-0" />
+                          <XCircle className="w-5 h-5 ml-auto shrink-0 mt-0.5" />
                         )}
                     </div>
                   </button>
@@ -892,23 +932,23 @@ export default function DemoClient() {
       {/* ═══════════════════════════════════════════ */}
       {/* SECTION 5 — LEARN FROM MISTAKES            */}
       {/* ═══════════════════════════════════════════ */}
-      <section id="mistakes" className="py-24 px-6 border-t border-[#1a2332]/8">
+      <section id="mistakes" className="py-16 sm:py-24 px-4 sm:px-6 border-t border-[#1a2332]/8">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center mb-10 sm:mb-12">
             <div className="text-xs uppercase tracking-widest text-[#B8860B] mb-3">
               Step 5
             </div>
-            <h2 className="text-3xl font-bold text-[#1a2332] mb-3">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#1a2332] mb-3">
               Learn From Mistakes
             </h2>
-            <p className="text-[#5a6a7a] max-w-2xl mx-auto text-lg">
+            <p className="text-[#5a6a7a] max-w-2xl mx-auto text-base sm:text-lg">
               Students do not simply receive a score. Every mistake becomes a
               learning opportunity.
             </p>
           </div>
 
           {/* Problem statement */}
-          <div className="bg-[#c45c4a]/6 border border-[#c45c4a]/15 rounded-xl p-6 mb-10">
+          <div className="bg-[#c45c4a]/6 border border-[#c45c4a]/15 rounded-xl p-4 sm:p-6 mb-8 sm:mb-10">
             <div className="flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-[#c45c4a] mt-0.5 shrink-0" />
               <div>
@@ -916,7 +956,7 @@ export default function DemoClient() {
                   The Problem: Wrong Answers Teach Nothing Without Explanation
                 </h3>
                 <p className="text-sm text-[#5a6a7a] leading-relaxed">
-                  A student misses a question and sees only "Incorrect." They remember they got it wrong, but not why. 
+                  A student misses a question and sees only "Incorrect." They remember they got it wrong, but not why.
                   The misconception remains. On the board exam, they make the same mistake again — because they were never taught the correct reasoning.
                 </p>
               </div>
@@ -925,14 +965,14 @@ export default function DemoClient() {
 
           <div className="bg-white border border-[#1a2332]/10 rounded-xl overflow-hidden shadow-sm">
             {/* Incorrect Answer Header */}
-            <div className="bg-[#c45c4a]/6 border-b border-[#c45c4a]/15 p-6">
+            <div className="bg-[#c45c4a]/6 border-b border-[#c45c4a]/15 p-5 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
                 <XCircle className="w-6 h-6 text-[#c45c4a]" />
-                <span className="text-[#c45c4a] font-semibold">
+                <span className="text-[#c45c4a] font-semibold text-sm sm:text-base">
                   Incorrect Answer Selected
                 </span>
               </div>
-              <p className="text-[#1a2332] text-lg">
+              <p className="text-[#1a2332] text-base sm:text-lg">
                 &ldquo;Androgenic alopecia&rdquo;
               </p>
               <p className="text-[#5a6a7a] text-sm mt-1">
@@ -940,7 +980,7 @@ export default function DemoClient() {
               </p>
             </div>
 
-            <div className="p-6 space-y-6">
+            <div className="p-5 sm:p-6 space-y-6">
               {/* Explanation */}
               <div>
                 <h4 className="text-sm font-semibold text-[#1a2332] mb-2 flex items-center gap-2">
@@ -1002,7 +1042,7 @@ export default function DemoClient() {
             </div>
           </div>
 
-          <div className="mt-8 text-center max-w-2xl mx-auto">
+          <div className="mt-6 sm:mt-8 text-center max-w-2xl mx-auto">
             <p className="text-[#8a9aaa] text-sm italic">
               &ldquo;The platform transforms every wrong answer into a targeted
               learning moment — not just a number on a score sheet.&rdquo;
@@ -1014,23 +1054,23 @@ export default function DemoClient() {
       {/* ═══════════════════════════════════════════ */}
       {/* SECTION 6 — PROGRESS TRACKING              */}
       {/* ═══════════════════════════════════════════ */}
-      <section id="progress" className="py-24 px-6 border-t border-[#1a2332]/8">
+      <section id="progress" className="py-16 sm:py-24 px-4 sm:px-6 border-t border-[#1a2332]/8">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center mb-10 sm:mb-12">
             <div className="text-xs uppercase tracking-widest text-[#B8860B] mb-3">
               Step 6
             </div>
-            <h2 className="text-3xl font-bold text-[#1a2332] mb-3">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#1a2332] mb-3">
               Progress Tracking
             </h2>
-            <p className="text-[#5a6a7a] max-w-2xl mx-auto">
+            <p className="text-[#5a6a7a] max-w-2xl mx-auto text-sm sm:text-base">
               Students, instructors, and schools can measure improvement over
               time.
             </p>
           </div>
 
           {/* Problem statement */}
-          <div className="bg-[#c45c4a]/6 border border-[#c45c4a]/15 rounded-xl p-6 mb-10">
+          <div className="bg-[#c45c4a]/6 border border-[#c45c4a]/15 rounded-xl p-4 sm:p-6 mb-8 sm:mb-10">
             <div className="flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-[#c45c4a] mt-0.5 shrink-0" />
               <div>
@@ -1038,22 +1078,22 @@ export default function DemoClient() {
                   The Problem: No One Knows Who Needs Help Until It's Too Late
                 </h3>
                 <p className="text-sm text-[#5a6a7a] leading-relaxed">
-                  Instructors with 30 students cannot quiz each one individually. School owners discover a student is failing only when they fail the board exam. 
+                  Instructors with 30 students cannot quiz each one individually. School owners discover a student is failing only when they fail the board exam.
                   Without measurement, there is no accountability. Without accountability, there is no improvement.
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
             {/* Before */}
-            <div className="bg-white border border-[#1a2332]/10 rounded-xl p-8 shadow-sm">
+            <div className="bg-white border border-[#1a2332]/10 rounded-xl p-6 sm:p-8 shadow-sm">
               <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#8a9aaa] mb-6">
                 <Clock className="w-4 h-4" />
                 Before Review
               </div>
               <div className="text-center">
-                <div className="text-5xl font-bold text-[#c9a000] mb-2">
+                <div className="text-4xl sm:text-5xl font-bold text-[#c9a000] mb-2">
                   72%
                 </div>
                 <div className="text-sm text-[#5a6a7a] mb-4">
@@ -1084,8 +1124,8 @@ export default function DemoClient() {
             </div>
 
             {/* After */}
-            <div className="bg-white border border-[#B8860B]/20 rounded-xl p-8 relative shadow-sm">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-[#B8860B] text-white text-xs font-semibold rounded-full">
+            <div className="bg-white border border-[#B8860B]/20 rounded-xl p-6 sm:p-8 relative shadow-sm">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-[#B8860B] text-white text-xs font-semibold rounded-full whitespace-nowrap">
                 After Targeted Review
               </div>
               <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#B8860B] mb-6">
@@ -1093,7 +1133,7 @@ export default function DemoClient() {
                 After Review
               </div>
               <div className="text-center">
-                <div className="text-5xl font-bold text-[#4a8a6a] mb-2">
+                <div className="text-4xl sm:text-5xl font-bold text-[#4a8a6a] mb-2">
                   78%
                 </div>
                 <div className="text-sm text-[#5a6a7a] mb-4">
@@ -1123,14 +1163,14 @@ export default function DemoClient() {
           </div>
 
           {/* Improvement Metric */}
-          <div className="mt-8 bg-[#B8860B]/6 border border-[#B8860B]/15 rounded-xl p-6 text-center">
+          <div className="mt-6 sm:mt-8 bg-[#B8860B]/6 border border-[#B8860B]/15 rounded-xl p-5 sm:p-6 text-center">
             <div className="flex items-center justify-center gap-2 text-[#B8860B] mb-2">
               <TrendingUp className="w-5 h-5" />
               <span className="text-sm font-semibold uppercase tracking-wider">
                 Improvement
               </span>
             </div>
-            <div className="text-4xl font-bold text-[#B8860B]">+6%</div>
+            <div className="text-3xl sm:text-4xl font-bold text-[#B8860B]">+6%</div>
             <p className="text-[#5a6a7a] text-sm mt-2">
               Board Readiness improvement after targeted review of missed
               concepts
@@ -1138,7 +1178,7 @@ export default function DemoClient() {
           </div>
 
           {/* Stakeholder value */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6 sm:mt-8">
             <div className="bg-[#f5f3ef] border border-[#1a2332]/8 rounded-lg p-4 text-center">
               <Users className="w-5 h-5 text-[#B8860B] mx-auto mb-2" />
               <p className="text-sm text-[#3a4a5a] font-medium">For Instructors</p>
@@ -1167,22 +1207,22 @@ export default function DemoClient() {
       {/* ═══════════════════════════════════════════ */}
       {/* SECTION 7 — FUTURE VISION                  */}
       {/* ═══════════════════════════════════════════ */}
-      <section id="future" className="py-24 px-6 border-t border-[#1a2332]/8">
+      <section id="future" className="py-16 sm:py-24 px-4 sm:px-6 border-t border-[#1a2332]/8">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center mb-10 sm:mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#B8860B]/8 border border-[#B8860B]/20 rounded-full text-[#B8860B] text-sm font-medium mb-6">
               <Sparkles className="w-4 h-4" />
               Future Vision
             </div>
-            <h2 className="text-3xl font-bold text-[#1a2332] mb-3">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#1a2332] mb-3">
               Roadmap Ahead
             </h2>
-            <p className="text-[#5a6a7a] max-w-xl mx-auto">
+            <p className="text-[#5a6a7a] max-w-xl mx-auto text-sm sm:text-base">
               These features represent the future direction of the platform.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {[
               {
                 icon: Volume2,
@@ -1223,10 +1263,10 @@ export default function DemoClient() {
             ].map((feature, idx) => (
               <div
                 key={idx}
-                className="bg-white border border-dashed border-[#1a2332]/10 rounded-xl p-6 opacity-70 hover:opacity-100 transition-opacity shadow-sm"
+                className="bg-white border border-dashed border-[#1a2332]/10 rounded-xl p-5 sm:p-6 opacity-70 hover:opacity-100 transition-opacity shadow-sm"
               >
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-lg bg-[#B8860B]/8 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-lg bg-[#B8860B]/8 flex items-center justify-center shrink-0">
                     <feature.icon className="w-5 h-5 text-[#B8860B]" />
                   </div>
                   <h3 className="text-sm font-semibold text-[#1a2332]">
@@ -1240,7 +1280,7 @@ export default function DemoClient() {
             ))}
           </div>
 
-          <div className="mt-12 text-center">
+          <div className="mt-10 sm:mt-12 text-center">
             <p className="text-[#8a9aaa] text-sm">
               Future features are conceptual and subject to development
               prioritization based on school and instructor feedback.
@@ -1250,7 +1290,7 @@ export default function DemoClient() {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="border-t border-[#1a2332]/8 py-12 px-6 bg-[#f5f3ef]">
+      <footer className="border-t border-[#1a2332]/8 py-10 sm:py-12 px-4 sm:px-6 bg-[#f5f3ef]">
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex items-center justify-center gap-3 mb-4">
             <GraduationCap className="w-6 h-6 text-[#B8860B]" />
