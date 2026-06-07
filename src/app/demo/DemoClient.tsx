@@ -29,6 +29,7 @@ const navItems = [
   { label: "Welcome", href: "#welcome" },
   { label: "Dashboard", href: "#dashboard" },
   { label: "Chapter 10", href: "#chapter10" },
+  { label: "Consultation", href: "#consultation" },
   { label: "Flashcards", href: "#flashcards" },
   { label: "Quiz", href: "#quiz" },
   { label: "Learn From Mistakes", href: "#mistakes" },
@@ -46,6 +47,7 @@ function scrollToSection(href: string) {
 export default function DemoClient() {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
+  const [selectedConsultAnswer, setSelectedConsultAnswer] = useState<number | null>(null);
 
   const quizQuestion = {
     question:
@@ -515,7 +517,183 @@ export default function DemoClient() {
       </section>
 
       {/* ═══════════════════════════════════════════ */}
-      {/* SECTION 3 — FLASHCARDS                     */}
+      {/* SECTION 3 — CLIENT CONSULTATION CHALLENGE  */}
+      {/* ═══════════════════════════════════════════ */}
+      <section id="consultation" className="py-24 px-6 border-t border-[#1a2332]/8">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#B8860B]/8 border border-[#B8860B]/20 rounded-full text-[#B8860B] text-sm font-medium mb-4">
+              <Users className="w-4 h-4" />
+              Professional Decision Making
+            </div>
+            <div className="text-xs uppercase tracking-widest text-[#B8860B] mb-3">
+              Step 3
+            </div>
+            <h2 className="text-3xl font-bold text-[#1a2332] mb-3">
+              Client Consultation Challenge
+            </h2>
+            <p className="text-[#5a6a7a] max-w-2xl mx-auto">
+              Can this student apply what they learned in a real barber situation?
+            </p>
+          </div>
+
+          {/* Scenario Card */}
+          <div className="bg-white border border-[#B8860B]/30 rounded-xl p-8 mb-8 shadow-sm">
+            <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#B8860B] mb-4">
+              <AlertTriangle className="w-4 h-4" />
+              Scenario
+            </div>
+            <p className="text-[#1a2332] text-lg leading-relaxed mb-4">
+              A client sits in your chair with <span className="text-[#B8860B] font-medium">circular patches of hair loss</span> on the scalp.
+            </p>
+            <div className="bg-[#f5f3ef] rounded-lg p-4 border border-[#1a2332]/8">
+              <p className="text-[#3a4a5a] italic">
+                &ldquo;Can we continue with today&apos;s service?&rdquo;
+              </p>
+            </div>
+          </div>
+
+          {/* Question */}
+          <div className="mb-6">
+            <p className="text-[#1a2332] font-medium text-lg mb-4">
+              What is the MOST professional response?
+            </p>
+
+            <div className="space-y-3">
+              {[
+                {
+                  letter: "A",
+                  text: "Continue the service as normal.",
+                  wrong: "Barbers must prioritize client safety. Continuing without assessment could spread a contagious condition or worsen an underlying medical issue.",
+                },
+                {
+                  letter: "B",
+                  text: "Diagnose the condition as alopecia areata.",
+                  wrong: "Barbers are not licensed to diagnose medical conditions. Making a diagnosis exceeds the scope of practice and could create liability.",
+                },
+                {
+                  letter: "C",
+                  text: "Recognize the concern and recommend medical evaluation.",
+                  correct: true,
+                  explanation: "This is the correct professional response. Barbers should recognize potential disorders, pause service when appropriate, and refer clients to medical professionals for diagnosis and treatment.",
+                },
+                {
+                  letter: "D",
+                  text: "Apply a scalp treatment before proceeding.",
+                  wrong: "Applying treatment without knowing the underlying condition could mask symptoms, cause adverse reactions, or delay proper medical care.",
+                },
+              ].map((option, idx) => {
+                const isSelected = selectedConsultAnswer === idx;
+                const isCorrect = option.correct;
+                const showResult = selectedConsultAnswer !== null;
+
+                let btnClass = "w-full text-left p-4 rounded-lg border transition-all duration-200 ";
+                if (!showResult) {
+                  btnClass += "bg-white border-[#1a2332]/10 text-[#3a4a5a] hover:border-[#B8860B]/50 hover:bg-[#f5f3ef] cursor-pointer";
+                } else if (isCorrect) {
+                  btnClass += "bg-[#4a8a6a]/8 border-[#4a8a6a]/40 text-[#4a8a6a]";
+                } else if (isSelected) {
+                  btnClass += "bg-[#c45c4a]/8 border-[#c45c4a]/40 text-[#c45c4a]";
+                } else {
+                  btnClass += "bg-white border-[#1a2332]/10 text-[#8a9aaa]";
+                }
+
+                return (
+                  <div key={idx}>
+                    <button
+                      onClick={() => {
+                        if (selectedConsultAnswer === null) {
+                          setSelectedConsultAnswer(idx);
+                        }
+                      }}
+                      disabled={showResult}
+                      className={btnClass}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium shrink-0 ${
+                          showResult && isCorrect
+                            ? "bg-[#4a8a6a]/15 text-[#4a8a6a]"
+                            : showResult && isSelected && !isCorrect
+                            ? "bg-[#c45c4a]/15 text-[#c45c4a]"
+                            : "bg-[#f5f3ef] text-[#5a6a7a]"
+                        }`}>
+                          {option.letter}
+                        </span>
+                        <span>{option.text}</span>
+                        {showResult && isCorrect && (
+                          <CheckCircle className="w-5 h-5 ml-auto shrink-0" />
+                        )}
+                        {showResult && isSelected && !isCorrect && (
+                          <XCircle className="w-5 h-5 ml-auto shrink-0" />
+                        )}
+                      </div>
+                    </button>
+
+                    {/* Explanation for this option */}
+                    {showResult && (isCorrect || isSelected) && (
+                      <div className={`mt-2 p-4 rounded-lg border ${
+                        isCorrect
+                          ? "bg-[#4a8a6a]/5 border-[#4a8a6a]/20"
+                          : "bg-[#c45c4a]/5 border-[#c45c4a]/20"
+                      }`}>
+                        {isCorrect ? (
+                          <>
+                            <p className="text-[#4a8a6a] font-medium text-sm mb-1">
+                              Correct Answer
+                            </p>
+                            <p className="text-[#3a4a5a] text-sm leading-relaxed">
+                              {option.explanation}
+                            </p>
+                          </>
+                        ) : (
+                          <>
+                            <p className="text-[#c45c4a] font-medium text-sm mb-1">
+                              Why this is incorrect
+                            </p>
+                            <p className="text-[#5a6a7a] text-sm leading-relaxed">
+                              {option.wrong}
+                            </p>
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Key Takeaways */}
+          {selectedConsultAnswer !== null && (
+            <div className="mt-8 bg-[#B8860B]/5 border border-[#B8860B]/20 rounded-xl p-6">
+              <h4 className="text-sm font-semibold text-[#B8860B] mb-4 flex items-center gap-2">
+                <Award className="w-4 h-4" />
+                Key Takeaways
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {[
+                  { label: "Recognition", desc: "Identify abnormal conditions" },
+                  { label: "Safety", desc: "Protect the client first" },
+                  { label: "Referral", desc: "Know when to recommend medical evaluation" },
+                  { label: "Professional Judgment", desc: "Stay within scope of practice" },
+                  { label: "Board Readiness", desc: "Apply knowledge under pressure" },
+                ].map((item) => (
+                  <div
+                    key={item.label}
+                    className="bg-white rounded-lg p-3 border border-[#1a2332]/8"
+                  >
+                    <p className="text-[#1a2332] text-sm font-medium">{item.label}</p>
+                    <p className="text-[#8a9aaa] text-xs mt-0.5">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════ */}
+      {/* SECTION 4 — FLASHCARDS                     */}
       {/* ═══════════════════════════════════════════ */}
       <section id="flashcards" className="py-24 px-6 border-t border-[#1a2332]/8">
         <div className="max-w-5xl mx-auto">
@@ -1036,6 +1214,12 @@ export default function DemoClient() {
                 description:
                   "Customized content and practice exams aligned to specific state board requirements and regulations.",
               },
+              {
+                icon: BookOpen,
+                title: "Spanish Version",
+                description:
+                  "Bilingual study support for Spanish-speaking barber students.",
+              },
             ].map((feature, idx) => (
               <div
                 key={idx}
@@ -1079,7 +1263,7 @@ export default function DemoClient() {
             visibility.
           </p>
           <p className="text-[#8a9aaa] text-xs mt-4">
-            Demo Presentation — For Milady, NABBA, and Barber School Partners
+            &copy; {new Date().getFullYear()} Barber Study Pro. All rights reserved.
           </p>
         </div>
       </footer>
