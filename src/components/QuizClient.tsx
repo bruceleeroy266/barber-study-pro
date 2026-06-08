@@ -131,6 +131,8 @@ export default function QuizClient({ quiz, questions, chapterId, userId, bestAtt
             chapter_id: chapterId,
             quiz_completed: true,
             best_quiz_score: Math.max(percentage, bestAttempt?.percentage || 0),
+            progress_percentage: 100,
+            last_studied_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           },
           { onConflict: 'user_id,chapter_id' }

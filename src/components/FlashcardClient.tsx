@@ -86,6 +86,8 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
           user_id: userId,
           chapter_id: chapterId,
           flashcards_completed: true,
+          progress_percentage: 50,
+          last_studied_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         }, {
           onConflict: 'user_id,chapter_id'
