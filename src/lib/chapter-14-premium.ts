@@ -165,8 +165,8 @@ export const chapter14PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'facial-shapes-intro',
       title: 'Facial Shapes and Hair Design',
-      content: 'Understanding facial shapes helps you recommend styles that complement the client\'s features. The five basic facial shapes are oval, round, square, inverted triangular (heart), and pear-shaped (triangular). Each shape has specific design goals to create balance and harmony.',
-      highlight: 'The five basic facial shapes: oval, round, square, inverted triangular, pear-shaped',
+      content: 'Understanding facial shapes helps you recommend styles that complement the client\'s features. The seven facial shapes are oval, round, square, inverted triangular (heart), pear-shaped (triangular), oblong, and diamond. Each shape has specific design goals to create balance and harmony. Use the three-zone method to analyze: divide the face horizontally at the eyebrows, end of nose, and chin.',
+      highlight: 'Seven facial shapes analyzed using the three-zone method',
     },
     {
       type: 'tabbed',
@@ -222,6 +222,80 @@ export const chapter14PremiumContent: ChapterContent = {
             { label: 'Characteristics', description: 'Narrower forehead, wider jawline' },
             { label: 'Design Goal', description: 'Add width at temples, minimize jaw width' },
             { label: 'Recommendation', description: 'Styles with volume on top work well' },
+          ],
+        },
+        {
+          id: 'oblong',
+          label: 'Oblong',
+          title: 'Oblong Face — Visually Shorten',
+          bullets: [
+            { label: 'Characteristics', description: 'Long, rectangular structure with angular features' },
+            { label: 'Design Goal', description: 'Visually shorten the face' },
+            { label: 'Techniques', description: 'Layered bangs brushed sideways over temples; mustache adds horizontal line to break length' },
+          ],
+        },
+        {
+          id: 'diamond',
+          label: 'Diamond',
+          title: 'Diamond Face — Balance Mid-Face Width',
+          bullets: [
+            { label: 'Characteristics', description: 'Narrow temples and chin, widest at cheekbones' },
+            { label: 'Design Goal', description: 'Add fullness at temples, keep hair close at widest points' },
+            { label: 'Techniques', description: 'Direct bangs off-face into sides; full or square beard balances narrow chin' },
+          ],
+        },
+      ],
+    },
+    {
+      type: 'contentBlock',
+      id: 'facial-profiles',
+      title: 'Facial Profiles and Design',
+      content: 'Facial profile — the side view silhouette — is just as important as face shape. The four profile types are straight (balanced), convex (forehead and chin recede), concave (receding forehead, jutting chin), and angular (sharp, defined lines). Use hairstyle and facial hair to minimize prominent features and add volume to receding ones.',
+      highlight: 'The four profile types: straight, convex, concave, angular',
+    },
+    {
+      type: 'tabbed',
+      id: 'profile-types',
+      title: 'Four Facial Profile Types',
+      subtitle: 'Design strategies for each profile',
+      tabs: [
+        {
+          id: 'straight',
+          label: 'Straight',
+          title: 'Straight Profile — Balanced and Proportioned',
+          bullets: [
+            { label: 'Characteristics', description: 'Forehead and chin align with slight curvature; most balanced type' },
+            { label: 'Design Goal', description: 'Minimal adjustment needed; wide variety of styles work well' },
+          ],
+        },
+        {
+          id: 'convex',
+          label: 'Convex',
+          title: 'Convex Profile — Minimize Forehead Bulge',
+          bullets: [
+            { label: 'Characteristics', description: 'Forehead and chin recede backward, creating curved-forward appearance' },
+            { label: 'Design Goal', description: 'Minimize forehead bulge' },
+            { label: 'Technique', description: 'Use close hair arrangement at forehead' },
+          ],
+        },
+        {
+          id: 'concave',
+          label: 'Concave',
+          title: 'Concave Profile — Balance Forehead and Chin',
+          bullets: [
+            { label: 'Characteristics', description: 'Receding forehead with chin jutting forward' },
+            { label: 'Design Goal', description: 'Create balance between forehead and chin' },
+            { label: 'Techniques', description: 'Add volume over forehead; use close-cut beard to minimize chin bulk' },
+          ],
+        },
+        {
+          id: 'angular',
+          label: 'Angular',
+          title: 'Angular Profile — Soften Sharp Features',
+          bullets: [
+            { label: 'Characteristics', description: 'Sharp angles and defined lines' },
+            { label: 'Design Goal', description: 'Soften or complement angular features' },
+            { label: 'Technique', description: 'Use wavy or textured styles to break harsh lines' },
           ],
         },
       ],
@@ -281,6 +355,13 @@ export const chapter14PremiumContent: ChapterContent = {
       ],
     },
     {
+      type: 'contentBlock',
+      id: 'neck-ear-sideburns',
+      title: 'Neck Length, Ear Placement, and Sideburn Design',
+      content: 'Neck length, ear size, and sideburn design are critical finishing details. For long necks, leave hair fuller at the nape and never cut above the natural hairline. For short necks, taper at the natural hairline to create the illusion of length. Sideburn length is relative to facial features — what looks short on a large face may look long on a small face. Sideburns should appear even from the front, but may need slight asymmetry to account for natural facial differences.',
+      highlight: 'Sideburn length is relative to the client\'s individual features',
+    },
+    {
       type: 'featureGrid',
       id: 'basic-techniques',
       title: 'Basic Haircutting Techniques',
@@ -312,8 +393,329 @@ export const chapter14PremiumContent: ChapterContent = {
         },
       ],
     },
+    {
+      type: 'contentBlock',
+      id: 'shear-point-tapering',
+      title: 'Shear-Point Tapering',
+      content: 'Shear-point tapering uses the tips of the shears to thin or customize difficult areas caused by growth patterns like hollows, whorls, or scalp creases. By cutting only a few strands at a time, this technique minimizes dark or ragged patches and blends them with surrounding hair. It is an advanced skill that shows attention to detail and produces a more natural, polished result.',
+      highlight: 'Use shear tips to blend hollows, whorls, and scalp creases',
+    },
+    {
+      type: 'contentBlock',
+      id: 'freehand-shear',
+      title: 'Freehand Shear Cutting',
+      content: 'Freehand shear cutting uses shears without a comb to refine the haircut in its final stages. The open-shear technique — consistently opening and closing shears while moving over the hair surface — removes stray hairs protruding from the design. This is especially effective for shaping and trimming tight curl textures where comb control is difficult.',
+      highlight: 'Freehand shear cutting is especially effective for tight curl textures',
+    },
+    {
+      type: 'contentBlock',
+      id: 'razor-techniques',
+      title: 'Razor Cutting Techniques',
+      content: 'Razor cutting produces tapered, soft ends rather than the blunt ends created by shears. Hair must be kept uniformly damp throughout the process — dry cutting causes discomfort and frizz. Three main techniques exist: razor-over-comb (similar to shear-over-comb, rolling the comb out to project hair), razor rotation (a two-part counter-rotation movement for blending and tapering), and fingers-and-razor (holding hair taut between fingers while cutting). Razor cutting is considered the best method for blending and tapering because the blade creates a smoother transition than shears or clippers.',
+      highlight: 'Razor cutting creates tapered, soft ends — ideal for blending and tapering',
+    },
+    {
+      type: 'tabbed',
+      id: 'razor-taper-methods',
+      title: 'Razor Taper-Blending Methods',
+      subtitle: 'Three levels of taper intensity',
+      tabs: [
+        {
+          id: 'light',
+          label: 'Light',
+          title: 'Light Taper-Blending',
+          bullets: [
+            { label: 'Blade Angle', description: 'Razor held almost flat against the hair surface with slight tilt' },
+            { label: 'Pressure', description: 'Minimal pressure removes a small amount of hair' },
+            { label: 'Best For', description: 'Fine hair and subtle blending' },
+          ],
+        },
+        {
+          id: 'heavier',
+          label: 'Heavier',
+          title: 'Heavier Taper-Blending',
+          bullets: [
+            { label: 'Blade Angle', description: 'Razor held up to 45 degrees from the hair strand surface' },
+            { label: 'Pressure', description: 'Increased pressure creates deeper cuts and removes more hair' },
+            { label: 'Best For', description: 'Medium texture and moderate bulk removal' },
+          ],
+        },
+        {
+          id: 'terminal',
+          label: 'Terminal',
+          title: 'Terminal Blending',
+          bullets: [
+            { label: 'Blade Angle', description: 'Razor blade angle increased to almost 90 degrees' },
+            { label: 'Effect', description: 'Produces minimal tapering at the hair ends' },
+            { label: 'Best For', description: 'Final finishing and softening weight lines' },
+          ],
+        },
+      ],
+    },
+    {
+      type: 'contentBlock',
+      id: 'thinning-texturizing',
+      title: 'Thinning and Texturizing Techniques',
+      content: 'Thinning and texturizing reduce bulk or weight without dramatically altering overall length. Slicing glides open shears along the hair surface to remove bulk. Carving elevates hair 45–90 degrees and glides open shears with a curving motion to remove under-portion bulk. Slithering uses an up-and-down sliding motion of shears along a thin section toward the scalp with slight closing action. Point cutting and notching use shear tips at vertical or diagonal angles to reduce weight at the ends — notching is more aggressive and creates chunkier texture. Never cut visible top surfaces where cutting lines can be seen.',
+      highlight: 'Never cut visible top surfaces when thinning — creates noticeable lines',
+    },
+    {
+      type: 'contentBlock',
+      id: 'guards-vs-blades',
+      title: 'Guards vs. Detachable Blades — State Board Critical',
+      content: 'Detachable blades and clipper guards are not the same. Detachable blades are metal blades that attach directly to the clipper and determine cutting length. Guards (attachment combs) are plastic combs placed on top of the blade that allow more hair length to remain. Guards are NOT considered freehand clipper cutting and are typically NOT acceptable for state board practical examinations. Students must demonstrate true freehand clipper control without guard attachments for licensing exams.',
+      highlight: 'Guards are NOT acceptable for state board practical exams',
+    },
+
+    // Section 4b: Design Elements and Lines
+    {
+      type: 'contentBlock',
+      id: 'design-elements',
+      title: 'Design Elements in Haircutting',
+      content: 'Barbers work with three-dimensional design elements: line, form, space, texture, and color. Understanding how these elements interact helps develop a strong visual eye and the judgment needed to create successful designs. Lines create shape and direction. Form gives width, length, and depth. Space defines positive space (the haircut itself) and negative space (the area surrounding it). Texture affects how light reflects off the hair surface. Color creates illusions of depth and volume — dark colors recede while lighter colors appear to come forward.',
+      highlight: 'Line, form, space, texture, and color are the five design elements',
+    },
+    {
+      type: 'tabbed',
+      id: 'line-types',
+      title: 'Types of Lines in Haircutting',
+      subtitle: 'How different lines create different effects',
+      tabs: [
+        {
+          id: 'horizontal',
+          label: 'Horizontal',
+          title: 'Horizontal Lines — Build Weight',
+          bullets: [
+            { label: 'Characteristics', description: 'Parallel to the horizon or floor; move from one side to the other' },
+            { label: 'Effect', description: 'Build weight and create one-length or low-elevation designs' },
+            { label: 'Common Placement', description: 'At the perimeter or occipital area of the haircut' },
+            { label: 'Result', description: 'Creates weight lines that add bulk and structure' },
+          ],
+        },
+        {
+          id: 'vertical',
+          label: 'Vertical',
+          title: 'Vertical Lines — Remove Weight',
+          bullets: [
+            { label: 'Characteristics', description: 'Perpendicular to the floor; described as up and down' },
+            { label: 'Effect', description: 'Remove weight and create layers' },
+            { label: 'Technique', description: 'Facilitate projecting hair at higher elevations while cutting' },
+            { label: 'Result', description: 'Layers may be cut short-to-long, long-to-short, or uniformly' },
+          ],
+        },
+        {
+          id: 'diagonal',
+          label: 'Diagonal',
+          title: 'Diagonal Lines — Create Slope',
+          bullets: [
+            { label: 'Characteristics', description: 'Slanted direction; referred to as diagonal forward or diagonal back at the perimeter' },
+            { label: 'Effect', description: 'Produce increased length at one end, shorter at the opposite' },
+            { label: 'Technique', description: 'Diagonal finger placement creates stacked, layered effects' },
+            { label: 'Result', description: 'Blends longer layers to shorter layers within the haircut' },
+          ],
+        },
+        {
+          id: 'curved',
+          label: 'Curved',
+          title: 'Curved Lines — Soften Design',
+          bullets: [
+            { label: 'Characteristics', description: 'Move in semicircular or circular direction; can be shallow or deep' },
+            { label: 'Types', description: 'Concave curves inward; convex curves outward' },
+            { label: 'Placement', description: 'Often used at the nape perimeter and around the face' },
+            { label: 'Result', description: 'Softens the design and creates wave patterns when repeated' },
+          ],
+        },
+      ],
+    },
+    {
+      type: 'contentBlock',
+      id: 'elevation-degrees',
+      title: 'Elevation and Projection',
+      content: 'Elevation is the angle at which a section of hair is held from the head for cutting, relative to where it grows. Projection is the result of lifting hair above zero elevation. These angles determine the final shape and weight distribution of the haircut. Zero elevation produces weight and bulk at the perimeter. Forty-five degree elevation creates graduation or stacking. Ninety-degree elevation produces layering and is the most common projection in men\'s haircutting. One hundred eighty-degree elevation is used for long hair layering.',
+      highlight: 'Elevation angles determine weight distribution and final shape',
+    },
+    {
+      type: 'tabbed',
+      id: 'elevation-guide',
+      title: 'Elevation Degrees and Their Effects',
+      subtitle: 'How angle changes the haircut',
+      tabs: [
+        {
+          id: 'zero',
+          label: '0°',
+          title: 'Zero Elevation — Maximum Weight',
+          bullets: [
+            { label: 'Method', description: 'Hair combed straight down from where it grows and cut against the skin or between fingers' },
+            { label: 'Result', description: 'Produces weight, bulk, and maximum length at the perimeter' },
+            { label: 'Use', description: 'Creates the design line that guides all subsequent partings' },
+            { label: 'Style', description: 'Standard blunt cut on longer hair; crisp lines on shorter styles' },
+          ],
+        },
+        {
+          id: 'forty-five',
+          label: '45°',
+          title: '45-Degree Elevation — Graduation',
+          bullets: [
+            { label: 'Classification', description: 'Medium elevation; also called graduation' },
+            { label: 'Result', description: 'Creates layered ends or stacking within the parting' },
+            { label: 'Technique', description: 'Horizontal parting with stationary guide at the perimeter' },
+            { label: 'Effect', description: 'Movement and texture between the zero and forty-five degree positions' },
+          ],
+        },
+        {
+          id: 'ninety',
+          label: '90°',
+          title: '90-Degree Elevation — Layering',
+          bullets: [
+            { label: 'Classification', description: 'High elevation; most common in men\'s haircutting' },
+            { label: 'Result', description: 'Produces layering, tapering, and blended effects' },
+            { label: 'Technique', description: 'Hair held straight out from where it grows; requires traveling guide' },
+            { label: 'Use', description: 'Uniform layers or tapered effects from nape to top' },
+          ],
+        },
+        {
+          id: 'one-eighty',
+          label: '180°',
+          title: '180-Degree Elevation — Long Hair Layers',
+          bullets: [
+            { label: 'Classification', description: 'Highest elevation; used for long hair' },
+            { label: 'Technique', description: 'Ninety-degree stationary guide in top section; sides and back brought up to it' },
+            { label: 'Important', description: 'The hair being cut is at 180 degrees, not the stationary guide' },
+            { label: 'Reference', description: 'See Chapter 16: Women\'s Haircutting and Styling' },
+          ],
+        },
+      ],
+    },
+    {
+      type: 'contentBlock',
+      id: 'guide-types',
+      title: 'Guides: Stationary and Traveling',
+      content: 'A guide is a cut section of hair by which subsequent partings are measured and cut. Guides are classified as stationary or traveling. A stationary guide maintains its position while subsequent partings are brought to it — used for one-length designs and maintaining length in a section. A traveling guide moves along the section as each cut is made — the previous cut becomes the guide for the next parting. Most haircuts use a combination of both guide types.',
+      highlight: 'Most haircuts use a combination of stationary and traveling guides',
+    },
+    {
+      type: 'contentBlock',
+      id: 'cross-checking',
+      title: 'Cross-Checking',
+      content: 'Cross-checking is the process of parting off subsections opposite from the elevation or direction at which they were cut to check the precision of cutting lines or blending. For example, a vertical subsection cut at a ninety-degree projection can be cross-checked by parting off subsections horizontally at ninety degrees. This essential quality-control step ensures even, balanced results.',
+      highlight: 'Cross-checking ensures precision and balanced results',
+    },
+    {
+      type: 'contentBlock',
+      id: 'grain-cutting',
+      title: 'Cutting With, Against, and Across the Grain',
+      content: 'The direction of cutting relative to hair growth affects the final result. Cutting with the grain follows the natural growth direction for a softer, longer appearance. Cutting against the grain goes opposite to growth for a closer, tighter cut — essential for fades and tapers. Cutting across the grain moves in a direction neither with nor against growth. In whorl areas where hair grows unevenly, a circular motion may be required.',
+      highlight: 'Cutting against the grain achieves a closer cut than with the grain',
+    },
+    {
+      type: 'contentBlock',
+      id: 'tension-control',
+      title: 'Tension and Comb Selection',
+      content: 'Tension is the amount of pressure applied while combing and holding a section for cutting. It ranges from minimum to maximum based on how much the hair is stretched. Use maximum tension on straight hair for precise lines. Use minimal to moderate tension on curly and wavy hair — maximum tension may cause the hair to dry shorter than intended. Comb tooth spacing affects tension: fine-toothed combs create more tension because the hair has less room to move; wide-toothed combs create less tension.',
+      highlight: 'Fine-toothed combs create more tension; wide-toothed combs create less',
+    },
 
     // Section 5: Haircutting Procedures
+    {
+      type: 'contentBlock',
+      id: 'head-sections',
+      title: 'Sections of the Head and Reference Points',
+      content: 'The head is divided into seven sections for systematic cutting: front, top (apex), temporal (crest/parietal ridge/hatband/horseshoe), crown, sides, sideburns, back, and nape. Key reference points include the parietal ridge (widest part, where the comb leaves the head at the sides), occipital bone (base of skull, where the comb leaves at the nape), apex (highest point), and the four corners (found by crossing diagonal lines at the apex). Tapering is the gradual increase in hair length without visible lines of demarcation. Blending areas are the transition zones between different lengths.',
+      highlight: 'Seven head sections and four key reference points guide every haircut',
+    },
+    {
+      type: 'contentBlock',
+      id: 'classic-styles',
+      title: 'Classic Men\'s Haircut Styles',
+      content: 'Understanding classic haircut styles provides a reference framework for client consultations and ensures you can execute the most requested cuts. Styles are cyclical — classic cuts return with modern modifications. Regional naming varies: a temple fade in the Midwest may be called a Philly fade on the East Coast.',
+      highlight: 'Classic styles provide the foundation for modern variations',
+    },
+    {
+      type: 'tabbed',
+      id: 'classic-cuts',
+      title: 'Common Classic Cuts',
+      subtitle: 'Characteristics and technique notes',
+      tabs: [
+        {
+          id: 'flat-top',
+          label: 'Flat Top',
+          title: 'Flat Top — Squared Crest',
+          bullets: [
+            { label: 'Characteristics', description: 'Very short sides and back with slightly longer hair at upper parietal and front; flat, squared-off top section' },
+            { label: 'Technique', description: 'Requires steady hand and consistent horizontal comb placement; both clippers and shears used' },
+            { label: 'Variation', description: 'Can be combined with fade elements' },
+          ],
+        },
+        {
+          id: 'crew-cut',
+          label: 'Crew Cut',
+          title: 'Crew Cut — Graduated Length',
+          bullets: [
+            { label: 'Characteristics', description: 'Short, semi-short, or medium-tapered sides and back; length gradually increases from crown to front' },
+            { label: 'Technique', description: 'Back and sides cut high to bottom of crest; tapered and blended to top; wide-toothed comb used for level guide' },
+            { label: 'Variation', description: 'Brush cut (combed back to stand up) and butch cut (styled forward or to side)' },
+          ],
+        },
+        {
+          id: 'high-tight',
+          label: 'High & Tight',
+          title: 'High and Tight — Extreme Contrast',
+          bullets: [
+            { label: 'Characteristics', description: 'Extremely close or shaved sides and back cut to a specific level; short top section no more than ¼ inch' },
+            { label: 'Technique', description: 'Line at parietal ridge can be left distinct or blended into top based on client preference' },
+          ],
+        },
+        {
+          id: 'fade',
+          label: 'Fade',
+          title: 'Fade — Gradual to Skin',
+          bullets: [
+            { label: 'Characteristics', description: 'Hair longer at top, gradually fading to nothing at hairline; back and sides cut extremely close' },
+            { label: 'Technique', description: 'Follow natural hair growth pattern to avoid gaps and patches; multiple variations for different textures' },
+          ],
+        },
+        {
+          id: 'taper',
+          label: 'Taper',
+          title: 'Taper Cut — Graduated and Blended',
+          bullets: [
+            { label: 'Characteristics', description: 'Well-blended, graduated cut conforming to head shape; length increases from hairline to top without visible gaps' },
+            { label: 'Technique', description: 'Top left long enough for styling options; also called regular taper, businessman\'s cut, or Ivy League' },
+            { label: 'Consultation', description: 'Always ask about natural taper preference versus blocked nape' },
+          ],
+        },
+        {
+          id: 'pompadour',
+          label: 'Pompadour',
+          title: 'Pompadour — Long Top, Volume Front',
+          bullets: [
+            { label: 'Characteristics', description: 'Medium to long taper with long top section; gradual length increase from hairline through back and sides' },
+            { label: 'Technique', description: 'Overdirection from front to crown; diagonal cutting lines shorter at crown, longer toward front' },
+            { label: 'Variation', description: 'Pomp fade combines very short sides with extra long top' },
+          ],
+        },
+        {
+          id: 'caesar',
+          label: 'Caesar',
+          title: 'Caesar — Uniform Forward Layers',
+          bullets: [
+            { label: 'Characteristics', description: 'Short, uniform layered cut (1 to 2 inches) distributed around head form; styled forward over front hairline' },
+            { label: 'Technique', description: 'Fingers-and-shear at 90-degree elevations; rounder appearance than angular cuts' },
+            { label: 'Variation', description: 'Modern versions may incorporate tapering or fading in side/back areas' },
+          ],
+        },
+        {
+          id: 'quo-vadis',
+          label: 'Quo Vadis',
+          title: 'Quo Vadis — Close, Even All-Over',
+          bullets: [
+            { label: 'Characteristics', description: 'Close, even all-over length using clippers; conforms to head contours' },
+            { label: 'Technique', description: 'Select blade size for desired length; follow natural growth pattern; cutting against grain leaves hair shorter' },
+            { label: 'Best For', description: 'Most hair textures; produces most uniform appearance on medium to thick hair' },
+          ],
+        },
+      ],
+    },
     {
       type: 'contentBlock',
       id: 'haircutting-procedures',
@@ -397,6 +799,37 @@ export const chapter14PremiumContent: ChapterContent = {
       highlight: 'Cutting against the grain achieves a closer cut',
     },
 
+    {
+      type: 'contentBlock',
+      id: 'finish-work',
+      title: 'Haircut Finish Work',
+      content: 'Professional finishing touches separate a good haircut from a great one. Standard finishing procedures include a neck or outline shave, eyebrow trim, and removal of stray hairs from ears or nostrils. These services demonstrate attention to detail, provide a complete barbershop experience, and help build client loyalty and referrals. Always include finish work as part of your standard service — not as an extra.',
+      highlight: 'Finish work builds client loyalty and should be standard — not extra',
+    },
+    {
+      type: 'contentBlock',
+      id: 'natural-styling',
+      title: 'Natural Drying and Finger Styling',
+      content: 'Not every client needs a blowout. Natural drying lets hair air-dry in its natural position — comb into place or arrange with fingers, then apply gel or pomade while damp. Finger styling uses fingers instead of a comb to manipulate hair into place, producing a more natural, tousled look that many clients prefer. Scrunch styling is a form of finger styling for wavy or curly hair: lift and squeeze hair between fingers while applying diffuser heat to enhance natural texture.',
+      highlight: 'Finger styling produces a natural, tousled look many clients prefer',
+    },
+    {
+      type: 'contentBlock',
+      id: 'locks',
+      title: 'Locks (Dreadlocks) — Consultation Essentials',
+      content: 'Locks form when natural-textured hair intertwines into a single network. The process takes 6 months to 1 year to fully complete. Once hair locks, removal requires cutting them off entirely — emphasize this permanence during consultation. Cultivated locks are intentionally guided through techniques like double twisting, coiling, palm rolling, braiding, or wrapping with cord. Maintenance requires regular shop visits for cleaning, conditioning, and rerolling. Use only non-petroleum-based oils; heavy oils cause buildup and attract debris.',
+      highlight: 'Locks are permanent — removal requires cutting them off',
+    },
+
+    // Section 5b: Building Volume
+    {
+      type: 'contentBlock',
+      id: 'building-volume',
+      title: 'Building Volume with Blowdryer and Brush',
+      content: 'Adding volume to specific areas creates proportional balance and an even contour throughout the haircut. The crown, crest, and top areas are the most common zones requiring extra lift. To build volume, lift the hair with a brush while bending the section, directing the blowdryer at the base of the section and following through to the ends. Use horizontal partings when styling the sides down, and vertical or diagonal partings when brushing the sides back. Keep the dryer moving to avoid burning the scalp.',
+      highlight: 'Lift with the brush, bend the section, and direct heat at the base',
+    },
+
     // Section 6: Blowdrying Techniques
     {
       type: 'contentBlock',
@@ -470,6 +903,20 @@ export const chapter14PremiumContent: ChapterContent = {
           ],
         },
       ],
+    },
+    {
+      type: 'contentBlock',
+      id: 'blowdry-safety',
+      title: 'Blowdrying Safety',
+      content: 'Keep both the airflow and hair constantly moving to prevent burning the client\'s scalp. Never concentrate dryer heat in one spot for extended periods. Keep metal combs away from the scalp during heat application. Dry underneath sections first to prevent missing damp spots and accelerate total drying time.',
+      highlight: 'Keep airflow and hair constantly moving to prevent scalp burns',
+    },
+    {
+      type: 'contentBlock',
+      id: 'tool-maintenance',
+      title: 'Tool Maintenance and Safety',
+      content: 'Dull blades pull hair, cause client pain, and degrade haircut quality. Replace blades mid-service if necessary. Keep razors closed when not in active use. Maintain spatial awareness when using sharp implements around others. After each client, clean, disinfect, and properly store all tools. Sweep the floor and dispose of hair clippings between every client to prevent cross-contamination.',
+      highlight: 'Dull blades pull hair and cause pain — replace them when needed',
     },
 
     // Section 7: The Head Shave
@@ -624,15 +1071,26 @@ export const chapter14PremiumContent: ChapterContent = {
       title: 'Chapter Summary',
       items: [
         { text: 'Always conduct a thorough consultation before cutting' },
-        { text: 'Five facial shapes: oval, round, square, inverted triangular, pear-shaped' },
+        { text: 'Seven facial shapes: oval, round, square, inverted triangular, pear-shaped, oblong, diamond' },
+        { text: 'Four facial profiles: straight, convex, concave, angular' },
+        { text: 'Five design elements: line, form, space, texture, color' },
+        { text: 'Four line types: horizontal, vertical, diagonal, curved' },
+        { text: 'Elevation degrees: 0°, 45°, 90°, 180° and their effects' },
+        { text: 'Guide types: stationary and traveling' },
         { text: 'Basic techniques: clipper-over-comb, shear-over-comb, freehand, blending, fading' },
+        { text: 'Razor techniques: razor-over-comb, razor rotation, fingers-and-razor' },
+        { text: 'Thinning methods: slicing, carving, slithering, point cutting, notching' },
+        { text: 'Classic styles: flat top, crew cut, high and tight, fade, taper, pompadour, Caesar, quo vadis' },
         { text: 'Shadow fade uses adjustable-blade clipper with/without guards' },
         { text: 'Pompadour fade requires sectioning and careful blending' },
         { text: 'Blowdrying methods: freeform, stylized, blow waving, diffused' },
+        { text: 'Building volume: lift with brush, bend section, direct heat at base' },
         { text: 'Head shave requires steamed towels and careful stretching of skin' },
         { text: 'Cornrow braiding involves picking up hair with each strand cross' },
+        { text: 'Locks take 6–12 months to form and are permanent' },
         { text: 'Always follow proper clean-up and disinfection procedures' },
         { text: 'Dispose of blades in sharps container only' },
+        { text: 'Guards are NOT acceptable for state board practical exams' },
       ],
     },
   ],
