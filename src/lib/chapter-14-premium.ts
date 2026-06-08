@@ -1,95 +1,96 @@
 // Chapter 14: Men's Haircutting and Styling — PREMIUM IMMERSIVE EXPERIENCE
-// THE BARBER'S CHAIR — Master the Art of Men's Haircutting
+// THE DESIGN STUDIO — Where Haircut Architecture Meets Artistry
 
 import type { ChapterTheme, ChapterContent } from './chapter-content'
 
 // ═══════════════════════════════════════════════
-// THE BARBER'S CHAIR THEME — Classic Barbershop Craft
-// Deep navy / Warm brass / Ivory cream / Charcoal
-// Feels like: A modern barbershop where precision meets artistry
+// THE DESIGN STUDIO THEME — Elite Haircut Architecture Academy
+// Blueprint precision / Warm steel / Design studio atmosphere
+// Feels like: A premium barber design studio with blueprint overlays,
+// facial geometry systems, and precision cutting tools
 // ═══════════════════════════════════════════════
 
 export const chapter14PremiumTheme: ChapterTheme = {
-  primary: '#2C3E50',
-  primaryLight: '#4A6FA5',
-  primaryDark: '#1A252F',
-  secondary: '#C9A84C',
-  background: 'rgba(20, 24, 32, 0.96)',
-  backgroundAlt: 'rgba(32, 38, 48, 0.92)',
-  surface: '#141820',
-  border: 'rgba(44, 62, 80, 0.25)',
-  text: '#F5F0EB',
-  textMuted: '#B8A89A',
-  highlight: '#C9A84C',
+  primary: '#3B4252',
+  primaryLight: '#5E81AC',
+  primaryDark: '#2E3440',
+  secondary: '#D08770',
+  background: 'rgba(30, 34, 42, 0.96)',
+  backgroundAlt: 'rgba(46, 52, 64, 0.92)',
+  surface: '#1E222A',
+  border: 'rgba(59, 66, 82, 0.3)',
+  text: '#ECEFF4',
+  textMuted: '#A3AEBF',
+  highlight: '#D08770',
   timeline: {
-    line: 'rgba(44, 62, 80, 0.35)',
-    iconBg: '#202630',
-    iconBorder: '#2C3E50',
+    line: 'rgba(94, 129, 172, 0.35)',
+    iconBg: '#2E3440',
+    iconBorder: '#3B4252',
   },
   quote: {
-    border: 'rgba(44, 62, 80, 0.4)',
-    icon: 'rgba(44, 62, 80, 0.3)',
-    bg: 'rgba(20, 24, 32, 0.7)',
+    border: 'rgba(208, 135, 112, 0.4)',
+    icon: 'rgba(208, 135, 112, 0.3)',
+    bg: 'rgba(30, 34, 42, 0.7)',
   },
   tabbed: {
-    activeBg: 'rgba(44, 62, 80, 0.15)',
-    activeBorder: 'rgba(44, 62, 80, 0.5)',
-    activeText: '#4A6FA5',
-    inactiveBg: 'rgba(20, 24, 32, 0.7)',
-    inactiveBorder: 'rgba(44, 62, 80, 0.12)',
-    inactiveText: '#B8A89A',
-    panelBg: 'rgba(20, 24, 32, 0.85)',
-    panelBorder: 'rgba(44, 62, 80, 0.18)',
+    activeBg: 'rgba(94, 129, 172, 0.15)',
+    activeBorder: 'rgba(208, 135, 112, 0.5)',
+    activeText: '#5E81AC',
+    inactiveBg: 'rgba(30, 34, 42, 0.7)',
+    inactiveBorder: 'rgba(59, 66, 82, 0.2)',
+    inactiveText: '#A3AEBF',
+    panelBg: 'rgba(30, 34, 42, 0.85)',
+    panelBorder: 'rgba(59, 66, 82, 0.25)',
   },
   toolCard: {
-    headerBg: 'rgba(44, 62, 80, 0.1)',
-    headerText: '#4A6FA5',
-    dot: 'rgba(44, 62, 80, 0.6)',
-    line: 'rgba(44, 62, 80, 0.25)',
+    headerBg: 'rgba(94, 129, 172, 0.1)',
+    headerText: '#5E81AC',
+    dot: 'rgba(208, 135, 112, 0.6)',
+    line: 'rgba(94, 129, 172, 0.25)',
   },
   featureGrid: {
-    iconBg: 'rgba(44, 62, 80, 0.15)',
-    iconColor: '#2C3E50',
-    cardBorder: 'rgba(44, 62, 80, 0.2)',
+    iconBg: 'rgba(208, 135, 112, 0.15)',
+    iconColor: '#D08770',
+    cardBorder: 'rgba(59, 66, 82, 0.25)',
   },
   milestone: {
-    yearColor: '#2C3E50',
-    border: 'rgba(44, 62, 80, 0.22)',
+    yearColor: '#D08770',
+    border: 'rgba(59, 66, 82, 0.25)',
   },
   checklist: {
-    checkBorder: 'rgba(44, 62, 80, 0.4)',
-    checkColor: '#2C3E50',
-    bg: 'rgba(20, 24, 32, 0.7)',
+    checkBorder: 'rgba(208, 135, 112, 0.4)',
+    checkColor: '#D08770',
+    bg: 'rgba(30, 34, 42, 0.7)',
   },
   contentBlock: {
-    bg: 'rgba(20, 24, 32, 0.7)',
-    border: 'rgba(44, 62, 80, 0.18)',
-    highlightColor: '#C9A84C',
+    bg: 'rgba(30, 34, 42, 0.7)',
+    border: 'rgba(59, 66, 82, 0.2)',
+    highlightColor: '#D08770',
   },
   challengeCard: {
-    badgeBg: 'rgba(201, 168, 76, 0.15)',
-    badgeText: '#C9A84C',
-    cardBorder: 'rgba(44, 62, 80, 0.22)',
-    completedBg: 'rgba(0, 230, 118, 0.1)',
-    completedBorder: 'rgba(0, 230, 118, 0.3)',
+    badgeBg: 'rgba(208, 135, 112, 0.15)',
+    badgeText: '#D08770',
+    cardBorder: 'rgba(59, 66, 82, 0.25)',
+    completedBg: 'rgba(163, 190, 140, 0.1)',
+    completedBorder: 'rgba(163, 190, 140, 0.3)',
   },
   scenarioBlock: {
-    situationBg: 'rgba(201, 168, 76, 0.06)',
-    optionBorder: 'rgba(44, 62, 80, 0.18)',
-    correctBg: 'rgba(0, 230, 118, 0.1)',
-    incorrectBg: 'rgba(255, 82, 82, 0.08)',
+    situationBg: 'rgba(208, 135, 112, 0.06)',
+    optionBorder: 'rgba(59, 66, 82, 0.2)',
+    correctBg: 'rgba(163, 190, 140, 0.1)',
+    incorrectBg: 'rgba(191, 97, 106, 0.08)',
   },
   levelUp: {
-    levelBadgeBg: 'rgba(44, 62, 80, 0.2)',
-    levelBadgeText: '#4A6FA5',
-    rewardBg: 'rgba(0, 230, 118, 0.12)',
-    rewardText: '#00E676',
+    levelBadgeBg: 'rgba(94, 129, 172, 0.2)',
+    levelBadgeText: '#5E81AC',
+    rewardBg: 'rgba(163, 190, 140, 0.12)',
+    rewardText: '#A3BE8C',
   },
   actionPrompt: {
-    cardBorder: 'rgba(44, 62, 80, 0.2)',
-    completedBorder: 'rgba(0, 230, 118, 0.35)',
-    benefitBg: 'rgba(201, 168, 76, 0.1)',
-    benefitBorder: 'rgba(201, 168, 76, 0.3)',
+    cardBorder: 'rgba(59, 66, 82, 0.25)',
+    completedBorder: 'rgba(163, 190, 140, 0.35)',
+    benefitBg: 'rgba(208, 135, 112, 0.1)',
+    benefitBorder: 'rgba(208, 135, 112, 0.3)',
   },
 }
 
@@ -100,9 +101,18 @@ export const chapter14PremiumTheme: ChapterTheme = {
 export const chapter14PremiumContent: ChapterContent = {
   chapterNumber: 14,
   title: "Men's Haircutting and Styling",
-  subtitle: 'Master the foundation of barbering — from consultation to clean-up',
+  subtitle: 'The Design Studio — Blueprint your way to board-exam mastery',
   theme: chapter14PremiumTheme,
   sections: [
+    // Section 0: Design Studio Welcome
+    {
+      type: 'contentBlock',
+      id: 'design-studio-hero',
+      title: 'Welcome to the Design Studio',
+      content: 'You are not just learning to cut hair — you are learning to design, analyze, and build haircuts with precision. This chapter transforms textbook concepts into a professional design system used by elite barbers. Every haircut begins with a blueprint and ends with a masterpiece.',
+      highlight: 'Elite Haircut Architecture Academy',
+    },
+
     // Section 1: Why Study Men's Haircutting
     {
       type: 'infoCards',
@@ -129,15 +139,32 @@ export const chapter14PremiumContent: ChapterContent = {
     {
       type: 'quote',
       id: 'haircutting-quote',
-      quote: 'The consultation is the most important part of any haircut. A thorough consultation prevents misunderstandings and ensures client satisfaction.',
+      quote: 'The consultation is the blueprint. The haircut is the build. Without a blueprint, even the best tools cannot create a masterpiece.',
     },
 
     // Section 2: Client Consultation
     {
+      type: 'scenarioBlock',
+      id: 'consultation-scenario-1',
+      title: 'Design Studio Challenge: The Vague Client',
+      scenarios: [
+        {
+          situation: 'A new client sits in your chair and says, "Just a trim — nothing crazy." You notice their hair is 3 inches long on top and they have a round face shape. What is your next professional move?',
+          options: [
+            { letter: 'A', text: 'Start cutting immediately to show confidence', feedback: 'Never cut without clarifying. "Trim" means different things to different people.' },
+            { letter: 'B', text: 'Show exactly how much hair will be removed using fingers or a comb', feedback: 'Correct. Visual confirmation prevents misunderstandings and builds trust.' },
+            { letter: 'C', text: 'Assume they want 1 inch off all over', feedback: 'Assumptions lead to mistakes. Always confirm length visually.' },
+            { letter: 'D', text: 'Ask them to come back with a photo', feedback: 'Photos help but are not required. Your job is to clarify through demonstration.' },
+          ],
+          correctAnswer: 'B',
+        },
+      ],
+    },
+    {
       type: 'contentBlock',
       id: 'consultation-fundamentals',
-      title: 'The Client Consultation',
-      content: 'A thorough consultation is the foundation of a successful haircut. Understanding what the client wants prevents misunderstandings and builds trust. Always clarify vague terms like "just a trim" — what is a trim to one person may be a major cut to another.',
+      title: 'The Client Consultation Blueprint',
+      content: 'A thorough consultation is the foundation of a successful haircut. Understanding what the client wants prevents misunderstandings and builds trust. Always clarify vague terms like "just a trim" — what is a trim to one person may be a major cut to another. Think of consultation as reading the blueprint before construction.',
       highlight: 'Always clarify vague terms like "just a trim"',
     },
     {
@@ -161,6 +188,20 @@ export const chapter14PremiumContent: ChapterContent = {
     },
 
     // Section 3: Facial Shapes and Hair Design
+    {
+      type: 'challengeCard',
+      id: 'facial-shape-challenge',
+      title: 'Design Studio Challenge: Facial Shape Analyzer',
+      challenges: [
+        { badge: 'Shape 1', title: 'Oval Face', description: 'The ideal shape — most versatile. Can wear almost any style.', action: 'Practice identifying oval faces in photos.', difficulty: 'easy' },
+        { badge: 'Shape 2', title: 'Round Face', description: 'Add height, minimize width. Avoid volume on sides.', action: 'Design a style that adds top height for round faces.', difficulty: 'easy' },
+        { badge: 'Shape 3', title: 'Square Face', description: 'Soften angular features. Use wavy bangs and beards.', action: 'Create a softening style plan for square faces.', difficulty: 'easy' },
+        { badge: 'Shape 4', title: 'Heart Face', description: 'Balance forehead and jaw. Add volume at jawline.', action: 'Recommend styles with side volume for heart faces.', difficulty: 'medium' },
+        { badge: 'Shape 5', title: 'Pear Face', description: 'Add width at temples. Use volume on top.', action: 'Design a top-volume style for pear-shaped faces.', difficulty: 'medium' },
+        { badge: 'Shape 6', title: 'Oblong Face', description: 'Visually shorten the face. Use horizontal lines.', action: 'Plan a style with bangs for oblong faces.', difficulty: 'medium' },
+        { badge: 'Shape 7', title: 'Diamond Face', description: 'Balance mid-face width. Keep hair close at cheekbones.', action: 'Create a balancing design for diamond faces.', difficulty: 'medium' },
+      ],
+    },
     {
       type: 'contentBlock',
       id: 'facial-shapes-intro',
@@ -334,6 +375,18 @@ export const chapter14PremiumContent: ChapterContent = {
     },
 
     // Section 4: Basic Haircutting Principles
+    {
+      type: 'levelUp',
+      id: 'haircutting-level-up',
+      title: 'Level Up: The Haircut Construction System',
+      levels: [
+        { level: '1', title: 'Blueprint', description: 'Consultation + facial analysis + style selection', reward: 'Client trust and clear direction' },
+        { level: '2', title: 'Foundation', description: 'Sectioning + reference points + guide establishment', reward: 'Precision and systematic cutting' },
+        { level: '3', title: 'Structure', description: 'Elevation + cutting technique + grain direction', reward: 'Correct weight distribution' },
+        { level: '4', title: 'Transition', description: 'Blending + tapering + cross-checking', reward: 'Seamless, professional finish' },
+        { level: '5', title: 'Finish', description: 'Outlining + detailing + styling + clean-up', reward: 'Client satisfaction and loyalty' },
+      ],
+    },
     {
       type: 'contentBlock',
       id: 'haircutting-fundamentals',
@@ -617,6 +670,17 @@ export const chapter14PremiumContent: ChapterContent = {
 
     // Section 5: Haircutting Procedures
     {
+      type: 'actionPrompt',
+      id: 'reference-point-explorer',
+      title: 'Design Studio Tool: Reference Point Explorer',
+      prompts: [
+        { action: 'Locate the Parietal Ridge', description: 'Place comb flat against side of head. Ridge begins where head curves away from comb.', benefit: 'Defines widest section and major transition area', timeframe: 'Practice on 5 clients this week' },
+        { action: 'Locate the Occipital Bone', description: 'Place comb flat against nape. Bone begins where head curves away from comb.', benefit: 'Guides nape tapering and blending', timeframe: 'Practice on every haircut' },
+        { action: 'Find the Apex', description: 'Highest point on top of the head.', benefit: 'Determines top section boundaries', timeframe: 'Check on every client before cutting' },
+        { action: 'Mark the Four Corners', description: 'Cross two diagonal lines at the apex.', benefit: 'Balances the haircut and guides sectioning', timeframe: 'Practice until automatic' },
+      ],
+    },
+    {
       type: 'contentBlock',
       id: 'head-sections',
       title: 'Sections of the Head and Reference Points',
@@ -823,6 +887,23 @@ export const chapter14PremiumContent: ChapterContent = {
 
     // Section 5b: Building Volume
     {
+      type: 'scenarioBlock',
+      id: 'volume-scenario',
+      title: 'Design Studio Challenge: Volume Construction',
+      scenarios: [
+        {
+          situation: 'Your client wants volume at the crown and crest, but the sides should lay flat. You have a blowdryer and round brush. Which parting and technique combination achieves this?',
+          options: [
+            { letter: 'A', text: 'Horizontal partings on sides, lift at base with brush bend', feedback: 'Correct. Horizontal partings style sides down; lifting with brush bend at the base builds volume at crown and crest.' },
+            { letter: 'B', text: 'Vertical partings everywhere, direct heat at ends only', feedback: 'Vertical partings brush hair back, not down. Heat at ends only misses the base where volume is created.' },
+            { letter: 'C', text: 'Diagonal partings on sides, skip the crown', feedback: 'Diagonal partings brush sides back, not down. Skipping the crown misses the primary volume zone.' },
+            { letter: 'D', text: 'No partings, random blowdrying', feedback: 'Unstructured blowdrying creates inconsistent results. Partings provide control and direction.' },
+          ],
+          correctAnswer: 'A',
+        },
+      ],
+    },
+    {
       type: 'contentBlock',
       id: 'building-volume',
       title: 'Building Volume with Blowdryer and Brush',
@@ -831,6 +912,17 @@ export const chapter14PremiumContent: ChapterContent = {
     },
 
     // Section 6: Blowdrying Techniques
+    {
+      type: 'challengeCard',
+      id: 'blowdry-challenge',
+      title: 'Design Studio Challenge: Blowdry Method Selector',
+      challenges: [
+        { badge: 'Method 1', title: 'Freeform Blowdrying', description: 'Quick, natural finish — most like at-home styling. Builds fullness and lets hair fall into natural lines.', action: 'Use on clients who want low-maintenance styles.', difficulty: 'easy' },
+        { badge: 'Method 2', title: 'Stylized Blowdrying', description: 'Smooth, precise direction with comb or brush. Creates a more finished, directed appearance.', action: 'Use on clients who want polished, professional looks.', difficulty: 'medium' },
+        { badge: 'Method 3', title: 'Blow Waving', description: 'Creates wave patterns and ridges near scalp using comb and heat.', action: 'Use on clients who want vintage or textured wave styles.', difficulty: 'medium' },
+        { badge: 'Method 4', title: 'Diffused Drying', description: 'Maintains natural curl pattern, minimizes frizz. Uses diffuser attachment.', action: 'Use on curly or wavy hair clients who want to preserve texture.', difficulty: 'easy' },
+      ],
+    },
     {
       type: 'contentBlock',
       id: 'blowdrying-intro',
@@ -921,6 +1013,23 @@ export const chapter14PremiumContent: ChapterContent = {
 
     // Section 7: The Head Shave
     {
+      type: 'scenarioBlock',
+      id: 'head-shave-scenario',
+      title: 'Design Studio Challenge: The Head Shave Protocol',
+      scenarios: [
+        {
+          situation: 'A client requests a complete head shave. During your scalp examination, you notice a small abrasion near the crown. What is the correct professional response?',
+          options: [
+            { letter: 'A', text: 'Shave carefully around the abrasion and continue', feedback: 'Never shave over broken skin. This risks infection and injury.' },
+            { letter: 'B', text: 'Explain the finding and reschedule after healing', feedback: 'Correct. Client safety comes first. Explain the finding professionally and reschedule.' },
+            { letter: 'C', text: 'Apply extra shaving cream and proceed normally', feedback: 'Extra cream does not protect broken skin. Always reschedule when abrasions are present.' },
+            { letter: 'D', text: 'Ignore it if the client says it does not bother them', feedback: 'The barber is responsible for safety, not the client. Never ignore scalp conditions.' },
+          ],
+          correctAnswer: 'B',
+        },
+      ],
+    },
+    {
       type: 'contentBlock',
       id: 'head-shave-intro',
       title: 'The Head Shave',
@@ -977,6 +1086,18 @@ export const chapter14PremiumContent: ChapterContent = {
 
     // Section 8: Cornrow Braiding
     {
+      type: 'challengeCard',
+      id: 'cornrow-challenge',
+      title: 'Design Studio Challenge: Cornrow Precision',
+      challenges: [
+        { badge: 'Step 1', title: 'Clean Partings', description: 'Neat, consistent rows created with a tail comb. Partings are the foundation of professional cornrows.', action: 'Practice straight, curved, and diagonal partings on a mannequin.', difficulty: 'easy' },
+        { badge: 'Step 2', title: 'Even Tension', description: 'Consistent pressure throughout each braid prevents discomfort and creates uniform results.', action: 'Braid a full head maintaining the same tension in every row.', difficulty: 'medium' },
+        { badge: 'Step 3', title: 'Hair Pickup', description: 'Add hair to the outer strand with each cross-under. This is what makes cornrows lie flat against the scalp.', action: 'Practice the three-strand cross-under with pickup on a mannequin.', difficulty: 'medium' },
+        { badge: 'Step 4', title: 'Follow Curvature', description: 'Braids must follow the natural curves of the head for a professional, comfortable fit.', action: 'Create curved cornrows that follow the head shape from nape to crown.', difficulty: 'medium' },
+        { badge: 'Step 5', title: 'Professional Finish', description: 'Secure ends with small rubber bands and apply oil sheen or appropriate styling aid.', action: 'Finish five complete cornrow sets with professional polish.', difficulty: 'easy' },
+      ],
+    },
+    {
       type: 'contentBlock',
       id: 'cornrow-intro',
       title: 'Cornrow Braiding',
@@ -1028,6 +1149,23 @@ export const chapter14PremiumContent: ChapterContent = {
 
     // Section 9: Clean-Up and Disinfection
     {
+      type: 'scenarioBlock',
+      id: 'cleanup-scenario',
+      title: 'Design Studio Challenge: Post-Service Protocol',
+      scenarios: [
+        {
+          situation: 'You have just finished a haircut. The client is satisfied and has left. Your station has hair clippings on the floor and used tools on the counter. What is the correct sequence of actions?',
+          options: [
+            { letter: 'A', text: 'Sweep floor, disinfect tools, clean work area, wash hands', feedback: 'Correct. This sequence prevents cross-contamination and maintains professional standards.' },
+            { letter: 'B', text: 'Start with the next client immediately to save time', feedback: 'Never start a new service without cleaning. This violates sanitation standards.' },
+            { letter: 'C', text: 'Wipe tools with a towel and call it clean', feedback: 'Towels do not disinfect. Tools must be properly cleaned and disinfected after each client.' },
+            { letter: 'D', text: 'Leave cleanup for the end of the day', feedback: 'Cleanup must happen between every client. End-of-day cleanup is too late.' },
+          ],
+          correctAnswer: 'A',
+        },
+      ],
+    },
+    {
       type: 'contentBlock',
       id: 'cleanup-intro',
       title: 'Clean-Up and Disinfection',
@@ -1057,7 +1195,23 @@ export const chapter14PremiumContent: ChapterContent = {
       highlight: 'Always use a proper sharps container',
     },
 
-    // Section 10: Key Takeaways
+    // Section 10: Board Exam Checkpoint
+    {
+      type: 'levelUp',
+      id: 'board-exam-checkpoint',
+      title: 'Board Exam Checkpoint: Chapter 14 Mastery',
+      levels: [
+        { level: '1', title: 'Consultation', description: 'Can conduct a thorough client consultation and clarify vague requests', reward: 'Client trust and repeat business' },
+        { level: '2', title: 'Facial Analysis', description: 'Can identify all seven facial shapes and four profile types', reward: 'Customized style recommendations' },
+        { level: '3', title: 'Design Elements', description: 'Can explain the five design elements and four line types', reward: 'Strong visual design intuition' },
+        { level: '4', title: 'Reference Points', description: 'Can locate parietal ridge, occipital bone, apex, and four corners', reward: 'Precision sectioning and balanced cuts' },
+        { level: '5', title: 'Elevation', description: 'Can explain 0°, 45°, 90°, and 180° elevations and their effects', reward: 'Correct weight distribution every time' },
+        { level: '6', title: 'Techniques', description: 'Can perform clipper-over-comb, shear-over-comb, and razor techniques', reward: 'Versatile, professional cutting skills' },
+        { level: '7', title: 'State Board', description: 'Knows guards are NOT acceptable for practical exams', reward: 'Exam confidence and first-attempt pass' },
+      ],
+    },
+
+    // Section 11: Key Takeaways
     {
       type: 'contentBlock',
       id: 'key-takeaways',
@@ -1068,29 +1222,29 @@ export const chapter14PremiumContent: ChapterContent = {
     {
       type: 'checklist',
       id: 'chapter-summary',
-      title: 'Chapter Summary',
+      title: 'Design Studio Blueprint: Chapter 14 Complete Checklist',
       items: [
-        { text: 'Always conduct a thorough consultation before cutting' },
-        { text: 'Seven facial shapes: oval, round, square, inverted triangular, pear-shaped, oblong, diamond' },
-        { text: 'Four facial profiles: straight, convex, concave, angular' },
-        { text: 'Five design elements: line, form, space, texture, color' },
-        { text: 'Four line types: horizontal, vertical, diagonal, curved' },
-        { text: 'Elevation degrees: 0°, 45°, 90°, 180° and their effects' },
-        { text: 'Guide types: stationary and traveling' },
-        { text: 'Basic techniques: clipper-over-comb, shear-over-comb, freehand, blending, fading' },
-        { text: 'Razor techniques: razor-over-comb, razor rotation, fingers-and-razor' },
-        { text: 'Thinning methods: slicing, carving, slithering, point cutting, notching' },
-        { text: 'Classic styles: flat top, crew cut, high and tight, fade, taper, pompadour, Caesar, quo vadis' },
-        { text: 'Shadow fade uses adjustable-blade clipper with/without guards' },
-        { text: 'Pompadour fade requires sectioning and careful blending' },
-        { text: 'Blowdrying methods: freeform, stylized, blow waving, diffused' },
-        { text: 'Building volume: lift with brush, bend section, direct heat at base' },
-        { text: 'Head shave requires steamed towels and careful stretching of skin' },
-        { text: 'Cornrow braiding involves picking up hair with each strand cross' },
-        { text: 'Locks take 6–12 months to form and are permanent' },
-        { text: 'Always follow proper clean-up and disinfection procedures' },
-        { text: 'Dispose of blades in sharps container only' },
-        { text: 'Guards are NOT acceptable for state board practical exams' },
+        { text: '✓ Always conduct a thorough consultation before cutting' },
+        { text: '✓ Seven facial shapes: oval, round, square, inverted triangular, pear-shaped, oblong, diamond' },
+        { text: '✓ Four facial profiles: straight, convex, concave, angular' },
+        { text: '✓ Five design elements: line, form, space, texture, color' },
+        { text: '✓ Four line types: horizontal, vertical, diagonal, curved' },
+        { text: '✓ Elevation degrees: 0°, 45°, 90°, 180° and their effects' },
+        { text: '✓ Guide types: stationary and traveling' },
+        { text: '✓ Basic techniques: clipper-over-comb, shear-over-comb, freehand, blending, fading' },
+        { text: '✓ Razor techniques: razor-over-comb, razor rotation, fingers-and-razor' },
+        { text: '✓ Thinning methods: slicing, carving, slithering, point cutting, notching' },
+        { text: '✓ Classic styles: flat top, crew cut, high and tight, fade, taper, pompadour, Caesar, quo vadis' },
+        { text: '✓ Shadow fade uses adjustable-blade clipper with/without guards' },
+        { text: '✓ Pompadour fade requires sectioning and careful blending' },
+        { text: '✓ Blowdrying methods: freeform, stylized, blow waving, diffused' },
+        { text: '✓ Building volume: lift with brush, bend section, direct heat at base' },
+        { text: '✓ Head shave requires steamed towels and careful stretching of skin' },
+        { text: '✓ Cornrow braiding involves picking up hair with each strand cross' },
+        { text: '✓ Locks take 6–12 months to form and are permanent' },
+        { text: '✓ Always follow proper clean-up and disinfection procedures' },
+        { text: '✓ Dispose of blades in sharps container only' },
+        { text: '✓ Guards are NOT acceptable for state board practical exams' },
       ],
     },
   ],

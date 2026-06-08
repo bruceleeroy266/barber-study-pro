@@ -102,7 +102,7 @@ export const chapter13QuizQuestions: QuizQuestion[] = chapter13PremiumQuizQuesti
 
 // ───────────────────────────────────────────────
 // CHAPTER 14: Men's Haircutting and Styling — PREMIUM QUIZ
-// 40 questions generated from flashcard curriculum
+// 70 questions generated from flashcard curriculum
 // ───────────────────────────────────────────────
 export const chapter14QuizQuestions: QuizQuestion[] = chapter14PremiumQuizQuestions
 

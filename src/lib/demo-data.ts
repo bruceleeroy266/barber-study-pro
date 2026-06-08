@@ -207,8 +207,8 @@ export const demoQuizzes: Record<string, Quiz> = {
   'ch-12': { id: 'quiz-12', chapter_id: 'ch-12', title: "Men's Facial Massage and Treatments — Premium Quiz", description: '45 board-exam style questions. Passing score: 75%.', is_active: true },
   // Chapter 13: Premium flashcard-driven quiz (45 questions)
   'ch-13': { id: 'quiz-13', chapter_id: 'ch-13', title: 'Shaving and Facial-Hair Design — Premium Quiz', description: '45 board-exam style questions. Passing score: 75%.', is_active: true },
-  // Chapter 14: Premium flashcard-driven quiz (40 questions)
-  'ch-14': { id: 'quiz-14', chapter_id: 'ch-14', title: "Men's Haircutting and Styling — Premium Quiz", description: '40 board-exam style questions. Passing score: 75%.', is_active: true },
+  // Chapter 14: Premium flashcard-driven quiz (70 questions)
+  'ch-14': { id: 'quiz-14', chapter_id: 'ch-14', title: "Men's Haircutting and Styling — Premium Quiz", description: '70 board-exam style questions. Passing score: 75%.', is_active: true },
 }
 
 for (let i = 3; i <= 21; i++) {
