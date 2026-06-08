@@ -158,8 +158,8 @@ if (realFlashcards['ch-14'] && realFlashcards['ch-14'].length > 0) {
   }))
 }
 
-// BATCH 4: Wire orphaned flashcards for Ch 14, 15, 17, 18, 19, 20, 21
-const batch4Chapters = ['ch-14', 'ch-15', 'ch-17', 'ch-18', 'ch-19', 'ch-20', 'ch-21']
+// BATCH 4: Wire orphaned flashcards for Ch 15, 17, 18, 19, 20, 21
+const batch4Chapters = ['ch-15', 'ch-17', 'ch-18', 'ch-19', 'ch-20', 'ch-21']
 for (const chId of batch4Chapters) {
   if (batch4Flashcards[chId] && batch4Flashcards[chId].length > 0) {
     demoFlashcards[chId] = batch4Flashcards[chId]
