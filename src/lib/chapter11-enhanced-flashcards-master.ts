@@ -28,4 +28,4 @@ export const chapter11Stats = {
   total: chapter11AllEnhanced.length
 }
 
-console.log(`Chapter 11: ${chapter11Stats.total} flashcards created`)
+

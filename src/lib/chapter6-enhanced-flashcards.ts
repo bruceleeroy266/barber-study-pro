@@ -791,4 +791,4 @@ export const chapter6EnhancedStats = {
   total: chapter6AllEnhanced.length
 }
 
-console.log(`Chapter 6 Enhanced Flashcards: ${chapter6EnhancedStats.total} new cards created`)
+

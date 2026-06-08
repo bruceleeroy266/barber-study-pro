@@ -76,4 +76,4 @@ export const chapter10Difficulty = {
   hard: chapter10AllEnhanced.filter(c => c.difficulty === 'hard').length
 }
 
-console.log(`Chapter 10: ${chapter10Stats.total} flashcards created`)
+

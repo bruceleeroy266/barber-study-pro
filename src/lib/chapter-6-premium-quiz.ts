@@ -764,5 +764,4 @@ export const chapter6QuizStats = {
   }))],
 }
 
-console.log(`Chapter 6 Premium Quiz: ${chapter6QuizStats.totalQuestions} questions created`)
-console.log(`Difficulty breakdown: ${chapter6QuizStats.easy} easy, ${chapter6QuizStats.medium} medium, ${chapter6QuizStats.hard} hard`)
+

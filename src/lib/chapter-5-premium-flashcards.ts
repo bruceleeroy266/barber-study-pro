@@ -749,6 +749,4 @@ export const chapter5FlashcardStats = {
   },
 }
 
-console.log(`Chapter 5 Premium Flashcards: ${chapter5FlashcardStats.total} cards created`)
-console.log(`Categories: ${chapter5FlashcardStats.categories.join(', ')}`)
-console.log(`Difficulty: ${chapter5FlashcardStats.byDifficulty.easy} easy, ${chapter5FlashcardStats.byDifficulty.medium} medium, ${chapter5FlashcardStats.byDifficulty.hard} hard`)
+

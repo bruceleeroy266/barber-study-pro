@@ -109,4 +109,4 @@ export const qualityMetrics = {
   categoryDiversity: "excellent"
 }
 
-console.log(`Flashcard Expansion Complete: ${expansionSummary.totalNewFlashcards} cards created`)
+
