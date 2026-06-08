@@ -149,6 +149,15 @@ if (realFlashcards['ch-13'] && realFlashcards['ch-13'].length > 0) {
   }))
 }
 
+// Chapter 14: Use premium flashcards (real content)
+if (realFlashcards['ch-14'] && realFlashcards['ch-14'].length > 0) {
+  demoFlashcards['ch-14'] = realFlashcards['ch-14'].map((fc, idx) => ({
+    ...fc,
+    order_index: idx + 1,
+    is_active: true,
+  }))
+}
+
 // BATCH 4: Wire orphaned flashcards for Ch 14, 15, 17, 18, 19, 20, 21
 const batch4Chapters = ['ch-14', 'ch-15', 'ch-17', 'ch-18', 'ch-19', 'ch-20', 'ch-21']
 for (const chId of batch4Chapters) {
@@ -198,6 +207,8 @@ export const demoQuizzes: Record<string, Quiz> = {
   'ch-12': { id: 'quiz-12', chapter_id: 'ch-12', title: "Men's Facial Massage and Treatments — Premium Quiz", description: '45 board-exam style questions. Passing score: 75%.', is_active: true },
   // Chapter 13: Premium flashcard-driven quiz (45 questions)
   'ch-13': { id: 'quiz-13', chapter_id: 'ch-13', title: 'Shaving and Facial-Hair Design — Premium Quiz', description: '45 board-exam style questions. Passing score: 75%.', is_active: true },
+  // Chapter 14: Premium flashcard-driven quiz (40 questions)
+  'ch-14': { id: 'quiz-14', chapter_id: 'ch-14', title: "Men's Haircutting and Styling — Premium Quiz", description: '40 board-exam style questions. Passing score: 75%.', is_active: true },
 }
 
 for (let i = 3; i <= 21; i++) {
