@@ -10,11 +10,30 @@ export default async function ProfilePage() {
     redirect('/login')
   }
 
-  const { data: profile } = await supabase
+  // Query profile WITHOUT school join — school_id may be NULL
+  const { data: profile, error: profileError } = await supabase
     .from('profiles')
-    .select('*, schools(*)')
+    .select('*')
     .eq('id', user.id)
     .single()
+
+  // Optionally fetch school name separately if school_id exists
+  let schoolName: string | null = null
+  if (profile?.school_id) {
+    const { data: school } = await supabase
+      .from('schools')
+      .select('name')
+      .eq('id', profile.school_id)
+      .single()
+    if (school) {
+      schoolName = school.name
+    }
+  }
+
+  // Fallbacks for display
+  const displayName = profile?.full_name || user?.user_metadata?.full_name || 'Not set'
+  const displayEmail = profile?.email || user?.email || 'Not set'
+  const displayRole = profile?.role || 'student'
 
   return (
     <div className="space-y-8">
@@ -28,34 +47,34 @@ export default async function ProfilePage() {
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
             <h2 className="text-lg font-semibold text-white mb-6">Account Information</h2>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-400 mb-1">Full Name</label>
                 <div className="px-4 py-3 bg-gray-800 rounded-lg text-white">
-                  {profile?.full_name}
+                  {displayName}
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-400 mb-1">Email Address</label>
                 <div className="px-4 py-3 bg-gray-800 rounded-lg text-white">
-                  {profile?.email}
+                  {displayEmail}
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-400 mb-1">Role</label>
                 <div className="inline-block px-3 py-1 bg-[#D4AF37]/10 text-[#D4AF37] rounded-lg capitalize">
-                  {profile?.role}
+                  {displayRole}
                 </div>
               </div>
 
-              {profile?.schools && (
+              {schoolName && (
                 <div>
                   <label className="block text-sm font-medium text-gray-400 mb-1">School</label>
                   <div className="px-4 py-3 bg-gray-800 rounded-lg text-white">
-                    {profile.schools.name}
+                    {schoolName}
                   </div>
                 </div>
               )}
@@ -82,7 +101,7 @@ export default async function ProfilePage() {
 
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
             <h2 className="text-lg font-semibold text-white mb-4">Account Stats</h2>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 bg-gray-800 rounded-lg">
                 <div className="text-2xl font-bold text-[#D4AF37]">
@@ -109,7 +128,7 @@ export default async function ProfilePage() {
         <div className="space-y-6">
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
             <h2 className="text-lg font-semibold text-white mb-4">Quick Actions</h2>
-            
+
             <div className="space-y-3">
               <Link
                 href="/update-password"
