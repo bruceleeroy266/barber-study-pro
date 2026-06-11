@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
-import { Chapter, StudentProgress, QuizAttempt } from '@/types'
+import { StudentProgress, QuizAttempt } from '@/types'
+import { localChapters } from '@/lib/local-data'
 
 export default async function ProgressPage() {
   const supabase = await createClient()
@@ -10,12 +11,8 @@ export default async function ProgressPage() {
     redirect('/login')
   }
 
-  // Get all chapters
-  const { data: chapters } = await supabase
-    .from('chapters')
-    .select('*')
-    .eq('is_active', true)
-    .order('chapter_number', { ascending: true }) as { data: Chapter[] | null; error: any }
+  // Use local chapters (not Supabase)
+  const chapters = localChapters
 
   // Get user progress
   const { data: progress } = await supabase

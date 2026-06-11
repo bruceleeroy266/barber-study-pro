@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase-server'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
-import { Profile, Chapter, StudentProgress, QuizAttempt } from '@/types'
+import { Profile, StudentProgress, QuizAttempt } from '@/types'
+import { localChapters } from '@/lib/local-data'
 
 interface StudentDetailPageProps {
   params: Promise<{
@@ -42,12 +43,8 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     notFound()
   }
 
-  // Get chapters
-  const { data: chapters } = await supabase
-    .from('chapters')
-    .select('*')
-    .eq('is_active', true)
-    .order('chapter_number', { ascending: true }) as { data: Chapter[] | null; error: any }
+  // Use local chapters (not Supabase)
+  const chapters = localChapters
 
   // Get student progress
   const { data: progress } = await supabase

@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 
 export default async function ProfilePage() {
   const supabase = await createClient()
@@ -85,14 +86,18 @@ export default async function ProfilePage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 bg-gray-800 rounded-lg">
                 <div className="text-2xl font-bold text-[#D4AF37]">
-                  {new Date(profile?.created_at).toLocaleDateString()}
+                  {profile?.created_at
+                    ? new Date(profile.created_at).toLocaleDateString()
+                    : '—'}
                 </div>
                 <div className="text-sm text-gray-400">Member Since</div>
               </div>
-              
+
               <div className="p-4 bg-gray-800 rounded-lg">
                 <div className="text-2xl font-bold text-blue-400">
-                  {new Date(profile?.updated_at).toLocaleDateString()}
+                  {profile?.updated_at
+                    ? new Date(profile.updated_at).toLocaleDateString()
+                    : '—'}
                 </div>
                 <div className="text-sm text-gray-400">Last Updated</div>
               </div>
@@ -106,12 +111,12 @@ export default async function ProfilePage() {
             <h2 className="text-lg font-semibold text-white mb-4">Quick Actions</h2>
             
             <div className="space-y-3">
-              <a
-                href="/reset-password"
+              <Link
+                href="/update-password"
                 className="block w-full text-center px-4 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors"
               >
                 Change Password
-              </a>
+              </Link>
             </div>
           </div>
 

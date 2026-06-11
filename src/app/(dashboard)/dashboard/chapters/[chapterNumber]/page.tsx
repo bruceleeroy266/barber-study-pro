@@ -6,6 +6,7 @@ import QuizClient from '@/components/QuizClient'
 import ChapterContent from '@/components/chapter/ChapterContent'
 import ChapterHeader from '@/components/chapter/ChapterHeader'
 import { getChapterContent } from '@/lib/chapter-content'
+import { localChapters, getLocalFlashcards, getLocalQuiz, getLocalQuizQuestions } from '@/lib/local-data'
 
 interface ChapterPageProps {
   params: Promise<{
@@ -28,40 +29,21 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
     redirect('/login')
   }
 
-  // Get chapter
-  const { data: chapter } = await supabase
-    .from('chapters')
-    .select('*')
-    .eq('chapter_number', num)
-    .eq('is_active', true)
-    .single()
+  // Get chapter from local data
+  const chapter = localChapters.find(ch => ch.chapter_number === num && ch.is_active)
 
   if (!chapter) {
     notFound()
   }
 
-  // Get flashcards
-  const { data: flashcards } = await supabase
-    .from('flashcards')
-    .select('*')
-    .eq('chapter_id', chapter.id)
-    .eq('is_active', true)
-    .order('order_index', { ascending: true })
+  // Get flashcards from local data
+  const flashcards = getLocalFlashcards(chapter.id)
 
-  // Get quiz
-  const { data: quiz } = await supabase
-    .from('quizzes')
-    .select('*')
-    .eq('chapter_id', chapter.id)
-    .eq('is_active', true)
-    .single()
+  // Get quiz from local data
+  const quiz = getLocalQuiz(chapter.id)
 
-  // Get quiz questions
-  const { data: questions } = await supabase
-    .from('quiz_questions')
-    .select('*')
-    .eq('quiz_id', quiz?.id)
-    .order('order_index', { ascending: true })
+  // Get quiz questions from local data
+  const questions = quiz ? getLocalQuizQuestions(quiz.id) : []
 
   // Get user progress
   const { data: progress } = await supabase
@@ -103,10 +85,10 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
       </div>
 
       {/* Themed Header */}
-      <ChapterHeader 
-        num={num} 
-        title={chapter.title} 
-        description={chapter.description}
+      <ChapterHeader
+        num={num}
+        title={chapter.title}
+        description={chapter.description || ''}
         subtitle={getChapterContent(num)?.subtitle}
         flashcardsCount={flashcards?.length || 0}
         questionsCount={questions?.length || 0}

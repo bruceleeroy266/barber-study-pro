@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Profile, Chapter, StudentProgress, QuizAttempt } from '@/types'
+import { Profile, StudentProgress, QuizAttempt } from '@/types'
+import { localChapters } from '@/lib/local-data'
 
 // ── At-Risk Criteria ──
 const RISK_LOW_PROGRESS = 50        // progress % below this is a risk factor
@@ -69,12 +70,8 @@ export default async function InstructorDashboard() {
     .eq('school_id', schoolId)
     .in('role', ['student', 'apprentice']) as { data: Profile[] | null; error: any }
 
-  // Get all chapters
-  const { data: chapters } = await supabase
-    .from('chapters')
-    .select('*')
-    .eq('is_active', true)
-    .order('chapter_number', { ascending: true }) as { data: Chapter[] | null; error: any }
+  // Use local chapters (not Supabase)
+  const chapters = localChapters
 
   // Get all student progress for this school
   const studentIds = students?.map((s) => s.id) || []

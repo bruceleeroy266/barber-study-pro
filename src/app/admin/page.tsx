@@ -29,9 +29,7 @@ export default async function AdminDashboard() {
     .from('schools')
     .select('*', { count: 'exact', head: true })
 
-  const { count: chapterCount } = await supabase
-    .from('chapters')
-    .select('*', { count: 'exact', head: true })
+  const chapterCount = 21 // Local curriculum chapters
 
   return (
     <div className="min-h-screen bg-gray-950 p-8">

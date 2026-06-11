@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase-server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { Chapter, StudentProgress } from '@/types'
+import { StudentProgress } from '@/types'
+import { localChapters } from '@/lib/local-data'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -20,12 +21,8 @@ export default async function DashboardPage() {
     .eq('id', user.id)
     .single()
 
-  // Get all chapters
-  const { data: chapters } = await supabase
-    .from('chapters')
-    .select('*')
-    .eq('is_active', true)
-    .order('chapter_number', { ascending: true }) as { data: Chapter[] | null; error: any }
+  // Use local chapters (not Supabase)
+  const chapters = localChapters
 
   // Get user progress
   const { data: progress } = await supabase
@@ -34,7 +31,7 @@ export default async function DashboardPage() {
     .eq('user_id', user?.id) as { data: StudentProgress[] | null; error: any }
 
   // Calculate stats
-  const totalChapters = chapters?.length || 0
+  const totalChapters = chapters.length
   const completedChapters = progress?.filter(p => p.progress_percentage === 100).length || 0
   const inProgressChapters = progress?.filter(p => p.progress_percentage > 0 && p.progress_percentage < 100).length || 0
   // Overall progress = average across ALL chapters (including 0% for not started)

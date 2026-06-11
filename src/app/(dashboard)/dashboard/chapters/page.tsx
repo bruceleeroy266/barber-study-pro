@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase-server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { Chapter, StudentProgress } from '@/types'
+import { StudentProgress } from '@/types'
+import { localChapters } from '@/lib/local-data'
 
 export default async function ChaptersPage() {
   const supabase = await createClient()
@@ -12,11 +13,7 @@ export default async function ChaptersPage() {
     redirect('/login')
   }
   
-  const { data: chapters } = await supabase
-    .from('chapters')
-    .select('*')
-    .eq('is_active', true)
-    .order('chapter_number', { ascending: true }) as { data: Chapter[] | null; error: any }
+  const chapters = localChapters
 
   const { data: progress } = await supabase
     .from('student_progress')
