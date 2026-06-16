@@ -68,7 +68,33 @@ function createClient() {
     return mockSupabase as any
   }
 
-  return createBrowserClient(supabaseUrl, supabaseKey)
+  return createBrowserClient(supabaseUrl, supabaseKey, {
+    cookies: {
+      getAll() {
+        if (typeof document === 'undefined') return []
+        return document.cookie.split('; ').filter(Boolean).map((cookie) => {
+          const [name, ...rest] = cookie.split('=')
+          return { name, value: rest.join('=') }
+        })
+      },
+      setAll(cookiesToSet) {
+        if (typeof document === 'undefined') return
+        cookiesToSet.forEach(({ name, value, options }) => {
+          let cookieString = `${name}=${value}`
+          if (options) {
+            if (options.maxAge) cookieString += `; Max-Age=${options.maxAge}`
+            if (options.expires) cookieString += `; Expires=${options.expires.toUTCString()}`
+            if (options.path) cookieString += `; Path=${options.path}`
+            if (options.domain) cookieString += `; Domain=${options.domain}`
+            if (options.secure) cookieString += '; Secure'
+            if (options.sameSite) cookieString += `; SameSite=${options.sameSite}`
+            if (options.httpOnly) cookieString += '; HttpOnly'
+          }
+          document.cookie = cookieString
+        })
+      },
+    },
+  })
 }
 
 export const supabase = createClient()

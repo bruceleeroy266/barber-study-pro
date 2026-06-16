@@ -76,8 +76,18 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
   }
 
   const handleMarkComplete = async () => {
-    if (!userId) return
-    
+    if (!userId) {
+      console.error('[FlashcardClient] Cannot save progress: no userId provided')
+      return
+    }
+
+    // Verify browser session is available
+    const { data: sessionData, error: sessionError } = await supabase.auth.getSession()
+    if (sessionError || !sessionData.session) {
+      console.error('[FlashcardClient] No authenticated session found:', sessionError?.message || 'Session is null')
+      return
+    }
+
     setSaving(true)
     try {
       const { error } = await supabase
@@ -93,10 +103,24 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
           onConflict: 'user_id,chapter_id'
         })
 
-      if (error) throw error
+      if (error) {
+        console.error('[FlashcardClient] Supabase upsert error:', {
+          message: error.message,
+          code: error.code,
+          details: (error as any).details,
+          hint: (error as any).hint,
+        })
+        throw error
+      }
       setCompleted(true)
-    } catch (err) {
-      console.error('Error saving progress:', err)
+    } catch (err: any) {
+      console.error('[FlashcardClient] Error saving progress:', {
+        message: err?.message,
+        code: err?.code,
+        details: err?.details,
+        hint: err?.hint,
+        raw: err,
+      })
     } finally {
       setSaving(false)
     }
