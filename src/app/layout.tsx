@@ -8,7 +8,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Barber Study Pro - Master Your Craft",
+  title: "ASCYN PRO - Master Your Craft",
   description: "Professional barbering education platform with 21 comprehensive chapters, interactive flashcards, and practice quizzes.",
 };
 

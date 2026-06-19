@@ -9,7 +9,7 @@ export default function HomePage() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-2">
               <span className="text-2xl">✂️</span>
-              <span className="font-bold text-white text-lg">Barber Study Pro</span>
+              <span className="font-bold text-white text-lg">ASCYN PRO</span>
             </div>
             <div className="flex items-center gap-4">
               <Link
@@ -129,7 +129,7 @@ export default function HomePage() {
             Ready to Start Your Barbering Journey?
           </h2>
           <p className="text-xl text-gray-400 mb-8">
-            Join thousands of students preparing for their state board exams with Barber Study Pro.
+            Join thousands of students preparing for their state board exams with ASCYN PRO.
           </p>
           <Link
             href="/signup"
@@ -146,10 +146,10 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <span className="text-xl">✂️</span>
-              <span className="font-semibold text-white">Barber Study Pro</span>
+              <span className="font-semibold text-white">ASCYN PRO</span>
             </div>
             <p className="text-gray-500 text-sm">
-              © 2026 Barber Study Pro. Built for future barbers.
+              © 2026 ASCYN PRO. Built for future licensed professionals.
             </p>
           </div>
         </div>

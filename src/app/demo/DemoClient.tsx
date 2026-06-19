@@ -101,7 +101,7 @@ export default function DemoClient() {
           <div className="flex items-center gap-3">
             <GraduationCap className="w-5 h-5 text-[#B8860B]" />
             <span className="font-semibold tracking-tight text-sm text-[#1a2332]">
-              Barber Study Pro
+              ASCYN PRO
             </span>
           </div>
 
@@ -185,7 +185,7 @@ export default function DemoClient() {
               Schools lose students who fail the board exam. Instructors spend hours creating quizzes and grading papers. Students have no visibility into what they actually know.
             </p>
             <p className="text-[#3a4a5a] leading-relaxed text-sm sm:text-base">
-              Barber Study Pro changes that. Students learn, reinforce, test, and improve—with every step measured and every gap identified.
+              ASCYN PRO changes that. Students learn, reinforce, test, and improve—with every step measured and every gap identified.
             </p>
           </div>
 
@@ -1295,7 +1295,7 @@ export default function DemoClient() {
           <div className="flex items-center justify-center gap-3 mb-4">
             <GraduationCap className="w-6 h-6 text-[#B8860B]" />
             <span className="text-lg font-semibold text-[#1a2332]">
-              Barber Study Pro
+              ASCYN PRO
             </span>
           </div>
           <p className="text-[#5a6a7a] text-sm">
@@ -1303,7 +1303,7 @@ export default function DemoClient() {
             visibility.
           </p>
           <p className="text-[#8a9aaa] text-xs mt-4">
-            &copy; {new Date().getFullYear()} Barber Study Pro. All rights reserved.
+            &copy; {new Date().getFullYear()} ASCYN PRO. All rights reserved.
           </p>
         </div>
       </footer>

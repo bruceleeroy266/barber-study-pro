@@ -36,7 +36,7 @@ export default function DashboardNav({ user }: DashboardNavProps) {
         <div className="flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-2">
             <span className="text-2xl">✂️</span>
-            <span className="font-bold text-white">Barber Study Pro</span>
+            <span className="font-bold text-white">ASCYN PRO</span>
           </Link>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -92,7 +92,7 @@ export default function DashboardNav({ user }: DashboardNavProps) {
           <Link href="/dashboard" className="flex items-center gap-3 mb-8">
             <span className="text-3xl">✂️</span>
             <div>
-              <span className="font-bold text-white block">Barber Study Pro</span>
+              <span className="font-bold text-white block">ASCYN PRO</span>
               <span className="text-xs text-gray-500">v2.0</span>
             </div>
           </Link>

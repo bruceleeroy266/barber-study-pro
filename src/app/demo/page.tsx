@@ -6,7 +6,7 @@ import DemoClient from "./DemoClient";
 // ───────────────────────────────────────────────
 
 export const metadata = {
-  title: "Barber Study Pro — Board Readiness Dashboard",
+  title: "ASCYN PRO — Board Readiness Dashboard",
   description:
     "Professional barbering education platform. Measurable board exam preparation.",
 };
