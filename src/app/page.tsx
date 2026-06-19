@@ -35,10 +35,10 @@ export default function HomePage() {
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
               Master the Art of{' '}
-              <span className="text-gradient-gold">Barbering</span>
+              <span className="text-gradient-gold">Professional Licensing</span>
             </h1>
             <p className="text-xl text-gray-400 mb-8">
-              Professional barbering education with 21 comprehensive chapters, 
+              Professional licensing education with comprehensive chapters, flashcards, quizzes, and progress tracking. 
               interactive flashcards, and practice quizzes to help you ace your state board exam.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -67,7 +67,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-white mb-4">Everything You Need to Succeed</h2>
-            <p className="text-gray-400">Comprehensive study tools designed for barbering students</p>
+            <p className="text-gray-400">Comprehensive study tools designed for licensing students</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -126,7 +126,7 @@ export default function HomePage() {
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Start Your Barbering Journey?
+            Ready to Pass Your Licensing Exam?
           </h2>
           <p className="text-xl text-gray-400 mb-8">
             Join thousands of students preparing for their state board exams with ASCYN PRO.
