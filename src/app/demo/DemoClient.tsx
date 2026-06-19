@@ -172,14 +172,14 @@ export default function DemoClient() {
           </div>
 
           <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-[#1a2332] leading-tight">
-            Helping Barber Students
+            Helping Licensing Students
             <br />
             <span className="text-[#B8860B]">Become Board Ready</span>
           </h1>
 
           <div className="max-w-2xl mx-auto space-y-4">
             <p className="text-[#3a4a5a] text-base sm:text-lg leading-relaxed">
-              Barber students read the textbook. Then they forget 70% of it within 24 hours.
+              Students read the textbook. Then they forget 70% of it within 24 hours.
             </p>
             <p className="text-[#5a6a7a] leading-relaxed text-sm sm:text-base">
               Schools lose students who fail the board exam. Instructors spend hours creating quizzes and grading papers. Students have no visibility into what they actually know.
@@ -1240,7 +1240,7 @@ export default function DemoClient() {
                 icon: BarChart3,
                 title: "School Analytics",
                 description:
-                  "Aggregated reporting for barber schools to track cohort performance and identify curriculum gaps.",
+                  "Aggregated reporting for schools and training programs to track cohort performance and identify curriculum gaps.",
               },
               {
                 icon: Target,
@@ -1258,7 +1258,7 @@ export default function DemoClient() {
                 icon: BookOpen,
                 title: "Spanish Version",
                 description:
-                  "Bilingual study support for Spanish-speaking barber students.",
+                  "Bilingual study support for Spanish-speaking students.",
               },
             ].map((feature, idx) => (
               <div
