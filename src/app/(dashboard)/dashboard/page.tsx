@@ -56,7 +56,7 @@ export default async function DashboardPage() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
-        <p className="text-gray-400">Track your progress through all 21 barbering chapters</p>
+        <p className="text-gray-400">Track your progress through all 21 chapters</p>
         {profile?.role === 'apprentice' && (
           <div className="mt-2 flex flex-wrap gap-2 text-sm">
             <span className="px-2 py-1 bg-purple-500/10 text-purple-400 rounded-full">

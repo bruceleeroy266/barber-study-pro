@@ -191,7 +191,7 @@ export default function SignupPage() {
       <div className="text-center mb-8">
         <div className="text-5xl mb-4">✂️</div>
         <h1 className="text-2xl font-bold text-white mb-2">Create Account</h1>
-        <p className="text-gray-400">Start your barbering education journey</p>
+        <p className="text-gray-400">Start your professional education journey</p>
       </div>
 
       {error && (

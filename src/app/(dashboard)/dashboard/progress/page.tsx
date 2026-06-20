@@ -133,7 +133,7 @@ export default async function ProgressPage() {
                     </td>
                     <td className="py-3">
                       <span className={`font-medium ${
-                        attempt.percentage >= 70 ? 'text-green-400' : 'text-yellow-400'
+                        attempt.percentage >= 75 ? 'text-green-400' : 'text-yellow-400'
                       }`}>
                         {attempt.percentage}%
                       </span>

@@ -57,7 +57,7 @@ function LoginForm() {
       <div className="text-center mb-8">
         <div className="text-5xl mb-4">✂️</div>
         <h1 className="text-2xl font-bold text-white mb-2">Welcome Back</h1>
-        <p className="text-gray-400">Sign in to continue your barbering journey</p>
+        <p className="text-gray-400">Sign in to continue your learning journey</p>
       </div>
 
       {error && (

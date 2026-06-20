@@ -9,7 +9,7 @@ const RISK_LOW_PROGRESS = 50        // progress % below this is a risk factor
 const RISK_LOW_QUIZ_SCORE = 60      // avg quiz % below this is a risk factor
 const RISK_INACTIVE_DAYS = 14       // no activity in this many days is a risk factor
 const ACTIVE_DAYS = 7               // "active" if studied within this window
-const STRUGGLING_THRESHOLD = 70     // below this % = struggling student
+const STRUGGLING_THRESHOLD = 70     // below this % = struggling student (intentionally lower than 75% quiz pass threshold for early warning)
 
 interface ChapterFocusArea {
   chapterId: string
