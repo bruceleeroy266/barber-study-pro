@@ -129,9 +129,9 @@ export default function QuizClient({ quiz, questions, chapterId, userId, bestAtt
           {
             user_id: userId,
             chapter_id: chapterId,
-            quiz_completed: true,
+            quiz_completed: percentage >= 75,
             best_quiz_score: Math.max(percentage, bestAttempt?.percentage || 0),
-            progress_percentage: 100,
+            progress_percentage: percentage >= 75 ? 100 : 50,
             last_studied_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           },
