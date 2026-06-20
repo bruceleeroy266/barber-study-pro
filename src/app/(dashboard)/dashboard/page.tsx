@@ -46,6 +46,11 @@ export default async function DashboardPage() {
     return !chapterProgress || chapterProgress.progress_percentage < 100
   })
 
+  const continueProgress = continueChapter
+    ? progress?.find(p => p.chapter_id === continueChapter.id)?.progress_percentage || 0
+    : 0
+  const continueTitle = continueProgress > 0 ? 'Continue Studying' : 'Start Studying'
+  const continueButton = continueProgress > 0 ? 'Continue ?' : 'Start ?'
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -103,14 +108,14 @@ export default async function DashboardPage() {
         <div className="bg-gradient-to-r from-[#D4AF37]/10 to-transparent border border-[#D4AF37]/20 rounded-xl p-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <h2 className="text-lg font-semibold text-white mb-1">Continue Studying</h2>
+              <h2 className="text-lg font-semibold text-white mb-1">{continueTitle}</h2>
               <p className="text-gray-400">Chapter {continueChapter.chapter_number}: {continueChapter.title}</p>
             </div>
             <Link
               href={`/dashboard/chapters/${continueChapter.chapter_number}`}
               className="inline-flex items-center gap-2 px-6 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] transition-colors"
             >
-              Continue →
+              {continueButton}
             </Link>
           </div>
         </div>
@@ -165,3 +170,5 @@ export default async function DashboardPage() {
     </div>
   )
 }
+
+
