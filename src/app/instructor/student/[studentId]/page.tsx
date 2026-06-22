@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Profile, StudentProgress, QuizAttempt } from '@/types'
 import { localChapters } from '@/lib/local-data'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
+import { demoStudents, demoStudentProgress, demoStudentQuizAttempts } from '@/lib/demo-data'
 
 interface StudentDetailPageProps {
   params: Promise<{
@@ -34,16 +35,26 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     redirect('/dashboard')
   }
 
-  // Get student — must belong to same school
+  // Get student — must belong to same school and be a learner role
   const { data: student } = await supabase
     .from('profiles')
     .select('*')
     .eq('id', studentId)
     .eq('school_id', instructorProfile.school_id)
-    .eq('role', 'student')
+    .in('role', ['student', 'apprentice'])
     .single() as { data: Profile | null; error: any }
 
-  if (!student) {
+  // Demo fallback: if real data is unavailable, check demo students
+  let resolvedStudent: Profile | null = student
+  if (!resolvedStudent) {
+    resolvedStudent = demoStudents.find(
+      (s) =>
+        s.id === studentId &&
+        (s.school_id === instructorProfile.school_id || !instructorProfile.school_id)
+    ) || null
+  }
+
+  if (!resolvedStudent) {
     notFound()
   }
 
@@ -63,10 +74,19 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     .eq('user_id', studentId)
     .order('completed_at', { ascending: false }) as { data: QuizAttempt[] | null; error: any }
 
+  // Demo fallback for progress and attempts
+  let progressRecords = progress || []
+  let attemptRecords = attempts || []
+  if (progressRecords.length === 0 && attemptRecords.length === 0) {
+    progressRecords = demoStudentProgress.filter((p) => p.user_id === studentId)
+    attemptRecords = demoStudentQuizAttempts.filter((a) => a.user_id === studentId)
+    attemptRecords.sort((a, b) => new Date(b.completed_at).getTime() - new Date(a.completed_at).getTime())
+  }
+
   const totalChapters = chapters?.length || 0
-  const completedChapters = progress?.filter((p) => p.progress_percentage === 100).length || 0
-  const avgQuizScore = attempts && attempts.length > 0
-    ? Math.round(attempts.reduce((sum, a) => sum + a.percentage, 0) / attempts.length)
+  const completedChapters = progressRecords.filter((p) => p.progress_percentage === 100).length || 0
+  const avgQuizScore = attemptRecords.length > 0
+    ? Math.round(attemptRecords.reduce((sum, a) => sum + a.percentage, 0) / attemptRecords.length)
     : 0
 
   return (
@@ -78,13 +98,13 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
             Instructor Dashboard
           </Link>
           <span>/</span>
-          <span className="text-white">{student.full_name}</span>
+          <span className="text-white">{resolvedStudent.full_name}</span>
         </div>
 
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">{student.full_name}</h1>
-          <p className="text-gray-400">{student.email}</p>
+          <h1 className="text-3xl font-bold text-white mb-2">{resolvedStudent.full_name}</h1>
+          <p className="text-gray-400">{resolvedStudent.email}</p>
         </div>
 
         {/* Stats */}
@@ -104,7 +124,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
             <div className="text-sm text-gray-400">Avg Quiz Score</div>
           </div>
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <div className="text-3xl font-bold text-purple-400">{attempts?.length || 0}</div>
+            <div className="text-3xl font-bold text-purple-400">{attemptRecords.length}</div>
             <div className="text-sm text-gray-400">Quiz Attempts</div>
           </div>
         </div>
@@ -117,7 +137,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           {chapters && chapters.length > 0 ? (
             <div className="divide-y divide-gray-800">
               {chapters.map((chapter) => {
-                const chapterProgress = progress?.find((p) => p.chapter_id === chapter.id)
+                const chapterProgress = progressRecords.find((p) => p.chapter_id === chapter.id)
                 const pct = chapterProgress?.progress_percentage || 0
                 const flashDone = chapterProgress?.flashcards_completed
                 const quizDone = chapterProgress?.quiz_completed
@@ -169,7 +189,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="p-6 border-b border-gray-800">
             <h2 className="text-xl font-semibold text-white">Recent Quiz Attempts</h2>
           </div>
-          {attempts && attempts.length > 0 ? (
+          {attemptRecords.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -181,7 +201,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                   </tr>
                 </thead>
                 <tbody className="text-sm">
-                  {attempts.map((attempt) => (
+                  {attemptRecords.map((attempt) => (
                     <tr key={attempt.id} className="border-b border-gray-800/50">
                       <td className="p-4 text-white">{attempt.quiz_id}</td>
                       <td className="p-4 text-gray-300">

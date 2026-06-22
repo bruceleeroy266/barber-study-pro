@@ -58,6 +58,58 @@ export const demoApprenticeProfile: Profile = {
   updated_at: '2026-01-01T00:00:00Z',
 }
 
+// Demo students for the instructor roster fallback
+export const demoStudents: Profile[] = [
+  {
+    id: 'demo-student-1',
+    email: 'alex@barberstudypro.test',
+    full_name: 'Alex Johnson',
+    role: 'student',
+    school_id: 'demo-school',
+    barber_shop_name: null,
+    mentor_name: null,
+    avatar_url: null,
+    created_at: '2026-01-15T00:00:00Z',
+    updated_at: '2026-01-15T00:00:00Z',
+  },
+  {
+    id: 'demo-student-2',
+    email: 'maria@barberstudypro.test',
+    full_name: 'Maria Garcia',
+    role: 'student',
+    school_id: 'demo-school',
+    barber_shop_name: null,
+    mentor_name: null,
+    avatar_url: null,
+    created_at: '2026-01-20T00:00:00Z',
+    updated_at: '2026-01-20T00:00:00Z',
+  },
+  {
+    id: 'demo-student-3',
+    email: 'jordan@barberstudypro.test',
+    full_name: 'Jordan Smith',
+    role: 'apprentice',
+    school_id: 'demo-school',
+    barber_shop_name: "Razor Kings",
+    mentor_name: "Malenny",
+    avatar_url: null,
+    created_at: '2026-02-01T00:00:00Z',
+    updated_at: '2026-02-01T00:00:00Z',
+  },
+  {
+    id: 'demo-student-4',
+    email: 'taylor@barberstudypro.test',
+    full_name: 'Taylor Brown',
+    role: 'student',
+    school_id: 'demo-school',
+    barber_shop_name: null,
+    mentor_name: null,
+    avatar_url: null,
+    created_at: '2026-02-10T00:00:00Z',
+    updated_at: '2026-02-10T00:00:00Z',
+  },
+]
+
 export const demoChapters: Chapter[] = [
   { id: 'ch-1', chapter_number: 1, title: 'History of Barbering', description: 'Explore the rich history and evolution of the barbering profession from ancient times to modern day.', content: null, order_index: 1, is_active: true },
   { id: 'ch-2', chapter_number: 2, title: 'Life Skills', description: 'Develop essential life skills including time management, communication, and professional ethics.', content: null, order_index: 2, is_active: true },
@@ -257,6 +309,49 @@ export const demoProgress: StudentProgress[] = [
 
 export const demoQuizAttempts: QuizAttempt[] = [
   { id: 'attempt-1', user_id: 'demo-user', quiz_id: 'quiz-1', score: 5, total_questions: 5, percentage: 100, answers_json: { 'qq-1-1': 'b', 'qq-1-2': 'b', 'qq-1-3': 'b', 'qq-1-4': 'b', 'qq-1-5': 'c' }, completed_at: '2026-05-17T10:30:00Z' },
+]
+
+// Instructor roster demo data — safe fallback when real Supabase tables are empty
+export const demoStudentProgress: StudentProgress[] = [
+  // Alex Johnson — strong progress
+  { id: 'prog-alex-1', user_id: 'demo-student-1', chapter_id: 'ch-1', flashcards_completed: true, quiz_completed: true, best_quiz_score: 92, last_studied_at: '2026-06-21T09:00:00Z', progress_percentage: 100 },
+  { id: 'prog-alex-2', user_id: 'demo-student-1', chapter_id: 'ch-2', flashcards_completed: true, quiz_completed: true, best_quiz_score: 88, last_studied_at: '2026-06-20T10:00:00Z', progress_percentage: 100 },
+  { id: 'prog-alex-3', user_id: 'demo-student-1', chapter_id: 'ch-3', flashcards_completed: true, quiz_completed: true, best_quiz_score: 95, last_studied_at: '2026-06-19T11:00:00Z', progress_percentage: 100 },
+  { id: 'prog-alex-4', user_id: 'demo-student-1', chapter_id: 'ch-4', flashcards_completed: true, quiz_completed: true, best_quiz_score: 90, last_studied_at: '2026-06-18T14:00:00Z', progress_percentage: 100 },
+  { id: 'prog-alex-5', user_id: 'demo-student-1', chapter_id: 'ch-5', flashcards_completed: true, quiz_completed: true, best_quiz_score: 85, last_studied_at: '2026-06-17T16:00:00Z', progress_percentage: 100 },
+  { id: 'prog-alex-6', user_id: 'demo-student-1', chapter_id: 'ch-6', flashcards_completed: false, quiz_completed: false, best_quiz_score: null, last_studied_at: '2026-06-16T09:00:00Z', progress_percentage: 40 },
+
+  // Maria Garcia — moderate progress
+  { id: 'prog-maria-1', user_id: 'demo-student-2', chapter_id: 'ch-1', flashcards_completed: true, quiz_completed: true, best_quiz_score: 80, last_studied_at: '2026-06-21T08:30:00Z', progress_percentage: 100 },
+  { id: 'prog-maria-2', user_id: 'demo-student-2', chapter_id: 'ch-2', flashcards_completed: true, quiz_completed: true, best_quiz_score: 78, last_studied_at: '2026-06-20T15:00:00Z', progress_percentage: 100 },
+  { id: 'prog-maria-3', user_id: 'demo-student-2', chapter_id: 'ch-3', flashcards_completed: true, quiz_completed: true, best_quiz_score: 82, last_studied_at: '2026-06-19T10:00:00Z', progress_percentage: 100 },
+  { id: 'prog-maria-4', user_id: 'demo-student-2', chapter_id: 'ch-4', flashcards_completed: false, quiz_completed: false, best_quiz_score: null, last_studied_at: '2026-06-15T11:00:00Z', progress_percentage: 55 },
+
+  // Jordan Smith — beginner apprentice
+  { id: 'prog-jordan-1', user_id: 'demo-student-3', chapter_id: 'ch-1', flashcards_completed: true, quiz_completed: true, best_quiz_score: 72, last_studied_at: '2026-06-21T13:00:00Z', progress_percentage: 100 },
+  { id: 'prog-jordan-2', user_id: 'demo-student-3', chapter_id: 'ch-2', flashcards_completed: false, quiz_completed: false, best_quiz_score: null, last_studied_at: '2026-06-20T09:00:00Z', progress_percentage: 30 },
+
+  // Taylor Brown — struggling, only partial ch 1
+  { id: 'prog-taylor-1', user_id: 'demo-student-4', chapter_id: 'ch-1', flashcards_completed: false, quiz_completed: false, best_quiz_score: null, last_studied_at: '2026-06-10T10:00:00Z', progress_percentage: 25 },
+]
+
+export const demoStudentQuizAttempts: QuizAttempt[] = [
+  // Alex Johnson
+  { id: 'attempt-alex-1', user_id: 'demo-student-1', quiz_id: 'quiz-1', score: 23, total_questions: 25, percentage: 92, answers_json: {}, completed_at: '2026-06-21T09:30:00Z' },
+  { id: 'attempt-alex-2', user_id: 'demo-student-1', quiz_id: 'quiz-2', score: 22, total_questions: 25, percentage: 88, answers_json: {}, completed_at: '2026-06-20T10:30:00Z' },
+  { id: 'attempt-alex-3', user_id: 'demo-student-1', quiz_id: 'quiz-3', score: 24, total_questions: 25, percentage: 95, answers_json: {}, completed_at: '2026-06-19T11:30:00Z' },
+  { id: 'attempt-alex-4', user_id: 'demo-student-1', quiz_id: 'quiz-4', score: 23, total_questions: 25, percentage: 90, answers_json: {}, completed_at: '2026-06-18T14:30:00Z' },
+  { id: 'attempt-alex-5', user_id: 'demo-student-1', quiz_id: 'quiz-5', score: 43, total_questions: 50, percentage: 85, answers_json: {}, completed_at: '2026-06-17T16:30:00Z' },
+
+  // Maria Garcia
+  { id: 'attempt-maria-1', user_id: 'demo-student-2', quiz_id: 'quiz-1', score: 20, total_questions: 25, percentage: 80, answers_json: {}, completed_at: '2026-06-21T09:00:00Z' },
+  { id: 'attempt-maria-2', user_id: 'demo-student-2', quiz_id: 'quiz-2', score: 20, total_questions: 25, percentage: 78, answers_json: {}, completed_at: '2026-06-20T15:30:00Z' },
+  { id: 'attempt-maria-3', user_id: 'demo-student-2', quiz_id: 'quiz-3', score: 21, total_questions: 25, percentage: 82, answers_json: {}, completed_at: '2026-06-19T10:30:00Z' },
+
+  // Jordan Smith
+  { id: 'attempt-jordan-1', user_id: 'demo-student-3', quiz_id: 'quiz-1', score: 18, total_questions: 25, percentage: 72, answers_json: {}, completed_at: '2026-06-21T13:30:00Z' },
+
+  // Taylor Brown — no quiz attempts yet
 ]
 
 // Helper to get all flashcards for a chapter

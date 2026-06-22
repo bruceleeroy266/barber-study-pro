@@ -5,6 +5,9 @@ import {
   demoProfile,
   demoInstructorProfile,
   demoApprenticeProfile,
+  demoStudents,
+  demoStudentProgress,
+  demoStudentQuizAttempts,
   demoSchool,
   demoChapters,
   getDemoFlashcards,
@@ -53,7 +56,7 @@ function createMockQueryBuilder(tableName: string) {
   // Load initial data based on table
   switch (tableName) {
     case 'profiles':
-      currentData = [demoProfile, demoInstructorProfile, demoApprenticeProfile]
+      currentData = [demoProfile, demoInstructorProfile, demoApprenticeProfile, ...demoStudents]
       break
     case 'schools':
       currentData = [demoSchool]
@@ -72,10 +75,10 @@ function createMockQueryBuilder(tableName: string) {
       currentData = []
       break
     case 'quiz_attempts':
-      currentData = [...getDemoQuizAttempts('demo-user')]
+      currentData = [...getDemoQuizAttempts('demo-user'), ...demoStudentQuizAttempts]
       break
     case 'student_progress':
-      currentData = [...getDemoProgress('demo-user')]
+      currentData = [...getDemoProgress('demo-user'), ...demoStudentProgress]
       break
     case 'weak_areas':
       currentData = []
