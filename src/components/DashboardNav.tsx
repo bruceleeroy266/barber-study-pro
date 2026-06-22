@@ -1,17 +1,18 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutDashboard, BookOpen, TrendingUp, User, LogOut } from 'lucide-react'
+import { LayoutDashboard, BookOpen, TrendingUp, User, LogOut, GraduationCap, Shield } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { Profile } from '@/types'
+import { isInstructorOrAdmin, isAdmin } from '@/lib/auth-helpers'
 
 interface DashboardNavProps {
   user: Profile | null
 }
 
-const navItems = [
+const baseNavItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/dashboard/chapters', label: 'Chapters', icon: BookOpen },
   { href: '/dashboard/progress', label: 'My Progress', icon: TrendingUp },
@@ -22,6 +23,18 @@ export default function DashboardNav({ user }: DashboardNavProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
+
+  // Build nav items based on role so instructors/admins can reach their portals.
+  const navItems = useMemo(() => {
+    const items = [...baseNavItems]
+    if (user && isInstructorOrAdmin(user.role)) {
+      items.push({ href: '/instructor', label: 'Instructor Portal', icon: GraduationCap })
+    }
+    if (user && isAdmin(user.role)) {
+      items.push({ href: '/admin', label: 'Admin Portal', icon: Shield })
+    }
+    return items
+  }, [user])
 
   const handleLogout = async () => {
     await supabase.auth.signOut()

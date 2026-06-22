@@ -3,6 +3,7 @@ import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Profile, StudentProgress, QuizAttempt } from '@/types'
 import { localChapters } from '@/lib/local-data'
+import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 
 interface StudentDetailPageProps {
   params: Promise<{
@@ -26,7 +27,10 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     .eq('id', user.id)
     .single()
 
-  if (!instructorProfile || (instructorProfile.role !== 'instructor' && instructorProfile.role !== 'admin')) {
+  // ── INSTRUCTOR ACCESS ENFORCEMENT (server component layer) ──
+  // Defense-in-depth: verify the current user is an instructor or admin
+  // before exposing any student detail data.
+  if (!instructorProfile || !isInstructorOrAdmin(instructorProfile.role)) {
     redirect('/dashboard')
   }
 

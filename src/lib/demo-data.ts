@@ -36,7 +36,7 @@ export const demoProfile: Profile = {
   id: 'demo-user',
   email: 'demo@barberstudypro.test',
   full_name: 'Demo Student',
-  role: 'student',
+  role: 'admin', // aligned with demoUser.role so demo mode can test instructor/admin portals
   school_id: 'demo-school',
   barber_shop_name: null,
   mentor_name: null,

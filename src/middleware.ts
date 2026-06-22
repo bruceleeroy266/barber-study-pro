@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { isInstructorOrAdmin, isAdmin } from '@/lib/auth-helpers'
 
 // Check if Supabase is properly configured
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
@@ -13,6 +14,16 @@ const isSupabaseConfigured =
   !supabaseUrl.includes('your-project') &&
   !supabaseUrl.includes('example.supabase.co') &&
   supabaseKey.length > 20
+
+/** Match /instructor and /instructor/* without false positives like /instructorXYZ. */
+function isInstructorRoute(pathname: string): boolean {
+  return pathname === '/instructor' || pathname.startsWith('/instructor/')
+}
+
+/** Match /admin and /admin/* without false positives like /adminXYZ. */
+function isAdminRoute(pathname: string): boolean {
+  return pathname === '/admin' || pathname.startsWith('/admin/')
+}
 
 export async function middleware(request: NextRequest) {
   // Demo mode: skip auth checks ONLY if explicitly enabled AND Supabase not configured
@@ -94,28 +105,34 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  if (request.nextUrl.pathname.startsWith('/instructor') && user) {
+  // ── INSTRUCTOR ACCESS ENFORCEMENT (edge layer) ──
+  // Only users whose profile role is 'instructor' or 'admin' may access
+  // /instructor and /instructor/* sub-routes. Students/apprentices are
+  // redirected to /dashboard. Logged-out users were handled above.
+  if (isInstructorRoute(request.nextUrl.pathname) && user) {
     const { data: profile } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
       .single()
 
-    if (!profile || (profile.role !== 'instructor' && profile.role !== 'admin')) {
+    if (!profile || !isInstructorOrAdmin(profile.role)) {
       const url = request.nextUrl.clone()
       url.pathname = '/dashboard'
       return NextResponse.redirect(url)
     }
   }
 
-  if (request.nextUrl.pathname.startsWith('/admin') && user) {
+  // ── ADMIN ACCESS ENFORCEMENT (edge layer) ──
+  // Only users whose profile role is 'admin' may access /admin and /admin/*.
+  if (isAdminRoute(request.nextUrl.pathname) && user) {
     const { data: profile } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
       .single()
 
-    if (!profile || profile.role !== 'admin') {
+    if (!profile || !isAdmin(profile.role)) {
       const url = request.nextUrl.clone()
       url.pathname = '/dashboard'
       return NextResponse.redirect(url)

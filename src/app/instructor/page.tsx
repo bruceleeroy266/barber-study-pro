@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Profile, StudentProgress, QuizAttempt } from '@/types'
 import { localChapters } from '@/lib/local-data'
+import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 
 // ── At-Risk Criteria ──
 const RISK_LOW_PROGRESS = 50        // progress % below this is a risk factor
@@ -56,7 +57,11 @@ export default async function InstructorDashboard() {
     .eq('id', user.id)
     .single()
 
-  if (!profile || (profile.role !== 'instructor' && profile.role !== 'admin')) {
+  // ── INSTRUCTOR ACCESS ENFORCEMENT (server component layer) ──
+  // Defense-in-depth: re-verify the user is an instructor or admin here.
+  // The middleware already gates the route; this check ensures the rule
+  // survives even if middleware is misconfigured or bypassed.
+  if (!profile || !isInstructorOrAdmin(profile.role)) {
     redirect('/dashboard')
   }
 

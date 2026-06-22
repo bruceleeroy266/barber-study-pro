@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
+import { isAdmin } from '@/lib/auth-helpers'
 
 export default async function AdminDashboard() {
   const supabase = await createClient()
@@ -16,7 +17,10 @@ export default async function AdminDashboard() {
     .eq('id', user.id)
     .single()
 
-  if (!profile || profile.role !== 'admin') {
+  // ── ADMIN ACCESS ENFORCEMENT (server component layer) ──
+  // Only the 'admin' role may access /admin. Instructors and students
+  // are redirected to /dashboard.
+  if (!profile || !isAdmin(profile.role)) {
     redirect('/dashboard')
   }
 
