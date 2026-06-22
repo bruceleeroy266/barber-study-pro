@@ -44,6 +44,71 @@ function getReadinessEstimate(overallProgress: number, avgQuizScore: number): {
   return { label: 'Getting Started', score, color: 'text-red-400' }
 }
 
+interface ChapterScore {
+  chapterId: string
+  chapterNumber: number
+  chapterTitle: string
+  score: number
+  attempted: boolean
+}
+
+function computeChapterScores(
+  chapters: { id: string; chapter_number: number; title: string }[],
+  progressRecords: StudentProgress[]
+): ChapterScore[] {
+  return chapters.map((chapter) => {
+    const progress = progressRecords.find((p) => p.chapter_id === chapter.id)
+    const score = progress?.best_quiz_score ?? 0
+    return {
+      chapterId: chapter.id,
+      chapterNumber: chapter.chapter_number,
+      chapterTitle: chapter.title,
+      score,
+      attempted: score > 0,
+    }
+  })
+}
+
+function getBoardRisk(attemptedChapters: ChapterScore[]): {
+  label: string
+  color: string
+  description: string
+} {
+  if (attemptedChapters.length === 0) {
+    return {
+      label: 'No Data',
+      color: 'text-gray-400',
+      description: 'Not enough quiz data to assess board readiness risk.',
+    }
+  }
+
+  const anyCritical = attemptedChapters.some((c) => c.score < 60)
+  const passingCount = attemptedChapters.filter((c) => c.score >= 75).length
+  const passingRate = passingCount / attemptedChapters.length
+
+  if (anyCritical || passingRate < 0.5) {
+    return {
+      label: 'High Risk',
+      color: 'text-red-400',
+      description: 'Multiple weak areas may affect board exam performance.',
+    }
+  }
+
+  if (passingRate < 0.8 || attemptedChapters.some((c) => c.score < 75)) {
+    return {
+      label: 'Moderate Risk',
+      color: 'text-yellow-400',
+      description: 'Some topics need additional review before the board exam.',
+    }
+  }
+
+  return {
+    label: 'Low Risk',
+    color: 'text-green-400',
+    description: 'Strong quiz performance across attempted chapters.',
+  }
+}
+
 export default async function StudentDetailPage({ params }: StudentDetailPageProps) {
   const { studentId } = await params
   const supabase = await createClient()
@@ -134,6 +199,23 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
   const lastActivityAt = lastStudiedDates[0] || null
 
   const readiness = getReadinessEstimate(overallProgress, avgQuizScore)
+
+  // Weak area analytics
+  const chapterScores = computeChapterScores(chapters, progressRecords)
+  const attemptedChapters = chapterScores.filter((c) => c.attempted)
+  const hasEnoughQuizData = attemptedChapters.length >= 2
+
+  const sortedByScoreAsc = [...attemptedChapters].sort((a, b) => a.score - b.score)
+  const sortedByScoreDesc = [...attemptedChapters].sort((a, b) => b.score - a.score)
+
+  // Weak areas: bottom performers (relative weak areas)
+  const weakAreaCount = Math.min(3, Math.floor(attemptedChapters.length / 2) + 1)
+  const weakAreas = sortedByScoreAsc.slice(0, weakAreaCount)
+
+  // Strong areas: top performers with score >= 80%
+  const strongAreas = sortedByScoreDesc.filter((c) => c.score >= 80).slice(0, 3)
+
+  const boardRisk = getBoardRisk(attemptedChapters)
 
   return (
     <div className="min-h-screen bg-gray-950 p-6 md:p-8">
@@ -371,6 +453,118 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
             </div>
           ) : (
             <div className="p-8 text-center text-gray-400">No quiz attempts yet.</div>
+          )}
+        </div>
+
+        {/* Weak Areas */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+          <div className="p-6 border-b border-gray-800">
+            <h2 className="text-xl font-semibold text-white">Weak Areas & Study Focus</h2>
+          </div>
+
+          {!hasEnoughQuizData ? (
+            <div className="p-8 text-center text-gray-400">
+              <p className="font-medium">Not enough quiz data yet</p>
+              <p className="text-sm text-gray-500 mt-2">
+                This student needs at least two completed chapter quizzes before weak-area analytics can be generated.
+              </p>
+            </div>
+          ) : (
+            <div className="divide-y divide-gray-800">
+              {/* Board Risk Summary */}
+              <div className="p-6">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                  <div className="text-sm text-gray-400">Board Exam Risk:</div>
+                  <div className={`text-lg font-bold ${boardRisk.color}`}>{boardRisk.label}</div>
+                </div>
+                <p className="text-sm text-gray-500 mt-2">{boardRisk.description}</p>
+              </div>
+
+              {/* Weak Areas List */}
+              {weakAreas.length > 0 && (
+                <div className="p-6">
+                  <h3 className="text-sm font-semibold text-red-300 uppercase tracking-wide mb-4">
+                    Weakest Areas
+                  </h3>
+                  <div className="space-y-3">
+                    {weakAreas.map((area) => (
+                      <div
+                        key={area.chapterId}
+                        className="flex items-center justify-between p-3 bg-red-950/20 border border-red-900/30 rounded-lg"
+                      >
+                        <div>
+                          <p className="text-white font-medium">
+                            Ch.{area.chapterNumber} — {area.chapterTitle}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {area.score < 75 ? 'Below passing threshold' : area.score < 80 ? 'Needs polish' : 'Lowest relative score'}
+                          </p>
+                        </div>
+                        <div className={`text-xl font-bold ${
+                          area.score >= 75 ? 'text-yellow-400' :
+                          area.score >= 60 ? 'text-orange-400' : 'text-red-400'
+                        }`}>
+                          {area.score}%
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Strong Areas List */}
+              {strongAreas.length > 0 && (
+                <div className="p-6">
+                  <h3 className="text-sm font-semibold text-green-300 uppercase tracking-wide mb-4">
+                    Strongest Areas
+                  </h3>
+                  <div className="space-y-3">
+                    {strongAreas.map((area) => (
+                      <div
+                        key={area.chapterId}
+                        className="flex items-center justify-between p-3 bg-green-950/20 border border-green-900/30 rounded-lg"
+                      >
+                        <div>
+                          <p className="text-white font-medium">
+                            Ch.{area.chapterNumber} — {area.chapterTitle}
+                          </p>
+                          <p className="text-xs text-gray-500">Strong performance</p>
+                        </div>
+                        <div className="text-xl font-bold text-green-400">{area.score}%</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Recommended Study Focus */}
+              {weakAreas.length > 0 && (
+                <div className="p-6 bg-[#D4AF37]/5">
+                  <h3 className="text-sm font-semibold text-[#D4AF37] uppercase tracking-wide mb-3">
+                    Recommended Study Focus
+                  </h3>
+                  <p className="text-sm text-gray-400 mb-3">
+                    Prioritize review in these areas to improve board readiness:
+                  </p>
+                  <ol className="list-decimal list-inside space-y-2 text-sm text-gray-300">
+                    {weakAreas.slice(0, 3).map((area) => (
+                      <li key={area.chapterId}>
+                        <span className="font-medium text-white">
+                          Chapter {area.chapterNumber} — {area.chapterTitle}
+                        </span>
+                        <span className="text-gray-500 ml-2">(current best: {area.score}%)</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+
+              {weakAreas.length === 0 && (
+                <div className="p-8 text-center text-gray-400">
+                  No weak areas found — all attempted chapters are performing strongly.
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>
