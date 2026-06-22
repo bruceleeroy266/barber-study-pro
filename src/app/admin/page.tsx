@@ -71,19 +71,25 @@ export default async function AdminDashboard() {
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
             <h3 className="text-lg font-semibold text-white mb-2">Users</h3>
             <p className="text-gray-400 text-sm mb-4">Manage user accounts and roles</p>
-            <button className="text-[#D4AF37] hover:text-[#F4E4A6]">Manage Users →</button>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-800 text-gray-400 text-sm rounded-lg">
+              <span>Coming soon</span>
+            </div>
           </div>
 
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
             <h3 className="text-lg font-semibold text-white mb-2">Schools</h3>
             <p className="text-gray-400 text-sm mb-4">Manage schools and subscriptions</p>
-            <button className="text-[#D4AF37] hover:text-[#F4E4A6]">Manage Schools →</button>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-800 text-gray-400 text-sm rounded-lg">
+              <span>Coming soon</span>
+            </div>
           </div>
 
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
             <h3 className="text-lg font-semibold text-white mb-2">Content</h3>
             <p className="text-gray-400 text-sm mb-4">Manage chapters, flashcards, and quizzes</p>
-            <button className="text-[#D4AF37] hover:text-[#F4E4A6]">Manage Content →</button>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-800 text-gray-400 text-sm rounded-lg">
+              <span>Coming soon</span>
+            </div>
           </div>
         </div>
 

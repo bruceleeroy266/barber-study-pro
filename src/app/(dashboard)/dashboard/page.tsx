@@ -50,7 +50,7 @@ export default async function DashboardPage() {
     ? progress?.find(p => p.chapter_id === continueChapter.id)?.progress_percentage || 0
     : 0
   const continueTitle = continueProgress > 0 ? 'Continue Studying' : 'Start Studying'
-  const continueButton = continueProgress > 0 ? 'Continue ?' : 'Start ?'
+  const continueButton = continueProgress > 0 ? 'Continue Chapter' : 'Start Chapter'
   return (
     <div className="space-y-8">
       {/* Header */}
