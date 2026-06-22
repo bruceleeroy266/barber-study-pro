@@ -12,6 +12,38 @@ interface StudentDetailPageProps {
   }>
 }
 
+function formatDate(dateString: string | null): string {
+  if (!dateString) return 'Never'
+  return new Date(dateString).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
+}
+
+function formatDaysAgo(dateString: string | null): string {
+  if (!dateString) return 'Never'
+  const days = Math.floor((Date.now() - new Date(dateString).getTime()) / (1000 * 60 * 60 * 24))
+  if (days === 0) return 'Today'
+  if (days === 1) return 'Yesterday'
+  return `${days} days ago`
+}
+
+function getReadinessEstimate(overallProgress: number, avgQuizScore: number): {
+  label: string
+  score: number
+  color: string
+} {
+  // Weighted readiness score: 50% chapter completion + 50% quiz performance
+  const score = Math.round(overallProgress * 0.5 + avgQuizScore * 0.5)
+
+  if (score >= 85) return { label: 'Board Ready', score, color: 'text-green-400' }
+  if (score >= 70) return { label: 'Almost Ready', score, color: 'text-blue-400' }
+  if (score >= 50) return { label: 'On Track', score, color: 'text-yellow-400' }
+  if (score >= 25) return { label: 'Needs Review', score, color: 'text-orange-400' }
+  return { label: 'Getting Started', score, color: 'text-red-400' }
+}
+
 export default async function StudentDetailPage({ params }: StudentDetailPageProps) {
   const { studentId } = await params
   const supabase = await createClient()
@@ -21,7 +53,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     redirect('/login')
   }
 
-  // Verify instructor
+  // Verify instructor or admin
   const { data: instructorProfile } = await supabase
     .from('profiles')
     .select('role, school_id')
@@ -84,55 +116,140 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
   }
 
   const totalChapters = chapters?.length || 0
-  const completedChapters = progressRecords.filter((p) => p.progress_percentage === 100).length || 0
+  const completedChapters = progressRecords.filter((p) => p.progress_percentage === 100).length
+  const overallProgress = totalChapters > 0
+    ? Math.round(progressRecords.reduce((sum, p) => sum + p.progress_percentage, 0) / totalChapters)
+    : 0
+  const flashcardsCompleted = progressRecords.filter((p) => p.flashcards_completed).length
+  const quizzesCompleted = progressRecords.filter((p) => p.quiz_completed).length
   const avgQuizScore = attemptRecords.length > 0
     ? Math.round(attemptRecords.reduce((sum, a) => sum + a.percentage, 0) / attemptRecords.length)
     : 0
 
+  // Last activity across all progress records
+  const lastStudiedDates = progressRecords
+    .map((p) => p.last_studied_at)
+    .filter((d): d is string => !!d)
+    .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
+  const lastActivityAt = lastStudiedDates[0] || null
+
+  const readiness = getReadinessEstimate(overallProgress, avgQuizScore)
+
   return (
-    <div className="min-h-screen bg-gray-950 p-8">
+    <div className="min-h-screen bg-gray-950 p-6 md:p-8">
       <div className="max-w-5xl mx-auto space-y-8">
-        {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-gray-400">
-          <Link href="/instructor" className="hover:text-[#D4AF37] transition-colors">
-            Instructor Dashboard
-          </Link>
-          <span>/</span>
-          <span className="text-white">{resolvedStudent.full_name}</span>
-        </div>
-
-        {/* Header */}
+        {/* Back link */}
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">{resolvedStudent.full_name}</h1>
-          <p className="text-gray-400">{resolvedStudent.email}</p>
+          <Link
+            href="/instructor"
+            className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-[#D4AF37] transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to roster
+          </Link>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <div className="text-3xl font-bold text-[#D4AF37]">{completedChapters}</div>
-            <div className="text-sm text-gray-400">Chapters Completed</div>
-          </div>
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <div className="text-3xl font-bold text-blue-400">{totalChapters - completedChapters}</div>
-            <div className="text-sm text-gray-400">Remaining</div>
-          </div>
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <div className={`text-3xl font-bold ${avgQuizScore >= 75 ? 'text-green-400' : 'text-yellow-400'}`}>
-              {avgQuizScore}%
+        {/* Student Summary Card */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+          <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6">
+            <div className="w-16 h-16 rounded-full bg-[#D4AF37]/20 flex items-center justify-center shrink-0">
+              <span className="text-2xl font-bold text-[#D4AF37]">
+                {resolvedStudent.full_name.charAt(0).toUpperCase()}
+              </span>
             </div>
-            <div className="text-sm text-gray-400">Avg Quiz Score</div>
+            <div className="flex-1">
+              <h1 className="text-3xl font-bold text-white">{resolvedStudent.full_name}</h1>
+              <p className="text-gray-400">{resolvedStudent.email}</p>
+              <div className="flex flex-wrap items-center gap-3 mt-2 text-sm">
+                <span className="px-2 py-0.5 bg-gray-800 text-gray-300 rounded capitalize">
+                  {resolvedStudent.role}
+                </span>
+                <span className="text-gray-500">
+                  Joined {formatDate(resolvedStudent.created_at)}
+                </span>
+                {lastActivityAt && (
+                  <span className="text-gray-500">
+                    Last active {formatDaysAgo(lastActivityAt)}
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <div className="text-3xl font-bold text-purple-400">{attemptRecords.length}</div>
-            <div className="text-sm text-gray-400">Quiz Attempts</div>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+            <div className={`text-2xl font-bold ${
+              overallProgress >= 75 ? 'text-green-400' :
+              overallProgress >= 50 ? 'text-yellow-400' : 'text-red-400'
+            }`}>
+              {overallProgress}%
+            </div>
+            <div className="text-xs text-gray-400 mt-1">Overall Progress</div>
           </div>
+
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+            <div className="text-2xl font-bold text-[#D4AF37]">{completedChapters}</div>
+            <div className="text-xs text-gray-400 mt-1">Chapters Done</div>
+          </div>
+
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+            <div className="text-2xl font-bold text-purple-400">{flashcardsCompleted}</div>
+            <div className="text-xs text-gray-400 mt-1">Flashcards Done</div>
+          </div>
+
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+            <div className="text-2xl font-bold text-blue-400">{quizzesCompleted}</div>
+            <div className="text-xs text-gray-400 mt-1">Quizzes Passed</div>
+          </div>
+
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+            <div className={`text-2xl font-bold ${avgQuizScore >= 75 ? 'text-green-400' : avgQuizScore >= 60 ? 'text-yellow-400' : avgQuizScore > 0 ? 'text-red-400' : 'text-gray-500'}`}>
+              {avgQuizScore > 0 ? `${avgQuizScore}%` : '—'}
+            </div>
+            <div className="text-xs text-gray-400 mt-1">Quiz Average</div>
+          </div>
+
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+            <div className={`text-2xl font-bold ${readiness.color}`}>{readiness.score}</div>
+            <div className="text-xs text-gray-400 mt-1">{readiness.label}</div>
+          </div>
+        </div>
+
+        {/* Overall Progress Bar */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-semibold text-white">Overall Course Progress</h2>
+            <span className={`text-2xl font-bold ${
+              overallProgress >= 75 ? 'text-green-400' :
+              overallProgress >= 50 ? 'text-yellow-400' : 'text-red-400'
+            }`}>
+              {overallProgress}%
+            </span>
+          </div>
+          <div className="bg-gray-800 rounded-full h-3">
+            <div
+              className={`h-3 rounded-full transition-all ${
+                overallProgress >= 75 ? 'bg-green-500' :
+                overallProgress >= 50 ? 'bg-yellow-500' : 'bg-red-500'
+              }`}
+              style={{ width: `${overallProgress}%` }}
+            />
+          </div>
+          <p className="text-sm text-gray-500 mt-3">
+            {completedChapters} of {totalChapters} chapters completed
+            {quizzesCompleted > 0 && ` • ${quizzesCompleted} quizzes passed`}
+            {flashcardsCompleted > 0 && ` • ${flashcardsCompleted} flashcard decks completed`}
+          </p>
         </div>
 
         {/* Chapter Progress */}
         <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
           <div className="p-6 border-b border-gray-800">
-            <h2 className="text-xl font-semibold text-white">Chapter Progress</h2>
+            <h2 className="text-xl font-semibold text-white">Chapter-by-Chapter Progress</h2>
           </div>
           {chapters && chapters.length > 0 ? (
             <div className="divide-y divide-gray-800">
@@ -145,13 +262,13 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
 
                 return (
                   <div key={chapter.id} className="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <span className="text-lg font-bold text-[#D4AF37] w-8">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className="text-lg font-bold text-[#D4AF37] w-8 shrink-0">
                         {String(chapter.chapter_number).padStart(2, '0')}
                       </span>
-                      <div>
-                        <p className="text-white font-medium">{chapter.title}</p>
-                        <div className="flex gap-3 text-xs text-gray-400 mt-1">
+                      <div className="min-w-0">
+                        <p className="text-white font-medium truncate">{chapter.title}</p>
+                        <div className="flex flex-wrap gap-3 text-xs text-gray-400 mt-1">
                           <span className={flashDone ? 'text-green-400' : ''}>
                             {flashDone ? '✓ Flashcards' : '○ Flashcards'}
                           </span>
@@ -166,10 +283,14 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3 w-full md:w-48">
+                    <div className="flex items-center gap-3 w-full md:w-56">
                       <div className="flex-1 bg-gray-800 rounded-full h-2">
                         <div
-                          className="bg-[#D4AF37] h-2 rounded-full transition-all"
+                          className={`h-2 rounded-full transition-all ${
+                            pct >= 75 ? 'bg-green-500' :
+                            pct >= 50 ? 'bg-yellow-500' :
+                            pct > 0 ? 'bg-[#D4AF37]' : 'bg-gray-700'
+                          }`}
                           style={{ width: `${pct}%` }}
                         />
                       </div>
@@ -184,10 +305,34 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           )}
         </div>
 
+        {/* Flashcard Completion Summary */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+          <h2 className="text-xl font-semibold text-white mb-4">Flashcard Completion</h2>
+          <div className="flex items-center gap-4">
+            <div className="flex-1 bg-gray-800 rounded-full h-3">
+              <div
+                className="bg-purple-500 h-3 rounded-full transition-all"
+                style={{ width: `${totalChapters > 0 ? (flashcardsCompleted / totalChapters) * 100 : 0}%` }}
+              />
+            </div>
+            <span className="text-white font-semibold w-24 text-right">
+              {flashcardsCompleted} / {totalChapters}
+            </span>
+          </div>
+          <p className="text-sm text-gray-500 mt-3">
+            {flashcardsCompleted === 0
+              ? 'No flashcard decks completed yet.'
+              : flashcardsCompleted === totalChapters
+              ? 'All flashcard decks completed.'
+              : `${totalChapters - flashcardsCompleted} decks remaining.`}
+          </p>
+        </div>
+
         {/* Recent Quiz Attempts */}
         <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
-          <div className="p-6 border-b border-gray-800">
+          <div className="p-6 border-b border-gray-800 flex items-center justify-between">
             <h2 className="text-xl font-semibold text-white">Recent Quiz Attempts</h2>
+            <span className="text-sm text-gray-500">{attemptRecords.length} total</span>
           </div>
           {attemptRecords.length > 0 ? (
             <div className="overflow-x-auto">
@@ -217,7 +362,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                         </span>
                       </td>
                       <td className="p-4 text-gray-400">
-                        {new Date(attempt.completed_at).toLocaleDateString()}
+                        {formatDate(attempt.completed_at)}
                       </td>
                     </tr>
                   ))}
