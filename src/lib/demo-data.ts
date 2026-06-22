@@ -73,7 +73,7 @@ export const demoChapters: Chapter[] = [
   { id: 'ch-12', chapter_number: 12, title: "Men's Facial Massage and Treatments", description: 'Learn facial massage techniques and treatments specifically designed for male clients.', content: null, order_index: 12, is_active: true },
   { id: 'ch-13', chapter_number: 13, title: 'Shaving and Facial-Hair Design', description: 'Master the art of shaving, beard shaping, and facial hair design techniques.', content: null, order_index: 13, is_active: true },
   { id: 'ch-14', chapter_number: 14, title: 'Men\'s Haircutting and Styling', description: 'Learn fundamental and advanced men\'s haircutting and styling techniques.', content: null, order_index: 14, is_active: true },
-  { id: 'ch-15', chapter_number: 15, title: 'Men\'s Chemical Services', description: 'Understand chemical processes including perms, relaxers, and hair coloring for men.', content: null, order_index: 15, is_active: true },
+  { id: 'ch-15', chapter_number: 15, title: 'Men\'s Hair Replacement', description: 'Master hair replacement systems, consultation, attachment, maintenance, and blending techniques.', content: null, order_index: 15, is_active: true },
   { id: 'ch-16', chapter_number: 16, title: 'State Board Preparation', description: 'Prepare for your state board examination with comprehensive review materials.', content: null, order_index: 16, is_active: true },
   { id: 'ch-17', chapter_number: 17, title: 'Barbershop Management', description: 'Learn the business side of barbering including shop management and operations.', content: null, order_index: 17, is_active: true },
   { id: 'ch-18', chapter_number: 18, title: 'Advanced Cutting Techniques', description: 'Master advanced cutting techniques including fades, tapers, and texturizing.', content: null, order_index: 18, is_active: true },
@@ -158,8 +158,17 @@ if (realFlashcards['ch-14'] && realFlashcards['ch-14'].length > 0) {
   }))
 }
 
-// BATCH 4: Wire orphaned flashcards for Ch 15, 17, 18, 19, 20, 21
-const batch4Chapters = ['ch-15', 'ch-17', 'ch-18', 'ch-19', 'ch-20', 'ch-21']
+// Chapter 15: Use premium flashcards (real content)
+if (realFlashcards['ch-15'] && realFlashcards['ch-15'].length > 0) {
+  demoFlashcards['ch-15'] = realFlashcards['ch-15'].map((fc, idx) => ({
+    ...fc,
+    order_index: idx + 1,
+    is_active: true,
+  }))
+}
+
+// BATCH 4: Wire orphaned flashcards for Ch 17, 18, 19, 20, 21
+const batch4Chapters = ['ch-17', 'ch-18', 'ch-19', 'ch-20', 'ch-21']
 for (const chId of batch4Chapters) {
   if (batch4Flashcards[chId] && batch4Flashcards[chId].length > 0) {
     demoFlashcards[chId] = batch4Flashcards[chId]
@@ -209,6 +218,8 @@ export const demoQuizzes: Record<string, Quiz> = {
   'ch-13': { id: 'quiz-13', chapter_id: 'ch-13', title: 'Shaving and Facial-Hair Design — Premium Quiz', description: '45 board-exam style questions. Passing score: 75%.', is_active: true },
   // Chapter 14: Premium flashcard-driven quiz (70 questions)
   'ch-14': { id: 'quiz-14', chapter_id: 'ch-14', title: "Men's Haircutting and Styling — Premium Quiz", description: '70 board-exam style questions. Passing score: 75%.', is_active: true },
+  // Chapter 15: Premium flashcard-driven quiz (72 questions)
+  'ch-15': { id: 'quiz-15', chapter_id: 'ch-15', title: "Men's Hair Replacement — Premium Quiz", description: '72 board-exam style questions. Passing score: 75%.', is_active: true },
 }
 
 for (let i = 3; i <= 21; i++) {
@@ -228,8 +239,8 @@ export const demoQuizQuestions: Record<string, QuizQuestion[]> = {
 
 for (let i = 3; i <= 21; i++) {
   const quizId = `quiz-${i}`
-  // Skip Chapters 3–13 — already in allQuizQuestions
-  if (i >= 3 && i <= 13) continue
+  // Skip Chapters 3–15 — already in allQuizQuestions
+  if (i >= 3 && i <= 15) continue
   if (!demoQuizQuestions[quizId]) {
     demoQuizQuestions[quizId] = [
       { id: `qq-${i}-1`, quiz_id: quizId, question: `Demo question 1 for Chapter ${i}`, answer_a: 'Option A', answer_b: 'Option B', answer_c: 'Option C', answer_d: 'Option D', correct_answer: 'a', explanation: `This is a demo question for Chapter ${i}.`, difficulty: 'easy', order_index: 1 },
