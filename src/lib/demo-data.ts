@@ -1,7 +1,7 @@
 // Demo data for soft launch without Supabase
 // This provides safe mock data when NEXT_PUBLIC_DEMO_MODE=true
 
-import { Chapter, Flashcard, Quiz, QuizQuestion, QuizAttempt, StudentProgress, Profile } from '@/types'
+import { Chapter, Flashcard, Quiz, QuizQuestion, QuizAttempt, StudentProgress, Profile, InstructorNote } from '@/types'
 import { chapterFlashcards as realFlashcards } from './flashcards-data'
 import { batch1Flashcards, batch4Flashcards } from './orphaned-flashcards'
 import { allQuizQuestions } from './quiz-data'
@@ -352,6 +352,46 @@ export const demoStudentQuizAttempts: QuizAttempt[] = [
   { id: 'attempt-jordan-1', user_id: 'demo-student-3', quiz_id: 'quiz-1', score: 18, total_questions: 25, percentage: 72, answers_json: {}, completed_at: '2026-06-21T13:30:00Z' },
 
   // Taylor Brown — no quiz attempts yet
+]
+
+// Demo instructor notes for the student detail fallback
+export const demoInstructorNotes: InstructorNote[] = [
+  {
+    id: 'note-alex-1',
+    student_id: 'demo-student-1',
+    instructor_id: 'demo-instructor',
+    instructor_name: 'Demo Instructor',
+    note_type: 'readiness',
+    note_text: 'Alex is tracking well for the board exam. Consistently scoring above 85% on quizzes. Encourage him to finish the General Anatomy chapter next.',
+    created_at: '2026-06-21T10:00:00Z',
+  },
+  {
+    id: 'note-alex-2',
+    student_id: 'demo-student-1',
+    instructor_id: 'demo-instructor',
+    instructor_name: 'Demo Instructor',
+    note_type: 'coaching',
+    note_text: 'Reviewed flashcard strategy. Alex benefits from daily 15-minute review sessions rather than cramming.',
+    created_at: '2026-06-18T14:00:00Z',
+  },
+  {
+    id: 'note-maria-1',
+    student_id: 'demo-student-2',
+    instructor_id: 'demo-instructor',
+    instructor_name: 'Demo Instructor',
+    note_type: 'general',
+    note_text: 'Maria asks great questions during review sessions. Suggested she retake Chapter 2 quiz to push above 80%.',
+    created_at: '2026-06-19T11:30:00Z',
+  },
+  {
+    id: 'note-jordan-1',
+    student_id: 'demo-student-3',
+    instructor_id: 'demo-instructor',
+    instructor_name: 'Demo Instructor',
+    note_type: 'remediation',
+    note_text: 'Jordan scored 72% on Chapter 1. Schedule one-on-one remediation on infection control fundamentals before advancing.',
+    created_at: '2026-06-21T14:00:00Z',
+  },
 ]
 
 // Helper to get all flashcards for a chapter

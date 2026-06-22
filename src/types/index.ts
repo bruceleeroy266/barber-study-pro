@@ -90,3 +90,13 @@ export interface ChapterWithProgress extends Chapter {
   flashcardCount?: number
   quizQuestionCount?: number
 }
+
+export interface InstructorNote {
+  id: string
+  student_id: string
+  instructor_id: string
+  instructor_name: string
+  note_type: 'coaching' | 'remediation' | 'readiness' | 'general'
+  note_text: string
+  created_at: string
+}
