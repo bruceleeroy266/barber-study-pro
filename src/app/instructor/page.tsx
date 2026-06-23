@@ -1,10 +1,13 @@
 import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Profile, StudentProgress, QuizAttempt } from '@/types'
+import { Profile, StudentProgress, QuizAttempt, HourLog, ReadinessLevel } from '@/types'
 import { localChapters } from '@/lib/local-data'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
-import { demoStudents, demoStudentProgress, demoStudentQuizAttempts } from '@/lib/demo-data'
+import { demoStudents, demoStudentProgress, demoStudentQuizAttempts, demoHourLogs } from '@/lib/demo-data'
+import { calculateBoardReadiness, getReadinessColorClass } from '@/lib/readiness'
+import { analyzePerformance, getCategoryForChapter } from '@/lib/analytics'
+import { allQuizQuestions } from '@/lib/quiz-data'
 
 interface RosterStudent extends Profile {
   overallProgress: number
@@ -14,7 +17,8 @@ interface RosterStudent extends Profile {
   completedChapters: number
   daysSinceActive: number | null
   readinessScore: number
-  readinessLabel: string
+  readinessLevel: ReadinessLevel
+  weakestCategory: string | null
 }
 
 interface ChapterClassScore {
@@ -31,19 +35,43 @@ interface InstructorDashboardProps {
 
 const ACTIVE_DAYS = 7
 
+function formatMinutes(totalMinutes: number): string {
+  const h = Math.floor(totalMinutes / 60)
+  const m = totalMinutes % 60
+  return `${h}h ${m}m`
+}
+
+function readinessBadgeClasses(level: ReadinessLevel): string {
+  switch (level) {
+    case 'Ready':
+      return 'bg-green-500/20 text-green-400 border-green-500/30'
+    case 'Nearly Ready':
+      return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
+    case 'Needs Review':
+      return 'bg-orange-500/20 text-orange-400 border-orange-500/30'
+    case 'At Risk':
+      return 'bg-red-500/20 text-red-400 border-red-500/30'
+    default:
+      return 'bg-gray-700 text-gray-300 border-gray-600'
+  }
+}
+
 function computeStudentStats(
   students: Profile[],
   allProgress: StudentProgress[],
   allAttempts: QuizAttempt[],
-  chaptersCount: number
+  chapters: { id: string; chapter_number: number; title: string }[],
+  questions: import('@/types').QuizQuestion[]
 ): RosterStudent[] {
+  const totalChapters = chapters.length
+
   return students.map((student) => {
     const progress = allProgress.filter((p) => p.user_id === student.id)
     const attempts = allAttempts.filter((a) => a.user_id === student.id)
 
     const completedChapters = progress.filter((p) => p.progress_percentage === 100).length
     const totalProgressSum = progress.reduce((sum, p) => sum + p.progress_percentage, 0)
-    const overallProgress = chaptersCount > 0 ? Math.round(totalProgressSum / chaptersCount) : 0
+    const overallProgress = totalChapters > 0 ? Math.round(totalProgressSum / totalChapters) : 0
 
     const avgQuizScore = attempts.length > 0
       ? Math.round(attempts.reduce((sum, a) => sum + a.percentage, 0) / attempts.length)
@@ -59,12 +87,22 @@ function computeStudentStats(
       ? Math.floor((Date.now() - new Date(lastStudiedAt).getTime()) / (1000 * 60 * 60 * 24))
       : null
 
-    const readinessScore = Math.round(overallProgress * 0.5 + avgQuizScore * 0.5)
-    const readinessLabel =
-      readinessScore >= 85 ? 'Board Ready' :
-      readinessScore >= 70 ? 'Almost Ready' :
-      readinessScore >= 50 ? 'On Track' :
-      readinessScore >= 25 ? 'Needs Review' : 'Getting Started'
+    const readiness = calculateBoardReadiness({
+      userId: student.id,
+      attempts,
+      progress,
+      totalChapters,
+    })
+
+    // Determine weakest category from analytics
+    const analytics = analyzePerformance({
+      userId: student.id,
+      attempts,
+      progress,
+      chapters,
+      questions,
+    })
+    const weakestCategory = analytics.weakAreas[0]?.category || null
 
     return {
       ...student,
@@ -74,8 +112,9 @@ function computeStudentStats(
       quizzesTaken: attempts.length,
       completedChapters,
       daysSinceActive,
-      readinessScore,
-      readinessLabel,
+      readinessScore: readiness.score,
+      readinessLevel: readiness.level,
+      weakestCategory,
     }
   })
 }
@@ -140,7 +179,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
   const schoolName = (profile.schools as { name?: string } | null)?.name || 'Your School'
 
   // Fetch students in the same school
-  const { data: students, error: studentsError } = await supabase
+  const { data: students } = await supabase
     .from('profiles')
     .select('*')
     .eq('school_id', schoolId)
@@ -169,6 +208,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
   // Use local chapters as the source of truth for chapter count
   const chapters = localChapters
   const totalChapters = chapters.length
+  const questions = Object.values(allQuizQuestions).flat()
 
   // Build demo fallback for progress/attempts when real tables are empty
   let progressRecords = allProgress || []
@@ -178,7 +218,24 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     attemptRecords = demoStudentQuizAttempts.filter((a) => studentIds.includes(a.user_id))
   }
 
-  const studentStats = computeStudentStats(rosterStudents, progressRecords, attemptRecords, totalChapters)
+  // Fetch hour logs for pending approval queue
+  const { data: allHourLogs } = await supabase
+    .from('hour_logs')
+    .select('*')
+    .in('user_id', studentIds.length > 0 ? studentIds : ['__none__']) as { data: HourLog[] | null; error: any }
+
+  let hourLogRecords = allHourLogs || []
+  if (hourLogRecords.length === 0 && isDemoFallbackEnabled()) {
+    hourLogRecords = demoHourLogs.filter((h) => studentIds.includes(h.user_id))
+  }
+
+  const pendingHourLogs = hourLogRecords.filter((h) => h.status === 'pending')
+  const pendingByStudent = pendingHourLogs.reduce<Record<string, number>>((acc, log) => {
+    acc[log.user_id] = (acc[log.user_id] || 0) + log.minutes
+    return acc
+  }, {})
+
+  const studentStats = computeStudentStats(rosterStudents, progressRecords, attemptRecords, chapters, questions)
 
   // Filter by search query (name, email, or role)
   const filteredStudents = searchQuery
@@ -213,19 +270,25 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     ? Math.round(studentsWithReadiness.reduce((sum, s) => sum + s.readinessScore, 0) / studentsWithReadiness.length)
     : 0
 
-  // At-risk students: low progress, low quiz avg, low readiness, or inactive > 14 days
+  // At-risk students: readiness below 70, low progress, low quiz avg, or inactive > 14 days
   const atRiskStudents = studentStats.filter((s) => {
+    const lowReadiness = s.readinessScore > 0 && s.readinessScore < 70
     const lowProgress = s.overallProgress < 50
     const lowQuiz = s.avgQuizScore > 0 && s.avgQuizScore < 70
-    const highRisk = s.readinessScore > 0 && s.readinessScore < 50
     const inactive = s.daysSinceActive !== null && s.daysSinceActive > 14
-    return lowProgress || lowQuiz || highRisk || inactive
+    return lowReadiness || lowProgress || lowQuiz || inactive
   })
 
   // Chapter-level class analytics
   const chapterClassScores = computeChapterClassScores(chapters, progressRecords)
   const weakestChapters = [...chapterClassScores].sort((a, b) => a.avgScore - b.avgScore).slice(0, 5)
   const strongestChapters = [...chapterClassScores].sort((a, b) => b.avgScore - a.avgScore).slice(0, 5)
+
+  // Board readiness overview counts
+  const readyCount = studentStats.filter((s) => s.readinessLevel === 'Ready').length
+  const nearlyReadyCount = studentStats.filter((s) => s.readinessLevel === 'Nearly Ready').length
+  const needsReviewCount = studentStats.filter((s) => s.readinessLevel === 'Needs Review').length
+  const atRiskCount = studentStats.filter((s) => s.readinessLevel === 'At Risk').length
 
   // Recommended instructor actions
   const recommendedActions: string[] = []
@@ -291,9 +354,9 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
 
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
             <div className={`text-2xl font-bold ${
-              classAvgReadiness >= 85 ? 'text-green-400' :
-              classAvgReadiness >= 70 ? 'text-blue-400' :
-              classAvgReadiness >= 50 ? 'text-yellow-400' :
+              classAvgReadiness >= 90 ? 'text-green-400' :
+              classAvgReadiness >= 80 ? 'text-yellow-400' :
+              classAvgReadiness >= 70 ? 'text-orange-400' :
               classAvgReadiness > 0 ? 'text-red-400' : 'text-gray-500'
             }`}>
               {classAvgReadiness > 0 ? classAvgReadiness : '—'}
@@ -342,6 +405,108 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
           </form>
         </div>
 
+        {/* Board Readiness Overview */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+          <div className="p-6 border-b border-gray-800">
+            <h2 className="text-xl font-semibold text-white">Board Readiness Overview</h2>
+            <p className="text-sm text-gray-400 mt-1">At-a-glance board exam readiness across your roster</p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 border-b border-gray-800">
+            <div className="bg-gray-950 border border-green-900/30 rounded-xl p-4 text-center">
+              <div className="text-3xl font-bold text-green-400">{readyCount}</div>
+              <div className="text-xs text-gray-400 mt-1">Ready</div>
+            </div>
+            <div className="bg-gray-950 border border-yellow-900/30 rounded-xl p-4 text-center">
+              <div className="text-3xl font-bold text-yellow-400">{nearlyReadyCount}</div>
+              <div className="text-xs text-gray-400 mt-1">Nearly Ready</div>
+            </div>
+            <div className="bg-gray-950 border border-orange-900/30 rounded-xl p-4 text-center">
+              <div className="text-3xl font-bold text-orange-400">{needsReviewCount}</div>
+              <div className="text-xs text-gray-400 mt-1">Needs Review</div>
+            </div>
+            <div className="bg-gray-950 border border-red-900/30 rounded-xl p-4 text-center">
+              <div className="text-3xl font-bold text-red-400">{atRiskCount}</div>
+              <div className="text-xs text-gray-400 mt-1">At Risk</div>
+            </div>
+          </div>
+
+          {filteredStudents.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="text-left text-sm text-gray-400 border-b border-gray-800">
+                    <th className="p-4">Student</th>
+                    <th className="p-4">Readiness Score</th>
+                    <th className="p-4">Status</th>
+                    <th className="p-4">Weakest Category</th>
+                    <th className="p-4">Last Activity</th>
+                  </tr>
+                </thead>
+                <tbody className="text-sm">
+                  {filteredStudents.map((student) => (
+                    <tr key={student.id} className="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors">
+                      <td className="p-4">
+                        <div className="text-white font-medium">{student.full_name}</div>
+                        <div className="text-gray-500 text-xs">{student.email}</div>
+                      </td>
+                      <td className="p-4">
+                        <span className={`text-xl font-bold ${getReadinessColorClass(student.readinessScore)}`}>
+                          {student.readinessScore > 0 ? student.readinessScore : '—'}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <span className={`px-2 py-1 rounded text-xs font-semibold border ${readinessBadgeClasses(student.readinessLevel)}`}>
+                          {student.readinessLevel}
+                        </span>
+                      </td>
+                      <td className="p-4 text-gray-400">
+                        {student.weakestCategory || '—'}
+                      </td>
+                      <td className="p-4 text-gray-400">
+                        {student.daysSinceActive !== null ? `${student.daysSinceActive}d ago` : 'Never'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="p-8 text-center text-gray-400">
+              No students match your search.
+            </div>
+          )}
+        </div>
+
+        {/* Hours Pending Approval Queue Placeholder */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+          <div className="p-6 border-b border-gray-800">
+            <h2 className="text-xl font-semibold text-white">Hours Pending Approval</h2>
+            <p className="text-sm text-gray-400 mt-1">Approval workflow coming soon</p>
+          </div>
+          {Object.keys(pendingByStudent).length > 0 ? (
+            <div className="divide-y divide-gray-800">
+              {Object.entries(pendingByStudent).map(([userId, minutes]) => {
+                const student = rosterStudents.find((s) => s.id === userId)
+                if (!student) return null
+                return (
+                  <div key={userId} className="p-5 flex items-center justify-between">
+                    <div>
+                      <p className="text-white font-medium">{student.full_name}</p>
+                      <p className="text-xs text-gray-500">{student.email}</p>
+                    </div>
+                    <div className="text-xl font-bold text-yellow-400">{formatMinutes(minutes)}</div>
+                  </div>
+                )
+              })}
+            </div>
+          ) : (
+            <div className="p-8 text-center text-gray-400">
+              No hours pending approval.
+            </div>
+          )}
+        </div>
+
         {/* School Analytics */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Students At Risk */}
@@ -349,7 +514,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
             <div className="p-6 border-b border-gray-800">
               <h2 className="text-xl font-semibold text-white">Students At Risk</h2>
               <p className="text-sm text-gray-400 mt-1">
-                Low progress, low quiz scores, low readiness, or inactive 14+ days
+                Readiness below 70, low progress, low quiz scores, or inactive 14+ days
               </p>
             </div>
             {atRiskStudents.length > 0 ? (
@@ -365,9 +530,9 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
                   <tbody className="text-sm">
                     {atRiskStudents.map((student) => {
                       const factors: string[] = []
+                      if (student.readinessScore > 0 && student.readinessScore < 70) factors.push('Low readiness')
                       if (student.overallProgress < 50) factors.push('Low progress')
                       if (student.avgQuizScore > 0 && student.avgQuizScore < 70) factors.push('Low quiz avg')
-                      if (student.readinessScore > 0 && student.readinessScore < 50) factors.push('High board risk')
                       if (student.daysSinceActive !== null && student.daysSinceActive > 14) factors.push('Inactive')
                       return (
                         <tr key={student.id} className="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors">

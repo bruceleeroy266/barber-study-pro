@@ -1,8 +1,17 @@
 import { createClient } from '@/lib/supabase-server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { StudentProgress } from '@/types'
+import { QuizAttempt, StudentProgress } from '@/types'
 import { localChapters } from '@/lib/local-data'
+import { allQuizQuestions } from '@/lib/quiz-data'
+import { calculateBoardReadiness } from '@/lib/readiness'
+import { analyzePerformance } from '@/lib/analytics'
+import { generateStudyPlan } from '@/lib/recommendations'
+import { getDemoMissedQuestionsForUser } from '@/lib/demo-analytics'
+import BoardReadinessCard from '@/components/BoardReadinessCard'
+import WeakAreaAnalytics from '@/components/WeakAreaAnalytics'
+import StudyRecommendations from '@/components/StudyRecommendations'
+import AnalyticsCharts from '@/components/AnalyticsCharts'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -30,6 +39,13 @@ export default async function DashboardPage() {
     .select('*')
     .eq('user_id', user?.id) as { data: StudentProgress[] | null; error: any }
 
+  // Get quiz attempts
+  const { data: attempts } = await supabase
+    .from('quiz_attempts')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('completed_at', { ascending: false }) as { data: QuizAttempt[] | null; error: any }
+
   // Calculate stats
   const totalChapters = chapters.length
   const completedChapters = progress?.filter(p => p.progress_percentage === 100).length || 0
@@ -39,6 +55,49 @@ export default async function DashboardPage() {
   const averageProgress = totalChapters > 0
     ? Math.round(totalProgressSum / totalChapters)
     : 0
+
+  // Phase 5 analytics
+  const attemptRecords = attempts || []
+  const progressRecords = progress || []
+  const questions = Object.values(allQuizQuestions).flat()
+
+  const analytics = analyzePerformance({
+    userId: user.id,
+    attempts: attemptRecords,
+    progress: progressRecords,
+    chapters,
+    questions,
+  })
+
+  const readiness = calculateBoardReadiness({
+    userId: user.id,
+    attempts: attemptRecords,
+    progress: progressRecords,
+    totalChapters,
+    streakDays: analytics.averageScore > 0 ? 5 : 0,
+  })
+
+  // Derive missed questions; fall back to demo data when none exist
+  const { buildMissedQuestions } = await import('@/lib/analytics')
+  let missedQuestions = buildMissedQuestions({
+    userId: user.id,
+    attempts: attemptRecords,
+    progress: progressRecords,
+    chapters,
+    questions,
+  })
+  if (missedQuestions.length === 0) {
+    missedQuestions = getDemoMissedQuestionsForUser(user.id)
+  }
+
+  const recommendations = generateStudyPlan({
+    userId: user.id,
+    readiness,
+    weakAreas: analytics.weakAreas,
+    strongAreas: analytics.strongAreas,
+    missedQuestions,
+    totalChapters,
+  })
 
   // Find continue chapter (first incomplete)
   const continueChapter = chapters?.find(chapter => {
@@ -102,6 +161,27 @@ export default async function DashboardPage() {
           <div className="text-sm text-gray-400">Overall Progress</div>
         </div>
       </div>
+
+      {/* Board Readiness */}
+      <BoardReadinessCard readiness={readiness} />
+
+      {/* Weak / Strong Areas + Recommendations */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <div className="xl:col-span-2">
+          <WeakAreaAnalytics weakAreas={analytics.weakAreas} strongAreas={analytics.strongAreas} />
+        </div>
+        <div>
+          <StudyRecommendations recommendations={recommendations} />
+        </div>
+      </div>
+
+      {/* Analytics Charts */}
+      <AnalyticsCharts
+        readinessScore={readiness.score}
+        categoryPerformance={analytics.categoryPerformance}
+        chapterPerformance={analytics.chapterPerformance}
+        missedQuestionTrend={analytics.missedQuestionTrend}
+      />
 
       {/* Continue Studying */}
       {continueChapter && (

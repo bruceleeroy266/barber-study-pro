@@ -1,10 +1,20 @@
 import { createClient } from '@/lib/supabase-server'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
-import { Profile, StudentProgress, QuizAttempt, InstructorNote } from '@/types'
+import { Profile, StudentProgress, QuizAttempt, InstructorNote, HourLog, HourStatus } from '@/types'
 import { localChapters } from '@/lib/local-data'
+import { allQuizQuestions } from '@/lib/quiz-data'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
-import { demoStudents, demoStudentProgress, demoStudentQuizAttempts, demoInstructorNotes } from '@/lib/demo-data'
+import { demoStudents, demoStudentProgress, demoStudentQuizAttempts, demoInstructorNotes, demoHourLogs } from '@/lib/demo-data'
+import { getDemoMissedQuestionsForUser } from '@/lib/demo-analytics'
+import { calculateBoardReadiness } from '@/lib/readiness'
+import { analyzePerformance } from '@/lib/analytics'
+import { generateStudyPlan } from '@/lib/recommendations'
+import BoardReadinessCard from '@/components/BoardReadinessCard'
+import WeakAreaAnalytics from '@/components/WeakAreaAnalytics'
+import StudyRecommendations from '@/components/StudyRecommendations'
+import AnalyticsCharts from '@/components/AnalyticsCharts'
+import MissedQuestionBank from '@/components/MissedQuestionBank'
 import { AddNoteForm } from './AddNoteForm'
 import { PrintButton } from './PrintButton'
 
@@ -21,6 +31,25 @@ function formatDate(dateString: string | null): string {
     day: 'numeric',
     year: 'numeric',
   })
+}
+
+function formatMinutes(totalMinutes: number): string {
+  const h = Math.floor(totalMinutes / 60)
+  const m = totalMinutes % 60
+  return `${h}h ${m}m`
+}
+
+function statusBadgeClasses(status: HourStatus): string {
+  switch (status) {
+    case 'approved':
+      return 'bg-green-500/20 text-green-400 border-green-500/30'
+    case 'pending':
+      return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
+    case 'rejected':
+      return 'bg-red-500/20 text-red-400 border-red-500/30'
+    default:
+      return 'bg-gray-700 text-gray-300 border-gray-600'
+  }
 }
 
 function formatDaysAgo(dateString: string | null): string {
@@ -193,6 +222,34 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     noteRecords = demoInstructorNotes.filter((n) => n.student_id === studentId)
   }
 
+  // Get hour logs
+  const { data: hourLogs } = await supabase
+    .from('hour_logs')
+    .select('*')
+    .eq('user_id', studentId)
+    .order('date', { ascending: false }) as { data: HourLog[] | null; error: any }
+
+  let hourLogRecords = hourLogs || []
+  if (hourLogRecords.length === 0) {
+    hourLogRecords = demoHourLogs.filter((h) => h.user_id === studentId)
+    hourLogRecords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  }
+
+  const REQUIRED_MINUTES = 1500 * 60
+  const approvedMinutes = hourLogRecords
+    .filter((h) => h.status === 'approved')
+    .reduce((sum, h) => sum + h.minutes, 0)
+  const pendingMinutes = hourLogRecords
+    .filter((h) => h.status === 'pending')
+    .reduce((sum, h) => sum + h.minutes, 0)
+  const rejectedMinutes = hourLogRecords
+    .filter((h) => h.status === 'rejected')
+    .reduce((sum, h) => sum + h.minutes, 0)
+  const remainingMinutes = Math.max(0, REQUIRED_MINUTES - approvedMinutes)
+  const completionPercentage = REQUIRED_MINUTES > 0
+    ? Math.round((approvedMinutes / REQUIRED_MINUTES) * 100)
+    : 0
+
   const totalChapters = chapters?.length || 0
   const completedChapters = progressRecords.filter((p) => p.progress_percentage === 100).length
   const overallProgress = totalChapters > 0
@@ -213,7 +270,45 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
 
   const readiness = getReadinessEstimate(overallProgress, avgQuizScore)
 
-  // Weak area analytics
+  // Phase 5 analytics
+  const questions = Object.values(allQuizQuestions).flat()
+  const analytics = analyzePerformance({
+    userId: studentId,
+    attempts: attemptRecords,
+    progress: progressRecords,
+    chapters,
+    questions,
+  })
+
+  const boardReadiness = calculateBoardReadiness({
+    userId: studentId,
+    attempts: attemptRecords,
+    progress: progressRecords,
+    totalChapters,
+  })
+
+  const { buildMissedQuestions } = await import('@/lib/analytics')
+  let missedQuestions = buildMissedQuestions({
+    userId: studentId,
+    attempts: attemptRecords,
+    progress: progressRecords,
+    chapters,
+    questions,
+  })
+  if (missedQuestions.length === 0) {
+    missedQuestions = getDemoMissedQuestionsForUser(studentId)
+  }
+
+  const recommendations = generateStudyPlan({
+    userId: studentId,
+    readiness: boardReadiness,
+    weakAreas: analytics.weakAreas,
+    strongAreas: analytics.strongAreas,
+    missedQuestions,
+    totalChapters,
+  })
+
+  // Weak area analytics (legacy)
   const chapterScores = computeChapterScores(chapters, progressRecords)
   const attemptedChapters = chapterScores.filter((c) => c.attempted)
   const hasEnoughQuizData = attemptedChapters.length >= 2
@@ -474,6 +569,52 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
             <div className={`text-2xl font-bold ${readiness.color}`}>{readiness.score}</div>
             <div className="text-xs text-gray-400 mt-1">{readiness.label}</div>
+          </div>
+        </div>
+
+        {/* Phase 5 — Board Readiness & Analytics */}
+        <BoardReadinessCard readiness={boardReadiness} />
+
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div className="xl:col-span-2">
+            <WeakAreaAnalytics weakAreas={analytics.weakAreas} strongAreas={analytics.strongAreas} />
+          </div>
+          <div>
+            <StudyRecommendations recommendations={recommendations} />
+          </div>
+        </div>
+
+        <AnalyticsCharts
+          readinessScore={boardReadiness.score}
+          categoryPerformance={analytics.categoryPerformance}
+          chapterPerformance={analytics.chapterPerformance}
+          missedQuestionTrend={analytics.missedQuestionTrend}
+        />
+
+        {/* Missed Question Statistics */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+          <div className="p-6 border-b border-gray-800 flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-semibold text-white">Missed Question Bank</h2>
+              <p className="text-sm text-gray-400 mt-1">
+                {missedQuestions.length} missed question{missedQuestions.length === 1 ? '' : 's'} recorded
+              </p>
+            </div>
+            <Link
+              href={`/instructor/student/${studentId}`}
+              className="text-sm text-[#D4AF37] hover:text-[#F4E4A6] font-medium"
+            >
+              View full report →
+            </Link>
+          </div>
+          <div className="p-6">
+            {missedQuestions.length > 0 ? (
+              <MissedQuestionBank questions={missedQuestions.slice(0, 10)} />
+            ) : (
+              <div className="text-center text-gray-400 py-8">
+                No missed questions yet.
+              </div>
+            )}
           </div>
         </div>
 
@@ -785,6 +926,209 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
             </div>
           )}
         </div>
+
+        {/* Hour Tracker */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+          <div className="p-6 border-b border-gray-800">
+            <h2 className="text-xl font-semibold text-white">Hour Tracker</h2>
+            <p className="text-sm text-gray-400 mt-1">
+              Only instructor-approved hours count toward official completed hours.
+            </p>
+          </div>
+
+          {/* Hour Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 p-6 border-b border-gray-800">
+            <div className="bg-gray-950 border border-gray-800 rounded-xl p-4">
+              <div className="text-xl font-bold text-green-400">{formatMinutes(approvedMinutes)}</div>
+              <div className="text-xs text-gray-400 mt-1">Approved Hours</div>
+            </div>
+            <div className="bg-gray-950 border border-gray-800 rounded-xl p-4">
+              <div className="text-xl font-bold text-yellow-400">{formatMinutes(pendingMinutes)}</div>
+              <div className="text-xs text-gray-400 mt-1">Pending Approval</div>
+            </div>
+            <div className="bg-gray-950 border border-gray-800 rounded-xl p-4">
+              <div className="text-xl font-bold text-[#D4AF37]">{formatMinutes(REQUIRED_MINUTES)}</div>
+              <div className="text-xs text-gray-400 mt-1">Required Hours</div>
+            </div>
+            <div className="bg-gray-950 border border-gray-800 rounded-xl p-4">
+              <div className="text-xl font-bold text-blue-400">{formatMinutes(remainingMinutes)}</div>
+              <div className="text-xs text-gray-400 mt-1">Remaining Hours</div>
+            </div>
+            <div className="bg-gray-950 border border-gray-800 rounded-xl p-4">
+              <div className="text-xl font-bold text-purple-400">{completionPercentage}%</div>
+              <div className="text-xs text-gray-400 mt-1">Completion</div>
+            </div>
+          </div>
+
+          {/* Daily Hour Log */}
+          <div className="p-6 border-b border-gray-800">
+            <h3 className="text-lg font-semibold text-white mb-4">Daily Hour Log</h3>
+            {hourLogRecords.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="text-left text-sm text-gray-400 border-b border-gray-800">
+                      <th className="p-4">Date</th>
+                      <th className="p-4">Category</th>
+                      <th className="p-4">Minutes</th>
+                      <th className="p-4">Display</th>
+                      <th className="p-4">Status</th>
+                      <th className="p-4">Notes</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-sm">
+                    {hourLogRecords.map((log) => (
+                      <tr key={log.id} className="border-b border-gray-800/50">
+                        <td className="p-4 text-white">{formatDate(log.date)}</td>
+                        <td className="p-4 text-gray-300">{log.category}</td>
+                        <td className="p-4 text-gray-300">{log.minutes}</td>
+                        <td className="p-4 text-white font-medium">{formatMinutes(log.minutes)}</td>
+                        <td className="p-4">
+                          <span className={`px-2 py-0.5 rounded text-xs font-semibold uppercase border ${statusBadgeClasses(log.status)}`}>
+                            {log.status}
+                          </span>
+                        </td>
+                        <td className="p-4 text-gray-500">{log.notes || '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="p-8 text-center text-gray-400">
+                No hour logs yet.
+                <p className="text-sm text-gray-500 mt-2">Daily logs will appear here once submitted.</p>
+              </div>
+            )}
+          </div>
+
+          {/* Rejected Logs */}
+          {hourLogRecords.some((h) => h.status === 'rejected') && (
+            <div className="p-6">
+              <h3 className="text-lg font-semibold text-white mb-4">Rejected Logs</h3>
+              <p className="text-sm text-gray-500 mb-3">
+                These logs do not count toward official hours and may need to be resubmitted.
+              </p>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="text-left text-sm text-gray-400 border-b border-gray-800">
+                      <th className="p-4">Date</th>
+                      <th className="p-4">Category</th>
+                      <th className="p-4">Hours</th>
+                      <th className="p-4">Notes</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-sm">
+                    {hourLogRecords
+                      .filter((h) => h.status === 'rejected')
+                      .map((log) => (
+                        <tr key={log.id} className="border-b border-gray-800/50">
+                          <td className="p-4 text-white">{formatDate(log.date)}</td>
+                          <td className="p-4 text-gray-300">{log.category}</td>
+                          <td className="p-4 text-white">{formatMinutes(log.minutes)}</td>
+                          <td className="p-4 text-gray-500">{log.notes || '—'}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Board Hours Summary Report */}
+        <section id="board-hours-report" className="report-hours-section bg-white text-black rounded-xl p-8 shadow-lg print:shadow-none">
+          <style>{`
+            @media print {
+              body * { visibility: hidden; }
+              .report-hours-section, .report-hours-section * { visibility: visible; }
+              .report-hours-section { position: absolute; left: 0; top: 0; width: 100%; padding: 0.5in !important; }
+              .report-hours-section button { display: none !important; }
+            }
+          `}</style>
+
+          <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-4">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">Board Hours Summary Report</h2>
+              <p className="text-sm text-gray-500">Generated {new Date().toLocaleDateString()}</p>
+            </div>
+            <PrintButton />
+          </div>
+
+          {/* Student Info */}
+          <div className="mb-6">
+            <h3 className="text-xl font-bold text-gray-900">{resolvedStudent.full_name}</h3>
+            <p className="text-gray-600">{resolvedStudent.email}</p>
+            <p className="text-sm text-gray-500 capitalize">Role: {resolvedStudent.role}</p>
+            <p className="text-sm text-gray-500">Program: Barbering</p>
+            <p className="text-sm text-gray-500">State: Oklahoma</p>
+          </div>
+
+          {/* Official Hour Totals */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div className="border border-gray-200 rounded-lg p-4">
+              <div className="text-2xl font-bold text-gray-900">{formatMinutes(REQUIRED_MINUTES)}</div>
+              <div className="text-xs text-gray-500">Required Hours</div>
+            </div>
+            <div className="border border-gray-200 rounded-lg p-4">
+              <div className="text-2xl font-bold text-green-600">{formatMinutes(approvedMinutes)}</div>
+              <div className="text-xs text-gray-500">Approved Hours</div>
+            </div>
+            <div className="border border-gray-200 rounded-lg p-4">
+              <div className="text-2xl font-bold text-blue-600">{formatMinutes(remainingMinutes)}</div>
+              <div className="text-xs text-gray-500">Remaining Hours</div>
+            </div>
+            <div className="border border-gray-200 rounded-lg p-4">
+              <div className="text-2xl font-bold text-purple-600">{completionPercentage}%</div>
+              <div className="text-xs text-gray-500">Completion</div>
+            </div>
+          </div>
+
+          {/* Approved Daily Logs */}
+          <div className="mb-6 print-break-inside">
+            <h3 className="text-lg font-bold text-gray-900 mb-3">Approved Daily Hour Logs</h3>
+            {hourLogRecords.filter((h) => h.status === 'approved').length > 0 ? (
+              <table className="w-full text-sm border-collapse">
+                <thead>
+                  <tr className="border-b border-gray-200 text-left">
+                    <th className="py-2 pr-4">Date</th>
+                    <th className="py-2 pr-4">Category</th>
+                    <th className="py-2 pr-4">Hours</th>
+                    <th className="py-2">Notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {hourLogRecords
+                    .filter((h) => h.status === 'approved')
+                    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+                    .map((log) => (
+                      <tr key={log.id} className="border-b border-gray-100">
+                        <td className="py-2 pr-4">{formatDate(log.date)}</td>
+                        <td className="py-2 pr-4">{log.category}</td>
+                        <td className="py-2 pr-4">{formatMinutes(log.minutes)}</td>
+                        <td className="py-2">{log.notes || '—'}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            ) : (
+              <p className="text-gray-500">No approved hours yet.</p>
+            )}
+          </div>
+
+          {/* Disclaimer */}
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+            <p className="text-sm text-yellow-800">
+              <span className="font-semibold">Disclaimer:</span> Verify state-specific submission requirements before submitting to a licensing board. This report is a summary of approved hours only and is not an official state board form.
+            </p>
+          </div>
+
+          {/* Footer */}
+          <div className="text-center text-xs text-gray-400 mt-8 pt-4 border-t border-gray-200">
+            Barber Study Pro — Board Hours Summary Report
+          </div>
+        </section>
       </div>
     </div>
   )

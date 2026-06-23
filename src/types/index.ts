@@ -100,3 +100,109 @@ export interface InstructorNote {
   note_text: string
   created_at: string
 }
+
+export type HourCategory = 'Theory' | 'Practical' | 'Clinic' | 'Sanitation' | 'Makeup Hours' | 'Other'
+export type HourStatus = 'pending' | 'approved' | 'rejected'
+
+export interface HourLog {
+  id: string
+  user_id: string
+  date: string
+  category: HourCategory
+  minutes: number
+  status: HourStatus
+  notes: string | null
+  created_at: string
+  updated_at: string
+}
+
+// ============================================================================
+// PHASE 5 — BOARD READINESS, ANALYTICS, AND MISSED QUESTIONS
+// ============================================================================
+
+export type ReadinessLevel = 'Ready' | 'Nearly Ready' | 'Needs Review' | 'At Risk'
+
+export interface BoardReadiness {
+  userId: string
+  score: number
+  level: ReadinessLevel
+  quizAverage: number
+  quizCompletionRate: number
+  chapterCompletionRate: number
+  flashcardEngagementRate: number
+  consistencyScore: number
+  improvementTrend: 'improving' | 'stable' | 'declining'
+  totalQuestionsAnswered: number
+  chaptersCompleted: number
+  totalChapters: number
+  recommendedStudyMinutes: number
+  updatedAt: string
+}
+
+export interface AreaPerformance {
+  id: string
+  name: string
+  chapterNumber: number | null
+  category: string
+  score: number
+  attempts: number
+  trend: 'improving' | 'stable' | 'declining'
+  lastAttemptAt: string | null
+}
+
+export interface StudyRecommendation {
+  id: string
+  type: 'study' | 'review' | 'practice'
+  title: string
+  description: string
+  chapterNumber: number | null
+  priority: 'critical' | 'high' | 'medium' | 'low'
+  estimatedMinutes: number
+}
+
+export interface MissedQuestion {
+  id: string
+  userId: string
+  questionId: string
+  question: string
+  correctAnswer: string
+  studentAnswer: string
+  explanation: string | null
+  chapterId: string
+  chapterNumber: number
+  category: string
+  quizId: string
+  missedAt: string
+  retakenAt: string | null
+  timesMissed: number
+}
+
+export interface StudentAnalyticsSummary {
+  userId: string
+  totalQuestionsAnswered: number
+  totalCorrect: number
+  totalIncorrect: number
+  averageScore: number
+  quizzesCompleted: number
+  flashcardsReviewed: number
+  chaptersCompleted: number
+  totalChapters: number
+  streakDays: number
+  lastStudyAt: string | null
+  readiness: BoardReadiness
+  weakAreas: AreaPerformance[]
+  strongAreas: AreaPerformance[]
+  recommendations: StudyRecommendation[]
+  missedQuestions: MissedQuestion[]
+}
+
+export interface InstructorReadinessOverview {
+  userId: string
+  fullName: string
+  email: string
+  role: string
+  readinessScore: number
+  readinessLevel: ReadinessLevel
+  weakestCategory: string | null
+  lastActivityAt: string | null
+}

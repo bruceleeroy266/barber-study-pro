@@ -2,6 +2,15 @@ import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import { StudentProgress, QuizAttempt } from '@/types'
 import { localChapters } from '@/lib/local-data'
+import { allQuizQuestions } from '@/lib/quiz-data'
+import { calculateBoardReadiness } from '@/lib/readiness'
+import { analyzePerformance } from '@/lib/analytics'
+import { generateStudyPlan } from '@/lib/recommendations'
+import { getDemoMissedQuestionsForUser } from '@/lib/demo-analytics'
+import BoardReadinessCard from '@/components/BoardReadinessCard'
+import WeakAreaAnalytics from '@/components/WeakAreaAnalytics'
+import StudyRecommendations from '@/components/StudyRecommendations'
+import AnalyticsCharts from '@/components/AnalyticsCharts'
 
 export default async function ProgressPage() {
   const supabase = await createClient()
@@ -36,12 +45,74 @@ export default async function ProgressPage() {
     ? Math.round(attempts.reduce((acc, a) => acc + a.percentage, 0) / attempts.length)
     : 0
 
+  // Phase 5 analytics
+  const attemptRecords = attempts || []
+  const progressRecords = progress || []
+  const questions = Object.values(allQuizQuestions).flat()
+
+  const analytics = analyzePerformance({
+    userId: user.id,
+    attempts: attemptRecords,
+    progress: progressRecords,
+    chapters,
+    questions,
+  })
+
+  const readiness = calculateBoardReadiness({
+    userId: user.id,
+    attempts: attemptRecords,
+    progress: progressRecords,
+    totalChapters,
+  })
+
+  const { buildMissedQuestions } = await import('@/lib/analytics')
+  let missedQuestions = buildMissedQuestions({
+    userId: user.id,
+    attempts: attemptRecords,
+    progress: progressRecords,
+    chapters,
+    questions,
+  })
+  if (missedQuestions.length === 0) {
+    missedQuestions = getDemoMissedQuestionsForUser(user.id)
+  }
+
+  const recommendations = generateStudyPlan({
+    userId: user.id,
+    readiness,
+    weakAreas: analytics.weakAreas,
+    strongAreas: analytics.strongAreas,
+    missedQuestions,
+    totalChapters,
+  })
+
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold text-white mb-2">My Progress</h1>
         <p className="text-gray-400">Track your learning journey</p>
       </div>
+
+      {/* Board Readiness */}
+      <BoardReadinessCard readiness={readiness} />
+
+      {/* Weak / Strong Areas + Recommendations */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <div className="xl:col-span-2">
+          <WeakAreaAnalytics weakAreas={analytics.weakAreas} strongAreas={analytics.strongAreas} />
+        </div>
+        <div>
+          <StudyRecommendations recommendations={recommendations} />
+        </div>
+      </div>
+
+      {/* Analytics Charts */}
+      <AnalyticsCharts
+        readinessScore={readiness.score}
+        categoryPerformance={analytics.categoryPerformance}
+        chapterPerformance={analytics.chapterPerformance}
+        missedQuestionTrend={analytics.missedQuestionTrend}
+      />
 
       {/* Stats Overview */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

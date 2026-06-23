@@ -1,7 +1,7 @@
 // Demo data for soft launch without Supabase
 // This provides safe mock data when NEXT_PUBLIC_DEMO_MODE=true
 
-import { Chapter, Flashcard, Quiz, QuizQuestion, QuizAttempt, StudentProgress, Profile, InstructorNote } from '@/types'
+import { Chapter, Flashcard, Quiz, QuizQuestion, QuizAttempt, StudentProgress, Profile, InstructorNote, HourLog } from '@/types'
 import { chapterFlashcards as realFlashcards } from './flashcards-data'
 import { batch1Flashcards, batch4Flashcards } from './orphaned-flashcards'
 import { allQuizQuestions } from './quiz-data'
@@ -329,10 +329,13 @@ export const demoStudentProgress: StudentProgress[] = [
 
   // Jordan Smith — beginner apprentice
   { id: 'prog-jordan-1', user_id: 'demo-student-3', chapter_id: 'ch-1', flashcards_completed: true, quiz_completed: true, best_quiz_score: 72, last_studied_at: '2026-06-21T13:00:00Z', progress_percentage: 100 },
-  { id: 'prog-jordan-2', user_id: 'demo-student-3', chapter_id: 'ch-2', flashcards_completed: false, quiz_completed: false, best_quiz_score: null, last_studied_at: '2026-06-20T09:00:00Z', progress_percentage: 30 },
+  { id: 'prog-jordan-2', user_id: 'demo-student-3', chapter_id: 'ch-2', flashcards_completed: true, quiz_completed: true, best_quiz_score: 68, last_studied_at: '2026-06-20T09:00:00Z', progress_percentage: 100 },
+  { id: 'prog-jordan-3', user_id: 'demo-student-3', chapter_id: 'ch-3', flashcards_completed: false, quiz_completed: false, best_quiz_score: null, last_studied_at: '2026-06-19T09:00:00Z', progress_percentage: 50 },
 
-  // Taylor Brown — struggling, only partial ch 1
-  { id: 'prog-taylor-1', user_id: 'demo-student-4', chapter_id: 'ch-1', flashcards_completed: false, quiz_completed: false, best_quiz_score: null, last_studied_at: '2026-06-10T10:00:00Z', progress_percentage: 25 },
+  // Taylor Brown — struggling, needs review
+  { id: 'prog-taylor-1', user_id: 'demo-student-4', chapter_id: 'ch-1', flashcards_completed: true, quiz_completed: true, best_quiz_score: 65, last_studied_at: '2026-06-21T10:00:00Z', progress_percentage: 100 },
+  { id: 'prog-taylor-2', user_id: 'demo-student-4', chapter_id: 'ch-2', flashcards_completed: true, quiz_completed: false, best_quiz_score: 58, last_studied_at: '2026-06-20T10:00:00Z', progress_percentage: 60 },
+  { id: 'prog-taylor-3', user_id: 'demo-student-4', chapter_id: 'ch-4', flashcards_completed: false, quiz_completed: false, best_quiz_score: 55, last_studied_at: '2026-06-18T10:00:00Z', progress_percentage: 40 },
 ]
 
 export const demoStudentQuizAttempts: QuizAttempt[] = [
@@ -350,8 +353,12 @@ export const demoStudentQuizAttempts: QuizAttempt[] = [
 
   // Jordan Smith
   { id: 'attempt-jordan-1', user_id: 'demo-student-3', quiz_id: 'quiz-1', score: 18, total_questions: 25, percentage: 72, answers_json: {}, completed_at: '2026-06-21T13:30:00Z' },
+  { id: 'attempt-jordan-2', user_id: 'demo-student-3', quiz_id: 'quiz-2', score: 17, total_questions: 25, percentage: 68, answers_json: {}, completed_at: '2026-06-20T09:30:00Z' },
 
-  // Taylor Brown — no quiz attempts yet
+  // Taylor Brown — struggling
+  { id: 'attempt-taylor-1', user_id: 'demo-student-4', quiz_id: 'quiz-1', score: 16, total_questions: 25, percentage: 65, answers_json: {}, completed_at: '2026-06-21T10:30:00Z' },
+  { id: 'attempt-taylor-2', user_id: 'demo-student-4', quiz_id: 'quiz-2', score: 14, total_questions: 25, percentage: 58, answers_json: {}, completed_at: '2026-06-20T10:30:00Z' },
+  { id: 'attempt-taylor-3', user_id: 'demo-student-4', quiz_id: 'quiz-4', score: 14, total_questions: 25, percentage: 55, answers_json: {}, completed_at: '2026-06-18T10:30:00Z' },
 ]
 
 // Demo instructor notes for the student detail fallback
@@ -392,6 +399,29 @@ export const demoInstructorNotes: InstructorNote[] = [
     note_text: 'Jordan scored 72% on Chapter 1. Schedule one-on-one remediation on infection control fundamentals before advancing.',
     created_at: '2026-06-21T14:00:00Z',
   },
+]
+
+// Demo hour logs for the hour tracker fallback
+export const demoHourLogs: HourLog[] = [
+  // Alex Johnson — approved logs
+  { id: 'hour-alex-1', user_id: 'demo-student-1', date: '2026-06-16', category: 'Theory', minutes: 240, status: 'approved', notes: 'Chapter 1-2 theory review', created_at: '2026-06-16T17:00:00Z', updated_at: '2026-06-16T17:00:00Z' },
+  { id: 'hour-alex-2', user_id: 'demo-student-1', date: '2026-06-17', category: 'Practical', minutes: 480, status: 'approved', notes: 'Clipper practice on mannequin', created_at: '2026-06-17T17:00:00Z', updated_at: '2026-06-17T17:00:00Z' },
+  { id: 'hour-alex-3', user_id: 'demo-student-1', date: '2026-06-18', category: 'Clinic', minutes: 495, status: 'approved', notes: 'Clinic floor — 3 haircuts', created_at: '2026-06-18T17:00:00Z', updated_at: '2026-06-18T17:00:00Z' },
+  { id: 'hour-alex-4', user_id: 'demo-student-1', date: '2026-06-19', category: 'Sanitation', minutes: 60, status: 'approved', notes: 'Shop sanitization', created_at: '2026-06-19T17:00:00Z', updated_at: '2026-06-19T17:00:00Z' },
+  { id: 'hour-alex-5', user_id: 'demo-student-1', date: '2026-06-20', category: 'Theory', minutes: 185, status: 'approved', notes: 'Anatomy review', created_at: '2026-06-20T17:00:00Z', updated_at: '2026-06-20T17:00:00Z' },
+  // Alex Johnson — pending log
+  { id: 'hour-alex-6', user_id: 'demo-student-1', date: '2026-06-21', category: 'Clinic', minutes: 480, status: 'pending', notes: 'Clinic floor — 4 haircuts', created_at: '2026-06-21T17:00:00Z', updated_at: '2026-06-21T17:00:00Z' },
+  // Alex Johnson — rejected log
+  { id: 'hour-alex-7', user_id: 'demo-student-1', date: '2026-06-15', category: 'Other', minutes: 120, status: 'rejected', notes: 'Incomplete log — no supervisor signature', created_at: '2026-06-15T17:00:00Z', updated_at: '2026-06-15T17:00:00Z' },
+  // Maria Garcia — approved logs
+  { id: 'hour-maria-1', user_id: 'demo-student-2', date: '2026-06-17', category: 'Theory', minutes: 180, status: 'approved', notes: 'Chapter 1 theory', created_at: '2026-06-17T17:00:00Z', updated_at: '2026-06-17T17:00:00Z' },
+  { id: 'hour-maria-2', user_id: 'demo-student-2', date: '2026-06-18', category: 'Practical', minutes: 360, status: 'approved', notes: 'Scissor work practice', created_at: '2026-06-18T17:00:00Z', updated_at: '2026-06-18T17:00:00Z' },
+  // Maria Garcia — pending log
+  { id: 'hour-maria-3', user_id: 'demo-student-2', date: '2026-06-21', category: 'Clinic', minutes: 240, status: 'pending', notes: 'Clinic floor', created_at: '2026-06-21T17:00:00Z', updated_at: '2026-06-21T17:00:00Z' },
+  // Jordan Smith — approved and pending
+  { id: 'hour-jordan-1', user_id: 'demo-student-3', date: '2026-06-19', category: 'Theory', minutes: 120, status: 'approved', notes: 'Chapter 1 theory', created_at: '2026-06-19T17:00:00Z', updated_at: '2026-06-19T17:00:00Z' },
+  { id: 'hour-jordan-2', user_id: 'demo-student-3', date: '2026-06-20', category: 'Practical', minutes: 240, status: 'approved', notes: 'Basic cuts', created_at: '2026-06-20T17:00:00Z', updated_at: '2026-06-20T17:00:00Z' },
+  { id: 'hour-jordan-3', user_id: 'demo-student-3', date: '2026-06-21', category: 'Clinic', minutes: 480, status: 'pending', notes: 'Clinic floor', created_at: '2026-06-21T17:00:00Z', updated_at: '2026-06-21T17:00:00Z' },
 ]
 
 // Helper to get all flashcards for a chapter

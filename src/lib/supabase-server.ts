@@ -9,6 +9,7 @@ import {
   demoStudentProgress,
   demoStudentQuizAttempts,
   demoInstructorNotes,
+  demoHourLogs,
   demoSchool,
   demoChapters,
   getDemoFlashcards,
@@ -86,6 +87,9 @@ function createMockQueryBuilder(tableName: string) {
       break
     case 'instructor_notes':
       currentData = [...demoInstructorNotes]
+      break
+    case 'hour_logs':
+      currentData = [...demoHourLogs]
       break
     case 'final_exam_attempts':
       currentData = []
