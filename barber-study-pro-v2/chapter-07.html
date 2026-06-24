@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 7: Basics of Chemistry | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .chapter-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
+        .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; }
+        .chapter-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
+        .content { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+        .section { margin-bottom: 3rem; }
+        .section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+        .section h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .section p, .section ul { margin-bottom: 1rem; color: #ccc; }
+        .section ul { margin-left: 1.5rem; }
+        .key-point { background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .key-point strong { color: var(--gold); }
+        .term { background: var(--medium-gray); padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 8px; }
+        .term strong { color: var(--gold); display: block; margin-bottom: 0.25rem; }
+        .study-tools { position: fixed; bottom: 2rem; right: 2rem; display: flex; gap: 1rem; }
+        .tool-btn { background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; }
+        .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; }
+        .nav-chapters { display: flex; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--medium-gray); }
+        .nav-chapters a { color: var(--gold); text-decoration: none; font-weight: 600; }
+
+        .quiz-section { background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
+        .quiz-section h2 { color: var(--gold); margin-bottom: 1.5rem; }
+        .quiz-question { margin-bottom: 1.5rem; }
+        .quiz-question p { font-weight: 600; margin-bottom: 0.75rem; color: var(--white); }
+        .quiz-options label { display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .quiz-options label:hover { background: rgba(212, 175, 55, 0.1); }
+        .quiz-options input[type="radio"] { margin-right: 0.75rem; }
+        .quiz-submit { background: var(--gold); color: var(--dark); border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+        .quiz-result { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: none; }
+        .quiz-result.correct { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; }
+        .quiz-result.incorrect { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <nav><div class="nav-container"><a href="index.html" class="logo">⚡ Barber Study Pro</a><a href="index.html#chapters" class="back-link">← Back</a></div></nav>
+    <header class="chapter-header">
+        <span class="chapter-number">CHAPTER 7</span>
+        <h1>Basics of Chemistry</h1>
+        <p>Matter, elements, pH scale, and chemical reactions in barbering</p>
+    </header>
+    <main class="content">
+        <section class="section">
+            <h2>🎯 Why Study Chemistry?</h2>
+            <p>Barbers work with chemical products daily — shampoos, conditioners, hair tonics, shaving creams, astringents, and chemical services. Understanding chemistry helps you:</p>
+            <ul>
+                <li>Choose the right products for different hair and skin types</li>
+                <li>Understand how products interact with hair and skin (e.g., pH effects)</li>
+                <li>Perform services safely and predict results</li>
+                <li>Avoid damage to hair or skin</li>
+            </ul>
+        </section>
+        <section class="section">
+            <h2>⚗️ Chemistry Areas</h2>
+            <div class="term">
+                <strong>Organic Chemistry</strong>
+                Study of substances containing carbon (most living things). Examples: gasoline, synthetic fabrics, plastics, pesticides, many hair products.
+            </div>
+            <div class="term">
+                <strong>Inorganic Chemistry</strong>
+                Study of substances without carbon. Examples: metals, minerals, water, air, ammonia.
+            </div>
+        </section>
+        <section class="section">
+            <h2>⚛️ Matter and Its Properties</h2>
+            <p>Matter is anything that occupies space and has mass. Three physical states:</p>
+            <ul>
+                <li><strong>Solid</strong> — Definite shape and volume (ice, wax)</li>
+                <li><strong>Liquid</strong> — Definite volume, takes shape of container (water, shampoo)</li>
+                <li><strong>Gas</strong> — No definite shape or volume; expands to fill container (air, vapor)</li>
+            </ul>
+            <p><strong>Physical changes</strong> — No new substance formed (melting ice, cutting hair)</p>
+            <p><strong>Chemical changes</strong> — New substances formed (oxidation during hair lightening)</p>
+        </section>
+        <section class="section">
+            <h2>🔬 Elements and Compounds</h2>
+            <div class="term">
+                <strong>Element</strong>
+                Simplest form of matter; cannot be broken down chemically. 118 known elements; ~98 occur naturally.
+            </div>
+            <div class="term">
+                <strong>Atom</strong>
+                Smallest particle of an element that retains its chemical identity. Basic building blocks of all matter.
+            </div>
+            <div class="term">
+                <strong>Compound</strong>
+                Chemical combination of two or more atoms of different elements in fixed proportions. Examples: water (H₂O), salt (NaCl).
+            </div>
+            <div class="key-point"><strong>Hair Composition:</strong> Made primarily of keratin protein containing carbon, oxygen, hydrogen, nitrogen, and sulfur (COHNS).</div>
+        </section>
+        <section class="section">
+            <h2>🔄 Chemical Reactions</h2>
+            <ul>
+                <li><strong>Oxidation</strong> — Addition of oxygen or loss of hydrogen/electrons. Example: Hydrogen peroxide lightens hair by oxidizing melanin.</li>
+                <li><strong>Reduction</strong> — Loss of oxygen or addition of hydrogen/electrons.</li>
+                <li><strong>Redox reactions</strong> — Reduction and oxidation always occur together.</li>
+                <li><strong>Endothermic</strong> — Absorbs heat/energy</li>
+                <li><strong>Exothermic</strong> — Releases heat/energy</li>
+            </ul>
+        </section>
+        <section class="section">
+            <h2>📊 pH Scale</h2>
+            <p>Measures acidity or alkalinity (0-14):</p>
+            <ul>
+                <li><strong>Below 7</strong> — Acidic (shrinks/hardens hair cuticle; conditioners, toners)</li>
+                <li><strong>7</strong> — Neutral (pure water)</li>
+                <li><strong>Above 7</strong> — Alkaline (softens/swells cuticle; shampoos, relaxers, perms)</li>
+            </ul>
+            <div class="key-point">Natural hair and skin pH is slightly acidic (4.5–5.5). This <strong>acid mantle</strong> protects against bacteria and keeps cuticle smooth.</div>
+        </section>
+        <section class="section">
+            <h2>📝 Chapter 7 Key Takeaways</h2>
+            <div class="key-point">
+                <ul style="margin-left: 1rem;">
+                    <li><strong>Organic chemistry</strong> studies carbon-containing substances; <strong>inorganic</strong> studies non-carbon</li>
+                    <li><strong>Atoms</strong> are basic building blocks; <strong>elements</strong> cannot be broken down; <strong>compounds</strong> combine elements</li>
+                    <li><strong>Redox reactions</strong> (oxidation-reduction) power permanent waving, coloring, and lightening</li>
+                    <li><strong>pH scale</strong> (0-14): Hair/skin prefer slightly acidic (4.5-5.5) for protection</li>
+                    <li><strong>Acidic products</strong> close cuticle; <strong>alkaline products</strong> open it</li>
+                    <li>Match <strong>product pH</strong> to client's hair and skin condition to avoid damage</li>
+                </ul>
+            </div>
+        </section>
+        <div class="nav-chapters"><a href="chapter-06.html">← Chapter 6</a><a href="chapter-08.html">Chapter 8 →</a></div>
+    </main>
+    <div class="study-tools">
+        <section class="quiz-section">
+            <h2>📝 Mini Review Quiz</h2>
+            <div class="quiz-question">
+                <p>1. What is the pH of pure water?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q1" value="a"> 0</label>
+                    <label><input type="radio" name="q1" value="b"> 7</label>
+                    <label><input type="radio" name="q1" value="c"> 14</label>
+                    <label><input type="radio" name="q1" value="d"> 10</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>2. What pH range is considered acidic?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q2" value="a"> 7-14</label>
+                    <label><input type="radio" name="q2" value="b"> 0-7</label>
+                    <label><input type="radio" name="q2" value="c"> Exactly 7</label>
+                    <label><input type="radio" name="q2" value="d"> 10-14</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>3. What does pH measure?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q3" value="a"> Temperature</label>
+                    <label><input type="radio" name="q3" value="b"> Acidity or alkalinity</label>
+                    <label><input type="radio" name="q3" value="c"> Density</label>
+                    <label><input type="radio" name="q3" value="d"> Volume</label>
+                </div>
+            </div>
+            <button class="quiz-submit" onclick="checkQuiz()">Check Answers</button>
+            <div class="quiz-result" id="quiz-result"></div>
+        </section>
+
+        <button class="tool-btn" onclick="openQuiz()">🎴 Flashcards</button>
+        <button class="tool-btn" onclick="openQuiz()">❓ Quiz</button>
+    </div>
+    <script>
+        function checkQuiz() {
+            const answers = { q1: 'b', q2: 'b', q3: 'b' };
+            let score = 0;
+            let total = 3;
+            for (let q in answers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (selected && selected.value === answers[q]) score++;
+            }
+            const resultDiv = document.getElementById('quiz-result');
+            resultDiv.style.display = 'block';
+            if (score === total) {
+                resultDiv.className = 'quiz-result correct';
+                resultDiv.innerHTML = `<strong>Perfect! 🎉</strong> You got ${score}/${total} correct!`;
+            } else {
+                resultDiv.className = 'quiz-result incorrect';
+                resultDiv.innerHTML = `<strong>Keep studying!</strong> You got ${score}/${total} correct.`;
+            }
+        }
+
+        function openQuiz() {
+            window.location.href = 'chapter-07-quiz.html';
+        }
+
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+            localStorage.setItem('chapter-07-progress', Math.round(scrolled));
+        });
+    </script>
+</body>
+</html>

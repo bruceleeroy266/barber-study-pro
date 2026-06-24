@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Progress - Barber Study Pro</title>
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --dark: #1a1a1a;
+            --dark-gray: #2d2d2d;
+            --medium-gray: #3d3d3d;
+            --light-gray: #888;
+            --white: #f5f5f5;
+            --success: #22c55e;
+            --danger: #ef4444;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--dark);
+            color: var(--white);
+            line-height: 1.6;
+        }
+        .progress-bar {
+            position: fixed; top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--dark-gray); z-index: 1000;
+        }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.3s; }
+        
+        nav {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: sticky; top: 4px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+        .nav-container {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .back-link:hover { color: var(--gold); }
+
+        .container {
+            max-width: 1100px; margin: 2rem auto; padding: 0 2rem;
+        }
+
+        .header {
+            text-align: center; padding: 3rem 0;
+        }
+        .header h1 { color: var(--gold); font-size: 2.5rem; margin-bottom: 1rem; }
+        .header p { color: var(--light-gray); font-size: 1.125rem; }
+
+        .overall-progress {
+            background: var(--dark-gray);
+            border-radius: 16px; padding: 2.5rem;
+            margin-bottom: 3rem;
+            border: 1px solid var(--medium-gray);
+            text-align: center;
+        }
+        .progress-circle {
+            width: 200px; height: 200px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+        .progress-circle svg {
+            transform: rotate(-90deg);
+        }
+        .progress-circle-bg {
+            fill: none;
+            stroke: var(--medium-gray);
+            stroke-width: 12;
+        }
+        .progress-circle-fill {
+            fill: none;
+            stroke: var(--gold);
+            stroke-width: 12;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease;
+        }
+        .progress-text {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+        .overall-progress h2 { margin-bottom: 0.5rem; }
+        .overall-progress p { color: var(--light-gray); }
+
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem; margin-bottom: 3rem;
+        }
+        .stat-card {
+            background: var(--dark-gray); padding: 1.5rem;
+            border-radius: 12px; text-align: center;
+            border: 1px solid var(--medium-gray);
+        }
+        .stat-card h3 { color: var(--light-gray); font-size: 0.875rem; margin-bottom: 0.5rem; }
+        .stat-value { font-size: 2.5rem; font-weight: 700; color: var(--gold); }
+
+        .section-title {
+            font-size: 1.5rem; margin-bottom: 1.5rem;
+            display: flex; align-items: center; gap: 0.75rem;
+        }
+
+        .chapters-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem; margin-bottom: 3rem;
+        }
+        .chapter-progress {
+            background: var(--dark-gray);
+            border-radius: 12px; padding: 1.25rem;
+            border: 1px solid var(--medium-gray);
+            transition: all 0.3s;
+        }
+        .chapter-progress:hover {
+            border-color: var(--gold);
+        }
+        .chapter-header {
+            display: flex; justify-content: space-between;
+            align-items: center; margin-bottom: 0.75rem;
+        }
+        .chapter-name { font-weight: 600; }
+        .chapter-percent { color: var(--gold); font-weight: 700; }
+        .progress-bar-small {
+            height: 8px; background: var(--medium-gray);
+            border-radius: 4px; overflow: hidden;
+        }
+        .progress-fill-small {
+            height: 100%; background: var(--gold);
+            border-radius: 4px; transition: width 0.5s ease;
+        }
+        .chapter-status {
+            display: flex; gap: 0.5rem; margin-top: 0.75rem;
+        }
+        .status-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--medium-gray);
+        }
+        .status-dot.completed { background: var(--success); }
+        .status-dot.in-progress { background: var(--gold); }
+
+        .exam-history {
+            background: var(--dark-gray);
+            border-radius: 12px; padding: 1.5rem;
+            border: 1px solid var(--medium-gray);
+        }
+        .exam-history h2 {
+            display: flex; align-items: center;
+            gap: 0.75rem; margin-bottom: 1.5rem;
+        }
+        .exam-item {
+            display: flex; justify-content: space-between;
+            align-items: center; padding: 1rem 0;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+        .exam-item:last-child { border-bottom: none; }
+        .exam-info h4 { margin-bottom: 0.25rem; }
+        .exam-info p { color: var(--light-gray); font-size: 0.875rem; }
+        .exam-score {
+            font-size: 1.5rem; font-weight: 700;
+        }
+        .exam-score.pass { color: var(--success); }
+        .exam-score.fail { color: var(--danger); }
+
+        .empty-state {
+            text-align: center; padding: 4rem 2rem;
+            color: var(--light-gray);
+        }
+        .empty-state-icon { font-size: 4rem; margin-bottom: 1rem; }
+
+        .achievement-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem; margin-bottom: 3rem;
+        }
+        .achievement {
+            background: var(--dark-gray);
+            border-radius: 12px; padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--medium-gray);
+            opacity: 0.5;
+            transition: all 0.3s;
+        }
+        .achievement.unlocked {
+            opacity: 1;
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.1);
+        }
+        .achievement-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .achievement h4 { font-size: 0.875rem; margin-bottom: 0.25rem; }
+        .achievement p { font-size: 0.75rem; color: var(--light-gray); }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.875rem; }
+            .progress-circle { width: 150px; height: 150px; }
+            .progress-text { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">⚡ Barber Study Pro</a>
+            <a href="index.html" class="back-link">← Back to Home</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>📊 My Progress</h1>
+            <p>Track your learning journey and see how far you've come</p>
+        </div>
+
+        <div class="overall-progress">
+            <div class="progress-circle">
+                <svg width="200" height="200">
+                    <circle class="progress-circle-bg" cx="100" cy="100" r="88"></circle>
+                    <circle class="progress-circle-fill" id="overallCircle" cx="100" cy="100" r="88" 
+                        stroke-dasharray="553" stroke-dashoffset="553"></circle>
+                </svg>
+                <div class="progress-text" id="overallPercent">0%</div>
+            </div>
+            <h2>Overall Completion</h2>
+            <p>Based on chapter reading and quiz completion</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Chapters Read</h3>
+                <div class="stat-value" id="chaptersRead">0/21</div>
+            </div>
+            <div class="stat-card">
+                <h3>Quizzes Taken</h3>
+                <div class="stat-value" id="quizzesTaken">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Practice Exams</h3>
+                <div class="stat-value" id="practiceExams">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Avg. Exam Score</h3>
+                <div class="stat-value" id="avgScore">0%</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">🏆 Achievements</h2>
+        <div class="achievement-grid">
+            <div class="achievement" id="ach1">
+                <div class="achievement-icon">📚</div>
+                <h4>First Steps</h4>
+                <p>Read first chapter</p>
+            </div>
+            <div class="achievement" id="ach2">
+                <div class="achievement-icon">📝</div>
+                <h4>Quiz Whiz</h4>
+                <p>Complete 5 quizzes</p>
+            </div>
+            <div class="achievement" id="ach3">
+                <div class="achievement-icon">🎯</div>
+                <h4>Exam Ready</h4>
+                <p>Take practice exam</p>
+            </div>
+            <div class="achievement" id="ach4">
+                <div class="achievement-icon">⭐</div>
+                <h4>Perfect Score</h4>
+                <p>Get 100% on any quiz</p>
+            </div>
+            <div class="achievement" id="ach5">
+                <div class="achievement-icon">🔥</div>
+                <h4>On Fire</h4>
+                <p>Study 7 days in a row</p>
+            </div>
+            <div class="achievement" id="ach6">
+                <div class="achievement-icon">🏅</div>
+                <h4>Master Barber</h4>
+                <p>Complete all chapters</p>
+            </div>
+        </div>
+
+        <h2 class="section-title">📖 Chapter Progress</h2>
+        <div class="chapters-grid" id="chaptersGrid">
+            <!-- Populated by JS -->
+        </div>
+
+        <h2 class="section-title">📝 Exam History</h2>
+        <div class="exam-history">
+            <div id="examHistoryList">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📝</div>
+                    <h3>No Exams Taken Yet</h3>
+                    <p>Take your first practice exam to see your results here!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chapters = [
+            { num: 1, name: "History of Barbering" },
+            { num: 2, name: "Life Skills" },
+            { num: 3, name: "Professional Image" },
+            { num: 4, name: "Infection Control" },
+            { num: 5, name: "Bacteriology" },
+            { num: 6, name: "Implements & Tools" },
+            { num: 7, name: "Men's Haircutting" },
+            { num: 8, name: "Electricity" },
+            { num: 9, name: "Skin" },
+            { num: 10, name: "Hair" },
+            { num: 11, name: "Shampooing" },
+            { num: 12, name: "Men's Grooming" },
+            { num: 13, name: "Wigs" },
+            { num: 14, name: "Chemistry" },
+            { num: 15, name: "Anatomy" },
+            { num: 16, name: "Facial Massage" },
+            { num: 17, name: "Haircolor" },
+            { num: 18, name: "Haircolor Theory" },
+            { num: 19, name: "Licensure" },
+            { num: 20, name: "Working Behind Chair" },
+            { num: 21, name: "Business of Barbering" }
+        ];
+
+        function loadProgress() {
+            // Load chapter progress
+            let totalProgress = 0;
+            const chaptersGrid = document.getElementById('chaptersGrid');
+            let chaptersCompleted = 0;
+
+            chaptersGrid.innerHTML = chapters.map(ch => {
+                const progress = parseInt(localStorage.getItem(`chapter-${ch.num.toString().padStart(2, '0')}-progress`) || '0');
+                totalProgress += progress;
+                if (progress >= 90) chaptersCompleted++;
+
+                return `
+                    <div class="chapter-progress">
+                        <div class="chapter-header">
+                            <span class="chapter-name">${ch.num}. ${ch.name}</span>
+                            <span class="chapter-percent">${progress}%</span>
+                        </div>
+                        <div class="progress-bar-small">
+                            <div class="progress-fill-small" style="width: ${progress}%"></div>
+                        </div>
+                        <div class="chapter-status">
+                            ${Array(5).fill(0).map((_, i) => `
+                                <div class="status-dot ${progress >= (i + 1) * 20 ? 'completed' : ''}"></div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Update overall stats
+            const overallPercent = Math.round(totalProgress / 21);
+            document.getElementById('overallPercent').textContent = overallPercent + '%';
+            document.getElementById('chaptersRead').textContent = `${chaptersCompleted}/21`;
+
+            // Animate circle
+            const circle = document.getElementById('overallCircle');
+            const circumference = 553;
+            const offset = circumference - (overallPercent / 100) * circumference;
+            setTimeout(() => {
+                circle.style.strokeDashoffset = offset;
+            }, 100);
+
+            // Load exam history
+            const examHistory = JSON.parse(localStorage.getItem('examHistory') || '[]');
+            document.getElementById('practiceExams').textContent = examHistory.length;
+
+            if (examHistory.length > 0) {
+                const avgScore = Math.round(examHistory.reduce((a, b) => a + b.score, 0) / examHistory.length);
+                document.getElementById('avgScore').textContent = avgScore + '%';
+
+                const historyList = document.getElementById('examHistoryList');
+                historyList.innerHTML = examHistory.slice(-5).reverse().map(exam => `
+                    <div class="exam-item">
+                        <div class="exam-info">
+                            <h4>Practice Exam</h4>
+                            <p>${new Date(exam.date).toLocaleDateString()}</p>
+                        </div>
+                        <div class="exam-score ${exam.passed ? 'pass' : 'fail'}">
+                            ${exam.score}%
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Count quizzes taken
+            let quizzesTaken = 0;
+            for (let i = 1; i <= 21; i++) {
+                if (localStorage.getItem(`chapter-${i.toString().padStart(2, '0')}-quiz-complete`)) {
+                    quizzesTaken++;
+                }
+            }
+            document.getElementById('quizzesTaken').textContent = quizzesTaken;
+
+            // Check achievements
+            checkAchievements(chaptersCompleted, quizzesTaken, examHistory);
+        }
+
+        function checkAchievements(chaptersCompleted, quizzesTaken, examHistory) {
+            // Achievement 1: First chapter
+            if (chaptersCompleted >= 1) {
+                document.getElementById('ach1').classList.add('unlocked');
+            }
+
+            // Achievement 2: 5 quizzes
+            if (quizzesTaken >= 5) {
+                document.getElementById('ach2').classList.add('unlocked');
+            }
+
+            // Achievement 3: Practice exam
+            if (examHistory.length >= 1) {
+                document.getElementById('ach3').classList.add('unlocked');
+            }
+
+            // Achievement 4: Perfect score
+            const perfectScore = examHistory.some(e => e.score === 100);
+            if (perfectScore) {
+                document.getElementById('ach4').classList.add('unlocked');
+            }
+
+            // Achievement 5: Study streak (simplified - would need daily tracking)
+            // Skipping for now
+
+            // Achievement 6: All chapters
+            if (chaptersCompleted >= 21) {
+                document.getElementById('ach6').classList.add('unlocked');
+            }
+        }
+
+        // Update progress bar on scroll
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+        });
+
+        // Load progress on page load
+        loadProgress();
+    </script>
+</body>
+</html>
