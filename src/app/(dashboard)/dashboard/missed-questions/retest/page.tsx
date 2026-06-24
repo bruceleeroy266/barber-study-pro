@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { QuizAttempt, StudentProgress } from '@/types'
 import { localChapters } from '@/lib/local-data'
 import { allQuizQuestions } from '@/lib/quiz-data'
-import { analyzePerformance, buildMissedQuestions } from '@/lib/analytics'
+import { buildMissedQuestions } from '@/lib/analytics'
 import { getDemoMissedQuestionsForUser } from '@/lib/demo-analytics'
 import { buildWeakAreaQuiz } from '@/lib/missed-questions'
 import QuizClient from '@/components/QuizClient'
@@ -19,21 +19,21 @@ export default async function RetestWeakAreasPage() {
   const chapters = localChapters
   const questions = Object.values(allQuizQuestions).flat()
 
-  const { data: attempts } = await supabase
+  const { data: attemptsData } = await supabase
     .from('quiz_attempts')
     .select('*')
     .eq('user_id', user.id)
-    .order('completed_at', { ascending: false }) as { data: QuizAttempt[] | null; error: any }
+    .order('completed_at', { ascending: false })
 
-  const { data: progress } = await supabase
+  const { data: progressData } = await supabase
     .from('student_progress')
     .select('*')
-    .eq('user_id', user.id) as { data: StudentProgress[] | null; error: any }
+    .eq('user_id', user.id)
 
   let missed = buildMissedQuestions({
     userId: user.id,
-    attempts: attempts || [],
-    progress: progress || [],
+    attempts: (attemptsData as QuizAttempt[]) || [],
+    progress: (progressData as StudentProgress[]) || [],
     chapters,
     questions,
   })

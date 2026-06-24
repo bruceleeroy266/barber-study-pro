@@ -18,8 +18,6 @@ export interface ReadinessInputs {
   streakDays?: number
 }
 
-const PASSING_SCORE = 75
-
 function getLevel(score: number): ReadinessLevel {
   if (score >= 90) return 'Ready'
   if (score >= 80) return 'Nearly Ready'

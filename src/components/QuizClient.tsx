@@ -84,16 +84,6 @@ export default function QuizClient({ quiz, questions, chapterId, userId, bestAtt
     setShowExplanation(true)
   }, [selectedAnswer, question])
 
-  const handleNext = useCallback(() => {
-    if (currentQuestion < shuffledQuestions.length - 1) {
-      setCurrentQuestion((prev) => prev + 1)
-      setSelectedAnswer(null)
-      setShowExplanation(false)
-    } else {
-      finishQuiz()
-    }
-  }, [currentQuestion, shuffledQuestions.length])
-
   const finishQuiz = useCallback(async () => {
     if (!userId) {
       setCompleted(true)
@@ -146,6 +136,16 @@ export default function QuizClient({ quiz, questions, chapterId, userId, bestAtt
       setSaving(false)
     }
   }, [answers, selectedAnswer, question, shuffledQuestions, userId, quiz.id, chapterId, bestAttempt])
+
+  const handleNext = useCallback(() => {
+    if (currentQuestion < shuffledQuestions.length - 1) {
+      setCurrentQuestion((prev) => prev + 1)
+      setSelectedAnswer(null)
+      setShowExplanation(false)
+    } else {
+      finishQuiz()
+    }
+  }, [currentQuestion, shuffledQuestions.length, finishQuiz])
 
   const restartQuiz = useCallback(() => {
     setStarted(false)

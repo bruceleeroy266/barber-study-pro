@@ -30,9 +30,6 @@ export function calculateChapterPerformance(
     const attemptsForChapter = chapterAttempts.get(chapter.id) || []
     const scores = attemptsForChapter.map((a) => a.percentage)
     const bestScore = scores.length > 0 ? Math.max(...scores) : 0
-    const avgScore = scores.length > 0
-      ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
-      : 0
 
     const progressRecord = progress.find((p) => p.chapter_id === chapter.id)
     const attemptsCount = attemptsForChapter.length

@@ -83,11 +83,11 @@ Build ASCYN PRO's intelligent student success system. The system analyzes quiz p
   - **70–79:** Needs Review (orange)
   - **Below 70:** At Risk (red)
 - Inputs considered:
-  - Quiz averages (80% weight)
-  - Quiz completion rate (5%)
-  - Chapter completion rate (5%)
-  - Flashcard engagement rate (5%)
-  - Consistency / streak (5%)
+  - Quiz averages (85% weight)
+  - Quiz completion rate (4%)
+  - Chapter completion rate (4%)
+  - Flashcard engagement rate (4%)
+  - Consistency / streak (3%)
   - Improvement trend (+/- 5)
 
 ### 2. Student Dashboard
@@ -145,10 +145,10 @@ Build ASCYN PRO's intelligent student success system. The system analyzes quiz p
 
 - Works when Supabase is unavailable or tables are empty.
 - Demo students now span realistic readiness profiles:
-  - **Alex Johnson:** High performer (~88, Nearly Ready)
-  - **Maria Garcia:** Average performer (~75, Needs Review)
-  - **Jordan Smith:** At-risk (~65, At Risk)
-  - **Taylor Brown:** At-risk (~55, At Risk)
+  - **Alex Johnson:** High performer (~81, Nearly Ready)
+  - **Maria Garcia:** Average performer (~71, Needs Review)
+  - **Jordan Smith:** At-risk (~61, At Risk)
+  - **Taylor Brown:** At-risk (~53, At Risk)
 
 ---
 
@@ -226,3 +226,6 @@ New routes generated:
 - Existing authentication (student, instructor, admin) was preserved.
 - Existing hour tracker functionality from Phase 4A was preserved.
 - The missed-question bank derives data from `quiz_attempts.answers_json`, preserving schema compatibility.
+- Fixed a pre-existing React hooks ordering issue in `src/components/QuizClient.tsx` so the "Retest Weak Areas" flow runs reliably.
+- Cleaned up lint warnings in all Phase 5 files (`src/lib/readiness`, `src/lib/analytics`, `src/lib/recommendations`, `src/lib/missed-questions`, `src/lib/demo-analytics.ts`, and related dashboard/instructor pages).
+- Remaining lint errors are pre-existing in scripts, auth pages, and demo components outside the Phase 5 scope.

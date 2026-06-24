@@ -5,7 +5,7 @@
  * Realistic analytics for demo mode when Supabase tables are empty.
  */
 
-import { MissedQuestion, QuizAttempt, StudentProgress } from '@/types'
+import { MissedQuestion, StudentProgress } from '@/types'
 import { demoStudents } from './demo-data'
 import { allQuizQuestions } from './quiz-data'
 
@@ -112,15 +112,6 @@ export function getDemoMissedQuestionsForUser(userId: string): MissedQuestion[] 
     return []
   }
   return generateDemoMissedQuestions(userId)
-}
-
-export function seedDemoAttemptsWithAnswers(
-  attempts: QuizAttempt[],
-  userId: string
-): QuizAttempt[] {
-  // This is a no-op for now — the demo missed questions are generated directly.
-  // Keeping the signature for future expansion.
-  return attempts
 }
 
 export function seedDemoProgressWithFlashcards(

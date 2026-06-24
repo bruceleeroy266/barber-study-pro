@@ -4,8 +4,7 @@
  */
 
 import { AreaPerformance } from '@/types'
-import { ChapterMeta } from './types'
-import { getCategoryForChapter, trendDirection } from './utils'
+import { trendDirection } from './utils'
 
 export function calculateCategoryPerformance(
   chapterPerformance: AreaPerformance[]

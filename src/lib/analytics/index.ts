@@ -7,13 +7,7 @@
  * future AI coaching.
  */
 
-import {
-  AreaPerformance,
-  MissedQuestion,
-  QuizAttempt,
-  QuizQuestion,
-  StudentProgress,
-} from '@/types'
+import { MissedQuestion } from '@/types'
 import { AnalyticsInputs, AnalyticsResult } from './types'
 import { calculateChapterPerformance } from './chapter-performance'
 import { calculateCategoryPerformance } from './category-performance'

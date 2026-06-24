@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { QuizAttempt, StudentProgress } from '@/types'
 import { localChapters } from '@/lib/local-data'
 import { allQuizQuestions } from '@/lib/quiz-data'
-import { analyzePerformance } from '@/lib/analytics'
+
 import { getDemoMissedQuestionsForUser } from '@/lib/demo-analytics'
 import MissedQuestionBank from '@/components/MissedQuestionBank'
 import { AlertCircle } from 'lucide-react'
@@ -20,35 +20,21 @@ export default async function MissedQuestionsPage() {
   const questions = Object.values(allQuizQuestions).flat()
 
   // Fetch attempts
-  const { data: attempts } = await supabase
+  const { data: attemptsData } = await supabase
     .from('quiz_attempts')
     .select('*')
     .eq('user_id', user.id)
-    .order('completed_at', { ascending: false }) as { data: QuizAttempt[] | null; error: any }
+    .order('completed_at', { ascending: false })
 
-  const { data: progress } = await supabase
+  const { data: progressData } = await supabase
     .from('student_progress')
     .select('*')
-    .eq('user_id', user.id) as { data: StudentProgress[] | null; error: any }
+    .eq('user_id', user.id)
 
-  const attemptRecords = attempts || []
-  const progressRecords = progress || []
+  const attemptRecords: QuizAttempt[] = attemptsData || []
+  const progressRecords: StudentProgress[] = progressData || []
 
   // Derive missed questions from attempts
-  const analytics = analyzePerformance({
-    userId: user.id,
-    attempts: attemptRecords,
-    progress: progressRecords,
-    chapters,
-    questions,
-  })
-
-  let missedQuestions = analytics.missedQuestionTrend.length > 0
-    ? analytics.missedQuestionTrend as unknown as typeof analytics.missedQuestionTrend
-    : []
-
-  // Wait, we need the actual missed questions, not just trend.
-  // Re-derive explicitly.
   const { buildMissedQuestions } = await import('@/lib/analytics')
   let missed = buildMissedQuestions({
     userId: user.id,
