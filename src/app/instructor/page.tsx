@@ -490,6 +490,51 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
           </Link>
         </div>
 
+        {/* Phase 11 — Compliance Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Link
+            href="/instructor/compliance"
+            className="bg-gray-900 border border-gray-800 rounded-xl p-5 hover:border-[#D4AF37]/30 transition-colors"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-400">State Board Compliance</p>
+                <p className="text-2xl font-bold text-white mt-1">Monitor</p>
+              </div>
+              <span className="text-2xl">📋</span>
+            </div>
+            <p className="text-xs text-gray-500 mt-2">Track licensing readiness</p>
+          </Link>
+
+          <Link
+            href="/instructor/compliance"
+            className="bg-gray-900 border border-gray-800 rounded-xl p-5 hover:border-[#D4AF37]/30 transition-colors"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-400">Eligibility Candidates</p>
+                <p className="text-2xl font-bold text-white mt-1">Review</p>
+              </div>
+              <span className="text-2xl">✅</span>
+            </div>
+            <p className="text-xs text-gray-500 mt-2">Students ready for board exam</p>
+          </Link>
+
+          <Link
+            href="/instructor/compliance"
+            className="bg-gray-900 border border-gray-800 rounded-xl p-5 hover:border-[#D4AF37]/30 transition-colors"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-400">Compliance Alerts</p>
+                <p className="text-2xl font-bold text-white mt-1">View</p>
+              </div>
+              <span className="text-2xl">🚨</span>
+            </div>
+            <p className="text-xs text-gray-500 mt-2">Missing hours, assessments, practicals</p>
+          </Link>
+        </div>
+
         {/* Phase 9 — Gradebook Overview */}
         <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
           <div className="p-6 border-b border-gray-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

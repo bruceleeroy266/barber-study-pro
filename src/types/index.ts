@@ -605,3 +605,100 @@ export interface SchoolReport {
   summary: string
   rows: Record<string, string | number>[]
 }
+
+// ============================================================================
+// PHASE 11 — STATE BOARD COMPLIANCE SUITE
+// ============================================================================
+
+export type ComplianceStatus = 'met' | 'partial' | 'missing' | 'at_risk'
+
+export type BoardEligibilityStatus = 'eligible' | 'near_eligible' | 'not_eligible'
+
+export type ComplianceAlertType =
+  | 'low_attendance'
+  | 'missing_hours'
+  | 'missing_assessments'
+  | 'missing_practicals'
+  | 'low_readiness'
+  | 'graduation_risk'
+  | 'board_eligible'
+  | 'low_grade'
+
+export interface ComplianceRequirement {
+  id: string
+  name: string
+  category: 'attendance' | 'hours' | 'assessments' | 'practicals' | 'readiness' | 'grades'
+  requiredValue: number
+  actualValue: number
+  unit: string
+  status: ComplianceStatus
+  weight: number
+  description: string
+}
+
+export interface ComplianceScore {
+  score: number
+  label: string
+  colorClass: string
+  requirements: ComplianceRequirement[]
+  componentScores: {
+    attendance: number
+    hours: number
+    assessments: number
+    practicals: number
+    readiness: number
+    grades: number
+  }
+}
+
+export interface BoardEligibilityResult {
+  status: BoardEligibilityStatus
+  label: string
+  colorClass: string
+  reasons: string[]
+  missingRequirements: string[]
+  estimatedCompletionDate?: string | null
+}
+
+export interface GraduationReadiness {
+  studentId: string
+  fullName: string
+  percentage: number
+  completedHours: number
+  requiredHours: number
+  completedAssessments: number
+  requiredAssessments: number
+  completedPracticals: number
+  requiredPracticals: number
+  overallGrade: number
+  attendancePercentage: number
+  readinessScore: number
+  isReady: boolean
+  remainingItems: string[]
+}
+
+export interface ComplianceAlert {
+  id: string
+  type: ComplianceAlertType
+  title: string
+  description: string
+  studentId?: string | null
+  studentName?: string | null
+  priority: NotificationPriority
+  createdAt: string
+}
+
+export type ComplianceReportType =
+  | 'student_compliance'
+  | 'graduation_readiness'
+  | 'board_eligibility'
+  | 'instructor_compliance'
+  | 'school_compliance'
+
+export interface ComplianceReport {
+  type: ComplianceReportType
+  title: string
+  generatedAt: string
+  summary: string
+  rows: Record<string, string | number>[]
+}

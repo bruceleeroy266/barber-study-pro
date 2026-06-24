@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutDashboard, BookOpen, TrendingUp, User, LogOut, GraduationCap, Shield, RotateCcw, MessageSquare, Calculator, ClipboardCheck, Building2 } from 'lucide-react'
+import { LayoutDashboard, BookOpen, TrendingUp, User, LogOut, GraduationCap, Shield, RotateCcw, MessageSquare, Calculator, ClipboardCheck, Building2, FileCheck } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { Profile } from '@/types'
 import { isInstructorOrAdmin, isAdmin } from '@/lib/auth-helpers'
@@ -19,6 +19,7 @@ const baseNavItems = [
   { href: '/dashboard/progress', label: 'My Progress', icon: TrendingUp },
   { href: '/dashboard/grades', label: 'Grades', icon: Calculator },
   { href: '/dashboard/assessments', label: 'Assessments', icon: ClipboardCheck },
+  { href: '/dashboard/compliance', label: 'Compliance', icon: FileCheck },
   { href: '/dashboard/messages', label: 'Messages', icon: MessageSquare },
   { href: '/dashboard/profile', label: 'Profile', icon: User },
 ]
