@@ -1,7 +1,7 @@
 // Demo data for soft launch without Supabase
 // This provides safe mock data when NEXT_PUBLIC_DEMO_MODE=true
 
-import { Chapter, Flashcard, Quiz, QuizQuestion, QuizAttempt, StudentProgress, Profile, InstructorNote, HourLog, AttendanceRecord, InstructorAttendanceNote } from '@/types'
+import { Chapter, Flashcard, Quiz, QuizQuestion, QuizAttempt, StudentProgress, Profile, InstructorNote, HourLog, AttendanceRecord, InstructorAttendanceNote, MessageThread, Message, Notification, Announcement, NotificationPriority } from '@/types'
 import { chapterFlashcards as realFlashcards } from './flashcards-data'
 import { batch1Flashcards, batch4Flashcards } from './orphaned-flashcards'
 import { allQuizQuestions } from './quiz-data'
@@ -586,4 +586,483 @@ export function getDemoProgress(userId: string): StudentProgress[] {
 export function getDemoQuizAttempts(userId: string): QuizAttempt[] {
   if (userId !== 'demo-user') return []
   return demoQuizAttempts
+}
+
+// ============================================================================
+// PHASE 8A — DEMO MESSAGING DATA
+// ============================================================================
+
+const messagePriority = (p: NotificationPriority): NotificationPriority => p
+
+export const demoMessageThreads: MessageThread[] = [
+  {
+    id: 'thread-alex-instructor',
+    subject: 'Chapter 6 Study Plan',
+    participants: [
+      { id: 'part-alex', userId: 'demo-student-1', name: 'Alex Johnson', role: 'student' },
+      { id: 'part-inst', userId: 'demo-instructor', name: 'Demo Instructor', role: 'instructor' },
+    ],
+    lastMessageAt: '2026-06-23T14:30:00Z',
+    lastMessagePreview: 'Thanks for the guidance, I will review the flashcards tonight.',
+    unreadCount: 1,
+    isGroup: false,
+  },
+  {
+    id: 'thread-maria-instructor',
+    subject: 'Missed Chapter 4 Quiz',
+    participants: [
+      { id: 'part-maria', userId: 'demo-student-2', name: 'Maria Garcia', role: 'student' },
+      { id: 'part-inst', userId: 'demo-instructor', name: 'Demo Instructor', role: 'instructor' },
+    ],
+    lastMessageAt: '2026-06-22T16:15:00Z',
+    lastMessagePreview: 'Can we schedule a retake for Friday afternoon?',
+    unreadCount: 1,
+    isGroup: false,
+  },
+  {
+    id: 'thread-jordan-instructor',
+    subject: 'Attendance Check-In',
+    participants: [
+      { id: 'part-jordan', userId: 'demo-student-3', name: 'Jordan Smith', role: 'apprentice' },
+      { id: 'part-inst', userId: 'demo-instructor', name: 'Demo Instructor', role: 'instructor' },
+    ],
+    lastMessageAt: '2026-06-21T09:45:00Z',
+    lastMessagePreview: 'I have set up a new alarm and arranged a ride.',
+    unreadCount: 0,
+    isGroup: false,
+  },
+  {
+    id: 'thread-taylor-instructor',
+    subject: 'Hour Log Rejection',
+    participants: [
+      { id: 'part-taylor', userId: 'demo-student-4', name: 'Taylor Brown', role: 'student' },
+      { id: 'part-inst', userId: 'demo-instructor', name: 'Demo Instructor', role: 'instructor' },
+    ],
+    lastMessageAt: '2026-06-20T11:00:00Z',
+    lastMessagePreview: 'Please resubmit with the supervisor signature.',
+    unreadCount: 1,
+    isGroup: false,
+  },
+  {
+    id: 'thread-class-group',
+    subject: 'State Board Study Group',
+    participants: [
+      { id: 'part-alex', userId: 'demo-student-1', name: 'Alex Johnson', role: 'student' },
+      { id: 'part-maria', userId: 'demo-student-2', name: 'Maria Garcia', role: 'student' },
+      { id: 'part-jordan', userId: 'demo-student-3', name: 'Jordan Smith', role: 'apprentice' },
+      { id: 'part-taylor', userId: 'demo-student-4', name: 'Taylor Brown', role: 'student' },
+      { id: 'part-inst', userId: 'demo-instructor', name: 'Demo Instructor', role: 'instructor' },
+    ],
+    lastMessageAt: '2026-06-23T18:00:00Z',
+    lastMessagePreview: 'Reminder: mock board exam review is tomorrow at 9 AM.',
+    unreadCount: 2,
+    isGroup: true,
+    groupName: 'State Board Study Group',
+  },
+]
+
+export const demoMessages: Message[] = [
+  // Alex Johnson thread
+  {
+    id: 'msg-alex-1',
+    threadId: 'thread-alex-instructor',
+    senderId: 'demo-instructor',
+    senderName: 'Demo Instructor',
+    senderRole: 'instructor',
+    recipientIds: ['demo-student-1'],
+    subject: 'Chapter 6 Study Plan',
+    body: 'Hi Alex, your Chapter 5 quiz score was strong. To keep momentum, I recommend completing the Chapter 6 flashcards this week and attempting the quiz by Friday. Let me know if you need help.',
+    status: 'read',
+    priority: messagePriority('medium'),
+    sentAt: '2026-06-22T10:00:00Z',
+    readAt: '2026-06-22T11:00:00Z',
+  },
+  {
+    id: 'msg-alex-2',
+    threadId: 'thread-alex-instructor',
+    senderId: 'demo-student-1',
+    senderName: 'Alex Johnson',
+    senderRole: 'student',
+    recipientIds: ['demo-instructor'],
+    subject: 'Chapter 6 Study Plan',
+    body: 'Thanks for the guidance, I will review the flashcards tonight.',
+    status: 'delivered',
+    priority: messagePriority('low'),
+    sentAt: '2026-06-23T14:30:00Z',
+  },
+  // Maria Garcia thread
+  {
+    id: 'msg-maria-1',
+    threadId: 'thread-maria-instructor',
+    senderId: 'demo-instructor',
+    senderName: 'Demo Instructor',
+    senderRole: 'instructor',
+    recipientIds: ['demo-student-2'],
+    subject: 'Missed Chapter 4 Quiz',
+    body: 'Maria, I noticed you have not completed the Chapter 4 quiz yet. Infection Control is a critical topic for the state board. Please set aside time this week to finish it.',
+    status: 'read',
+    priority: messagePriority('high'),
+    sentAt: '2026-06-21T13:00:00Z',
+    readAt: '2026-06-21T14:00:00Z',
+  },
+  {
+    id: 'msg-maria-2',
+    threadId: 'thread-maria-instructor',
+    senderId: 'demo-student-2',
+    senderName: 'Maria Garcia',
+    senderRole: 'student',
+    recipientIds: ['demo-instructor'],
+    subject: 'Missed Chapter 4 Quiz',
+    body: 'Can we schedule a retake for Friday afternoon?',
+    status: 'sent',
+    priority: messagePriority('medium'),
+    sentAt: '2026-06-22T16:15:00Z',
+  },
+  // Jordan Smith thread
+  {
+    id: 'msg-jordan-1',
+    threadId: 'thread-jordan-instructor',
+    senderId: 'demo-instructor',
+    senderName: 'Demo Instructor',
+    senderRole: 'instructor',
+    recipientIds: ['demo-student-3'],
+    subject: 'Attendance Check-In',
+    body: 'Jordan, you have been late twice and absent twice in the past two weeks. Attendance is important for clinic floor eligibility. Let us know if there is anything we can do to help.',
+    status: 'read',
+    priority: messagePriority('urgent'),
+    sentAt: '2026-06-20T09:00:00Z',
+    readAt: '2026-06-20T10:00:00Z',
+  },
+  {
+    id: 'msg-jordan-2',
+    threadId: 'thread-jordan-instructor',
+    senderId: 'demo-student-3',
+    senderName: 'Jordan Smith',
+    senderRole: 'apprentice',
+    recipientIds: ['demo-instructor'],
+    subject: 'Attendance Check-In',
+    body: 'I have set up a new alarm and arranged a ride.',
+    status: 'read',
+    priority: messagePriority('medium'),
+    sentAt: '2026-06-21T09:45:00Z',
+    readAt: '2026-06-21T10:00:00Z',
+  },
+  // Taylor Brown thread
+  {
+    id: 'msg-taylor-1',
+    threadId: 'thread-taylor-instructor',
+    senderId: 'demo-instructor',
+    senderName: 'Demo Instructor',
+    senderRole: 'instructor',
+    recipientIds: ['demo-student-4'],
+    subject: 'Hour Log Rejection',
+    body: 'Taylor, your hour log from June 15 was rejected because it is missing a supervisor signature. Please resubmit with the signature so we can count those hours.',
+    status: 'delivered',
+    priority: messagePriority('high'),
+    sentAt: '2026-06-19T15:30:00Z',
+  },
+  {
+    id: 'msg-taylor-2',
+    threadId: 'thread-taylor-instructor',
+    senderId: 'demo-instructor',
+    senderName: 'Demo Instructor',
+    senderRole: 'instructor',
+    recipientIds: ['demo-student-4'],
+    subject: 'Hour Log Rejection',
+    body: 'Please resubmit with the supervisor signature.',
+    status: 'sent',
+    priority: messagePriority('high'),
+    sentAt: '2026-06-20T11:00:00Z',
+  },
+  // Group thread
+  {
+    id: 'msg-group-1',
+    threadId: 'thread-class-group',
+    senderId: 'demo-instructor',
+    senderName: 'Demo Instructor',
+    senderRole: 'instructor',
+    recipientIds: ['demo-student-1', 'demo-student-2', 'demo-student-3', 'demo-student-4'],
+    subject: 'State Board Study Group',
+    body: 'Welcome to the State Board Study Group. We will use this thread for exam reminders and study resources.',
+    status: 'read',
+    priority: messagePriority('medium'),
+    sentAt: '2026-06-18T08:00:00Z',
+    readAt: '2026-06-18T09:00:00Z',
+  },
+  {
+    id: 'msg-group-2',
+    threadId: 'thread-class-group',
+    senderId: 'demo-student-1',
+    senderName: 'Alex Johnson',
+    senderRole: 'student',
+    recipientIds: ['demo-instructor', 'demo-student-2', 'demo-student-3', 'demo-student-4'],
+    subject: 'State Board Study Group',
+    body: 'Does anyone want to meet after class on Thursday to review Chapter 4?',
+    status: 'read',
+    priority: messagePriority('low'),
+    sentAt: '2026-06-22T17:00:00Z',
+    readAt: '2026-06-22T18:00:00Z',
+  },
+  {
+    id: 'msg-group-3',
+    threadId: 'thread-class-group',
+    senderId: 'demo-instructor',
+    senderName: 'Demo Instructor',
+    senderRole: 'instructor',
+    recipientIds: ['demo-student-1', 'demo-student-2', 'demo-student-3', 'demo-student-4'],
+    subject: 'State Board Study Group',
+    body: 'Reminder: mock board exam review is tomorrow at 9 AM.',
+    status: 'delivered',
+    priority: messagePriority('high'),
+    sentAt: '2026-06-23T18:00:00Z',
+  },
+]
+
+export const demoNotifications: Notification[] = [
+  // Alex Johnson
+  {
+    id: 'notif-alex-1',
+    userId: 'demo-student-1',
+    type: 'board_readiness',
+    title: 'Board Readiness Update',
+    body: 'Your board readiness score is strong. Keep up the consistent study habit.',
+    priority: 'low',
+    read: true,
+    createdAt: '2026-06-21T09:00:00Z',
+    actionUrl: '/dashboard/progress',
+  },
+  {
+    id: 'notif-alex-2',
+    userId: 'demo-student-1',
+    type: 'upcoming_exam',
+    title: 'Chapter 6 Quiz Due Friday',
+    body: 'Do not forget to complete the Chapter 6 quiz by the end of the week.',
+    priority: 'medium',
+    read: false,
+    createdAt: '2026-06-23T08:00:00Z',
+    actionUrl: '/dashboard/chapters/6',
+  },
+  // Maria Garcia
+  {
+    id: 'notif-maria-1',
+    userId: 'demo-student-2',
+    type: 'attendance_risk',
+    title: 'Attendance Risk',
+    body: 'Your attendance is trending down. One more unexcused absence may trigger an academic warning.',
+    priority: 'high',
+    read: false,
+    createdAt: '2026-06-22T10:00:00Z',
+    actionUrl: '/dashboard',
+  },
+  {
+    id: 'notif-maria-2',
+    userId: 'demo-student-2',
+    type: 'missed_assessment',
+    title: 'Missed Chapter 4 Quiz',
+    body: 'You missed the Chapter 4 quiz deadline. Schedule a retake with your instructor.',
+    priority: 'high',
+    read: false,
+    createdAt: '2026-06-21T14:00:00Z',
+    actionUrl: '/dashboard/chapters/4',
+  },
+  // Jordan Smith
+  {
+    id: 'notif-jordan-1',
+    userId: 'demo-student-3',
+    type: 'attendance_alert',
+    title: 'Attendance Alert',
+    body: 'You were marked absent on June 11 and June 16. Please contact your instructor.',
+    priority: 'urgent',
+    read: false,
+    createdAt: '2026-06-21T08:00:00Z',
+    actionUrl: '/dashboard',
+  },
+  {
+    id: 'notif-jordan-2',
+    userId: 'demo-student-3',
+    type: 'missing_hours',
+    title: 'Missing Hours',
+    body: 'You are behind on clinic hours this month. Log your floor time to stay on track.',
+    priority: 'high',
+    read: true,
+    createdAt: '2026-06-20T16:00:00Z',
+    actionUrl: '/dashboard',
+  },
+  {
+    id: 'notif-jordan-3',
+    userId: 'demo-student-3',
+    type: 'board_readiness',
+    title: 'Board Readiness Warning',
+    body: 'Your readiness score dropped after missed quizzes. Focus on infection control fundamentals.',
+    priority: 'high',
+    read: false,
+    createdAt: '2026-06-22T11:00:00Z',
+    actionUrl: '/dashboard/progress',
+  },
+  // Taylor Brown
+  {
+    id: 'notif-taylor-1',
+    userId: 'demo-student-4',
+    type: 'attendance_alert',
+    title: 'Attendance Alert',
+    body: 'Multiple absences detected. An attendance contract may be required.',
+    priority: 'urgent',
+    read: false,
+    createdAt: '2026-06-20T09:00:00Z',
+    actionUrl: '/dashboard',
+  },
+  {
+    id: 'notif-taylor-2',
+    userId: 'demo-student-4',
+    type: 'missing_hours',
+    title: 'Missing Hours',
+    body: 'Several hour logs are still pending approval. Check with your supervisor.',
+    priority: 'medium',
+    read: false,
+    createdAt: '2026-06-22T13:00:00Z',
+    actionUrl: '/dashboard',
+  },
+  {
+    id: 'notif-taylor-3',
+    userId: 'demo-student-4',
+    type: 'board_readiness',
+    title: 'Board Readiness At Risk',
+    body: 'Your readiness score is below 60. Schedule remediation before the mock exam.',
+    priority: 'urgent',
+    read: false,
+    createdAt: '2026-06-23T07:00:00Z',
+    actionUrl: '/dashboard/progress',
+  },
+  {
+    id: 'notif-taylor-4',
+    userId: 'demo-student-4',
+    type: 'missed_assessment',
+    title: 'Low Quiz Score',
+    body: 'Your Chapter 2 quiz score was below passing. Retake available.',
+    priority: 'high',
+    read: false,
+    createdAt: '2026-06-20T15:00:00Z',
+    actionUrl: '/dashboard/chapters/2',
+  },
+  // Instructor notifications
+  {
+    id: 'notif-inst-1',
+    userId: 'demo-instructor',
+    type: 'attendance_alert',
+    title: 'Attendance Concern: Taylor Brown',
+    body: 'Taylor has missed 4 days this pay period and may need an attendance contract.',
+    priority: 'urgent',
+    read: false,
+    createdAt: '2026-06-23T09:00:00Z',
+    actionUrl: '/instructor/attendance',
+  },
+  {
+    id: 'notif-inst-2',
+    userId: 'demo-instructor',
+    type: 'attendance_risk',
+    title: 'Attendance Risk: Jordan Smith',
+    body: 'Jordan is approaching the attendance threshold with two unexcused absences.',
+    priority: 'high',
+    read: false,
+    createdAt: '2026-06-22T10:00:00Z',
+    actionUrl: '/instructor/attendance',
+  },
+  {
+    id: 'notif-inst-3',
+    userId: 'demo-instructor',
+    type: 'board_readiness',
+    title: 'Board Readiness At Risk: Taylor Brown',
+    body: "Taylor's board readiness score dropped below 60. Remediation recommended.",
+    priority: 'high',
+    read: false,
+    createdAt: '2026-06-23T08:00:00Z',
+    actionUrl: '/instructor/student/demo-student-4',
+  },
+  {
+    id: 'notif-inst-4',
+    userId: 'demo-instructor',
+    type: 'missing_hours',
+    title: 'Pending Hour Logs',
+    body: 'You have 3 pending hour logs to review across the roster.',
+    priority: 'medium',
+    read: true,
+    createdAt: '2026-06-21T17:00:00Z',
+    actionUrl: '/instructor',
+  },
+  {
+    id: 'notif-inst-5',
+    userId: 'demo-instructor',
+    type: 'message',
+    title: 'New Message from Maria Garcia',
+    body: 'Maria asked about scheduling a Chapter 4 quiz retake.',
+    priority: 'medium',
+    read: false,
+    createdAt: '2026-06-22T16:20:00Z',
+    actionUrl: '/instructor/messages?thread=thread-maria-instructor',
+  },
+]
+
+export const demoAnnouncements: Announcement[] = [
+  {
+    id: 'announce-1',
+    schoolId: 'demo-school',
+    title: 'Mock Board Exam Review',
+    body: 'Join us tomorrow at 9:00 AM in Classroom B for a comprehensive mock board exam review. Bring your notes and questions.',
+    authorId: 'demo-instructor',
+    authorName: 'Demo Instructor',
+    priority: 'high',
+    expiresAt: '2026-06-25T23:59:59Z',
+    createdAt: '2026-06-23T08:00:00Z',
+  },
+  {
+    id: 'announce-2',
+    schoolId: 'demo-school',
+    title: 'Clinic Hour Submission Deadline',
+    body: 'All clinic hours for June must be submitted by June 30 at 5:00 PM. Late submissions may delay graduation paperwork.',
+    authorId: 'demo-instructor',
+    authorName: 'Demo Instructor',
+    priority: 'medium',
+    expiresAt: '2026-06-30T23:59:59Z',
+    createdAt: '2026-06-22T10:00:00Z',
+  },
+  {
+    id: 'announce-3',
+    schoolId: 'demo-school',
+    title: 'Shop Sanitation Refresh',
+    body: 'A quick sanitation refresher will be held Friday after lunch. Attendance is required for all students on the clinic floor this month.',
+    authorId: 'demo-instructor',
+    authorName: 'Demo Instructor',
+    priority: 'urgent',
+    expiresAt: '2026-06-27T23:59:59Z',
+    createdAt: '2026-06-23T12:00:00Z',
+  },
+]
+
+// Helper to get demo message threads for a user
+export function getDemoThreadsForUser(userId: string): MessageThread[] {
+  return demoMessageThreads.filter((thread) =>
+    thread.participants.some((p) => p.userId === userId)
+  )
+}
+
+// Helper to get demo messages for a thread
+export function getDemoMessagesForThread(threadId: string): Message[] {
+  return demoMessages
+    .filter((m) => m.threadId === threadId)
+    .sort((a, b) => new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime())
+}
+
+// Helper to get demo notifications for a user
+export function getDemoNotificationsForUser(userId: string): Notification[] {
+  return demoNotifications
+    .filter((n) => n.userId === userId)
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+}
+
+// Helper to get active demo announcements for a school
+export function getDemoAnnouncementsForSchool(schoolId: string): Announcement[] {
+  const now = new Date().toISOString()
+  return demoAnnouncements
+    .filter((a) => a.schoolId === schoolId && (!a.expiresAt || a.expiresAt > now))
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 }

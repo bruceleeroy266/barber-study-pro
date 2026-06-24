@@ -314,3 +314,80 @@ export interface AttendanceFilterState {
   statuses?: AttendanceStatus[]
   searchQuery?: string | null
 }
+
+// ============================================================================
+// PHASE 8A — INTERNAL MESSAGING CENTER
+// ============================================================================
+
+export type NotificationPriority = 'low' | 'medium' | 'high' | 'urgent'
+
+export type MessageStatus = 'draft' | 'sent' | 'delivered' | 'read'
+
+export interface MessageRecipient {
+  id: string
+  userId: string
+  name: string
+  role: 'student' | 'instructor' | 'apprentice' | 'admin'
+  readAt?: string | null
+}
+
+export interface Message {
+  id: string
+  threadId: string
+  senderId: string
+  senderName: string
+  senderRole: 'student' | 'instructor' | 'apprentice' | 'admin'
+  recipientIds: string[]
+  subject: string
+  body: string
+  status: MessageStatus
+  priority: NotificationPriority
+  sentAt: string
+  readAt?: string | null
+}
+
+export interface MessageThread {
+  id: string
+  subject: string
+  participants: MessageRecipient[]
+  lastMessageAt: string
+  lastMessagePreview: string
+  unreadCount: number
+  isGroup: boolean
+  groupName?: string | null
+}
+
+export type NotificationType =
+  | 'attendance_alert'
+  | 'attendance_risk'
+  | 'board_readiness'
+  | 'missing_hours'
+  | 'missed_assessment'
+  | 'upcoming_exam'
+  | 'announcement'
+  | 'message'
+  | 'general'
+
+export interface Notification {
+  id: string
+  userId: string
+  type: NotificationType
+  title: string
+  body: string
+  priority: NotificationPriority
+  read: boolean
+  createdAt: string
+  actionUrl?: string | null
+}
+
+export interface Announcement {
+  id: string
+  schoolId: string
+  title: string
+  body: string
+  authorId: string
+  authorName: string
+  priority: NotificationPriority
+  expiresAt?: string | null
+  createdAt: string
+}

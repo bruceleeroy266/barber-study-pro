@@ -1,19 +1,23 @@
 import { createClient } from '@/lib/supabase-server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { QuizAttempt, StudentProgress, AttendanceRecord } from '@/types'
+import { QuizAttempt, StudentProgress, AttendanceRecord, Notification } from '@/types'
 import { localChapters } from '@/lib/local-data'
 import { allQuizQuestions } from '@/lib/quiz-data'
 import { calculateBoardReadiness } from '@/lib/readiness'
 import { analyzePerformance } from '@/lib/analytics'
 import { generateStudyPlan } from '@/lib/recommendations'
 import { getDemoMissedQuestionsForUser } from '@/lib/demo-analytics'
-import { demoAttendanceRecords } from '@/lib/demo-data'
+import { demoAttendanceRecords, getDemoNotificationsForUser, getDemoThreadsForUser, getDemoAnnouncementsForSchool, demoAnnouncements } from '@/lib/demo-data'
+import { isDemoFallbackEnabled } from '@/lib/demo-helpers'
 import { calculateAttendanceSummary, getTodayAttendanceStatus, getStatusColorClass } from '@/lib/attendance'
+import { formatMessageTime, getThreadDisplayName, priorityColorClasses } from '@/lib/messaging'
 import BoardReadinessCard from '@/components/BoardReadinessCard'
 import WeakAreaAnalytics from '@/components/WeakAreaAnalytics'
 import StudyRecommendations from '@/components/StudyRecommendations'
 import AnalyticsCharts from '@/components/AnalyticsCharts'
+import AnnouncementBanner from '@/components/messaging/AnnouncementBanner'
+import UnreadBadge from '@/components/messaging/UnreadBadge'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -63,6 +67,18 @@ export default async function DashboardPage() {
   const attendanceSummary = calculateAttendanceSummary(user.id, attendanceRecords)
   const { status: todayStatus } = getTodayAttendanceStatus(attendanceRecords, user.id)
   const lastAttendanceNote = attendanceRecords.find((r) => r.note)?.note || null
+
+  // Phase 8A messaging demo data
+  const demoNotifications = isDemoFallbackEnabled() ? getDemoNotificationsForUser(user.id) : []
+  const demoThreads = isDemoFallbackEnabled() ? getDemoThreadsForUser(user.id) : []
+  const demoAnnouncementsForSchool = isDemoFallbackEnabled()
+    ? getDemoAnnouncementsForSchool(profile?.school_id || 'demo-school')
+    : []
+  const fallbackAnnouncements = demoAnnouncementsForSchool.length > 0
+    ? demoAnnouncementsForSchool
+    : demoAnnouncements.slice(0, 1)
+  const unreadNotifications = demoNotifications.filter((n) => !n.read)
+  const unreadThreads = demoThreads.filter((t) => t.unreadCount > 0)
 
   // Calculate stats
   const totalChapters = chapters.length
@@ -154,6 +170,128 @@ export default async function DashboardPage() {
           </div>
         )}
       </div>
+
+      {/* Announcement Banner */}
+      <AnnouncementBanner announcements={fallbackAnnouncements} />
+
+      {/* Notification Summary + Unread Badge */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Link
+          href="/dashboard/messages"
+          className="bg-gray-900 border border-gray-800 rounded-xl p-5 hover:border-[#D4AF37]/30 transition-colors"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-400">Messages</p>
+              <p className="text-2xl font-bold text-white mt-1">
+                {unreadThreads.length} unread
+              </p>
+            </div>
+            <UnreadBadge count={unreadThreads.length} />
+          </div>
+          <p className="text-xs text-gray-500 mt-2">View inbox</p>
+        </Link>
+
+        <Link
+          href="/dashboard/messages"
+          className="bg-gray-900 border border-gray-800 rounded-xl p-5 hover:border-[#D4AF37]/30 transition-colors"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-400">Notifications</p>
+              <p className="text-2xl font-bold text-white mt-1">
+                {unreadNotifications.length} unread
+              </p>
+            </div>
+            <UnreadBadge count={unreadNotifications.length} />
+          </div>
+          <p className="text-xs text-gray-500 mt-2">View notification center</p>
+        </Link>
+      </div>
+
+      {/* Recent Messages Widget */}
+      {demoThreads.length > 0 && (
+        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+          <div className="p-4 border-b border-gray-800 flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-white">Recent Messages</h2>
+            <Link
+              href="/dashboard/messages"
+              className="text-sm text-[#D4AF37] hover:text-[#F4E4A6]"
+            >
+              View all
+            </Link>
+          </div>
+          <ul className="divide-y divide-gray-800">
+            {demoThreads.slice(0, 3).map((thread) => (
+              <li key={thread.id}>
+                <Link
+                  href="/dashboard/messages"
+                  className="flex items-center justify-between p-4 hover:bg-gray-800/50 transition-colors"
+                >
+                  <div className="min-w-0">
+                    <p className="font-medium text-white truncate">
+                      {getThreadDisplayName(thread, user.id)}
+                    </p>
+                    <p className="text-sm text-gray-400 truncate">{thread.subject}</p>
+                    <p className="text-xs text-gray-500 truncate mt-0.5">
+                      {thread.lastMessagePreview}
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-xs text-gray-500 block">
+                      {formatMessageTime(thread.lastMessageAt)}
+                    </span>
+                    {thread.unreadCount > 0 && (
+                      <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold text-white bg-red-500 rounded-full mt-1">
+                        {thread.unreadCount}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Latest Notifications */}
+      {demoNotifications.length > 0 && (
+        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+          <div className="p-4 border-b border-gray-800 flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-white">Latest Notifications</h2>
+            <Link
+              href="/dashboard/messages"
+              className="text-sm text-[#D4AF37] hover:text-[#F4E4A6]"
+            >
+              View all
+            </Link>
+          </div>
+          <ul className="divide-y divide-gray-800">
+            {demoNotifications.slice(0, 3).map((notification) => (
+              <li
+                key={notification.id}
+                className={`p-4 ${notification.read ? 'bg-gray-900/50' : 'bg-gray-800/30'}`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className={`px-2 py-0.5 rounded text-xs font-medium border ${priorityColorClasses(notification.priority)}`}>
+                        {notification.priority}
+                      </span>
+                      <span className="text-xs text-gray-500">{formatMessageTime(notification.createdAt)}</span>
+                    </div>
+                    <p className={`font-medium ${notification.read ? 'text-gray-300' : 'text-white'}`}>
+                      {notification.title}
+                    </p>
+                    <p className="text-sm text-gray-400 truncate">{notification.body}</p>
+                  </div>
+                  {!notification.read && <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0 mt-2" />}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
