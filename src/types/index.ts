@@ -206,3 +206,76 @@ export interface InstructorReadinessOverview {
   weakestCategory: string | null
   lastActivityAt: string | null
 }
+
+// ============================================================================
+// PHASE 6 — ATTENDANCE & CLOCK-IN FOUNDATION
+// ============================================================================
+
+export type AttendanceStatus =
+  | 'Present'
+  | 'Absent'
+  | 'Tardy'
+  | 'Excused'
+  | 'Clocked In'
+  | 'Clocked Out'
+
+export interface ClockEvent {
+  id: string
+  attendanceRecordId: string
+  eventType: 'in' | 'out'
+  timestamp: string
+  note?: string | null
+}
+
+export interface AttendanceRecord {
+  id: string
+  userId: string
+  schoolId: string | null
+  date: string
+  status: AttendanceStatus
+  clockedInAt: string | null
+  clockedOutAt: string | null
+  minutesPresent: number | null
+  note: string | null
+  verifiedBy: string | null
+  createdAt: string
+  updatedAt: string
+  clockEvents?: ClockEvent[]
+}
+
+export interface AttendanceSummary {
+  userId: string
+  totalDays: number
+  presentDays: number
+  absentDays: number
+  tardyDays: number
+  excusedDays: number
+  clockedInDays: number
+  attendancePercentage: number
+  tardyRate: number
+  absentRate: number
+  averageMinutesPerDay: number | null
+  currentStatus: AttendanceStatus | null
+  lastAttendanceDate: string | null
+  isAtRisk: boolean
+  riskReason: string | null
+}
+
+export interface AttendanceConcern {
+  userId: string
+  fullName: string
+  attendancePercentage: number
+  concernType: 'low_attendance' | 'absent' | 'tardy' | 'no_show'
+  description: string
+  lastAttendanceDate: string | null
+}
+
+export interface InstructorAttendanceNote {
+  id: string
+  studentId: string
+  instructorId: string
+  instructorName: string
+  date: string
+  note: string
+  createdAt: string
+}

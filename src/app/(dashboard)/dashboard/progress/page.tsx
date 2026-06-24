@@ -1,12 +1,14 @@
 import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
-import { StudentProgress, QuizAttempt } from '@/types'
+import { StudentProgress, QuizAttempt, AttendanceRecord } from '@/types'
 import { localChapters } from '@/lib/local-data'
 import { allQuizQuestions } from '@/lib/quiz-data'
 import { calculateBoardReadiness } from '@/lib/readiness'
 import { analyzePerformance } from '@/lib/analytics'
 import { generateStudyPlan } from '@/lib/recommendations'
 import { getDemoMissedQuestionsForUser } from '@/lib/demo-analytics'
+import { demoAttendanceRecords } from '@/lib/demo-data'
+import { calculateAttendanceSummary } from '@/lib/attendance'
 import BoardReadinessCard from '@/components/BoardReadinessCard'
 import WeakAreaAnalytics from '@/components/WeakAreaAnalytics'
 import StudyRecommendations from '@/components/StudyRecommendations'
@@ -24,30 +26,46 @@ export default async function ProgressPage() {
   const chapters = localChapters
 
   // Get user progress
-  const { data: progress } = await supabase
+  const { data: progressData } = await supabase
     .from('student_progress')
     .select('*')
-    .eq('user_id', user?.id) as { data: StudentProgress[] | null; error: any }
+    .eq('user_id', user?.id)
 
   // Get quiz attempts
-  const { data: attempts } = await supabase
+  const { data: attemptsData } = await supabase
     .from('quiz_attempts')
-    .select('*, quizzes(chapter_id)')
+    .select('*')
     .eq('user_id', user?.id)
-    .order('completed_at', { ascending: false }) as { data: QuizAttempt[] | null; error: any }
+    .order('completed_at', { ascending: false })
+
+  // Get attendance records
+  const { data: attendanceData } = await supabase
+    .from('attendance_records')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('date', { ascending: false })
+
+  let attendanceRecords: AttendanceRecord[] = (attendanceData as AttendanceRecord[]) || []
+  if (attendanceRecords.length === 0) {
+    attendanceRecords = demoAttendanceRecords.filter((a) => a.userId === user.id)
+  }
+
+  const attendanceSummary = calculateAttendanceSummary(user.id, attendanceRecords)
 
   // Calculate stats
+  const progress: StudentProgress[] = progressData || []
+  const attempts: QuizAttempt[] = attemptsData || []
   const totalChapters = chapters?.length || 0
-  const completedChapters = progress?.filter(p => p.progress_percentage === 100).length || 0
-  const flashcardsCompleted = progress?.filter(p => p.flashcards_completed).length || 0
-  const quizzesCompleted = progress?.filter(p => p.quiz_completed).length || 0
-  const averageQuizScore = attempts?.length
+  const completedChapters = progress.filter(p => p.progress_percentage === 100).length || 0
+  const flashcardsCompleted = progress.filter(p => p.flashcards_completed).length || 0
+  const quizzesCompleted = progress.filter(p => p.quiz_completed).length || 0
+  const averageQuizScore = attempts.length
     ? Math.round(attempts.reduce((acc, a) => acc + a.percentage, 0) / attempts.length)
     : 0
 
   // Phase 5 analytics
-  const attemptRecords = attempts || []
-  const progressRecords = progress || []
+  const attemptRecords = attempts
+  const progressRecords = progress
   const questions = Object.values(allQuizQuestions).flat()
 
   const analytics = analyzePerformance({
@@ -115,7 +133,7 @@ export default async function ProgressPage() {
       />
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 text-center">
           <div className="text-3xl font-bold text-[#D4AF37] mb-1">
             {Math.round(((completedChapters / totalChapters) * 100) || 0)}%
@@ -136,6 +154,16 @@ export default async function ProgressPage() {
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 text-center">
           <div className="text-3xl font-bold text-purple-400 mb-1">{averageQuizScore}%</div>
           <div className="text-sm text-gray-400">Avg Quiz Score</div>
+        </div>
+
+        <div className={`rounded-xl p-6 text-center border ${attendanceSummary.isAtRisk ? 'bg-red-950/10 border-red-900/50' : 'bg-gray-900 border-gray-800'}`}>
+          <div className={`text-3xl font-bold mb-1 ${attendanceSummary.attendancePercentage >= 80 ? 'text-green-400' : attendanceSummary.attendancePercentage >= 70 ? 'text-yellow-400' : 'text-red-400'}`}>
+            {attendanceSummary.attendancePercentage}%
+          </div>
+          <div className="text-sm text-gray-400">Attendance</div>
+          {attendanceSummary.isAtRisk && (
+            <p className="mt-1 text-xs text-red-400">Below target</p>
+          )}
         </div>
       </div>
 

@@ -1,7 +1,7 @@
 // Demo data for soft launch without Supabase
 // This provides safe mock data when NEXT_PUBLIC_DEMO_MODE=true
 
-import { Chapter, Flashcard, Quiz, QuizQuestion, QuizAttempt, StudentProgress, Profile, InstructorNote, HourLog } from '@/types'
+import { Chapter, Flashcard, Quiz, QuizQuestion, QuizAttempt, StudentProgress, Profile, InstructorNote, HourLog, AttendanceRecord, InstructorAttendanceNote } from '@/types'
 import { chapterFlashcards as realFlashcards } from './flashcards-data'
 import { batch1Flashcards, batch4Flashcards } from './orphaned-flashcards'
 import { allQuizQuestions } from './quiz-data'
@@ -422,6 +422,143 @@ export const demoHourLogs: HourLog[] = [
   { id: 'hour-jordan-1', user_id: 'demo-student-3', date: '2026-06-19', category: 'Theory', minutes: 120, status: 'approved', notes: 'Chapter 1 theory', created_at: '2026-06-19T17:00:00Z', updated_at: '2026-06-19T17:00:00Z' },
   { id: 'hour-jordan-2', user_id: 'demo-student-3', date: '2026-06-20', category: 'Practical', minutes: 240, status: 'approved', notes: 'Basic cuts', created_at: '2026-06-20T17:00:00Z', updated_at: '2026-06-20T17:00:00Z' },
   { id: 'hour-jordan-3', user_id: 'demo-student-3', date: '2026-06-21', category: 'Clinic', minutes: 480, status: 'pending', notes: 'Clinic floor', created_at: '2026-06-21T17:00:00Z', updated_at: '2026-06-21T17:00:00Z' },
+]
+
+// ============================================================================
+// PHASE 6 — DEMO ATTENDANCE & CLOCK-IN DATA
+// ============================================================================
+
+function createAttendanceRecord(
+  id: string,
+  userId: string,
+  date: string,
+  status: AttendanceRecord['status'],
+  clockIn: string | null = null,
+  clockOut: string | null = null,
+  note: string | null = null
+): AttendanceRecord {
+  const minutesPresent = clockIn && clockOut
+    ? Math.round((new Date(clockOut).getTime() - new Date(clockIn).getTime()) / 60000)
+    : null
+
+  return {
+    id,
+    userId,
+    schoolId: 'demo-school',
+    date,
+    status,
+    clockedInAt: clockIn,
+    clockedOutAt: clockOut,
+    minutesPresent,
+    note,
+    verifiedBy: status === 'Absent' || status === 'Excused' ? null : 'demo-instructor',
+    createdAt: `${date}T08:00:00Z`,
+    updatedAt: `${date}T17:00:00Z`,
+  }
+}
+
+// Demo attendance records for the last 11 school days (Mon-Fri weeks)
+export const demoAttendanceRecords: AttendanceRecord[] = [
+  // Alex Johnson — strong attendance
+  createAttendanceRecord('att-alex-2026-06-09', 'demo-student-1', '2026-06-09', 'Present', '2026-06-09T08:55:00Z', '2026-06-09T17:05:00Z'),
+  createAttendanceRecord('att-alex-2026-06-10', 'demo-student-1', '2026-06-10', 'Present', '2026-06-10T08:50:00Z', '2026-06-10T17:00:00Z'),
+  createAttendanceRecord('att-alex-2026-06-11', 'demo-student-1', '2026-06-11', 'Present', '2026-06-11T09:05:00Z', '2026-06-11T17:10:00Z'),
+  createAttendanceRecord('att-alex-2026-06-12', 'demo-student-1', '2026-06-12', 'Tardy', '2026-06-12T09:25:00Z', '2026-06-12T17:00:00Z', 'Late due to traffic'),
+  createAttendanceRecord('att-alex-2026-06-13', 'demo-student-1', '2026-06-13', 'Present', '2026-06-13T08:45:00Z', '2026-06-13T16:55:00Z'),
+  createAttendanceRecord('att-alex-2026-06-16', 'demo-student-1', '2026-06-16', 'Present', '2026-06-16T08:50:00Z', '2026-06-16T17:05:00Z'),
+  createAttendanceRecord('att-alex-2026-06-17', 'demo-student-1', '2026-06-17', 'Excused', null, null, 'Medical appointment'),
+  createAttendanceRecord('att-alex-2026-06-18', 'demo-student-1', '2026-06-18', 'Present', '2026-06-18T08:55:00Z', '2026-06-18T17:00:00Z'),
+  createAttendanceRecord('att-alex-2026-06-19', 'demo-student-1', '2026-06-19', 'Present', '2026-06-19T08:50:00Z', '2026-06-19T17:05:00Z'),
+  createAttendanceRecord('att-alex-2026-06-20', 'demo-student-1', '2026-06-20', 'Present', '2026-06-20T08:45:00Z', '2026-06-20T16:50:00Z'),
+  createAttendanceRecord('att-alex-2026-06-23', 'demo-student-1', '2026-06-23', 'Present', '2026-06-23T08:50:00Z', null),
+
+  // Maria Garcia — good attendance with one absence
+  createAttendanceRecord('att-maria-2026-06-09', 'demo-student-2', '2026-06-09', 'Present', '2026-06-09T08:58:00Z', '2026-06-09T17:00:00Z'),
+  createAttendanceRecord('att-maria-2026-06-10', 'demo-student-2', '2026-06-10', 'Present', '2026-06-10T08:52:00Z', '2026-06-10T17:05:00Z'),
+  createAttendanceRecord('att-maria-2026-06-11', 'demo-student-2', '2026-06-11', 'Tardy', '2026-06-11T09:20:00Z', '2026-06-11T17:00:00Z', 'Bus delayed'),
+  createAttendanceRecord('att-maria-2026-06-12', 'demo-student-2', '2026-06-12', 'Present', '2026-06-12T08:55:00Z', '2026-06-12T17:00:00Z'),
+  createAttendanceRecord('att-maria-2026-06-13', 'demo-student-2', '2026-06-13', 'Present', '2026-06-13T08:50:00Z', '2026-06-13T17:00:00Z'),
+  createAttendanceRecord('att-maria-2026-06-16', 'demo-student-2', '2026-06-16', 'Absent', null, null, 'Family emergency'),
+  createAttendanceRecord('att-maria-2026-06-17', 'demo-student-2', '2026-06-17', 'Present', '2026-06-17T08:55:00Z', '2026-06-17T17:00:00Z'),
+  createAttendanceRecord('att-maria-2026-06-18', 'demo-student-2', '2026-06-18', 'Excused', null, null, 'Court date'),
+  createAttendanceRecord('att-maria-2026-06-19', 'demo-student-2', '2026-06-19', 'Present', '2026-06-19T08:50:00Z', '2026-06-19T17:00:00Z'),
+  createAttendanceRecord('att-maria-2026-06-20', 'demo-student-2', '2026-06-20', 'Present', '2026-06-20T08:45:00Z', '2026-06-20T17:05:00Z'),
+  createAttendanceRecord('att-maria-2026-06-23', 'demo-student-2', '2026-06-23', 'Present', '2026-06-23T08:55:00Z', null),
+
+  // Jordan Smith — at-risk attendance
+  createAttendanceRecord('att-jordan-2026-06-09', 'demo-student-3', '2026-06-09', 'Present', '2026-06-09T08:50:00Z', '2026-06-09T17:00:00Z'),
+  createAttendanceRecord('att-jordan-2026-06-10', 'demo-student-3', '2026-06-10', 'Tardy', '2026-06-10T09:30:00Z', '2026-06-10T17:00:00Z', 'Overslept'),
+  createAttendanceRecord('att-jordan-2026-06-11', 'demo-student-3', '2026-06-11', 'Absent', null, null, 'No call/no show'),
+  createAttendanceRecord('att-jordan-2026-06-12', 'demo-student-3', '2026-06-12', 'Present', '2026-06-12T08:55:00Z', '2026-06-12T17:00:00Z'),
+  createAttendanceRecord('att-jordan-2026-06-13', 'demo-student-3', '2026-06-13', 'Present', '2026-06-13T08:50:00Z', '2026-06-13T17:00:00Z'),
+  createAttendanceRecord('att-jordan-2026-06-16', 'demo-student-3', '2026-06-16', 'Absent', null, null, 'No call/no show'),
+  createAttendanceRecord('att-jordan-2026-06-17', 'demo-student-3', '2026-06-17', 'Tardy', '2026-06-17T09:15:00Z', '2026-06-17T17:00:00Z', 'Late arrival'),
+  createAttendanceRecord('att-jordan-2026-06-18', 'demo-student-3', '2026-06-18', 'Excused', null, null, 'Sick leave with note'),
+  createAttendanceRecord('att-jordan-2026-06-19', 'demo-student-3', '2026-06-19', 'Present', '2026-06-19T08:50:00Z', '2026-06-19T17:00:00Z'),
+  createAttendanceRecord('att-jordan-2026-06-20', 'demo-student-3', '2026-06-20', 'Present', '2026-06-20T08:45:00Z', '2026-06-20T17:00:00Z'),
+  createAttendanceRecord('att-jordan-2026-06-23', 'demo-student-3', '2026-06-23', 'Present', '2026-06-23T09:05:00Z', null),
+
+  // Taylor Brown — struggling attendance
+  createAttendanceRecord('att-taylor-2026-06-09', 'demo-student-4', '2026-06-09', 'Present', '2026-06-09T08:55:00Z', '2026-06-09T17:00:00Z'),
+  createAttendanceRecord('att-taylor-2026-06-10', 'demo-student-4', '2026-06-10', 'Absent', null, null, 'No call/no show'),
+  createAttendanceRecord('att-taylor-2026-06-11', 'demo-student-4', '2026-06-11', 'Absent', null, null, 'No call/no show'),
+  createAttendanceRecord('att-taylor-2026-06-12', 'demo-student-4', '2026-06-12', 'Tardy', '2026-06-12T09:40:00Z', '2026-06-12T17:00:00Z', 'Transportation issues'),
+  createAttendanceRecord('att-taylor-2026-06-13', 'demo-student-4', '2026-06-13', 'Present', '2026-06-13T08:50:00Z', '2026-06-13T17:00:00Z'),
+  createAttendanceRecord('att-taylor-2026-06-16', 'demo-student-4', '2026-06-16', 'Absent', null, null, 'No call/no show'),
+  createAttendanceRecord('att-taylor-2026-06-17', 'demo-student-4', '2026-06-17', 'Excused', null, null, 'Family matter'),
+  createAttendanceRecord('att-taylor-2026-06-18', 'demo-student-4', '2026-06-18', 'Present', '2026-06-18T08:55:00Z', '2026-06-18T17:00:00Z'),
+  createAttendanceRecord('att-taylor-2026-06-19', 'demo-student-4', '2026-06-19', 'Absent', null, null, 'No call/no show'),
+  createAttendanceRecord('att-taylor-2026-06-20', 'demo-student-4', '2026-06-20', 'Present', '2026-06-20T08:50:00Z', '2026-06-20T17:00:00Z'),
+  createAttendanceRecord('att-taylor-2026-06-23', 'demo-student-4', '2026-06-23', 'Present', '2026-06-23T09:00:00Z', null),
+]
+
+// Demo instructor attendance notes
+export const demoInstructorAttendanceNotes: InstructorAttendanceNote[] = [
+  {
+    id: 'att-note-alex-1',
+    studentId: 'demo-student-1',
+    instructorId: 'demo-instructor',
+    instructorName: 'Demo Instructor',
+    date: '2026-06-12',
+    note: 'Alex arrived 25 minutes late due to traffic. Otherwise strong attendance.',
+    createdAt: '2026-06-12T09:30:00Z',
+  },
+  {
+    id: 'att-note-maria-1',
+    studentId: 'demo-student-2',
+    instructorId: 'demo-instructor',
+    instructorName: 'Demo Instructor',
+    date: '2026-06-16',
+    note: 'Maria absent for family emergency. Follow up tomorrow.',
+    createdAt: '2026-06-16T10:00:00Z',
+  },
+  {
+    id: 'att-note-jordan-1',
+    studentId: 'demo-student-3',
+    instructorId: 'demo-instructor',
+    instructorName: 'Demo Instructor',
+    date: '2026-06-11',
+    note: 'Jordan no-call/no-show. Pattern emerging — schedule check-in.',
+    createdAt: '2026-06-11T10:00:00Z',
+  },
+  {
+    id: 'att-note-jordan-2',
+    studentId: 'demo-student-3',
+    instructorId: 'demo-instructor',
+    instructorName: 'Demo Instructor',
+    date: '2026-06-17',
+    note: 'Jordan late again. Discussed transportation plan.',
+    createdAt: '2026-06-17T09:30:00Z',
+  },
+  {
+    id: 'att-note-taylor-1',
+    studentId: 'demo-student-4',
+    instructorId: 'demo-instructor',
+    instructorName: 'Demo Instructor',
+    date: '2026-06-16',
+    note: 'Taylor has missed 3 days this pay period. Attendance contract recommended.',
+    createdAt: '2026-06-16T10:30:00Z',
+  },
 ]
 
 // Helper to get all flashcards for a chapter

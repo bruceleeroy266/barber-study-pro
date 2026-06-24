@@ -1,13 +1,15 @@
 import { createClient } from '@/lib/supabase-server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { QuizAttempt, StudentProgress } from '@/types'
+import { QuizAttempt, StudentProgress, AttendanceRecord } from '@/types'
 import { localChapters } from '@/lib/local-data'
 import { allQuizQuestions } from '@/lib/quiz-data'
 import { calculateBoardReadiness } from '@/lib/readiness'
 import { analyzePerformance } from '@/lib/analytics'
 import { generateStudyPlan } from '@/lib/recommendations'
 import { getDemoMissedQuestionsForUser } from '@/lib/demo-analytics'
+import { demoAttendanceRecords } from '@/lib/demo-data'
+import { calculateAttendanceSummary, getTodayAttendanceStatus, getStatusColorClass } from '@/lib/attendance'
 import BoardReadinessCard from '@/components/BoardReadinessCard'
 import WeakAreaAnalytics from '@/components/WeakAreaAnalytics'
 import StudyRecommendations from '@/components/StudyRecommendations'
@@ -34,31 +36,49 @@ export default async function DashboardPage() {
   const chapters = localChapters
 
   // Get user progress
-  const { data: progress } = await supabase
+  const { data: progressData } = await supabase
     .from('student_progress')
     .select('*')
-    .eq('user_id', user?.id) as { data: StudentProgress[] | null; error: any }
+    .eq('user_id', user?.id)
 
   // Get quiz attempts
-  const { data: attempts } = await supabase
+  const { data: attemptsData } = await supabase
     .from('quiz_attempts')
     .select('*')
     .eq('user_id', user.id)
-    .order('completed_at', { ascending: false }) as { data: QuizAttempt[] | null; error: any }
+    .order('completed_at', { ascending: false })
+
+  // Get attendance records
+  const { data: attendanceData } = await supabase
+    .from('attendance_records')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('date', { ascending: false })
+
+  let attendanceRecords: AttendanceRecord[] = (attendanceData as AttendanceRecord[]) || []
+  if (attendanceRecords.length === 0) {
+    attendanceRecords = demoAttendanceRecords.filter((a) => a.userId === user.id)
+  }
+
+  const attendanceSummary = calculateAttendanceSummary(user.id, attendanceRecords)
+  const { status: todayStatus } = getTodayAttendanceStatus(attendanceRecords, user.id)
+  const lastAttendanceNote = attendanceRecords.find((r) => r.note)?.note || null
 
   // Calculate stats
   const totalChapters = chapters.length
-  const completedChapters = progress?.filter(p => p.progress_percentage === 100).length || 0
-  const inProgressChapters = progress?.filter(p => p.progress_percentage > 0 && p.progress_percentage < 100).length || 0
+  const progress: StudentProgress[] = progressData || []
+  const attempts: QuizAttempt[] = attemptsData || []
+  const completedChapters = progress.filter(p => p.progress_percentage === 100).length || 0
+  const inProgressChapters = progress.filter(p => p.progress_percentage > 0 && p.progress_percentage < 100).length || 0
   // Overall progress = average across ALL chapters (including 0% for not started)
-  const totalProgressSum = progress?.reduce((acc, p) => acc + p.progress_percentage, 0) || 0
+  const totalProgressSum = progress.reduce((acc, p) => acc + p.progress_percentage, 0) || 0
   const averageProgress = totalChapters > 0
     ? Math.round(totalProgressSum / totalChapters)
     : 0
 
   // Phase 5 analytics
-  const attemptRecords = attempts || []
-  const progressRecords = progress || []
+  const attemptRecords = attempts
+  const progressRecords = progress
   const questions = Object.values(allQuizQuestions).flat()
 
   const analytics = analyzePerformance({
@@ -136,7 +156,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
           <div className="text-3xl mb-2">📚</div>
           <div className="text-3xl font-bold text-white">{totalChapters}</div>
@@ -159,6 +179,23 @@ export default async function DashboardPage() {
           <div className="text-3xl mb-2">📊</div>
           <div className="text-3xl font-bold text-green-400">{averageProgress}%</div>
           <div className="text-sm text-gray-400">Overall Progress</div>
+        </div>
+
+        {/* Attendance Snapshot Card */}
+        <div className={`bg-gray-900 border rounded-xl p-6 ${attendanceSummary.isAtRisk ? 'border-red-900/50' : 'border-gray-800'}`}>
+          <div className="text-3xl mb-2">⏰</div>
+          <div className={`text-3xl font-bold ${attendanceSummary.attendancePercentage >= 80 ? 'text-green-400' : attendanceSummary.attendancePercentage >= 70 ? 'text-yellow-400' : 'text-red-400'}`}>
+            {attendanceSummary.attendancePercentage}%
+          </div>
+          <div className="text-sm text-gray-400">Attendance</div>
+          <div className="mt-2 flex items-center gap-2">
+            <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${getStatusColorClass(todayStatus)}`}>
+              {todayStatus || 'Not marked'}
+            </span>
+          </div>
+          {attendanceSummary.isAtRisk && (
+            <p className="mt-2 text-xs text-red-400">{attendanceSummary.riskReason}</p>
+          )}
         </div>
       </div>
 

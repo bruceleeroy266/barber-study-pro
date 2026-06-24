@@ -1,15 +1,16 @@
 import { createClient } from '@/lib/supabase-server'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
-import { Profile, StudentProgress, QuizAttempt, InstructorNote, HourLog, HourStatus } from '@/types'
+import { Profile, StudentProgress, QuizAttempt, InstructorNote, HourLog, HourStatus, AttendanceRecord, InstructorAttendanceNote } from '@/types'
 import { localChapters } from '@/lib/local-data'
 import { allQuizQuestions } from '@/lib/quiz-data'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
-import { demoStudents, demoStudentProgress, demoStudentQuizAttempts, demoInstructorNotes, demoHourLogs } from '@/lib/demo-data'
+import { demoStudents, demoStudentProgress, demoStudentQuizAttempts, demoInstructorNotes, demoHourLogs, demoAttendanceRecords, demoInstructorAttendanceNotes } from '@/lib/demo-data'
 import { getDemoMissedQuestionsForUser } from '@/lib/demo-analytics'
 import { calculateBoardReadiness } from '@/lib/readiness'
 import { analyzePerformance } from '@/lib/analytics'
 import { generateStudyPlan } from '@/lib/recommendations'
+import { calculateAttendanceSummary, getRecentAttendance, getStatusColorClass } from '@/lib/attendance'
 import BoardReadinessCard from '@/components/BoardReadinessCard'
 import WeakAreaAnalytics from '@/components/WeakAreaAnalytics'
 import StudyRecommendations from '@/components/StudyRecommendations'
@@ -170,10 +171,12 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     .eq('id', studentId)
     .eq('school_id', instructorProfile.school_id)
     .in('role', ['student', 'apprentice'])
-    .single() as { data: Profile | null; error: any }
+    .single()
+
+  const typedStudent = student as Profile | null
 
   // Demo fallback: if real data is unavailable, check demo students
-  let resolvedStudent: Profile | null = student
+  let resolvedStudent: Profile | null = typedStudent
   if (!resolvedStudent) {
     resolvedStudent = demoStudents.find(
       (s) =>
@@ -193,26 +196,26 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
   const { data: progress } = await supabase
     .from('student_progress')
     .select('*')
-    .eq('user_id', studentId) as { data: StudentProgress[] | null; error: any }
+    .eq('user_id', studentId)
 
   // Get quiz attempts
   const { data: attempts } = await supabase
     .from('quiz_attempts')
     .select('*')
     .eq('user_id', studentId)
-    .order('completed_at', { ascending: false }) as { data: QuizAttempt[] | null; error: any }
+    .order('completed_at', { ascending: false })
 
   // Get instructor notes
   const { data: notes } = await supabase
     .from('instructor_notes')
     .select('*')
     .eq('student_id', studentId)
-    .order('created_at', { ascending: false }) as { data: InstructorNote[] | null; error: any }
+    .order('created_at', { ascending: false })
 
   // Demo fallback for progress, attempts, and notes
-  let progressRecords = progress || []
-  let attemptRecords = attempts || []
-  let noteRecords = notes || []
+  let progressRecords: StudentProgress[] = (progress as StudentProgress[]) || []
+  let attemptRecords: QuizAttempt[] = (attempts as QuizAttempt[]) || []
+  let noteRecords: InstructorNote[] = (notes as InstructorNote[]) || []
   if (progressRecords.length === 0 && attemptRecords.length === 0) {
     progressRecords = demoStudentProgress.filter((p) => p.user_id === studentId)
     attemptRecords = demoStudentQuizAttempts.filter((a) => a.user_id === studentId)
@@ -227,13 +230,38 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     .from('hour_logs')
     .select('*')
     .eq('user_id', studentId)
-    .order('date', { ascending: false }) as { data: HourLog[] | null; error: any }
+    .order('date', { ascending: false })
 
-  let hourLogRecords = hourLogs || []
+  let hourLogRecords: HourLog[] = (hourLogs as HourLog[]) || []
   if (hourLogRecords.length === 0) {
     hourLogRecords = demoHourLogs.filter((h) => h.user_id === studentId)
     hourLogRecords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   }
+
+  // Get attendance records
+  const { data: attendance } = await supabase
+    .from('attendance_records')
+    .select('*')
+    .eq('user_id', studentId)
+    .order('date', { ascending: false })
+
+  const { data: attendanceNotes } = await supabase
+    .from('attendance_notes')
+    .select('*')
+    .eq('student_id', studentId)
+    .order('created_at', { ascending: false })
+
+  let attendanceRecords: AttendanceRecord[] = (attendance as AttendanceRecord[]) || []
+  let attendanceNoteRecords: InstructorAttendanceNote[] = (attendanceNotes as InstructorAttendanceNote[]) || []
+  if (attendanceRecords.length === 0) {
+    attendanceRecords = demoAttendanceRecords.filter((a) => a.userId === studentId)
+  }
+  if (attendanceNoteRecords.length === 0) {
+    attendanceNoteRecords = demoInstructorAttendanceNotes.filter((n) => n.studentId === studentId)
+  }
+
+  const attendanceSummary = calculateAttendanceSummary(studentId, attendanceRecords)
+  const recentAttendance = getRecentAttendance(attendanceRecords, studentId, 14)
 
   const REQUIRED_MINUTES = 1500 * 60
   const approvedMinutes = hourLogRecords
@@ -241,9 +269,6 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     .reduce((sum, h) => sum + h.minutes, 0)
   const pendingMinutes = hourLogRecords
     .filter((h) => h.status === 'pending')
-    .reduce((sum, h) => sum + h.minutes, 0)
-  const rejectedMinutes = hourLogRecords
-    .filter((h) => h.status === 'rejected')
     .reduce((sum, h) => sum + h.minutes, 0)
   const remainingMinutes = Math.max(0, REQUIRED_MINUTES - approvedMinutes)
   const completionPercentage = REQUIRED_MINUTES > 0
@@ -881,6 +906,114 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                   No weak areas found — all attempted chapters are performing strongly.
                 </div>
               )}
+            </div>
+          )}
+        </div>
+
+        {/* Attendance Summary */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+          <div className="p-6 border-b border-gray-800">
+            <h2 className="text-xl font-semibold text-white">Attendance Summary</h2>
+            <p className="text-sm text-gray-400 mt-1">Last 11 school days</p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 p-6 border-b border-gray-800">
+            <div className="bg-gray-950 border border-gray-800 rounded-xl p-4">
+              <div className={`text-xl font-bold ${attendanceSummary.attendancePercentage >= 80 ? 'text-green-400' : attendanceSummary.attendancePercentage >= 70 ? 'text-yellow-400' : 'text-red-400'}`}>
+                {attendanceSummary.attendancePercentage}%
+              </div>
+              <div className="text-xs text-gray-400 mt-1">Attendance Rate</div>
+            </div>
+            <div className="bg-gray-950 border border-gray-800 rounded-xl p-4">
+              <div className="text-xl font-bold text-green-400">{attendanceSummary.presentDays}</div>
+              <div className="text-xs text-gray-400 mt-1">Present</div>
+            </div>
+            <div className="bg-gray-950 border border-gray-800 rounded-xl p-4">
+              <div className="text-xl font-bold text-red-400">{attendanceSummary.absentDays}</div>
+              <div className="text-xs text-gray-400 mt-1">Absent</div>
+            </div>
+            <div className="bg-gray-950 border border-gray-800 rounded-xl p-4">
+              <div className="text-xl font-bold text-yellow-400">{attendanceSummary.tardyDays}</div>
+              <div className="text-xs text-gray-400 mt-1">Tardy</div>
+            </div>
+            <div className="bg-gray-950 border border-gray-800 rounded-xl p-4">
+              <div className="text-xl font-bold text-blue-400">{attendanceSummary.excusedDays}</div>
+              <div className="text-xs text-gray-400 mt-1">Excused</div>
+            </div>
+          </div>
+
+          {attendanceSummary.isAtRisk && (
+            <div className="p-4 bg-red-950/20 border-b border-red-900/30">
+              <div className="flex items-start gap-3">
+                <span className="text-red-400 text-lg">⚠️</span>
+                <div>
+                  <h3 className="text-sm font-semibold text-red-400">Attendance Concern</h3>
+                  <p className="text-sm text-gray-300">{attendanceSummary.riskReason}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="p-6 border-b border-gray-800">
+            <h3 className="text-sm font-semibold text-white uppercase tracking-wide mb-4">Recent History</h3>
+            {recentAttendance.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="text-left text-sm text-gray-400 border-b border-gray-800">
+                      <th className="p-3">Date</th>
+                      <th className="p-3">Status</th>
+                      <th className="p-3">Clock In</th>
+                      <th className="p-3">Clock Out</th>
+                      <th className="p-3">Minutes</th>
+                      <th className="p-3">Note</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-sm">
+                    {recentAttendance.slice(0, 10).map((record) => (
+                      <tr key={record.id} className="border-b border-gray-800 last:border-0">
+                        <td className="p-3 text-gray-300">{formatDate(record.date)}</td>
+                        <td className="p-3">
+                          <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${getStatusColorClass(record.status)}`}>
+                            {record.status}
+                          </span>
+                        </td>
+                        <td className="p-3 text-gray-400">
+                          {record.clockedInAt ? new Date(record.clockedInAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '—'}
+                        </td>
+                        <td className="p-3 text-gray-400">
+                          {record.clockedOutAt ? new Date(record.clockedOutAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '—'}
+                        </td>
+                        <td className="p-3 text-gray-400">
+                          {record.minutesPresent !== null ? `${record.minutesPresent} min` : '—'}
+                        </td>
+                        <td className="p-3 text-gray-400 truncate max-w-[200px]">
+                          {record.note || '—'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <p className="text-gray-400 text-sm">No attendance records found.</p>
+            )}
+          </div>
+
+          {attendanceNoteRecords.length > 0 && (
+            <div className="p-6">
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wide mb-4">Attendance Notes</h3>
+              <div className="space-y-3">
+                {attendanceNoteRecords.map((note) => (
+                  <div key={note.id} className="p-3 bg-gray-950 border border-gray-800 rounded-lg">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs text-gray-500">{formatDate(note.date)}</span>
+                      <span className="text-xs text-gray-500">by {note.instructorName}</span>
+                    </div>
+                    <p className="text-sm text-gray-300">{note.note}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>

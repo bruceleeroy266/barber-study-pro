@@ -1,12 +1,13 @@
 import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Profile, StudentProgress, QuizAttempt, HourLog, ReadinessLevel } from '@/types'
+import { Profile, StudentProgress, QuizAttempt, HourLog, ReadinessLevel, AttendanceRecord } from '@/types'
 import { localChapters } from '@/lib/local-data'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
-import { demoStudents, demoStudentProgress, demoStudentQuizAttempts, demoHourLogs } from '@/lib/demo-data'
+import { demoStudents, demoStudentProgress, demoStudentQuizAttempts, demoHourLogs, demoAttendanceRecords } from '@/lib/demo-data'
 import { calculateBoardReadiness, getReadinessColorClass } from '@/lib/readiness'
-import { analyzePerformance, getCategoryForChapter } from '@/lib/analytics'
+import { analyzePerformance } from '@/lib/analytics'
+import { calculateAttendanceSummary, getAttendanceConcerns, getStatusColorClass } from '@/lib/attendance'
 import { allQuizQuestions } from '@/lib/quiz-data'
 
 interface RosterStudent extends Profile {
@@ -183,9 +184,9 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     .from('profiles')
     .select('*')
     .eq('school_id', schoolId)
-    .in('role', ['student', 'apprentice']) as { data: Profile[] | null; error: any }
+    .in('role', ['student', 'apprentice'])
 
-  let rosterStudents: Profile[] = students || []
+  let rosterStudents: Profile[] = (students as Profile[]) || []
 
   // Demo fallback: if no real student data is available, show safe demo roster
   if (rosterStudents.length === 0 && isDemoFallbackEnabled()) {
@@ -198,21 +199,20 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
   const { data: allProgress } = await supabase
     .from('student_progress')
     .select('*')
-    .in('user_id', studentIds.length > 0 ? studentIds : ['__none__']) as { data: StudentProgress[] | null; error: any }
+    .in('user_id', studentIds.length > 0 ? studentIds : ['__none__'])
 
   const { data: allAttempts } = await supabase
     .from('quiz_attempts')
     .select('*')
-    .in('user_id', studentIds.length > 0 ? studentIds : ['__none__']) as { data: QuizAttempt[] | null; error: any }
+    .in('user_id', studentIds.length > 0 ? studentIds : ['__none__'])
 
   // Use local chapters as the source of truth for chapter count
   const chapters = localChapters
-  const totalChapters = chapters.length
   const questions = Object.values(allQuizQuestions).flat()
 
   // Build demo fallback for progress/attempts when real tables are empty
-  let progressRecords = allProgress || []
-  let attemptRecords = allAttempts || []
+  let progressRecords: StudentProgress[] = (allProgress as StudentProgress[]) || []
+  let attemptRecords: QuizAttempt[] = (allAttempts as QuizAttempt[]) || []
   if (rosterStudents.length > 0 && progressRecords.length === 0 && attemptRecords.length === 0 && isDemoFallbackEnabled()) {
     progressRecords = demoStudentProgress.filter((p) => studentIds.includes(p.user_id))
     attemptRecords = demoStudentQuizAttempts.filter((a) => studentIds.includes(a.user_id))
@@ -222,12 +222,33 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
   const { data: allHourLogs } = await supabase
     .from('hour_logs')
     .select('*')
-    .in('user_id', studentIds.length > 0 ? studentIds : ['__none__']) as { data: HourLog[] | null; error: any }
+    .in('user_id', studentIds.length > 0 ? studentIds : ['__none__'])
 
-  let hourLogRecords = allHourLogs || []
+  let hourLogRecords: HourLog[] = (allHourLogs as HourLog[]) || []
   if (hourLogRecords.length === 0 && isDemoFallbackEnabled()) {
     hourLogRecords = demoHourLogs.filter((h) => studentIds.includes(h.user_id))
   }
+
+  // Fetch attendance records
+  const { data: allAttendance } = await supabase
+    .from('attendance_records')
+    .select('*')
+    .in('user_id', studentIds.length > 0 ? studentIds : ['__none__'])
+
+  let attendanceRecords: AttendanceRecord[] = (allAttendance as AttendanceRecord[]) || []
+  if (attendanceRecords.length === 0 && isDemoFallbackEnabled()) {
+    attendanceRecords = demoAttendanceRecords.filter((a) => studentIds.includes(a.userId))
+  }
+
+  const today = new Date().toISOString().split('T')[0]
+  const todayRecords = attendanceRecords.filter((a) => a.date === today)
+  const presentToday = todayRecords.filter((a) => a.status === 'Present').length
+  const absentToday = todayRecords.filter((a) => a.status === 'Absent').length
+  const tardyToday = todayRecords.filter((a) => a.status === 'Tardy').length
+  const excusedToday = todayRecords.filter((a) => a.status === 'Excused').length
+  const notMarkedToday = rosterStudents.length - todayRecords.length
+
+  const attendanceConcerns = getAttendanceConcerns(rosterStudents, attendanceRecords)
 
   const pendingHourLogs = hourLogRecords.filter((h) => h.status === 'pending')
   const pendingByStudent = pendingHourLogs.reduce<Record<string, number>>((acc, log) => {
@@ -403,6 +424,108 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
               )}
             </div>
           </form>
+        </div>
+
+        {/* Today's Attendance Overview */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+          <div className="p-6 border-b border-gray-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-semibold text-white">Today&apos;s Attendance Overview</h2>
+              <p className="text-sm text-gray-400 mt-1">{today} — Present / Absent / Tardy / Excused</p>
+            </div>
+            <div className="text-sm text-gray-400">
+              {notMarkedToday > 0 && (
+                <span className="text-yellow-400">{notMarkedToday} not marked</span>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 p-6 border-b border-gray-800">
+            <div className="bg-gray-950 border border-green-900/30 rounded-xl p-4 text-center">
+              <div className="text-3xl font-bold text-green-400">{presentToday}</div>
+              <div className="text-xs text-gray-400 mt-1">Present</div>
+            </div>
+            <div className="bg-gray-950 border border-red-900/30 rounded-xl p-4 text-center">
+              <div className="text-3xl font-bold text-red-400">{absentToday}</div>
+              <div className="text-xs text-gray-400 mt-1">Absent</div>
+            </div>
+            <div className="bg-gray-950 border border-yellow-900/30 rounded-xl p-4 text-center">
+              <div className="text-3xl font-bold text-yellow-400">{tardyToday}</div>
+              <div className="text-xs text-gray-400 mt-1">Tardy</div>
+            </div>
+            <div className="bg-gray-950 border border-blue-900/30 rounded-xl p-4 text-center">
+              <div className="text-3xl font-bold text-blue-400">{excusedToday}</div>
+              <div className="text-xs text-gray-400 mt-1">Excused</div>
+            </div>
+            <div className="bg-gray-950 border border-gray-700 rounded-xl p-4 text-center">
+              <div className="text-3xl font-bold text-gray-400">{rosterStudents.length}</div>
+              <div className="text-xs text-gray-400 mt-1">Total Roster</div>
+            </div>
+          </div>
+
+          {attendanceConcerns.length > 0 ? (
+            <div className="p-6 border-b border-gray-800">
+              <h3 className="text-sm font-semibold text-red-400 mb-3 flex items-center gap-2">
+                <span>⚠️</span> Students Needing Attention
+              </h3>
+              <div className="space-y-2">
+                {attendanceConcerns.slice(0, 5).map((concern) => (
+                  <div
+                    key={concern.userId}
+                    className="flex items-center justify-between bg-gray-950 border border-red-900/20 rounded-lg p-3"
+                  >
+                    <div>
+                      <Link
+                        href={`/instructor/student/${concern.userId}`}
+                        className="font-medium text-white hover:text-[#D4AF37] transition-colors"
+                      >
+                        {concern.fullName}
+                      </Link>
+                      <p className="text-sm text-gray-400">{concern.description}</p>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-lg font-bold text-red-400">{concern.attendancePercentage}%</div>
+                      <div className="text-xs text-gray-500">attendance</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="p-6 border-b border-gray-800">
+              <p className="text-green-400 text-sm">✅ No attendance concerns today.</p>
+            </div>
+          )}
+
+          <div className="p-6">
+            <h3 className="text-sm font-semibold text-white mb-3">Quick Attendance Queue</h3>
+            <p className="text-sm text-gray-400">
+              Mark attendance one student at a time. Full self clock-in workflow coming in a future phase.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {studentStats.slice(0, 6).map((student) => {
+                const todayRecord = todayRecords.find((r) => r.userId === student.id)
+                return (
+                  <div
+                    key={student.id}
+                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-medium ${
+                      todayRecord
+                        ? getStatusColorClass(todayRecord.status)
+                        : 'text-gray-400 bg-gray-800 border-gray-700'
+                    }`}
+                  >
+                    <span className="truncate max-w-[120px]">{student.full_name}</span>
+                    <span>{todayRecord ? todayRecord.status : 'Not marked'}</span>
+                  </div>
+                )
+              })}
+              {studentStats.length > 6 && (
+                <span className="inline-flex items-center px-3 py-1.5 rounded-full border border-gray-700 text-gray-400 text-xs">
+                  +{studentStats.length - 6} more
+                </span>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Board Readiness Overview */}
