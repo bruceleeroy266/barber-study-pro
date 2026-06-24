@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 14: Men's Haircutting & Styling | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .chapter-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
+        .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; }
+        .chapter-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
+        .content { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+        .section { margin-bottom: 3rem; }
+        .section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+        .section h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .section p, .section ul { margin-bottom: 1rem; color: #ccc; }
+        .section ul { margin-left: 1.5rem; }
+        .key-point { background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .key-point strong { color: var(--gold); }
+        .study-tools { position: fixed; bottom: 2rem; right: 2rem; display: flex; gap: 1rem; }
+        .tool-btn { background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; }
+        .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; }
+        .nav-chapters { display: flex; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--medium-gray); }
+        .nav-chapters a { color: var(--gold); text-decoration: none; font-weight: 600; }
+
+        .quiz-section { background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
+        .quiz-section h2 { color: var(--gold); margin-bottom: 1.5rem; }
+        .quiz-question { margin-bottom: 1.5rem; }
+        .quiz-question p { font-weight: 600; margin-bottom: 0.75rem; color: var(--white); }
+        .quiz-options label { display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .quiz-options label:hover { background: rgba(212, 175, 55, 0.1); }
+        .quiz-options input[type="radio"] { margin-right: 0.75rem; }
+        .quiz-submit { background: var(--gold); color: var(--dark); border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+        .quiz-result { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: none; }
+        .quiz-result.correct { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; }
+        .quiz-result.incorrect { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <nav><div class="nav-container"><a href="index.html" class="logo">⚡ Barber Study Pro</a><a href="index.html#chapters" class="back-link">← Back</a></div></nav>
+    <header class="chapter-header">
+        <span class="chapter-number">CHAPTER 14</span>
+        <h1>Men's Haircutting & Styling</h1>
+        <p>Shear-over-comb, clipper techniques, and basic styles</p>
+    </header>
+    <main class="content">
+        <section class="section">
+            <h2>🎯 Why Study Haircutting?</h2>
+            <p>Haircutting is the foundation of barbering. Mastering it allows you to:</p>
+            <ul>
+                <li>Deliver consistent, high-quality results</li>
+                <li>Adapt to various hair textures and lengths</li>
+                <li>Create balanced, customized designs</li>
+                <li>Build client confidence and loyalty</li>
+            </ul>
+            <div class="key-point"><strong>Key Point:</strong> A great haircut is not just about removing hair — it's about creating shape, balance, and proportion.</div>
+        </section>
+        <section class="section">
+            <h2>✂️ Basic Cutting Techniques</h2>
+            <h3>Shear-Over-Comb (Fingers-and-Shear):</h3>
+            <ul>
+                <li><strong>Horizontal cutting</strong> — Top and crest sections; comb at 45° angle</li>
+                <li><strong>Vertical cutting</strong> — Sides; comb hair outward at 90° elevation</li>
+                <li><strong>Perimeter cutting</strong> — Nape and outline; use horizontal parts</li>
+            </ul>
+            <h3>Freehand Shear Cutting:</h3>
+            <ul>
+                <li>Cutting against skin without comb or fingers</li>
+                <li>Useful for fine-tuning, removing stray hairs, shaping nape</li>
+            </ul>
+            <h3>Clipper Techniques:</h3>
+            <ul>
+                <li><strong>Freehand clipper</strong> — Steady hand, comb lifts hair</li>
+                <li><strong>Clipper-over-comb</strong> — Comb lifts hair, clipper cuts protruding ends</li>
+            </ul>
+            <h3>Razor Cutting:</h3>
+            <ul>
+                <li>Produces softer, tapered ends</li>
+                <li>Keep hair damp; use guard for beginners</li>
+            </ul>
+            <div class="key-point">Master <strong>shear-over-comb first</strong> — it's the most versatile technique.</div>
+        </section>
+        <section class="section">
+            <h2>🔄 Hair Growth Directions</h2>
+            <ul>
+                <li><strong>With the grain</strong> — Cut in same direction as growth (safest, least irritation)</li>
+                <li><strong>Against the grain</strong> — Opposite direction (shorter result, more caution)</li>
+                <li><strong>Across the grain</strong> — Used in transition areas for blending</li>
+            </ul>
+            <div class="key-point">Always identify <strong>natural growth pattern</strong> before cutting.</div>
+        </section>
+        <section class="section">
+            <h2>✂️ Thinning and Texturizing</h2>
+            <ul>
+                <li><strong>Thinning</strong> — Use serrated shears mid-shaft to reduce density</li>
+                <li><strong>Slicing/Carving</strong> — Glide open shears through elevated hair</li>
+                <li><strong>Slithering</strong> — Slide shears down thin parting toward scalp</li>
+                <li><strong>Notching/Point Cutting</strong> — Create chunkier texture at ends</li>
+            </ul>
+            <div class="key-point">Observe density first. Remove bulk <strong>gradually</strong> — over-thinning is difficult to correct.</div>
+        </section>
+        <section class="section">
+            <h2>💈 Basic Haircut Styles</h2>
+            <ul>
+                <li><strong>Precision Cut</strong> — Uniform taper using fingers-and-shear</li>
+                <li><strong>Taper Cut</strong> — Graduated length from nape to top</li>
+                <li><strong>Flat Top/Crew Cut</strong> — Short sides, flat or rounded top</li>
+                <li><strong>Pompadour</strong> — Medium to long top with volume, tapered sides</li>
+                <li><strong>Fade/High & Tight</strong> — Extremely close sides blending to longer top</li>
+                <li><strong>Caesar</strong> — Short, uniform layers styled forward</li>
+            </ul>
+        </section>
+        <section class="section">
+            <h2>📝 Chapter 14 Key Takeaways</h2>
+            <div class="key-point">
+                <ul style="margin-left: 1rem;">
+                    <li>Core techniques: <strong>shear-over-comb, freehand shear, clipper-over-comb, razor</strong></li>
+                    <li>Hair growth directions determine <strong>tool usage</strong></li>
+                    <li><strong>Thinning/texturizing</strong> reduces bulk or adds movement</li>
+                    <li>Basic styles: <strong>taper, flat top, pompadour, fade, Caesar</strong></li>
+                    <li><strong>Finish work</strong> (neck shave, trim) completes the professional look</li>
+                    <li><strong>Safety</strong> — use proper tools, disinfect everything, maintain ergonomics</li>
+                </ul>
+            </div>
+        </section>
+        <section class="quiz-section">
+            <h2>📝 Mini Review Quiz</h2>
+            <div class="quiz-question">
+                <p>1. What is the most important barbering tool?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q1" value="a"> Clippers</label>
+                    <label><input type="radio" name="q1" value="b"> Shears</label>
+                    <label><input type="radio" name="q1" value="c"> Comb</label>
+                    <label><input type="radio" name="q1" value="d"> Razor</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>2. What is the line where the hair and skin meet called?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q2" value="a"> Part</label>
+                    <label><input type="radio" name="q2" value="b"> Section</label>
+                    <label><input type="radio" name="q2" value="c"> Hairline</label>
+                    <label><input type="radio" name="q2" value="d"> Perimeter</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>3. What is the process of removing excess bulk called?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q3" value="a"> Tapering</label>
+                    <label><input type="radio" name="q3" value="b"> Texturizing</label>
+                    <label><input type="radio" name="q3" value="c"> Thinning</label>
+                    <label><input type="radio" name="q3" value="d"> Blending</label>
+                </div>
+            </div>
+            <button class="quiz-submit" onclick="checkQuiz()">Check Answers</button>
+            <div class="quiz-result" id="quiz-result"></div>
+        </section>
+
+        <div class="nav-chapters"><a href="chapter-13.html">← Chapter 13</a><a href="chapter-15.html">Chapter 15 →</a></div>
+    </main>
+    <div class="study-tools">
+        <button class="tool-btn" onclick="openQuiz()">🎴 Flashcards</button>
+        <button class="tool-btn" onclick="openQuiz()">❓ Quiz</button>
+    </div>
+    <script>
+        function checkQuiz() {
+            const answers = { q1: 'c', q2: 'c', q3: 'b' };
+            let score = 0;
+            let total = 3;
+            for (let q in answers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (selected && selected.value === answers[q]) score++;
+            }
+            const resultDiv = document.getElementById('quiz-result');
+            resultDiv.style.display = 'block';
+            if (score === total) {
+                resultDiv.className = 'quiz-result correct';
+                resultDiv.innerHTML = `<strong>Perfect! 🎉</strong> You got ${score}/${total} correct!`;
+            } else {
+                resultDiv.className = 'quiz-result incorrect';
+                resultDiv.innerHTML = `<strong>Keep studying!</strong> You got ${score}/${total} correct.`;
+            }
+        }
+
+        function openQuiz() {
+            document.querySelector('.quiz-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+            localStorage.setItem('chapter-14-progress', Math.round(scrolled));
+        });
+    </script>
+</body>
+</html>

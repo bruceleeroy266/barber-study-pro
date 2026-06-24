@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 6: Anatomy & Physiology | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .chapter-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
+        .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; }
+        .chapter-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
+        .content { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+        .section { margin-bottom: 3rem; }
+        .section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+        .section h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .section p, .section ul { margin-bottom: 1rem; color: #ccc; }
+        .section ul { margin-left: 1.5rem; }
+        .key-point { background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .key-point strong { color: var(--gold); }
+        .term { background: var(--medium-gray); padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 8px; }
+        .term strong { color: var(--gold); display: block; margin-bottom: 0.25rem; }
+        table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+        th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--medium-gray); }
+        th { background: var(--medium-gray); font-weight: 600; color: var(--gold); }
+        .study-tools { position: fixed; bottom: 2rem; right: 2rem; display: flex; gap: 1rem; }
+        .tool-btn { background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; }
+        .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; }
+        .nav-chapters { display: flex; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--medium-gray); }
+        .nav-chapters a { color: var(--gold); text-decoration: none; font-weight: 600; }
+        .image-container { margin: 2rem 0; text-align: center; }
+        .image-container img { max-width: 100%; height: auto; border-radius: 8px; border: 2px solid var(--gold); }
+        .image-caption { color: var(--light-gray); font-size: 0.9rem; margin-top: 0.5rem; font-style: italic; }
+        .image-placeholder { background: var(--medium-gray); border: 2px dashed var(--gold); border-radius: 8px; padding: 2rem; text-align: center; margin: 2rem 0; }
+        .image-placeholder a { color: var(--gold); text-decoration: none; }
+        .image-placeholder a:hover { text-decoration: underline; }
+
+        .quiz-section { background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
+        .quiz-section h2 { color: var(--gold); margin-bottom: 1.5rem; }
+        .quiz-question { margin-bottom: 1.5rem; }
+        .quiz-question p { font-weight: 600; margin-bottom: 0.75rem; color: var(--white); }
+        .quiz-options label { display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .quiz-options label:hover { background: rgba(212, 175, 55, 0.1); }
+        .quiz-options input[type="radio"] { margin-right: 0.75rem; }
+        .quiz-submit { background: var(--gold); color: var(--dark); border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+        .quiz-result { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: none; }
+        .quiz-result.correct { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; }
+        .quiz-result.incorrect { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <nav><div class="nav-container"><a href="index.html" class="logo">⚡ Barber Study Pro</a><a href="index.html#chapters" class="back-link">← Back</a></div></nav>
+    <header class="chapter-header">
+        <span class="chapter-number">CHAPTER 6</span>
+        <h1>Anatomy & Physiology</h1>
+        <p>Cells, tissues, body systems, and structures relevant to barbering</p>
+    </header>
+    <main class="content">
+        
+        <!-- Visual Learning Resources -->
+        <section class="section" style="background: rgba(212,175,55,0.05); border: 1px solid var(--gold); border-radius: 12px; padding: 2rem;">
+            <h2>📚 Visual Learning Resources</h2>
+            <p>Enhance your understanding with these free visual resources:</p>
+            
+            <div class="image-placeholder">
+                <p><strong>🦴 Human Skeleton Diagram</strong></p>
+                <p>View: <a href="https://unsplash.com/s/photos/human-skeleton-anatomy" target="_blank">Free Skeleton Images on Unsplash</a></p>
+                <p>Search: "human skeleton anatomy diagram" on <a href="https://pixabay.com/images/search/human%20skeleton/" target="_blank">Pixabay</a></p>
+            </div>
+            
+            <div class="image-placeholder">
+                <p><strong>🧠 Cranial Nerves Diagram</strong></p>
+                <p>View: <a href="https://commons.wikimedia.org/wiki/File:Brain_human_normal_inferior_view_with_labels_en.svg" target="_blank">Wikimedia Commons - Brain Anatomy</a></p>
+                <p>Educational resource: <a href="https://www.visiblebody.com/learn/nervous/cranial-nerves" target="_blank">Visible Body - Cranial Nerves</a></p>
+            </div>
+            
+            <div class="image-placeholder">
+                <p><strong>💪 Facial Muscles Chart</strong></p>
+                <p>View: <a href="https://unsplash.com/s/photos/facial-muscles" target="_blank">Facial Muscles on Unsplash</a></p>
+                <p>Search: "facial muscles anatomy" on <a href="https://www.pexels.com/search/anatomy/" target="_blank">Pexels</a></p>
+            </div>
+            
+            <div class="key-point">
+                <strong>💡 Tip:</strong> Save these images to your <code>images/chapter-06/</code> folder to view them offline while studying!
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🎯 Why Study Anatomy & Physiology?</h2>
+            <ul>
+                <li>Perform services safely and effectively</li>
+                <li>Recognize normal versus abnormal conditions</li>
+                <li>Avoid causing injury or discomfort to clients</li>
+                <li>Make informed decisions about when to refer a client to a physician</li>
+            </ul>
+            <div class="key-point"><strong>Key Point:</strong> Anatomy tells you "what" the body is made of; physiology tells you "how" it works. Together, they form the foundation for safe, professional barbering.</div>
+        </section>
+        <section class="section">
+            <h2>🔬 Cells – Basic Unit of Life</h2>
+            <p>All living organisms are composed of cells. A typical cell contains:</p>
+            <ul>
+                <li><strong>Protoplasm</strong> — Colorless, jelly-like substance containing proteins, fats, carbohydrates, mineral salts, and water</li>
+                <li><strong>Nucleus</strong> — Control center; directs cell reproduction and contains DNA</li>
+                <li><strong>Cytoplasm</strong> — Fluid surrounding the nucleus containing organelles</li>
+                <li><strong>Cell membrane</strong> — Outer layer that encloses the cell and regulates what enters/exits</li>
+            </ul>
+            <p>Cells reproduce by <strong>mitosis</strong> (cell division), allowing tissues to grow and repair.</p>
+        </section>
+        <section class="section">
+            <h2>🧬 Tissues – Groups of Similar Cells</h2>
+            <table>
+                <tr><th>Type</th><th>Function</th><th>Examples</th></tr>
+                <tr><td>Epithelial</td><td>Protective covering</td><td>Skin, mucous membranes, glands</td></tr>
+                <tr><td>Connective</td><td>Supports, protects, binds</td><td>Bone, cartilage, fat, blood</td></tr>
+                <tr><td>Muscular</td><td>Contracts and moves</td><td>Skeletal, smooth, cardiac muscle</td></tr>
+                <tr><td>Nervous</td><td>Carries messages</td><td>Neurons, brain, spinal cord</td></tr>
+            </table>
+            <div class="key-point">In barbering, you work most directly with <strong>epithelial tissue</strong> (skin and hair) and <strong>muscular tissue</strong> (facial and neck muscles during massage and shaving).</div>
+        </section>
+        <section class="section">
+            <h2>🏗️ Body Systems Relevant to Barbering</h2>
+            <h3>Skeletal System</h3>
+            <ul>
+                <li>Provides framework, support, and protection</li>
+                <li>Key areas: skull (cranium and facial bones), cervical vertebrae (neck), mandible (lower jaw)</li>
+            </ul>
+            <h3>Muscular System</h3>
+            <ul>
+                <li>Produces movement</li>
+                <li>Key muscles: frontalis, occipitalis, orbicularis oculi, masseter, platysma, sternocleidomastoid</li>
+            </ul>
+            <h3>Nervous System</h3>
+            <ul>
+                <li>Controls and coordinates body activities</li>
+                <li>Cranial nerves V (trigeminal) and VII (facial) supply sensation and motor function to face and scalp</li>
+            </ul>
+            <h3>Circulatory System</h3>
+            <ul>
+                <li>Transports blood, oxygen, nutrients, and waste</li>
+                <li>Blood supply nourishes skin and hair follicles</li>
+            </ul>
+            <h3>Integumentary System</h3>
+            <ul>
+                <li>Skin and accessory organs: hair, nails, sweat and oil glands</li>
+                <li>This is the system barbers interact with most directly</li>
+            </ul>
+            <h3>Endocrine System</h3>
+            <ul>
+                <li>Glands that secrete hormones affecting hair growth, skin condition, oil/sweat gland activity</li>
+                <li>Major glands: pituitary, thyroid, adrenals, gonads</li>
+            </ul>
+        </section>
+        <section class="section">
+            <h2>📝 Chapter 6 Key Takeaways</h2>
+            <div class="key-point">
+                <ul style="margin-left: 1rem;">
+                    <li><strong>Anatomy</strong> studies body structures; <strong>physiology</strong> studies how they function</li>
+                    <li>The <strong>cell</strong> is the basic unit of life; <strong>tissues</strong> are groups of similar cells; <strong>organs</strong> are groups of tissues</li>
+                    <li>Barbers focus on the <strong>head, face, neck, skin, and hair</strong></li>
+                    <li>The <strong>integumentary system</strong> (skin, hair, glands) is most relevant for daily services</li>
+                    <li><strong>Muscular and nervous systems</strong> are critical for facial massage and shaving</li>
+                    <li>The <strong>endocrine system</strong> influences hair growth, skin condition, and oil production</li>
+                    <li>Understanding anatomy helps perform services <strong>safely</strong> and recognize problems</li>
+                </ul>
+            </div>
+        </section>
+        <section class="quiz-section">
+            <h2>📝 Mini Review Quiz</h2>
+            <div class="quiz-question">
+                <p>1. What is the basic unit of life?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q1" value="a"> Tissue</label>
+                    <label><input type="radio" name="q1" value="b"> Organ</label>
+                    <label><input type="radio" name="q1" value="c"> Cell</label>
+                    <label><input type="radio" name="q1" value="d"> System</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>2. Which system includes skin, hair, and glands?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q2" value="a"> Nervous system</label>
+                    <label><input type="radio" name="q2" value="b"> Integumentary system</label>
+                    <label><input type="radio" name="q2" value="c"> Circulatory system</label>
+                    <label><input type="radio" name="q2" value="d"> Endocrine system</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>3. What is the outermost layer of skin called?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q3" value="a"> Dermis</label>
+                    <label><input type="radio" name="q3" value="b"> Hypodermis</label>
+                    <label><input type="radio" name="q3" value="c"> Epidermis</label>
+                    <label><input type="radio" name="q3" value="d"> Subcutaneous</label>
+                </div>
+            </div>
+            <button class="quiz-submit" onclick="checkQuiz()">Check Answers</button>
+            <div class="quiz-result" id="quiz-result"></div>
+        </section>
+
+        <div class="nav-chapters"><a href="chapter-05.html">← Chapter 5</a><a href="chapter-07.html">Chapter 7 →</a></div>
+    </main>
+    <div class="study-tools">
+        <button class="tool-btn" onclick="openQuiz()">🎴 Flashcards</button>
+        <button class="tool-btn" onclick="openQuiz()">❓ Quiz</button>
+    </div>
+    <script>
+        function checkQuiz() {
+            const answers = { q1: 'c', q2: 'b', q3: 'c' };
+            let score = 0;
+            let total = 3;
+            for (let q in answers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (selected && selected.value === answers[q]) score++;
+            }
+            const resultDiv = document.getElementById('quiz-result');
+            resultDiv.style.display = 'block';
+            if (score === total) {
+                resultDiv.className = 'quiz-result correct';
+                resultDiv.innerHTML = `<strong>Perfect! 🎉</strong> You got ${score}/${total} correct!`;
+            } else {
+                resultDiv.className = 'quiz-result incorrect';
+                resultDiv.innerHTML = `<strong>Keep studying!</strong> You got ${score}/${total} correct.`;
+            }
+        }
+
+        function openQuiz() {
+            window.location.href = 'chapter-06-quiz.html';
+        }
+
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+            localStorage.setItem('chapter-06-progress', Math.round(scrolled));
+        });
+    </script>
+</body>
+</html>

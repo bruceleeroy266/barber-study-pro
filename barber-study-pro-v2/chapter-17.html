@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 17: Chemical Texture Services | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .chapter-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
+        .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; }
+        .chapter-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
+        .content { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+        .section { margin-bottom: 3rem; }
+        .section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+        .section h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .section p, .section ul { margin-bottom: 1rem; color: #ccc; }
+        .section ul { margin-left: 1.5rem; }
+        .key-point { background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .key-point strong { color: var(--gold); }
+        .term { background: var(--medium-gray); padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 8px; }
+        .term strong { color: var(--gold); display: block; margin-bottom: 0.25rem; }
+        .study-tools { position: fixed; bottom: 2rem; right: 2rem; display: flex; gap: 1rem; }
+        .tool-btn { background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; }
+        .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; }
+        .nav-chapters { display: flex; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--medium-gray); }
+        .nav-chapters a { color: var(--gold); text-decoration: none; font-weight: 600; }
+
+        .quiz-section { background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
+        .quiz-section h2 { color: var(--gold); margin-bottom: 1.5rem; }
+        .quiz-question { margin-bottom: 1.5rem; }
+        .quiz-question p { font-weight: 600; margin-bottom: 0.75rem; color: var(--white); }
+        .quiz-options label { display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .quiz-options label:hover { background: rgba(212, 175, 55, 0.1); }
+        .quiz-options input[type="radio"] { margin-right: 0.75rem; }
+        .quiz-submit { background: var(--gold); color: var(--dark); border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+        .quiz-result { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: none; }
+        .quiz-result.correct { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; }
+        .quiz-result.incorrect { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <nav><div class="nav-container"><a href="index.html" class="logo">⚡ Barber Study Pro</a><a href="index.html#chapters" class="back-link">← Back</a></div></nav>
+    <header class="chapter-header">
+        <span class="chapter-number">CHAPTER 17</span>
+        <h1>Chemical Texture Services</h1>
+        <p>Permanent waves, relaxers, and curl reformation</p>
+    </header>
+    <main class="content">
+        <section class="section">
+            <h2>🎯 Why Study Chemical Texture?</h2>
+            <ul>
+                <li>Increases versatility and services offered</li>
+                <li>Boosts income in the barbershop</li>
+                <li>Builds client loyalty and professional confidence</li>
+                <li>Prevents damage when performed correctly</li>
+            </ul>
+        </section>
+        <section class="section">
+            <h2>⚗️ Chemistry of Texture Services</h2>
+            <p>Services permanently alter <strong>disulfide bonds</strong> in the cortex:</p>
+            <ul>
+                <li><strong>Reduction</strong> — Alkaline solution breaks disulfide bonds (cystine → cysteine)</li>
+                <li><strong>Oxidation</strong> — Neutralizer rebuilds bonds (cysteine → cystine)</li>
+            </ul>
+            <h3>Types:</h3>
+            <ul>
+                <li><strong>Permanent Waving</strong> — Changes straight/wavy hair to curly</li>
+                <li><strong>Chemical Relaxing</strong> — Straightens overly curly hair</li>
+                <li><strong>Curl Reformation</strong> — Partially straightens then re-curls to larger pattern</li>
+            </ul>
+            <div class="key-point"><strong>Hydroxide relaxers</strong> are NOT compatible with thio products.</div>
+        </section>
+        <section class="section">
+            <h2>📊 Hair Analysis (Critical!)</h2>
+            <p><strong>Porosity</strong> is the #1 factor affecting processing time:</p>
+            <ul>
+                <li><strong>Resistant</strong> — Tight cuticle; needs stronger solution, longer processing</li>
+                <li><strong>Normal</strong> — Processes as expected</li>
+                <li><strong>Porous</strong> — Raised cuticle; absorbs quickly, needs gentler solution</li>
+            </ul>
+            <h3>Other Factors:</h3>
+            <ul>
+                <li><strong>Texture</strong> — Coarse needs more processing; fine is more fragile</li>
+                <li><strong>Elasticity</strong> — Normal stretches 50% and returns; poor indicates damage</li>
+                <li><strong>Density</strong> — Thick needs smaller subsections</li>
+            </ul>
+        </section>
+        <section class="section">
+            <h2>🌀 Permanent Waves</h2>
+            <h3>Rod Types:</h3>
+            <ul>
+                <li><strong>Concave</strong> — Most common; tighter center curl</li>
+                <li><strong>Straight</strong> — Uniform curl</li>
+                <li><strong>Diameter</strong> — Controls curl size (smaller = tighter)</li>
+            </ul>
+            <h3>Wrapping Techniques:</h3>
+            <ul>
+                <li><strong>Croquignole</strong> — Ends to scalp (overlapping)</li>
+                <li><strong>Spiral</strong> — Vertical spiraling for uniform curl</li>
+                <li><strong>Piggyback</strong> — For long/dense hair</li>
+            </ul>
+            <h3>Types:</h3>
+            <ul>
+                <li><strong>Alkaline (Cold)</strong> — pH 9.0-9.6; strong, fast, room temp</li>
+                <li><strong>True Acid</strong> — pH 4.5-7.0; soft curl, needs heat</li>
+                <li><strong>Exothermic</strong> — Generates own heat</li>
+            </ul>
+            <div class="key-point"><strong>Test curls</strong> in 3 areas before full service. <strong>Underprocessing</strong> = limp wave; <strong>Overprocessing</strong> = frizzy, damaged hair.</div>
+        </section>
+        <section class="section">
+            <h2>📝 Chapter 17 Key Takeaways</h2>
+            <div class="key-point">
+                <ul style="margin-left: 1rem;">
+                    <li>Chemical texture permanently alters <strong>disulfide bonds</strong> in cortex</li>
+                    <li><strong>Porosity</strong> is #1 factor affecting processing time</li>
+                    <li>Always perform thorough <strong>consultation + hair analysis</strong></li>
+                    <li>Match <strong>product strength, rod size, wrapping technique</strong> to hair</li>
+                    <li><strong>Neutralization</strong> is critical — improper neutralization causes curl relaxation</li>
+                    <li><strong>Safety first:</strong> Never perm damaged scalp/hair; follow manufacturer directions</li>
+                </ul>
+            </div>
+        </section>
+        <section class="quiz-section">
+            <h2>📝 Mini Review Quiz</h2>
+            <div class="quiz-question">
+                <p>1. What is the first step in beard grooming?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q1" value="a"> Trimming</label>
+                    <label><input type="radio" name="q1" value="b"> Cleansing</label>
+                    <label><input type="radio" name="q1" value="c"> Applying oil</label>
+                    <label><input type="radio" name="q1" value="d"> Combing</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>2. What tool is best for defining beard lines?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q2" value="a"> Scissors</label>
+                    <label><input type="radio" name="q2" value="b"> Outliner/trimmer</label>
+                    <label><input type="radio" name="q2" value="c"> Razor</label>
+                    <label><input type="radio" name="q2" value="d"> Comb</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>3. What is used to soften beard hair before trimming?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q3" value="a"> Water</label>
+                    <label><input type="radio" name="q3" value="b"> Beard oil or conditioner</label>
+                    <label><input type="radio" name="q3" value="c"> Alcohol</label>
+                    <label><input type="radio" name="q3" value="d"> Gel</label>
+                </div>
+            </div>
+            <button class="quiz-submit" onclick="checkQuiz()">Check Answers</button>
+            <div class="quiz-result" id="quiz-result"></div>
+        </section>
+
+        <div class="nav-chapters"><a href="chapter-16.html">← Chapter 16</a><a href="chapter-18.html">Chapter 18 →</a></div>
+    </main>
+    <div class="study-tools">
+        <button class="tool-btn" onclick="openQuiz()">🎴 Flashcards</button>
+        <button class="tool-btn" onclick="openQuiz()">❓ Quiz</button>
+    </div>
+    <script>
+        function checkQuiz() {
+            const answers = { q1: 'b', q2: 'b', q3: 'b' };
+            let score = 0;
+            let total = 3;
+            for (let q in answers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (selected && selected.value === answers[q]) score++;
+            }
+            const resultDiv = document.getElementById('quiz-result');
+            resultDiv.style.display = 'block';
+            if (score === total) {
+                resultDiv.className = 'quiz-result correct';
+                resultDiv.innerHTML = `<strong>Perfect! 🎉</strong> You got ${score}/${total} correct!`;
+            } else {
+                resultDiv.className = 'quiz-result incorrect';
+                resultDiv.innerHTML = `<strong>Keep studying!</strong> You got ${score}/${total} correct.`;
+            }
+        }
+
+        function openQuiz() {
+            document.querySelector('.quiz-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+            localStorage.setItem('chapter-17-progress', Math.round(scrolled));
+        });
+    </script>
+</body>
+</html>
