@@ -1,0 +1,132 @@
+'use client'
+
+import { Profile, Grade, GradeCategory, Assessment } from '@/types'
+import { calculateStudentGradePerformance, getGradeColorClass } from '@/lib/gradebook'
+
+interface ClassPerformanceReportProps {
+  students: Profile[]
+  grades: Grade[]
+  categories: GradeCategory[]
+  assessments: Assessment[]
+}
+
+export default function ClassPerformanceReport({
+  students,
+  grades,
+  categories,
+  assessments,
+}: ClassPerformanceReportProps) {
+  const performances = students.map((student) =>
+    calculateStudentGradePerformance(student.id, grades, categories, assessments)
+  )
+
+  const classAverage =
+    performances.length > 0
+      ? Math.round(
+          (performances.reduce((sum, p) => sum + p.overallGrade, 0) / performances.length) * 10
+        ) / 10
+      : 0
+
+  const atRiskCount = performances.filter((p) => p.isAtRisk).length
+  const passingCount = performances.filter((p) => p.overallGrade >= 70).length
+
+  const categoryAverages = categories
+    .filter((c) => c.isActive)
+    .map((category) => {
+      const categoryGrades = grades.filter((g) => g.categoryId === category.id && !g.isExcused)
+      const avg =
+        categoryGrades.length > 0
+          ? Math.round(
+              (categoryGrades.reduce((sum, g) => sum + g.percentage, 0) / categoryGrades.length) * 10
+            ) / 10
+          : 0
+      return { ...category, average: avg }
+    })
+
+  return (
+    <div className="bg-white text-gray-900 rounded-xl p-8 max-w-4xl mx-auto">
+      <div className="border-b border-gray-200 pb-6 mb-6">
+        <h1 className="text-3xl font-bold text-gray-900">Class Performance Report</h1>
+        <p className="text-gray-600 mt-1">ASCYN PRO · Barber Study Pro</p>
+      </div>
+
+      <div className="grid grid-cols-3 gap-6 mb-8">
+        <div className="bg-gray-50 rounded-lg p-4">
+          <p className="text-sm text-gray-500">Class Average</p>
+          <p className={`text-3xl font-bold ${getGradeColorClass(classAverage)}`}>{classAverage}%</p>
+        </div>
+        <div className="bg-gray-50 rounded-lg p-4">
+          <p className="text-sm text-gray-500">Passing Students</p>
+          <p className="text-3xl font-bold text-green-600">
+            {passingCount}/{performances.length}
+          </p>
+        </div>
+        <div className="bg-gray-50 rounded-lg p-4">
+          <p className="text-sm text-gray-500">At Risk</p>
+          <p className="text-3xl font-bold text-red-600">{atRiskCount}</p>
+        </div>
+      </div>
+
+      <section className="mb-8">
+        <h2 className="text-xl font-semibold mb-4">Category Averages</h2>
+        <table className="w-full text-sm border-collapse">
+          <thead>
+            <tr className="border-b border-gray-200 text-left text-gray-600">
+              <th className="py-2">Category</th>
+              <th className="py-2">Weight</th>
+              <th className="py-2">Class Average</th>
+            </tr>
+          </thead>
+          <tbody>
+            {categoryAverages.map((cat) => (
+              <tr key={cat.id} className="border-b border-gray-100">
+                <td className="py-2">{cat.name}</td>
+                <td className="py-2">{Math.round(cat.weight * 100)}%</td>
+                <td className={`py-2 font-bold ${getGradeColorClass(cat.average)}`}>{cat.average}%</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Student Performance</h2>
+        <table className="w-full text-sm border-collapse">
+          <thead>
+            <tr className="border-b border-gray-200 text-left text-gray-600">
+              <th className="py-2">Student</th>
+              <th className="py-2">Overall Grade</th>
+              <th className="py-2">Trend</th>
+              <th className="py-2">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {performances.map((performance) => {
+              const student = students.find((s) => s.id === performance.studentId)
+              return (
+                <tr key={performance.studentId} className="border-b border-gray-100">
+                  <td className="py-2">{student?.full_name || performance.studentId}</td>
+                  <td className={`py-2 font-bold ${getGradeColorClass(performance.overallGrade)}`}>
+                    {performance.overallGrade}%
+                  </td>
+                  <td className="py-2 capitalize">{performance.trendDirection}</td>
+                  <td className="py-2">
+                    {performance.isAtRisk ? (
+                      <span className="text-red-600 font-medium">At Risk</span>
+                    ) : (
+                      <span className="text-green-600 font-medium">On Track</span>
+                    )}
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </section>
+
+      <div className="mt-8 text-xs text-gray-500 border-t border-gray-200 pt-4">
+        Generated by ASCYN PRO Gradebook · Internal instructor report.
+      </div>
+    </div>
+  )
+}

@@ -7,7 +7,7 @@
  * and recent improvement trends.
  */
 
-import { BoardReadiness, ReadinessLevel, QuizAttempt, StudentProgress } from '@/types'
+import { BoardReadiness, ReadinessLevel, QuizAttempt, StudentProgress, Grade } from '@/types'
 
 export interface ReadinessInputs {
   userId: string
@@ -16,6 +16,7 @@ export interface ReadinessInputs {
   totalChapters: number
   flashcardDecksCompleted?: number
   streakDays?: number
+  grades?: Grade[]
 }
 
 function getLevel(score: number): ReadinessLevel {
@@ -93,6 +94,27 @@ function totalQuestionsAnswered(attempts: QuizAttempt[]): number {
   return attempts.reduce((sum, a) => sum + a.total_questions, 0)
 }
 
+function gradeTrendAdjustment(grades: Grade[] | undefined): number {
+  if (!grades || grades.length < 3) return 0
+  const nonExcused = grades.filter((g) => !g.isExcused)
+  if (nonExcused.length < 3) return 0
+
+  const sorted = [...nonExcused].sort(
+    (a, b) => new Date(a.dateEntered).getTime() - new Date(b.dateEntered).getTime()
+  )
+  const mid = Math.ceil(sorted.length / 2)
+  const firstHalf = sorted.slice(0, mid)
+  const secondHalf = sorted.slice(mid)
+
+  const firstAvg = firstHalf.reduce((sum, g) => sum + g.percentage, 0) / firstHalf.length
+  const secondAvg = secondHalf.reduce((sum, g) => sum + g.percentage, 0) / secondHalf.length
+
+  const diff = secondAvg - firstAvg
+  if (diff >= 5) return 3
+  if (diff <= -5) return -3
+  return 0
+}
+
 function recommendedStudyMinutes(readiness: number, weakAreaCount: number): number {
   let base = 0
   if (readiness >= 90) base = 15
@@ -112,6 +134,7 @@ export function calculateBoardReadiness(inputs: ReadinessInputs): BoardReadiness
     totalChapters,
     flashcardDecksCompleted,
     streakDays = 0,
+    grades,
   } = inputs
 
   const quizAverage = averageAttemptScore(attempts)
@@ -134,7 +157,8 @@ export function calculateBoardReadiness(inputs: ReadinessInputs): BoardReadiness
     chapterRate * 0.04 +
     flashcardRate * 0.04 +
     consistency * 0.03 +
-    (trend === 'improving' ? 5 : trend === 'declining' ? -5 : 0)
+    (trend === 'improving' ? 5 : trend === 'declining' ? -5 : 0) +
+    gradeTrendAdjustment(grades)
   )
 
   const clampedScore = Math.max(0, Math.min(100, score))

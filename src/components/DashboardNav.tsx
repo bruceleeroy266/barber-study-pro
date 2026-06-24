@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutDashboard, BookOpen, TrendingUp, User, LogOut, GraduationCap, Shield, RotateCcw, MessageSquare } from 'lucide-react'
+import { LayoutDashboard, BookOpen, TrendingUp, User, LogOut, GraduationCap, Shield, RotateCcw, MessageSquare, Calculator, ClipboardCheck, Building2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { Profile } from '@/types'
 import { isInstructorOrAdmin, isAdmin } from '@/lib/auth-helpers'
@@ -17,8 +17,16 @@ const baseNavItems = [
   { href: '/dashboard/chapters', label: 'Chapters', icon: BookOpen },
   { href: '/dashboard/missed-questions', label: 'Missed Questions', icon: RotateCcw },
   { href: '/dashboard/progress', label: 'My Progress', icon: TrendingUp },
+  { href: '/dashboard/grades', label: 'Grades', icon: Calculator },
+  { href: '/dashboard/assessments', label: 'Assessments', icon: ClipboardCheck },
   { href: '/dashboard/messages', label: 'Messages', icon: MessageSquare },
   { href: '/dashboard/profile', label: 'Profile', icon: User },
+]
+
+const instructorNavItems = [
+  { href: '/instructor/gradebook', label: 'Gradebook', icon: Calculator },
+  { href: '/instructor/assessments', label: 'Assessments', icon: ClipboardCheck },
+  { href: '/instructor/rubrics', label: 'Rubrics', icon: ClipboardCheck },
 ]
 
 export default function DashboardNav({ user }: DashboardNavProps) {
@@ -30,9 +38,11 @@ export default function DashboardNav({ user }: DashboardNavProps) {
   const navItems = useMemo(() => {
     const items = [...baseNavItems]
     if (user && isInstructorOrAdmin(user.role)) {
+      items.push(...instructorNavItems)
       items.push({ href: '/instructor', label: 'Instructor Portal', icon: GraduationCap })
     }
     if (user && isAdmin(user.role)) {
+      items.push({ href: '/admin/school', label: 'School Dashboard', icon: Building2 })
       items.push({ href: '/admin', label: 'Admin Portal', icon: Shield })
     }
     return items

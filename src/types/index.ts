@@ -300,7 +300,7 @@ export interface AttendanceAuditEntry {
   id: string
   recordId: string
   action: 'create' | 'update' | 'correct'
-  changedFields: Record<string, { old: any; new: any }>
+  changedFields: Record<string, { old: unknown; new: unknown }>
   userId: string
   userName: string
   timestamp: string
@@ -390,4 +390,218 @@ export interface Announcement {
   priority: NotificationPriority
   expiresAt?: string | null
   createdAt: string
+}
+
+// ============================================================================
+// PHASE 9 — GRADEBOOK & ASSESSMENTS SUITE
+// ============================================================================
+
+export type GradeCategoryType =
+  | 'WRITTEN_EXAM'
+  | 'PRACTICAL_EXAM'
+  | 'QUIZ'
+  | 'HOMEWORK'
+  | 'PARTICIPATION'
+  | 'ATTENDANCE'
+
+export type AssessmentType = 'HAIRCUT' | 'COLOR' | 'CHEMICAL' | 'SANITATION' | 'CONSULTATION'
+
+export type QualitativeResult = 'PASS' | 'NEEDS_IMPROVEMENT' | 'FAIL'
+
+export type ScoringType = 'NUMERIC' | 'QUALITATIVE'
+
+export interface Grade {
+  id: string
+  studentId: string
+  categoryId: string
+  categoryType: GradeCategoryType
+  score: number
+  maxScore: number
+  percentage: number
+  weight: number
+  dateEntered: string
+  dateModified?: string | null
+  instructorId: string
+  instructorName: string
+  notes?: string | null
+  isExcused: boolean
+}
+
+export interface GradeCategory {
+  id: string
+  name: string
+  type: GradeCategoryType
+  weight: number
+  schoolId?: string | null
+  courseId?: string | null
+  isActive: boolean
+}
+
+export interface RubricCriterion {
+  id: string
+  name: string
+  description: string
+  maxScore: number
+  weight: number
+}
+
+export interface AssessmentRubric {
+  id: string
+  assessmentType: AssessmentType
+  criteria: RubricCriterion[]
+  schoolId?: string | null
+  isActive: boolean
+  createdBy: string
+  createdAt: string
+}
+
+export interface Assessment {
+  id: string
+  studentId: string
+  assessmentType: AssessmentType
+  score: number
+  scoringType: ScoringType
+  qualitativeResult?: QualitativeResult | null
+  feedback: string
+  assessmentDate: string
+  evaluatorId: string
+  evaluatorName: string
+  rubricId: string
+  isPassed: boolean
+}
+
+export interface GradeHistory {
+  id: string
+  gradeId: string
+  previousScore: number
+  newScore: number
+  previousPercentage: number
+  newPercentage: number
+  changedBy: string
+  changedAt: string
+  reason?: string | null
+}
+
+export interface GradeBreakdown {
+  categoryId: string
+  categoryName: string
+  categoryType: GradeCategoryType
+  weight: number
+  averagePercentage: number
+  weightedContribution: number
+  gradeCount: number
+}
+
+export interface StudentGradePerformance {
+  studentId: string
+  overallGrade: number
+  gradeBreakdown: GradeBreakdown[]
+  trendDirection: 'improving' | 'stable' | 'declining'
+  isAtRisk: boolean
+  missingAssignments: number
+  recentAssessments: Assessment[]
+}
+
+// ============================================================================
+// PHASE 10 — SCHOOL OWNER / SCHOOL ADMINISTRATOR DASHBOARD
+// ============================================================================
+
+export type SchoolAlertType =
+  | 'low_attendance'
+  | 'low_readiness'
+  | 'missing_hours'
+  | 'failed_assessment'
+  | 'unread_notification'
+
+export interface SchoolOwnerAlert {
+  id: string
+  type: SchoolAlertType
+  title: string
+  description: string
+  studentId?: string | null
+  studentName?: string | null
+  priority: NotificationPriority
+  createdAt: string
+  actionUrl?: string | null
+}
+
+export interface SchoolOverviewMetrics {
+  totalStudents: number
+  activeStudents: number
+  graduatedStudents: number
+  atRiskStudents: number
+  averageAttendance: number
+  averageReadiness: number
+  averageGrade: number
+  completedHours: number
+  remainingHours: number
+  assessmentCompletionRate: number
+}
+
+export interface StudentPerformanceRow {
+  studentId: string
+  fullName: string
+  attendancePercentage: number
+  readinessScore: number
+  overallGrade: number
+  completedHours: number
+  requiredHours: number
+  assessmentPassRate: number
+  isAtRisk: boolean
+  riskReasons: string[]
+}
+
+export interface InstructorPerformanceRow {
+  instructorId: string
+  fullName: string
+  studentsAssigned: number
+  averageAttendance: number
+  averageReadiness: number
+  averageGrade: number
+  assessmentsCompleted: number
+  messagesSent: number
+  successIndicator: 'high' | 'medium' | 'low'
+}
+
+export interface SchoolHealthScore {
+  score: number
+  label: string
+  colorClass: string
+  componentScores: {
+    attendance: number
+    readiness: number
+    grades: number
+    assessmentCompletion: number
+    hoursCompletion: number
+  }
+}
+
+export interface TrendPoint {
+  date: string
+  value: number
+}
+
+export interface SchoolAnalyticsSnapshot {
+  attendanceTrend: TrendPoint[]
+  readinessTrend: TrendPoint[]
+  gradeDistribution: { label: string; count: number; colorClass: string }[]
+  assessmentCompletionTrend: TrendPoint[]
+  hoursCompletionTrend: TrendPoint[]
+  riskDistribution: { label: string; count: number; colorClass: string }[]
+}
+
+export type SchoolReportType =
+  | 'attendance'
+  | 'readiness'
+  | 'grade'
+  | 'hours'
+  | 'assessment'
+  | 'school_summary'
+
+export interface SchoolReport {
+  type: SchoolReportType
+  title: string
+  generatedAt: string
+  summary: string
+  rows: Record<string, string | number>[]
 }

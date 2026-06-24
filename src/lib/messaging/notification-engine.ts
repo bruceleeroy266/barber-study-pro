@@ -1,4 +1,4 @@
-import { Notification, NotificationPriority, AttendanceSummary, BoardReadiness, HourLog, StudentProgress } from '@/types'
+import { Notification, NotificationPriority, AttendanceSummary, BoardReadiness, HourLog, StudentProgress, Grade, Assessment } from '@/types'
 
 export interface NotificationInput {
   userId: string
@@ -7,6 +7,8 @@ export interface NotificationInput {
   readiness?: BoardReadiness | null
   hourLogs?: HourLog[]
   progress?: StudentProgress[]
+  grades?: Grade[]
+  assessments?: Assessment[]
 }
 
 function buildNotification(
@@ -186,6 +188,103 @@ export function generateNotificationsFromProgress(
   return notifications
 }
 
+export function generateNotificationsFromGrades(
+  userId: string,
+  grades: Grade[]
+): Notification[] {
+  const notifications: Notification[] = []
+  if (grades.length === 0) return notifications
+
+  const nonExcused = grades.filter((g) => !g.isExcused)
+  const avg =
+    nonExcused.length > 0
+      ? Math.round((nonExcused.reduce((sum, g) => sum + g.percentage, 0) / nonExcused.length) * 10) / 10
+      : 0
+
+  if (avg < 60) {
+    notifications.push(
+      buildNotification(
+        userId,
+        'missed_assessment',
+        'Grade Average Critical',
+        `Your current grade average is ${avg}%. Schedule remediation with your instructor immediately.`,
+        'urgent',
+        '/dashboard/grades'
+      )
+    )
+  } else if (avg < 70) {
+    notifications.push(
+      buildNotification(
+        userId,
+        'missed_assessment',
+        'Grade Average Below Passing',
+        `Your current grade average is ${avg}%. Focus on upcoming assignments to raise your score.`,
+        'high',
+        '/dashboard/grades'
+      )
+    )
+  }
+
+  const latestGrades = [...nonExcused]
+    .sort((a, b) => new Date(b.dateEntered).getTime() - new Date(a.dateEntered).getTime())
+    .slice(0, 3)
+
+  const recentLowGrade = latestGrades.find((g) => g.percentage < 70)
+  if (recentLowGrade && avg >= 70) {
+    notifications.push(
+      buildNotification(
+        userId,
+        'missed_assessment',
+        'Low Grade Alert',
+        `A recent grade (${recentLowGrade.percentage}%) was below passing. Review the material and consider a retake.`,
+        'medium',
+        '/dashboard/grades'
+      )
+    )
+  }
+
+  return notifications
+}
+
+export function generateNotificationsFromAssessments(
+  userId: string,
+  assessments: Assessment[]
+): Notification[] {
+  const notifications: Notification[] = []
+  if (assessments.length === 0) return notifications
+
+  const failed = assessments.filter((a) => !a.isPassed)
+  const recentFailed = [...failed]
+    .sort((a, b) => new Date(b.assessmentDate).getTime() - new Date(a.assessmentDate).getTime())
+    .slice(0, 3)
+
+  if (failed.length >= 2) {
+    notifications.push(
+      buildNotification(
+        userId,
+        'missed_assessment',
+        'Multiple Failed Assessments',
+        `You have ${failed.length} failed practical assessments. Additional practice is required before progressing.`,
+        'urgent',
+        '/dashboard/assessments'
+      )
+    )
+  } else if (recentFailed.length > 0) {
+    notifications.push(
+      buildNotification(
+        userId,
+        'missed_assessment',
+        'Assessment Retake Available',
+        `Your ${recentFailed[0].assessmentType} assessment was not passed. Schedule a retake with your instructor.`,
+        'high',
+        '/dashboard/assessments'
+      )
+    )
+  }
+
+  return notifications
+}
+
 export function generateAllNotifications(input: NotificationInput): Notification[] {
   const notifications: Notification[] = []
 
@@ -200,6 +299,12 @@ export function generateAllNotifications(input: NotificationInput): Notification
   }
   if (input.progress && input.progress.length > 0) {
     notifications.push(...generateNotificationsFromProgress(input.userId, input.progress))
+  }
+  if (input.grades && input.grades.length > 0) {
+    notifications.push(...generateNotificationsFromGrades(input.userId, input.grades))
+  }
+  if (input.assessments && input.assessments.length > 0) {
+    notifications.push(...generateNotificationsFromAssessments(input.userId, input.assessments))
   }
 
   return notifications

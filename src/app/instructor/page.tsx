@@ -1,14 +1,16 @@
 import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Profile, StudentProgress, QuizAttempt, HourLog, ReadinessLevel, AttendanceRecord } from '@/types'
+import { Profile, StudentProgress, QuizAttempt, HourLog, ReadinessLevel, AttendanceRecord, Grade, GradeCategory, Assessment } from '@/types'
 import { localChapters } from '@/lib/local-data'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
-import { demoStudents, demoStudentProgress, demoStudentQuizAttempts, demoHourLogs, demoAttendanceRecords, getDemoNotificationsForUser, getDemoThreadsForUser } from '@/lib/demo-data'
+import { demoStudents, demoStudentProgress, demoStudentQuizAttempts, demoHourLogs, demoAttendanceRecords, getDemoNotificationsForUser, getDemoThreadsForUser, demoGrades, demoGradeCategories, demoAssessments } from '@/lib/demo-data'
 import { isDemoFallbackEnabled } from '@/lib/demo-helpers'
 import { calculateBoardReadiness, getReadinessColorClass } from '@/lib/readiness'
 import { analyzePerformance } from '@/lib/analytics'
-import { calculateAttendanceSummary, getAttendanceConcerns, getStatusColorClass } from '@/lib/attendance'
+import { getAttendanceConcerns, getStatusColorClass } from '@/lib/attendance'
+import { calculateStudentGradePerformance, getGradeColorClass } from '@/lib/gradebook'
+import AssessmentList from '@/components/assessments/AssessmentList'
 import { allQuizQuestions } from '@/lib/quiz-data'
 import { getThreadDisplayName, formatMessageTime, priorityColorClasses } from '@/lib/messaging'
 import UnreadBadge from '@/components/messaging/UnreadBadge'
@@ -231,6 +233,58 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     attendanceRecords = demoAttendanceRecords.filter((a) => studentIds.includes(a.userId))
   }
 
+  // Phase 9 — fetch grades and assessments for class overview
+  const { data: allGrades } = await supabase
+    .from('grades')
+    .select('*')
+    .in('student_id', studentIds.length > 0 ? studentIds : ['__none__'])
+
+  let gradeRecords: Grade[] = (allGrades as unknown as Grade[]) || []
+  if (gradeRecords.length === 0 && isDemoFallbackEnabled()) {
+    gradeRecords = demoGrades.filter((g) => studentIds.includes(g.studentId))
+  }
+
+  const { data: allCategories } = await supabase.from('grade_categories').select('*')
+
+  let gradeCategories: GradeCategory[] = (allCategories as unknown as GradeCategory[]) || []
+  if (gradeCategories.length === 0 && isDemoFallbackEnabled()) {
+    gradeCategories = demoGradeCategories
+  }
+
+  const { data: allAssessments } = await supabase
+    .from('assessments')
+    .select('*')
+    .in('student_id', studentIds.length > 0 ? studentIds : ['__none__'])
+
+  let assessmentRecords: Assessment[] = (allAssessments as unknown as Assessment[]) || []
+  if (assessmentRecords.length === 0 && isDemoFallbackEnabled()) {
+    assessmentRecords = demoAssessments.filter((a) => studentIds.includes(a.studentId))
+  }
+
+  const classPerformances = rosterStudents.map((student) => {
+    const missingCount = gradeCategories.filter((c) => {
+      return gradeRecords.filter((g) => g.studentId === student.id && g.categoryId === c.id && !g.isExcused).length === 0
+    }).length
+    return calculateStudentGradePerformance(student.id, gradeRecords, gradeCategories, assessmentRecords, missingCount)
+  })
+
+  const classAvgGrade = classPerformances.length > 0
+    ? Math.round((classPerformances.reduce((sum, p) => sum + p.overallGrade, 0) / classPerformances.length) * 10) / 10
+    : 0
+
+  const gradeAtRiskCount = classPerformances.filter((p) => p.isAtRisk).length
+  const topPerformers = [...classPerformances]
+    .sort((a, b) => b.overallGrade - a.overallGrade)
+    .slice(0, 3)
+    .map((p) => rosterStudents.find((s) => s.id === p.studentId))
+    .filter(Boolean) as Profile[]
+
+  const recentAssessments = [...assessmentRecords]
+    .sort((a, b) => new Date(b.assessmentDate).getTime() - new Date(a.assessmentDate).getTime())
+    .slice(0, 5)
+
+  const assessmentQueue = assessmentRecords.filter((a) => !a.isPassed).slice(0, 5)
+
   const today = new Date().toISOString().split('T')[0]
   const todayRecords = attendanceRecords.filter((a) => a.date === today)
   const presentToday = todayRecords.filter((a) => a.status === 'Present').length
@@ -434,6 +488,84 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
             </div>
             <p className="text-xs text-gray-500 mt-2">Post school-wide updates</p>
           </Link>
+        </div>
+
+        {/* Phase 9 — Gradebook Overview */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+          <div className="p-6 border-b border-gray-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-semibold text-white">Gradebook Overview</h2>
+              <p className="text-sm text-gray-400 mt-1">Class grade averages and at-risk students</p>
+            </div>
+            <Link
+              href="/instructor/gradebook"
+              className="px-4 py-2 bg-[#D4AF37] hover:bg-[#F4E4A6] text-gray-950 font-semibold rounded-lg transition-colors text-sm"
+            >
+              Open Gradebook →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 border-b border-gray-800">
+            <div className="bg-gray-950 border border-gray-800 rounded-xl p-4 text-center">
+              <div className={`text-3xl font-bold ${getGradeColorClass(classAvgGrade)}`}>{classAvgGrade}%</div>
+              <div className="text-xs text-gray-400 mt-1">Class Avg Grade</div>
+            </div>
+            <div className="bg-gray-950 border border-red-900/30 rounded-xl p-4 text-center">
+              <div className="text-3xl font-bold text-red-400">{gradeAtRiskCount}</div>
+              <div className="text-xs text-gray-400 mt-1">At-Risk Students</div>
+            </div>
+            <div className="bg-gray-950 border border-gray-800 rounded-xl p-4 text-center">
+              <div className="text-3xl font-bold text-blue-400">{assessmentRecords.length}</div>
+              <div className="text-xs text-gray-400 mt-1">Total Assessments</div>
+            </div>
+            <div className="bg-gray-950 border border-yellow-900/30 rounded-xl p-4 text-center">
+              <div className="text-3xl font-bold text-yellow-400">{assessmentQueue.length}</div>
+              <div className="text-xs text-gray-400 mt-1">Assessment Queue</div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+            <div>
+              <h3 className="text-sm font-semibold text-white mb-3">Top Performers</h3>
+              {topPerformers.length > 0 ? (
+                <div className="space-y-2">
+                  {topPerformers.map((student, idx) => {
+                    const perf = classPerformances.find((p) => p.studentId === student.id)
+                    return (
+                      <div
+                        key={student.id}
+                        className="flex items-center justify-between bg-gray-950 border border-gray-800 rounded-lg p-3"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] text-xs font-bold">
+                            {idx + 1}
+                          </span>
+                          <div>
+                            <div className="text-white font-medium">{student.full_name}</div>
+                            <div className="text-xs text-gray-500">{student.email}</div>
+                          </div>
+                        </div>
+                        <div className={`font-bold ${getGradeColorClass(perf?.overallGrade || 0)}`}>
+                          {perf?.overallGrade || 0}%
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              ) : (
+                <p className="text-sm text-gray-500">No grade data yet.</p>
+              )}
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-white mb-3">Recent Assessments</h3>
+              {recentAssessments.length > 0 ? (
+                <AssessmentList assessments={recentAssessments} students={rosterStudents} showStudentName />
+              ) : (
+                <p className="text-sm text-gray-500">No recent assessments.</p>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Search */}

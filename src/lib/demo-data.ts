@@ -1,7 +1,7 @@
 // Demo data for soft launch without Supabase
 // This provides safe mock data when NEXT_PUBLIC_DEMO_MODE=true
 
-import { Chapter, Flashcard, Quiz, QuizQuestion, QuizAttempt, StudentProgress, Profile, InstructorNote, HourLog, AttendanceRecord, InstructorAttendanceNote, MessageThread, Message, Notification, Announcement, NotificationPriority } from '@/types'
+import { Chapter, Flashcard, Quiz, QuizQuestion, QuizAttempt, StudentProgress, Profile, InstructorNote, HourLog, AttendanceRecord, InstructorAttendanceNote, MessageThread, Message, Notification, Announcement, NotificationPriority, GradeCategory, Grade, AssessmentRubric, Assessment, GradeHistory } from '@/types'
 import { chapterFlashcards as realFlashcards } from './flashcards-data'
 import { batch1Flashcards, batch4Flashcards } from './orphaned-flashcards'
 import { allQuizQuestions } from './quiz-data'
@@ -1065,4 +1065,268 @@ export function getDemoAnnouncementsForSchool(schoolId: string): Announcement[] 
   return demoAnnouncements
     .filter((a) => a.schoolId === schoolId && (!a.expiresAt || a.expiresAt > now))
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+}
+
+// ============================================================================
+// PHASE 9 — DEMO GRADEBOOK & ASSESSMENTS DATA
+// ============================================================================
+
+export const demoGradeCategories: GradeCategory[] = [
+  { id: 'gc-quizzes', name: 'Chapter Quizzes', type: 'QUIZ', weight: 0.25, schoolId: 'demo-school', isActive: true },
+  { id: 'gc-practical', name: 'Practical Exams', type: 'PRACTICAL_EXAM', weight: 0.30, schoolId: 'demo-school', isActive: true },
+  { id: 'gc-written', name: 'Written Exams', type: 'WRITTEN_EXAM', weight: 0.20, schoolId: 'demo-school', isActive: true },
+  { id: 'gc-homework', name: 'Homework', type: 'HOMEWORK', weight: 0.10, schoolId: 'demo-school', isActive: true },
+  { id: 'gc-participation', name: 'Participation', type: 'PARTICIPATION', weight: 0.10, schoolId: 'demo-school', isActive: true },
+  { id: 'gc-attendance', name: 'Attendance', type: 'ATTENDANCE', weight: 0.05, schoolId: 'demo-school', isActive: true },
+]
+
+function createGrade(
+  id: string,
+  studentId: string,
+  category: GradeCategory,
+  score: number,
+  maxScore: number,
+  date: string,
+  notes?: string,
+  isExcused = false
+): Grade {
+  const percentage = Math.round((score / maxScore) * 1000) / 10
+  return {
+    id,
+    studentId,
+    categoryId: category.id,
+    categoryType: category.type,
+    score,
+    maxScore,
+    percentage,
+    weight: category.weight,
+    dateEntered: date,
+    instructorId: 'demo-instructor',
+    instructorName: 'Demo Instructor',
+    notes: notes || null,
+    isExcused,
+  }
+}
+
+export const demoGrades: Grade[] = [
+  // Alex Johnson — strong student
+  createGrade('grade-alex-q1', 'demo-student-1', demoGradeCategories[0], 88, 100, '2026-06-02T09:00:00Z', 'Chapter 1-2 quiz'),
+  createGrade('grade-alex-q2', 'demo-student-1', demoGradeCategories[0], 92, 100, '2026-06-09T09:00:00Z', 'Chapter 3-4 quiz'),
+  createGrade('grade-alex-pe1', 'demo-student-1', demoGradeCategories[1], 90, 100, '2026-06-10T13:00:00Z', 'Taper fade practical'),
+  createGrade('grade-alex-pe2', 'demo-student-1', demoGradeCategories[1], 87, 100, '2026-06-17T13:00:00Z', 'Beard trim practical'),
+  createGrade('grade-alex-we1', 'demo-student-1', demoGradeCategories[2], 85, 100, '2026-06-05T10:00:00Z', 'Midterm written'),
+  createGrade('grade-alex-hw1', 'demo-student-1', demoGradeCategories[3], 18, 20, '2026-06-03T23:59:00Z', 'Infection control worksheet'),
+  createGrade('grade-alex-hw2', 'demo-student-1', demoGradeCategories[3], 19, 20, '2026-06-12T23:59:00Z', 'Anatomy crossword'),
+  createGrade('grade-alex-part', 'demo-student-1', demoGradeCategories[4], 95, 100, '2026-06-19T16:00:00Z', 'Peer tutoring session'),
+  createGrade('grade-alex-att', 'demo-student-1', demoGradeCategories[5], 95, 100, '2026-06-23T16:00:00Z', 'Attendance score'),
+
+  // Maria Garcia — moderate student
+  createGrade('grade-maria-q1', 'demo-student-2', demoGradeCategories[0], 78, 100, '2026-06-02T09:00:00Z', 'Chapter 1-2 quiz'),
+  createGrade('grade-maria-q2', 'demo-student-2', demoGradeCategories[0], 82, 100, '2026-06-09T09:00:00Z', 'Chapter 3-4 quiz'),
+  createGrade('grade-maria-pe1', 'demo-student-2', demoGradeCategories[1], 80, 100, '2026-06-10T13:00:00Z', 'Taper fade practical'),
+  createGrade('grade-maria-pe2', 'demo-student-2', demoGradeCategories[1], 76, 100, '2026-06-17T13:00:00Z', 'Beard trim practical'),
+  createGrade('grade-maria-we1', 'demo-student-2', demoGradeCategories[2], 74, 100, '2026-06-05T10:00:00Z', 'Midterm written'),
+  createGrade('grade-maria-hw1', 'demo-student-2', demoGradeCategories[3], 16, 20, '2026-06-03T23:59:00Z', 'Infection control worksheet'),
+  createGrade('grade-maria-hw2', 'demo-student-2', demoGradeCategories[3], 17, 20, '2026-06-12T23:59:00Z', 'Anatomy crossword'),
+  createGrade('grade-maria-part', 'demo-student-2', demoGradeCategories[4], 88, 100, '2026-06-19T16:00:00Z', 'Class participation'),
+  createGrade('grade-maria-att', 'demo-student-2', demoGradeCategories[5], 85, 100, '2026-06-23T16:00:00Z', 'Attendance score'),
+
+  // Jordan Smith — apprentice, needs improvement
+  createGrade('grade-jordan-q1', 'demo-student-3', demoGradeCategories[0], 70, 100, '2026-06-02T09:00:00Z', 'Chapter 1-2 quiz'),
+  createGrade('grade-jordan-q2', 'demo-student-3', demoGradeCategories[0], 68, 100, '2026-06-09T09:00:00Z', 'Chapter 3-4 quiz'),
+  createGrade('grade-jordan-pe1', 'demo-student-3', demoGradeCategories[1], 72, 100, '2026-06-10T13:00:00Z', 'Taper fade practical'),
+  createGrade('grade-jordan-pe2', 'demo-student-3', demoGradeCategories[1], 70, 100, '2026-06-17T13:00:00Z', 'Beard trim practical'),
+  createGrade('grade-jordan-we1', 'demo-student-3', demoGradeCategories[2], 66, 100, '2026-06-05T10:00:00Z', 'Midterm written'),
+  createGrade('grade-jordan-hw1', 'demo-student-3', demoGradeCategories[3], 14, 20, '2026-06-03T23:59:00Z', 'Infection control worksheet'),
+  createGrade('grade-jordan-hw2', 'demo-student-3', demoGradeCategories[3], 15, 20, '2026-06-12T23:59:00Z', 'Anatomy crossword'),
+  createGrade('grade-jordan-part', 'demo-student-3', demoGradeCategories[4], 80, 100, '2026-06-19T16:00:00Z', 'Class participation'),
+  createGrade('grade-jordan-att', 'demo-student-3', demoGradeCategories[5], 78, 100, '2026-06-23T16:00:00Z', 'Attendance score'),
+
+  // Taylor Brown — struggling
+  createGrade('grade-taylor-q1', 'demo-student-4', demoGradeCategories[0], 62, 100, '2026-06-02T09:00:00Z', 'Chapter 1-2 quiz'),
+  createGrade('grade-taylor-q2', 'demo-student-4', demoGradeCategories[0], 58, 100, '2026-06-09T09:00:00Z', 'Chapter 3-4 quiz'),
+  createGrade('grade-taylor-pe1', 'demo-student-4', demoGradeCategories[1], 60, 100, '2026-06-10T13:00:00Z', 'Taper fade practical'),
+  createGrade('grade-taylor-pe2', 'demo-student-4', demoGradeCategories[1], 55, 100, '2026-06-17T13:00:00Z', 'Beard trim practical'),
+  createGrade('grade-taylor-we1', 'demo-student-4', demoGradeCategories[2], 52, 100, '2026-06-05T10:00:00Z', 'Midterm written'),
+  createGrade('grade-taylor-hw1', 'demo-student-4', demoGradeCategories[3], 10, 20, '2026-06-03T23:59:00Z', 'Infection control worksheet'),
+  createGrade('grade-taylor-hw2', 'demo-student-4', demoGradeCategories[3], 12, 20, '2026-06-12T23:59:00Z', 'Anatomy crossword'),
+  createGrade('grade-taylor-part', 'demo-student-4', demoGradeCategories[4], 70, 100, '2026-06-19T16:00:00Z', 'Class participation'),
+  createGrade('grade-taylor-att', 'demo-student-4', demoGradeCategories[5], 68, 100, '2026-06-23T16:00:00Z', 'Attendance score'),
+]
+
+export const demoAssessmentRubrics: AssessmentRubric[] = [
+  {
+    id: 'rubric-haircut',
+    assessmentType: 'HAIRCUT',
+    criteria: [
+      { id: 'crit-hc-1', name: 'Consultation', description: 'Conducts thorough client consultation and documents preferences', maxScore: 10, weight: 1 },
+      { id: 'crit-hc-2', name: 'Sectioning', description: 'Proper sectioning and control of hair throughout service', maxScore: 10, weight: 1 },
+      { id: 'crit-hc-3', name: 'Cutting Technique', description: 'Demonstrates safe, precise cutting technique', maxScore: 30, weight: 1 },
+      { id: 'crit-hc-4', name: 'Blending & Fade', description: 'Smooth blending and fade execution', maxScore: 25, weight: 1 },
+      { id: 'crit-hc-5', name: 'Finish & Cleanup', description: 'Clean lines, neckline, and sanitation', maxScore: 25, weight: 1 },
+    ],
+    schoolId: 'demo-school',
+    isActive: true,
+    createdBy: 'demo-instructor',
+    createdAt: '2026-01-01T00:00:00Z',
+  },
+  {
+    id: 'rubric-color',
+    assessmentType: 'COLOR',
+    criteria: [
+      { id: 'crit-col-1', name: 'Color Theory', description: 'Identifies natural level, tone, and desired result', maxScore: 20, weight: 1 },
+      { id: 'crit-col-2', name: 'Formulation', description: 'Selects appropriate color formula and developer', maxScore: 25, weight: 1 },
+      { id: 'crit-col-3', name: 'Application', description: 'Even, clean application avoiding skin staining', maxScore: 30, weight: 1 },
+      { id: 'crit-col-4', name: 'Processing', description: 'Monitors processing time and strand test', maxScore: 15, weight: 1 },
+      { id: 'crit-col-5', name: 'Results', description: 'Achieves intended color with healthy hair condition', maxScore: 10, weight: 1 },
+    ],
+    schoolId: 'demo-school',
+    isActive: true,
+    createdBy: 'demo-instructor',
+    createdAt: '2026-01-01T00:00:00Z',
+  },
+  {
+    id: 'rubric-chemical',
+    assessmentType: 'CHEMICAL',
+    criteria: [
+      { id: 'crit-chm-1', name: 'Hair Analysis', description: 'Evaluates hair integrity and elasticity', maxScore: 20, weight: 1 },
+      { id: 'crit-chm-2', name: 'Product Selection', description: 'Chooses correct chemical service and strength', maxScore: 20, weight: 1 },
+      { id: 'crit-chm-3', name: 'Application', description: 'Applies chemical safely and accurately', maxScore: 30, weight: 1 },
+      { id: 'crit-chm-4', name: 'Timing', description: 'Monitors processing time and tests curl pattern', maxScore: 20, weight: 1 },
+      { id: 'crit-chm-5', name: 'Neutralizing', description: 'Rinses and neutralizes thoroughly', maxScore: 10, weight: 1 },
+    ],
+    schoolId: 'demo-school',
+    isActive: true,
+    createdBy: 'demo-instructor',
+    createdAt: '2026-01-01T00:00:00Z',
+  },
+  {
+    id: 'rubric-sanitation',
+    assessmentType: 'SANITATION',
+    criteria: [
+      { id: 'crit-san-1', name: 'Workstation Setup', description: 'Sets up sanitized workstation with proper supplies', maxScore: 25, weight: 1 },
+      { id: 'crit-san-2', name: 'Tool Sanitization', description: 'Sanitizes and stores tools per state board standards', maxScore: 25, weight: 1 },
+      { id: 'crit-san-3', name: 'Blood Exposure', description: 'Demonstrates proper blood exposure protocol', maxScore: 25, weight: 1 },
+      { id: 'crit-san-4', name: 'Client Safety', description: 'Maintains client safety and comfort throughout service', maxScore: 25, weight: 1 },
+    ],
+    schoolId: 'demo-school',
+    isActive: true,
+    createdBy: 'demo-instructor',
+    createdAt: '2026-01-01T00:00:00Z',
+  },
+  {
+    id: 'rubric-consultation',
+    assessmentType: 'CONSULTATION',
+    criteria: [
+      { id: 'crit-con-1', name: 'Greeting & Rapport', description: 'Professional greeting and builds client rapport', maxScore: 20, weight: 1 },
+      { id: 'crit-con-2', name: 'Needs Analysis', description: 'Asks clarifying questions to understand desired service', maxScore: 25, weight: 1 },
+      { id: 'crit-con-3', name: 'Recommendation', description: 'Recommends appropriate service with realistic expectations', maxScore: 25, weight: 1 },
+      { id: 'crit-con-4', name: 'Communication', description: 'Explains process, maintenance, and home care clearly', maxScore: 20, weight: 1 },
+      { id: 'crit-con-5', name: 'Documentation', description: 'Records consultation notes accurately', maxScore: 10, weight: 1 },
+    ],
+    schoolId: 'demo-school',
+    isActive: true,
+    createdBy: 'demo-instructor',
+    createdAt: '2026-01-01T00:00:00Z',
+  },
+]
+
+function createAssessment(
+  id: string,
+  studentId: string,
+  assessmentType: Assessment['assessmentType'],
+  score: number,
+  maxScore: number,
+  date: string,
+  feedback: string,
+  isPassed: boolean
+): Assessment {
+  return {
+    id,
+    studentId,
+    assessmentType,
+    score,
+    scoringType: 'NUMERIC',
+    qualitativeResult: null,
+    feedback,
+    assessmentDate: date,
+    evaluatorId: 'demo-instructor',
+    evaluatorName: 'Demo Instructor',
+    rubricId: `rubric-${assessmentType.toLowerCase()}`,
+    isPassed,
+  }
+}
+
+export const demoAssessments: Assessment[] = [
+  // Alex Johnson
+  createAssessment('assess-alex-hc', 'demo-student-1', 'HAIRCUT', 92, 100, '2026-06-18T14:00:00Z', 'Excellent fade and blend. Work on neckline detail.', true),
+  createAssessment('assess-alex-san', 'demo-student-1', 'SANITATION', 95, 100, '2026-06-19T10:00:00Z', 'Spotless station and thorough sanitization.', true),
+  createAssessment('assess-alex-con', 'demo-student-1', 'CONSULTATION', 90, 100, '2026-06-20T11:00:00Z', 'Strong client communication and documentation.', true),
+
+  // Maria Garcia
+  createAssessment('assess-maria-hc', 'demo-student-2', 'HAIRCUT', 84, 100, '2026-06-18T14:00:00Z', 'Good shape, minor weight line left in fade.', true),
+  createAssessment('assess-maria-col', 'demo-student-2', 'COLOR', 78, 100, '2026-06-19T13:00:00Z', 'Formulation was close; adjust developer strength next time.', true),
+  createAssessment('assess-maria-san', 'demo-student-2', 'SANITATION', 88, 100, '2026-06-20T10:00:00Z', 'Good sanitation habits; label products clearly.', true),
+
+  // Jordan Smith
+  createAssessment('assess-jordan-hc', 'demo-student-3', 'HAIRCUT', 74, 100, '2026-06-18T14:00:00Z', 'Uneven weight line; needs more practice with guards.', true),
+  createAssessment('assess-jordan-chm', 'demo-student-3', 'CHEMICAL', 68, 100, '2026-06-19T13:00:00Z', 'Timing was off; strand test missed. Review processing.', false),
+  createAssessment('assess-jordan-con', 'demo-student-3', 'CONSULTATION', 76, 100, '2026-06-20T11:00:00Z', 'Asked basic questions; needs deeper needs analysis.', true),
+
+  // Taylor Brown
+  createAssessment('assess-taylor-hc', 'demo-student-4', 'HAIRCUT', 58, 100, '2026-06-18T14:00:00Z', 'Multiple guard lines; client safety was maintained.', false),
+  createAssessment('assess-taylor-san', 'demo-student-4', 'SANITATION', 64, 100, '2026-06-19T10:00:00Z', 'Missed disinfecting comb between uses.', false),
+  createAssessment('assess-taylor-chm', 'demo-student-4', 'CHEMICAL', 52, 100, '2026-06-19T13:00:00Z', 'Application uneven; requires supervised redo.', false),
+]
+
+export const demoGradeHistories: GradeHistory[] = [
+  {
+    id: 'history-alex-q1',
+    gradeId: 'grade-alex-q1',
+    previousScore: 82,
+    newScore: 88,
+    previousPercentage: 82,
+    newPercentage: 88,
+    changedBy: 'demo-instructor',
+    changedAt: '2026-06-03T11:00:00Z',
+    reason: 'Regraded open-response question',
+  },
+  {
+    id: 'history-maria-pe1',
+    gradeId: 'grade-maria-pe1',
+    previousScore: 76,
+    newScore: 80,
+    previousPercentage: 76,
+    newPercentage: 80,
+    changedBy: 'demo-instructor',
+    changedAt: '2026-06-11T15:00:00Z',
+    reason: 'Corrected point deduction for timing',
+  },
+  {
+    id: 'history-taylor-we1',
+    gradeId: 'grade-taylor-we1',
+    previousScore: 48,
+    newScore: 52,
+    previousPercentage: 48,
+    newPercentage: 52,
+    changedBy: 'demo-instructor',
+    changedAt: '2026-06-06T09:30:00Z',
+    reason: 'Accepted late submission with penalty removed',
+  },
+]
+
+export function getDemoGradesForStudent(studentId: string): Grade[] {
+  return demoGrades.filter((g) => g.studentId === studentId)
+}
+
+export function getDemoGradesForCategory(categoryId: string): Grade[] {
+  return demoGrades.filter((g) => g.categoryId === categoryId)
+}
+
+export function getDemoAssessmentsForStudent(studentId: string): Assessment[] {
+  return demoAssessments.filter((a) => a.studentId === studentId)
+}
+
+export function getDemoGradeHistoryForGrade(gradeId: string): GradeHistory[] {
+  return demoGradeHistories.filter((h) => h.gradeId === gradeId)
 }

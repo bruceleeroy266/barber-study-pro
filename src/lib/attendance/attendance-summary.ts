@@ -98,6 +98,14 @@ export function getRecentAttendance(
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 }
 
+/**
+ * Derives an attendance grade score from an attendance summary.
+ * This can be used to populate the ATTENDANCE grade category in the gradebook.
+ */
+export function calculateAttendanceGrade(summary: AttendanceSummary): number {
+  return Math.max(0, Math.min(100, summary.attendancePercentage))
+}
+
 export function getAttendanceTrend(
   records: AttendanceRecord[],
   userId: string,

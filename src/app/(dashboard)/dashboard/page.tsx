@@ -1,14 +1,14 @@
 import { createClient } from '@/lib/supabase-server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { QuizAttempt, StudentProgress, AttendanceRecord, Notification } from '@/types'
+import { QuizAttempt, StudentProgress, AttendanceRecord, Grade, GradeCategory, Assessment } from '@/types'
 import { localChapters } from '@/lib/local-data'
 import { allQuizQuestions } from '@/lib/quiz-data'
 import { calculateBoardReadiness } from '@/lib/readiness'
 import { analyzePerformance } from '@/lib/analytics'
 import { generateStudyPlan } from '@/lib/recommendations'
 import { getDemoMissedQuestionsForUser } from '@/lib/demo-analytics'
-import { demoAttendanceRecords, getDemoNotificationsForUser, getDemoThreadsForUser, getDemoAnnouncementsForSchool, demoAnnouncements } from '@/lib/demo-data'
+import { demoAttendanceRecords, getDemoNotificationsForUser, getDemoThreadsForUser, getDemoAnnouncementsForSchool, demoAnnouncements, demoGrades, demoGradeCategories, demoAssessments } from '@/lib/demo-data'
 import { isDemoFallbackEnabled } from '@/lib/demo-helpers'
 import { calculateAttendanceSummary, getTodayAttendanceStatus, getStatusColorClass } from '@/lib/attendance'
 import { formatMessageTime, getThreadDisplayName, priorityColorClasses } from '@/lib/messaging'
@@ -18,6 +18,9 @@ import StudyRecommendations from '@/components/StudyRecommendations'
 import AnalyticsCharts from '@/components/AnalyticsCharts'
 import AnnouncementBanner from '@/components/messaging/AnnouncementBanner'
 import UnreadBadge from '@/components/messaging/UnreadBadge'
+import StudentGradeWidget from '@/components/gradebook/StudentGradeWidget'
+import AssessmentList from '@/components/assessments/AssessmentList'
+import { calculateStudentGradePerformance } from '@/lib/gradebook'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -66,7 +69,38 @@ export default async function DashboardPage() {
 
   const attendanceSummary = calculateAttendanceSummary(user.id, attendanceRecords)
   const { status: todayStatus } = getTodayAttendanceStatus(attendanceRecords, user.id)
-  const lastAttendanceNote = attendanceRecords.find((r) => r.note)?.note || null
+
+  // Phase 9 — gradebook & assessments data
+  const { data: gradesData } = await supabase.from('grades').select('*').eq('student_id', user.id)
+  let gradeRecords: Grade[] = (gradesData as unknown as Grade[]) || []
+
+  const { data: categoriesData } = await supabase.from('grade_categories').select('*')
+  let gradeCategories: GradeCategory[] = (categoriesData as unknown as GradeCategory[]) || []
+
+  if ((gradeRecords.length === 0 || gradeCategories.length === 0) && isDemoFallbackEnabled()) {
+    gradeRecords = demoGrades.filter((g) => g.studentId === user.id)
+    gradeCategories = demoGradeCategories
+  }
+
+  const { data: assessmentsData } = await supabase.from('assessments').select('*').eq('student_id', user.id)
+  let assessmentRecords: Assessment[] = (assessmentsData as unknown as Assessment[]) || []
+  if (assessmentRecords.length === 0 && isDemoFallbackEnabled()) {
+    assessmentRecords = demoAssessments.filter((a) => a.studentId === user.id)
+  }
+
+  const missingAssignmentCount = gradeCategories.filter((c) => {
+    return gradeRecords.filter((g) => g.categoryId === c.id && !g.isExcused).length === 0
+  }).length
+
+  const gradePerformance = calculateStudentGradePerformance(
+    user.id,
+    gradeRecords,
+    gradeCategories,
+    assessmentRecords,
+    missingAssignmentCount
+  )
+
+  const recentFailedAssessments = assessmentRecords.filter((a) => !a.isPassed).slice(0, 3)
 
   // Phase 8A messaging demo data
   const demoNotifications = isDemoFallbackEnabled() ? getDemoNotificationsForUser(user.id) : []
@@ -290,6 +324,59 @@ export default async function DashboardPage() {
               </li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {/* Phase 9 — Grades & Assessments Overview */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <StudentGradeWidget performance={gradePerformance} />
+
+        <div className="lg:col-span-2 space-y-6">
+          {gradePerformance.isAtRisk && (
+            <div className="bg-red-950/30 border border-red-900/50 rounded-xl p-5">
+              <h3 className="text-lg font-semibold text-red-400 mb-2">Performance Alert</h3>
+              <p className="text-sm text-gray-300">
+                Your overall grade is below the passing threshold or you have missing assignments / failed assessments.
+                Schedule a check-in with your instructor.
+              </p>
+            </div>
+          )}
+
+          {recentFailedAssessments.length > 0 && (
+            <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+              <h3 className="text-lg font-semibold text-white mb-3">Assessments Needing Practice</h3>
+              <div className="space-y-2">
+                {recentFailedAssessments.map((a) => (
+                  <div
+                    key={a.id}
+                    className="flex items-center justify-between bg-gray-950 border border-gray-800 rounded-lg p-3"
+                  >
+                    <div>
+                      <div className="text-white font-medium">{a.assessmentType}</div>
+                      <div className="text-xs text-gray-500">{a.evaluatorName}</div>
+                    </div>
+                    <div className="text-red-400 text-sm font-bold">Not Passed</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {missingAssignmentCount > 0 && (
+            <div className="bg-yellow-950/20 border border-yellow-900/30 rounded-xl p-5">
+              <h3 className="text-lg font-semibold text-yellow-400 mb-2">Missing Assignments</h3>
+              <p className="text-sm text-gray-300">
+                You have {missingAssignmentCount} grade categor{missingAssignmentCount === 1 ? 'y' : 'ies'} with no recorded work.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {assessmentRecords.length > 0 && (
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+          <h2 className="text-lg font-semibold text-white mb-4">Recent Assessments</h2>
+          <AssessmentList assessments={assessmentRecords.slice(0, 3)} />
         </div>
       )}
 
