@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 21: The Business of Barbering | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .chapter-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
+        .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; }
+        .chapter-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
+        .content { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+        .section { margin-bottom: 3rem; }
+        .section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+        .section h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .section p, .section ul { margin-bottom: 1rem; color: #ccc; }
+        .section ul { margin-left: 1.5rem; }
+        .key-point { background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .key-point strong { color: var(--gold); }
+        .study-tools { position: fixed; bottom: 2rem; right: 2rem; display: flex; gap: 1rem; }
+        .tool-btn { background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; }
+        .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; }
+        .nav-chapters { display: flex; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--medium-gray); }
+        .nav-chapters a { color: var(--gold); text-decoration: none; font-weight: 600; }
+
+        .quiz-section { background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
+        .quiz-section h2 { color: var(--gold); margin-bottom: 1.5rem; }
+        .quiz-question { margin-bottom: 1.5rem; }
+        .quiz-question p { font-weight: 600; margin-bottom: 0.75rem; color: var(--white); }
+        .quiz-options label { display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .quiz-options label:hover { background: rgba(212, 175, 55, 0.1); }
+        .quiz-options input[type="radio"] { margin-right: 0.75rem; }
+        .quiz-submit { background: var(--gold); color: var(--dark); border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+        .quiz-result { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: none; }
+        .quiz-result.correct { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; }
+        .quiz-result.incorrect { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <nav><div class="nav-container"><a href="index.html" class="logo">⚡ Barber Study Pro</a><a href="index.html#chapters" class="back-link">← Back</a></div></nav>
+    <header class="chapter-header">
+        <span class="chapter-number">CHAPTER 21</span>
+        <h1>The Business of Barbering</h1>
+        <p>Ownership options, business plan, operations, and marketing</p>
+    </header>
+    <main class="content">
+        <section class="section">
+            <h2>🎯 Why Study Business?</h2>
+            <ul>
+                <li>You may become a booth renter or shop owner</li>
+                <li>Understanding business helps manage your career</li>
+                <li>Essential for attracting and retaining employees and clients</li>
+            </ul>
+        </section>
+        <section class="section">
+            <h2>🏢 Types of Business Ownership</h2>
+            <h3>Sole Proprietorship:</h3>
+            <ul>
+                <li>Owner makes all decisions</li>
+                <li>Assumes all expenses, receives all profits, bears all losses</li>
+                <li>Best if you want full control</li>
+            </ul>
+            <h3>Partnership:</h3>
+            <ul>
+                <li>Two or more people share ownership</li>
+                <li>More capital, shared skills/responsibilities</li>
+                <li>Partners share liability for debts</li>
+            </ul>
+            <h3>Corporation:</h3>
+            <ul>
+                <li>Controlled by stockholders</li>
+                <li>Limits personal liability</li>
+                <li>Greater flexibility, easier to raise capital</li>
+            </ul>
+            <h3>Franchise:</h3>
+            <ul>
+                <li>Contract with successful franchisor</li>
+                <li>Brand recognition and marketing support</li>
+                <li>Fees and strict stipulations; less independence</li>
+            </ul>
+        </section>
+        <section class="section">
+            <h2>📋 Business Plan Essentials</h2>
+            <ul>
+                <li>Executive summary</li>
+                <li>Vision and mission statements</li>
+                <li>Organizational plan</li>
+                <li>Marketing plan</li>
+                <li>Financial documents (projected and actual)</li>
+                <li>Supporting documents and policies</li>
+            </ul>
+            <div class="key-point">Create a <strong>Vision Statement</strong> (long-term picture) and <strong>Mission Statement</strong> (guides actions) with specific goals.</div>
+        </section>
+        <section class="section">
+            <h2>💰 Money Allocation (Benchmarks)</h2>
+            <ul>
+                <li>Salaries/Commissions (including payroll taxes): ~53.5%</li>
+                <li>Rent: ~13%</li>
+                <li>Supplies: ~5%</li>
+                <li>Advertising: ~3%</li>
+                <li>Other expenses: ~7.5%</li>
+                <li><strong>Total Expenses: ~85%</strong></li>
+                <li><strong>Net Profit: ~15%</strong></li>
+            </ul>
+        </section>
+        <section class="section">
+            <h2>📢 Building Your Business</h2>
+            <ul>
+                <li><strong>Social Media</strong> — Consistent username, get permission for photos, post regularly</li>
+                <li><strong>Advertising</strong> — Budget ≤3% of gross income</li>
+                <li><strong>Referrals</strong> — Satisfied clients are best advertising</li>
+                <li><strong>Retailing</strong> — Focus on client needs/benefits</li>
+                <li><strong>Prebooking</strong> — Schedule next appointment before client leaves</li>
+            </ul>
+            <div class="key-point">Always prioritize <strong>client satisfaction</strong> — happy clients are your best marketing.</div>
+        </section>
+        <section class="section">
+            <h2>📝 Chapter 21 Key Takeaways</h2>
+            <div class="key-point">
+                <ul style="margin-left: 1rem;">
+                    <li>Success requires balancing <strong>artistic skill with business knowledge</strong></li>
+                    <li>Evaluate <strong>ownership options</strong> (sole prop, partnership, corporation, franchise)</li>
+                    <li>A solid <strong>business plan, brand identity, location, legal compliance</strong> are essential</li>
+                    <li><strong>Efficient operations, excellent layout, strong personnel management</strong> drive profitability</li>
+                    <li>Build business through <strong>social media, advertising, referrals, professional selling</strong></li>
+                    <li>Always prioritize <strong>client satisfaction</strong></li>
+                </ul>
+            </div>
+        </section>
+        <section class="quiz-section">
+            <h2>📝 Mini Review Quiz</h2>
+            <div class="quiz-question">
+                <p>1. What is the simplest form of business ownership?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q1" value="a"> Partnership</label>
+                    <label><input type="radio" name="q1" value="b"> Corporation</label>
+                    <label><input type="radio" name="q1" value="c"> Sole proprietorship</label>
+                    <label><input type="radio" name="q1" value="d"> Franchise</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>2. What is the best form of advertising?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q2" value="a"> Paid social media ads</label>
+                    <label><input type="radio" name="q2" value="b"> Satisfied client referrals</label>
+                    <label><input type="radio" name="q2" value="c"> Billboards</label>
+                    <label><input type="radio" name="q2" value="d"> Radio commercials</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>3. What should you do before a client leaves?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q3" value="a"> Ask for a tip</label>
+                    <label><input type="radio" name="q3" value="b"> Schedule their next appointment</label>
+                    <label><input type="radio" name="q3" value="c"> Give them a business card</label>
+                    <label><input type="radio" name="q3" value="d"> Take a photo</label>
+                </div>
+            </div>
+            <button class="quiz-submit" onclick="checkQuiz()">Check Answers</button>
+            <div class="quiz-result" id="quiz-result"></div>
+        </section>
+
+        <div class="nav-chapters"><a href="chapter-20.html">← Chapter 20</a><a href="index.html">All Chapters →</a></div>
+    </main>
+    <div class="study-tools">
+        <button class="tool-btn" onclick="openQuiz()">🎴 Flashcards</button>
+        <button class="tool-btn" onclick="openQuiz()">❓ Quiz</button>
+    </div>
+    <script>
+        function checkQuiz() {
+            const answers = { q1: 'c', q2: 'b', q3: 'b' };
+            let score = 0;
+            let total = 3;
+            for (let q in answers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (selected && selected.value === answers[q]) score++;
+            }
+            const resultDiv = document.getElementById('quiz-result');
+            resultDiv.style.display = 'block';
+            if (score === total) {
+                resultDiv.className = 'quiz-result correct';
+                resultDiv.innerHTML = `<strong>Perfect! 🎉</strong> You got ${score}/${total} correct!`;
+            } else {
+                resultDiv.className = 'quiz-result incorrect';
+                resultDiv.innerHTML = `<strong>Keep studying!</strong> You got ${score}/${total} correct.`;
+            }
+        }
+
+        function openQuiz() {
+            document.querySelector('.quiz-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+            localStorage.setItem('chapter-21-progress', Math.round(scrolled));
+        });
+    </script>
+</body>
+</html>

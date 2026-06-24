@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 15: Men's Hair Replacement | Barber Study Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--medium-gray); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .chapter-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--dark-gray) 0%, var(--dark) 100%); text-align: center; }
+        .chapter-number { display: inline-block; background: var(--gold); color: var(--dark); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; margin-bottom: 1rem; }
+        .chapter-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
+        .content { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+        .section { margin-bottom: 3rem; }
+        .section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+        .section h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .section p, .section ul { margin-bottom: 1rem; color: #ccc; }
+        .section ul { margin-left: 1.5rem; }
+        .key-point { background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .key-point strong { color: var(--gold); }
+        .term { background: var(--medium-gray); padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 8px; }
+        .term strong { color: var(--gold); display: block; margin-bottom: 0.25rem; }
+        .study-tools { position: fixed; bottom: 2rem; right: 2rem; display: flex; gap: 1rem; }
+        .tool-btn { background: var(--gold); color: var(--dark); border: none; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; }
+        .progress-bar { position: fixed; top: 65px; left: 0; right: 0; height: 3px; background: var(--medium-gray); z-index: 999; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; }
+        .nav-chapters { display: flex; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--medium-gray); }
+        .nav-chapters a { color: var(--gold); text-decoration: none; font-weight: 600; }
+
+        .quiz-section { background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
+        .quiz-section h2 { color: var(--gold); margin-bottom: 1.5rem; }
+        .quiz-question { margin-bottom: 1.5rem; }
+        .quiz-question p { font-weight: 600; margin-bottom: 0.75rem; color: var(--white); }
+        .quiz-options label { display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .quiz-options label:hover { background: rgba(212, 175, 55, 0.1); }
+        .quiz-options input[type="radio"] { margin-right: 0.75rem; }
+        .quiz-submit { background: var(--gold); color: var(--dark); border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+        .quiz-result { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: none; }
+        .quiz-result.correct { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; }
+        .quiz-result.incorrect { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <nav><div class="nav-container"><a href="index.html" class="logo">⚡ Barber Study Pro</a><a href="index.html#chapters" class="back-link">← Back</a></div></nav>
+    <header class="chapter-header">
+        <span class="chapter-number">CHAPTER 15</span>
+        <h1>Men's Hair Replacement</h1>
+        <p>Hair systems, consultation, application, and maintenance</p>
+    </header>
+    <main class="content">
+        <section class="section">
+            <h2>🎯 Why Study Hair Replacement?</h2>
+            <p>Hair replacement systems help men with thinning or baldness regain natural-looking hair. Barbers can:</p>
+            <ul>
+                <li>Provide honest consultations</li>
+                <li>Measure, fit, cut, style, and maintain systems</li>
+                <li>Increase client loyalty and shop revenue</li>
+            </ul>
+            <div class="key-point">Approach consultations <strong>sensitively</strong>; many men feel self-conscious about hair loss.</div>
+        </section>
+        <section class="section">
+            <h2>💇 Types of Hair Used</h2>
+            <h3>Human Hair:</h3>
+            <ul>
+                <li>Most popular for natural look, texture, movement</li>
+                <li>Tolerates chemical services (color, perm)</li>
+                <li>Reacts to climate, fades with sun, requires maintenance</li>
+            </ul>
+            <h3>Synthetic Hair:</h3>
+            <ul>
+                <li>Less costly, holds style well, resistant to humidity</li>
+                <li>Can look shiny or artificial; harder to blend</li>
+            </ul>
+            <h3>Mixed Hair:</h3>
+            <ul>
+                <li>Blend of human and synthetic</li>
+                <li>Balance of natural appearance and durability</li>
+            </ul>
+        </section>
+        <section class="section">
+            <h2>📦 Stock vs. Custom Systems</h2>
+            <h3>Stock (Ready-Made):</h3>
+            <ul>
+                <li>Pre-manufactured in standard sizes and colors</li>
+                <li>Faster delivery and lower cost</li>
+                <li>Barber measures, trims, and customizes to fit</li>
+            </ul>
+            <h3>Custom Systems:</h3>
+            <ul>
+                <li>Made to client's exact head shape, color, density</li>
+                <li>More expensive but best, most natural fit</li>
+                <li>Requires template or mold</li>
+            </ul>
+        </section>
+        <section class="section">
+            <h2>🔧 Application Methods</h2>
+            <h3>Full Head Bonding:</h3>
+            <ul>
+                <li>Perform patch test 24 hours prior</li>
+                <li>Clean and disinfect scalp</li>
+                <li>Apply multiple thin coats of adhesive</li>
+                <li>Position system carefully and press firmly</li>
+            </ul>
+            <h3>Tape Application:</h3>
+            <ul>
+                <li>Use double-sided tape on reinforced areas</li>
+                <li>Never apply tape directly on lace</li>
+                <li>Use solvent to loosen tape for removal; never pull</li>
+            </ul>
+        </section>
+        <section class="section">
+            <h2>📝 Chapter 15 Key Takeaways</h2>
+            <div class="key-point">
+                <ul style="margin-left: 1rem;">
+                    <li><strong>Human hair</strong> provides most natural look; <strong>synthetic</strong> is more affordable</li>
+                    <li><strong>Stock systems</strong> are cost-effective; <strong>custom systems</strong> offer best fit</li>
+                    <li>Accurate <strong>measuring and templating</strong> is essential</li>
+                    <li>Always <strong>patch test</strong> adhesives 24 hours before application</li>
+                    <li>Cut and blend <strong>conservatively</strong> to match natural hair</li>
+                    <li>Follow manufacturer guidelines for <strong>cleaning, coloring, and perming</strong></li>
+                </ul>
+            </div>
+        </section>
+        <div class="nav-chapters"><a href="chapter-14.html">← Chapter 14</a><a href="chapter-16.html">Chapter 16 →</a></div>
+        <section class="quiz-section">
+            <h2>📝 Mini Review Quiz</h2>
+            <div class="quiz-question">
+                <p>1. What is the foundation of every men's haircut?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q1" value="a"> Top section</label>
+                    <label><input type="radio" name="q1" value="b"> Side sections</label>
+                    <label><input type="radio" name="q1" value="c"> Back section</label>
+                    <label><input type="radio" name="q1" value="d"> Nape section</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>2. What is the term for cutting hair at a 45-degree angle?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q2" value="a"> Blunt cut</label>
+                    <label><input type="radio" name="q2" value="b"> Layered cut</label>
+                    <label><input type="radio" name="q2" value="c"> Graduated cut</label>
+                    <label><input type="radio" name="q2" value="d"> Texturized cut</label>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>3. What guard number leaves hair approximately 1/2 inch long?</p>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q3" value="a"> #1</label>
+                    <label><input type="radio" name="q3" value="b"> #2</label>
+                    <label><input type="radio" name="q3" value="c"> #3</label>
+                    <label><input type="radio" name="q3" value="d"> #4</label>
+                </div>
+            </div>
+            <button class="quiz-submit" onclick="checkQuiz()">Check Answers</button>
+            <div class="quiz-result" id="quiz-result"></div>
+        </section>
+
+    </main>
+    <div class="study-tools">
+        <button class="tool-btn" onclick="openQuiz()">🎴 Flashcards</button>
+        <button class="tool-btn" onclick="openQuiz()">❓ Quiz</button>
+    </div>
+    <script>
+        function checkQuiz() {
+            const answers = { q1: 'd', q2: 'c', q3: 'd' };
+            let score = 0;
+            let total = 3;
+            for (let q in answers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (selected && selected.value === answers[q]) score++;
+            }
+            const resultDiv = document.getElementById('quiz-result');
+            resultDiv.style.display = 'block';
+            if (score === total) {
+                resultDiv.className = 'quiz-result correct';
+                resultDiv.innerHTML = `<strong>Perfect! 🎉</strong> You got ${score}/${total} correct!`;
+            } else {
+                resultDiv.className = 'quiz-result incorrect';
+                resultDiv.innerHTML = `<strong>Keep studying!</strong> You got ${score}/${total} correct.`;
+            }
+        }
+
+        function openQuiz() {
+            document.querySelector('.quiz-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+            localStorage.setItem('chapter-15-progress', Math.round(scrolled));
+        });
+    </script>
+</body>
+</html>

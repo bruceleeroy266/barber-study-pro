@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 7 Quiz - Basics of Chemistry - Barber Study Pro</title>
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --dark: #1a1a1a;
+            --dark-gray: #2d2d2d;
+            --medium-gray: #3d3d3d;
+            --light-gray: #888;
+            --white: #f5f5f5;
+            --success: #22c55e;
+            --danger: #ef4444;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--dark);
+            color: var(--white);
+            line-height: 1.6;
+        }
+        .progress-bar {
+            position: fixed; top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--dark-gray); z-index: 1000;
+        }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.3s; }
+        nav {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: sticky; top: 4px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+        .nav-container {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .back-link { color: var(--light-gray); text-decoration: none; }
+        .back-link:hover { color: var(--gold); }
+        .container { max-width: 800px; margin: 0 auto; padding: 3rem 2rem; }
+        .quiz-header { text-align: center; margin-bottom: 3rem; }
+        .quiz-header h1 { color: var(--gold); margin-bottom: 1rem; }
+        .quiz-header p { color: var(--light-gray); }
+        .quiz-section { background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
+        .quiz-section h2 { color: var(--gold); margin-bottom: 1.5rem; }
+        .quiz-question { margin-bottom: 1.5rem; }
+        .quiz-question p { font-weight: 600; margin-bottom: 0.75rem; color: var(--white); }
+        .quiz-options label { display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: var(--dark-gray); border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .quiz-options label:hover { background: rgba(212, 175, 55, 0.1); }
+        .quiz-options input[type="radio"] { margin-right: 0.75rem; }
+        .quiz-submit { background: var(--gold); color: var(--dark); border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+        .quiz-result { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: none; }
+        .quiz-result.correct { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; }
+        .quiz-result.incorrect { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">⚡ Barber Study Pro</a>
+            <a href="chapter-07.html" class="back-link">← Back to Chapter 7</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="quiz-header">
+            <h1>Chapter 7: Basics of Chemistry</h1>
+            <p>Comprehensive Review Quiz - 50 Questions</p>
+        </div>
+        <section class="quiz-section">
+            <h2>📝 Chapter 7 Comprehensive Review Quiz</h2>
+            <p style="color: var(--light-gray); margin-bottom: 2rem;">Test your knowledge of chemistry, matter, pH, and barbering products.</p>
+            <div id="quiz-container"></div>
+            <button class="quiz-submit" onclick="checkQuiz()">Check Answers</button>
+            <div class="quiz-result" id="quiz-result"></div>
+        </section>
+    </div>
+    <script>
+        const quizData = [
+            {q: "1. What is chemistry?", a: ["The study of electricity", "The science that deals with composition, structure, and properties of matter", "The study of biology", "The study of physics"], correct: 1},
+            {q: "2. What does organic chemistry study?", a: ["Substances without carbon", "Substances containing carbon", "Only living things", "Only metals"], correct: 1},
+            {q: "3. What does inorganic chemistry study?", a: ["Substances containing carbon", "Substances without carbon", "Only living things", "Only plants"], correct: 1},
+            {q: "4. Which substances will burn?", a: ["Inorganic substances", "Most organic substances", "Only metals", "Only water"], correct: 1},
+            {q: "5. What is matter?", a: ["Only things we can see", "Anything that occupies space and has mass", "Only liquids", "Only solids"], correct: 1},
+            {q: "6. What are physical properties?", a: ["Properties that require chemical reactions", "Characteristics that can be determined without chemical reaction", "Only color and odor", "Only weight and density"], correct: 1},
+            {q: "7. What are chemical properties?", a: ["Properties that don't change", "Characteristics that can only be determined by chemical reaction", "Only physical changes", "Only melting points"], correct: 1},
+            {q: "8. How many states of matter exist?", a: ["2", "3", "4", "5"], correct: 1},
+            {q: "9. Which state of matter has definite shape and volume?", a: ["Liquid", "Gas", "Solid", "Plasma"], correct: 2},
+            {q: "10. Which state of matter has volume but no definite shape?", a: ["Solid", "Liquid", "Gas", "Plasma"], correct: 1},
+            {q: "11. What is a physical change?", a: ["A change that creates new substances", "A change in form without chemical reaction", "Only rusting", "Only burning"], correct: 1},
+            {q: "12. What is a chemical change?", a: ["A change in form only", "A change in chemical composition", "Only melting", "Only freezing"], correct: 1},
+            {q: "13. What is an element?", a: ["A combination of two substances", "The simplest form of chemical matter", "Only metals", "Only gases"], correct: 1},
+            {q: "14. How many elements are known to science?", a: ["98", "100", "118", "150"], correct: 2},
+            {q: "15. What are atoms?", a: ["Large particles", "Basic building blocks of all matter", "Only found in metals", "Only found in gases"], correct: 1},
+            {q: "16. What is a molecule?", a: ["A single atom", "Two or more atoms combined chemically", "Only found in solids", "Only found in liquids"], correct: 1},
+            {q: "17. What is a pure substance?", a: ["A mixture of many things", "Matter with fixed chemical composition", "Only water", "Only air"], correct: 1},
+            {q: "18. What is a physical mixture?", a: ["A chemical compound", "Combination of substances united physically", "Only solutions", "Only elements"], correct: 1},
+            {q: "19. What is a solution?", a: ["An unstable mixture", "A stable, uniform mixture of mixable substances", "Only solids", "Only gases"], correct: 1},
+            {q: "20. What is the solute?", a: ["The substance that dissolves", "The substance that does the dissolving", "Only water", "Only oil"], correct: 0},
+            {q: "21. What is the solvent?", a: ["The substance being dissolved", "The substance that dissolves the solute", "Only salt", "Only sugar"], correct: 1},
+            {q: "22. What is a suspension?", a: ["A stable mixture", "An unstable mixture with visible particles", "Only solutions", "Only emulsions"], correct: 1},
+            {q: "23. What is an emulsion?", a: ["A solution of one liquid", "A mixture of two immiscible liquids", "Only water", "Only oil"], correct: 1},
+            {q: "24. What is a surfactant?", a: ["A type of oil", "A substance that allows oil and water to mix", "Only water", "Only alcohol"], correct: 1},
+            {q: "25. What does the head of a surfactant molecule do?", a: ["Repels water", "Is hydrophilic (water-loving)", "Only attracts oil", "Only repels oil"], correct: 1},
+            {q: "26. What does pH measure?", a: ["Temperature", "Acidity or alkalinity", "Only acids", "Only bases"], correct: 1},
+            {q: "27. What is the pH scale range?", a: ["0 to 10", "0 to 14", "1 to 10", "1 to 12"], correct: 1},
+            {q: "28. What pH is neutral?", a: ["0", "7", "14", "10"], correct: 1},
+            {q: "29. What pH is acidic?", a: ["Above 7", "Below 7", "Exactly 7", "Only 14"], correct: 1},
+            {q: "30. What pH is alkaline?", a: ["Below 7", "Above 7", "Exactly 7", "Only 0"], correct: 1},
+            {q: "31. What is the normal pH range of hair and skin?", a: ["3.0 to 4.0", "4.5 to 5.5", "7.0 to 8.0", "10.0 to 11.0"], correct: 1},
+            {q: "32. What do acids do to hair?", a: ["Soften and swell", "Contract and harden", "Only clean", "Only moisturize"], correct: 1},
+            {q: "33. What do alkalis do to hair?", a: ["Contract and harden", "Soften and swell", "Only dry", "Only clean"], correct: 1},
+            {q: "34. What do acids taste like?", a: ["Bitter", "Sour", "Sweet", "Salty"], correct: 1},
+            {q: "35. What do alkalis taste like?", a: ["Sour", "Bitter", "Sweet", "Salty"], correct: 1},
+            {q: "36. What is the most abundant chemical on earth?", a: ["Oil", "Water", "Salt", "Sugar"], correct: 1},
+            {q: "37. What percentage of the human body is water?", a: ["About 35%", "About 50%", "About 65%", "About 80%"], correct: 2},
+            {q: "38. What are anionics in shampoo?", a: ["Mild cleansers", "Relatively harsh cleansers that produce rich foam", "Only conditioners", "Only moisturizers"], correct: 1},
+            {q: "39. What are cationics used for?", a: ["Only cleansing", "Antibacterial action in dandruff shampoos", "Only moisturizing", "Only coloring"], correct: 1},
+            {q: "40. What are nonionics?", a: ["Harsh cleansers", "Mild cleansing agents with low irritation", "Only antibacterial", "Only for coloring"], correct: 1},
+            {q: "41. What are amphoterics used for?", a: ["Only harsh cleaning", "Baby shampoos because they are nonirritating to eyes", "Only dandruff treatment", "Only coloring"], correct: 1},
+            {q: "42. What do conditioners do?", a: ["Remove color", "Deposit protein or moisture to restore strength", "Only clean", "Only dry hair"], correct: 1},
+            {q: "43. What are humectants?", a: ["Substances that repel moisture", "Compounds that attract and retain moisture", "Only oils", "Only alcohols"], correct: 1},
+            {q: "44. What is hydrogen peroxide used for?", a: ["Only cleaning", "Bleaching agent for hair", "Only moisturizing", "Only conditioning"], correct: 1},
+            {q: "45. What is petrolatum commonly known as?", a: ["Alcohol", "Vaseline or petroleum jelly", "Only water", "Only oil"], correct: 1},
+            {q: "46. What do astringents do?", a: ["Only moisturize", "Cause contraction of tissues and remove oil", "Only color hair", "Only condition"], correct: 1},
+            {q: "47. What is formaldehyde used for?", a: ["Only moisturizing", "Disinfectant, fungicide, germicide, and preservative", "Only coloring", "Only conditioning"], correct: 1},
+            {q: "48. What is glycerin used for?", a: ["Only cleaning", "Solvent and skin moisturizer", "Only coloring", "Only bleaching"], correct: 1},
+            {q: "49. What are silicones?", a: ["Only water", "Oils that form a breathable film on hair or skin", "Only alcohols", "Only acids"], correct: 1},
+            {q: "50. What is the United States Pharmacopeia (USP)?", a: ["A drug company", "A public health organization that sets standards", "Only for food", "Only for cosmetics"], correct: 1}
+        ];
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            quizData.forEach((item, index) => {
+                const qDiv = document.createElement('div');
+                qDiv.className = 'quiz-question';
+                qDiv.innerHTML = `
+                    <p>${item.q}</p>
+                    <div class="quiz-options">
+                        ${item.a.map((opt, i) => `
+                            <label><input type="radio" name="q${index + 1}" value="${i}"> ${opt}</label>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(qDiv);
+            });
+        }
+
+        function checkQuiz() {
+            let score = 0;
+            let total = quizData.length;
+            
+            quizData.forEach((item, index) => {
+                const selected = document.querySelector(`input[name="q${index + 1}"]:checked`);
+                if (selected && parseInt(selected.value) === item.correct) score++;
+            });
+            
+            const resultDiv = document.getElementById('quiz-result');
+            resultDiv.style.display = 'block';
+            if (score === total) {
+                resultDiv.className = 'quiz-result correct';
+                resultDiv.innerHTML = `<strong>Perfect! 🎉</strong> You got ${score}/${total} correct!`;
+            } else {
+                resultDiv.className = 'quiz-result incorrect';
+                resultDiv.innerHTML = `<strong>Keep studying!</strong> You got ${score}/${total} correct.`;
+            }
+        }
+
+        renderQuiz();
+
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html>
