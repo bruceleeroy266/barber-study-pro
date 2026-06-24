@@ -279,3 +279,38 @@ export interface InstructorAttendanceNote {
   note: string
   createdAt: string
 }
+
+// ============================================================================
+// PHASE 7 — INSTRUCTOR ATTENDANCE MANAGEMENT & REPORTING
+// ============================================================================
+
+export interface AttendanceCorrection {
+  id: string
+  attendanceRecordId: string
+  originalStatus: AttendanceStatus
+  newStatus: AttendanceStatus
+  reason: string
+  correctedBy: string
+  correctedAt: string
+  approvedBy?: string | null
+  approvedAt?: string | null
+}
+
+export interface AttendanceAuditEntry {
+  id: string
+  recordId: string
+  action: 'create' | 'update' | 'correct'
+  changedFields: Record<string, { old: any; new: any }>
+  userId: string
+  userName: string
+  timestamp: string
+  reason?: string | null
+}
+
+export interface AttendanceFilterState {
+  dateFrom?: string | null
+  dateTo?: string | null
+  studentIds?: string[]
+  statuses?: AttendanceStatus[]
+  searchQuery?: string | null
+}

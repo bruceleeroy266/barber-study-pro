@@ -1,0 +1,91 @@
+import { createClient } from '@/lib/supabase-server'
+import { redirect } from 'next/navigation'
+import { Profile, AttendanceRecord } from '@/types'
+import { isInstructorOrAdmin } from '@/lib/auth-helpers'
+import { demoStudents, demoAttendanceRecords } from '@/lib/demo-data'
+import AttendanceClient from './AttendanceClient'
+
+function isDemoFallbackEnabled(): boolean {
+  if (process.env.NEXT_PUBLIC_DEMO_MODE === 'true') return true
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+  const configured =
+    url.startsWith('https://') &&
+    !url.includes('your-project') &&
+    !url.includes('example.supabase.co') &&
+    key.length > 20
+  return !configured
+}
+
+export default async function AttendanceManagementPage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect('/login')
+  }
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('id, role, school_id, full_name, email, schools(name)')
+    .eq('id', user.id)
+    .single()
+
+  if (!profile || !isInstructorOrAdmin(profile.role)) {
+    redirect('/dashboard')
+  }
+
+  const typedProfile: Profile = {
+    id: profile.id,
+    email: profile.email || '',
+    full_name: profile.full_name || '',
+    role: profile.role,
+    school_id: profile.school_id || null,
+    barber_shop_name: null,
+    mentor_name: null,
+    avatar_url: null,
+    created_at: '',
+    updated_at: '',
+  }
+
+  const schoolId = profile.school_id || null
+  const schoolName = (profile.schools as { name?: string } | null)?.name || 'Your School'
+
+  const { data: studentsData } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('school_id', schoolId)
+    .in('role', ['student', 'apprentice'])
+
+  let students: Profile[] = (studentsData as Profile[]) || []
+
+  if (students.length === 0 && isDemoFallbackEnabled()) {
+    students = demoStudents.filter((s) => s.school_id === schoolId || !schoolId)
+  }
+
+  const studentIds = students.map((s) => s.id)
+
+  const { data: attendanceData } = await supabase
+    .from('attendance_records')
+    .select('*')
+    .in('user_id', studentIds.length > 0 ? studentIds : ['__none__'])
+    .order('date', { ascending: false })
+
+  let records: AttendanceRecord[] = (attendanceData as AttendanceRecord[]) || []
+  if (records.length === 0 && isDemoFallbackEnabled()) {
+    records = demoAttendanceRecords.filter((a) => studentIds.includes(a.userId))
+  }
+
+  const defaultDate = new Date().toISOString().split('T')[0]
+
+  return (
+    <AttendanceClient
+      initialRecords={records}
+      students={students}
+      currentUser={typedProfile}
+      schoolId={schoolId}
+      schoolName={schoolName}
+      defaultDate={defaultDate}
+    />
+  )
+}

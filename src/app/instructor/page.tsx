@@ -433,10 +433,16 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
               <h2 className="text-xl font-semibold text-white">Today&apos;s Attendance Overview</h2>
               <p className="text-sm text-gray-400 mt-1">{today} — Present / Absent / Tardy / Excused</p>
             </div>
-            <div className="text-sm text-gray-400">
+            <div className="flex items-center gap-4">
               {notMarkedToday > 0 && (
-                <span className="text-yellow-400">{notMarkedToday} not marked</span>
+                <span className="text-sm text-yellow-400">{notMarkedToday} not marked</span>
               )}
+              <Link
+                href="/instructor/attendance"
+                className="px-4 py-2 bg-[#D4AF37] hover:bg-[#F4E4A6] text-gray-950 font-semibold rounded-lg transition-colors text-sm"
+              >
+                Manage Attendance →
+              </Link>
             </div>
           </div>
 
