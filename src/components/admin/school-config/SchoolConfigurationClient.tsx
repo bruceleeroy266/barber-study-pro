@@ -77,6 +77,7 @@ export default function SchoolConfigurationClient({
 }: SchoolConfigurationClientProps) {
   const [activeTab, setActiveTab] = useState<TabId>('profile')
   const [config, setConfig] = useState<SchoolConfiguration>(initialConfig)
+  const [savedConfig, setSavedConfig] = useState<SchoolConfiguration>(initialConfig)
   const [errors, setErrors] = useState<ValidationErrors>({})
   const [isSaving, setIsSaving] = useState(false)
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(
@@ -84,8 +85,8 @@ export default function SchoolConfigurationClient({
   )
 
   const hasUnsavedChanges = useMemo(() => {
-    return JSON.stringify(config) !== JSON.stringify(initialConfig)
-  }, [config, initialConfig])
+    return JSON.stringify(config) !== JSON.stringify(savedConfig)
+  }, [config, savedConfig])
 
   const validate = useCallback((nextConfig: SchoolConfiguration) => {
     const nextErrors = validateSchoolConfiguration(nextConfig)
@@ -118,10 +119,16 @@ export default function SchoolConfigurationClient({
       type: result.success ? 'success' : 'error',
       message: result.message,
     })
+
+    if (result.success && result.savedConfig) {
+      setSavedConfig(result.savedConfig)
+      setConfig(result.savedConfig)
+      setErrors({})
+    }
   }
 
   function handleReset() {
-    setConfig(initialConfig)
+    setConfig(savedConfig)
     setErrors({})
     setFeedback(null)
   }

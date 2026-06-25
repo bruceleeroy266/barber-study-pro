@@ -9,6 +9,7 @@ import { logPermissionDenied, logSensitiveConfigChange } from '@/lib/security/au
 export interface SaveConfigurationResult {
   success: boolean
   message: string
+  savedConfig?: SchoolConfiguration
 }
 
 export async function saveSchoolConfiguration(
@@ -57,6 +58,7 @@ export async function saveSchoolConfiguration(
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
   const supabaseConfigured =
+    Boolean(url) &&
     url.startsWith('https://') &&
     !url.includes('your-project') &&
     !url.includes('example.supabase.co') &&
@@ -66,26 +68,50 @@ export async function saveSchoolConfiguration(
     return {
       success: true,
       message: 'Settings are valid, but changes are preview-only in demo mode and will not persist.',
+      savedConfig: config,
     }
   }
 
-  // Real persistence path (requires school_settings table or JSONB column on schools).
+  // Real persistence path.
   try {
-    // Prefer a dedicated school_settings row when available.
+    // Fetch existing settings to compute a safe change summary for audit logging.
+    const { data: existingRow } = await supabase
+      .from('school_settings')
+      .select('settings')
+      .eq('school_id', profile.school_id)
+      .maybeSingle()
+
+    const existingConfig = isSchoolConfiguration(existingRow?.settings)
+      ? (existingRow.settings as SchoolConfiguration)
+      : null
+
+    const changedFields = existingConfig
+      ? getChangedFields(existingConfig, config)
+      : ['settings']
+
+    const configWithTimestamp: SchoolConfiguration = {
+      ...config,
+      updatedAt: new Date().toISOString(),
+    }
+
     const { error } = await supabase
       .from('school_settings')
       .upsert(
         {
           school_id: profile.school_id,
-          settings: config as unknown as Record<string, unknown>,
-          updated_at: new Date().toISOString(),
+          settings: configWithTimestamp as unknown as Record<string, unknown>,
+          name: configWithTimestamp.school.name,
+          primary_color: configWithTimestamp.branding.primaryColor,
+          contact_email: configWithTimestamp.school.contact_email,
+          contact_phone: null,
+          updated_at: configWithTimestamp.updatedAt,
           updated_by: user.id,
         },
         { onConflict: 'school_id' }
       )
 
     if (error) {
-      if (error.message?.includes('relation') || error.code === '42P01') {
+      if (isMissingTableError(error)) {
         return {
           success: false,
           message:
@@ -102,13 +128,59 @@ export async function saveSchoolConfiguration(
       schoolId: profile.school_id,
       resourceId: profile.school_id,
       action: 'save',
+      metadata: { changedFields },
     })
 
-    return { success: true, message: 'School settings saved successfully.' }
+    return {
+      success: true,
+      message: 'School settings saved successfully.',
+      savedConfig: configWithTimestamp,
+    }
   } catch (err) {
     return {
       success: false,
       message: err instanceof Error ? err.message : 'Failed to save school settings.',
     }
   }
+}
+
+function isMissingTableError(error: { message?: string; code?: string }): boolean {
+  return Boolean(
+    error.message?.includes('relation') ||
+      error.message?.includes('does not exist') ||
+      error.code === '42P01'
+  )
+}
+
+function isSchoolConfiguration(value: unknown): boolean {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'school' in value &&
+    'branding' in value &&
+    'programs' in value &&
+    'attendancePolicy' in value &&
+    'hoursPolicy' in value &&
+    'gradebookConfig' in value &&
+    'assessmentDefaults' in value
+  )
+}
+
+function getChangedFields(
+  previous: SchoolConfiguration,
+  next: SchoolConfiguration
+): string[] {
+  const fields: string[] = []
+  const keys = new Set([
+    ...Object.keys(previous),
+    ...Object.keys(next),
+  ]) as Set<keyof SchoolConfiguration>
+
+  for (const key of keys) {
+    if (JSON.stringify(previous[key]) !== JSON.stringify(next[key])) {
+      fields.push(key)
+    }
+  }
+
+  return fields
 }
