@@ -1,8 +1,10 @@
+export type AppRole = 'student' | 'instructor' | 'apprentice' | 'admin'
+
 export interface Profile {
   id: string
   email: string
   full_name: string
-  role: 'student' | 'instructor' | 'apprentice' | 'admin'
+  role: AppRole
   school_id: string | null
   barber_shop_name: string | null
   mentor_name: string | null
@@ -701,4 +703,98 @@ export interface ComplianceReport {
   generatedAt: string
   summary: string
   rows: Record<string, string | number>[]
+}
+
+// ============================================================================
+// PHASE 12 — ADMINISTRATIVE & SCHOOL CONFIGURATION
+// ============================================================================
+
+export interface SchoolBranding {
+  primaryColor: string
+  logoUrl: string | null
+  faviconUrl: string | null
+}
+
+export interface AcademicProgram {
+  id: string
+  name: string
+  requiredHours: number
+  requiredAssessments: number
+  requiredPracticals: number
+  active: boolean
+}
+
+export interface AttendancePolicy {
+  targetAttendancePercentage: number
+  autoExcuseLimit: number
+  tardyThresholdMinutes: number
+  trackClockEvents: boolean
+}
+
+export interface HoursPolicy {
+  requiredHours: number
+  categories: HourCategory[]
+  requireInstructorApproval: boolean
+}
+
+export interface GradebookConfig {
+  passingPercentage: number
+  gradingScale: 'percentage' | 'letter'
+  categories: GradeCategory[]
+}
+
+export interface AssessmentDefaults {
+  passingPercentage: number
+  defaultRubricId: string | null
+  allowedTypes: AssessmentType[]
+}
+
+export interface MessagingPreferences {
+  allowStudentToStudent: boolean
+  requireModeration: boolean
+  autoReplyEnabled: boolean
+}
+
+export interface SchoolNotificationSetting {
+  type: NotificationType
+  enabled: boolean
+  priority: NotificationPriority
+}
+
+export interface RolePermission {
+  role: AppRole
+  permissions: Permission[]
+}
+
+export type Permission =
+  | 'view_dashboard'
+  | 'manage_students'
+  | 'manage_instructors'
+  | 'manage_attendance'
+  | 'manage_gradebook'
+  | 'manage_assessments'
+  | 'manage_compliance'
+  | 'manage_messaging'
+  | 'manage_settings'
+  | 'view_reports'
+  | 'export_data'
+
+export interface SchoolConfiguration {
+  school: School
+  branding: SchoolBranding
+  programs: AcademicProgram[]
+  instructors: Profile[]
+  enrollment: {
+    openEnrollment: boolean
+    allowSelfRegistration: boolean
+    defaultProgramId: string | null
+  }
+  attendancePolicy: AttendancePolicy
+  hoursPolicy: HoursPolicy
+  gradebookConfig: GradebookConfig
+  assessmentDefaults: AssessmentDefaults
+  messagingPreferences: MessagingPreferences
+  notificationSettings: SchoolNotificationSetting[]
+  rolePermissions: RolePermission[]
+  updatedAt: string
 }

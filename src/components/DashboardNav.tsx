@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutDashboard, BookOpen, TrendingUp, User, LogOut, GraduationCap, Shield, RotateCcw, MessageSquare, Calculator, ClipboardCheck, Building2, FileCheck } from 'lucide-react'
+import { LayoutDashboard, BookOpen, TrendingUp, User, LogOut, GraduationCap, Shield, RotateCcw, MessageSquare, Calculator, ClipboardCheck, Building2, FileCheck, Settings } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { Profile } from '@/types'
 import { isInstructorOrAdmin, isAdmin } from '@/lib/auth-helpers'
@@ -44,6 +44,7 @@ export default function DashboardNav({ user }: DashboardNavProps) {
     }
     if (user && isAdmin(user.role)) {
       items.push({ href: '/admin/school', label: 'School Dashboard', icon: Building2 })
+      items.push({ href: '/admin/school/configuration', label: 'School Settings', icon: Settings })
       items.push({ href: '/admin', label: 'Admin Portal', icon: Shield })
     }
     return items

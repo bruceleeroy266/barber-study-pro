@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase-server'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { isAdmin } from '@/lib/auth-helpers'
+import { Settings } from 'lucide-react'
 
 export default async function AdminDashboard() {
   const supabase = await createClient()
@@ -68,17 +70,23 @@ export default async function AdminDashboard() {
 
         {/* Management Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Link
+            href="/admin/school/configuration"
+            className="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-[#D4AF37]/30 transition-colors group"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-semibold text-white group-hover:text-[#D4AF37]">School Settings</h3>
+              <Settings className="w-5 h-5 text-gray-500 group-hover:text-[#D4AF37]" />
+            </div>
+            <p className="text-gray-400 text-sm mb-4">Configure school profile, programs, policies, and roles</p>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#D4AF37]/10 text-[#D4AF37] text-sm rounded-lg border border-[#D4AF37]/20">
+              Open Configuration
+            </span>
+          </Link>
+
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
             <h3 className="text-lg font-semibold text-white mb-2">Users</h3>
             <p className="text-gray-400 text-sm mb-4">Manage user accounts and roles</p>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-800 text-gray-400 text-sm rounded-lg">
-              <span>Coming soon</span>
-            </div>
-          </div>
-
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <h3 className="text-lg font-semibold text-white mb-2">Schools</h3>
-            <p className="text-gray-400 text-sm mb-4">Manage schools and subscriptions</p>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-800 text-gray-400 text-sm rounded-lg">
               <span>Coming soon</span>
             </div>

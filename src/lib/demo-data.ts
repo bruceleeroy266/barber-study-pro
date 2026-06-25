@@ -1,7 +1,7 @@
 // Demo data for soft launch without Supabase
 // This provides safe mock data when NEXT_PUBLIC_DEMO_MODE=true
 
-import { Chapter, Flashcard, Quiz, QuizQuestion, QuizAttempt, StudentProgress, Profile, InstructorNote, HourLog, AttendanceRecord, InstructorAttendanceNote, MessageThread, Message, Notification, Announcement, NotificationPriority, GradeCategory, Grade, AssessmentRubric, Assessment, GradeHistory } from '@/types'
+import { Chapter, Flashcard, Quiz, QuizQuestion, QuizAttempt, StudentProgress, Profile, InstructorNote, HourLog, AttendanceRecord, InstructorAttendanceNote, MessageThread, Message, Notification, Announcement, NotificationPriority, GradeCategory, Grade, AssessmentRubric, Assessment, GradeHistory, SchoolConfiguration, AcademicProgram, AttendancePolicy, HoursPolicy, GradebookConfig, AssessmentDefaults, MessagingPreferences, SchoolNotificationSetting, RolePermission } from '@/types'
 import { chapterFlashcards as realFlashcards } from './flashcards-data'
 import { batch1Flashcards, batch4Flashcards } from './orphaned-flashcards'
 import { allQuizQuestions } from './quiz-data'
@@ -1329,4 +1329,124 @@ export function getDemoAssessmentsForStudent(studentId: string): Assessment[] {
 
 export function getDemoGradeHistoryForGrade(gradeId: string): GradeHistory[] {
   return demoGradeHistories.filter((h) => h.gradeId === gradeId)
+}
+
+
+// ============================================================================
+// PHASE 12 — ADMINISTRATIVE & SCHOOL CONFIGURATION
+// ============================================================================
+
+export const demoAcademicPrograms: AcademicProgram[] = [
+  { id: 'program-barber', name: 'Barbering', requiredHours: 1500, requiredAssessments: 10, requiredPracticals: 20, active: true },
+  { id: 'program-cosmo', name: 'Cosmetology', requiredHours: 1500, requiredAssessments: 12, requiredPracticals: 24, active: true },
+  { id: 'program-esthetics', name: 'Esthetics', requiredHours: 600, requiredAssessments: 8, requiredPracticals: 16, active: false },
+]
+
+export const demoAttendancePolicy: AttendancePolicy = {
+  targetAttendancePercentage: 80,
+  autoExcuseLimit: 3,
+  tardyThresholdMinutes: 10,
+  trackClockEvents: true,
+}
+
+export const demoHoursPolicy: HoursPolicy = {
+  requiredHours: 1500,
+  categories: ['Theory', 'Practical', 'Clinic', 'Sanitation', 'Other'],
+  requireInstructorApproval: true,
+}
+
+export const demoGradebookConfig: GradebookConfig = {
+  passingPercentage: 70,
+  gradingScale: 'percentage',
+  categories: demoGradeCategories,
+}
+
+export const demoAssessmentDefaults: AssessmentDefaults = {
+  passingPercentage: 70,
+  defaultRubricId: demoAssessmentRubrics[0]?.id || null,
+  allowedTypes: ['HAIRCUT', 'COLOR', 'CHEMICAL', 'SANITATION', 'CONSULTATION'],
+}
+
+export const demoMessagingPreferences: MessagingPreferences = {
+  allowStudentToStudent: false,
+  requireModeration: false,
+  autoReplyEnabled: false,
+}
+
+export const demoNotificationSettings: SchoolNotificationSetting[] = [
+  { type: 'attendance_alert', enabled: true, priority: 'high' },
+  { type: 'attendance_risk', enabled: true, priority: 'high' },
+  { type: 'board_readiness', enabled: true, priority: 'medium' },
+  { type: 'missing_hours', enabled: true, priority: 'medium' },
+  { type: 'upcoming_exam', enabled: true, priority: 'low' },
+]
+
+export const demoRolePermissions: RolePermission[] = [
+  {
+    role: 'student',
+    permissions: ['view_dashboard'],
+  },
+  {
+    role: 'apprentice',
+    permissions: ['view_dashboard'],
+  },
+  {
+    role: 'instructor',
+    permissions: [
+      'view_dashboard',
+      'manage_students',
+      'manage_attendance',
+      'manage_gradebook',
+      'manage_assessments',
+      'manage_compliance',
+      'manage_messaging',
+      'view_reports',
+      'export_data',
+    ],
+  },
+  {
+    role: 'admin',
+    permissions: [
+      'view_dashboard',
+      'manage_students',
+      'manage_instructors',
+      'manage_attendance',
+      'manage_gradebook',
+      'manage_assessments',
+      'manage_compliance',
+      'manage_messaging',
+      'manage_settings',
+      'view_reports',
+      'export_data',
+    ],
+  },
+]
+
+export const demoSchoolConfiguration: SchoolConfiguration = {
+  school: {
+    ...demoSchool,
+    address: '123 Demo Lane, Oklahoma City, OK 73102',
+    contact_email: 'admin@demobarberacademy.test',
+    subscription_status: 'trial',
+  },
+  branding: {
+    primaryColor: '#D4AF37',
+    logoUrl: null,
+    faviconUrl: null,
+  },
+  programs: demoAcademicPrograms,
+  instructors: [demoInstructorProfile],
+  enrollment: {
+    openEnrollment: true,
+    allowSelfRegistration: false,
+    defaultProgramId: 'program-barber',
+  },
+  attendancePolicy: demoAttendancePolicy,
+  hoursPolicy: demoHoursPolicy,
+  gradebookConfig: demoGradebookConfig,
+  assessmentDefaults: demoAssessmentDefaults,
+  messagingPreferences: demoMessagingPreferences,
+  notificationSettings: demoNotificationSettings,
+  rolePermissions: demoRolePermissions,
+  updatedAt: '2026-06-24T00:00:00Z',
 }
