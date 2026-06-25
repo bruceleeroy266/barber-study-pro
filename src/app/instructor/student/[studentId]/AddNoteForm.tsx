@@ -2,10 +2,13 @@
 
 import { useState } from 'react'
 import { addInstructorNote, NoteType } from './actions'
+import { isDemoFallbackEnabled } from '@/lib/demo-helpers'
 
 interface AddNoteFormProps {
   studentId: string
 }
+
+const isDemo = isDemoFallbackEnabled()
 
 const NOTE_TYPES: { value: NoteType; label: string }[] = [
   { value: 'coaching', label: 'Coaching' },
@@ -41,6 +44,12 @@ export function AddNoteForm({ studentId }: AddNoteFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {isDemo && (
+        <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3 text-sm text-yellow-400">
+          <span className="font-semibold">Demo mode:</span> Instructor notes are read-only while running without a configured Supabase database. Notes you enter here will not be saved.
+        </div>
+      )}
+
       <div>
         <label htmlFor="note-type" className="block text-sm font-medium text-gray-300 mb-1">
           Note Type
@@ -76,10 +85,10 @@ export function AddNoteForm({ studentId }: AddNoteFormProps) {
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
         <button
           type="submit"
-          disabled={pending || !noteText.trim()}
+          disabled={pending || !noteText.trim() || isDemo}
           className="px-4 py-2 bg-[#D4AF37] hover:bg-[#F4E4A6] disabled:opacity-50 disabled:cursor-not-allowed text-gray-950 font-semibold rounded-lg transition-colors"
         >
-          {pending ? 'Adding...' : 'Add Note'}
+          {pending ? 'Adding...' : isDemo ? 'Notes read-only' : 'Add Note'}
         </button>
 
         {status && (

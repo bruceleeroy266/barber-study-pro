@@ -3,7 +3,7 @@
  * ASCYN PRO / Barber Study Pro V2
  */
 
-import { AttendanceRecord, AttendanceSummary, AttendanceStatus } from '@/types'
+import { AttendanceRecord, AttendanceSummary } from '@/types'
 
 export function calculateAttendanceSummary(
   userId: string,

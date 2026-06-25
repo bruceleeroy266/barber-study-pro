@@ -27,22 +27,20 @@ function formatTimestamp(iso: string): string {
 
 export default function AuditLog({ record, student, onClose, fetchAuditHistory }: AuditLogProps) {
   const [entries, setEntries] = useState<AttendanceAuditEntry[]>([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!record) return
 
     let cancelled = false
-    setLoading(true)
-    setError(null)
 
     fetchAuditHistory(record.id)
       .then((data) => {
         if (!cancelled) setEntries(data)
       })
       .catch((err) => {
-        if (!cancelled) setError(err?.message || 'Failed to load audit history')
+        if (!cancelled) setError(err instanceof Error ? err.message : 'Failed to load audit history')
       })
       .finally(() => {
         if (!cancelled) setLoading(false)

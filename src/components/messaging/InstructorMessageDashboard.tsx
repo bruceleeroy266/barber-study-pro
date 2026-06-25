@@ -2,8 +2,8 @@
 
 import Link from 'next/link'
 import { Mail, Bell, Megaphone, Send, User } from 'lucide-react'
-import { MessageThread, Notification, Profile } from '@/types'
-import { getThreadDisplayName, formatMessageTime, priorityColorClasses } from '@/lib/messaging'
+import { Notification, Profile } from '@/types'
+import { getThreadDisplayName, formatMessageTime } from '@/lib/messaging'
 import { useMessages } from '@/hooks/useMessages'
 import { useNotifications } from '@/hooks/useNotifications'
 import MessageList from './MessageList'
@@ -63,13 +63,16 @@ export default function InstructorMessageDashboard({
             <Send className="w-4 h-4" />
             New Message
           </Link>
-          <Link
-            href="#"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 text-white font-medium rounded-lg hover:bg-gray-700 transition-colors"
+          <button
+            type="button"
+            disabled
+            title="Announcements are coming soon"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800/60 text-gray-400 font-medium rounded-lg cursor-not-allowed border border-gray-700/50"
           >
             <Megaphone className="w-4 h-4" />
             Announcement
-          </Link>
+            <span className="ml-1 text-[10px] uppercase tracking-wide text-gray-500">Soon</span>
+          </button>
         </div>
       </div>
 

@@ -206,6 +206,7 @@ export default function AttendanceClient({
 
       {auditRecord && (
         <AuditLog
+          key={auditRecord.id}
           record={auditRecord}
           student={studentMap.get(auditRecord.userId)}
           onClose={() => setAuditRecord(null)}

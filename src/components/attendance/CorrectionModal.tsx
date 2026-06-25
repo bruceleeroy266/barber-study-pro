@@ -38,8 +38,8 @@ export default function CorrectionModal({ record, student, onClose, onSubmit }: 
     try {
       await onSubmit(record.id, newStatus, reason.trim())
       onClose()
-    } catch (err: any) {
-      setError(err?.message || 'Failed to submit correction.')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to submit correction.')
     } finally {
       setSubmitting(false)
     }

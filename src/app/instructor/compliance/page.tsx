@@ -26,71 +26,87 @@ export default async function InstructorComplianceDashboard() {
     redirect('/login')
   }
 
-  const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role, school_id')
+    .eq('id', user.id)
+    .single()
   if (!profile || (profile.role !== 'instructor' && profile.role !== 'admin')) {
     redirect('/dashboard')
   }
 
   const useDemo = isDemoFallbackEnabled()
+  const schoolId = profile.school_id
 
-  const { data: studentsData } = await supabase.from('profiles').select('*').eq('role', 'student')
-  const students: Profile[] =
-    (studentsData as Profile[])?.length > 0 ? (studentsData as Profile[]) : useDemo ? demoStudents : []
+  // Scope all student-facing data to the instructor's assigned school.
+  const { data: studentsData } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('school_id', schoolId)
+    .in('role', ['student', 'apprentice'])
+
+  let students: Profile[] = (studentsData as Profile[]) || []
+  if (students.length === 0 && useDemo) {
+    students = demoStudents.filter((s) => s.school_id === schoolId || !schoolId)
+  }
+
+  const studentIds = students.map((s) => s.id)
+  const studentIdFilter = studentIds.length > 0 ? studentIds : ['__none__']
 
   const [attendanceRes, hoursRes, attemptsRes, progressRes, gradesRes, categoriesRes, assessmentsRes] =
     await Promise.all([
-      supabase.from('attendance_records').select('*'),
-      supabase.from('hour_logs').select('*'),
-      supabase.from('quiz_attempts').select('*'),
-      supabase.from('student_progress').select('*'),
-      supabase.from('grades').select('*'),
-      supabase.from('grade_categories').select('*'),
-      supabase.from('assessments').select('*'),
+      supabase.from('attendance_records').select('*').in('user_id', studentIdFilter),
+      supabase.from('hour_logs').select('*').in('user_id', studentIdFilter),
+      supabase.from('quiz_attempts').select('*').in('user_id', studentIdFilter),
+      supabase.from('student_progress').select('*').in('user_id', studentIdFilter),
+      supabase.from('grades').select('*').in('student_id', studentIdFilter),
+      supabase.from('grade_categories').select('*').eq('school_id', schoolId),
+      supabase.from('assessments').select('*').in('student_id', studentIdFilter),
     ])
 
   const attendanceRecords: AttendanceRecord[] =
     (attendanceRes.data as AttendanceRecord[])?.length > 0
       ? (attendanceRes.data as AttendanceRecord[])
       : useDemo
-      ? demoAttendanceRecords
+      ? demoAttendanceRecords.filter((a) => studentIds.includes(a.userId))
       : []
 
   const hourLogs: HourLog[] =
-    (hoursRes.data as HourLog[])?.length > 0 ? (hoursRes.data as HourLog[]) : useDemo ? demoHourLogs : []
+    (hoursRes.data as HourLog[])?.length > 0 ? (hoursRes.data as HourLog[]) : useDemo ? demoHourLogs.filter((h) => studentIds.includes(h.user_id)) : []
 
   const quizAttempts: QuizAttempt[] =
     (attemptsRes.data as QuizAttempt[])?.length > 0
       ? (attemptsRes.data as QuizAttempt[])
       : useDemo
-      ? demoQuizAttempts
+      ? demoQuizAttempts.filter((a) => studentIds.includes(a.user_id))
       : []
 
   const progress: StudentProgress[] =
     (progressRes.data as StudentProgress[])?.length > 0
       ? (progressRes.data as StudentProgress[])
       : useDemo
-      ? demoStudentProgress
+      ? demoStudentProgress.filter((p) => studentIds.includes(p.user_id))
       : []
 
   const grades: Grade[] =
     (gradesRes.data as unknown as Grade[])?.length > 0
       ? (gradesRes.data as unknown as Grade[])
       : useDemo
-      ? demoGrades
+      ? demoGrades.filter((g) => studentIds.includes(g.studentId))
       : []
 
   const gradeCategories: GradeCategory[] =
     (categoriesRes.data as unknown as GradeCategory[])?.length > 0
       ? (categoriesRes.data as unknown as GradeCategory[])
       : useDemo
-      ? demoGradeCategories
+      ? demoGradeCategories.filter((c) => c.schoolId === schoolId || !c.schoolId)
       : []
 
   const assessments: Assessment[] =
     (assessmentsRes.data as unknown as Assessment[])?.length > 0
       ? (assessmentsRes.data as unknown as Assessment[])
       : useDemo
-      ? demoAssessments
+      ? demoAssessments.filter((a) => studentIds.includes(a.studentId))
       : []
 
   const studentCompliances = students.map((student) =>

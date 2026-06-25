@@ -28,7 +28,7 @@ function generateId(): string {
 export interface LogAuditEntryInput {
   recordId: string
   action: AttendanceAuditEntry['action']
-  changedFields: Record<string, { old: any; new: any }>
+  changedFields: Record<string, { old: unknown; new: unknown }>
   userId: string
   userName: string
   reason?: string | null
