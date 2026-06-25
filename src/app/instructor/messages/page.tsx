@@ -6,8 +6,9 @@ import {
   demoStudents,
   getDemoNotificationsForUser,
 } from '@/lib/demo-data'
-import { isDemoFallbackEnabled } from '@/lib/demo-helpers'
+import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
 import InstructorMessageDashboard from '@/components/messaging/InstructorMessageDashboard'
+import ProductionMessagingPlaceholder from '@/components/messaging/ProductionMessagingPlaceholder'
 
 export default async function InstructorMessagesPage() {
   const supabase = await createClient()
@@ -33,7 +34,24 @@ export default async function InstructorMessagesPage() {
 
   const instructorProfile = profile as Profile
 
-  // Fetch students in the same school
+  // Phase 13C.1: messaging is only functional in explicit safe demo mode.
+  // In production (Supabase configured), show a disabled/coming-soon state
+  // instead of fake demo threads and notifications.
+  const demoMode = isExplicitDemoMode()
+  const supabaseConfigured = isSupabaseConfigured()
+  const isSafeDemo = demoMode && !supabaseConfigured
+
+  if (!isSafeDemo) {
+    return (
+      <ProductionMessagingPlaceholder
+        title="Instructor Messaging"
+        backHref="/instructor"
+        backLabel="Back to Instructor Dashboard"
+      />
+    )
+  }
+
+  // Demo-only path: load the school roster and demo notifications.
   const { data: students } = await supabase
     .from('profiles')
     .select('*')
@@ -41,15 +59,13 @@ export default async function InstructorMessagesPage() {
     .in('role', ['student', 'apprentice'])
 
   let rosterStudents: Profile[] = (students as Profile[]) || []
-  if (rosterStudents.length === 0 && isDemoFallbackEnabled()) {
+  if (rosterStudents.length === 0) {
     rosterStudents = demoStudents.filter(
       (s) => s.school_id === instructorProfile.school_id || !instructorProfile.school_id
     )
   }
 
-  const demoNotifications = isDemoFallbackEnabled()
-    ? getDemoNotificationsForUser(user.id)
-    : []
+  const demoNotifications = getDemoNotificationsForUser(user.id)
 
   return (
     <div className="min-h-screen bg-gray-950 p-6 md:p-8">

@@ -4,6 +4,7 @@ import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
 import { logFailedLogin } from '../actions'
 
 function LoginForm() {
@@ -22,12 +23,23 @@ function LoginForm() {
     setError(null)
 
     try {
-      const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+      const demoMode = isExplicitDemoMode()
+      const supabaseConfigured = isSupabaseConfigured()
 
-      if (isDemoMode) {
+      // Phase 13C.1: auth bypass is only allowed in a safe local demo
+      // environment (explicit demo mode + no real Supabase project).
+      if (demoMode && !supabaseConfigured) {
         router.push(redirect)
         router.refresh()
         return
+      }
+
+      // If demo mode is enabled but a real Supabase project is configured,
+      // treat this as a misconfiguration and force real authentication.
+      if (demoMode && supabaseConfigured) {
+        console.warn(
+          '[Login] Demo mode is enabled but Supabase is configured. Enforcing real authentication.'
+        )
       }
 
       const { data, error } = await supabase.auth.signInWithPassword({

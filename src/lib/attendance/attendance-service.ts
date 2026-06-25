@@ -8,7 +8,7 @@
 import { AttendanceRecord, AttendanceStatus, AttendanceFilterState, Profile } from '@/types'
 import { supabase } from '@/lib/supabase'
 import { demoAttendanceRecords } from '@/lib/demo-data'
-const demoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
 
 // In-memory mutable store for demo mode (does not persist to disk)
 let mutableDemoRecords: AttendanceRecord[] | null = null
@@ -28,15 +28,8 @@ function generateId(): string {
 }
 
 function isDemoFallback(): boolean {
-  if (demoMode) return true
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-  const configured =
-    url.startsWith('https://') &&
-    !url.includes('your-project') &&
-    !url.includes('example.supabase.co') &&
-    key.length > 20
-  return !configured
+  // Phase 13C.1: demo fallback is only allowed in explicit safe demo mode.
+  return isExplicitDemoMode() && !isSupabaseConfigured()
 }
 
 export interface AttendanceServiceFilters extends AttendanceFilterState {
@@ -73,7 +66,7 @@ export async function getAttendanceRecords(
   let query = supabase.from('attendance_records').select('*')
 
   if (filters.schoolId) {
-    query = query.eq('schoolId', filters.schoolId)
+    query = query.eq('school_id', filters.schoolId)
   }
   if (filters.dateFrom) {
     query = query.gte('date', filters.dateFrom)

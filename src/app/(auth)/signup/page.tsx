@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
 
 type Role = 'student' | 'instructor' | 'apprentice'
 
@@ -25,14 +26,17 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
+  const [pendingSchool, setPendingSchool] = useState(false)
 
-  // Load existing schools for student selection
+  // Load existing active schools for student selection.
+  // Phase 13C.1: pending/inactive schools must not accept student registrations.
   useEffect(() => {
     async function loadSchools() {
       try {
         const { data, error } = await supabase
           .from('schools')
           .select('id, name')
+          .eq('is_active', true)
           .order('name', { ascending: true })
 
         if (!error && data) {
@@ -95,19 +99,44 @@ export default function SignupPage() {
 
       if (signUpData.user) {
         let schoolId: string | null = null
+        let instructorSchoolPending = false
 
         if (role === 'instructor') {
-          const { data: schoolData, error: schoolError } = await supabase
-            .from('schools')
-            .insert({
-              name: schoolName.trim(),
-              created_by: signUpData.user.id,
-            })
-            .select('id')
-            .single()
+          const demoMode = isExplicitDemoMode()
+          const supabaseConfigured = isSupabaseConfigured()
 
-          if (!schoolError && schoolData) {
-            schoolId = schoolData.id
+          if (demoMode && !supabaseConfigured) {
+            // Safe local demo: create an active school immediately.
+            const { data: schoolData, error: schoolError } = await supabase
+              .from('schools')
+              .insert({
+                name: schoolName.trim(),
+                created_by: signUpData.user.id,
+                is_active: true,
+              })
+              .select('id')
+              .single()
+
+            if (!schoolError && schoolData) {
+              schoolId = schoolData.id
+            }
+          } else {
+            // Production (or misconfigured demo + real Supabase): create the
+            // school in a pending/inactive state pending admin approval.
+            const { data: schoolData, error: schoolError } = await supabase
+              .from('schools')
+              .insert({
+                name: schoolName.trim(),
+                created_by: signUpData.user.id,
+                is_active: false,
+              })
+              .select('id')
+              .single()
+
+            if (!schoolError && schoolData) {
+              schoolId = schoolData.id
+              instructorSchoolPending = true
+            }
           }
         } else if (role === 'student') {
           // Students must select an existing school; they cannot create schools
@@ -150,9 +179,10 @@ export default function SignupPage() {
         }, {
           onConflict: 'id',
         })
-      }
 
-      setSuccess(true)
+        setPendingSchool(instructorSchoolPending)
+        setSuccess(true)
+      }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to sign up')
     } finally {
@@ -160,20 +190,24 @@ export default function SignupPage() {
     }
   }
 
-  const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+  const isDemoMode = isExplicitDemoMode()
 
   if (success) {
     return (
       <div className="bg-gray-900/80 backdrop-blur-sm border border-gray-800 rounded-2xl p-8 shadow-2xl text-center">
         <div className="text-5xl mb-4">🎉</div>
-        <h1 className="text-2xl font-bold text-white mb-4">Account Created!</h1>
+        <h1 className="text-2xl font-bold text-white mb-4">
+          {pendingSchool ? 'Account Created — Pending Approval' : 'Account Created!'}
+        </h1>
         <p className="text-gray-400 mb-6">
-          {isDemoMode
+          {pendingSchool
+            ? 'Your school has been submitted for administrator approval. You will receive an email once your school is activated.'
+            : isDemoMode
             ? 'Your account is ready. Start studying right away!'
             : 'Please check your email to verify your account. Once verified, you can sign in.'}
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          {isDemoMode && (
+          {isDemoMode && !pendingSchool && (
             <Link
               href="/dashboard"
               className="inline-block py-3 px-6 bg-gradient-to-r from-[#D4AF37] to-[#B8941F] text-gray-950 font-semibold rounded-lg hover:from-[#F4E4A6] hover:to-[#D4AF37] transition-all duration-200"

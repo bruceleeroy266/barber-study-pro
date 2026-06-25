@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase-server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { isAdmin } from '@/lib/auth-helpers'
+import { hasPermission } from '@/lib/security/permissions'
 import { Settings } from 'lucide-react'
 
 export default async function AdminDashboard() {
@@ -12,10 +13,10 @@ export default async function AdminDashboard() {
     redirect('/login')
   }
 
-  // Check if user is admin
+  // Check if user is admin and fetch school assignment.
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role')
+    .select('role, school_id')
     .eq('id', user.id)
     .single()
 
@@ -26,14 +27,35 @@ export default async function AdminDashboard() {
     redirect('/dashboard')
   }
 
-  // Get stats
-  const { count: userCount } = await supabase
-    .from('profiles')
-    .select('*', { count: 'exact', head: true })
+  const canViewPlatformAnalytics = hasPermission(profile.role, 'view_platform_analytics')
 
-  const { count: schoolCount } = await supabase
-    .from('schools')
-    .select('*', { count: 'exact', head: true })
+  // Phase 13C.1: regular school admins must only see data for their assigned
+  // school. Platform-wide analytics require the platform_super_admin permission.
+  let userCount = 0
+  let schoolCount = 0
+  let schoolName: string | null = null
+
+  if (canViewPlatformAnalytics) {
+    const { count: platformUserCount } = await supabase
+      .from('profiles')
+      .select('*', { count: 'exact', head: true })
+    const { count: platformSchoolCount } = await supabase
+      .from('schools')
+      .select('*', { count: 'exact', head: true })
+    userCount = platformUserCount || 0
+    schoolCount = platformSchoolCount || 0
+  } else if (profile.school_id) {
+    const [{ count: schoolUserCount }, { data: school }] = await Promise.all([
+      supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true })
+        .eq('school_id', profile.school_id),
+      supabase.from('schools').select('name').eq('id', profile.school_id).single(),
+    ])
+    userCount = schoolUserCount || 0
+    schoolCount = 1
+    schoolName = school?.name || null
+  }
 
   const chapterCount = 21 // Local curriculum chapters
 
@@ -42,19 +64,29 @@ export default async function AdminDashboard() {
       <div className="max-w-7xl mx-auto space-y-8">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Admin Dashboard</h1>
-          <p className="text-gray-400">Platform management and overview</p>
+          <p className="text-gray-400">
+            {canViewPlatformAnalytics
+              ? 'Platform management and overview'
+              : schoolName
+              ? `School management — ${schoolName}`
+              : 'School management'}
+          </p>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <div className="text-3xl font-bold text-[#D4AF37]">{userCount || 0}</div>
-            <div className="text-sm text-gray-400">Total Users</div>
+            <div className="text-3xl font-bold text-[#D4AF37]">{userCount}</div>
+            <div className="text-sm text-gray-400">
+              {canViewPlatformAnalytics ? 'Total Platform Users' : 'School Users'}
+            </div>
           </div>
           
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <div className="text-3xl font-bold text-blue-400">{schoolCount || 0}</div>
-            <div className="text-sm text-gray-400">Schools</div>
+            <div className="text-3xl font-bold text-blue-400">{schoolCount}</div>
+            <div className="text-sm text-gray-400">
+              {canViewPlatformAnalytics ? 'Total Schools' : 'Your School'}
+            </div>
           </div>
           
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">

@@ -1,9 +1,10 @@
 import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import { Profile } from '@/types'
-import { getDemoNotificationsForUser, getDemoThreadsForUser } from '@/lib/demo-data'
-import { isDemoFallbackEnabled } from '@/lib/demo-helpers'
+import { getDemoNotificationsForUser } from '@/lib/demo-data'
+import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
 import MessageCenter from '@/components/messaging/MessageCenter'
+import ProductionMessagingPlaceholder from '@/components/messaging/ProductionMessagingPlaceholder'
 
 export default async function StudentMessagesPage() {
   const supabase = await createClient()
@@ -32,10 +33,18 @@ export default async function StudentMessagesPage() {
     updated_at: new Date().toISOString(),
   }
 
-  // Demo notifications fallback
-  const demoNotifications = isDemoFallbackEnabled()
-    ? getDemoNotificationsForUser(user.id)
-    : []
+  // Phase 13C.1: messaging is only functional in explicit safe demo mode.
+  // In production (Supabase configured), show a disabled/coming-soon state
+  // instead of fake demo threads and notifications.
+  const demoMode = isExplicitDemoMode()
+  const supabaseConfigured = isSupabaseConfigured()
+  const isSafeDemo = demoMode && !supabaseConfigured
+
+  if (!isSafeDemo) {
+    return <ProductionMessagingPlaceholder title="Messages" backHref="/dashboard" backLabel="Back to Dashboard" />
+  }
+
+  const demoNotifications = getDemoNotificationsForUser(user.id)
 
   return (
     <MessageCenter
