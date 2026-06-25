@@ -35,6 +35,10 @@ export default async function InstructorComplianceDashboard() {
     redirect('/dashboard')
   }
 
+  if (!profile.school_id) {
+    redirect('/dashboard')
+  }
+
   const useDemo = isDemoFallbackEnabled()
   const schoolId = profile.school_id
 

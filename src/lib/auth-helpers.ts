@@ -4,6 +4,10 @@
  * These helpers centralize role checks so middleware, server components,
  * and client components cannot drift out of sync.
  *
+ * Phase 13B: the canonical implementation now lives in
+ * `@/lib/security/permissions`. This file re-exports the helpers so existing
+ * imports continue to work and cannot drift out of sync.
+ *
  * Roles defined in the database / types:
  * - 'student'
  * - 'instructor'
@@ -11,19 +15,21 @@
  * - 'apprentice'
  */
 
-export type AppRole = 'student' | 'instructor' | 'admin' | 'apprentice'
-
-/** Returns true for instructors and admins (the roles allowed to access /instructor). */
-export function isInstructorOrAdmin(role: string | null | undefined): boolean {
-  return role === 'instructor' || role === 'admin'
-}
-
-/** Returns true only for admins. */
-export function isAdmin(role: string | null | undefined): boolean {
-  return role === 'admin'
-}
-
-/** Returns true for students and apprentices (the learner roles). */
-export function isLearner(role: string | null | undefined): boolean {
-  return role === 'student' || role === 'apprentice'
-}
+export {
+  type AppRole,
+  ACTIVE_ROLES,
+  FUTURE_ROLES,
+  type FutureRole,
+  type KnownRole,
+  type Permission,
+  hasPermission,
+  hasAnyPermission,
+  hasAllPermissions,
+  getRolePermissions,
+  canAccessRoute,
+  isInstructorOrAdmin,
+  isAdmin,
+  isLearner,
+  isKnownRole,
+  getRoleDisplayName,
+} from './security/permissions'

@@ -49,7 +49,12 @@ export default async function StudentComplianceDashboard() {
       supabase.from('quiz_attempts').select('*').eq('user_id', student.id),
       supabase.from('student_progress').select('*').eq('user_id', student.id),
       supabase.from('grades').select('*').eq('studentId', student.id),
-      supabase.from('grade_categories').select('*'),
+      (profile?.school_id
+      ? supabase
+          .from('grade_categories')
+          .select('*')
+          .or(`school_id.eq.${profile.school_id},school_id.is.null`)
+      : supabase.from('grade_categories').select('*').is('school_id', null)),
       supabase.from('assessments').select('*').eq('studentId', student.id),
     ])
 

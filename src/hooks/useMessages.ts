@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { MessageThread, Message, Profile } from '@/types'
 import {
   getThreadsForUser,
@@ -21,21 +21,28 @@ export function useMessages({ userId, userName, userRole }: UseMessagesOptions) 
   const [threads, setThreads] = useState<MessageThread[]>(() => getThreadsForUser(userId))
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null)
   const [messagesByThread, setMessagesByThread] = useState<Record<string, Message[]>>({})
+  const loadedThreadIds = useRef<Set<string>>(new Set())
 
   const selectedThread = useMemo(
     () => (selectedThreadId ? getThreadById(selectedThreadId) : null),
     [selectedThreadId]
   )
 
-  const selectedMessages = useMemo(() => {
-    if (!selectedThreadId) return []
-    if (messagesByThread[selectedThreadId]) return messagesByThread[selectedThreadId]
+  // Load messages for the selected thread only when the thread id changes.
+  useEffect(() => {
+    if (!selectedThreadId) return
+    if (loadedThreadIds.current.has(selectedThreadId)) return
+    loadedThreadIds.current.add(selectedThreadId)
     const loaded = getMessagesForThread(selectedThreadId)
     setMessagesByThread((prev) => ({ ...prev, [selectedThreadId]: loaded }))
-    return loaded
+  }, [selectedThreadId])
+
+  const selectedMessages = useMemo(() => {
+    if (!selectedThreadId) return []
+    return messagesByThread[selectedThreadId] ?? []
   }, [selectedThreadId, messagesByThread])
 
-  const unreadCount = useMemo(() => countUnreadThreads(userId), [threads, userId])
+  const unreadCount = useMemo(() => countUnreadThreads(userId), [userId])
 
   const selectThread = useCallback((threadId: string) => {
     setSelectedThreadId(threadId)

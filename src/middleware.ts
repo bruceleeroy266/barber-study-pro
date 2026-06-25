@@ -8,8 +8,8 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 const demoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
 
 const isSupabaseConfigured =
-  supabaseUrl &&
-  supabaseKey &&
+  Boolean(supabaseUrl) &&
+  Boolean(supabaseKey) &&
   supabaseUrl.startsWith('https://') &&
   !supabaseUrl.includes('your-project') &&
   !supabaseUrl.includes('example.supabase.co') &&
@@ -117,6 +117,9 @@ export async function middleware(request: NextRequest) {
       .single()
 
     if (!profile || !isInstructorOrAdmin(profile.role)) {
+      console.warn(
+        `[Middleware] Unauthorized instructor route attempt: user=${user.id} role=${profile?.role ?? 'none'} path=${request.nextUrl.pathname}`
+      )
       const url = request.nextUrl.clone()
       url.pathname = '/dashboard'
       return NextResponse.redirect(url)
@@ -133,6 +136,9 @@ export async function middleware(request: NextRequest) {
       .single()
 
     if (!profile || !isAdmin(profile.role)) {
+      console.warn(
+        `[Middleware] Unauthorized admin route attempt: user=${user.id} role=${profile?.role ?? 'none'} path=${request.nextUrl.pathname}`
+      )
       const url = request.nextUrl.clone()
       url.pathname = '/dashboard'
       return NextResponse.redirect(url)

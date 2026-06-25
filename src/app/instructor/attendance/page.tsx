@@ -35,6 +35,10 @@ export default async function AttendanceManagementPage() {
     redirect('/dashboard')
   }
 
+  if (!profile.school_id) {
+    redirect('/dashboard')
+  }
+
   const typedProfile: Profile = {
     id: profile.id,
     email: profile.email || '',

@@ -142,20 +142,32 @@ create policy "Instructors can read school quiz attempts" on public.quiz_attempt
 -- ───────────────────────────────────────────────
 create or replace function public.handle_new_user()
 returns trigger as $$
+declare
+  allowed_role text;
+  requested_role text;
 begin
+  requested_role := coalesce(new.raw_user_meta_data->>'role', 'student');
+
+  -- Self-registration may only produce student, apprentice, or instructor.
+  if requested_role in ('student', 'apprentice', 'instructor') then
+    allowed_role := requested_role;
+  else
+    allowed_role := 'student';
+  end if;
+
   insert into public.profiles (id, email, full_name, role, created_at, updated_at)
   values (
     new.id,
     new.email,
     coalesce(new.raw_user_meta_data->>'full_name', new.email),
-    coalesce(new.raw_user_meta_data->>'role', 'student'),
+    allowed_role,
     now(),
     now()
   )
   on conflict (id) do update set
     email = excluded.email,
     full_name = coalesce(excluded.full_name, profiles.full_name),
-    role = coalesce(excluded.role, profiles.role),
+    role = coalesce(profiles.role, excluded.role),
     updated_at = now();
   return new;
 end;

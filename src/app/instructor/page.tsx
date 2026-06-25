@@ -169,6 +169,10 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     redirect('/dashboard')
   }
 
+  if (!profile.school_id) {
+    redirect('/dashboard')
+  }
+
   const schoolId = profile.school_id
   const schoolName = (profile.schools as { name?: string } | null)?.name || 'Your School'
 

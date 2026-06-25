@@ -91,13 +91,25 @@ $$ LANGUAGE plpgsql;
 -- Auto-create profile on signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
+DECLARE
+  allowed_role TEXT;
+  requested_role TEXT;
 BEGIN
+  requested_role := COALESCE(NEW.raw_user_meta_data->>'role', 'student');
+
+  -- Self-registration may only produce student, apprentice, or instructor.
+  IF requested_role IN ('student', 'apprentice', 'instructor') THEN
+    allowed_role := requested_role;
+  ELSE
+    allowed_role := 'student';
+  END IF;
+
   INSERT INTO public.profiles (id, email, full_name, role, created_at, updated_at)
   VALUES (
     NEW.id,
     NEW.email,
     COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.email),
-    COALESCE(NEW.raw_user_meta_data->>'role', 'student'),
+    allowed_role,
     NOW(),
     NOW()
   )

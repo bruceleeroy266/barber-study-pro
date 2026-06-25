@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 
@@ -13,8 +12,6 @@ interface SchoolOption {
 }
 
 export default function SignupPage() {
-  const router = useRouter()
-
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -77,6 +74,11 @@ export default function SignupPage() {
       return
     }
 
+    if (role === 'student' && schoolName.trim() && !selectedSchoolId) {
+      // We will attempt to match the school name on submit. If no match is
+      // found, an error is shown after the lookup.
+    }
+
     try {
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email,
@@ -108,6 +110,8 @@ export default function SignupPage() {
             schoolId = schoolData.id
           }
         } else if (role === 'student') {
+          // Students must select an existing school; they cannot create schools
+          // during self-registration to prevent unauthorized school sprawl.
           if (selectedSchoolId) {
             schoolId = selectedSchoolId
           } else if (schoolName.trim()) {
@@ -119,17 +123,19 @@ export default function SignupPage() {
 
             if (existing) {
               schoolId = existing.id
-            } else {
-              const { data: newSchool } = await supabase
-                .from('schools')
-                .insert({ name: schoolName.trim() })
-                .select('id')
-                .single()
-              if (newSchool) schoolId = newSchool.id
             }
+            // If no existing school matches, schoolId remains null and the
+            // signup flow will surface an error below.
           }
         }
         // Apprentice: schoolId stays null unless they picked one
+
+        // Defensive validation: students must belong to a school.
+        if (role === 'student' && !schoolId) {
+          setError('We could not find a matching school. Please select a school from the list or contact your administrator.')
+          setLoading(false)
+          return
+        }
 
         await supabase.from('profiles').upsert({
           id: signUpData.user.id,
@@ -147,8 +153,8 @@ export default function SignupPage() {
       }
 
       setSuccess(true)
-    } catch (err: any) {
-      setError(err.message || 'Failed to sign up')
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to sign up')
     } finally {
       setLoading(false)
     }

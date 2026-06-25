@@ -4,6 +4,7 @@ import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import { logFailedLogin } from '../actions'
 
 function LoginForm() {
   const router = useRouter()
@@ -45,8 +46,15 @@ function LoginForm() {
 
       router.push(redirect)
       router.refresh()
-    } catch (err: any) {
-      setError(err.message || 'Failed to sign in')
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to sign in'
+      setError(message)
+      // Best-effort security audit log; never block the user on logging failure.
+      try {
+        await logFailedLogin(email, message)
+      } catch {
+        // ignore
+      }
     } finally {
       setLoading(false)
     }

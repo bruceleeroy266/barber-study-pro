@@ -44,7 +44,7 @@ export default async function SchoolOwnerDashboard() {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role')
+    .select('role, school_id')
     .eq('id', user.id)
     .single()
 
@@ -52,25 +52,64 @@ export default async function SchoolOwnerDashboard() {
     redirect('/dashboard')
   }
 
-  // Fetch real data when available; otherwise fall back to demo data.
+  if (!profile.school_id) {
+    redirect('/dashboard')
+  }
+
+  const schoolId = profile.school_id
+
+  // Multi-school isolation: every query is scoped to the admin's assigned school.
+  // Instructors without a school cannot view production data for any school.
   const { data: studentsData } = await supabase
     .from('profiles')
     .select('*')
-    .eq('role', 'student')
+    .eq('school_id', schoolId)
+    .in('role', ['student', 'apprentice'])
 
   const { data: instructorsData } = await supabase
     .from('profiles')
     .select('*')
+    .eq('school_id', schoolId)
     .eq('role', 'instructor')
 
-  const { data: attendanceData } = await supabase.from('attendance_records').select('*')
-  const { data: hoursData } = await supabase.from('hour_logs').select('*')
-  const { data: attemptsData } = await supabase.from('quiz_attempts').select('*')
-  const { data: progressData } = await supabase.from('student_progress').select('*')
-  const { data: gradesData } = await supabase.from('grades').select('*')
-  const { data: categoriesData } = await supabase.from('grade_categories').select('*')
-  const { data: assessmentsData } = await supabase.from('assessments').select('*')
-  const { data: notificationsData } = await supabase.from('notifications').select('*')
+  const studentIds = ((studentsData as Profile[]) || []).map((s) => s.id)
+  const instructorIds = ((instructorsData as Profile[]) || []).map((i) => i.id)
+  const schoolUserIds = studentIds.length > 0 || instructorIds.length > 0
+    ? [...studentIds, ...instructorIds]
+    : ['__none__']
+
+  const { data: attendanceData } = await supabase
+    .from('attendance_records')
+    .select('*')
+    .in('user_id', schoolUserIds)
+  const { data: hoursData } = await supabase
+    .from('hour_logs')
+    .select('*')
+    .in('user_id', schoolUserIds)
+  const { data: attemptsData } = await supabase
+    .from('quiz_attempts')
+    .select('*')
+    .in('user_id', schoolUserIds)
+  const { data: progressData } = await supabase
+    .from('student_progress')
+    .select('*')
+    .in('user_id', schoolUserIds)
+  const { data: gradesData } = await supabase
+    .from('grades')
+    .select('*')
+    .in('student_id', studentIds.length > 0 ? studentIds : ['__none__'])
+  const { data: categoriesData } = await supabase
+    .from('grade_categories')
+    .select('*')
+    .eq('school_id', schoolId)
+  const { data: assessmentsData } = await supabase
+    .from('assessments')
+    .select('*')
+    .in('student_id', studentIds.length > 0 ? studentIds : ['__none__'])
+  const { data: notificationsData } = await supabase
+    .from('notifications')
+    .select('*')
+    .in('user_id', schoolUserIds)
 
   const useDemo = isDemoFallbackEnabled()
 
@@ -78,70 +117,72 @@ export default async function SchoolOwnerDashboard() {
     (studentsData as Profile[])?.length > 0
       ? (studentsData as Profile[])
       : useDemo
-      ? demoStudents
+      ? demoStudents.filter((s) => s.school_id === schoolId || !schoolId)
       : []
 
   const instructors: Profile[] =
     (instructorsData as Profile[])?.length > 0
       ? (instructorsData as Profile[])
       : useDemo
-      ? [demoInstructorProfile]
+      ? [demoInstructorProfile].filter((i) => i.school_id === schoolId || !schoolId)
       : []
+
+  const scopedStudentIds = new Set(students.map((s) => s.id))
 
   const attendanceRecords: AttendanceRecord[] =
     (attendanceData as AttendanceRecord[])?.length > 0
       ? (attendanceData as AttendanceRecord[])
       : useDemo
-      ? demoAttendanceRecords
+      ? demoAttendanceRecords.filter((a) => scopedStudentIds.has(a.userId))
       : []
 
   const hourLogs: HourLog[] =
     (hoursData as HourLog[])?.length > 0
       ? (hoursData as HourLog[])
       : useDemo
-      ? demoHourLogs
+      ? demoHourLogs.filter((h) => scopedStudentIds.has(h.user_id))
       : []
 
   const quizAttempts: QuizAttempt[] =
     (attemptsData as QuizAttempt[])?.length > 0
       ? (attemptsData as QuizAttempt[])
       : useDemo
-      ? demoQuizAttempts
+      ? demoQuizAttempts.filter((a) => scopedStudentIds.has(a.user_id))
       : []
 
   const progress: StudentProgress[] =
     (progressData as StudentProgress[])?.length > 0
       ? (progressData as StudentProgress[])
       : useDemo
-      ? demoStudentProgress
+      ? demoStudentProgress.filter((p) => scopedStudentIds.has(p.user_id))
       : []
 
   const grades: Grade[] =
     (gradesData as unknown as Grade[])?.length > 0
       ? (gradesData as unknown as Grade[])
       : useDemo
-      ? demoGrades
+      ? demoGrades.filter((g) => scopedStudentIds.has(g.studentId))
       : []
 
   const gradeCategories: GradeCategory[] =
     (categoriesData as unknown as GradeCategory[])?.length > 0
       ? (categoriesData as unknown as GradeCategory[])
       : useDemo
-      ? demoGradeCategories
+      ? demoGradeCategories.filter((c) => c.schoolId === schoolId || !c.schoolId)
       : []
 
   const assessments: Assessment[] =
     (assessmentsData as unknown as Assessment[])?.length > 0
       ? (assessmentsData as unknown as Assessment[])
       : useDemo
-      ? demoAssessments
+      ? demoAssessments.filter((a) => scopedStudentIds.has(a.studentId))
       : []
 
   const notifications: Notification[] =
     (notificationsData as Notification[])?.length > 0
       ? (notificationsData as Notification[])
       : useDemo
-      ? demoNotifications
+      ? demoNotifications.filter((n) => scopedStudentIds.has(n.userId))
       : []
 
   const inputs = {

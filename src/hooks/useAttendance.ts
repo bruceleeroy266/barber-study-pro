@@ -7,7 +7,7 @@
 
 'use client'
 
-import { useState, useCallback, useEffect, useMemo } from 'react'
+import { useState, useCallback } from 'react'
 import {
   AttendanceRecord,
   AttendanceStatus,
@@ -79,16 +79,12 @@ export function useAttendance({
         students
       )
       setRecords(fresh)
-    } catch (err: any) {
-      setError(err?.message || 'Failed to load attendance records')
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to load attendance records')
     } finally {
       setLoading(false)
     }
   }, [schoolId, students])
-
-  useEffect(() => {
-    setRecords(initialRecords)
-  }, [initialRecords])
 
   const toggleSelection = useCallback((id: string) => {
     setSelectedIds((prev) => {

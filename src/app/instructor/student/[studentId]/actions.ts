@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase-server'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
+import { logPermissionDenied, logUnauthorizedAccess } from '@/lib/security/audit-logger'
 
 export type NoteType = 'coaching' | 'remediation' | 'readiness' | 'general'
 
@@ -25,12 +26,45 @@ export async function addInstructorNote(
   // Verify instructor or admin
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role, full_name')
+    .select('role, full_name, school_id')
     .eq('id', user.id)
     .single()
 
   if (!profile || !isInstructorOrAdmin(profile.role)) {
+    await logPermissionDenied('manage_students', {
+      userId: user.id,
+      email: user.email,
+      role: profile?.role ?? null,
+      schoolId: profile?.school_id ?? null,
+      resource: 'instructor_notes',
+      action: 'create',
+    })
     return { success: false, message: 'Only instructors and admins can add notes.' }
+  }
+
+  // Multi-school isolation: verify the target student belongs to the same school.
+  const { data: student } = await supabase
+    .from('profiles')
+    .select('school_id')
+    .eq('id', studentId)
+    .in('role', ['student', 'apprentice'])
+    .single()
+
+  if (!student) {
+    return { success: false, message: 'Student not found.' }
+  }
+
+  if (!profile.school_id || student.school_id !== profile.school_id) {
+    await logUnauthorizedAccess('student record', {
+      userId: user.id,
+      email: user.email,
+      role: profile.role,
+      schoolId: profile.school_id,
+      resourceId: studentId,
+      action: 'create_instructor_note',
+      metadata: { studentSchoolId: student.school_id },
+    })
+    return { success: false, message: 'You can only add notes for students in your school.' }
   }
 
   if (!noteText.trim()) {

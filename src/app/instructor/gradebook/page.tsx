@@ -49,6 +49,11 @@ export default function InstructorGradebookPage() {
         return
       }
 
+      if (!profile.school_id) {
+        router.push('/dashboard')
+        return
+      }
+
       const schoolId = profile.school_id
 
       const { data: studentsData } = await supabase

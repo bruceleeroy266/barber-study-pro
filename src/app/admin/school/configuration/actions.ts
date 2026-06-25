@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase-server'
 import { isAdmin } from '@/lib/auth-helpers'
 import { SchoolConfiguration } from '@/types'
 import { validateSchoolConfiguration, hasValidationErrors } from '@/lib/school-config/validation'
+import { logPermissionDenied, logSensitiveConfigChange } from '@/lib/security/audit-logger'
 
 export interface SaveConfigurationResult {
   success: boolean
@@ -27,7 +28,24 @@ export async function saveSchoolConfiguration(
     .single()
 
   if (!profile || !isAdmin(profile.role)) {
+    await logPermissionDenied('manage_settings', {
+      userId: user.id,
+      email: user.email,
+      role: profile?.role ?? null,
+      schoolId: profile?.school_id ?? null,
+      resource: '/admin/school/configuration',
+      action: 'save',
+    })
     return { success: false, message: 'Only admins can save school settings.' }
+  }
+
+  // Multi-school isolation: an admin must be assigned to a school and may only
+  // mutate settings for that school. Never accept a school id from the client.
+  if (!profile.school_id) {
+    return {
+      success: false,
+      message: 'You must be assigned to a school before you can save school settings.',
+    }
   }
 
   const errors = validateSchoolConfiguration(config)
@@ -58,7 +76,7 @@ export async function saveSchoolConfiguration(
       .from('school_settings')
       .upsert(
         {
-          school_id: profile.school_id || config.school.id,
+          school_id: profile.school_id,
           settings: config as unknown as Record<string, unknown>,
           updated_at: new Date().toISOString(),
           updated_by: user.id,
@@ -76,6 +94,15 @@ export async function saveSchoolConfiguration(
       }
       return { success: false, message: error.message }
     }
+
+    await logSensitiveConfigChange('school_settings', {
+      userId: user.id,
+      email: user.email,
+      role: profile.role,
+      schoolId: profile.school_id,
+      resourceId: profile.school_id,
+      action: 'save',
+    })
 
     return { success: true, message: 'School settings saved successfully.' }
   } catch (err) {

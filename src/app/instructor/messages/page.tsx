@@ -27,6 +27,10 @@ export default async function InstructorMessagesPage() {
     redirect('/dashboard')
   }
 
+  if (!profile.school_id) {
+    redirect('/dashboard')
+  }
+
   const instructorProfile = profile as Profile
 
   // Fetch students in the same school

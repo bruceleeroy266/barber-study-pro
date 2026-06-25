@@ -28,7 +28,13 @@ export default async function StudentGradesPage() {
 
   let grades: Grade[] = (gradesData as unknown as Grade[]) || []
 
-  const { data: categoriesData } = await supabase.from('grade_categories').select('*')
+  let categoriesQuery = supabase.from('grade_categories').select('*')
+  if (profile?.school_id) {
+    categoriesQuery = categoriesQuery.or(`school_id.eq.${profile.school_id},school_id.is.null`)
+  } else {
+    categoriesQuery = categoriesQuery.is('school_id', null)
+  }
+  const { data: categoriesData } = await categoriesQuery
 
   let categories: GradeCategory[] = (categoriesData as unknown as GradeCategory[]) || []
 

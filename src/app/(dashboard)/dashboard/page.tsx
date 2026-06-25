@@ -74,7 +74,13 @@ export default async function DashboardPage() {
   const { data: gradesData } = await supabase.from('grades').select('*').eq('student_id', user.id)
   let gradeRecords: Grade[] = (gradesData as unknown as Grade[]) || []
 
-  const { data: categoriesData } = await supabase.from('grade_categories').select('*')
+  let categoriesQuery = supabase.from('grade_categories').select('*')
+  if (profile?.school_id) {
+    categoriesQuery = categoriesQuery.or(`school_id.eq.${profile.school_id},school_id.is.null`)
+  } else {
+    categoriesQuery = categoriesQuery.is('school_id', null)
+  }
+  const { data: categoriesData } = await categoriesQuery
   let gradeCategories: GradeCategory[] = (categoriesData as unknown as GradeCategory[]) || []
 
   if ((gradeRecords.length === 0 || gradeCategories.length === 0) && isDemoFallbackEnabled()) {

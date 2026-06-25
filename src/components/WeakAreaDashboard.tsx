@@ -1,11 +1,10 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { 
   WeakArea, 
   StudentAnalytics, 
-  AdaptiveLearningPath,
-  WeakAreaMappingSystem 
+  AdaptiveLearningPath
 } from '@/lib/weak-area-mapping'
 import { 
   AlertTriangle, 
@@ -25,159 +24,146 @@ import {
   Calendar
 } from 'lucide-react'
 
+// Captured once at module load so mock dates are stable and component render
+// remains pure (avoids calling MOCK_BASE_TIME during render).
+const MOCK_BASE_TIME = Date.now()
+
 interface WeakAreaDashboardProps {
   userId: string
 }
 
 export default function WeakAreaDashboard({ userId }: WeakAreaDashboardProps) {
-  const [weakAreas, setWeakAreas] = useState<WeakArea[]>([])
-  const [analytics, setAnalytics] = useState<StudentAnalytics | null>(null)
-  const [learningPath, setLearningPath] = useState<AdaptiveLearningPath | null>(null)
   const [activeTab, setActiveTab] = useState<'overview' | 'weak-areas' | 'progress' | 'study-plan'>('overview')
-  const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    // In production, this would fetch from Supabase
-    // For now, using mock data to demonstrate the UI
-    loadMockData()
-  }, [userId])
-
-  const loadMockData = () => {
-    // Mock weak areas
-    const mockWeakAreas: WeakArea[] = [
-      {
-        id: '1',
-        userId,
-        chapterNumber: 4,
-        conceptId: 'infection-control-universal-precautions',
-        conceptName: 'Universal Precautions',
-        category: 'infection-control',
-        difficulty: 'medium',
-        weaknessType: 'both',
-        missCount: 5,
-        lastAttempt: new Date(Date.now() - 86400000),
-        confidenceScore: 35,
-        priority: 'critical',
-        recommendedActions: [
-          'Review flashcards for this topic',
-          'Read chapter study notes',
-          'CRITICAL: Master for state board exam',
-          'Practice sanitation procedures'
-        ],
-        relatedConcepts: ['sanitation', 'safety', 'state-board']
-      },
-      {
-        id: '2',
-        userId,
-        chapterNumber: 6,
-        conceptId: 'anatomy-cranial-nerves',
-        conceptName: 'Cranial Nerves',
-        category: 'anatomy',
-        difficulty: 'hard',
-        weaknessType: 'quiz',
-        missCount: 4,
-        lastAttempt: new Date(Date.now() - 172800000),
-        confidenceScore: 45,
-        priority: 'high',
-        recommendedActions: [
-          'Review flashcards for this topic',
-          'Use anatomical diagrams',
-          'Practice with 3D models if available'
-        ],
-        relatedConcepts: ['physiology', 'skin', 'hair']
-      },
-      {
-        id: '3',
-        userId,
-        chapterNumber: 7,
-        conceptId: 'chemistry-ph-scale',
-        conceptName: 'pH Scale',
-        category: 'chemistry',
-        difficulty: 'medium',
-        weaknessType: 'flashcard',
-        missCount: 3,
-        lastAttempt: new Date(Date.now() - 259200000),
-        confidenceScore: 55,
-        priority: 'high',
-        recommendedActions: [
-          'Take practice quiz on this topic',
-          'Create custom flashcards',
-          'Study with a partner'
-        ],
-        relatedConcepts: ['haircoloring', 'chemical-texture']
-      },
-      {
-        id: '4',
-        userId,
-        chapterNumber: 9,
-        conceptId: 'skin-contagious-conditions',
-        conceptName: 'Contagious Skin Conditions',
-        category: 'skin',
-        difficulty: 'medium',
-        weaknessType: 'both',
-        missCount: 3,
-        lastAttempt: new Date(Date.now() - 345600000),
-        confidenceScore: 50,
-        priority: 'high',
-        recommendedActions: [
-          'Review flashcards for this topic',
-          'Read chapter study notes',
-          'CRITICAL: Master for state board exam'
-        ],
-        relatedConcepts: ['anatomy', 'disorders', 'treatments']
-      },
-      {
-        id: '5',
-        userId,
-        chapterNumber: 17,
-        conceptId: 'state-board-licensing',
-        conceptName: 'Licensing Requirements',
-        category: 'state-board',
-        difficulty: 'easy',
-        weaknessType: 'quiz',
-        missCount: 2,
-        lastAttempt: new Date(Date.now() - 432000000),
-        confidenceScore: 65,
-        priority: 'medium',
-        recommendedActions: [
-          'Review flashcards for this topic',
-          'Read chapter study notes'
-        ],
-        relatedConcepts: ['infection-control', 'professional', 'legal']
-      }
-    ]
-
-    // Mock analytics
-    const mockAnalytics: StudentAnalytics = {
+  // Mock data computed directly during render to avoid setState-in-effect.
+  const weakAreas: WeakArea[] = [
+    {
+      id: '1',
       userId,
-      totalStudyTime: 480, // 8 hours
-      quizzesCompleted: 127,
-      flashcardsReviewed: 342,
-      weakAreasCount: 5,
-      improvingAreasCount: 3,
-      masteredAreasCount: 12,
-      streakDays: 7,
-      lastStudyDate: new Date(Date.now() - 86400000),
-      overallConfidence: 68,
-      examReadiness: 62
-    }
-
-    // Mock learning path
-    const mockLearningPath: AdaptiveLearningPath = {
+      chapterNumber: 4,
+      conceptId: 'infection-control-universal-precautions',
+      conceptName: 'Universal Precautions',
+      category: 'infection-control',
+      difficulty: 'medium',
+      weaknessType: 'both',
+      missCount: 5,
+      lastAttempt: new Date(MOCK_BASE_TIME - 86400000),
+      confidenceScore: 35,
+      priority: 'critical',
+      recommendedActions: [
+        'Review flashcards for this topic',
+        'Read chapter study notes',
+        'CRITICAL: Master for state board exam',
+        'Practice sanitation procedures'
+      ],
+      relatedConcepts: ['sanitation', 'safety', 'state-board']
+    },
+    {
+      id: '2',
       userId,
-      currentFocus: ['Universal Precautions', 'Cranial Nerves', 'pH Scale'],
-      recommendedChapters: [4, 6, 7, 9, 17],
-      priorityWeakAreas: mockWeakAreas.slice(0, 3),
-      suggestedStudyTime: 35,
-      nextMilestone: 'Master Universal Precautions',
-      confidenceTrend: 'improving'
+      chapterNumber: 6,
+      conceptId: 'anatomy-cranial-nerves',
+      conceptName: 'Cranial Nerves',
+      category: 'anatomy',
+      difficulty: 'hard',
+      weaknessType: 'quiz',
+      missCount: 4,
+      lastAttempt: new Date(MOCK_BASE_TIME - 172800000),
+      confidenceScore: 45,
+      priority: 'high',
+      recommendedActions: [
+        'Review flashcards for this topic',
+        'Use anatomical diagrams',
+        'Practice with 3D models if available'
+      ],
+      relatedConcepts: ['physiology', 'skin', 'hair']
+    },
+    {
+      id: '3',
+      userId,
+      chapterNumber: 7,
+      conceptId: 'chemistry-ph-scale',
+      conceptName: 'pH Scale',
+      category: 'chemistry',
+      difficulty: 'medium',
+      weaknessType: 'flashcard',
+      missCount: 3,
+      lastAttempt: new Date(MOCK_BASE_TIME - 259200000),
+      confidenceScore: 55,
+      priority: 'high',
+      recommendedActions: [
+        'Take practice quiz on this topic',
+        'Create custom flashcards',
+        'Study with a partner'
+      ],
+      relatedConcepts: ['haircoloring', 'chemical-texture']
+    },
+    {
+      id: '4',
+      userId,
+      chapterNumber: 9,
+      conceptId: 'skin-contagious-conditions',
+      conceptName: 'Contagious Skin Conditions',
+      category: 'skin',
+      difficulty: 'medium',
+      weaknessType: 'both',
+      missCount: 3,
+      lastAttempt: new Date(MOCK_BASE_TIME - 345600000),
+      confidenceScore: 50,
+      priority: 'high',
+      recommendedActions: [
+        'Review flashcards for this topic',
+        'Read chapter study notes',
+        'CRITICAL: Master for state board exam'
+      ],
+      relatedConcepts: ['anatomy', 'disorders', 'treatments']
+    },
+    {
+      id: '5',
+      userId,
+      chapterNumber: 17,
+      conceptId: 'state-board-licensing',
+      conceptName: 'Licensing Requirements',
+      category: 'state-board',
+      difficulty: 'easy',
+      weaknessType: 'quiz',
+      missCount: 2,
+      lastAttempt: new Date(MOCK_BASE_TIME - 432000000),
+      confidenceScore: 65,
+      priority: 'medium',
+      recommendedActions: [
+        'Review flashcards for this topic',
+        'Read chapter study notes'
+      ],
+      relatedConcepts: ['infection-control', 'professional', 'legal']
     }
+  ]
 
-    setWeakAreas(mockWeakAreas)
-    setAnalytics(mockAnalytics)
-    setLearningPath(mockLearningPath)
-    setIsLoading(false)
+  const analytics: StudentAnalytics = {
+    userId,
+    totalStudyTime: 480, // 8 hours
+    quizzesCompleted: 127,
+    flashcardsReviewed: 342,
+    weakAreasCount: 5,
+    improvingAreasCount: 3,
+    masteredAreasCount: 12,
+    streakDays: 7,
+    lastStudyDate: new Date(MOCK_BASE_TIME - 86400000),
+    overallConfidence: 68,
+    examReadiness: 62
   }
+
+  const learningPath: AdaptiveLearningPath = {
+    userId,
+    currentFocus: ['Universal Precautions', 'Cranial Nerves', 'pH Scale'],
+    recommendedChapters: [4, 6, 7, 9, 17],
+    priorityWeakAreas: weakAreas.slice(0, 3),
+    suggestedStudyTime: 35,
+    nextMilestone: 'Master Universal Precautions',
+    confidenceTrend: 'improving'
+  }
+
+  const isLoading = false
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -255,15 +241,15 @@ export default function WeakAreaDashboard({ userId }: WeakAreaDashboardProps) {
 
       {/* Navigation Tabs */}
       <div className="flex flex-wrap gap-2 border-b border-gray-700 pb-4">
-        {[
+        {([
           { id: 'overview', label: 'Overview', icon: BarChart3 },
           { id: 'weak-areas', label: 'Weak Areas', icon: AlertTriangle },
           { id: 'progress', label: 'Progress', icon: TrendingUp },
           { id: 'study-plan', label: 'Study Plan', icon: Calendar }
-        ].map(tab => (
+        ] as const).map(tab => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
+            onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
               activeTab === tab.id
                 ? 'bg-amber-500 text-black'
@@ -496,7 +482,7 @@ export default function WeakAreaDashboard({ userId }: WeakAreaDashboardProps) {
           <div className="bg-gradient-to-r from-amber-500/20 to-yellow-500/20 rounded-xl p-6 border border-amber-500/30">
             <div className="flex items-center gap-3 mb-4">
               <Calendar className="w-6 h-6 text-amber-500" />
-              <h3 className="text-lg font-semibold text-white">Today's Study Plan</h3>
+              <h3 className="text-lg font-semibold text-white">Today&apos;s Study Plan</h3>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               <div>
