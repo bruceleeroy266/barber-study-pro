@@ -14,6 +14,7 @@ import AssessmentList from '@/components/assessments/AssessmentList'
 import { allQuizQuestions } from '@/lib/quiz-data'
 import { getThreadDisplayName, formatMessageTime, priorityColorClasses } from '@/lib/messaging'
 import UnreadBadge from '@/components/messaging/UnreadBadge'
+import { mapHourLogsFromDb, mapAttendanceRecordsFromDb, mapGradesFromDb, mapGradeCategoriesFromDb, mapAssessmentsFromDb } from '@/lib/mappers/operational-data-mappers'
 
 interface RosterStudent extends Profile {
   overallProgress: number
@@ -219,9 +220,10 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
   const { data: allHourLogs } = await supabase
     .from('hour_logs')
     .select('*')
+    .eq('school_id', schoolId)
     .in('user_id', studentIds.length > 0 ? studentIds : ['__none__'])
 
-  let hourLogRecords: HourLog[] = (allHourLogs as HourLog[]) || []
+  let hourLogRecords: HourLog[] = mapHourLogsFromDb(allHourLogs || []) || []
   if (hourLogRecords.length === 0 && isDemoFallbackEnabled()) {
     hourLogRecords = demoHourLogs.filter((h) => studentIds.includes(h.user_id))
   }
@@ -230,9 +232,10 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
   const { data: allAttendance } = await supabase
     .from('attendance_records')
     .select('*')
+    .eq('school_id', schoolId)
     .in('user_id', studentIds.length > 0 ? studentIds : ['__none__'])
 
-  let attendanceRecords: AttendanceRecord[] = (allAttendance as AttendanceRecord[]) || []
+  let attendanceRecords: AttendanceRecord[] = mapAttendanceRecordsFromDb(allAttendance || []) || []
   if (attendanceRecords.length === 0 && isDemoFallbackEnabled()) {
     attendanceRecords = demoAttendanceRecords.filter((a) => studentIds.includes(a.userId))
   }
@@ -241,16 +244,20 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
   const { data: allGrades } = await supabase
     .from('grades')
     .select('*')
+    .eq('school_id', schoolId)
     .in('student_id', studentIds.length > 0 ? studentIds : ['__none__'])
 
-  let gradeRecords: Grade[] = (allGrades as unknown as Grade[]) || []
+  let gradeRecords: Grade[] = mapGradesFromDb(allGrades || []) || []
   if (gradeRecords.length === 0 && isDemoFallbackEnabled()) {
     gradeRecords = demoGrades.filter((g) => studentIds.includes(g.studentId))
   }
 
-  const { data: allCategories } = await supabase.from('grade_categories').select('*')
+  const { data: allCategories } = await supabase
+    .from('grade_categories')
+    .select('*')
+    .or(`school_id.eq.${schoolId},school_id.is.null`)
 
-  let gradeCategories: GradeCategory[] = (allCategories as unknown as GradeCategory[]) || []
+  let gradeCategories: GradeCategory[] = mapGradeCategoriesFromDb(allCategories || []) || []
   if (gradeCategories.length === 0 && isDemoFallbackEnabled()) {
     gradeCategories = demoGradeCategories
   }
@@ -258,9 +265,10 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
   const { data: allAssessments } = await supabase
     .from('assessments')
     .select('*')
+    .eq('school_id', schoolId)
     .in('student_id', studentIds.length > 0 ? studentIds : ['__none__'])
 
-  let assessmentRecords: Assessment[] = (allAssessments as unknown as Assessment[]) || []
+  let assessmentRecords: Assessment[] = mapAssessmentsFromDb(allAssessments || []) || []
   if (assessmentRecords.length === 0 && isDemoFallbackEnabled()) {
     assessmentRecords = demoAssessments.filter((a) => studentIds.includes(a.studentId))
   }

@@ -18,6 +18,8 @@ import AnalyticsCharts from '@/components/AnalyticsCharts'
 import MissedQuestionBank from '@/components/MissedQuestionBank'
 import { AddNoteForm } from './AddNoteForm'
 import { PrintButton } from './PrintButton'
+import { getInstructorNotes } from './actions'
+import { mapHourLogsFromDb, mapAttendanceRecordsFromDb, mapAttendanceNotesFromDb } from '@/lib/mappers/operational-data-mappers'
 
 interface StudentDetailPageProps {
   params: Promise<{
@@ -206,22 +208,19 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     .order('completed_at', { ascending: false })
 
   // Get instructor notes
-  const { data: notes } = await supabase
-    .from('instructor_notes')
-    .select('*')
-    .eq('student_id', studentId)
-    .order('created_at', { ascending: false })
+  const notesResult = await getInstructorNotes(studentId, instructorProfile.school_id)
+  let noteRecords: InstructorNote[] = notesResult.success ? notesResult.data : []
+  const notesError: string | null = notesResult.success ? null : notesResult.message
 
   // Demo fallback for progress, attempts, and notes
   let progressRecords: StudentProgress[] = (progress as StudentProgress[]) || []
   let attemptRecords: QuizAttempt[] = (attempts as QuizAttempt[]) || []
-  let noteRecords: InstructorNote[] = (notes as InstructorNote[]) || []
   if (progressRecords.length === 0 && attemptRecords.length === 0) {
     progressRecords = demoStudentProgress.filter((p) => p.user_id === studentId)
     attemptRecords = demoStudentQuizAttempts.filter((a) => a.user_id === studentId)
     attemptRecords.sort((a, b) => new Date(b.completed_at).getTime() - new Date(a.completed_at).getTime())
   }
-  if (noteRecords.length === 0) {
+  if (noteRecords.length === 0 && !notesError) {
     noteRecords = demoInstructorNotes.filter((n) => n.student_id === studentId)
   }
 
@@ -229,10 +228,11 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
   const { data: hourLogs } = await supabase
     .from('hour_logs')
     .select('*')
+    .eq('school_id', instructorProfile.school_id)
     .eq('user_id', studentId)
     .order('date', { ascending: false })
 
-  let hourLogRecords: HourLog[] = (hourLogs as HourLog[]) || []
+  let hourLogRecords: HourLog[] = mapHourLogsFromDb(hourLogs || []) || []
   if (hourLogRecords.length === 0) {
     hourLogRecords = demoHourLogs.filter((h) => h.user_id === studentId)
     hourLogRecords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
@@ -242,17 +242,19 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
   const { data: attendance } = await supabase
     .from('attendance_records')
     .select('*')
+    .eq('school_id', instructorProfile.school_id)
     .eq('user_id', studentId)
     .order('date', { ascending: false })
 
   const { data: attendanceNotes } = await supabase
     .from('attendance_notes')
     .select('*')
+    .eq('school_id', instructorProfile.school_id)
     .eq('student_id', studentId)
     .order('created_at', { ascending: false })
 
-  let attendanceRecords: AttendanceRecord[] = (attendance as AttendanceRecord[]) || []
-  let attendanceNoteRecords: InstructorAttendanceNote[] = (attendanceNotes as InstructorAttendanceNote[]) || []
+  let attendanceRecords: AttendanceRecord[] = mapAttendanceRecordsFromDb(attendance || []) || []
+  let attendanceNoteRecords: InstructorAttendanceNote[] = mapAttendanceNotesFromDb(attendanceNotes || []) || []
   if (attendanceRecords.length === 0) {
     attendanceRecords = demoAttendanceRecords.filter((a) => a.userId === studentId)
   }
@@ -1023,6 +1025,12 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="p-6 border-b border-gray-800">
             <h2 className="text-xl font-semibold text-white">Instructor Notes</h2>
           </div>
+
+          {notesError && (
+            <div className="mx-6 mt-6 bg-red-950/30 border border-red-900/50 text-red-400 rounded-lg p-4">
+              {notesError}
+            </div>
+          )}
 
           <div className="p-6">
             <AddNoteForm studentId={studentId} />

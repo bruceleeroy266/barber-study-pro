@@ -3,11 +3,20 @@
  * ASCYN PRO / Barber Study Pro V2
  *
  * Tracks attendance status corrections with reason and approval state.
+ * Phase 13E.1D: production errors are now surfaced; silent fallbacks removed.
  */
 
 import { AttendanceCorrection, AttendanceStatus } from '@/types'
+import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
+import {
+  mapAttendanceCorrectionFromDb,
+  mapAttendanceCorrectionsFromDb,
+  mapAttendanceCorrectionToDb,
+} from '@/lib/mappers/operational-data-mappers'
 
-const demoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+function isDemoFallback(): boolean {
+  return isExplicitDemoMode() && !isSupabaseConfigured()
+}
 
 let mutableDemoCorrections: AttendanceCorrection[] | null = null
 
@@ -26,6 +35,7 @@ function generateId(): string {
 }
 
 export interface SubmitCorrectionInput {
+  schoolId: string
   attendanceRecordId: string
   originalStatus: AttendanceStatus
   newStatus: AttendanceStatus
@@ -34,6 +44,7 @@ export interface SubmitCorrectionInput {
 }
 
 export async function submitCorrection(input: SubmitCorrectionInput): Promise<AttendanceCorrection> {
+  const now = new Date().toISOString()
   const correction: AttendanceCorrection = {
     id: generateId(),
     attendanceRecordId: input.attendanceRecordId,
@@ -41,35 +52,39 @@ export async function submitCorrection(input: SubmitCorrectionInput): Promise<At
     newStatus: input.newStatus,
     reason: input.reason,
     correctedBy: input.correctedBy,
-    correctedAt: new Date().toISOString(),
+    correctedAt: now,
   }
 
-  if (demoMode) {
+  if (isDemoFallback()) {
     const corrections = getDemoCorrections()
     corrections.unshift(correction)
     return correction
   }
 
-  // Real mode: persist to Supabase when table is available
   const { supabase } = await import('@/lib/supabase')
+  const payload = {
+    ...mapAttendanceCorrectionToDb(correction),
+    school_id: input.schoolId,
+    created_at: now,
+    updated_at: now,
+  }
+
   const { data, error } = await supabase
     .from('attendance_corrections')
-    .insert(correction)
+    .insert(payload)
     .select()
     .single()
 
   if (error) {
-    console.warn('[AttendanceCorrection] Supabase correction table not available, using in-memory store:', error.message)
-    const corrections = getDemoCorrections()
-    corrections.unshift(correction)
-    return correction
+    console.error('[AttendanceCorrection] submitCorrection error:', error)
+    throw new Error(`Failed to submit correction: ${error.message}`)
   }
 
-  return data as AttendanceCorrection
+  return mapAttendanceCorrectionFromDb(data)
 }
 
 export async function getCorrectionHistory(recordId: string): Promise<AttendanceCorrection[]> {
-  if (demoMode) {
+  if (isDemoFallback()) {
     return getDemoCorrections()
       .filter((c) => c.attendanceRecordId === recordId)
       .sort((a, b) => new Date(b.correctedAt).getTime() - new Date(a.correctedAt).getTime())
@@ -79,13 +94,13 @@ export async function getCorrectionHistory(recordId: string): Promise<Attendance
   const { data, error } = await supabase
     .from('attendance_corrections')
     .select('*')
-    .eq('attendanceRecordId', recordId)
-    .order('correctedAt', { ascending: false })
+    .eq('attendance_record_id', recordId)
+    .order('corrected_at', { ascending: false })
 
   if (error) {
-    console.warn('[AttendanceCorrection] getCorrectionHistory error:', error.message)
-    return getDemoCorrections().filter((c) => c.attendanceRecordId === recordId)
+    console.error('[AttendanceCorrection] getCorrectionHistory error:', error)
+    throw new Error(`Failed to load correction history: ${error.message}`)
   }
 
-  return (data as AttendanceCorrection[]) || []
+  return mapAttendanceCorrectionsFromDb(data || [])
 }

@@ -3,12 +3,18 @@
  * ASCYN PRO / Barber Study Pro V2
  *
  * Client-side attendance CRUD with demo fallback and Supabase support.
+ * Phase 13E.1B: converted to snake_case Supabase queries and explicit mappers.
  */
 
 import { AttendanceRecord, AttendanceStatus, AttendanceFilterState, Profile } from '@/types'
 import { supabase } from '@/lib/supabase'
 import { demoAttendanceRecords } from '@/lib/demo-data'
 import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
+import {
+  mapAttendanceRecordFromDb,
+  mapAttendanceRecordsFromDb,
+  mapAttendanceRecordToDb,
+} from '@/lib/mappers/operational-data-mappers'
 
 // In-memory mutable store for demo mode (does not persist to disk)
 let mutableDemoRecords: AttendanceRecord[] | null = null
@@ -75,7 +81,7 @@ export async function getAttendanceRecords(
     query = query.lte('date', filters.dateTo)
   }
   if (filters.studentIds && filters.studentIds.length > 0) {
-    query = query.in('userId', filters.studentIds)
+    query = query.in('user_id', filters.studentIds)
   }
   if (filters.statuses && filters.statuses.length > 0) {
     query = query.in('status', filters.statuses)
@@ -87,7 +93,7 @@ export async function getAttendanceRecords(
     throw error
   }
 
-  let records = (data as AttendanceRecord[]) || []
+  let records = mapAttendanceRecordsFromDb(data || [])
   if (filters.searchQuery) {
     records = records.filter((r) => matchesFilters(r, students, filters))
   }
@@ -111,9 +117,15 @@ export async function createAttendanceRecord(
     return newRecord
   }
 
+  const payload = {
+    ...mapAttendanceRecordToDb(newRecord),
+    created_at: now,
+    updated_at: now,
+  }
+
   const { data, error } = await supabase
     .from('attendance_records')
-    .insert(newRecord)
+    .insert(payload)
     .select()
     .single()
 
@@ -122,7 +134,7 @@ export async function createAttendanceRecord(
     throw error
   }
 
-  return data as AttendanceRecord
+  return mapAttendanceRecordFromDb(data)
 }
 
 export async function updateAttendanceRecord(
@@ -141,9 +153,14 @@ export async function updateAttendanceRecord(
     return records[index]
   }
 
+  const payload = {
+    ...mapAttendanceRecordToDb(updates),
+    updated_at: now,
+  }
+
   const { data, error } = await supabase
     .from('attendance_records')
-    .update({ ...updates, updatedAt: now })
+    .update(payload)
     .eq('id', id)
     .select()
     .single()
@@ -153,7 +170,7 @@ export async function updateAttendanceRecord(
     throw error
   }
 
-  return data as AttendanceRecord
+  return mapAttendanceRecordFromDb(data)
 }
 
 export async function bulkUpdateAttendance(
@@ -177,7 +194,7 @@ export async function bulkUpdateAttendance(
 
   const { data, error } = await supabase
     .from('attendance_records')
-    .update({ status, updatedAt: now })
+    .update({ status, updated_at: now })
     .in('id', ids)
     .select()
 
@@ -186,7 +203,7 @@ export async function bulkUpdateAttendance(
     throw error
   }
 
-  return (data as AttendanceRecord[]) || []
+  return mapAttendanceRecordsFromDb(data || [])
 }
 
 export function resetDemoAttendanceRecords(): void {

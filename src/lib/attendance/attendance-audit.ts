@@ -3,11 +3,20 @@
  * ASCYN PRO / Barber Study Pro V2
  *
  * Immutable audit trail for attendance record changes.
+ * Phase 13E.1D: production errors are now surfaced; silent fallbacks removed.
  */
 
 import { AttendanceAuditEntry } from '@/types'
+import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
+import {
+  mapAttendanceAuditEntryFromDb,
+  mapAttendanceAuditEntriesFromDb,
+  mapAttendanceAuditEntryToDb,
+} from '@/lib/mappers/operational-data-mappers'
 
-const demoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+function isDemoFallback(): boolean {
+  return isExplicitDemoMode() && !isSupabaseConfigured()
+}
 
 let mutableDemoAuditLog: AttendanceAuditEntry[] | null = null
 
@@ -26,6 +35,7 @@ function generateId(): string {
 }
 
 export interface LogAuditEntryInput {
+  schoolId?: string | null
   recordId: string
   action: AttendanceAuditEntry['action']
   changedFields: Record<string, { old: unknown; new: unknown }>
@@ -35,6 +45,7 @@ export interface LogAuditEntryInput {
 }
 
 export async function logAuditEntry(input: LogAuditEntryInput): Promise<AttendanceAuditEntry> {
+  const now = new Date().toISOString()
   const entry: AttendanceAuditEntry = {
     id: generateId(),
     recordId: input.recordId,
@@ -42,35 +53,39 @@ export async function logAuditEntry(input: LogAuditEntryInput): Promise<Attendan
     changedFields: input.changedFields,
     userId: input.userId,
     userName: input.userName,
-    timestamp: new Date().toISOString(),
+    timestamp: now,
     reason: input.reason || null,
   }
 
-  if (demoMode) {
+  if (isDemoFallback()) {
     const log = getDemoAuditLog()
     log.unshift(entry)
     return entry
   }
 
   const { supabase } = await import('@/lib/supabase')
+  const payload = {
+    ...mapAttendanceAuditEntryToDb(entry),
+    school_id: input.schoolId || null,
+    created_at: now,
+  }
+
   const { data, error } = await supabase
     .from('attendance_audit_log')
-    .insert(entry)
+    .insert(payload)
     .select()
     .single()
 
   if (error) {
-    console.warn('[AttendanceAudit] Supabase audit table not available, using in-memory store:', error.message)
-    const log = getDemoAuditLog()
-    log.unshift(entry)
-    return entry
+    console.error('[AttendanceAudit] logAuditEntry error:', error)
+    throw new Error(`Failed to log audit entry: ${error.message}`)
   }
 
-  return data as AttendanceAuditEntry
+  return mapAttendanceAuditEntryFromDb(data)
 }
 
 export async function getAuditHistory(recordId: string): Promise<AttendanceAuditEntry[]> {
-  if (demoMode) {
+  if (isDemoFallback()) {
     return getDemoAuditLog()
       .filter((e) => e.recordId === recordId)
       .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
@@ -80,19 +95,19 @@ export async function getAuditHistory(recordId: string): Promise<AttendanceAudit
   const { data, error } = await supabase
     .from('attendance_audit_log')
     .select('*')
-    .eq('recordId', recordId)
+    .eq('record_id', recordId)
     .order('timestamp', { ascending: false })
 
   if (error) {
-    console.warn('[AttendanceAudit] getAuditHistory error:', error.message)
-    return getDemoAuditLog().filter((e) => e.recordId === recordId)
+    console.error('[AttendanceAudit] getAuditHistory error:', error)
+    throw new Error(`Failed to load audit history: ${error.message}`)
   }
 
-  return (data as AttendanceAuditEntry[]) || []
+  return mapAttendanceAuditEntriesFromDb(data || [])
 }
 
 export async function getAllAuditHistory(): Promise<AttendanceAuditEntry[]> {
-  if (demoMode) {
+  if (isDemoFallback()) {
     return getDemoAuditLog().sort(
       (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     )
@@ -105,9 +120,9 @@ export async function getAllAuditHistory(): Promise<AttendanceAuditEntry[]> {
     .order('timestamp', { ascending: false })
 
   if (error) {
-    console.warn('[AttendanceAudit] getAllAuditHistory error:', error.message)
-    return getDemoAuditLog()
+    console.error('[AttendanceAudit] getAllAuditHistory error:', error)
+    throw new Error(`Failed to load audit history: ${error.message}`)
   }
 
-  return (data as AttendanceAuditEntry[]) || []
+  return mapAttendanceAuditEntriesFromDb(data || [])
 }

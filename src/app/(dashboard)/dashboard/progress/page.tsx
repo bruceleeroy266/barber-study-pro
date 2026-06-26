@@ -13,6 +13,7 @@ import BoardReadinessCard from '@/components/BoardReadinessCard'
 import WeakAreaAnalytics from '@/components/WeakAreaAnalytics'
 import StudyRecommendations from '@/components/StudyRecommendations'
 import AnalyticsCharts from '@/components/AnalyticsCharts'
+import { mapAttendanceRecordsFromDb } from '@/lib/mappers/operational-data-mappers'
 
 export default async function ProgressPage() {
   const supabase = await createClient()
@@ -21,6 +22,12 @@ export default async function ProgressPage() {
   if (!user) {
     redirect('/login')
   }
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('school_id')
+    .eq('id', user.id)
+    .single()
 
   // Use local chapters (not Supabase)
   const chapters = localChapters
@@ -39,13 +46,17 @@ export default async function ProgressPage() {
     .order('completed_at', { ascending: false })
 
   // Get attendance records
-  const { data: attendanceData } = await supabase
+  const attendanceQuery = supabase
     .from('attendance_records')
     .select('*')
     .eq('user_id', user.id)
     .order('date', { ascending: false })
+  if (profile?.school_id) {
+    attendanceQuery.eq('school_id', profile.school_id)
+  }
+  const { data: attendanceData } = await attendanceQuery
 
-  let attendanceRecords: AttendanceRecord[] = (attendanceData as AttendanceRecord[]) || []
+  let attendanceRecords: AttendanceRecord[] = mapAttendanceRecordsFromDb(attendanceData || []) || []
   if (attendanceRecords.length === 0) {
     attendanceRecords = demoAttendanceRecords.filter((a) => a.userId === user.id)
   }

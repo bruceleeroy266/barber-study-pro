@@ -17,6 +17,7 @@ import { buildStudentCompliance, buildComplianceAlerts, generateComplianceReport
 import ComplianceAlertsPanel from '@/components/compliance/ComplianceAlertsPanel'
 import ComplianceReportingCenter from '@/components/compliance/ComplianceReportingCenter'
 import { CheckCircle, AlertTriangle, Clock, Wrench, ClipboardCheck, Target } from 'lucide-react'
+import { mapAttendanceRecordsFromDb, mapHourLogsFromDb, mapGradesFromDb, mapGradeCategoriesFromDb, mapAssessmentsFromDb } from '@/lib/mappers/operational-data-mappers'
 
 export default async function InstructorComplianceDashboard() {
   const supabase = await createClient()
@@ -59,24 +60,24 @@ export default async function InstructorComplianceDashboard() {
 
   const [attendanceRes, hoursRes, attemptsRes, progressRes, gradesRes, categoriesRes, assessmentsRes] =
     await Promise.all([
-      supabase.from('attendance_records').select('*').in('user_id', studentIdFilter),
-      supabase.from('hour_logs').select('*').in('user_id', studentIdFilter),
+      supabase.from('attendance_records').select('*').eq('school_id', schoolId).in('user_id', studentIdFilter),
+      supabase.from('hour_logs').select('*').eq('school_id', schoolId).in('user_id', studentIdFilter),
       supabase.from('quiz_attempts').select('*').in('user_id', studentIdFilter),
       supabase.from('student_progress').select('*').in('user_id', studentIdFilter),
-      supabase.from('grades').select('*').in('student_id', studentIdFilter),
-      supabase.from('grade_categories').select('*').eq('school_id', schoolId),
-      supabase.from('assessments').select('*').in('student_id', studentIdFilter),
+      supabase.from('grades').select('*').eq('school_id', schoolId).in('student_id', studentIdFilter),
+      supabase.from('grade_categories').select('*').or(`school_id.eq.${schoolId},school_id.is.null`),
+      supabase.from('assessments').select('*').eq('school_id', schoolId).in('student_id', studentIdFilter),
     ])
 
   const attendanceRecords: AttendanceRecord[] =
-    (attendanceRes.data as AttendanceRecord[])?.length > 0
-      ? (attendanceRes.data as AttendanceRecord[])
+    mapAttendanceRecordsFromDb(attendanceRes.data || [])?.length > 0
+      ? mapAttendanceRecordsFromDb(attendanceRes.data || [])
       : useDemo
       ? demoAttendanceRecords.filter((a) => studentIds.includes(a.userId))
       : []
 
   const hourLogs: HourLog[] =
-    (hoursRes.data as HourLog[])?.length > 0 ? (hoursRes.data as HourLog[]) : useDemo ? demoHourLogs.filter((h) => studentIds.includes(h.user_id)) : []
+    mapHourLogsFromDb(hoursRes.data || [])?.length > 0 ? mapHourLogsFromDb(hoursRes.data || []) : useDemo ? demoHourLogs.filter((h) => studentIds.includes(h.user_id)) : []
 
   const quizAttempts: QuizAttempt[] =
     (attemptsRes.data as QuizAttempt[])?.length > 0
@@ -93,22 +94,22 @@ export default async function InstructorComplianceDashboard() {
       : []
 
   const grades: Grade[] =
-    (gradesRes.data as unknown as Grade[])?.length > 0
-      ? (gradesRes.data as unknown as Grade[])
+    mapGradesFromDb(gradesRes.data || [])?.length > 0
+      ? mapGradesFromDb(gradesRes.data || [])
       : useDemo
       ? demoGrades.filter((g) => studentIds.includes(g.studentId))
       : []
 
   const gradeCategories: GradeCategory[] =
-    (categoriesRes.data as unknown as GradeCategory[])?.length > 0
-      ? (categoriesRes.data as unknown as GradeCategory[])
+    mapGradeCategoriesFromDb(categoriesRes.data || [])?.length > 0
+      ? mapGradeCategoriesFromDb(categoriesRes.data || [])
       : useDemo
       ? demoGradeCategories.filter((c) => c.schoolId === schoolId || !c.schoolId)
       : []
 
   const assessments: Assessment[] =
-    (assessmentsRes.data as unknown as Assessment[])?.length > 0
-      ? (assessmentsRes.data as unknown as Assessment[])
+    mapAssessmentsFromDb(assessmentsRes.data || [])?.length > 0
+      ? mapAssessmentsFromDb(assessmentsRes.data || [])
       : useDemo
       ? demoAssessments.filter((a) => studentIds.includes(a.studentId))
       : []

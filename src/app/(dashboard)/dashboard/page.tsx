@@ -21,6 +21,7 @@ import UnreadBadge from '@/components/messaging/UnreadBadge'
 import StudentGradeWidget from '@/components/gradebook/StudentGradeWidget'
 import AssessmentList from '@/components/assessments/AssessmentList'
 import { calculateStudentGradePerformance } from '@/lib/gradebook'
+import { mapAttendanceRecordsFromDb, mapGradesFromDb, mapGradeCategoriesFromDb, mapAssessmentsFromDb } from '@/lib/mappers/operational-data-mappers'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -56,13 +57,17 @@ export default async function DashboardPage() {
     .order('completed_at', { ascending: false })
 
   // Get attendance records
-  const { data: attendanceData } = await supabase
+  const attendanceQuery = supabase
     .from('attendance_records')
     .select('*')
     .eq('user_id', user.id)
     .order('date', { ascending: false })
+  if (profile?.school_id) {
+    attendanceQuery.eq('school_id', profile.school_id)
+  }
+  const { data: attendanceData } = await attendanceQuery
 
-  let attendanceRecords: AttendanceRecord[] = (attendanceData as AttendanceRecord[]) || []
+  let attendanceRecords: AttendanceRecord[] = mapAttendanceRecordsFromDb(attendanceData || []) || []
   if (attendanceRecords.length === 0) {
     attendanceRecords = demoAttendanceRecords.filter((a) => a.userId === user.id)
   }
@@ -71,8 +76,12 @@ export default async function DashboardPage() {
   const { status: todayStatus } = getTodayAttendanceStatus(attendanceRecords, user.id)
 
   // Phase 9 — gradebook & assessments data
-  const { data: gradesData } = await supabase.from('grades').select('*').eq('student_id', user.id)
-  let gradeRecords: Grade[] = (gradesData as unknown as Grade[]) || []
+  const gradesQuery = supabase.from('grades').select('*').eq('student_id', user.id)
+  if (profile?.school_id) {
+    gradesQuery.eq('school_id', profile.school_id)
+  }
+  const { data: gradesData } = await gradesQuery
+  let gradeRecords: Grade[] = mapGradesFromDb(gradesData || []) || []
 
   let categoriesQuery = supabase.from('grade_categories').select('*')
   if (profile?.school_id) {
@@ -81,15 +90,19 @@ export default async function DashboardPage() {
     categoriesQuery = categoriesQuery.is('school_id', null)
   }
   const { data: categoriesData } = await categoriesQuery
-  let gradeCategories: GradeCategory[] = (categoriesData as unknown as GradeCategory[]) || []
+  let gradeCategories: GradeCategory[] = mapGradeCategoriesFromDb(categoriesData || []) || []
 
   if ((gradeRecords.length === 0 || gradeCategories.length === 0) && isDemoFallbackEnabled()) {
     gradeRecords = demoGrades.filter((g) => g.studentId === user.id)
     gradeCategories = demoGradeCategories
   }
 
-  const { data: assessmentsData } = await supabase.from('assessments').select('*').eq('student_id', user.id)
-  let assessmentRecords: Assessment[] = (assessmentsData as unknown as Assessment[]) || []
+  const assessmentsQuery = supabase.from('assessments').select('*').eq('student_id', user.id)
+  if (profile?.school_id) {
+    assessmentsQuery.eq('school_id', profile.school_id)
+  }
+  const { data: assessmentsData } = await assessmentsQuery
+  let assessmentRecords: Assessment[] = mapAssessmentsFromDb(assessmentsData || []) || []
   if (assessmentRecords.length === 0 && isDemoFallbackEnabled()) {
     assessmentRecords = demoAssessments.filter((a) => a.studentId === user.id)
   }

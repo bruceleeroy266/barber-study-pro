@@ -33,6 +33,7 @@ import InstructorPerformancePanel from '@/components/school-owner/InstructorPerf
 import SchoolAnalyticsCharts from '@/components/school-owner/SchoolAnalyticsCharts'
 import AlertsCenter from '@/components/school-owner/AlertsCenter'
 import ReportingCenter from '@/components/school-owner/ReportingCenter'
+import { mapAttendanceRecordsFromDb, mapHourLogsFromDb, mapGradesFromDb, mapGradeCategoriesFromDb, mapAssessmentsFromDb } from '@/lib/mappers/operational-data-mappers'
 
 export default async function SchoolOwnerDashboard() {
   const supabase = await createClient()
@@ -81,10 +82,12 @@ export default async function SchoolOwnerDashboard() {
   const { data: attendanceData } = await supabase
     .from('attendance_records')
     .select('*')
+    .eq('school_id', schoolId)
     .in('user_id', schoolUserIds)
   const { data: hoursData } = await supabase
     .from('hour_logs')
     .select('*')
+    .eq('school_id', schoolId)
     .in('user_id', schoolUserIds)
   const { data: attemptsData } = await supabase
     .from('quiz_attempts')
@@ -97,14 +100,16 @@ export default async function SchoolOwnerDashboard() {
   const { data: gradesData } = await supabase
     .from('grades')
     .select('*')
+    .eq('school_id', schoolId)
     .in('student_id', studentIds.length > 0 ? studentIds : ['__none__'])
   const { data: categoriesData } = await supabase
     .from('grade_categories')
     .select('*')
-    .eq('school_id', schoolId)
+    .or(`school_id.eq.${schoolId},school_id.is.null`)
   const { data: assessmentsData } = await supabase
     .from('assessments')
     .select('*')
+    .eq('school_id', schoolId)
     .in('student_id', studentIds.length > 0 ? studentIds : ['__none__'])
   const { data: notificationsData } = await supabase
     .from('notifications')
@@ -130,15 +135,15 @@ export default async function SchoolOwnerDashboard() {
   const scopedStudentIds = new Set(students.map((s) => s.id))
 
   const attendanceRecords: AttendanceRecord[] =
-    (attendanceData as AttendanceRecord[])?.length > 0
-      ? (attendanceData as AttendanceRecord[])
+    mapAttendanceRecordsFromDb(attendanceData || [])?.length > 0
+      ? mapAttendanceRecordsFromDb(attendanceData || [])
       : useDemo
       ? demoAttendanceRecords.filter((a) => scopedStudentIds.has(a.userId))
       : []
 
   const hourLogs: HourLog[] =
-    (hoursData as HourLog[])?.length > 0
-      ? (hoursData as HourLog[])
+    mapHourLogsFromDb(hoursData || [])?.length > 0
+      ? mapHourLogsFromDb(hoursData || [])
       : useDemo
       ? demoHourLogs.filter((h) => scopedStudentIds.has(h.user_id))
       : []
@@ -158,22 +163,22 @@ export default async function SchoolOwnerDashboard() {
       : []
 
   const grades: Grade[] =
-    (gradesData as unknown as Grade[])?.length > 0
-      ? (gradesData as unknown as Grade[])
+    mapGradesFromDb(gradesData || [])?.length > 0
+      ? mapGradesFromDb(gradesData || [])
       : useDemo
       ? demoGrades.filter((g) => scopedStudentIds.has(g.studentId))
       : []
 
   const gradeCategories: GradeCategory[] =
-    (categoriesData as unknown as GradeCategory[])?.length > 0
-      ? (categoriesData as unknown as GradeCategory[])
+    mapGradeCategoriesFromDb(categoriesData || [])?.length > 0
+      ? mapGradeCategoriesFromDb(categoriesData || [])
       : useDemo
       ? demoGradeCategories.filter((c) => c.schoolId === schoolId || !c.schoolId)
       : []
 
   const assessments: Assessment[] =
-    (assessmentsData as unknown as Assessment[])?.length > 0
-      ? (assessmentsData as unknown as Assessment[])
+    mapAssessmentsFromDb(assessmentsData || [])?.length > 0
+      ? mapAssessmentsFromDb(assessmentsData || [])
       : useDemo
       ? demoAssessments.filter((a) => scopedStudentIds.has(a.studentId))
       : []

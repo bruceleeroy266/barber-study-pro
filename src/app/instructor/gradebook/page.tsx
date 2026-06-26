@@ -12,6 +12,8 @@ import {
   demoGrades,
   getDemoGradeHistoryForGrade,
 } from '@/lib/demo-data'
+import { saveGrade } from './actions'
+import { mapGradesFromDb, mapGradeCategoriesFromDb } from '@/lib/mappers/operational-data-mappers'
 import GradebookTable from '@/components/gradebook/GradebookTable'
 import GradeEntryForm from '@/components/gradebook/GradeEntryForm'
 import GradeHistoryModal from '@/components/gradebook/GradeHistoryModal'
@@ -27,6 +29,7 @@ export default function InstructorGradebookPage() {
   const [categories, setCategories] = useState<GradeCategory[]>([])
   const [editingGrade, setEditingGrade] = useState<Grade | null>(null)
   const [historyGrade, setHistoryGrade] = useState<Grade | null>(null)
+  const [saveError, setSaveError] = useState<string | null>(null)
 
   useEffect(() => {
     async function init() {
@@ -73,9 +76,10 @@ export default function InstructorGradebookPage() {
       const { data: gradesData } = await supabase
         .from('grades')
         .select('*')
+        .eq('school_id', schoolId)
         .in('student_id', studentIds.length > 0 ? studentIds : ['__none__'])
 
-      let gradeRecords: Grade[] = (gradesData as unknown as Grade[]) || []
+      let gradeRecords: Grade[] = mapGradesFromDb(gradesData || [])
       if (gradeRecords.length === 0 && isDemoFallbackEnabled()) {
         gradeRecords = demoGrades.filter((g) => studentIds.includes(g.studentId))
       }
@@ -84,9 +88,9 @@ export default function InstructorGradebookPage() {
       const { data: categoriesData } = await supabase
         .from('grade_categories')
         .select('*')
-        .eq('school_id', schoolId)
+        .or(`school_id.eq.${schoolId},school_id.is.null`)
 
-      let categoryRecords: GradeCategory[] = (categoriesData as unknown as GradeCategory[]) || []
+      let categoryRecords: GradeCategory[] = mapGradeCategoriesFromDb(categoriesData || [])
       if (categoryRecords.length === 0 && isDemoFallbackEnabled()) {
         categoryRecords = demoGradeCategories.filter((c) => c.schoolId === schoolId || !c.schoolId)
       }
@@ -108,13 +112,33 @@ export default function InstructorGradebookPage() {
     return getDemoGradeHistoryForGrade(historyGrade.id)
   }, [historyGrade])
 
-  function handleSaveGrade(grade: Grade) {
+  async function handleSaveGrade(grade: Grade) {
+    setSaveError(null)
+
+    if (isDemoFallbackEnabled()) {
+      setGrades((prev) => {
+        const exists = prev.find((g) => g.id === grade.id)
+        if (exists) {
+          return prev.map((g) => (g.id === grade.id ? grade : g))
+        }
+        return [grade, ...prev]
+      })
+      setEditingGrade(null)
+      return
+    }
+
+    const result = await saveGrade(grade)
+    if (!result.success || !result.grade) {
+      setSaveError(result.message)
+      return
+    }
+
     setGrades((prev) => {
-      const exists = prev.find((g) => g.id === grade.id)
+      const exists = prev.find((g) => g.id === result.grade!.id)
       if (exists) {
-        return prev.map((g) => (g.id === grade.id ? grade : g))
+        return prev.map((g) => (g.id === result.grade!.id ? result.grade! : g))
       }
-      return [grade, ...prev]
+      return [result.grade!, ...prev]
     })
     setEditingGrade(null)
   }
@@ -134,6 +158,12 @@ export default function InstructorGradebookPage() {
           <h1 className="text-3xl font-bold text-white mb-2">Gradebook</h1>
           <p className="text-gray-400">Manage grades and view class performance</p>
         </div>
+
+        {saveError && (
+          <div className="bg-red-950/30 border border-red-900/50 text-red-400 rounded-lg p-4">
+            {saveError}
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">

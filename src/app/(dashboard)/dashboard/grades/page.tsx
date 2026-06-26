@@ -12,6 +12,7 @@ import {
 import { calculateStudentGradePerformance, getGradeColorClass, getLetterGrade } from '@/lib/gradebook'
 import StudentGradeWidget from '@/components/gradebook/StudentGradeWidget'
 import StudentGradeReport from '@/components/reports/StudentGradeReport'
+import { mapGradesFromDb, mapGradeCategoriesFromDb, mapAssessmentsFromDb } from '@/lib/mappers/operational-data-mappers'
 
 export default async function StudentGradesPage() {
   const supabase = await createClient()
@@ -21,12 +22,16 @@ export default async function StudentGradesPage() {
 
   const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
 
-  const { data: gradesData } = await supabase
+  const gradesQuery = supabase
     .from('grades')
     .select('*')
     .eq('student_id', user.id)
+  if (profile?.school_id) {
+    gradesQuery.eq('school_id', profile.school_id)
+  }
+  const { data: gradesData } = await gradesQuery
 
-  let grades: Grade[] = (gradesData as unknown as Grade[]) || []
+  let grades: Grade[] = mapGradesFromDb(gradesData || []) || []
 
   let categoriesQuery = supabase.from('grade_categories').select('*')
   if (profile?.school_id) {
@@ -36,19 +41,23 @@ export default async function StudentGradesPage() {
   }
   const { data: categoriesData } = await categoriesQuery
 
-  let categories: GradeCategory[] = (categoriesData as unknown as GradeCategory[]) || []
+  let categories: GradeCategory[] = mapGradeCategoriesFromDb(categoriesData || []) || []
 
   if ((grades.length === 0 || categories.length === 0) && isDemoFallbackEnabled()) {
     grades = demoGrades.filter((g) => g.studentId === user.id)
     categories = demoGradeCategories
   }
 
-  const { data: assessmentsData } = await supabase
+  const assessmentsQuery = supabase
     .from('assessments')
     .select('*')
     .eq('student_id', user.id)
+  if (profile?.school_id) {
+    assessmentsQuery.eq('school_id', profile.school_id)
+  }
+  const { data: assessmentsData } = await assessmentsQuery
 
-  let assessments: Assessment[] = (assessmentsData as unknown as Assessment[]) || []
+  let assessments: Assessment[] = mapAssessmentsFromDb(assessmentsData || []) || []
   if (assessments.length === 0 && isDemoFallbackEnabled()) {
     assessments = demoAssessments.filter((a) => a.studentId === user.id)
   }

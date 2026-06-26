@@ -6,6 +6,7 @@ import { isDemoFallbackEnabled } from '@/lib/demo-helpers'
 import { demoAssessments, demoAssessmentRubrics } from '@/lib/demo-data'
 import AssessmentList from '@/components/assessments/AssessmentList'
 import RubricBuilder from '@/components/assessments/RubricBuilder'
+import { mapAssessmentsFromDb, mapAssessmentRubricsFromDb } from '@/lib/mappers/operational-data-mappers'
 
 export default async function StudentAssessmentsPage() {
   const supabase = await createClient()
@@ -13,25 +14,29 @@ export default async function StudentAssessmentsPage() {
 
   if (!user) redirect('/login')
 
-  const { data: assessmentsData } = await supabase
+  const { data: profile } = await supabase.from('profiles').select('school_id').eq('id', user.id).single()
+  const schoolId = profile?.school_id
+
+  const assessmentsQuery = supabase
     .from('assessments')
     .select('*')
     .eq('student_id', user.id)
+  if (schoolId) {
+    assessmentsQuery.eq('school_id', schoolId)
+  }
+  const { data: assessmentsData } = await assessmentsQuery
 
-  let assessments: Assessment[] = (assessmentsData as unknown as Assessment[]) || []
+  let assessments: Assessment[] = mapAssessmentsFromDb(assessmentsData || []) || []
   if (assessments.length === 0 && isDemoFallbackEnabled()) {
     assessments = demoAssessments.filter((a) => a.studentId === user.id)
   }
 
-  const { data: profile } = await supabase.from('profiles').select('school_id').eq('id', user.id).single()
-  const schoolId = profile?.school_id
-
   const { data: rubricsData } = await supabase
     .from('assessment_rubrics')
     .select('*')
-    .eq('school_id', schoolId)
+    .or(`school_id.eq.${schoolId},school_id.is.null`)
 
-  let rubrics: AssessmentRubric[] = (rubricsData as unknown as AssessmentRubric[]) || []
+  let rubrics: AssessmentRubric[] = mapAssessmentRubricsFromDb(rubricsData || []) || []
   if (rubrics.length === 0 && isDemoFallbackEnabled()) {
     rubrics = demoAssessmentRubrics.filter((r) => r.schoolId === schoolId || !r.schoolId)
   }

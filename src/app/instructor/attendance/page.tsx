@@ -4,6 +4,7 @@ import { Profile, AttendanceRecord } from '@/types'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 import { demoStudents, demoAttendanceRecords } from '@/lib/demo-data'
 import AttendanceClient from './AttendanceClient'
+import { mapAttendanceRecordsFromDb } from '@/lib/mappers/operational-data-mappers'
 
 function isDemoFallbackEnabled(): boolean {
   if (process.env.NEXT_PUBLIC_DEMO_MODE === 'true') return true
@@ -72,10 +73,11 @@ export default async function AttendanceManagementPage() {
   const { data: attendanceData } = await supabase
     .from('attendance_records')
     .select('*')
+    .eq('school_id', schoolId)
     .in('user_id', studentIds.length > 0 ? studentIds : ['__none__'])
     .order('date', { ascending: false })
 
-  let records: AttendanceRecord[] = (attendanceData as AttendanceRecord[]) || []
+  let records: AttendanceRecord[] = mapAttendanceRecordsFromDb(attendanceData || []) || []
   if (records.length === 0 && isDemoFallbackEnabled()) {
     records = demoAttendanceRecords.filter((a) => studentIds.includes(a.userId))
   }

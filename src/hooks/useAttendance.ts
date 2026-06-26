@@ -3,6 +3,7 @@
  * ASCYN PRO / Barber Study Pro V2
  *
  * Manages attendance records, selection, bulk updates, and corrections.
+ * Phase 13E.1D: surfaces production errors instead of swallowing them.
  */
 
 'use client'
@@ -53,6 +54,7 @@ export interface UseAttendanceReturn {
   refresh: (filters?: AttendanceFilterState) => Promise<void>
   getRecordForStudentAndDate: (studentId: string, date: string) => AttendanceRecord | undefined
   ensureTodayRecords: () => Promise<void>
+  clearError: () => void
 }
 
 export function useAttendance({
@@ -66,6 +68,8 @@ export function useAttendance({
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const clearError = useCallback(() => setError(null), [])
 
   const refresh = useCallback(async (filters?: AttendanceFilterState) => {
     setLoading(true)
@@ -116,47 +120,59 @@ export function useAttendance({
       const original = records.find((r) => r.id === id)
       if (!original) return
 
-      const updated = await updateAttendanceRecord(id, { status })
+      try {
+        const updated = await updateAttendanceRecord(id, { status })
 
-      await logAuditEntry({
-        recordId: id,
-        action: 'update',
-        changedFields: {
-          status: { old: original.status, new: updated.status },
-        },
-        userId: currentUser.id,
-        userName: currentUser.full_name,
-        reason,
-      })
+        await logAuditEntry({
+          schoolId,
+          recordId: id,
+          action: 'update',
+          changedFields: {
+            status: { old: original.status, new: updated.status },
+          },
+          userId: currentUser.id,
+          userName: currentUser.full_name,
+          reason,
+        })
 
-      setRecords((prev) => prev.map((r) => (r.id === id ? updated : r)))
+        setRecords((prev) => prev.map((r) => (r.id === id ? updated : r)))
+        setError(null)
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'Failed to update attendance status')
+      }
     },
-    [records, currentUser]
+    [records, currentUser, schoolId]
   )
 
   const bulkUpdateStatus = useCallback(
     async (ids: string[], status: AttendanceStatus) => {
       const originals = records.filter((r) => ids.includes(r.id))
-      await bulkUpdateAttendance(ids, status)
+      try {
+        await bulkUpdateAttendance(ids, status)
 
-      for (const original of originals) {
-        await logAuditEntry({
-          recordId: original.id,
-          action: 'update',
-          changedFields: {
-            status: { old: original.status, new: status },
-          },
-          userId: currentUser.id,
-          userName: currentUser.full_name,
-        })
+        for (const original of originals) {
+          await logAuditEntry({
+            schoolId,
+            recordId: original.id,
+            action: 'update',
+            changedFields: {
+              status: { old: original.status, new: status },
+            },
+            userId: currentUser.id,
+            userName: currentUser.full_name,
+          })
+        }
+
+        setRecords((prev) =>
+          prev.map((r) => (ids.includes(r.id) ? { ...r, status, updatedAt: new Date().toISOString() } : r))
+        )
+        clearSelection()
+        setError(null)
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'Failed to bulk update attendance')
       }
-
-      setRecords((prev) =>
-        prev.map((r) => (ids.includes(r.id) ? { ...r, status, updatedAt: new Date().toISOString() } : r))
-      )
-      clearSelection()
     },
-    [records, currentUser, clearSelection]
+    [records, currentUser, clearSelection, schoolId]
   )
 
   const addNote = useCallback(
@@ -164,21 +180,27 @@ export function useAttendance({
       const original = records.find((r) => r.id === id)
       if (!original) return
 
-      const updated = await updateAttendanceRecord(id, { note })
+      try {
+        const updated = await updateAttendanceRecord(id, { note })
 
-      await logAuditEntry({
-        recordId: id,
-        action: 'update',
-        changedFields: {
-          note: { old: original.note, new: updated.note },
-        },
-        userId: currentUser.id,
-        userName: currentUser.full_name,
-      })
+        await logAuditEntry({
+          schoolId,
+          recordId: id,
+          action: 'update',
+          changedFields: {
+            note: { old: original.note, new: updated.note },
+          },
+          userId: currentUser.id,
+          userName: currentUser.full_name,
+        })
 
-      setRecords((prev) => prev.map((r) => (r.id === id ? updated : r)))
+        setRecords((prev) => prev.map((r) => (r.id === id ? updated : r)))
+        setError(null)
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'Failed to add attendance note')
+      }
     },
-    [records, currentUser]
+    [records, currentUser, schoolId]
   )
 
   const submitCorrectionLocal = useCallback(
@@ -186,39 +208,62 @@ export function useAttendance({
       const original = records.find((r) => r.id === recordId)
       if (!original) return
 
-      await submitCorrection({
-        attendanceRecordId: recordId,
-        originalStatus: original.status,
-        newStatus,
-        reason,
-        correctedBy: currentUser.id,
-      })
+      try {
+        await submitCorrection({
+          schoolId: schoolId ?? '',
+          attendanceRecordId: recordId,
+          originalStatus: original.status,
+          newStatus,
+          reason,
+          correctedBy: currentUser.id,
+        })
 
-      const updated = await updateAttendanceRecord(recordId, { status: newStatus })
+        const updated = await updateAttendanceRecord(recordId, { status: newStatus })
 
-      await logAuditEntry({
-        recordId,
-        action: 'correct',
-        changedFields: {
-          status: { old: original.status, new: newStatus },
-        },
-        userId: currentUser.id,
-        userName: currentUser.full_name,
-        reason,
-      })
+        await logAuditEntry({
+          schoolId,
+          recordId,
+          action: 'correct',
+          changedFields: {
+            status: { old: original.status, new: newStatus },
+          },
+          userId: currentUser.id,
+          userName: currentUser.full_name,
+          reason,
+        })
 
-      setRecords((prev) => prev.map((r) => (r.id === recordId ? updated : r)))
+        setRecords((prev) => prev.map((r) => (r.id === recordId ? updated : r)))
+        setError(null)
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'Failed to submit correction')
+      }
     },
-    [records, currentUser]
+    [records, currentUser, schoolId]
   )
 
-  const getCorrections = useCallback(async (recordId: string) => {
-    return getCorrectionHistory(recordId)
-  }, [])
+  const getCorrections = useCallback(
+    async (recordId: string) => {
+      try {
+        return await getCorrectionHistory(recordId)
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'Failed to load corrections')
+        return []
+      }
+    },
+    []
+  )
 
-  const getAuditHistoryLocal = useCallback(async (recordId: string) => {
-    return getAuditHistory(recordId)
-  }, [])
+  const getAuditHistoryLocal = useCallback(
+    async (recordId: string) => {
+      try {
+        return await getAuditHistory(recordId)
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'Failed to load audit history')
+        return []
+      }
+    },
+    []
+  )
 
   const getRecordForStudentAndDate = useCallback(
     (studentId: string, date: string) => {
@@ -231,36 +276,42 @@ export function useAttendance({
     const date = defaultDate || new Date().toISOString().split('T')[0]
     const changed: AttendanceRecord[] = []
 
-    for (const student of students) {
-      const existing = getRecordForStudentAndDate(student.id, date)
-      if (!existing) {
-        const created = await createAttendanceRecord({
-          userId: student.id,
-          schoolId: schoolId ?? null,
-          date,
-          status: 'Absent',
-          clockedInAt: null,
-          clockedOutAt: null,
-          minutesPresent: null,
-          note: null,
-          verifiedBy: currentUser.id,
-        })
-        changed.push(created)
+    try {
+      for (const student of students) {
+        const existing = getRecordForStudentAndDate(student.id, date)
+        if (!existing) {
+          const created = await createAttendanceRecord({
+            userId: student.id,
+            schoolId: schoolId ?? null,
+            date,
+            status: 'Absent',
+            clockedInAt: null,
+            clockedOutAt: null,
+            minutesPresent: null,
+            note: null,
+            verifiedBy: currentUser.id,
+          })
+          changed.push(created)
 
-        await logAuditEntry({
-          recordId: created.id,
-          action: 'create',
-          changedFields: {
-            status: { old: null, new: created.status },
-          },
-          userId: currentUser.id,
-          userName: currentUser.full_name,
-        })
+          await logAuditEntry({
+            schoolId,
+            recordId: created.id,
+            action: 'create',
+            changedFields: {
+              status: { old: null, new: created.status },
+            },
+            userId: currentUser.id,
+            userName: currentUser.full_name,
+          })
+        }
       }
-    }
 
-    if (changed.length > 0) {
-      setRecords((prev) => [...prev, ...changed])
+      if (changed.length > 0) {
+        setRecords((prev) => [...prev, ...changed])
+      }
+      setError(null)
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to create today\'s attendance records')
     }
   }, [defaultDate, students, schoolId, currentUser, getRecordForStudentAndDate])
 
@@ -284,5 +335,6 @@ export function useAttendance({
     refresh,
     getRecordForStudentAndDate,
     ensureTodayRecords,
+    clearError,
   }
 }

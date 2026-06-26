@@ -6,6 +6,7 @@ import { isDemoFallbackEnabled } from '@/lib/demo-helpers'
 import { demoAssessmentRubrics } from '@/lib/demo-data'
 import RubricBuilder from '@/components/assessments/RubricBuilder'
 import RubricEvaluator from '@/components/assessments/RubricEvaluator'
+import { mapAssessmentRubricsFromDb } from '@/lib/mappers/operational-data-mappers'
 
 export default async function InstructorRubricsPage() {
   const supabase = await createClient()
@@ -26,9 +27,9 @@ export default async function InstructorRubricsPage() {
   const { data: rubricsData } = await supabase
     .from('assessment_rubrics')
     .select('*')
-    .eq('school_id', schoolId)
+    .or(`school_id.eq.${schoolId},school_id.is.null`)
 
-  let rubrics: AssessmentRubric[] = (rubricsData as unknown as AssessmentRubric[]) || []
+  let rubrics: AssessmentRubric[] = mapAssessmentRubricsFromDb(rubricsData || []) || []
   if (rubrics.length === 0 && isDemoFallbackEnabled()) {
     rubrics = demoAssessmentRubrics.filter((r) => r.schoolId === schoolId || !r.schoolId)
   }

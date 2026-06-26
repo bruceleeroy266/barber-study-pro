@@ -7,6 +7,8 @@ import { supabase } from '@/lib/supabase'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 import { isDemoFallbackEnabled } from '@/lib/demo-helpers'
 import { demoStudents, demoAssessments, demoAssessmentRubrics } from '@/lib/demo-data'
+import { saveAssessment } from './actions'
+import { mapAssessmentsFromDb, mapAssessmentRubricsFromDb } from '@/lib/mappers/operational-data-mappers'
 import AssessmentList from '@/components/assessments/AssessmentList'
 import AssessmentForm from '@/components/assessments/AssessmentForm'
 import { Loader2, Plus } from 'lucide-react'
@@ -18,6 +20,7 @@ export default function InstructorAssessmentsPage() {
   const [assessments, setAssessments] = useState<Assessment[]>([])
   const [rubrics, setRubrics] = useState<AssessmentRubric[]>([])
   const [showForm, setShowForm] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
 
   useEffect(() => {
     async function init() {
@@ -59,9 +62,10 @@ export default function InstructorAssessmentsPage() {
       const { data: assessmentsData } = await supabase
         .from('assessments')
         .select('*')
+        .eq('school_id', schoolId)
         .in('student_id', studentIds.length > 0 ? studentIds : ['__none__'])
 
-      let assessmentRecords: Assessment[] = (assessmentsData as unknown as Assessment[]) || []
+      let assessmentRecords: Assessment[] = mapAssessmentsFromDb(assessmentsData || [])
       if (assessmentRecords.length === 0 && isDemoFallbackEnabled()) {
         assessmentRecords = demoAssessments.filter((a) => studentIds.includes(a.studentId))
       }
@@ -70,9 +74,9 @@ export default function InstructorAssessmentsPage() {
       const { data: rubricsData } = await supabase
         .from('assessment_rubrics')
         .select('*')
-        .eq('school_id', schoolId)
+        .or(`school_id.eq.${schoolId},school_id.is.null`)
 
-      let rubricRecords: AssessmentRubric[] = (rubricsData as unknown as AssessmentRubric[]) || []
+      let rubricRecords: AssessmentRubric[] = mapAssessmentRubricsFromDb(rubricsData || [])
       if (rubricRecords.length === 0 && isDemoFallbackEnabled()) {
         rubricRecords = demoAssessmentRubrics.filter((r) => r.schoolId === schoolId || !r.schoolId)
       }
@@ -84,8 +88,30 @@ export default function InstructorAssessmentsPage() {
     init()
   }, [router])
 
-  function handleSaveAssessment(assessment: Assessment) {
-    setAssessments((prev) => [assessment, ...prev])
+  async function handleSaveAssessment(assessment: Assessment) {
+    setSaveError(null)
+
+    if (isDemoFallbackEnabled()) {
+      setAssessments((prev) => [assessment, ...prev])
+      setShowForm(false)
+      return
+    }
+
+    const result = await saveAssessment(assessment)
+    if (!result.success || !result.assessment) {
+      setSaveError(result.message)
+      return
+    }
+
+    setAssessments((prev) => {
+      const existingIndex = prev.findIndex((a) => a.id === result.assessment!.id)
+      if (existingIndex >= 0) {
+        const next = [...prev]
+        next[existingIndex] = result.assessment!
+        return next
+      }
+      return [result.assessment!, ...prev]
+    })
     setShowForm(false)
   }
 
@@ -113,6 +139,12 @@ export default function InstructorAssessmentsPage() {
             Add Assessment
           </button>
         </div>
+
+        {saveError && (
+          <div className="bg-red-950/30 border border-red-900/50 text-red-400 rounded-lg p-4">
+            {saveError}
+          </div>
+        )}
 
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
           <h2 className="text-lg font-semibold text-white mb-4">Assessment Records</h2>
