@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
 
-type Role = 'student' | 'instructor' | 'apprentice'
+type Role = 'student' | 'instructor'
 
 interface SchoolOption {
   id: string
@@ -21,8 +21,6 @@ export default function SignupPage() {
   const [schoolName, setSchoolName] = useState('')
   const [schools, setSchools] = useState<SchoolOption[]>([])
   const [selectedSchoolId, setSelectedSchoolId] = useState('')
-  const [barberShopName, setBarberShopName] = useState('')
-  const [mentorName, setMentorName] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
@@ -148,6 +146,7 @@ export default function SignupPage() {
               .from('schools')
               .select('id')
               .eq('name', schoolName.trim())
+              .eq('is_active', true)
               .single()
 
             if (existing) {
@@ -157,7 +156,6 @@ export default function SignupPage() {
             // signup flow will surface an error below.
           }
         }
-        // Apprentice: schoolId stays null unless they picked one
 
         // Defensive validation: students must belong to a school.
         if (role === 'student' && !schoolId) {
@@ -172,8 +170,6 @@ export default function SignupPage() {
           full_name: fullName || signUpData.user.email,
           role,
           school_id: schoolId,
-          barber_shop_name: barberShopName.trim() || null,
-          mentor_name: mentorName.trim() || null,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         }, {
@@ -246,15 +242,13 @@ export default function SignupPage() {
           <label className="block text-sm font-medium text-gray-300 mb-2">
             I am a...
           </label>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
               onClick={() => {
                 setRole('student')
                 setSchoolName('')
                 setSelectedSchoolId('')
-                setBarberShopName('')
-                setMentorName('')
               }}
               className={`px-3 py-3 rounded-lg border-2 text-sm font-medium transition-all ${
                 role === 'student'
@@ -270,8 +264,6 @@ export default function SignupPage() {
                 setRole('instructor')
                 setSchoolName('')
                 setSelectedSchoolId('')
-                setBarberShopName('')
-                setMentorName('')
               }}
               className={`px-3 py-3 rounded-lg border-2 text-sm font-medium transition-all ${
                 role === 'instructor'
@@ -281,29 +273,7 @@ export default function SignupPage() {
             >
               Instructor
             </button>
-            <button
-              type="button"
-              onClick={() => {
-                setRole('apprentice')
-                setSchoolName('')
-                setSelectedSchoolId('')
-                setBarberShopName('')
-                setMentorName('')
-              }}
-              className={`px-3 py-3 rounded-lg border-2 text-sm font-medium transition-all ${
-                role === 'apprentice'
-                  ? 'border-[#D4AF37] bg-[#D4AF37]/10 text-[#D4AF37]'
-                  : 'border-gray-700 bg-gray-800 text-gray-400 hover:border-gray-600'
-              }`}
-            >
-              Apprentice
-            </button>
           </div>
-          {role === 'apprentice' && (
-            <p className="text-xs text-gray-500 mt-2">
-              Independent apprentices and barber-shop learners can sign up without a school.
-            </p>
-          )}
         </div>
 
         <div>
@@ -336,7 +306,7 @@ export default function SignupPage() {
           />
         </div>
 
-        {/* School / Apprentice Fields */}
+        {/* School / Student Fields */}
         {role === 'instructor' ? (
           <div>
             <label htmlFor="schoolName" className="block text-sm font-medium text-gray-300 mb-2">
@@ -352,7 +322,7 @@ export default function SignupPage() {
               placeholder="e.g., Oklahoma Barber Academy"
             />
           </div>
-        ) : role === 'student' ? (
+        ) : (
           <div className="space-y-3">
             <div>
               <label htmlFor="schoolSelect" className="block text-sm font-medium text-gray-300 mb-2">
@@ -394,57 +364,6 @@ export default function SignupPage() {
                 }}
                 className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-colors"
                 placeholder="Enter your school name"
-              />
-            </div>
-          </div>
-        ) : (
-          /* Apprentice fields */
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="schoolSelectApprentice" className="block text-sm font-medium text-gray-300 mb-2">
-                School <span className="text-gray-500">(optional)</span>
-              </label>
-              <select
-                id="schoolSelectApprentice"
-                value={selectedSchoolId}
-                onChange={(e) => {
-                  setSelectedSchoolId(e.target.value)
-                  if (e.target.value) setSchoolName('')
-                }}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-colors"
-              >
-                <option value="">-- Optional: select a school --</option>
-                {schools.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="barberShopName" className="block text-sm font-medium text-gray-300 mb-2">
-                Barber Shop Name <span className="text-gray-500">(optional)</span>
-              </label>
-              <input
-                id="barberShopName"
-                type="text"
-                value={barberShopName}
-                onChange={(e) => setBarberShopName(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-colors"
-                placeholder="e.g., Razor Kings"
-              />
-            </div>
-            <div>
-              <label htmlFor="mentorName" className="block text-sm font-medium text-gray-300 mb-2">
-                Mentor / Instructor Name <span className="text-gray-500">(optional)</span>
-              </label>
-              <input
-                id="mentorName"
-                type="text"
-                value={mentorName}
-                onChange={(e) => setMentorName(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-colors"
-                placeholder="e.g., Malenny"
               />
             </div>
           </div>

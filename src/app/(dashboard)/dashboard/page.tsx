@@ -40,6 +40,30 @@ export default async function DashboardPage() {
     .eq('id', user.id)
     .single()
 
+  // Route users to the correct home based on role and school approval state.
+  if (profile) {
+    if (profile.role === 'admin') {
+      redirect('/admin')
+    }
+
+    if (profile.role === 'instructor') {
+      if (profile.school_id) {
+        const { data: school } = await supabase
+          .from('schools')
+          .select('is_active')
+          .eq('id', profile.school_id)
+          .single()
+        if (school && !school.is_active) {
+          redirect('/pending-approval')
+        }
+      } else {
+        // Instructor with no school cannot access the instructor dashboard yet.
+        redirect('/pending-approval')
+      }
+      redirect('/instructor')
+    }
+  }
+
   // Use local chapters (not Supabase)
   const chapters = localChapters
 
