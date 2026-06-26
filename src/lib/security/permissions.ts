@@ -58,6 +58,7 @@ export type Permission =
   | 'view_platform_analytics'
   | 'manage_platform_schools'
   | 'manage_platform_users'
+  | 'manage_platform'
   | 'impersonate_users'
 
 // ============================================================================
@@ -98,6 +99,7 @@ const ROLE_PERMISSIONS: Record<KnownRole, Permission[]> = {
     'manage_messaging',
     'manage_settings',
     'manage_school_users',
+    'manage_platform',
   ],
   admissions: ['view_dashboard', 'view_school_students', 'manage_students', 'view_school_reports'],
   compliance_officer: [
@@ -124,6 +126,7 @@ const ROLE_PERMISSIONS: Record<KnownRole, Permission[]> = {
     'view_platform_analytics',
     'manage_platform_schools',
     'manage_platform_users',
+    'manage_platform',
     'impersonate_users',
   ],
 }

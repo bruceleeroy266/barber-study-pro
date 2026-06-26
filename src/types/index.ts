@@ -369,6 +369,16 @@ export type NotificationType =
   | 'announcement'
   | 'message'
   | 'general'
+  // Phase 13D enterprise notification types
+  | 'system'
+  | 'security'
+  | 'compliance'
+  | 'attendance'
+  | 'grades'
+  | 'assessments'
+  | 'school_approval'
+  | 'account_approval'
+  | 'maintenance'
 
 export interface Notification {
   id: string

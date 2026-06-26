@@ -105,6 +105,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  // ── MAINTENANCE MODE ENFORCEMENT (edge layer) ──
+  // If maintenance mode is enabled, redirect non-allowed users to /maintenance.
+  // Allowed roles are stored in maintenance_mode.allowed_roles. Demo mode
+  // always bypasses maintenance checks because the service reports disabled.
+  if (!demoMode && !request.nextUrl.pathname.startsWith('/maintenance')) {
+    const maintenanceRedirect = await checkMaintenanceMode(request, supabase, user?.id)
+    if (maintenanceRedirect) {
+      return maintenanceRedirect
+    }
+  }
+
   // ── INSTRUCTOR ACCESS ENFORCEMENT (edge layer) ──
   // Only users whose profile role is 'instructor' or 'admin' may access
   // /instructor and /instructor/* sub-routes. Students/apprentices are
@@ -146,6 +157,65 @@ export async function middleware(request: NextRequest) {
   }
 
   return supabaseResponse
+}
+
+/**
+ * Check whether maintenance mode is enabled and the current user is allowed
+ * through. Returns a redirect response to /maintenance when the user should
+ * be blocked, or null when they may proceed.
+ */
+async function checkMaintenanceMode(
+  request: NextRequest,
+  supabase: ReturnType<typeof createServerClient>,
+  userId: string | undefined
+): Promise<NextResponse | null> {
+  try {
+    const { data: mode } = await supabase
+      .from('maintenance_mode')
+      .select('enabled, message, allowed_roles')
+      .order('id', { ascending: true })
+      .limit(1)
+      .maybeSingle()
+
+    if (!mode?.enabled) {
+      return null
+    }
+
+    const allowedRoles: string[] = Array.isArray(mode.allowed_roles)
+      ? mode.allowed_roles
+      : ['platform_super_admin']
+
+    // Unauthenticated users are always blocked during maintenance.
+    if (!userId) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/maintenance'
+      if (mode.message) {
+        url.searchParams.set('message', mode.message)
+      }
+      return NextResponse.redirect(url)
+    }
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', userId)
+      .single()
+
+    if (profile?.role && allowedRoles.includes(profile.role)) {
+      return null
+    }
+
+    const url = request.nextUrl.clone()
+    url.pathname = '/maintenance'
+    if (mode.message) {
+      url.searchParams.set('message', mode.message)
+    }
+    return NextResponse.redirect(url)
+  } catch (err) {
+    console.warn('[Middleware] Maintenance mode check failed:', err)
+    // Fail open: if we cannot verify maintenance mode, allow the request.
+    return null
+  }
 }
 
 export const config = {

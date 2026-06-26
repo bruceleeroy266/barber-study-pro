@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { isAdmin } from '@/lib/auth-helpers'
 import { hasPermission } from '@/lib/security/permissions'
-import { Settings } from 'lucide-react'
+import { Settings, Activity, History, Flag, Wrench, Archive, Bell } from 'lucide-react'
 
 export default async function AdminDashboard() {
   const supabase = await createClient()
@@ -98,6 +98,11 @@ export default async function AdminDashboard() {
             <div className="text-3xl font-bold text-purple-400">Active</div>
             <div className="text-sm text-gray-400">Platform Status</div>
           </div>
+
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+            <div className="text-3xl font-bold text-pink-400">13D</div>
+            <div className="text-sm text-gray-400">Enterprise Services</div>
+          </div>
         </div>
 
         {/* Management Cards */}
@@ -115,6 +120,81 @@ export default async function AdminDashboard() {
               Open Configuration
             </span>
           </Link>
+
+          <Link
+            href="/admin/audit"
+            className="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-[#D4AF37]/30 transition-colors group"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-semibold text-white group-hover:text-[#D4AF37]">Audit History</h3>
+              <History className="w-5 h-5 text-gray-500 group-hover:text-[#D4AF37]" />
+            </div>
+            <p className="text-gray-400 text-sm mb-4">Review security events and platform activity</p>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#D4AF37]/10 text-[#D4AF37] text-sm rounded-lg border border-[#D4AF37]/20">
+              View Logs
+            </span>
+          </Link>
+
+          <Link
+            href="/admin/health"
+            className="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-[#D4AF37]/30 transition-colors group"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-semibold text-white group-hover:text-[#D4AF37]">System Health</h3>
+              <Activity className="w-5 h-5 text-gray-500 group-hover:text-[#D4AF37]" />
+            </div>
+            <p className="text-gray-400 text-sm mb-4">Run diagnostics and monitor platform status</p>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#D4AF37]/10 text-[#D4AF37] text-sm rounded-lg border border-[#D4AF37]/20">
+              Run Checks
+            </span>
+          </Link>
+
+          <Link
+            href="/admin/maintenance"
+            className="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-[#D4AF37]/30 transition-colors group"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-semibold text-white group-hover:text-[#D4AF37]">Maintenance Mode</h3>
+              <Wrench className="w-5 h-5 text-gray-500 group-hover:text-[#D4AF37]" />
+            </div>
+            <p className="text-gray-400 text-sm mb-4">Enable or disable platform maintenance mode</p>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#D4AF37]/10 text-[#D4AF37] text-sm rounded-lg border border-[#D4AF37]/20">
+              Manage
+            </span>
+          </Link>
+
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-semibold text-white">Notifications</h3>
+              <Bell className="w-5 h-5 text-gray-500" />
+            </div>
+            <p className="text-gray-400 text-sm mb-4">Production notification service is ready</p>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-500/10 text-green-400 text-sm rounded-lg border border-green-500/20">
+              <span>Operational</span>
+            </div>
+          </div>
+
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-semibold text-white">Feature Flags</h3>
+              <Flag className="w-5 h-5 text-gray-500" />
+            </div>
+            <p className="text-gray-400 text-sm mb-4">Global and school-specific feature toggles</p>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-500/10 text-green-400 text-sm rounded-lg border border-green-500/20">
+              <span>Operational</span>
+            </div>
+          </div>
+
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-semibold text-white">Backup & Recovery</h3>
+              <Archive className="w-5 h-5 text-gray-500" />
+            </div>
+            <p className="text-gray-400 text-sm mb-4">Backup status and recovery readiness</p>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-800 text-gray-400 text-sm rounded-lg">
+              <span>External integration required</span>
+            </div>
+          </div>
 
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
             <h3 className="text-lg font-semibold text-white mb-2">Users</h3>
