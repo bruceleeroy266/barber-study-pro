@@ -367,4 +367,193 @@ git commit -m "fix(signup): remove Apprentice from public signup UI
 
 ---
 
+## 16. Fix Signup School Dropdown Not Showing Active Local School
+
+**Date:** 2026-06-26
+
+### 16.1 Issue
+
+`ASCYN Smoke Test Academy` existed in the local Supabase `public.schools` table with `subscription_status = active` and `is_active = true`, but it did not appear in the Student signup school dropdown.
+
+### 16.2 Root Cause
+
+Two environment/config issues prevented the browser from seeing the local school:
+
+1. **`.env.local` pointed to the remote Supabase project**, so the signup page queried the remote database instead of the local one.
+2. **`isSupabaseConfigured()` required an `https://` URL**, which rejected the local Supabase CLI endpoint (`http://127.0.0.1:54321`). When the helper returned `false`, the app fell back to the mock client, whose `schools` query returns an empty array.
+
+The signup query itself (`select id, name from public.schools where is_active = true`) was correct.
+
+### 16.3 Files Changed
+
+| File | Change |
+|------|--------|
+| `.env.local` | Switched to local Supabase CLI defaults for smoke testing; remote values kept as comments. |
+| `src/lib/demo-helpers.ts` | Relaxed `isSupabaseConfigured()` to accept `https://` production URLs **and** `http://127.0.0.1:54321` / `http://localhost:54321` local CLI endpoints. |
+| `src/lib/supabase.ts` | Imported shared helpers instead of duplicating the config check. |
+| `src/lib/supabase-server.ts` | Imported shared helpers instead of duplicating the config check. |
+| `src/middleware.ts` | Imported shared helpers instead of duplicating the config check. |
+| `src/app/(auth)/signup/page.tsx` | Added safe console logging to the schools loader for local debugging. |
+
+### 16.4 Fix Made
+
+- Centralized Supabase configuration detection in `src/lib/demo-helpers.ts`.
+- Allowed local development endpoints so the real Supabase client is used when `.env.local` points to `http://127.0.0.1:54321`.
+- Updated `.env.local` to local defaults and commented out the remote project values.
+- Added debug logs in the signup page:
+  - URL being queried.
+  - Query error messages.
+  - Number of active schools returned.
+- Preserved production behavior:
+  - Inactive schools are still filtered out (`is_active = true`).
+  - Instructor-created schools remain pending (`is_active = false`) until admin approval.
+  - No role-based restriction was added to the schools query; the public RLS policy already allows anonymous reads of active schools.
+
+### 16.5 Validation Results
+
+Validation run after the fix on **2026-06-26**:
+
+| Check | Command | Result |
+|-------|---------|--------|
+| TypeScript | `npx tsc --noEmit` | ✅ Passed with no errors. |
+| Production build | `npm run build` | ✅ Compiled successfully. 36 routes generated. |
+| ESLint (changed logic files) | `npx eslint "src/app/(auth)/signup/page.tsx" "src/lib/demo-helpers.ts" "src/middleware.ts"` | ✅ 0 errors, 0 warnings. |
+| ESLint (full modified list) | `npx eslint "src/app/(auth)/signup/page.tsx" "src/lib/demo-helpers.ts" "src/lib/supabase.ts" "src/lib/supabase-server.ts" "src/middleware.ts"` | ⚠️ `supabase.ts` and `supabase-server.ts` report pre-existing `@typescript-eslint/no-explicit-any` and `prefer-const` warnings in the mock client code. These errors existed before this change and are unrelated to the school dropdown fix. |
+
+### 16.6 Re-Test Steps
+
+1. Ensure local Supabase is running (`supabase start`).
+2. Confirm `.env.local` contains the local URL/key and `NEXT_PUBLIC_DEMO_MODE=false`.
+3. Restart the Next.js dev server so it picks up `.env.local` changes.
+4. Open the Student signup page.
+5. Verify `ASCYN Smoke Test Academy` appears in the school dropdown.
+6. Open browser DevTools and confirm the console logs:
+   - `[Signup] Loading active schools from: http://127.0.0.1:54321`
+   - `[Signup] Active schools loaded: N` where N includes the smoke-test school.
+7. Confirm inactive/pending schools do **not** appear in the dropdown.
+
+### 16.7 Commit Recommendation
+
+**Commit the fix.** Suggested message:
+
+```bash
+git add src/lib/demo-helpers.ts \
+           src/lib/supabase.ts \
+           src/lib/supabase-server.ts \
+           src/middleware.ts \
+           src/app/(auth)/signup/page.tsx \
+           PHASE_13E_FINAL_SMOKE_TEST_REPORT.md
+# .env.local is gitignored and should not be staged
+git commit -m "fix(signup): use local Supabase for school dropdown and centralize config checks
+
+- Allow http://127.0.0.1:54321 and http://localhost:54321 in isSupabaseConfigured
+- Use shared demo-helpers config checks in supabase/supabase-server/middleware
+- Add signup school-loader logging for local debugging
+- Keep is_active=true filter and pending instructor school behavior"
+```
+
+**Do not push** until the local school-dropdown smoke test passes.
+
+---
+
+## 17. Fix Schools RLS for Anonymous Signup Dropdown
+
+**Date:** 2026-06-26
+
+### 17.1 Issue
+
+Student signup reached the local Supabase REST API, but the schools query failed with `permission denied for table schools`. The smoke-test school (`ASCYN Smoke Test Academy`) existed in `public.schools` with `is_active = true`, yet the signup page could not load it.
+
+### 17.2 Root Cause
+
+Two security-layer issues blocked anonymous reads:
+
+1. **Missing table-level grant.** The `public.schools` table had Row Level Security enabled, but the `anon` and `authenticated` roles had not been granted `SELECT` on it. Without the table privilege, the RLS policy is never evaluated and Postgres returns `permission denied for table schools`.
+2. **Overly permissive existing policy.** The legacy policy `Schools are viewable by everyone` used `for select using (true)`, which exposed inactive and soft-deleted schools to anonymous users.
+
+### 17.3 Files Changed
+
+| File | Change |
+|------|--------|
+| `supabase/migrations/20250625010050_fix_schools_anon_select_policy.sql` | New migration that drops the legacy permissive policy and creates an active-only select policy, plus grants `SELECT` on `public.schools` to `anon` and `authenticated`. |
+| `PHASE_13E_FINAL_SMOKE_TEST_REPORT.md` | Documented the RLS fix, validation, and re-test steps. |
+
+### 17.4 Fix Made
+
+- Added migration `20250625010050_fix_schools_anon_select_policy.sql` running after `20250625010000_create_core_production_tables.sql` (where `is_active` and `deleted_at` columns are defined).
+- Replaced `Schools are viewable by everyone` with `Active schools are viewable by everyone`:
+  ```sql
+  create policy "Active schools are viewable by everyone" on public.schools
+    for select using (
+      is_active = true
+      and deleted_at is null
+    );
+  ```
+- Granted the required table-level privilege:
+  ```sql
+  grant select on public.schools to anon, authenticated;
+  ```
+- Preserved all other `public.schools` policies:
+  - Instructors can still create schools.
+  - School creators can still update their own schools.
+  - No insert/update/delete privileges were granted to anonymous users.
+
+### 17.5 Security Impact
+
+| Action | Anonymous | Authenticated (non-admin) | Admin/Instructor |
+|--------|-----------|---------------------------|------------------|
+| SELECT active schools | ✅ Allowed | ✅ Allowed | ✅ Allowed |
+| SELECT inactive/deleted schools | ❌ Blocked | ❌ Blocked | ❌ Blocked (via policy) |
+| INSERT | ❌ Blocked | ❌ Blocked | Instructors only |
+| UPDATE | ❌ Blocked | Creators only | Creators only |
+| DELETE | ❌ Blocked | ❌ Blocked | ❌ Blocked |
+
+- Inactive/pending instructor-created schools remain hidden from the signup dropdown.
+- Admin/instructor/student RLS was not weakened.
+- No other tables or policies were modified.
+
+### 17.6 Validation Results
+
+Validation run after the RLS fix on **2026-06-26**:
+
+| Check | Command | Result |
+|-------|---------|--------|
+| Supabase stop | `supabase stop --no-backup` | ✅ Success |
+| Supabase start | `supabase start` | ✅ Success, all migrations applied, seed loaded |
+| Migrations apply cleanly | `supabase db reset` | ✅ Success |
+| Anon API can read active schools | REST `GET /rest/v1/schools?select=id,name,is_active` with anon key | ✅ Returns 6 active demo schools |
+| Inactive schools hidden from anon | Inserted `is_active = false` test row, re-queried anon API | ✅ Inactive school not returned |
+| Anon write blocked | REST `POST /rest/v1/schools` with anon key | ❌ Request failed as expected |
+| TypeScript | `npx tsc --noEmit` | ✅ Passed with no errors |
+| Production build | `npm run build` | ✅ Compiled successfully. 36 routes generated |
+| ESLint | N/A (only SQL and markdown changed) | N/A |
+
+### 17.7 Re-Test Steps
+
+1. Ensure local Supabase is running (`supabase start`).
+2. Open the Student signup page in a browser with `NEXT_PUBLIC_DEMO_MODE=false`.
+3. Verify the school dropdown loads without `permission denied for table schools`.
+4. Confirm only active schools appear (e.g., the demo schools and `ASCYN Smoke Test Academy`).
+5. Confirm inactive/pending schools do **not** appear.
+6. Attempt to create a school as an anonymous user via the REST API and confirm it is rejected.
+
+### 17.8 Commit Recommendation
+
+**Commit the fix.** Suggested message:
+
+```bash
+git add supabase/migrations/20250625010050_fix_schools_anon_select_policy.sql \
+           PHASE_13E_FINAL_SMOKE_TEST_REPORT.md
+git commit -m "fix(supabase): restrict school reads to active schools for anon/auth users
+
+- Replace permissive schools select policy with active-only policy
+- Grant SELECT on public.schools to anon and authenticated roles
+- Preserve instructor create and creator update policies
+- Keep inactive/pending schools hidden from signup dropdown"
+```
+
+**Do not push** until the local signup school-dropdown smoke test passes.
+
+---
+
 

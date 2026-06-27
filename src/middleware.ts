@@ -1,19 +1,13 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { isInstructorOrAdmin, isAdmin } from '@/lib/auth-helpers'
+import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
 
 // Check if Supabase is properly configured
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-const demoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
-
-const isSupabaseConfigured =
-  Boolean(supabaseUrl) &&
-  Boolean(supabaseKey) &&
-  supabaseUrl.startsWith('https://') &&
-  !supabaseUrl.includes('your-project') &&
-  !supabaseUrl.includes('example.supabase.co') &&
-  supabaseKey.length > 20
+const demoMode = isExplicitDemoMode()
+const supabaseConfigured = isSupabaseConfigured()
 
 /** Match /instructor and /instructor/* without false positives like /instructorXYZ. */
 function isInstructorRoute(pathname: string): boolean {
@@ -27,7 +21,7 @@ function isAdminRoute(pathname: string): boolean {
 
 export async function middleware(request: NextRequest) {
   // Demo mode: skip auth checks ONLY if explicitly enabled AND Supabase not configured
-  if (demoMode && !isSupabaseConfigured) {
+  if (demoMode && !supabaseConfigured) {
     console.warn('[Middleware] Demo mode — auth bypassed')
     return NextResponse.next()
   }
@@ -37,7 +31,7 @@ export async function middleware(request: NextRequest) {
   })
 
   // If Supabase not configured and demo mode is off, block protected routes
-  if (!isSupabaseConfigured) {
+  if (!supabaseConfigured) {
     const protectedRoutes = ['/dashboard', '/instructor', '/admin']
     const isProtectedRoute = protectedRoutes.some((route) =>
       request.nextUrl.pathname.startsWith(route)

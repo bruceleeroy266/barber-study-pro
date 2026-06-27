@@ -31,17 +31,24 @@ export default function SignupPage() {
   useEffect(() => {
     async function loadSchools() {
       try {
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'not-set'
+        console.log('[Signup] Loading active schools from:', supabaseUrl)
+
         const { data, error } = await supabase
           .from('schools')
           .select('id, name')
           .eq('is_active', true)
           .order('name', { ascending: true })
 
-        if (!error && data) {
-          setSchools(data)
+        if (error) {
+          console.warn('[Signup] Schools query error:', error.message)
+          return
         }
-      } catch {
-        // Silently fail — demo mode or missing table
+
+        console.log('[Signup] Active schools loaded:', data?.length ?? 0, data)
+        setSchools(data || [])
+      } catch (err) {
+        console.warn('[Signup] Failed to load schools:', err)
       }
     }
     loadSchools()

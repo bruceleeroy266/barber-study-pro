@@ -18,12 +18,18 @@ export function isExplicitDemoMode(): boolean {
 export function isSupabaseConfigured(): boolean {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-  return (
-    url.startsWith('https://') &&
+
+  // Accept production HTTPS endpoints or a local Supabase CLI dev endpoint.
+  const isValidScheme =
+    url.startsWith('https://') ||
+    url.startsWith('http://127.0.0.1:54321') ||
+    url.startsWith('http://localhost:54321')
+
+  const isNonPlaceholder =
     !url.includes('your-project') &&
-    !url.includes('example.supabase.co') &&
-    key.length > 20
-  )
+    !url.includes('example.supabase.co')
+
+  return isValidScheme && isNonPlaceholder && key.length > 20
 }
 
 /**
