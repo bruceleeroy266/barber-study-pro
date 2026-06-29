@@ -126,7 +126,7 @@ export const demoChapters: Chapter[] = [
   { id: 'ch-13', chapter_number: 13, title: 'Shaving and Facial-Hair Design', description: 'Master the art of shaving, beard shaping, and facial hair design techniques.', content: null, order_index: 13, is_active: true },
   { id: 'ch-14', chapter_number: 14, title: 'Men\'s Haircutting and Styling', description: 'Learn fundamental and advanced men\'s haircutting and styling techniques.', content: null, order_index: 14, is_active: true },
   { id: 'ch-15', chapter_number: 15, title: 'Men\'s Hair Replacement', description: 'Master hair replacement systems, consultation, attachment, maintenance, and blending techniques.', content: null, order_index: 15, is_active: true },
-  { id: 'ch-16', chapter_number: 16, title: 'State Board Preparation', description: 'Prepare for your state board examination with comprehensive review materials.', content: null, order_index: 16, is_active: true },
+  { id: 'ch-16', chapter_number: 16, title: "Women's Haircutting & Styling", description: 'Master the design philosophy, foundational structures, texture analysis, and professional mindset for women\'s haircutting and styling.', content: null, order_index: 16, is_active: true },
   { id: 'ch-17', chapter_number: 17, title: 'Barbershop Management', description: 'Learn the business side of barbering including shop management and operations.', content: null, order_index: 17, is_active: true },
   { id: 'ch-18', chapter_number: 18, title: 'Advanced Cutting Techniques', description: 'Master advanced cutting techniques including fades, tapers, and texturizing.', content: null, order_index: 18, is_active: true },
   { id: 'ch-19', chapter_number: 19, title: 'Hair Replacement Systems', description: 'Explore hair replacement options, toupees, and non-surgical hair restoration.', content: null, order_index: 19, is_active: true },
@@ -137,8 +137,8 @@ export const demoChapters: Chapter[] = [
 // Use real flashcards for chapters 1, 3, 4, demo for rest
 export const demoFlashcards: Record<string, Flashcard[]> = {}
 
-// Load real flashcards for chapters 1, 2, 3, 4, 7, 8, 9 and 16
-const realChapters = [1, 2, 3, 4, 7, 8, 9, 16]
+// Load real flashcards for chapters 1, 2, 3, 4, 7, 8, 9
+const realChapters = [1, 2, 3, 4, 7, 8, 9]
 for (const i of realChapters) {
   const chId = `ch-${i}`
   if (realFlashcards[chId]) {
@@ -219,6 +219,15 @@ if (realFlashcards['ch-15'] && realFlashcards['ch-15'].length > 0) {
   }))
 }
 
+// Chapter 16: Use premium flashcards (real content)
+if (realFlashcards['ch-16'] && realFlashcards['ch-16'].length > 0) {
+  demoFlashcards['ch-16'] = realFlashcards['ch-16'].map((fc, idx) => ({
+    ...fc,
+    order_index: idx + 1,
+    is_active: true,
+  }))
+}
+
 // BATCH 4: Wire orphaned flashcards for Ch 17, 18, 19, 20, 21
 const batch4Chapters = ['ch-17', 'ch-18', 'ch-19', 'ch-20', 'ch-21']
 for (const chId of batch4Chapters) {
@@ -227,7 +236,7 @@ for (const chId of batch4Chapters) {
   }
 }
 
-// Generate placeholder flashcards for remaining chapters (16)
+// Generate placeholder flashcards for remaining chapters
 for (let i = 5; i <= 21; i++) {
   const chId = `ch-${i}`
   // Skip chapters that now have real data
@@ -243,35 +252,37 @@ for (let i = 5; i <= 21; i++) {
 
 export const demoQuizzes: Record<string, Quiz> = {
   // Chapter 1: Premium flashcard-driven quiz (30 questions)
-  'ch-1': { id: 'quiz-1', chapter_id: 'ch-1', title: 'History of Barbering — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true },
+  'ch-1': { id: 'quiz-1', chapter_id: 'ch-1', title: 'History of Barbering — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true, passing_score: 75 },
   // Chapter 2: Premium flashcard-driven quiz (30 questions)
-  'ch-2': { id: 'quiz-2', chapter_id: 'ch-2', title: 'Life Skills — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true },
+  'ch-2': { id: 'quiz-2', chapter_id: 'ch-2', title: 'Life Skills — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true, passing_score: 75 },
   // Chapter 3: Premium flashcard-driven quiz (30 questions)
-  'ch-3': { id: 'quiz-3', chapter_id: 'ch-3', title: 'Professional Image — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true },
+  'ch-3': { id: 'quiz-3', chapter_id: 'ch-3', title: 'Professional Image — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true, passing_score: 75 },
   // Chapter 4: Premium flashcard-driven quiz (30 questions)
-  'ch-4': { id: 'quiz-4', chapter_id: 'ch-4', title: 'Infection Control — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true },
+  'ch-4': { id: 'quiz-4', chapter_id: 'ch-4', title: 'Infection Control — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true, passing_score: 75 },
   // Chapter 5: Premium flashcard-driven quiz (50 questions)
-  'ch-5': { id: 'quiz-5', chapter_id: 'ch-5', title: 'Implements, Tools, and Equipment — Premium Quiz', description: '50 board-exam style questions. Passing score: 75%.', is_active: true },
+  'ch-5': { id: 'quiz-5', chapter_id: 'ch-5', title: 'Implements, Tools, and Equipment — Premium Quiz', description: '50 board-exam style questions. Passing score: 75%.', is_active: true, passing_score: 75 },
   // Chapter 6: Premium flashcard-driven quiz (50 questions)
-  'ch-6': { id: 'quiz-6', chapter_id: 'ch-6', title: 'General Anatomy and Physiology — Premium Quiz', description: '50 board-exam style questions. Passing score: 75%.', is_active: true },
+  'ch-6': { id: 'quiz-6', chapter_id: 'ch-6', title: 'General Anatomy and Physiology — Premium Quiz', description: '50 board-exam style questions. Passing score: 75%.', is_active: true, passing_score: 75 },
   // Chapter 7: Premium flashcard-driven quiz (50 questions)
-  'ch-7': { id: 'quiz-7', chapter_id: 'ch-7', title: 'Basics of Chemistry — Premium Quiz', description: '50 board-exam style questions. Passing score: 75%.', is_active: true },
+  'ch-7': { id: 'quiz-7', chapter_id: 'ch-7', title: 'Basics of Chemistry — Premium Quiz', description: '50 board-exam style questions. Passing score: 75%.', is_active: true, passing_score: 75 },
   // Chapter 8: Premium flashcard-driven quiz (30 questions)
-  'ch-8': { id: 'quiz-8', chapter_id: 'ch-8', title: 'Basics of Electricity — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true },
+  'ch-8': { id: 'quiz-8', chapter_id: 'ch-8', title: 'Basics of Electricity — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true, passing_score: 75 },
   // Chapter 9: Premium flashcard-driven quiz (30 questions)
-  'ch-9': { id: 'quiz-9', chapter_id: 'ch-9', title: 'The Skin — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true },
+  'ch-9': { id: 'quiz-9', chapter_id: 'ch-9', title: 'The Skin — Premium Quiz', description: '30 board-exam style questions. Passing score: 75%.', is_active: true, passing_score: 75 },
   // Chapter 10: Premium flashcard-driven quiz (65 questions)
-  'ch-10': { id: 'quiz-10', chapter_id: 'ch-10', title: 'Properties and Disorders of the Hair and Scalp — Premium Quiz', description: '65 board-exam style questions. Passing score: 75%.', is_active: true },
+  'ch-10': { id: 'quiz-10', chapter_id: 'ch-10', title: 'Properties and Disorders of the Hair and Scalp — Premium Quiz', description: '65 board-exam style questions. Passing score: 75%.', is_active: true, passing_score: 75 },
   // Chapter 11: Premium flashcard-driven quiz (50 questions)
-  'ch-11': { id: 'quiz-11', chapter_id: 'ch-11', title: 'Treatment of the Hair and Scalp — Premium Quiz', description: '50 board-exam style questions. Passing score: 75%.', is_active: true },
+  'ch-11': { id: 'quiz-11', chapter_id: 'ch-11', title: 'Treatment of the Hair and Scalp — Premium Quiz', description: '50 board-exam style questions. Passing score: 75%.', is_active: true, passing_score: 75 },
   // Chapter 12: Premium flashcard-driven quiz (45 questions)
-  'ch-12': { id: 'quiz-12', chapter_id: 'ch-12', title: "Men's Facial Massage and Treatments — Premium Quiz", description: '45 board-exam style questions. Passing score: 75%.', is_active: true },
+  'ch-12': { id: 'quiz-12', chapter_id: 'ch-12', title: "Men's Facial Massage and Treatments — Premium Quiz", description: '45 board-exam style questions. Passing score: 75%.', is_active: true, passing_score: 75 },
   // Chapter 13: Premium flashcard-driven quiz (45 questions)
-  'ch-13': { id: 'quiz-13', chapter_id: 'ch-13', title: 'Shaving and Facial-Hair Design — Premium Quiz', description: '45 board-exam style questions. Passing score: 75%.', is_active: true },
+  'ch-13': { id: 'quiz-13', chapter_id: 'ch-13', title: 'Shaving and Facial-Hair Design — Premium Quiz', description: '45 board-exam style questions. Passing score: 75%.', is_active: true, passing_score: 75 },
   // Chapter 14: Premium flashcard-driven quiz (70 questions)
-  'ch-14': { id: 'quiz-14', chapter_id: 'ch-14', title: "Men's Haircutting and Styling — Premium Quiz", description: '70 board-exam style questions. Passing score: 75%.', is_active: true },
+  'ch-14': { id: 'quiz-14', chapter_id: 'ch-14', title: "Men's Haircutting and Styling — Premium Quiz", description: '70 board-exam style questions. Passing score: 75%.', is_active: true, passing_score: 75 },
   // Chapter 15: Premium flashcard-driven quiz (72 questions)
-  'ch-15': { id: 'quiz-15', chapter_id: 'ch-15', title: "Men's Hair Replacement — Premium Quiz", description: '72 board-exam style questions. Passing score: 75%.', is_active: true },
+  'ch-15': { id: 'quiz-15', chapter_id: 'ch-15', title: "Men's Hair Replacement — Premium Quiz", description: '72 board-exam style questions. Passing score: 75%.', is_active: true, passing_score: 75 },
+  // Chapter 16: Premium flashcard-driven quiz (30 questions)
+  'ch-16': { id: 'quiz-16', chapter_id: 'ch-16', title: "Women's Haircutting & Styling — Premium Quiz", description: '30 board-exam style questions. Passing score: 80%.', is_active: true, passing_score: 80 },
 }
 
 for (let i = 3; i <= 21; i++) {
@@ -279,7 +290,7 @@ for (let i = 3; i <= 21; i++) {
   // Skip Chapters 3–13 — already registered above with premium titles
   if (i >= 3 && i <= 13) continue
   if (!demoQuizzes[chId]) {
-    demoQuizzes[chId] = { id: `quiz-${i}`, chapter_id: chId, title: `Chapter ${i} Quiz`, description: `Test your knowledge of Chapter ${i}.`, is_active: true }
+    demoQuizzes[chId] = { id: `quiz-${i}`, chapter_id: chId, title: `Chapter ${i} Quiz`, description: `Test your knowledge of Chapter ${i}.`, is_active: true, passing_score: 75 }
   }
 }
 

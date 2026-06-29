@@ -105,11 +105,11 @@ export function generateStudyPlan(inputs: RecommendationsInputs): StudyRecommend
 
   if (readiness.score >= 85 && totalChapters >= 16) {
     recommendations.push({
-      id: `rec-study-${userId}-stateboard`,
+      id: `rec-study-${userId}-ch16`,
       type: 'study',
-      title: 'State Board Preparation',
+      title: "Women's Haircutting & Styling",
       description:
-        'You\'re nearly ready. Focus on high-risk exam concepts like infection control and state law.',
+        "You're nearly ready. Focus on women's haircut structures, hair analysis, texture and density, curly hair, overdirection, razor cutting, texturizing, wet styling, blow-drying, thermal styling, and finishing.",
       chapterNumber: 16,
       priority: 'medium',
       estimatedMinutes: 25,

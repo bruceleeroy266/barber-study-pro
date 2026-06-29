@@ -144,6 +144,34 @@ function createMockQueryBuilder(tableName: string) {
       return builder
     },
 
+    or: (filterString: string) => {
+      const conditions = filterString.split(',').map((cond) => cond.trim())
+      filters.push((item) => {
+        return conditions.some((cond) => {
+          // Parse simple field.operator.value patterns used in the app
+          // e.g., school_id.eq.abc123, school_id.is.null
+          const match = cond.match(/^(.+?)\.(eq|neq|gt|gte|lt|lte|is)\.(.+)$/)
+          if (!match) return false
+          const [, field, op, rawValue] = match
+          if (op === 'is') {
+            if (rawValue === 'null') return item[field] === null || item[field] === undefined
+            if (rawValue === 'true') return item[field] === true
+            if (rawValue === 'false') return item[field] === false
+            return item[field] == rawValue
+          }
+          // Comparison operators: use the raw string value
+          if (op === 'eq') return item[field] == rawValue
+          if (op === 'neq') return item[field] != rawValue
+          if (op === 'gt') return item[field] > rawValue
+          if (op === 'gte') return item[field] >= rawValue
+          if (op === 'lt') return item[field] < rawValue
+          if (op === 'lte') return item[field] <= rawValue
+          return false
+        })
+      })
+      return builder
+    },
+
     order: (field: string, { ascending = true } = {}) => {
       orderField = field
       orderAsc = ascending

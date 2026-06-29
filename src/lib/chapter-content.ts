@@ -15,6 +15,7 @@ import { chapter12PremiumContent, chapter12PremiumTheme } from './chapter-12-pre
 import { chapter13PremiumContent, chapter13PremiumTheme } from './chapter-13-premium'
 import { chapter14PremiumContent, chapter14PremiumTheme } from './chapter-14-premium'
 import { chapter15PremiumContent, chapter15PremiumTheme } from './chapter-15-premium'
+import { chapter16PremiumContent, chapter16PremiumTheme } from './chapter-16-premium'
 
 // ───────────────────────────────────────────────
 // Section Types (discriminated union)
@@ -3002,6 +3003,7 @@ export const chapterContentData: Record<string, ChapterContent> = {
   'ch-13': chapter13PremiumContent,
   'ch-14': chapter14PremiumContent,
   'ch-15': chapter15PremiumContent,
+  'ch-16': chapter16PremiumContent,
 }
 
 // ───────────────────────────────────────────────

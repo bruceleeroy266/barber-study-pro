@@ -58,6 +58,9 @@ export default function QuizClient({ quiz, questions, chapterId, userId, bestAtt
   const [score, setScore] = useState(0)
   const [saving, setSaving] = useState(false)
 
+  // Use quiz-specific passing score if configured; otherwise default to 75%
+  const passingScore = quiz.passing_score ?? 75
+
   // Randomize questions and answers on each quiz start
   const shuffledQuestions = useMemo(() => {
     const randomized = shuffleArray(questions)
@@ -119,9 +122,9 @@ export default function QuizClient({ quiz, questions, chapterId, userId, bestAtt
           {
             user_id: userId,
             chapter_id: chapterId,
-            quiz_completed: percentage >= 75,
+            quiz_completed: percentage >= passingScore,
             best_quiz_score: Math.max(percentage, bestAttempt?.percentage || 0),
-            progress_percentage: percentage >= 75 ? 100 : 50,
+            progress_percentage: percentage >= passingScore ? 100 : 50,
             last_studied_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           },
@@ -135,7 +138,7 @@ export default function QuizClient({ quiz, questions, chapterId, userId, bestAtt
     } finally {
       setSaving(false)
     }
-  }, [answers, selectedAnswer, question, shuffledQuestions, userId, quiz.id, chapterId, bestAttempt])
+  }, [answers, selectedAnswer, question, shuffledQuestions, userId, quiz.id, chapterId, bestAttempt, passingScore])
 
   const handleNext = useCallback(() => {
     if (currentQuestion < shuffledQuestions.length - 1) {
@@ -185,7 +188,7 @@ export default function QuizClient({ quiz, questions, chapterId, userId, bestAtt
 
         <div className="mb-6 space-y-2">
           <p className="text-gray-300 font-medium">
-            {shuffledQuestions.length} questions &bull; Multiple choice &bull; Passing: 75%
+            {shuffledQuestions.length} questions &bull; Multiple choice &bull; Passing: {passingScore}%
           </p>
           <p className="text-gray-500 text-sm">
             Questions and answers are randomized each attempt
@@ -213,7 +216,7 @@ export default function QuizClient({ quiz, questions, chapterId, userId, bestAtt
   // ── RESULTS SCREEN ──
   if (completed) {
     const percentage = Math.round((score / shuffledQuestions.length) * 100)
-    const passed = percentage >= 75
+    const passed = percentage >= passingScore
 
     return (
       <div className="text-center py-8">
@@ -237,7 +240,7 @@ export default function QuizClient({ quiz, questions, chapterId, userId, bestAtt
           <p className="text-green-400 mb-6 font-medium">Great job! You demonstrated solid knowledge.</p>
         ) : (
           <p className="text-yellow-400 mb-6 font-medium">
-            Passing score is 75%. Review the flashcards and try again.
+            Passing score is {passingScore}%. Review the flashcards and try again.
           </p>
         )}
 

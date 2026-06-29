@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase-server'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Profile, StudentProgress, QuizAttempt, InstructorNote, HourLog, HourStatus, AttendanceRecord, InstructorAttendanceNote } from '@/types'
-import { localChapters } from '@/lib/local-data'
+import { localChapters, getLocalQuiz } from '@/lib/local-data'
 import { allQuizQuestions } from '@/lib/quiz-data'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 import { demoStudents, demoStudentProgress, demoStudentQuizAttempts, demoInstructorNotes, demoHourLogs, demoAttendanceRecords, demoInstructorAttendanceNotes } from '@/lib/demo-data'
@@ -84,6 +84,12 @@ interface ChapterScore {
   chapterTitle: string
   score: number
   attempted: boolean
+  passingScore: number
+}
+
+function getPassingScoreByQuizId(quizId: string): number {
+  const chapterId = quizId.replace('quiz-', 'ch-')
+  return getLocalQuiz(chapterId)?.passing_score ?? 75
 }
 
 function computeChapterScores(
@@ -93,12 +99,14 @@ function computeChapterScores(
   return chapters.map((chapter) => {
     const progress = progressRecords.find((p) => p.chapter_id === chapter.id)
     const score = progress?.best_quiz_score ?? 0
+    const quiz = getLocalQuiz(chapter.id)
     return {
       chapterId: chapter.id,
       chapterNumber: chapter.chapter_number,
       chapterTitle: chapter.title,
       score,
       attempted: score > 0,
+      passingScore: quiz?.passing_score ?? 75,
     }
   })
 }
@@ -117,7 +125,7 @@ function getBoardRisk(attemptedChapters: ChapterScore[]): {
   }
 
   const anyCritical = attemptedChapters.some((c) => c.score < 60)
-  const passingCount = attemptedChapters.filter((c) => c.score >= 75).length
+  const passingCount = attemptedChapters.filter((c) => c.score >= c.passingScore).length
   const passingRate = passingCount / attemptedChapters.length
 
   if (anyCritical || passingRate < 0.5) {
@@ -128,7 +136,7 @@ function getBoardRisk(attemptedChapters: ChapterScore[]): {
     }
   }
 
-  if (passingRate < 0.8 || attemptedChapters.some((c) => c.score < 75)) {
+  if (passingRate < 0.8 || attemptedChapters.some((c) => c.score < c.passingScore)) {
     return {
       label: 'Moderate Risk',
       color: 'text-yellow-400',
@@ -685,6 +693,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                 const flashDone = chapterProgress?.flashcards_completed
                 const quizDone = chapterProgress?.quiz_completed
                 const bestScore = chapterProgress?.best_quiz_score
+                const chapterPassingScore = getLocalQuiz(chapter.id)?.passing_score ?? 75
 
                 return (
                   <div key={chapter.id} className="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
@@ -702,8 +711,8 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                             {quizDone ? '✓ Quiz' : '○ Quiz'}
                           </span>
                           {bestScore !== null && bestScore !== undefined && (
-                            <span className={bestScore >= 75 ? 'text-green-400' : 'text-yellow-400'}>
-                              Best: {bestScore}%
+                            <span className={bestScore >= chapterPassingScore ? 'text-green-400' : 'text-yellow-400'}>
+                              Best: {bestScore}% (pass: {chapterPassingScore}%)
                             </span>
                           )}
                         </div>
@@ -713,7 +722,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                       <div className="flex-1 bg-gray-800 rounded-full h-2">
                         <div
                           className={`h-2 rounded-full transition-all ${
-                            pct >= 75 ? 'bg-green-500' :
+                            pct >= chapterPassingScore ? 'bg-green-500' :
                             pct >= 50 ? 'bg-yellow-500' :
                             pct > 0 ? 'bg-[#D4AF37]' : 'bg-gray-700'
                           }`}
@@ -772,26 +781,29 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                   </tr>
                 </thead>
                 <tbody className="text-sm">
-                  {attemptRecords.map((attempt) => (
-                    <tr key={attempt.id} className="border-b border-gray-800/50">
-                      <td className="p-4 text-white">{attempt.quiz_id}</td>
-                      <td className="p-4 text-gray-300">
-                        {attempt.score} / {attempt.total_questions}
-                      </td>
-                      <td className="p-4">
-                        <span
-                          className={`font-semibold ${
-                            attempt.percentage >= 75 ? 'text-green-400' : 'text-yellow-400'
-                          }`}
-                        >
-                          {attempt.percentage}%
-                        </span>
-                      </td>
-                      <td className="p-4 text-gray-400">
-                        {formatDate(attempt.completed_at)}
-                      </td>
-                    </tr>
-                  ))}
+                  {attemptRecords.map((attempt) => {
+                    const attemptPassingScore = getPassingScoreByQuizId(attempt.quiz_id)
+                    return (
+                      <tr key={attempt.id} className="border-b border-gray-800/50">
+                        <td className="p-4 text-white">{attempt.quiz_id}</td>
+                        <td className="p-4 text-gray-300">
+                          {attempt.score} / {attempt.total_questions}
+                        </td>
+                        <td className="p-4">
+                          <span
+                            className={`font-semibold ${
+                              attempt.percentage >= attemptPassingScore ? 'text-green-400' : 'text-yellow-400'
+                            }`}
+                          >
+                            {attempt.percentage}%
+                          </span>
+                        </td>
+                        <td className="p-4 text-gray-400">
+                          {formatDate(attempt.completed_at)}
+                        </td>
+                      </tr>
+                    )
+                  })}
                 </tbody>
               </table>
             </div>
@@ -841,11 +853,11 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                             Ch.{area.chapterNumber} — {area.chapterTitle}
                           </p>
                           <p className="text-xs text-gray-500">
-                            {area.score < 75 ? 'Below passing threshold' : area.score < 80 ? 'Needs polish' : 'Lowest relative score'}
+                            {area.score < area.passingScore ? `Below passing threshold (${area.passingScore}%)` : area.score < 80 ? 'Needs polish' : 'Lowest relative score'}
                           </p>
                         </div>
                         <div className={`text-xl font-bold ${
-                          area.score >= 75 ? 'text-yellow-400' :
+                          area.score >= area.passingScore ? 'text-yellow-400' :
                           area.score >= 60 ? 'text-orange-400' : 'text-red-400'
                         }`}>
                           {area.score}%

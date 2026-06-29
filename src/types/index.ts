@@ -49,6 +49,7 @@ export interface Quiz {
   title: string
   description: string | null
   is_active: boolean
+  passing_score?: number
 }
 
 export interface QuizQuestion {
