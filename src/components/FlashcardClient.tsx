@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
+import { calculateChapterProgress } from '@/lib/progress'
+import { isSupabaseConfigured } from '@/lib/demo-helpers'
 import { Flashcard } from '@/types'
 
 interface FlashcardClientProps {
@@ -90,13 +92,29 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
 
     setSaving(true)
     try {
+      // Preserve existing quiz completion status and recalculate weighted progress.
+      let quizCompleted = false
+
+      if (isSupabaseConfigured()) {
+        const { data: existingProgress } = await supabase
+          .from('student_progress')
+          .select('quiz_completed')
+          .eq('user_id', userId)
+          .eq('chapter_id', chapterId)
+          .maybeSingle()
+
+        quizCompleted = existingProgress?.quiz_completed ?? false
+      }
+
+      const progressPercentage = calculateChapterProgress(true, quizCompleted)
+
       const { error } = await supabase
         .from('student_progress')
         .upsert({
           user_id: userId,
           chapter_id: chapterId,
           flashcards_completed: true,
-          progress_percentage: 50,
+          progress_percentage: progressPercentage,
           last_studied_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         }, {
