@@ -6,6 +6,64 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 const demoMode = isExplicitDemoMode()
 const supabaseConfigured = isSupabaseConfigured()
 
+/**
+ * Creates a chainable mock query builder that behaves like the real Supabase
+ * PostgREST builder. Each filtering method returns the builder for further
+ * chaining, and awaiting the builder resolves to a safe default result.
+ */
+function createMockQueryBuilder(operation: 'select' | 'insert' | 'upsert' | 'delete' = 'select') {
+  let shouldError = false
+
+  const builder: any = {
+    eq: () => builder,
+    neq: () => builder,
+    gt: () => builder,
+    gte: () => builder,
+    lt: () => builder,
+    lte: () => builder,
+    like: () => builder,
+    ilike: () => builder,
+    is: () => builder,
+    in: () => builder,
+    contains: () => builder,
+    containedBy: () => builder,
+    range: () => builder,
+    overlaps: () => builder,
+    textSearch: () => builder,
+    match: () => builder,
+    not: () => builder,
+    or: () => builder,
+    filter: () => builder,
+    select: () => builder,
+    order: () => builder,
+    limit: () => builder,
+    single: () => Promise.resolve({ data: null, error: null }),
+    maybeSingle: () => Promise.resolve({ data: null, error: null }),
+    csv: () => Promise.resolve({ data: null, error: null }),
+    then: (onfulfilled?: any, onrejected?: any) => {
+      if (shouldError) {
+        const error = { message: 'Demo mode query failed', code: 'DEMO_ERROR' }
+        return onrejected ? Promise.reject(error).catch(onrejected) : Promise.reject(error)
+      }
+
+      let result: any
+      if (operation === 'select') {
+        result = { data: [], error: null }
+      } else if (operation === 'insert' || operation === 'upsert') {
+        result = { data: null, error: null }
+      } else if (operation === 'delete') {
+        result = { data: null, error: null }
+      } else {
+        result = { data: null, error: null }
+      }
+
+      return Promise.resolve(result).then(onfulfilled, onrejected)
+    },
+  }
+
+  return builder
+}
+
 const mockSupabase = {
   auth: {
     signOut: async () => ({ error: null }),
@@ -40,10 +98,11 @@ const mockSupabase = {
     }),
   },
   from: () => ({
-    insert: async () => ({ data: null, error: null }),
-    upsert: async () => ({ data: null, error: null }),
-    select: async () => ({ data: [], error: null }),
-    eq: async () => ({ data: [], error: null }),
+    insert: () => createMockQueryBuilder('insert'),
+    upsert: () => createMockQueryBuilder('upsert'),
+    update: () => createMockQueryBuilder('upsert'),
+    delete: () => createMockQueryBuilder('delete'),
+    select: () => createMockQueryBuilder('select'),
   }),
 }
 

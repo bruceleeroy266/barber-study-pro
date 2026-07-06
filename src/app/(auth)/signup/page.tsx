@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
 
-type Role = 'student' | 'instructor'
+type Role = 'student' | 'instructor' | 'apprentice'
 
 interface SchoolOption {
   id: string
@@ -77,13 +77,13 @@ export default function SignupPage() {
       return
     }
 
-    if (role === 'student' && !schoolName.trim() && !selectedSchoolId) {
+    if ((role === 'student' || role === 'apprentice') && !schoolName.trim() && !selectedSchoolId) {
       setError('Please select or enter your school')
       setLoading(false)
       return
     }
 
-    if (role === 'student' && schoolName.trim() && !selectedSchoolId) {
+    if ((role === 'student' || role === 'apprentice') && schoolName.trim() && !selectedSchoolId) {
       // We will attempt to match the school name on submit. If no match is
       // found, an error is shown after the lookup.
     }
@@ -143,8 +143,8 @@ export default function SignupPage() {
               instructorSchoolPending = true
             }
           }
-        } else if (role === 'student') {
-          // Students must select an existing school; they cannot create schools
+        } else if (role === 'student' || role === 'apprentice') {
+          // Students and apprentices must select an existing school; they cannot create schools
           // during self-registration to prevent unauthorized school sprawl.
           if (selectedSchoolId) {
             schoolId = selectedSchoolId
@@ -164,8 +164,8 @@ export default function SignupPage() {
           }
         }
 
-        // Defensive validation: students must belong to a school.
-        if (role === 'student' && !schoolId) {
+        // Defensive validation: students and apprentices must belong to a school.
+        if ((role === 'student' || role === 'apprentice') && !schoolId) {
           setError('We could not find a matching school. Please select a school from the list or contact your administrator.')
           setLoading(false)
           return
@@ -249,7 +249,7 @@ export default function SignupPage() {
           <label className="block text-sm font-medium text-gray-300 mb-2">
             I am a...
           </label>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-3 gap-3">
             <button
               type="button"
               onClick={() => {
@@ -264,6 +264,21 @@ export default function SignupPage() {
               }`}
             >
               Student
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setRole('apprentice')
+                setSchoolName('')
+                setSelectedSchoolId('')
+              }}
+              className={`px-3 py-3 rounded-lg border-2 text-sm font-medium transition-all ${
+                role === 'apprentice'
+                  ? 'border-[#D4AF37] bg-[#D4AF37]/10 text-[#D4AF37]'
+                  : 'border-gray-700 bg-gray-800 text-gray-400 hover:border-gray-600'
+              }`}
+            >
+              Apprentice
             </button>
             <button
               type="button"
