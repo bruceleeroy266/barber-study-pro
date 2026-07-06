@@ -2,6 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { isInstructorOrAdmin, isAdmin } from '@/lib/auth-helpers'
 import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
+import { BETA_AGREEMENT_VERSION } from '@/lib/beta'
 
 // Check if Supabase is properly configured
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
@@ -17,6 +18,11 @@ function isInstructorRoute(pathname: string): boolean {
 /** Match /admin and /admin/* without false positives like /adminXYZ. */
 function isAdminRoute(pathname: string): boolean {
   return pathname === '/admin' || pathname.startsWith('/admin/')
+}
+
+/** Match /dashboard and /dashboard/* routes. */
+function isDashboardRoute(pathname: string): boolean {
+  return pathname === '/dashboard' || pathname.startsWith('/dashboard/')
 }
 
 export async function middleware(request: NextRequest) {
@@ -99,6 +105,24 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  // ── BETA AGREEMENT ENFORCEMENT (edge layer) ──
+  // All authenticated /dashboard/* users must have accepted the current beta agreement.
+  // Admins and instructors are exempt so they can manage the platform without restriction.
+  if (isDashboardRoute(request.nextUrl.pathname) && user) {
+    const profileRole = await getUserRole(supabase, user.id)
+    const isAdminOrInstructor = profileRole === 'admin' || profileRole === 'instructor'
+
+    if (!isAdminOrInstructor) {
+      const hasAgreement = await hasAcceptedBetaAgreement(supabase, user.id)
+      if (!hasAgreement) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/beta-agreement'
+        url.searchParams.set('redirect', request.nextUrl.pathname)
+        return NextResponse.redirect(url)
+      }
+    }
+  }
+
   // ── MAINTENANCE MODE ENFORCEMENT (edge layer) ──
   // If maintenance mode is enabled, redirect non-allowed users to /maintenance.
   // Allowed roles are stored in maintenance_mode.allowed_roles. Demo mode
@@ -151,6 +175,55 @@ export async function middleware(request: NextRequest) {
   }
 
   return supabaseResponse
+}
+
+/**
+ * Get the user's profile role from Supabase.
+ */
+async function getUserRole(
+  supabase: ReturnType<typeof createServerClient>,
+  userId: string
+): Promise<string | null> {
+  try {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', userId)
+      .single()
+
+    return profile?.role ?? null
+  } catch (err) {
+    console.warn('[Middleware] Failed to load user role:', err)
+    return null
+  }
+}
+
+/**
+ * Check whether the user has accepted the current beta agreement version.
+ */
+async function hasAcceptedBetaAgreement(
+  supabase: ReturnType<typeof createServerClient>,
+  userId: string
+): Promise<boolean> {
+  try {
+    const { data, error } = await supabase
+      .from('beta_agreements')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('agreement_version', BETA_AGREEMENT_VERSION)
+      .maybeSingle()
+
+    if (error) {
+      console.warn('[Middleware] Beta agreement check failed:', error)
+      // Fail open: if the table is missing or query fails, allow access to avoid lockouts.
+      return true
+    }
+
+    return !!data
+  } catch (err) {
+    console.warn('[Middleware] Beta agreement check error:', err)
+    return true
+  }
 }
 
 /**

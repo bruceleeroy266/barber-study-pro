@@ -1,17 +1,19 @@
 'use client'
 
+import { Suspense } from 'react'
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { isSupabaseConfigured } from '@/lib/demo-helpers'
+import { BETA_AGREEMENT_VERSION, BETA_AGREEMENT_STORAGE_KEY } from '@/lib/beta'
 import { Printer, ArrowRight } from 'lucide-react'
 
-const AGREEMENT_VERSION = 'v1.0'
 const EFFECTIVE_DATE = 'July 1, 2026'
-const LOCAL_STORAGE_KEY = 'ascyn_beta_agreement_v1'
 
-export default function BetaAgreementPage() {
+function BetaAgreementContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectPath = searchParams.get('redirect') || '/dashboard/beta-checklist'
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [agreed, setAgreed] = useState(false)
@@ -48,7 +50,7 @@ export default function BetaAgreementPage() {
         }
 
         const raw = typeof window !== 'undefined'
-          ? window.localStorage.getItem(LOCAL_STORAGE_KEY)
+          ? window.localStorage.getItem(BETA_AGREEMENT_STORAGE_KEY)
           : null
 
         if (raw && !cancelled) {
@@ -118,7 +120,7 @@ export default function BetaAgreementPage() {
         const { error: dbError } = await supabase.from('beta_agreements').insert({
           tester_name: name.trim(),
           tester_email: email.trim(),
-          agreement_version: AGREEMENT_VERSION,
+          agreement_version: BETA_AGREEMENT_VERSION,
           accepted_at: acceptedAt,
           user_id: userId,
         })
@@ -127,10 +129,10 @@ export default function BetaAgreementPage() {
       }
 
       if (typeof window !== 'undefined') {
-        window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({
+        window.localStorage.setItem(BETA_AGREEMENT_STORAGE_KEY, JSON.stringify({
           name: name.trim(),
           email: email.trim(),
-          version: AGREEMENT_VERSION,
+          version: BETA_AGREEMENT_VERSION,
           acceptedAt,
           userId,
         }))
@@ -155,7 +157,7 @@ export default function BetaAgreementPage() {
 
   const handleContinue = () => {
     if (canContinue) {
-      router.push('/dashboard/beta-checklist')
+      router.push(redirectPath)
     }
   }
 
@@ -166,7 +168,7 @@ export default function BetaAgreementPage() {
           ASCYN PRO Beta Tester Agreement & Confidentiality Notice
         </h1>
         <p className="text-gray-400">
-          Version {AGREEMENT_VERSION} · Effective {EFFECTIVE_DATE}
+          Version {BETA_AGREEMENT_VERSION} · Effective {EFFECTIVE_DATE}
         </p>
       </div>
 
@@ -178,7 +180,7 @@ export default function BetaAgreementPage() {
           <h1 className="text-2xl font-bold mb-4 lg:hidden print:block">
             ASCYN PRO Beta Tester Agreement & Confidentiality Notice
           </h1>
-          <p><strong>Version:</strong> {AGREEMENT_VERSION}</p>
+          <p><strong>Version:</strong> {BETA_AGREEMENT_VERSION}</p>
           <p><strong>Effective Date:</strong> {EFFECTIVE_DATE}</p>
 
           <p>
@@ -332,11 +334,23 @@ export default function BetaAgreementPage() {
             disabled={!canContinue}
             className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#D4AF37] hover:bg-[#c4a030] disabled:opacity-50 disabled:cursor-not-allowed text-black font-semibold rounded-lg transition-colors"
           >
-            Continue to Beta Checklist
+            Continue
             <ArrowRight className="w-5 h-5" />
           </button>
         </div>
       </div>
     </div>
+  )
+}
+
+export default function BetaAgreementPage() {
+  return (
+    <Suspense fallback={
+      <div className="max-w-3xl mx-auto p-8 text-center text-gray-400">
+        Loading agreement…
+      </div>
+    }>
+      <BetaAgreementContent />
+    </Suspense>
   )
 }

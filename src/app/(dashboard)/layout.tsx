@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import DashboardNav from '@/components/DashboardNav'
+import { BETA_AGREEMENT_VERSION } from '@/lib/beta'
+import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 
 export default async function DashboardLayout({
   children,
@@ -19,6 +21,22 @@ export default async function DashboardLayout({
     .select('*')
     .eq('id', user.id)
     .single()
+
+  // ── BETA AGREEMENT FALLBACK ENFORCEMENT ──
+  // Students and apprentices must accept the current beta agreement before
+  // accessing any dashboard page. Admins and instructors are exempt.
+  if (profile && !isInstructorOrAdmin(profile.role)) {
+    const { data: agreement } = await supabase
+      .from('beta_agreements')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('agreement_version', BETA_AGREEMENT_VERSION)
+      .maybeSingle()
+
+    if (!agreement) {
+      redirect('/beta-agreement')
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-950">
