@@ -1,15 +1,56 @@
 # ASCYN PRO Roadmap 2.0
 
-**Version:** 2.0  
-**Date:** 2026-07-03  
-**Branch:** `origin/workstation-transfer-safety`  
-**Current verified commit:** `f618e2b fix: prevent failed quiz attempts from completing chapter progress`  
+**Version:** 2.1  
+**Date:** 2026-07-07  
+**Branch:** `workstation-transfer-safety`  
+**Current verified commit:** `bbf925a chore(config): add .env.example and allow it in gitignore`  
+
+---
+
+## Priority Reorder Notice (2026-07-07)
+
+Per Gabriel's direction, the immediate work order has changed:
+
+1. **Oklahoma Board Presentation Package** — new top priority
+2. **NABBA Booth Launch** — second priority; booth production begins only after Oklahoma package is presentation-ready
+3. **Product Development** (Beta Stabilization, Student Platform, Instructor Platform, School/Admin) — resumes around NABBA preparation and after
+4. **Commercial Release** — remains final phase
+
+The phase definitions below remain accurate, but the execution order is now driven by the external deadlines above. See `01-plan/Executive-Dashboard.md` for live status.
 
 ---
 
 ## Executive Summary
 
 This roadmap turns ASCYN PRO from a feature-heavy demo into a disciplined, release-ready product. Work is organized into six phases, each with a clear goal, exit criteria, and dependency chain. No phase is declared complete until its exit criteria are verified by Gabe and Ping.
+
+---
+
+## Phase 0: Oklahoma Board Presentation Package
+
+**Goal:** Win the confidence of Oklahoma licensing regulators with a complete, professional presentation package.
+
+**Focus Areas:**
+- Understand the board's priorities, concerns, and decision criteria
+- Frame ASCYN PRO as a force multiplier for compliance, student success, and school accountability
+- Demonstrate the platform with a live or recorded demo
+- Leave behind materials that continue selling after the meeting
+
+**Deliverables:**
+- Presentation deck
+- Speaker notes
+- Handout
+- Leave-behind packet
+- Executive summary
+- FAQ sheet
+- Demo script
+- Supporting visuals
+
+**Exit Criteria:**
+- Gabriel reviews and approves every deliverable
+- Demo can be delivered smoothly in the allotted time
+- Materials are board-ready and professionally formatted
+- Presentation-ready status confirmed
 
 ---
 
@@ -125,6 +166,8 @@ This roadmap turns ASCYN PRO from a feature-heavy demo into a disciplined, relea
 
 **Goal:** Present ASCYN PRO as an established ed-tech company at NABBA, September 20, 2026.
 
+**Dependency:** Phase 0 (Oklahoma Board Presentation Package) must be presentation-ready before booth production begins.
+
 **Focus Areas:**
 - Polish demo flows for 30s, 3min, and 10min booth demos
 - Create cinematic promo video and loop it on booth TV
@@ -144,6 +187,7 @@ This roadmap turns ASCYN PRO from a feature-heavy demo into a disciplined, relea
 - NABBA-ready production deploy
 
 **Exit Criteria:**
+- Oklahoma Board package is presentation-ready
 - All booth materials ordered/printed
 - Demo practiced and timed
 - Production environment stable
@@ -181,6 +225,11 @@ This roadmap turns ASCYN PRO from a feature-heavy demo into a disciplined, relea
 ## Dependency Map
 
 ```
+Phase 0: Oklahoma Board Presentation Package (priority interrupt)
+    │
+    ├──► Phase 5: NABBA Booth Launch (begins only after Phase 0 is presentation-ready)
+    │
+    ▼
 Phase 1: Beta Stabilization
     │
     ▼
@@ -192,11 +241,12 @@ Phase 3: Instructor Platform
     ▼
 Phase 4: School / Admin Platform
     │
-    ├──► Phase 5: NABBA Booth Launch
-    │
     ▼
 Phase 6: Commercial Release
 ```
+
+**Note:** Phase 0 and Phase 5 are driven by external deadlines and take precedence over product phases until presentation-ready and booth-ready status are achieved.
+
 
 ---
 
