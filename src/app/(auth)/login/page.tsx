@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
+import { checkLoginRateLimit, recordLoginAttempt } from '@/lib/rate-limit'
 import { logFailedLogin } from '../actions'
 
 function LoginForm() {
@@ -21,6 +22,13 @@ function LoginForm() {
     e.preventDefault()
     setLoading(true)
     setError(null)
+
+    const rateLimit = checkLoginRateLimit(email)
+    if (!rateLimit.allowed) {
+      setError(`Too many failed login attempts. Please try again in ${rateLimit.waitSeconds} seconds.`)
+      setLoading(false)
+      return
+    }
 
     try {
       const demoMode = isExplicitDemoMode()
@@ -47,12 +55,17 @@ function LoginForm() {
         password,
       })
 
-      if (error) throw error
+      if (error) {
+        recordLoginAttempt(email, false)
+        throw error
+      }
+
+      recordLoginAttempt(email, true)
 
       // Check if email is verified (if email confirmation is required)
       if (data.user && data.user.email_confirmed_at === null) {
-        setError('Please verify your email before signing in. Check your inbox for the verification link.')
-        setLoading(false)
+        await supabase.auth.signOut()
+        router.push(`/auth/verify-email?email=${encodeURIComponent(data.user.email || '')}`)
         return
       }
 

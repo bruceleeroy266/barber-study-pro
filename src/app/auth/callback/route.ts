@@ -32,7 +32,7 @@ export async function GET(request: Request) {
     if (!error) {
       // Handle password recovery
       if (type === 'recovery') {
-        return NextResponse.redirect(`${origin}/update-password`)
+        return NextResponse.redirect(`${origin}/auth/update-password`)
       }
       return NextResponse.redirect(`${origin}${next}`)
     }

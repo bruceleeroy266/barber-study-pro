@@ -30,7 +30,7 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser()
   
   if (!user) {
-    redirect('/login')
+    redirect('/login?redirect=/dashboard')
   }
 
   // Get user profile (for apprentice null-school handling)

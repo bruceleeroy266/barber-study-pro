@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
+import { checkSignupRateLimit, recordSignupAttempt } from '@/lib/rate-limit'
 
 type Role = 'student' | 'instructor' | 'apprentice'
 
@@ -59,6 +60,13 @@ export default function SignupPage() {
     setLoading(true)
     setError(null)
 
+    const rateLimit = checkSignupRateLimit()
+    if (!rateLimit.allowed) {
+      setError(`Too many signup attempts. Please try again in ${rateLimit.waitSeconds} seconds.`)
+      setLoading(false)
+      return
+    }
+
     if (password !== confirmPassword) {
       setError('Passwords do not match')
       setLoading(false)
@@ -89,10 +97,18 @@ export default function SignupPage() {
     }
 
     try {
+      const signupLimit = recordSignupAttempt()
+      if (!signupLimit.allowed) {
+        setError(`Too many signup attempts. Please try again in ${signupLimit.waitSeconds} seconds.`)
+        setLoading(false)
+        return
+      }
+
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
+          emailRedirectTo: `${typeof window !== 'undefined' ? window.location.origin : ''}/auth/callback`,
           data: {
             full_name: fullName,
             role,
@@ -171,7 +187,7 @@ export default function SignupPage() {
           return
         }
 
-        await supabase.from('profiles').upsert({
+        const profilePayload = {
           id: signUpData.user.id,
           email: signUpData.user.email,
           full_name: fullName || signUpData.user.email,
@@ -179,9 +195,48 @@ export default function SignupPage() {
           school_id: schoolId,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
-        }, {
-          onConflict: 'id',
-        })
+        }
+
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .upsert(profilePayload, { onConflict: 'id' })
+
+        if (profileError) {
+          console.error('[Signup] Profile upsert failed:', profileError)
+          // Attempt to read back the profile in case the DB trigger created it
+          const { data: existingProfile } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('id', signUpData.user.id)
+            .single()
+
+          if (!existingProfile) {
+            await supabase.auth.signOut()
+            throw new Error(
+              'Account was created but your profile could not be saved. Please try again or contact support.'
+            )
+          }
+        }
+
+        // Verify the profile row actually exists before declaring success.
+        const { data: verifiedProfile, error: verifyError } = await supabase
+          .from('profiles')
+          .select('id, role, school_id')
+          .eq('id', signUpData.user.id)
+          .single()
+
+        if (verifyError || !verifiedProfile) {
+          console.error('[Signup] Profile verification failed:', verifyError)
+          await supabase.auth.signOut()
+          throw new Error(
+            'Account was created but your profile could not be verified. Please try again or contact support.'
+          )
+        }
+
+        // Prevent immediate access before email verification in non-demo mode.
+        if (!isDemoMode) {
+          await supabase.auth.signOut()
+        }
 
         setPendingSchool(instructorSchoolPending)
         setSuccess(true)
