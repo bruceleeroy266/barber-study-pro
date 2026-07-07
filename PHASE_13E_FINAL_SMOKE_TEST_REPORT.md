@@ -90,9 +90,9 @@ It provisions:
 
 | Account | Email | Role | Password |
 |---------|-------|------|----------|
-| Smoke Test Admin | `admin@ascyn-smoke.test` | `admin` | `Test1234!` |
-| Smoke Test Instructor | `instructor@ascyn-smoke.test` | `instructor` | `Test1234!` |
-| Smoke Test Student | `student@ascyn-smoke.test` | `student` | `Test1234!` |
+| Smoke Test Admin | `admin@ascyn-smoke.test` | `admin` | `[REDACTED]` |
+| Smoke Test Instructor | `instructor@ascyn-smoke.test` | `instructor` | `[REDACTED]` |
+| Smoke Test Student | `student@ascyn-smoke.test` | `student` | `[REDACTED]` |
 
 **Test school:** `ASCYN Smoke Test Academy` (`11111111-1111-1111-1111-111111111111`)
 
@@ -106,7 +106,7 @@ It provisions:
 
 The seed file inserts `profiles` rows with placeholder auth user IDs. Because Supabase Auth generates user IDs when accounts are created, the actual workflow is:
 
-1. Create the three auth users in Supabase Authentication with the emails above and password `Test1234!`.
+1. Create the three auth users in Supabase Authentication with the emails above and a strong password stored in your secrets manager (never commit passwords).
 2. Copy the generated user UUIDs into `supabase/seed-test-accounts.sql`.
 3. Run the seed SQL against a local/test Supabase instance.
 4. Start the app with `NEXT_PUBLIC_DEMO_MODE=false` and run the smoke test checklist below.
