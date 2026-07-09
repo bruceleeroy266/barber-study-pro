@@ -1,6 +1,6 @@
 /**
  * useAttendance
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  *
  * Manages attendance records, selection, bulk updates, and corrections.
  * Phase 13E.1D: surfaces production errors instead of swallowing them.

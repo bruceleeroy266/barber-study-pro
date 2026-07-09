@@ -1,6 +1,6 @@
 /**
  * CHAPTER PERFORMANCE ANALYTICS
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  */
 
 import { AreaPerformance, QuizAttempt, StudentProgress } from '@/types'

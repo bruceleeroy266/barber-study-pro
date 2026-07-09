@@ -1,6 +1,6 @@
 /**
  * WEAK AREA MAPPING + ADAPTIVE LEARNING INTELLIGENCE SYSTEM
- * Barber Study Pro v2.0
+ * ASCYN PRO v2.0
  * 
  * This system transforms the platform from static to intelligent
  * by tracking, analyzing, and adapting to student weaknesses.

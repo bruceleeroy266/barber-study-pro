@@ -1,6 +1,6 @@
 /**
  * ATTENDANCE SERVICE
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  *
  * Client-side attendance CRUD with demo fallback and Supabase support.
  * Phase 13E.1B: converted to snake_case Supabase queries and explicit mappers.

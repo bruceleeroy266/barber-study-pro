@@ -1,6 +1,6 @@
 /**
  * STATE BOARD COMPLIANCE RULES
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  *
  * Configurable thresholds used by the compliance engine.
  */

@@ -1,6 +1,6 @@
 /**
  * GRADUATION READINESS ENGINE
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  *
  * Calculates how close a student is to graduation based on hours, assessments,
  * practicals, attendance, readiness, and grades.

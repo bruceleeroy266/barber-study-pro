@@ -1,6 +1,6 @@
 /**
  * ANALYTICS UTILITIES
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  */
 
 export function getCategoryForChapter(chapterNumber: number): string {

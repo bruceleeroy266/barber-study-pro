@@ -109,13 +109,13 @@ const mockSupabase = {
 function createClient() {
   // Only use demo mode if explicitly enabled AND Supabase is not configured
   if (demoMode && !supabaseConfigured) {
-    console.warn('[Barber Study Pro] Demo mode active — Supabase not configured')
+    console.warn('[ASCYN PRO] Demo mode active — Supabase not configured')
     return mockSupabase as any
   }
 
   // Production: require real Supabase
   if (!supabaseConfigured) {
-    console.error('[Barber Study Pro] ERROR: Supabase not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY, or enable demo mode.')
+    console.error('[ASCYN PRO] ERROR: Supabase not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY, or enable demo mode.')
     // Return mock to prevent crashes, but log error
     return mockSupabase as any
   }

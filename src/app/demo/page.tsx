@@ -8,7 +8,7 @@ import DemoClient from "./DemoClient";
 export const metadata = {
   title: "ASCYN PRO — Board Readiness Dashboard",
   description:
-    "Professional barbering education platform. Measurable board exam preparation.",
+    "Professional licensing education platform. Measurable board exam preparation.",
 };
 
 export default function DemoPage() {

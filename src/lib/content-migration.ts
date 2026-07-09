@@ -1,5 +1,5 @@
 // Content Migration Utility
-// Extracts and structures content from HTML Barber Study Pro for Next.js version
+// Extracts and structures content from HTML ASCYN PRO for Next.js version
 
 export interface ChapterContent {
   chapterNumber: number

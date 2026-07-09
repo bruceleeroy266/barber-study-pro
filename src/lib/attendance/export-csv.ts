@@ -1,6 +1,6 @@
 /**
  * ATTENDANCE CSV EXPORT
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  *
  * Exports filtered attendance records to CSV with BOM for Excel.
  */

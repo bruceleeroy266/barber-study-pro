@@ -1,6 +1,6 @@
 /**
  * ATTENDANCE RISK & CONCERN DETECTION
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  */
 
 import { AttendanceConcern, AttendanceRecord, AttendanceSummary, Profile } from '@/types'

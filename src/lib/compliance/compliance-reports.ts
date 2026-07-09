@@ -1,6 +1,6 @@
 /**
  * COMPLIANCE REPORTS
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  *
  * Generates demo CSV-ready compliance reports for audit preparation.
  */

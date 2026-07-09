@@ -8,7 +8,7 @@ import { allQuizQuestions } from './quiz-data'
 
 export const demoUser = {
   id: 'demo-user',
-  email: 'demo@barberstudypro.test',
+  email: 'demo@ascynpro.test',
   role: 'admin' as const,
 }
 
@@ -21,7 +21,7 @@ export const demoSchool = {
 
 export const demoInstructorProfile: Profile = {
   id: 'demo-instructor',
-  email: 'instructor@barberstudypro.test',
+  email: 'instructor@ascynpro.test',
   full_name: 'Demo Instructor',
   role: 'instructor',
   school_id: 'demo-school',
@@ -34,7 +34,7 @@ export const demoInstructorProfile: Profile = {
 
 export const demoProfile: Profile = {
   id: 'demo-user',
-  email: 'demo@barberstudypro.test',
+  email: 'demo@ascynpro.test',
   full_name: 'Demo Student',
   role: 'admin', // aligned with demoUser.role so demo mode can test instructor/admin portals
   school_id: 'demo-school',
@@ -47,7 +47,7 @@ export const demoProfile: Profile = {
 
 export const demoApprenticeProfile: Profile = {
   id: 'demo-apprentice',
-  email: 'apprentice@barberstudypro.test',
+  email: 'apprentice@ascynpro.test',
   full_name: 'Demo Apprentice',
   role: 'apprentice',
   school_id: null,
@@ -62,7 +62,7 @@ export const demoApprenticeProfile: Profile = {
 export const demoStudents: Profile[] = [
   {
     id: 'demo-student-1',
-    email: 'alex@barberstudypro.test',
+    email: 'alex@ascynpro.test',
     full_name: 'Alex Johnson',
     role: 'student',
     school_id: 'demo-school',
@@ -74,7 +74,7 @@ export const demoStudents: Profile[] = [
   },
   {
     id: 'demo-student-2',
-    email: 'maria@barberstudypro.test',
+    email: 'maria@ascynpro.test',
     full_name: 'Maria Garcia',
     role: 'student',
     school_id: 'demo-school',
@@ -86,7 +86,7 @@ export const demoStudents: Profile[] = [
   },
   {
     id: 'demo-student-3',
-    email: 'jordan@barberstudypro.test',
+    email: 'jordan@ascynpro.test',
     full_name: 'Jordan Smith',
     role: 'apprentice',
     school_id: 'demo-school',
@@ -98,7 +98,7 @@ export const demoStudents: Profile[] = [
   },
   {
     id: 'demo-student-4',
-    email: 'taylor@barberstudypro.test',
+    email: 'taylor@ascynpro.test',
     full_name: 'Taylor Brown',
     role: 'student',
     school_id: 'demo-school',

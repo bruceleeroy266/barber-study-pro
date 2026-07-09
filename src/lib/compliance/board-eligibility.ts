@@ -1,6 +1,6 @@
 /**
  * BOARD ELIGIBILITY ENGINE
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  *
  * Determines whether a student is eligible, nearly eligible, or not eligible
  * to sit for the state board exam based on attendance, hours, assessments,

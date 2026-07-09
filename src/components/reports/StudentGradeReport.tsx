@@ -26,7 +26,7 @@ export default function StudentGradeReport({
     <div className="bg-white text-gray-900 rounded-xl p-8 print:p-0 print:shadow-none max-w-3xl mx-auto">
       <div className="border-b border-gray-200 pb-6 mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Student Grade Report</h1>
-        <p className="text-gray-600 mt-1">ASCYN PRO · Barber Study Pro</p>
+        <p className="text-gray-600 mt-1">Professional Licensing Platform</p>
       </div>
 
       <div className="grid grid-cols-2 gap-6 mb-8">

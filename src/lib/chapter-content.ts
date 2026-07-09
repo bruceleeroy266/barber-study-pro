@@ -1,4 +1,4 @@
-// Chapter content data structures and content for Barber Study Pro V2
+// Chapter content data structures and content for ASCYN PRO V2
 // This is the FOUNDATION file for ALL chapters — reusable typed structures
 
 import { LucideIcon } from 'lucide-react'

@@ -1,6 +1,6 @@
 /**
  * useAttendanceFilters
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  *
  * Manages attendance filter state for the instructor attendance page.
  */

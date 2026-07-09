@@ -1,6 +1,6 @@
 /**
  * Operational Data Mappers
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  *
  * Converts between Supabase snake_case database rows and app-friendly
  * TypeScript objects. These mappers replace unsafe `as unknown as Type` casts

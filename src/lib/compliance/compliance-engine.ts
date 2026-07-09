@@ -1,6 +1,6 @@
 /**
  * COMPLIANCE ENGINE
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  *
  * High-level engine that aggregates compliance data for a student and produces
  * scores, eligibility, graduation readiness, and alerts.

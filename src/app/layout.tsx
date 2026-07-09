@@ -8,8 +8,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "ASCYN PRO - Master Your Craft",
-  description: "Professional barbering education platform with 21 comprehensive chapters, interactive flashcards, and practice quizzes.",
+  title: "ASCYN PRO - Board Exam Readiness",
+  description: "A professional licensing education platform that helps students identify learning gaps earlier and gives instructors actionable insight before the board exam.",
 };
 
 export default function RootLayout({

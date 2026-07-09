@@ -1,6 +1,6 @@
 /**
  * BOARD READINESS ENGINE
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  *
  * Calculates a composite board readiness score for each student based on
  * quiz performance, chapter completion, flashcard engagement, consistency,

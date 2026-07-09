@@ -1,6 +1,6 @@
 /**
  * ATTENDANCE SUMMARY CALCULATIONS
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  */
 
 import { AttendanceRecord, AttendanceSummary } from '@/types'

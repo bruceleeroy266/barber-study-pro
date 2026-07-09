@@ -1,4 +1,4 @@
-// Real flashcards for Barber Study Pro V2
+// Real flashcards for ASCYN PRO V2
 // Chapter 1: Premium image-based rebuild (45 cards, 6 categories)
 // Chapters 2-4: Legacy content (to be rebuilt)
 // DO NOT copy textbook sentences directly - all content is paraphrased

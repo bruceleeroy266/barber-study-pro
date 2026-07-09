@@ -1,4 +1,4 @@
-// Quiz questions for Barber Study Pro V2
+// Quiz questions for ASCYN PRO V2
 // Chapter 1: Premium flashcard-driven quiz (imported from chapter-1-premium-quiz.ts)
 // Chapter 2: Premium flashcard-driven quiz (imported from chapter-2-premium-quiz.ts)
 // Chapter 3: Premium flashcard-driven quiz (imported from chapter-3-premium-quiz.ts)

@@ -1,6 +1,6 @@
 /**
  * STUDY PLAN / RECOMMENDATIONS ENGINE
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  *
  * Generates personalized study recommendations from readiness scores,
  * weak areas, strong areas, and missed questions.

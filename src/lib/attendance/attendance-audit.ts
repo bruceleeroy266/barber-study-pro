@@ -1,6 +1,6 @@
 /**
  * ATTENDANCE AUDIT LOG SERVICE
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  *
  * Immutable audit trail for attendance record changes.
  * Phase 13E.1D: production errors are now surfaced; silent fallbacks removed.

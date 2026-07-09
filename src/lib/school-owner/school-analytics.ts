@@ -1,6 +1,6 @@
 /**
  * SCHOOL OWNER DASHBOARD ANALYTICS
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  *
  * Aggregates student, instructor, attendance, readiness, grade, assessment,
  * and hour data into executive-level school metrics.

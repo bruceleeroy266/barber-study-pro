@@ -1,6 +1,6 @@
 /**
  * ATTENDANCE UTILITIES
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  *
  * Reusable attendance helpers for dashboards, instructor views, and reporting.
  */

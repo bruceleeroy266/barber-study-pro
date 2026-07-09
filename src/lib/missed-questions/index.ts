@@ -1,6 +1,6 @@
 /**
  * MISSED QUESTION BANK
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  *
  * Utilities for storing, filtering, and retaking missed questions.
  */

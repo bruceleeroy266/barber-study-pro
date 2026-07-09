@@ -1,6 +1,6 @@
 /**
  * ATTENDANCE CORRECTION SERVICE
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  *
  * Tracks attendance status corrections with reason and approval state.
  * Phase 13E.1D: production errors are now surfaced; silent fallbacks removed.

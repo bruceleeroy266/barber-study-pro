@@ -1,6 +1,6 @@
 /**
  * ANALYTICS ENGINE
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  *
  * Transforms quiz attempts, chapter progress, and missed questions into
  * weak/strong area analytics that power dashboards, recommendations, and

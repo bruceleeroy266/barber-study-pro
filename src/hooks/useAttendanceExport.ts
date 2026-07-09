@@ -1,6 +1,6 @@
 /**
  * useAttendanceExport
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  *
  * Handles CSV and PDF export for attendance records.
  */

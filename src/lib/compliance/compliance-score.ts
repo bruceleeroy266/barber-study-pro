@@ -1,6 +1,6 @@
 /**
  * COMPLIANCE SCORE CALCULATOR
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  *
  * Computes a 0–100 compliance score from attendance, hours, assessments,
  * practicals, readiness, and grade performance.

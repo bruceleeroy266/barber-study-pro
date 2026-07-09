@@ -1,6 +1,6 @@
 /**
  * DEMO ANALYTICS DATA
- * ASCYN PRO / Barber Study Pro V2
+ * ASCYN PRO / ASCYN PRO V2
  *
  * Realistic analytics for demo mode when Supabase tables are empty.
  */

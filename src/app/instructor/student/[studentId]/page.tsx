@@ -563,7 +563,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
 
           {/* Footer */}
           <div className="text-center text-xs text-gray-400 mt-8 pt-4 border-t border-gray-200">
-            Barber Study Pro — Student Progress Report
+            ASCYN PRO — Student Progress Report
           </div>
         </section>
 
@@ -1279,7 +1279,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
 
           {/* Footer */}
           <div className="text-center text-xs text-gray-400 mt-8 pt-4 border-t border-gray-200">
-            Barber Study Pro — Board Hours Summary Report
+            ASCYN PRO — Board Hours Summary Report
           </div>
         </section>
       </div>
