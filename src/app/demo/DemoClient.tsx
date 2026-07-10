@@ -122,7 +122,7 @@ export default function DemoClient() {
           </div>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-1">
             {navItems.map((item) => (
               <button
                 key={item.href}
@@ -145,7 +145,7 @@ export default function DemoClient() {
             {/* Mobile hamburger */}
             <button
               onClick={() => setMobileNavOpen((v) => !v)}
-              className="md:hidden p-2 rounded-md hover:bg-[#1a2332]/5"
+              className="lg:hidden p-2 rounded-md hover:bg-[#1a2332]/5"
               aria-label="Toggle menu"
             >
               {mobileNavOpen ? (
@@ -159,7 +159,7 @@ export default function DemoClient() {
 
         {/* Mobile nav dropdown */}
         {mobileNavOpen && (
-          <div className="md:hidden border-t border-[#1a2332]/8 bg-[#FAFAF8]/95 backdrop-blur-md px-4 pb-4">
+          <div className="lg:hidden border-t border-[#1a2332]/8 bg-[#FAFAF8]/95 backdrop-blur-md px-4 pb-4">
             <div className="flex flex-col gap-1 pt-2">
               {navItems.map((item) => (
                 <button
