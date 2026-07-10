@@ -3,19 +3,16 @@
 import Link from 'next/link'
 import { useState } from 'react'
 
-export default function PilotPage() {
+export default function ContactForm() {
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const [formData, setFormData] = useState({
-    schoolName: '',
-    contactName: '',
+    name: '',
+    school: '',
     email: '',
     phone: '',
-    programType: '',
-    cohortSize: '',
-    startDate: '',
     message: '',
     website: '', // honeypot
   })
@@ -37,8 +34,13 @@ export default function PilotPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          formType: 'pilot',
-          ...formData,
+          formType: 'contact',
+          contactName: formData.name,
+          schoolName: formData.school,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+          website: formData.website,
         }),
       })
 
@@ -87,13 +89,13 @@ export default function PilotPage() {
       <section className="relative pt-32 pb-16 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/5 via-transparent to-transparent pointer-events-none" />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <div className="text-[#D4AF37] font-semibold mb-4">SCHOOL PILOT PROGRAM</div>
+          <div className="text-[#D4AF37] font-semibold mb-4">CONTACT US</div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight tracking-tight">
-            Partner With ASCYN PRO
+            Let&apos;s Talk
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Join a small group of Oklahoma schools piloting ASCYN PRO for the upcoming semester. 
-            No financial commitment. Full support included.
+            Have a question about ASCYN PRO, partnership opportunities, or how we can help your school? 
+            Send us a message and we&apos;ll respond within one business day.
           </p>
         </div>
       </section>
@@ -107,10 +109,10 @@ export default function PilotPage() {
                 ✓
               </div>
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-                Request Sent Successfully
+                Message Sent Successfully
               </h2>
               <p className="text-gray-400 text-lg mb-8">
-                Thank you. Your request has been received. We&apos;ll contact you within one business day.
+                Thank you. Your message has been received. We&apos;ll contact you within one business day.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
@@ -146,34 +148,33 @@ export default function PilotPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="schoolName" className="block text-sm font-medium text-gray-300 mb-2">
-                      School Name *
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
+                      Name *
                     </label>
                     <input
                       type="text"
-                      id="schoolName"
-                      name="schoolName"
+                      id="name"
+                      name="name"
                       required
-                      value={formData.schoolName}
-                      onChange={(e) => updateField('schoolName', e.target.value)}
+                      value={formData.name}
+                      onChange={(e) => updateField('name', e.target.value)}
                       className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-[#D4AF37]/50 focus:ring-1 focus:ring-[#D4AF37]/50 transition-colors"
-                      placeholder="Oklahoma Barber Academy"
+                      placeholder="Jane Smith"
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="contactName" className="block text-sm font-medium text-gray-300 mb-2">
-                      Contact Name *
+                    <label htmlFor="school" className="block text-sm font-medium text-gray-300 mb-2">
+                      School
                     </label>
                     <input
                       type="text"
-                      id="contactName"
-                      name="contactName"
-                      required
-                      value={formData.contactName}
-                      onChange={(e) => updateField('contactName', e.target.value)}
+                      id="school"
+                      name="school"
+                      value={formData.school}
+                      onChange={(e) => updateField('school', e.target.value)}
                       className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-[#D4AF37]/50 focus:ring-1 focus:ring-[#D4AF37]/50 transition-colors"
-                      placeholder="Jane Smith"
+                      placeholder="Oklahoma Barber Academy"
                     />
                   </div>
                 </div>
@@ -211,72 +212,19 @@ export default function PilotPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="programType" className="block text-sm font-medium text-gray-300 mb-2">
-                      Program Type *
-                    </label>
-                    <select
-                      id="programType"
-                      name="programType"
-                      required
-                      value={formData.programType}
-                      onChange={(e) => updateField('programType', e.target.value)}
-                      className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 rounded-lg text-white focus:outline-none focus:border-[#D4AF37]/50 focus:ring-1 focus:ring-[#D4AF37]/50 transition-colors"
-                    >
-                      <option value="">Select a program</option>
-                      <option value="Barbering">Barbering</option>
-                      <option value="Cosmetology">Cosmetology</option>
-                      <option value="Esthetics">Esthetics</option>
-                      <option value="Nail Technology">Nail Technology</option>
-                      <option value="Instructor Training">Instructor Training</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label htmlFor="cohortSize" className="block text-sm font-medium text-gray-300 mb-2">
-                      Estimated Cohort Size
-                    </label>
-                    <input
-                      type="number"
-                      id="cohortSize"
-                      name="cohortSize"
-                      min="1"
-                      value={formData.cohortSize}
-                      onChange={(e) => updateField('cohortSize', e.target.value)}
-                      className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-[#D4AF37]/50 focus:ring-1 focus:ring-[#D4AF37]/50 transition-colors"
-                      placeholder="25"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="startDate" className="block text-sm font-medium text-gray-300 mb-2">
-                    Preferred Start Date
-                  </label>
-                  <input
-                    type="date"
-                    id="startDate"
-                    name="startDate"
-                    value={formData.startDate}
-                    onChange={(e) => updateField('startDate', e.target.value)}
-                    className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 rounded-lg text-white focus:outline-none focus:border-[#D4AF37]/50 focus:ring-1 focus:ring-[#D4AF37]/50 transition-colors"
-                  />
-                </div>
-
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">
-                    Message / Notes
+                    Message *
                   </label>
                   <textarea
                     id="message"
                     name="message"
-                    rows={4}
+                    rows={5}
+                    required
                     value={formData.message}
                     onChange={(e) => updateField('message', e.target.value)}
                     className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-[#D4AF37]/50 focus:ring-1 focus:ring-[#D4AF37]/50 transition-colors resize-none"
-                    placeholder="Tell us about your school, your current challenges, or any questions you have about the pilot."
+                    placeholder="Tell us how we can help your school or students."
                   />
                 </div>
 
@@ -292,7 +240,7 @@ export default function PilotPage() {
                     disabled={loading}
                     className="w-full px-8 py-4 bg-[#D4AF37] text-[#0a0a0a] font-bold rounded-xl hover:bg-[#F4E4A6] transition-all shadow-lg shadow-[#D4AF37]/20 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    {loading ? 'Sending...' : 'Submit Pilot Inquiry'}
+                    {loading ? 'Sending...' : 'Send Message'}
                   </button>
                 </div>
 
