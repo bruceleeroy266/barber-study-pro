@@ -232,6 +232,8 @@ export async function POST(request: NextRequest) {
 async function getResendEmailStatus(id: string | undefined | null) {
   if (!id || !process.env.RESEND_API_KEY) return null
   try {
+    // Resend may need a moment to make the email retrievable
+    await new Promise((resolve) => setTimeout(resolve, 2000))
     const response = await fetch(`https://api.resend.com/emails/${id}`, {
       headers: {
         Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
