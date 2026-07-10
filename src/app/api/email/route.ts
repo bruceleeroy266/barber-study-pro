@@ -8,6 +8,15 @@ const resend = process.env.RESEND_API_KEY
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'hello@ascynpro.com'
 const TO_EMAIL = process.env.EMAIL_TO || 'hello@ascynpro.com'
 
+// Diagnostic logging (no values exposed)
+console.log('[Email API] Boot', {
+  hasKey: !!process.env.RESEND_API_KEY,
+  keyLength: process.env.RESEND_API_KEY?.length ?? 0,
+  from: FROM_EMAIL,
+  to: TO_EMAIL,
+  resendInitialized: !!resend,
+})
+
 // Lightweight in-memory rate limiter. Persists only for the lifetime of the
 // serverless instance, which is enough to stop rapid duplicate submissions.
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
@@ -165,6 +174,13 @@ export async function POST(request: NextRequest) {
       }),
     ])
 
+    console.log('[Email API] Resend results', {
+      notificationId: notificationResult.data?.id ?? null,
+      notificationError: notificationResult.error ?? null,
+      confirmationId: confirmationResult.data?.id ?? null,
+      confirmationError: confirmationResult.error ?? null,
+    })
+
     if (notificationResult.error || confirmationResult.error) {
       console.error('[Email API] Resend error:', notificationResult.error, confirmationResult.error)
       return NextResponse.json(
@@ -173,7 +189,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    return NextResponse.json({ success: true }, { status: 200 })
+    return NextResponse.json(
+      {
+        success: true,
+        ids: {
+          notification: notificationResult.data?.id ?? null,
+          confirmation: confirmationResult.data?.id ?? null,
+        },
+      },
+      { status: 200 }
+    )
   } catch (err) {
     console.error('[Email API] Unexpected error:', err)
     return NextResponse.json(
