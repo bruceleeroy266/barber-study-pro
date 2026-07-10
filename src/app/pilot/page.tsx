@@ -107,10 +107,14 @@ export default function PilotPage() {
                 ✓
               </div>
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-                Request Sent Successfully
+                Thank You!
               </h2>
               <p className="text-gray-400 text-lg mb-8">
-                Thank you. Your request has been received. We&apos;ll contact you within one business day.
+                Your pilot request has been received successfully.
+                <br /><br />
+                If you selected <span className="text-[#D4AF37] font-medium">Barbering</span>, a member of our team will contact you within one business day.
+                <br /><br />
+                If you selected a Coming Soon program, we&apos;ve added you to our early access list and will notify you as soon as your program becomes available.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
@@ -211,6 +215,23 @@ export default function PilotPage() {
                   </div>
                 </div>
 
+                {/* Program availability banner */}
+                <div className="bg-[#0a0a0a] border border-[#D4AF37]/30 rounded-xl p-5 md:p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-full bg-[#D4AF37]/10 flex items-center justify-center text-[#D4AF37] shrink-0">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                    </div>
+                    <div>
+                      <h3 className="text-[#D4AF37] font-semibold mb-1">Currently Piloting Barbering</h3>
+                      <p className="text-gray-400 text-sm leading-relaxed">
+                        ASCYN PRO is currently accepting pilot schools for our Barbering program only.
+                        Cosmetology, Esthetics, Nail Technology, and Instructor Training are actively being developed and will be available in future releases.
+                        If you&apos;re interested in one of these programs, you may still submit a request and we&apos;ll notify you as soon as early access becomes available.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="programType" className="block text-sm font-medium text-gray-300 mb-2">
@@ -225,11 +246,11 @@ export default function PilotPage() {
                       className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 rounded-lg text-white focus:outline-none focus:border-[#D4AF37]/50 focus:ring-1 focus:ring-[#D4AF37]/50 transition-colors"
                     >
                       <option value="">Select a program</option>
-                      <option value="Barbering">Barbering</option>
-                      <option value="Cosmetology">Cosmetology</option>
-                      <option value="Esthetics">Esthetics</option>
-                      <option value="Nail Technology">Nail Technology</option>
-                      <option value="Instructor Training">Instructor Training</option>
+                      <option value="Barbering">✅ Barbering — Available Now</option>
+                      <option value="Cosmetology">🟡 Cosmetology — Coming Soon</option>
+                      <option value="Esthetics">🟡 Esthetics — Coming Soon</option>
+                      <option value="Nail Technology">🟡 Nail Technology — Coming Soon</option>
+                      <option value="Instructor Training">🟡 Instructor Training — Coming Soon</option>
                       <option value="Other">Other</option>
                     </select>
                   </div>

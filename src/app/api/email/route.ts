@@ -117,6 +117,10 @@ export async function POST(request: NextRequest) {
     }
 
     const timestamp = formatTimestamp()
+    const isBarberingAvailable = programType === 'Barbering'
+    const availabilityNote = isBarberingAvailable
+      ? 'A member of our team will contact you within one business day.'
+      : "You've been added to our early access list. We'll notify you as soon as your selected program becomes available."
 
     const notificationSubject =
       formType === 'pilot'
@@ -168,12 +172,12 @@ export async function POST(request: NextRequest) {
         subject: 'Thank you for contacting ASCYN PRO',
         html: `
           <p>Thank you for contacting ASCYN PRO.</p>
-          <p>We have received your request.</p>
-          <p>A member of our team will contact you within one business day.</p>
+          <p>We have received your request${programType ? ` for <strong>${escapeHtml(programType)}</strong>` : ''}.</p>
+          <p>${availabilityNote}</p>
           <p>We appreciate your interest in helping students succeed on their licensing exams.</p>
           <p>— ASCYN PRO</p>
         `,
-        text: `Thank you for contacting ASCYN PRO.\n\nWe have received your request.\n\nA member of our team will contact you within one business day.\n\nWe appreciate your interest in helping students succeed on their licensing exams.\n\n— ASCYN PRO`,
+        text: `Thank you for contacting ASCYN PRO.\n\nWe have received your request${programType ? ` for ${programType}` : ''}.\n\n${availabilityNote}\n\nWe appreciate your interest in helping students succeed on their licensing exams.\n\n— ASCYN PRO`,
       }),
     ])
 
