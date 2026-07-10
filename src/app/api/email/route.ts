@@ -8,16 +8,7 @@ const resend = process.env.RESEND_API_KEY
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'ASCYN PRO <hello@ascynpro.com>'
 const NOTIFICATION_FROM_EMAIL = process.env.NOTIFICATION_FROM_EMAIL || 'ASCYN PRO <notifications@ascynpro.com>'
 const TO_EMAIL = process.env.EMAIL_TO || 'hello@ascynpro.com'
-
-// Diagnostic logging (no values exposed)
-console.log('[Email API] Boot', {
-  hasKey: !!process.env.RESEND_API_KEY,
-  keyLength: process.env.RESEND_API_KEY?.length ?? 0,
-  visitorFrom: FROM_EMAIL,
-  notificationFrom: NOTIFICATION_FROM_EMAIL,
-  to: TO_EMAIL,
-  resendInitialized: !!resend,
-})
+const LOGO_URL = 'https://ascynpro.com/logo.svg'
 
 // Lightweight in-memory rate limiter. Persists only for the lifetime of the
 // serverless instance, which is enough to stop rapid duplicate submissions.
@@ -54,6 +45,55 @@ function formatTimestamp() {
     dateStyle: 'medium',
     timeStyle: 'short',
   })
+}
+
+function escapeHtml(input: string): string {
+  return input
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+function emailWrapper(content: string, previewText: string) {
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light" />
+  <meta name="supported-color-schemes" content="light" />
+  <title>${escapeHtml(previewText)}</title>
+</head>
+<body style="margin:0; padding:0; background-color:#0a0a0a;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#0a0a0a">
+    <tr>
+      <td align="center" style="padding:40px 20px;">
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width:600px; width:100%; background-color:#111111; border:1px solid #2a2a2a; border-radius:12px; overflow:hidden;">
+          <tr>
+            <td align="center" style="padding:32px 24px 24px; border-bottom:1px solid #2a2a2a;">
+              <img src="${LOGO_URL}" alt="ASCYN PRO" width="160" style="display:block; max-width:160px; height:auto;" />
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:32px 24px; color:#ffffff; font-family:Arial, Helvetica, sans-serif; font-size:16px; line-height:1.6;">
+              ${content}
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:24px; border-top:1px solid #2a2a2a; color:#888888; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:1.5; text-align:center;">
+              © 2026 ASCYN PRO. Built for future licensed professionals.
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `.trim()
 }
 
 export async function POST(request: NextRequest) {
@@ -117,45 +157,117 @@ export async function POST(request: NextRequest) {
     }
 
     const timestamp = formatTimestamp()
-    const isBarberingAvailable = programType === 'Barbering'
-    const availabilityNote = isBarberingAvailable
-      ? 'A member of our team will contact you within one business day.'
-      : "You've been added to our early access list. We'll notify you as soon as your selected program becomes available."
+    const isPilot = formType === 'pilot'
+    const isBarbering = programType === 'Barbering'
 
-    const notificationSubject =
-      formType === 'pilot'
-        ? 'New ASCYN PRO Pilot Inquiry'
-        : 'New ASCYN PRO Contact Form Submission'
+    // ── INTERNAL NOTIFICATION ───────────────────────────────────────────────
+    const notificationSubject = isPilot
+      ? '🚨 New ASCYN PRO Pilot Inquiry'
+      : 'New ASCYN PRO Contact Form Submission'
 
-    const notificationHtml = `
-      <h2>${formType === 'pilot' ? 'Pilot Inquiry' : 'Contact Form Submission'}</h2>
-      <table style="border-collapse: collapse; width: 100%; max-width: 600px;">
-        ${schoolName ? `<tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>School Name</strong></td><td style="padding: 8px; border: 1px solid #ddd;">${escapeHtml(schoolName)}</td></tr>` : ''}
-        <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Name</strong></td><td style="padding: 8px; border: 1px solid #ddd;">${escapeHtml(contactName)}</td></tr>
-        <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Email</strong></td><td style="padding: 8px; border: 1px solid #ddd;">${escapeHtml(email)}</td></tr>
-        ${phone ? `<tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Phone</strong></td><td style="padding: 8px; border: 1px solid #ddd;">${escapeHtml(phone)}</td></tr>` : ''}
-        ${programType ? `<tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Program Type</strong></td><td style="padding: 8px; border: 1px solid #ddd;">${escapeHtml(programType)}</td></tr>` : ''}
-        ${cohortSize ? `<tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Estimated Cohort Size</strong></td><td style="padding: 8px; border: 1px solid #ddd;">${escapeHtml(cohortSize)}</td></tr>` : ''}
-        ${startDate ? `<tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Preferred Start Date</strong></td><td style="padding: 8px; border: 1px solid #ddd;">${escapeHtml(startDate)}</td></tr>` : ''}
-        ${message ? `<tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Message</strong></td><td style="padding: 8px; border: 1px solid #ddd;">${escapeHtml(message).replace(/\n/g, '<br/>')}</td></tr>` : ''}
-        <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Submitted At</strong></td><td style="padding: 8px; border: 1px solid #ddd;">${timestamp}</td></tr>
+    const notificationRows = [
+      { label: 'School Name', value: schoolName },
+      { label: 'Contact Name', value: contactName },
+      { label: 'Email', value: email },
+      { label: 'Phone Number', value: phone || 'Not provided' },
+      { label: 'Program Selected', value: programType || 'N/A' },
+      { label: 'Estimated Cohort Size', value: cohortSize || 'Not provided' },
+      { label: 'Preferred Start Date', value: startDate || 'Not provided' },
+      { label: 'Message / Notes', value: message || 'None' },
+      { label: 'Date & Time Submitted', value: timestamp },
+    ]
+
+    const notificationHtml = emailWrapper(
+      `
+      <h1 style="margin:0 0 24px; color:#D4AF37; font-size:22px; font-weight:bold;">🚨 New ASCYN PRO Pilot Inquiry</h1>
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;">
+        ${notificationRows
+          .map(
+            (row) => `
+          <tr>
+            <td style="padding:12px 16px; border-bottom:1px solid #2a2a2a; color:#D4AF37; font-weight:bold; width:40%; font-size:14px; vertical-align:top;">${escapeHtml(row.label)}</td>
+            <td style="padding:12px 16px; border-bottom:1px solid #2a2a2a; color:#ffffff; font-size:14px; vertical-align:top;">${escapeHtml(row.value).replace(/\n/g, '<br/>')}</td>
+          </tr>
+        `
+          )
+          .join('')}
       </table>
-    `
+      <p style="margin:24px 0 0; color:#888888; font-size:13px;">
+        Reply directly to this email to respond to ${escapeHtml(contactName)}.
+      </p>
+      `,
+      notificationSubject
+    )
 
     const notificationText = [
-      formType === 'pilot' ? 'New Pilot Inquiry' : 'New Contact Form Submission',
-      schoolName ? `School Name: ${schoolName}` : '',
-      `Name: ${contactName}`,
-      `Email: ${email}`,
-      phone ? `Phone: ${phone}` : '',
-      programType ? `Program Type: ${programType}` : '',
-      cohortSize ? `Estimated Cohort Size: ${cohortSize}` : '',
-      startDate ? `Preferred Start Date: ${startDate}` : '',
-      message ? `Message: ${message}` : '',
-      `Submitted At: ${timestamp}`,
-    ]
-      .filter(Boolean)
-      .join('\n')
+      '🚨 New ASCYN PRO Pilot Inquiry',
+      '',
+      ...notificationRows.map((row) => `${row.label}: ${row.value}`),
+      '',
+      `Reply to respond to ${contactName} at ${email}.`,
+    ].join('\n')
+
+    // ── VISITOR CONFIRMATION ────────────────────────────────────────────────
+    const confirmationSubject = 'Thank you for contacting ASCYN PRO'
+
+    let confirmationBodyHtml = ''
+    let confirmationBodyText = ''
+
+    if (isPilot) {
+      const programLine = isBarbering
+        ? 'We have received your <strong>Barbering</strong> pilot request successfully.'
+        : `We have received your <strong>${escapeHtml(programType)}</strong> pilot request successfully.`
+
+      const followUpLine = isBarbering
+        ? 'Because ASCYN PRO is currently onboarding pilot partners, our team will review your submission and contact you within <strong>10 business days</strong>.'
+        : 'Your program has been added to our early access notification list. We&apos;ll notify you when it becomes available.'
+
+      confirmationBodyHtml = `
+        <p style="margin:0 0 16px;">Thank you for contacting ASCYN PRO.</p>
+        <p style="margin:0 0 16px;">${programLine}</p>
+        <p style="margin:0 0 16px;">${followUpLine}</p>
+        <p style="margin:0 0 16px;">We appreciate your interest in helping students succeed on their licensing exams.</p>
+        <p style="margin:0;">— The ASCYN PRO Team</p>
+      `
+
+      const programLineText = isBarbering
+        ? 'We have received your Barbering pilot request successfully.'
+        : `We have received your ${programType} pilot request successfully.`
+
+      const followUpLineText = isBarbering
+        ? 'Because ASCYN PRO is currently onboarding pilot partners, our team will review your submission and contact you within 10 business days.'
+        : 'Your program has been added to our early access notification list. We\'ll notify you when it becomes available.'
+
+      confirmationBodyText = [
+        'Thank you for contacting ASCYN PRO.',
+        '',
+        programLineText,
+        '',
+        followUpLineText,
+        '',
+        'We appreciate your interest in helping students succeed on their licensing exams.',
+        '',
+        '— The ASCYN PRO Team',
+      ].join('\n')
+    } else {
+      confirmationBodyHtml = `
+        <p style="margin:0 0 16px;">Thank you for contacting ASCYN PRO.</p>
+        <p style="margin:0 0 16px;">We have received your message and a member of our team will contact you within one business day.</p>
+        <p style="margin:0 0 16px;">We appreciate your interest in helping students succeed on their licensing exams.</p>
+        <p style="margin:0;">— The ASCYN PRO Team</p>
+      `
+      confirmationBodyText = [
+        'Thank you for contacting ASCYN PRO.',
+        '',
+        'We have received your message and a member of our team will contact you within one business day.',
+        '',
+        'We appreciate your interest in helping students succeed on their licensing exams.',
+        '',
+        '— The ASCYN PRO Team',
+      ].join('\n')
+    }
+
+    const confirmationHtml = emailWrapper(confirmationBodyHtml, confirmationSubject)
 
     const [notificationResult, confirmationResult] = await Promise.all([
       resend.emails.send({
@@ -169,37 +281,11 @@ export async function POST(request: NextRequest) {
       resend.emails.send({
         from: FROM_EMAIL,
         to: email,
-        subject: 'Thank you for contacting ASCYN PRO',
-        html: `
-          <p>Thank you for contacting ASCYN PRO.</p>
-          <p>We have received your request${programType ? ` for <strong>${escapeHtml(programType)}</strong>` : ''}.</p>
-          <p>${availabilityNote}</p>
-          <p>We appreciate your interest in helping students succeed on their licensing exams.</p>
-          <p>— ASCYN PRO</p>
-        `,
-        text: `Thank you for contacting ASCYN PRO.\n\nWe have received your request${programType ? ` for ${programType}` : ''}.\n\n${availabilityNote}\n\nWe appreciate your interest in helping students succeed on their licensing exams.\n\n— ASCYN PRO`,
+        subject: confirmationSubject,
+        html: confirmationHtml,
+        text: confirmationBodyText,
       }),
     ])
-
-    console.log('[Email API] Notification payload', {
-      from: NOTIFICATION_FROM_EMAIL,
-      to: TO_EMAIL,
-      replyTo: email,
-      subject: notificationSubject,
-      htmlLength: notificationHtml.length,
-      textLength: notificationText.length,
-    })
-
-    console.log('[Email API] Resend results', {
-      notificationId: notificationResult.data?.id ?? null,
-      notificationError: notificationResult.error ?? null,
-      confirmationId: confirmationResult.data?.id ?? null,
-      confirmationError: confirmationResult.error ?? null,
-    })
-
-    // Check Resend status for the internal notification
-    const notificationStatus = await getResendEmailStatus(notificationResult.data?.id)
-    console.log('[Email API] Notification status', notificationStatus)
 
     if (notificationResult.error || confirmationResult.error) {
       console.error('[Email API] Resend error:', notificationResult.error, confirmationResult.error)
@@ -209,17 +295,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        ids: {
-          notification: notificationResult.data?.id ?? null,
-          confirmation: confirmationResult.data?.id ?? null,
-        },
-        notificationStatus,
-      },
-      { status: 200 }
-    )
+    return NextResponse.json({ success: true }, { status: 200 })
   } catch (err) {
     console.error('[Email API] Unexpected error:', err)
     return NextResponse.json(
@@ -227,33 +303,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     )
   }
-}
-
-async function getResendEmailStatus(id: string | undefined | null) {
-  if (!id || !process.env.RESEND_API_KEY) return null
-  try {
-    // Resend may need a moment to make the email retrievable
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    const response = await fetch(`https://api.resend.com/emails/${id}`, {
-      headers: {
-        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-    })
-    if (!response.ok) {
-      return { error: `Resend status fetch failed: ${response.status}` }
-    }
-    return await response.json()
-  } catch (err) {
-    return { error: err instanceof Error ? err.message : 'Unknown error' }
-  }
-}
-
-function escapeHtml(input: string): string {
-  return input
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
 }

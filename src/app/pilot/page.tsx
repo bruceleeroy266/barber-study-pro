@@ -109,13 +109,19 @@ export default function PilotPage() {
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
                 Thank You!
               </h2>
-              <p className="text-gray-400 text-lg mb-8">
-                Your pilot request has been received successfully.
-                <br /><br />
-                If you selected <span className="text-[#D4AF37] font-medium">Barbering</span>, a member of our team will contact you within one business day.
-                <br /><br />
-                If you selected a Coming Soon program, we&apos;ve added you to our early access list and will notify you as soon as your program becomes available.
-              </p>
+              {formData.programType === 'Barbering' ? (
+                <p className="text-gray-400 text-lg mb-8">
+                  Your Barbering pilot request has been received successfully.
+                  <br /><br />
+                  Our team will review your request and contact you within 10 business days.
+                </p>
+              ) : (
+                <p className="text-gray-400 text-lg mb-8">
+                  Your request has been added to our Early Access list.
+                  <br /><br />
+                  We&apos;ll notify you as soon as your selected program becomes available.
+                </p>
+              )}
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   href="/demo"
@@ -224,9 +230,9 @@ export default function PilotPage() {
                     <div>
                       <h3 className="text-[#D4AF37] font-semibold mb-1">Currently Piloting Barbering</h3>
                       <p className="text-gray-400 text-sm leading-relaxed">
-                        ASCYN PRO is currently accepting pilot schools for our Barbering program only.
-                        Cosmetology, Esthetics, Nail Technology, and Instructor Training are actively being developed and will be available in future releases.
-                        If you&apos;re interested in one of these programs, you may still submit a request and we&apos;ll notify you as soon as early access becomes available.
+                        ASCYN PRO is currently accepting pilot partners for Barbering only.
+                        Cosmetology, Esthetics, Nail Technology, and Instructor Training are actively being developed.
+                        You are welcome to request early access and we&apos;ll notify you as soon as your selected program becomes available.
                       </p>
                     </div>
                   </div>
