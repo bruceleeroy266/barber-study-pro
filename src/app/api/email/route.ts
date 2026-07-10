@@ -181,12 +181,25 @@ export async function POST(request: NextRequest) {
       }),
     ])
 
+    console.log('[Email API] Notification payload', {
+      from: NOTIFICATION_FROM_EMAIL,
+      to: TO_EMAIL,
+      replyTo: email,
+      subject: notificationSubject,
+      htmlLength: notificationHtml.length,
+      textLength: notificationText.length,
+    })
+
     console.log('[Email API] Resend results', {
       notificationId: notificationResult.data?.id ?? null,
       notificationError: notificationResult.error ?? null,
       confirmationId: confirmationResult.data?.id ?? null,
       confirmationError: confirmationResult.error ?? null,
     })
+
+    // Check Resend status for the internal notification
+    const notificationStatus = await getResendEmailStatus(notificationResult.data?.id)
+    console.log('[Email API] Notification status', notificationStatus)
 
     if (notificationResult.error || confirmationResult.error) {
       console.error('[Email API] Resend error:', notificationResult.error, confirmationResult.error)
@@ -212,6 +225,24 @@ export async function POST(request: NextRequest) {
       { error: 'Something went wrong. Please try again.' },
       { status: 500 }
     )
+  }
+}
+
+async function getResendEmailStatus(id: string | undefined | null) {
+  if (!id || !process.env.RESEND_API_KEY) return null
+  try {
+    const response = await fetch(`https://api.resend.com/emails/${id}`, {
+      headers: {
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    if (!response.ok) {
+      return { error: `Resend status fetch failed: ${response.status}` }
+    }
+    return await response.json()
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : 'Unknown error' }
   }
 }
 
