@@ -5,14 +5,16 @@ const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null
 
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'hello@ascynpro.com'
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'ASCYN PRO <hello@ascynpro.com>'
+const NOTIFICATION_FROM_EMAIL = process.env.NOTIFICATION_FROM_EMAIL || 'ASCYN PRO <notifications@ascynpro.com>'
 const TO_EMAIL = process.env.EMAIL_TO || 'hello@ascynpro.com'
 
 // Diagnostic logging (no values exposed)
 console.log('[Email API] Boot', {
   hasKey: !!process.env.RESEND_API_KEY,
   keyLength: process.env.RESEND_API_KEY?.length ?? 0,
-  from: FROM_EMAIL,
+  visitorFrom: FROM_EMAIL,
+  notificationFrom: NOTIFICATION_FROM_EMAIL,
   to: TO_EMAIL,
   resendInitialized: !!resend,
 })
@@ -153,8 +155,9 @@ export async function POST(request: NextRequest) {
 
     const [notificationResult, confirmationResult] = await Promise.all([
       resend.emails.send({
-        from: FROM_EMAIL,
+        from: NOTIFICATION_FROM_EMAIL,
         to: TO_EMAIL,
+        replyTo: email,
         subject: notificationSubject,
         html: notificationHtml,
         text: notificationText,
