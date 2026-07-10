@@ -216,6 +216,7 @@ export async function POST(request: NextRequest) {
           notification: notificationResult.data?.id ?? null,
           confirmation: confirmationResult.data?.id ?? null,
         },
+        notificationStatus,
       },
       { status: 200 }
     )
