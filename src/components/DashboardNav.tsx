@@ -62,9 +62,8 @@ export default function DashboardNav({ user }: DashboardNavProps) {
       {/* Mobile menu button */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-800 px-4 py-3">
         <div className="flex items-center justify-between">
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <span className="text-2xl">✂️</span>
-            <span className="font-bold text-white">ASCYN PRO</span>
+          <Link href="/dashboard" className="flex items-center">
+            <img src="/logo.svg" alt="ASCYN PRO" className="h-7 w-auto" />
           </Link>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -118,9 +117,8 @@ export default function DashboardNav({ user }: DashboardNavProps) {
       <aside className="hidden lg:block fixed left-0 top-0 bottom-0 w-64 bg-gray-900 border-r border-gray-800">
         <div className="p-6">
           <Link href="/dashboard" className="flex items-center gap-3 mb-8">
-            <span className="text-3xl">✂️</span>
+            <img src="/logo.svg" alt="ASCYN PRO" className="h-8 w-auto" />
             <div>
-              <span className="font-bold text-white block">ASCYN PRO</span>
               <span className="text-xs text-gray-500">v2.0</span>
             </div>
           </Link>

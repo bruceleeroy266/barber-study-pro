@@ -8,8 +8,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center gap-2">
-              <span className="text-2xl">✂️</span>
-              <span className="font-bold text-white text-lg tracking-tight">ASCYN PRO</span>
+              <img src="/logo.svg" alt="ASCYN PRO" className="h-7 w-auto" />
             </Link>
             <div className="flex items-center gap-3">
               <Link
@@ -333,9 +332,8 @@ export default function HomePage() {
       <footer className="border-t border-white/10 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-xl">✂️</span>
-              <span className="font-semibold text-white tracking-tight">ASCYN PRO</span>
+            <div className="flex items-center">
+              <img src="/logo.svg" alt="ASCYN PRO" className="h-6 w-auto" />
             </div>
             <p className="text-gray-500 text-sm">
               © 2026 ASCYN PRO. Built for future licensed professionals.

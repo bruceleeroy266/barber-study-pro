@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40" fill="none">
+  <path d="M8 32L20 8L32 32H26.5L20 19L13.5 32H8Z" fill="#D4AF37"/>
+  <path d="M20 8L8 32H13.5L20 19L26.5 32H32L20 8Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+  <text x="42" y="27" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="700" fill="white" letter-spacing="0.02em">ASCYN</text>
+  <text x="122" y="27" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="400" fill="#D4AF37" letter-spacing="0.05em">PRO</text>
+</svg>
