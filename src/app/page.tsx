@@ -24,7 +24,7 @@ export default function HomePage() {
                 View Demo
               </Link>
               <Link
-                href="/signup"
+                href="/pilot"
                 className="px-4 py-2 text-sm font-semibold bg-[#D4AF37] text-[#0a0a0a] rounded-lg hover:bg-[#F4E4A6] transition-colors"
               >
                 Request Pilot Access
@@ -58,7 +58,7 @@ export default function HomePage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="/signup"
+                href="/pilot"
                 className="px-8 py-4 bg-[#D4AF37] text-[#0a0a0a] font-bold rounded-xl hover:bg-[#F4E4A6] transition-all shadow-lg shadow-[#D4AF37]/20 text-center"
               >
                 Request Pilot Access
@@ -270,10 +270,10 @@ export default function HomePage() {
                   ))}
                 </div>
                 <Link
-                  href="/signup"
+                  href="/pilot"
                   className="inline-flex px-8 py-4 bg-[#D4AF37] text-[#0a0a0a] font-bold rounded-xl hover:bg-[#F4E4A6] transition-all shadow-lg shadow-[#D4AF37]/20"
                 >
-                  Request Pilot Access
+                Request Pilot Access
                 </Link>
               </div>
               <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-8">
@@ -313,10 +313,10 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/signup"
+              href="/pilot"
               className="px-8 py-4 bg-[#D4AF37] text-[#0a0a0a] font-bold rounded-xl hover:bg-[#F4E4A6] transition-all shadow-lg shadow-[#D4AF37]/20"
             >
-              Request Pilot Access
+                Request Pilot Access
             </Link>
             <Link
               href="/demo"
