@@ -1,27 +1,19 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import {
   AlertTriangle,
-  ArrowLeft,
   BarChart3,
-  BookOpen,
-  Calendar,
   CheckCircle,
-  ChevronDown,
-  ChevronUp,
   Clock,
   Download,
   FileText,
-  Filter,
   GraduationCap,
-  LayoutDashboard,
-  MoreHorizontal,
+  Menu,
   Plus,
   Save,
   Search,
-  TrendingDown,
   TrendingUp,
   User,
   Users,
@@ -55,6 +47,7 @@ type Student = {
   topicMastery: { topic: string; score: number }[]
   quizHistory: { chapter: string; score: number; date: string }[]
   recommendedAction: string
+  riskFactors: string[]
   notes: Note[]
 }
 
@@ -90,6 +83,7 @@ const sampleStudents: Student[] = [
       { chapter: 'Ch. 9 — Skin Disorders', score: 90, date: 'Jul 3' },
     ],
     recommendedAction: 'Continue weekly review of chemical texture processing times.',
+    riskFactors: ['Weak topic mastery in Chemical Services'],
     notes: [],
   },
   {
@@ -117,7 +111,8 @@ const sampleStudents: Student[] = [
       { chapter: 'Ch. 7 — Electricity', score: 72, date: 'Jul 5' },
       { chapter: 'Ch. 6 — Anatomy', score: 79, date: 'Jul 1' },
     ],
-    recommendedAction: 'Schedule 1:1 review of Oklahoma state rules and sanitation protocols.',
+    recommendedAction: 'Schedule 1:1 review of state rules and sanitation protocols.',
+    riskFactors: ['Low readiness score (64%)', 'Weak topic mastery in State Rules & Laws', 'Declining confidence trend'],
     notes: [],
   },
   {
@@ -146,6 +141,7 @@ const sampleStudents: Student[] = [
       { chapter: 'Ch. 3 — Professionalism', score: 68, date: 'Jun 20' },
     ],
     recommendedAction: 'Immediate intervention: review infection control fundamentals and set daily study goal.',
+    riskFactors: ['Low readiness score (42%)', 'Inactivity — no study in 5 days', 'Repeated quiz failures', 'Declining confidence trend', 'Weak topic mastery in Infection Control'],
     notes: [],
   },
   {
@@ -174,6 +170,7 @@ const sampleStudents: Student[] = [
       { chapter: 'Ch. 8 — State Rules', score: 82, date: 'Jul 4' },
     ],
     recommendedAction: 'Focus on identifying contagious scalp conditions using flashcards.',
+    riskFactors: ['Weak topic mastery in Hair & Scalp Disorders'],
     notes: [],
   },
   {
@@ -202,6 +199,7 @@ const sampleStudents: Student[] = [
       { chapter: 'Ch. 10 — Hair & Scalp', score: 65, date: 'Jun 29' },
     ],
     recommendedAction: 'Continue retest loop on chemical services until score reaches 75%.',
+    riskFactors: ['Low readiness score (55%)', 'Repeated quiz failures in Chemical Services', 'Weak topic mastery in Chemical Services'],
     notes: [],
   },
   {
@@ -230,6 +228,7 @@ const sampleStudents: Student[] = [
       { chapter: 'Ch. 12 — Chemical Texture', score: 88, date: 'Jul 5' },
     ],
     recommendedAction: 'Light review of nail disorders and anatomy.',
+    riskFactors: ['Weak topic mastery in Nail Care'],
     notes: [],
   },
 ]
@@ -252,7 +251,7 @@ const recentActivity = [
 ]
 
 // ───────────────────────────────────────────────
-// COMPONENTS
+// HELPERS
 // ────────────────────────────────────────────
 
 function RiskBadge({ status }: { status: string }) {
@@ -301,15 +300,210 @@ function ScoreRing({ score }: { score: number }) {
   )
 }
 
+function generateStudentReportHtml(student: Student): string {
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>ASCYN PRO — Student Readiness Report</title>
+        <style>
+          body { font-family: Inter, system-ui, sans-serif; color: #1a1a1a; background: #fff; padding: 40px; line-height: 1.5; }
+          .header { border-bottom: 3px solid #D4AF37; padding-bottom: 20px; margin-bottom: 30px; }
+          .logo { font-size: 24px; font-weight: 700; color: #0a0a0a; }
+          .subtitle { color: #666; font-size: 14px; margin-top: 4px; }
+          h1 { font-size: 28px; margin: 0 0 8px; }
+          h2 { font-size: 18px; margin: 30px 0 12px; color: #0a0a0a; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+          .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 20px 0; }
+          .card { border: 1px solid #e5e5e5; border-radius: 8px; padding: 16px; }
+          .label { font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+          .value { font-size: 24px; font-weight: 700; }
+          .risk-high { color: #ef4444; }
+          .risk-medium { color: #eab308; }
+          .risk-low { color: #22c55e; }
+          .topic { display: flex; justify-content: space-between; margin-bottom: 8px; }
+          .bar { height: 8px; background: #f3f3f3; border-radius: 4px; margin-top: 4px; }
+          .bar-fill { height: 100%; border-radius: 4px; }
+          table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+          th, td { text-align: left; padding: 10px; border-bottom: 1px solid #eee; }
+          th { font-size: 12px; text-transform: uppercase; color: #666; }
+          .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #999; }
+          @media print { body { padding: 0; } }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="logo">ASCYN PRO</div>
+          <div class="subtitle">Student Readiness Report — Presentation Demo</div>
+        </div>
+        <h1>${student.name}</h1>
+        <p>${student.program} • Demo Barber Academy</p>
+        <div class="grid">
+          <div class="card">
+            <div class="label">Board Readiness</div>
+            <div class="value ${student.readiness >= 75 ? 'risk-low' : student.readiness >= 60 ? 'risk-medium' : 'risk-high'}">${student.readiness}%</div>
+          </div>
+          <div class="card">
+            <div class="label">Average Quiz Score</div>
+            <div class="value">${student.avgScore}%</div>
+          </div>
+          <div class="card">
+            <div class="label">Risk Level</div>
+            <div class="value ${student.riskStatus === 'high' ? 'risk-high' : student.riskStatus === 'medium' ? 'risk-medium' : 'risk-low'}">${student.riskStatus.toUpperCase()}</div>
+          </div>
+        </div>
+        <h2>Topic Mastery</h2>
+        ${student.topicMastery.map(t => {
+          const color = t.score >= 75 ? '#22c55e' : t.score >= 60 ? '#D4AF37' : '#ef4444'
+          return `
+            <div style="margin-bottom: 12px;">
+              <div class="topic"><span>${t.topic}</span><span>${t.score}%</span></div>
+              <div class="bar"><div class="bar-fill" style="width: ${t.score}%; background: ${color};"></div></div>
+            </div>
+          `
+        }).join('')}
+        <h2>Quiz History</h2>
+        <table>
+          <thead><tr><th>Chapter</th><th>Date</th><th>Score</th></tr></thead>
+          <tbody>
+            ${student.quizHistory.map(q => `<tr><td>${q.chapter}</td><td>${q.date}</td><td>${q.score}%</td></tr>`).join('')}
+          </tbody>
+        </table>
+        <h2>Recommended Action</h2>
+        <p>${student.recommendedAction}</p>
+        <div class="footer">
+          Generated by ASCYN PRO demonstration environment. Data is simulated and does not contain real student records.
+        </div>
+      </body>
+    </html>
+  `
+}
+
+function generateClassReportHtml(students: Student[]): string {
+  const classAverage = Math.round(students.reduce((acc, s) => acc + s.readiness, 0) / students.length)
+  const atRiskCount = students.filter(s => s.riskStatus !== 'low').length
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>ASCYN PRO — Class Readiness Report</title>
+        <style>
+          body { font-family: Inter, system-ui, sans-serif; color: #1a1a1a; background: #fff; padding: 40px; line-height: 1.5; }
+          .header { border-bottom: 3px solid #D4AF37; padding-bottom: 20px; margin-bottom: 30px; }
+          .logo { font-size: 24px; font-weight: 700; color: #0a0a0a; }
+          .subtitle { color: #666; font-size: 14px; margin-top: 4px; }
+          h1 { font-size: 28px; margin: 0 0 8px; }
+          h2 { font-size: 18px; margin: 30px 0 12px; color: #0a0a0a; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+          .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 20px 0; }
+          .card { border: 1px solid #e5e5e5; border-radius: 8px; padding: 16px; }
+          .label { font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+          .value { font-size: 24px; font-weight: 700; }
+          table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+          th, td { text-align: left; padding: 10px; border-bottom: 1px solid #eee; }
+          th { font-size: 12px; text-transform: uppercase; color: #666; }
+          .risk-high { color: #ef4444; font-weight: 600; }
+          .risk-medium { color: #eab308; font-weight: 600; }
+          .risk-low { color: #22c55e; font-weight: 600; }
+          .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #999; }
+          @media print { body { padding: 0; } }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="logo">ASCYN PRO</div>
+          <div class="subtitle">Class Readiness Report — Presentation Demo</div>
+        </div>
+        <h1>Demo Barber Academy</h1>
+        <p>Summer 2026 Cohort</p>
+        <div class="grid">
+          <div class="card"><div class="label">Total Students</div><div class="value">${students.length}</div></div>
+          <div class="card"><div class="label">Class Average</div><div class="value">${classAverage}%</div></div>
+          <div class="card"><div class="label">At Risk</div><div class="value" style="color: ${atRiskCount > 0 ? '#ef4444' : '#22c55e'};">${atRiskCount}</div></div>
+          <div class="card"><div class="label">Programs</div><div class="value">2</div></div>
+        </div>
+        <h2>Student Roster</h2>
+        <table>
+          <thead>
+            <tr><th>Student</th><th>Program</th><th>Readiness</th><th>Weakest Topic</th><th>Risk</th></tr>
+          </thead>
+          <tbody>
+            ${students.map(s => `
+              <tr>
+                <td>${s.name}</td>
+                <td>${s.program}</td>
+                <td>${s.readiness}%</td>
+                <td>${s.weakestTopic}</td>
+                <td class="${s.riskStatus === 'high' ? 'risk-high' : s.riskStatus === 'medium' ? 'risk-medium' : 'risk-low'}">${s.riskStatus.toUpperCase()}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        <h2>Class Weak Areas</h2>
+        <table>
+          <thead><tr><th>Topic</th><th>Class Average</th><th>Exam Weight</th></tr></thead>
+          <tbody>
+            ${heatmapTopics.map(t => `<tr><td>${t.topic}</td><td>${t.classAvg}%</td><td>${t.weight}</td></tr>`).join('')}
+          </tbody>
+        </table>
+        <div class="footer">
+          Generated by ASCYN PRO demonstration environment. Data is simulated and does not contain real student records.
+        </div>
+      </body>
+    </html>
+  `
+}
+
+function openReport(title: string, html: string) {
+  const win = window.open('', '_blank')
+  if (!win) {
+    alert('Please allow popups to view the report.')
+    return
+  }
+  win.document.write(html)
+  win.document.close()
+  win.focus()
+}
+
+function downloadCsv(students: Student[]) {
+  const headers = ['Name', 'Program', 'Readiness', 'Weakest Topic', 'Risk Status', 'Quizzes Taken', 'Average Score', 'Recommended Action']
+  const rows = students.map(s => [
+    s.name,
+    s.program,
+    `${s.readiness}%`,
+    s.weakestTopic,
+    s.riskStatus,
+    s.quizzesTaken.toString(),
+    `${s.avgScore}%`,
+    s.recommendedAction,
+  ])
+  const csv = [headers, ...rows]
+    .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+    .join('\n')
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = 'ascyn-pro-demo-roster.csv'
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+}
+
+// ───────────────────────────────────────────────
+// MAIN PAGE
+// ────────────────────────────────────────────
+
 export default function InstructorDemoPage() {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [riskFilter, setRiskFilter] = useState('all')
-  const [students, setStudents] = useState(sampleStudents)
+  const [students, setStudents] = useState<Student[]>(sampleStudents)
   const [noteText, setNoteText] = useState('')
   const [noteType, setNoteType] = useState('General')
   const [noteFollowUp, setNoteFollowUp] = useState('This week')
   const [showAddNote, setShowAddNote] = useState(false)
+  const [noteSaved, setNoteSaved] = useState(false)
+  const modalRef = useRef<HTMLDivElement>(null)
 
   const filteredStudents = students.filter((s) => {
     const matchesSearch = s.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -319,13 +513,46 @@ export default function InstructorDemoPage() {
 
   const atRiskStudents = students.filter((s) => s.riskStatus !== 'low')
   const classAverage = Math.round(students.reduce((acc, s) => acc + s.readiness, 0) / students.length)
-  const activeStudents = students.filter((s) => !s.lastActive.includes('days ago') || parseInt(s.lastActive) < 4).length
+  const activeStudents = students.filter((s) => {
+    if (s.lastActive.includes('hour')) return true
+    if (s.lastActive.includes('day')) {
+      const days = parseInt(s.lastActive.match(/\d+/)?.[0] || '0')
+      return days < 4
+    }
+    return false
+  }).length
 
   const openStudent = (student: Student) => {
     setSelectedStudent(student)
     setNoteText('')
+    setNoteSaved(false)
     setShowAddNote(false)
   }
+
+  const closeModal = () => {
+    setSelectedStudent(null)
+  }
+
+  useEffect(() => {
+    if (selectedStudent) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [selectedStudent])
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') closeModal()
+    }
+    if (selectedStudent) {
+      window.addEventListener('keydown', handleKeyDown)
+      return () => window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [selectedStudent])
 
   const addNote = () => {
     if (!selectedStudent || !noteText.trim()) return
@@ -348,13 +575,15 @@ export default function InstructorDemoPage() {
     setStudents(updated)
     setSelectedStudent(updated.find((s) => s.id === selectedStudent.id) || null)
     setNoteText('')
+    setNoteSaved(true)
     setShowAddNote(false)
+    setTimeout(() => setNoteSaved(false), 4000)
   }
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-[#0a0a0a]/95 backdrop-blur-sm">
+      <nav className="fixed top-0 left-0 right-0 z-40 border-b border-white/10 bg-[#0a0a0a]/95 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center">
@@ -378,23 +607,39 @@ export default function InstructorDemoPage() {
         </div>
       </nav>
 
+      {/* Demo Banner */}
+      <div className="fixed top-16 left-0 right-0 z-30 bg-[#D4AF37]/10 border-b border-[#D4AF37]/20 px-4 py-2">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+          <div className="flex items-center gap-2">
+            <span className="px-2 py-0.5 bg-[#D4AF37]/20 text-[#D4AF37] text-xs font-bold rounded">PRESENTATION DEMO</span>
+            <span className="text-gray-300 text-sm">This demonstration uses sample student data and does not contain real student records.</span>
+          </div>
+        </div>
+      </div>
+
       {/* Header */}
-      <header className="pt-28 pb-8 px-4 sm:px-6 lg:px-8">
+      <header className="pt-36 pb-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
               <div className="text-[#D4AF37] font-semibold text-sm mb-2">INSTRUCTOR PORTAL — DEMO</div>
               <h1 className="text-3xl md:text-4xl font-bold text-white">Class Readiness Dashboard</h1>
-              <p className="text-gray-400 mt-2">Demo Barber Academy • Summer 2026 Cohort</p>
+              <p className="text-gray-400 mt-2">Demo Academy • Summer 2026 Cohort</p>
             </div>
-            <div className="flex items-center gap-3">
-              <button className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm font-medium hover:bg-white/10 transition-colors flex items-center gap-2">
-                <Download className="w-4 h-4" />
-                Export Data
-              </button>
-              <button className="px-4 py-2 bg-[#D4AF37] text-[#0a0a0a] rounded-lg text-sm font-bold hover:bg-[#F4E4A6] transition-colors flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                onClick={() => openReport('Class Report', generateClassReportHtml(students))}
+                className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm font-medium hover:bg-white/10 transition-colors flex items-center gap-2"
+              >
                 <FileText className="w-4 h-4" />
                 Class Report
+              </button>
+              <button
+                onClick={() => downloadCsv(students)}
+                className="px-4 py-2 bg-[#D4AF37] text-[#0a0a0a] rounded-lg text-sm font-bold hover:bg-[#F4E4A6] transition-colors flex items-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                Export Data
               </button>
             </div>
           </div>
@@ -464,27 +709,24 @@ export default function InstructorDemoPage() {
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {heatmapTopics.map((topic) => {
-              const color = topic.classAvg < 65 ? 'rgba(248,113,113,0.4)' : topic.classAvg < 80 ? 'rgba(212,175,39,0.6)' : 'rgba(74,222,128,0.4)'
-              return (
-                <div key={topic.topic} className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-white font-medium">{topic.topic}</span>
-                    <span className={`text-xs px-2 py-0.5 rounded-full border ${
-                      topic.weight === 'High' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-[#D4AF37]/10 text-[#D4AF37] border-[#D4AF37]/20'
-                    }`}>
-                      {topic.weight} Weight
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="text-2xl font-bold text-white">{topic.classAvg}%</div>
-                    <div className="flex-1">
-                      <ProgressBar value={topic.classAvg} color={topic.classAvg < 65 ? '#f87171' : topic.classAvg < 80 ? '#D4AF37' : '#4ade80'} />
-                    </div>
+            {heatmapTopics.map((topic) => (
+              <div key={topic.topic} className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-white font-medium">{topic.topic}</span>
+                  <span className={`text-xs px-2 py-0.5 rounded-full border ${
+                    topic.weight === 'High' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-[#D4AF37]/10 text-[#D4AF37] border-[#D4AF37]/20'
+                  }`}>
+                    {topic.weight} Weight
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="text-2xl font-bold text-white">{topic.classAvg}%</div>
+                  <div className="flex-1">
+                    <ProgressBar value={topic.classAvg} color={topic.classAvg < 65 ? '#f87171' : topic.classAvg < 80 ? '#D4AF37' : '#4ade80'} />
                   </div>
                 </div>
-              )
-            })}
+              </div>
+            ))}
           </div>
         </section>
 
@@ -497,7 +739,7 @@ export default function InstructorDemoPage() {
                   <h2 className="text-xl font-bold text-white">Student Roster</h2>
                   <p className="text-gray-500 text-sm mt-1">Tap a student to view detailed readiness profile</p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                   <div className="relative">
                     <Search className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
@@ -505,7 +747,7 @@ export default function InstructorDemoPage() {
                       placeholder="Search students..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-9 pr-4 py-2 bg-[#0a0a0a] border border-white/10 rounded-lg text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#D4AF37]/50"
+                      className="pl-9 pr-4 py-2 bg-[#0a0a0a] border border-white/10 rounded-lg text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#D4AF37]/50 w-full sm:w-auto"
                     />
                   </div>
                   <select
@@ -587,12 +829,22 @@ export default function InstructorDemoPage() {
                       onClick={() => openStudent(student)}
                       className="w-full text-left p-4 bg-[#0a0a0a] border border-white/10 rounded-lg hover:border-red-500/30 transition-colors"
                     >
-                      <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center justify-between mb-2">
                         <span className="text-white font-medium">{student.name}</span>
                         <RiskBadge status={student.riskStatus} />
                       </div>
-                      <p className="text-gray-500 text-sm">{student.recentActivity}</p>
-                      <p className="text-red-400 text-xs mt-2">Risk factor: {student.readiness < 50 ? 'Low readiness score' : student.lastActive.includes('5 days') ? 'Inactivity' : 'Repeated weak area'}</p>
+                      <p className="text-gray-500 text-sm mb-2">{student.recentActivity}</p>
+                      <div className="space-y-1">
+                        {student.riskFactors.slice(0, 2).map((factor, idx) => (
+                          <p key={idx} className="text-red-400 text-xs flex items-start gap-1.5">
+                            <span className="mt-0.5">•</span>
+                            {factor}
+                          </p>
+                        ))}
+                        {student.riskFactors.length > 2 && (
+                          <p className="text-red-400/70 text-xs">+{student.riskFactors.length - 2} more flags</p>
+                        )}
+                      </div>
                     </button>
                   ))
                 )}
@@ -628,15 +880,17 @@ export default function InstructorDemoPage() {
               <p className="text-gray-400 text-sm mt-1">Generate shareable readiness reports for students or administrators.</p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <button className="px-5 py-3 bg-white/5 border border-white/10 rounded-lg text-sm font-medium hover:bg-white/10 transition-colors flex items-center gap-2">
-                <User className="w-4 h-4" />
-                View Student Report
-              </button>
-              <button className="px-5 py-3 bg-white/5 border border-white/10 rounded-lg text-sm font-medium hover:bg-white/10 transition-colors flex items-center gap-2">
+              <button
+                onClick={() => openReport('Class Report', generateClassReportHtml(students))}
+                className="px-5 py-3 bg-white/5 border border-white/10 rounded-lg text-sm font-medium hover:bg-white/10 transition-colors flex items-center gap-2"
+              >
                 <Users className="w-4 h-4" />
                 View Class Report
               </button>
-              <button className="px-5 py-3 bg-[#D4AF37] text-[#0a0a0a] rounded-lg text-sm font-bold hover:bg-[#F4E4A6] transition-colors flex items-center gap-2">
+              <button
+                onClick={() => downloadCsv(students)}
+                className="px-5 py-3 bg-[#D4AF37] text-[#0a0a0a] rounded-lg text-sm font-bold hover:bg-[#F4E4A6] transition-colors flex items-center gap-2"
+              >
                 <Download className="w-4 h-4" />
                 Export Data
               </button>
@@ -647,30 +901,39 @@ export default function InstructorDemoPage() {
 
       {/* 5. Individual Student Modal + 6. Intervention Notes */}
       {selectedStudent && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-[#111111] border border-white/10 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+        <div
+          className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) closeModal()
+          }}
+        >
+          <div
+            ref={modalRef}
+            className="bg-[#111111] border border-white/10 rounded-none sm:rounded-2xl w-full max-w-4xl max-h-none sm:max-h-[90vh] overflow-y-auto"
+          >
             {/* Modal Header */}
-            <div className="sticky top-0 bg-[#111111] border-b border-white/10 p-6 flex items-center justify-between z-10">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-[#D4AF37]/10 flex items-center justify-center text-[#D4AF37] font-bold text-lg">
+            <div className="sticky top-0 bg-[#111111] border-b border-white/10 p-4 sm:p-6 flex items-center justify-between z-10">
+              <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#D4AF37]/10 flex items-center justify-center text-[#D4AF37] font-bold text-sm sm:text-lg shrink-0">
                   {selectedStudent.name.split(' ').map((n) => n[0]).join('')}
                 </div>
-                <div>
-                  <h2 className="text-xl font-bold text-white">{selectedStudent.name}</h2>
-                  <p className="text-gray-500 text-sm">{selectedStudent.program} • {selectedStudent.quizzesTaken} quizzes taken</p>
+                <div className="min-w-0">
+                  <h2 className="text-lg sm:text-xl font-bold text-white truncate">{selectedStudent.name}</h2>
+                  <p className="text-gray-500 text-xs sm:text-sm truncate">{selectedStudent.program} • {selectedStudent.quizzesTaken} quizzes</p>
                 </div>
               </div>
               <button
-                onClick={() => setSelectedStudent(null)}
-                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                onClick={closeModal}
+                className="p-2 hover:bg-white/10 rounded-lg transition-colors shrink-0"
+                aria-label="Close"
               >
                 <X className="w-5 h-5 text-gray-400" />
               </button>
             </div>
 
-            <div className="p-6 space-y-8">
+            <div className="p-4 sm:p-6 space-y-6 sm:space-y-8">
               {/* Top Stats */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="bg-[#0a0a0a] border border-white/10 rounded-xl p-5 text-center">
                   <div className="text-gray-500 text-sm mb-3">Overall Readiness</div>
                   <div className="flex justify-center mb-3">
@@ -685,7 +948,7 @@ export default function InstructorDemoPage() {
                     {selectedStudent.confidenceTrend.map((score, idx) => (
                       <div
                         key={idx}
-                        className="flex-1 rounded-t"
+                        className="flex-1 rounded-t min-w-[4px]"
                         style={{
                           height: `${score}%`,
                           backgroundColor: score >= 75 ? '#4ade80' : score >= 60 ? '#D4AF37' : '#f87171',
@@ -705,6 +968,24 @@ export default function InstructorDemoPage() {
                   <p className="text-white text-sm leading-relaxed">{selectedStudent.recommendedAction}</p>
                 </div>
               </div>
+
+              {/* Risk Factors */}
+              {selectedStudent.riskFactors.length > 0 && (
+                <div className="bg-red-500/5 border border-red-500/20 rounded-xl p-4">
+                  <h3 className="text-sm font-bold text-red-400 mb-3 flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4" />
+                    Why This Student Was Flagged
+                  </h3>
+                  <ul className="space-y-2">
+                    {selectedStudent.riskFactors.map((factor, idx) => (
+                      <li key={idx} className="text-gray-300 text-sm flex items-start gap-2">
+                        <span className="text-red-400 mt-0.5">•</span>
+                        {factor}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
               {/* Topic Mastery */}
               <div>
@@ -754,6 +1035,24 @@ export default function InstructorDemoPage() {
                 </div>
               </div>
 
+              {/* Reporting buttons inside modal */}
+              <div className="flex flex-wrap gap-3">
+                <button
+                  onClick={() => openReport('Student Report', generateStudentReportHtml(selectedStudent))}
+                  className="px-5 py-3 bg-white/5 border border-white/10 rounded-lg text-sm font-medium hover:bg-white/10 transition-colors flex items-center gap-2"
+                >
+                  <FileText className="w-4 h-4" />
+                  View Student Report
+                </button>
+                <button
+                  onClick={() => downloadCsv([selectedStudent])}
+                  className="px-5 py-3 bg-white/5 border border-white/10 rounded-lg text-sm font-medium hover:bg-white/10 transition-colors flex items-center gap-2"
+                >
+                  <Download className="w-4 h-4" />
+                  Export This Student
+                </button>
+              </div>
+
               {/* Intervention Notes */}
               <div>
                 <div className="flex items-center justify-between mb-4">
@@ -766,6 +1065,20 @@ export default function InstructorDemoPage() {
                     Add Note
                   </button>
                 </div>
+
+                <div className="bg-[#D4AF37]/5 border border-[#D4AF37]/20 rounded-lg p-3 mb-4">
+                  <p className="text-[#D4AF37] text-sm flex items-start gap-2">
+                    <span className="font-bold">Demo:</span>
+                    Notes are saved in your browser session and will reset when the page refreshes.
+                  </p>
+                </div>
+
+                {noteSaved && (
+                  <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3 mb-4 flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    <span className="text-green-400 text-sm font-medium">Note saved successfully.</span>
+                  </div>
+                )}
 
                 {showAddNote && (
                   <div className="bg-[#0a0a0a] border border-white/10 rounded-xl p-4 mb-4">
@@ -847,6 +1160,20 @@ export default function InstructorDemoPage() {
           </div>
         </div>
       )}
+
+      {/* Footer */}
+      <footer className="border-t border-white/10 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center">
+              <img src="/logo.svg" alt="ASCYN PRO" className="h-6 w-auto" />
+            </div>
+            <p className="text-gray-500 text-sm">
+              © 2026 ASCYN PRO. Built for future licensed professionals.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }

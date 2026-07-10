@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   BookOpen,
   Brain,
@@ -25,6 +26,7 @@ import {
   Award,
   Menu,
   X,
+  ArrowLeft,
 } from "lucide-react";
 
 const navItems = [
@@ -95,6 +97,20 @@ export default function DemoClient() {
 
   return (
     <main className="min-h-screen bg-[#FAFAF8] text-[#1a2332] scroll-smooth">
+      {/* ── DEMO BANNER ── */}
+      <div className="bg-[#B8860B]/10 border-b border-[#B8860B]/20 px-4 py-2">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+          <div className="flex items-center gap-2">
+            <span className="px-2 py-0.5 bg-[#B8860B]/20 text-[#B8860B] text-xs font-bold rounded">PRESENTATION DEMO</span>
+            <span className="text-[#5a6a7a] text-sm">Sample student data. No real student records.</span>
+          </div>
+          <Link href="/demo" className="text-[#B8860B] text-sm font-medium hover:underline flex items-center gap-1">
+            <ArrowLeft className="w-3 h-3" />
+            Back to Demo Selection
+          </Link>
+        </div>
+      </div>
+
       {/* ── STICKY NAVIGATION ── */}
       <nav className="sticky top-0 z-50 bg-[#FAFAF8]/95 backdrop-blur-md border-b border-[#1a2332]/8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
@@ -119,9 +135,13 @@ export default function DemoClient() {
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="hidden sm:inline text-xs uppercase tracking-widest text-[#8a9aaa]">
-              Demo
-            </span>
+            <Link
+              href="/demo"
+              className="hidden sm:inline-flex items-center gap-1 text-xs uppercase tracking-widest text-[#B8860B] hover:text-[#a07800] transition-colors"
+            >
+              <ArrowLeft className="w-3 h-3" />
+              Demo Home
+            </Link>
             {/* Mobile hamburger */}
             <button
               onClick={() => setMobileNavOpen((v) => !v)}
