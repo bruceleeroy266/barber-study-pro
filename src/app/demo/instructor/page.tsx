@@ -490,6 +490,31 @@ function generateClassReportHtml(students: Student[]): string {
   `
 }
 
+function FilterButton({
+  value,
+  label,
+  currentFilter,
+  onChange,
+}: {
+  value: 'all' | 'on-track' | 'needs-attention' | 'inactive'
+  label: string
+  currentFilter: string
+  onChange: (value: 'all' | 'on-track' | 'needs-attention' | 'inactive') => void
+}) {
+  return (
+    <button
+      onClick={() => onChange(value)}
+      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+        currentFilter === value
+          ? 'bg-[#D4AF37] text-[#0a0a0a]'
+          : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
+      }`}
+    >
+      {label}
+    </button>
+  )
+}
+
 function openReport(title: string, html: string) {
   const win = window.open('', '_blank')
   if (!win) {
@@ -628,25 +653,6 @@ export default function InstructorDemoPage() {
     setShowAddNote(false)
     setTimeout(() => setNoteSaved(false), 4000)
   }
-
-  const FilterButton = ({
-    value,
-    label,
-  }: {
-    value: 'all' | 'on-track' | 'needs-attention' | 'inactive'
-    label: string
-  }) => (
-    <button
-      onClick={() => setRosterFilter(value)}
-      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-        rosterFilter === value
-          ? 'bg-[#D4AF37] text-[#0a0a0a]'
-          : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
-      }`}
-    >
-      {label}
-    </button>
-  )
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white overflow-x-hidden">
@@ -892,10 +898,10 @@ export default function InstructorDemoPage() {
               </div>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <FilterButton value="all" label="All" />
-                  <FilterButton value="on-track" label="On track" />
-                  <FilterButton value="needs-attention" label="Needs attention" />
-                  <FilterButton value="inactive" label="Inactive" />
+                  <FilterButton value="all" label="All" currentFilter={rosterFilter} onChange={setRosterFilter} />
+                  <FilterButton value="on-track" label="On track" currentFilter={rosterFilter} onChange={setRosterFilter} />
+                  <FilterButton value="needs-attention" label="Needs attention" currentFilter={rosterFilter} onChange={setRosterFilter} />
+                  <FilterButton value="inactive" label="Inactive" currentFilter={rosterFilter} onChange={setRosterFilter} />
                 </div>
                 <div className="relative">
                   <Search className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
