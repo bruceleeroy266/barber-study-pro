@@ -105,12 +105,13 @@ export async function middleware(request: NextRequest) {
     role: string | null
     approval_status: string
     is_disabled: boolean
+    requires_password_change: boolean
   }
   let profile: MinimalProfile | null = null
   if ((isProtectedRoute || isAuthRoute) && user) {
     const { data: profileData } = await supabase
       .from('profiles')
-      .select('role, approval_status, is_disabled')
+      .select('role, approval_status, is_disabled, requires_password_change')
       .eq('id', user.id)
       .single()
     if (profileData) {
@@ -125,7 +126,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // Protected routes: enforce approval and disabled status server-side.
+  // Protected routes: enforce approval, disabled status, and password-change requirement.
   if (isProtectedRoute && user) {
     const access = validateLoginAccess(profile)
     if (!access.ok) {
@@ -135,6 +136,13 @@ export async function middleware(request: NextRequest) {
       if (request.nextUrl.pathname !== '/login') {
         return NextResponse.redirect(url)
       }
+    }
+
+    if (profile?.requires_password_change && !request.nextUrl.pathname.startsWith('/update-password')) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/update-password'
+      url.searchParams.set('reason', 'required')
+      return NextResponse.redirect(url)
     }
   }
 

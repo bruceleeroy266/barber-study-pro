@@ -13,6 +13,7 @@ export interface Profile {
   is_disabled: boolean
   approved_by: string | null
   approved_at: string | null
+  requires_password_change: boolean
   created_at: string
   updated_at: string
 }

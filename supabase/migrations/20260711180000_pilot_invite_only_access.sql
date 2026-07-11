@@ -9,7 +9,8 @@ alter table public.profiles
     check (approval_status in ('pending', 'approved', 'rejected')),
   add column if not exists is_disabled boolean default false,
   add column if not exists approved_by uuid references auth.users(id) on delete set null,
-  add column if not exists approved_at timestamptz;
+  add column if not exists approved_at timestamptz,
+  add column if not exists requires_password_change boolean default false;
 
 -- ───────────────────────────────────────────────
 -- Trigger: self-registered accounts start as pending

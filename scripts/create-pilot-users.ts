@@ -90,6 +90,7 @@ async function upsertProfile(
       approval_status: 'approved',
       is_disabled: false,
       approved_at: new Date().toISOString(),
+      requires_password_change: true,
       updated_at: new Date().toISOString(),
     },
     { onConflict: 'id' }

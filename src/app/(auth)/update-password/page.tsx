@@ -38,6 +38,15 @@ export default function UpdatePasswordPage() {
 
       if (error) throw error
 
+      // Clear the forced password-change flag if it was set.
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        await supabase
+          .from('profiles')
+          .update({ requires_password_change: false, updated_at: new Date().toISOString() })
+          .eq('id', user.id)
+      }
+
       setSuccess(true)
       // Redirect to login after 3 seconds
       setTimeout(() => {

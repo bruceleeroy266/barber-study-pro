@@ -53,6 +53,7 @@ export default async function AttendanceManagementPage() {
     is_disabled: false,
     approved_by: null,
     approved_at: null,
+    requires_password_change: false,
     created_at: '',
     updated_at: '',
   }

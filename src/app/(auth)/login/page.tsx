@@ -110,6 +110,12 @@ function LoginForm() {
         return
       }
 
+      // Force password change on first login for seeded/invited accounts.
+      if (profile.requires_password_change) {
+        router.push('/update-password?reason=required')
+        return
+      }
+
       // Redirect by role, or fall back to the requested redirect if allowed.
       const roleRedirect = getRoleBasedRedirect(profile.role)
       const target = redirect !== '/dashboard' ? redirect : roleRedirect
