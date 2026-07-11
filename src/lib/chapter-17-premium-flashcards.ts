@@ -7,6 +7,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   // === BOARD ESSENTIAL (cards 1–38) ===
   {
     id: 'fc-ch17-001',
+    standardId: 'CH17-F001',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C02',
     front: 'What is the main purpose of a chemical texture service?',
@@ -18,6 +19,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-002',
+    standardId: 'CH17-F002',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C02',
     front: 'What is a disulfide bond?',
@@ -29,6 +31,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-003',
+    standardId: 'CH17-F003',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C02',
     front: 'What happens during the reduction phase of a texture service?',
@@ -40,6 +43,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-004',
+    standardId: 'CH17-F004',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C02',
     front: 'What happens during the oxidation (neutralization) phase?',
@@ -51,6 +55,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-005',
+    standardId: 'CH17-F005',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C02',
     front: 'Name the three main categories of chemical texture services.',
@@ -62,6 +67,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-006',
+    standardId: 'CH17-F006',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C01',
     front: 'Why is porosity the most important factor in chemical texture processing?',
@@ -73,6 +79,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-007',
+    standardId: 'CH17-F007',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C01',
     front: 'How does resistant hair behave during chemical texture processing?',
@@ -84,6 +91,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-008',
+    standardId: 'CH17-F008',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C01',
     front: 'How does porous hair behave during chemical texture processing?',
@@ -95,6 +103,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-009',
+    standardId: 'CH17-F009',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C01',
     front: 'What does normal elasticity look like?',
@@ -106,6 +115,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-010',
+    standardId: 'CH17-F010',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C01',
     front: 'What does low elasticity indicate?',
@@ -117,6 +127,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-011',
+    standardId: 'CH17-F011',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C01',
     front: 'List six characteristics that must be analyzed before a chemical texture service.',
@@ -128,6 +139,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-012',
+    standardId: 'CH17-F012',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C03',
     front: 'What is a concave perm rod?',
@@ -139,6 +151,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-013',
+    standardId: 'CH17-F013',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C03',
     front: 'How does rod diameter affect curl size?',
@@ -150,6 +163,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-014',
+    standardId: 'CH17-F014',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C03',
     front: 'What is a croquignole perm wrap?',
@@ -161,6 +175,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-015',
+    standardId: 'CH17-F015',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C03',
     front: 'What is a spiral perm wrap?',
@@ -172,6 +187,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-016',
+    standardId: 'CH17-F016',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C03',
     front: 'What is a piggyback perm wrap?',
@@ -183,6 +199,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-017',
+    standardId: 'CH17-F017',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C03',
     front: 'Describe on-base rod placement.',
@@ -194,6 +211,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-018',
+    standardId: 'CH17-F018',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C03',
     front: 'Describe half off-base rod placement.',
@@ -205,6 +223,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-019',
+    standardId: 'CH17-F019',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C03',
     front: 'Describe off-base rod placement.',
@@ -216,6 +235,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-020',
+    standardId: 'CH17-F020',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C02',
     front: 'What is an alkaline (cold) permanent wave?',
@@ -227,6 +247,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-021',
+    standardId: 'CH17-F021',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C03',
     front: 'What is a true acid permanent wave?',
@@ -238,6 +259,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-022',
+    standardId: 'CH17-F022',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C03',
     front: 'What is an exothermic permanent wave?',
@@ -249,6 +271,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-023',
+    standardId: 'CH17-F023',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C03',
     front: 'What causes underprocessing in a permanent wave?',
@@ -260,6 +283,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-024',
+    standardId: 'CH17-F024',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C03',
     front: 'What causes overprocessing in a permanent wave?',
@@ -271,6 +295,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-025',
+    standardId: 'CH17-F025',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C04',
     front: 'What are the two main types of chemical relaxers?',
@@ -282,6 +307,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-026',
+    standardId: 'CH17-F026',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C04',
     front: 'What is a hydroxide relaxer?',
@@ -293,6 +319,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-027',
+    standardId: 'CH17-F027',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C04',
     front: 'What is a thio relaxer?',
@@ -304,6 +331,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-028',
+    standardId: 'CH17-F028',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C04',
     front: 'What is the difference between a base and a no-base relaxer?',
@@ -315,6 +343,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-029',
+    standardId: 'CH17-F029',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C06',
     front: 'Name three strand tests performed before a chemical relaxing service.',
@@ -326,6 +355,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-030',
+    standardId: 'CH17-F030',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C06',
     front: 'Why is a hydroxide relaxer incompatible with a thio perm?',
@@ -337,6 +367,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-031',
+    standardId: 'CH17-F031',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C05',
     front: 'What are the three basic steps of curl reformation?',
@@ -348,6 +379,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-032',
+    standardId: 'CH17-F032',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C07',
     front: 'What is a texturizer?',
@@ -359,6 +391,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-033',
+    standardId: 'CH17-F033',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C07',
     front: 'What is a chemical blowout?',
@@ -370,6 +403,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-034',
+    standardId: 'CH17-F034',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C02',
     front: 'What is neutralization?',
@@ -381,6 +415,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-035',
+    standardId: 'CH17-F035',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C06',
     front: 'Why is it important to rinse thoroughly before applying neutralizer?',
@@ -392,6 +427,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-036',
+    standardId: 'CH17-F036',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C01',
     front: 'What should you do if the scalp shows abrasion, infection, or disease?',
@@ -403,6 +439,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-037',
+    standardId: 'CH17-F037',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C01',
     front: 'What does density tell you about sectioning?',
@@ -414,6 +451,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-038',
+    standardId: 'CH17-F038',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C03',
     front: 'What is the purpose of a test curl?',
@@ -427,6 +465,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   // === PROFESSIONAL ESSENTIAL (cards 39–60) ===
   {
     id: 'fc-ch17-039',
+    standardId: 'CH17-F039',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C01',
     front: 'Why should you ask about home hair color or bleach before a texture service?',
@@ -438,6 +477,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-040',
+    standardId: 'CH17-F040',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C01',
     front: 'How can medications affect a chemical texture service?',
@@ -449,6 +489,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-041',
+    standardId: 'CH17-F041',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C03',
     front: 'When would you choose a piggyback wrap?',
@@ -460,6 +501,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-042',
+    standardId: 'CH17-F042',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C03',
     front: 'What is the visual result of on-base placement compared to off-base?',
@@ -471,6 +513,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-043',
+    standardId: 'CH17-F043',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C04',
     front: 'Why do alkaline perms process faster than true acid perms?',
@@ -482,6 +525,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-044',
+    standardId: 'CH17-F044',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C04',
     front: 'What is the risk of applying relaxer to the scalp with broken skin?',
@@ -493,6 +537,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-045',
+    standardId: 'CH17-F045',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C04',
     front: 'Why is section size important during a chemical relaxer?',
@@ -504,6 +549,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-046',
+    standardId: 'CH17-F046',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C06',
     front: 'What should you do if a client wants a perm on hair that was relaxed with hydroxide six months ago?',
@@ -515,6 +561,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-047',
+    standardId: 'CH17-F047',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C03',
     front: 'How do you know when to rinse a permanent wave?',
@@ -526,6 +573,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-048',
+    standardId: 'CH17-F048',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C03',
     front: 'What aftercare advice should you give after a chemical texture service?',
@@ -537,6 +585,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-049',
+    standardId: 'CH17-F049',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C07',
     front: 'What is the difference between a texturizer and a relaxer?',
@@ -548,6 +597,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-050',
+    standardId: 'CH17-F050',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C05',
     front: 'Why is a curl reformation service considered high risk?',
@@ -559,6 +609,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-051',
+    standardId: 'CH17-F051',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C04',
     front: 'What is the purpose of a protective base cream?',
@@ -570,6 +621,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-052',
+    standardId: 'CH17-F052',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C06',
     front: 'What is a common sign that hair is overprocessed?',
@@ -581,6 +633,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-053',
+    standardId: 'CH17-F053',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C02',
     front: 'Why should you not pull or stretch hair during the neutralization phase?',
@@ -592,6 +645,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-054',
+    standardId: 'CH17-F054',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C02',
     front: 'How does previous highlighting affect perm selection?',
@@ -603,6 +657,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-055',
+    standardId: 'CH17-F055',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C03',
     front: 'What is the best way to maintain consistent saturation during a perm?',
@@ -614,6 +669,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-056',
+    standardId: 'CH17-F056',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C01',
     front: 'When should you refuse a chemical texture service?',
@@ -625,6 +681,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-057',
+    standardId: 'CH17-F057',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C01',
     front: 'What information belongs in a chemical texture service record?',
@@ -636,6 +693,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-058',
+    standardId: 'CH17-F058',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C06',
     front: 'Why are gloves essential during chemical texture services?',
@@ -647,6 +705,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-059',
+    standardId: 'CH17-F059',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C01',
     front: 'What is the best practice for applying relaxer near the hairline?',
@@ -658,6 +717,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-ch17-060',
+    standardId: 'CH17-F060',
     chapter_id: 'ch-17',
     competency_id: 'CH17-C01',
     front: 'How can you explain chemical texture services to a nervous client?',

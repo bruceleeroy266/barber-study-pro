@@ -12,6 +12,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   // === CONSULTATION & ANALYSIS (5 questions) ===
   {
     id: 'qq-17-001',
+    standardId: 'CH17-Q001',
     quiz_id: 'quiz-17',
     question: 'Which hair characteristic is the most important factor when determining processing time for a chemical texture service?',
     answer_a: 'Density',
@@ -26,6 +27,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-002',
+    standardId: 'CH17-Q002',
     quiz_id: 'quiz-17',
     question: 'A client has fine, highlighted hair and requests a permanent wave. What is the most appropriate first action?',
     answer_a: 'Use a standard alkaline perm for faster results',
@@ -40,6 +42,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-003',
+    standardId: 'CH17-Q003',
     quiz_id: 'quiz-17',
     question: 'Which of the following is a contraindication for a chemical texture service?',
     answer_a: 'Normal elasticity and medium porosity',
@@ -54,6 +57,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-004',
+    standardId: 'CH17-Q004',
     quiz_id: 'quiz-17',
     question: 'How many characteristics of the hair and scalp are typically analyzed before a chemical texture service?',
     answer_a: 'Three',
@@ -68,6 +72,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-005',
+    standardId: 'CH17-Q005',
     quiz_id: 'quiz-17',
     question: 'During the consultation, a client reveals they had a hydroxide relaxer six months ago. Why does this matter for future texture services?',
     answer_a: 'Hydroxide only affects the cuticle and does not influence other services',
@@ -84,6 +89,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   // === CHEMISTRY (5 questions) ===
   {
     id: 'qq-17-006',
+    standardId: 'CH17-Q006',
     quiz_id: 'quiz-17',
     question: 'What type of bond is permanently altered by all chemical texture services?',
     answer_a: 'Hydrogen bond',
@@ -98,6 +104,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-007',
+    standardId: 'CH17-Q007',
     quiz_id: 'quiz-17',
     question: 'What happens during the reduction phase of a permanent wave?',
     answer_a: 'Disulfide bonds are rebuilt into their new shape',
@@ -112,6 +119,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-008',
+    standardId: 'CH17-Q008',
     quiz_id: 'quiz-17',
     question: 'What is the purpose of neutralization in a permanent wave?',
     answer_a: 'To remove product from the hair',
@@ -126,6 +134,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-009',
+    standardId: 'CH17-Q009',
     quiz_id: 'quiz-17',
     question: 'Which statement best describes the difference between alkaline and true acid perms?',
     answer_a: 'Alkaline perms are gentler and require heat; acid perms are stronger and process at room temperature',
@@ -140,6 +149,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-010',
+    standardId: 'CH17-Q010',
     quiz_id: 'quiz-17',
     question: 'An exothermic perm solution works by:',
     answer_a: 'Lowering the pH of the hair',
@@ -156,6 +166,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   // === PERMANENT WAVES (7 questions) ===
   {
     id: 'qq-17-011',
+    standardId: 'CH17-Q011',
     quiz_id: 'quiz-17',
     question: 'Which rod placement creates the tightest curl and fullest volume at the base?',
     answer_a: 'Off-base',
@@ -170,6 +181,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-012',
+    standardId: 'CH17-Q012',
     quiz_id: 'quiz-17',
     question: 'Which wrapping technique is best for creating a corkscrew curl pattern?',
     answer_a: 'Croquignole',
@@ -184,6 +196,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-013',
+    standardId: 'CH17-Q013',
     quiz_id: 'quiz-17',
     question: 'What effect does using a smaller-diameter perm rod have?',
     answer_a: 'Looser wave pattern',
@@ -198,6 +211,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-014',
+    standardId: 'CH17-Q014',
     quiz_id: 'quiz-17',
     question: 'A client wants a perm but has very long, dense hair. Which wrap would you most likely use?',
     answer_a: 'Croquignole',
@@ -212,6 +226,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-015',
+    standardId: 'CH17-Q015',
     quiz_id: 'quiz-17',
     question: 'What is the most likely result of underprocessing a permanent wave?',
     answer_a: 'Frizzy, damaged hair',
@@ -226,6 +241,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-016',
+    standardId: 'CH17-Q016',
     quiz_id: 'quiz-17',
     question: 'What is the most likely result of overprocessing a permanent wave?',
     answer_a: 'A firm, well-defined curl',
@@ -240,6 +256,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-017',
+    standardId: 'CH17-Q017',
     quiz_id: 'quiz-17',
     question: 'Before rinsing a perm, how many test curls should be checked?',
     answer_a: 'One, at the crown',
@@ -256,6 +273,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   // === CHEMICAL RELAXERS (7 questions) ===
   {
     id: 'qq-17-018',
+    standardId: 'CH17-Q018',
     quiz_id: 'quiz-17',
     question: 'Which type of relaxer contains a high pH and is very effective at straightening?',
     answer_a: 'Thio relaxer',
@@ -270,6 +288,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-019',
+    standardId: 'CH17-Q019',
     quiz_id: 'quiz-17',
     question: 'What is the main difference between a base relaxer and a no-base relaxer?',
     answer_a: 'Base relaxers are always lye; no-base relaxers are always no-lye',
@@ -284,6 +303,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-020',
+    standardId: 'CH17-Q020',
     quiz_id: 'quiz-17',
     question: 'Which strand test determines how quickly hair will absorb a relaxer?',
     answer_a: 'Elasticity test',
@@ -298,6 +318,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-021',
+    standardId: 'CH17-Q021',
     quiz_id: 'quiz-17',
     question: 'Which strand test checks whether hair can withstand chemical processing?',
     answer_a: 'Porosity test',
@@ -312,6 +333,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-022',
+    standardId: 'CH17-Q022',
     quiz_id: 'quiz-17',
     question: 'Why is it unsafe to apply a thio perm over hair that was relaxed with hydroxide?',
     answer_a: 'The hair will process too slowly',
@@ -326,6 +348,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-023',
+    standardId: 'CH17-Q023',
     quiz_id: 'quiz-17',
     question: 'A relaxer is applied and the client complains of burning. What is the best immediate action?',
     answer_a: 'Continue processing to finish the straightening',
@@ -340,6 +363,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-024',
+    standardId: 'CH17-Q024',
     quiz_id: 'quiz-17',
     question: 'Which relaxer type is generally compatible with a follow-up thio perm?',
     answer_a: 'Lye hydroxide relaxer',
@@ -356,6 +380,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   // === CURL REFORMATION, TEXTURIZERS, BLOWOUTS (3 questions) ===
   {
     id: 'qq-17-025',
+    standardId: 'CH17-Q025',
     quiz_id: 'quiz-17',
     question: 'What is the first step of a curl reformation service?',
     answer_a: 'Wrap the hair on rods',
@@ -370,6 +395,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-026',
+    standardId: 'CH17-Q026',
     quiz_id: 'quiz-17',
     question: 'Why is curl reformation considered a higher-risk service?',
     answer_a: 'It uses only one chemical process',
@@ -384,6 +410,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-027',
+    standardId: 'CH17-Q027',
     quiz_id: 'quiz-17',
     question: 'What is the main difference between a texturizer and a full relaxer?',
     answer_a: 'Texturizers are always hydroxide; relaxers are always thio',
@@ -400,6 +427,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   // === SAFETY & NEUTRALIZATION (3 questions) ===
   {
     id: 'qq-17-028',
+    standardId: 'CH17-Q028',
     quiz_id: 'quiz-17',
     question: 'Why is thorough rinsing important before applying neutralizer?',
     answer_a: 'It lightens the hair color',
@@ -414,6 +442,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-029',
+    standardId: 'CH17-Q029',
     quiz_id: 'quiz-17',
     question: 'What can happen if neutralization is incomplete?',
     answer_a: 'The curl will be too tight',
@@ -428,6 +457,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
   },
   {
     id: 'qq-17-030',
+    standardId: 'CH17-Q030',
     quiz_id: 'quiz-17',
     question: 'Which safety practice protects the stylist during chemical texture services?',
     answer_a: 'Wearing gloves',
@@ -449,6 +479,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
 export const chapter17LearningQuestions: QuizQuestion[] = [
   {
     id: 'lq-17-001',
+    standardId: 'CH17-Q031',
     quiz_id: 'quiz-17-learning',
     question: 'In your own words, why does porosity matter more than texture for processing time?',
     answer_a: 'Texture determines curl size; porosity determines how fast the product works',
@@ -463,6 +494,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
   },
   {
     id: 'lq-17-002',
+    standardId: 'CH17-Q032',
     quiz_id: 'quiz-17-learning',
     question: 'How does the reduction → reshape → oxidation cycle explain why a perm is permanent?',
     answer_a: 'It coats the outside of the hair with a protective layer',
@@ -477,6 +509,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
   },
   {
     id: 'lq-17-003',
+    standardId: 'CH17-Q033',
     quiz_id: 'quiz-17-learning',
     question: 'When would you choose on-base placement instead of off-base placement?',
     answer_a: 'When the client wants maximum volume and tight curl',
@@ -491,6 +524,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
   },
   {
     id: 'lq-17-004',
+    standardId: 'CH17-Q034',
     quiz_id: 'quiz-17-learning',
     question: 'Why is a spiral wrap different from a croquignole wrap?',
     answer_a: 'Spiral wraps overlap hair from ends to scalp; croquignole wraps vertically',
@@ -505,6 +539,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
   },
   {
     id: 'lq-17-005',
+    standardId: 'CH17-Q035',
     quiz_id: 'quiz-17-learning',
     question: 'What should you do if a strand test shows poor elasticity before a relaxer?',
     answer_a: 'Proceed with a stronger relaxer',
@@ -519,6 +554,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
   },
   {
     id: 'lq-17-006',
+    standardId: 'CH17-Q036',
     quiz_id: 'quiz-17-learning',
     question: 'Why is it important to record every chemical texture service in the client file?',
     answer_a: 'To track progress and protect both client and stylist if a future reaction occurs',
@@ -533,6 +569,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
   },
   {
     id: 'lq-17-007',
+    standardId: 'CH17-Q037',
     quiz_id: 'quiz-17-learning',
     question: 'How do you explain a strand test to a client in simple terms?',
     answer_a: 'It is a way to guess the final color',
@@ -547,6 +584,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
   },
   {
     id: 'lq-17-008',
+    standardId: 'CH17-Q038',
     quiz_id: 'quiz-17-learning',
     question: 'What is the relationship between rod size and the final curl size?',
     answer_a: 'Larger rods make tighter curls',
@@ -561,6 +599,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
   },
   {
     id: 'lq-17-009',
+    standardId: 'CH17-Q039',
     quiz_id: 'quiz-17-learning',
     question: 'Why is a no-base relaxer called "no-base"?',
     answer_a: 'It is applied only to the ends of the hair',
@@ -575,6 +614,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
   },
   {
     id: 'lq-17-010',
+    standardId: 'CH17-Q040',
     quiz_id: 'quiz-17-learning',
     question: 'What makes a chemical blowout different from a full relaxer?',
     answer_a: 'It permanently colors the hair',
@@ -589,6 +629,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
   },
   {
     id: 'lq-17-011',
+    standardId: 'CH17-Q041',
     quiz_id: 'quiz-17-learning',
     question: 'Why should a client avoid shampooing for 48 hours after a perm?',
     answer_a: 'Shampoo will make the hair grow faster',
@@ -603,6 +644,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
   },
   {
     id: 'lq-17-012',
+    standardId: 'CH17-Q042',
     quiz_id: 'quiz-17-learning',
     question: 'What does it mean if hair "does not take" a perm?',
     answer_a: 'The hair is too healthy',
@@ -617,6 +659,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
   },
   {
     id: 'lq-17-013',
+    standardId: 'CH17-Q043',
     quiz_id: 'quiz-17-learning',
     question: 'How can you tell the difference between underprocessed and overprocessed permed hair?',
     answer_a: 'Underprocessed is limp; overprocessed is frizzy or damaged',
@@ -631,6 +674,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
   },
   {
     id: 'lq-17-014',
+    standardId: 'CH17-Q044',
     quiz_id: 'quiz-17-learning',
     question: 'Why is density important when sectioning for a relaxer?',
     answer_a: 'Dense hair needs smaller sections for full saturation',
@@ -645,6 +689,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
   },
   {
     id: 'lq-17-015',
+    standardId: 'CH17-Q045',
     quiz_id: 'quiz-17-learning',
     question: 'What is the best way to protect a client\'s scalp during a base relaxer service?',
     answer_a: 'Apply a protective base cream to the scalp before the relaxer',
@@ -659,6 +704,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
   },
   {
     id: 'lq-17-016',
+    standardId: 'CH17-Q046',
     quiz_id: 'quiz-17-learning',
     question: 'How are permanent waves, relaxers, and curl reformation chemically similar — and how do they differ?',
     answer_a: 'They all use hydroxide to break bonds; only the wrapping technique differs',

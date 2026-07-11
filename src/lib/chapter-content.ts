@@ -46,6 +46,7 @@ export type SectionType =
 export interface BaseSection {
   type: SectionType
   id: string
+  standardId?: string
   title?: string
   subtitle?: string
   competencyIds?: string[]
@@ -420,8 +421,11 @@ export interface ChapterLearningObjective {
   description: string
   competencyIds: string[]
   lessonIds: string[]
+  standardLessonIds?: string[]
   flashcardIds: string[]
+  standardFlashcardIds?: string[]
   quizQuestionIds: string[]
+  standardQuizQuestionIds?: string[]
 }
 
 // ───────────────────────────────────────────────
@@ -429,12 +433,18 @@ export interface ChapterLearningObjective {
 // ───────────────────────────────────────────────
 
 export interface ChapterRemediationPath {
+  id: string
+  standardId: string
   competencyId: string
   lessonIds: string[]
+  standardLessonIds?: string[]
   flashcardIds: string[]
+  standardFlashcardIds?: string[]
   vocabularyIds?: string[]
   learningQuestionIds: string[]
+  standardLearningQuestionIds?: string[]
   boardQuestionIds: string[]
+  standardBoardQuestionIds?: string[]
   instructorNote: string
   retakeCount: number
 }

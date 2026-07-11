@@ -105,6 +105,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'infoCards',
       id: 'why-study',
+      standardId: 'CH17-L01',
       competencyIds: ['CH17-C01', 'CH17-C02', 'CH17-C07'],
       title: 'Why Study Chemical Texture Services?',
       cards: [
@@ -133,6 +134,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'what-is-texture',
+      standardId: 'CH17-L02',
       competencyIds: ['CH17-C02'],
       title: 'What Chemical Texture Services Do',
       content:
@@ -142,6 +144,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'featureGrid',
       id: 'vocabulary-anchors',
+      standardId: 'CH17-L03',
       competencyIds: ['CH17-C02', 'CH17-C03', 'CH17-C04'],
       title: 'Key Terms, Pronunciation & Memory Hooks',
       subtitle: 'Lock in the language the board expects',
@@ -172,6 +175,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'tabbed',
       id: 'hair-analysis',
+      standardId: 'CH17-L04',
       competencyIds: ['CH17-C01'],
       title: 'Client Consultation & Hair Analysis',
       tabs: [
@@ -238,6 +242,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'featureGrid',
       id: 'bond-science',
+      standardId: 'CH17-L05',
       competencyIds: ['CH17-C02'],
       title: 'The Science: Disulfide Bonds',
       features: [
@@ -270,6 +275,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'tools-materials',
+      standardId: 'CH17-L06',
       competencyIds: ['CH17-C06'],
       title: 'Tools & Materials for Chemical Texture Services',
       content:
@@ -280,6 +286,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'tabbed',
       id: 'perm-waves',
+      standardId: 'CH17-L07',
       competencyIds: ['CH17-C03'],
       title: 'Permanent Waves',
       tabs: [
@@ -328,6 +335,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'milestoneList',
       id: 'perm-procedure',
+      standardId: 'CH17-L08',
       competencyIds: ['CH17-C03'],
       title: 'Permanent Wave Procedure Sequence',
       milestones: [
@@ -346,6 +354,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'perm-service-check',
+      standardId: 'CH17-L09',
       competencyIds: ['CH17-C03', 'CH17-C06'],
       title: 'Permanent Wave Service Check',
       content:
@@ -355,6 +364,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'tabbed',
       id: 'relaxers',
+      standardId: 'CH17-L10',
       competencyIds: ['CH17-C04'],
       title: 'Chemical Hair Relaxers',
       tabs: [
@@ -391,6 +401,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'milestoneList',
       id: 'relaxer-procedure',
+      standardId: 'CH17-L11',
       competencyIds: ['CH17-C04'],
       title: 'Chemical Relaxer Procedure Sequence',
       milestones: [
@@ -408,6 +419,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'relaxer-warning',
+      standardId: 'CH17-L12',
       competencyIds: ['CH17-C02', 'CH17-C04', 'CH17-C06'],
       title: 'Relaxer Compatibility Warning',
       content:
@@ -417,6 +429,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'curl-reformation',
+      standardId: 'CH17-L13',
       competencyIds: ['CH17-C05'],
       title: 'Chemical Curl Reformation',
       content:
@@ -426,6 +439,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'texturizers',
+      standardId: 'CH17-L14',
       competencyIds: ['CH17-C07'],
       title: 'Texturizers & Chemical Blowouts',
       content:
@@ -435,6 +449,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'compare-chemistries',
+      standardId: 'CH17-L15',
       competencyIds: ['CH17-C02'],
       title: 'How the Three Services Are Alike — and Different',
       content:
@@ -444,6 +459,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'checklist',
       id: 'safety-checklist',
+      standardId: 'CH17-L16',
       competencyIds: ['CH17-C06'],
       title: 'Safety Checklist',
       items: [
@@ -462,6 +478,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'confidenceBuilder',
       id: 'texture-confidence',
+      standardId: 'CH17-L17',
       competencyIds: ['CH17-C01', 'CH17-C06'],
       title: 'Client Conversation Confidence Builder',
       subtitle: 'How would you respond in the chair?',
@@ -481,6 +498,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'scenarioBlock',
       id: 'scenario-1',
+      standardId: 'CH17-L18',
       competencyIds: ['CH17-C01', 'CH17-C02', 'CH17-C03'],
       title: 'Real Shop Scenario',
       scenarios: [
@@ -511,6 +529,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'challengeCard',
       id: 'try-this',
+      standardId: 'CH17-L19',
       competencyIds: ['CH17-C03', 'CH17-C04', 'CH17-C06'],
       title: 'Try This',
       challenges: [
@@ -540,6 +559,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'common-mistakes',
+      standardId: 'CH17-L20',
       competencyIds: ['CH17-C06'],
       title: 'Common Mistakes to Avoid',
       content:
@@ -549,6 +569,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'memory-tricks',
+      standardId: 'CH17-L21',
       competencyIds: ['CH17-C02', 'CH17-C03', 'CH17-C04'],
       title: 'Memory Tricks',
       content:
@@ -558,6 +579,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'proTip',
       id: 'instructor-tips',
+      standardId: 'CH17-L22',
       competencyIds: ['CH17-C01', 'CH17-C02', 'CH17-C03', 'CH17-C04', 'CH17-C05', 'CH17-C06', 'CH17-C07'],
       title: '💎 Instructor Notes & Remediation',
       subtitle: 'Teaching chemical texture services with confidence',
@@ -574,6 +596,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'reflectionBlock',
       id: 'texture-reflection',
+      standardId: 'CH17-L23',
       competencyIds: ['CH17-C01', 'CH17-C02', 'CH17-C03', 'CH17-C04', 'CH17-C05', 'CH17-C06', 'CH17-C07'],
       title: 'Reflect Before You Practice',
       questions: [
@@ -592,6 +615,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'featureGrid',
       id: 'board-alerts',
+      standardId: 'CH17-L24',
       competencyIds: ['CH17-C02', 'CH17-C03', 'CH17-C04', 'CH17-C06'],
       title: 'Board Alerts',
       features: [
@@ -823,6 +847,8 @@ export const chapter17PremiumContent: ChapterContent = {
   ],
   remediation: [
     {
+      id: 'CH17-R01',
+      standardId: 'CH17-R01',
       competencyId: 'CH17-C01',
       lessonIds: ['why-study', 'hair-analysis', 'scenario-1', 'texture-confidence'],
       flashcardIds: ['fc-ch17-001', 'fc-ch17-006', 'fc-ch17-007', 'fc-ch17-008', 'fc-ch17-009', 'fc-ch17-010', 'fc-ch17-011', 'fc-ch17-039', 'fc-ch17-040'],
@@ -833,6 +859,8 @@ export const chapter17PremiumContent: ChapterContent = {
       retakeCount: 3,
     },
     {
+      id: 'CH17-R02',
+      standardId: 'CH17-R02',
       competencyId: 'CH17-C02',
       lessonIds: ['what-is-texture', 'bond-science', 'compare-chemistries', 'memory-tricks'],
       flashcardIds: ['fc-ch17-002', 'fc-ch17-003', 'fc-ch17-004', 'fc-ch17-005', 'fc-ch17-020', 'fc-ch17-021', 'fc-ch17-022', 'fc-ch17-025', 'fc-ch17-026', 'fc-ch17-027'],
@@ -843,6 +871,8 @@ export const chapter17PremiumContent: ChapterContent = {
       retakeCount: 3,
     },
     {
+      id: 'CH17-R03',
+      standardId: 'CH17-R03',
       competencyId: 'CH17-C03',
       lessonIds: ['perm-waves', 'perm-procedure', 'perm-service-check'],
       flashcardIds: ['fc-ch17-012', 'fc-ch17-013', 'fc-ch17-014', 'fc-ch17-015', 'fc-ch17-016', 'fc-ch17-017', 'fc-ch17-018', 'fc-ch17-019', 'fc-ch17-020', 'fc-ch17-023', 'fc-ch17-024', 'fc-ch17-038'],
@@ -853,6 +883,8 @@ export const chapter17PremiumContent: ChapterContent = {
       retakeCount: 3,
     },
     {
+      id: 'CH17-R04',
+      standardId: 'CH17-R04',
       competencyId: 'CH17-C04',
       lessonIds: ['relaxers', 'relaxer-procedure', 'relaxer-warning'],
       flashcardIds: ['fc-ch17-025', 'fc-ch17-026', 'fc-ch17-027', 'fc-ch17-028', 'fc-ch17-029', 'fc-ch17-044', 'fc-ch17-045', 'fc-ch17-049', 'fc-ch17-051'],
@@ -863,6 +895,8 @@ export const chapter17PremiumContent: ChapterContent = {
       retakeCount: 3,
     },
     {
+      id: 'CH17-R05',
+      standardId: 'CH17-R05',
       competencyId: 'CH17-C05',
       lessonIds: ['curl-reformation'],
       flashcardIds: ['fc-ch17-031', 'fc-ch17-050'],
@@ -873,6 +907,8 @@ export const chapter17PremiumContent: ChapterContent = {
       retakeCount: 3,
     },
     {
+      id: 'CH17-R06',
+      standardId: 'CH17-R06',
       competencyId: 'CH17-C06',
       lessonIds: ['tools-materials', 'safety-checklist', 'texture-confidence', 'scenario-1'],
       flashcardIds: ['fc-ch17-029', 'fc-ch17-030', 'fc-ch17-035', 'fc-ch17-036', 'fc-ch17-044', 'fc-ch17-046', 'fc-ch17-052', 'fc-ch17-056', 'fc-ch17-058'],
@@ -883,6 +919,8 @@ export const chapter17PremiumContent: ChapterContent = {
       retakeCount: 3,
     },
     {
+      id: 'CH17-R07',
+      standardId: 'CH17-R07',
       competencyId: 'CH17-C07',
       lessonIds: ['texturizers', 'compare-chemistries'],
       flashcardIds: ['fc-ch17-032', 'fc-ch17-033', 'fc-ch17-049'],

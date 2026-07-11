@@ -34,6 +34,7 @@ export interface Chapter {
 
 export interface Flashcard {
   id: string
+  standardId?: string
   chapter_id: string
   front: string
   back: string
@@ -55,6 +56,7 @@ export interface Quiz {
 
 export interface QuizQuestion {
   id: string
+  standardId?: string
   quiz_id: string
   question: string
   answer_a: string
