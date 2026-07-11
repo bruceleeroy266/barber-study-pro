@@ -391,12 +391,43 @@ export interface ChapterTheme {
   actionPrompt?: Record<string, string>
 }
 
+// ───────────────────────────────────────────────
+// Competency Mapping — board blueprint alignment
+// ───────────────────────────────────────────────
+
+export interface ChapterCompetency {
+  id: string
+  title: string
+  description: string
+  importance: 'critical' | 'high' | 'medium' | 'low'
+  difficulty: 'easy' | 'medium' | 'hard'
+  learningObjectives: string[]
+  vocabularyIds?: string[]
+  flashcardIds?: string[]
+  quizQuestionIds?: string[]
+}
+
+// ───────────────────────────────────────────────
+// Image Placeholder Manifest — planned visual assets
+// ───────────────────────────────────────────────
+
+export interface ChapterImagePlaceholder {
+  assetId: string
+  concept: string
+  visualType: 'diagram' | 'illustration' | 'chart' | 'photo' | 'infographic'
+  priority: 'critical' | 'high' | 'medium' | 'low'
+  altText: string
+  status: 'planned' | 'in-progress' | 'complete'
+}
+
 export interface ChapterContent {
   chapterNumber: number
   title: string
   subtitle: string
   theme?: ChapterTheme
   sections: ChapterSection[]
+  competencies?: ChapterCompetency[]
+  imagePlaceholders?: ChapterImagePlaceholder[]
 }
 
 // ───────────────────────────────────────────────

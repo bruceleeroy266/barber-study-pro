@@ -1,7 +1,7 @@
 import { QuizQuestion } from '@/types'
 
 // Chapter 17: Chemical Texture Services — PREMIUM MCQ QUIZ
-// 30 board-style questions + 15 learning questions
+// 30 board-style questions + 16 learning questions
 // Original content; no textbook or exam questions copied.
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -21,6 +21,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'Porosity determines how quickly the chemical solution penetrates the cuticle. Resistant hair processes slowly; porous hair processes quickly and can overprocess.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-01',
     order_index: 1,
   },
   {
@@ -34,6 +35,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'Highlighted hair is often porous and fragile. Strand testing and a milder acid formula reduce the risk of overprocessing while still creating a wave.',
     difficulty: 'medium',
+    competency_id: 'CH17-COMP-01',
     order_index: 2,
   },
   {
@@ -47,6 +49,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'c',
     explanation: 'Open cuts, infections, or scalp disease can allow chemicals to enter tissue and cause burns or further injury. The service must be postponed.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-06',
     order_index: 3,
   },
   {
@@ -60,6 +63,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'c',
     explanation: 'The standard analysis covers texture, porosity, elasticity, density, scalp condition, and service history.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-01',
     order_index: 4,
   },
   {
@@ -73,6 +77,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'Hydroxide relaxers restructure hair with a different chemistry than thio products. Combining them can cause severe damage; a compatibility test is needed.',
     difficulty: 'medium',
+    competency_id: 'CH17-COMP-01',
     order_index: 5,
   },
 
@@ -88,6 +93,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'c',
     explanation: 'Disulfide bonds are the strong side bonds in the cortex that determine hair shape. Chemical texture services break and rebuild them.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-02',
     order_index: 6,
   },
   {
@@ -101,6 +107,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'Reduction breaks disulfide bonds (cystine to cysteine), allowing the hair to be wrapped into a new curl pattern.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-02',
     order_index: 7,
   },
   {
@@ -114,6 +121,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'Neutralizer oxidizes cysteine back to cystine, rebuilding disulfide bonds and locking the hair into its new shape.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-02',
     order_index: 8,
   },
   {
@@ -127,6 +135,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'Alkaline perms have a pH around 9.0–9.6 and process quickly without heat. True acid perms have a lower pH and use heat for gentler processing.',
     difficulty: 'medium',
+    competency_id: 'CH17-COMP-02',
     order_index: 9,
   },
   {
@@ -140,6 +149,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'Exothermic perm solutions create heat through a chemical reaction when mixed, which increases processing activity.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-02',
     order_index: 10,
   },
 
@@ -155,6 +165,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'c',
     explanation: 'On-base placement stretches hair 135° from the scalp, producing maximum tension, a tight curl, and strong fullness.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-03',
     order_index: 11,
   },
   {
@@ -168,6 +179,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'c',
     explanation: 'Spiral wrapping winds hair vertically down the rod, producing a long, corkscrew-shaped curl.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-03',
     order_index: 12,
   },
   {
@@ -181,6 +193,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'Rod diameter controls curl size. Smaller rods produce tighter curls; larger rods produce looser waves.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-03',
     order_index: 13,
   },
   {
@@ -194,6 +207,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'c',
     explanation: 'Piggyback wrapping uses two rods per section to manage long or dense hair and produce an even curl from scalp to ends.',
     difficulty: 'medium',
+    competency_id: 'CH17-COMP-03',
     order_index: 14,
   },
   {
@@ -207,6 +221,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'Underprocessing means the disulfide bonds were not broken and rebuilt enough to create a firm curl, leaving the wave weak.',
     difficulty: 'medium',
+    competency_id: 'CH17-COMP-03',
     order_index: 15,
   },
   {
@@ -220,6 +235,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'Overprocessing breaks too many bonds for too long, leaving the cortex fragile and the cuticle lifted, which causes frizz and breakage.',
     difficulty: 'medium',
+    competency_id: 'CH17-COMP-03',
     order_index: 16,
   },
   {
@@ -233,6 +249,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'c',
     explanation: 'Checking test curls in at least three areas ensures the wave has developed evenly across the entire head before neutralizing.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-03',
     order_index: 17,
   },
 
@@ -248,6 +265,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'Hydroxide relaxers, including lye and no-lye formulas, have a high pH and straighten hair by breaking disulfide bonds.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-04',
     order_index: 18,
   },
   {
@@ -261,6 +279,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'Base relaxers need a separate protective base cream applied to the scalp before the relaxer. No-base formulas contain protective ingredients.',
     difficulty: 'medium',
+    competency_id: 'CH17-COMP-04',
     order_index: 19,
   },
   {
@@ -274,6 +293,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'c',
     explanation: 'The porosity test shows how readily the hair absorbs product, which helps predict processing time and possible overprocessing.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-04',
     order_index: 20,
   },
   {
@@ -287,6 +307,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'The elasticity test measures whether hair stretches and returns to its length. Poor elasticity means the hair may be too weak to process.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-04',
     order_index: 21,
   },
   {
@@ -300,6 +321,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'Hydroxide relaxers leave hair in a chemically different state than thio products. Combining them can cause breakage, melting, or severe damage.',
     difficulty: 'medium',
+    competency_id: 'CH17-COMP-04',
     order_index: 22,
   },
   {
@@ -313,6 +335,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'Burning is a sign of irritation or chemical injury. The product must be removed immediately to prevent further damage.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-06',
     order_index: 23,
   },
   {
@@ -326,6 +349,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'c',
     explanation: 'Thio relaxers use ammonium thioglycolate, the same chemistry as thio perms, making them compatible when hair is healthy.',
     difficulty: 'medium',
+    competency_id: 'CH17-COMP-04',
     order_index: 24,
   },
 
@@ -341,6 +365,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'Curl reformation begins by straightening the existing curl pattern with a thio-based relaxer before wrapping and neutralizing.',
     difficulty: 'medium',
+    competency_id: 'CH17-COMP-05',
     order_index: 25,
   },
   {
@@ -354,6 +379,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'Curl reformation relaxes the hair and then reforms it, applying two chemical services. The hair must be healthy enough to withstand both.',
     difficulty: 'medium',
+    competency_id: 'CH17-COMP-05',
     order_index: 26,
   },
   {
@@ -367,6 +393,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'A texturizer uses a mild relaxer formula and shorter processing to loosen curl pattern. A relaxer is designed to fully straighten.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-07',
     order_index: 27,
   },
 
@@ -382,6 +409,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'Rinsing removes the alkaline or reducing solution so it stops processing before the neutralizer rebuilds bonds.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-06',
     order_index: 28,
   },
   {
@@ -395,6 +423,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'Incomplete neutralization leaves disulfide bonds unstable, which can cause the curl to relax and the hair to remain fragile.',
     difficulty: 'medium',
+    competency_id: 'CH17-COMP-02',
     order_index: 29,
   },
   {
@@ -408,6 +437,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     correct_answer: 'a',
     explanation: 'Gloves protect the stylist\'s skin from alkaline, acidic, or reducing solutions that can cause irritation or burns.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-06',
     order_index: 30,
   },
 ]
@@ -428,6 +458,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'Porosity controls absorption speed, which directly affects timing and risk of overprocessing. Texture affects strength and resistance but not absorption rate.',
     difficulty: 'medium',
+    competency_id: 'CH17-COMP-01',
     order_index: 1,
   },
   {
@@ -441,6 +472,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
     correct_answer: 'c',
     explanation: 'The internal structure of the hair is permanently changed when disulfide bonds are broken, reshaped, and rebuilt.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-02',
     order_index: 2,
   },
   {
@@ -454,6 +486,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
     correct_answer: 'a',
     explanation: 'On-base placement uses high tension to create fullness and tight curl at the scalp. Off-base creates a softer look.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-03',
     order_index: 3,
   },
   {
@@ -467,6 +500,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'Croquignole wraps overlap horizontally toward the scalp, while spiral wraps wind vertically down the rod for a corkscrew curl.',
     difficulty: 'medium',
+    competency_id: 'CH17-COMP-03',
     order_index: 4,
   },
   {
@@ -480,6 +514,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'Poor elasticity means the hair is weak. Processing it can cause breakage; conditioning and postponement are the safest choices.',
     difficulty: 'medium',
+    competency_id: 'CH17-COMP-06',
     order_index: 5,
   },
   {
@@ -493,6 +528,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
     correct_answer: 'a',
     explanation: 'Records document products, strengths, timing, and results, which helps plan future services and resolve concerns.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-01',
     order_index: 6,
   },
   {
@@ -506,6 +542,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'A strand test lets you observe how a small amount of hair responds to the product, reducing risk for the whole head.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-06',
     order_index: 7,
   },
   {
@@ -519,6 +556,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'The hair wraps more tightly around a smaller rod, producing a smaller, tighter curl. Larger rods produce looser waves.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-03',
     order_index: 8,
   },
   {
@@ -532,6 +570,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'No-base relaxers include protective ingredients in the formula, eliminating the need for a separate base cream.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-04',
     order_index: 9,
   },
   {
@@ -545,6 +584,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
     correct_answer: 'c',
     explanation: 'A chemical blowout is a mild relaxing service that reduces curl for easier styling without complete straightening.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-07',
     order_index: 10,
   },
   {
@@ -558,6 +598,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
     correct_answer: 'b',
     explanation: 'Waiting allows disulfide bonds to fully stabilize in their new shape, helping the curl last and resist relaxing.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-03',
     order_index: 11,
   },
   {
@@ -571,6 +612,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
     correct_answer: 'c',
     explanation: 'When a perm does not take, the reduction or processing was insufficient to reshape and lock the bonds into curls.',
     difficulty: 'medium',
+    competency_id: 'CH17-COMP-02',
     order_index: 12,
   },
   {
@@ -584,6 +626,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
     correct_answer: 'a',
     explanation: 'Underprocessing leaves a weak wave; overprocessing breaks too many bonds and causes frizz, weakness, and damage.',
     difficulty: 'medium',
+    competency_id: 'CH17-COMP-02',
     order_index: 13,
   },
   {
@@ -597,6 +640,7 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
     correct_answer: 'a',
     explanation: 'Thicker, denser hair requires smaller subsections so the relaxer reaches every strand evenly and avoids patchy results.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-04',
     order_index: 14,
   },
   {
@@ -610,6 +654,21 @@ export const chapter17LearningQuestions: QuizQuestion[] = [
     correct_answer: 'a',
     explanation: 'A base cream creates a barrier between the scalp and the high-pH relaxer, reducing irritation and burn risk.',
     difficulty: 'easy',
+    competency_id: 'CH17-COMP-06',
     order_index: 15,
+  },
+  {
+    id: 'lq-17-016',
+    quiz_id: 'quiz-17-learning',
+    question: 'How are permanent waves, relaxers, and curl reformation chemically similar — and how do they differ?',
+    answer_a: 'They all use hydroxide to break bonds; only the wrapping technique differs',
+    answer_b: 'They all reduce, reshape, and oxidize disulfide bonds, but they use different products and tools to create different outcomes',
+    answer_c: 'They only change the cuticle layer and do not affect disulfide bonds',
+    answer_d: 'Perms add curl, relaxers remove curl, and reformation does nothing to bonds',
+    correct_answer: 'b',
+    explanation: 'All three services follow the same three-stage chemistry on disulfide bonds. The differences are the desired shape (curl, straight, or reset curl), the tools used (rods vs. comb vs. both), and the product families (alkaline/acid vs. hydroxide/thio).',
+    difficulty: 'medium',
+    competency_id: 'CH17-COMP-02',
+    order_index: 16,
   },
 ]

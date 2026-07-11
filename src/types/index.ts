@@ -64,6 +64,7 @@ export interface QuizQuestion {
   explanation: string | null
   difficulty: 'easy' | 'medium' | 'hard'
   order_index: number
+  competency_id?: string
 }
 
 export interface QuizAttempt {
