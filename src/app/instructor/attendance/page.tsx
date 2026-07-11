@@ -49,6 +49,10 @@ export default async function AttendanceManagementPage() {
     barber_shop_name: null,
     mentor_name: null,
     avatar_url: null,
+    approval_status: 'approved',
+    is_disabled: false,
+    approved_by: null,
+    approved_at: null,
     created_at: '',
     updated_at: '',
   }

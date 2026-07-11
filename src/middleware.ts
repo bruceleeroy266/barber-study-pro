@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { isInstructorOrAdmin, isAdmin } from '@/lib/auth-helpers'
 import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
 import { BETA_AGREEMENT_VERSION } from '@/lib/beta'
+import { getRoleBasedRedirect, validateLoginAccess } from '@/lib/auth-access'
 
 // Check if Supabase is properly configured
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
@@ -99,10 +100,42 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  // Load profile once for protected routes and auth-route redirects.
+  interface MinimalProfile {
+    role: string | null
+    approval_status: string
+    is_disabled: boolean
+  }
+  let profile: MinimalProfile | null = null
+  if ((isProtectedRoute || isAuthRoute) && user) {
+    const { data: profileData } = await supabase
+      .from('profiles')
+      .select('role, approval_status, is_disabled')
+      .eq('id', user.id)
+      .single()
+    if (profileData) {
+      profile = profileData as MinimalProfile
+    }
+  }
+
+  // Auth routes: redirect already-logged-in users to their role dashboard.
   if (isAuthRoute && user) {
     const url = request.nextUrl.clone()
-    url.pathname = '/dashboard'
+    url.pathname = getRoleBasedRedirect(profile?.role)
     return NextResponse.redirect(url)
+  }
+
+  // Protected routes: enforce approval and disabled status server-side.
+  if (isProtectedRoute && user) {
+    const access = validateLoginAccess(profile)
+    if (!access.ok) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/login'
+      url.searchParams.set('error', access.errorKey ?? 'unknown')
+      if (request.nextUrl.pathname !== '/login') {
+        return NextResponse.redirect(url)
+      }
+    }
   }
 
   // ── BETA AGREEMENT ENFORCEMENT (edge layer) ──

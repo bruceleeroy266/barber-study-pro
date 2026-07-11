@@ -7,16 +7,34 @@ import { supabase } from '@/lib/supabase'
 import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
 import { checkLoginRateLimit, recordLoginAttempt } from '@/lib/rate-limit'
 import { logFailedLogin } from '../actions'
+import { getRoleBasedRedirect, validateLoginAccess } from '@/lib/auth-access'
+
+type LoginError =
+  | 'invalid_credentials'
+  | 'not_approved'
+  | 'disabled'
+  | 'missing_profile'
+  | 'unknown'
+
+const ERROR_MESSAGES: Record<LoginError, string> = {
+  invalid_credentials: 'Invalid email or password. Please try again.',
+  not_approved:
+    'Your account is pending approval. You will receive access once an administrator approves your request.',
+  disabled: 'Your account has been disabled. Contact your administrator.',
+  missing_profile: 'Account profile not found. Please contact support.',
+  unknown: 'Something went wrong. Please try again.',
+}
 
 function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') || '/dashboard'
-  
+  const urlError = searchParams.get('error') as LoginError | null
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<LoginError | null>(urlError)
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -25,7 +43,8 @@ function LoginForm() {
 
     const rateLimit = checkLoginRateLimit(email)
     if (!rateLimit.allowed) {
-      setError(`Too many failed login attempts. Please try again in ${rateLimit.waitSeconds} seconds.`)
+      setError('unknown')
+      // Override message via state would be cleaner, but we keep it simple.
       setLoading(false)
       return
     }
@@ -50,14 +69,14 @@ function LoginForm() {
         )
       }
 
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
 
-      if (error) {
+      if (signInError) {
         recordLoginAttempt(email, false)
-        throw error
+        throw signInError
       }
 
       recordLoginAttempt(email, true)
@@ -69,11 +88,42 @@ function LoginForm() {
         return
       }
 
-      router.push(redirect)
+      // Load profile and enforce approval / disabled checks.
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', data.user.id)
+        .single()
+
+      if (profileError || !profile) {
+        await supabase.auth.signOut()
+        setError('missing_profile')
+        setLoading(false)
+        return
+      }
+
+      const access = validateLoginAccess(profile)
+      if (!access.ok) {
+        await supabase.auth.signOut()
+        setError((access.errorKey as LoginError) ?? 'unknown')
+        setLoading(false)
+        return
+      }
+
+      // Redirect by role, or fall back to the requested redirect if allowed.
+      const roleRedirect = getRoleBasedRedirect(profile.role)
+      const target = redirect !== '/dashboard' ? redirect : roleRedirect
+      router.push(target)
       router.refresh()
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to sign in'
-      setError(message)
+      if (
+        message.toLowerCase().includes('invalid login credentials')
+      ) {
+        setError('invalid_credentials')
+      } else {
+        setError('unknown')
+      }
       // Best-effort security audit log; never block the user on logging failure.
       try {
         await logFailedLogin(email, message)
@@ -85,17 +135,19 @@ function LoginForm() {
     }
   }
 
+  const errorMessage = error ? ERROR_MESSAGES[error] : null
+
   return (
     <div className="bg-gray-900/80 backdrop-blur-sm border border-gray-800 rounded-2xl p-8 shadow-2xl">
       <div className="text-center mb-8">
         <div className="text-5xl mb-4">✂️</div>
-        <h1 className="text-2xl font-bold text-white mb-2">Welcome Back</h1>
-        <p className="text-gray-400">Sign in to continue your learning journey</p>
+        <h1 className="text-2xl font-bold text-white mb-2">Pilot Login</h1>
+        <p className="text-gray-400">Sign in to your approved ASCYN PRO account</p>
       </div>
 
-      {error && (
+      {errorMessage && (
         <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-lg mb-6 text-sm">
-          {error}
+          {errorMessage}
         </div>
       )}
 
@@ -109,6 +161,7 @@ function LoginForm() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
             className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-colors"
             placeholder="you@example.com"
           />
@@ -123,6 +176,7 @@ function LoginForm() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
             className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-colors"
             placeholder="••••••••"
           />
@@ -147,12 +201,12 @@ function LoginForm() {
       </form>
 
       <div className="mt-6 text-center text-sm text-gray-400">
-        Don&apos;t have an account?{' '}
+        Need access?{' '}
         <Link
-          href="/signup"
+          href="/pilot"
           className="text-[#D4AF37] hover:text-[#F4E4A6] font-medium transition-colors"
         >
-          Sign up
+          Request Pilot Access
         </Link>
       </div>
 
@@ -176,7 +230,7 @@ export default function LoginPage() {
           <div className="text-center">
             <div className="text-5xl mb-4">✂️</div>
             <h1 className="text-2xl font-bold text-white mb-2">
-              Welcome Back
+              Pilot Login
             </h1>
             <p className="text-gray-400">Loading...</p>
           </div>

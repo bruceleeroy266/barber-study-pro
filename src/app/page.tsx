@@ -15,7 +15,7 @@ export default function HomePage() {
                 href="/login"
                 className="hidden sm:inline-flex text-gray-300 hover:text-white transition-colors text-sm font-medium"
               >
-                Sign In
+                Pilot Login
               </Link>
               <Link
                 href="/demo"
@@ -334,6 +334,20 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center">
               <img src="/logo.svg" alt="ASCYN PRO" className="h-6 w-auto" />
+            </div>
+            <div className="flex items-center gap-6">
+              <Link
+                href="/login"
+                className="text-gray-500 hover:text-white text-sm transition-colors"
+              >
+                Pilot Login
+              </Link>
+              <Link
+                href="/pilot"
+                className="text-gray-500 hover:text-white text-sm transition-colors"
+              >
+                Request Pilot Access
+              </Link>
             </div>
             <p className="text-gray-500 text-sm">
               © 2026 ASCYN PRO. Built for future licensed professionals.

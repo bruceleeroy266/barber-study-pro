@@ -205,6 +205,12 @@ export async function requireStudentInSchool(
 }
 
 /**
+ * Re-export client-safe access helpers so server-auth remains a single import
+ * point for server components while the helpers stay usable in client code.
+ */
+export { getRoleBasedRedirect, validateLoginAccess, type LoginAccessError } from '@/lib/auth-access'
+
+/**
  * Validate that a role string is one of the known active roles.
  * Use this on signup / role-assignment paths to reject crafted metadata.
  */

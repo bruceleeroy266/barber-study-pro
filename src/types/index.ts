@@ -9,6 +9,10 @@ export interface Profile {
   barber_shop_name: string | null
   mentor_name: string | null
   avatar_url: string | null
+  approval_status: 'pending' | 'approved' | 'rejected'
+  is_disabled: boolean
+  approved_by: string | null
+  approved_at: string | null
   created_at: string
   updated_at: string
 }

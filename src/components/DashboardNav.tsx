@@ -7,6 +7,7 @@ import { LayoutDashboard, BookOpen, TrendingUp, User, LogOut, GraduationCap, Shi
 import { supabase } from '@/lib/supabase'
 import { Profile } from '@/types'
 import { isInstructorOrAdmin, isAdmin } from '@/lib/auth-helpers'
+import { logLogout } from '@/app/(auth)/actions'
 
 interface DashboardNavProps {
   user: Profile | null
@@ -52,6 +53,12 @@ export default function DashboardNav({ user }: DashboardNavProps) {
   }, [user])
 
   const handleLogout = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      await logLogout(user?.id ?? 'unknown', user?.email)
+    } catch {
+      // ignore logging failures
+    }
     await supabase.auth.signOut()
     router.push('/login')
     router.refresh()
