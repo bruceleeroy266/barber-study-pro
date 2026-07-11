@@ -41,6 +41,7 @@ export interface Flashcard {
   difficulty: 'easy' | 'medium' | 'hard' | null
   order_index: number
   is_active: boolean
+  competency_id?: string
 }
 
 export interface Quiz {

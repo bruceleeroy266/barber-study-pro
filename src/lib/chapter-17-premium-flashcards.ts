@@ -8,6 +8,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-001',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C02',
     front: 'What is the main purpose of a chemical texture service?',
     back: 'To permanently change the natural wave pattern of hair by altering disulfide bonds in the cortex.',
     category: 'Board Essential',
@@ -18,6 +19,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-002',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C02',
     front: 'What is a disulfide bond?',
     back: 'A strong chemical side bond in the cortex that gives hair its shape and strength.',
     category: 'Board Essential',
@@ -28,6 +30,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-003',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C02',
     front: 'What happens during the reduction phase of a texture service?',
     back: 'The waving or relaxing solution breaks disulfide bonds, changing cystine to cysteine.',
     category: 'Board Essential',
@@ -38,6 +41,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-004',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C02',
     front: 'What happens during the oxidation (neutralization) phase?',
     back: 'The neutralizer rebuilds disulfide bonds in the new shape, locking in the curl or straight pattern.',
     category: 'Board Essential',
@@ -48,6 +52,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-005',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C02',
     front: 'Name the three main categories of chemical texture services.',
     back: 'Permanent waves, chemical relaxers, and curl reformation.',
     category: 'Board Essential',
@@ -58,6 +63,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-006',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C01',
     front: 'Why is porosity the most important factor in chemical texture processing?',
     back: 'Porosity determines how quickly the product penetrates the cuticle and how fast the hair processes.',
     category: 'Board Essential',
@@ -68,6 +74,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-007',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C01',
     front: 'How does resistant hair behave during chemical texture processing?',
     back: 'It has a tight cuticle and processes more slowly, often needing stronger solution or longer time.',
     category: 'Board Essential',
@@ -78,6 +85,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-008',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C01',
     front: 'How does porous hair behave during chemical texture processing?',
     back: 'It absorbs product quickly and is more likely to overprocess or become damaged.',
     category: 'Board Essential',
@@ -88,6 +96,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-009',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C01',
     front: 'What does normal elasticity look like?',
     back: 'Hair stretches about 50% when wet and returns to its original length.',
     category: 'Board Essential',
@@ -98,6 +107,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-010',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C01',
     front: 'What does low elasticity indicate?',
     back: 'Hair is weak or damaged and may not withstand chemical processing.',
     category: 'Board Essential',
@@ -108,6 +118,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-011',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C01',
     front: 'List six characteristics that must be analyzed before a chemical texture service.',
     back: 'Texture, porosity, elasticity, density, scalp condition, and service history.',
     category: 'Board Essential',
@@ -118,6 +129,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-012',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C03',
     front: 'What is a concave perm rod?',
     back: 'A rod that is narrower in the middle and wider at the ends, creating a tighter center curl.',
     category: 'Board Essential',
@@ -128,6 +140,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-013',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C03',
     front: 'How does rod diameter affect curl size?',
     back: 'Smaller rods create tighter curls; larger rods create looser waves.',
     category: 'Board Essential',
@@ -138,6 +151,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-014',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C03',
     front: 'What is a croquignole perm wrap?',
     back: 'A wrapping technique where hair is wound from ends to scalp in overlapping layers.',
     category: 'Board Essential',
@@ -148,6 +162,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-015',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C03',
     front: 'What is a spiral perm wrap?',
     back: 'A wrapping technique where hair is wound vertically down the rod to create a corkscrew curl.',
     category: 'Board Essential',
@@ -158,6 +173,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-016',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C03',
     front: 'What is a piggyback perm wrap?',
     back: 'Two rods used on one section of long or dense hair to control length and curl.',
     category: 'Board Essential',
@@ -168,6 +184,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-017',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C03',
     front: 'Describe on-base rod placement.',
     back: 'Hair is stretched 135° from the base, creating maximum tension, tight curl, and fullness.',
     category: 'Board Essential',
@@ -178,6 +195,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-018',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C03',
     front: 'Describe half off-base rod placement.',
     back: 'Hair is stretched 90° from the base, creating moderate lift and curl.',
     category: 'Board Essential',
@@ -188,6 +206,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-019',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C03',
     front: 'Describe off-base rod placement.',
     back: 'Hair is wrapped with little tension, creating a more natural curl with less volume.',
     category: 'Board Essential',
@@ -198,6 +217,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-020',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C02',
     front: 'What is an alkaline (cold) permanent wave?',
     back: 'A perm with a pH of 9.0–9.6 that processes strongly and quickly at room temperature.',
     category: 'Board Essential',
@@ -208,6 +228,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-021',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C03',
     front: 'What is a true acid permanent wave?',
     back: 'A gentler perm with a pH of 4.5–7.0 that usually requires heat to process.',
     category: 'Board Essential',
@@ -218,6 +239,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-022',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C03',
     front: 'What is an exothermic permanent wave?',
     back: 'A perm solution that generates its own heat when mixed for stronger activation.',
     category: 'Board Essential',
@@ -228,6 +250,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-023',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C03',
     front: 'What causes underprocessing in a permanent wave?',
     back: 'Not enough processing time or solution strength, resulting in a limp or weak wave.',
     category: 'Board Essential',
@@ -238,6 +261,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-024',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C03',
     front: 'What causes overprocessing in a permanent wave?',
     back: 'Too much processing time or too strong a solution, causing frizz, weakness, or damage.',
     category: 'Board Essential',
@@ -248,6 +272,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-025',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C04',
     front: 'What are the two main types of chemical relaxers?',
     back: 'Hydroxide relaxers and thio relaxers.',
     category: 'Board Essential',
@@ -258,6 +283,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-026',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C04',
     front: 'What is a hydroxide relaxer?',
     back: 'A high-pH relaxer, either lye or no-lye, that straightens hair effectively.',
     category: 'Board Essential',
@@ -268,6 +294,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-027',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C04',
     front: 'What is a thio relaxer?',
     back: 'A milder ammonium thioglycolate relaxer that is compatible with thio perms.',
     category: 'Board Essential',
@@ -278,6 +305,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-028',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C04',
     front: 'What is the difference between a base and a no-base relaxer?',
     back: 'A base relaxer requires a protective base cream on the scalp; a no-base relaxer has protective ingredients built in.',
     category: 'Board Essential',
@@ -288,6 +316,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-029',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C06',
     front: 'Name three strand tests performed before a chemical relaxing service.',
     back: 'Porosity test, elasticity test, and texture test.',
     category: 'Board Essential',
@@ -298,6 +327,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-030',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C06',
     front: 'Why is a hydroxide relaxer incompatible with a thio perm?',
     back: 'Hydroxide restructures hair with a different chemistry; applying thio afterward can cause severe damage.',
     category: 'Board Essential',
@@ -308,6 +338,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-031',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C05',
     front: 'What are the three basic steps of curl reformation?',
     back: '(1) Straighten with a thio-based relaxer, (2) wrap on large rods, (3) neutralize to lock the new curl.',
     category: 'Board Essential',
@@ -318,6 +349,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-032',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C07',
     front: 'What is a texturizer?',
     back: 'A mild relaxer formula that loosens curl pattern rather than fully straightening the hair.',
     category: 'Board Essential',
@@ -328,6 +360,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-033',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C07',
     front: 'What is a chemical blowout?',
     back: 'A mild relaxing service that loosens curl enough to make blow-drying and styling easier.',
     category: 'Board Essential',
@@ -338,6 +371,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-034',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C02',
     front: 'What is neutralization?',
     back: 'The process of rebuilding disulfide bonds after the hair has been reshaped, usually with an oxidizing solution.',
     category: 'Board Essential',
@@ -348,6 +382,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-035',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C06',
     front: 'Why is it important to rinse thoroughly before applying neutralizer?',
     back: 'Residual waving or relaxing solution can continue to process hair and weaken the final result.',
     category: 'Board Essential',
@@ -358,6 +393,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-036',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C01',
     front: 'What should you do if the scalp shows abrasion, infection, or disease?',
     back: 'Postpone the chemical texture service until the condition is resolved.',
     category: 'Board Essential',
@@ -368,6 +404,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-037',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C01',
     front: 'What does density tell you about sectioning?',
     back: 'Thicker hair needs smaller subsections so the product saturates every strand evenly.',
     category: 'Board Essential',
@@ -378,6 +415,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-038',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C03',
     front: 'What is the purpose of a test curl?',
     back: 'To check if the wave has formed properly before rinsing and neutralizing the entire head.',
     category: 'Board Essential',
@@ -390,6 +428,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-039',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C01',
     front: 'Why should you ask about home hair color or bleach before a texture service?',
     back: 'Previous lightening or color can leave hair porous and unpredictable during chemical processing.',
     category: 'Professional Essential',
@@ -400,6 +439,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-040',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C01',
     front: 'How can medications affect a chemical texture service?',
     back: 'Some medications change hair strength or scalp sensitivity, increasing risk of damage or irritation.',
     category: 'Professional Essential',
@@ -410,6 +450,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-041',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C03',
     front: 'When would you choose a piggyback wrap?',
     back: 'When the hair is too long or dense to wrap neatly on a single rod.',
     category: 'Professional Essential',
@@ -420,6 +461,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-042',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C03',
     front: 'What is the visual result of on-base placement compared to off-base?',
     back: 'On-base gives fuller, tighter curls near the scalp; off-base gives softer, more natural curl with less volume.',
     category: 'Professional Essential',
@@ -430,6 +472,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-043',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C04',
     front: 'Why do alkaline perms process faster than true acid perms?',
     back: 'Alkaline perms have a higher pH and do not require external heat.',
     category: 'Professional Essential',
@@ -440,6 +483,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-044',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C04',
     front: 'What is the risk of applying relaxer to the scalp with broken skin?',
     back: 'Chemical burns, infection, and serious injury can occur.',
     category: 'Professional Essential',
@@ -450,6 +494,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-045',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C04',
     front: 'Why is section size important during a chemical relaxer?',
     back: 'Sections that are too large can leave strands underprocessed or unevenly saturated.',
     category: 'Professional Essential',
@@ -460,6 +505,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-046',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C06',
     front: 'What should you do if a client wants a perm on hair that was relaxed with hydroxide six months ago?',
     back: 'Perform a compatibility strand test; hydroxide may still be present and incompatible with thio products.',
     category: 'Professional Essential',
@@ -470,6 +516,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-047',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C03',
     front: 'How do you know when to rinse a permanent wave?',
     back: 'When test curls in multiple areas show the desired pattern and the hair has processed for the correct time.',
     category: 'Professional Essential',
@@ -480,6 +527,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-048',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C03',
     front: 'What aftercare advice should you give after a chemical texture service?',
     back: 'Avoid shampooing for 48 hours, use recommended conditioners, and avoid heat or other chemicals until hair stabilizes.',
     category: 'Professional Essential',
@@ -490,6 +538,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-049',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C07',
     front: 'What is the difference between a texturizer and a relaxer?',
     back: 'A texturizer uses a milder formula and shorter processing to loosen curl; a relaxer fully straightens.',
     category: 'Professional Essential',
@@ -500,6 +549,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-050',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C05',
     front: 'Why is a curl reformation service considered high risk?',
     back: 'It applies two chemical processes — relaxing and then reforming — so hair must be very healthy.',
     category: 'Professional Essential',
@@ -510,6 +560,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-051',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C04',
     front: 'What is the purpose of a protective base cream?',
     back: 'To shield the scalp from irritation during a base relaxer application.',
     category: 'Professional Essential',
@@ -520,6 +571,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-052',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C06',
     front: 'What is a common sign that hair is overprocessed?',
     back: 'Excessive frizz, mushy texture, breakage, or loss of elasticity.',
     category: 'Professional Essential',
@@ -530,6 +582,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-053',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C02',
     front: 'Why should you not pull or stretch hair during the neutralization phase?',
     back: 'Hair is in a fragile state until bonds are fully rebuilt; rough handling can weaken the final structure.',
     category: 'Professional Essential',
@@ -540,6 +593,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-054',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C02',
     front: 'How does previous highlighting affect perm selection?',
     back: 'Highlighted hair is often porous and fragile; a milder acid perm and careful strand testing are needed.',
     category: 'Professional Essential',
@@ -550,6 +604,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-055',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C03',
     front: 'What is the best way to maintain consistent saturation during a perm?',
     back: 'Use clean, even sections and ensure every rod receives full, uniform product coverage.',
     category: 'Professional Essential',
@@ -560,6 +615,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-056',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C01',
     front: 'When should you refuse a chemical texture service?',
     back: 'When the scalp or hair is damaged, the client has a contraindication, or you cannot perform safe strand testing.',
     category: 'Professional Essential',
@@ -570,6 +626,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-057',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C01',
     front: 'What information belongs in a chemical texture service record?',
     back: 'Products used, strengths, processing times, strand test results, client reactions, and aftercare given.',
     category: 'Professional Essential',
@@ -580,6 +637,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-058',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C06',
     front: 'Why are gloves essential during chemical texture services?',
     back: 'They protect your skin from alkaline or acidic solutions that can cause irritation or burns.',
     category: 'Professional Essential',
@@ -590,6 +648,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-059',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C01',
     front: 'What is the best practice for applying relaxer near the hairline?',
     back: 'Apply carefully, avoid the skin, and use base cream if required by the product instructions.',
     category: 'Professional Essential',
@@ -600,6 +659,7 @@ export const chapter17PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch17-060',
     chapter_id: 'ch-17',
+    competency_id: 'CH17-C01',
     front: 'How can you explain chemical texture services to a nervous client?',
     back: 'Use simple language, describe the steps, share how you will protect their hair, and explain aftercare.',
     category: 'Professional Essential',

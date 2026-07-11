@@ -105,6 +105,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'infoCards',
       id: 'why-study',
+      competencyIds: ['CH17-C01', 'CH17-C02', 'CH17-C07'],
       title: 'Why Study Chemical Texture Services?',
       cards: [
         {
@@ -132,6 +133,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'what-is-texture',
+      competencyIds: ['CH17-C02'],
       title: 'What Chemical Texture Services Do',
       content:
         'Chemical texture services permanently change the natural wave pattern of hair. They do this by breaking the disulfide bonds inside the cortex, reshaping the hair, and then rebuilding those bonds in the new shape. The three main service categories are permanent waves (add curl), chemical relaxers (remove curl), and curl reformation (loosen and reset curl pattern).',
@@ -140,6 +142,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'featureGrid',
       id: 'vocabulary-anchors',
+      competencyIds: ['CH17-C02', 'CH17-C03', 'CH17-C04'],
       title: 'Key Terms, Pronunciation & Memory Hooks',
       subtitle: 'Lock in the language the board expects',
       features: [
@@ -169,6 +172,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'tabbed',
       id: 'hair-analysis',
+      competencyIds: ['CH17-C01'],
       title: 'Client Consultation & Hair Analysis',
       tabs: [
         {
@@ -234,6 +238,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'featureGrid',
       id: 'bond-science',
+      competencyIds: ['CH17-C02'],
       title: 'The Science: Disulfide Bonds',
       features: [
         {
@@ -265,6 +270,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'tools-materials',
+      competencyIds: ['CH17-C06'],
       title: 'Tools & Materials for Chemical Texture Services',
       content:
         'Every texture service depends on having the right supplies ready before you start: protective gloves, cape and neck strip, sectioning clips, tail comb, perm rods in several sizes, end papers, waving or relaxing solution, neutralizer, timer, spray bottle, towels, and a basin for rinsing. For relaxers you also need a protective base cream (if using a base relaxer), applicator brush, and plastic cap. For curl reformation you need both relaxer and perm rods. Missing one item mid-service can lead to rushed timing, uneven saturation, or client injury.',
@@ -274,6 +280,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'tabbed',
       id: 'perm-waves',
+      competencyIds: ['CH17-C03'],
       title: 'Permanent Waves',
       tabs: [
         {
@@ -321,6 +328,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'milestoneList',
       id: 'perm-procedure',
+      competencyIds: ['CH17-C03'],
       title: 'Permanent Wave Procedure Sequence',
       milestones: [
         { year: 'Step 1', title: 'Consult and analyze', description: 'Assess texture, porosity, elasticity, density, scalp condition, and service history.' },
@@ -338,6 +346,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'perm-service-check',
+      competencyIds: ['CH17-C03', 'CH17-C06'],
       title: 'Permanent Wave Service Check',
       content:
         'Before processing, perform strand tests on representative sections. Process according to manufacturer timing. Check a test curl in at least three areas before rinsing. Underprocessing leaves hair limp; overprocessing causes frizz and breakage. Always rinse thoroughly before applying neutralizer.',
@@ -346,6 +355,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'tabbed',
       id: 'relaxers',
+      competencyIds: ['CH17-C04'],
       title: 'Chemical Hair Relaxers',
       tabs: [
         {
@@ -381,6 +391,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'milestoneList',
       id: 'relaxer-procedure',
+      competencyIds: ['CH17-C04'],
       title: 'Chemical Relaxer Procedure Sequence',
       milestones: [
         { year: 'Step 1', title: 'Consult and analyze', description: 'Assess all six hair/scalp characteristics and record service history.' },
@@ -397,6 +408,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'relaxer-warning',
+      competencyIds: ['CH17-C02', 'CH17-C04', 'CH17-C06'],
       title: 'Relaxer Compatibility Warning',
       content:
         'Hydroxide relaxers are not compatible with thio-based perms or relaxers. Hair treated with hydroxide has been restructured with a different chemistry, and applying a thio product afterward can cause severe damage. Always ask about previous services during consultation.',
@@ -405,6 +417,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'curl-reformation',
+      competencyIds: ['CH17-C05'],
       title: 'Chemical Curl Reformation',
       content:
         'Curl reformation loosens tight curl patterns and resets them into a larger, more manageable curl. The three basic steps are: (1) straighten the hair with a thio-based relaxer, (2) wrap the hair on large rods in the desired new curl pattern, and (3) neutralize to lock the new shape. Because the hair is processed twice, precise timing and strand testing are essential.',
@@ -413,6 +426,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'texturizers',
+      competencyIds: ['CH17-C07'],
       title: 'Texturizers & Chemical Blowouts',
       content:
         'Texturizers use a mild relaxer formula to loosen curl rather than fully straighten. They create softer, more manageable curl patterns with less volume. Chemical blowouts relax curl enough to allow easier blow-drying and styling. Both services require the same consultation, strand testing, and safety steps as full relaxers.',
@@ -421,6 +435,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'compare-chemistries',
+      competencyIds: ['CH17-C02'],
       title: 'How the Three Services Are Alike — and Different',
       content:
         'Permanent waves, chemical relaxers, and curl reformation all rely on the same three-stage chemistry: reduce disulfide bonds, reshape the hair, then oxidize to lock the new pattern. The difference is the desired outcome and the tools used. A perm adds curl by wrapping hair on rods. A relaxer removes curl by combing hair straight. Curl reformation combines both: it first relaxes tight curl, then wraps the hair in a new pattern and neutralizes. Perms usually use alkaline or acid solutions; relaxers use hydroxide or thio formulas; curl reformation uses a thio relaxer followed by a perm wrap. Understanding these similarities and differences is what lets you choose the right service and explain it to a client.',
@@ -429,6 +444,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'checklist',
       id: 'safety-checklist',
+      competencyIds: ['CH17-C06'],
       title: 'Safety Checklist',
       items: [
         { text: 'Complete a full consultation and service history.' },
@@ -446,6 +462,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'confidenceBuilder',
       id: 'texture-confidence',
+      competencyIds: ['CH17-C01', 'CH17-C06'],
       title: 'Client Conversation Confidence Builder',
       subtitle: 'How would you respond in the chair?',
       cards: [
@@ -464,6 +481,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'scenarioBlock',
       id: 'scenario-1',
+      competencyIds: ['CH17-C01', 'CH17-C02', 'CH17-C03'],
       title: 'Real Shop Scenario',
       scenarios: [
         {
@@ -493,6 +511,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'challengeCard',
       id: 'try-this',
+      competencyIds: ['CH17-C03', 'CH17-C04', 'CH17-C06'],
       title: 'Try This',
       challenges: [
         {
@@ -521,6 +540,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'common-mistakes',
+      competencyIds: ['CH17-C06'],
       title: 'Common Mistakes to Avoid',
       content:
         'Skipping the strand test, ignoring previous chemical services, applying relaxer to damaged scalp, using rods that are too large or too small for the desired curl, and rinsing before neutralizing properly are the most common reasons texture services fail. Always treat timing as a range based on hair condition, not a fixed number.',
@@ -529,6 +549,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'memory-tricks',
+      competencyIds: ['CH17-C02', 'CH17-C03', 'CH17-C04'],
       title: 'Memory Tricks',
       content:
         'Remember the texture service cycle with R-R-O: **Reduce** the bonds, **Reshape** the hair, **Oxidize** to lock. For rod placement, think “ON the head = ON the base” (most tension, fullest curl). For relaxers, “Base = Barrier” (you add a protective base cream).',
@@ -537,6 +558,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'proTip',
       id: 'instructor-tips',
+      competencyIds: ['CH17-C01', 'CH17-C02', 'CH17-C03', 'CH17-C04', 'CH17-C05', 'CH17-C06', 'CH17-C07'],
       title: '💎 Instructor Notes & Remediation',
       subtitle: 'Teaching chemical texture services with confidence',
       items: [
@@ -552,6 +574,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'reflectionBlock',
       id: 'texture-reflection',
+      competencyIds: ['CH17-C01', 'CH17-C02', 'CH17-C03', 'CH17-C04', 'CH17-C05', 'CH17-C06', 'CH17-C07'],
       title: 'Reflect Before You Practice',
       questions: [
         {
@@ -569,6 +592,7 @@ export const chapter17PremiumContent: ChapterContent = {
     {
       type: 'featureGrid',
       id: 'board-alerts',
+      competencyIds: ['CH17-C02', 'CH17-C03', 'CH17-C04', 'CH17-C06'],
       title: 'Board Alerts',
       features: [
         {
@@ -596,83 +620,284 @@ export const chapter17PremiumContent: ChapterContent = {
   ],
   competencies: [
     {
-      id: 'CH17-COMP-01',
+      id: 'CH17-C01',
+      standardId: 'CH17-C01',
+      legacyId: 'CH17-COMP-01',
       title: 'Client Consultation and Hair Analysis',
       description: 'Conduct a thorough consultation and analyze six hair/scalp characteristics before recommending or performing any chemical texture service.',
       importance: 'critical',
       difficulty: 'medium',
-      learningObjectives: ['2', '3'],
+      learningObjectives: ['CH17-LO02', 'CH17-LO03'],
       vocabularyIds: ['fc-ch17-006', 'fc-ch17-007', 'fc-ch17-008', 'fc-ch17-009', 'fc-ch17-010', 'fc-ch17-011'],
       flashcardIds: ['fc-ch17-001', 'fc-ch17-006', 'fc-ch17-007', 'fc-ch17-008', 'fc-ch17-009', 'fc-ch17-010', 'fc-ch17-011', 'fc-ch17-036', 'fc-ch17-037', 'fc-ch17-039', 'fc-ch17-040', 'fc-ch17-056', 'fc-ch17-057', 'fc-ch17-059'],
       quizQuestionIds: ['qq-17-001', 'qq-17-002', 'qq-17-003', 'qq-17-004', 'qq-17-005', 'lq-17-001', 'lq-17-006', 'lq-17-007'],
     },
     {
-      id: 'CH17-COMP-02',
+      id: 'CH17-C02',
+      standardId: 'CH17-C02',
+      legacyId: 'CH17-COMP-02',
       title: 'Chemistry of Chemical Texture Services',
       description: 'Explain how disulfide bonds are reduced, reshaped, and oxidized, and compare the chemistry of perms, relaxers, and curl reformation.',
       importance: 'critical',
       difficulty: 'medium',
-      learningObjectives: ['1', '4', '5'],
+      learningObjectives: ['CH17-LO01', 'CH17-LO04', 'CH17-LO05'],
       vocabularyIds: ['fc-ch17-002', 'fc-ch17-003', 'fc-ch17-004', 'fc-ch17-034'],
       flashcardIds: ['fc-ch17-002', 'fc-ch17-003', 'fc-ch17-004', 'fc-ch17-005', 'fc-ch17-020', 'fc-ch17-021', 'fc-ch17-022', 'fc-ch17-025', 'fc-ch17-026', 'fc-ch17-027', 'fc-ch17-030', 'fc-ch17-034', 'fc-ch17-035', 'fc-ch17-043', 'fc-ch17-046', 'fc-ch17-052', 'fc-ch17-053'],
-      quizQuestionIds: ['qq-17-006', 'qq-17-007', 'qq-17-008', 'qq-17-009', 'qq-17-010', 'lq-17-002', 'lq-17-012', 'lq-17-013'],
+      quizQuestionIds: ['qq-17-006', 'qq-17-007', 'qq-17-008', 'qq-17-009', 'qq-17-010', 'lq-17-002', 'lq-17-012', 'lq-17-013', 'lq-17-016'],
     },
     {
-      id: 'CH17-COMP-03',
+      id: 'CH17-C03',
+      standardId: 'CH17-C03',
+      legacyId: 'CH17-COMP-03',
       title: 'Permanent Waving Procedures',
       description: 'Select appropriate rods, wrapping techniques, and placement; execute the full perm service from analysis to neutralization.',
       importance: 'critical',
       difficulty: 'medium',
-      learningObjectives: ['6', '7'],
+      learningObjectives: ['CH17-LO06', 'CH17-LO07'],
       vocabularyIds: ['fc-ch17-012', 'fc-ch17-013', 'fc-ch17-014', 'fc-ch17-015', 'fc-ch17-016', 'fc-ch17-017', 'fc-ch17-018', 'fc-ch17-019'],
       flashcardIds: ['fc-ch17-012', 'fc-ch17-013', 'fc-ch17-014', 'fc-ch17-015', 'fc-ch17-016', 'fc-ch17-017', 'fc-ch17-018', 'fc-ch17-019', 'fc-ch17-020', 'fc-ch17-021', 'fc-ch17-022', 'fc-ch17-023', 'fc-ch17-024', 'fc-ch17-038', 'fc-ch17-041', 'fc-ch17-042', 'fc-ch17-047', 'fc-ch17-048', 'fc-ch17-055'],
       quizQuestionIds: ['qq-17-011', 'qq-17-012', 'qq-17-013', 'qq-17-014', 'qq-17-015', 'qq-17-016', 'qq-17-017', 'lq-17-003', 'lq-17-004', 'lq-17-008', 'lq-17-011'],
     },
     {
-      id: 'CH17-COMP-04',
+      id: 'CH17-C04',
+      standardId: 'CH17-C04',
+      legacyId: 'CH17-COMP-04',
       title: 'Chemical Relaxing Procedures',
       description: 'Identify relaxer types, choose base vs. no-base application, and perform the full relaxer service safely.',
       importance: 'critical',
       difficulty: 'medium',
-      learningObjectives: ['8', '9'],
+      learningObjectives: ['CH17-LO08', 'CH17-LO09'],
       vocabularyIds: ['fc-ch17-025', 'fc-ch17-026', 'fc-ch17-027', 'fc-ch17-028'],
       flashcardIds: ['fc-ch17-025', 'fc-ch17-026', 'fc-ch17-027', 'fc-ch17-028', 'fc-ch17-029', 'fc-ch17-044', 'fc-ch17-045', 'fc-ch17-049', 'fc-ch17-051'],
       quizQuestionIds: ['qq-17-018', 'qq-17-019', 'qq-17-020', 'qq-17-021', 'qq-17-022', 'qq-17-023', 'qq-17-024', 'lq-17-009', 'lq-17-014', 'lq-17-015'],
     },
     {
-      id: 'CH17-COMP-05',
+      id: 'CH17-C05',
+      standardId: 'CH17-C05',
+      legacyId: 'CH17-COMP-05',
       title: 'Curl Reformation Procedures',
       description: 'Explain and perform the three-step curl reformation process while recognizing its higher risk profile.',
       importance: 'high',
       difficulty: 'hard',
-      learningObjectives: ['11'],
+      learningObjectives: ['CH17-LO11'],
       vocabularyIds: ['fc-ch17-031'],
       flashcardIds: ['fc-ch17-031', 'fc-ch17-050'],
       quizQuestionIds: ['qq-17-025', 'qq-17-026'],
     },
     {
-      id: 'CH17-COMP-06',
+      id: 'CH17-C06',
+      standardId: 'CH17-C06',
+      legacyId: 'CH17-COMP-06',
       title: 'Safety, Contraindications, and Strand Tests',
       description: 'Recognize contraindications, perform strand and elasticity tests, and apply all required safety precautions.',
       importance: 'critical',
       difficulty: 'medium',
-      learningObjectives: ['10'],
+      learningObjectives: ['CH17-LO10'],
       vocabularyIds: ['fc-ch17-029', 'fc-ch17-036'],
       flashcardIds: ['fc-ch17-029', 'fc-ch17-030', 'fc-ch17-035', 'fc-ch17-036', 'fc-ch17-044', 'fc-ch17-046', 'fc-ch17-052', 'fc-ch17-056', 'fc-ch17-058'],
       quizQuestionIds: ['qq-17-028', 'qq-17-029', 'qq-17-030', 'lq-17-005'],
     },
     {
-      id: 'CH17-COMP-07',
+      id: 'CH17-C07',
+      standardId: 'CH17-C07',
+      legacyId: 'CH17-COMP-07',
       title: 'Texturizers and Chemical Blowouts',
       description: 'Describe the intended outcomes of texturizer and chemical blowout services and how they differ from full relaxers.',
       importance: 'medium',
       difficulty: 'easy',
-      learningObjectives: ['12'],
+      learningObjectives: ['CH17-LO12'],
       vocabularyIds: ['fc-ch17-032', 'fc-ch17-033'],
       flashcardIds: ['fc-ch17-032', 'fc-ch17-033', 'fc-ch17-049'],
       quizQuestionIds: ['qq-17-027', 'lq-17-010'],
     },
   ],
+  learningObjectives: [
+    {
+      id: 'CH17-LO01',
+      standardId: 'CH17-LO01',
+      description: 'Describe how permanent waves, relaxers, and curl reformation services change the appearance of the hair.',
+      competencyIds: ['CH17-C02'],
+      lessonIds: ['what-is-texture', 'compare-chemistries'],
+      flashcardIds: ['fc-ch17-001', 'fc-ch17-005'],
+      quizQuestionIds: ['lq-17-016'],
+    },
+    {
+      id: 'CH17-LO02',
+      standardId: 'CH17-LO02',
+      description: 'List topics to discuss during a client consultation.',
+      competencyIds: ['CH17-C01'],
+      lessonIds: ['hair-analysis', 'scenario-1'],
+      flashcardIds: ['fc-ch17-039', 'fc-ch17-040', 'fc-ch17-057', 'fc-ch17-060'],
+      quizQuestionIds: ['qq-17-005', 'lq-17-006'],
+    },
+    {
+      id: 'CH17-LO03',
+      standardId: 'CH17-LO03',
+      description: 'Identify six characteristics of the hair and scalp that are analyzed before performing chemical texture services.',
+      competencyIds: ['CH17-C01'],
+      lessonIds: ['hair-analysis'],
+      flashcardIds: ['fc-ch17-006', 'fc-ch17-007', 'fc-ch17-008', 'fc-ch17-009', 'fc-ch17-010', 'fc-ch17-011', 'fc-ch17-037'],
+      quizQuestionIds: ['qq-17-001', 'qq-17-004', 'lq-17-001'],
+    },
+    {
+      id: 'CH17-LO04',
+      standardId: 'CH17-LO04',
+      description: 'Describe how the ingredients in permanent waves, relaxers, and curl reformation services are chemically similar and chemically different from each other.',
+      competencyIds: ['CH17-C02'],
+      lessonIds: ['what-is-texture', 'bond-science', 'compare-chemistries'],
+      flashcardIds: ['fc-ch17-002', 'fc-ch17-003', 'fc-ch17-004', 'fc-ch17-005', 'fc-ch17-020', 'fc-ch17-025', 'fc-ch17-031'],
+      quizQuestionIds: ['lq-17-016'],
+    },
+    {
+      id: 'CH17-LO05',
+      standardId: 'CH17-LO05',
+      description: 'Explain the physical and chemical actions of permanent waving, chemical relaxing, and curl reformation processes.',
+      competencyIds: ['CH17-C02'],
+      lessonIds: ['bond-science', 'perm-procedure', 'relaxer-procedure', 'curl-reformation'],
+      flashcardIds: ['fc-ch17-002', 'fc-ch17-003', 'fc-ch17-004', 'fc-ch17-034', 'fc-ch17-035', 'fc-ch17-050', 'fc-ch17-053'],
+      quizQuestionIds: ['qq-17-006', 'qq-17-007', 'qq-17-008', 'qq-17-029', 'lq-17-002'],
+    },
+    {
+      id: 'CH17-LO06',
+      standardId: 'CH17-LO06',
+      description: 'Identify types of perm rods and end wrapping techniques.',
+      competencyIds: ['CH17-C03'],
+      lessonIds: ['perm-waves'],
+      flashcardIds: ['fc-ch17-012', 'fc-ch17-013', 'fc-ch17-014', 'fc-ch17-015', 'fc-ch17-016', 'fc-ch17-041'],
+      quizQuestionIds: ['qq-17-012', 'qq-17-013', 'qq-17-014', 'lq-17-004', 'lq-17-008'],
+    },
+    {
+      id: 'CH17-LO07',
+      standardId: 'CH17-LO07',
+      description: 'Define on-base, half off-base, and off-base rod placement.',
+      competencyIds: ['CH17-C03'],
+      lessonIds: ['perm-waves'],
+      flashcardIds: ['fc-ch17-017', 'fc-ch17-018', 'fc-ch17-019', 'fc-ch17-042'],
+      quizQuestionIds: ['qq-17-011', 'lq-17-003'],
+    },
+    {
+      id: 'CH17-LO08',
+      standardId: 'CH17-LO08',
+      description: 'Identify two types of chemical relaxers.',
+      competencyIds: ['CH17-C04'],
+      lessonIds: ['relaxers'],
+      flashcardIds: ['fc-ch17-025', 'fc-ch17-026', 'fc-ch17-027', 'fc-ch17-043'],
+      quizQuestionIds: ['qq-17-018', 'qq-17-024', 'lq-17-009'],
+    },
+    {
+      id: 'CH17-LO09',
+      standardId: 'CH17-LO09',
+      description: 'Explain the difference between base and no-base relaxers.',
+      competencyIds: ['CH17-C04'],
+      lessonIds: ['relaxers'],
+      flashcardIds: ['fc-ch17-028', 'fc-ch17-051'],
+      quizQuestionIds: ['qq-17-019', 'lq-17-009'],
+    },
+    {
+      id: 'CH17-LO10',
+      standardId: 'CH17-LO10',
+      description: 'List three strand tests to be performed before a chemical relaxing process.',
+      competencyIds: ['CH17-C06'],
+      lessonIds: ['relaxers', 'safety-checklist'],
+      flashcardIds: ['fc-ch17-029', 'fc-ch17-030'],
+      quizQuestionIds: ['qq-17-020', 'qq-17-021', 'lq-17-005', 'lq-17-007'],
+    },
+    {
+      id: 'CH17-LO11',
+      standardId: 'CH17-LO11',
+      description: 'Explain the three steps of a curl reformation process.',
+      competencyIds: ['CH17-C05'],
+      lessonIds: ['curl-reformation'],
+      flashcardIds: ['fc-ch17-031', 'fc-ch17-050'],
+      quizQuestionIds: ['qq-17-025', 'qq-17-026'],
+    },
+    {
+      id: 'CH17-LO12',
+      standardId: 'CH17-LO12',
+      description: 'Describe the intended outcomes of texturizer and chemical blowout services.',
+      competencyIds: ['CH17-C07'],
+      lessonIds: ['texturizers'],
+      flashcardIds: ['fc-ch17-032', 'fc-ch17-033', 'fc-ch17-049'],
+      quizQuestionIds: ['qq-17-027', 'lq-17-010'],
+    },
+  ],
+  remediation: [
+    {
+      competencyId: 'CH17-C01',
+      lessonIds: ['why-study', 'hair-analysis', 'scenario-1', 'texture-confidence'],
+      flashcardIds: ['fc-ch17-001', 'fc-ch17-006', 'fc-ch17-007', 'fc-ch17-008', 'fc-ch17-009', 'fc-ch17-010', 'fc-ch17-011', 'fc-ch17-039', 'fc-ch17-040'],
+      vocabularyIds: ['texture', 'porosity', 'elasticity', 'density', 'scalp-condition', 'service-history'],
+      learningQuestionIds: ['lq-17-001', 'lq-17-006', 'lq-17-007'],
+      boardQuestionIds: ['qq-17-001', 'qq-17-002', 'qq-17-003', 'qq-17-004', 'qq-17-005'],
+      instructorNote: 'Return to the six-analysis checklist. Have the student practice a mock consultation and explain why each characteristic affects product selection.',
+      retakeCount: 3,
+    },
+    {
+      competencyId: 'CH17-C02',
+      lessonIds: ['what-is-texture', 'bond-science', 'compare-chemistries', 'memory-tricks'],
+      flashcardIds: ['fc-ch17-002', 'fc-ch17-003', 'fc-ch17-004', 'fc-ch17-005', 'fc-ch17-020', 'fc-ch17-021', 'fc-ch17-022', 'fc-ch17-025', 'fc-ch17-026', 'fc-ch17-027'],
+      vocabularyIds: ['disulfide-bond', 'reduction', 'oxidation', 'neutralization'],
+      learningQuestionIds: ['lq-17-002', 'lq-17-012', 'lq-17-013', 'lq-17-016'],
+      boardQuestionIds: ['qq-17-006', 'qq-17-007', 'qq-17-008', 'qq-17-009', 'qq-17-010', 'qq-17-029'],
+      instructorNote: 'Use the R-R-O mnemonic and draw the bond cycle. Compare alkaline, acid, hydroxide, and thio chemistries side-by-side.',
+      retakeCount: 3,
+    },
+    {
+      competencyId: 'CH17-C03',
+      lessonIds: ['perm-waves', 'perm-procedure', 'perm-service-check'],
+      flashcardIds: ['fc-ch17-012', 'fc-ch17-013', 'fc-ch17-014', 'fc-ch17-015', 'fc-ch17-016', 'fc-ch17-017', 'fc-ch17-018', 'fc-ch17-019', 'fc-ch17-020', 'fc-ch17-023', 'fc-ch17-024', 'fc-ch17-038'],
+      vocabularyIds: ['concave-rod', 'straight-rod', 'croquignole', 'spiral', 'piggyback', 'on-base', 'half-off-base', 'off-base'],
+      learningQuestionIds: ['lq-17-003', 'lq-17-004', 'lq-17-008', 'lq-17-011'],
+      boardQuestionIds: ['qq-17-011', 'qq-17-012', 'qq-17-013', 'qq-17-014', 'qq-17-015', 'qq-17-016', 'qq-17-017'],
+      instructorNote: 'Have the student demonstrate rod placement on a mannequin and verbalize the tension angle for each placement.',
+      retakeCount: 3,
+    },
+    {
+      competencyId: 'CH17-C04',
+      lessonIds: ['relaxers', 'relaxer-procedure', 'relaxer-warning'],
+      flashcardIds: ['fc-ch17-025', 'fc-ch17-026', 'fc-ch17-027', 'fc-ch17-028', 'fc-ch17-029', 'fc-ch17-044', 'fc-ch17-045', 'fc-ch17-049', 'fc-ch17-051'],
+      vocabularyIds: ['hydroxide-relaxer', 'thio-relaxer', 'base-relaxer', 'no-base-relaxer'],
+      learningQuestionIds: ['lq-17-009', 'lq-17-014', 'lq-17-015'],
+      boardQuestionIds: ['qq-17-018', 'qq-17-019', 'qq-17-020', 'qq-17-021', 'qq-17-022', 'qq-17-023', 'qq-17-024'],
+      instructorNote: 'Focus on the difference between base and no-base application and why hydroxide/thio compatibility matters.',
+      retakeCount: 3,
+    },
+    {
+      competencyId: 'CH17-C05',
+      lessonIds: ['curl-reformation'],
+      flashcardIds: ['fc-ch17-031', 'fc-ch17-050'],
+      vocabularyIds: ['curl-reformation'],
+      learningQuestionIds: [],
+      boardQuestionIds: ['qq-17-025', 'qq-17-026'],
+      instructorNote: 'Stress the two-process risk. Require the student to explain why hair must be healthy enough for reformation.',
+      retakeCount: 3,
+    },
+    {
+      competencyId: 'CH17-C06',
+      lessonIds: ['tools-materials', 'safety-checklist', 'texture-confidence', 'scenario-1'],
+      flashcardIds: ['fc-ch17-029', 'fc-ch17-030', 'fc-ch17-035', 'fc-ch17-036', 'fc-ch17-044', 'fc-ch17-046', 'fc-ch17-052', 'fc-ch17-056', 'fc-ch17-058'],
+      vocabularyIds: ['porosity-test', 'elasticity-test', 'texture-test', 'contraindication'],
+      learningQuestionIds: ['lq-17-005'],
+      boardQuestionIds: ['qq-17-028', 'qq-17-029', 'qq-17-030'],
+      instructorNote: 'Return to the safety checklist and strand-test procedures. Practice identifying contraindications from photos or case studies.',
+      retakeCount: 3,
+    },
+    {
+      competencyId: 'CH17-C07',
+      lessonIds: ['texturizers', 'compare-chemistries'],
+      flashcardIds: ['fc-ch17-032', 'fc-ch17-033', 'fc-ch17-049'],
+      vocabularyIds: ['texturizer', 'chemical-blowout'],
+      learningQuestionIds: ['lq-17-010'],
+      boardQuestionIds: ['qq-17-027'],
+      instructorNote: 'Compare texturizer and blowout outcomes to full relaxers using processing time and final curl pattern.',
+      retakeCount: 3,
+    },
+  ],
+  mastery: {
+    passingScore: 75,
+    confidenceCheck: true,
+    remediationRequiredBelow: 75,
+  },
   imagePlaceholders: [
     {
       assetId: 'ch17-img-001',

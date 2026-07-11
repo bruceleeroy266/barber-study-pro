@@ -48,6 +48,7 @@ export interface BaseSection {
   id: string
   title?: string
   subtitle?: string
+  competencyIds?: string[]
 }
 
 // Info Cards Section (e.g., "Why Study Barbering History?")
@@ -397,6 +398,8 @@ export interface ChapterTheme {
 
 export interface ChapterCompetency {
   id: string
+  standardId: string
+  legacyId?: string
   title: string
   description: string
   importance: 'critical' | 'high' | 'medium' | 'low'
@@ -405,6 +408,45 @@ export interface ChapterCompetency {
   vocabularyIds?: string[]
   flashcardIds?: string[]
   quizQuestionIds?: string[]
+}
+
+// ───────────────────────────────────────────────
+// Learning Objectives — explicit competency mapping
+// ───────────────────────────────────────────────
+
+export interface ChapterLearningObjective {
+  id: string
+  standardId: string
+  description: string
+  competencyIds: string[]
+  lessonIds: string[]
+  flashcardIds: string[]
+  quizQuestionIds: string[]
+}
+
+// ───────────────────────────────────────────────
+// Remediation Path — targeted review per competency
+// ───────────────────────────────────────────────
+
+export interface ChapterRemediationPath {
+  competencyId: string
+  lessonIds: string[]
+  flashcardIds: string[]
+  vocabularyIds?: string[]
+  learningQuestionIds: string[]
+  boardQuestionIds: string[]
+  instructorNote: string
+  retakeCount: number
+}
+
+// ───────────────────────────────────────────────
+// Mastery Configuration — analytics-ready thresholds
+// ───────────────────────────────────────────────
+
+export interface ChapterMasteryConfig {
+  passingScore: number
+  confidenceCheck: boolean
+  remediationRequiredBelow: number
 }
 
 // ───────────────────────────────────────────────
@@ -427,6 +469,9 @@ export interface ChapterContent {
   theme?: ChapterTheme
   sections: ChapterSection[]
   competencies?: ChapterCompetency[]
+  learningObjectives?: ChapterLearningObjective[]
+  remediation?: ChapterRemediationPath[]
+  mastery?: ChapterMasteryConfig
   imagePlaceholders?: ChapterImagePlaceholder[]
 }
 
