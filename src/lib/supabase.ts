@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createBrowserClient } from '@supabase/ssr'
 import { isExplicitDemoMode, isSupabaseConfigured } from './demo-helpers'
 
@@ -12,7 +13,7 @@ const supabaseConfigured = isSupabaseConfigured()
  * chaining, and awaiting the builder resolves to a safe default result.
  */
 function createMockQueryBuilder(operation: 'select' | 'insert' | 'upsert' | 'delete' = 'select') {
-  let shouldError = false
+  const shouldError = false
 
   const builder: any = {
     eq: () => builder,
@@ -113,10 +114,18 @@ function createClient() {
     return mockSupabase as any
   }
 
-  // Production: require real Supabase
+  // Production safety: never silently fall back to mock auth/data. The mock
+  // client ignores credentials and returns a demo admin profile, which would
+  // let anyone into /admin if it leaked into a production deployment.
   if (!supabaseConfigured) {
-    console.error('[ASCYN PRO] ERROR: Supabase not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY, or enable demo mode.')
-    // Return mock to prevent crashes, but log error
+    const message =
+      '[ASCYN PRO] ERROR: Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY, or enable demo mode.'
+    console.error(message)
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error(message)
+    }
+    // Non-production fallback keeps local development from crashing when env
+    // vars are intentionally omitted, but still surfaces the misconfiguration.
     return mockSupabase as any
   }
 

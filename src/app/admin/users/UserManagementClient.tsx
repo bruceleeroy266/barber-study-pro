@@ -67,8 +67,8 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
   async function loadUsers(newOffset = 0) {
     const result = await getUsers({
       search,
-      role: roleFilter as any,
-      approvalStatus: statusFilter as any,
+      role: roleFilter as AppRole | 'all',
+      approvalStatus: statusFilter as 'pending' | 'approved' | 'rejected' | 'all',
       schoolId: schoolFilter,
       limit: LIMIT,
       offset: newOffset,
@@ -96,9 +96,9 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
       full_name: String(form.get('full_name') || ''),
       email: String(form.get('email') || ''),
       password: String(form.get('password') || ''),
-      role: String(form.get('role') || 'student') as any,
+      role: String(form.get('role') || 'student') as AppRole,
       school_id: String(form.get('school_id') || '') || null,
-      approval_status: String(form.get('approval_status') || 'pending') as any,
+      approval_status: String(form.get('approval_status') || 'pending') as 'pending' | 'approved' | 'rejected',
     })
 
     if (result.success) {
@@ -357,7 +357,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                   <td className="px-4 py-3">
                     <select
                       value={user.approval_status}
-                      onChange={(e) => handleAction(updateUserStatus, user.id, e.target.value as any)}
+                      onChange={(e) => handleAction(updateUserStatus, user.id, e.target.value as 'approved' | 'rejected')}
                       className="bg-gray-950 border border-gray-800 rounded px-2 py-1 text-sm text-white focus:outline-none focus:border-[#D4AF37]"
                     >
                       {APPROVAL_STATUSES.map((s) => (

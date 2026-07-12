@@ -26,7 +26,7 @@ export default function QuoteBlock({ quote, attribution, theme }: QuoteBlockProp
     >
       <Quote className="w-8 h-8 mb-3" style={{ color: (qt && qt.icon) || t.primary }} />
       <blockquote className="text-lg md:text-xl italic leading-relaxed" style={{ color: t.text }}>
-        "{quote}"
+        &quot;{quote}&quot;
       </blockquote>
       {attribution && (
         <div className="mt-4 text-sm" style={{ color: t.primary }}>— {attribution}</div>

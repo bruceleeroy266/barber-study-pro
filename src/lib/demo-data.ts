@@ -9,7 +9,7 @@ import { allQuizQuestions } from './quiz-data'
 export const demoUser = {
   id: 'demo-user',
   email: 'demo@ascynpro.test',
-  role: 'admin' as const,
+  role: 'student' as const,
 }
 
 export const demoSchool = {
@@ -41,7 +41,7 @@ export const demoProfile: Profile = {
   id: 'demo-user',
   email: 'demo@ascynpro.test',
   full_name: 'Demo Student',
-  role: 'admin', // aligned with demoUser.role so demo mode can test instructor/admin portals
+  role: 'student', // default demo user is a student; never default to admin for safety
   school_id: 'demo-school',
   barber_shop_name: null,
   mentor_name: null,

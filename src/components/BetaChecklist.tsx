@@ -144,6 +144,7 @@ export default function BetaChecklist({ initialFeedback }: BetaChecklistProps) {
       if (raw) {
         const parsed = JSON.parse(raw)
         if (Array.isArray(parsed.completed)) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setCompleted(new Set(parsed.completed))
         }
       }

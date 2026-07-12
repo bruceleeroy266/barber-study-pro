@@ -18,7 +18,7 @@ export default async function ChaptersPage() {
   const { data: progress } = await supabase
     .from('student_progress')
     .select('*')
-    .eq('user_id', user?.id) as { data: StudentProgress[] | null; error: any }
+    .eq('user_id', user?.id) as { data: StudentProgress[] | null; error: Error | null }
 
   return (
     <div className="space-y-8">

@@ -140,8 +140,9 @@ function BetaAgreementContent() {
 
       setAgreed(true)
       setSaved(true)
-    } catch (err: any) {
-      setError(err?.message || 'Failed to save your agreement. Please try again.')
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to save your agreement. Please try again.'
+      setError(message)
       setAgreed(false)
       setSaved(false)
     } finally {

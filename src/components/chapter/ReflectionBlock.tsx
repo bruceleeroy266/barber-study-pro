@@ -118,7 +118,7 @@ export default function ReflectionBlock({ questions, theme }: ReflectionBlockPro
                       Your Response
                     </p>
                     <p className="text-sm italic" style={{ color: t.text }}>
-                      "{responses[idx]}"
+                      &quot;{responses[idx]}&quot;
                     </p>
                   </div>
                   <div

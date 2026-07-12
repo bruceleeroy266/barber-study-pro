@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { isExplicitDemoMode, isSupabaseConfigured } from './demo-helpers'
@@ -45,7 +46,7 @@ function mockResult(data: any, error: any = null) {
 // Create a chainable mock query builder
 function createMockQueryBuilder(tableName: string) {
   let currentData: any[] = []
-  let filters: Array<(item: any) => boolean> = []
+  const filters: Array<(item: any) => boolean> = []
   let singleMode = false
   let maybeSingleMode = false
   let orderField: string | null = null
@@ -377,10 +378,18 @@ export async function createClient() {
     return createMockServerClient() as any
   }
 
-  // Production: require real Supabase
+  // Production safety: never silently fall back to mock data. The mock client
+  // defaults to an admin profile, which would grant unauthorized access to
+  // protected dashboards if it leaked into a production deployment.
   if (!supabaseConfigured) {
-    console.error('[ASCYN PRO] Server ERROR: Supabase not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY, or enable demo mode.')
-    // Return mock to prevent crashes during build/startup
+    const message =
+      '[ASCYN PRO] Server ERROR: Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY, or enable demo mode.'
+    console.error(message)
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error(message)
+    }
+    // Non-production fallback keeps local development from crashing when env
+    // vars are intentionally omitted, but still surfaces the misconfiguration.
     return createMockServerClient() as any
   }
 

@@ -125,18 +125,19 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
         console.error('[FlashcardClient] Supabase upsert error:', {
           message: error.message,
           code: error.code,
-          details: (error as any).details,
-          hint: (error as any).hint,
+          details: 'details' in error ? String(error.details) : undefined,
+          hint: 'hint' in error ? String(error.hint) : undefined,
         })
         throw error
       }
       setCompleted(true)
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err : new Error(String(err))
       console.error('[FlashcardClient] Error saving progress:', {
-        message: err?.message,
-        code: err?.code,
-        details: err?.details,
-        hint: err?.hint,
+        message: error.message,
+        code: 'code' in error ? String(error.code) : undefined,
+        details: 'details' in error ? String(error.details) : undefined,
+        hint: 'hint' in error ? String(error.hint) : undefined,
         raw: err,
       })
     } finally {
