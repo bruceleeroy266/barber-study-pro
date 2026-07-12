@@ -72,26 +72,31 @@ function LoginForm() {
         )
       }
 
+      console.log('[Login] Attempting signInWithPassword for', email)
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
 
       if (signInError) {
+        console.error('[Login] signInWithPassword error:', signInError)
         recordLoginAttempt(email, false)
         throw signInError
       }
 
+      console.log('[Login] signInWithPassword success, user:', data.user?.id)
       recordLoginAttempt(email, true)
 
       // Check if email is verified (if email confirmation is required)
       if (data.user && data.user.email_confirmed_at === null) {
+        console.log('[Login] Email not confirmed, redirecting to verify-email')
         await supabase.auth.signOut()
         router.push(`/auth/verify-email?email=${encodeURIComponent(data.user.email || '')}`)
         return
       }
 
       // Load profile and enforce approval / disabled checks.
+      console.log('[Login] Fetching profile for', data.user.id)
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('*')
@@ -99,14 +104,17 @@ function LoginForm() {
         .single()
 
       if (profileError || !profile) {
+        console.error('[Login] Profile error:', profileError, 'profile:', profile)
         await supabase.auth.signOut()
         setError('missing_profile')
         setLoading(false)
         return
       }
 
+      console.log('[Login] Profile fetched, validating access')
       const access = validateLoginAccess(profile)
       if (!access.ok) {
+        console.error('[Login] Access denied:', access)
         await supabase.auth.signOut()
         setError((access.errorKey as LoginError) ?? 'unknown')
         setLoading(false)
@@ -115,6 +123,7 @@ function LoginForm() {
 
       // Force password change on first login for seeded/invited accounts.
       if (profile.requires_password_change) {
+        console.log('[Login] Password change required')
         router.push('/update-password?reason=required')
         return
       }
@@ -128,14 +137,20 @@ function LoginForm() {
         redirect && redirect !== '/dashboard' && canAccessRoute(profile.role, redirect)
           ? redirect
           : roleRedirect
+      console.log('[Login] Redirecting to', target)
       router.push(target)
       router.refresh()
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to sign in'
+      console.error('[Login] Caught error during login:', err)
       if (
         message.toLowerCase().includes('invalid login credentials')
       ) {
         setError('invalid_credentials')
+      } else if (message.toLowerCase().includes('rate limit')) {
+        setError('unknown')
+      } else if (message.toLowerCase().includes('email not confirmed')) {
+        setError('unknown')
       } else {
         setError('unknown')
       }
