@@ -4,6 +4,8 @@ import { useState, useMemo, useCallback, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { calculateChapterProgress } from '@/lib/progress'
 import { isSupabaseConfigured } from '@/lib/demo-helpers'
+import { saveMissedQuestions } from '@/lib/missed-questions'
+import { getCategoryForChapter } from '@/lib/analytics'
 import { Quiz, QuizQuestion, QuizAttempt } from '@/types'
 
 interface QuizClientProps {
@@ -162,6 +164,37 @@ export default function QuizClient({ quiz, questions, chapterId, userId, bestAtt
           },
           { onConflict: 'user_id,chapter_id' }
         )
+
+      // Persist missed questions to Supabase so they survive logout/login.
+      const allAnswers = { ...answers, [question!.original.id]: selectedAnswer }
+      const chapterNumber = parseInt(chapterId.replace(/^ch-/, ''), 10) || 0
+      const category = chapterNumber ? getCategoryForChapter(chapterNumber) : 'General'
+      const missed = shuffledQuestions
+        .filter((sq) => allAnswers[sq.original.id] !== sq.correctKey)
+        .map((sq) => {
+          const studentKey = allAnswers[sq.original.id] ?? ''
+          const correctOption = sq.options.find((o) => o.key === sq.correctKey)
+          const studentOption = sq.options.find((o) => o.key === studentKey)
+          return {
+            userId,
+            questionId: sq.original.id,
+            quizId: quiz.id,
+            question: sq.original.question,
+            correctAnswer: correctOption ? `${correctOption.label}. ${correctOption.text}` : sq.correctKey,
+            studentAnswer: studentOption ? `${studentOption.label}. ${studentOption.text}` : studentKey || 'No answer',
+            explanation: sq.original.explanation ?? null,
+            chapterId,
+            chapterNumber: chapterNumber || null,
+            category,
+          }
+        })
+
+      if (missed.length > 0) {
+        const saveResult = await saveMissedQuestions(userId, missed)
+        if (!saveResult.ok) {
+          console.error('[QuizClient] Failed to save missed questions:', saveResult.error)
+        }
+      }
 
       setScore(finalScore)
       setCompleted(true)

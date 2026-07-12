@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { calculateChapterProgress } from '@/lib/progress'
 import { isSupabaseConfigured } from '@/lib/demo-helpers'
+import { isTypingTarget } from '@/lib/keyboard-shortcuts'
 import { Flashcard } from '@/types'
 
 interface FlashcardClientProps {
@@ -32,9 +33,13 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
     localStorage.setItem(getStorageKey(chapterId), String(currentIndex))
   }, [currentIndex, chapterId])
 
-  // Keyboard shortcuts: Space to flip, Arrow keys to navigate
+  // Keyboard shortcuts: Space to flip, Arrow keys to navigate.
+  // Ignore shortcuts when the user is typing in an input or contenteditable
+  // so that flashcard navigation does not block spaces/arrow keys in forms.
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
+      if (isTypingTarget(e.target)) return
+
       if (e.key === ' ' || e.key === 'Spacebar') {
         e.preventDefault()
         setIsFlipped((prev) => !prev)
