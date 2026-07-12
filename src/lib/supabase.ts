@@ -173,4 +173,23 @@ function createClient() {
   })
 }
 
-export const supabase = createClient()
+// Lazy singleton: do not call createClient() at module load. Calling it during
+// module initialization causes it to run during `next build` page-data
+// collection for any page that imports this module, even when the page is
+// marked force-dynamic. Deferring creation until first use lets protected
+// pages build successfully while still failing loudly at runtime if Supabase
+// is genuinely unconfigured.
+let supabaseInstance: any
+
+export const supabase = new Proxy({} as any, {
+  get(_target, prop) {
+    if (!supabaseInstance) {
+      supabaseInstance = createClient()
+    }
+    return supabaseInstance[prop]
+  },
+})
+
+export function getSupabaseBrowserClient(): typeof supabase {
+  return supabase
+}
