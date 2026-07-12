@@ -372,28 +372,28 @@ function createMockServerClient() {
 }
 
 export async function createClient() {
-  // Demo mode: return mock client only if explicitly enabled AND Supabase not configured
-  if (demoMode && !supabaseConfigured) {
-    console.warn('[ASCYN PRO] Server demo mode active — Supabase not configured')
-    return createMockServerClient() as any
-  }
-
-  // Production safety: never silently fall back to mock data. The mock client
-  // defaults to an admin profile, which would grant unauthorized access to
-  // protected dashboards if it leaked into a production deployment.
+  // Production safety: never silently fall back to mock data — not even under
+  // demo mode. The mock client defaults to an admin profile, which would grant
+  // unauthorized access to protected dashboards if it leaked into a production
+  // deployment. This check runs before the demo-mode fallback so a misconfigured
+  // production deployment fails loudly instead of serving demo data.
   if (!supabaseConfigured) {
     const message =
-      '[ASCYN PRO] Server ERROR: Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY, or enable demo mode.'
+      '[ASCYN PRO] Server ERROR: Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.'
     console.error(message)
     if (process.env.NODE_ENV === 'production') {
       throw new Error(message)
     }
-    // Non-production fallback keeps local development from crashing when env
-    // vars are intentionally omitted, but still surfaces the misconfiguration.
+    // Non-production: allow explicit demo mode to keep local development from
+    // crashing when env vars are intentionally omitted.
+    if (demoMode) {
+      console.warn('[ASCYN PRO] Server demo mode active — Supabase not configured')
+      return createMockServerClient() as any
+    }
+    // Non-production, non-demo fallback still surfaces the misconfiguration.
     return createMockServerClient() as any
   }
 
-  // Real mode: create actual Supabase server client
   const cookieStore = await cookies()
 
   return createServerClient(

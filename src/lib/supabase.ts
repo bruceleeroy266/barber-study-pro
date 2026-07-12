@@ -108,24 +108,25 @@ const mockSupabase = {
 }
 
 function createClient() {
-  // Only use demo mode if explicitly enabled AND Supabase is not configured
-  if (demoMode && !supabaseConfigured) {
-    console.warn('[ASCYN PRO] Demo mode active — Supabase not configured')
-    return mockSupabase as any
-  }
-
-  // Production safety: never silently fall back to mock auth/data. The mock
-  // client ignores credentials and returns a demo admin profile, which would
-  // let anyone into /admin if it leaked into a production deployment.
+  // Production safety: never silently fall back to mock auth/data — not even
+  // under demo mode. The mock client ignores credentials and returns a demo
+  // admin profile, which would let anyone into /admin if it leaked into a
+  // production deployment. This check runs before the demo-mode fallback so a
+  // misconfigured production deployment fails loudly instead of serving demo data.
   if (!supabaseConfigured) {
     const message =
-      '[ASCYN PRO] ERROR: Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY, or enable demo mode.'
+      '[ASCYN PRO] ERROR: Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.'
     console.error(message)
     if (process.env.NODE_ENV === 'production') {
       throw new Error(message)
     }
-    // Non-production fallback keeps local development from crashing when env
-    // vars are intentionally omitted, but still surfaces the misconfiguration.
+    // Non-production: allow explicit demo mode to keep local development from
+    // crashing when env vars are intentionally omitted.
+    if (demoMode) {
+      console.warn('[ASCYN PRO] Demo mode active — Supabase not configured')
+      return mockSupabase as any
+    }
+    // Non-production, non-demo fallback still surfaces the misconfiguration.
     return mockSupabase as any
   }
 
