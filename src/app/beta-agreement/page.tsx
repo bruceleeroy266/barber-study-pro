@@ -4,27 +4,29 @@ import { Suspense } from 'react'
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import { isSupabaseConfigured } from '@/lib/demo-helpers'
+import { isSupabaseConfigured, diagnoseSupabaseConfig } from '@/lib/demo-helpers'
 import { BETA_AGREEMENT_VERSION, BETA_AGREEMENT_STORAGE_KEY } from '@/lib/beta'
 import { Printer, ArrowRight, AlertTriangle } from 'lucide-react'
 
 const EFFECTIVE_DATE = 'July 1, 2026'
 
-// Temporary production diagnostic. Reports boolean presence only — never the key.
+// Temporary production diagnostic. Reports boolean presence and check results only — never the key.
 function logEnvDiagnostic() {
   if (typeof window === 'undefined') return
-  const urlPresent = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL)
-  const keyPresent = Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
   const demoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
-  const configured = isSupabaseConfigured()
+  const diag = diagnoseSupabaseConfig()
   // eslint-disable-next-line no-console
-  console.log('[ASCYN PRO diagnostic] Supabase URL present:', urlPresent)
-  // eslint-disable-next-line no-console
-  console.log('[ASCYN PRO diagnostic] Supabase anon key present:', keyPresent)
-  // eslint-disable-next-line no-console
-  console.log('[ASCYN PRO diagnostic] Demo mode flag:', demoMode)
-  // eslint-disable-next-line no-console
-  console.log('[ASCYN PRO diagnostic] isSupabaseConfigured():', configured)
+  console.log('[ASCYN PRO diagnostic] Supabase config:', {
+    urlPresent: diag.urlPresent,
+    keyPresent: diag.keyPresent,
+    urlLength: diag.urlLength,
+    keyLength: diag.keyLength,
+    urlValidScheme: diag.urlValidScheme,
+    urlNonPlaceholder: diag.urlNonPlaceholder,
+    keyLongEnough: diag.keyLongEnough,
+    configured: diag.configured,
+    demoMode,
+  })
 }
 
 function BetaAgreementContent() {

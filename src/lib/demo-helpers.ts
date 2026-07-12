@@ -15,21 +15,52 @@ export function isExplicitDemoMode(): boolean {
   return process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
 }
 
-export function isSupabaseConfigured(): boolean {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+/**
+ * Safe diagnostic that explains why Supabase appears unconfigured.
+ * Never logs the actual URL or key values.
+ */
+export function diagnoseSupabaseConfig(): {
+  configured: boolean
+  urlPresent: boolean
+  keyPresent: boolean
+  urlLength: number
+  keyLength: number
+  urlValidScheme: boolean
+  urlNonPlaceholder: boolean
+  keyLongEnough: boolean
+} {
+  const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const rawKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  const url = (rawUrl ?? '').trim()
+  const key = (rawKey ?? '').trim()
 
-  // Accept production HTTPS endpoints or a local Supabase CLI dev endpoint.
-  const isValidScheme =
+  const urlPresent = url.length > 0
+  const keyPresent = key.length > 0
+
+  const urlValidScheme =
     url.startsWith('https://') ||
     url.startsWith('http://127.0.0.1:54321') ||
     url.startsWith('http://localhost:54321')
 
-  const isNonPlaceholder =
-    !url.includes('your-project') &&
-    !url.includes('example.supabase.co')
+  const urlNonPlaceholder =
+    !url.includes('your-project') && !url.includes('example.supabase.co')
 
-  return isValidScheme && isNonPlaceholder && key.length > 20
+  const keyLongEnough = key.length > 20
+
+  return {
+    configured: urlPresent && keyPresent && urlValidScheme && urlNonPlaceholder && keyLongEnough,
+    urlPresent,
+    keyPresent,
+    urlLength: url.length,
+    keyLength: key.length,
+    urlValidScheme,
+    urlNonPlaceholder,
+    keyLongEnough,
+  }
+}
+
+export function isSupabaseConfigured(): boolean {
+  return diagnoseSupabaseConfig().configured
 }
 
 /**

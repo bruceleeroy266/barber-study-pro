@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createBrowserClient } from '@supabase/ssr'
-import { isExplicitDemoMode, isSupabaseConfigured } from './demo-helpers'
+import { isExplicitDemoMode, diagnoseSupabaseConfig } from './demo-helpers'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
@@ -109,7 +109,8 @@ function createClient() {
   // Evaluate configuration at call time so server-side code uses runtime env
   // values and client-side diagnostics reflect the built-in values accurately.
   const demoMode = isExplicitDemoMode()
-  const supabaseConfigured = isSupabaseConfigured()
+  const diag = diagnoseSupabaseConfig()
+  const supabaseConfigured = diag.configured
 
   // Production safety: never silently fall back to mock auth/data — not even
   // under demo mode. The mock client ignores credentials and returns a demo
@@ -120,6 +121,16 @@ function createClient() {
     const message =
       '[ASCYN PRO] ERROR: Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.'
     console.error(message)
+    console.error('[ASCYN PRO] Client diagnostic:', {
+      urlPresent: diag.urlPresent,
+      keyPresent: diag.keyPresent,
+      urlLength: diag.urlLength,
+      keyLength: diag.keyLength,
+      urlValidScheme: diag.urlValidScheme,
+      urlNonPlaceholder: diag.urlNonPlaceholder,
+      keyLongEnough: diag.keyLongEnough,
+      nodeEnv: process.env.NODE_ENV,
+    })
     if (process.env.NODE_ENV === 'production') {
       throw new Error(message)
     }

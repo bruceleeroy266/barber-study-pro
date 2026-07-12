@@ -4,6 +4,11 @@ import DashboardNav from '@/components/DashboardNav'
 import { BETA_AGREEMENT_VERSION } from '@/lib/beta'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 
+// All dashboard pages require an authenticated user, so they must be rendered
+// dynamically at request time. Static generation would call createClient()
+// without a user session and fail when Supabase env vars are missing.
+export const dynamic = 'force-dynamic'
+
 export default async function DashboardLayout({
   children,
 }: {

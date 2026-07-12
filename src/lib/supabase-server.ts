@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
-import { isExplicitDemoMode, isSupabaseConfigured } from './demo-helpers'
+import { isExplicitDemoMode, diagnoseSupabaseConfig } from './demo-helpers'
 import {
   demoUser,
   demoProfile,
@@ -371,7 +371,8 @@ function createMockServerClient() {
 export async function createClient() {
   // Evaluate configuration at call time so server-side code uses runtime env values.
   const demoMode = isExplicitDemoMode()
-  const supabaseConfigured = isSupabaseConfigured()
+  const diag = diagnoseSupabaseConfig()
+  const supabaseConfigured = diag.configured
 
   // Production safety: never silently fall back to mock data — not even under
   // demo mode. The mock client defaults to an admin profile, which would grant
@@ -382,6 +383,16 @@ export async function createClient() {
     const message =
       '[ASCYN PRO] Server ERROR: Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.'
     console.error(message)
+    console.error('[ASCYN PRO] Server diagnostic:', {
+      urlPresent: diag.urlPresent,
+      keyPresent: diag.keyPresent,
+      urlLength: diag.urlLength,
+      keyLength: diag.keyLength,
+      urlValidScheme: diag.urlValidScheme,
+      urlNonPlaceholder: diag.urlNonPlaceholder,
+      keyLongEnough: diag.keyLongEnough,
+      nodeEnv: process.env.NODE_ENV,
+    })
     if (process.env.NODE_ENV === 'production') {
       throw new Error(message)
     }
