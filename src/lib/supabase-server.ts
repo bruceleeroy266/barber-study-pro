@@ -26,6 +26,8 @@ import {
 // Check if Supabase is properly configured
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+// Module-load diagnostic (build-time / top-level evaluation)
+diagnoseSupabaseConfig('supabase-server:module-load')
 
 // Demo user/session for server-side mock
 const demoSession = {
@@ -371,7 +373,7 @@ function createMockServerClient() {
 export async function createClient() {
   // Evaluate configuration at call time so server-side code uses runtime env values.
   const demoMode = isExplicitDemoMode()
-  const diag = diagnoseSupabaseConfig()
+  const diag = diagnoseSupabaseConfig('supabase-server:createClient')
   const supabaseConfigured = diag.configured
 
   // Production safety: never silently fall back to mock data — not even under

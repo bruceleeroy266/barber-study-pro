@@ -1,11 +1,12 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { isInstructorOrAdmin, isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
-import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
+import { isExplicitDemoMode, isSupabaseConfigured, diagnoseSupabaseConfig } from '@/lib/demo-helpers'
 import { BETA_AGREEMENT_VERSION } from '@/lib/beta'
 import { getRoleBasedRedirect, validateLoginAccess } from '@/lib/auth-access'
 
-
+// Module-load diagnostic (build-time / top-level evaluation)
+diagnoseSupabaseConfig('middleware:module-load')
 
 /** Match /instructor and /instructor/* without false positives like /instructorXYZ. */
 function isInstructorRoute(pathname: string): boolean {
@@ -29,6 +30,7 @@ function isDashboardRoute(pathname: string): boolean {
 
 export async function middleware(request: NextRequest) {
   // Evaluate configuration per request so edge runtime uses current env values.
+  diagnoseSupabaseConfig('middleware:request')
   const demoMode = isExplicitDemoMode()
   const supabaseConfigured = isSupabaseConfigured()
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''

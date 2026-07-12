@@ -4,6 +4,8 @@ import { isExplicitDemoMode, diagnoseSupabaseConfig } from './demo-helpers'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+// Module-load diagnostic (build-time / top-level evaluation)
+diagnoseSupabaseConfig('supabase:module-load')
 
 /**
  * Creates a chainable mock query builder that behaves like the real Supabase
@@ -109,7 +111,7 @@ function createClient() {
   // Evaluate configuration at call time so server-side code uses runtime env
   // values and client-side diagnostics reflect the built-in values accurately.
   const demoMode = isExplicitDemoMode()
-  const diag = diagnoseSupabaseConfig()
+  const diag = diagnoseSupabaseConfig('supabase:createClient')
   const supabaseConfigured = diag.configured
 
   // Production safety: never silently fall back to mock auth/data — not even

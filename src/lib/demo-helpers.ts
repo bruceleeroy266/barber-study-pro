@@ -19,7 +19,7 @@ export function isExplicitDemoMode(): boolean {
  * Safe diagnostic that explains why Supabase appears unconfigured.
  * Never logs the actual URL or key values.
  */
-export function diagnoseSupabaseConfig(): {
+export function diagnoseSupabaseConfig(context = 'unknown'): {
   configured: boolean
   urlPresent: boolean
   keyPresent: boolean
@@ -47,7 +47,7 @@ export function diagnoseSupabaseConfig(): {
 
   const keyLongEnough = key.length > 20
 
-  return {
+  const result = {
     configured: urlPresent && keyPresent && urlValidScheme && urlNonPlaceholder && keyLongEnough,
     urlPresent,
     keyPresent,
@@ -57,6 +57,23 @@ export function diagnoseSupabaseConfig(): {
     urlNonPlaceholder,
     keyLongEnough,
   }
+
+  // Diagnostic logging (no secrets exposed)
+  console.log(`[ASCYN PRO] Supabase diagnostic [${context}]`, {
+    nodeEnv: process.env.NODE_ENV,
+    urlPresent: result.urlPresent,
+    keyPresent: result.keyPresent,
+    urlLength: result.urlLength,
+    keyLength: result.keyLength,
+    urlFirstChars: url.slice(0, 12),
+    keyFirstChars: key.slice(0, 8),
+    urlValidScheme: result.urlValidScheme,
+    urlNonPlaceholder: result.urlNonPlaceholder,
+    keyLongEnough: result.keyLongEnough,
+    configured: result.configured,
+  })
+
+  return result
 }
 
 export function isSupabaseConfigured(): boolean {
