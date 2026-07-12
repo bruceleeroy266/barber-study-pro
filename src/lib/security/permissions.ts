@@ -15,7 +15,7 @@ export type { AppRole }
 // ============================================================================
 
 /** Roles currently active in the platform. */
-export const ACTIVE_ROLES: AppRole[] = ['student', 'apprentice', 'instructor', 'admin']
+export const ACTIVE_ROLES: AppRole[] = ['student', 'apprentice', 'instructor', 'admin', 'school_admin']
 
 /** Roles planned for future phases. Kept here for forward compatibility. */
 export const FUTURE_ROLES = [
@@ -45,6 +45,7 @@ export type Permission =
   | 'view_school_analytics'
   | 'view_school_reports'
   | 'view_school_compliance'
+  | 'view_school_dashboard'
   | 'manage_students'
   | 'manage_instructors'
   | 'manage_attendance'
@@ -89,6 +90,7 @@ const ROLE_PERMISSIONS: Record<KnownRole, Permission[]> = {
     'view_school_analytics',
     'view_school_reports',
     'view_school_compliance',
+    'view_school_dashboard',
     'view_admin_dashboard',
     'manage_students',
     'manage_instructors',
@@ -100,6 +102,24 @@ const ROLE_PERMISSIONS: Record<KnownRole, Permission[]> = {
     'manage_settings',
     'manage_school_users',
     'manage_platform',
+  ],
+  school_admin: [
+    'view_dashboard',
+    'view_instructor_portal',
+    'view_school_students',
+    'view_school_analytics',
+    'view_school_reports',
+    'view_school_compliance',
+    'view_school_dashboard',
+    'manage_students',
+    'manage_instructors',
+    'manage_attendance',
+    'manage_gradebook',
+    'manage_assessments',
+    'manage_compliance',
+    'manage_messaging',
+    'manage_settings',
+    'manage_school_users',
   ],
   admissions: ['view_dashboard', 'view_school_students', 'manage_students', 'view_school_reports'],
   compliance_officer: [
@@ -142,6 +162,8 @@ export type ProtectedRoute =
   | '/instructor/*'
   | '/admin'
   | '/admin/*'
+  | '/school'
+  | '/school/*'
 
 const ROUTE_PERMISSIONS: Record<ProtectedRoute, Permission[]> = {
   '/dashboard': ['view_dashboard'],
@@ -150,6 +172,8 @@ const ROUTE_PERMISSIONS: Record<ProtectedRoute, Permission[]> = {
   '/instructor/*': ['view_instructor_portal'],
   '/admin': ['view_admin_dashboard'],
   '/admin/*': ['view_admin_dashboard'],
+  '/school': ['view_school_dashboard'],
+  '/school/*': ['view_school_dashboard'],
 }
 
 // ============================================================================
@@ -218,6 +242,10 @@ export function isAdmin(role: string | null | undefined): boolean {
   return hasPermission(role, 'view_admin_dashboard')
 }
 
+export function isSchoolAdmin(role: string | null | undefined): boolean {
+  return hasPermission(role, 'view_school_dashboard')
+}
+
 export function isLearner(role: string | null | undefined): boolean {
   return role === 'student' || role === 'apprentice'
 }
@@ -241,6 +269,8 @@ export function getRoleDisplayName(role: string | null | undefined): string {
     case 'instructor':
       return 'Instructor'
     case 'admin':
+      return 'Administrator'
+    case 'school_admin':
       return 'School Administrator'
     case 'admissions':
       return 'Admissions'

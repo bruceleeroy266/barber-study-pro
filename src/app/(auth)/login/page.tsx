@@ -8,12 +8,14 @@ import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
 import { checkLoginRateLimit, recordLoginAttempt } from '@/lib/rate-limit'
 import { logFailedLogin } from '../actions'
 import { getRoleBasedRedirect, validateLoginAccess } from '@/lib/auth-access'
+import { canAccessRoute } from '@/lib/auth-helpers'
 
 type LoginError =
   | 'invalid_credentials'
   | 'not_approved'
   | 'disabled'
   | 'missing_profile'
+  | 'invalid_role'
   | 'unknown'
 
 const ERROR_MESSAGES: Record<LoginError, string> = {
@@ -22,6 +24,7 @@ const ERROR_MESSAGES: Record<LoginError, string> = {
     'Your account is pending approval. You will receive access once an administrator approves your request.',
   disabled: 'Your account has been disabled. Contact your administrator.',
   missing_profile: 'Account profile not found. Please contact support.',
+  invalid_role: 'Your account has an unrecognized role. Please contact support.',
   unknown: 'Something went wrong. Please try again.',
 }
 
@@ -116,9 +119,15 @@ function LoginForm() {
         return
       }
 
-      // Redirect by role, or fall back to the requested redirect if allowed.
+      // Redirect by role. The role portal is the default destination so
+      // instructors/admins are never left on /dashboard. Only honor the
+      // original `redirect` param when it points to a specific allowed route
+      // other than the generic dashboard landing page.
       const roleRedirect = getRoleBasedRedirect(profile.role)
-      const target = redirect !== '/dashboard' ? redirect : roleRedirect
+      const target =
+        redirect && redirect !== '/dashboard' && canAccessRoute(profile.role, redirect)
+          ? redirect
+          : roleRedirect
       router.push(target)
       router.refresh()
     } catch (err: unknown) {

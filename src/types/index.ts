@@ -1,4 +1,4 @@
-export type AppRole = 'student' | 'instructor' | 'apprentice' | 'admin'
+export type AppRole = 'student' | 'instructor' | 'apprentice' | 'admin' | 'school_admin'
 
 export interface Profile {
   id: string
@@ -339,7 +339,7 @@ export interface MessageRecipient {
   id: string
   userId: string
   name: string
-  role: 'student' | 'instructor' | 'apprentice' | 'admin'
+  role: AppRole
   readAt?: string | null
 }
 
@@ -348,7 +348,7 @@ export interface Message {
   threadId: string
   senderId: string
   senderName: string
-  senderRole: 'student' | 'instructor' | 'apprentice' | 'admin'
+  senderRole: AppRole
   recipientIds: string[]
   subject: string
   body: string

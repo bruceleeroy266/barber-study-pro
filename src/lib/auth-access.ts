@@ -5,7 +5,7 @@
  * so they can be used in both client components and middleware.
  */
 
-export type LoginAccessError = 'not_approved' | 'disabled' | 'missing_profile'
+export type LoginAccessError = 'not_approved' | 'disabled' | 'missing_profile' | 'invalid_role'
 
 export interface LoginAccessProfile {
   role: string | null | undefined
@@ -13,21 +13,33 @@ export interface LoginAccessProfile {
   is_disabled: boolean | null | undefined
 }
 
+/** Canonical portal routes for each active role. */
+const ROLE_PORTAL: Record<string, string> = {
+  admin: '/admin',
+  school_admin: '/school',
+  instructor: '/instructor',
+  student: '/dashboard',
+  apprentice: '/dashboard',
+}
+
 /**
  * Returns the default post-login redirect path for a given role.
  * Used by login flow and middleware to send each user to the right dashboard.
+ *
+ * Security: unknown or missing roles NEVER default to /admin. They are sent
+ * back to login with an invalid_role error so the issue is surfaced and fixed.
  */
 export function getRoleBasedRedirect(role: string | null | undefined): string {
-  switch (role) {
-    case 'admin':
-      return '/admin'
-    case 'instructor':
-      return '/instructor'
-    case 'student':
-    case 'apprentice':
-    default:
-      return '/dashboard'
+  if (!role) {
+    return '/login?error=invalid_role'
   }
+
+  const portal = ROLE_PORTAL[role]
+  if (!portal) {
+    return '/login?error=invalid_role'
+  }
+
+  return portal
 }
 
 /**
@@ -65,6 +77,14 @@ export function validateLoginAccess(
         profile.approval_status === 'rejected'
           ? 'Your account request was not approved. Contact your administrator for more information.'
           : 'Your account is pending approval. You will receive access once an administrator approves your request.',
+    }
+  }
+
+  if (!profile.role || !(profile.role in ROLE_PORTAL)) {
+    return {
+      ok: false,
+      errorKey: 'invalid_role',
+      message: 'Your account has an unrecognized role. Please contact support.',
     }
   }
 

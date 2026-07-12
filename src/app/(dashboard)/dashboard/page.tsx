@@ -22,6 +22,7 @@ import StudentGradeWidget from '@/components/gradebook/StudentGradeWidget'
 import AssessmentList from '@/components/assessments/AssessmentList'
 import { calculateStudentGradePerformance } from '@/lib/gradebook'
 import { mapAttendanceRecordsFromDb, mapGradesFromDb, mapGradeCategoriesFromDb, mapAssessmentsFromDb } from '@/lib/mappers/operational-data-mappers'
+import { getRoleBasedRedirect, validateLoginAccess } from '@/lib/auth-access'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -36,32 +37,37 @@ export default async function DashboardPage() {
   // Get user profile (for apprentice null-school handling)
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role, school_id, barber_shop_name, mentor_name')
+    .select('role, school_id, barber_shop_name, mentor_name, approval_status, is_disabled')
     .eq('id', user.id)
     .single()
 
-  // Route users to the correct home based on role and school approval state.
-  if (profile) {
-    if (profile.role === 'admin') {
-      redirect('/admin')
-    }
+  // Enforce approval, disabled, and known-role checks before rendering.
+  const access = validateLoginAccess(profile)
+  if (!access.ok) {
+    redirect(`/login?error=${access.errorKey ?? 'unknown'}`)
+  }
 
-    if (profile.role === 'instructor') {
-      if (profile.school_id) {
-        const { data: school } = await supabase
-          .from('schools')
-          .select('is_active')
-          .eq('id', profile.school_id)
-          .single()
-        if (school && !school.is_active) {
-          redirect('/pending-approval')
-        }
-      } else {
-        // Instructor with no school cannot access the instructor dashboard yet.
+  // Route users to the correct home based on role and school approval state.
+  // Students and apprentices remain on /dashboard; all other roles are sent
+  // to their dedicated portal.
+  if (profile.role === 'instructor') {
+    if (profile.school_id) {
+      const { data: school } = await supabase
+        .from('schools')
+        .select('is_active')
+        .eq('id', profile.school_id)
+        .single()
+      if (school && !school.is_active) {
         redirect('/pending-approval')
       }
-      redirect('/instructor')
+    } else {
+      // Instructor with no school cannot access the instructor dashboard yet.
+      redirect('/pending-approval')
     }
+  }
+
+  if (profile.role !== 'student' && profile.role !== 'apprentice') {
+    redirect(getRoleBasedRedirect(profile.role))
   }
 
   // Use local chapters (not Supabase)

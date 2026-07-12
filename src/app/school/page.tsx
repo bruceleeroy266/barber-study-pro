@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
 import SchoolDashboard from '@/components/school-owner/SchoolDashboard'
 
-export default async function SchoolOwnerDashboard() {
+export default async function SchoolAdminPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 

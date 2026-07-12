@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
-import { isInstructorOrAdmin, isAdmin } from '@/lib/auth-helpers'
+import { isInstructorOrAdmin, isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
 import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
 import { BETA_AGREEMENT_VERSION } from '@/lib/beta'
 import { getRoleBasedRedirect, validateLoginAccess } from '@/lib/auth-access'
@@ -21,6 +21,11 @@ function isAdminRoute(pathname: string): boolean {
   return pathname === '/admin' || pathname.startsWith('/admin/')
 }
 
+/** Match /school and /school/* without false positives like /schoolXYZ. */
+function isSchoolRoute(pathname: string): boolean {
+  return pathname === '/school' || pathname.startsWith('/school/')
+}
+
 /** Match /dashboard and /dashboard/* routes. */
 function isDashboardRoute(pathname: string): boolean {
   return pathname === '/dashboard' || pathname.startsWith('/dashboard/')
@@ -39,7 +44,7 @@ export async function middleware(request: NextRequest) {
 
   // If Supabase not configured and demo mode is off, block protected routes
   if (!supabaseConfigured) {
-    const protectedRoutes = ['/dashboard', '/instructor', '/admin']
+    const protectedRoutes = ['/dashboard', '/instructor', '/admin', '/school']
     const isProtectedRoute = protectedRoutes.some((route) =>
       request.nextUrl.pathname.startsWith(route)
     )
@@ -83,12 +88,12 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const protectedRoutes = ['/dashboard', '/instructor', '/admin']
+  const protectedRoutes = ['/dashboard', '/instructor', '/admin', '/school']
   const isProtectedRoute = protectedRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
   )
 
-  const authRoutes = ['/login', '/signup', '/reset-password']
+  const authRoutes = ['/login', '/signup', '/reset-password', '/update-password']
   const isAuthRoute = authRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
   )
@@ -191,13 +196,15 @@ export async function middleware(request: NextRequest) {
         `[Middleware] Unauthorized instructor route attempt: user=${user.id} role=${profile?.role ?? 'none'} path=${request.nextUrl.pathname}`
       )
       const url = request.nextUrl.clone()
-      url.pathname = '/dashboard'
+      url.pathname = getRoleBasedRedirect(profile?.role)
       return NextResponse.redirect(url)
     }
   }
 
   // ── ADMIN ACCESS ENFORCEMENT (edge layer) ──
   // Only users whose profile role is 'admin' may access /admin and /admin/*.
+  // Exception: /admin/school and /admin/school/* are also accessible to
+  // school_admin users because they share the school dashboard UI.
   if (isAdminRoute(request.nextUrl.pathname) && user) {
     const { data: profile } = await supabase
       .from('profiles')
@@ -205,12 +212,36 @@ export async function middleware(request: NextRequest) {
       .eq('id', user.id)
       .single()
 
-    if (!profile || !isAdmin(profile.role)) {
+    const pathname = request.nextUrl.pathname
+    const isSchoolSubRoute = pathname === '/admin/school' || pathname.startsWith('/admin/school/')
+    const allowed = isAdmin(profile?.role ?? '') || (isSchoolSubRoute && isSchoolAdmin(profile?.role ?? ''))
+
+    if (!profile || !allowed) {
       console.warn(
-        `[Middleware] Unauthorized admin route attempt: user=${user.id} role=${profile?.role ?? 'none'} path=${request.nextUrl.pathname}`
+        `[Middleware] Unauthorized admin route attempt: user=${user.id} role=${profile?.role ?? 'none'} path=${pathname}`
       )
       const url = request.nextUrl.clone()
-      url.pathname = '/dashboard'
+      url.pathname = getRoleBasedRedirect(profile?.role)
+      return NextResponse.redirect(url)
+    }
+  }
+
+  // ── SCHOOL ADMIN ACCESS ENFORCEMENT (edge layer) ──
+  // Only users whose profile role is 'school_admin' or 'admin' may access
+  // /school and /school/* sub-routes.
+  if (isSchoolRoute(request.nextUrl.pathname) && user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (!profile || !(isSchoolAdmin(profile.role) || isAdmin(profile.role))) {
+      console.warn(
+        `[Middleware] Unauthorized school route attempt: user=${user.id} role=${profile?.role ?? 'none'} path=${request.nextUrl.pathname}`
+      )
+      const url = request.nextUrl.clone()
+      url.pathname = getRoleBasedRedirect(profile?.role)
       return NextResponse.redirect(url)
     }
   }

@@ -44,14 +44,21 @@ assert(middleware.includes('getRoleBasedRedirect'), 'Middleware redirects by rol
 
 // 5. Role-based redirect logic.
 assert(getRoleBasedRedirect('admin') === '/admin', 'Admin redirects to /admin')
+assert(getRoleBasedRedirect('school_admin') === '/school', 'School admin redirects to /school')
 assert(getRoleBasedRedirect('instructor') === '/instructor', 'Instructor redirects to /instructor')
 assert(getRoleBasedRedirect('student') === '/dashboard', 'Student redirects to /dashboard')
 assert(getRoleBasedRedirect('apprentice') === '/dashboard', 'Apprentice redirects to /dashboard')
+assert(getRoleBasedRedirect('unknown') === '/login?error=invalid_role', 'Unknown role never defaults to /admin')
+assert(getRoleBasedRedirect(null) === '/login?error=invalid_role', 'Missing role never defaults to /admin')
 
 // 6. Access validation logic.
 assert(
   validateLoginAccess({ role: 'admin', approval_status: 'approved', is_disabled: false }).ok,
   'Approved admin can log in'
+)
+assert(
+  validateLoginAccess({ role: 'school_admin', approval_status: 'approved', is_disabled: false }).ok,
+  'Approved school_admin can log in'
 )
 assert(
   !validateLoginAccess({ role: 'student', approval_status: 'pending', is_disabled: false }).ok,
@@ -68,6 +75,10 @@ assert(
 assert(
   !validateLoginAccess(null).ok,
   'Missing profile cannot log in'
+)
+assert(
+  !validateLoginAccess({ role: 'unknown', approval_status: 'approved', is_disabled: false }).ok,
+  'Unknown role cannot log in'
 )
 
 // 7. Admin creation script must read credentials from environment variables only.

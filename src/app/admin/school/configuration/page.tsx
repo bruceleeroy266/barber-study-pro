@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
-import { isAdmin } from '@/lib/auth-helpers'
+import { isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
 import { isDemoFallbackEnabled } from '@/lib/demo-helpers'
 import { demoSchoolConfiguration } from '@/lib/demo-data'
 import { createDefaultSchoolConfiguration } from '@/lib/school-config/defaults'
@@ -21,7 +21,7 @@ export default async function SchoolConfigurationPage() {
     .eq('id', user.id)
     .single()
 
-  if (!profile || !isAdmin(profile.role)) {
+  if (!profile || !(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
     redirect('/dashboard')
   }
 

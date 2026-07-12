@@ -29,6 +29,7 @@ export {
   canAccessRoute,
   isInstructorOrAdmin,
   isAdmin,
+  isSchoolAdmin,
   isLearner,
   isKnownRole,
   getRoleDisplayName,
