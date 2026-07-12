@@ -1,9 +1,9 @@
 import { createClient } from '@/lib/supabase-server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { isAdmin } from '@/lib/auth-helpers'
+import { isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
 import { hasPermission } from '@/lib/security/permissions'
-import { Settings, Activity, History, Flag, Wrench, Archive, Bell } from 'lucide-react'
+import { Settings, Activity, History, Flag, Wrench, Archive, Bell, Users } from 'lucide-react'
 
 export default async function AdminDashboard() {
   const supabase = await createClient()
@@ -21,9 +21,9 @@ export default async function AdminDashboard() {
     .single()
 
   // ── ADMIN ACCESS ENFORCEMENT (server component layer) ──
-  // Only the 'admin' role may access /admin. Instructors and students
-  // are redirected to /dashboard.
-  if (!profile || !isAdmin(profile.role)) {
+  // Platform admins ('admin') and school admins ('school_admin') may access
+  // the admin dashboard. School admins see a scoped school-only view.
+  if (!profile || !(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
     redirect('/dashboard')
   }
 
@@ -196,13 +196,19 @@ export default async function AdminDashboard() {
             </div>
           </div>
 
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <h3 className="text-lg font-semibold text-white mb-2">Users</h3>
-            <p className="text-gray-400 text-sm mb-4">Manage user accounts and roles</p>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-800 text-gray-400 text-sm rounded-lg">
-              <span>Coming soon</span>
+          <Link
+            href="/admin/users"
+            className="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-[#D4AF37]/30 transition-colors group"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-semibold text-white group-hover:text-[#D4AF37]">Users</h3>
+              <Users className="w-5 h-5 text-gray-500 group-hover:text-[#D4AF37]" />
             </div>
-          </div>
+            <p className="text-gray-400 text-sm mb-4">Manage user accounts, roles, and approvals</p>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#D4AF37]/10 text-[#D4AF37] text-sm rounded-lg border border-[#D4AF37]/20">
+              Manage Users
+            </span>
+          </Link>
 
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
             <h3 className="text-lg font-semibold text-white mb-2">Content</h3>

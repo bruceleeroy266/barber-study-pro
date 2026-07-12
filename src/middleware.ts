@@ -202,9 +202,9 @@ export async function middleware(request: NextRequest) {
   }
 
   // ── ADMIN ACCESS ENFORCEMENT (edge layer) ──
-  // Only users whose profile role is 'admin' may access /admin and /admin/*.
-  // Exception: /admin/school and /admin/school/* are also accessible to
-  // school_admin users because they share the school dashboard UI.
+  // Platform admins ('admin') may access all /admin routes. School admins
+  // ('school_admin') may access /admin (dashboard) and /admin/users only.
+  // Other admin sub-routes remain restricted to platform admins.
   if (isAdminRoute(request.nextUrl.pathname) && user) {
     const { data: profile } = await supabase
       .from('profiles')
@@ -213,8 +213,13 @@ export async function middleware(request: NextRequest) {
       .single()
 
     const pathname = request.nextUrl.pathname
-    const isSchoolSubRoute = pathname === '/admin/school' || pathname.startsWith('/admin/school/')
-    const allowed = isAdmin(profile?.role ?? '') || (isSchoolSubRoute && isSchoolAdmin(profile?.role ?? ''))
+    const isSchoolAdminAllowedRoute =
+      pathname === '/admin' ||
+      pathname === '/admin/users' ||
+      pathname.startsWith('/admin/users/')
+    const allowed =
+      isAdmin(profile?.role ?? '') ||
+      (isSchoolAdminAllowedRoute && isSchoolAdmin(profile?.role ?? ''))
 
     if (!profile || !allowed) {
       console.warn(

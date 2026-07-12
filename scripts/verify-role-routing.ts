@@ -103,7 +103,7 @@ function assertLocation(name: string, actual: string | null, expected: string | 
   console.log(`[PASS] ${name}: ${resolved}`)
 }
 
-async function signIn(supabase: SupabaseClient, email: string, password: string): Promise<{ access_token: string; refresh_token: string }> {
+async function signIn(supabase: SupabaseClient, email: string, password: string): Promise<{ access_token: string; refresh_token: string; user: { id: string } }> {
   const { data, error } = await supabase.auth.signInWithPassword({ email, password })
   if (error || !data.session) {
     throw new Error(`Sign in failed for ${email}: ${error?.message ?? 'no session'}`)
