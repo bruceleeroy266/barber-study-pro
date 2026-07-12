@@ -77,7 +77,7 @@ describe('validateLoginAccess', () => {
   })
 
   it('rejects missing role', () => {
-    const result = validateLoginAccess({ role: null, approval_status: 'approved', is_disabled: false } as Record<string, unknown>)
+    const result = validateLoginAccess({ role: null, approval_status: 'approved', is_disabled: false })
     expect(result.ok).toBe(false)
     expect(result.errorKey).toBe('invalid_role')
   })

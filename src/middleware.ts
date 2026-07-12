@@ -5,11 +5,7 @@ import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
 import { BETA_AGREEMENT_VERSION } from '@/lib/beta'
 import { getRoleBasedRedirect, validateLoginAccess } from '@/lib/auth-access'
 
-// Check if Supabase is properly configured
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-const demoMode = isExplicitDemoMode()
-const supabaseConfigured = isSupabaseConfigured()
+
 
 /** Match /instructor and /instructor/* without false positives like /instructorXYZ. */
 function isInstructorRoute(pathname: string): boolean {
@@ -32,6 +28,12 @@ function isDashboardRoute(pathname: string): boolean {
 }
 
 export async function middleware(request: NextRequest) {
+  // Evaluate configuration per request so edge runtime uses current env values.
+  const demoMode = isExplicitDemoMode()
+  const supabaseConfigured = isSupabaseConfigured()
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+
   // Demo mode: skip auth checks ONLY if explicitly enabled AND Supabase not configured
   if (demoMode && !supabaseConfigured) {
     console.warn('[Middleware] Demo mode — auth bypassed')

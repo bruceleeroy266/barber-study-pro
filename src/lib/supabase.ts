@@ -4,8 +4,6 @@ import { isExplicitDemoMode, isSupabaseConfigured } from './demo-helpers'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-const demoMode = isExplicitDemoMode()
-const supabaseConfigured = isSupabaseConfigured()
 
 /**
  * Creates a chainable mock query builder that behaves like the real Supabase
@@ -108,6 +106,11 @@ const mockSupabase = {
 }
 
 function createClient() {
+  // Evaluate configuration at call time so server-side code uses runtime env
+  // values and client-side diagnostics reflect the built-in values accurately.
+  const demoMode = isExplicitDemoMode()
+  const supabaseConfigured = isSupabaseConfigured()
+
   // Production safety: never silently fall back to mock auth/data — not even
   // under demo mode. The mock client ignores credentials and returns a demo
   // admin profile, which would let anyone into /admin if it leaked into a

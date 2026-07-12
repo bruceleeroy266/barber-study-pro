@@ -23,12 +23,9 @@ import {
   getDemoQuizAttempts,
 } from './demo-data'
 
-const demoMode = isExplicitDemoMode()
-
 // Check if Supabase is properly configured
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-const supabaseConfigured = isSupabaseConfigured()
 
 // Demo user/session for server-side mock
 const demoSession = {
@@ -372,6 +369,10 @@ function createMockServerClient() {
 }
 
 export async function createClient() {
+  // Evaluate configuration at call time so server-side code uses runtime env values.
+  const demoMode = isExplicitDemoMode()
+  const supabaseConfigured = isSupabaseConfigured()
+
   // Production safety: never silently fall back to mock data — not even under
   // demo mode. The mock client defaults to an admin profile, which would grant
   // unauthorized access to protected dashboards if it leaked into a production
