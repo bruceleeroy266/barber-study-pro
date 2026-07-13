@@ -46,8 +46,8 @@ function loadEnv(): Env & { serviceRoleKey: string } {
   const instructorEmail = env.ASCYN_INSTRUCTOR_EMAIL
   const instructorPassword = env.ASCYN_INSTRUCTOR_PASSWORD
 
-  const adminEmail = process.env.ASCYN_ADMIN_EMAIL
-  const adminPassword = process.env.ASCYN_ADMIN_PASSWORD
+  const adminEmail = env.ASCYN_ADMIN_EMAIL ?? process.env.ASCYN_ADMIN_EMAIL
+  const adminPassword = env.ASCYN_ADMIN_PASSWORD ?? process.env.ASCYN_ADMIN_PASSWORD
 
   if (!url || !anonKey || !serviceRoleKey || !studentEmail || !studentPassword || !instructorEmail || !instructorPassword) {
     throw new Error('Missing required environment variables')
@@ -179,7 +179,7 @@ async function run() {
     { name: 'Instructor /school (blocked)', path: '/school', cookie: instructorCookie, expected: `${env.baseUrl}/instructor` },
     { name: 'Admin /admin', path: '/admin', cookie: adminCookie, expected: new RegExp(`${env.baseUrl}/admin($|\\?)`), status: 200 },
     { name: 'Admin /instructor', path: '/instructor', cookie: adminCookie, expected: new RegExp(`${env.baseUrl}/instructor($|\\?)`), status: 200 },
-    { name: 'Admin /dashboard', path: '/dashboard', cookie: adminCookie, expected: new RegExp(`${env.baseUrl}/dashboard($|\\?)`), status: 200 },
+    { name: 'Admin /dashboard (redirected to admin portal)', path: '/dashboard', cookie: adminCookie, expected: `${env.baseUrl}/admin` },
   ]
 
   for (const c of cases) {
