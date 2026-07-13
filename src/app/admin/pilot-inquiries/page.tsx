@@ -2,7 +2,8 @@ import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import { isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
 import Link from 'next/link'
-import { ArrowLeft, Mail, Phone, Calendar, Tag, ExternalLink, Trash2, CheckCircle, XCircle, HelpCircle, AlertCircle } from 'lucide-react'
+import { ArrowLeft, Mail, Phone, Calendar, Tag, Trash2, CheckCircle, XCircle, HelpCircle, AlertCircle } from 'lucide-react'
+import ReplyModal from './ReplyModal'
 
 export const dynamic = 'force-dynamic'
 
@@ -208,13 +209,13 @@ export default async function PilotInquiriesPage() {
                   </div>
 
                   <div className="flex lg:flex-col items-start lg:items-end gap-2 min-w-[140px]">
-                    <a
-                      href={`mailto:${inquiry.email}?subject=RE: ASCYN PRO Pilot Inquiry`}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-[#0a0a0a] bg-[#D4AF37] rounded-lg hover:bg-[#F4E4A6] transition-colors"
-                    >
-                      <ExternalLink className="w-3.5 h-3.5" />
-                      Reply
-                    </a>
+                    <ReplyModal
+                      inquiryId={inquiry.id}
+                      email={inquiry.email}
+                      contactName={inquiry.contact_name}
+                      schoolName={inquiry.school_name}
+                      defaultSubject={`RE: ASCYN PRO Pilot Inquiry - ${inquiry.school_name}`}
+                    />
                     {inquiry.is_test && (
                       <span className="text-xs text-yellow-500/80">Safe to delete</span>
                     )}
