@@ -1,14 +1,21 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { trackEvent, trackPageView } from '@/lib/analytics/events'
-import { storeUtmParams } from '@/lib/analytics/utm'
+import { storeUtmParams, getCurrentUtmContext } from '@/lib/analytics/utm'
+
+function getFourWeeksFromToday(): string {
+  const date = new Date()
+  date.setDate(date.getDate() + 28)
+  return date.toISOString().split('T')[0]
+}
 
 export default function PilotPage() {
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const earliestStartDate = useMemo(() => getFourWeeksFromToday(), [])
 
   useEffect(() => {
     storeUtmParams()
@@ -40,12 +47,14 @@ export default function PilotPage() {
     setError(null)
 
     try {
+      const utm = getCurrentUtmContext()
       const response = await fetch('/api/email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           formType: 'pilot',
           ...formData,
+          ...utm,
         }),
       })
 
@@ -300,10 +309,17 @@ export default function PilotPage() {
                     type="date"
                     id="startDate"
                     name="startDate"
+                    min={earliestStartDate}
                     value={formData.startDate}
                     onChange={(e) => updateField('startDate', e.target.value)}
-                    className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 rounded-lg text-white focus:outline-none focus:border-[#D4AF37]/50 focus:ring-1 focus:ring-[#D4AF37]/50 transition-colors"
+                    className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 rounded-lg text-white focus:outline-none focus:border-[#D4AF37]/50 focus:ring-1 focus:ring-[#D4AF37]/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   />
+                  <p className="mt-2 text-sm text-yellow-500/90">
+                    Pilot onboarding is temporarily paused while we complete final preparations.
+                    Thank you for your interest. We are using the next four weeks to complete
+                    testing and ensure the best possible experience for our pilot schools.
+                    We look forward to onboarding you soon.
+                  </p>
                 </div>
 
                 <div>
