@@ -189,7 +189,10 @@ export default function QuizClient({ quiz, questions, chapterId, userId, bestAtt
           }
         })
 
-      if (missed.length > 0) {
+      // Only persist missed questions for real chapter quizzes. The weak-area
+      // retest uses synthetic question IDs (weak-*) that should not create new
+      // missed-question records; the original missed questions remain in the bank.
+      if (missed.length > 0 && !quiz.id.startsWith('weak-area')) {
         const saveResult = await saveMissedQuestions(userId, missed)
         if (!saveResult.ok) {
           console.error('[QuizClient] Failed to save missed questions:', saveResult.error)
