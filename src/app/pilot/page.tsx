@@ -1,12 +1,19 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { trackEvent, trackPageView } from '@/lib/analytics/events'
+import { storeUtmParams } from '@/lib/analytics/utm'
 
 export default function PilotPage() {
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    storeUtmParams()
+    trackPageView('pilot')
+  }, [])
 
   const [formData, setFormData] = useState({
     schoolName: '',
@@ -48,6 +55,10 @@ export default function PilotPage() {
         throw new Error(data.error || 'Something went wrong. Please try again.')
       }
 
+      trackEvent('pilot_form_submitted', {
+        program_type: formData.programType,
+        has_message: formData.message.trim().length > 0,
+      })
       setSubmitted(true)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Submission failed. Please try again.')
@@ -68,12 +79,14 @@ export default function PilotPage() {
             <div className="flex items-center gap-3">
               <Link
                 href="/login"
+                onClick={() => trackEvent('pilot_login_clicked')}
                 className="hidden sm:inline-flex text-gray-300 hover:text-white transition-colors text-sm font-medium"
               >
                 Sign In
               </Link>
               <Link
                 href="/demo"
+                onClick={() => trackEvent('demo_clicked')}
                 className="px-4 py-2 text-sm font-semibold text-white border border-white/20 rounded-lg hover:bg-white/5 transition-colors"
               >
                 View Demo
@@ -125,6 +138,7 @@ export default function PilotPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   href="/demo"
+                  onClick={() => trackEvent('demo_clicked')}
                   className="px-8 py-4 bg-[#D4AF37] text-[#0a0a0a] font-bold rounded-xl hover:bg-[#F4E4A6] transition-all"
                 >
                   View Demo
@@ -317,6 +331,7 @@ export default function PilotPage() {
                   <button
                     type="submit"
                     disabled={loading}
+                    onClick={() => trackEvent('pilot_request_clicked')}
                     className="w-full px-8 py-4 bg-[#D4AF37] text-[#0a0a0a] font-bold rounded-xl hover:bg-[#F4E4A6] transition-all shadow-lg shadow-[#D4AF37]/20 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {loading ? 'Sending...' : 'Submit Pilot Inquiry'}
@@ -325,7 +340,11 @@ export default function PilotPage() {
 
                 <p className="text-sm text-gray-500 text-center">
                   Submissions are sent directly to{' '}
-                  <a href="mailto:hello@ascynpro.com" className="text-[#D4AF37] hover:underline">
+                  <a
+                    href="mailto:hello@ascynpro.com"
+                    onClick={() => trackEvent('pilot_contact_clicked')}
+                    className="text-[#D4AF37] hover:underline"
+                  >
                     hello@ascynpro.com
                   </a>
                   . We never share your information.
