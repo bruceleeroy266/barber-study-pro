@@ -1,9 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
+import { createClient } from '@supabase/supabase-js'
 
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+const supabaseAdmin =
+  supabaseUrl && supabaseServiceKey
+    ? createClient(supabaseUrl, supabaseServiceKey, {
+        auth: { autoRefreshToken: false, persistSession: false },
+      })
+    : null
 
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'ASCYN PRO <hello@ascynpro.com>'
 const NOTIFICATION_FROM_EMAIL = process.env.NOTIFICATION_FROM_EMAIL || 'ASCYN PRO <notifications@ascynpro.com>'
@@ -140,6 +151,14 @@ export async function POST(request: NextRequest) {
 
     const forwardedFor = request.headers.get('x-forwarded-for')
     const ip = forwardedFor ? forwardedFor.split(',')[0].trim() : 'unknown'
+    const userAgent = request.headers.get('user-agent') || 'unknown'
+
+    // Capture UTM context when provided by the client.
+    const utmSource = sanitize(body.utm_source)
+    const utmMedium = sanitize(body.utm_medium)
+    const utmCampaign = sanitize(body.utm_campaign)
+    const utmTerm = sanitize(body.utm_term)
+    const utmContent = sanitize(body.utm_content)
 
     if (isRateLimited(ip, email)) {
       return NextResponse.json(
@@ -159,6 +178,48 @@ export async function POST(request: NextRequest) {
     const timestamp = formatTimestamp()
     const isPilot = formType === 'pilot'
     const isBarbering = programType === 'Barbering'
+
+    // ── PERSIST TO DATABASE ─────────────────────────────────────────────────
+    let persistedId: string | null = null
+    if (supabaseAdmin && isPilot) {
+      const { data: inserted, error: insertError } = await supabaseAdmin
+        .from('pilot_inquiries')
+        .insert({
+          school_name: schoolName,
+          contact_name: contactName,
+          email,
+          phone: phone || null,
+          program_type: programType,
+          cohort_size: cohortSize || null,
+          start_date: startDate || null,
+          message: message || null,
+          utm_source: utmSource || null,
+          utm_medium: utmMedium || null,
+          utm_campaign: utmCampaign || null,
+          utm_term: utmTerm || null,
+          utm_content: utmContent || null,
+          ip_address: ip,
+          user_agent: userAgent,
+          is_test: email.endsWith('@ascynpro.test') || email.includes('+test@'),
+        })
+        .select('id')
+        .single()
+
+      if (insertError) {
+        // Fail loudly in production so missing tables/config are not hidden.
+        if (process.env.NODE_ENV === 'production') {
+          console.error('[Email API] Failed to persist pilot inquiry:', insertError)
+          return NextResponse.json(
+            { error: 'We could not save your submission. Please try again later.' },
+            { status: 500 }
+          )
+        }
+        // In non-production, log and continue so email flow can still be tested.
+        console.warn('[Email API] Non-production: pilot inquiry persistence skipped.', insertError.message)
+      } else {
+        persistedId = inserted?.id ?? null
+      }
+    }
 
     // ── INTERNAL NOTIFICATION ───────────────────────────────────────────────
     const notificationSubject = isPilot

@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
 import { hasPermission } from '@/lib/security/permissions'
-import { Settings, Activity, History, Flag, Wrench, Archive, Bell, Users } from 'lucide-react'
+import { Settings, Activity, History, Flag, Wrench, Archive, Bell, Users, Plane } from 'lucide-react'
 
 export default async function AdminDashboard() {
   const supabase = await createClient()
@@ -118,6 +118,20 @@ export default async function AdminDashboard() {
             <p className="text-gray-400 text-sm mb-4">Configure school profile, programs, policies, and roles</p>
             <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#D4AF37]/10 text-[#D4AF37] text-sm rounded-lg border border-[#D4AF37]/20">
               Open Configuration
+            </span>
+          </Link>
+
+          <Link
+            href="/admin/pilot-inquiries"
+            className="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-[#D4AF37]/30 transition-colors group"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-semibold text-white group-hover:text-[#D4AF37]">Pilot Inquiries</h3>
+              <Plane className="w-5 h-5 text-gray-500 group-hover:text-[#D4AF37]" />
+            </div>
+            <p className="text-gray-400 text-sm mb-4">Review and manage pilot program submissions</p>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#D4AF37]/10 text-[#D4AF37] text-sm rounded-lg border border-[#D4AF37]/20">
+              View Submissions
             </span>
           </Link>
 

@@ -189,3 +189,74 @@ create index if not exists idx_student_progress_chapter_id on public.student_pro
 create index if not exists idx_quiz_attempts_user_id on public.quiz_attempts(user_id);
 create index if not exists idx_quiz_attempts_quiz_id on public.quiz_attempts(quiz_id);
 create index if not exists idx_schools_created_by on public.schools(created_by);
+
+-- ───────────────────────────────────────────────
+-- Pilot inquiries table
+-- Stores public pilot program submissions from the /pilot page.
+-- ───────────────────────────────────────────────
+create table if not exists public.pilot_inquiries (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now(),
+  school_name text not null,
+  contact_name text not null,
+  email text not null,
+  phone text,
+  program_type text not null,
+  cohort_size text,
+  start_date text,
+  message text,
+  utm_source text,
+  utm_medium text,
+  utm_campaign text,
+  utm_term text,
+  utm_content text,
+  ip_address text,
+  user_agent text,
+  is_test boolean default false,
+  status text default 'new' check (status in ('new', 'contacted', 'approved', 'declined', 'spam')),
+  notes text
+);
+
+-- Enable RLS
+alter table public.pilot_inquiries enable row level security;
+
+-- Public can create pilot inquiries (the /api/email route inserts using the
+-- service role key, but this policy also allows anon inserts if desired).
+create policy "Public can create pilot inquiries" on public.pilot_inquiries
+  for insert with check (true);
+
+-- Only admins and school admins can read pilot inquiries
+create policy "Admins can read pilot inquiries" on public.pilot_inquiries
+  for select using (
+    exists (
+      select 1 from public.profiles
+      where profiles.id = auth.uid()
+        and (profiles.role = 'admin' or profiles.role = 'school_admin')
+    )
+  );
+
+-- Only admins can update pilot inquiries (status, notes, is_test)
+create policy "Admins can update pilot inquiries" on public.pilot_inquiries
+  for update using (
+    exists (
+      select 1 from public.profiles
+      where profiles.id = auth.uid()
+        and (profiles.role = 'admin' or profiles.role = 'school_admin')
+    )
+  );
+
+-- Only admins can delete pilot inquiries
+create policy "Admins can delete pilot inquiries" on public.pilot_inquiries
+  for delete using (
+    exists (
+      select 1 from public.profiles
+      where profiles.id = auth.uid()
+        and profiles.role = 'admin'
+    )
+  );
+
+-- Indexes for performance
+ create index if not exists idx_pilot_inquiries_email on public.pilot_inquiries(email);
+ create index if not exists idx_pilot_inquiries_status on public.pilot_inquiries(status);
+ create index if not exists idx_pilot_inquiries_created_at on public.pilot_inquiries(created_at desc);
