@@ -180,6 +180,14 @@ export async function POST(request: NextRequest) {
     const isBarbering = programType === 'Barbering'
 
     // ── PERSIST TO DATABASE ─────────────────────────────────────────────────
+    if (process.env.NODE_ENV === 'production' && isPilot && !supabaseAdmin) {
+      console.error('[Email API] SUPABASE_SERVICE_ROLE_KEY or NEXT_PUBLIC_SUPABASE_URL is not configured.')
+      return NextResponse.json(
+        { error: 'Submission storage is not configured. Please try again later.' },
+        { status: 503 }
+      )
+    }
+
     let persistedId: string | null = null
     if (supabaseAdmin && isPilot) {
       const { data: inserted, error: insertError } = await supabaseAdmin
