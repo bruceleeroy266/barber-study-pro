@@ -1,124 +1,75 @@
-# Barber Study Pro V2 — Deployment Checklist
+# ASCYN PRO — Deployment Checklist
 
-## ✅ COMPLETED CHANGES (2026-05-18)
+**Last updated:** 2026-07-13  
+**Live site:** https://ascynpro.com  
+**Repository:** `git@github.com:bruceleeroy266/barber-study-pro`  
+**Branch:** `main`
 
-### Environment Configuration
-- [x] `.env.local` updated with clear documentation
-- [x] `NEXT_PUBLIC_DEMO_MODE` set to `false` (production default)
-- [x] Supabase variables left empty (must be filled for production)
+## ✅ Completed Deployment Steps
 
-### Auth & Middleware
-- [x] `src/middleware.ts` — Conditional auth bypass (demo only when unconfigured)
-- [x] `src/lib/supabase.ts` — Browser client with proper config validation
-- [x] `src/lib/supabase-server.ts` — Server client with proper config validation
+- [x] Supabase production project created and connected
+- [x] Database schema applied (`supabase-schema.sql` + migrations)
+- [x] Environment variables configured in Vercel and local `.env.local`
+- [x] GitHub repository connected to Vercel; auto-deploy from `main`
+- [x] Custom domain `ascynpro.com` live and serving HTTPS
+- [x] Pilot inquiries table created with required columns
+- [x] Admin pilot-inquiry review page + in-app reply modal deployed
+- [x] Vercel Analytics and Speed Insights enabled
+- [x] `.env.local` in `.gitignore`; no secrets committed
 
-### Data Safety
-- [x] All demo data files preserved (`flashcards-data.ts`, `quiz-data.ts`, `demo-data.ts`, `orphaned-flashcards.ts`)
-- [x] Seed SQL created for Supabase import
+## 🔧 Environment Variables (Vercel + local `.env.local`)
 
----
+Required:
 
-## 🔧 REQUIRED BEFORE PRODUCTION DEPLOYMENT
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `NEXT_PUBLIC_SITE_URL`
+- `NEXT_PUBLIC_DEMO_MODE`
 
-### 1. Supabase Project Setup
+Admin / utility scripts (never expose):
 
-**Create Supabase project:**
-1. Go to https://supabase.com
-2. Create new project
-3. Note the project URL and anon key
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `ASCYN_ADMIN_EMAIL`
+- `ASCYN_ADMIN_PASSWORD`
+- `ASCYN_ADMIN_FULL_NAME`
 
-**Required Tables:**
-| Table | Purpose | Status |
-|-------|---------|--------|
-| `schools` | Multi-tenant schools | Schema ready |
-| `profiles` | User profiles (extends auth.users) | Schema ready |
-| `chapters` | 21 barber chapters | Schema ready |
-| `flashcards` | 967 study cards | Needs seed data |
-| `quizzes` | One per chapter | Needs seed data |
-| `quiz_questions` | Quiz questions (50+ currently) | Needs seed data |
-| `student_progress` | User progress tracking | Schema ready |
-| `quiz_attempts` | Quiz score history | Schema ready |
+Pilot test accounts (utility scripts only):
 
-**Run SQL:**
-1. Execute `supabase-schema.sql` in Supabase SQL Editor
-2. Execute `supabase-seed-data.sql` for chapters
-3. Use seed script for flashcards/quiz questions (or manual CSV import)
+- `ASCYN_STUDENT_EMAIL`
+- `ASCYN_STUDENT_PASSWORD`
+- `ASCYN_INSTRUCTOR_EMAIL`
+- `ASCYN_INSTRUCTOR_PASSWORD`
 
-### 2. Environment Variables (Vercel)
+Email (configured in Vercel or local env for Resend):
 
-Add these in Vercel Dashboard → Project Settings → Environment Variables:
+- `RESEND_API_KEY`
+- `RESEND_FROM_EMAIL`
+- `NOTIFICATION_FROM_EMAIL`
+- `EMAIL_TO`
 
-| Variable | Value | Required |
-|----------|-------|----------|
-| `NEXT_PUBLIC_SUPABASE_URL` | `https://your-project.supabase.co` | ✅ Yes |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `eyJ...` (anon/public key) | ✅ Yes |
-| `NEXT_PUBLIC_SITE_URL` | `https://your-domain.vercel.app` | ✅ Yes |
-| `NEXT_PUBLIC_DEMO_MODE` | `false` | ✅ Yes |
-| `SUPABASE_SERVICE_ROLE_KEY` | `eyJ...` (service role) | ⚠️ Admin only |
+See `.env.example` in `02-work/app/` for the template.
 
-**DO NOT commit these to GitHub.**
+## 🧪 Production Verification Checklist
 
-### 3. GitHub Safety Check
+- [x] Root URL returns 200
+- [x] `/pilot` page loads and form submits
+- [x] `/admin/pilot-inquiries` requires login and routes correctly
+- [x] `/login`, `/signup`, `/auth/verify-email`, `/auth/update-password` render
+- [x] Build passes (`npm run build`)
+- [x] TypeScript passes (`npx tsc --noEmit`)
 
-Before pushing:
-- [ ] `.env.local` is in `.gitignore` (✅ confirmed)
-- [ ] No secrets in committed files
-- [ ] `npm run build` passes
-- [ ] TypeScript is clean
+## 📋 Remaining Pre-Launch / Post-Launch Tasks
 
-### 4. Vercel Deployment Steps
+- [ ] Complete Beta Phase 1 QA end-to-end
+- [ ] Migrate Chapters 17–21 into v2 platform
+- [ ] Replace admin portal placeholders with real functionality
+- [ ] Seed remaining quiz/content data as needed
+- [ ] Set up automated backups
+- [ ] Set up CI/CD (GitHub Actions: typecheck, lint, build)
+- [ ] Payment/subscription integration
+- [ ] Final legal review (privacy, terms, LLC)
 
-1. Push code to GitHub
-2. Connect repo to Vercel
-3. Add environment variables (see above)
-4. Deploy
-5. Verify build succeeds
+## Notes
 
----
-
-## 🧪 TESTING CHECKLIST
-
-### Demo Mode (Development)
-- [ ] Set `NEXT_PUBLIC_DEMO_MODE=true`
-- [ ] Clear Supabase URL/key
-- [ ] Verify app loads with mock data
-- [ ] Verify flashcards display
-- [ ] Verify quizzes work
-
-### Production Mode
-- [ ] Set `NEXT_PUBLIC_DEMO_MODE=false`
-- [ ] Add real Supabase credentials
-- [ ] Verify login works
-- [ ] Verify signup works
-- [ ] Verify protected routes require auth
-- [ ] Verify flashcards load from Supabase
-- [ ] Verify quizzes load from Supabase
-- [ ] Verify progress persists
-
----
-
-## 📋 CURRENT STATUS
-
-| Component | Status |
-|-----------|--------|
-| Demo mode | ✅ Available as fallback |
-| Production auth | ✅ Ready (middleware enforces) |
-| Supabase schema | ✅ SQL files ready |
-| Seed data | ⚠️ Needs import script |
-| Build | ✅ Passes |
-| GitHub push | ✅ Safe (.env in .gitignore) |
-| Vercel deploy | ⚠️ Needs env vars + Supabase project |
-
----
-
-## 🎯 BLOCKERS FOR FULL LAUNCH
-
-1. **Supabase project creation** — Need active project with tables
-2. **Data migration** — 967 flashcards + 50+ quiz questions need bulk import
-3. **Quiz completion** — Only Ch 1-2 have quizzes (19 chapters need 25 questions each)
-4. **Chapter content** — All chapters have `content: null` (no long-form study material)
-5. **Payment/subscription** — No Stripe or payment integration yet
-
----
-
-*Last updated: 2026-05-18*
+- The local `.env.local` must live in `02-work/app/` (the Next.js app directory).
+- Do not place `.env.local` in the top-level `C:\AI\ACTIVE\ASCYN-PRO/` folder; it will not be loaded and creates a duplicate-secret risk.
