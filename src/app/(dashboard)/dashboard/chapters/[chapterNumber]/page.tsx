@@ -61,7 +61,7 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
     .eq('quiz_id', quiz?.id)
     .order('percentage', { ascending: false })
     .limit(1)
-    .single()
+    .maybeSingle()
 
   return (
     <div className="space-y-8">

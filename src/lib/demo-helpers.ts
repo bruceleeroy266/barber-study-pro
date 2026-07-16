@@ -16,6 +16,48 @@ export function isExplicitDemoMode(): boolean {
 }
 
 /**
+ * Validate that a URL points to a local-loopback Supabase stack.
+ * Accepts only plain HTTP against 127.0.0.1, localhost or [::1]
+ * with a valid port. Rejects embedded credentials, lookalike hosts,
+ * private-network IPs and out-of-range ports.
+ */
+export function isLocalSupabaseUrl(url: string): boolean {
+  if (!url.startsWith('http://')) {
+    return false
+  }
+
+  try {
+    const u = new URL(url)
+
+    if (u.protocol !== 'http:') {
+      return false
+    }
+
+    if (u.username || u.password) {
+      return false
+    }
+
+    const allowedHost =
+      u.hostname === '127.0.0.1' ||
+      u.hostname === 'localhost' ||
+      u.hostname === '[::1]'
+
+    if (!allowedHost) {
+      return false
+    }
+
+    const port = u.port ? parseInt(u.port, 10) : 80
+    if (Number.isNaN(port) || port < 1 || port > 65535) {
+      return false
+    }
+
+    return true
+  } catch {
+    return false
+  }
+}
+
+/**
  * Safe diagnostic that explains why Supabase appears unconfigured.
  * Never logs the actual URL or key values.
  */
@@ -37,10 +79,7 @@ export function diagnoseSupabaseConfig(context = 'unknown'): {
   const urlPresent = url.length > 0
   const keyPresent = key.length > 0
 
-  const urlValidScheme =
-    url.startsWith('https://') ||
-    url.startsWith('http://127.0.0.1:54321') ||
-    url.startsWith('http://localhost:54321')
+  const urlValidScheme = url.startsWith('https://') || isLocalSupabaseUrl(url)
 
   const urlNonPlaceholder =
     !url.includes('your-project') && !url.includes('example.supabase.co')
