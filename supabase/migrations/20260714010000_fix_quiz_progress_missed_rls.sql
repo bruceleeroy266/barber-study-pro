@@ -27,32 +27,45 @@ grant select, insert, update, delete on public.student_progress   to service_rol
 grant select, insert, update, delete on public.missed_questions   to service_role;
 grant select, insert, update, delete on public.profiles           to service_role;
 
--- Sequences are used by gen_random_uuid() default, but grant anyway for safety.
-grant all privileges on all sequences in schema public to service_role;
-
 -- ============================================================================
 -- 2. HELPER FUNCTIONS (SECURITY DEFINER — bypass RLS, avoid recursion)
 -- ============================================================================
 -- These functions read profiles once, outside the recursive policy context.
 -- They must remain security definer and owned by a role with BYPASSRLS
 -- (postgres in Supabase) to work correctly.
+-- Each uses an explicit search_path and is restricted from PUBLIC/anon
+-- execution; only authenticated and service_role may invoke them.
 
 create or replace function public.current_user_school_id()
-returns uuid as $$
+returns uuid
+set search_path = public, pg_temp
+as $$
 begin
   return (select school_id from public.profiles where id = auth.uid() limit 1);
 end;
 $$ language plpgsql security definer;
 
+revoke execute on function public.current_user_school_id() from public;
+grant execute on function public.current_user_school_id() to authenticated;
+grant execute on function public.current_user_school_id() to service_role;
+
 create or replace function public.current_user_role()
-returns text as $$
+returns text
+set search_path = public, pg_temp
+as $$
 begin
   return (select role from public.profiles where id = auth.uid() limit 1);
 end;
 $$ language plpgsql security definer;
 
+revoke execute on function public.current_user_role() from public;
+grant execute on function public.current_user_role() to authenticated;
+grant execute on function public.current_user_role() to service_role;
+
 create or replace function public.is_school_staff(target_school_id uuid)
-returns boolean as $$
+returns boolean
+set search_path = public, pg_temp
+as $$
 begin
   return exists (
     select 1 from public.profiles
@@ -63,8 +76,14 @@ begin
 end;
 $$ language plpgsql security definer;
 
+revoke execute on function public.is_school_staff(uuid) from public;
+grant execute on function public.is_school_staff(uuid) to authenticated;
+grant execute on function public.is_school_staff(uuid) to service_role;
+
 create or replace function public.is_school_admin(target_school_id uuid)
-returns boolean as $$
+returns boolean
+set search_path = public, pg_temp
+as $$
 begin
   return exists (
     select 1 from public.profiles
@@ -75,15 +94,27 @@ begin
 end;
 $$ language plpgsql security definer;
 
+revoke execute on function public.is_school_admin(uuid) from public;
+grant execute on function public.is_school_admin(uuid) to authenticated;
+grant execute on function public.is_school_admin(uuid) to service_role;
+
 create or replace function public.user_school_id(target_user_id uuid)
-returns uuid as $$
+returns uuid
+set search_path = public, pg_temp
+as $$
 begin
   return (select school_id from public.profiles where id = target_user_id limit 1);
 end;
 $$ language plpgsql security definer;
 
+revoke execute on function public.user_school_id(uuid) from public;
+grant execute on function public.user_school_id(uuid) to authenticated;
+grant execute on function public.user_school_id(uuid) to service_role;
+
 create or replace function public.is_platform_super_admin()
-returns boolean as $$
+returns boolean
+set search_path = public, pg_temp
+as $$
 begin
   return exists (
     select 1 from public.profiles
@@ -91,6 +122,10 @@ begin
   );
 end;
 $$ language plpgsql security definer;
+
+revoke execute on function public.is_platform_super_admin() from public;
+grant execute on function public.is_platform_super_admin() to authenticated;
+grant execute on function public.is_platform_super_admin() to service_role;
 
 -- ============================================================================
 -- 3. PROFILES RLS — REMOVE RECURSIVE SELF-JOIN POLICIES
@@ -222,10 +257,18 @@ declare
   constraint_exists boolean;
 begin
   select exists (
-    select 1 from pg_constraint
-    where conrelid = 'public.student_progress'::regclass
-      and contype = 'u'
-      and pg_get_constraintdef(oid) like '%(user_id, chapter_id)%'
+    select 1 from pg_constraint c
+    where c.conrelid = 'public.student_progress'::regclass
+      and c.contype = 'u'
+      and (
+        select count(*) from unnest(c.conkey) as k(attnum)
+        where k.attnum in (
+          select attnum from pg_attribute
+          where attrelid = 'public.student_progress'::regclass
+            and attname in ('user_id', 'chapter_id')
+        )
+      ) = 2
+      and array_length(c.conkey, 1) = 2
   ) into constraint_exists;
 
   if not constraint_exists then
@@ -365,12 +408,18 @@ alter table public.quiz_attempts
   add column if not exists updated_at timestamptz default now();
 
 create or replace function public.update_updated_at_column()
-returns trigger as $$
+returns trigger
+set search_path = public, pg_temp
+as $$
 begin
   new.updated_at = now();
   return new;
 end;
 $$ language plpgsql;
+
+revoke execute on function public.update_updated_at_column() from public;
+grant execute on function public.update_updated_at_column() to authenticated;
+grant execute on function public.update_updated_at_column() to service_role;
 
 -- Attach to tables that have updated_at and may be missing a trigger.
 drop trigger if exists update_quiz_attempts_updated_at on public.quiz_attempts;
