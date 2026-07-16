@@ -73,7 +73,9 @@ begin
 end;
 $$ language plpgsql;
 
-create trigger if not exists trg_missed_questions_updated_at
+drop trigger if exists trg_missed_questions_updated_at on public.missed_questions;
+
+create trigger trg_missed_questions_updated_at
   before update on public.missed_questions
   for each row
   execute function public.set_updated_at();

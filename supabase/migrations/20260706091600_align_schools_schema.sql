@@ -103,6 +103,7 @@ alter table public.schools enable row level security;
 -- Remove any legacy overly-broad policies.
 drop policy if exists "Schools are viewable by everyone" on public.schools;
 drop policy if exists "Active schools are viewable by everyone" on public.schools;
+drop policy if exists "Active schools are viewable by anon and authenticated" on public.schools;
 
 -- Allow anonymous and authenticated users to read only active, non-deleted schools.
 create policy "Active schools are viewable by anon and authenticated" on public.schools
