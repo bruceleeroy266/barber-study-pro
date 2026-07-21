@@ -266,7 +266,7 @@
 | 16.2 | Self-delete prevention | Action rejects deleting the currently authenticated admin | PASS | `deleteUser` test |
 | 16.3 | School-admin scope | School admins cannot delete platform admins or users outside their school | PASS | `deleteUser` tests |
 | 16.4 | Confirmation dialog | UI opens a modal requiring explicit confirmation before deletion | PASS | `UserManagementClient.test.tsx` |
-| 16.5 | Audit logging | Deletion is logged via `logUserManagementAction` with `delete_user` action | PASS | `user_management_audit_logs` (migration exists; production table status to verify) |
+| 16.5 | Audit logging | Deletion is logged via `logUserManagementAction` with `delete_user` action | BLOCKED | `user_management_audit_logs` table does **not** exist in production (PGRST205). Migration `20260712030000_admin_user_management.sql` must be applied before audit logs persist. The action still deletes the user if the table is missing. |
 | 16.6 | Profile cleanup | Auth user deletion cascades to profile and operational records | PASS | FK `on delete cascade` in migrations |
 
 ## Build & Typecheck Verification
