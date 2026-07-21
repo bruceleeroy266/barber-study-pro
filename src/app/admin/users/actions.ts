@@ -52,6 +52,14 @@ interface UserFormData {
   approval_status: 'pending' | 'approved' | 'rejected'
 }
 
+export interface InviteUserFormData {
+  full_name: string
+  email: string
+  role: AppRole
+  school_id: string | null
+  approval_status: 'pending' | 'approved' | 'rejected'
+}
+
 const MANAGEABLE_ROLES: AppRole[] = ['student', 'instructor', 'apprentice', 'admin', 'school_admin']
 
 async function getCurrentAdmin(): Promise<ActionResult<AdminContext>> {
@@ -364,6 +372,140 @@ export async function createUser(formData: UserFormData): Promise<ActionResult<{
   )
 
   return { success: true, data: { id: authData.user.id } }
+}
+
+/**
+ * Returns the canonical site URL for auth redirects.
+ * Uses NEXT_PUBLIC_SITE_URL in non-production environments; in production
+ * it always returns the approved ascynpro.com origin to prevent redirect
+ * manipulation through environment variables.
+ */
+function getSiteUrl(): string {
+  if (process.env.NODE_ENV === 'production') {
+    return 'https://ascynpro.com'
+  }
+  return process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') || 'http://localhost:3000'
+}
+
+export async function inviteUser(formData: InviteUserFormData): Promise<ActionResult<{ id: string }>> {
+  const adminResult = await getCurrentAdmin()
+  if (!adminResult.success || !adminResult.data) {
+    return { success: false, error: adminResult.error }
+  }
+
+  const admin = adminResult.data
+
+  // Validate role.
+  if (!isKnownRole(formData.role) || !MANAGEABLE_ROLES.includes(formData.role)) {
+    return { success: false, error: 'Invalid role' }
+  }
+
+  // School admins cannot invite admins.
+  if (!admin.isPlatformAdmin && (formData.role === 'admin' || formData.role === 'school_admin')) {
+    return { success: false, error: 'School admins cannot create administrator accounts' }
+  }
+
+  // Validate school assignment.
+  if (formData.school_id) {
+    if (!admin.isPlatformAdmin && formData.school_id !== admin.schoolId) {
+      return { success: false, error: 'Cannot assign user to a different school' }
+    }
+
+    // Verify the school exists and is active.
+    const serviceClientForValidation = createServiceRoleClient()
+    const { data: school, error: schoolError } = await serviceClientForValidation
+      .from('schools')
+      .select('id, is_active, deleted_at')
+      .eq('id', formData.school_id)
+      .single()
+
+    if (schoolError || !school) {
+      return { success: false, error: 'Invalid school' }
+    }
+    if (!school.is_active || school.deleted_at) {
+      return { success: false, error: 'School is not active' }
+    }
+  }
+
+  const serviceClient = createServiceRoleClient()
+  const normalizedEmail = formData.email.toLowerCase().trim()
+
+  // Prevent duplicate email accounts in Auth.
+  const { data: existingUsers, error: listError } = await serviceClient.auth.admin.listUsers()
+  if (listError) {
+    return { success: false, error: 'Failed to check existing users' }
+  }
+  if (existingUsers.users.some((u) => u.email?.toLowerCase() === normalizedEmail)) {
+    return { success: false, error: 'An account with this email already exists' }
+  }
+
+  // Note: we intentionally do not reject here if a profile row with the same
+  // email already exists. The Supabase Auth trigger `on_auth_user_created`
+  // creates a profile when `inviteUserByEmail` inserts the auth user, so a
+  // pre-invite profile check would always fail. Duplicate *Auth* accounts are
+  // still prevented above. The upsert below ensures exactly one profile per
+  // invited auth user and overwrites trigger defaults with validated values.
+
+  // Send the invitation email. The user will set their own password.
+  const redirectTo = `${getSiteUrl()}/auth/callback`
+  const { data: inviteData, error: inviteError } = await serviceClient.auth.admin.inviteUserByEmail(
+    normalizedEmail,
+    {
+      redirectTo,
+      data: {
+        full_name: formData.full_name,
+        role: formData.role,
+      },
+    }
+  )
+
+  if (inviteError || !inviteData.user) {
+    return { success: false, error: inviteError?.message || 'Failed to send invitation' }
+  }
+
+  // Upsert the profile row. Supabase Auth trigger `on_auth_user_created` already
+  // inserts a profile when the auth user is created, but it cannot set
+  // school_id or approval_status. Upsert guarantees exactly one profile and
+  // safely overwrites the trigger-created defaults with the validated values.
+  const { error: profileError } = await serviceClient
+    .from('profiles')
+    .upsert(
+      {
+        id: inviteData.user.id,
+        email: normalizedEmail,
+        full_name: formData.full_name,
+        role: formData.role,
+        school_id: formData.school_id,
+        approval_status: formData.approval_status,
+        is_disabled: false,
+        requires_password_change: false,
+      },
+      { onConflict: 'id' }
+    )
+
+  if (profileError) {
+    // Best-effort cleanup: delete the invited auth user if profile upsert failed.
+    await serviceClient.auth.admin.deleteUser(inviteData.user.id)
+    return { success: false, error: profileError.message }
+  }
+
+  await logUserManagementAction(
+    admin,
+    inviteData.user.id,
+    normalizedEmail,
+    'invite_user',
+    {},
+    {
+      full_name: formData.full_name,
+      role: formData.role,
+      school_id: formData.school_id,
+      approval_status: formData.approval_status,
+      redirect_to: redirectTo,
+    },
+    formData.school_id
+  )
+
+  return { success: true, data: { id: inviteData.user.id } }
 }
 
 export async function updateUserStatus(

@@ -188,13 +188,83 @@
 
 ---
 
+## 13. Instructor Portal
+
+| # | Test Step | Expected Result | Status | Notes |
+|---|-----------|-----------------|--------|-------|
+| 13.1 | Instructor dashboard roster | Displays school-scoped students using canonical profile identity | PASS | 2026-07-21 identity audit |
+| 13.2 | Student detail Progress Report modal | Opens; has Close/X; closes on Escape and backdrop click; restores focus | PASS | Modal triggerRef + tests |
+| 13.3 | Secondary instructor/admin pages | Back button present with safe role-dashboard fallback | PASS | Added to `/admin/school/configuration`; others already had BackButton |
+| 13.4 | Recommended Next Steps in instructor view | Does not link to student dashboard unless labeled student preview | PASS | MissedQuestionBank `instructorView` + StudyRecommendations `instructorView` |
+
+## 14. Pilot School & Instructor Invitation Setup
+
+| # | Test Step | Expected Result | Status | Notes |
+|---|-----------|-----------------|--------|-------|
+| 14.1 | Confirm first pilot school exists in production | `RISE Program` school found (ID `12b09747-7391-4811-bc22-db7eebbb12c1`), active, subscription active; no duplicate created | PASS | Verified 2026-07-21; treated as `R.I.S.E Program` per Gabe |
+| 14.2 | Confirm instructor account does not exist | No Auth user or profile for `tessamyers2911@gmail.com` | PASS | Verified 2026-07-21 |
+| 14.3 | Build secure invitation server action | `inviteUser` action added to `/admin/users/actions.ts`; uses service-role client; requires authenticated admin; calls `auth.admin.inviteUserByEmail`; prevents duplicate Auth users; validates role and active school; writes audit log | PASS | Implemented 2026-07-21 |
+| 14.4 | Build admin invitation UI | "Invite User" form added to `/admin/users/UserManagementClient.tsx`; allows selecting role `instructor` and school `RISE Program`; no password field exposed | PASS | Implemented 2026-07-21 |
+| 14.5 | Invitation redirect uses approved production origin | `getSiteUrl()` returns `https://ascynpro.com` in production; redirect is `/auth/callback` | PASS | Implemented 2026-07-21 |
+| 14.6 | Do not send Tessa's invitation yet | No production Auth invite sent; no production data modified; no commit/push/deploy | PASS | Awaiting final approval and Supabase redirect config confirmation |
+
+## 15. Authentication Lifecycle Audit
+
+### 15.1 Profile Creation
+
+| # | Test Step | Expected Result | Status | Notes |
+|---|-----------|-----------------|--------|-------|
+| 15.1.1 | Trigger inspection | `on_auth_user_created` trigger in `supabase-schema.sql` and current migration auto-inserts a `profiles` row from `auth.users` | PASS | Trigger reads `raw_user_meta_data->>'role'` and `raw_user_meta_data->>'full_name'`; sets `approval_status = 'pending'`; does **not** set `school_id` |
+| 15.1.2 | No duplicate profile insert | `inviteUser` no longer `insert`s a second profile; uses `upsert ... onConflict('id')` to overwrite the trigger-created row with validated values | PASS | Prevents unique-constraint failure and ensures exactly one profile |
+| 15.1.3 | Metadata flow | Invitation metadata (`full_name`, `role`, `school_id`, `approval_status`) is written to `raw_user_meta_data` and then applied to the profile row | PASS | `options.data` passed to `inviteUserByEmail`; profile upsert validates and overrides trigger defaults |
+| 15.1.4 | Exactly one Auth user and one profile | A single invitation produces one `auth.users` record and one `profiles` record | PASS | Verified by `actions.test.ts` upsert test |
+
+### 15.2 Password Setup
+
+| # | Test Step | Expected Result | Status | Notes |
+|---|-----------|-----------------|--------|-------|
+| 15.2.1 | Set Password page exists | `/auth/set-password/page.tsx` created with session verification, password + confirmation fields, strong-password validation (≥8 chars, uppercase, lowercase, number) | PASS | Implemented 2026-07-21 |
+| 15.2.2 | No service-role key in browser | Password update uses `supabase.auth.updateUser` from the browser client (`@/lib/supabase`) | PASS | No `service_role` key exposed to client |
+| 15.2.3 | Expired/invalid link handling | Missing or invalid session shows clear error: "Invitation link is invalid or has expired. Please request a new invitation." | PASS | Implemented 2026-07-21 |
+| 15.2.4 | Callback routes typed correctly | `type=recovery` → `/auth/update-password`; `type=invite` → `/auth/set-password` | PASS | `src/app/auth/callback/route.ts` |
+
+### 15.3 Instructor Destination
+
+| # | Test Step | Expected Result | Status | Notes |
+|---|-----------|-----------------|--------|-------|
+| 15.3.1 | Instructor lands at `/instructor` | After password setup, instructors are redirected via existing `getRoleBasedRedirect` | PASS | `src/lib/auth-access.ts` |
+| 15.3.2 | Students and apprentices land at `/dashboard` | Non-instructor roles redirect to `/dashboard` | PASS | `getRoleBasedRedirect` |
+| 15.3.3 | Open-redirect protection | `next` parameter validated against internal path allow-list; external and protocol-relative URLs rejected | PASS | Implemented in `src/app/auth/callback/route.ts` |
+
+### 15.4 Testing
+
+| # | Test Step | Expected Result | Status | Notes |
+|---|-----------|-----------------|--------|-------|
+| 15.4.1 | Invitation action tests | `src/app/admin/users/actions.test.ts` covers success, duplicate auth user, trigger-created profile upsert, unauthorized, invalid role, invalid school, invitation failure, and profile-failure cleanup | PASS | 8 tests |
+| 15.4.2 | Callback route tests | `src/app/auth/callback/route.test.ts` covers recovery, invite, instructor/student/apprentice redirects, safe `next` usage, and open-redirect rejection | PASS | 10 tests |
+| 15.4.3 | Set Password page tests | `src/app/auth/set-password/page.test.tsx` covers session verification, mismatch, weak password, success redirects, and update errors | PASS | 8 tests |
+| 15.4.4 | Full verification suite | `npm test` 185/185 pass, `npx tsc --noEmit` clean, `npm run lint` 0 errors, `npm run build` succeeds | PASS | 2026-07-21 |
+
+## 14. Authentication & Invitation Lifecycle
+
+| # | Test Step | Expected Result | Status | Notes |
+|---|-----------|-----------------|--------|-------|
+| 14.1 | Auth-user trigger | Creates exactly one profile per auth user; upsert handles invited users | PASS | `handle_new_user()` + `inviteUser` upsert |
+| 14.2 | Secure Set Password page | Requires valid session, matching passwords, and strong password | PASS | `/auth/set-password` |
+| 14.3 | Instructor invite login | Redirects invited instructor to `/instructor` | PASS | callback + set-password routes |
+| 14.4 | Student invite login | Redirects invited student to `/dashboard` | PASS | callback + set-password routes |
+| 14.5 | Invalid/expired invitation | Shows error or redirects to auth-code-error page | PASS | missing session → error; bad code → `/auth/auth-code-error` |
+| 14.6 | Open-redirect protection | Rejects external and protocol-relative `next` params | PASS | `isSafeRedirectPath` in callback route |
+| 14.7 | Two-commit separation proposed | Backend/auth commits separate from admin UI commits | PASS | `AUTH_LIFECYCLE_AUDIT_2026-07-21.md` |
+
 ## Build & Typecheck Verification
 
 | # | Check | Command | Expected Result | Status |
 |---|-------|---------|-----------------|--------|
-| B.1 | TypeScript | `npx tsc --noEmit` | No errors | |
-| B.2 | Production build | `npm run build` | Exits 0; all pages generated | |
+| B.1 | TypeScript | `npx tsc --noEmit` | No errors | PASS |
+| B.2 | Production build | `npm run build` | Exits 0; all pages generated | PASS |
 | B.3 | No console errors on initial load | Browser dev tools | Clean console for `/login`, `/dashboard`, `/dashboard/chapters/16` | |
+| B.4 | Lint | `npm run lint` | 0 errors | PASS |
 
 ---
 

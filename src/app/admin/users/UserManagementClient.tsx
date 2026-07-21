@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import {
   createUser,
+  inviteUser,
   updateUserStatus,
   toggleUserDisabled,
   changeUserRole,
@@ -56,6 +57,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
     error ? { type: 'error', text: error } : null
   )
   const [showCreateForm, setShowCreateForm] = useState(false)
+  const [showInviteForm, setShowInviteForm] = useState(false)
   const [isPending, startTransition] = useTransition()
 
   const LIMIT = 50
@@ -107,6 +109,27 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
       await loadUsers(0)
     } else {
       setMessage({ type: 'error', text: result.error || 'Failed to create user' })
+    }
+  }
+
+  async function handleInviteUser(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    const form = new FormData(e.currentTarget)
+
+    const result = await inviteUser({
+      full_name: String(form.get('full_name') || ''),
+      email: String(form.get('email') || ''),
+      role: String(form.get('role') || 'student') as AppRole,
+      school_id: String(form.get('school_id') || '') || null,
+      approval_status: String(form.get('approval_status') || 'pending') as 'pending' | 'approved' | 'rejected',
+    })
+
+    if (result.success) {
+      setMessage({ type: 'success', text: 'Invitation sent successfully' })
+      setShowInviteForm(false)
+      await loadUsers(0)
+    } else {
+      setMessage({ type: 'error', text: result.error || 'Failed to send invitation' })
     }
   }
 
@@ -203,12 +226,26 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
           </button>
         </form>
 
-        <button
-          onClick={() => setShowCreateForm(!showCreateForm)}
-          className="px-4 py-2 bg-gray-800 text-white border border-gray-700 rounded-lg hover:border-[#D4AF37]/50"
-        >
-          {showCreateForm ? 'Cancel' : 'Create User'}
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => {
+              setShowCreateForm(!showCreateForm)
+              setShowInviteForm(false)
+            }}
+            className="px-4 py-2 bg-gray-800 text-white border border-gray-700 rounded-lg hover:border-[#D4AF37]/50"
+          >
+            {showCreateForm ? 'Cancel' : 'Create User'}
+          </button>
+          <button
+            onClick={() => {
+              setShowInviteForm(!showInviteForm)
+              setShowCreateForm(false)
+            }}
+            className="px-4 py-2 bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/30 rounded-lg hover:bg-[#D4AF37]/20"
+          >
+            {showInviteForm ? 'Cancel Invite' : 'Invite User'}
+          </button>
+        </div>
       </div>
 
       {showCreateForm && (
@@ -296,6 +333,88 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                 className="px-6 py-2 bg-[#D4AF37] text-black font-medium rounded-lg hover:bg-[#c4a030]"
               >
                 Create User
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {showInviteForm && (
+        <div className="bg-gray-900 border border-[#D4AF37]/30 rounded-xl p-6">
+          <h2 className="text-xl font-semibold text-white mb-2">Invite User</h2>
+          <p className="text-sm text-gray-400 mb-4">
+            Sends an email invitation. The recipient chooses their own password and is redirected to the platform.
+          </p>
+          <form onSubmit={handleInviteUser} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm text-gray-400 mb-1">Full name</label>
+              <input
+                name="full_name"
+                type="text"
+                required
+                className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-400 mb-1">Email</label>
+              <input
+                name="email"
+                type="email"
+                required
+                className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-400 mb-1">Role</label>
+              <select
+                name="role"
+                required
+                className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+              >
+                {manageableRoles.map((r) => (
+                  <option key={r.value} value={r.value}>
+                    {r.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm text-gray-400 mb-1">School</label>
+              <select
+                name="school_id"
+                required
+                defaultValue={currentUser.schoolId ?? ''}
+                className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+              >
+                <option value="">No school</option>
+                {schools.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm text-gray-400 mb-1">Approval status</label>
+              <select
+                name="approval_status"
+                required
+                defaultValue="pending"
+                className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+              >
+                {APPROVAL_STATUSES.map((s) => (
+                  <option key={s.value} value={s.value}>
+                    {s.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="md:col-span-2">
+              <button
+                type="submit"
+                className="px-6 py-2 bg-[#D4AF37] text-black font-medium rounded-lg hover:bg-[#c4a030]"
+              >
+                Send Invitation
               </button>
             </div>
           </form>
