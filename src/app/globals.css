@@ -100,3 +100,82 @@ html {
   backdrop-filter: blur(10px);
   border: 1px solid rgba(212, 175, 55, 0.1);
 }
+
+/* ── Beta Agreement Print Styles ── */
+@media print {
+  @page {
+    margin: 0.5in;
+    size: letter;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Hide screen chrome on the beta-agreement page. */
+  body:has(#agreement-document) nav,
+  body:has(#agreement-document) header,
+  body:has(#agreement-document) footer,
+  body:has(#agreement-document) .print\:hidden,
+  body:has(#agreement-document) button,
+  body:has(#agreement-document) [role="alert"] {
+    display: none !important;
+  }
+
+  /* Reset the agreement container for print. */
+  #agreement-document {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    height: auto !important;
+    min-height: auto !important;
+  }
+
+  #agreement-document * {
+    color: #000000 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  #agreement-document h1,
+  #agreement-document h2,
+  #agreement-document h3,
+  #agreement-document h4,
+  #agreement-document p,
+  #agreement-document li {
+    color: #000000 !important;
+  }
+
+  #agreement-document strong {
+    color: #000000 !important;
+    font-weight: 700 !important;
+  }
+
+  #agreement-document h1 {
+    font-size: 16pt !important;
+    margin-bottom: 6pt !important;
+  }
+
+  #agreement-document h3 {
+    font-size: 11pt !important;
+    margin-top: 8pt !important;
+    margin-bottom: 3pt !important;
+  }
+
+  #agreement-document p {
+    font-size: 9.5pt !important;
+    line-height: 1.25 !important;
+    margin-bottom: 4pt !important;
+  }
+}
