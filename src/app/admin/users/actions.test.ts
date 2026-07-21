@@ -50,11 +50,13 @@ function createMockServiceClient(overrides: ServiceClientOverrides = {}) {
     },
     profiles: {
       select: () => ({
-        eq: () =>
-          Promise.resolve({
-            data: [] as unknown[],
-            error: null,
-          }),
+        eq: () => ({
+          single: () =>
+            Promise.resolve({
+              data: null,
+              error: null,
+            }),
+        }),
       }),
       upsert: vi.fn().mockResolvedValue({
         data: null,
@@ -345,5 +347,186 @@ describe('inviteUser', () => {
     expect(result.success).toBe(false)
     expect(result.error).toMatch(/profiles upsert failed/i)
     expect(mockServiceClient.auth.admin.deleteUser).toHaveBeenCalledWith(INVITED_USER_ID)
+  })
+})
+
+describe('deleteUser', () => {
+  beforeEach(() => {
+    vi.resetModules()
+  })
+
+  afterEach(() => {
+    vi.doUnmock('@/lib/supabase-server')
+    vi.doUnmock('@/lib/supabase-service-role')
+    vi.restoreAllMocks()
+  })
+
+  const TARGET_USER_ID = 'target-user-id'
+
+  function setupDeleteMocks(overrides: ServiceClientOverrides = {}, role = 'admin') {
+    return setupMocks(
+      {
+        from: {
+          profiles: {
+            select: () => ({
+              eq: () => ({
+                single: () =>
+                  Promise.resolve({
+                    data: {
+                      id: TARGET_USER_ID,
+                      email: 'target@ascynpro.test',
+                      role: 'instructor',
+                      school_id: RISE_SCHOOL_ID,
+                      approval_status: 'approved',
+                      is_disabled: false,
+                      requires_password_change: false,
+                    },
+                    error: null,
+                  }),
+              }),
+            }),
+            upsert: vi.fn().mockResolvedValue({ data: null, error: null }),
+          },
+          ...(overrides.from || {}),
+        },
+        ...overrides,
+      },
+      role
+    )
+  }
+
+  it('deletes the auth user and logs the action', async () => {
+    const mockServiceClient = setupDeleteMocks()
+    const { deleteUser: deleteUserAction } = await import('./actions')
+
+    const result = await deleteUserAction(TARGET_USER_ID)
+
+    expect(result.success).toBe(true)
+    expect(mockServiceClient.auth.admin.deleteUser).toHaveBeenCalledWith(TARGET_USER_ID)
+  })
+
+  it('prevents admins from deleting themselves', async () => {
+    const mockServiceClient = setupDeleteMocks()
+    const { deleteUser: deleteUserAction } = await import('./actions')
+
+    const result = await deleteUserAction(ADMIN_USER_ID)
+
+    expect(result.success).toBe(false)
+    expect(result.error).toMatch(/cannot delete your own account/i)
+    expect(mockServiceClient.auth.admin.deleteUser).not.toHaveBeenCalled()
+  })
+
+  it('rejects when the admin is not authenticated', async () => {
+    vi.doMock('@/lib/supabase-server', () => ({
+      createClient: vi.fn().mockResolvedValue({
+        auth: {
+          getUser: vi.fn().mockResolvedValue({ data: { user: null }, error: null }),
+        },
+      }),
+    }))
+    vi.doMock('@/lib/supabase-service-role', () => ({
+      createServiceRoleClient: vi.fn(),
+    }))
+
+    const { deleteUser: deleteUserAction } = await import('./actions')
+
+    const result = await deleteUserAction(TARGET_USER_ID)
+
+    expect(result.success).toBe(false)
+    expect(result.error).toMatch(/unauthorized/i)
+  })
+
+  it('prevents school admins from deleting platform admins', async () => {
+    const mockServiceClient = setupDeleteMocks(
+      {
+        from: {
+          profiles: {
+            select: () => ({
+              eq: () => ({
+                single: () =>
+                  Promise.resolve({
+                    data: {
+                      id: TARGET_USER_ID,
+                      email: 'target@ascynpro.test',
+                      role: 'admin',
+                      school_id: RISE_SCHOOL_ID,
+                      approval_status: 'approved',
+                      is_disabled: false,
+                      requires_password_change: false,
+                    },
+                    error: null,
+                  }),
+              }),
+            }),
+            upsert: vi.fn().mockResolvedValue({ data: null, error: null }),
+          },
+        },
+      },
+      'school_admin'
+    )
+    const { deleteUser: deleteUserAction } = await import('./actions')
+
+    const result = await deleteUserAction(TARGET_USER_ID)
+
+    expect(result.success).toBe(false)
+    expect(result.error).toMatch(/cannot delete platform administrators/i)
+    expect(mockServiceClient.auth.admin.deleteUser).not.toHaveBeenCalled()
+  })
+
+  it('prevents school admins from deleting users outside their school', async () => {
+    const mockServiceClient = setupDeleteMocks(
+      {
+        from: {
+          profiles: {
+            select: () => ({
+              eq: () => ({
+                single: () =>
+                  Promise.resolve({
+                    data: {
+                      id: TARGET_USER_ID,
+                      email: 'target@ascynpro.test',
+                      role: 'instructor',
+                      school_id: 'other-school-id',
+                      approval_status: 'approved',
+                      is_disabled: false,
+                      requires_password_change: false,
+                    },
+                    error: null,
+                  }),
+              }),
+            }),
+            upsert: vi.fn().mockResolvedValue({ data: null, error: null }),
+          },
+        },
+      },
+      'school_admin'
+    )
+    const { deleteUser: deleteUserAction } = await import('./actions')
+
+    const result = await deleteUserAction(TARGET_USER_ID)
+
+    expect(result.success).toBe(false)
+    expect(result.error).toMatch(/forbidden/i)
+    expect(mockServiceClient.auth.admin.deleteUser).not.toHaveBeenCalled()
+  })
+
+  it('returns an error when the auth delete fails', async () => {
+    const mockServiceClient = setupDeleteMocks({
+      auth: {
+        admin: {
+          deleteUser: vi.fn().mockResolvedValue({
+            data: null,
+            error: { message: 'Auth delete failed' },
+          }),
+        },
+      },
+    })
+    const { deleteUser: deleteUserAction } = await import('./actions')
+
+    const result = await deleteUserAction(TARGET_USER_ID)
+
+    expect(result.success).toBe(false)
+    expect(result.error).toMatch(/auth delete failed/i)
+    expect(mockServiceClient.auth.admin.deleteUser).toHaveBeenCalledWith(TARGET_USER_ID)
   })
 })

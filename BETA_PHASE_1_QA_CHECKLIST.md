@@ -226,7 +226,8 @@
 | 15.2.1 | Set Password page exists | `/auth/set-password/page.tsx` created with session verification, password + confirmation fields, strong-password validation (≥8 chars, uppercase, lowercase, number) | PASS | Implemented 2026-07-21 |
 | 15.2.2 | No service-role key in browser | Password update uses `supabase.auth.updateUser` from the browser client (`@/lib/supabase`) | PASS | No `service_role` key exposed to client |
 | 15.2.3 | Expired/invalid link handling | Missing or invalid session shows clear error: "Invitation link is invalid or has expired. Please request a new invitation." | PASS | Implemented 2026-07-21 |
-| 15.2.4 | Callback routes typed correctly | `type=recovery` → `/auth/update-password`; `type=invite` → `/auth/set-password` | PASS | `src/app/auth/callback/route.ts` |
+| 15.2.4 | Callback routes typed correctly | `type=recovery` → `/auth/update-password`; `type=invite` → `/auth/set-password` | PASS | `src/app/auth/callback/page.tsx` |
+| 15.2.5 | Auth code error page exists | `/auth/auth-code-error/page.tsx` provides a friendly fallback for invalid/used/expired invitation links | PASS | Added 2026-07-21 |
 
 ### 15.3 Instructor Destination
 
@@ -241,7 +242,7 @@
 | # | Test Step | Expected Result | Status | Notes |
 |---|-----------|-----------------|--------|-------|
 | 15.4.1 | Invitation action tests | `src/app/admin/users/actions.test.ts` covers success, duplicate auth user, trigger-created profile upsert, unauthorized, invalid role, invalid school, invitation failure, and profile-failure cleanup | PASS | 8 tests |
-| 15.4.2 | Callback route tests | `src/app/auth/callback/route.test.ts` covers recovery, invite, instructor/student/apprentice redirects, safe `next` usage, and open-redirect rejection | PASS | 10 tests |
+| 15.4.2 | Callback page tests | `src/app/auth/callback/page.test.tsx` covers recovery, invite, instructor/student/apprentice redirects, safe `next` usage, and open-redirect rejection. The callback is now a client page requiring a user click so email security scanners cannot consume the single-use code before the user does. | PASS | 7 tests |
 | 15.4.3 | Set Password page tests | `src/app/auth/set-password/page.test.tsx` covers session verification, mismatch, weak password, success redirects, and update errors | PASS | 8 tests |
 | 15.4.4 | Full verification suite | `npm test` 185/185 pass, `npx tsc --noEmit` clean, `npm run lint` 0 errors, `npm run build` succeeds | PASS | 2026-07-21 |
 
@@ -256,6 +257,17 @@
 | 14.5 | Invalid/expired invitation | Shows error or redirects to auth-code-error page | PASS | missing session → error; bad code → `/auth/auth-code-error` |
 | 14.6 | Open-redirect protection | Rejects external and protocol-relative `next` params | PASS | `isSafeRedirectPath` in callback route |
 | 14.7 | Two-commit separation proposed | Backend/auth commits separate from admin UI commits | PASS | `AUTH_LIFECYCLE_AUDIT_2026-07-21.md` |
+
+## 16. User Management — Delete User
+
+| # | Test Step | Expected Result | Status | Notes |
+|---|-----------|-----------------|--------|-------|
+| 16.1 | Delete action exists | `deleteUser` server action in `src/app/admin/users/actions.ts` calls `auth.admin.deleteUser` | PASS | Implemented 2026-07-21 |
+| 16.2 | Self-delete prevention | Action rejects deleting the currently authenticated admin | PASS | `deleteUser` test |
+| 16.3 | School-admin scope | School admins cannot delete platform admins or users outside their school | PASS | `deleteUser` tests |
+| 16.4 | Confirmation dialog | UI opens a modal requiring explicit confirmation before deletion | PASS | `UserManagementClient.test.tsx` |
+| 16.5 | Audit logging | Deletion is logged via `logUserManagementAction` with `delete_user` action | PASS | `user_management_audit_logs` (migration exists; production table status to verify) |
+| 16.6 | Profile cleanup | Auth user deletion cascades to profile and operational records | PASS | FK `on delete cascade` in migrations |
 
 ## Build & Typecheck Verification
 

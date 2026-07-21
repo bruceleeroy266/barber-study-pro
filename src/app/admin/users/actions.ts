@@ -659,6 +659,53 @@ export async function assignUserSchool(id: string, schoolId: string | null): Pro
   return { success: true }
 }
 
+export async function deleteUser(id: string): Promise<ActionResult> {
+  const adminResult = await getCurrentAdmin()
+  if (!adminResult.success || !adminResult.data) {
+    return { success: false, error: adminResult.error }
+  }
+
+  const admin = adminResult.data
+
+  // Admins cannot delete their own account through this UI.
+  if (id === admin.userId) {
+    return { success: false, error: 'You cannot delete your own account' }
+  }
+
+  const serviceClient = createServiceRoleClient()
+
+  const userResult = await getManagedUser(serviceClient, admin, id)
+  if (!userResult.success || !userResult.user) {
+    return { success: false, error: userResult.error }
+  }
+
+  // School admins cannot delete platform admins.
+  if (!admin.isPlatformAdmin && userResult.user.role === 'admin') {
+    return { success: false, error: 'School admins cannot delete platform administrators' }
+  }
+
+  const oldValues = {
+    email: userResult.user.email,
+    role: userResult.user.role,
+    school_id: userResult.user.school_id,
+    approval_status: userResult.user.approval_status,
+    is_disabled: userResult.user.is_disabled,
+  }
+
+  // Delete the Auth user. The profiles table has `on delete cascade` to
+  // auth.users, so the profile row and any cascade-linked operational records
+  // are cleaned up automatically.
+  const { error: deleteError } = await serviceClient.auth.admin.deleteUser(id)
+
+  if (deleteError) {
+    return { success: false, error: deleteError.message }
+  }
+
+  await logUserManagementAction(admin, id, userResult.user.email, 'delete_user', oldValues, {}, userResult.user.school_id)
+
+  return { success: true }
+}
+
 export async function requirePasswordChange(id: string): Promise<ActionResult> {
   const adminResult = await getCurrentAdmin()
   if (!adminResult.success || !adminResult.data) {

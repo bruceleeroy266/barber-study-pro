@@ -10,11 +10,13 @@ import {
   assignUserSchool,
   requirePasswordChange,
   resetUserPassword,
+  deleteUser,
   getUsers,
   getSchools,
   UserListItem,
 } from './actions'
 import { AppRole } from '@/types'
+import Modal from '@/components/ui/Modal'
 
 interface CurrentUser {
   id: string
@@ -58,6 +60,8 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
   )
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [showInviteForm, setShowInviteForm] = useState(false)
+  const [deleteCandidate, setDeleteCandidate] = useState<UserListItem | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
   const [isPending, startTransition] = useTransition()
 
   const LIMIT = 50
@@ -109,6 +113,22 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
       await loadUsers(0)
     } else {
       setMessage({ type: 'error', text: result.error || 'Failed to create user' })
+    }
+  }
+
+  async function handleDeleteUser() {
+    if (!deleteCandidate) return
+
+    setIsDeleting(true)
+    const result = await deleteUser(deleteCandidate.id)
+    setIsDeleting(false)
+
+    if (result.success) {
+      setMessage({ type: 'success', text: `User ${deleteCandidate.email} deleted successfully` })
+      setDeleteCandidate(null)
+      await loadUsers(0)
+    } else {
+      setMessage({ type: 'error', text: result.error || 'Failed to delete user' })
     }
   }
 
@@ -527,6 +547,14 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                       >
                         Reset password
                       </button>
+                      <button
+                        onClick={() => setDeleteCandidate(user)}
+                        disabled={user.id === currentUser.id}
+                        title={user.id === currentUser.id ? 'You cannot delete your own account' : 'Delete user'}
+                        className="px-2 py-1 text-xs bg-red-500/10 text-red-400 border border-red-500/30 rounded hover:bg-red-500/20 disabled:opacity-40 disabled:cursor-not-allowed"
+                      >
+                        Delete
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -564,6 +592,48 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={!!deleteCandidate}
+        onClose={() => setDeleteCandidate(null)}
+        title="Delete user"
+        size="sm"
+        footer={
+          <div className="flex justify-end gap-3">
+            <button
+              type="button"
+              onClick={() => setDeleteCandidate(null)}
+              disabled={isDeleting}
+              className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleDeleteUser}
+              disabled={isDeleting}
+              aria-label="Confirm delete"
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+            >
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </button>
+          </div>
+        }
+      >
+        {deleteCandidate && (
+          <div className="space-y-3">
+            <p className="text-gray-300">
+              Are you sure you want to permanently delete{' '}
+              <span className="font-semibold text-white">{deleteCandidate.full_name}</span> (
+              <span className="text-gray-400">{deleteCandidate.email}</span>)?
+            </p>
+            <p className="text-sm text-red-400">
+              This will remove the user from Authentication and delete their profile and associated
+              records. This action cannot be undone.
+            </p>
+          </div>
+        )}
+      </Modal>
     </div>
   )
 }

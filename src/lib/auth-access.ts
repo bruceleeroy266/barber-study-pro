@@ -13,6 +13,25 @@ export interface LoginAccessProfile {
   is_disabled: boolean | null | undefined
 }
 
+/**
+ * Allowed internal redirect prefixes. The `next` search param is only used
+ * when it is a relative path starting with one of these prefixes to prevent
+ * open-redirect attacks.
+ */
+export const ALLOWED_REDIRECT_PREFIXES = ['/dashboard', '/instructor', '/admin', '/school']
+
+/** Returns true if `path` is a safe relative internal redirect path. */
+export function isSafeRedirectPath(path: string | null | undefined): path is string {
+  if (!path) return false
+  // Reject absolute URLs and protocol-relative URLs.
+  if (/^[a-zA-Z][a-zA-Z\d+.-]*:/.test(path) || path.startsWith('//')) {
+    return false
+  }
+  return ALLOWED_REDIRECT_PREFIXES.some(
+    (prefix) => path === prefix || path.startsWith(`${prefix}/`)
+  )
+}
+
 /** Canonical portal routes for each active role. */
 const ROLE_PORTAL: Record<string, string> = {
   admin: '/admin',

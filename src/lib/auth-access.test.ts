@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getRoleBasedRedirect, validateLoginAccess } from './auth-access'
+import { getRoleBasedRedirect, validateLoginAccess, isSafeRedirectPath } from './auth-access'
 
 describe('getRoleBasedRedirect', () => {
   it('routes student to /dashboard', () => {
@@ -32,6 +32,33 @@ describe('getRoleBasedRedirect', () => {
     expect(getRoleBasedRedirect('superuser')).toBe('/login?error=invalid_role')
     expect(getRoleBasedRedirect('Admin')).toBe('/login?error=invalid_role')
     expect(getRoleBasedRedirect('STUDENT')).toBe('/login?error=invalid_role')
+  })
+})
+
+describe('isSafeRedirectPath', () => {
+  it('allows internal dashboard paths', () => {
+    expect(isSafeRedirectPath('/dashboard')).toBe(true)
+    expect(isSafeRedirectPath('/dashboard/chapters/1')).toBe(true)
+  })
+
+  it('allows internal instructor paths', () => {
+    expect(isSafeRedirectPath('/instructor')).toBe(true)
+    expect(isSafeRedirectPath('/instructor/student/123')).toBe(true)
+  })
+
+  it('rejects external URLs', () => {
+    expect(isSafeRedirectPath('https://evil.com')).toBe(false)
+    expect(isSafeRedirectPath('http://localhost:3000/login')).toBe(false)
+  })
+
+  it('rejects protocol-relative URLs', () => {
+    expect(isSafeRedirectPath('//evil.com')).toBe(false)
+  })
+
+  it('rejects empty or null paths', () => {
+    expect(isSafeRedirectPath('')).toBe(false)
+    expect(isSafeRedirectPath(null)).toBe(false)
+    expect(isSafeRedirectPath(undefined)).toBe(false)
   })
 })
 

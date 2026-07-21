@@ -102,6 +102,46 @@ This separation keeps the auth/security logic reviewable independently from the 
 
 ---
 
+## Production Callback Blocker — 2026-07-21
+
+### Observed failure
+- Controlled invitation to `arkmariah@gmail.com` was sent and delivered.
+- Clicking **Accept invitation** reached `https://ascynpro.com` but showed **404 — This page could not be found**.
+- Sanitized Vercel logs showed the request path sequence:
+  - `GET /auth/callback` → `307`
+  - `GET /auth/auth-code-error` → `404`
+
+### Root cause
+The server-side `/auth/callback` route immediately called `supabase.auth.exchangeCodeForSession(code)` on every GET. Email security scanners and client pre-fetchers follow the confirmation link and consume the single-use auth code before the actual user clicks. When the user then clicks the same link, the code is already used/expired, so the route redirected to `/auth/auth-code-error` — a route that did not exist, producing the observed 404.
+
+Evidence from the controlled test user (`arkmariah@gmail.com`):
+- `email_confirmed_at` and `last_sign_in_at` were both set within the same second as the first `/auth/callback` hit, confirming a session was created by an automated fetch rather than the user’s browser.
+- Subsequent `/auth/callback` hits all redirected to `/auth/auth-code-error`.
+
+### Fix implemented
+- Replaced the server-side `src/app/auth/callback/route.ts` with a client page `src/app/auth/callback/page.tsx`.
+- The page renders a **“Complete your account setup”** button and only calls `supabase.auth.exchangeCodeForSession(code)` after the user clicks it. Pre-fetchers that load the page cannot consume the code.
+- Preserved flow logic: `type=recovery` → `/auth/update-password`; `type=invite` → `/auth/set-password`; other callbacks route by profile role via `getRoleBasedRedirect`.
+- Preserved open-redirect protection by moving `isSafeRedirectPath` to `src/lib/auth-access.ts` and validating the `next` param before use.
+- Created `src/app/auth/auth-code-error/page.tsx` as a safe fallback for invalid, used, or expired links.
+- Added/updated tests in `src/app/auth/callback/page.test.tsx` and `src/lib/auth-access.test.ts`.
+
+### Files changed
+- Deleted: `src/app/auth/callback/route.ts`
+- Deleted: `src/app/auth/callback/route.test.ts`
+- Added: `src/app/auth/callback/page.tsx`
+- Added: `src/app/auth/callback/page.test.tsx`
+- Added: `src/app/auth/auth-code-error/page.tsx`
+- Modified: `src/lib/auth-access.ts` (exported `isSafeRedirectPath` as type predicate)
+- Modified: `src/lib/auth-access.test.ts` (added `isSafeRedirectPath` tests)
+- Modified: `BETA_PHASE_1_QA_CHECKLIST.md`
+
+### Verification after fix
+- `npm test`: 24 files, 187 tests passed
+- `npx tsc --noEmit`: no errors
+- `npm run lint`: 0 errors (59 pre-existing warnings)
+- `npm run build`: exit 0; `/auth/callback` and `/auth/auth-code-error` both appear in the route manifest
+
 ## Notes / Blockers
 
 - No production data was modified.
