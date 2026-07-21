@@ -30,7 +30,7 @@ export function calculateStudentMetrics(
   const sortedDesc = [...scoredChapters].sort((a, b) => b.score - a.score)
 
   const weakAreas = sortedAsc.slice(0, 5)
-  const strongAreas = sortedDesc.filter((a) => a.score >= 75).slice(0, 5)
+  const strongAreas = sortedDesc.filter((a) => a.score >= 80).slice(0, 5)
 
   return {
     totalQuestionsAnswered,

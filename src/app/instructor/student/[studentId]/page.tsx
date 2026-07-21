@@ -89,7 +89,7 @@ interface ChapterScore {
 
 function getPassingScoreByQuizId(quizId: string): number {
   const chapterId = quizId.replace('quiz-', 'ch-')
-  return getLocalQuiz(chapterId)?.passing_score ?? 75
+  return getLocalQuiz(chapterId)?.passing_score ?? 80
 }
 
 function computeChapterScores(
@@ -106,7 +106,7 @@ function computeChapterScores(
       chapterTitle: chapter.title,
       score,
       attempted: score > 0,
-      passingScore: quiz?.passing_score ?? 75,
+      passingScore: quiz?.passing_score ?? 80,
     }
   })
 }
@@ -571,7 +571,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
             <div className={`text-2xl font-bold ${
-              overallProgress >= 75 ? 'text-green-400' :
+              overallProgress >= 80 ? 'text-green-400' :
               overallProgress >= 50 ? 'text-yellow-400' : 'text-red-400'
             }`}>
               {overallProgress}%
@@ -595,7 +595,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           </div>
 
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-            <div className={`text-2xl font-bold ${avgQuizScore >= 75 ? 'text-green-400' : avgQuizScore >= 60 ? 'text-yellow-400' : avgQuizScore > 0 ? 'text-red-400' : 'text-gray-500'}`}>
+            <div className={`text-2xl font-bold ${avgQuizScore >= 80 ? 'text-green-400' : avgQuizScore >= 60 ? 'text-yellow-400' : avgQuizScore > 0 ? 'text-red-400' : 'text-gray-500'}`}>
               {avgQuizScore > 0 ? `${avgQuizScore}%` : '—'}
             </div>
             <div className="text-xs text-gray-400 mt-1">Quiz Average</div>
@@ -658,7 +658,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-lg font-semibold text-white">Overall Course Progress</h2>
             <span className={`text-2xl font-bold ${
-              overallProgress >= 75 ? 'text-green-400' :
+              overallProgress >= 80 ? 'text-green-400' :
               overallProgress >= 50 ? 'text-yellow-400' : 'text-red-400'
             }`}>
               {overallProgress}%
@@ -667,7 +667,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="bg-gray-800 rounded-full h-3">
             <div
               className={`h-3 rounded-full transition-all ${
-                overallProgress >= 75 ? 'bg-green-500' :
+                overallProgress >= 80 ? 'bg-green-500' :
                 overallProgress >= 50 ? 'bg-yellow-500' : 'bg-red-500'
               }`}
               style={{ width: `${overallProgress}%` }}
@@ -693,7 +693,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                 const flashDone = chapterProgress?.flashcards_completed
                 const quizDone = chapterProgress?.quiz_completed
                 const bestScore = chapterProgress?.best_quiz_score
-                const chapterPassingScore = getLocalQuiz(chapter.id)?.passing_score ?? 75
+                const chapterPassingScore = getLocalQuiz(chapter.id)?.passing_score ?? 80
 
                 return (
                   <div key={chapter.id} className="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">

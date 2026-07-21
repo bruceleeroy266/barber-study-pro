@@ -204,7 +204,7 @@ const sampleStudents: Student[] = [
       { chapter: 'Ch. 11 — Haircolor', score: 48, date: 'Jul 2' },
       { chapter: 'Ch. 10 — Hair & Scalp', score: 65, date: 'Jun 29' },
     ],
-    recommendedAction: 'Continue retest loop on chemical services until score reaches 75%.',
+    recommendedAction: 'Continue retest loop on chemical services until score reaches 80%.',
     riskFactors: ['Low readiness score (55%)', 'Repeated quiz failures in Chemical Services', 'Weak topic mastery in Chemical Services'],
     notes: [],
   },
@@ -318,7 +318,7 @@ function ProgressBar({ value, color = '#D4AF37' }: { value: number; color?: stri
 }
 
 function ScoreRing({ score }: { score: number }) {
-  const color = score >= 75 ? '#4ade80' : score >= 60 ? '#D4AF37' : '#f87171'
+  const color = score >= 80 ? '#4ade80' : score >= 60 ? '#D4AF37' : '#f87171'
   return (
     <div className="relative w-20 h-20 flex items-center justify-center">
       <svg className="w-full h-full -rotate-90">
@@ -697,7 +697,7 @@ export default function InstructorDemoPage() {
                     <div className="grid grid-cols-2 gap-3 mb-4">
                       <div className="bg-[#111111] border border-white/10 rounded-lg p-3">
                         <div className="text-gray-500 text-xs mb-1">Readiness</div>
-                        <div className={`text-lg font-bold ${student.readiness >= 75 ? 'text-green-400' : student.readiness >= 60 ? 'text-[#D4AF37]' : 'text-red-400'}`}>
+                        <div className={`text-lg font-bold ${student.readiness >= 80 ? 'text-green-400' : student.readiness >= 60 ? 'text-[#D4AF37]' : 'text-red-400'}`}>
                           {student.readiness}%
                         </div>
                       </div>
@@ -856,7 +856,7 @@ export default function InstructorDemoPage() {
                         <span className="text-white font-semibold text-sm w-8">{student.readiness}%</span>
                         <ProgressBar
                           value={student.readiness}
-                          color={student.readiness >= 75 ? '#4ade80' : student.readiness >= 60 ? '#D4AF37' : '#f87171'}
+                          color={student.readiness >= 80 ? '#4ade80' : student.readiness >= 60 ? '#D4AF37' : '#f87171'}
                         />
                       </div>
                     </td>
@@ -1017,13 +1017,13 @@ export default function InstructorDemoPage() {
                 <div className="bg-[#0a0a0a] border border-white/10 rounded-xl p-5">
                   <div className="text-gray-500 text-sm mb-3">Confidence Level</div>
                   <div className="text-3xl font-bold text-white mb-2">{lastConfidence(selectedStudent)}%</div>
-                  <ProgressBar value={lastConfidence(selectedStudent)} color={lastConfidence(selectedStudent) >= 75 ? '#4ade80' : lastConfidence(selectedStudent) >= 60 ? '#D4AF37' : '#f87171'} />
+                  <ProgressBar value={lastConfidence(selectedStudent)} color={lastConfidence(selectedStudent) >= 80 ? '#4ade80' : lastConfidence(selectedStudent) >= 60 ? '#D4AF37' : '#f87171'} />
                 </div>
 
                 <div className="bg-[#0a0a0a] border border-white/10 rounded-xl p-5">
                   <div className="text-gray-500 text-sm mb-3">Recent Quiz Performance</div>
                   <div className="text-3xl font-bold text-white mb-2">{selectedStudent.avgScore}%</div>
-                  <ProgressBar value={selectedStudent.avgScore} color={selectedStudent.avgScore >= 75 ? '#4ade80' : selectedStudent.avgScore >= 60 ? '#D4AF37' : '#f87171'} />
+                  <ProgressBar value={selectedStudent.avgScore} color={selectedStudent.avgScore >= 80 ? '#4ade80' : selectedStudent.avgScore >= 60 ? '#D4AF37' : '#f87171'} />
                   <div className="text-xs text-gray-500 mt-2">{selectedStudent.quizzesTaken} quizzes taken</div>
                 </div>
 
@@ -1066,11 +1066,11 @@ export default function InstructorDemoPage() {
                 <div>
                   <h3 className="text-lg font-bold text-white mb-4">Strong Topics <span className="text-sm font-normal text-gray-500">(≥75%)</span></h3>
                   <div className="space-y-3">
-                    {selectedStudent.topicMastery.filter((t) => t.score >= 75).length === 0 ? (
+                    {selectedStudent.topicMastery.filter((t) => t.score >= 80).length === 0 ? (
                       <p className="text-gray-500 text-sm">No topics above 75% yet.</p>
                     ) : (
                       selectedStudent.topicMastery
-                        .filter((t) => t.score >= 75)
+                        .filter((t) => t.score >= 80)
                         .map((topic) => (
                           <div key={topic.topic} className="bg-[#0a0a0a] border border-white/10 rounded-lg p-3">
                             <div className="flex justify-between text-sm mb-2">
@@ -1117,7 +1117,7 @@ export default function InstructorDemoPage() {
                       </div>
                       <ProgressBar
                         value={topic.score}
-                        color={topic.score >= 75 ? '#4ade80' : topic.score >= 60 ? '#D4AF37' : '#f87171'}
+                        color={topic.score >= 80 ? '#4ade80' : topic.score >= 60 ? '#D4AF37' : '#f87171'}
                       />
                     </div>
                   ))}
@@ -1142,7 +1142,7 @@ export default function InstructorDemoPage() {
                           <td className="px-4 py-3 text-white text-sm">{quiz.chapter}</td>
                           <td className="px-4 py-3 text-gray-500 text-sm">{quiz.date}</td>
                           <td className="px-4 py-3">
-                            <span className={`text-sm font-medium ${quiz.score >= 75 ? 'text-green-400' : quiz.score >= 60 ? 'text-[#D4AF37]' : 'text-red-400'}`}>
+                            <span className={`text-sm font-medium ${quiz.score >= 80 ? 'text-green-400' : quiz.score >= 60 ? 'text-[#D4AF37]' : 'text-red-400'}`}>
                               {quiz.score}%
                             </span>
                           </td>

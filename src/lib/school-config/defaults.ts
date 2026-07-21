@@ -50,7 +50,7 @@ export function createDefaultSchoolConfiguration(school: School): SchoolConfigur
   }
 
   const defaultGradebookConfig: GradebookConfig = {
-    passingPercentage: 75,
+    passingPercentage: 80,
     gradingScale: 'percentage',
     categories: [],
   }

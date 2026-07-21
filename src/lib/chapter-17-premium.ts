@@ -932,9 +932,9 @@ export const chapter17PremiumContent: ChapterContent = {
     },
   ],
   mastery: {
-    passingScore: 75,
+    passingScore: 80,
     confidenceCheck: true,
-    remediationRequiredBelow: 75,
+    remediationRequiredBelow: 80,
   },
   imagePlaceholders: [
     {

@@ -27,7 +27,7 @@ function nextIncompleteChapter(
   weakAreas: AreaPerformance[]
 ): { chapterNumber: number; title: string } | null {
   for (const area of weakAreas) {
-    if (area.chapterNumber && area.score < 75) {
+    if (area.chapterNumber && area.score < 80) {
       return { chapterNumber: area.chapterNumber, title: area.name }
     }
   }

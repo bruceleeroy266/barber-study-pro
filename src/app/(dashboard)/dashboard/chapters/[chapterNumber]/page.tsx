@@ -36,6 +36,12 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
     notFound()
   }
 
+  // Determine the next active chapter for post-quiz navigation.
+  const nextChapter = localChapters
+    .filter((ch) => ch.is_active && ch.chapter_number > num)
+    .sort((a, b) => a.chapter_number - b.chapter_number)[0]
+  const nextChapterNumber = nextChapter?.chapter_number ?? null
+
   // Get flashcards from local data
   const flashcards = getLocalFlashcards(chapter.id)
 
@@ -145,6 +151,8 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
             quiz={quiz}
             questions={questions}
             chapterId={chapter.id}
+            chapterNumber={num}
+            nextChapterNumber={nextChapterNumber}
             userId={user?.id}
             bestAttempt={bestAttempt}
           />

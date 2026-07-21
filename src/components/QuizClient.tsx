@@ -1,17 +1,21 @@
 'use client'
 
 import { useState, useMemo, useCallback, useEffect } from 'react'
+import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { calculateChapterProgress } from '@/lib/progress'
 import { isSupabaseConfigured } from '@/lib/demo-helpers'
 import { saveMissedQuestions } from '@/lib/missed-questions'
 import { getCategoryForChapter } from '@/lib/analytics'
+import { calculateQuizScore } from '@/lib/quiz-scoring'
 import { Quiz, QuizQuestion, QuizAttempt } from '@/types'
 
 interface QuizClientProps {
   quiz: Quiz
   questions: QuizQuestion[]
   chapterId: string
+  chapterNumber?: number
+  nextChapterNumber?: number | null
   userId: string | undefined
   bestAttempt: QuizAttempt | null
 }
@@ -52,7 +56,15 @@ function shuffleQuestionAnswers(q: QuizQuestion): ShuffledQuestion {
   return { original: q, options, correctKey }
 }
 
-export default function QuizClient({ quiz, questions, chapterId, userId, bestAttempt }: QuizClientProps) {
+export default function QuizClient({
+  quiz,
+  questions,
+  chapterId,
+  chapterNumber,
+  nextChapterNumber,
+  userId,
+  bestAttempt,
+}: QuizClientProps) {
   const [started, setStarted] = useState(false)
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
@@ -62,8 +74,8 @@ export default function QuizClient({ quiz, questions, chapterId, userId, bestAtt
   const [score, setScore] = useState(0)
   const [saving, setSaving] = useState(false)
 
-  // Use quiz-specific passing score if configured; otherwise default to 75%
-  const passingScore = quiz.passing_score ?? 75
+  // Book + ASCYN learning model: standard passing score is 80%.
+  const passingScore = quiz.passing_score ?? 80
 
   // Randomize questions and answers on each quiz start
   const shuffledQuestions = useMemo(() => {
@@ -98,16 +110,20 @@ export default function QuizClient({ quiz, questions, chapterId, userId, bestAtt
     }
 
     setSaving(true)
-    // Calculate final score from answers + current selected answer
-    // Do NOT use score state - it was already incremented during gameplay
-    const currentQuestionCorrect = selectedAnswer && question && selectedAnswer === question.correctKey ? 1 : 0
-    const answeredCorrectly = Object.entries(answers).reduce((acc, [qId, answer]) => {
-      const sq = shuffledQuestions.find((sq) => sq.original.id === qId)
-      return acc + (sq && sq.correctKey === answer ? 1 : 0)
-    }, 0)
-    const finalScore = answeredCorrectly + currentQuestionCorrect
-
-    const percentage = Math.round((finalScore / shuffledQuestions.length) * 100)
+    // Calculate final score using the dedicated scoring helper. The current
+    // question's answer is already in `answers` when the user clicked Submit, but
+    // the helper merges `selectedAnswer` as a safeguard against any state timing
+    // edge case and ensures each question is counted exactly once.
+    // Do NOT use score state - it was already incremented during gameplay.
+    const scoringQuestions = shuffledQuestions.map((sq) => ({
+      id: sq.original.id,
+      correctKey: sq.correctKey,
+    }))
+    const allAnswers = { ...answers, [question!.original.id]: selectedAnswer }
+    const {
+      score: finalScore,
+      percentage,
+    } = calculateQuizScore(scoringQuestions, answers, question!.original.id, selectedAnswer)
 
     try {
       await supabase.from('quiz_attempts').insert({
@@ -166,7 +182,6 @@ export default function QuizClient({ quiz, questions, chapterId, userId, bestAtt
         )
 
       // Persist missed questions to Supabase so they survive logout/login.
-      const allAnswers = { ...answers, [question!.original.id]: selectedAnswer }
       const chapterNumber = parseInt(chapterId.replace(/^ch-/, ''), 10) || 0
       const category = chapterNumber ? getCategoryForChapter(chapterNumber) : 'General'
       const missed = shuffledQuestions
@@ -263,6 +278,14 @@ export default function QuizClient({ quiz, questions, chapterId, userId, bestAtt
           </p>
         </div>
 
+        {/* Book + ASCYN textbook notice */}
+        <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg text-left">
+          <p className="text-blue-300 text-sm leading-relaxed">
+            Some questions may require information from your assigned textbook.
+            ASCYN PRO is designed to be used alongside your textbook and classroom instruction.
+          </p>
+        </div>
+
         <button
           onClick={() => setStarted(true)}
           className="px-8 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] transition-colors shadow-lg shadow-[#D4AF37]/20"
@@ -305,10 +328,12 @@ export default function QuizClient({ quiz, questions, chapterId, userId, bestAtt
         </p>
 
         {passed ? (
-          <p className="text-green-400 mb-6 font-medium">Great job! You demonstrated solid knowledge.</p>
+          <p className="text-green-400 mb-6 font-medium">
+            Quiz passed. Review your missed questions, flashcards, and textbook anytime, or retake the quiz to improve your score.
+          </p>
         ) : (
           <p className="text-yellow-400 mb-6 font-medium">
-            Passing score is {passingScore}%. Review the flashcards and try again.
+            Review the flashcards and the corresponding textbook chapter, then retake the quiz.
           </p>
         )}
 
@@ -349,14 +374,54 @@ export default function QuizClient({ quiz, questions, chapterId, userId, bestAtt
           </div>
         )}
 
-        <div className="flex gap-4 justify-center mt-8">
-          <button
-            onClick={restartQuiz}
-            className="px-6 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors border border-gray-600"
-          >
-            Retake Quiz
-          </button>
+        {/* Result actions */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+          {passed ? (
+            <>
+              {nextChapterNumber ? (
+                <Link
+                  href={`/dashboard/chapters/${nextChapterNumber}`}
+                  className="px-6 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] transition-colors text-center"
+                >
+                  Continue to Chapter {nextChapterNumber}
+                </Link>
+              ) : (
+                <Link
+                  href="/dashboard"
+                  className="px-6 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] transition-colors text-center"
+                >
+                  Return to Dashboard
+                </Link>
+              )}
+              <button
+                onClick={restartQuiz}
+                className="px-6 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors border border-gray-600"
+              >
+                Retake Quiz
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={restartQuiz}
+              className="px-6 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] transition-colors"
+            >
+              Review and Retake Quiz
+            </button>
+          )}
         </div>
+
+        {/* Missed questions review link */}
+        {missedQuestions.length > 0 && (
+          <div className="mt-6">
+            <Link
+              href="/dashboard/missed-questions"
+              className="inline-flex items-center gap-2 text-[#D4AF37] hover:text-[#F4E4A6] transition-colors"
+            >
+              Review Missed Questions
+              <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+        )}
       </div>
     )
   }

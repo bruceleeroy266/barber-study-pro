@@ -53,21 +53,21 @@ function lastConfidence(student: Student): number {
 }
 
 function readinessColor(score: number): string {
-  if (score >= 75) return '#22c55e'
+  if (score >= 80) return '#22c55e'
   if (score >= 60) return GOLD
   return '#ef4444'
 }
 
 function readinessLabel(score: number): string {
   if (score >= 85) return 'Ready'
-  if (score >= 75) return 'On Track'
+  if (score >= 80) return 'On Track'
   if (score >= 60) return 'Needs Improvement'
   return 'At Risk'
 }
 
 function topicStatus(score: number): { label: string; color: string } {
   if (score >= 85) return { label: 'Excellent', color: '#22c55e' }
-  if (score >= 75) return { label: 'Good', color: '#16a34a' }
+  if (score >= 80) return { label: 'Good', color: '#16a34a' }
   if (score >= 60) return { label: 'Needs Improvement', color: GOLD }
   return { label: 'Critical', color: '#ef4444' }
 }
@@ -271,14 +271,14 @@ export function generateStudentReportHtml(student: Student): string {
   const scoreLabel = readinessLabel(student.readiness)
 
   const strengths = student.topicMastery
-    .filter((t) => t.score >= 75)
+    .filter((t) => t.score >= 80)
     .sort((a, b) => b.score - a.score)
   const concerns = student.topicMastery
     .filter((t) => t.score < 70)
     .sort((a, b) => a.score - b.score)
 
   const summaryText =
-    student.readiness >= 75
+    student.readiness >= 80
       ? `This student is progressing well but should strengthen <strong>${escapeHtml(student.weakestTopic)}</strong> before attempting the licensing examination.`
       : student.readiness >= 60
         ? `This student is approaching readiness but needs targeted support in <strong>${escapeHtml(student.weakestTopic)}</strong> to pass the licensing examination.`
@@ -465,7 +465,7 @@ export function generateClassReportHtml(
   const sortedTopics = [...heatmapTopics].sort((a, b) => a.classAvg - b.classAvg)
   const weakestTopics = sortedTopics.slice(0, 3)
   const strongestTopics = [...heatmapTopics]
-    .filter((t) => t.classAvg >= 75)
+    .filter((t) => t.classAvg >= 80)
     .sort((a, b) => b.classAvg - a.classAvg)
   const mostMissed = weakestTopics[0]
 

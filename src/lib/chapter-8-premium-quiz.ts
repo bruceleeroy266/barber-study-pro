@@ -422,9 +422,9 @@ export const chapter8QuizMeta = {
   id: 'quiz-8',
   chapter_id: 'ch-8',
   title: 'Basics of Electricity — Premium Quiz',
-  description: '30 board-exam style questions derived from Chapter 8 flashcard curriculum. Passing score: 75%.',
+  description: '30 board-exam style questions derived from Chapter 8 flashcard curriculum. Passing score: 80%.',
   question_count: 30,
-  passing_score: 75,
+  passing_score: 80,
   time_limit_minutes: 45,
 }
 

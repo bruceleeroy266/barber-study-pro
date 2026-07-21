@@ -421,9 +421,9 @@ export const chapter1QuizMeta = {
   id: 'quiz-1',
   chapter_id: 'ch-1',
   title: 'History of Barbering — Premium Quiz',
-  description: '30 board-exam style questions derived from Chapter 1 flashcard curriculum. Passing score: 75%.',
+  description: '30 board-exam style questions derived from Chapter 1 flashcard curriculum. Passing score: 80%.',
   question_count: 30,
-  passing_score: 75,
+  passing_score: 80,
   time_limit_minutes: 45,
 }
 

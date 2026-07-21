@@ -380,7 +380,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
   if (weakestChapters.length > 0 && weakestChapters[0].avgScore < 70) {
     recommendedActions.push(`Reteach Chapter ${weakestChapters[0].chapterNumber} — ${weakestChapters[0].chapterTitle} (class avg ${weakestChapters[0].avgScore}%)`)
   }
-  if (classAvgQuiz > 0 && classAvgQuiz < 75) {
+  if (classAvgQuiz > 0 && classAvgQuiz < 80) {
     recommendedActions.push('Assign a review quiz to reinforce concepts across the class.')
   }
   const inactiveStudents = studentStats.filter((s) => s.daysSinceActive !== null && s.daysSinceActive > 14)
@@ -418,7 +418,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
 
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
             <div className={`text-2xl font-bold ${
-              classAvgProgress >= 75 ? 'text-green-400' :
+              classAvgProgress >= 80 ? 'text-green-400' :
               classAvgProgress >= 50 ? 'text-yellow-400' : 'text-red-400'
             }`}>
               {classAvgProgress}%
@@ -428,7 +428,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
 
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
             <div className={`text-2xl font-bold ${
-              classAvgQuiz >= 75 ? 'text-green-400' :
+              classAvgQuiz >= 80 ? 'text-green-400' :
               classAvgQuiz >= 60 ? 'text-yellow-400' :
               classAvgQuiz > 0 ? 'text-red-400' : 'text-gray-500'
             }`}>
@@ -1063,7 +1063,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
                       <p className="text-xs text-gray-500">{chapter.studentCount} student{chapter.studentCount === 1 ? '' : 's'} attempted</p>
                     </div>
                     <div className={`text-2xl font-bold ${
-                      chapter.avgScore >= 75 ? 'text-green-400' :
+                      chapter.avgScore >= 80 ? 'text-green-400' :
                       chapter.avgScore >= 60 ? 'text-yellow-400' : 'text-red-400'
                     }`}>
                       {chapter.avgScore}%
@@ -1149,7 +1149,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
                           <div className="flex-1 bg-gray-800 rounded-full h-2 w-24">
                             <div
                               className={`h-2 rounded-full ${
-                                student.overallProgress >= 75 ? 'bg-green-500' :
+                                student.overallProgress >= 80 ? 'bg-green-500' :
                                 student.overallProgress >= 50 ? 'bg-yellow-500' : 'bg-red-500'
                               }`}
                               style={{ width: `${student.overallProgress}%` }}
@@ -1163,7 +1163,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
                       </td>
                       <td className="p-4">
                         <span className={`font-semibold ${
-                          student.avgQuizScore >= 75 ? 'text-green-400' :
+                          student.avgQuizScore >= 80 ? 'text-green-400' :
                           student.avgQuizScore >= 60 ? 'text-yellow-400' :
                           student.avgQuizScore > 0 ? 'text-red-400' : 'text-gray-500'
                         }`}>

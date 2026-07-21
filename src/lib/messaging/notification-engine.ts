@@ -95,7 +95,7 @@ export function generateNotificationsFromReadiness(
         '/dashboard/progress'
       )
     )
-  } else if (readiness.score < 75) {
+  } else if (readiness.score < 80) {
     notifications.push(
       buildNotification(
         userId,
