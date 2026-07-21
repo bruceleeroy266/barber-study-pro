@@ -4,6 +4,7 @@ import { isAdmin } from '@/lib/auth-helpers'
 import { hasPermission } from '@/lib/security/permissions'
 import { getMaintenanceMode } from '@/lib/maintenance/maintenance-mode'
 import MaintenanceModePanel from '@/components/admin/maintenance/MaintenanceModePanel'
+import BackButton from '@/components/ui/BackButton'
 
 export default async function MaintenancePage() {
   const supabase = await createClient()
@@ -31,6 +32,7 @@ export default async function MaintenancePage() {
 
   return (
     <div className="min-h-screen bg-gray-950 p-6 lg:p-8">
+        <BackButton fallbackHref="/admin" label="Back to admin dashboard" />
       <div className="max-w-4xl mx-auto">
         <MaintenanceModePanel initialState={state} />
       </div>

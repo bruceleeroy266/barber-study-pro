@@ -12,6 +12,7 @@ import { mapAssessmentsFromDb, mapAssessmentRubricsFromDb } from '@/lib/mappers/
 import AssessmentList from '@/components/assessments/AssessmentList'
 import AssessmentForm from '@/components/assessments/AssessmentForm'
 import { Loader2, Plus } from 'lucide-react'
+import BackButton from '@/components/ui/BackButton'
 
 export default function InstructorAssessmentsPage() {
   const router = useRouter()
@@ -118,6 +119,7 @@ export default function InstructorAssessmentsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <BackButton fallbackHref="/instructor" label="Back to instructor dashboard" />
         <Loader2 className="w-8 h-8 text-[#D4AF37] animate-spin" />
       </div>
     )

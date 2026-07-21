@@ -12,9 +12,10 @@ import Link from 'next/link'
 
 interface MissedQuestionBankProps {
   questions: MissedQuestion[]
+  instructorView?: boolean
 }
 
-export default function MissedQuestionBank({ questions }: MissedQuestionBankProps) {
+export default function MissedQuestionBank({ questions, instructorView = false }: MissedQuestionBankProps) {
   const [chapterFilter, setChapterFilter] = useState<number | 'all'>('all')
   const [categoryFilter, setCategoryFilter] = useState<string | 'all'>('all')
   const [search, setSearch] = useState('')
@@ -84,13 +85,23 @@ export default function MissedQuestionBank({ questions }: MissedQuestionBankProp
             Showing {filtered.length} of {questions.length} missed question
             {questions.length === 1 ? '' : 's'}
           </p>
-          <Link
-            href="/dashboard/missed-questions/retest"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] transition-colors"
-          >
-            <RotateCcw className="w-4 h-4" />
-            Retest Weak Areas
-          </Link>
+          {instructorView ? (
+            <span
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#D4AF37]/30 text-[#D4AF37] font-semibold rounded-lg cursor-not-allowed"
+              title="Only the student can retest weak areas"
+            >
+              <RotateCcw className="w-4 h-4" />
+              Retest Weak Areas (student preview)
+            </span>
+          ) : (
+            <Link
+              href="/dashboard/missed-questions/retest"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] transition-colors"
+            >
+              <RotateCcw className="w-4 h-4" />
+              Retest Weak Areas
+            </Link>
+          )}
         </div>
       </div>
 
@@ -153,12 +164,18 @@ export default function MissedQuestionBank({ questions }: MissedQuestionBankProp
                     </div>
                   )}
                   <div className="pt-2">
-                    <Link
-                      href={`/dashboard/chapters/${q.chapterNumber}`}
-                      className="inline-flex items-center gap-2 text-sm text-[#D4AF37] hover:text-[#F4E4A6] font-medium"
-                    >
-                      Study Chapter {q.chapterNumber}
-                    </Link>
+                    {instructorView ? (
+                      <span className="inline-flex items-center gap-2 text-sm text-gray-500 font-medium">
+                        Study Chapter {q.chapterNumber} (student preview)
+                      </span>
+                    ) : (
+                      <Link
+                        href={`/dashboard/chapters/${q.chapterNumber}`}
+                        className="inline-flex items-center gap-2 text-sm text-[#D4AF37] hover:text-[#F4E4A6] font-medium"
+                      >
+                        Study Chapter {q.chapterNumber}
+                      </Link>
+                    )}
                   </div>
                 </div>
               )}

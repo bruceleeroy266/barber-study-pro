@@ -7,6 +7,7 @@ import { demoAssessmentRubrics } from '@/lib/demo-data'
 import RubricBuilder from '@/components/assessments/RubricBuilder'
 import RubricEvaluator from '@/components/assessments/RubricEvaluator'
 import { mapAssessmentRubricsFromDb } from '@/lib/mappers/operational-data-mappers'
+import BackButton from '@/components/ui/BackButton'
 
 export default async function InstructorRubricsPage() {
   const supabase = await createClient()
@@ -36,6 +37,7 @@ export default async function InstructorRubricsPage() {
 
   return (
     <div className="min-h-screen bg-gray-950 p-6 md:p-8">
+        <BackButton fallbackHref="/instructor" label="Back to instructor dashboard" />
       <div className="max-w-7xl mx-auto space-y-8">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Assessment Rubrics</h1>

@@ -6,6 +6,7 @@ import { demoSchoolConfiguration } from '@/lib/demo-data'
 import { createDefaultSchoolConfiguration } from '@/lib/school-config/defaults'
 import { SchoolConfiguration } from '@/types'
 import SchoolConfigurationClient from '@/components/admin/school-config/SchoolConfigurationClient'
+import BackButton from '@/components/ui/BackButton'
 
 export default async function SchoolConfigurationPage() {
   const supabase = await createClient()
@@ -32,7 +33,14 @@ export default async function SchoolConfigurationPage() {
   const isDemo = isDemoFallbackEnabled()
 
   if (isDemo) {
-    return <SchoolConfigurationClient initialConfig={demoSchoolConfiguration} isDemo={true} />
+    return (
+      <div className="min-h-screen bg-gray-950 p-6 lg:p-8">
+        <BackButton fallbackHref="/admin" label="Back to admin dashboard" />
+        <div className="mt-6">
+          <SchoolConfigurationClient initialConfig={demoSchoolConfiguration} isDemo={true} />
+        </div>
+      </div>
+    )
   }
 
   // Production path: load the actual school and its settings.
@@ -62,7 +70,14 @@ export default async function SchoolConfigurationPage() {
     return <SchoolConfigurationClient initialConfig={demoSchoolConfiguration} isDemo={true} />
   }
 
-  return <SchoolConfigurationClient initialConfig={configuration} isDemo={false} />
+  return (
+    <div className="min-h-screen bg-gray-950 p-6 lg:p-8">
+      <BackButton fallbackHref="/admin" label="Back to admin dashboard" />
+      <div className="mt-6">
+        <SchoolConfigurationClient initialConfig={configuration} isDemo={false} />
+      </div>
+    </div>
+  )
 }
 
 function isMissingTableError(error: { message?: string; code?: string }): boolean {

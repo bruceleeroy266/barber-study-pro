@@ -9,6 +9,7 @@ import {
 import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
 import InstructorMessageDashboard from '@/components/messaging/InstructorMessageDashboard'
 import ProductionMessagingPlaceholder from '@/components/messaging/ProductionMessagingPlaceholder'
+import BackButton from '@/components/ui/BackButton'
 
 export default async function InstructorMessagesPage() {
   const supabase = await createClient()
@@ -69,6 +70,7 @@ export default async function InstructorMessagesPage() {
 
   return (
     <div className="min-h-screen bg-gray-950 p-6 md:p-8">
+        <BackButton fallbackHref="/instructor" label="Back to instructor dashboard" />
       <div className="max-w-7xl mx-auto">
         <InstructorMessageDashboard
           instructorId={user.id}

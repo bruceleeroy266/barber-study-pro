@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { isAdmin } from '@/lib/auth-helpers'
 import { runDiagnostics } from '@/lib/diagnostics/diagnostics'
 import SystemHealthDashboard from '@/components/admin/health/SystemHealthDashboard'
+import BackButton from '@/components/ui/BackButton'
 
 export default async function SystemHealthPage() {
   const supabase = await createClient()
@@ -26,6 +27,7 @@ export default async function SystemHealthPage() {
 
   return (
     <div className="min-h-screen bg-gray-950 p-6 lg:p-8">
+        <BackButton fallbackHref="/admin" label="Back to admin dashboard" />
       <div className="max-w-7xl mx-auto">
         <SystemHealthDashboard initialReport={report} />
       </div>

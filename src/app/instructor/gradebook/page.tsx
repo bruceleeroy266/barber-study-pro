@@ -20,6 +20,7 @@ import GradeHistoryModal from '@/components/gradebook/GradeHistoryModal'
 import CategoryWeightingPanel from '@/components/gradebook/CategoryWeightingPanel'
 import ClassPerformanceReport from '@/components/reports/ClassPerformanceReport'
 import { Loader2 } from 'lucide-react'
+import BackButton from '@/components/ui/BackButton'
 
 export default function InstructorGradebookPage() {
   const router = useRouter()
@@ -146,6 +147,7 @@ export default function InstructorGradebookPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <BackButton fallbackHref="/instructor" label="Back to instructor dashboard" />
         <Loader2 className="w-8 h-8 text-[#D4AF37] animate-spin" />
       </div>
     )

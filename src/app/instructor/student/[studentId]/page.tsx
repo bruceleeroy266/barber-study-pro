@@ -16,8 +16,11 @@ import WeakAreaAnalytics from '@/components/WeakAreaAnalytics'
 import StudyRecommendations from '@/components/StudyRecommendations'
 import AnalyticsCharts from '@/components/AnalyticsCharts'
 import MissedQuestionBank from '@/components/MissedQuestionBank'
+import StudentIdentity from '@/components/StudentIdentity'
 import { AddNoteForm } from './AddNoteForm'
 import { PrintButton } from './PrintButton'
+import ProgressReportModal from './ProgressReportModal'
+import BackButton from '@/components/ui/BackButton'
 import { getInstructorNotes } from './actions'
 import { mapHourLogsFromDb, mapAttendanceRecordsFromDb, mapAttendanceNotesFromDb } from '@/lib/mappers/operational-data-mappers'
 
@@ -363,18 +366,8 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
   return (
     <div className="min-h-screen bg-gray-950 p-6 md:p-8">
       <div className="max-w-5xl mx-auto space-y-8">
-        {/* Back link */}
-        <div>
-          <Link
-            href="/instructor"
-            className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-[#D4AF37] transition-colors"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Back to roster
-          </Link>
-        </div>
+        {/* Back navigation */}
+        <BackButton fallbackHref="/instructor" label="Back to roster" />
 
         {/* Student Summary Card */}
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
@@ -404,168 +397,21 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           </div>
         </div>
 
-        {/* Student Progress Report */}
-        <section id="student-report" className="report-section bg-white text-black rounded-xl p-8 shadow-lg print:shadow-none">
-          {/* Print styles scoped to this report section */}
-          <style>{`
-            @media print {
-              body * { visibility: hidden; }
-              .report-section, .report-section * { visibility: visible; }
-              .report-section { position: absolute; left: 0; top: 0; width: 100%; padding: 0.5in !important; }
-              .report-section button { display: none !important; }
-            }
-          `}</style>
-
-          <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-4">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900">Student Progress Report</h2>
-              <p className="text-sm text-gray-500">Generated {new Date().toLocaleDateString()}</p>
-            </div>
-            <PrintButton />
-          </div>
-
-          {/* Student Info */}
-          <div className="mb-6">
-            <h3 className="text-xl font-bold text-gray-900">{resolvedStudent.full_name}</h3>
-            <p className="text-gray-600">{resolvedStudent.email}</p>
-            <p className="text-sm text-gray-500 capitalize">Role: {resolvedStudent.role}</p>
-            <p className="text-sm text-gray-500">Joined: {formatDate(resolvedStudent.created_at)}</p>
-            {lastActivityAt && (
-              <p className="text-sm text-gray-500">Last active: {formatDaysAgo(lastActivityAt)}</p>
-            )}
-          </div>
-
-          {/* Key Metrics */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="border border-gray-200 rounded-lg p-4">
-              <div className="text-2xl font-bold text-gray-900">{overallProgress}%</div>
-              <div className="text-xs text-gray-500">Overall Progress</div>
-            </div>
-            <div className="border border-gray-200 rounded-lg p-4">
-              <div className="text-2xl font-bold text-gray-900">{avgQuizScore > 0 ? `${avgQuizScore}%` : '—'}</div>
-              <div className="text-xs text-gray-500">Quiz Average</div>
-            </div>
-            <div className="border border-gray-200 rounded-lg p-4">
-              <div className="text-2xl font-bold text-gray-900">{readiness.label}</div>
-              <div className="text-xs text-gray-500">Board Readiness ({readiness.score})</div>
-            </div>
-            <div className="border border-gray-200 rounded-lg p-4">
-              <div className="text-2xl font-bold text-gray-900">{boardRisk.label}</div>
-              <div className="text-xs text-gray-500">Board Exam Risk</div>
-            </div>
-          </div>
-
-          {/* Chapter Progress */}
-          <div className="mb-6 print-break-inside">
-            <h3 className="text-lg font-bold text-gray-900 mb-3">Chapter Progress</h3>
-            {chapters.length > 0 ? (
-              <table className="w-full text-sm border-collapse">
-                <thead>
-                  <tr className="border-b border-gray-200 text-left">
-                    <th className="py-2 pr-4">Chapter</th>
-                    <th className="py-2 pr-4">Progress</th>
-                    <th className="py-2 pr-4">Flashcards</th>
-                    <th className="py-2 pr-4">Quiz</th>
-                    <th className="py-2">Best Score</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {chapters.map((chapter) => {
-                    const chapterProgress = progressRecords.find((p) => p.chapter_id === chapter.id)
-                    return (
-                      <tr key={chapter.id} className="border-b border-gray-100">
-                        <td className="py-2 pr-4">
-                          <span className="font-medium">{chapter.chapter_number}. {chapter.title}</span>
-                        </td>
-                        <td className="py-2 pr-4">{chapterProgress?.progress_percentage || 0}%</td>
-                        <td className="py-2 pr-4">{chapterProgress?.flashcards_completed ? 'Done' : '—'}</td>
-                        <td className="py-2 pr-4">{chapterProgress?.quiz_completed ? 'Passed' : '—'}</td>
-                        <td className="py-2">{chapterProgress?.best_quiz_score !== null && chapterProgress?.best_quiz_score !== undefined ? `${chapterProgress.best_quiz_score}%` : '—'}</td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            ) : (
-              <p className="text-gray-500">No chapter data available.</p>
-            )}
-          </div>
-
-          {/* Recent Quiz Attempts */}
-          <div className="mb-6 print-break-inside">
-            <h3 className="text-lg font-bold text-gray-900 mb-3">Recent Quiz Attempts</h3>
-            {attemptRecords.length > 0 ? (
-              <table className="w-full text-sm border-collapse">
-                <thead>
-                  <tr className="border-b border-gray-200 text-left">
-                    <th className="py-2 pr-4">Quiz</th>
-                    <th className="py-2 pr-4">Score</th>
-                    <th className="py-2 pr-4">Percentage</th>
-                    <th className="py-2">Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {attemptRecords.slice(0, 10).map((attempt) => (
-                    <tr key={attempt.id} className="border-b border-gray-100">
-                      <td className="py-2 pr-4">{attempt.quiz_id}</td>
-                      <td className="py-2 pr-4">{attempt.score} / {attempt.total_questions}</td>
-                      <td className="py-2 pr-4">{attempt.percentage}%</td>
-                      <td className="py-2">{formatDate(attempt.completed_at)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p className="text-gray-500">No quiz attempts yet.</p>
-            )}
-          </div>
-
-          {/* Weak Areas */}
-          <div className="mb-6 print-break-inside">
-            <h3 className="text-lg font-bold text-gray-900 mb-3">Weak Areas & Study Focus</h3>
-            {!hasEnoughQuizData ? (
-              <p className="text-gray-500">Not enough quiz data yet.</p>
-            ) : weakAreas.length > 0 ? (
-              <div className="space-y-2">
-                {weakAreas.map((area) => (
-                  <div key={area.chapterId} className="flex items-center justify-between border border-gray-200 rounded-lg p-3">
-                    <span className="font-medium">Ch.{area.chapterNumber} — {area.chapterTitle}</span>
-                    <span className="font-bold">{area.score}%</span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-gray-500">No weak areas found.</p>
-            )}
-          </div>
-
-          {/* Instructor Notes */}
-          <div className="mb-6 print-break-inside">
-            <h3 className="text-lg font-bold text-gray-900 mb-3">Instructor Notes</h3>
-            {noteRecords.length > 0 ? (
-              <div className="space-y-3">
-                {noteRecords.map((note) => (
-                  <div key={note.id} className="border border-gray-200 rounded-lg p-3">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-semibold uppercase bg-gray-100 text-gray-700 px-2 py-0.5 rounded">
-                        {note.note_type}
-                      </span>
-                      <span className="text-xs text-gray-500">by {note.instructor_name} • {formatDate(note.created_at)}</span>
-                    </div>
-                    <p className="text-sm text-gray-800 whitespace-pre-wrap">{note.note_text}</p>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-gray-500">No instructor notes yet.</p>
-            )}
-          </div>
-
-          {/* Footer */}
-          <div className="text-center text-xs text-gray-400 mt-8 pt-4 border-t border-gray-200">
-            ASCYN PRO — Student Progress Report
-          </div>
-        </section>
+        {/* Student Progress Report (modal popup) */}
+        <ProgressReportModal
+          student={resolvedStudent}
+          lastActivityAt={lastActivityAt}
+          overallProgress={overallProgress}
+          avgQuizScore={avgQuizScore}
+          readiness={readiness}
+          boardRisk={boardRisk}
+          chapters={chapters}
+          progressRecords={progressRecords}
+          attemptRecords={attemptRecords}
+          hasEnoughQuizData={hasEnoughQuizData}
+          weakAreas={weakAreas}
+          noteRecords={noteRecords}
+        />
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -615,7 +461,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
             <WeakAreaAnalytics weakAreas={analytics.weakAreas} strongAreas={analytics.strongAreas} />
           </div>
           <div>
-            <StudyRecommendations recommendations={recommendations} />
+            <StudyRecommendations recommendations={recommendations} studentId={studentId} instructorView />
           </div>
         </div>
 
@@ -644,7 +490,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           </div>
           <div className="p-6">
             {missedQuestions.length > 0 ? (
-              <MissedQuestionBank questions={missedQuestions.slice(0, 10)} />
+              <MissedQuestionBank questions={missedQuestions.slice(0, 10)} instructorView />
             ) : (
               <div className="text-center text-gray-400 py-8">
                 No missed questions yet.
@@ -1211,10 +1057,8 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
 
           {/* Student Info */}
           <div className="mb-6">
-            <h3 className="text-xl font-bold text-gray-900">{resolvedStudent.full_name}</h3>
-            <p className="text-gray-600">{resolvedStudent.email}</p>
-            <p className="text-sm text-gray-500 capitalize">Role: {resolvedStudent.role}</p>
-            <p className="text-sm text-gray-500">Program: Barbering</p>
+            <StudentIdentity student={resolvedStudent} variant="light" showRole />
+            <p className="text-sm text-gray-500 mt-2">Program: Barbering</p>
             <p className="text-sm text-gray-500">State: Oklahoma</p>
           </div>
 

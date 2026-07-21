@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import { isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
 import SchoolDashboard from '@/components/school-owner/SchoolDashboard'
+import BackButton from '@/components/ui/BackButton'
 
 export default async function SchoolOwnerDashboard() {
   const supabase = await createClient()
@@ -25,5 +26,12 @@ export default async function SchoolOwnerDashboard() {
     redirect('/dashboard')
   }
 
-  return <SchoolDashboard schoolId={profile.school_id} />
+  return (
+    <div className="min-h-screen bg-gray-950 p-6 md:p-8">
+      <BackButton fallbackHref="/admin" label="Back to admin dashboard" />
+      <div className="mt-6">
+        <SchoolDashboard schoolId={profile.school_id} />
+      </div>
+    </div>
+  )
 }

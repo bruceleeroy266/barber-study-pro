@@ -3,7 +3,6 @@ import { redirect } from 'next/navigation'
 import { Profile, AttendanceRecord, HourLog, QuizAttempt, StudentProgress, Grade, GradeCategory, Assessment } from '@/types'
 import {
   demoStudents,
-
   demoAttendanceRecords,
   demoHourLogs,
   demoQuizAttempts,
@@ -13,6 +12,7 @@ import {
   demoAssessments,
 } from '@/lib/demo-data'
 import { isDemoFallbackEnabled } from '@/lib/demo-helpers'
+import BackButton from '@/components/ui/BackButton'
 import { buildStudentCompliance, buildComplianceAlerts, generateComplianceReport } from '@/lib/compliance'
 import ComplianceAlertsPanel from '@/components/compliance/ComplianceAlertsPanel'
 import ComplianceReportingCenter from '@/components/compliance/ComplianceReportingCenter'
@@ -168,6 +168,7 @@ export default async function InstructorComplianceDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-950 p-6 lg:p-8">
+        <BackButton fallbackHref="/instructor" label="Back to instructor dashboard" />
       <div className="max-w-7xl mx-auto space-y-8">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Instructor Compliance</h1>

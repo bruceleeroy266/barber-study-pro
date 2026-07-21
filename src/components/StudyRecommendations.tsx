@@ -6,6 +6,8 @@ import Link from 'next/link'
 
 interface StudyRecommendationsProps {
   recommendations: StudyRecommendation[]
+  studentId?: string
+  instructorView?: boolean
 }
 
 function iconForType(type: StudyRecommendation['type']) {
@@ -36,7 +38,7 @@ function priorityColor(priority: StudyRecommendation['priority']) {
   }
 }
 
-export default function StudyRecommendations({ recommendations }: StudyRecommendationsProps) {
+export default function StudyRecommendations({ recommendations, studentId, instructorView }: StudyRecommendationsProps) {
   if (recommendations.length === 0) {
     return (
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
@@ -60,12 +62,9 @@ export default function StudyRecommendations({ recommendations }: StudyRecommend
             ? '/dashboard/missed-questions'
             : '/dashboard/chapters'
 
-          return (
-            <Link
-              key={rec.id}
-              href={href}
-              className="flex items-start gap-4 p-4 bg-gray-950 border border-gray-800 rounded-lg hover:border-[#D4AF37]/30 transition-colors group"
-            >
+          const isInstructorScoped = instructorView && studentId
+          const cardContent = (
+            <>
               <div className="p-2 bg-gray-900 rounded-lg shrink-0">
                 <Icon className="w-5 h-5 text-[#D4AF37]" />
               </div>
@@ -86,6 +85,23 @@ export default function StudyRecommendations({ recommendations }: StudyRecommend
                   {rec.estimatedMinutes} min
                 </div>
               </div>
+            </>
+          )
+
+          return isInstructorScoped ? (
+            <div
+              key={rec.id}
+              className="flex items-start gap-4 p-4 bg-gray-950 border border-gray-800 rounded-lg transition-colors"
+            >
+              {cardContent}
+            </div>
+          ) : (
+            <Link
+              key={rec.id}
+              href={href}
+              className="flex items-start gap-4 p-4 bg-gray-950 border border-gray-800 rounded-lg hover:border-[#D4AF37]/30 transition-colors group"
+            >
+              {cardContent}
               <ChevronRight className="w-5 h-5 text-gray-600 group-hover:text-[#D4AF37] shrink-0 mt-1" />
             </Link>
           )

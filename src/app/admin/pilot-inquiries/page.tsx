@@ -2,8 +2,9 @@ import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import { isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
 import Link from 'next/link'
-import { ArrowLeft, Mail, Phone, Calendar, Tag, Trash2, CheckCircle, XCircle, HelpCircle, AlertCircle } from 'lucide-react'
+import { Mail, Phone, Calendar, Tag, Trash2, CheckCircle, XCircle, HelpCircle, AlertCircle } from 'lucide-react'
 import ReplyModal from './ReplyModal'
+import BackButton from '@/components/ui/BackButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -84,6 +85,7 @@ export default async function PilotInquiriesPage() {
 
   return (
     <div className="min-h-screen bg-gray-950 p-4 md:p-8">
+        <BackButton fallbackHref="/admin" label="Back to admin dashboard" />
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
@@ -92,13 +94,6 @@ export default async function PilotInquiriesPage() {
               {rows.length} submission{rows.length === 1 ? '' : 's'} found
             </p>
           </div>
-          <Link
-            href="/admin"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Admin
-          </Link>
         </div>
 
         {rows.length === 0 ? (

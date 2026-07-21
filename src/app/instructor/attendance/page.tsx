@@ -5,6 +5,7 @@ import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 import { demoStudents, demoAttendanceRecords } from '@/lib/demo-data'
 import AttendanceClient from './AttendanceClient'
 import { mapAttendanceRecordsFromDb } from '@/lib/mappers/operational-data-mappers'
+import BackButton from '@/components/ui/BackButton'
 
 function isDemoFallbackEnabled(): boolean {
   if (process.env.NEXT_PUBLIC_DEMO_MODE === 'true') return true
@@ -90,13 +91,18 @@ export default async function AttendanceManagementPage() {
   const defaultDate = new Date().toISOString().split('T')[0]
 
   return (
-    <AttendanceClient
-      initialRecords={records}
-      students={students}
-      currentUser={typedProfile}
-      schoolId={schoolId}
-      schoolName={schoolName}
-      defaultDate={defaultDate}
-    />
+    <div className="min-h-screen bg-gray-950 p-6 md:p-8">
+      <BackButton fallbackHref="/instructor" label="Back to instructor dashboard" />
+      <div className="mt-6">
+        <AttendanceClient
+          initialRecords={records}
+          students={students}
+          currentUser={typedProfile}
+          schoolId={schoolId}
+          schoolName={schoolName}
+          defaultDate={defaultDate}
+        />
+      </div>
+    </div>
   )
 }

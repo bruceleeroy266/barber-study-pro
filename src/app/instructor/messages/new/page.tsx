@@ -5,6 +5,7 @@ import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 import { isDemoFallbackEnabled } from '@/lib/demo-helpers'
 import { demoStudents } from '@/lib/demo-data'
 import NewMessageClient from './NewMessageClient'
+import BackButton from '@/components/ui/BackButton'
 
 export default async function NewMessagePage() {
   const supabase = await createClient()
@@ -37,5 +38,12 @@ export default async function NewMessagePage() {
     students = demoStudents.filter((s) => s.school_id === schoolId || !schoolId)
   }
 
-  return <NewMessageClient students={students} />
+  return (
+    <div className="min-h-screen bg-gray-950 p-6 md:p-8">
+      <BackButton fallbackHref="/instructor" label="Back to instructor dashboard" />
+      <div className="mt-6">
+        <NewMessageClient students={students} />
+      </div>
+    </div>
+  )
 }

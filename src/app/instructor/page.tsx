@@ -14,6 +14,7 @@ import AssessmentList from '@/components/assessments/AssessmentList'
 import { allQuizQuestions } from '@/lib/quiz-data'
 import { getThreadDisplayName, formatMessageTime, priorityColorClasses } from '@/lib/messaging'
 import UnreadBadge from '@/components/messaging/UnreadBadge'
+import StudentIdentity from '@/components/StudentIdentity'
 import { mapHourLogsFromDb, mapAttendanceRecordsFromDb, mapGradesFromDb, mapGradeCategoriesFromDb, mapAssessmentsFromDb } from '@/lib/mappers/operational-data-mappers'
 
 interface RosterStudent extends Profile {
@@ -597,10 +598,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
                           <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] text-xs font-bold">
                             {idx + 1}
                           </span>
-                          <div>
-                            <div className="text-white font-medium">{student.full_name}</div>
-                            <div className="text-xs text-gray-500">{student.email}</div>
-                          </div>
+                          <StudentIdentity student={student} />
                         </div>
                         <div className={`font-bold ${getGradeColorClass(perf?.overallGrade || 0)}`}>
                           {perf?.overallGrade || 0}%
@@ -896,8 +894,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
                   {filteredStudents.map((student) => (
                     <tr key={student.id} className="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors">
                       <td className="p-4">
-                        <div className="text-white font-medium">{student.full_name}</div>
-                        <div className="text-gray-500 text-xs">{student.email}</div>
+                        <StudentIdentity student={student} />
                       </td>
                       <td className="p-4">
                         <span className={`text-xl font-bold ${getReadinessColorClass(student.readinessScore)}`}>
@@ -940,10 +937,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
                 if (!student) return null
                 return (
                   <div key={userId} className="p-5 flex items-center justify-between">
-                    <div>
-                      <p className="text-white font-medium">{student.full_name}</p>
-                      <p className="text-xs text-gray-500">{student.email}</p>
-                    </div>
+                    <StudentIdentity student={student} />
                     <div className="text-xl font-bold text-yellow-400">{formatMinutes(minutes)}</div>
                   </div>
                 )
@@ -986,8 +980,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
                       return (
                         <tr key={student.id} className="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors">
                           <td className="p-4">
-                            <div className="text-white font-medium">{student.full_name}</div>
-                            <div className="text-gray-500 text-xs">{student.email}</div>
+                            <StudentIdentity student={student} />
                           </td>
                           <td className="p-4">
                             <div className="flex flex-wrap gap-1">
@@ -1138,8 +1131,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
                   {filteredStudents.map((student) => (
                     <tr key={student.id} className="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors">
                       <td className="p-4">
-                        <div className="text-white font-medium">{student.full_name}</div>
-                        <div className="text-gray-500 text-xs">{student.email}</div>
+                        <StudentIdentity student={student} />
                       </td>
                       <td className="p-4">
                         <span className="capitalize text-gray-300">{student.role}</span>
