@@ -21,6 +21,7 @@ import ProLevelSystem from './ProLevelSystem'
 import AppearanceChecklist from './AppearanceChecklist'
 import ProTip from './ProTip'
 import ReflectionBlock from './ReflectionBlock'
+import HtmlContentBlock from './HtmlContentBlock'
 
 interface ChapterContentProps {
   sections: ChapterSection[]
@@ -193,6 +194,13 @@ export default function ChapterContent({ sections, theme }: ChapterContentProps)
             return (
               <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
                 <ReflectionBlock questions={section.questions} theme={t} />
+              </SectionWrapper>
+            )
+
+          case 'htmlContent':
+            return (
+              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+                <HtmlContentBlock html={section.html} theme={t} />
               </SectionWrapper>
             )
 

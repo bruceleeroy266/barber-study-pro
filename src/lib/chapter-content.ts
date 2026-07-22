@@ -17,6 +17,7 @@ import { chapter14PremiumContent, chapter14PremiumTheme } from './chapter-14-pre
 import { chapter15PremiumContent, chapter15PremiumTheme } from './chapter-15-premium'
 import { chapter16PremiumContent, chapter16PremiumTheme } from './chapter-16-premium'
 import { chapter17PremiumContent, chapter17PremiumTheme } from './chapter-17-premium'
+import { chapter18PremiumContent, chapter18PremiumTheme } from './chapter-18-premium'
 
 // ───────────────────────────────────────────────
 // Section Types (discriminated union)
@@ -42,6 +43,7 @@ export type SectionType =
   | 'appearanceChecklist'
   | 'proTip'
   | 'reflectionBlock'
+  | 'htmlContent'
 
 export interface BaseSection {
   type: SectionType
@@ -335,6 +337,11 @@ export interface ReflectionBlockSection extends BaseSection {
   questions: ReflectionQuestion[]
 }
 
+export interface HtmlContentSection extends BaseSection {
+  type: 'htmlContent'
+  html: string
+}
+
 // ───────────────────────────────────────────────
 // Chapter Content Type
 // ───────────────────────────────────────────────
@@ -359,6 +366,7 @@ export type ChapterSection =
   | AppearanceChecklistSection
   | ProTipSection
   | ReflectionBlockSection
+  | HtmlContentSection
 
 // ───────────────────────────────────────────────
 // Chapter Theme System
@@ -3092,6 +3100,7 @@ export const chapterContentData: Record<string, ChapterContent> = {
   'ch-15': chapter15PremiumContent,
   'ch-16': chapter16PremiumContent,
   'ch-17': chapter17PremiumContent,
+  'ch-18': chapter18PremiumContent,
 }
 
 // ───────────────────────────────────────────────

@@ -50,3 +50,5 @@ supabase/snippets/
 # browser automation / lighthouse cache artifacts that can appear in repo root
 undefined:
 undefined*/
+# Legacy static HTML prototypes (not production assets)
+_legacy-static-prototypes/
