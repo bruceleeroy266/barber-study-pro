@@ -258,6 +258,20 @@
 | 14.6 | Open-redirect protection | Rejects external and protocol-relative `next` params | PASS | `isSafeRedirectPath` in callback route |
 | 14.7 | Two-commit separation proposed | Backend/auth commits separate from admin UI commits | PASS | `AUTH_LIFECYCLE_AUDIT_2026-07-21.md` |
 
+## 17. Owner Notification System (Phase 1)
+
+| # | Test Step | Expected Result | Status | Notes |
+|---|-----------|-----------------|--------|-------|
+| 17.1 | New pilot request triggers owner email | `notifyOwner('pilot_request', ...)` called; email sent to `OWNER_NOTIFICATION_EMAIL` | PASS | Implemented 2026-07-21 |
+| 17.2 | New contact form triggers owner email | `notifyOwner('contact_submission', ...)` called; email sent to owner | PASS | `src/app/api/email/route.ts` |
+| 17.3 | New demo request triggers owner email | `notifyOwner('demo_request', ...)` called; email sent to owner | PASS | New `/demo/request` page and endpoint support |
+| 17.4 | Confirmation email still sent to submitter | Visitor receives confirmation email for all three forms | PASS | Existing Resend flow preserved |
+| 17.5 | Submissions saved to database | `owner_notifications` row created with payload, dedup_hash, recipient | PASS | Migration `20260722010000_create_owner_notifications.sql` |
+| 17.6 | Duplicate notification prevention | Unique `dedup_hash` constraint prevents duplicate emails | PASS | DB-verified with local Supabase |
+| 17.7 | Notification failures logged | Failed email sets `email_status='failed'` and `email_error` | PASS | `NotificationService.test.ts` |
+| 17.8 | Least-privilege grants | Only `service_role` can manage `owner_notifications`; anon/authenticated denied | PASS | Local DB verified |
+| 17.9 | Channel-extensible design | `NotificationChannel` interface allows adding push/SMS/Slack without business-logic changes | PASS | `src/lib/notifications/channels/` |
+
 ## 16. User Management — Delete User
 
 | # | Test Step | Expected Result | Status | Notes |
@@ -266,7 +280,7 @@
 | 16.2 | Self-delete prevention | Action rejects deleting the currently authenticated admin | PASS | `deleteUser` test |
 | 16.3 | School-admin scope | School admins cannot delete platform admins or users outside their school | PASS | `deleteUser` tests |
 | 16.4 | Confirmation dialog | UI opens a modal requiring explicit confirmation before deletion | PASS | `UserManagementClient.test.tsx` |
-| 16.5 | Audit logging | Deletion is logged via `logUserManagementAction` with `delete_user` action | BLOCKED | `user_management_audit_logs` table does **not** exist in production (PGRST205). Migration `20260712030000_admin_user_management.sql` must be applied before audit logs persist. The action still deletes the user if the table is missing. |
+| 16.5 | Audit logging | Deletion is logged via `logUserManagementAction` with `delete_user` action | READY TO APPLY | Repair migration `supabase/migrations/20260721212700_repair_user_management_audit_logs.sql` created with idempotent CREATE TABLE, indexes, RLS policies, and service_role grant. Production table missing (PGRST205). Apply via Supabase SQL Editor; then unit tests + manual insert verify logging. |
 | 16.6 | Profile cleanup | Auth user deletion cascades to profile and operational records | PASS | FK `on delete cascade` in migrations |
 
 ## Build & Typecheck Verification

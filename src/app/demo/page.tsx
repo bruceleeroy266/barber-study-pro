@@ -49,7 +49,7 @@ export default function DemoLandingPage() {
 
       {/* Demo Cards */}
       <section className="pb-24 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           {/* Student Demo */}
           <Link
             href="/demo/student"
@@ -84,6 +84,24 @@ export default function DemoLandingPage() {
             </p>
             <div className="flex items-center text-[#D4AF37] font-semibold group-hover:gap-2 transition-all">
               Start Instructor Demo
+              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+        </div>
+
+        <div className="max-w-5xl mx-auto">
+          <Link
+            href="/demo/request"
+            className="group flex flex-col md:flex-row items-center justify-between gap-6 bg-[#111111] border border-white/10 rounded-2xl p-8 hover:border-[#D4AF37]/30 transition-all"
+          >
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-2">Want a personalized walkthrough?</h2>
+              <p className="text-gray-400 leading-relaxed">
+                Request a live demo and our team will show you how ASCYN PRO fits your school.
+              </p>
+            </div>
+            <div className="flex items-center text-[#D4AF37] font-semibold whitespace-nowrap group-hover:gap-2 transition-all">
+              Request a Demo
               <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>

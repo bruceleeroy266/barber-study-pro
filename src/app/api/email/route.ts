@@ -1,20 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
-import { createClient } from '@supabase/supabase-js'
+import { NotificationService } from '@/lib/notifications/NotificationService'
+import { OwnerNotificationPayload } from '@/lib/notifications/types'
+import { createServiceRoleClient } from '@/lib/supabase-service-role'
 
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+const notificationService = NotificationService.createDefault(resend)
 
-const supabaseAdmin =
-  supabaseUrl && supabaseServiceKey
-    ? createClient(supabaseUrl, supabaseServiceKey, {
-        auth: { autoRefreshToken: false, persistSession: false },
-      })
-    : null
+const supabaseAdmin = createServiceRoleClient()
 
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'ASCYN PRO <hello@ascynpro.com>'
 const NOTIFICATION_FROM_EMAIL = process.env.NOTIFICATION_FROM_EMAIL || 'ASCYN PRO <notifications@ascynpro.com>'
@@ -116,17 +112,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: true }, { status: 200 })
     }
 
-    const formType = sanitize(body.formType) as 'pilot' | 'contact'
+    const formType = sanitize(body.formType) as 'pilot' | 'contact' | 'demo'
     const schoolName = sanitize(body.schoolName)
     const contactName = sanitize(body.contactName || body.name)
     const email = sanitize(body.email).toLowerCase()
     const phone = sanitize(body.phone)
     const programType = sanitize(body.programType)
     const cohortSize = sanitize(body.cohortSize)
+    const studentCount = sanitize(body.studentCount)
     const startDate = sanitize(body.startDate)
+    const state = sanitize(body.state)
     const message = sanitize(body.message)
 
-    if (!['pilot', 'contact'].includes(formType)) {
+    if (!['pilot', 'contact', 'demo'].includes(formType)) {
       return NextResponse.json({ error: 'Invalid form type.' }, { status: 400 })
     }
 
@@ -147,6 +145,13 @@ export async function POST(request: NextRequest) {
 
     if (formType === 'contact' && !message) {
       return NextResponse.json({ error: 'Message is required.' }, { status: 400 })
+    }
+
+    if (formType === 'demo' && (!contactName || !email)) {
+      return NextResponse.json(
+        { error: 'Name and email are required for a demo request.' },
+        { status: 400 }
+      )
     }
 
     const forwardedFor = request.headers.get('x-forwarded-for')
@@ -177,6 +182,7 @@ export async function POST(request: NextRequest) {
 
     const timestamp = formatTimestamp()
     const isPilot = formType === 'pilot'
+    const isDemo = formType === 'demo'
     const isBarbering = programType === 'Barbering'
 
     // ── PERSIST TO DATABASE ─────────────────────────────────────────────────
@@ -228,53 +234,39 @@ export async function POST(request: NextRequest) {
         persistedId = inserted?.id ?? null
       }
     }
+    // ── OWNER NOTIFICATION ──────────────────────────────────────────────────
+    const ownerPayload: OwnerNotificationPayload = {
+      timeSubmitted: timestamp,
+      schoolName: schoolName || null,
+      contactName: contactName || null,
+      email: email || null,
+      phone: phone || null,
+      studentCount: isDemo ? studentCount || null : cohortSize || null,
+      state: state || null,
+      message: message || null,
+      programType: programType || null,
+      startDate: startDate || null,
+    }
 
-    // ── INTERNAL NOTIFICATION ───────────────────────────────────────────────
-    const notificationSubject = isPilot
-      ? '🚨 New ASCYN PRO Pilot Inquiry'
-      : 'New ASCYN PRO Contact Form Submission'
+    const ownerNotificationType = isPilot
+      ? 'pilot_request'
+      : isDemo
+        ? 'demo_request'
+        : 'contact_submission'
 
-    const notificationRows = [
-      { label: 'School Name', value: schoolName },
-      { label: 'Contact Name', value: contactName },
-      { label: 'Email', value: email },
-      { label: 'Phone Number', value: phone || 'Not provided' },
-      { label: 'Program Selected', value: programType || 'N/A' },
-      { label: 'Estimated Cohort Size', value: cohortSize || 'Not provided' },
-      { label: 'Preferred Start Date', value: startDate || 'Not provided' },
-      { label: 'Message / Notes', value: message || 'None' },
-      { label: 'Date & Time Submitted', value: timestamp },
-    ]
-
-    const notificationHtml = emailWrapper(
-      `
-      <h1 style="margin:0 0 24px; color:#D4AF37; font-size:22px; font-weight:bold;">🚨 New ASCYN PRO Pilot Inquiry</h1>
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;">
-        ${notificationRows
-          .map(
-            (row) => `
-          <tr>
-            <td style="padding:12px 16px; border-bottom:1px solid #2a2a2a; color:#D4AF37; font-weight:bold; width:40%; font-size:14px; vertical-align:top;">${escapeHtml(row.label)}</td>
-            <td style="padding:12px 16px; border-bottom:1px solid #2a2a2a; color:#ffffff; font-size:14px; vertical-align:top;">${escapeHtml(row.value).replace(/\n/g, '<br/>')}</td>
-          </tr>
-        `
-          )
-          .join('')}
-      </table>
-      <p style="margin:24px 0 0; color:#888888; font-size:13px;">
-        Reply directly to this email to respond to ${escapeHtml(contactName)}.
-      </p>
-      `,
-      notificationSubject
+    const notificationResult = await notificationService.notifyOwner(
+      ownerNotificationType,
+      ownerPayload,
+      isPilot && persistedId
+        ? { sourceType: 'pilot_inquiries', sourceId: persistedId }
+        : undefined
     )
 
-    const notificationText = [
-      '🚨 New ASCYN PRO Pilot Inquiry',
-      '',
-      ...notificationRows.map((row) => `${row.label}: ${row.value}`),
-      '',
-      `Reply to respond to ${contactName} at ${email}.`,
-    ].join('\n')
+    if (!notificationResult.success && !notificationResult.duplicate) {
+      console.error('[Email API] Owner notification failed:', notificationResult.error)
+      // Do not fail the visitor-facing request just because the internal
+      // notification failed; the row is already persisted with a failed status.
+    }
 
     // ── VISITOR CONFIRMATION ────────────────────────────────────────────────
     const confirmationSubject = 'Thank you for contacting ASCYN PRO'
@@ -338,26 +330,16 @@ export async function POST(request: NextRequest) {
 
     const confirmationHtml = emailWrapper(confirmationBodyHtml, confirmationSubject)
 
-    const [notificationResult, confirmationResult] = await Promise.all([
-      resend.emails.send({
-        from: NOTIFICATION_FROM_EMAIL,
-        to: TO_EMAIL,
-        replyTo: email,
-        subject: notificationSubject,
-        html: notificationHtml,
-        text: notificationText,
-      }),
-      resend.emails.send({
-        from: FROM_EMAIL,
-        to: email,
-        subject: confirmationSubject,
-        html: confirmationHtml,
-        text: confirmationBodyText,
-      }),
-    ])
+    const confirmationResult = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: email,
+      subject: confirmationSubject,
+      html: confirmationHtml,
+      text: confirmationBodyText,
+    })
 
-    if (notificationResult.error || confirmationResult.error) {
-      console.error('[Email API] Resend error:', notificationResult.error, confirmationResult.error)
+    if (confirmationResult.error) {
+      console.error('[Email API] Resend error:', confirmationResult.error)
       return NextResponse.json(
         { error: 'We could not send your message. Please try again in a moment.' },
         { status: 502 }
