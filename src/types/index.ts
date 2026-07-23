@@ -71,6 +71,7 @@ export interface QuizQuestion {
   correct_answer: 'a' | 'b' | 'c' | 'd'
   explanation: string | null
   difficulty: 'easy' | 'medium' | 'hard'
+  learningObjective?: string
   order_index: number
   competency_id?: string
 }

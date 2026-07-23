@@ -1,0 +1,327 @@
+[
+  {
+    "id": "qq-19-01",
+    "question": "Before you can be hired as a barber, which milestone must you typically complete first?",
+    "options": [
+      "A. Pass your state licensing examinations and obtain your barber license",
+      "B. Complete a one-year apprenticeship in a working barbershop",
+      "C. Build an online portfolio with at least 50 before-and-after photos",
+      "D. Submit applications to at least ten local shops regardless of licensure status"
+    ],
+    "answer": 0,
+    "explanation": "Licensure is the gateway to employment. Most states require candidates to pass written and practical examinations, apply for a license, and pay the required fee before legally working as a barber.",
+    "category": "Licensure Preparation",
+    "difficulty": "easy",
+    "lessonSection": "Prepare for Licensure",
+    "learningObjective": "LO-1",
+    "relatedFlashcards": [],
+    "textbookPages": [
+      "707",
+      "708"
+    ],
+    "type": "knowledge"
+  },
+  {
+    "id": "qq-19-02",
+    "question": "What does it mean to be 'test-wise' when preparing for a licensing exam?",
+    "options": [
+      "A. Memorizing every glossary word in the textbook verbatim",
+      "B. Understanding strategies that help you succeed during an exam",
+      "C. Finishing the test before anyone else in the room",
+      "D. Relying on intuition because you already know the material"
+    ],
+    "answer": 1,
+    "explanation": "Being test-wise means knowing how to approach questions, manage time, and use reasoning skills. It supplements—but does not replace—solid mastery of the course content.",
+    "category": "Test-Taking Strategies",
+    "difficulty": "easy",
+    "lessonSection": "Prepare for Licensure",
+    "learningObjective": "LO-1",
+    "relatedFlashcards": [],
+    "textbookPages": [
+      "709"
+    ],
+    "type": "knowledge"
+  },
+  {
+    "id": "qq-19-03",
+    "question": "Which factor has the greatest influence on how well you perform on a licensing exam?",
+    "options": [
+      "A. Wearing a favorite outfit that makes you feel confident",
+      "B. Mastery of the course content covered in your program",
+      "C. The number of other candidates taking the exam at the same time",
+      "D. How early you arrive at the testing site"
+    ],
+    "answer": 1,
+    "explanation": "Strong test-taking strategies help, but deep understanding of the material is the single most important driver of exam performance.",
+    "category": "Written Examination",
+    "difficulty": "medium",
+    "lessonSection": "Prepare for Licensure",
+    "learningObjective": "LO-1",
+    "relatedFlashcards": [],
+    "textbookPages": [
+      "709"
+    ],
+    "type": "knowledge"
+  },
+  {
+    "id": "qq-19-04",
+    "question": "When you first receive a written licensing exam, what is the most effective first step?",
+    "options": [
+      "A. Start answering the hardest questions while you are mentally fresh",
+      "B. Read the directions, scan the entire test, and plan your time",
+      "C. Ask the proctor to clarify every question you do not immediately understand",
+      "D. Write your name on the booklet and guess on each question quickly"
+    ],
+    "answer": 1,
+    "explanation": "Scanning the entire exam and budgeting your time before you begin helps you pace yourself, identify easy wins, and note questions you may want to revisit.",
+    "category": "Test-Taking Strategies",
+    "difficulty": "medium",
+    "lessonSection": "Prepare for Licensure",
+    "learningObjective": "LO-1",
+    "relatedFlashcards": [],
+    "textbookPages": [
+      "710"
+    ],
+    "type": "application"
+  },
+  {
+    "id": "qq-19-05",
+    "question": "You encounter a multiple-choice item where two answer choices say exactly the same thing. Using deductive reasoning, what can you logically conclude?",
+    "options": [
+      "A. Both identical choices are probably correct",
+      "B. Both identical choices can be eliminated because they cannot both be the unique answer",
+      "C. The question is a trick and should be skipped automatically",
+      "D. You should always select the longer of the two identical choices"
+    ],
+    "answer": 1,
+    "explanation": "When two options are identical, they cannot each be the single best answer. Eliminating them narrows the field and improves your chance of selecting the correct remaining option.",
+    "category": "Test-Taking Strategies",
+    "difficulty": "hard",
+    "lessonSection": "Prepare for Licensure",
+    "learningObjective": "LO-1",
+    "relatedFlashcards": [],
+    "textbookPages": [
+      "710",
+      "711"
+    ],
+    "type": "critical"
+  },
+  {
+    "id": "qq-19-06",
+    "question": "In a true/false exam, statements that contain words such as 'always,' 'never,' 'all,' or 'none' are usually:",
+    "options": [
+      "A. True because they show confidence in the statement",
+      "B. False because absolutes are rarely accurate in practice",
+      "C. Easier to answer quickly without reading carefully",
+      "D. Required by state boards to test basic facts"
+    ],
+    "answer": 1,
+    "explanation": "Absolutes are rarely true in real-world barbering. Test-wise students treat words like always, never, all, and none as red flags.",
+    "category": "Test-Taking Strategies",
+    "difficulty": "easy",
+    "lessonSection": "Prepare for Licensure",
+    "learningObjective": "LO-1",
+    "relatedFlashcards": [],
+    "textbookPages": [
+      "711"
+    ],
+    "type": "knowledge"
+  },
+  {
+    "id": "qq-19-07",
+    "question": "Which set of skills is most commonly evaluated during the practical barber licensing exam?",
+    "options": [
+      "A. Haircutting, shaving, shampooing, and infection control",
+      "B. Accounting, payroll, and shop decoration",
+      "C. Social-media marketing and retail display design",
+      "D. State law recitation and contract negotiation"
+    ],
+    "answer": 0,
+    "explanation": "Practical exams focus on hands-on technical and safety competencies. Exact procedures vary by state, but haircutting, shaving, shampooing, and infection control are standard evaluations.",
+    "category": "Practical Examination",
+    "difficulty": "medium",
+    "lessonSection": "Prepare for Licensure",
+    "learningObjective": "LO-1",
+    "relatedFlashcards": [],
+    "textbookPages": [
+      "713"
+    ],
+    "type": "knowledge"
+  },
+  {
+    "id": "qq-19-08",
+    "question": "What is the main purpose of completing an Inventory of Personal Characteristics and Technical Skills before seeking a job?",
+    "options": [
+      "A. To satisfy a state board licensing requirement",
+      "B. To identify your strengths and the skills you still need to develop",
+      "C. To determine the exact salary you should demand from employers",
+      "D. To replace the need for an employment portfolio"
+    ],
+    "answer": 1,
+    "explanation": "The inventory is a self-assessment tool. It helps you see where you stand and create a focused improvement plan before entering the job market.",
+    "category": "Career Planning",
+    "difficulty": "medium",
+    "lessonSection": "Prepare for Employment",
+    "learningObjective": "LO-2",
+    "relatedFlashcards": [],
+    "textbookPages": [
+      "714"
+    ],
+    "type": "knowledge"
+  },
+  {
+    "id": "qq-19-09",
+    "question": "A résumé is best described as which of the following?",
+    "options": [
+      "A. A bound collection of photos and reference letters",
+      "B. A written summary of your education and work experience",
+      "C. A contract between you and a future employer",
+      "D. A complete list of every job you have ever held, including unrelated ones"
+    ],
+    "answer": 1,
+    "explanation": "A résumé markets your background by summarizing your education, skills, and relevant accomplishments for potential employers.",
+    "category": "Résumé Development",
+    "difficulty": "easy",
+    "lessonSection": "Prepare for Employment",
+    "learningObjective": "LO-2",
+    "relatedFlashcards": [],
+    "textbookPages": [
+      "716"
+    ],
+    "type": "knowledge"
+  },
+  {
+    "id": "qq-19-10",
+    "question": "When describing past jobs on a résumé, what should you emphasize most?",
+    "options": [
+      "A. Your salary history and reasons for leaving each position",
+      "B. A detailed list of every daily duty you performed",
+      "C. Accomplishments, ideally supported by numbers or percentages",
+      "D. Decorative fonts and colorful borders to catch the reader's eye"
+    ],
+    "answer": 2,
+    "explanation": "Employers scan résumés very quickly. Quantified accomplishments show the impact you made and set you apart from applicants who only list duties.",
+    "category": "Résumé Development",
+    "difficulty": "medium",
+    "lessonSection": "Prepare for Employment",
+    "learningObjective": "LO-2",
+    "relatedFlashcards": [],
+    "textbookPages": [
+      "716",
+      "717"
+    ],
+    "type": "application"
+  },
+  {
+    "id": "qq-19-11",
+    "question": "A new barber previously worked as a restaurant server. How should that experience be framed on a barbering résumé?",
+    "options": [
+      "A. It should be hidden because it is not barbering work",
+      "B. It demonstrates transferable skills such as customer service and handling diverse clients",
+      "C. It only matters if the restaurant was located near the barbershop",
+      "D. It proves the applicant can manage the shop's food and beverage service"
+    ],
+    "answer": 1,
+    "explanation": "Skills from other jobs—such as communication, teamwork, and customer service—can strengthen a barbering résumé when they are relevant to serving clients.",
+    "category": "Résumé Development",
+    "difficulty": "medium",
+    "lessonSection": "Prepare for Employment",
+    "learningObjective": "LO-2",
+    "relatedFlashcards": [],
+    "textbookPages": [
+      "716"
+    ],
+    "type": "application"
+  },
+  {
+    "id": "qq-19-12",
+    "question": "Which item would best belong in a strong employment portfolio?",
+    "options": [
+      "A. A list of your favorite television shows",
+      "B. Before-and-after photographs of services you have performed",
+      "C. A copy of your high school cafeteria menu",
+      "D. Your personal social media passwords"
+    ],
+    "answer": 1,
+    "explanation": "A portfolio should showcase relevant evidence of skill, including photos, awards, certificates, reference letters, and a brief career statement.",
+    "category": "Employment Portfolio",
+    "difficulty": "medium",
+    "lessonSection": "Prepare for Employment",
+    "learningObjective": "LO-2",
+    "relatedFlashcards": [],
+    "textbookPages": [
+      "719",
+      "720"
+    ],
+    "type": "knowledge"
+  },
+  {
+    "id": "qq-19-13",
+    "question": "After researching a barbershop through a visit and deciding you would like to apply, what is the most effective next step?",
+    "options": [
+      "A. Post a public review praising or criticizing the shop to get noticed",
+      "B. Send a résumé with a tailored cover letter that references your visit",
+      "C. Wait at least one month so the owner does not think you are too eager",
+      "D. Ask the owner to skip the interview because you already observed the shop"
+    ],
+    "answer": 1,
+    "explanation": "A cover letter introduces you, identifies the position you want, and connects your research to the specific shop. Follow the employer's submission guidelines and follow up after about a week.",
+    "category": "Networking & Employer Research",
+    "difficulty": "hard",
+    "lessonSection": "Arrange for a Job Interview",
+    "learningObjective": "LO-3",
+    "relatedFlashcards": [],
+    "textbookPages": [
+      "720",
+      "721",
+      "722"
+    ],
+    "type": "application"
+  },
+  {
+    "id": "qq-19-14",
+    "question": "Which combination best represents professional interview etiquette and image?",
+    "options": [
+      "A. Arrive early, dress appropriately, turn off your phone, and send a thank-you note afterward",
+      "B. Chew gum, keep your phone on, and update social media during the interview",
+      "C. Wear casual street clothes and bring a snack to stay comfortable",
+      "D. Criticize a former employer to show you have high standards"
+    ],
+    "answer": 0,
+    "explanation": "Professional image and etiquette begin before the interview starts and continue afterward. Being prompt, polished, attentive, and gracious leaves a lasting positive impression.",
+    "category": "Interview Preparation",
+    "difficulty": "easy",
+    "lessonSection": "Arrange for a Job Interview",
+    "learningObjective": "LO-3",
+    "relatedFlashcards": [],
+    "textbookPages": [
+      "724",
+      "726",
+      "727"
+    ],
+    "type": "application"
+  },
+  {
+    "id": "qq-19-15",
+    "question": "An interviewer asks, 'How old are you?' This question is generally inappropriate because:",
+    "options": [
+      "A. Age is never relevant to any job under any circumstances",
+      "B. It may lead to illegal age discrimination in hiring decisions",
+      "C. Barbers are not allowed to know their own age",
+      "D. The question should be asked only after you are hired"
+    ],
+    "answer": 1,
+    "explanation": "Except where the law requires verification that a worker is old enough to be employed, questions about age are improper and can support discriminatory hiring. Respond politely and professionally without being confrontational.",
+    "category": "Professional Conduct & Legal Responsibilities",
+    "difficulty": "hard",
+    "lessonSection": "Arrange for a Job Interview",
+    "learningObjective": "LO-3",
+    "relatedFlashcards": [],
+    "textbookPages": [
+      "728",
+      "729",
+      "730"
+    ],
+    "type": "critical"
+  }
+]

@@ -164,7 +164,7 @@ export const demoChapters: Chapter[] = [
   { id: 'ch-16', chapter_number: 16, title: "Women's Haircutting & Styling", description: 'Master the design philosophy, foundational structures, texture analysis, and professional mindset for women\'s haircutting and styling.', content: null, order_index: 16, is_active: true },
   { id: 'ch-17', chapter_number: 17, title: 'Barbershop Management', description: 'Learn the business side of barbering including shop management and operations.', content: null, order_index: 17, is_active: true },
   { id: 'ch-18', chapter_number: 18, title: 'Haircoloring and Lightening', description: 'Color theory, product selection, application, and safety for haircoloring and lightening services.', content: null, order_index: 18, is_active: true },
-  { id: 'ch-19', chapter_number: 19, title: 'Hair Replacement Systems', description: 'Explore hair replacement options, toupees, and non-surgical hair restoration.', content: null, order_index: 19, is_active: true },
+  { id: 'ch-19', chapter_number: 19, title: 'Preparing for Licensure and Employment', description: 'Prepare for state licensure, job search, résumé and portfolio development, interviews, and employment contracts.', content: null, order_index: 19, is_active: true },
   { id: 'ch-20', chapter_number: 20, title: 'Color Theory and Application', description: 'Deep dive into hair color theory, formulation, and application techniques.', content: null, order_index: 20, is_active: true },
   { id: 'ch-21', chapter_number: 21, title: 'Final Exam Preparation', description: 'Comprehensive final exam preparation with practice tests and review materials.', content: null, order_index: 21, is_active: true },
 ]
@@ -272,6 +272,15 @@ if (realFlashcards['ch-18'] && realFlashcards['ch-18'].length > 0) {
   }))
 }
 
+// Chapter 19: Use premium flashcards (real content)
+if (realFlashcards['ch-19'] && realFlashcards['ch-19'].length > 0) {
+  demoFlashcards['ch-19'] = realFlashcards['ch-19'].map((fc, idx) => ({
+    ...fc,
+    order_index: idx + 1,
+    is_active: true,
+  }))
+}
+
 // BATCH 4: Wire orphaned flashcards for Ch 17, 18, 19, 20, 21
 const batch4Chapters = ['ch-17', 'ch-18', 'ch-19', 'ch-20', 'ch-21']
 for (const chId of batch4Chapters) {
@@ -330,6 +339,8 @@ export const demoQuizzes: Record<string, Quiz> = {
   'ch-16': { id: 'quiz-16', chapter_id: 'ch-16', title: "Women's Haircutting & Styling — Premium Quiz", description: '30 board-exam style questions. Passing score: 80%.', is_active: true, passing_score: 80 },
   // Chapter 18: Premium flashcard-driven quiz (15 questions)
   'ch-18': { id: 'quiz-18', chapter_id: 'ch-18', title: 'Haircoloring and Lightening — Premium Quiz', description: '15 board-exam style questions. Passing score: 80%.', is_active: true, passing_score: 80 },
+  // Chapter 19: Premium flashcard-driven quiz (15 questions)
+  'ch-19': { id: 'quiz-19', chapter_id: 'ch-19', title: 'Preparing for Licensure and Employment — Premium Quiz', description: '15 board-exam style questions on licensure, job search, résumé/portfolio, interviews, and contracts. Passing score: 80%.', is_active: true, passing_score: 80 },
 }
 
 for (let i = 3; i <= 21; i++) {

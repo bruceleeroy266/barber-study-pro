@@ -25,6 +25,7 @@ import { chapter15PremiumQuizQuestions } from './chapter-15-premium-quiz'
 import { chapter16PremiumQuizQuestions } from './chapter-16-premium-quiz'
 import { chapter17PremiumQuizQuestions } from './chapter-17-premium-quiz'
 import { chapter18PremiumQuizQuestions } from './chapter-18-premium-quiz'
+import { chapter19PremiumQuizQuestions } from './chapter-19-premium-quiz'
 
 // ───────────────────────────────────────────────
 // CHAPTER 1: History of Barbering — PREMIUM QUIZ
@@ -133,6 +134,11 @@ export const chapter17QuizQuestions: QuizQuestion[] = chapter17PremiumQuizQuesti
 export const chapter18QuizQuestions: QuizQuestion[] = chapter18PremiumQuizQuestions
 
 // ───────────────────────────────────────────────
+// CHAPTER 19: Preparing for Licensure and Employment — PREMIUM QUIZ
+// ───────────────────────────────────────────────
+export const chapter19QuizQuestions: QuizQuestion[] = chapter19PremiumQuizQuestions
+
+// ───────────────────────────────────────────────
 // Export all quiz questions by chapter
 // ───────────────────────────────────────────────
 export const allQuizQuestions: Record<string, QuizQuestion[]> = {
@@ -154,4 +160,5 @@ export const allQuizQuestions: Record<string, QuizQuestion[]> = {
   'quiz-16': chapter16QuizQuestions,
   'quiz-17': chapter17QuizQuestions,
   'quiz-18': chapter18QuizQuestions,
+  'quiz-19': chapter19QuizQuestions,
 }
