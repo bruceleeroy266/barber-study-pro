@@ -62,7 +62,7 @@ export default function ReflectionBlock({ questions, theme }: ReflectionBlockPro
               }}
             >
               <div className="flex items-center gap-2 mb-2">
-                <MessageSquare className="w-4 h-4" style={{ color: t.primary }} />
+                <MessageSquare className="w-4 h-4" style={{ color: t.primary }} aria-hidden="true" />
                 <span className="text-xs font-bold uppercase tracking-widest" style={{ color: t.primary }}>
                   Professional Reflection
                 </span>
@@ -93,7 +93,8 @@ export default function ReflectionBlock({ questions, theme }: ReflectionBlockPro
                   <button
                     onClick={() => handleSubmit(idx)}
                     disabled={!hasResponse}
-                    className="mt-3 flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all disabled:opacity-40"
+                    aria-label="Submit reflection and reveal insight"
+                    className="mt-3 flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
                     style={{
                       background: hasResponse
                         ? `linear-gradient(135deg, ${t.primary}, ${t.primaryDark})`
@@ -101,7 +102,7 @@ export default function ReflectionBlock({ questions, theme }: ReflectionBlockPro
                       color: hasResponse ? '#fff' : t.textMuted,
                     }}
                   >
-                    <Send className="w-4 h-4" />
+                    <Send className="w-4 h-4" aria-hidden="true" />
                     Reflect & Reveal
                   </button>
                 </>
@@ -137,10 +138,11 @@ export default function ReflectionBlock({ questions, theme }: ReflectionBlockPro
                   </div>
                   <button
                     onClick={() => handleReset(idx)}
-                    className="flex items-center gap-2 text-xs transition-all hover:opacity-80"
+                    aria-label="Reset reflection and try again"
+                    className="flex items-center gap-2 text-xs transition-all hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1"
                     style={{ color: t.textMuted }}
                   >
-                    <RotateCcw className="w-3 h-3" />
+                    <RotateCcw className="w-3 h-3" aria-hidden="true" />
                     Reflect Again
                   </button>
                 </div>

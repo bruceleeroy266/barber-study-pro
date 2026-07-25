@@ -244,7 +244,8 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
                     <button
                       key={option.letter}
                       onClick={() => selectAnswer(sIdx, option.letter)}
-                      className="w-full text-left rounded-lg p-3 transition-all text-sm flex items-center gap-3"
+                      aria-label={`Option ${option.letter}: ${option.text}`}
+                      className="w-full text-left rounded-lg p-3 transition-all text-sm flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
                       style={{
                         backgroundColor: bgColor,
                         borderColor: borderColor,
@@ -264,10 +265,10 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
                       </span>
                       <span style={{ color: t.text }}>{option.text}</span>
                       {isRevealed && isCorrectOption && (
-                        <CheckCircle className="w-4 h-4 ml-auto flex-shrink-0" style={{ color: '#10B981' }} />
+                        <CheckCircle className="w-4 h-4 ml-auto flex-shrink-0" style={{ color: '#10B981' }} aria-hidden="true" />
                       )}
                       {isRevealed && isSelected && !isCorrectOption && (
-                        <XCircle className="w-4 h-4 ml-auto flex-shrink-0" style={{ color: '#EF4444' }} />
+                        <XCircle className="w-4 h-4 ml-auto flex-shrink-0" style={{ color: '#EF4444' }} aria-hidden="true" />
                       )}
                     </button>
                   )
@@ -279,7 +280,8 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
                 <button
                   onClick={() => revealAnswer(sIdx)}
                   disabled={selected === undefined}
-                  className="w-full rounded-lg py-2.5 text-sm font-semibold transition-all disabled:opacity-50"
+                  aria-label="Check answer"
+                  className="w-full rounded-lg py-2.5 text-sm font-semibold transition-all disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
                   style={{
                     backgroundColor: selected !== undefined ? t.primary : t.backgroundAlt,
                     color: selected !== undefined ? '#fff' : t.textMuted,
@@ -292,6 +294,8 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
               {/* Feedback */}
               {isRevealed && selected && (
                 <div
+                  aria-live="polite"
+                  aria-atomic="true"
                   className="rounded-lg p-4 mt-3"
                   style={{
                     backgroundColor: isCorrect ? 'rgba(16, 185, 129, 0.1)' : 'rgba(245, 166, 35, 0.1)',
@@ -299,7 +303,7 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
                   }}
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <Lightbulb className="w-4 h-4" style={{ color: isCorrect ? '#10B981' : '#F59E0B' }} />
+                    <Lightbulb className="w-4 h-4" style={{ color: isCorrect ? '#10B981' : '#F59E0B' }} aria-hidden="true" />
                     <span className="text-xs font-bold uppercase" style={{ color: isCorrect ? '#10B981' : '#F59E0B' }}>
                       {isCorrect ? 'Correct! Well done!' : 'Not quite — here\'s why:'}
                     </span>
@@ -314,7 +318,8 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
               {isRevealed && (
                 <button
                   onClick={() => resetScenario(sIdx)}
-                  className="w-full mt-4 rounded-lg py-2 text-sm font-medium transition-all"
+                  aria-label="Try this scenario again"
+                  className="w-full mt-4 rounded-lg py-2 text-sm font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
                   style={{
                     backgroundColor: 'transparent',
                     color: t.primaryLight,
