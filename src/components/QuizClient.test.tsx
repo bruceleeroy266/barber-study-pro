@@ -140,9 +140,9 @@ describe('QuizClient', () => {
     mocks.saveMissedQuestions.mockResolvedValue({ ok: true })
   })
 
-  it('shows the textbook notice and 80% passing score before the quiz starts', () => {
+  it('shows the study notice and 80% passing score before the quiz starts', () => {
     renderQuiz()
-    expect(screen.getByText(/Some questions may require information from your assigned textbook/i)).toBeInTheDocument()
+    expect(screen.getByText(/Some questions may require information from your assigned course materials/i)).toBeInTheDocument()
     expect(screen.getByText(/Passing: 80%/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Start Quiz/i })).toBeInTheDocument()
   })
@@ -151,7 +151,7 @@ describe('QuizClient', () => {
     await completeQuiz(0)
 
     await waitFor(() => {
-      expect(screen.getByText(/Review the flashcards and the corresponding textbook chapter, then retake the quiz/i)).toBeInTheDocument()
+      expect(screen.getByText(/Review the flashcards and the corresponding lesson, then retake the quiz/i)).toBeInTheDocument()
       expect(screen.getByRole('button', { name: /Review and Retake Quiz/i })).toBeInTheDocument()
       expect(screen.queryByRole('link', { name: /Continue to Chapter/i })).not.toBeInTheDocument()
     })
