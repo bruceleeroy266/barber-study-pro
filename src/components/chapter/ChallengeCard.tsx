@@ -40,6 +40,13 @@ export default function ChallengeCard({ challenges, theme }: ChallengeCardProps)
     })
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, idx: number) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      toggleComplete(idx)
+    }
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {challenges.map((challenge, idx) => {
@@ -50,7 +57,11 @@ export default function ChallengeCard({ challenges, theme }: ChallengeCardProps)
         return (
           <div
             key={idx}
-            className="rounded-xl p-5 transition-all duration-300 hover:scale-[1.02] cursor-pointer"
+            role="button"
+            tabIndex={0}
+            aria-pressed={isCompleted}
+            aria-label={`${challenge.title}. ${challenge.description} ${challenge.action}. ${isCompleted ? 'Completed' : 'Not completed'}. Press Enter or Space to toggle.`}
+            className="rounded-xl p-5 transition-all duration-300 hover:scale-[1.02] cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2 focus:ring-offset-gray-900"
             style={{
               backgroundColor: isCompleted ? 'rgba(16, 185, 129, 0.1)' : t.background,
               borderColor: isCompleted ? 'rgba(16, 185, 129, 0.4)' : t.border,
@@ -58,6 +69,7 @@ export default function ChallengeCard({ challenges, theme }: ChallengeCardProps)
               borderStyle: 'solid',
             }}
             onClick={() => toggleComplete(idx)}
+            onKeyDown={(e) => handleKeyDown(e, idx)}
           >
             <div className="flex items-start justify-between mb-3">
               <div
@@ -70,7 +82,7 @@ export default function ChallengeCard({ challenges, theme }: ChallengeCardProps)
                 {challenge.badge}
               </div>
               <div className="flex items-center gap-1">
-                <DiffIcon className="w-3 h-3" style={{ color: config.color }} />
+                <DiffIcon className="w-3 h-3" style={{ color: config.color }} aria-hidden="true" />
                 <span className="text-xs font-medium" style={{ color: config.color }}>
                   {config.label}
                 </span>
@@ -109,7 +121,7 @@ export default function ChallengeCard({ challenges, theme }: ChallengeCardProps)
                   borderStyle: 'solid',
                 }}
               >
-                {isCompleted && <CheckCircle className="w-3 h-3 text-white" />}
+                {isCompleted && <CheckCircle className="w-3 h-3 text-white" aria-hidden="true" />}
               </div>
               <span className="text-xs font-medium" style={{ color: isCompleted ? '#10B981' : t.textMuted }}>
                 {isCompleted ? 'Completed! +' + (challenge.difficulty === 'easy' ? '50' : challenge.difficulty === 'medium' ? '100' : '200') + ' XP' : 'Tap to complete'}

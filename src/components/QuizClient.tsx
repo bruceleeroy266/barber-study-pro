@@ -9,6 +9,8 @@ import { saveMissedQuestions } from '@/lib/missed-questions'
 import { getCategoryForChapter } from '@/lib/analytics'
 import { calculateQuizScore } from '@/lib/quiz-scoring'
 import { Quiz, QuizQuestion, QuizAttempt } from '@/types'
+import RemediationPanel from './chapter/RemediationPanel'
+import type { ChapterCompetency, ChapterRemediationPath } from '@/lib/chapter-content'
 
 interface QuizClientProps {
   quiz: Quiz
@@ -18,6 +20,8 @@ interface QuizClientProps {
   nextChapterNumber?: number | null
   userId: string | undefined
   bestAttempt: QuizAttempt | null
+  remediation?: ChapterRemediationPath[]
+  competencies?: ChapterCompetency[]
 }
 
 // ───────────────────────────────────────────────
@@ -64,6 +68,8 @@ export default function QuizClient({
   nextChapterNumber,
   userId,
   bestAttempt,
+  remediation = [],
+  competencies = [],
 }: QuizClientProps) {
   const [started, setStarted] = useState(false)
   const [currentQuestion, setCurrentQuestion] = useState(0)
@@ -278,17 +284,17 @@ export default function QuizClient({
           </p>
         </div>
 
-        {/* Book + ASCYN textbook notice */}
+        {/* ASCYN study notice */}
         <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg text-left">
           <p className="text-blue-300 text-sm leading-relaxed">
-            Some questions may require information from your assigned textbook.
-            ASCYN PRO is designed to be used alongside your textbook and classroom instruction.
+            Some questions may require information from your assigned course materials.
+            ASCYN PRO is designed to be used alongside your program materials and classroom instruction.
           </p>
         </div>
 
         <button
           onClick={() => setStarted(true)}
-          className="px-8 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] transition-colors shadow-lg shadow-[#D4AF37]/20"
+          className="px-8 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] transition-colors shadow-lg shadow-[#D4AF37]/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
         >
           {bestAttempt ? 'Retake Quiz' : 'Start Quiz'}
         </button>
@@ -329,11 +335,11 @@ export default function QuizClient({
 
         {passed ? (
           <p className="text-green-400 mb-6 font-medium">
-            Quiz passed. Review your missed questions, flashcards, and textbook anytime, or retake the quiz to improve your score.
+            Quiz passed. Review your missed questions, flashcards, and course materials anytime, or retake the quiz to improve your score.
           </p>
         ) : (
           <p className="text-yellow-400 mb-6 font-medium">
-            Review the flashcards and the corresponding textbook chapter, then retake the quiz.
+            Review the flashcards and the corresponding lesson, then retake the quiz.
           </p>
         )}
 
@@ -374,6 +380,19 @@ export default function QuizClient({
           </div>
         )}
 
+        {/* Targeted Remediation */}
+        {remediation.length > 0 && competencies.length > 0 && (
+          <div className="mt-8">
+            <RemediationPanel
+              remediation={remediation}
+              competencies={competencies}
+              missedQuestionIds={missedQuestions.map((sq) => sq.original.id)}
+              chapterNumber={chapterNumber}
+              onRetryQuiz={restartQuiz}
+            />
+          </div>
+        )}
+
         {/* Result actions */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
           {passed ? (
@@ -381,21 +400,21 @@ export default function QuizClient({
               {nextChapterNumber ? (
                 <Link
                   href={`/dashboard/chapters/${nextChapterNumber}`}
-                  className="px-6 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] transition-colors text-center"
+                  className="px-6 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] transition-colors text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
                 >
                   Continue to Chapter {nextChapterNumber}
                 </Link>
               ) : (
                 <Link
                   href="/dashboard"
-                  className="px-6 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] transition-colors text-center"
+                  className="px-6 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] transition-colors text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
                 >
                   Return to Dashboard
                 </Link>
               )}
               <button
                 onClick={restartQuiz}
-                className="px-6 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors border border-gray-600"
+                className="px-6 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors border border-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
               >
                 Retake Quiz
               </button>
@@ -403,7 +422,7 @@ export default function QuizClient({
           ) : (
             <button
               onClick={restartQuiz}
-              className="px-6 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] transition-colors"
+              className="px-6 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
             >
               Review and Retake Quiz
             </button>
@@ -440,7 +459,14 @@ export default function QuizClient({
       </div>
 
       {/* Progress bar */}
-      <div className="w-full bg-gray-800 rounded-full h-2 overflow-hidden">
+      <div
+        className="w-full bg-gray-800 rounded-full h-2 overflow-hidden"
+        role="progressbar"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(progress)}
+        aria-label={`Quiz progress: question ${currentQuestion + 1} of ${shuffledQuestions.length}`}
+      >
         <div
           className="bg-gradient-to-r from-[#D4AF37] to-[#F4E4A6] h-2 rounded-full transition-all duration-500"
           style={{ width: `${progress}%` }}
@@ -465,7 +491,7 @@ export default function QuizClient({
                 key={option.key}
                 onClick={() => handleSelectAnswer(option.key)}
                 disabled={showExplanation}
-                className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-200 ${
+                className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 ${
                   showCorrect
                     ? 'bg-green-500/10 border-green-500 text-green-400'
                     : showWrong
@@ -497,7 +523,7 @@ export default function QuizClient({
           <button
             onClick={handleSubmitAnswer}
             disabled={!selectedAnswer}
-            className="px-6 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-lg shadow-[#D4AF37]/10"
+            className="px-6 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-lg shadow-[#D4AF37]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
           >
             Submit Answer
           </button>
@@ -505,7 +531,7 @@ export default function QuizClient({
           <button
             onClick={handleNext}
             disabled={saving}
-            className="px-6 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] disabled:opacity-50 transition-colors shadow-lg shadow-[#D4AF37]/10"
+            className="px-6 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] disabled:opacity-50 transition-colors shadow-lg shadow-[#D4AF37]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
           >
             {saving
               ? 'Saving...'

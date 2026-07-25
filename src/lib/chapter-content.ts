@@ -18,7 +18,8 @@ import { chapter15PremiumContent, chapter15PremiumTheme } from './chapter-15-pre
 import { chapter16PremiumContent, chapter16PremiumTheme } from './chapter-16-premium'
 import { chapter17PremiumContent, chapter17PremiumTheme } from './chapter-17-premium'
 import { chapter18PremiumContent, chapter18PremiumTheme } from './chapter-18-premium'
-import { chapter19PremiumContent } from './chapter-19-premium-content'
+import { chapter19PremiumContent, chapter19PremiumTheme } from './chapter-19-premium-content'
+import { chapter20PremiumContent, chapter20PremiumTheme } from './chapter-20-premium-content'
 
 // ───────────────────────────────────────────────
 // Section Types (discriminated union)
@@ -203,6 +204,7 @@ export interface ScenarioOption {
 }
 
 export interface ScenarioBlockItem {
+  id?: string
   situation: string
   options: ScenarioOption[]
   correctAnswer: string
@@ -328,6 +330,7 @@ export interface ProTipSection extends BaseSection {
 
 // Reflection Block — interactive journaling prompts
 export interface ReflectionQuestion {
+  id?: string
   question: string
   placeholder: string
   insight: string
@@ -2665,7 +2668,7 @@ export const chapterContentData: Record<string, ChapterContent> = {
         type: 'contentBlock',
         id: 'posture-intro',
         title: 'Posture: The Foundation of Longevity',
-        content: "Your posture determines how long your career lasts. Poor alignment doesn't just cause pain — it shortens careers. The textbook identifies four common posture problems that barbers develop over time: hunchback (rounded upper back), swayback (excessive lower back curve), flat back (loss of natural curves), and combined hunchback-swayback. Recognizing these patterns early and correcting them through awareness and exercise is essential for a sustainable career.",
+        content: "Your posture determines how long your career lasts. Poor alignment doesn't just cause pain — it shortens careers. Professional barbering practice recognizes four common posture problems that barbers develop over time: hunchback (rounded upper back), swayback (excessive lower back curve), flat back (loss of natural curves), and combined hunchback-swayback. Recognizing these patterns early and correcting them through awareness and exercise is essential for a sustainable career.",
         highlight: 'Your posture determines how long your career lasts',
       },
       {
@@ -2780,7 +2783,7 @@ export const chapterContentData: Record<string, ChapterContent> = {
         type: 'contentBlock',
         id: 'stress-relief-intro',
         title: 'Daily Stress-Relief Exercises for Barbers',
-        content: 'Repetitive motions and sustained positions create cumulative stress on your body. The textbook recommends specific exercises targeting the areas most affected by barbering: wrists, fingers, and shoulders. These exercises take less than 5 minutes and should be performed between clients or during breaks. Prevention is always easier than recovery.',
+        content: 'Repetitive motions and sustained positions create cumulative stress on your body. A solid self-care routine includes specific exercises targeting the areas most affected by barbering: wrists, fingers, and shoulders. These exercises take less than 5 minutes and should be performed between clients or during breaks. Prevention is always easier than recovery.',
         highlight: 'Prevention is always easier than recovery',
       },
       {
@@ -2831,7 +2834,7 @@ export const chapterContentData: Record<string, ChapterContent> = {
         type: 'contentBlock',
         id: 'manners-intro',
         title: 'Good Manners: The Invisible Professional Edge',
-        content: "Good manners reflect thoughtfulness, respect, and tolerance toward others. In barbering, they include exercising care of others' property, being considerate of coworkers, and showing courtesy to every person who enters the shop. Mannerisms — your habitual behaviors and gestures — either reinforce your professional image or undermine it. The textbook specifically warns against gum chewing, nervous habits, and negative body language that clients notice instantly.",
+        content: "Good manners reflect thoughtfulness, respect, and tolerance toward others. In barbering, they include exercising care of others' property, being considerate of coworkers, and showing courtesy to every person who enters the shop. Mannerisms — your habitual behaviors and gestures — either reinforce your professional image or undermine it. Professional standards strongly discourage gum chewing, nervous habits, and negative body language that clients notice instantly.",
         highlight: 'Mannerisms either reinforce your image or undermine it',
       },
       {
@@ -2935,7 +2938,7 @@ export const chapterContentData: Record<string, ChapterContent> = {
         type: 'contentBlock',
         id: 'conversation-intro',
         title: 'Conversation Topics: What to Discuss and What to Avoid',
-        content: "The barber chair is a place of trust. Clients share their lives with you, and how you handle that trust defines your professionalism. The textbook specifically identifies topics that should never be discussed in the barbershop: religion, politics, personal problems, and gossip about other clients or coworkers. These topics create division, discomfort, and can damage the welcoming atmosphere every shop needs.",
+        content: "The barber chair is a place of trust. Clients share their lives with you, and how you handle that trust defines your professionalism. Industry best practice identifies topics that should never be discussed in the barbershop: religion, politics, personal problems, and gossip about other clients or coworkers. These topics create division, discomfort, and can damage the welcoming atmosphere every shop needs.",
         highlight: 'The barber chair is a place of trust',
       },
       {
@@ -2986,7 +2989,7 @@ export const chapterContentData: Record<string, ChapterContent> = {
         type: 'contentBlock',
         id: 'social-media-expanded',
         title: 'Social Media: Building Your Brand the Right Way',
-        content: "Social media is one of the most powerful tools for building your barbering career — but it's also one of the fastest ways to damage it. The textbook emphasizes that maintaining a professional online image is a daily process that requires intention. Your social media presence should reflect the same standards you maintain in the shop: professionalism, positivity, and respect.",
+        content: "Social media is one of the most powerful tools for building your barbering career — but it's also one of the fastest ways to damage it. Maintaining a professional online image is a daily process that requires intention. Your social media presence should reflect the same standards you maintain in the shop: professionalism, positivity, and respect.",
         highlight: 'Maintaining a professional online image is a daily process',
       },
       {
@@ -3103,6 +3106,7 @@ export const chapterContentData: Record<string, ChapterContent> = {
   'ch-17': chapter17PremiumContent,
   'ch-18': chapter18PremiumContent,
   'ch-19': chapter19PremiumContent,
+  'ch-20': chapter20PremiumContent,
 }
 
 // ───────────────────────────────────────────────

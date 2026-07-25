@@ -5,6 +5,8 @@ import FlashcardClient from '@/components/FlashcardClient'
 import QuizClient from '@/components/QuizClient'
 import ChapterContent from '@/components/chapter/ChapterContent'
 import ChapterHeader from '@/components/chapter/ChapterHeader'
+import MasteryPanel from '@/components/chapter/MasteryPanel'
+import RemediationPanel from '@/components/chapter/RemediationPanel'
 import { getChapterContent } from '@/lib/chapter-content'
 import { localChapters, getLocalFlashcards, getLocalQuiz, getLocalQuizQuestions } from '@/lib/local-data'
 
@@ -69,6 +71,21 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
     .limit(1)
     .maybeSingle()
 
+  // Get chapter content for theme/subtitle/remediation/mastery
+  const chapterContent = getChapterContent(num)
+
+  // Determine missed questions from the best attempt for persistent remediation review.
+  const missedQuestionIds: string[] = []
+  if (bestAttempt?.answers_json && typeof bestAttempt.answers_json === 'object') {
+    const answers = bestAttempt.answers_json as Record<string, string>
+    const correctAnswers = new Map(questions.map((q) => [q.id, q.correct_answer]))
+    for (const [questionId, answer] of Object.entries(answers)) {
+      if (correctAnswers.get(questionId) !== answer) {
+        missedQuestionIds.push(questionId)
+      }
+    }
+  }
+
   return (
     <div className="space-y-8">
       {/* Breadcrumb */}
@@ -95,17 +112,28 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
         num={num}
         title={chapter.title}
         description={chapter.description || ''}
-        subtitle={getChapterContent(num)?.subtitle}
+        subtitle={chapterContent?.subtitle}
         flashcardsCount={flashcards?.length || 0}
         questionsCount={questions?.length || 0}
         bestAttempt={bestAttempt}
-        theme={getChapterContent(num)?.theme}
+        theme={chapterContent?.theme}
       />
 
+      {/* Mastery Panel */}
+      {chapterContent && (
+        <MasteryPanel
+          learningObjectives={chapterContent.learningObjectives}
+          competencies={chapterContent.competencies}
+          mastery={chapterContent.mastery}
+          bestAttemptPercentage={bestAttempt?.percentage ?? null}
+          theme={chapterContent.theme}
+        />
+      )}
+
       {/* Chapter Content */}
-      <ChapterContent 
-        sections={getChapterContent(num)?.sections || []} 
-        theme={getChapterContent(num)?.theme}
+      <ChapterContent
+        sections={chapterContent?.sections || []}
+        theme={chapterContent?.theme}
       />
 
       {/* Flashcards Section */}
@@ -155,8 +183,20 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
             nextChapterNumber={nextChapterNumber}
             userId={user?.id}
             bestAttempt={bestAttempt}
+            remediation={chapterContent?.remediation || []}
+            competencies={chapterContent?.competencies || []}
           />
         </div>
+      )}
+
+      {/* Persistent Remediation Review */}
+      {chapterContent && missedQuestionIds.length > 0 && (
+        <RemediationPanel
+          remediation={chapterContent.remediation || []}
+          competencies={chapterContent.competencies || []}
+          missedQuestionIds={missedQuestionIds}
+          chapterNumber={num}
+        />
       )}
 
       {/* Navigation */}
