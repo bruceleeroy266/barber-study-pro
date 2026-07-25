@@ -1,7 +1,7 @@
 // Real flashcards for ASCYN PRO V2
 // Chapter 1: Premium image-based rebuild (45 cards, 6 categories)
 // Chapters 2-4: Legacy content (to be rebuilt)
-// DO NOT copy textbook sentences directly - all content is paraphrased
+// All content is original and written in ASCYN PRO voice
 
 export interface Flashcard {
   id: string;
@@ -55,6 +55,10 @@ export { chapter16PremiumFlashcards } from './chapter-16-premium-flashcards'
 export { chapter18PremiumFlashcards } from './chapter-18-premium-flashcards'
 // Re-export Chapter 19 premium flashcards
 export { chapter19PremiumFlashcards } from './chapter-19-premium-flashcards'
+// Re-export Chapter 20 premium flashcards
+export { chapter20PremiumFlashcards } from './chapter-20-premium-flashcards'
+// Re-export Chapter 21 premium flashcards
+export { chapter21PremiumFlashcards } from './chapter-21-premium-flashcards'
 import { chapter1PremiumFlashcards } from './chapter-1-premium-flashcards'
 import { chapter2PremiumFlashcards } from './chapter-2-premium-flashcards'
 import { chapter3PremiumFlashcards } from './chapter-3-premium-flashcards'
@@ -72,6 +76,8 @@ import { chapter15PremiumFlashcards } from './chapter-15-premium-flashcards'
 import { chapter16PremiumFlashcards } from './chapter-16-premium-flashcards'
 import { chapter18PremiumFlashcards } from './chapter-18-premium-flashcards'
 import { chapter19PremiumFlashcards } from './chapter-19-premium-flashcards'
+import { chapter20PremiumFlashcards } from './chapter-20-premium-flashcards'
+import { chapter21PremiumFlashcards } from './chapter-21-premium-flashcards'
 
 export const chapterFlashcards: Record<string, Flashcard[]> = {
   'ch-1': chapter1PremiumFlashcards,
@@ -91,6 +97,8 @@ export const chapterFlashcards: Record<string, Flashcard[]> = {
   'ch-16': chapter16PremiumFlashcards,
   'ch-18': chapter18PremiumFlashcards,
   'ch-19': chapter19PremiumFlashcards,
+  'ch-20': chapter20PremiumFlashcards,
+  'ch-21': chapter21PremiumFlashcards,
 }
 
 export default chapterFlashcards
