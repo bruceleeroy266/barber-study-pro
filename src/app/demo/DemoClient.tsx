@@ -406,7 +406,7 @@ export default function DemoClient() {
                 For Students
               </div>
               <p className="text-sm text-[#5a6a7a]">
-                Walk into the board exam knowing exactly what you know — and what you've already mastered.
+                Walk into the board exam knowing exactly what you know — and what you&apos;ve already mastered.
               </p>
             </div>
           </div>
@@ -956,7 +956,7 @@ export default function DemoClient() {
                   The Problem: Wrong Answers Teach Nothing Without Explanation
                 </h3>
                 <p className="text-sm text-[#5a6a7a] leading-relaxed">
-                  A student misses a question and sees only "Incorrect." They remember they got it wrong, but not why.
+                  A student misses a question and sees only &quot;Incorrect.&quot; They remember they got it wrong, but not why.
                   The misconception remains. On the board exam, they make the same mistake again — because they were never taught the correct reasoning.
                 </p>
               </div>
@@ -1075,7 +1075,7 @@ export default function DemoClient() {
               <AlertTriangle className="w-5 h-5 text-[#c45c4a] mt-0.5 shrink-0" />
               <div>
                 <h3 className="text-sm font-semibold text-[#1a2332] mb-1">
-                  The Problem: No One Knows Who Needs Help Until It's Too Late
+                  The Problem: No One Knows Who Needs Help Until It&apos;s Too Late
                 </h3>
                 <p className="text-sm text-[#5a6a7a] leading-relaxed">
                   Instructors with 30 students cannot quiz each one individually. School owners discover a student is failing only when they fail the board exam.
@@ -1197,7 +1197,7 @@ export default function DemoClient() {
               <Award className="w-5 h-5 text-[#B8860B] mx-auto mb-2" />
               <p className="text-sm text-[#3a4a5a] font-medium">For Students</p>
               <p className="text-xs text-[#8a9aaa] mt-1">
-                Walk into the board exam knowing exactly what you've mastered.
+                Walk into the board exam knowing exactly what you&apos;ve mastered.
               </p>
             </div>
           </div>

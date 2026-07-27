@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, Circle, Sparkles, ShieldCheck } from 'lucide-react'
+import { Check, Sparkles, ShieldCheck } from 'lucide-react'
 import type { ChapterTheme } from '@/lib/chapter-content'
 import { defaultTheme } from '@/lib/chapter-content'
 

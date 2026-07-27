@@ -33,8 +33,9 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
 
   // Cleanup all intervals on unmount
   useEffect(() => {
+    const intervals = intervalRefs.current
     return () => {
-      Object.values(intervalRefs.current).forEach(clearInterval)
+      Object.values(intervals).forEach(clearInterval)
     }
   }, [])
 

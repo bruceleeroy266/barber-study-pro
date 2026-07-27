@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Crown, CheckCircle, Lock, ChevronRight, Star } from 'lucide-react'
+import { Crown, CheckCircle, ChevronRight, Star } from 'lucide-react'
 import type { ChapterTheme } from '@/lib/chapter-content'
 import { defaultTheme } from '@/lib/chapter-content'
 

@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
-import { Profile, AttendanceRecord, HourLog, QuizAttempt, StudentProgress, Grade, GradeCategory, Assessment } from '@/types'
+import { Profile, AttendanceRecord, HourLog, QuizAttempt, StudentProgress, Grade, GradeCategory, GradeCategoryRow, Assessment } from '@/types'
 import {
   demoStudents,
   demoAttendanceRecords,
@@ -49,12 +49,13 @@ export default async function StudentComplianceDashboard() {
       supabase.from('quiz_attempts').select('*').eq('user_id', student.id),
       supabase.from('student_progress').select('*').eq('user_id', student.id),
       supabase.from('grades').select('*').eq('studentId', student.id),
-      (profile?.school_id
-      ? supabase
-          .from('grade_categories')
-          .select('*')
-          .or(`school_id.eq.${profile.school_id},school_id.is.null`)
-      : supabase.from('grade_categories').select('*').is('school_id', null)),
+      (async () => {
+        if (profile?.school_id) {
+          const { data } = await supabase.from('grade_categories').select('*')
+          return { data: (data as GradeCategoryRow[] | null)?.filter((c: GradeCategoryRow) => c.school_id === profile.school_id || c.school_id === null) || [] }
+        }
+        return supabase.from('grade_categories').select('*').is('school_id', null)
+      })(),
       supabase.from('assessments').select('*').eq('studentId', student.id),
     ])
 

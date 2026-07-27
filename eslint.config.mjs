@@ -12,6 +12,11 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Standalone CommonJS utility/maintenance scripts (not part of the Next.js app).
+    // These run directly with `node <script>` and rely on CommonJS semantics (__dirname, require).
+    "check-chapters.js",
+    "fix-flashcards.js",
+    "scripts/**",
   ]),
 ]);
 

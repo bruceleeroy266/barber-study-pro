@@ -58,14 +58,14 @@ function createClient() {
   // Only use demo mode if explicitly enabled AND Supabase is not configured
   if (demoMode && !isSupabaseConfigured) {
     console.warn('[Barber Study Pro] Demo mode active — Supabase not configured')
-    return mockSupabase as any
+    return mockSupabase as unknown as ReturnType<typeof createBrowserClient>
   }
 
   // Production: require real Supabase
   if (!isSupabaseConfigured) {
     console.error('[Barber Study Pro] ERROR: Supabase not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY, or enable demo mode.')
     // Return mock to prevent crashes, but log error
-    return mockSupabase as any
+    return mockSupabase as unknown as ReturnType<typeof createBrowserClient>
   }
 
   return createBrowserClient(supabaseUrl, supabaseKey, {

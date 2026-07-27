@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Grade, GradeCategory, Assessment, Profile } from '@/types'
+import { Grade, GradeCategory, GradeCategoryRow, Assessment, Profile } from '@/types'
 import { isDemoFallbackEnabled } from '@/lib/demo-helpers'
 import {
   demoGradeCategories,
@@ -28,13 +28,17 @@ export default async function StudentGradesPage() {
 
   let grades: Grade[] = (gradesData as unknown as Grade[]) || []
 
-  let categoriesQuery = supabase.from('grade_categories').select('*')
+  let categoriesData: GradeCategoryRow[] | null = null
   if (profile?.school_id) {
-    categoriesQuery = categoriesQuery.or(`school_id.eq.${profile.school_id},school_id.is.null`)
+    // Fetch all and filter in memory for server-side compatibility
+    const { data: allCategories } = await supabase.from('grade_categories').select('*')
+    categoriesData = (allCategories as GradeCategoryRow[] | null)?.filter((c: GradeCategoryRow) => 
+      c.school_id === profile.school_id || c.school_id === null
+    ) || []
   } else {
-    categoriesQuery = categoriesQuery.is('school_id', null)
+    const { data } = await supabase.from('grade_categories').select('*').is('school_id', null)
+    categoriesData = data as GradeCategoryRow[] | null
   }
-  const { data: categoriesData } = await categoriesQuery
 
   let categories: GradeCategory[] = (categoriesData as unknown as GradeCategory[]) || []
 

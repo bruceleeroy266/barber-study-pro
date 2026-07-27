@@ -1,20 +1,18 @@
 // Chapter content data structures and content for Barber Study Pro V2
 // This is the FOUNDATION file for ALL chapters — reusable typed structures
 
-import { LucideIcon } from 'lucide-react'
-import { chapter4Content, chapter4Theme } from './chapter-4-content'
-import { chapter4PremiumContent, chapter4PremiumTheme } from './chapter-4-premium'
-import { chapter5PremiumContent, chapter5PremiumTheme } from './chapter-5-premium'
-import { chapter6PremiumContent, chapter6PremiumTheme } from './chapter-6-premium'
-import { chapter7PremiumContent, chapter7PremiumTheme } from './chapter-7-premium'
-import { chapter8PremiumContent, chapter8PremiumTheme } from './chapter-8-premium'
-import { chapter9PremiumContent, chapter9PremiumTheme } from './chapter-9-premium'
-import { chapter10PremiumContent, chapter10PremiumTheme } from './chapter-10-premium'
-import { chapter11PremiumContent, chapter11PremiumTheme } from './chapter-11-premium'
-import { chapter12PremiumContent, chapter12PremiumTheme } from './chapter-12-premium'
-import { chapter13PremiumContent, chapter13PremiumTheme } from './chapter-13-premium'
-import { chapter14PremiumContent, chapter14PremiumTheme } from './chapter-14-premium'
-import { chapter15PremiumContent, chapter15PremiumTheme } from './chapter-15-premium'
+import { chapter4PremiumContent } from './chapter-4-premium'
+import { chapter5PremiumContent } from './chapter-5-premium'
+import { chapter6PremiumContent } from './chapter-6-premium'
+import { chapter7PremiumContent } from './chapter-7-premium'
+import { chapter8PremiumContent } from './chapter-8-premium'
+import { chapter9PremiumContent } from './chapter-9-premium'
+import { chapter10PremiumContent } from './chapter-10-premium'
+import { chapter11PremiumContent } from './chapter-11-premium'
+import { chapter12PremiumContent } from './chapter-12-premium'
+import { chapter13PremiumContent } from './chapter-13-premium'
+import { chapter14PremiumContent } from './chapter-14-premium'
+import { chapter15PremiumContent } from './chapter-15-premium'
 
 // ───────────────────────────────────────────────
 // Section Types (discriminated union)

@@ -268,6 +268,7 @@ export class WeakAreaDetector {
     flashcardWeaknesses: WeakArea[],
     userId: string
   ): WeakArea[] {
+    void userId
     const combined = new Map<string, WeakArea>()
     
     // Add quiz weaknesses

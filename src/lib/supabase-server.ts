@@ -43,14 +43,22 @@ const demoSession = {
 }
 
 // Build a mock query result from data
-function mockResult(data: any, error: any = null) {
+function mockResult<T>(data: T, error: { message: string; code?: string } | null = null) {
   return Promise.resolve({ data, error })
+}
+
+type MockRow = Record<string, unknown>
+type MockFilter = (item: MockRow) => boolean
+type MockResolve = (value: { data: unknown; error: unknown }) => void
+
+function asMockRows(data: unknown[]): MockRow[] {
+  return data as MockRow[]
 }
 
 // Create a chainable mock query builder
 function createMockQueryBuilder(tableName: string) {
-  let currentData: any[] = []
-  let filters: Array<(item: any) => boolean> = []
+  let currentData: MockRow[] = []
+  const filters: MockFilter[] = []
   let singleMode = false
   let maybeSingleMode = false
   let orderField: string | null = null
@@ -60,44 +68,44 @@ function createMockQueryBuilder(tableName: string) {
   // Load initial data based on table
   switch (tableName) {
     case 'profiles':
-      currentData = [demoProfile, demoInstructorProfile, demoApprenticeProfile, ...demoStudents]
+      currentData = asMockRows([demoProfile, demoInstructorProfile, demoApprenticeProfile, ...demoStudents])
       break
     case 'schools':
-      currentData = [demoSchool]
+      currentData = asMockRows([demoSchool])
       break
     case 'chapters':
-      currentData = [...demoChapters]
+      currentData = asMockRows([...demoChapters])
       break
     case 'flashcards':
       // Will be filtered by chapter_id via .eq()
       currentData = []
       break
     case 'quizzes':
-      currentData = Object.values(getDemoQuiz('ch-1') || {}).filter(Boolean)
+      currentData = asMockRows(Object.values(getDemoQuiz('ch-1') || {}).filter(Boolean))
       break
     case 'quiz_questions':
       currentData = []
       break
     case 'quiz_attempts':
-      currentData = [...getDemoQuizAttempts('demo-user'), ...demoStudentQuizAttempts]
+      currentData = asMockRows([...getDemoQuizAttempts('demo-user'), ...demoStudentQuizAttempts])
       break
     case 'student_progress':
-      currentData = [...getDemoProgress('demo-user'), ...demoStudentProgress]
+      currentData = asMockRows([...getDemoProgress('demo-user'), ...demoStudentProgress])
       break
     case 'weak_areas':
       currentData = []
       break
     case 'instructor_notes':
-      currentData = [...demoInstructorNotes]
+      currentData = asMockRows([...demoInstructorNotes])
       break
     case 'hour_logs':
-      currentData = [...demoHourLogs]
+      currentData = asMockRows([...demoHourLogs])
       break
     case 'attendance_records':
-      currentData = [...demoAttendanceRecords]
+      currentData = asMockRows([...demoAttendanceRecords])
       break
     case 'attendance_notes':
-      currentData = [...demoInstructorAttendanceNotes]
+      currentData = asMockRows([...demoInstructorAttendanceNotes])
       break
     case 'final_exam_attempts':
       currentData = []
@@ -107,44 +115,47 @@ function createMockQueryBuilder(tableName: string) {
   }
 
   const builder = {
-    select: (_columns?: string) => builder,
+    select: (columns?: string) => {
+      void columns
+      return builder
+    },
 
-    eq: (field: string, value: any) => {
+    eq: (field: string, value: unknown) => {
       filters.push((item) => item[field] === value)
       return builder
     },
 
-    neq: (field: string, value: any) => {
+    neq: (field: string, value: unknown) => {
       filters.push((item) => item[field] !== value)
       return builder
     },
 
-    gt: (field: string, value: any) => {
-      filters.push((item) => item[field] > value)
+    gt: (field: string, value: unknown) => {
+      filters.push((item) => (item[field] as number) > (value as number))
       return builder
     },
 
-    gte: (field: string, value: any) => {
-      filters.push((item) => item[field] >= value)
+    gte: (field: string, value: unknown) => {
+      filters.push((item) => (item[field] as number) >= (value as number))
       return builder
     },
 
-    lt: (field: string, value: any) => {
-      filters.push((item) => item[field] < value)
+    lt: (field: string, value: unknown) => {
+      filters.push((item) => (item[field] as number) < (value as number))
       return builder
     },
 
-    lte: (field: string, value: any) => {
-      filters.push((item) => item[field] <= value)
+    lte: (field: string, value: unknown) => {
+      filters.push((item) => (item[field] as number) <= (value as number))
       return builder
     },
 
-    in: (field: string, values: any[]) => {
+    in: (field: string, values: unknown[]) => {
       filters.push((item) => values.includes(item[field]))
       return builder
     },
 
-    is: (field: string, value: any) => {
+    is: (field: string, value: unknown) => {
       filters.push((item) => item[field] === value)
       return builder
     },
@@ -171,7 +182,7 @@ function createMockQueryBuilder(tableName: string) {
     },
 
     // Execute and return result
-    then: (resolve: any) => {
+    then: (resolve: MockResolve) => {
       let result = [...currentData]
 
       // Apply all filters
@@ -181,11 +192,7 @@ function createMockQueryBuilder(tableName: string) {
 
       // Special handling for flashcards - load from demo data when chapter_id is filtered
       if (tableName === 'flashcards') {
-        const chapterFilter = filters.find(
-          () => true // We need to capture chapter_id from eq call
-        )
         // Re-load from demo data if we have a chapter_id match
-        const chapterIdEq = currentData.length === 0 ? null : currentData[0]?.chapter_id
         if (result.length === 0) {
           // Try to find chapter_id from the eq filter pattern
           // This is a simplified approach - we scan demo data for matching chapter
@@ -193,10 +200,10 @@ function createMockQueryBuilder(tableName: string) {
             const flashcards = getDemoFlashcards(ch.id)
             if (flashcards.length > 0) {
               // Check if any filter would match
-              const testItem = flashcards[0]
+              const testItem = flashcards[0] as unknown as MockRow
               const allMatch = filters.every((f) => f(testItem))
               if (allMatch) {
-                result = flashcards
+                result = flashcards as unknown as MockRow[]
                 break
               }
             }
@@ -209,9 +216,9 @@ function createMockQueryBuilder(tableName: string) {
         for (const ch of demoChapters) {
           const quiz = getDemoQuiz(ch.id)
           if (quiz) {
-            const allMatch = filters.every((f) => f(quiz))
+            const allMatch = filters.every((f) => f(quiz as unknown as MockRow))
             if (allMatch) {
-              result = [quiz]
+              result = [quiz as unknown as MockRow]
               break
             }
           }
@@ -223,21 +230,21 @@ function createMockQueryBuilder(tableName: string) {
         for (const quizId of Object.keys(getDemoQuizQuestions('quiz-1') ? { 'quiz-1': true } : {})) {
           const questions = getDemoQuizQuestions(quizId)
           if (questions.length > 0) {
-            const testItem = questions[0]
+            const testItem = questions[0] as unknown as MockRow
             const allMatch = filters.every((f) => f(testItem))
             if (allMatch) {
-              result = questions
+              result = questions as unknown as MockRow[]
               break
             }
           }
         }
         // Fallback: try all quiz IDs
         if (result.length === 0) {
-          const allQuestions: any[] = []
+          const allQuestions: MockRow[] = []
           for (let i = 1; i <= 21; i++) {
             const q = getDemoQuizQuestions(`quiz-${i}`)
             if (q.length > 0) {
-              const matched = q.filter((item) => filters.every((f) => f(item)))
+              const matched = (q as unknown as MockRow[]).filter((item) => filters.every((f) => f(item)))
               allQuestions.push(...matched)
             }
           }
@@ -279,35 +286,45 @@ function createMockQueryBuilder(tableName: string) {
     },
 
     // Insert mock
-    insert: (_values: any) => ({
-      select: () => ({
-        single: () => mockResult(null, null),
-      }),
-      then: (resolve: any) => resolve({ data: null, error: null }),
-    }),
+    insert: (values: unknown) => {
+      void values
+      return {
+        select: () => ({
+          single: () => mockResult(null, null),
+        }),
+        then: (resolve: MockResolve) => resolve({ data: null, error: null }),
+      }
+    },
 
     // Upsert mock
-    upsert: (_values: any, _options?: any) => ({
-      select: () => ({
-        single: () => mockResult(null, null),
-      }),
-      then: (resolve: any) => resolve({ data: null, error: null }),
-    }),
+    upsert: (values: unknown, options?: unknown) => {
+      void values
+      void options
+      return {
+        select: () => ({
+          single: () => mockResult(null, null),
+        }),
+        then: (resolve: MockResolve) => resolve({ data: null, error: null }),
+      }
+    },
 
     // Update mock
-    update: (_values: any) => ({
-      eq: () => ({
-        then: (resolve: any) => resolve({ data: null, error: null }),
-      }),
-      then: (resolve: any) => resolve({ data: null, error: null }),
-    }),
+    update: (values: unknown) => {
+      void values
+      return {
+        eq: () => ({
+          then: (resolve: MockResolve) => resolve({ data: null, error: null }),
+        }),
+        then: (resolve: MockResolve) => resolve({ data: null, error: null }),
+      }
+    },
 
     // Delete mock
     delete: () => ({
       eq: () => ({
-        then: (resolve: any) => resolve({ data: null, error: null }),
+        then: (resolve: MockResolve) => resolve({ data: null, error: null }),
       }),
-      then: (resolve: any) => resolve({ data: null, error: null }),
+      then: (resolve: MockResolve) => resolve({ data: null, error: null }),
     }),
   }
 
@@ -351,14 +368,14 @@ export async function createClient() {
   // Demo mode: return mock client only if explicitly enabled AND Supabase not configured
   if (demoMode && !isSupabaseConfigured) {
     console.warn('[Barber Study Pro] Server demo mode active — Supabase not configured')
-    return createMockServerClient() as any
+    return createMockServerClient() as unknown as ReturnType<typeof createServerClient>
   }
 
   // Production: require real Supabase
   if (!isSupabaseConfigured) {
     console.error('[Barber Study Pro] Server ERROR: Supabase not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY, or enable demo mode.')
     // Return mock to prevent crashes during build/startup
-    return createMockServerClient() as any
+    return createMockServerClient() as unknown as ReturnType<typeof createServerClient>
   }
 
   // Real mode: create actual Supabase server client

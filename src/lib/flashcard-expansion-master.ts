@@ -4,12 +4,6 @@
  * Total: 375 new flashcards across 14 chapters
  */
 
-import { FlashcardData as Part1 } from './flashcard-expansion'
-import { FlashcardData as Part2 } from './flashcard-expansion-part2'
-import { FlashcardData as Part3 } from './flashcard-expansion-part3'
-import { FlashcardData as Part4 } from './flashcard-expansion-part4'
-import { FlashcardData as Part5 } from './flashcard-expansion-part5'
-
 export type FlashcardData = {
   chapterNumber: number
   front: string
@@ -95,7 +89,7 @@ export function findDuplicates(flashcards: FlashcardData[]): { front: string; ch
   })
   
   return Array.from(frontMap.entries())
-    .filter(([_, chapters]) => chapters.length > 1)
+    .filter(([, chapters]) => chapters.length > 1)
     .map(([front, chapters]) => ({ front, chapters }))
 }
 

@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase-server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { QuizAttempt, StudentProgress, AttendanceRecord, Grade, GradeCategory, Assessment } from '@/types'
+import { QuizAttempt, StudentProgress, AttendanceRecord, Grade, GradeCategory, GradeCategoryRow, Assessment } from '@/types'
 import { localChapters } from '@/lib/local-data'
 import { allQuizQuestions } from '@/lib/quiz-data'
 import { calculateBoardReadiness } from '@/lib/readiness'
@@ -74,13 +74,16 @@ export default async function DashboardPage() {
   const { data: gradesData } = await supabase.from('grades').select('*').eq('student_id', user.id)
   let gradeRecords: Grade[] = (gradesData as unknown as Grade[]) || []
 
-  let categoriesQuery = supabase.from('grade_categories').select('*')
+  let categoriesData: GradeCategoryRow[] | null = null
   if (profile?.school_id) {
-    categoriesQuery = categoriesQuery.or(`school_id.eq.${profile.school_id},school_id.is.null`)
+    const { data: allCategories } = await supabase.from('grade_categories').select('*')
+    categoriesData = (allCategories as GradeCategoryRow[] | null)?.filter((c: GradeCategoryRow) => 
+      c.school_id === profile.school_id || c.school_id === null
+    ) || []
   } else {
-    categoriesQuery = categoriesQuery.is('school_id', null)
+    const { data } = await supabase.from('grade_categories').select('*').is('school_id', null)
+    categoriesData = data as GradeCategoryRow[] | null
   }
-  const { data: categoriesData } = await categoriesQuery
   let gradeCategories: GradeCategory[] = (categoriesData as unknown as GradeCategory[]) || []
 
   if ((gradeRecords.length === 0 || gradeCategories.length === 0) && isDemoFallbackEnabled()) {

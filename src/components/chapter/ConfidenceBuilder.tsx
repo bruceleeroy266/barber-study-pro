@@ -40,7 +40,6 @@ export default function ConfidenceBuilder({ cards, theme }: ConfidenceBuilderPro
       {cards.map((card, cIdx) => {
         const isRevealed = revealed.has(cIdx)
         const selected = selectedResponses[cIdx]
-        const selectedResponse = selected !== undefined ? card.responses[selected] : null
 
         return (
           <div

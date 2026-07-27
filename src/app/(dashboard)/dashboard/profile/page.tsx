@@ -11,7 +11,7 @@ export default async function ProfilePage() {
   }
 
   // Query profile WITHOUT school join — school_id may be NULL
-  const { data: profile, error: profileError } = await supabase
+  const { data: profile } = await supabase
     .from('profiles')
     .select('*')
     .eq('id', user.id)
