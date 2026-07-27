@@ -166,7 +166,10 @@ export default function SignupPage() {
           return
         }
 
-        await supabase.from('profiles').upsert({
+        // Use upsert to handle both trigger-created and manual profiles
+        // The trigger may have already created a profile with approval_status='pending'
+        // We preserve that status while updating other fields
+        const { error: upsertError } = await supabase.from('profiles').upsert({
           id: signUpData.user.id,
           email: signUpData.user.email,
           full_name: fullName || signUpData.user.email,
@@ -174,11 +177,15 @@ export default function SignupPage() {
           school_id: schoolId,
           barber_shop_name: barberShopName.trim() || null,
           mentor_name: mentorName.trim() || null,
-          created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         }, {
           onConflict: 'id',
         })
+
+        if (upsertError) {
+          console.error('[Signup] Profile upsert error:', upsertError)
+          // Don't fail the signup; the trigger already created a basic profile
+        }
 
         setPendingSchool(instructorSchoolPending)
         setSuccess(true)

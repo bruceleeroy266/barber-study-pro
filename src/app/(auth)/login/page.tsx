@@ -11,11 +11,30 @@ function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') || '/dashboard'
+  const errorParam = searchParams.get('error')
   
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  
+  // Initialize error from URL param (no effect needed)
+  const getInitialError = (): string | null => {
+    if (!errorParam) return null
+    switch (errorParam) {
+      case 'account_disabled':
+        return 'Your account has been disabled. Please contact an administrator.'
+      case 'pending_approval':
+        return 'Your account is pending administrator approval. Please wait for approval before signing in.'
+      case 'account_rejected':
+        return 'Your account application was rejected. Please contact an administrator.'
+      case 'supabase_not_configured':
+        return 'System configuration error. Please contact support.'
+      default:
+        return 'An error occurred. Please try again.'
+    }
+  }
+  
+  const [error, setError] = useState<string | null>(getInitialError)
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -54,6 +73,36 @@ function LoginForm() {
         setError('Please verify your email before signing in. Check your inbox for the verification link.')
         setLoading(false)
         return
+      }
+
+      // Check approval status and disabled flag
+      if (data.user) {
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('approval_status, is_disabled')
+          .eq('id', data.user.id)
+          .single()
+
+        if (profileError) {
+          console.warn('[Login] Could not fetch profile for approval check:', profileError)
+          // Allow login to proceed; dashboard will handle missing profile
+        } else if (profile) {
+          if (profile.is_disabled) {
+            setError('Your account has been disabled. Please contact an administrator.')
+            setLoading(false)
+            return
+          }
+          if (profile.approval_status === 'pending') {
+            setError('Your account is pending administrator approval. Please wait for approval before signing in.')
+            setLoading(false)
+            return
+          }
+          if (profile.approval_status === 'rejected') {
+            setError('Your account application was rejected. Please contact an administrator.')
+            setLoading(false)
+            return
+          }
+        }
       }
 
       router.push(redirect)

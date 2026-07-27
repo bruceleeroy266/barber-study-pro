@@ -99,6 +99,40 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  // ── APPROVAL & DISABLED ACCOUNT ENFORCEMENT ──
+  // Check approval_status and is_disabled for all authenticated users
+  if (user) {
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('approval_status, is_disabled')
+      .eq('id', user.id)
+      .single()
+
+    if (!profileError && profile) {
+      if (profile.is_disabled) {
+        console.warn(`[Middleware] Disabled account access attempt: user=${user.id}`)
+        const url = request.nextUrl.clone()
+        url.pathname = '/login'
+        url.searchParams.set('error', 'account_disabled')
+        return NextResponse.redirect(url)
+      }
+      if (profile.approval_status === 'pending') {
+        console.warn(`[Middleware] Pending approval access attempt: user=${user.id}`)
+        const url = request.nextUrl.clone()
+        url.pathname = '/login'
+        url.searchParams.set('error', 'pending_approval')
+        return NextResponse.redirect(url)
+      }
+      if (profile.approval_status === 'rejected') {
+        console.warn(`[Middleware] Rejected account access attempt: user=${user.id}`)
+        const url = request.nextUrl.clone()
+        url.pathname = '/login'
+        url.searchParams.set('error', 'account_rejected')
+        return NextResponse.redirect(url)
+      }
+    }
+  }
+
   if (isAuthRoute && user) {
     const url = request.nextUrl.clone()
     url.pathname = '/dashboard'
@@ -110,15 +144,25 @@ export async function middleware(request: NextRequest) {
   // /instructor and /instructor/* sub-routes. Students/apprentices are
   // redirected to /dashboard. Logged-out users were handled above.
   if (isInstructorRoute(request.nextUrl.pathname) && user) {
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
       .single()
 
-    if (!profile || !isInstructorOrAdmin(profile.role)) {
+    // If profile is missing, redirect to dashboard (safe default)
+    if (profileError || !profile) {
       console.warn(
-        `[Middleware] Unauthorized instructor route attempt: user=${user.id} role=${profile?.role ?? 'none'} path=${request.nextUrl.pathname}`
+        `[Middleware] No profile found for user=${user.id} path=${request.nextUrl.pathname}`
+      )
+      const url = request.nextUrl.clone()
+      url.pathname = '/dashboard'
+      return NextResponse.redirect(url)
+    }
+
+    if (!isInstructorOrAdmin(profile.role)) {
+      console.warn(
+        `[Middleware] Unauthorized instructor route attempt: user=${user.id} role=${profile.role} path=${request.nextUrl.pathname}`
       )
       const url = request.nextUrl.clone()
       url.pathname = '/dashboard'
@@ -129,15 +173,25 @@ export async function middleware(request: NextRequest) {
   // ── ADMIN ACCESS ENFORCEMENT (edge layer) ──
   // Only users whose profile role is 'admin' may access /admin and /admin/*.
   if (isAdminRoute(request.nextUrl.pathname) && user) {
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
       .single()
 
-    if (!profile || !isAdmin(profile.role)) {
+    // If profile is missing, redirect to dashboard (safe default)
+    if (profileError || !profile) {
       console.warn(
-        `[Middleware] Unauthorized admin route attempt: user=${user.id} role=${profile?.role ?? 'none'} path=${request.nextUrl.pathname}`
+        `[Middleware] No profile found for user=${user.id} path=${request.nextUrl.pathname}`
+      )
+      const url = request.nextUrl.clone()
+      url.pathname = '/dashboard'
+      return NextResponse.redirect(url)
+    }
+
+    if (!isAdmin(profile.role)) {
+      console.warn(
+        `[Middleware] Unauthorized admin route attempt: user=${user.id} role=${profile.role} path=${request.nextUrl.pathname}`
       )
       const url = request.nextUrl.clone()
       url.pathname = '/dashboard'

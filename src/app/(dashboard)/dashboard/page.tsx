@@ -33,11 +33,38 @@ export default async function DashboardPage() {
   }
 
   // Get user profile (for apprentice null-school handling)
-  const { data: profile } = await supabase
+  const { data: profileData, error: profileError } = await supabase
     .from('profiles')
     .select('role, school_id, barber_shop_name, mentor_name')
     .eq('id', user.id)
     .single()
+
+  let profile = profileData
+
+  // Handle missing profile: create a default student profile
+  if (profileError || !profile) {
+    console.warn(`[Dashboard] No profile found for user ${user.id}, creating default`)
+    
+    const { data: newProfile, error: insertError } = await supabase
+      .from('profiles')
+      .insert({
+        id: user.id,
+        email: user.email || '',
+        full_name: user.user_metadata?.full_name || user.email || 'Unknown',
+        role: 'student',
+        approval_status: 'pending',
+        is_disabled: false,
+      })
+      .select()
+      .single()
+    
+    if (insertError) {
+      console.error('[Dashboard] Failed to create profile:', insertError)
+      // Continue with null profile; downstream code handles it
+    } else {
+      profile = newProfile
+    }
+  }
 
   // Use local chapters (not Supabase)
   const chapters = localChapters
