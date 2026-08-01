@@ -52,3 +52,7 @@ undefined:
 undefined*/
 # Legacy static HTML prototypes (not production assets)
 _legacy-static-prototypes/
+
+# temporary files
+temp.env
+live-schema-dump.sql

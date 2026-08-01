@@ -460,6 +460,17 @@ export interface GradeCategory {
   isActive: boolean
 }
 
+/** Raw database row shape for the grade_categories table (snake_case columns). */
+export interface GradeCategoryRow {
+  id: string
+  name: string
+  type: string
+  weight: number
+  school_id: string | null
+  course_id: string | null
+  is_active: boolean
+}
+
 export interface RubricCriterion {
   id: string
   name: string
