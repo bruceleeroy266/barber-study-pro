@@ -16,6 +16,7 @@ interface DashboardNavProps {
 const baseNavItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/dashboard/chapters', label: 'Chapters', icon: BookOpen },
+  { href: '/dashboard/chapters', label: 'Flashcards', icon: RotateCcw },
   { href: '/dashboard/missed-questions', label: 'Missed Questions', icon: RotateCcw },
   { href: '/dashboard/progress', label: 'My Progress', icon: TrendingUp },
   { href: '/dashboard/grades', label: 'Grades', icon: Calculator },
@@ -61,9 +62,32 @@ export default function DashboardNav({ user }: DashboardNavProps) {
     } catch {
       // ignore logging failures
     }
+    
+    // Clear Supabase session
     await supabase.auth.signOut()
-    router.push('/login')
+    
+    // Clear all storage
+    if (typeof window !== 'undefined') {
+      // Clear localStorage
+      window.localStorage.clear()
+      // Clear sessionStorage
+      window.sessionStorage.clear()
+      // Clear cookies by setting expired date
+      document.cookie.split(';').forEach((c) => {
+        const eqPos = c.indexOf('=')
+        const name = eqPos > -1 ? c.substring(0, eqPos).trim() : c.trim()
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`
+      })
+    }
+    
+    // Redirect to home with cache-busting to prevent back-button access
+    router.push('/')
     router.refresh()
+    
+    // Force reload to clear any cached state
+    setTimeout(() => {
+      window.location.href = '/'
+    }, 100)
   }
 
   return (
