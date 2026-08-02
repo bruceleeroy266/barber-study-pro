@@ -138,8 +138,10 @@ function LoginForm() {
           ? redirect
           : roleRedirect
       console.log('[Login] Redirecting to', target)
-      router.push(target)
-      router.refresh()
+      
+      // Use window.location for a full page reload to ensure clean state
+      // This prevents any cached React state from showing the wrong dashboard
+      window.location.href = target
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to sign in'
       console.error('[Login] Caught error during login:', err)

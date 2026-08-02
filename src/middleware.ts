@@ -28,6 +28,18 @@ function isDashboardRoute(pathname: string): boolean {
   return pathname === '/dashboard' || pathname.startsWith('/dashboard/')
 }
 
+/** Match auth routes. */
+function isAuthRoute(pathname: string): boolean {
+  const authRoutes = ['/login', '/signup', '/reset-password', '/update-password']
+  return authRoutes.some((route) => pathname.startsWith(route))
+}
+
+/** Match protected routes. */
+function isProtectedRoute(pathname: string): boolean {
+  const protectedRoutes = ['/dashboard', '/instructor', '/admin', '/school']
+  return protectedRoutes.some((route) => pathname.startsWith(route))
+}
+
 export async function middleware(request: NextRequest) {
   // Evaluate configuration per request so edge runtime uses current env values.
   diagnoseSupabaseConfig('middleware:request')
@@ -48,18 +60,12 @@ export async function middleware(request: NextRequest) {
 
   // If Supabase not configured and demo mode is off, block protected routes
   if (!supabaseConfigured) {
-    const protectedRoutes = ['/dashboard', '/instructor', '/admin', '/school']
-    const isProtectedRoute = protectedRoutes.some((route) =>
-      request.nextUrl.pathname.startsWith(route)
-    )
-
-    if (isProtectedRoute) {
+    if (isProtectedRoute(request.nextUrl.pathname)) {
       const url = request.nextUrl.clone()
       url.pathname = '/login'
       url.searchParams.set('error', 'supabase_not_configured')
       return NextResponse.redirect(url)
     }
-
     return supabaseResponse
   }
 
@@ -92,24 +98,19 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const protectedRoutes = ['/dashboard', '/instructor', '/admin', '/school']
-  const isProtectedRoute = protectedRoutes.some((route) =>
-    request.nextUrl.pathname.startsWith(route)
-  )
+  const pathname = request.nextUrl.pathname
+  const isProtected = isProtectedRoute(pathname)
+  const isAuth = isAuthRoute(pathname)
 
-  const authRoutes = ['/login', '/signup', '/reset-password', '/update-password']
-  const isAuthRoute = authRoutes.some((route) =>
-    request.nextUrl.pathname.startsWith(route)
-  )
-
-  if (isProtectedRoute && !user) {
+  // Redirect unauthenticated users from protected routes to login
+  if (isProtected && !user) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
-    url.searchParams.set('redirect', request.nextUrl.pathname)
+    url.searchParams.set('redirect', pathname)
     return NextResponse.redirect(url)
   }
 
-  // Load profile once for protected routes and auth-route redirects.
+  // Load profile once for all subsequent checks
   interface MinimalProfile {
     role: string | null
     approval_status: string
@@ -117,7 +118,7 @@ export async function middleware(request: NextRequest) {
     requires_password_change: boolean
   }
   let profile: MinimalProfile | null = null
-  if ((isProtectedRoute || isAuthRoute) && user) {
+  if ((isProtected || isAuth) && user) {
     const { data: profileData } = await supabase
       .from('profiles')
       .select('role, approval_status, is_disabled, requires_password_change')
@@ -128,26 +129,24 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Auth routes: redirect already-logged-in users to their role dashboard.
-  if (isAuthRoute && user) {
+  // Auth routes: redirect already-logged-in users to their role dashboard
+  if (isAuth && user) {
     const url = request.nextUrl.clone()
     url.pathname = getRoleBasedRedirect(profile?.role)
     return NextResponse.redirect(url)
   }
 
-  // Protected routes: enforce approval, disabled status, and password-change requirement.
-  if (isProtectedRoute && user) {
+  // Protected routes: enforce approval, disabled status, and password-change requirement
+  if (isProtected && user) {
     const access = validateLoginAccess(profile)
     if (!access.ok) {
       const url = request.nextUrl.clone()
       url.pathname = '/login'
       url.searchParams.set('error', access.errorKey ?? 'unknown')
-      if (request.nextUrl.pathname !== '/login') {
-        return NextResponse.redirect(url)
-      }
+      return NextResponse.redirect(url)
     }
 
-    if (profile?.requires_password_change && !request.nextUrl.pathname.startsWith('/update-password')) {
+    if (profile?.requires_password_change && !pathname.startsWith('/update-password')) {
       const url = request.nextUrl.clone()
       url.pathname = '/update-password'
       url.searchParams.set('reason', 'required')
@@ -156,10 +155,8 @@ export async function middleware(request: NextRequest) {
   }
 
   // ── BETA AGREEMENT ENFORCEMENT (edge layer) ──
-  // All authenticated /dashboard/* users must have accepted the current beta agreement.
-  // Admins and instructors are exempt so they can manage the platform without restriction.
-  if (isDashboardRoute(request.nextUrl.pathname) && user) {
-    const profileRole = await getUserRole(supabase, user.id)
+  if (isDashboardRoute(pathname) && user) {
+    const profileRole = profile?.role
     const isAdminOrInstructor = profileRole === 'admin' || profileRole === 'instructor'
 
     if (!isAdminOrInstructor) {
@@ -167,116 +164,71 @@ export async function middleware(request: NextRequest) {
       if (!hasAgreement) {
         const url = request.nextUrl.clone()
         url.pathname = '/beta-agreement'
-        url.searchParams.set('redirect', request.nextUrl.pathname)
+        url.searchParams.set('redirect', pathname)
         return NextResponse.redirect(url)
       }
     }
   }
 
   // ── MAINTENANCE MODE ENFORCEMENT (edge layer) ──
-  // If maintenance mode is enabled, redirect non-allowed users to /maintenance.
-  // Allowed roles are stored in maintenance_mode.allowed_roles. Demo mode
-  // always bypasses maintenance checks because the service reports disabled.
-  if (!demoMode && !request.nextUrl.pathname.startsWith('/maintenance')) {
+  if (!demoMode && !pathname.startsWith('/maintenance')) {
     const maintenanceRedirect = await checkMaintenanceMode(request, supabase, user?.id)
     if (maintenanceRedirect) {
       return maintenanceRedirect
     }
   }
 
-  // ── INSTRUCTOR ACCESS ENFORCEMENT (edge layer) ──
-  // Only users whose profile role is 'instructor' or 'admin' may access
-  // /instructor and /instructor/* sub-routes. Students/apprentices are
-  // redirected to /dashboard. Logged-out users were handled above.
-  if (isInstructorRoute(request.nextUrl.pathname) && user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
+  // ── ROLE-BASED ROUTE ENFORCEMENT (edge layer) ──
+  // Single source of truth: verify user has correct role for the route they're accessing
+  if (user && profile) {
+    const userRole = profile.role
 
-    if (!profile || !isInstructorOrAdmin(profile.role)) {
-      console.warn(
-        `[Middleware] Unauthorized instructor route attempt: user=${user.id} role=${profile?.role ?? 'none'} path=${request.nextUrl.pathname}`
-      )
-      const url = request.nextUrl.clone()
-      url.pathname = getRoleBasedRedirect(profile?.role)
-      return NextResponse.redirect(url)
+    // Instructor routes: only instructor or admin
+    if (isInstructorRoute(pathname)) {
+      if (!isInstructorOrAdmin(userRole)) {
+        console.warn(
+          `[Middleware] Unauthorized instructor route attempt: user=${user.id} role=${userRole ?? 'none'} path=${pathname}`
+        )
+        const url = request.nextUrl.clone()
+        url.pathname = getRoleBasedRedirect(userRole)
+        return NextResponse.redirect(url)
+      }
     }
-  }
 
-  // ── ADMIN ACCESS ENFORCEMENT (edge layer) ──
-  // Platform admins ('admin') may access all /admin routes. School admins
-  // ('school_admin') may access /admin (dashboard) and /admin/users only.
-  // Other admin sub-routes remain restricted to platform admins.
-  if (isAdminRoute(request.nextUrl.pathname) && user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
+    // Admin routes: only admin or school_admin (school_admin limited to certain routes)
+    if (isAdminRoute(pathname)) {
+      const isSchoolAdminAllowedRoute =
+        pathname === '/admin' ||
+        pathname === '/admin/users' ||
+        pathname.startsWith('/admin/users/')
+      const allowed =
+        isAdmin(userRole ?? '') ||
+        (isSchoolAdminAllowedRoute && isSchoolAdmin(userRole ?? ''))
 
-    const pathname = request.nextUrl.pathname
-    const isSchoolAdminAllowedRoute =
-      pathname === '/admin' ||
-      pathname === '/admin/users' ||
-      pathname.startsWith('/admin/users/')
-    const allowed =
-      isAdmin(profile?.role ?? '') ||
-      (isSchoolAdminAllowedRoute && isSchoolAdmin(profile?.role ?? ''))
-
-    if (!profile || !allowed) {
-      console.warn(
-        `[Middleware] Unauthorized admin route attempt: user=${user.id} role=${profile?.role ?? 'none'} path=${pathname}`
-      )
-      const url = request.nextUrl.clone()
-      url.pathname = getRoleBasedRedirect(profile?.role)
-      return NextResponse.redirect(url)
+      if (!allowed) {
+        console.warn(
+          `[Middleware] Unauthorized admin route attempt: user=${user.id} role=${userRole ?? 'none'} path=${pathname}`
+        )
+        const url = request.nextUrl.clone()
+        url.pathname = getRoleBasedRedirect(userRole)
+        return NextResponse.redirect(url)
+      }
     }
-  }
 
-  // ── SCHOOL ADMIN ACCESS ENFORCEMENT (edge layer) ──
-  // Only users whose profile role is 'school_admin' or 'admin' may access
-  // /school and /school/* sub-routes.
-  if (isSchoolRoute(request.nextUrl.pathname) && user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-
-    if (!profile || !(isSchoolAdmin(profile.role) || isAdmin(profile.role))) {
-      console.warn(
-        `[Middleware] Unauthorized school route attempt: user=${user.id} role=${profile?.role ?? 'none'} path=${request.nextUrl.pathname}`
-      )
-      const url = request.nextUrl.clone()
-      url.pathname = getRoleBasedRedirect(profile?.role)
-      return NextResponse.redirect(url)
+    // School routes: only school_admin or admin
+    if (isSchoolRoute(pathname)) {
+      if (!(isSchoolAdmin(userRole) || isAdmin(userRole))) {
+        console.warn(
+          `[Middleware] Unauthorized school route attempt: user=${user.id} role=${userRole ?? 'none'} path=${pathname}`
+        )
+        const url = request.nextUrl.clone()
+        url.pathname = getRoleBasedRedirect(userRole)
+        return NextResponse.redirect(url)
+      }
     }
   }
 
   return supabaseResponse
-}
-
-/**
- * Get the user's profile role from Supabase.
- */
-async function getUserRole(
-  supabase: ReturnType<typeof createServerClient>,
-  userId: string
-): Promise<string | null> {
-  try {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', userId)
-      .single()
-
-    return profile?.role ?? null
-  } catch (err) {
-    console.warn('[Middleware] Failed to load user role:', err)
-    return null
-  }
 }
 
 /**

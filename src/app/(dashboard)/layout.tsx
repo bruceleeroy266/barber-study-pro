@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import DashboardNav from '@/components/DashboardNav'
 import { BETA_AGREEMENT_VERSION } from '@/lib/beta'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
+import BackButtonPrevention from '@/components/auth/BackButtonPrevention'
 
 // All dashboard pages require an authenticated user, so they must be rendered
 // dynamically at request time. Static generation would call createClient()
@@ -45,6 +46,7 @@ export default async function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-gray-950">
+      <BackButtonPrevention />
       <DashboardNav user={profile} />
       <main className="lg:pl-64 min-h-screen">
         <div className="p-4 lg:p-8 max-w-7xl mx-auto">

@@ -35,7 +35,7 @@ export function isSafeRedirectPath(path: string | null | undefined): path is str
 /** Canonical portal routes for each active role. */
 const ROLE_PORTAL: Record<string, string> = {
   admin: '/admin',
-  school_admin: '/school',
+  school_admin: '/admin',
   instructor: '/instructor',
   student: '/dashboard',
   apprentice: '/dashboard',

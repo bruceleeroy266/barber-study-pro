@@ -1,6 +1,28 @@
+import { createClient } from '@/lib/supabase-server'
+import { redirect } from 'next/navigation'
+import { getRoleBasedRedirect } from '@/lib/auth-access'
 import Link from 'next/link'
+import SignInButton from '@/components/auth/SignInButton'
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Check if user is already authenticated
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  // If authenticated, redirect to role-based portal
+  if (user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (profile?.role) {
+      redirect(getRoleBasedRedirect(profile.role))
+    }
+  }
+
+  // Not authenticated - show public landing page
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       {/* Navigation */}
@@ -11,12 +33,9 @@ export default function HomePage() {
               <img src="/logo.svg" alt="ASCYN PRO" className="h-7 w-auto" />
             </Link>
             <div className="flex items-center gap-3">
-              <Link
-                href="/login"
-                className="hidden sm:inline-flex text-gray-300 hover:text-white transition-colors text-sm font-medium"
-              >
+              <SignInButton className="hidden sm:inline-flex text-gray-300 hover:text-white transition-colors text-sm font-medium">
                 Pilot Login
-              </Link>
+              </SignInButton>
               <Link
                 href="/demo"
                 className="px-4 py-2 text-sm font-semibold text-white border border-white/20 rounded-lg hover:bg-white/5 transition-colors"
@@ -336,12 +355,9 @@ export default function HomePage() {
               <img src="/logo.svg" alt="ASCYN PRO" className="h-6 w-auto" />
             </div>
             <div className="flex items-center gap-6">
-              <Link
-                href="/login"
-                className="text-gray-500 hover:text-white text-sm transition-colors"
-              >
+              <SignInButton className="text-gray-500 hover:text-white text-sm transition-colors">
                 Pilot Login
-              </Link>
+              </SignInButton>
               <Link
                 href="/pilot"
                 className="text-gray-500 hover:text-white text-sm transition-colors"
