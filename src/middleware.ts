@@ -129,11 +129,18 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Auth routes: redirect already-logged-in users to their role dashboard
+  // Auth routes: redirect already-logged-in users to their role dashboard.
+  // Exception: /update-password must remain accessible when the user is
+  // required to change their password (requires_password_change = true),
+  // otherwise the protected-route check and this check create a redirect loop.
   if (isAuth && user) {
-    const url = request.nextUrl.clone()
-    url.pathname = getRoleBasedRedirect(profile?.role)
-    return NextResponse.redirect(url)
+    const isUpdatePassword = pathname.startsWith('/update-password')
+    const needsPasswordChange = profile?.requires_password_change === true
+    if (!isUpdatePassword || !needsPasswordChange) {
+      const url = request.nextUrl.clone()
+      url.pathname = getRoleBasedRedirect(profile?.role)
+      return NextResponse.redirect(url)
+    }
   }
 
   // Protected routes: enforce approval, disabled status, and password-change requirement
