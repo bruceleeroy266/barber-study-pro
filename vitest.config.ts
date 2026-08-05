@@ -8,6 +8,16 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/.{idea,git,cache,output,temp}/**',
+      'tests/e2e/**',
+      // PingOS subsystem tests use node:test runner, not Vitest
+      'src/lib/bootstrap/**/*.test.ts',
+      'src/lib/execution/**/*.test.ts',
+      'src/lib/memory-manager/**/*.test.ts',
+    ],
   },
   resolve: {
     alias: {

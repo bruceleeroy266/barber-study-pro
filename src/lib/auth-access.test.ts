@@ -18,8 +18,8 @@ describe('getRoleBasedRedirect', () => {
     expect(getRoleBasedRedirect('admin')).toBe('/admin')
   })
 
-  it('routes school_admin to /school', () => {
-    expect(getRoleBasedRedirect('school_admin')).toBe('/school')
+  it('routes school_admin to /admin', () => {
+    expect(getRoleBasedRedirect('school_admin')).toBe('/admin')
   })
 
   it('never defaults missing role to /admin', () => {

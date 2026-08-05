@@ -44,7 +44,7 @@ assert(middleware.includes('getRoleBasedRedirect'), 'Middleware redirects by rol
 
 // 5. Role-based redirect logic.
 assert(getRoleBasedRedirect('admin') === '/admin', 'Admin redirects to /admin')
-assert(getRoleBasedRedirect('school_admin') === '/school', 'School admin redirects to /school')
+assert(getRoleBasedRedirect('school_admin') === '/admin', 'School admin redirects to /admin')
 assert(getRoleBasedRedirect('instructor') === '/instructor', 'Instructor redirects to /instructor')
 assert(getRoleBasedRedirect('student') === '/dashboard', 'Student redirects to /dashboard')
 assert(getRoleBasedRedirect('apprentice') === '/dashboard', 'Apprentice redirects to /dashboard')

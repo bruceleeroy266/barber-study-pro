@@ -7,8 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "verify:quick": "npm run typecheck && npm run lint && npm run build",
+    "verify": "npm run typecheck && npm run lint && npm run build && npm test",
+    "verify:full": "npm run verify && npm run test:e2e"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.3",

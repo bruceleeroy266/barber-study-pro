@@ -341,7 +341,7 @@ export default async function InstructorStudentsPage() {
             <div className="p-8 text-center text-gray-400">
               No students found in your school yet.
               <p className="text-sm text-gray-500 mt-2">
-                Students will appear here once they sign up and select "{schoolName}".
+                Students will appear here once they sign up and select &quot;{schoolName}&quot;.
               </p>
             </div>
           )}
