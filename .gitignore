@@ -56,3 +56,28 @@ _legacy-static-prototypes/
 # temporary files
 temp.env
 live-schema-dump.sql
+
+# production environment files (credentials)
+.env.production
+.env.vercel.production
+.env.*.production
+
+# test output artifacts
+playwright-report/
+test-results/
+
+# backup and data export directories
+backups/
+
+# temporary credential/ID files
+temp_*.txt
+
+# certification/investigation screenshots
+certification-screenshots/
+
+# root-level debug screenshots
+/*.png
+
+# investigation output artifacts
+auth-audit-results.json
+deep-auth-test-results.json
