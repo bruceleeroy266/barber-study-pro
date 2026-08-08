@@ -15,6 +15,8 @@ import {
   NotificationType,
   Permission,
   AppRole,
+  StudentDefaults,
+  InstructorDefaults,
 } from '@/types'
 
 /**
@@ -59,6 +61,19 @@ export function createDefaultSchoolConfiguration(school: School): SchoolConfigur
     passingPercentage: 70,
     defaultRubricId: null,
     allowedTypes: ['HAIRCUT', 'COLOR', 'CHEMICAL', 'SANITATION', 'CONSULTATION'] as AssessmentType[],
+  }
+
+  const defaultStudentDefaults: StudentDefaults = {
+    passingPercentage: 70,
+    maxQuizAttempts: 3,
+    requiredAttendancePercentage: 80,
+  }
+
+  const defaultInstructorDefaults: InstructorDefaults = {
+    canApproveHours: true,
+    canManageStudents: true,
+    canViewReports: true,
+    requireApprovalForGrades: false,
   }
 
   const defaultMessagingPreferences: MessagingPreferences = {
@@ -117,11 +132,21 @@ export function createDefaultSchoolConfiguration(school: School): SchoolConfigur
     school: {
       ...school,
       address: school.address ?? '',
+      city: school.city ?? '',
+      state: school.state ?? '',
+      postal_code: school.postal_code ?? '',
       contact_email: school.contact_email ?? '',
+      contact_phone: school.contact_phone ?? '',
+      website: school.website ?? '',
+      timezone: school.timezone ?? 'America/Chicago',
+      license_number: school.license_number ?? '',
+      accreditation: school.accreditation ?? '',
+      school_type: school.school_type ?? 'barber',
       subscription_status: school.subscription_status ?? 'trial',
     },
     branding: {
       primaryColor: '#D4AF37',
+      secondaryColor: '#1F2937',
       logoUrl: null,
       faviconUrl: null,
     },
@@ -136,6 +161,8 @@ export function createDefaultSchoolConfiguration(school: School): SchoolConfigur
     hoursPolicy: defaultHoursPolicy,
     gradebookConfig: defaultGradebookConfig,
     assessmentDefaults: defaultAssessmentDefaults,
+    studentDefaults: defaultStudentDefaults,
+    instructorDefaults: defaultInstructorDefaults,
     messagingPreferences: defaultMessagingPreferences,
     notificationSettings: defaultNotificationSettings,
     rolePermissions: defaultRolePermissions,

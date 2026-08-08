@@ -22,7 +22,16 @@ export interface School {
   id: string
   name: string
   address: string | null
+  city: string | null
+  state: string | null
+  postal_code: string | null
   contact_email: string | null
+  contact_phone: string | null
+  website: string | null
+  timezone: string | null
+  license_number: string | null
+  accreditation: string | null
+  school_type: 'barber' | 'cosmetology' | 'esthetics' | 'nail_technology' | 'instructor' | 'multi_program' | null
   subscription_status: 'active' | 'inactive' | 'trial'
   created_at: string
 }
@@ -743,6 +752,7 @@ export interface ComplianceReport {
 
 export interface SchoolBranding {
   primaryColor: string
+  secondaryColor: string
   logoUrl: string | null
   faviconUrl: string | null
 }
@@ -811,6 +821,19 @@ export type Permission =
   | 'view_reports'
   | 'export_data'
 
+export interface StudentDefaults {
+  passingPercentage: number
+  maxQuizAttempts: number
+  requiredAttendancePercentage: number
+}
+
+export interface InstructorDefaults {
+  canApproveHours: boolean
+  canManageStudents: boolean
+  canViewReports: boolean
+  requireApprovalForGrades: boolean
+}
+
 export interface SchoolConfiguration {
   school: School
   branding: SchoolBranding
@@ -825,6 +848,8 @@ export interface SchoolConfiguration {
   hoursPolicy: HoursPolicy
   gradebookConfig: GradebookConfig
   assessmentDefaults: AssessmentDefaults
+  studentDefaults: StudentDefaults
+  instructorDefaults: InstructorDefaults
   messagingPreferences: MessagingPreferences
   notificationSettings: SchoolNotificationSetting[]
   rolePermissions: RolePermission[]

@@ -18,10 +18,14 @@ import {
   Save,
   AlertCircle,
   CheckCircle2,
+  Palette,
+  UserCheck,
+  Settings,
 } from 'lucide-react'
 import { validateSchoolConfiguration, ValidationErrors } from '@/lib/school-config/validation'
 import { saveSchoolConfiguration } from '@/app/admin/school/configuration/actions'
 import SchoolProfileSection from './SchoolProfileSection'
+import BrandingSection from './BrandingSection'
 import ProgramsSection from './ProgramsSection'
 import InstructorsSection from './InstructorsSection'
 import EnrollmentSection from './EnrollmentSection'
@@ -29,12 +33,15 @@ import AttendancePolicySection from './AttendancePolicySection'
 import HoursPolicySection from './HoursPolicySection'
 import GradebookConfigSection from './GradebookConfigSection'
 import AssessmentDefaultsSection from './AssessmentDefaultsSection'
+import StudentDefaultsSection from './StudentDefaultsSection'
+import InstructorDefaultsSection from './InstructorDefaultsSection'
 import MessagingPreferencesSection from './MessagingPreferencesSection'
 import NotificationSettingsSection from './NotificationSettingsSection'
 import RolePermissionsSection from './RolePermissionsSection'
 
 type TabId =
   | 'profile'
+  | 'branding'
   | 'programs'
   | 'instructors'
   | 'enrollment'
@@ -42,6 +49,8 @@ type TabId =
   | 'hours'
   | 'gradebook'
   | 'assessments'
+  | 'students'
+  | 'instructor-defaults'
   | 'messaging'
   | 'notifications'
   | 'roles'
@@ -54,6 +63,7 @@ interface TabDef {
 
 const tabs: TabDef[] = [
   { id: 'profile', label: 'School Profile', icon: Building2 },
+  { id: 'branding', label: 'Branding', icon: Palette },
   { id: 'programs', label: 'Programs', icon: GraduationCap },
   { id: 'instructors', label: 'Instructors', icon: Users },
   { id: 'enrollment', label: 'Enrollment', icon: UserPlus },
@@ -61,6 +71,8 @@ const tabs: TabDef[] = [
   { id: 'hours', label: 'Hours', icon: Clock },
   { id: 'gradebook', label: 'Gradebook', icon: Calculator },
   { id: 'assessments', label: 'Assessments', icon: ClipboardCheck },
+  { id: 'students', label: 'Student Defaults', icon: UserCheck },
+  { id: 'instructor-defaults', label: 'Instructor Defaults', icon: Settings },
   { id: 'messaging', label: 'Messaging', icon: MessageSquare },
   { id: 'notifications', label: 'Notifications', icon: Bell },
   { id: 'roles', label: 'Roles & Permissions', icon: Shield },
@@ -221,6 +233,13 @@ export default function SchoolConfigurationClient({
                   errors={errors}
                 />
               )}
+              {activeTab === 'branding' && (
+                <BrandingSection
+                  config={config}
+                  onChange={(branding) => updateConfig({ branding })}
+                  errors={errors}
+                />
+              )}
               {activeTab === 'programs' && (
                 <ProgramsSection
                   config={config}
@@ -260,6 +279,19 @@ export default function SchoolConfigurationClient({
                   config={config}
                   onChange={(assessmentDefaults) => updateConfig({ assessmentDefaults })}
                   errors={errors}
+                />
+              )}
+              {activeTab === 'students' && (
+                <StudentDefaultsSection
+                  config={config}
+                  onChange={(studentDefaults) => updateConfig({ studentDefaults })}
+                  errors={errors}
+                />
+              )}
+              {activeTab === 'instructor-defaults' && (
+                <InstructorDefaultsSection
+                  config={config}
+                  onChange={(instructorDefaults) => updateConfig({ instructorDefaults })}
                 />
               )}
               {activeTab === 'messaging' && (

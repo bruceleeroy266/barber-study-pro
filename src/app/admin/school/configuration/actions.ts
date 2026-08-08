@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase-server'
-import { isAdmin } from '@/lib/auth-helpers'
+import { isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
 import { SchoolConfiguration } from '@/types'
 import { validateSchoolConfiguration, hasValidationErrors } from '@/lib/school-config/validation'
 import { logPermissionDenied, logSensitiveConfigChange } from '@/lib/security/audit-logger'
@@ -28,7 +28,7 @@ export async function saveSchoolConfiguration(
     .eq('id', user.id)
     .single()
 
-  if (!profile || !isAdmin(profile.role)) {
+  if (!profile || !(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
     await logPermissionDenied('manage_settings', {
       userId: user.id,
       email: user.email,
@@ -37,7 +37,7 @@ export async function saveSchoolConfiguration(
       resource: '/admin/school/configuration',
       action: 'save',
     })
-    return { success: false, message: 'Only admins can save school settings.' }
+    return { success: false, message: 'Only administrators can save school settings.' }
   }
 
   // Multi-school isolation: an admin must be assigned to a school and may only
@@ -94,6 +94,33 @@ export async function saveSchoolConfiguration(
       updatedAt: new Date().toISOString(),
     }
 
+    // Update the schools table with the latest school info
+    const { error: schoolError } = await supabase
+      .from('schools')
+      .update({
+        name: configWithTimestamp.school.name,
+        address: configWithTimestamp.school.address,
+        city: configWithTimestamp.school.city,
+        state: configWithTimestamp.school.state,
+        postal_code: configWithTimestamp.school.postal_code,
+        contact_email: configWithTimestamp.school.contact_email,
+        contact_phone: configWithTimestamp.school.contact_phone,
+        website: configWithTimestamp.school.website,
+        timezone: configWithTimestamp.school.timezone,
+        license_number: configWithTimestamp.school.license_number,
+        accreditation: configWithTimestamp.school.accreditation,
+        school_type: configWithTimestamp.school.school_type,
+        updated_at: configWithTimestamp.updatedAt,
+      })
+      .eq('id', profile.school_id)
+
+    if (schoolError) {
+      console.error('[SchoolConfiguration] Failed to update schools table:', schoolError.message)
+      // Continue with settings save even if schools update fails
+    }
+
+    // Save the complete configuration to school_settings
+    // Note: branding is stored as JSONB, not as standalone columns
     const { error } = await supabase
       .from('school_settings')
       .upsert(
@@ -101,9 +128,14 @@ export async function saveSchoolConfiguration(
           school_id: profile.school_id,
           settings: configWithTimestamp as unknown as Record<string, unknown>,
           name: configWithTimestamp.school.name,
-          primary_color: configWithTimestamp.branding.primaryColor,
+          branding: {
+            primaryColor: configWithTimestamp.branding.primaryColor,
+            secondaryColor: configWithTimestamp.branding.secondaryColor,
+            logoUrl: configWithTimestamp.branding.logoUrl,
+            faviconUrl: configWithTimestamp.branding.faviconUrl,
+          },
           contact_email: configWithTimestamp.school.contact_email,
-          contact_phone: null,
+          contact_phone: configWithTimestamp.school.contact_phone,
           updated_at: configWithTimestamp.updatedAt,
           updated_by: user.id,
         },

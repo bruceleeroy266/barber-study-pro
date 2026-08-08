@@ -60,7 +60,39 @@ export default async function SchoolConfigurationPage() {
   let configuration: SchoolConfiguration
 
   if (school && settingsRow?.settings && isSchoolConfiguration(settingsRow.settings)) {
-    configuration = settingsRow.settings as SchoolConfiguration
+    // Merge saved settings with school data to ensure all fields are present
+    const savedConfig = settingsRow.settings as SchoolConfiguration
+    configuration = {
+      ...savedConfig,
+      school: {
+        ...savedConfig.school,
+        // Ensure all new fields have values from the school record or defaults
+        city: savedConfig.school.city ?? school.city ?? '',
+        state: savedConfig.school.state ?? school.state ?? '',
+        postal_code: savedConfig.school.postal_code ?? school.postal_code ?? '',
+        contact_phone: savedConfig.school.contact_phone ?? school.contact_phone ?? '',
+        website: savedConfig.school.website ?? school.website ?? '',
+        timezone: savedConfig.school.timezone ?? school.timezone ?? 'America/Chicago',
+        license_number: savedConfig.school.license_number ?? school.license_number ?? '',
+        accreditation: savedConfig.school.accreditation ?? school.accreditation ?? '',
+        school_type: savedConfig.school.school_type ?? school.school_type ?? 'barber',
+      },
+      branding: {
+        ...savedConfig.branding,
+        secondaryColor: savedConfig.branding.secondaryColor ?? '#1F2937',
+      },
+      studentDefaults: savedConfig.studentDefaults ?? {
+        passingPercentage: 70,
+        maxQuizAttempts: 3,
+        requiredAttendancePercentage: 80,
+      },
+      instructorDefaults: savedConfig.instructorDefaults ?? {
+        canApproveHours: true,
+        canManageStudents: true,
+        canViewReports: true,
+        requireApprovalForGrades: false,
+      },
+    }
   } else if (school) {
     // No saved settings yet — use production defaults derived from the real school.
     configuration = createDefaultSchoolConfiguration(school)
