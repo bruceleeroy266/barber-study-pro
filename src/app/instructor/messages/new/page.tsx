@@ -39,7 +39,7 @@ export default async function NewMessagePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 p-6 md:p-8">
+    <div className="min-h-screen bg-black p-6 md:p-8">
       <BackButton fallbackHref="/instructor" label="Back to instructor dashboard" />
       <div className="mt-6">
         <NewMessageClient students={students} />

@@ -170,7 +170,7 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
                     className="ml-auto flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold"
                     style={{
                       backgroundColor: isUrgent ? 'rgba(239, 68, 68, 0.15)' : 'rgba(8, 145, 178, 0.15)',
-                      color: isUrgent ? '#EF4444' : t.primaryLight,
+                      color: isUrgent ? 'var(--color-brand-silver)' : t.primaryLight,
                       border: `1px solid ${isUrgent ? 'rgba(239, 68, 68, 0.3)' : t.border}`,
                     }}
                   >
@@ -183,7 +183,7 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
                     className="ml-auto flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold"
                     style={{
                       backgroundColor: isExpired ? 'rgba(239, 68, 68, 0.15)' : 'rgba(16, 185, 129, 0.15)',
-                      color: isExpired ? '#EF4444' : '#10B981',
+                      color: isExpired ? 'var(--color-brand-silver)' : 'var(--color-brand-gold)',
                       border: `1px solid ${isExpired ? 'rgba(239, 68, 68, 0.3)' : 'rgba(16, 185, 129, 0.3)'}`,
                     }}
                   >
@@ -209,8 +209,8 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
                   }}
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <AlertTriangle className="w-4 h-4" style={{ color: '#EF4444' }} />
-                    <span className="text-xs font-bold uppercase" style={{ color: '#EF4444' }}>
+                    <AlertTriangle className="w-4 h-4" style={{ color: 'var(--color-brand-silver)' }} />
+                    <span className="text-xs font-bold uppercase" style={{ color: 'var(--color-brand-silver)' }}>
                       Time Expired — Safety Response Required
                     </span>
                   </div>
@@ -229,10 +229,10 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
 
                   if (isRevealed) {
                     if (isCorrectOption) {
-                      borderColor = '#10B981'
+                      borderColor = 'var(--color-brand-gold)'
                       bgColor = 'rgba(16, 185, 129, 0.1)'
                     } else if (isSelected && !isCorrectOption) {
-                      borderColor = '#EF4444'
+                      borderColor = 'var(--color-brand-silver)'
                       bgColor = 'rgba(239, 68, 68, 0.1)'
                     }
                   } else if (isSelected) {
@@ -245,7 +245,7 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
                       key={option.letter}
                       onClick={() => selectAnswer(sIdx, option.letter)}
                       aria-label={`Option ${option.letter}: ${option.text}`}
-                      className="w-full text-left rounded-lg p-3 transition-all text-sm flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
+                      className="w-full text-left rounded-lg p-3 transition-all text-sm flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
                       style={{
                         backgroundColor: bgColor,
                         borderColor: borderColor,
@@ -258,17 +258,17 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
                         className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
                         style={{
                           backgroundColor: isSelected ? t.primary : t.background,
-                          color: isSelected ? '#fff' : t.textMuted,
+                          color: isSelected ? 'var(--color-brand-white)' : t.textMuted,
                         }}
                       >
                         {option.letter}
                       </span>
                       <span style={{ color: t.text }}>{option.text}</span>
                       {isRevealed && isCorrectOption && (
-                        <CheckCircle className="w-4 h-4 ml-auto flex-shrink-0" style={{ color: '#10B981' }} aria-hidden="true" />
+                        <CheckCircle className="w-4 h-4 ml-auto flex-shrink-0" style={{ color: 'var(--color-brand-gold)' }} aria-hidden="true" />
                       )}
                       {isRevealed && isSelected && !isCorrectOption && (
-                        <XCircle className="w-4 h-4 ml-auto flex-shrink-0" style={{ color: '#EF4444' }} aria-hidden="true" />
+                        <XCircle className="w-4 h-4 ml-auto flex-shrink-0" style={{ color: 'var(--color-brand-silver)' }} aria-hidden="true" />
                       )}
                     </button>
                   )
@@ -281,10 +281,10 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
                   onClick={() => revealAnswer(sIdx)}
                   disabled={selected === undefined}
                   aria-label="Check answer"
-                  className="w-full rounded-lg py-2.5 text-sm font-semibold transition-all disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
+                  className="w-full rounded-lg py-2.5 text-sm font-semibold transition-all disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
                   style={{
                     backgroundColor: selected !== undefined ? t.primary : t.backgroundAlt,
-                    color: selected !== undefined ? '#fff' : t.textMuted,
+                    color: selected !== undefined ? 'var(--color-brand-white)' : t.textMuted,
                   }}
                 >
                   Check Answer
@@ -299,12 +299,12 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
                   className="rounded-lg p-4 mt-3"
                   style={{
                     backgroundColor: isCorrect ? 'rgba(16, 185, 129, 0.1)' : 'rgba(245, 166, 35, 0.1)',
-                    borderLeft: `3px solid ${isCorrect ? '#10B981' : '#F59E0B'}`,
+                    borderLeft: `3px solid ${isCorrect ? 'var(--color-brand-gold)' : 'var(--color-brand-warm-bronze)'}`,
                   }}
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <Lightbulb className="w-4 h-4" style={{ color: isCorrect ? '#10B981' : '#F59E0B' }} aria-hidden="true" />
-                    <span className="text-xs font-bold uppercase" style={{ color: isCorrect ? '#10B981' : '#F59E0B' }}>
+                    <Lightbulb className="w-4 h-4" style={{ color: isCorrect ? 'var(--color-brand-gold)' : 'var(--color-brand-warm-bronze)' }} aria-hidden="true" />
+                    <span className="text-xs font-bold uppercase" style={{ color: isCorrect ? 'var(--color-brand-gold)' : 'var(--color-brand-warm-bronze)' }}>
                       {isCorrect ? 'Correct! Well done!' : 'Not quite — here\'s why:'}
                     </span>
                   </div>
@@ -319,7 +319,7 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
                 <button
                   onClick={() => resetScenario(sIdx)}
                   aria-label="Try this scenario again"
-                  className="w-full mt-4 rounded-lg py-2 text-sm font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
+                  className="w-full mt-4 rounded-lg py-2 text-sm font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
                   style={{
                     backgroundColor: 'transparent',
                     color: t.primaryLight,

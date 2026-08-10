@@ -23,7 +23,7 @@ export default function BackButton({ fallbackHref, label = 'Back' }: BackButtonP
     <button
       type="button"
       onClick={handleClick}
-      className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-[#D4AF37] rounded px-2 py-1 -ml-2"
+      className="inline-flex items-center gap-2 text-sm text-silver hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)] rounded px-2 py-1 -ml-2"
     >
       <ArrowLeft className="w-4 h-4" />
       {label}

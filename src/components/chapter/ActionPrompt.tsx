@@ -53,7 +53,7 @@ export default function ActionPrompt({ prompts, theme }: ActionPromptProps) {
             <div className="flex items-start gap-3">
               <div className="flex-shrink-0 mt-0.5">
                 {isCompleted ? (
-                  <CheckCircle2 className="w-5 h-5" style={{ color: '#10B981' }} />
+                  <CheckCircle2 className="w-5 h-5" style={{ color: 'var(--color-brand-gold)' }} />
                 ) : (
                   <Circle className="w-5 h-5" style={{ color: t.primary }} />
                 )}
@@ -63,7 +63,7 @@ export default function ActionPrompt({ prompts, theme }: ActionPromptProps) {
                 <p
                   className={`text-sm font-semibold mb-1 ${isCompleted ? 'line-through' : ''}`}
                   style={{
-                    color: isCompleted ? '#10B981' : t.text,
+                    color: isCompleted ? 'var(--color-brand-gold)' : t.text,
                   }}
                 >
                   {prompt.action}

@@ -52,22 +52,22 @@ function emailWrapper(content: string, previewText: string): string {
   <title>${escapeHtml(previewText)}</title>
 </head>
 <body style="margin:0; padding:0; background-color:#0a0a0a;">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#0a0a0a">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#000000">
     <tr>
       <td align="center" style="padding:40px 20px;">
         <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width:600px; width:100%; background-color:#111111; border:1px solid #2a2a2a; border-radius:12px; overflow:hidden;">
           <tr>
             <td align="center" style="padding:32px 24px 24px; border-bottom:1px solid #2a2a2a;">
-              <img src="https://ascynpro.com/logo.svg" alt="ASCYN PRO" width="160" style="display:block; max-width:160px; height:auto;" />
+              <img src="https://ascynpro.com/brand/horizontal-dark.svg" alt="ASCYN PRO" width="160" style="display:block; max-width:160px; height:auto;" />
             </td>
           </tr>
           <tr>
-            <td style="padding:32px 24px; color:#ffffff; font-family:Arial, Helvetica, sans-serif; font-size:16px; line-height:1.6;">
+            <td style="padding:32px 24px; color:#ffffff; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size:16px; line-height:1.6;">
               ${content}
             </td>
           </tr>
           <tr>
-            <td style="padding:24px; border-top:1px solid #2a2a2a; color:#888888; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:1.5; text-align:center;">
+            <td style="padding:24px; border-top:1px solid #2a2a2a; color:#888888; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size:14px; line-height:1.5; text-align:center;">
               © 2026 ASCYN PRO. Built for future licensed professionals.
             </td>
           </tr>

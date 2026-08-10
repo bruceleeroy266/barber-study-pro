@@ -31,19 +31,19 @@ export function formatAttendancePercentage(value: number): string {
 export function getStatusColorClass(status: AttendanceStatus | null): string {
   switch (status) {
     case 'Present':
-      return 'text-green-400 bg-green-500/10 border-green-500/20'
+      return 'text-gold bg-gold/10 border-gold/20'
     case 'Absent':
-      return 'text-red-400 bg-red-500/10 border-red-500/20'
+      return 'text-silver bg-silver/10 border-silver/20'
     case 'Tardy':
-      return 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20'
+      return 'text-warm-bronze bg-warm-bronze/10 border-warm-bronze/20'
     case 'Excused':
-      return 'text-blue-400 bg-blue-500/10 border-blue-500/20'
+      return 'text-silver bg-silver/10 border-silver/20'
     case 'Clocked In':
-      return 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
+      return 'text-gold bg-gold/10 border-gold/20'
     case 'Clocked Out':
-      return 'text-gray-400 bg-gray-500/10 border-gray-500/20'
+      return 'text-silver bg-silver-gray/10 border-silver-gray/20'
     default:
-      return 'text-gray-400 bg-gray-800 border-gray-700'
+      return 'text-silver bg-graphite border-[var(--color-border-secondary)]'
   }
 }
 

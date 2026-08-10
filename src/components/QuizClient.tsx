@@ -11,6 +11,7 @@ import { calculateQuizScore } from '@/lib/quiz-scoring'
 import { Quiz, QuizQuestion, QuizAttempt } from '@/types'
 import RemediationPanel from './chapter/RemediationPanel'
 import type { ChapterCompetency, ChapterRemediationPath } from '@/lib/chapter-content'
+import { Button, Card, Badge, ProgressBar, Alert } from '@/components/ui'
 
 interface QuizClientProps {
   quiz: Quiz
@@ -266,38 +267,39 @@ export default function QuizClient({
     return (
       <div className="text-center py-8">
         {bestAttempt && (
-          <div className="mb-6 p-4 bg-gray-800 rounded-lg border border-gray-700">
-            <p className="text-gray-400 text-sm uppercase tracking-wider">Your Best Score</p>
-            <p className="text-4xl font-bold text-[#D4AF37] mt-1">{bestAttempt.percentage}%</p>
-            <p className="text-gray-500 text-sm mt-1">
+          <Card variant="outlined" padding="md" className="mb-6">
+            <p className="text-[var(--color-text-muted)] text-sm uppercase tracking-wider">Your Best Score</p>
+            <p className="text-4xl font-bold text-[var(--color-brand-gold)] mt-1">{bestAttempt.percentage}%</p>
+            <p className="text-[var(--color-text-muted)] text-sm mt-1">
               {bestAttempt.score}/{bestAttempt.total_questions} correct
             </p>
-          </div>
+          </Card>
         )}
 
         <div className="mb-6 space-y-2">
-          <p className="text-gray-300 font-medium">
+          <p className="text-[var(--color-text-secondary)] font-medium">
             {shuffledQuestions.length} questions &bull; Multiple choice &bull; Passing: {passingScore}%
           </p>
-          <p className="text-gray-500 text-sm">
+          <p className="text-[var(--color-text-muted)] text-sm">
             Questions and answers are randomized each attempt
           </p>
         </div>
 
         {/* ASCYN study notice */}
-        <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg text-left">
-          <p className="text-blue-300 text-sm leading-relaxed">
+        <Alert variant="info" className="mb-6 text-left">
+          <p className="text-sm leading-relaxed">
             Some questions may require information from your assigned course materials.
             ASCYN PRO is designed to be used alongside your program materials and classroom instruction.
           </p>
-        </div>
+        </Alert>
 
-        <button
+        <Button
+          variant="primary"
+          size="lg"
           onClick={() => setStarted(true)}
-          className="px-8 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] transition-colors shadow-lg shadow-[#D4AF37]/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
         >
           {bestAttempt ? 'Retake Quiz' : 'Start Quiz'}
-        </button>
+        </Button>
       </div>
     )
   }
@@ -317,7 +319,7 @@ export default function QuizClient({
 
     return (
       <div className="text-center py-8">
-        <div className={`text-5xl mb-4 ${passed ? 'text-green-400' : 'text-yellow-400'}`}>
+        <div className={`text-5xl mb-4 ${passed ? 'text-gold' : 'text-warm-bronze'}`}>
           {passed ? 'PASS' : 'REVIEW NEEDED'}
         </div>
 
@@ -325,20 +327,20 @@ export default function QuizClient({
           {passed ? 'Quiz Passed!' : 'Quiz Completed'}
         </h3>
 
-        <div className="text-5xl font-bold text-[#D4AF37] mb-2">
+        <div className="text-5xl font-bold text-[var(--color-brand-gold)] mb-2">
           {percentage}%
         </div>
 
-        <p className="text-gray-400 mb-2">
+        <p className="text-[var(--color-text-muted)] mb-2">
           You got {score} out of {shuffledQuestions.length} questions correct
         </p>
 
         {passed ? (
-          <p className="text-green-400 mb-6 font-medium">
+          <p className="text-gold mb-6 font-medium">
             Quiz passed. Review your missed questions, flashcards, and course materials anytime, or retake the quiz to improve your score.
           </p>
         ) : (
-          <p className="text-yellow-400 mb-6 font-medium">
+          <p className="text-warm-bronze mb-6 font-medium">
             Review the flashcards and the corresponding lesson, then retake the quiz.
           </p>
         )}
@@ -355,25 +357,25 @@ export default function QuizClient({
                 const userOption = sq.options.find((o) => o.key === userAnswerKey)
                 const correctOption = sq.options.find((o) => o.key === sq.correctKey)
                 return (
-                  <div key={sq.original.id} className="bg-gray-800 rounded-xl p-5 border border-gray-700 text-left">
-                    <p className="text-sm text-gray-400 mb-2">Question {idx + 1}</p>
+                  <Card key={sq.original.id} variant="default" padding="md" className="text-left">
+                    <p className="text-sm text-[var(--color-text-muted)] mb-2">Question {idx + 1}</p>
                     <p className="text-white font-medium mb-3">{sq.original.question}</p>
                     <div className="space-y-2">
-                      <div className="flex items-start gap-2 text-red-400">
+                      <div className="flex items-start gap-2 text-silver">
                         <span className="font-bold">Your answer:</span>
                         <span>{userOption ? `${userOption.label}. ${userOption.text}` : 'No answer'}</span>
                       </div>
-                      <div className="flex items-start gap-2 text-green-400">
+                      <div className="flex items-start gap-2 text-gold">
                         <span className="font-bold">Correct answer:</span>
                         <span>{correctOption ? `${correctOption.label}. ${correctOption.text}` : ''}</span>
                       </div>
                     </div>
                     {sq.original.explanation && (
-                      <p className="mt-3 text-sm text-gray-300 bg-gray-700/50 rounded-lg p-3">
+                      <p className="mt-3 text-sm text-[var(--color-text-secondary)] bg-[var(--color-border-secondary)]/50 rounded-lg p-3">
                         {sq.original.explanation}
                       </p>
                     )}
-                  </div>
+                  </Card>
                 )
               })}
             </div>
@@ -398,34 +400,34 @@ export default function QuizClient({
           {passed ? (
             <>
               {nextChapterNumber ? (
-                <Link
-                  href={`/dashboard/chapters/${nextChapterNumber}`}
-                  className="px-6 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] transition-colors text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
-                >
-                  Continue to Chapter {nextChapterNumber}
+                <Link href={`/dashboard/chapters/${nextChapterNumber}`}>
+                  <Button variant="primary" size="lg">
+                    Continue to Chapter {nextChapterNumber}
+                  </Button>
                 </Link>
               ) : (
-                <Link
-                  href="/dashboard"
-                  className="px-6 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] transition-colors text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
-                >
-                  Return to Dashboard
+                <Link href="/dashboard">
+                  <Button variant="primary" size="lg">
+                    Return to Dashboard
+                  </Button>
                 </Link>
               )}
-              <button
+              <Button
+                variant="secondary"
+                size="lg"
                 onClick={restartQuiz}
-                className="px-6 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors border border-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
               >
                 Retake Quiz
-              </button>
+              </Button>
             </>
           ) : (
-            <button
+            <Button
+              variant="primary"
+              size="lg"
               onClick={restartQuiz}
-              className="px-6 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
             >
               Review and Retake Quiz
-            </button>
+            </Button>
           )}
         </div>
 
@@ -434,7 +436,7 @@ export default function QuizClient({
           <div className="mt-6">
             <Link
               href="/dashboard/missed-questions"
-              className="inline-flex items-center gap-2 text-[#D4AF37] hover:text-[#F4E4A6] transition-colors"
+              className="inline-flex items-center gap-2 text-[var(--color-brand-gold)] hover:text-[var(--color-brand-gold-light)] transition-colors"
             >
               Review Missed Questions
               <span aria-hidden="true">→</span>
@@ -450,31 +452,25 @@ export default function QuizClient({
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between text-sm">
-        <span className="text-gray-400">
+        <span className="text-[var(--color-text-muted)]">
           Question {currentQuestion + 1} of {shuffledQuestions.length}
         </span>
-        <span className="text-[#D4AF37] font-medium">
+        <span className="text-[var(--color-brand-gold)] font-medium">
           Score: {score}
         </span>
       </div>
 
       {/* Progress bar */}
-      <div
-        className="w-full bg-gray-800 rounded-full h-2 overflow-hidden"
-        role="progressbar"
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={Math.round(progress)}
+      <ProgressBar
+        value={progress}
+        variant="default"
+        size="md"
+        showLabel={false}
         aria-label={`Quiz progress: question ${currentQuestion + 1} of ${shuffledQuestions.length}`}
-      >
-        <div
-          className="bg-gradient-to-r from-[#D4AF37] to-[#F4E4A6] h-2 rounded-full transition-all duration-500"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
+      />
 
       {/* Question card */}
-      <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+      <Card variant="default" padding="lg">
         <p className="text-lg text-white font-medium mb-6 leading-relaxed">
           {question.original.question}
         </p>
@@ -491,17 +487,17 @@ export default function QuizClient({
                 key={option.key}
                 onClick={() => handleSelectAnswer(option.key)}
                 disabled={showExplanation}
-                className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 ${
+                className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 ${
                   showCorrect
-                    ? 'bg-green-500/10 border-green-500 text-green-400'
+                    ? 'bg-gold/10 border-gold text-gold'
                     : showWrong
-                    ? 'bg-red-500/10 border-red-500 text-red-400'
+                    ? 'bg-silver/10 border-silver text-silver'
                     : isSelected
-                    ? 'bg-[#D4AF37]/10 border-[#D4AF37] text-white'
-                    : 'bg-gray-700/50 border-gray-600 text-gray-300 hover:bg-gray-700 hover:border-gray-500'
+                    ? 'bg-[var(--color-brand-gold)]/10 border-[var(--color-brand-gold)] text-white'
+                    : 'bg-[var(--color-border-secondary)]/50 border-silver-gray text-[var(--color-text-secondary)] hover:bg-[var(--color-border-secondary)] hover:border-silver-gray'
                 }`}
               >
-                <span className="font-bold mr-3 text-[#D4AF37]">{option.label}.</span>
+                <span className="font-bold mr-3 text-[var(--color-brand-gold)]">{option.label}.</span>
                 {option.text}
               </button>
             )
@@ -510,35 +506,37 @@ export default function QuizClient({
 
         {/* Explanation */}
         {showExplanation && question.original.explanation && (
-          <div className="mt-6 p-4 bg-[#D4AF37]/5 border border-[#D4AF37]/20 rounded-lg">
-            <p className="text-[#D4AF37] font-semibold mb-1 text-sm uppercase tracking-wider">Explanation</p>
-            <p className="text-gray-300 leading-relaxed">{question.original.explanation}</p>
-          </div>
+          <Alert variant="info" className="mt-6">
+            <p className="font-semibold mb-1 text-sm uppercase tracking-wider">Explanation</p>
+            <p className="leading-relaxed">{question.original.explanation}</p>
+          </Alert>
         )}
-      </div>
+      </Card>
 
       {/* Actions */}
       <div className="flex justify-end">
         {!showExplanation ? (
-          <button
+          <Button
+            variant="primary"
+            size="lg"
             onClick={handleSubmitAnswer}
             disabled={!selectedAnswer}
-            className="px-6 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-lg shadow-[#D4AF37]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
           >
             Submit Answer
-          </button>
+          </Button>
         ) : (
-          <button
+          <Button
+            variant="primary"
+            size="lg"
             onClick={handleNext}
             disabled={saving}
-            className="px-6 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] disabled:opacity-50 transition-colors shadow-lg shadow-[#D4AF37]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
           >
             {saving
               ? 'Saving...'
               : currentQuestion === shuffledQuestions.length - 1
               ? 'Finish Quiz'
               : 'Next Question'}
-          </button>
+          </Button>
         )}
       </div>
     </div>

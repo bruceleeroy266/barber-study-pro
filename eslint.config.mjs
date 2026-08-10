@@ -14,6 +14,7 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Standalone utility scripts (not part of the Next.js runtime):
     "scripts/**",
+    "tools/**",
     "*.js",
   ]),
 ]);

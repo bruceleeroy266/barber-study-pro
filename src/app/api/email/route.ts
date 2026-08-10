@@ -15,7 +15,7 @@ const supabaseAdmin = createServiceRoleClient()
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'ASCYN PRO <hello@ascynpro.com>'
 const NOTIFICATION_FROM_EMAIL = process.env.NOTIFICATION_FROM_EMAIL || 'ASCYN PRO <notifications@ascynpro.com>'
 const TO_EMAIL = process.env.EMAIL_TO || 'hello@ascynpro.com'
-const LOGO_URL = 'https://ascynpro.com/logo.svg'
+const LOGO_URL = 'https://ascynpro.com/brand/horizontal-dark.svg'
 
 // Lightweight in-memory rate limiter. Persists only for the lifetime of the
 // serverless instance, which is enough to stop rapid duplicate submissions.
@@ -75,7 +75,7 @@ function emailWrapper(content: string, previewText: string) {
   <title>${escapeHtml(previewText)}</title>
 </head>
 <body style="margin:0; padding:0; background-color:#0a0a0a;">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#0a0a0a">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#000000">
     <tr>
       <td align="center" style="padding:40px 20px;">
         <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width:600px; width:100%; background-color:#111111; border:1px solid #2a2a2a; border-radius:12px; overflow:hidden;">
@@ -85,12 +85,12 @@ function emailWrapper(content: string, previewText: string) {
             </td>
           </tr>
           <tr>
-            <td style="padding:32px 24px; color:#ffffff; font-family:Arial, Helvetica, sans-serif; font-size:16px; line-height:1.6;">
+            <td style="padding:32px 24px; color:#ffffff; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size:16px; line-height:1.6;">
               ${content}
             </td>
           </tr>
           <tr>
-            <td style="padding:24px; border-top:1px solid #2a2a2a; color:#888888; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:1.5; text-align:center;">
+            <td style="padding:24px; border-top:1px solid #2a2a2a; color:#888888; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size:14px; line-height:1.5; text-align:center;">
               © 2026 ASCYN PRO. Built for future licensed professionals.
             </td>
           </tr>

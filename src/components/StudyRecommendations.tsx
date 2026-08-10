@@ -26,24 +26,24 @@ function iconForType(type: StudyRecommendation['type']) {
 function priorityColor(priority: StudyRecommendation['priority']) {
   switch (priority) {
     case 'critical':
-      return 'bg-red-500/20 text-red-400 border-red-500/30'
+      return 'bg-silver/20 text-silver border-silver/30'
     case 'high':
-      return 'bg-orange-500/20 text-orange-400 border-orange-500/30'
+      return 'bg-warm-bronze/20 text-warm-bronze border-warm-bronze/30'
     case 'medium':
-      return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
+      return 'bg-warm-bronze/20 text-warm-bronze border-warm-bronze/30'
     case 'low':
-      return 'bg-green-500/20 text-green-400 border-green-500/30'
+      return 'bg-gold/20 text-gold border-gold/30'
     default:
-      return 'bg-gray-700 text-gray-300 border-gray-600'
+      return 'bg-[var(--color-border-secondary)] text-light-gray border-silver-gray'
   }
 }
 
 export default function StudyRecommendations({ recommendations, studentId, instructorView }: StudyRecommendationsProps) {
   if (recommendations.length === 0) {
     return (
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+      <div className="bg-charcoal border border-graphite rounded-xl p-6">
         <h3 className="text-lg font-semibold text-white mb-2">Study Recommendations</h3>
-        <p className="text-gray-500 text-sm">
+        <p className="text-silver-gray text-sm">
           Complete a quiz to generate personalized study recommendations.
         </p>
       </div>
@@ -51,7 +51,7 @@ export default function StudyRecommendations({ recommendations, studentId, instr
   }
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+    <div className="bg-charcoal border border-graphite rounded-xl p-6">
       <h3 className="text-lg font-semibold text-white mb-4">Recommended Next Steps</h3>
       <div className="space-y-3">
         {recommendations.map((rec) => {
@@ -65,8 +65,8 @@ export default function StudyRecommendations({ recommendations, studentId, instr
           const isInstructorScoped = instructorView && studentId
           const cardContent = (
             <>
-              <div className="p-2 bg-gray-900 rounded-lg shrink-0">
-                <Icon className="w-5 h-5 text-[#D4AF37]" />
+              <div className="p-2 bg-charcoal rounded-lg shrink-0">
+                <Icon className="w-5 h-5 text-[var(--color-brand-gold)]" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2 mb-1">
@@ -79,8 +79,8 @@ export default function StudyRecommendations({ recommendations, studentId, instr
                     {rec.priority}
                   </span>
                 </div>
-                <p className="text-sm text-gray-400">{rec.description}</p>
-                <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
+                <p className="text-sm text-silver">{rec.description}</p>
+                <div className="flex items-center gap-2 mt-2 text-xs text-silver-gray">
                   <Clock className="w-3 h-3" />
                   {rec.estimatedMinutes} min
                 </div>
@@ -91,7 +91,7 @@ export default function StudyRecommendations({ recommendations, studentId, instr
           return isInstructorScoped ? (
             <div
               key={rec.id}
-              className="flex items-start gap-4 p-4 bg-gray-950 border border-gray-800 rounded-lg transition-colors"
+              className="flex items-start gap-4 p-4 bg-black border border-graphite rounded-lg transition-colors"
             >
               {cardContent}
             </div>
@@ -99,10 +99,10 @@ export default function StudyRecommendations({ recommendations, studentId, instr
             <Link
               key={rec.id}
               href={href}
-              className="flex items-start gap-4 p-4 bg-gray-950 border border-gray-800 rounded-lg hover:border-[#D4AF37]/30 transition-colors group"
+              className="flex items-start gap-4 p-4 bg-black border border-graphite rounded-lg hover:border-[var(--color-brand-gold)]/30 transition-colors group"
             >
               {cardContent}
-              <ChevronRight className="w-5 h-5 text-gray-600 group-hover:text-[#D4AF37] shrink-0 mt-1" />
+              <ChevronRight className="w-5 h-5 text-silver-gray group-hover:text-[var(--color-brand-gold)] shrink-0 mt-1" />
             </Link>
           )
         })}

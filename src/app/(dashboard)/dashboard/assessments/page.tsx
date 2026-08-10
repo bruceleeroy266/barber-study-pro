@@ -8,6 +8,11 @@ import AssessmentList from '@/components/assessments/AssessmentList'
 import RubricBuilder from '@/components/assessments/RubricBuilder'
 import { mapAssessmentsFromDb, mapAssessmentRubricsFromDb } from '@/lib/mappers/operational-data-mappers'
 
+// Phase 4 Design System Components
+import { Card } from '@/components/ui/Card'
+import { MetricCard } from '@/components/ui/MetricCard'
+import { EmptyState } from '@/components/ui/EmptyState'
+
 export default async function StudentAssessmentsPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -43,53 +48,87 @@ export default async function StudentAssessmentsPage() {
 
   const passedCount = assessments.filter((a) => a.isPassed).length
   const failedCount = assessments.length - passedCount
+  const passRate = assessments.length > 0 ? Math.round((passedCount / assessments.length) * 100) : 0
 
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">My Assessments</h1>
-        <p className="text-gray-400">Review your practical skill evaluations</p>
+        <h1 className="text-3xl font-bold text-white">My Assessments</h1>
+        <p className="text-[var(--color-text-muted)] mt-1">Review your practical skill evaluations and rubrics</p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-          <div className="text-3xl font-bold text-white">{assessments.length}</div>
-          <div className="text-xs text-gray-400 mt-1">Total Assessments</div>
+      {/* Stats Overview */}
+      <div className="space-y-4">
+        <div>
+          <h2 className="text-xl font-semibold text-white">Overview</h2>
+          <p className="text-sm text-[var(--color-text-muted)]">Your assessment statistics</p>
         </div>
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-          <div className="text-3xl font-bold text-green-400">{passedCount}</div>
-          <div className="text-xs text-gray-400 mt-1">Passed</div>
+        
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <MetricCard
+            label="Total Assessments"
+            value={assessments.length}
+            variant="default"
+          />
+          <MetricCard
+            label="Passed"
+            value={passedCount}
+            variant="success"
+          />
+          <MetricCard
+            label="Needs Practice"
+            value={failedCount}
+            variant="warning"
+          />
+          <MetricCard
+            label="Pass Rate"
+            value={`${passRate}%`}
+            variant={passRate >= 80 ? 'success' : passRate >= 60 ? 'warning' : 'error'}
+          />
         </div>
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-          <div className="text-3xl font-bold text-red-400">{failedCount}</div>
-          <div className="text-xs text-gray-400 mt-1">Needs Practice</div>
+      </div>
+
+      {/* Assessment Records */}
+      <div className="space-y-4">
+        <div>
+          <h2 className="text-xl font-semibold text-white">Assessment Records</h2>
+          <p className="text-sm text-[var(--color-text-muted)]">Your evaluation history</p>
         </div>
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-          <div className="text-3xl font-bold text-[#D4AF37]">
-            {assessments.length > 0 ? Math.round((passedCount / assessments.length) * 100) : 0}%
+        
+        <Card variant="default" padding="lg">
+          {assessments.length === 0 ? (
+            <EmptyState
+              icon="📋"
+              title="No assessments yet"
+              description="Your practical assessments will appear here once your instructor evaluates your work."
+            />
+          ) : (
+            <AssessmentList assessments={assessments} />
+          )}
+        </Card>
+      </div>
+
+      {/* Rubrics */}
+      {rubrics.length > 0 && (
+        <div className="space-y-4">
+          <div>
+            <h2 className="text-xl font-semibold text-white">Rubrics</h2>
+            <p className="text-sm text-[var(--color-text-muted)]">Evaluation criteria</p>
           </div>
-          <div className="text-xs text-gray-400 mt-1">Pass Rate</div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {rubrics.slice(0, 2).map((rubric) => (
+              <RubricBuilder key={rubric.id} rubric={rubric} />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-        <h2 className="text-lg font-semibold text-white mb-4">Assessment Records</h2>
-        <AssessmentList assessments={assessments} />
-      </div>
-
-      <div>
-        <h2 className="text-xl font-semibold text-white mb-4">Rubrics</h2>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {rubrics.slice(0, 2).map((rubric) => (
-            <RubricBuilder key={rubric.id} rubric={rubric} />
-          ))}
-        </div>
-      </div>
-
+      {/* Navigation */}
       <div className="flex justify-start">
         <Link
           href="/dashboard/grades"
-          className="text-[#D4AF37] hover:text-[#F4E4A6] text-sm font-medium"
+          className="text-[var(--color-brand-gold)] hover:text-[var(--color-brand-gold-light)] text-sm font-medium"
         >
           Back to my grades →
         </Link>

@@ -146,24 +146,24 @@ export default function SchoolConfigurationClient({
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 p-6 lg:p-8">
+    <div className="min-h-screen bg-black p-6 lg:p-8">
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-white mb-2">School Configuration</h1>
-            <p className="text-gray-400">
+            <p className="text-silver">
               Manage school settings, programs, policies, and role permissions
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
             {hasUnsavedChanges && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm bg-warm-bronze/10 text-warm-bronze border border-warm-bronze/20">
                 <AlertCircle className="w-4 h-4" />
                 Unsaved changes
               </span>
             )}
             {isDemo && (
-              <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg px-4 py-2 text-sm text-yellow-400">
+              <div className="bg-warm-bronze/10 border border-warm-bronze/20 rounded-lg px-4 py-2 text-sm text-warm-bronze">
                 Demo mode: changes are not persisted
               </div>
             )}
@@ -176,8 +176,8 @@ export default function SchoolConfigurationClient({
             aria-live="polite"
             className={`flex items-center gap-3 px-4 py-3 rounded-lg border ${
               feedback.type === 'success'
-                ? 'bg-green-500/10 text-green-400 border-green-500/20'
-                : 'bg-red-500/10 text-red-400 border-red-500/20'
+                ? 'bg-gold/10 text-gold border-gold/20'
+                : 'bg-silver/10 text-silver border-silver/20'
             }`}
           >
             {feedback.type === 'success' ? (
@@ -192,7 +192,7 @@ export default function SchoolConfigurationClient({
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Sidebar tabs */}
           <nav className="lg:w-64 shrink-0" role="tablist" aria-label="Configuration sections">
-            <div className="bg-gray-900 border border-gray-800 rounded-xl p-2 space-y-1">
+            <div className="bg-charcoal border border-graphite rounded-xl p-2 space-y-1">
               {tabs.map((tab) => {
                 const Icon = tab.icon
                 const active = activeTab === tab.id
@@ -206,8 +206,8 @@ export default function SchoolConfigurationClient({
                     onClick={() => setActiveTab(tab.id)}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-colors ${
                       active
-                        ? 'bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/20'
-                        : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                        ? 'bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/20'
+                        : 'text-silver hover:bg-graphite hover:text-white'
                     }`}
                   >
                     <Icon className="w-4 h-4" />
@@ -224,7 +224,7 @@ export default function SchoolConfigurationClient({
               id={`panel-${activeTab}`}
               role="tabpanel"
               aria-labelledby={`tab-${activeTab}`}
-              className="bg-gray-900 border border-gray-800 rounded-xl p-6"
+              className="bg-charcoal border border-graphite rounded-xl p-6"
             >
               {activeTab === 'profile' && (
                 <SchoolProfileSection
@@ -318,15 +318,15 @@ export default function SchoolConfigurationClient({
 
         {/* Sticky save/reset bar */}
         <div className="sticky bottom-6 z-30">
-          <div className="bg-gray-900/95 backdrop-blur border border-gray-800 rounded-xl p-4 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-sm text-gray-400">
+          <div className="bg-charcoal/95 backdrop-blur border border-graphite rounded-xl p-4 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-sm text-silver">
               {hasUnsavedChanges ? (
-                <span className="text-yellow-400">You have unsaved changes.</span>
+                <span className="text-warm-bronze">You have unsaved changes.</span>
               ) : (
                 <span>All changes saved.</span>
               )}
               {isDemo && (
-                <span className="block sm:inline sm:ml-2 text-yellow-500/80">
+                <span className="block sm:inline sm:ml-2 text-warm-bronze/80">
                   Demo preview: settings will not persist after refresh.
                 </span>
               )}
@@ -336,7 +336,7 @@ export default function SchoolConfigurationClient({
                 type="button"
                 onClick={handleReset}
                 disabled={!hasUnsavedChanges || isSaving}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border border-gray-700 text-gray-300 hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border border-[var(--color-border-secondary)] text-light-gray hover:bg-graphite disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 <RotateCcw className="w-4 h-4" />
                 Reset Changes
@@ -345,7 +345,7 @@ export default function SchoolConfigurationClient({
                 type="button"
                 onClick={handleSave}
                 disabled={!hasUnsavedChanges || isSaving}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-[#D4AF37] text-gray-950 hover:bg-[#c4a030] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-[var(--color-brand-gold)] text-black hover:bg-[var(--color-brand-gold)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 <Save className="w-4 h-4" />
                 {isSaving ? 'Saving…' : 'Save Changes'}

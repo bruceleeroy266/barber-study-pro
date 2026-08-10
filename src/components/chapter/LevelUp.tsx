@@ -17,7 +17,7 @@ interface LevelUpProps {
 }
 
 const levelIcons = [Star, Trophy, Crown]
-const levelColors = ['#00D4FF', '#FFD700', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']
+const levelColors = ['var(--color-brand-silver)', 'var(--color-brand-gold)', 'var(--color-brand-gold)', 'var(--color-brand-warm-bronze)', 'var(--color-brand-silver)', 'var(--color-brand-silver)']
 
 export default function LevelUp({ levels, theme }: LevelUpProps) {
   const t = theme || defaultTheme

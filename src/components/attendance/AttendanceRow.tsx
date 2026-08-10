@@ -55,27 +55,27 @@ export default function AttendanceRow({
   }
 
   return (
-    <tr className="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors">
+    <tr className="border-b border-graphite/50 hover:bg-graphite/30 transition-colors">
       <td className="p-4">
         <input
           type="checkbox"
           checked={isSelected}
           onChange={onSelect}
           disabled={disabled}
-          className="w-4 h-4 rounded border-gray-600 bg-gray-800 text-[#D4AF37] focus:ring-[#D4AF37] focus:ring-offset-gray-900"
+          className="w-4 h-4 rounded border-silver-gray bg-graphite text-[var(--color-brand-gold)] focus:ring-[var(--color-brand-gold)] focus:ring-offset-gray-900"
         />
       </td>
       <td className="p-4">
         <div className="text-white font-medium">{student?.full_name || 'Unknown'}</div>
-        <div className="text-gray-500 text-xs">{student?.email}</div>
+        <div className="text-silver-gray text-xs">{student?.email}</div>
       </td>
-      <td className="p-4 text-gray-300 text-sm">{record.date}</td>
+      <td className="p-4 text-light-gray text-sm">{record.date}</td>
       <td className="p-4">
         <StatusSelector value={record.status} onChange={onStatusChange} disabled={disabled} size="sm" />
       </td>
-      <td className="p-4 text-gray-300 text-sm text-center">{formatClockTime(record.clockedInAt)}</td>
-      <td className="p-4 text-gray-300 text-sm text-center">{formatClockTime(record.clockedOutAt)}</td>
-      <td className="p-4 text-gray-300 text-sm text-center">{formatDuration(record.minutesPresent)}</td>
+      <td className="p-4 text-light-gray text-sm text-center">{formatClockTime(record.clockedInAt)}</td>
+      <td className="p-4 text-light-gray text-sm text-center">{formatClockTime(record.clockedOutAt)}</td>
+      <td className="p-4 text-light-gray text-sm text-center">{formatDuration(record.minutesPresent)}</td>
       <td className="p-4 min-w-[180px]">
         {isEditingNote ? (
           <input
@@ -87,17 +87,17 @@ export default function AttendanceRow({
               if (e.key === 'Enter') handleNoteBlur()
             }}
             autoFocus
-            className="w-full bg-gray-950 border border-gray-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-[#D4AF37]"
+            className="w-full bg-black border border-[var(--color-border-secondary)] rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
             placeholder="Add note..."
           />
         ) : (
           <button
             onClick={() => setIsEditingNote(true)}
-            className="flex items-center gap-1 text-xs text-gray-400 hover:text-white text-left"
+            className="flex items-center gap-1 text-xs text-silver hover:text-white text-left"
             title="Click to edit note"
           >
             <FileText className="w-3 h-3" />
-            <span className={record.note ? 'text-gray-300' : 'text-gray-600 italic'}>
+            <span className={record.note ? 'text-light-gray' : 'text-silver-gray italic'}>
               {record.note || 'Add note...'}
             </span>
           </button>
@@ -108,14 +108,14 @@ export default function AttendanceRow({
           <button
             onClick={() => onCorrectionClick(record)}
             disabled={disabled}
-            className="p-1.5 text-gray-400 hover:text-[#D4AF37] hover:bg-[#D4AF37]/10 rounded transition-colors"
+            className="p-1.5 text-silver hover:text-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold)]/10 rounded transition-colors"
             title="Submit correction"
           >
             <Edit3 className="w-4 h-4" />
           </button>
           <button
             onClick={() => onAuditClick(record)}
-            className="p-1.5 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded transition-colors"
+            className="p-1.5 text-silver hover:text-silver hover:bg-silver/10 rounded transition-colors"
             title="View audit history"
           >
             <History className="w-4 h-4" />

@@ -35,27 +35,27 @@ export default function MissedQuestionBank({ questions, instructorView = false }
   return (
     <div className="space-y-6">
       {/* Filters */}
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 space-y-4">
+      <div className="bg-charcoal border border-graphite rounded-xl p-4 space-y-4">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-silver-gray" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search missed questions..."
-              className="w-full bg-gray-950 border border-gray-700 rounded-lg pl-10 pr-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+              className="w-full bg-black border border-[var(--color-border-secondary)] rounded-lg pl-10 pr-4 py-2 text-white placeholder-silver-gray focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)]"
             />
           </div>
           <div className="flex gap-4">
             <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-gray-500" />
+              <Filter className="w-4 h-4 text-silver-gray" />
               <select
                 value={chapterFilter}
                 onChange={(e) =>
                   setChapterFilter(e.target.value === 'all' ? 'all' : parseInt(e.target.value, 10))
                 }
-                className="bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+                className="bg-black border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)]"
               >
                 <option value="all">All Chapters</option>
                 {chapters.map((ch) => (
@@ -68,7 +68,7 @@ export default function MissedQuestionBank({ questions, instructorView = false }
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+              className="bg-black border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)]"
             >
               <option value="all">All Categories</option>
               {categories.map((cat) => (
@@ -81,13 +81,13 @@ export default function MissedQuestionBank({ questions, instructorView = false }
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-silver">
             Showing {filtered.length} of {questions.length} missed question
             {questions.length === 1 ? '' : 's'}
           </p>
           {instructorView ? (
             <span
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#D4AF37]/30 text-[#D4AF37] font-semibold rounded-lg cursor-not-allowed"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-brand-gold)]/30 text-[var(--color-brand-gold)] font-semibold rounded-lg cursor-not-allowed"
               title="Only the student can retest weak areas"
             >
               <RotateCcw className="w-4 h-4" />
@@ -96,7 +96,7 @@ export default function MissedQuestionBank({ questions, instructorView = false }
           ) : (
             <Link
               href="/dashboard/missed-questions/retest"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-brand-gold)] text-black font-semibold rounded-lg hover:bg-[var(--color-brand-gold-light)] transition-colors"
             >
               <RotateCcw className="w-4 h-4" />
               Retest Weak Areas
@@ -111,43 +111,43 @@ export default function MissedQuestionBank({ questions, instructorView = false }
           {filtered.map((q) => (
             <div
               key={q.id}
-              className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden"
+              className="bg-charcoal border border-graphite rounded-xl overflow-hidden"
             >
               <button
                 onClick={() => setExpandedId(expandedId === q.id ? null : q.id)}
-                className="w-full p-5 text-left hover:bg-gray-800/30 transition-colors"
+                className="w-full p-5 text-left hover:bg-graphite/30 transition-colors"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <span className="px-2 py-0.5 bg-gray-800 text-gray-300 text-xs rounded">
+                      <span className="px-2 py-0.5 bg-graphite text-light-gray text-xs rounded">
                         Ch. {q.chapterNumber}
                       </span>
-                      <span className="px-2 py-0.5 bg-gray-800 text-gray-300 text-xs rounded">
+                      <span className="px-2 py-0.5 bg-graphite text-light-gray text-xs rounded">
                         {q.category}
                       </span>
-                      <span className="px-2 py-0.5 bg-red-500/20 text-red-400 text-xs rounded">
+                      <span className="px-2 py-0.5 bg-silver/20 text-silver text-xs rounded">
                         Missed {q.timesMissed}x
                       </span>
                     </div>
                     <p className="text-white font-medium">{q.question}</p>
                   </div>
-                  <div className="text-gray-500 text-sm shrink-0">
+                  <div className="text-silver-gray text-sm shrink-0">
                     {new Date(q.missedAt).toLocaleDateString()}
                   </div>
                 </div>
               </button>
 
               {expandedId === q.id && (
-                <div className="px-5 pb-5 border-t border-gray-800 pt-4 space-y-3">
-                  <div className="flex items-start gap-2 text-red-400">
+                <div className="px-5 pb-5 border-t border-graphite pt-4 space-y-3">
+                  <div className="flex items-start gap-2 text-silver">
                     <XCircle className="w-5 h-5 shrink-0" />
                     <div>
                       <p className="text-sm font-medium">Your answer</p>
                       <p className="text-sm">{q.studentAnswer}</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-2 text-green-400">
+                  <div className="flex items-start gap-2 text-gold">
                     <CheckCircle className="w-5 h-5 shrink-0" />
                     <div>
                       <p className="text-sm font-medium">Correct answer</p>
@@ -155,23 +155,23 @@ export default function MissedQuestionBank({ questions, instructorView = false }
                     </div>
                   </div>
                   {q.explanation && (
-                    <div className="flex items-start gap-2 text-gray-300">
-                      <BookOpen className="w-5 h-5 shrink-0 text-[#D4AF37]" />
+                    <div className="flex items-start gap-2 text-light-gray">
+                      <BookOpen className="w-5 h-5 shrink-0 text-[var(--color-brand-gold)]" />
                       <div>
-                        <p className="text-sm font-medium text-[#D4AF37]">Explanation</p>
+                        <p className="text-sm font-medium text-[var(--color-brand-gold)]">Explanation</p>
                         <p className="text-sm">{q.explanation}</p>
                       </div>
                     </div>
                   )}
                   <div className="pt-2">
                     {instructorView ? (
-                      <span className="inline-flex items-center gap-2 text-sm text-gray-500 font-medium">
+                      <span className="inline-flex items-center gap-2 text-sm text-silver-gray font-medium">
                         Study Chapter {q.chapterNumber} (student preview)
                       </span>
                     ) : (
                       <Link
                         href={`/dashboard/chapters/${q.chapterNumber}`}
-                        className="inline-flex items-center gap-2 text-sm text-[#D4AF37] hover:text-[#F4E4A6] font-medium"
+                        className="inline-flex items-center gap-2 text-sm text-[var(--color-brand-gold)] hover:text-[var(--color-brand-gold-light)] font-medium"
                       >
                         Study Chapter {q.chapterNumber}
                       </Link>
@@ -183,9 +183,9 @@ export default function MissedQuestionBank({ questions, instructorView = false }
           ))}
         </div>
       ) : (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 text-center">
-          <p className="text-gray-400 font-medium">No missed questions match your filters.</p>
-          <p className="text-sm text-gray-500 mt-2">
+        <div className="bg-charcoal border border-graphite rounded-xl p-8 text-center">
+          <p className="text-silver font-medium">No missed questions match your filters.</p>
+          <p className="text-sm text-silver-gray mt-2">
             {questions.length > 0
               ? 'Try adjusting your search or filters.'
               : 'Great job — you have no missed questions!'}

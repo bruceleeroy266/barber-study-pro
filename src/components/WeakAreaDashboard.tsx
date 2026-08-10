@@ -167,33 +167,33 @@ export default function WeakAreaDashboard({ userId }: WeakAreaDashboardProps) {
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'critical': return 'bg-red-500 text-white'
-      case 'high': return 'bg-orange-500 text-white'
-      case 'medium': return 'bg-yellow-500 text-black'
-      case 'low': return 'bg-green-500 text-white'
-      default: return 'bg-gray-500 text-white'
+      case 'critical': return 'bg-silver text-white'
+      case 'high': return 'bg-warm-bronze text-white'
+      case 'medium': return 'bg-warm-bronze text-black'
+      case 'low': return 'bg-gold text-white'
+      default: return 'bg-silver-gray text-white'
     }
   }
 
   const getTrendIcon = (trend: string) => {
     switch (trend) {
-      case 'improving': return <TrendingUp className="w-5 h-5 text-green-500" />
-      case 'declining': return <TrendingDown className="w-5 h-5 text-red-500" />
-      default: return <Minus className="w-5 h-5 text-yellow-500" />
+      case 'improving': return <TrendingUp className="w-5 h-5 text-gold" />
+      case 'declining': return <TrendingDown className="w-5 h-5 text-silver" />
+      default: return <Minus className="w-5 h-5 text-warm-bronze" />
     }
   }
 
   const getExamReadinessColor = (score: number) => {
-    if (score >= 80) return 'text-green-500'
-    if (score >= 60) return 'text-yellow-500'
-    if (score >= 40) return 'text-orange-500'
-    return 'text-red-500'
+    if (score >= 80) return 'text-gold'
+    if (score >= 60) return 'text-warm-bronze'
+    if (score >= 40) return 'text-warm-bronze'
+    return 'text-silver'
   }
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-warm-bronze"></div>
       </div>
     )
   }
@@ -204,11 +204,11 @@ export default function WeakAreaDashboard({ userId }: WeakAreaDashboardProps) {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-white">Adaptive Learning Dashboard</h2>
-          <p className="text-gray-400">Personalized insights to improve your state board readiness</p>
+          <p className="text-silver">Personalized insights to improve your state board readiness</p>
         </div>
         <div className="flex items-center gap-4">
           <div className="text-right">
-            <p className="text-sm text-gray-400">Exam Readiness</p>
+            <p className="text-sm text-silver">Exam Readiness</p>
             <p className={`text-3xl font-bold ${getExamReadinessColor(analytics?.examReadiness || 0)}`}>
               {analytics?.examReadiness}%
             </p>
@@ -222,7 +222,7 @@ export default function WeakAreaDashboard({ userId }: WeakAreaDashboardProps) {
                 stroke="currentColor"
                 strokeWidth="4"
                 fill="transparent"
-                className="text-gray-700"
+                className="text-silver-gray"
               />
               <circle
                 cx="32"
@@ -240,7 +240,7 @@ export default function WeakAreaDashboard({ userId }: WeakAreaDashboardProps) {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex flex-wrap gap-2 border-b border-gray-700 pb-4">
+      <div className="flex flex-wrap gap-2 border-b border-[var(--color-border-secondary)] pb-4">
         {([
           { id: 'overview', label: 'Overview', icon: BarChart3 },
           { id: 'weak-areas', label: 'Weak Areas', icon: AlertTriangle },
@@ -252,8 +252,8 @@ export default function WeakAreaDashboard({ userId }: WeakAreaDashboardProps) {
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
               activeTab === tab.id
-                ? 'bg-amber-500 text-black'
-                : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                ? 'bg-warm-bronze text-black'
+                : 'bg-graphite text-light-gray hover:bg-[var(--color-border-secondary)]'
             }`}
           >
             <tab.icon className="w-4 h-4" />
@@ -267,62 +267,62 @@ export default function WeakAreaDashboard({ userId }: WeakAreaDashboardProps) {
         <div className="space-y-6">
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
+            <div className="bg-graphite rounded-xl p-4 border border-[var(--color-border-secondary)]">
               <div className="flex items-center gap-3 mb-2">
-                <Clock className="w-5 h-5 text-amber-500" />
-                <span className="text-gray-400 text-sm">Study Time</span>
+                <Clock className="w-5 h-5 text-warm-bronze" />
+                <span className="text-silver text-sm">Study Time</span>
               </div>
               <p className="text-2xl font-bold text-white">{analytics?.totalStudyTime}m</p>
-              <p className="text-xs text-gray-500">Total time studied</p>
+              <p className="text-xs text-silver-gray">Total time studied</p>
             </div>
             
-            <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
+            <div className="bg-graphite rounded-xl p-4 border border-[var(--color-border-secondary)]">
               <div className="flex items-center gap-3 mb-2">
-                <BookOpen className="w-5 h-5 text-blue-500" />
-                <span className="text-gray-400 text-sm">Quizzes</span>
+                <BookOpen className="w-5 h-5 text-silver" />
+                <span className="text-silver text-sm">Quizzes</span>
               </div>
               <p className="text-2xl font-bold text-white">{analytics?.quizzesCompleted}</p>
-              <p className="text-xs text-gray-500">Questions answered</p>
+              <p className="text-xs text-silver-gray">Questions answered</p>
             </div>
             
-            <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
+            <div className="bg-graphite rounded-xl p-4 border border-[var(--color-border-secondary)]">
               <div className="flex items-center gap-3 mb-2">
-                <Zap className="w-5 h-5 text-yellow-500" />
-                <span className="text-gray-400 text-sm">Flashcards</span>
+                <Zap className="w-5 h-5 text-warm-bronze" />
+                <span className="text-silver text-sm">Flashcards</span>
               </div>
               <p className="text-2xl font-bold text-white">{analytics?.flashcardsReviewed}</p>
-              <p className="text-xs text-gray-500">Cards reviewed</p>
+              <p className="text-xs text-silver-gray">Cards reviewed</p>
             </div>
             
-            <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
+            <div className="bg-graphite rounded-xl p-4 border border-[var(--color-border-secondary)]">
               <div className="flex items-center gap-3 mb-2">
-                <Award className="w-5 h-5 text-green-500" />
-                <span className="text-gray-400 text-sm">Streak</span>
+                <Award className="w-5 h-5 text-gold" />
+                <span className="text-silver text-sm">Streak</span>
               </div>
               <p className="text-2xl font-bold text-white">{analytics?.streakDays} days</p>
-              <p className="text-xs text-gray-500">Keep it up!</p>
+              <p className="text-xs text-silver-gray">Keep it up!</p>
             </div>
           </div>
 
           {/* Current Focus Areas */}
-          <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+          <div className="bg-graphite rounded-xl p-6 border border-[var(--color-border-secondary)]">
             <div className="flex items-center gap-3 mb-4">
-              <Target className="w-6 h-6 text-amber-500" />
+              <Target className="w-6 h-6 text-warm-bronze" />
               <h3 className="text-lg font-semibold text-white">Current Focus Areas</h3>
             </div>
             <div className="space-y-3">
               {learningPath?.priorityWeakAreas.slice(0, 3).map((area, index) => (
-                <div key={area.id} className="flex items-center gap-4 p-3 bg-gray-900 rounded-lg">
+                <div key={area.id} className="flex items-center gap-4 p-3 bg-charcoal rounded-lg">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
-                    index === 0 ? 'bg-red-500 text-white' :
-                    index === 1 ? 'bg-orange-500 text-white' :
-                    'bg-yellow-500 text-black'
+                    index === 0 ? 'bg-silver text-white' :
+                    index === 1 ? 'bg-warm-bronze text-white' :
+                    'bg-warm-bronze text-black'
                   }`}>
                     {index + 1}
                   </div>
                   <div className="flex-1">
                     <p className="font-medium text-white">{area.conceptName}</p>
-                    <p className="text-sm text-gray-400">Chapter {area.chapterNumber} • {area.category}</p>
+                    <p className="text-sm text-silver">Chapter {area.chapterNumber} • {area.category}</p>
                   </div>
                   <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(area.priority)}`}>
                     {area.priority.toUpperCase()}
@@ -333,35 +333,35 @@ export default function WeakAreaDashboard({ userId }: WeakAreaDashboardProps) {
           </div>
 
           {/* Confidence Trend */}
-          <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+          <div className="bg-graphite rounded-xl p-6 border border-[var(--color-border-secondary)]">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <Brain className="w-6 h-6 text-purple-500" />
+                <Brain className="w-6 h-6 text-silver" />
                 <h3 className="text-lg font-semibold text-white">Confidence Trend</h3>
               </div>
               <div className="flex items-center gap-2">
                 {getTrendIcon(learningPath?.confidenceTrend || 'stable')}
                 <span className={`font-medium ${
-                  learningPath?.confidenceTrend === 'improving' ? 'text-green-500' :
-                  learningPath?.confidenceTrend === 'declining' ? 'text-red-500' :
-                  'text-yellow-500'
+                  learningPath?.confidenceTrend === 'improving' ? 'text-gold' :
+                  learningPath?.confidenceTrend === 'declining' ? 'text-silver' :
+                  'text-warm-bronze'
                 }`}>
                   {learningPath?.confidenceTrend?.charAt(0).toUpperCase()}{learningPath?.confidenceTrend?.slice(1)}
                 </span>
               </div>
             </div>
             <div className="grid grid-cols-3 gap-4">
-              <div className="text-center p-4 bg-gray-900 rounded-lg">
-                <p className="text-3xl font-bold text-red-500">{analytics?.weakAreasCount}</p>
-                <p className="text-sm text-gray-400">Need Work</p>
+              <div className="text-center p-4 bg-charcoal rounded-lg">
+                <p className="text-3xl font-bold text-silver">{analytics?.weakAreasCount}</p>
+                <p className="text-sm text-silver">Need Work</p>
               </div>
-              <div className="text-center p-4 bg-gray-900 rounded-lg">
-                <p className="text-3xl font-bold text-yellow-500">{analytics?.improvingAreasCount}</p>
-                <p className="text-sm text-gray-400">Improving</p>
+              <div className="text-center p-4 bg-charcoal rounded-lg">
+                <p className="text-3xl font-bold text-warm-bronze">{analytics?.improvingAreasCount}</p>
+                <p className="text-sm text-silver">Improving</p>
               </div>
-              <div className="text-center p-4 bg-gray-900 rounded-lg">
-                <p className="text-3xl font-bold text-green-500">{analytics?.masteredAreasCount}</p>
-                <p className="text-sm text-gray-400">Mastered</p>
+              <div className="text-center p-4 bg-charcoal rounded-lg">
+                <p className="text-3xl font-bold text-gold">{analytics?.masteredAreasCount}</p>
+                <p className="text-sm text-silver">Mastered</p>
               </div>
             </div>
           </div>
@@ -374,21 +374,21 @@ export default function WeakAreaDashboard({ userId }: WeakAreaDashboardProps) {
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-white">All Weak Areas</h3>
             <div className="flex gap-2">
-              <span className="px-3 py-1 bg-red-500/20 text-red-400 rounded-full text-sm">
+              <span className="px-3 py-1 bg-silver/20 text-silver rounded-full text-sm">
                 {weakAreas.filter(w => w.priority === 'critical').length} Critical
               </span>
-              <span className="px-3 py-1 bg-orange-500/20 text-orange-400 rounded-full text-sm">
+              <span className="px-3 py-1 bg-warm-bronze/20 text-warm-bronze rounded-full text-sm">
                 {weakAreas.filter(w => w.priority === 'high').length} High
               </span>
             </div>
           </div>
           
           {weakAreas.map(area => (
-            <div key={area.id} className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-amber-500/50 transition-colors">
+            <div key={area.id} className="bg-graphite rounded-xl p-6 border border-[var(--color-border-secondary)] hover:border-warm-bronze/50 transition-colors">
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h4 className="font-semibold text-white text-lg">{area.conceptName}</h4>
-                  <p className="text-gray-400">Chapter {area.chapterNumber} • {area.category}</p>
+                  <p className="text-silver">Chapter {area.chapterNumber} • {area.category}</p>
                 </div>
                 <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(area.priority)}`}>
                   {area.priority.toUpperCase()}
@@ -397,15 +397,15 @@ export default function WeakAreaDashboard({ userId }: WeakAreaDashboardProps) {
               
               <div className="grid grid-cols-3 gap-4 mb-4">
                 <div>
-                  <p className="text-sm text-gray-500">Confidence</p>
+                  <p className="text-sm text-silver-gray">Confidence</p>
                   <div className="flex items-center gap-2">
-                    <div className="flex-1 h-2 bg-gray-700 rounded-full overflow-hidden">
+                    <div className="flex-1 h-2 bg-[var(--color-border-secondary)] rounded-full overflow-hidden">
                       <div 
                         className={`h-full rounded-full ${
-                          area.confidenceScore < 30 ? 'bg-red-500' :
-                          area.confidenceScore < 50 ? 'bg-orange-500' :
-                          area.confidenceScore < 70 ? 'bg-yellow-500' :
-                          'bg-green-500'
+                          area.confidenceScore < 30 ? 'bg-silver' :
+                          area.confidenceScore < 50 ? 'bg-warm-bronze' :
+                          area.confidenceScore < 70 ? 'bg-warm-bronze' :
+                          'bg-gold'
                         }`}
                         style={{ width: `${area.confidenceScore}%` }}
                       />
@@ -414,25 +414,25 @@ export default function WeakAreaDashboard({ userId }: WeakAreaDashboardProps) {
                   </div>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Missed</p>
+                  <p className="text-sm text-silver-gray">Missed</p>
                   <p className="font-medium text-white">{area.missCount} times</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Type</p>
+                  <p className="text-sm text-silver-gray">Type</p>
                   <p className="font-medium text-white capitalize">{area.weaknessType}</p>
                 </div>
               </div>
               
               <div className="space-y-2">
-                <p className="text-sm font-medium text-gray-300">Recommended Actions:</p>
+                <p className="text-sm font-medium text-light-gray">Recommended Actions:</p>
                 <div className="flex flex-wrap gap-2">
                   {area.recommendedActions.map((action, i) => (
                     <span 
                       key={i}
                       className={`px-3 py-1 rounded-full text-xs ${
                         action.includes('CRITICAL') 
-                          ? 'bg-red-500/20 text-red-400 border border-red-500/50' 
-                          : 'bg-gray-700 text-gray-300'
+                          ? 'bg-silver/20 text-silver border border-silver/50' 
+                          : 'bg-[var(--color-border-secondary)] text-light-gray'
                       }`}
                     >
                       {action}
@@ -448,7 +448,7 @@ export default function WeakAreaDashboard({ userId }: WeakAreaDashboardProps) {
       {/* Progress Tab */}
       {activeTab === 'progress' && (
         <div className="space-y-6">
-          <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+          <div className="bg-graphite rounded-xl p-6 border border-[var(--color-border-secondary)]">
             <h3 className="text-lg font-semibold text-white mb-4">Study Progress</h3>
             <div className="space-y-4">
               {[
@@ -460,12 +460,12 @@ export default function WeakAreaDashboard({ userId }: WeakAreaDashboardProps) {
               ].map((chapter, i) => (
                 <div key={i}>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-300">{chapter.label}</span>
-                    <span className="text-amber-500">{chapter.progress}%</span>
+                    <span className="text-light-gray">{chapter.label}</span>
+                    <span className="text-warm-bronze">{chapter.progress}%</span>
                   </div>
-                  <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
+                  <div className="h-2 bg-[var(--color-border-secondary)] rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full transition-all"
+                      className="h-full bg-gradient-to-r from-warm-bronze to-warm-bronze rounded-full transition-all"
                       style={{ width: `${chapter.progress}%` }}
                     />
                   </div>
@@ -479,24 +479,24 @@ export default function WeakAreaDashboard({ userId }: WeakAreaDashboardProps) {
       {/* Study Plan Tab */}
       {activeTab === 'study-plan' && (
         <div className="space-y-6">
-          <div className="bg-gradient-to-r from-amber-500/20 to-yellow-500/20 rounded-xl p-6 border border-amber-500/30">
+          <div className="bg-gradient-to-r from-warm-bronze/20 to-warm-bronze/20 rounded-xl p-6 border border-warm-bronze/30">
             <div className="flex items-center gap-3 mb-4">
-              <Calendar className="w-6 h-6 text-amber-500" />
+              <Calendar className="w-6 h-6 text-warm-bronze" />
               <h3 className="text-lg font-semibold text-white">Today&apos;s Study Plan</h3>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-gray-400 mb-1">Suggested Time</p>
+                <p className="text-sm text-silver mb-1">Suggested Time</p>
                 <p className="text-3xl font-bold text-white">{learningPath?.suggestedStudyTime} minutes</p>
               </div>
               <div>
-                <p className="text-sm text-gray-400 mb-1">Next Milestone</p>
-                <p className="text-xl font-semibold text-amber-400">{learningPath?.nextMilestone}</p>
+                <p className="text-sm text-silver mb-1">Next Milestone</p>
+                <p className="text-xl font-semibold text-warm-bronze">{learningPath?.nextMilestone}</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+          <div className="bg-graphite rounded-xl p-6 border border-[var(--color-border-secondary)]">
             <h3 className="text-lg font-semibold text-white mb-4">Recommended Activities</h3>
             <div className="space-y-3">
               {[
@@ -505,17 +505,17 @@ export default function WeakAreaDashboard({ userId }: WeakAreaDashboardProps) {
                 { icon: CheckCircle, text: 'Take practice quiz on pH Scale', time: '10 min', priority: 'high' },
                 { icon: Brain, text: 'Review chapter notes on Skin Conditions', time: '15 min', priority: 'medium' }
               ].map((activity, i) => (
-                <div key={i} className="flex items-center gap-4 p-4 bg-gray-900 rounded-lg hover:bg-gray-850 transition-colors cursor-pointer">
+                <div key={i} className="flex items-center gap-4 p-4 bg-charcoal rounded-lg hover:bg-charcoal transition-colors cursor-pointer">
                   <activity.icon className={`w-5 h-5 ${
-                    activity.priority === 'critical' ? 'text-red-500' :
-                    activity.priority === 'high' ? 'text-orange-500' :
-                    'text-yellow-500'
+                    activity.priority === 'critical' ? 'text-silver' :
+                    activity.priority === 'high' ? 'text-warm-bronze' :
+                    'text-warm-bronze'
                   }`} />
                   <div className="flex-1">
                     <p className="text-white font-medium">{activity.text}</p>
                   </div>
-                  <span className="text-gray-400 text-sm">{activity.time}</span>
-                  <ChevronRight className="w-5 h-5 text-gray-600" />
+                  <span className="text-silver text-sm">{activity.time}</span>
+                  <ChevronRight className="w-5 h-5 text-silver-gray" />
                 </div>
               ))}
             </div>

@@ -17,24 +17,24 @@ const alertIcons: Record<string, React.ElementType> = {
 }
 
 const alertColors: Record<string, string> = {
-  low_attendance: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20',
-  low_readiness: 'text-orange-400 bg-orange-500/10 border-orange-500/20',
-  missing_hours: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
-  failed_assessment: 'text-red-400 bg-red-500/10 border-red-500/20',
-  unread_notification: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
+  low_attendance: 'text-warm-bronze bg-warm-bronze/10 border-warm-bronze/20',
+  low_readiness: 'text-warm-bronze bg-warm-bronze/10 border-warm-bronze/20',
+  missing_hours: 'text-silver bg-silver/10 border-silver/20',
+  failed_assessment: 'text-silver bg-silver/10 border-silver/20',
+  unread_notification: 'text-silver bg-silver/10 border-silver/20',
 }
 
 export default function AlertsCenter({ alerts, maxItems = 50 }: Props) {
   const display = alerts.slice(0, maxItems)
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
-      <div className="p-4 border-b border-gray-800 flex items-center justify-between">
+    <div className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+      <div className="p-4 border-b border-graphite flex items-center justify-between">
         <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-          <AlertTriangle className="w-5 h-5 text-[#D4AF37]" />
+          <AlertTriangle className="w-5 h-5 text-[var(--color-brand-gold)]" />
           Alerts Center
         </h2>
-        <span className="text-xs text-gray-500">{alerts.length} total</span>
+        <span className="text-xs text-silver-gray">{alerts.length} total</span>
       </div>
       <div className="max-h-[500px] overflow-y-auto">
         {display.map((alert) => {
@@ -42,7 +42,7 @@ export default function AlertsCenter({ alerts, maxItems = 50 }: Props) {
           return (
             <div
               key={alert.id}
-              className="p-4 border-b border-gray-800 hover:bg-gray-800/30 transition-colors"
+              className="p-4 border-b border-graphite hover:bg-graphite/30 transition-colors"
             >
               <div className="flex items-start gap-3">
                 <div className={`p-2 rounded-lg border ${alertColors[alert.type] || alertColors.low_readiness}`}>
@@ -54,20 +54,20 @@ export default function AlertsCenter({ alerts, maxItems = 50 }: Props) {
                     <span
                       className={`px-1.5 py-0.5 rounded text-[10px] font-medium uppercase tracking-wide ${
                         alert.priority === 'urgent'
-                          ? 'bg-red-500/20 text-red-400'
+                          ? 'bg-silver/20 text-silver'
                           : alert.priority === 'high'
-                          ? 'bg-orange-500/20 text-orange-400'
+                          ? 'bg-warm-bronze/20 text-warm-bronze'
                           : alert.priority === 'medium'
-                          ? 'bg-yellow-500/20 text-yellow-400'
-                          : 'bg-gray-700 text-gray-300'
+                          ? 'bg-warm-bronze/20 text-warm-bronze'
+                          : 'bg-[var(--color-border-secondary)] text-light-gray'
                       }`}
                     >
                       {alert.priority}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-400 truncate">{alert.description}</p>
+                  <p className="text-sm text-silver truncate">{alert.description}</p>
                   {alert.studentName && (
-                    <p className="text-xs text-gray-500 mt-1">Student: {alert.studentName}</p>
+                    <p className="text-xs text-silver-gray mt-1">Student: {alert.studentName}</p>
                   )}
                 </div>
               </div>
@@ -75,7 +75,7 @@ export default function AlertsCenter({ alerts, maxItems = 50 }: Props) {
           )
         })}
         {display.length === 0 && (
-          <div className="p-8 text-center text-gray-500">
+          <div className="p-8 text-center text-silver-gray">
             No active alerts. School is on track.
           </div>
         )}

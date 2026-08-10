@@ -8,6 +8,7 @@ import { supabase } from '@/lib/supabase'
 import { Profile } from '@/types'
 import { isInstructorOrAdmin, isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
 import { logLogout } from '@/app/(auth)/actions'
+import { Logo } from '@/components/brand'
 
 interface DashboardNavProps {
   user: Profile | null
@@ -93,14 +94,14 @@ export default function DashboardNav({ user }: DashboardNavProps) {
   return (
     <>
       {/* Mobile menu button */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-800 px-4 py-3">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-sm border-b border-graphite px-4 py-3">
         <div className="flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center">
-            <img src="/logo.svg" alt="ASCYN PRO" className="h-7 w-auto" />
+            <Logo variant="horizontal" theme="dark" size="sm" />
           </Link>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-gray-400 hover:text-white"
+            className="p-2 text-silver-gray hover:text-white"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {mobileMenuOpen ? (
@@ -115,7 +116,7 @@ export default function DashboardNav({ user }: DashboardNavProps) {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-40 bg-gray-950 pt-16">
+        <div className="lg:hidden fixed inset-0 z-40 bg-black pt-16">
           <nav className="p-4 space-y-2">
             {navItems.map((item) => {
               const Icon = item.icon
@@ -126,8 +127,8 @@ export default function DashboardNav({ user }: DashboardNavProps) {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                     pathname === item.href
-                      ? 'bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/20'
-                      : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                      ? 'bg-gold/10 text-gold border border-gold/20'
+                      : 'text-silver-gray hover:bg-charcoal hover:text-white'
                   }`}
                 >
                   <Icon className="w-5 h-5" />
@@ -137,7 +138,7 @@ export default function DashboardNav({ user }: DashboardNavProps) {
             })}
             <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+              className="w-full flex items-center gap-3 px-4 py-3 text-silver hover:bg-silver/10 rounded-lg transition-colors"
             >
               <LogOut className="w-5 h-5" />
               <span className="font-medium">Logout</span>
@@ -147,19 +148,19 @@ export default function DashboardNav({ user }: DashboardNavProps) {
       )}
 
       {/* Desktop sidebar */}
-      <aside className="hidden lg:block fixed left-0 top-0 bottom-0 w-64 bg-gray-900 border-r border-gray-800">
+      <aside className="hidden lg:block fixed left-0 top-0 bottom-0 w-64 bg-charcoal border-r border-graphite">
         <div className="p-6">
           <Link href="/dashboard" className="flex items-center gap-3 mb-8">
-            <img src="/logo.svg" alt="ASCYN PRO" className="h-8 w-auto" />
+            <Logo variant="horizontal" theme="dark" size="md" />
             <div>
-              <span className="text-xs text-gray-500">v2.0</span>
+              <span className="text-xs text-silver-gray">v2.0</span>
             </div>
           </Link>
 
-          <div className="mb-6 pb-6 border-b border-gray-800">
-            <p className="text-sm text-gray-400 mb-1">Welcome back,</p>
+          <div className="mb-6 pb-6 border-b border-graphite">
+            <p className="text-sm text-silver-gray mb-1">Welcome back,</p>
             <p className="font-medium text-white truncate">{user?.full_name || 'Student'}</p>
-            <span className="inline-block mt-2 px-2 py-1 bg-[#D4AF37]/10 text-[#D4AF37] text-xs rounded capitalize">
+            <span className="inline-block mt-2 px-2 py-1 bg-gold/10 text-gold text-xs rounded capitalize">
               {user?.role || 'Student'}
             </span>
           </div>
@@ -173,8 +174,8 @@ export default function DashboardNav({ user }: DashboardNavProps) {
                   href={item.href}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                     pathname === item.href
-                      ? 'bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/20'
-                      : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                      ? 'bg-gold/10 text-gold border border-gold/20'
+                      : 'text-silver-gray hover:bg-graphite hover:text-white'
                   }`}
                 >
                   <Icon className="w-5 h-5" />
@@ -185,10 +186,10 @@ export default function DashboardNav({ user }: DashboardNavProps) {
           </nav>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-800">
+        <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-graphite">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+            className="w-full flex items-center gap-3 px-4 py-3 text-silver hover:bg-silver/10 rounded-lg transition-colors"
           >
             <LogOut className="w-5 h-5" />
             <span className="font-medium">Logout</span>

@@ -1,63 +1,859 @@
 @import "tailwindcss";
 
+/* ============================================
+   ASCYN PRO — BL-001/BL-003 Design Token Foundation
+   Phase 5, Sprint 1
+   Canonical CSS Custom Properties + Typography System
+   ============================================ */
+
 :root {
-  --gold: #D4AF37;
-  --gold-light: #F4E4A6;
-  --dark: #0a0a0a;
-  --dark-gray: #1a1a1a;
-  --medium-gray: #2a2a2a;
-  --light-gray: #888;
-  --white: #ffffff;
-  --success: #22c55e;
-  --error: #ef4444;
-  --warning: #f59e0b;
+  /* ==========================================
+     1. BRAND COLORS
+     Phase 4 Visual Identity — Approved Palette
+     ========================================== */
+  
+  /* Primary Palette */
+  --color-brand-gold: #D4AF37;
+  --color-brand-gold-light: #F4E4A6;
+  --color-brand-silver: #C0C0C0;
+  --color-brand-black: #000000;
+  --color-brand-white: #FFFFFF;
+
+  /* Neutral Scale */
+  --color-brand-charcoal: #1A1A1A;
+  --color-brand-graphite: #2D2D2D;
+  --color-brand-silver-gray: #9A9A9A;
+  --color-brand-light-gray: #E5E5E5;
+  --color-brand-off-white: #F5F5F5;
+
+  /* Accent Colors */
+  --color-brand-deep-navy: #1B1F3B;
+  --color-brand-warm-bronze: #CD7F32;
+  --color-brand-cool-platinum: #E5E4E2;
+
+  /* ==========================================
+     2. SEMANTIC COLORS
+     Functional mappings of brand colors
+     ========================================== */
+
+  /* Backgrounds */
+  --color-background-primary: var(--color-brand-black);
+  --color-background-secondary: var(--color-brand-charcoal);
+  --color-background-tertiary: var(--color-brand-graphite);
+  --color-background-accent: var(--color-brand-deep-navy);
+
+  /* Surfaces */
+  --color-surface-primary: var(--color-brand-charcoal);
+  --color-surface-secondary: var(--color-brand-graphite);
+  --color-surface-elevated: var(--color-brand-graphite);
+
+  /* Borders */
+  --color-border-primary: var(--color-brand-graphite);
+  --color-border-secondary: #404040;
+  --color-border-accent: var(--color-brand-gold);
+  --color-border-muted: var(--color-brand-charcoal);
+
+  /* Text */
+  --color-text-primary: var(--color-brand-white);
+  --color-text-secondary: var(--color-brand-silver);
+  --color-text-muted: var(--color-brand-silver-gray);
+  --color-text-accent: var(--color-brand-gold);
+  --color-text-inverse: var(--color-brand-black);
+
+  /* Functional Colors */
+  --color-success: var(--color-brand-gold);
+  --color-success-bg: var(--color-brand-charcoal);
+  --color-success-border: var(--color-brand-gold);
+
+  --color-warning: var(--color-brand-warm-bronze);
+  --color-warning-bg: var(--color-brand-charcoal);
+  --color-warning-border: var(--color-brand-warm-bronze);
+
+  --color-error: var(--color-brand-silver);
+  --color-error-bg: var(--color-brand-charcoal);
+  --color-error-border: var(--color-brand-silver);
+
+  --color-info: var(--color-brand-silver);
+  --color-info-bg: var(--color-brand-charcoal);
+  --color-info-border: var(--color-brand-silver);
+
+  --color-disabled: #404040;
+  --color-disabled-bg: var(--color-brand-charcoal);
+  --color-disabled-border: var(--color-brand-graphite);
+
+  /* ==========================================
+     3. TYPOGRAPHY
+     Font families, sizes, weights, line heights
+     ========================================== */
+
+  /* Font Families */
+  --font-family-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-mono: var(--font-jetbrains-mono), "JetBrains Mono", "Fira Code", Consolas, "Courier New", monospace;
+
+  /* Font Sizes — Mobile First */
+  --font-size-display: 2.25rem;
+  --font-size-h1: 1.875rem;
+  --font-size-h2: 1.5rem;
+  --font-size-h3: 1.25rem;
+  --font-size-h4: 1.125rem;
+  --font-size-body-lg: 1.125rem;
+  --font-size-body: 1rem;
+  --font-size-body-sm: 0.875rem;
+  --font-size-caption: 0.75rem;
+  --font-size-overline: 0.6875rem;
+  --font-size-button: 0.875rem;
+  --font-size-input: 1rem;
+  --font-size-code: 0.875rem;
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Line Heights */
+  --line-height-tight: 1.1;
+  --line-height-snug: 1.2;
+  --line-height-normal: 1.25;
+  --line-height-relaxed: 1.3;
+  --line-height-loose: 1.4;
+  --line-height-body: 1.5;
+  --line-height-body-lg: 1.6;
+
+  /* Letter Spacing */
+  --letter-spacing-tighter: -0.02em;
+  --letter-spacing-tight: -0.015em;
+  --letter-spacing-snug: -0.01em;
+  --letter-spacing-normal: -0.005em;
+  --letter-spacing-body: 0;
+  --letter-spacing-wide: 0.005em;
+  --letter-spacing-wider: 0.01em;
+  --letter-spacing-widest: 0.08em;
+
+  /* ==========================================
+     4. SPACING SCALE
+     4px base unit system
+     ========================================== */
+
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-20: 5rem;
+  --spacing-24: 6rem;
+  --spacing-32: 8rem;
+
+  /* ==========================================
+     5. BORDER RADIUS
+     ========================================== */
+
+  --radius-none: 0;
+  --radius-sm: 0.125rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-full: 9999px;
+
+  /* ==========================================
+     6. ELEVATION & SHADOWS
+     ========================================== */
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --shadow-gold: 0 10px 40px rgba(212, 175, 55, 0.1);
+  --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+
+  /* ==========================================
+     7. ANIMATION TIMING
+     ========================================== */
+
+  --duration-instant: 0ms;
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --duration-slower: 700ms;
+
+  /* Easing Functions */
+  --ease-linear: linear;
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ==========================================
+     8. Z-INDEX SCALE
+     ========================================== */
+
+  --z-base: 0;
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  --z-skip-link: 100;
+
+  /* ==========================================
+     9. LEGACY ALIASES
+     Backward compatibility — map old names to new
+     ========================================== */
+
+  --gold: var(--color-brand-gold);
+  --gold-light: var(--color-brand-gold-light);
+  --silver: var(--color-brand-silver);
+  --black: var(--color-brand-black);
+  --white: var(--color-brand-white);
+  --charcoal: var(--color-brand-charcoal);
+  --graphite: var(--color-brand-graphite);
+  --silver-gray: var(--color-brand-silver-gray);
+  --light-gray: var(--color-brand-light-gray);
+  --off-white: var(--color-brand-off-white);
+  --deep-navy: var(--color-brand-deep-navy);
+  --warm-bronze: var(--color-brand-warm-bronze);
+  --cool-platinum: var(--color-brand-cool-platinum);
+  --dark: var(--color-brand-black);
+  --dark-gray: var(--color-brand-charcoal);
+  --medium-gray: var(--color-brand-graphite);
+
+  --bg-primary: var(--color-background-primary);
+  --bg-secondary: var(--color-background-secondary);
+  --bg-tertiary: var(--color-background-tertiary);
+  --surface-primary: var(--color-surface-primary);
+  --surface-secondary: var(--color-surface-secondary);
+  --border-primary: var(--color-border-primary);
+  --border-secondary: var(--color-border-secondary);
+  --text-primary: var(--color-text-primary);
+  --text-secondary: var(--color-text-secondary);
+  --text-muted: var(--color-text-muted);
+
+  --success: var(--color-success);
+  --success-bg: var(--color-success-bg);
+  --success-border: var(--color-success-border);
+  --warning: var(--color-warning);
+  --warning-bg: var(--color-warning-bg);
+  --warning-border: var(--color-warning-border);
+  --error: var(--color-error);
+  --error-bg: var(--color-error-bg);
+  --error-border: var(--color-error-border);
+  --info: var(--color-info);
+  --info-bg: var(--color-info-bg);
+  --info-border: var(--color-info-border);
+  --disabled: var(--color-disabled);
+  --disabled-bg: var(--color-disabled-bg);
+  --disabled-border: var(--color-disabled-border);
 }
+
+/* ============================================
+   RESPONSIVE FONT SIZES
+   Desktop overrides at lg breakpoint (1024px)
+   ============================================ */
+
+@media (min-width: 1024px) {
+  :root {
+    --font-size-display: 4rem;
+    --font-size-h1: 3rem;
+    --font-size-h2: 2.25rem;
+    --font-size-h3: 1.75rem;
+    --font-size-h4: 1.375rem;
+    --font-size-body-lg: 1.25rem;
+    --font-size-overline: 0.75rem;
+    --font-size-button: 1rem;
+  }
+}
+
+/* ============================================
+   TAILWIND CSS v4 THEME INTEGRATION
+   Maps design tokens to Tailwind utilities
+   ============================================ */
 
 @theme inline {
-  --color-gold: var(--gold);
-  --color-gold-light: var(--gold-light);
-  --color-dark: var(--dark);
-  --color-dark-gray: var(--dark-gray);
-  --color-medium-gray: var(--medium-gray);
-  --color-light-gray: var(--light-gray);
+  /* Colors */
+  --color-gold: var(--color-brand-gold);
+  --color-gold-light: var(--color-brand-gold-light);
+  --color-silver: var(--color-brand-silver);
+  --color-black: var(--color-brand-black);
+  --color-white: var(--color-brand-white);
+  --color-charcoal: var(--color-brand-charcoal);
+  --color-graphite: var(--color-brand-graphite);
+  --color-silver-gray: var(--color-brand-silver-gray);
+  --color-light-gray: var(--color-brand-light-gray);
+  --color-off-white: var(--color-brand-off-white);
+  --color-deep-navy: var(--color-brand-deep-navy);
+  --color-warm-bronze: var(--color-brand-warm-bronze);
+  --color-cool-platinum: var(--color-brand-cool-platinum);
+  --color-dark: var(--color-brand-black);
+  --color-dark-gray: var(--color-brand-charcoal);
+  --color-medium-gray: var(--color-brand-graphite);
+  --color-border-strong: #404040;
+
+  /* Semantic Colors */
+  --color-background-primary: var(--color-background-primary);
+  --color-background-secondary: var(--color-background-secondary);
+  --color-background-tertiary: var(--color-background-tertiary);
+  --color-surface-primary: var(--color-surface-primary);
+  --color-surface-secondary: var(--color-surface-secondary);
+  --color-border-primary: var(--color-border-primary);
+  --color-border-secondary: var(--color-border-secondary);
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-muted: var(--color-text-muted);
+
+  /* Functional Colors */
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-error: var(--color-error);
+  --color-info: var(--color-info);
+
+  /* Typography — Font Families */
+  --font-sans: var(--font-family-sans);
+  --font-mono: var(--font-family-mono);
+
+  /* Typography — Font Sizes (mapped to design tokens, responsive)
+     Tailwind classes resolve to CSS custom properties so
+     every text-* utility automatically uses the token system. */
+  --text-xs: var(--font-size-caption);
+  --text-xs--line-height: var(--line-height-loose);
+  --text-sm: var(--font-size-body-sm);
+  --text-sm--line-height: var(--line-height-body);
+  --text-base: var(--font-size-body);
+  --text-base--line-height: var(--line-height-body-lg);
+  --text-lg: var(--font-size-body-lg);
+  --text-lg--line-height: var(--line-height-body-lg);
+  --text-xl: var(--font-size-h4);
+  --text-xl--line-height: var(--line-height-relaxed);
+  --text-2xl: var(--font-size-h3);
+  --text-2xl--line-height: var(--line-height-normal);
+  --text-3xl: var(--font-size-h2);
+  --text-3xl--line-height: var(--line-height-snug);
+  --text-4xl: var(--font-size-h1);
+  --text-4xl--line-height: var(--line-height-tight);
+  --text-5xl: var(--font-size-display);
+  --text-5xl--line-height: var(--line-height-tight);
+  --text-6xl: calc(var(--font-size-display) * 1.5);
+  --text-6xl--line-height: 1;
+  --text-7xl: calc(var(--font-size-display) * 2);
+  --text-7xl--line-height: 1;
+  --text-8xl: calc(var(--font-size-display) * 2.5);
+  --text-8xl--line-height: 1;
+  --text-9xl: calc(var(--font-size-display) * 3);
+  --text-9xl--line-height: 1;
+
+  /* Typography — Font Weights (mapped to design tokens) */
+  --font-weight-light: 300;
+  --font-weight-normal: var(--font-weight-regular);
+  --font-weight-medium: var(--font-weight-medium);
+  --font-weight-semibold: var(--font-weight-semibold);
+  --font-weight-bold: var(--font-weight-bold);
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+
+  /* Typography — Line Heights (mapped to design tokens) */
+  --leading-none: 1;
+  --leading-tight: var(--line-height-tight);
+  --leading-snug: var(--line-height-snug);
+  --leading-normal: var(--line-height-normal);
+  --leading-relaxed: var(--line-height-relaxed);
+  --leading-loose: var(--line-height-loose);
+
+  /* Typography — Letter Spacing (mapped to design tokens) */
+  --tracking-tighter: var(--letter-spacing-tighter);
+  --tracking-tight: var(--letter-spacing-tight);
+  --tracking-normal: var(--letter-spacing-body);
+  --tracking-wide: var(--letter-spacing-wide);
+  --tracking-wider: var(--letter-spacing-wider);
+  --tracking-widest: var(--letter-spacing-widest);
+
+  /* Spacing */
+  --spacing-1: var(--spacing-1);
+  --spacing-2: var(--spacing-2);
+  --spacing-3: var(--spacing-3);
+  --spacing-4: var(--spacing-4);
+  --spacing-5: var(--spacing-5);
+  --spacing-6: var(--spacing-6);
+  --spacing-8: var(--spacing-8);
+  --spacing-10: var(--spacing-10);
+  --spacing-12: var(--spacing-12);
+  --spacing-16: var(--spacing-16);
+  --spacing-20: var(--spacing-20);
+  --spacing-24: var(--spacing-24);
+  --spacing-32: var(--spacing-32);
+
+  /* Border Radius */
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+  --radius-full: var(--radius-full);
+
+  /* Shadows */
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-2xl: var(--shadow-2xl);
+  --shadow-inner: var(--shadow-inner);
 }
 
-/* Custom scrollbar */
+/* ============================================
+   TYPOGRAPHY SYSTEM — Base Styles
+   BL-003: Consumes typography design tokens
+   All Tailwind text-*, font-*, leading-*, tracking-*
+   utilities resolve to these tokens via @theme above.
+   ============================================ */
+
+@layer base {
+  html {
+    font-family: var(--font-family-sans);
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background-primary);
+    color: var(--color-text-primary);
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-body-lg);
+    letter-spacing: var(--letter-spacing-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ---- Heading Scale ---- */
+
+  /* Display */
+  .text-display {
+    font-size: var(--font-size-display);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    letter-spacing: var(--letter-spacing-tighter);
+  }
+
+  /* H1 — Page titles */
+  h1, .text-h1 {
+    font-size: var(--font-size-h1);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    letter-spacing: var(--letter-spacing-tight);
+    margin-bottom: var(--spacing-6);
+  }
+
+  /* H2 — Section headers */
+  h2, .text-h2 {
+    font-size: var(--font-size-h2);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-snug);
+    letter-spacing: var(--letter-spacing-snug);
+    margin-top: var(--spacing-10);
+    margin-bottom: var(--spacing-5);
+  }
+
+  /* H3 — Subsection headers */
+  h3, .text-h3 {
+    font-size: var(--font-size-h3);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-normal);
+    letter-spacing: var(--letter-spacing-normal);
+    margin-top: var(--spacing-8);
+    margin-bottom: var(--spacing-4);
+  }
+
+  /* H4 — Card titles */
+  h4, .text-h4 {
+    font-size: var(--font-size-h4);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-relaxed);
+    letter-spacing: var(--letter-spacing-body);
+    margin-top: var(--spacing-6);
+    margin-bottom: var(--spacing-3);
+  }
+
+  /* H5/H6 — Rarely used, map to body-lg/body with semibold */
+  h5, .text-h5 {
+    font-size: var(--font-size-body-lg);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-body-lg);
+    letter-spacing: var(--letter-spacing-body);
+    margin-top: var(--spacing-4);
+    margin-bottom: var(--spacing-2);
+  }
+
+  h6, .text-h6 {
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-body-lg);
+    letter-spacing: var(--letter-spacing-body);
+    margin-top: var(--spacing-4);
+    margin-bottom: var(--spacing-2);
+  }
+
+  /* ---- Body Text ---- */
+
+  /* Body Large */
+  .text-body-lg {
+    font-size: var(--font-size-body-lg);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-body-lg);
+    letter-spacing: var(--letter-spacing-body);
+  }
+
+  /* Body — Default */
+  p, .text-body {
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-body-lg);
+    letter-spacing: var(--letter-spacing-body);
+    margin-bottom: var(--spacing-4);
+  }
+
+  /* Body Small */
+  .text-body-sm {
+    font-size: var(--font-size-body-sm);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-body);
+    letter-spacing: var(--letter-spacing-wide);
+    color: var(--color-text-secondary);
+  }
+
+  /* Caption */
+  .text-caption {
+    font-size: var(--font-size-caption);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-loose);
+    letter-spacing: var(--letter-spacing-wider);
+    color: var(--color-text-muted);
+  }
+
+  /* Overline */
+  .text-overline {
+    font-size: var(--font-size-overline);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-relaxed);
+    letter-spacing: var(--letter-spacing-widest);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  /* ---- Interactive Elements ---- */
+
+  /* Button */
+  .text-button {
+    font-size: var(--font-size-button);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-loose);
+    letter-spacing: var(--letter-spacing-wider);
+  }
+
+  /* Input */
+  input, textarea, select {
+    font-size: var(--font-size-input);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-body);
+    letter-spacing: var(--letter-spacing-body);
+  }
+
+  /* Labels */
+  label {
+    font-size: var(--font-size-body-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-body);
+    letter-spacing: var(--letter-spacing-wide);
+  }
+
+  /* ---- Code & Technical ---- */
+
+  code, pre, .text-code {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-code);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-body-lg);
+    letter-spacing: var(--letter-spacing-body);
+    color: var(--color-text-secondary);
+  }
+
+  pre {
+    margin-bottom: var(--spacing-4);
+  }
+
+  /* ---- Tables ---- */
+
+  table {
+    font-size: var(--font-size-body-sm);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-body);
+    letter-spacing: var(--letter-spacing-wide);
+  }
+
+  th {
+    font-size: var(--font-size-body-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-body);
+    letter-spacing: var(--letter-spacing-wider);
+    color: var(--color-text-muted);
+  }
+
+  td {
+    font-size: var(--font-size-body-sm);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-body);
+    letter-spacing: var(--letter-spacing-wide);
+  }
+
+  /* ---- Navigation ---- */
+
+  nav {
+    font-size: var(--font-size-body-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-body);
+    letter-spacing: var(--letter-spacing-wide);
+  }
+
+  nav a {
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+  }
+
+  /* ---- Dashboard Cards ---- */
+
+  /* Card titles use h4 scale via Tailwind text-xl → var(--font-size-h4) */
+  /* Card metric values use h2 scale via Tailwind text-3xl → var(--font-size-h2) */
+  /* Card labels use caption scale via Tailwind text-sm → var(--font-size-body-sm) */
+
+  /* ---- Lists ---- */
+
+  ul, ol {
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-body-lg);
+    letter-spacing: var(--letter-spacing-body);
+  }
+
+  li {
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  /* ---- Blockquotes ---- */
+
+  blockquote {
+    font-size: var(--font-size-body-lg);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-body-lg);
+    letter-spacing: var(--letter-spacing-body);
+  }
+
+  /* ---- Small print / footnotes ---- */
+
+  small {
+    font-size: var(--font-size-caption);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-loose);
+    letter-spacing: var(--letter-spacing-wider);
+    color: var(--color-text-muted);
+  }
+
+  /* ---- Strong / Emphasis ---- */
+
+  strong, b {
+    font-weight: var(--font-weight-semibold);
+  }
+
+  em, i {
+    font-style: italic;
+  }
+}
+
+/* ============================================
+   SPACING UTILITIES
+   Consumes spacing design tokens
+   ============================================ */
+
+@layer utilities {
+  .space-1 { margin: var(--spacing-1); }
+  .space-2 { margin: var(--spacing-2); }
+  .space-3 { margin: var(--spacing-3); }
+  .space-4 { margin: var(--spacing-4); }
+  .space-5 { margin: var(--spacing-5); }
+  .space-6 { margin: var(--spacing-6); }
+  .space-8 { margin: var(--spacing-8); }
+  .space-10 { margin: var(--spacing-10); }
+  .space-12 { margin: var(--spacing-12); }
+  .space-16 { margin: var(--spacing-16); }
+  .space-20 { margin: var(--spacing-20); }
+  .space-24 { margin: var(--spacing-24); }
+  .space-32 { margin: var(--spacing-32); }
+
+  .p-1 { padding: var(--spacing-1); }
+  .p-2 { padding: var(--spacing-2); }
+  .p-3 { padding: var(--spacing-3); }
+  .p-4 { padding: var(--spacing-4); }
+  .p-5 { padding: var(--spacing-5); }
+  .p-6 { padding: var(--spacing-6); }
+  .p-8 { padding: var(--spacing-8); }
+  .p-10 { padding: var(--spacing-10); }
+  .p-12 { padding: var(--spacing-12); }
+  .p-16 { padding: var(--spacing-16); }
+  .p-20 { padding: var(--spacing-20); }
+  .p-24 { padding: var(--spacing-24); }
+  .p-32 { padding: var(--spacing-32); }
+
+  .gap-1 { gap: var(--spacing-1); }
+  .gap-2 { gap: var(--spacing-2); }
+  .gap-3 { gap: var(--spacing-3); }
+  .gap-4 { gap: var(--spacing-4); }
+  .gap-5 { gap: var(--spacing-5); }
+  .gap-6 { gap: var(--spacing-6); }
+  .gap-8 { gap: var(--spacing-8); }
+  .gap-10 { gap: var(--spacing-10); }
+  .gap-12 { gap: var(--spacing-12); }
+  .gap-16 { gap: var(--spacing-16); }
+  .gap-20 { gap: var(--spacing-20); }
+  .gap-24 { gap: var(--spacing-24); }
+  .gap-32 { gap: var(--spacing-32); }
+}
+
+/* ============================================
+   LAYOUT GRID — 12-Column System
+   ============================================ */
+
+@layer utilities {
+  .container-ascyn {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--spacing-4);
+    padding-right: var(--spacing-4);
+  }
+  @media (min-width: 768px) {
+    .container-ascyn {
+      padding-left: var(--spacing-6);
+      padding-right: var(--spacing-6);
+    }
+  }
+  @media (min-width: 1024px) {
+    .container-ascyn {
+      padding-left: var(--spacing-8);
+      padding-right: var(--spacing-8);
+    }
+  }
+
+  .grid-12 {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--spacing-4);
+  }
+  @media (min-width: 768px) {
+    .grid-12 {
+      gap: var(--spacing-6);
+    }
+  }
+  @media (min-width: 1024px) {
+    .grid-12 {
+      gap: var(--spacing-8);
+    }
+  }
+
+  .col-span-1 { grid-column: span 1 / span 1; }
+  .col-span-2 { grid-column: span 2 / span 2; }
+  .col-span-3 { grid-column: span 3 / span 3; }
+  .col-span-4 { grid-column: span 4 / span 4; }
+  .col-span-5 { grid-column: span 5 / span 5; }
+  .col-span-6 { grid-column: span 6 / span 6; }
+  .col-span-7 { grid-column: span 7 / span 7; }
+  .col-span-8 { grid-column: span 8 / span 8; }
+  .col-span-9 { grid-column: span 9 / span 9; }
+  .col-span-10 { grid-column: span 10 / span 10; }
+  .col-span-11 { grid-column: span 11 / span 11; }
+  .col-span-12 { grid-column: span 12 / span 12; }
+
+  @media (min-width: 768px) {
+    .md\:col-span-1 { grid-column: span 1 / span 1; }
+    .md\:col-span-2 { grid-column: span 2 / span 2; }
+    .md\:col-span-3 { grid-column: span 3 / span 3; }
+    .md\:col-span-4 { grid-column: span 4 / span 4; }
+    .md\:col-span-5 { grid-column: span 5 / span 5; }
+    .md\:col-span-6 { grid-column: span 6 / span 6; }
+    .md\:col-span-7 { grid-column: span 7 / span 7; }
+    .md\:col-span-8 { grid-column: span 8 / span 8; }
+    .md\:col-span-9 { grid-column: span 9 / span 9; }
+    .md\:col-span-10 { grid-column: span 10 / span 10; }
+    .md\:col-span-11 { grid-column: span 11 / span 11; }
+    .md\:col-span-12 { grid-column: span 12 / span 12; }
+  }
+
+  @media (min-width: 1024px) {
+    .lg\:col-span-1 { grid-column: span 1 / span 1; }
+    .lg\:col-span-2 { grid-column: span 2 / span 2; }
+    .lg\:col-span-3 { grid-column: span 3 / span 3; }
+    .lg\:col-span-4 { grid-column: span 4 / span 4; }
+    .lg\:col-span-5 { grid-column: span 5 / span 5; }
+    .lg\:col-span-6 { grid-column: span 6 / span 6; }
+    .lg\:col-span-7 { grid-column: span 7 / span 7; }
+    .lg\:col-span-8 { grid-column: span 8 / span 8; }
+    .lg\:col-span-9 { grid-column: span 9 / span 9; }
+    .lg\:col-span-10 { grid-column: span 10 / span 10; }
+    .lg\:col-span-11 { grid-column: span 11 / span 11; }
+    .lg\:col-span-12 { grid-column: span 12 / span 12; }
+  }
+}
+
+/* ============================================
+   CUSTOM SCROLLBAR
+   ============================================ */
+
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--dark-gray);
+  background: var(--color-background-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--medium-gray);
-  border-radius: 4px;
+  background: var(--color-brand-graphite);
+  border-radius: var(--radius-md);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--gold);
+  background: var(--color-brand-gold);
 }
 
-/* Selection color */
+/* ============================================
+   SELECTION & FOCUS
+   ============================================ */
+
 ::selection {
   background: rgba(212, 175, 55, 0.3);
-  color: white;
+  color: var(--color-brand-white);
 }
 
-/* Focus styles */
 :focus-visible {
-  outline: 2px solid var(--gold);
+  outline: 2px solid var(--color-border-accent);
   outline-offset: 2px;
 }
 
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
-}
+/* ============================================
+   ANIMATIONS
+   Consumes animation design tokens
+   ============================================ */
 
-/* Animation utilities */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -69,39 +865,106 @@ html {
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.5s ease-out forwards;
+  animation: fadeIn var(--duration-slow) var(--ease-out) forwards;
 }
 
 .animate-slide-in {
-  animation: slideIn 0.5s ease-out forwards;
+  animation: slideIn var(--duration-slow) var(--ease-out) forwards;
 }
 
-/* Card hover effect */
+/* ============================================
+   ACCESSIBILITY — REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: var(--duration-instant) !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: var(--duration-instant) !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-fade-in,
+  .animate-slide-in {
+    animation: none !important;
+  }
+
+  .card-hover:hover {
+    transform: none !important;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY — SKIP LINKS
+   ============================================ */
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--color-brand-gold);
+  color: var(--color-brand-black);
+  padding: var(--spacing-2) var(--spacing-4);
+  text-decoration: none;
+  font-weight: var(--font-weight-semibold);
+  z-index: var(--z-skip-link);
+  border-radius: 0 0 var(--radius-md) 0;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ============================================
+   ACCESSIBILITY — FOCUS VISIBLE
+   ============================================ */
+
+:focus-visible {
+  outline: 2px solid var(--color-border-accent);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :focus-visible {
+    outline: 3px solid var(--color-border-accent);
+    outline-offset: 3px;
+  }
+}
+
+/* ============================================
+   CARD & SURFACE EFFECTS
+   Consumes shadow and animation tokens
+   ============================================ */
+
 .card-hover {
-  transition: all 0.3s ease;
+  transition: all var(--duration-normal) var(--ease-default);
 }
 
 .card-hover:hover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 40px rgba(212, 175, 55, 0.1);
+  box-shadow: var(--shadow-gold);
 }
 
-/* Gold gradient text */
 .text-gradient-gold {
-  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+  background: linear-gradient(135deg, var(--color-brand-gold) 0%, var(--color-brand-gold-light) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Glass effect */
 .glass {
   background: rgba(26, 26, 26, 0.8);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(212, 175, 55, 0.1);
 }
 
-/* ── Beta Agreement Print Styles ── */
+/* ============================================
+   BETA AGREEMENT PRINT STYLES
+   ============================================ */
+
 @media print {
   @page {
     margin: 0.5in;
@@ -116,7 +979,6 @@ html {
     print-color-adjust: exact;
   }
 
-  /* Hide screen chrome on the beta-agreement page. */
   body:has(#agreement-document) nav,
   body:has(#agreement-document) header,
   body:has(#agreement-document) footer,
@@ -126,7 +988,6 @@ html {
     display: none !important;
   }
 
-  /* Reset the agreement container for print. */
   #agreement-document {
     background: #ffffff !important;
     color: #000000 !important;
@@ -177,5 +1038,116 @@ html {
     font-size: 9.5pt !important;
     line-height: 1.25 !important;
     margin-bottom: 4pt !important;
+  }
+}
+
+/* ============================================
+   NABBA PRESENTATION MODE
+   ============================================ */
+
+.presentation-mode {
+  font-size: 1.25rem;
+}
+
+.presentation-mode .presentation-section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.presentation-mode h1 {
+  font-size: 4rem !important;
+  line-height: 1.1 !important;
+}
+
+.presentation-mode h2 {
+  font-size: 3rem !important;
+  line-height: 1.2 !important;
+}
+
+.presentation-mode h3 {
+  font-size: 2rem !important;
+}
+
+.presentation-mode p,
+.presentation-mode li {
+  font-size: 1.5rem !important;
+  line-height: 1.6 !important;
+}
+
+.presentation-mode .text-sm {
+  font-size: 1.25rem !important;
+}
+
+.presentation-mode .text-xs {
+  font-size: 1rem !important;
+}
+
+.presentation-mode button,
+.presentation-mode a {
+  font-size: 1.25rem !important;
+  padding: var(--spacing-4) var(--spacing-8) !important;
+}
+
+.presentation-mode .text-5xl {
+  font-size: 6rem !important;
+}
+
+.presentation-mode .text-6xl {
+  font-size: 8rem !important;
+}
+
+.presentation-mode .text-4xl {
+  font-size: 5rem !important;
+}
+
+/* High contrast mode */
+.presentation-mode.high-contrast {
+  background: var(--color-brand-black) !important;
+  color: var(--color-brand-white) !important;
+}
+
+.presentation-mode.high-contrast h1,
+.presentation-mode.high-contrast h2,
+.presentation-mode.high-contrast h3,
+.presentation-mode.high-contrast p,
+.presentation-mode.high-contrast li,
+.presentation-mode.high-contrast span {
+  color: var(--color-brand-white) !important;
+}
+
+.presentation-mode.high-contrast .text-[#B8860B],
+.presentation-mode.high-contrast .text-[#c9a000] {
+  color: #FFD700 !important;
+}
+
+.presentation-mode.high-contrast .bg-white {
+  background: var(--color-brand-charcoal) !important;
+}
+
+.presentation-mode.high-contrast .border-[#1a2332]\/10 {
+  border-color: var(--color-border-secondary) !important;
+}
+
+/* Smooth scroll for presentation */
+.presentation-mode {
+  scroll-behavior: smooth;
+}
+
+/* Hide cursor in presentation mode after inactivity */
+.presentation-mode.idle {
+  cursor: none;
+}
+
+/* Print styles for handouts */
+@media print {
+  .presentation-mode {
+    font-size: 12pt;
+  }
+  
+  .presentation-mode .presentation-section {
+    min-height: auto;
+    page-break-after: always;
   }
 }

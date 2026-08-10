@@ -71,20 +71,20 @@ export function PendingStudentApprovals({ students, schoolName }: PendingStudent
   }
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
-      <div className="p-6 border-b border-gray-800">
+    <div className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+      <div className="p-6 border-b border-graphite">
         <h2 className="text-xl font-semibold text-white">Pending Student Approvals</h2>
-        <p className="text-sm text-gray-400 mt-1">
+        <p className="text-sm text-silver mt-1">
           {students.length} student{students.length === 1 ? '' : 's'} awaiting approval
         </p>
       </div>
 
       {message && (
-        <div className={`px-6 py-3 border-b border-gray-800 ${
-          message.type === 'success' ? 'bg-green-500/10' : 'bg-red-500/10'
+        <div className={`px-6 py-3 border-b border-graphite ${
+          message.type === 'success' ? 'bg-gold/10' : 'bg-silver/10'
         }`}>
           <p className={`text-sm ${
-            message.type === 'success' ? 'text-green-400' : 'text-red-400'
+            message.type === 'success' ? 'text-gold' : 'text-silver'
           }`}>
             {message.text}
           </p>
@@ -94,7 +94,7 @@ export function PendingStudentApprovals({ students, schoolName }: PendingStudent
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="text-left text-sm text-gray-400 border-b border-gray-800">
+            <tr className="text-left text-sm text-silver border-b border-graphite">
               <th className="p-4">Student Name</th>
               <th className="p-4">Email</th>
               <th className="p-4">Registration Date</th>
@@ -105,21 +105,21 @@ export function PendingStudentApprovals({ students, schoolName }: PendingStudent
           </thead>
           <tbody className="text-sm">
             {students.map((student) => (
-              <tr key={student.id} className="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors">
+              <tr key={student.id} className="border-b border-graphite/50 hover:bg-graphite/30 transition-colors">
                 <td className="p-4">
                   <div className="text-white font-medium">{student.full_name}</div>
                 </td>
-                <td className="p-4 text-gray-400">
+                <td className="p-4 text-silver">
                   {student.email}
                 </td>
-                <td className="p-4 text-gray-400">
+                <td className="p-4 text-silver">
                   {formatDate(student.created_at)}
                 </td>
-                <td className="p-4 text-gray-400">
+                <td className="p-4 text-silver">
                   {schoolName}
                 </td>
                 <td className="p-4">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-warm-bronze/20 text-warm-bronze border border-warm-bronze/30">
                     🟡 Pending
                   </span>
                 </td>
@@ -128,14 +128,14 @@ export function PendingStudentApprovals({ students, schoolName }: PendingStudent
                     <button
                       onClick={() => handleApprove(student.id)}
                       disabled={loadingId === student.id}
-                      className="px-3 py-1.5 bg-green-600 hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors"
+                      className="px-3 py-1.5 bg-gold hover:bg-gold disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors"
                     >
                       {loadingId === student.id && actionType === 'approve' ? 'Approving...' : 'Approve'}
                     </button>
                     <button
                       onClick={() => handleReject(student.id)}
                       disabled={loadingId === student.id}
-                      className="px-3 py-1.5 bg-red-600 hover:bg-red-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors"
+                      className="px-3 py-1.5 bg-silver hover:bg-silver disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors"
                     >
                       {loadingId === student.id && actionType === 'reject' ? 'Rejecting...' : 'Reject'}
                     </button>

@@ -60,11 +60,11 @@ export default async function AdminDashboard() {
   const chapterCount = 21 // Local curriculum chapters
 
   return (
-    <div className="min-h-screen bg-gray-950 p-8">
+    <div className="min-h-screen bg-[var(--color-background-primary)] p-8">
       <div className="max-w-7xl mx-auto space-y-8">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Admin Dashboard</h1>
-          <p className="text-gray-400">
+          <p className="text-[var(--color-text-muted)]">
             {canViewPlatformAnalytics
               ? 'Platform management and overview'
               : schoolName
@@ -75,33 +75,33 @@ export default async function AdminDashboard() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <div className="text-3xl font-bold text-[#D4AF37]">{userCount}</div>
-            <div className="text-sm text-gray-400">
+          <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6">
+            <div className="text-3xl font-bold text-[var(--color-brand-gold)]">{userCount}</div>
+            <div className="text-sm text-[var(--color-text-muted)]">
               {canViewPlatformAnalytics ? 'Total Platform Users' : 'School Users'}
             </div>
           </div>
           
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <div className="text-3xl font-bold text-blue-400">{schoolCount}</div>
-            <div className="text-sm text-gray-400">
+          <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6">
+            <div className="text-3xl font-bold text-silver">{schoolCount}</div>
+            <div className="text-sm text-[var(--color-text-muted)]">
               {canViewPlatformAnalytics ? 'Total Schools' : 'Your School'}
             </div>
           </div>
           
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <div className="text-3xl font-bold text-green-400">{chapterCount || 0}</div>
-            <div className="text-sm text-gray-400">Chapters</div>
+          <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6">
+            <div className="text-3xl font-bold text-gold">{chapterCount || 0}</div>
+            <div className="text-sm text-[var(--color-text-muted)]">Chapters</div>
           </div>
           
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <div className="text-3xl font-bold text-purple-400">Active</div>
-            <div className="text-sm text-gray-400">Platform Status</div>
+          <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6">
+            <div className="text-3xl font-bold text-silver">Active</div>
+            <div className="text-sm text-[var(--color-text-muted)]">Platform Status</div>
           </div>
 
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <div className="text-3xl font-bold text-pink-400">13D</div>
-            <div className="text-sm text-gray-400">Enterprise Services</div>
+          <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6">
+            <div className="text-3xl font-bold text-silver">13D</div>
+            <div className="text-sm text-[var(--color-text-muted)]">Enterprise Services</div>
           </div>
         </div>
 
@@ -109,152 +109,152 @@ export default async function AdminDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Link
             href="/admin/school/configuration"
-            className="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-[#D4AF37]/30 transition-colors group"
+            className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6 hover:border-[var(--color-brand-gold)]/30 transition-colors group"
           >
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-semibold text-white group-hover:text-[#D4AF37]">School Settings</h3>
-              <Settings className="w-5 h-5 text-gray-500 group-hover:text-[#D4AF37]" />
+              <h2 className="text-lg font-semibold text-white group-hover:text-[var(--color-brand-gold)]">School Settings</h2>
+              <Settings className="w-5 h-5 text-[var(--color-text-muted)] group-hover:text-[var(--color-brand-gold)]" />
             </div>
-            <p className="text-gray-400 text-sm mb-4">Configure school profile, programs, policies, and roles</p>
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#D4AF37]/10 text-[#D4AF37] text-sm rounded-lg border border-[#D4AF37]/20">
+            <p className="text-[var(--color-text-muted)] text-sm mb-4">Configure school profile, programs, policies, and roles</p>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] text-sm rounded-lg border border-[var(--color-brand-gold)]/20">
               Open Configuration
             </span>
           </Link>
 
           <Link
             href="/admin/pilot-inquiries"
-            className="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-[#D4AF37]/30 transition-colors group"
+            className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6 hover:border-[var(--color-brand-gold)]/30 transition-colors group"
           >
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-semibold text-white group-hover:text-[#D4AF37]">Pilot Inquiries</h3>
-              <Plane className="w-5 h-5 text-gray-500 group-hover:text-[#D4AF37]" />
+              <h2 className="text-lg font-semibold text-white group-hover:text-[var(--color-brand-gold)]">Pilot Inquiries</h2>
+              <Plane className="w-5 h-5 text-[var(--color-text-muted)] group-hover:text-[var(--color-brand-gold)]" />
             </div>
-            <p className="text-gray-400 text-sm mb-4">Review and manage pilot program submissions</p>
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#D4AF37]/10 text-[#D4AF37] text-sm rounded-lg border border-[#D4AF37]/20">
+            <p className="text-[var(--color-text-muted)] text-sm mb-4">Review and manage pilot program submissions</p>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] text-sm rounded-lg border border-[var(--color-brand-gold)]/20">
               View Submissions
             </span>
           </Link>
 
           <Link
             href="/admin/audit"
-            className="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-[#D4AF37]/30 transition-colors group"
+            className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6 hover:border-[var(--color-brand-gold)]/30 transition-colors group"
           >
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-semibold text-white group-hover:text-[#D4AF37]">Audit History</h3>
-              <History className="w-5 h-5 text-gray-500 group-hover:text-[#D4AF37]" />
+              <h2 className="text-lg font-semibold text-white group-hover:text-[var(--color-brand-gold)]">Audit History</h2>
+              <History className="w-5 h-5 text-[var(--color-text-muted)] group-hover:text-[var(--color-brand-gold)]" />
             </div>
-            <p className="text-gray-400 text-sm mb-4">Review security events and platform activity</p>
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#D4AF37]/10 text-[#D4AF37] text-sm rounded-lg border border-[#D4AF37]/20">
+            <p className="text-[var(--color-text-muted)] text-sm mb-4">Review security events and platform activity</p>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] text-sm rounded-lg border border-[var(--color-brand-gold)]/20">
               View Logs
             </span>
           </Link>
 
           <Link
             href="/admin/health"
-            className="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-[#D4AF37]/30 transition-colors group"
+            className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6 hover:border-[var(--color-brand-gold)]/30 transition-colors group"
           >
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-semibold text-white group-hover:text-[#D4AF37]">System Health</h3>
-              <Activity className="w-5 h-5 text-gray-500 group-hover:text-[#D4AF37]" />
+              <h2 className="text-lg font-semibold text-white group-hover:text-[var(--color-brand-gold)]">System Health</h2>
+              <Activity className="w-5 h-5 text-[var(--color-text-muted)] group-hover:text-[var(--color-brand-gold)]" />
             </div>
-            <p className="text-gray-400 text-sm mb-4">Run diagnostics and monitor platform status</p>
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#D4AF37]/10 text-[#D4AF37] text-sm rounded-lg border border-[#D4AF37]/20">
+            <p className="text-[var(--color-text-muted)] text-sm mb-4">Run diagnostics and monitor platform status</p>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] text-sm rounded-lg border border-[var(--color-brand-gold)]/20">
               Run Checks
             </span>
           </Link>
 
           <Link
             href="/admin/maintenance"
-            className="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-[#D4AF37]/30 transition-colors group"
+            className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6 hover:border-[var(--color-brand-gold)]/30 transition-colors group"
           >
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-semibold text-white group-hover:text-[#D4AF37]">Maintenance Mode</h3>
-              <Wrench className="w-5 h-5 text-gray-500 group-hover:text-[#D4AF37]" />
+              <h2 className="text-lg font-semibold text-white group-hover:text-[var(--color-brand-gold)]">Maintenance Mode</h2>
+              <Wrench className="w-5 h-5 text-[var(--color-text-muted)] group-hover:text-[var(--color-brand-gold)]" />
             </div>
-            <p className="text-gray-400 text-sm mb-4">Enable or disable platform maintenance mode</p>
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#D4AF37]/10 text-[#D4AF37] text-sm rounded-lg border border-[#D4AF37]/20">
+            <p className="text-[var(--color-text-muted)] text-sm mb-4">Enable or disable platform maintenance mode</p>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] text-sm rounded-lg border border-[var(--color-brand-gold)]/20">
               Manage
             </span>
           </Link>
 
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+          <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-semibold text-white">Notifications</h3>
-              <Bell className="w-5 h-5 text-gray-500" />
+              <h2 className="text-lg font-semibold text-white">Notifications</h2>
+              <Bell className="w-5 h-5 text-[var(--color-text-muted)]" />
             </div>
-            <p className="text-gray-400 text-sm mb-4">Production notification service is ready</p>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-500/10 text-green-400 text-sm rounded-lg border border-green-500/20">
+            <p className="text-[var(--color-text-muted)] text-sm mb-4">Production notification service is ready</p>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gold/10 text-gold text-sm rounded-lg border border-gold/20">
               <span>Operational</span>
             </div>
           </div>
 
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+          <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-semibold text-white">Feature Flags</h3>
-              <Flag className="w-5 h-5 text-gray-500" />
+              <h2 className="text-lg font-semibold text-white">Feature Flags</h2>
+              <Flag className="w-5 h-5 text-[var(--color-text-muted)]" />
             </div>
-            <p className="text-gray-400 text-sm mb-4">Global and school-specific feature toggles</p>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-500/10 text-green-400 text-sm rounded-lg border border-green-500/20">
+            <p className="text-[var(--color-text-muted)] text-sm mb-4">Global and school-specific feature toggles</p>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gold/10 text-gold text-sm rounded-lg border border-gold/20">
               <span>Operational</span>
             </div>
           </div>
 
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+          <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-semibold text-white">Backup & Recovery</h3>
-              <Archive className="w-5 h-5 text-gray-500" />
+              <h2 className="text-lg font-semibold text-white">Backup & Recovery</h2>
+              <Archive className="w-5 h-5 text-[var(--color-text-muted)]" />
             </div>
-            <p className="text-gray-400 text-sm mb-4">Backup status and recovery readiness</p>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-800 text-gray-400 text-sm rounded-lg">
+            <p className="text-[var(--color-text-muted)] text-sm mb-4">Backup status and recovery readiness</p>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[var(--color-background-secondary)] text-[var(--color-text-muted)] text-sm rounded-lg">
               <span>External integration required</span>
             </div>
           </div>
 
           <Link
             href="/admin/users"
-            className="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-[#D4AF37]/30 transition-colors group"
+            className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6 hover:border-[var(--color-brand-gold)]/30 transition-colors group"
           >
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-semibold text-white group-hover:text-[#D4AF37]">Users</h3>
-              <Users className="w-5 h-5 text-gray-500 group-hover:text-[#D4AF37]" />
+              <h2 className="text-lg font-semibold text-white group-hover:text-[var(--color-brand-gold)]">Users</h2>
+              <Users className="w-5 h-5 text-[var(--color-text-muted)] group-hover:text-[var(--color-brand-gold)]" />
             </div>
-            <p className="text-gray-400 text-sm mb-4">Manage user accounts, roles, and approvals</p>
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#D4AF37]/10 text-[#D4AF37] text-sm rounded-lg border border-[#D4AF37]/20">
+            <p className="text-[var(--color-text-muted)] text-sm mb-4">Manage user accounts, roles, and approvals</p>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] text-sm rounded-lg border border-[var(--color-brand-gold)]/20">
               Manage Users
             </span>
           </Link>
 
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+          <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-semibold text-white">Content Management</h3>
-              <Archive className="w-5 h-5 text-gray-500" />
+              <h2 className="text-lg font-semibold text-white">Content Management</h2>
+              <Archive className="w-5 h-5 text-[var(--color-text-muted)]" />
             </div>
-            <p className="text-gray-400 text-sm mb-4">Chapters 1-21, flashcards, and quizzes are production-ready</p>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-500/10 text-green-400 text-sm rounded-lg border border-green-500/20">
+            <p className="text-[var(--color-text-muted)] text-sm mb-4">Chapters 1-21, flashcards, and quizzes are production-ready</p>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gold/10 text-gold text-sm rounded-lg border border-gold/20">
               <span>21 Chapters Active</span>
             </div>
           </div>
         </div>
 
         {/* System Status */}
-        <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-white mb-2">System Status</h3>
+        <div className="bg-[var(--color-background-primary)]/50 border border-[var(--color-border-primary)] rounded-xl p-6">
+          <h2 className="text-lg font-semibold text-white mb-2">System Status</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-              <span className="text-gray-400">Authentication: Operational</span>
+              <div className="w-2 h-2 bg-gold-light rounded-full"></div>
+              <span className="text-[var(--color-text-muted)]">Authentication: Operational</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-              <span className="text-gray-400">Database: Operational</span>
+              <div className="w-2 h-2 bg-gold-light rounded-full"></div>
+              <span className="text-[var(--color-text-muted)]">Database: Operational</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-              <span className="text-gray-400">Content: 21 Chapters Active</span>
+              <div className="w-2 h-2 bg-gold-light rounded-full"></div>
+              <span className="text-[var(--color-text-muted)]">Content: 21 Chapters Active</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-              <span className="text-gray-400">User Management: Active</span>
+              <div className="w-2 h-2 bg-gold-light rounded-full"></div>
+              <span className="text-[var(--color-text-muted)]">User Management: Active</span>
             </div>
           </div>
         </div>

@@ -17,13 +17,13 @@ export default function SchoolHealthScore({ health }: Props) {
   ]
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+    <div className="bg-charcoal border border-graphite rounded-xl p-6">
       <div className="flex flex-col md:flex-row md:items-center gap-6">
         <div className="flex flex-col items-center justify-center">
           <div className="w-36 h-36 relative">
             <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
               <path
-                className="text-gray-800"
+                className="text-light-gray"
                 d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                 fill="none"
                 stroke="currentColor"
@@ -40,12 +40,12 @@ export default function SchoolHealthScore({ health }: Props) {
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
               <span className={`text-3xl font-bold ${health.colorClass}`}>{health.score}</span>
-              <span className="text-xs text-gray-400">/100</span>
+              <span className="text-xs text-silver">/100</span>
             </div>
           </div>
           <div className="mt-2 text-center">
             <p className={`text-lg font-semibold ${health.colorClass}`}>{health.label}</p>
-            <p className="text-xs text-gray-500">School Health Score</p>
+            <p className="text-xs text-silver-gray">School Health Score</p>
           </div>
         </div>
 
@@ -53,16 +53,16 @@ export default function SchoolHealthScore({ health }: Props) {
           {components.map((c) => {
             const Icon = c.icon
             return (
-              <div key={c.label} className="bg-gray-950 border border-gray-800 rounded-lg p-3">
+              <div key={c.label} className="bg-black border border-graphite rounded-lg p-3">
                 <div className="flex items-center gap-2 mb-2">
-                  <Icon className="w-4 h-4 text-gray-500" />
-                  <span className="text-xs text-gray-400">{c.label}</span>
+                  <Icon className="w-4 h-4 text-silver-gray" />
+                  <span className="text-xs text-silver">{c.label}</span>
                 </div>
                 <div className="text-xl font-bold text-white">{c.value}</div>
-                <div className="w-full bg-gray-800 rounded-full h-1.5 mt-2">
+                <div className="w-full bg-graphite rounded-full h-1.5 mt-2">
                   <div
                     className={`h-full rounded-full ${
-                      c.value >= 80 ? 'bg-green-500' : c.value >= 70 ? 'bg-yellow-500' : c.value >= 60 ? 'bg-orange-500' : 'bg-red-500'
+                      c.value >= 80 ? 'bg-gold' : c.value >= 70 ? 'bg-warm-bronze' : c.value >= 60 ? 'bg-warm-bronze' : 'bg-silver'
                     }`}
                     style={{ width: `${Math.max(0, Math.min(100, c.value))}%` }}
                   />

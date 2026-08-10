@@ -45,10 +45,10 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-black">
       <BackButtonPrevention />
       <DashboardNav user={profile} />
-      <main className="lg:pl-64 min-h-screen">
+      <main id="main-content" className="lg:pl-64 min-h-screen">
         <div className="p-4 lg:p-8 max-w-7xl mx-auto">
           {children}
         </div>

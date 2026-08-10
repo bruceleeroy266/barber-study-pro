@@ -32,7 +32,7 @@ export default function StatusSelector({
             className={`
               rounded-md border font-medium transition-all
               ${size === 'sm' ? 'px-2 py-0.5 text-xs' : 'px-2.5 py-1 text-xs'}
-              ${isActive ? `${colorClass} ring-1 ring-offset-1 ring-offset-gray-900 ring-[#D4AF37]` : 'text-gray-400 bg-gray-800 border-gray-700 hover:bg-gray-700 hover:text-white'}
+              ${isActive ? `${colorClass} ring-1 ring-offset-1 ring-offset-gray-900 ring-[var(--color-brand-gold)]` : 'text-silver bg-graphite border-[var(--color-border-secondary)] hover:bg-[var(--color-border-secondary)] hover:text-white'}
               ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
             `}
             title={status}

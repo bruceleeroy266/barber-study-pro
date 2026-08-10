@@ -17,9 +17,9 @@ export default function StudentIdentity({
   variant = 'dark',
   showRole = false,
 }: StudentIdentityProps) {
-  const nameClass = variant === 'dark' ? 'text-white' : 'text-gray-900'
-  const emailClass = variant === 'dark' ? 'text-gray-500' : 'text-gray-600'
-  const roleClass = variant === 'dark' ? 'text-gray-500' : 'text-gray-600'
+  const nameClass = variant === 'dark' ? 'text-white' : 'text-white'
+  const emailClass = variant === 'dark' ? 'text-silver-gray' : 'text-silver-gray'
+  const roleClass = variant === 'dark' ? 'text-silver-gray' : 'text-silver-gray'
 
   return (
     <div>

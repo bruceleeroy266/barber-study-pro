@@ -274,19 +274,19 @@ export function buildSchoolHealthScore(inputs: SchoolAnalyticsInputs): SchoolHea
   )
 
   let label = 'Critical'
-  let colorClass = 'text-red-400'
+  let colorClass = 'text-silver'
   if (score >= 90) {
     label = 'Excellent'
-    colorClass = 'text-green-400'
+    colorClass = 'text-gold'
   } else if (score >= 80) {
     label = 'Good'
-    colorClass = 'text-blue-400'
+    colorClass = 'text-silver'
   } else if (score >= 70) {
     label = 'Fair'
-    colorClass = 'text-yellow-400'
+    colorClass = 'text-warm-bronze'
   } else if (score >= 60) {
     label = 'At Risk'
-    colorClass = 'text-orange-400'
+    colorClass = 'text-warm-bronze'
   }
 
   return {
@@ -427,17 +427,17 @@ export function buildSchoolAnalyticsSnapshot(inputs: SchoolAnalyticsInputs): Sch
   }))
 
   const gradeDistribution = [
-    { label: 'A (90-100%)', count: rows.filter((r) => r.overallGrade >= 90).length, colorClass: 'bg-green-500' },
-    { label: 'B (80-89%)', count: rows.filter((r) => r.overallGrade >= 80 && r.overallGrade < 90).length, colorClass: 'bg-blue-500' },
-    { label: 'C (70-79%)', count: rows.filter((r) => r.overallGrade >= 70 && r.overallGrade < 80).length, colorClass: 'bg-yellow-500' },
-    { label: 'D (60-69%)', count: rows.filter((r) => r.overallGrade >= 60 && r.overallGrade < 70).length, colorClass: 'bg-orange-500' },
-    { label: 'F (<60%)', count: rows.filter((r) => r.overallGrade > 0 && r.overallGrade < 60).length, colorClass: 'bg-red-500' },
-    { label: 'No Grade', count: rows.filter((r) => r.overallGrade === 0).length, colorClass: 'bg-gray-500' },
+    { label: 'A (90-100%)', count: rows.filter((r) => r.overallGrade >= 90).length, colorClass: 'bg-gold' },
+    { label: 'B (80-89%)', count: rows.filter((r) => r.overallGrade >= 80 && r.overallGrade < 90).length, colorClass: 'bg-silver' },
+    { label: 'C (70-79%)', count: rows.filter((r) => r.overallGrade >= 70 && r.overallGrade < 80).length, colorClass: 'bg-warm-bronze' },
+    { label: 'D (60-69%)', count: rows.filter((r) => r.overallGrade >= 60 && r.overallGrade < 70).length, colorClass: 'bg-warm-bronze' },
+    { label: 'F (<60%)', count: rows.filter((r) => r.overallGrade > 0 && r.overallGrade < 60).length, colorClass: 'bg-silver' },
+    { label: 'No Grade', count: rows.filter((r) => r.overallGrade === 0).length, colorClass: 'bg-silver-gray' },
   ]
 
   const riskDistribution = [
-    { label: 'At Risk', count: rows.filter((r) => r.isAtRisk).length, colorClass: 'bg-red-500' },
-    { label: 'On Track', count: rows.filter((r) => !r.isAtRisk).length, colorClass: 'bg-green-500' },
+    { label: 'At Risk', count: rows.filter((r) => r.isAtRisk).length, colorClass: 'bg-silver' },
+    { label: 'On Track', count: rows.filter((r) => !r.isAtRisk).length, colorClass: 'bg-gold' },
   ]
 
   return {

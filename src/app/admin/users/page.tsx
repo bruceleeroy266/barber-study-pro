@@ -32,12 +32,12 @@ export default async function UserManagementPage() {
   const initialSchools = await getSchools()
 
   return (
-    <div className="min-h-screen bg-gray-950 p-6 lg:p-8">
+    <div className="min-h-screen bg-black p-6 lg:p-8">
         <BackButton fallbackHref="/admin" label="Back to admin dashboard" />
       <div className="max-w-7xl mx-auto space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">User Management</h1>
-          <p className="text-gray-400">
+          <p className="text-silver">
             {isPlatformAdmin
               ? 'Manage platform users, roles, and approvals'
               : 'Manage users in your school'}

@@ -8,6 +8,10 @@ import { getDemoMissedQuestionsForUser } from '@/lib/demo-analytics'
 import MissedQuestionBank from '@/components/MissedQuestionBank'
 import { AlertCircle } from 'lucide-react'
 
+// Phase 4 Design System Components
+import { Card } from '@/components/ui/Card'
+import { EmptyState } from '@/components/ui/EmptyState'
+
 interface DbMissedQuestion {
   id: string
   user_id: string
@@ -97,27 +101,41 @@ export default async function MissedQuestionsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Missed Question Bank</h1>
-        <p className="text-gray-400">
-          Review questions you missed, filter by chapter or category, and retest your weak areas.
-        </p>
+        <h1 className="text-3xl font-bold text-white">Missed Question Bank</h1>
+        <p className="text-[var(--color-text-muted)] mt-1">Review questions you missed, filter by chapter or category, and retest your weak areas.</p>
       </div>
 
-      <div className="bg-[#D4AF37]/10 border border-[#D4AF37]/20 rounded-xl p-4 flex items-start gap-3">
-        <AlertCircle className="w-5 h-5 text-[#D4AF37] shrink-0 mt-0.5" />
-        <div>
-          <p className="text-white font-medium">How this works</p>
-          <p className="text-sm text-gray-400">
-            Every time you complete a quiz, missed questions are added here. Use the filters to focus
-            on specific chapters, then click “Retest Weak Areas” to practice only the questions you
-            got wrong.
-          </p>
+      {/* How It Works Card */}
+      <Card variant="outlined" padding="md" className="border-[var(--color-brand-gold)]/20 bg-[var(--color-brand-gold)]/5">
+        <div className="flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-[var(--color-brand-gold)] shrink-0 mt-0.5" />
+          <div>
+            <p className="text-white font-medium">How this works</p>
+            <p className="text-sm text-[var(--color-text-muted)] mt-1">
+              Every time you complete a quiz, missed questions are added here. Use the filters to focus
+              on specific chapters, then click &quot;Retest Weak Areas&quot; to practice only the questions you
+              got wrong.
+            </p>
+          </div>
         </div>
-      </div>
+      </Card>
 
-      <MissedQuestionBank questions={missed} />
+      {/* Missed Questions Bank */}
+      {missed.length === 0 ? (
+        <EmptyState
+          icon="🎉"
+          title="No missed questions"
+          description="Great job! You haven't missed any questions yet. Complete some quizzes to build your personalized review bank."
+          action={{
+            label: 'Browse Chapters',
+            href: '/dashboard/chapters',
+          }}
+        />
+      ) : (
+        <MissedQuestionBank questions={missed} />
+      )}
     </div>
   )
 }

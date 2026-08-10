@@ -46,17 +46,17 @@ export default function AttendanceGrid({
         disabled={loading}
       />
 
-      <div className="overflow-x-auto rounded-xl border border-gray-800 bg-gray-900">
+      <div className="overflow-x-auto rounded-xl border border-graphite bg-charcoal">
         <table className="w-full min-w-[900px]">
           <thead>
-            <tr className="text-left text-sm text-gray-400 border-b border-gray-800">
+            <tr className="text-left text-sm text-silver border-b border-graphite">
               <th className="p-4 w-10">
                 <input
                   type="checkbox"
                   checked={isAllSelected}
                   onChange={onToggleAll}
                   disabled={loading || records.length === 0}
-                  className="w-4 h-4 rounded border-gray-600 bg-gray-800 text-[#D4AF37] focus:ring-[#D4AF37] focus:ring-offset-gray-900"
+                  className="w-4 h-4 rounded border-silver-gray bg-graphite text-[var(--color-brand-gold)] focus:ring-[var(--color-brand-gold)] focus:ring-offset-gray-900"
                 />
               </th>
               <th className="p-4">Student</th>
@@ -87,7 +87,7 @@ export default function AttendanceGrid({
               ))
             ) : (
               <tr>
-                <td colSpan={9} className="p-8 text-center text-gray-400">
+                <td colSpan={9} className="p-8 text-center text-silver">
                   No attendance records match the current filters.
                 </td>
               </tr>

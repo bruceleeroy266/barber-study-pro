@@ -47,11 +47,11 @@ export default function MessageCenter({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-white mb-1">Messages</h1>
-          <p className="text-gray-400">Stay connected with your instructor and classmates</p>
+          <p className="text-silver">Stay connected with your instructor and classmates</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="bg-gray-900 border border-gray-800 rounded-lg px-4 py-2 flex items-center gap-2">
-            <span className="text-sm text-gray-400">Unread</span>
+          <div className="bg-charcoal border border-graphite rounded-lg px-4 py-2 flex items-center gap-2">
+            <span className="text-sm text-silver">Unread</span>
             <UnreadBadge count={unreadCount + unreadNotificationCount} />
           </div>
         </div>
@@ -77,8 +77,8 @@ export default function MessageCenter({
                   onSendReply={(body) => sendReply(selectedThread.id, body)}
                 />
               ) : (
-                <div className="h-full bg-gray-900 border border-gray-800 rounded-xl flex items-center justify-center">
-                  <div className="text-center text-gray-500">
+                <div className="h-full bg-charcoal border border-graphite rounded-xl flex items-center justify-center">
+                  <div className="text-center text-silver-gray">
                     <p className="text-lg font-medium">Select a conversation</p>
                     <p className="text-sm">Choose a thread from the list to view messages</p>
                   </div>

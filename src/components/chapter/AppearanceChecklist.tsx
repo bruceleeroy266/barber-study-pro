@@ -161,7 +161,7 @@ export default function AppearanceChecklist({ title, subtitle, categories, theme
             borderTop: `1px solid ${t.border}`,
           }}
         >
-          <p className="text-sm font-semibold" style={{ color: '#10B981' }}>
+          <p className="text-sm font-semibold" style={{ color: 'var(--color-brand-gold)' }}>
             ✨ All standards met — You are client-ready
           </p>
         </div>

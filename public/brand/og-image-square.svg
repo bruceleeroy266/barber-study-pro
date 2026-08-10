@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" fill="none">
+  <rect width="1200" height="1200" fill="#0a0a0a"/>
+  <path d="M450 600L600 350L750 600H675L600 475L525 600H450Z" fill="#D4AF37"/>
+  <path d="M600 350L450 600H525L600 475L675 600H750L600 350Z" stroke="white" stroke-width="6" stroke-linejoin="round"/>
+  <text x="600" y="780" font-family="Inter, system-ui, sans-serif" font-size="96" font-weight="700" fill="white" letter-spacing="0.02em" text-anchor="middle">ASCYN</text>
+  <text x="600" y="900" font-family="Inter, system-ui, sans-serif" font-size="96" font-weight="400" fill="#D4AF37" letter-spacing="0.05em" text-anchor="middle">PRO</text>
+  <text x="600" y="1000" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="400" fill="#888888" text-anchor="middle">Elevate. Learn. Succeed.</text>
+</svg>

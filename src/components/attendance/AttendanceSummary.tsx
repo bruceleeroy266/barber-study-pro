@@ -17,12 +17,12 @@ export default function AttendanceSummary({ records }: AttendanceSummaryProps) {
   const percentage = countable > 0 ? Math.round((present / countable) * 100) : 0
 
   const cards = [
-    { label: 'Total Records', value: total, color: 'text-white', border: 'border-gray-700' },
-    { label: 'Present', value: present, color: 'text-green-400', border: 'border-green-900/30' },
-    { label: 'Absent', value: absent, color: 'text-red-400', border: 'border-red-900/30' },
-    { label: 'Tardy', value: tardy, color: 'text-yellow-400', border: 'border-yellow-900/30' },
-    { label: 'Excused', value: excused, color: 'text-blue-400', border: 'border-blue-900/30' },
-    { label: 'Attendance %', value: `${percentage}%`, color: percentage >= 80 ? 'text-green-400' : percentage >= 60 ? 'text-yellow-400' : 'text-red-400', border: 'border-[#D4AF37]/30' },
+    { label: 'Total Records', value: total, color: 'text-white', border: 'border-[var(--color-border-secondary)]' },
+    { label: 'Present', value: present, color: 'text-gold', border: 'border-gold/30' },
+    { label: 'Absent', value: absent, color: 'text-silver', border: 'border-silver/30' },
+    { label: 'Tardy', value: tardy, color: 'text-warm-bronze', border: 'border-warm-bronze/30' },
+    { label: 'Excused', value: excused, color: 'text-silver', border: 'border-silver/30' },
+    { label: 'Attendance %', value: `${percentage}%`, color: percentage >= 80 ? 'text-gold' : percentage >= 60 ? 'text-warm-bronze' : 'text-silver', border: 'border-[var(--color-brand-gold)]/30' },
   ]
 
   return (
@@ -30,10 +30,10 @@ export default function AttendanceSummary({ records }: AttendanceSummaryProps) {
       {cards.map((card) => (
         <div
           key={card.label}
-          className={`bg-gray-900 border ${card.border} rounded-xl p-5 text-center`}
+          className={`bg-charcoal border ${card.border} rounded-xl p-5 text-center`}
         >
           <div className={`text-2xl font-bold ${card.color}`}>{card.value}</div>
-          <div className="text-xs text-gray-400 mt-1">{card.label}</div>
+          <div className="text-xs text-silver mt-1">{card.label}</div>
         </div>
       ))}
     </div>

@@ -37,7 +37,7 @@ describe('StudentIdentity', () => {
   it('supports a light variant for printable reports', () => {
     render(<StudentIdentity student={student} variant="light" showRole />)
 
-    expect(screen.getByText(student.full_name)).toHaveClass('text-gray-900')
-    expect(screen.getByText(student.email)).toHaveClass('text-gray-600')
+    expect(screen.getByText(student.full_name)).toHaveClass('text-white')
+    expect(screen.getByText(student.email)).toHaveClass('text-silver-gray')
   })
 })

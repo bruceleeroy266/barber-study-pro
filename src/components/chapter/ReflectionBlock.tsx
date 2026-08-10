@@ -94,12 +94,12 @@ export default function ReflectionBlock({ questions, theme }: ReflectionBlockPro
                     onClick={() => handleSubmit(idx)}
                     disabled={!hasResponse}
                     aria-label="Submit reflection and reveal insight"
-                    className="mt-3 flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
+                    className="mt-3 flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
                     style={{
                       background: hasResponse
                         ? `linear-gradient(135deg, ${t.primary}, ${t.primaryDark})`
                         : t.backgroundAlt,
-                      color: hasResponse ? '#fff' : t.textMuted,
+                      color: hasResponse ? 'var(--color-brand-white)' : t.textMuted,
                     }}
                   >
                     <Send className="w-4 h-4" aria-hidden="true" />
@@ -125,11 +125,11 @@ export default function ReflectionBlock({ questions, theme }: ReflectionBlockPro
                   <div
                     className="rounded-lg p-4"
                     style={{
-                      backgroundColor: 'rgba(16, 185, 129, 0.06)',
-                      borderLeft: `3px solid #10B981`,
+                      backgroundColor: 'rgba(212, 175, 55, 0.06)',
+                      borderLeft: `3px solid var(--color-brand-gold)`,
                     }}
                   >
-                    <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: '#10B981' }}>
+                    <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: 'var(--color-brand-gold)' }}>
                       Instructor Insight
                     </p>
                     <p className="text-sm" style={{ color: t.textMuted }}>
@@ -139,7 +139,7 @@ export default function ReflectionBlock({ questions, theme }: ReflectionBlockPro
                   <button
                     onClick={() => handleReset(idx)}
                     aria-label="Reset reflection and try again"
-                    className="flex items-center gap-2 text-xs transition-all hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1"
+                    className="flex items-center gap-2 text-xs transition-all hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1"
                     style={{ color: t.textMuted }}
                   >
                     <RotateCcw className="w-3 h-3" aria-hidden="true" />

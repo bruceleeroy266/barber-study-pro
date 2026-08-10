@@ -146,30 +146,30 @@ export default function InstructorGradebookPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--color-background-primary)] flex items-center justify-center">
         <BackButton fallbackHref="/instructor" label="Back to instructor dashboard" />
-        <Loader2 className="w-8 h-8 text-[#D4AF37] animate-spin" />
+        <Loader2 className="w-8 h-8 text-[var(--color-brand-gold)] animate-spin" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 p-6 md:p-8">
+    <div className="min-h-screen bg-[var(--color-background-primary)] p-6 md:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Gradebook</h1>
-          <p className="text-gray-400">Manage grades and view class performance</p>
+          <p className="text-[var(--color-text-muted)]">Manage grades and view class performance</p>
         </div>
 
         {saveError && (
-          <div className="bg-red-950/30 border border-red-900/50 text-red-400 rounded-lg p-4">
+          <div className="bg-charcoal/30 border border-silver/50 text-silver rounded-lg p-4">
             {saveError}
           </div>
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
-            <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+            <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-5">
               <h2 className="text-lg font-semibold text-white mb-4">Student Grades</h2>
               <GradebookTable
                 students={students}
@@ -183,7 +183,7 @@ export default function InstructorGradebookPage() {
 
           <div className="space-y-6">
             <CategoryWeightingPanel categories={categories} />
-            <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+            <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-5">
               <h2 className="text-lg font-semibold text-white mb-4">Class Report</h2>
               <ClassPerformanceReport
                 students={students}

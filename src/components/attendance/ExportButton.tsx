@@ -35,7 +35,7 @@ export default function ExportButton({ onExport, disabled = false }: ExportButto
         type="button"
         onClick={() => setOpen(!open)}
         disabled={disabled}
-        className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors disabled:opacity-50"
+        className="flex items-center gap-2 px-4 py-2 bg-graphite hover:bg-[var(--color-border-secondary)] text-white rounded-lg transition-colors disabled:opacity-50"
       >
         <Download className="w-4 h-4" />
         <span className="hidden sm:inline">Export</span>
@@ -43,19 +43,19 @@ export default function ExportButton({ onExport, disabled = false }: ExportButto
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-44 bg-gray-900 border border-gray-800 rounded-lg shadow-xl z-20 overflow-hidden">
+        <div className="absolute right-0 mt-2 w-44 bg-charcoal border border-graphite rounded-lg shadow-xl z-20 overflow-hidden">
           <button
             onClick={() => handleExport('csv')}
-            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-light-gray hover:bg-graphite hover:text-white transition-colors"
           >
-            <FileSpreadsheet className="w-4 h-4 text-green-400" />
+            <FileSpreadsheet className="w-4 h-4 text-gold" />
             Export CSV
           </button>
           <button
             onClick={() => handleExport('pdf')}
-            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-light-gray hover:bg-graphite hover:text-white transition-colors"
           >
-            <FileText className="w-4 h-4 text-red-400" />
+            <FileText className="w-4 h-4 text-silver" />
             Export PDF
           </button>
         </div>

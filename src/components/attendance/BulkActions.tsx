@@ -10,15 +10,15 @@ interface BulkActionsProps {
 }
 
 const BULK_OPTIONS: { status: AttendanceStatus; label: string; color: string }[] = [
-  { status: 'Present', label: 'Mark Present', color: 'bg-green-600 hover:bg-green-500' },
-  { status: 'Absent', label: 'Mark Absent', color: 'bg-red-600 hover:bg-red-500' },
-  { status: 'Excused', label: 'Mark Excused', color: 'bg-blue-600 hover:bg-blue-500' },
+  { status: 'Present', label: 'Mark Present', color: 'bg-gold hover:bg-gold' },
+  { status: 'Absent', label: 'Mark Absent', color: 'bg-silver hover:bg-silver' },
+  { status: 'Excused', label: 'Mark Excused', color: 'bg-silver hover:bg-silver' },
 ]
 
 export default function BulkActions({ selectedCount, onMarkStatus, onClear, disabled = false }: BulkActionsProps) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 bg-gray-950/50 border border-gray-800 rounded-lg">
-      <div className="text-sm text-gray-300">
+    <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 bg-black/50 border border-graphite rounded-lg">
+      <div className="text-sm text-light-gray">
         <span className="font-semibold text-white">{selectedCount}</span> selected
       </div>
       <div className="flex flex-wrap gap-2">
@@ -39,7 +39,7 @@ export default function BulkActions({ selectedCount, onMarkStatus, onClear, disa
           type="button"
           onClick={onClear}
           disabled={disabled}
-          className="px-3 py-1.5 text-xs font-medium text-gray-400 hover:text-white bg-gray-800 hover:bg-gray-700 rounded-md transition-colors disabled:opacity-50"
+          className="px-3 py-1.5 text-xs font-medium text-silver hover:text-white bg-graphite hover:bg-[var(--color-border-secondary)] rounded-md transition-colors disabled:opacity-50"
         >
           Clear
         </button>

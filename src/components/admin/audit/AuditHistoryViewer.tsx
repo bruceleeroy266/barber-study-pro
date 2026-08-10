@@ -67,57 +67,57 @@ export default function AuditHistoryViewer({ initialData }: AuditHistoryViewerPr
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-white">Audit History</h1>
 
-      <form action={handleSubmit} className="bg-gray-900 border border-gray-800 rounded-xl p-4 space-y-4">
+      <form action={handleSubmit} className="bg-charcoal border border-graphite rounded-xl p-4 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label htmlFor="dateFrom" className="block text-sm text-gray-400 mb-1">Date From</label>
+            <label htmlFor="dateFrom" className="block text-sm text-silver mb-1">Date From</label>
             <input
               id="dateFrom"
               name="dateFrom"
               type="date"
               defaultValue={filters.dateFrom}
-              className="w-full bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-white"
+              className="w-full bg-black border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white"
             />
           </div>
           <div>
-            <label htmlFor="dateTo" className="block text-sm text-gray-400 mb-1">Date To</label>
+            <label htmlFor="dateTo" className="block text-sm text-silver mb-1">Date To</label>
             <input
               id="dateTo"
               name="dateTo"
               type="date"
               defaultValue={filters.dateTo}
-              className="w-full bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-white"
+              className="w-full bg-black border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white"
             />
           </div>
           <div>
-            <label htmlFor="userId" className="block text-sm text-gray-400 mb-1">User ID</label>
+            <label htmlFor="userId" className="block text-sm text-silver mb-1">User ID</label>
             <input
               id="userId"
               name="userId"
               type="text"
               defaultValue={filters.userId}
               placeholder="UUID"
-              className="w-full bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-white"
+              className="w-full bg-black border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white"
             />
           </div>
           <div>
-            <label htmlFor="schoolId" className="block text-sm text-gray-400 mb-1">School ID</label>
+            <label htmlFor="schoolId" className="block text-sm text-silver mb-1">School ID</label>
             <input
               id="schoolId"
               name="schoolId"
               type="text"
               defaultValue={filters.schoolId}
               placeholder="UUID"
-              className="w-full bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-white"
+              className="w-full bg-black border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white"
             />
           </div>
           <div>
-            <label htmlFor="type" className="block text-sm text-gray-400 mb-1">Event Type</label>
+            <label htmlFor="type" className="block text-sm text-silver mb-1">Event Type</label>
             <select
               id="type"
               name="type"
               defaultValue={filters.type ?? ''}
-              className="w-full bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-white"
+              className="w-full bg-black border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white"
             >
               <option value="">All</option>
               {EVENT_TYPES.map((t) => (
@@ -126,12 +126,12 @@ export default function AuditHistoryViewer({ initialData }: AuditHistoryViewerPr
             </select>
           </div>
           <div>
-            <label htmlFor="result" className="block text-sm text-gray-400 mb-1">Result</label>
+            <label htmlFor="result" className="block text-sm text-silver mb-1">Result</label>
             <select
               id="result"
               name="result"
               defaultValue={filters.result ?? ''}
-              className="w-full bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-white"
+              className="w-full bg-black border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white"
             >
               <option value="">All</option>
               {RESULTS.map((r) => (
@@ -144,25 +144,25 @@ export default function AuditHistoryViewer({ initialData }: AuditHistoryViewerPr
           <button
             type="submit"
             disabled={isPending}
-            className="px-4 py-2 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] disabled:opacity-50"
+            className="px-4 py-2 bg-[var(--color-brand-gold)] text-black font-semibold rounded-lg hover:bg-[var(--color-brand-gold-light)] disabled:opacity-50"
           >
             {isPending ? 'Loading...' : 'Filter'}
           </button>
-          <span className="text-sm text-gray-400">{count} total results</span>
+          <span className="text-sm text-silver">{count} total results</span>
         </div>
       </form>
 
       {error && (
-        <div className="bg-red-950/20 border border-red-900/30 rounded-xl p-4 text-red-400">
+        <div className="bg-charcoal/20 border border-silver/30 rounded-xl p-4 text-silver">
           {error}
         </div>
       )}
 
-      <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+      <div className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-gray-400 border-b border-gray-800">
+              <tr className="text-left text-silver border-b border-graphite">
                 <th className="p-4">Time</th>
                 <th className="p-4">Type</th>
                 <th className="p-4">Result</th>
@@ -172,31 +172,31 @@ export default function AuditHistoryViewer({ initialData }: AuditHistoryViewerPr
                 <th className="p-4">Reason</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-800">
+            <tbody className="divide-y divide-graphite">
               {logs.map((log) => (
-                <tr key={log.id} className="hover:bg-gray-800/30">
-                  <td className="p-4 text-gray-300 whitespace-nowrap">
+                <tr key={log.id} className="hover:bg-graphite/30">
+                  <td className="p-4 text-light-gray whitespace-nowrap">
                     {new Date(log.created_at).toLocaleString()}
                   </td>
-                  <td className="p-4 text-gray-300">{log.type}</td>
+                  <td className="p-4 text-light-gray">{log.type}</td>
                   <td className="p-4">
                     <ResultBadge result={log.result} />
                   </td>
-                  <td className="p-4 text-gray-300">
+                  <td className="p-4 text-light-gray">
                     {log.email ?? log.user_id ?? '—'}
                   </td>
-                  <td className="p-4 text-gray-300">{log.school_id ?? '—'}</td>
-                  <td className="p-4 text-gray-300">
+                  <td className="p-4 text-light-gray">{log.school_id ?? '—'}</td>
+                  <td className="p-4 text-light-gray">
                     {log.resource ? `${log.resource}${log.resource_id ? ` (${log.resource_id.slice(0, 8)})` : ''}` : '—'}
                   </td>
-                  <td className="p-4 text-gray-400 max-w-xs truncate" title={log.reason ?? undefined}>
+                  <td className="p-4 text-silver max-w-xs truncate" title={log.reason ?? undefined}>
                     {log.reason ?? '—'}
                   </td>
                 </tr>
               ))}
               {logs.length === 0 && !error && (
                 <tr>
-                  <td colSpan={7} className="p-8 text-center text-gray-400">
+                  <td colSpan={7} className="p-8 text-center text-silver">
                     No audit log entries found.
                   </td>
                 </tr>
@@ -211,11 +211,11 @@ export default function AuditHistoryViewer({ initialData }: AuditHistoryViewerPr
 
 function ResultBadge({ result }: { result: AuditLogResult }) {
   const classes: Record<AuditLogResult, string> = {
-    allowed: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-    denied: 'bg-red-500/10 text-red-400 border-red-500/20',
-    blocked: 'bg-red-500/10 text-red-400 border-red-500/20',
-    success: 'bg-green-500/10 text-green-400 border-green-500/20',
-    failure: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
+    allowed: 'bg-silver/10 text-silver border-silver/20',
+    denied: 'bg-silver/10 text-silver border-silver/20',
+    blocked: 'bg-silver/10 text-silver border-silver/20',
+    success: 'bg-gold/10 text-gold border-gold/20',
+    failure: 'bg-warm-bronze/10 text-warm-bronze border-warm-bronze/20',
   }
 
   return (

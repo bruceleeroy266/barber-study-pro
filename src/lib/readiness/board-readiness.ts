@@ -185,22 +185,22 @@ export function calculateBoardReadiness(inputs: ReadinessInputs): BoardReadiness
 export function getReadinessColorClass(score: number): string {
   const level = getLevel(score)
   switch (level) {
-    case 'Ready': return 'text-green-400'
-    case 'Nearly Ready': return 'text-yellow-400'
-    case 'Needs Review': return 'text-orange-400'
-    case 'At Risk': return 'text-red-400'
-    default: return 'text-gray-400'
+    case 'Ready': return 'text-gold'
+    case 'Nearly Ready': return 'text-warm-bronze'
+    case 'Needs Review': return 'text-warm-bronze'
+    case 'At Risk': return 'text-silver'
+    default: return 'text-silver'
   }
 }
 
 export function getReadinessBgClass(score: number): string {
   const level = getLevel(score)
   switch (level) {
-    case 'Ready': return 'bg-green-500'
-    case 'Nearly Ready': return 'bg-yellow-500'
-    case 'Needs Review': return 'bg-orange-500'
-    case 'At Risk': return 'bg-red-500'
-    default: return 'bg-gray-500'
+    case 'Ready': return 'bg-gold'
+    case 'Nearly Ready': return 'bg-warm-bronze'
+    case 'Needs Review': return 'bg-warm-bronze'
+    case 'At Risk': return 'bg-silver'
+    default: return 'bg-silver-gray'
   }
 }
 

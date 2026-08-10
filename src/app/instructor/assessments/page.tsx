@@ -118,24 +118,24 @@ export default function InstructorAssessmentsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--color-background-primary)] flex items-center justify-center">
         <BackButton fallbackHref="/instructor" label="Back to instructor dashboard" />
-        <Loader2 className="w-8 h-8 text-[#D4AF37] animate-spin" />
+        <Loader2 className="w-8 h-8 text-[var(--color-brand-gold)] animate-spin" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 p-6 md:p-8">
+    <div className="min-h-screen bg-[var(--color-background-primary)] p-6 md:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-white mb-2">Practical Assessments</h1>
-            <p className="text-gray-400">Evaluate student practical skills and track progress</p>
+            <p className="text-[var(--color-text-muted)]">Evaluate student practical skills and track progress</p>
           </div>
           <button
             onClick={() => setShowForm(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-[#D4AF37] hover:bg-[#F4E4A6] text-gray-950 font-semibold rounded-lg transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold-light)] text-black font-semibold rounded-lg transition-colors"
           >
             <Plus className="w-4 h-4" />
             Add Assessment
@@ -143,12 +143,12 @@ export default function InstructorAssessmentsPage() {
         </div>
 
         {saveError && (
-          <div className="bg-red-950/30 border border-red-900/50 text-red-400 rounded-lg p-4">
+          <div className="bg-charcoal/30 border border-silver/50 text-silver rounded-lg p-4">
             {saveError}
           </div>
         )}
 
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+        <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-5">
           <h2 className="text-lg font-semibold text-white mb-4">Assessment Records</h2>
           <AssessmentList assessments={assessments} students={students} showStudentName />
         </div>

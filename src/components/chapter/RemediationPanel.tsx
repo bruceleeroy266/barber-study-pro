@@ -149,7 +149,7 @@ export default function RemediationPanel({
           {chapterNumber && (
             <Link
               href={`/dashboard/chapters/${chapterNumber}`}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
               style={{
                 backgroundColor: t.background,
                 color: t.text,
@@ -165,10 +165,10 @@ export default function RemediationPanel({
           {onRetryQuiz && (
             <button
               onClick={onRetryQuiz}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
               style={{
                 background: `linear-gradient(135deg, ${t.primary}, ${t.primaryDark})`,
-                color: '#fff',
+                color: 'var(--color-brand-white)',
               }}
             >
               <RotateCcw className="w-4 h-4" aria-hidden="true" />

@@ -22,6 +22,7 @@ import {
   Send,
   RotateCcw,
 } from 'lucide-react'
+import { Button, Card, Badge, ProgressBar, Input, Textarea, Select } from '@/components/ui'
 
 const AGREEMENT_VERSION = 'v1.0'
 const LOCAL_STORAGE_KEY = 'ascyn_beta_checklist_v1'
@@ -114,10 +115,10 @@ const CATEGORIES: { value: BetaFeedbackCategory; label: string; icon: React.Reac
 ]
 
 const SEVERITIES: { value: BetaFeedbackSeverity; label: string; color: string }[] = [
-  { value: 'low', label: 'Low', color: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
-  { value: 'medium', label: 'Medium', color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' },
-  { value: 'high', label: 'High', color: 'bg-orange-500/20 text-orange-400 border-orange-500/30' },
-  { value: 'critical', label: 'Critical', color: 'bg-red-500/20 text-red-400 border-red-500/30' },
+  { value: 'low', label: 'Low', color: 'bg-silver/20 text-silver border-silver/30' },
+  { value: 'medium', label: 'Medium', color: 'bg-warm-bronze/20 text-warm-bronze border-warm-bronze/30' },
+  { value: 'high', label: 'High', color: 'bg-warm-bronze/20 text-warm-bronze border-warm-bronze/30' },
+  { value: 'critical', label: 'Critical', color: 'bg-silver/20 text-silver border-silver/30' },
 ]
 
 export interface BetaChecklistProps {
@@ -234,43 +235,39 @@ export default function BetaChecklist({ initialFeedback }: BetaChecklistProps) {
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white mb-2">Beta Tester Checklist</h1>
-        <p className="text-gray-400">
+        <p className="text-silver">
           Work through each item and submit feedback as you go.
         </p>
       </div>
 
       {/* Progress */}
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-8">
+      <Card variant="default" padding="md" className="mb-8">
         <div className="flex items-center justify-between mb-3">
           <span className="text-white font-semibold">Your progress</span>
-          <span className="text-[#D4AF37] font-bold">{progress}%</span>
+          <span className="text-[var(--color-brand-gold)] font-bold">{progress}%</span>
         </div>
-        <div className="w-full h-3 bg-gray-800 rounded-full overflow-hidden mb-4">
-          <div
-            className="h-full bg-[#D4AF37] transition-all duration-500"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-        <p className="text-gray-400 text-sm">
+        <ProgressBar value={progress} variant="default" size="lg" showLabel={false} />
+        <p className="text-silver text-sm mt-4">
           {completed.size} of {CHECKLIST_ITEMS.length} items completed
         </p>
-      </div>
+      </Card>
 
       {/* Checklist */}
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-8">
+      <Card variant="default" padding="md" className="mb-8">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-            <ClipboardCheck className="w-5 h-5 text-[#D4AF37]" />
+            <ClipboardCheck className="w-5 h-5 text-[var(--color-brand-gold)]" />
             Tasks
           </h2>
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={resetProgress}
-            className="text-sm text-gray-500 hover:text-white flex items-center gap-1 transition-colors"
-            type="button"
+            className="text-sm"
           >
-            <RotateCcw className="w-4 h-4" />
+            <RotateCcw className="w-4 h-4 mr-1" />
             Reset
-          </button>
+          </Button>
         </div>
 
         <div className="space-y-3">
@@ -282,166 +279,153 @@ export default function BetaChecklist({ initialFeedback }: BetaChecklistProps) {
                 onClick={() => toggleItem(item.id)}
                 className={`w-full text-left p-4 rounded-lg border transition-all flex items-start gap-4 ${
                   isComplete
-                    ? 'bg-[#D4AF37]/10 border-[#D4AF37]/30'
-                    : 'bg-gray-800/50 border-gray-700 hover:border-gray-600'
+                    ? 'bg-[var(--color-brand-gold)]/10 border-[var(--color-brand-gold)]/30'
+                    : 'bg-graphite/50 border-[var(--color-border-secondary)] hover:border-silver-gray'
                 }`}
                 type="button"
               >
                 {isComplete ? (
-                  <CheckCircle2 className="w-6 h-6 text-[#D4AF37] flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-6 h-6 text-[var(--color-brand-gold)] flex-shrink-0 mt-0.5" />
                 ) : (
-                  <Circle className="w-6 h-6 text-gray-500 flex-shrink-0 mt-0.5" />
+                  <Circle className="w-6 h-6 text-silver-gray flex-shrink-0 mt-0.5" />
                 )}
                 <div className="flex-1 min-w-0">
                   <p className={`font-semibold ${isComplete ? 'text-white line-through opacity-70' : 'text-white'}`}>
                     {item.label}
                   </p>
                   {item.description && (
-                    <p className="text-gray-400 text-sm mt-1">{item.description}</p>
+                    <p className="text-silver text-sm mt-1">{item.description}</p>
                   )}
                 </div>
               </button>
             )
           })}
         </div>
-      </div>
+      </Card>
 
       {/* Feedback Form */}
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-8">
+      <Card variant="default" padding="md" className="mb-8">
         <h2 className="text-xl font-semibold text-white mb-2 flex items-center gap-2">
-          <AlertTriangle className="w-5 h-5 text-[#D4AF37]" />
+          <AlertTriangle className="w-5 h-5 text-[var(--color-brand-gold)]" />
           Submit Feedback
         </h2>
-        <p className="text-gray-400 text-sm mb-6">
+        <p className="text-silver text-sm mb-6">
           Report bugs, suggest improvements, or share observations. Your feedback goes directly to the ASCYN PRO team.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label htmlFor="feedback-item" className="block text-sm font-medium text-gray-400 mb-1">
+            <label htmlFor="feedback-item" className="block text-sm font-medium text-silver mb-1">
               Related checklist item (optional)
             </label>
-            <select
+            <Select
               id="feedback-item"
               value={selectedItem}
               onChange={(e) => setSelectedItem(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]"
-            >
-              <option value="">General feedback</option>
-              {CHECKLIST_ITEMS.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
+              options={[
+                { value: '', label: 'General feedback' },
+                ...CHECKLIST_ITEMS.map((item) => ({ value: item.id, label: item.label }))
+              ]}
+            />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">Category</label>
+              <label className="block text-sm font-medium text-silver mb-2">Category</label>
               <div className="flex flex-wrap gap-2">
                 {CATEGORIES.map((cat) => (
-                  <button
+                  <Button
                     key={cat.value}
-                    type="button"
+                    variant={category === cat.value ? 'primary' : 'outline'}
+                    size="sm"
                     onClick={() => setCategory(cat.value)}
-                    className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-colors ${
-                      category === cat.value
-                        ? 'bg-[#D4AF37] border-[#D4AF37] text-black'
-                        : 'bg-gray-800 border-gray-700 text-gray-300 hover:border-gray-600'
-                    }`}
+                    type="button"
                   >
                     {cat.icon}
                     {cat.label}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">Severity</label>
+              <label className="block text-sm font-medium text-silver mb-2">Severity</label>
               <div className="flex flex-wrap gap-2">
                 {SEVERITIES.map((sev) => (
-                  <button
+                  <Button
                     key={sev.value}
-                    type="button"
+                    variant={severity === sev.value ? 'primary' : 'outline'}
+                    size="sm"
                     onClick={() => setSeverity(sev.value)}
-                    className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors ${
-                      severity === sev.value
-                        ? sev.color
-                        : 'bg-gray-800 border-gray-700 text-gray-300 hover:border-gray-600'
-                    }`}
+                    type="button"
                   >
                     {sev.label}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
           </div>
 
           <div>
-            <label htmlFor="feedback-message" className="block text-sm font-medium text-gray-400 mb-1">
+            <label htmlFor="feedback-message" className="block text-sm font-medium text-silver mb-1">
               Message
             </label>
-            <textarea
+            <Textarea
               id="feedback-message"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               rows={4}
               placeholder="Describe what happened, what you expected, and steps to reproduce if applicable."
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]"
               required
             />
           </div>
 
           {status && (
             <p
-              className={`text-sm ${status.type === 'success' ? 'text-green-400' : 'text-red-400'}`}
+              className={`text-sm ${status.type === 'success' ? 'text-gold' : 'text-silver'}`}
               role="status"
             >
               {status.text}
             </p>
           )}
 
-          <button
+          <Button
             type="submit"
+            variant="primary"
             disabled={isPending}
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#D4AF37] hover:bg-[#c4a030] disabled:opacity-50 disabled:cursor-not-allowed text-black font-semibold rounded-lg transition-colors"
           >
-            <Send className="w-5 h-5" />
+            <Send className="w-5 h-5 mr-2" />
             {isPending ? 'Submitting…' : 'Submit Feedback'}
-          </button>
+          </Button>
         </form>
-      </div>
+      </Card>
 
       {/* Feedback History */}
       {feedbackHistory.length > 0 && (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+        <Card variant="default" padding="md">
           <h2 className="text-xl font-semibold text-white mb-4">Your Recent Feedback</h2>
           <div className="space-y-4">
             {feedbackHistory.map((item) => (
-              <div key={item.id} className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
+              <Card key={item.id} variant="ghost" padding="sm">
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <span className={`text-xs font-bold px-2 py-1 rounded border uppercase ${
-                    SEVERITIES.find((s) => s.value === item.severity)?.color || 'bg-gray-700 text-gray-300'
-                  }`}>
+                  <Badge variant={item.severity === 'critical' || item.severity === 'high' ? 'error' : item.severity === 'medium' ? 'warning' : 'default'} size="sm">
                     {item.severity}
-                  </span>
-                  <span className="text-xs text-gray-400 uppercase tracking-wider">{item.category}</span>
+                  </Badge>
+                  <span className="text-xs text-silver uppercase tracking-wider">{item.category}</span>
                   {item.checklist_item_id && (
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-silver-gray">
                       {CHECKLIST_ITEMS.find((i) => i.id === item.checklist_item_id)?.label || item.checklist_item_id}
                     </span>
                   )}
                 </div>
-                <p className="text-gray-200 text-sm whitespace-pre-wrap">{item.message}</p>
-                <p className="text-gray-500 text-xs mt-2">
+                <p className="text-light-gray text-sm whitespace-pre-wrap">{item.message}</p>
+                <p className="text-silver-gray text-xs mt-2">
                   {new Date(item.created_at).toLocaleString()}
                 </p>
-              </div>
+              </Card>
             ))}
           </div>
-        </div>
+        </Card>
       )}
     </div>
   )

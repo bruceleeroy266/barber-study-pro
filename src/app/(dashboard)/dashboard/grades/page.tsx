@@ -14,6 +14,11 @@ import StudentGradeWidget from '@/components/gradebook/StudentGradeWidget'
 import StudentGradeReport from '@/components/reports/StudentGradeReport'
 import { mapGradesFromDb, mapGradeCategoriesFromDb, mapAssessmentsFromDb } from '@/lib/mappers/operational-data-mappers'
 
+// Phase 4 Design System Components
+import { Card } from '@/components/ui/Card'
+import { Badge } from '@/components/ui/Badge'
+import { EmptyState } from '@/components/ui/EmptyState'
+
 export default async function StudentGradesPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -84,70 +89,101 @@ export default async function StudentGradesPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">My Grades</h1>
-        <p className="text-gray-400">Track your academic progress and assessment results</p>
+        <h1 className="text-3xl font-bold text-white">My Grades</h1>
+        <p className="text-[var(--color-text-muted)] mt-1">Track your academic progress and assessment results</p>
       </div>
 
+      {/* Grade Overview */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1">
           <StudentGradeWidget performance={performance} />
         </div>
 
-        <div className="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-xl p-5">
-          <h2 className="text-lg font-semibold text-white mb-4">Recent Grades</h2>
-          {grades.length === 0 ? (
-            <p className="text-gray-500">No grades recorded yet.</p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="text-left text-gray-400 border-b border-gray-800">
-                    <th className="p-3">Category</th>
-                    <th className="p-3">Score</th>
-                    <th className="p-3">Percentage</th>
-                    <th className="p-3">Notes</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-800">
-                  {grades
-                    .filter((g) => !g.isExcused)
-                    .sort((a, b) => new Date(b.dateEntered).getTime() - new Date(a.dateEntered).getTime())
-                    .map((grade) => {
-                      const category = categories.find((c) => c.id === grade.categoryId)
-                      return (
-                        <tr key={grade.id} className="hover:bg-gray-800/30">
-                          <td className="p-3 text-white">{category?.name || grade.categoryType}</td>
-                          <td className="p-3 text-gray-300">
-                            {grade.score}/{grade.maxScore}
-                          </td>
-                          <td className={`p-3 font-bold ${getGradeColorClass(grade.percentage)}`}>
-                            {grade.percentage}% · {getLetterGrade(grade.percentage)}
-                          </td>
-                          <td className="p-3 text-gray-500">{grade.notes || '—'}</td>
-                        </tr>
-                      )
-                    })}
-                </tbody>
-              </table>
+        <div className="lg:col-span-2">
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-xl font-semibold text-white">Recent Grades</h2>
+              <p className="text-sm text-[var(--color-text-muted)]">Your latest graded work</p>
             </div>
-          )}
+            
+            <Card variant="default" padding="lg">
+              {grades.length === 0 ? (
+                <EmptyState
+                  icon="📝"
+                  title="No grades recorded yet"
+                  description="Your grades will appear here once your instructor records them."
+                />
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="text-left text-[var(--color-text-muted)] border-b border-[var(--color-border-primary)]">
+                        <th className="p-3">Category</th>
+                        <th className="p-3">Score</th>
+                        <th className="p-3">Percentage</th>
+                        <th className="p-3">Grade</th>
+                        <th className="p-3">Notes</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-graphite">
+                      {grades
+                        .filter((g) => !g.isExcused)
+                        .sort((a, b) => new Date(b.dateEntered).getTime() - new Date(a.dateEntered).getTime())
+                        .map((grade) => {
+                          const category = categories.find((c) => c.id === grade.categoryId)
+                          return (
+                            <tr key={grade.id} className="hover:bg-[var(--color-background-secondary)]/30">
+                              <td className="p-3 text-white">{category?.name || grade.categoryType}</td>
+                              <td className="p-3 text-[var(--color-text-secondary)]">
+                                {grade.score}/{grade.maxScore}
+                              </td>
+                              <td className={`p-3 font-bold ${getGradeColorClass(grade.percentage)}`}>
+                                {grade.percentage}%
+                              </td>
+                              <td className="p-3">
+                                <Badge
+                                  variant={grade.percentage >= 90 ? 'success' : grade.percentage >= 80 ? 'gold' : grade.percentage >= 70 ? 'warning' : 'error'}
+                                  size="sm"
+                                >
+                                  {getLetterGrade(grade.percentage)}
+                                </Badge>
+                              </td>
+                              <td className="p-3 text-[var(--color-text-muted)]">{grade.notes || '—'}</td>
+                            </tr>
+                          )
+                        })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </Card>
+          </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl overflow-hidden">
-        <StudentGradeReport
-          student={studentProfile}
-          performance={performance}
-          grades={grades}
-          categories={categories}
-          assessments={assessments}
-        />
+      {/* Grade Report */}
+      <div className="space-y-4">
+        <div>
+          <h2 className="text-xl font-semibold text-white">Grade Report</h2>
+          <p className="text-sm text-[var(--color-text-muted)]">Comprehensive academic summary</p>
+        </div>
+        
+        <div className="bg-white rounded-xl overflow-hidden">
+          <StudentGradeReport
+            student={studentProfile}
+            performance={performance}
+            grades={grades}
+            categories={categories}
+            assessments={assessments}
+          />
+        </div>
       </div>
 
+      {/* Navigation */}
       <div className="flex justify-start">
         <Link
           href="/dashboard/assessments"
-          className="text-[#D4AF37] hover:text-[#F4E4A6] text-sm font-medium"
+          className="text-[var(--color-brand-gold)] hover:text-[var(--color-brand-gold-light)] text-sm font-medium"
         >
           View my practical assessments →
         </Link>

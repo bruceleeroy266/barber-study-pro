@@ -15,6 +15,12 @@ import StudyRecommendations from '@/components/StudyRecommendations'
 import AnalyticsCharts from '@/components/AnalyticsCharts'
 import { mapAttendanceRecordsFromDb } from '@/lib/mappers/operational-data-mappers'
 
+// Phase 4 Design System Components
+import { Card } from '@/components/ui/Card'
+import { MetricCard } from '@/components/ui/MetricCard'
+import { ProgressBar } from '@/components/ui/ProgressBar'
+import { Badge } from '@/components/ui/Badge'
+
 export default async function ProgressPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -118,14 +124,54 @@ export default async function ProgressPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">My Progress</h1>
-        <p className="text-gray-400">Track your learning journey</p>
+        <h1 className="text-3xl font-bold text-white">My Progress</h1>
+        <p className="text-[var(--color-text-muted)] mt-1">Track your learning journey and identify areas for improvement</p>
       </div>
 
-      {/* Board Readiness */}
+      {/* ZONE 1: Key Metrics */}
+      <div className="space-y-4">
+        <div>
+          <h2 className="text-xl font-semibold text-white">Overview</h2>
+          <p className="text-sm text-[var(--color-text-muted)]">Your learning statistics</p>
+        </div>
+        
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <MetricCard
+            label="Overall Progress"
+            value={`${Math.round(((completedChapters / totalChapters) * 100) || 0)}%`}
+            variant="default"
+          />
+          
+          <MetricCard
+            label="Flashcards Done"
+            value={flashcardsCompleted}
+            variant="info"
+          />
+          
+          <MetricCard
+            label="Quizzes Passed"
+            value={quizzesCompleted}
+            variant="success"
+          />
+          
+          <MetricCard
+            label="Avg Quiz Score"
+            value={`${averageQuizScore}%`}
+            variant="warning"
+          />
+
+          <MetricCard
+            label="Attendance"
+            value={`${attendanceSummary.attendancePercentage}%`}
+            variant={attendanceSummary.attendancePercentage >= 80 ? 'success' : attendanceSummary.attendancePercentage >= 70 ? 'warning' : 'error'}
+          />
+        </div>
+      </div>
+
+      {/* ZONE 2: Board Readiness */}
       <BoardReadinessCard readiness={readiness} />
 
-      {/* Weak / Strong Areas + Recommendations */}
+      {/* ZONE 3: Detailed Analytics */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2">
           <WeakAreaAnalytics weakAreas={analytics.weakAreas} strongAreas={analytics.strongAreas} />
@@ -143,116 +189,99 @@ export default async function ProgressPage() {
         missedQuestionTrend={analytics.missedQuestionTrend}
       />
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 text-center">
-          <div className="text-3xl font-bold text-[#D4AF37] mb-1">
-            {Math.round(((completedChapters / totalChapters) * 100) || 0)}%
-          </div>
-          <div className="text-sm text-gray-400">Overall Progress</div>
+      {/* Chapter Progress Detail */}
+      <div className="space-y-4">
+        <div>
+          <h2 className="text-xl font-semibold text-white">Chapter Progress</h2>
+          <p className="text-sm text-[var(--color-text-muted)]">Detailed breakdown by chapter</p>
         </div>
         
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 text-center">
-          <div className="text-3xl font-bold text-blue-400 mb-1">{flashcardsCompleted}</div>
-          <div className="text-sm text-gray-400">Flashcards Done</div>
-        </div>
-        
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 text-center">
-          <div className="text-3xl font-bold text-green-400 mb-1">{quizzesCompleted}</div>
-          <div className="text-sm text-gray-400">Quizzes Passed</div>
-        </div>
-        
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 text-center">
-          <div className="text-3xl font-bold text-purple-400 mb-1">{averageQuizScore}%</div>
-          <div className="text-sm text-gray-400">Avg Quiz Score</div>
-        </div>
-
-        <div className={`rounded-xl p-6 text-center border ${attendanceSummary.isAtRisk ? 'bg-red-950/10 border-red-900/50' : 'bg-gray-900 border-gray-800'}`}>
-          <div className={`text-3xl font-bold mb-1 ${attendanceSummary.attendancePercentage >= 80 ? 'text-green-400' : attendanceSummary.attendancePercentage >= 70 ? 'text-yellow-400' : 'text-red-400'}`}>
-            {attendanceSummary.attendancePercentage}%
-          </div>
-          <div className="text-sm text-gray-400">Attendance</div>
-          {attendanceSummary.isAtRisk && (
-            <p className="mt-1 text-xs text-red-400">Below target</p>
-          )}
-        </div>
-      </div>
-
-      {/* Chapter Progress */}
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-        <h2 className="text-xl font-semibold text-white mb-6">Chapter Progress</h2>
-        
-        <div className="space-y-4">
-          {chapters?.map((chapter) => {
-            const chapterProgress = progress?.find(p => p.chapter_id === chapter.id)
-            const progressPercent = chapterProgress?.progress_percentage || 0
-            
-            return (
-              <div key={chapter.id} className="flex items-center gap-4">
-                <span className="text-sm font-medium text-gray-500 w-8">
-                  {String(chapter.chapter_number).padStart(2, '0')}
-                </span>
-                <div className="flex-1">
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className="text-white">{chapter.title}</span>
-                    <span className="text-gray-400">{progressPercent}%</span>
-                  </div>
-                  <div className="w-full bg-gray-800 rounded-full h-2">
-                    <div
-                      className="bg-[#D4AF37] h-2 rounded-full transition-all"
-                      style={{ width: `${progressPercent}%` }}
+        <Card variant="default" padding="lg">
+          <div className="space-y-4">
+            {chapters?.map((chapter) => {
+              const chapterProgress = progress?.find(p => p.chapter_id === chapter.id)
+              const progressPercent = chapterProgress?.progress_percentage || 0
+              
+              return (
+                <div key={chapter.id} className="flex items-center gap-4">
+                  <span className="text-sm font-medium text-[var(--color-text-muted)] w-8">
+                    {String(chapter.chapter_number).padStart(2, '0')}
+                  </span>
+                  <div className="flex-1">
+                    <div className="flex justify-between text-sm mb-1">
+                      <span className="text-white">{chapter.title}</span>
+                      <span className="text-[var(--color-text-muted)]">{progressPercent}%</span>
+                    </div>
+                    <ProgressBar
+                      value={progressPercent}
+                      max={100}
+                      size="sm"
                     />
                   </div>
+                  <div className="flex gap-2">
+                    {chapterProgress?.flashcards_completed && (
+                      <Badge variant="success" size="sm">Flashcards</Badge>
+                    )}
+                    {chapterProgress?.quiz_completed && (
+                      <Badge variant="info" size="sm">Quiz</Badge>
+                    )}
+                  </div>
                 </div>
-                <div className="flex gap-2 text-xs">
-                  {chapterProgress?.flashcards_completed && (
-                    <span className="px-2 py-1 bg-green-500/10 text-green-400 rounded">Flashcards</span>
-                  )}
-                  {chapterProgress?.quiz_completed && (
-                    <span className="px-2 py-1 bg-blue-500/10 text-blue-400 rounded">Quiz</span>
-                  )}
-                </div>
-              </div>
-            )
-          })}
-        </div>
+              )
+            })}
+          </div>
+        </Card>
       </div>
 
       {/* Recent Quiz Attempts */}
       {attempts && attempts.length > 0 && (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-          <h2 className="text-xl font-semibold text-white mb-6">Recent Quiz Attempts</h2>
-          
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="text-left text-sm text-gray-400 border-b border-gray-800">
-                  <th className="pb-3">Date</th>
-                  <th className="pb-3">Score</th>
-                  <th className="pb-3">Percentage</th>
-                </tr>
-              </thead>
-              <tbody className="text-sm">
-                {attempts.slice(0, 10).map((attempt) => (
-                  <tr key={attempt.id} className="border-b border-gray-800/50">
-                    <td className="py-3 text-gray-300">
-                      {new Date(attempt.completed_at).toLocaleDateString()}
-                    </td>
-                    <td className="py-3 text-white">
-                      {attempt.score}/{attempt.total_questions}
-                    </td>
-                    <td className="py-3">
-                      <span className={`font-medium ${
-                        attempt.percentage >= 80 ? 'text-green-400' : 'text-yellow-400'
-                      }`}>
-                        {attempt.percentage}%
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <div className="space-y-4">
+          <div>
+            <h2 className="text-xl font-semibold text-white">Recent Quiz Attempts</h2>
+            <p className="text-sm text-[var(--color-text-muted)]">Your latest quiz results</p>
           </div>
+          
+          <Card variant="default" padding="lg">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="text-left text-sm text-[var(--color-text-muted)] border-b border-[var(--color-border-primary)]">
+                    <th className="pb-3">Date</th>
+                    <th className="pb-3">Score</th>
+                    <th className="pb-3">Percentage</th>
+                    <th className="pb-3">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="text-sm">
+                  {attempts.slice(0, 10).map((attempt) => (
+                    <tr key={attempt.id} className="border-b border-[var(--color-border-primary)]/50">
+                      <td className="py-3 text-[var(--color-text-secondary)]">
+                        {new Date(attempt.completed_at).toLocaleDateString()}
+                      </td>
+                      <td className="py-3 text-white">
+                        {attempt.score}/{attempt.total_questions}
+                      </td>
+                      <td className="py-3">
+                        <span className={`font-medium ${
+                          attempt.percentage >= 80 ? 'text-gold' : 'text-warm-bronze'
+                        }`}>
+                          {attempt.percentage}%
+                        </span>
+                      </td>
+                      <td className="py-3">
+                        <Badge
+                          variant={attempt.percentage >= 80 ? 'success' : 'warning'}
+                          size="sm"
+                        >
+                          {attempt.percentage >= 80 ? 'Passed' : 'Review'}
+                        </Badge>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
         </div>
       )}
     </div>

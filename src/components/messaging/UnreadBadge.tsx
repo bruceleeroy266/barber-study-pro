@@ -10,7 +10,7 @@ export default function UnreadBadge({ count, className = '' }: UnreadBadgeProps)
 
   return (
     <span
-      className={`inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold text-white bg-red-500 rounded-full ${className}`}
+      className={`inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold text-white bg-silver rounded-full ${className}`}
     >
       {count > 99 ? '99+' : count}
     </span>

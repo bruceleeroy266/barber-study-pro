@@ -7,10 +7,10 @@ interface Props {
 
 const priorityBadge = (priority: NotificationPriority) => {
   const map: Record<NotificationPriority, string> = {
-    low: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-    medium: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
-    high: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
-    urgent: 'bg-red-500/10 text-red-400 border-red-500/20',
+    low: 'bg-silver/10 text-silver border-silver/20',
+    medium: 'bg-warm-bronze/10 text-warm-bronze border-warm-bronze/20',
+    high: 'bg-warm-bronze/10 text-warm-bronze border-warm-bronze/20',
+    urgent: 'bg-silver/10 text-silver border-silver/20',
   }
   return map[priority]
 }
@@ -34,14 +34,14 @@ export default function NotificationSettingsSection({ config, onChange }: Props)
     <div className="space-y-6">
       <div>
         <h2 className="text-xl font-semibold text-white mb-1">School-wide Notifications</h2>
-        <p className="text-sm text-gray-400">Enable or disable notification types</p>
+        <p className="text-sm text-silver">Enable or disable notification types</p>
       </div>
 
       <div className="space-y-3">
         {notificationSettings.map((setting) => (
           <label
             key={setting.type}
-            className="flex items-center justify-between bg-gray-950 border border-gray-800 rounded-lg p-4"
+            className="flex items-center justify-between bg-black border border-graphite rounded-lg p-4"
           >
             <div className="flex items-center gap-3">
               <span className="text-white text-sm font-medium">{formatType(setting.type)}</span>
@@ -57,7 +57,7 @@ export default function NotificationSettingsSection({ config, onChange }: Props)
               type="checkbox"
               checked={setting.enabled}
               onChange={() => toggle(setting)}
-              className="w-5 h-5 accent-[#D4AF37]"
+              className="w-5 h-5 accent-[var(--color-brand-gold)]"
             />
           </label>
         ))}

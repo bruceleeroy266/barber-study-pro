@@ -24,14 +24,14 @@ export default function SystemHealthDashboard({ initialReport }: SystemHealthDas
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-white">System Health</h1>
-          <p className="text-gray-400 mt-1">
+          <p className="text-silver mt-1">
             Generated {new Date(report.generatedAt).toLocaleString()}
           </p>
         </div>
         <button
           onClick={runDiagnostics}
           disabled={isPending}
-          className="px-4 py-2 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] disabled:opacity-50"
+          className="px-4 py-2 bg-[var(--color-brand-gold)] text-black font-semibold rounded-lg hover:bg-[var(--color-brand-gold-light)] disabled:opacity-50"
         >
           {isPending ? 'Running...' : 'Run Diagnostics'}
         </button>
@@ -53,16 +53,16 @@ export default function SystemHealthDashboard({ initialReport }: SystemHealthDas
         />
       </div>
 
-      <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
-        <div className="p-4 border-b border-gray-800">
+      <div className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+        <div className="p-4 border-b border-graphite">
           <h2 className="text-lg font-semibold text-white">Diagnostic Checks</h2>
         </div>
-        <div className="divide-y divide-gray-800">
+        <div className="divide-y divide-graphite">
           {report.checks.map((check) => (
             <CheckRow key={check.name} check={check} />
           ))}
           {report.checks.length === 0 && (
-            <div className="p-8 text-center text-gray-400">No checks available.</div>
+            <div className="p-8 text-center text-silver">No checks available.</div>
           )}
         </div>
       </div>
@@ -72,10 +72,10 @@ export default function SystemHealthDashboard({ initialReport }: SystemHealthDas
 
 function HealthCard({ title, status }: { title: string; status: DiagnosticStatus }) {
   const classes: Record<DiagnosticStatus, string> = {
-    pass: 'bg-green-500/10 border-green-500/20 text-green-400',
-    warning: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400',
-    fail: 'bg-red-500/10 border-red-500/20 text-red-400',
-    info: 'bg-blue-500/10 border-blue-500/20 text-blue-400',
+    pass: 'bg-gold/10 border-gold/20 text-gold',
+    warning: 'bg-warm-bronze/10 border-warm-bronze/20 text-warm-bronze',
+    fail: 'bg-silver/10 border-silver/20 text-silver',
+    info: 'bg-silver/10 border-silver/20 text-silver',
   }
 
   return (
@@ -88,8 +88,8 @@ function HealthCard({ title, status }: { title: string; status: DiagnosticStatus
 
 function MetricCard({ title, value }: { title: string; value: number }) {
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-      <div className="text-sm text-gray-400">{title}</div>
+    <div className="bg-charcoal border border-graphite rounded-xl p-6">
+      <div className="text-sm text-silver">{title}</div>
       <div className="text-3xl font-bold text-white mt-1">{value}</div>
     </div>
   )
@@ -97,24 +97,24 @@ function MetricCard({ title, value }: { title: string; value: number }) {
 
 function CheckRow({ check }: { check: DiagnosticCheck }) {
   const dotClasses: Record<DiagnosticStatus, string> = {
-    pass: 'bg-green-400',
-    warning: 'bg-yellow-400',
-    fail: 'bg-red-400',
-    info: 'bg-blue-400',
+    pass: 'bg-gold-light',
+    warning: 'bg-warm-bronze',
+    fail: 'bg-silver',
+    info: 'bg-silver',
   }
 
   return (
-    <div className="p-4 hover:bg-gray-800/30">
+    <div className="p-4 hover:bg-graphite/30">
       <div className="flex items-start gap-3">
         <span className={`w-2 h-2 rounded-full mt-2 ${dotClasses[check.status]}`} />
         <div className="flex-1">
           <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
             <span className="font-medium text-white">{check.name}</span>
-            <span className="text-xs text-gray-500">{check.category}</span>
+            <span className="text-xs text-silver-gray">{check.category}</span>
           </div>
-          <p className="text-sm text-gray-400 mt-1">{check.message}</p>
+          <p className="text-sm text-silver mt-1">{check.message}</p>
           {check.detail && (
-            <p className="text-xs text-gray-500 mt-1">{check.detail}</p>
+            <p className="text-xs text-silver-gray mt-1">{check.detail}</p>
           )}
         </div>
       </div>

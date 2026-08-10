@@ -23,7 +23,7 @@ export default function DashboardError({
           Something went wrong
         </h2>
 
-        <p className="text-gray-400 leading-relaxed">
+        <p className="text-silver leading-relaxed">
           We&apos;re sorry. An unexpected error occurred while loading this page.
           Please try again.
         </p>
@@ -31,13 +31,13 @@ export default function DashboardError({
         <div className="flex flex-col sm:flex-row gap-3 pt-4">
           <button
             onClick={reset}
-            className="flex-1 px-6 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-xl hover:bg-[#F4E4A6] transition-all shadow-lg shadow-[#D4AF37]/20"
+            className="flex-1 px-6 py-3 bg-[var(--color-brand-gold)] text-black font-semibold rounded-xl hover:bg-[var(--color-brand-gold-light)] transition-all shadow-lg shadow-gold/20"
           >
             Try Again
           </button>
           <Link
             href="/"
-            className="flex-1 px-6 py-3 bg-gray-800 text-white font-semibold rounded-xl hover:bg-gray-700 transition-all border border-gray-700 text-center"
+            className="flex-1 px-6 py-3 bg-graphite text-white font-semibold rounded-xl hover:bg-[var(--color-border-secondary)] transition-all border border-[var(--color-border-secondary)] text-center"
           >
             Return Home
           </Link>

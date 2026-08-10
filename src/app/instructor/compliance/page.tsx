@@ -167,37 +167,37 @@ export default async function InstructorComplianceDashboard() {
   const eligibilityCandidates = studentCompliances.filter((c) => c.boardEligibility.status === 'eligible')
 
   return (
-    <div className="min-h-screen bg-gray-950 p-6 lg:p-8">
+    <div className="min-h-screen bg-[var(--color-background-primary)] p-6 lg:p-8">
         <BackButton fallbackHref="/instructor" label="Back to instructor dashboard" />
       <div className="max-w-7xl mx-auto space-y-8">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Instructor Compliance</h1>
-          <p className="text-gray-400">Monitor student compliance, graduation risk, and board eligibility</p>
+          <p className="text-[var(--color-text-muted)]">Monitor student compliance, graduation risk, and board eligibility</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-          <StatCard label="Students At Risk" value={atRiskStudents.length} icon={AlertTriangle} color="text-red-400" />
-          <StatCard label="Missing Hours" value={missingHours.length} icon={Clock} color="text-blue-400" />
-          <StatCard label="Missing Practicals" value={missingPracticals.length} icon={Wrench} color="text-orange-400" />
-          <StatCard label="Missing Assessments" value={missingAssessments.length} icon={ClipboardCheck} color="text-red-400" />
-          <StatCard label="Low Readiness" value={lowReadiness.length} icon={Target} color="text-purple-400" />
-          <StatCard label="Eligibility Candidates" value={eligibilityCandidates.length} icon={CheckCircle} color="text-green-400" />
+          <StatCard label="Students At Risk" value={atRiskStudents.length} icon={AlertTriangle} color="text-silver" />
+          <StatCard label="Missing Hours" value={missingHours.length} icon={Clock} color="text-silver" />
+          <StatCard label="Missing Practicals" value={missingPracticals.length} icon={Wrench} color="text-warm-bronze" />
+          <StatCard label="Missing Assessments" value={missingAssessments.length} icon={ClipboardCheck} color="text-silver" />
+          <StatCard label="Low Readiness" value={lowReadiness.length} icon={Target} color="text-silver" />
+          <StatCard label="Eligibility Candidates" value={eligibilityCandidates.length} icon={CheckCircle} color="text-gold" />
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           <div className="xl:col-span-2">
             <ComplianceAlertsPanel alerts={allAlerts} />
           </div>
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+          <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6">
             <h2 className="text-lg font-semibold text-white mb-4">Eligibility Candidates</h2>
             {eligibilityCandidates.length === 0 ? (
-              <p className="text-sm text-gray-500">No students are currently board eligible.</p>
+              <p className="text-sm text-[var(--color-text-muted)]">No students are currently board eligible.</p>
             ) : (
               <ul className="space-y-2">
                 {eligibilityCandidates.map((c) => (
-                  <li key={c.studentId} className="flex items-center justify-between p-3 bg-gray-950 border border-gray-800 rounded-lg">
+                  <li key={c.studentId} className="flex items-center justify-between p-3 bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg">
                     <span className="text-white font-medium">{c.fullName}</span>
-                    <span className="text-xs text-green-400 border border-green-500/20 bg-green-500/10 px-2 py-1 rounded">Eligible</span>
+                    <span className="text-xs text-gold border border-gold/20 bg-gold/10 px-2 py-1 rounded">Eligible</span>
                   </li>
                 ))}
               </ul>
@@ -205,36 +205,36 @@ export default async function InstructorComplianceDashboard() {
           </div>
         </div>
 
-        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
-          <div className="p-4 border-b border-gray-800">
+        <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl overflow-hidden">
+          <div className="p-4 border-b border-[var(--color-border-primary)]">
             <h2 className="text-lg font-semibold text-white">Student Compliance Summary</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-gray-950 text-left">
+              <thead className="bg-[var(--color-background-primary)] text-left">
                 <tr>
-                  <th className="px-4 py-3 text-xs font-medium text-gray-400">Student</th>
-                  <th className="px-4 py-3 text-xs font-medium text-gray-400">Compliance</th>
-                  <th className="px-4 py-3 text-xs font-medium text-gray-400">Attendance</th>
-                  <th className="px-4 py-3 text-xs font-medium text-gray-400">Hours</th>
-                  <th className="px-4 py-3 text-xs font-medium text-gray-400">Assessments</th>
-                  <th className="px-4 py-3 text-xs font-medium text-gray-400">Practicals</th>
-                  <th className="px-4 py-3 text-xs font-medium text-gray-400">Readiness</th>
-                  <th className="px-4 py-3 text-xs font-medium text-gray-400">Board Status</th>
+                  <th className="px-4 py-3 text-xs font-medium text-[var(--color-text-muted)]">Student</th>
+                  <th className="px-4 py-3 text-xs font-medium text-[var(--color-text-muted)]">Compliance</th>
+                  <th className="px-4 py-3 text-xs font-medium text-[var(--color-text-muted)]">Attendance</th>
+                  <th className="px-4 py-3 text-xs font-medium text-[var(--color-text-muted)]">Hours</th>
+                  <th className="px-4 py-3 text-xs font-medium text-[var(--color-text-muted)]">Assessments</th>
+                  <th className="px-4 py-3 text-xs font-medium text-[var(--color-text-muted)]">Practicals</th>
+                  <th className="px-4 py-3 text-xs font-medium text-[var(--color-text-muted)]">Readiness</th>
+                  <th className="px-4 py-3 text-xs font-medium text-[var(--color-text-muted)]">Board Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-800">
+              <tbody className="divide-y divide-graphite">
                 {studentCompliances.map((c) => (
-                  <tr key={c.studentId} className="hover:bg-gray-800/30">
+                  <tr key={c.studentId} className="hover:bg-[var(--color-background-secondary)]/30">
                     <td className="px-4 py-3 text-white font-medium">{c.fullName}</td>
                     <td className="px-4 py-3">
                       <span className={`font-medium ${c.complianceScore.colorClass}`}>{c.complianceScore.score}</span>
                     </td>
-                    <td className="px-4 py-3 text-gray-300">{c.attendanceSummary.attendancePercentage}%</td>
-                    <td className="px-4 py-3 text-gray-300">{Math.round(c.completedHours)}/1500</td>
-                    <td className="px-4 py-3 text-gray-300">{c.assessmentPassRate}%</td>
-                    <td className="px-4 py-3 text-gray-300">{c.practicalPassRate}%</td>
-                    <td className="px-4 py-3 text-gray-300">{c.readiness.score}</td>
+                    <td className="px-4 py-3 text-[var(--color-text-secondary)]">{c.attendanceSummary.attendancePercentage}%</td>
+                    <td className="px-4 py-3 text-[var(--color-text-secondary)]">{Math.round(c.completedHours)}/1500</td>
+                    <td className="px-4 py-3 text-[var(--color-text-secondary)]">{c.assessmentPassRate}%</td>
+                    <td className="px-4 py-3 text-[var(--color-text-secondary)]">{c.practicalPassRate}%</td>
+                    <td className="px-4 py-3 text-[var(--color-text-secondary)]">{c.readiness.score}</td>
                     <td className="px-4 py-3">
                       <span className={`text-xs font-medium ${c.boardEligibility.colorClass}`}>
                         {c.boardEligibility.label}
@@ -255,9 +255,9 @@ export default async function InstructorComplianceDashboard() {
 
 function StatCard({ label, value, icon: Icon, color }: { label: string; value: number; icon: React.ElementType; color: string }) {
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-xl p-4">
+    <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-4">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm text-gray-400">{label}</span>
+        <span className="text-sm text-[var(--color-text-muted)]">{label}</span>
         <Icon className={`w-5 h-5 ${color}`} />
       </div>
       <p className="text-2xl font-bold text-white">{value}</p>

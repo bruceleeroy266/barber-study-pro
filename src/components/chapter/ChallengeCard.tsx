@@ -19,9 +19,9 @@ interface ChallengeCardProps {
 }
 
 const difficultyConfig = {
-  easy: { color: '#10B981', icon: Zap, label: 'Easy XP' },
-  medium: { color: '#F59E0B', icon: Flame, label: 'Medium XP' },
-  hard: { color: '#EF4444', icon: Trophy, label: 'Hard XP' },
+  easy: { color: 'var(--color-brand-gold)', icon: Zap, label: 'Easy XP' },
+  medium: { color: 'var(--color-brand-warm-bronze)', icon: Flame, label: 'Medium XP' },
+  hard: { color: 'var(--color-brand-silver)', icon: Trophy, label: 'Hard XP' },
 }
 
 export default function ChallengeCard({ challenges, theme }: ChallengeCardProps) {
@@ -61,7 +61,7 @@ export default function ChallengeCard({ challenges, theme }: ChallengeCardProps)
             tabIndex={0}
             aria-pressed={isCompleted}
             aria-label={`${challenge.title}. ${challenge.description} ${challenge.action}. ${isCompleted ? 'Completed' : 'Not completed'}. Press Enter or Space to toggle.`}
-            className="rounded-xl p-5 transition-all duration-300 hover:scale-[1.02] cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2 focus:ring-offset-gray-900"
+            className="rounded-xl p-5 transition-all duration-300 hover:scale-[1.02] cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)] focus:ring-offset-2 focus:ring-offset-gray-900"
             style={{
               backgroundColor: isCompleted ? 'rgba(16, 185, 129, 0.1)' : t.background,
               borderColor: isCompleted ? 'rgba(16, 185, 129, 0.4)' : t.border,
@@ -100,10 +100,10 @@ export default function ChallengeCard({ challenges, theme }: ChallengeCardProps)
               className="rounded-lg p-3 mb-3"
               style={{
                 backgroundColor: isCompleted ? 'rgba(16, 185, 129, 0.15)' : `${t.primary}15`,
-                borderLeft: `3px solid ${isCompleted ? '#10B981' : t.primary}`,
+                borderLeft: `3px solid ${isCompleted ? 'var(--color-brand-gold)' : t.primary}`,
               }}
             >
-              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: isCompleted ? '#10B981' : t.primary }}>
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: isCompleted ? 'var(--color-brand-gold)' : t.primary }}>
                 Action
               </span>
               <p className="text-sm mt-1 font-medium" style={{ color: t.text }}>
@@ -115,15 +115,15 @@ export default function ChallengeCard({ challenges, theme }: ChallengeCardProps)
               <div
                 className="w-5 h-5 rounded-full flex items-center justify-center transition-colors"
                 style={{
-                  backgroundColor: isCompleted ? '#10B981' : 'transparent',
-                  borderColor: isCompleted ? '#10B981' : t.border,
+                  backgroundColor: isCompleted ? 'var(--color-brand-gold)' : 'transparent',
+                  borderColor: isCompleted ? 'var(--color-brand-gold)' : t.border,
                   borderWidth: '2px',
                   borderStyle: 'solid',
                 }}
               >
                 {isCompleted && <CheckCircle className="w-3 h-3 text-white" aria-hidden="true" />}
               </div>
-              <span className="text-xs font-medium" style={{ color: isCompleted ? '#10B981' : t.textMuted }}>
+              <span className="text-xs font-medium" style={{ color: isCompleted ? 'var(--color-brand-gold)' : t.textMuted }}>
                 {isCompleted ? 'Completed! +' + (challenge.difficulty === 'easy' ? '50' : challenge.difficulty === 'medium' ? '100' : '200') + ' XP' : 'Tap to complete'}
               </span>
             </div>

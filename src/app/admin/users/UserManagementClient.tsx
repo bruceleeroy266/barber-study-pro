@@ -176,8 +176,8 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
         <div
           className={`rounded-lg border p-4 ${
             message.type === 'success'
-              ? 'border-green-500/30 bg-green-500/10 text-green-400'
-              : 'border-red-500/30 bg-red-500/10 text-red-400'
+              ? 'border-gold/30 bg-gold/10 text-gold'
+              : 'border-silver/30 bg-silver/10 text-silver'
           }`}
         >
           {message.text}
@@ -197,12 +197,12 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
             placeholder="Search name or email"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="bg-gray-900 border border-gray-800 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-[#D4AF37]"
+            className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white placeholder-silver-gray focus:outline-none focus:border-[var(--color-brand-gold)]"
           />
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
-            className="bg-gray-900 border border-gray-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+            className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
           >
             <option value="all">All roles</option>
             {ROLES.map((r) => (
@@ -214,7 +214,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-gray-900 border border-gray-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+            className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
           >
             <option value="all">All statuses</option>
             {APPROVAL_STATUSES.map((s) => (
@@ -227,7 +227,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
             <select
               value={schoolFilter}
               onChange={(e) => setSchoolFilter(e.target.value)}
-              className="bg-gray-900 border border-gray-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+              className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
             >
               <option value="all">All schools</option>
               {schools.map((s) => (
@@ -240,7 +240,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
           <button
             type="submit"
             disabled={isPending}
-            className="px-4 py-2 bg-[#D4AF37] text-black font-medium rounded-lg hover:bg-[#c4a030] disabled:opacity-50"
+            className="px-4 py-2 bg-[var(--color-brand-gold)] text-black font-medium rounded-lg hover:bg-[var(--color-brand-gold)] disabled:opacity-50"
           >
             {isPending ? 'Loading...' : 'Search'}
           </button>
@@ -252,7 +252,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               setShowCreateForm(!showCreateForm)
               setShowInviteForm(false)
             }}
-            className="px-4 py-2 bg-gray-800 text-white border border-gray-700 rounded-lg hover:border-[#D4AF37]/50"
+            className="px-4 py-2 bg-[var(--color-background-secondary)] text-white border border-[var(--color-border-primary)] rounded-lg hover:border-[var(--color-brand-gold)]/50"
           >
             {showCreateForm ? 'Cancel' : 'Create User'}
           </button>
@@ -261,7 +261,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               setShowInviteForm(!showInviteForm)
               setShowCreateForm(false)
             }}
-            className="px-4 py-2 bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/30 rounded-lg hover:bg-[#D4AF37]/20"
+            className="px-4 py-2 bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/30 rounded-lg hover:bg-[var(--color-brand-gold)]/20"
           >
             {showInviteForm ? 'Cancel Invite' : 'Invite User'}
           </button>
@@ -269,45 +269,45 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
       </div>
 
       {showCreateForm && (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+        <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6">
           <h2 className="text-xl font-semibold text-white mb-4">Create User</h2>
           <form onSubmit={handleCreateUser} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-gray-400 mb-1">Full name</label>
+              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Full name</label>
               <input
                 name="full_name"
                 type="text"
                 required
-                className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-1">Email</label>
+              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Email</label>
               <input
                 name="email"
                 type="email"
                 required
-                className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-1">Temporary password</label>
+              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Temporary password</label>
               <input
                 name="password"
                 type="password"
                 required
                 minLength={8}
                 maxLength={72}
-                className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               />
-              <p className="text-xs text-gray-500 mt-1">8–72 characters. User will be forced to change it on first login.</p>
+              <p className="text-xs text-[var(--color-text-muted)] mt-1">8–72 characters. User will be forced to change it on first login.</p>
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-1">Role</label>
+              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Role</label>
               <select
                 name="role"
                 required
-                className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               >
                 {manageableRoles.map((r) => (
                   <option key={r.value} value={r.value}>
@@ -317,12 +317,12 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               </select>
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-1">School</label>
+              <label className="block text-sm text-[var(--color-text-muted)] mb-1">School</label>
               <select
                 name="school_id"
                 required
                 defaultValue={currentUser.schoolId ?? ''}
-                className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               >
                 <option value="">No school</option>
                 {schools.map((s) => (
@@ -333,12 +333,12 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               </select>
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-1">Approval status</label>
+              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Approval status</label>
               <select
                 name="approval_status"
                 required
                 defaultValue="pending"
-                className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               >
                 {APPROVAL_STATUSES.map((s) => (
                   <option key={s.value} value={s.value}>
@@ -350,7 +350,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
             <div className="md:col-span-2">
               <button
                 type="submit"
-                className="px-6 py-2 bg-[#D4AF37] text-black font-medium rounded-lg hover:bg-[#c4a030]"
+                className="px-6 py-2 bg-[var(--color-brand-gold)] text-black font-medium rounded-lg hover:bg-[var(--color-brand-gold)]"
               >
                 Create User
               </button>
@@ -360,36 +360,36 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
       )}
 
       {showInviteForm && (
-        <div className="bg-gray-900 border border-[#D4AF37]/30 rounded-xl p-6">
+        <div className="bg-[var(--color-background-primary)] border border-[var(--color-brand-gold)]/30 rounded-xl p-6">
           <h2 className="text-xl font-semibold text-white mb-2">Invite User</h2>
-          <p className="text-sm text-gray-400 mb-4">
+          <p className="text-sm text-[var(--color-text-muted)] mb-4">
             Sends an email invitation. The recipient chooses their own password and is redirected to the platform.
           </p>
           <form onSubmit={handleInviteUser} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-gray-400 mb-1">Full name</label>
+              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Full name</label>
               <input
                 name="full_name"
                 type="text"
                 required
-                className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-1">Email</label>
+              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Email</label>
               <input
                 name="email"
                 type="email"
                 required
-                className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-1">Role</label>
+              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Role</label>
               <select
                 name="role"
                 required
-                className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               >
                 {manageableRoles.map((r) => (
                   <option key={r.value} value={r.value}>
@@ -399,12 +399,12 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               </select>
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-1">School</label>
+              <label className="block text-sm text-[var(--color-text-muted)] mb-1">School</label>
               <select
                 name="school_id"
                 required
                 defaultValue={currentUser.schoolId ?? ''}
-                className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               >
                 <option value="">No school</option>
                 {schools.map((s) => (
@@ -415,12 +415,12 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               </select>
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-1">Approval status</label>
+              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Approval status</label>
               <select
                 name="approval_status"
                 required
                 defaultValue="pending"
-                className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               >
                 {APPROVAL_STATUSES.map((s) => (
                   <option key={s.value} value={s.value}>
@@ -432,7 +432,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
             <div className="md:col-span-2">
               <button
                 type="submit"
-                className="px-6 py-2 bg-[#D4AF37] text-black font-medium rounded-lg hover:bg-[#c4a030]"
+                className="px-6 py-2 bg-[var(--color-brand-gold)] text-black font-medium rounded-lg hover:bg-[var(--color-brand-gold)]"
               >
                 Send Invitation
               </button>
@@ -441,32 +441,32 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
         </div>
       )}
 
-      <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+      <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-gray-950 border-b border-gray-800">
+            <thead className="bg-[var(--color-background-primary)] border-b border-[var(--color-border-primary)]">
               <tr>
-                <th className="px-4 py-3 text-sm font-medium text-gray-400">Name</th>
-                <th className="px-4 py-3 text-sm font-medium text-gray-400">Email</th>
-                <th className="px-4 py-3 text-sm font-medium text-gray-400">Role</th>
-                <th className="px-4 py-3 text-sm font-medium text-gray-400">School</th>
-                <th className="px-4 py-3 text-sm font-medium text-gray-400">Status</th>
-                <th className="px-4 py-3 text-sm font-medium text-gray-400">Disabled</th>
-                <th className="px-4 py-3 text-sm font-medium text-gray-400">Pwd Change</th>
-                <th className="px-4 py-3 text-sm font-medium text-gray-400">Created</th>
-                <th className="px-4 py-3 text-sm font-medium text-gray-400">Actions</th>
+                <th className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Name</th>
+                <th className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Email</th>
+                <th className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Role</th>
+                <th className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">School</th>
+                <th className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Status</th>
+                <th className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Disabled</th>
+                <th className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Pwd Change</th>
+                <th className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Created</th>
+                <th className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-800">
+            <tbody className="divide-y divide-graphite">
               {users.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-800/50">
+                <tr key={user.id} className="hover:bg-[var(--color-background-secondary)]/50">
                   <td className="px-4 py-3 text-white">{user.full_name}</td>
-                  <td className="px-4 py-3 text-gray-300">{user.email}</td>
+                  <td className="px-4 py-3 text-[var(--color-text-secondary)]">{user.email}</td>
                   <td className="px-4 py-3">
                     <select
                       value={user.role}
                       onChange={(e) => handleAction(changeUserRole, user.id, e.target.value as AppRole)}
-                      className="bg-gray-950 border border-gray-800 rounded px-2 py-1 text-sm text-white focus:outline-none focus:border-[#D4AF37]"
+                      className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded px-2 py-1 text-sm text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
                     >
                       {manageableRoles.map((r) => (
                         <option key={r.value} value={r.value}>
@@ -475,12 +475,12 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                       ))}
                     </select>
                   </td>
-                  <td className="px-4 py-3 text-gray-300">
+                  <td className="px-4 py-3 text-[var(--color-text-secondary)]">
                     {currentUser.isPlatformAdmin ? (
                       <select
                         value={user.school_id ?? ''}
                         onChange={(e) => handleAction(assignUserSchool, user.id, e.target.value || null)}
-                        className="bg-gray-950 border border-gray-800 rounded px-2 py-1 text-sm text-white focus:outline-none focus:border-[#D4AF37]"
+                        className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded px-2 py-1 text-sm text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
                       >
                         <option value="">No school</option>
                         {schools.map((s) => (
@@ -497,7 +497,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                     <select
                       value={user.approval_status}
                       onChange={(e) => handleAction(updateUserStatus, user.id, e.target.value as 'approved' | 'rejected')}
-                      className="bg-gray-950 border border-gray-800 rounded px-2 py-1 text-sm text-white focus:outline-none focus:border-[#D4AF37]"
+                      className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded px-2 py-1 text-sm text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
                     >
                       {APPROVAL_STATUSES.map((s) => (
                         <option key={s.value} value={s.value}>
@@ -511,8 +511,8 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                       onClick={() => handleAction(toggleUserDisabled, user.id, !user.is_disabled)}
                       className={`px-2 py-1 rounded text-xs font-medium ${
                         user.is_disabled
-                          ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                          : 'bg-green-500/20 text-green-400 border border-green-500/30'
+                          ? 'bg-silver/20 text-silver border border-silver/30'
+                          : 'bg-gold/20 text-gold border border-gold/30'
                       }`}
                     >
                       {user.is_disabled ? 'Disabled' : 'Enabled'}
@@ -522,19 +522,19 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                     <span
                       className={`inline-flex px-2 py-1 rounded text-xs font-medium ${
                         user.requires_password_change
-                          ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
-                          : 'bg-gray-700 text-gray-300 border border-gray-600'
+                          ? 'bg-warm-bronze/20 text-warm-bronze border border-warm-bronze/30'
+                          : 'bg-[var(--color-border-secondary)] text-[var(--color-text-secondary)] border border-silver-gray'
                       }`}
                     >
                       {user.requires_password_change ? 'Required' : 'None'}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-gray-400 text-sm">{formatDate(user.created_at)}</td>
+                  <td className="px-4 py-3 text-[var(--color-text-muted)] text-sm">{formatDate(user.created_at)}</td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-2">
                       <button
                         onClick={() => handleAction(requirePasswordChange, user.id)}
-                        className="px-2 py-1 text-xs bg-gray-800 text-gray-300 border border-gray-700 rounded hover:border-[#D4AF37]/50"
+                        className="px-2 py-1 text-xs bg-[var(--color-background-secondary)] text-[var(--color-text-secondary)] border border-[var(--color-border-primary)] rounded hover:border-[var(--color-brand-gold)]/50"
                       >
                         Require pwd change
                       </button>
@@ -543,7 +543,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                           const password = prompt('Enter new temporary password (8-72 chars):')
                           if (password) handleAction(resetUserPassword, user.id, password)
                         }}
-                        className="px-2 py-1 text-xs bg-gray-800 text-gray-300 border border-gray-700 rounded hover:border-[#D4AF37]/50"
+                        className="px-2 py-1 text-xs bg-[var(--color-background-secondary)] text-[var(--color-text-secondary)] border border-[var(--color-border-primary)] rounded hover:border-[var(--color-brand-gold)]/50"
                       >
                         Reset password
                       </button>
@@ -551,7 +551,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                         onClick={() => setDeleteCandidate(user)}
                         disabled={user.id === currentUser.id}
                         title={user.id === currentUser.id ? 'You cannot delete your own account' : 'Delete user'}
-                        className="px-2 py-1 text-xs bg-red-500/10 text-red-400 border border-red-500/30 rounded hover:bg-red-500/20 disabled:opacity-40 disabled:cursor-not-allowed"
+                        className="px-2 py-1 text-xs bg-silver/10 text-silver border border-silver/30 rounded hover:bg-silver/20 disabled:opacity-40 disabled:cursor-not-allowed"
                       >
                         Delete
                       </button>
@@ -561,7 +561,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               ))}
               {users.length === 0 && (
                 <tr>
-                  <td colSpan={9} className="px-4 py-8 text-center text-gray-500">
+                  <td colSpan={9} className="px-4 py-8 text-center text-[var(--color-text-muted)]">
                     No users found
                   </td>
                 </tr>
@@ -570,7 +570,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
           </table>
         </div>
 
-        <div className="px-4 py-3 border-t border-gray-800 flex items-center justify-between text-sm text-gray-400">
+        <div className="px-4 py-3 border-t border-[var(--color-border-primary)] flex items-center justify-between text-sm text-[var(--color-text-muted)]">
           <span>
             Showing {users.length} of {count} users
           </span>
@@ -578,14 +578,14 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
             <button
               onClick={() => loadUsers(Math.max(0, offset - LIMIT))}
               disabled={offset === 0}
-              className="px-3 py-1 bg-gray-800 rounded disabled:opacity-50"
+              className="px-3 py-1 bg-[var(--color-background-secondary)] rounded disabled:opacity-50"
             >
               Previous
             </button>
             <button
               onClick={() => loadUsers(offset + LIMIT)}
               disabled={offset + LIMIT >= count}
-              className="px-3 py-1 bg-gray-800 rounded disabled:opacity-50"
+              className="px-3 py-1 bg-[var(--color-background-secondary)] rounded disabled:opacity-50"
             >
               Next
             </button>
@@ -604,7 +604,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               type="button"
               onClick={() => setDeleteCandidate(null)}
               disabled={isDeleting}
-              className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50"
+              className="px-4 py-2 bg-[var(--color-background-secondary)] text-white rounded-lg hover:bg-[var(--color-border-secondary)] disabled:opacity-50"
             >
               Cancel
             </button>
@@ -613,7 +613,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               onClick={handleDeleteUser}
               disabled={isDeleting}
               aria-label="Confirm delete"
-              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+              className="px-4 py-2 bg-silver text-white rounded-lg hover:bg-silver disabled:opacity-50"
             >
               {isDeleting ? 'Deleting...' : 'Delete'}
             </button>
@@ -622,12 +622,12 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
       >
         {deleteCandidate && (
           <div className="space-y-3">
-            <p className="text-gray-300">
+            <p className="text-[var(--color-text-secondary)]">
               Are you sure you want to permanently delete{' '}
               <span className="font-semibold text-white">{deleteCandidate.full_name}</span> (
-              <span className="text-gray-400">{deleteCandidate.email}</span>)?
+              <span className="text-[var(--color-text-muted)]">{deleteCandidate.email}</span>)?
             </p>
-            <p className="text-sm text-red-400">
+            <p className="text-sm text-silver">
               This will remove the user from Authentication and delete their profile and associated
               records. This action cannot be undone.
             </p>

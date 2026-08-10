@@ -34,10 +34,10 @@ export type HeatmapTopic = {
   weight: string
 }
 
-const LOGO_URL = 'https://ascynpro.com/logo.svg'
+const LOGO_URL = 'https://ascynpro.com/brand/horizontal-dark.svg'
 const GOLD = '#D4AF37'
-const BLACK = '#0a0a0a'
-const WHITE = '#ffffff'
+const BLACK = '#000000'
+const WHITE = '#FFFFFF'
 
 function escapeHtml(input: string): string {
   return input
@@ -53,9 +53,9 @@ function lastConfidence(student: Student): number {
 }
 
 function readinessColor(score: number): string {
-  if (score >= 80) return '#22c55e'
+  if (score >= 80) return 'var(--color-brand-gold)'
   if (score >= 60) return GOLD
-  return '#ef4444'
+  return 'var(--color-brand-silver)'
 }
 
 function readinessLabel(score: number): string {
@@ -66,10 +66,10 @@ function readinessLabel(score: number): string {
 }
 
 function topicStatus(score: number): { label: string; color: string } {
-  if (score >= 85) return { label: 'Excellent', color: '#22c55e' }
-  if (score >= 80) return { label: 'Good', color: '#16a34a' }
+  if (score >= 85) return { label: 'Excellent', color: 'var(--color-brand-gold)' }
+  if (score >= 80) return { label: 'Good', color: 'var(--color-brand-gold)' }
   if (score >= 60) return { label: 'Needs Improvement', color: GOLD }
-  return { label: 'Critical', color: '#ef4444' }
+  return { label: 'Critical', color: 'var(--color-brand-silver)' }
 }
 
 function formatDate(): string {
@@ -201,8 +201,8 @@ function reportBase(title: string, body: string): string {
       .checklist { list-style: none; padding: 0; margin: 0; }
       .checklist li { padding: 8px 0; font-size: 14px; color: #1a1a1a; border-bottom: 1px solid #f0f0f0; display: flex; align-items: flex-start; gap: 10px; }
       .checklist .icon { font-weight: 800; }
-      .checklist.strengths .icon { color: #22c55e; }
-      .checklist.concerns .icon { color: #ef4444; }
+      .checklist.strengths .icon { color: #D4AF37; }
+      .checklist.concerns .icon { color: #C0C0C0; }
 
       .recommendation {
         background: ${BLACK};
@@ -222,9 +222,9 @@ function reportBase(title: string, body: string): string {
       .data-table { width: 100%; border-collapse: collapse; }
       .data-table th, .data-table td { padding: 10px; text-align: left; border-bottom: 1px solid #e5e5e5; font-size: 13px; }
       .data-table th { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #666; }
-      .data-table .risk-high { color: #ef4444; font-weight: 700; }
-      .data-table .risk-medium { color: #d97706; font-weight: 700; }
-      .data-table .risk-low { color: #16a34a; font-weight: 700; }
+      .data-table .risk-high { color: #C0C0C0; font-weight: 700; }
+      .data-table .risk-medium { color: #CD7F32; font-weight: 700; }
+      .data-table .risk-low { color: #D4AF37; font-weight: 700; }
 
       .trend-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
       .trend-card { background: #fafafa; border: 1px solid #e5e5e5; border-radius: 10px; padding: 16px; break-inside: avoid; }
@@ -310,7 +310,7 @@ export function generateStudentReportHtml(student: Student): string {
       <div class="score-block">
         <div class="score-ring">
           <svg width="110" height="110" viewBox="0 0 110 110">
-            <circle cx="55" cy="55" r="48" fill="none" stroke="#e5e5e5" stroke-width="10" />
+            <circle cx="55" cy="55" r="48" fill="none" stroke="var(--color-brand-light-gray)" stroke-width="10" />
             <circle cx="55" cy="55" r="48" fill="none" stroke="${scoreColor}" stroke-width="10"
               stroke-dasharray="${Math.round((student.readiness / 100) * 301.59)} 301.59"
               stroke-linecap="round" />
@@ -510,12 +510,12 @@ export function generateClassReportHtml(
       <div class="section-title">Class Summary</div>
       <div class="card-grid" style="grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));">
         <div class="card"><div class="card-label">Total Students</div><div class="card-value">${students.length}</div></div>
-        <div class="card"><div class="card-label">Students On Track</div><div class="card-value" style="color:#16a34a">${onTrack}</div></div>
-        <div class="card"><div class="card-label">Needs Attention</div><div class="card-value" style="color:${needsAttention > 0 ? '#ef4444' : '#16a34a'}">${needsAttention}</div></div>
+        <div class="card"><div class="card-label">Students On Track</div><div class="card-value" style="color:#D4AF37">${onTrack}</div></div>
+        <div class="card"><div class="card-label">Needs Attention</div><div class="card-value" style="color:${needsAttention > 0 ? 'var(--color-brand-silver)' : 'var(--color-brand-gold)'}">${needsAttention}</div></div>
         <div class="card"><div class="card-label">Average Readiness</div><div class="card-value" style="color:${readinessColor(classAverage)}">${classAverage}%</div></div>
         <div class="card"><div class="card-label">Average Confidence</div><div class="card-value" style="color:${readinessColor(avgConfidence)}">${avgConfidence}%</div></div>
         <div class="card"><div class="card-label">Average Quiz Score</div><div class="card-value" style="color:${readinessColor(avgQuiz)}">${avgQuiz}%</div></div>
-        <div class="card"><div class="card-label">Inactive Students</div><div class="card-value" style="color:${inactive > 0 ? '#ef4444' : '#16a34a'}">${inactive}</div></div>
+        <div class="card"><div class="card-label">Inactive Students</div><div class="card-value" style="color:${inactive > 0 ? 'var(--color-brand-silver)' : 'var(--color-brand-gold)'}">${inactive}</div></div>
       </div>
     </div>
 

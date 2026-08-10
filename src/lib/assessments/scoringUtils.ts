@@ -44,16 +44,16 @@ export function formatScore(
 export function getQualitativeColorClass(result: QualitativeResult | null | undefined): string {
   switch (result) {
     case 'PASS':
-      return 'text-green-400'
+      return 'text-gold'
     case 'NEEDS_IMPROVEMENT':
-      return 'text-yellow-400'
+      return 'text-warm-bronze'
     case 'FAIL':
-      return 'text-red-400'
+      return 'text-silver'
     default:
-      return 'text-gray-400'
+      return 'text-silver'
   }
 }
 
 export function getPassFailColorClass(isPassed: boolean): string {
-  return isPassed ? 'text-green-400' : 'text-red-400'
+  return isPassed ? 'text-gold' : 'text-silver'
 }

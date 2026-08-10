@@ -42,7 +42,7 @@ export async function sendPilotInquiryReply(
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body style="margin:0; padding:0; background-color:#0a0a0a; color:#ffffff; font-family:Arial, Helvetica, sans-serif;">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#0a0a0a">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="var(--color-brand-black)">
     <tr>
       <td align="center" style="padding:40px 20px;">
         <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width:600px; width:100%; background-color:#111111; border:1px solid #2a2a2a; border-radius:12px; overflow:hidden;">

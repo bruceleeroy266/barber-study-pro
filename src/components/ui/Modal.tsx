@@ -121,10 +121,10 @@ export default function Modal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
-        className={`bg-gray-900 border border-gray-800 rounded-xl w-full ${sizeClasses[size]} max-h-[90vh] overflow-y-auto shadow-2xl`}
+        className={`bg-charcoal border border-graphite rounded-xl w-full ${sizeClasses[size]} max-h-[90vh] overflow-y-auto shadow-2xl`}
         onKeyDown={handleTabKey}
       >
-        <div className="flex items-center justify-between p-5 border-b border-gray-800">
+        <div className="flex items-center justify-between p-5 border-b border-graphite">
           <h2 id="modal-title" className="text-lg font-semibold text-white">
             {title}
           </h2>
@@ -133,7 +133,7 @@ export default function Modal({
             onClick={onClose}
             data-modal-close
             aria-label="Close"
-            className="text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37] rounded p-1"
+            className="text-silver hover:text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)] rounded p-1"
           >
             <X className="w-5 h-5" />
           </button>
@@ -141,7 +141,7 @@ export default function Modal({
 
         <div className="p-5">{children}</div>
 
-        {footer && <div className="p-5 border-t border-gray-800">{footer}</div>}
+        {footer && <div className="p-5 border-t border-graphite">{footer}</div>}
       </div>
     </div>,
     document.body

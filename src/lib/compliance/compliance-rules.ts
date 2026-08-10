@@ -47,9 +47,9 @@ export function getStatusForThreshold(
 }
 
 export function getComplianceLabel(score: number): { label: string; colorClass: string } {
-  if (score >= 90) return { label: 'Excellent', colorClass: 'text-green-400' }
-  if (score >= 80) return { label: 'Good', colorClass: 'text-blue-400' }
-  if (score >= 70) return { label: 'Fair', colorClass: 'text-yellow-400' }
-  if (score >= 60) return { label: 'At Risk', colorClass: 'text-orange-400' }
-  return { label: 'Critical', colorClass: 'text-red-400' }
+  if (score >= 90) return { label: 'Excellent', colorClass: 'text-gold' }
+  if (score >= 80) return { label: 'Good', colorClass: 'text-silver' }
+  if (score >= 70) return { label: 'Fair', colorClass: 'text-warm-bronze' }
+  if (score >= 60) return { label: 'At Risk', colorClass: 'text-warm-bronze' }
+  return { label: 'Critical', colorClass: 'text-silver' }
 }

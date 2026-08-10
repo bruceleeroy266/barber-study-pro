@@ -13,19 +13,19 @@ export default function CategoryWeightingPanel({ categories }: CategoryWeighting
   const validation = validateWeights(activeCategories)
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+    <div className="bg-charcoal border border-graphite rounded-xl p-5">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-white">Category Weighting</h3>
         <div className="flex items-center gap-2 text-sm">
           {validation.valid ? (
             <>
-              <CheckCircle className="w-4 h-4 text-green-400" />
-              <span className="text-green-400">Total {getWeightDisplay(validation.total)}</span>
+              <CheckCircle className="w-4 h-4 text-gold" />
+              <span className="text-gold">Total {getWeightDisplay(validation.total)}</span>
             </>
           ) : (
             <>
-              <AlertCircle className="w-4 h-4 text-yellow-400" />
-              <span className="text-yellow-400">
+              <AlertCircle className="w-4 h-4 text-warm-bronze" />
+              <span className="text-warm-bronze">
                 Total {getWeightDisplay(validation.total)} ({validation.difference} off)
               </span>
             </>
@@ -37,16 +37,16 @@ export default function CategoryWeightingPanel({ categories }: CategoryWeighting
         {activeCategories.map((category) => (
           <div
             key={category.id}
-            className="flex items-center justify-between bg-gray-950 border border-gray-800 rounded-lg p-3"
+            className="flex items-center justify-between bg-black border border-graphite rounded-lg p-3"
           >
             <div>
               <div className="font-medium text-white">{category.name}</div>
-              <div className="text-xs text-gray-500 uppercase tracking-wide">{category.type}</div>
+              <div className="text-xs text-silver-gray uppercase tracking-wide">{category.type}</div>
             </div>
             <div className="flex items-center gap-4">
-              <div className="w-32 bg-gray-800 rounded-full h-2 overflow-hidden">
+              <div className="w-32 bg-graphite rounded-full h-2 overflow-hidden">
                 <div
-                  className="bg-[#D4AF37] h-2 rounded-full"
+                  className="bg-[var(--color-brand-gold)] h-2 rounded-full"
                   style={{ width: `${category.weight * 100}%` }}
                 />
               </div>
@@ -59,7 +59,7 @@ export default function CategoryWeightingPanel({ categories }: CategoryWeighting
       </div>
 
       {!validation.valid && (
-        <p className="mt-4 text-xs text-yellow-400">
+        <p className="mt-4 text-xs text-warm-bronze">
           Weights should sum to 100% for accurate overall grade calculations.
         </p>
       )}

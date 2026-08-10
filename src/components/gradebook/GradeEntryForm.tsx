@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Grade, GradeCategory, Profile } from '@/types'
 import { X } from 'lucide-react'
+import { Button, Input, Select, Textarea, Card, Checkbox } from '@/components/ui'
 
 interface GradeEntryFormProps {
   grade: Grade | null
@@ -54,12 +55,12 @@ export default function GradeEntryForm({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-      <div className="bg-gray-900 border border-gray-800 rounded-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-5 border-b border-gray-800">
+      <Card variant="default" padding="none" className="w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between p-5 border-b border-graphite">
           <h2 className="text-lg font-semibold text-white">
             {grade?.id ? 'Edit Grade' : 'Add Grade'}
           </h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-white">
+          <button onClick={onClose} className="text-silver hover:text-white">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -67,111 +68,92 @@ export default function GradeEntryForm({
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           {student && (
             <div>
-              <label className="block text-sm text-gray-400 mb-1">Student</label>
+              <label className="block text-sm text-silver mb-1">Student</label>
               <div className="text-white font-medium">{student.full_name}</div>
             </div>
           )}
 
           <div>
-            <label htmlFor="category" className="block text-sm text-gray-400 mb-1">
+            <label htmlFor="category" className="block text-sm text-silver mb-1">
               Category
             </label>
-            <select
+            <Select
               id="category"
               value={categoryId}
               onChange={(e) => setCategoryId(e.target.value)}
-              className="w-full bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
-              required
-            >
-              {categories
+              options={categories
                 .filter((c) => c.isActive)
-                .map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name} ({Math.round(c.weight * 100)}%)
-                  </option>
-                ))}
-            </select>
+                .map((c) => ({ value: c.id, label: `${c.name} (${Math.round(c.weight * 100)}%)` }))}
+              required
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="score" className="block text-sm text-gray-400 mb-1">
-                Score
-              </label>
-              <input
-                id="score"
-                type="number"
-                min={0}
-                step="0.1"
-                value={score}
-                onChange={(e) => setScore(parseFloat(e.target.value) || 0)}
-                className="w-full bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="maxScore" className="block text-sm text-gray-400 mb-1">
-                Max Score
-              </label>
-              <input
-                id="maxScore"
-                type="number"
-                min={1}
-                step="0.1"
-                value={maxScore}
-                onChange={(e) => setMaxScore(parseFloat(e.target.value) || 1)}
-                className="w-full bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
-                required
-              />
-            </div>
+            <Input
+              label="Score"
+              id="score"
+              type="number"
+              min={0}
+              step="0.1"
+              value={score}
+              onChange={(e) => setScore(parseFloat(e.target.value) || 0)}
+              required
+            />
+            <Input
+              label="Max Score"
+              id="maxScore"
+              type="number"
+              min={1}
+              step="0.1"
+              value={maxScore}
+              onChange={(e) => setMaxScore(parseFloat(e.target.value) || 1)}
+              required
+            />
           </div>
 
-          <div className="bg-gray-950 border border-gray-800 rounded-lg p-3">
-            <div className="text-sm text-gray-400">Calculated Percentage</div>
-            <div className="text-2xl font-bold text-[#D4AF37]">{percentage}%</div>
-          </div>
+          <Card variant="ghost" padding="sm">
+            <div className="text-sm text-silver">Calculated Percentage</div>
+            <div className="text-2xl font-bold text-[var(--color-brand-gold)]">{percentage}%</div>
+          </Card>
 
           <div>
-            <label htmlFor="notes" className="block text-sm text-gray-400 mb-1">
+            <label htmlFor="notes" className="block text-sm text-silver mb-1">
               Notes
             </label>
-            <textarea
+            <Textarea
               id="notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
-              className="w-full bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
               placeholder="Add optional notes..."
             />
           </div>
 
-          <label className="flex items-center gap-2 text-sm text-gray-300">
-            <input
-              type="checkbox"
-              checked={isExcused}
-              onChange={(e) => setIsExcused(e.target.checked)}
-              className="rounded border-gray-700 bg-gray-950 text-[#D4AF37] focus:ring-[#D4AF37]"
-            />
-            Excused / Drop this grade
-          </label>
+          <Checkbox
+            label="Excused / Drop this grade"
+            checked={isExcused}
+            onChange={(e) => setIsExcused(e.target.checked)}
+          />
 
           <div className="flex gap-3 pt-2">
-            <button
+            <Button
               type="button"
+              variant="secondary"
               onClick={onClose}
-              className="flex-1 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors"
+              fullWidth
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
-              className="flex-1 px-4 py-2 bg-[#D4AF37] hover:bg-[#F4E4A6] text-gray-950 font-semibold rounded-lg transition-colors"
+              variant="primary"
+              fullWidth
             >
               Save Grade
-            </button>
+            </Button>
           </div>
         </form>
-      </div>
+      </Card>
     </div>
   )
 }

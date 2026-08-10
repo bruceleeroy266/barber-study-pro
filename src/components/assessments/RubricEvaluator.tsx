@@ -29,14 +29,14 @@ export default function RubricEvaluator({ rubric }: RubricEvaluatorProps) {
   }
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+    <div className="bg-charcoal border border-graphite rounded-xl p-5">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-white">Evaluate {rubric.assessmentType}</h3>
         <div className="text-right">
-          <div className={`text-3xl font-bold ${isPassed ? 'text-green-400' : 'text-red-400'}`}>
+          <div className={`text-3xl font-bold ${isPassed ? 'text-gold' : 'text-silver'}`}>
             {percentage}%
           </div>
-          <div className="text-xs text-gray-500">{isPassed ? 'Passing' : 'Below passing'}</div>
+          <div className="text-xs text-silver-gray">{isPassed ? 'Passing' : 'Below passing'}</div>
         </div>
       </div>
 
@@ -47,7 +47,7 @@ export default function RubricEvaluator({ rubric }: RubricEvaluatorProps) {
             <div key={criterion.id}>
               <div className="flex items-center justify-between mb-2">
                 <label className="text-sm font-medium text-white">{criterion.name}</label>
-                <span className="text-sm text-gray-400">
+                <span className="text-sm text-silver">
                   {score} / {criterion.maxScore}
                 </span>
               </div>
@@ -58,17 +58,17 @@ export default function RubricEvaluator({ rubric }: RubricEvaluatorProps) {
                 step={1}
                 value={score}
                 onChange={(e) => updateScore(criterion.id, parseInt(e.target.value, 10))}
-                className="w-full accent-[#D4AF37]"
+                className="w-full accent-[var(--color-brand-gold)]"
               />
-              <p className="text-xs text-gray-500 mt-1">{criterion.description}</p>
+              <p className="text-xs text-silver-gray mt-1">{criterion.description}</p>
             </div>
           )
         })}
       </div>
 
-      <div className="mt-6 p-4 bg-gray-950 border border-gray-800 rounded-lg flex items-center gap-3">
-        <CheckCircle className={`w-5 h-5 ${isPassed ? 'text-green-400' : 'text-red-400'}`} />
-        <span className={`text-sm ${isPassed ? 'text-green-400' : 'text-red-400'}`}>
+      <div className="mt-6 p-4 bg-black border border-graphite rounded-lg flex items-center gap-3">
+        <CheckCircle className={`w-5 h-5 ${isPassed ? 'text-gold' : 'text-silver'}`} />
+        <span className={`text-sm ${isPassed ? 'text-gold' : 'text-silver'}`}>
           {isPassed
             ? 'Student meets rubric standards for this assessment.'
             : 'Student needs additional practice before passing this assessment.'}

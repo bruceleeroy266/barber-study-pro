@@ -113,7 +113,7 @@ export default function ConfidenceBuilder({ cards, theme }: ConfidenceBuilderPro
                   >
                     <div className="flex-shrink-0 mt-0.5">
                       {isRevealed && response.isProfessional ? (
-                        <Star className="w-5 h-5" style={{ color: '#F59E0B' }} />
+                        <Star className="w-5 h-5" style={{ color: 'var(--color-brand-warm-bronze)' }} />
                       ) : isSelected ? (
                         <CheckCircle2 className="w-5 h-5" style={{ color: t.primary }} />
                       ) : (
@@ -123,7 +123,7 @@ export default function ConfidenceBuilder({ cards, theme }: ConfidenceBuilderPro
                     <div className="flex-1">
                       <span style={{ color: t.text }}>{response.text}</span>
                       {isRevealed && (
-                        <p className="text-xs mt-2 italic" style={{ color: response.isProfessional ? '#10B981' : '#EF4444' }}>
+                        <p className="text-xs mt-2 italic" style={{ color: response.isProfessional ? 'var(--color-brand-gold)' : 'var(--color-brand-silver)' }}>
                           {response.feedback}
                         </p>
                       )}
@@ -142,7 +142,7 @@ export default function ConfidenceBuilder({ cards, theme }: ConfidenceBuilderPro
                     background: selected !== undefined
                       ? `linear-gradient(135deg, ${t.primary}, ${t.primaryDark})`
                       : t.backgroundAlt,
-                    color: selected !== undefined ? '#fff' : t.textMuted,
+                    color: selected !== undefined ? 'var(--color-brand-white)' : t.textMuted,
                   }}
                 >
                   Check Your Instinct

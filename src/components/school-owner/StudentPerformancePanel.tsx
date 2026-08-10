@@ -19,7 +19,7 @@ function SortHeader({ label, sortKey, onSort }: {
   return (
     <button
       onClick={() => onSort(sortKey)}
-      className="flex items-center gap-1 text-xs font-medium text-gray-400 hover:text-white"
+      className="flex items-center gap-1 text-xs font-medium text-silver hover:text-white"
     >
       {label}
       <ArrowUpDown className="w-3 h-3" />
@@ -77,24 +77,24 @@ export default function StudentPerformancePanel({ rows }: Props) {
   }
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
-      <div className="p-4 border-b border-gray-800 flex flex-col md:flex-row md:items-center justify-between gap-3">
+    <div className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+      <div className="p-4 border-b border-graphite flex flex-col md:flex-row md:items-center justify-between gap-3">
         <h2 className="text-lg font-semibold text-white">Student Performance</h2>
         <div className="flex flex-col sm:flex-row gap-2">
           <div className="relative">
-            <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-silver-gray" />
             <input
               type="text"
               placeholder="Search students..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-8 pr-3 py-1.5 bg-gray-950 border border-gray-800 rounded-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#D4AF37]/50"
+              className="pl-8 pr-3 py-1.5 bg-black border border-graphite rounded-lg text-sm text-white placeholder-silver-gray focus:outline-none focus:border-[var(--color-brand-gold)]/50"
             />
           </div>
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value as FilterKey)}
-            className="px-3 py-1.5 bg-gray-950 border border-gray-800 rounded-lg text-sm text-white focus:outline-none focus:border-[#D4AF37]/50"
+            className="px-3 py-1.5 bg-black border border-graphite rounded-lg text-sm text-white focus:outline-none focus:border-[var(--color-brand-gold)]/50"
           >
             <option value="all">All Students</option>
             <option value="atRisk">At Risk</option>
@@ -108,7 +108,7 @@ export default function StudentPerformancePanel({ rows }: Props) {
 
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-gray-950 text-left">
+          <thead className="bg-black text-left">
             <tr>
               <th className="px-4 py-3"><SortHeader label="Student" sortKey="fullName" onSort={handleSort} /></th>
               <th className="px-4 py-3"><SortHeader label="Attendance" sortKey="attendancePercentage" onSort={handleSort} /></th>
@@ -119,45 +119,45 @@ export default function StudentPerformancePanel({ rows }: Props) {
               <th className="px-4 py-3">Risk</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-800">
+          <tbody className="divide-y divide-graphite">
             {filtered.map((row) => (
-              <tr key={row.studentId} className="hover:bg-gray-800/30">
+              <tr key={row.studentId} className="hover:bg-graphite/30">
                 <td className="px-4 py-3">
                   <div className="font-medium text-white">{row.fullName}</div>
                   {row.riskReasons.length > 0 && (
-                    <div className="text-xs text-gray-500 mt-0.5">{row.riskReasons.join(', ')}</div>
+                    <div className="text-xs text-silver-gray mt-0.5">{row.riskReasons.join(', ')}</div>
                   )}
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`font-medium ${row.attendancePercentage >= 80 ? 'text-green-400' : row.attendancePercentage >= 70 ? 'text-yellow-400' : 'text-red-400'}`}>
+                  <span className={`font-medium ${row.attendancePercentage >= 80 ? 'text-gold' : row.attendancePercentage >= 70 ? 'text-warm-bronze' : 'text-silver'}`}>
                     {row.attendancePercentage}%
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`font-medium ${row.readinessScore >= 80 ? 'text-green-400' : row.readinessScore >= 70 ? 'text-yellow-400' : 'text-red-400'}`}>
+                  <span className={`font-medium ${row.readinessScore >= 80 ? 'text-gold' : row.readinessScore >= 70 ? 'text-warm-bronze' : 'text-silver'}`}>
                     {row.readinessScore}
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`font-medium ${row.overallGrade >= 80 ? 'text-green-400' : row.overallGrade >= 70 ? 'text-yellow-400' : 'text-red-400'}`}>
+                  <span className={`font-medium ${row.overallGrade >= 80 ? 'text-gold' : row.overallGrade >= 70 ? 'text-warm-bronze' : 'text-silver'}`}>
                     {row.overallGrade}%
                   </span>
                 </td>
-                <td className="px-4 py-3 text-gray-300">
+                <td className="px-4 py-3 text-light-gray">
                   {row.completedHours}/{row.requiredHours}
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`font-medium ${row.assessmentPassRate >= 80 ? 'text-green-400' : 'text-red-400'}`}>
+                  <span className={`font-medium ${row.assessmentPassRate >= 80 ? 'text-gold' : 'text-silver'}`}>
                     {row.assessmentPassRate}%
                   </span>
                 </td>
                 <td className="px-4 py-3">
                   {row.isAtRisk ? (
-                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20">
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-silver/10 text-silver border border-silver/20">
                       <AlertTriangle className="w-3 h-3" /> At Risk
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20">
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-gold/10 text-gold border border-gold/20">
                       <Trophy className="w-3 h-3" /> On Track
                     </span>
                   )}
@@ -166,7 +166,7 @@ export default function StudentPerformancePanel({ rows }: Props) {
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
+                <td colSpan={7} className="px-4 py-8 text-center text-silver-gray">
                   No students match the current filter.
                 </td>
               </tr>

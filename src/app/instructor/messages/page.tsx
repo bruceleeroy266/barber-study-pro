@@ -69,7 +69,7 @@ export default async function InstructorMessagesPage() {
   const demoNotifications = getDemoNotificationsForUser(user.id)
 
   return (
-    <div className="min-h-screen bg-gray-950 p-6 md:p-8">
+    <div className="min-h-screen bg-[var(--color-background-primary)] p-6 md:p-8">
         <BackButton fallbackHref="/instructor" label="Back to instructor dashboard" />
       <div className="max-w-7xl mx-auto">
         <InstructorMessageDashboard

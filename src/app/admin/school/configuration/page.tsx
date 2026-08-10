@@ -34,7 +34,7 @@ export default async function SchoolConfigurationPage() {
 
   if (isDemo) {
     return (
-      <div className="min-h-screen bg-gray-950 p-6 lg:p-8">
+      <div className="min-h-screen bg-black p-6 lg:p-8">
         <BackButton fallbackHref="/admin" label="Back to admin dashboard" />
         <div className="mt-6">
           <SchoolConfigurationClient initialConfig={demoSchoolConfiguration} isDemo={true} />
@@ -79,7 +79,7 @@ export default async function SchoolConfigurationPage() {
       },
       branding: {
         ...savedConfig.branding,
-        secondaryColor: savedConfig.branding.secondaryColor ?? '#1F2937',
+        secondaryColor: savedConfig.branding.secondaryColor ?? 'var(--color-brand-graphite)',
       },
       studentDefaults: savedConfig.studentDefaults ?? {
         passingPercentage: 70,
@@ -103,7 +103,7 @@ export default async function SchoolConfigurationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 p-6 lg:p-8">
+    <div className="min-h-screen bg-black p-6 lg:p-8">
       <BackButton fallbackHref="/admin" label="Back to admin dashboard" />
       <div className="mt-6">
         <SchoolConfigurationClient initialConfig={configuration} isDemo={false} />

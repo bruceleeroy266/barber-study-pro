@@ -30,15 +30,15 @@ export default function RolePermissionsSection({ config, onChange }: Props) {
     <div className="space-y-6">
       <div>
         <h2 className="text-xl font-semibold text-white mb-1">Role & Permission Management</h2>
-        <p className="text-sm text-gray-400">Configure what each role can do (demo-ready)</p>
+        <p className="text-sm text-silver">Configure what each role can do (demo-ready)</p>
       </div>
 
       <div className="space-y-6">
         {rolePermissions.map((rp) => (
-          <div key={rp.role} className="bg-gray-950 border border-gray-800 rounded-xl p-4">
+          <div key={rp.role} className="bg-black border border-graphite rounded-xl p-4">
             <div className="flex items-center gap-3 mb-4">
               <span className="text-white font-medium capitalize">{rp.role}</span>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-silver-gray">
                 {rp.permissions.length} of {ALL_PERMISSIONS.length} permissions
               </span>
             </div>
@@ -48,13 +48,13 @@ export default function RolePermissionsSection({ config, onChange }: Props) {
                 return (
                   <label
                     key={perm.value}
-                    className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer"
+                    className="flex items-center gap-2 text-sm text-light-gray cursor-pointer"
                   >
                     <input
                       type="checkbox"
                       checked={checked}
                       onChange={() => onChange(togglePermission(rolePermissions, rp.role, perm.value))}
-                      className="w-4 h-4 accent-[#D4AF37]"
+                      className="w-4 h-4 accent-[var(--color-brand-gold)]"
                     />
                     {perm.label}
                   </label>

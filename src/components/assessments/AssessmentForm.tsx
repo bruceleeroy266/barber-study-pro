@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Assessment, AssessmentType, ScoringType, QualitativeResult, Profile, AssessmentRubric } from '@/types'
 import { calculatePassFail } from '@/lib/assessments'
 import { X } from 'lucide-react'
+import { Button, Input, Select, Textarea, Card } from '@/components/ui'
 
 interface AssessmentFormProps {
   students: Profile[]
@@ -46,159 +47,144 @@ export default function AssessmentForm({ students, rubrics, onSave, onClose }: A
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-      <div className="bg-gray-900 border border-gray-800 rounded-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-5 border-b border-gray-800">
+      <Card variant="default" padding="none" className="w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between p-5 border-b border-graphite">
           <h2 className="text-lg font-semibold text-white">Add Practical Assessment</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-white">
+          <button onClick={onClose} className="text-silver hover:text-white">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <div>
-            <label htmlFor="student" className="block text-sm text-gray-400 mb-1">
+            <label htmlFor="student" className="block text-sm text-silver mb-1">
               Student
             </label>
-            <select
+            <Select
               id="student"
               value={studentId}
               onChange={(e) => setStudentId(e.target.value)}
-              className="w-full bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+              options={students.map((s) => ({ value: s.id, label: s.full_name || '' }))}
               required
-            >
-              {students.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.full_name}
-                </option>
-              ))}
-            </select>
+            />
           </div>
 
           <div>
-            <label htmlFor="type" className="block text-sm text-gray-400 mb-1">
+            <label htmlFor="type" className="block text-sm text-silver mb-1">
               Assessment Type
             </label>
-            <select
+            <Select
               id="type"
               value={assessmentType}
               onChange={(e) => setAssessmentType(e.target.value as AssessmentType)}
-              className="w-full bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+              options={[
+                { value: 'HAIRCUT', label: 'Haircut' },
+                { value: 'COLOR', label: 'Color' },
+                { value: 'CHEMICAL', label: 'Chemical' },
+                { value: 'SANITATION', label: 'Sanitation' },
+                { value: 'CONSULTATION', label: 'Consultation' },
+              ]}
               required
-            >
-              <option value="HAIRCUT">Haircut</option>
-              <option value="COLOR">Color</option>
-              <option value="CHEMICAL">Chemical</option>
-              <option value="SANITATION">Sanitation</option>
-              <option value="CONSULTATION">Consultation</option>
-            </select>
+            />
           </div>
 
           <div>
-            <label htmlFor="scoring" className="block text-sm text-gray-400 mb-1">
+            <label htmlFor="scoring" className="block text-sm text-silver mb-1">
               Scoring Type
             </label>
-            <select
+            <Select
               id="scoring"
               value={scoringType}
               onChange={(e) => setScoringType(e.target.value as ScoringType)}
-              className="w-full bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
-            >
-              <option value="NUMERIC">Numeric</option>
-              <option value="QUALITATIVE">Qualitative</option>
-            </select>
+              options={[
+                { value: 'NUMERIC', label: 'Numeric' },
+                { value: 'QUALITATIVE', label: 'Qualitative' },
+              ]}
+            />
           </div>
 
           {scoringType === 'NUMERIC' ? (
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="score" className="block text-sm text-gray-400 mb-1">
-                  Score
-                </label>
-                <input
-                  id="score"
-                  type="number"
-                  min={0}
-                  value={score}
-                  onChange={(e) => setScore(parseFloat(e.target.value) || 0)}
-                  className="w-full bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="max" className="block text-sm text-gray-400 mb-1">
-                  Max Score
-                </label>
-                <input
-                  id="max"
-                  type="number"
-                  min={1}
-                  value={maxScore}
-                  onChange={(e) => setMaxScore(parseFloat(e.target.value) || 1)}
-                  className="w-full bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
-                  required
-                />
-              </div>
+              <Input
+                label="Score"
+                id="score"
+                type="number"
+                min={0}
+                value={score}
+                onChange={(e) => setScore(parseFloat(e.target.value) || 0)}
+                required
+              />
+              <Input
+                label="Max Score"
+                id="max"
+                type="number"
+                min={1}
+                value={maxScore}
+                onChange={(e) => setMaxScore(parseFloat(e.target.value) || 1)}
+                required
+              />
             </div>
           ) : (
             <div>
-              <label htmlFor="qualitative" className="block text-sm text-gray-400 mb-1">
+              <label htmlFor="qualitative" className="block text-sm text-silver mb-1">
                 Result
               </label>
-              <select
+              <Select
                 id="qualitative"
                 value={qualitativeResult}
                 onChange={(e) => setQualitativeResult(e.target.value as QualitativeResult)}
-                className="w-full bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
-              >
-                <option value="PASS">Pass</option>
-                <option value="NEEDS_IMPROVEMENT">Needs Improvement</option>
-                <option value="FAIL">Fail</option>
-              </select>
+                options={[
+                  { value: 'PASS', label: 'Pass' },
+                  { value: 'NEEDS_IMPROVEMENT', label: 'Needs Improvement' },
+                  { value: 'FAIL', label: 'Fail' },
+                ]}
+              />
             </div>
           )}
 
-          <div className="bg-gray-950 border border-gray-800 rounded-lg p-3">
-            <div className="text-sm text-gray-400">Result</div>
-            <div className={`text-2xl font-bold ${isPassed ? 'text-green-400' : 'text-red-400'}`}>
+          <Card variant="ghost" padding="sm">
+            <div className="text-sm text-silver">Result</div>
+            <div className={`text-2xl font-bold ${isPassed ? 'text-gold' : 'text-silver'}`}>
               {isPassed ? 'Passed' : 'Not Passed'}
             </div>
             {scoringType === 'NUMERIC' && (
-              <div className="text-xs text-gray-500">{percentage}%</div>
+              <div className="text-xs text-silver-gray">{percentage}%</div>
             )}
-          </div>
+          </Card>
 
           <div>
-            <label htmlFor="feedback" className="block text-sm text-gray-400 mb-1">
+            <label htmlFor="feedback" className="block text-sm text-silver mb-1">
               Feedback
             </label>
-            <textarea
+            <Textarea
               id="feedback"
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
               rows={3}
-              className="w-full bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
               placeholder="Enter detailed feedback..."
               required
             />
           </div>
 
           <div className="flex gap-3 pt-2">
-            <button
+            <Button
               type="button"
+              variant="secondary"
               onClick={onClose}
-              className="flex-1 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors"
+              fullWidth
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
-              className="flex-1 px-4 py-2 bg-[#D4AF37] hover:bg-[#F4E4A6] text-gray-950 font-semibold rounded-lg transition-colors"
+              variant="primary"
+              fullWidth
             >
               Save Assessment
-            </button>
+            </Button>
           </div>
         </form>
-      </div>
+      </Card>
     </div>
   )
 }

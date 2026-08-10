@@ -9,7 +9,7 @@ interface Props {
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null
-  return <p className="text-sm text-red-400 mt-1">{message}</p>
+  return <p className="text-sm text-silver mt-1">{message}</p>
 }
 
 export default function AttendancePolicySection({ config, onChange, errors }: Props) {
@@ -19,12 +19,12 @@ export default function AttendancePolicySection({ config, onChange, errors }: Pr
     <div className="space-y-6">
       <div>
         <h2 className="text-xl font-semibold text-white mb-1">Attendance & Hours Policies</h2>
-        <p className="text-sm text-gray-400">Rules for tracking attendance and tardiness</p>
+        <p className="text-sm text-silver">Rules for tracking attendance and tardiness</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-gray-950 border border-gray-800 rounded-lg p-4">
-          <label htmlFor="attendance-target" className="block text-sm font-medium text-gray-300 mb-2">
+        <div className="bg-black border border-graphite rounded-lg p-4">
+          <label htmlFor="attendance-target" className="block text-sm font-medium text-light-gray mb-2">
             Target Attendance %
           </label>
           <input
@@ -37,13 +37,13 @@ export default function AttendancePolicySection({ config, onChange, errors }: Pr
               onChange({ ...attendancePolicy, targetAttendancePercentage: Number(e.target.value) })
             }
             aria-invalid={!!errors.attendanceTarget}
-            className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37] aria-invalid:border-red-500"
+            className="w-full bg-charcoal border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)] aria-invalid:border-silver"
           />
           <FieldError message={errors.attendanceTarget} />
         </div>
 
-        <div className="bg-gray-950 border border-gray-800 rounded-lg p-4">
-          <label htmlFor="auto-excuse-limit" className="block text-sm font-medium text-gray-300 mb-2">
+        <div className="bg-black border border-graphite rounded-lg p-4">
+          <label htmlFor="auto-excuse-limit" className="block text-sm font-medium text-light-gray mb-2">
             Auto-Excuse Limit
           </label>
           <input
@@ -55,14 +55,14 @@ export default function AttendancePolicySection({ config, onChange, errors }: Pr
               onChange({ ...attendancePolicy, autoExcuseLimit: Number(e.target.value) })
             }
             aria-invalid={!!errors.autoExcuseLimit}
-            className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37] aria-invalid:border-red-500"
+            className="w-full bg-charcoal border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)] aria-invalid:border-silver"
           />
-          <p className="text-xs text-gray-500 mt-1">Per-student automatic excused absences</p>
+          <p className="text-xs text-silver-gray mt-1">Per-student automatic excused absences</p>
           <FieldError message={errors.autoExcuseLimit} />
         </div>
 
-        <div className="bg-gray-950 border border-gray-800 rounded-lg p-4">
-          <label htmlFor="tardy-threshold" className="block text-sm font-medium text-gray-300 mb-2">
+        <div className="bg-black border border-graphite rounded-lg p-4">
+          <label htmlFor="tardy-threshold" className="block text-sm font-medium text-light-gray mb-2">
             Tardy Threshold (minutes)
           </label>
           <input
@@ -74,15 +74,15 @@ export default function AttendancePolicySection({ config, onChange, errors }: Pr
               onChange({ ...attendancePolicy, tardyThresholdMinutes: Number(e.target.value) })
             }
             aria-invalid={!!errors.tardyThreshold}
-            className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37] aria-invalid:border-red-500"
+            className="w-full bg-charcoal border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)] aria-invalid:border-silver"
           />
           <FieldError message={errors.tardyThreshold} />
         </div>
 
-        <label className="flex items-center justify-between bg-gray-950 border border-gray-800 rounded-lg p-4">
+        <label className="flex items-center justify-between bg-black border border-graphite rounded-lg p-4">
           <div>
             <p className="text-white font-medium">Track Clock Events</p>
-            <p className="text-sm text-gray-400">Record clock-in/clock-out events</p>
+            <p className="text-sm text-silver">Record clock-in/clock-out events</p>
           </div>
           <input
             type="checkbox"
@@ -90,7 +90,7 @@ export default function AttendancePolicySection({ config, onChange, errors }: Pr
             onChange={(e) =>
               onChange({ ...attendancePolicy, trackClockEvents: e.target.checked })
             }
-            className="w-5 h-5 accent-[#D4AF37]"
+            className="w-5 h-5 accent-[var(--color-brand-gold)]"
           />
         </label>
       </div>

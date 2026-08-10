@@ -25,7 +25,7 @@ export default function MessageComposer({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="border-t border-gray-800 p-4">
+    <form onSubmit={handleSubmit} className="border-t border-graphite p-4">
       <div className="flex items-end gap-3">
         <textarea
           value={body}
@@ -33,7 +33,7 @@ export default function MessageComposer({
           placeholder={placeholder}
           disabled={disabled}
           rows={2}
-          className="flex-1 bg-gray-950 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent resize-none disabled:opacity-50"
+          className="flex-1 bg-black border border-[var(--color-border-secondary)] rounded-lg px-4 py-3 text-white placeholder-silver-gray focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)] focus:border-transparent resize-none disabled:opacity-50"
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault()
@@ -44,7 +44,7 @@ export default function MessageComposer({
         <button
           type="submit"
           disabled={disabled || !body.trim()}
-          className="flex items-center justify-center w-12 h-12 bg-[#D4AF37] text-gray-950 rounded-lg hover:bg-[#F4E4A6] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center justify-center w-12 h-12 bg-[var(--color-brand-gold)] text-black rounded-lg hover:bg-[var(--color-brand-gold-light)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           aria-label="Send message"
         >
           <Send className="w-5 h-5" />

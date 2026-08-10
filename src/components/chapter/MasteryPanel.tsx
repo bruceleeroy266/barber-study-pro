@@ -73,9 +73,9 @@ export default function MasteryPanel({
           >
             <div className="flex items-center gap-3">
               {passed ? (
-                <CheckCircle2 className="w-6 h-6 text-green-400" aria-hidden="true" />
+                <CheckCircle2 className="w-6 h-6 text-gold" aria-hidden="true" />
               ) : (
-                <Circle className="w-6 h-6 text-yellow-400" aria-hidden="true" />
+                <Circle className="w-6 h-6 text-warm-bronze" aria-hidden="true" />
               )}
               <div>
                 <p className="text-sm font-medium" style={{ color: t.text }}>
@@ -86,7 +86,7 @@ export default function MasteryPanel({
                 </p>
               </div>
             </div>
-            <span className="text-2xl font-bold" style={{ color: passed ? '#4ade80' : '#facc15' }}>
+            <span className="text-2xl font-bold" style={{ color: passed ? 'var(--color-brand-gold)' : 'var(--color-brand-warm-bronze)' }}>
               {bestAttemptPercentage}%
             </span>
           </div>

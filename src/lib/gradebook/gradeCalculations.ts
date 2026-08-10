@@ -125,9 +125,9 @@ export function getLetterGrade(percentage: number): string {
 }
 
 export function getGradeColorClass(percentage: number): string {
-  if (percentage >= 90) return 'text-green-400'
-  if (percentage >= 80) return 'text-blue-400'
-  if (percentage >= 70) return 'text-yellow-400'
-  if (percentage >= 60) return 'text-orange-400'
-  return 'text-red-400'
+  if (percentage >= 90) return 'text-gold'
+  if (percentage >= 80) return 'text-silver'
+  if (percentage >= 70) return 'text-warm-bronze'
+  if (percentage >= 60) return 'text-warm-bronze'
+  return 'text-silver'
 }

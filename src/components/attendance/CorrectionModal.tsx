@@ -47,34 +47,34 @@ export default function CorrectionModal({ record, student, onClose, onSubmit }: 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-      <div className="bg-gray-900 border border-gray-800 rounded-xl w-full max-w-md shadow-2xl">
-        <div className="flex items-center justify-between p-5 border-b border-gray-800">
+      <div className="bg-charcoal border border-graphite rounded-xl w-full max-w-md shadow-2xl">
+        <div className="flex items-center justify-between p-5 border-b border-graphite">
           <h3 className="text-lg font-semibold text-white">Submit Correction</h3>
           <button
             onClick={onClose}
-            className="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-gray-800 transition-colors"
+            className="p-1.5 text-silver hover:text-white rounded-lg hover:bg-graphite transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
-          <div className="bg-gray-950 border border-gray-800 rounded-lg p-4 space-y-2">
-            <div className="text-sm text-gray-400">Student</div>
+          <div className="bg-black border border-graphite rounded-lg p-4 space-y-2">
+            <div className="text-sm text-silver">Student</div>
             <div className="text-white font-medium">{student?.full_name || 'Unknown'}</div>
-            <div className="text-sm text-gray-400">Date</div>
+            <div className="text-sm text-silver">Date</div>
             <div className="text-white font-medium">{record.date}</div>
-            <div className="text-sm text-gray-400">Current Status</div>
+            <div className="text-sm text-silver">Current Status</div>
             <div className="text-white font-medium">{record.status}</div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm text-gray-300">New Status</label>
+            <label className="text-sm text-light-gray">New Status</label>
             <StatusSelector value={newStatus} onChange={setNewStatus} />
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="correction-reason" className="text-sm text-gray-300">
+            <label htmlFor="correction-reason" className="text-sm text-light-gray">
               Reason for Correction
             </label>
             <textarea
@@ -82,13 +82,13 @@ export default function CorrectionModal({ record, student, onClose, onSubmit }: 
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               rows={3}
-              className="w-full bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#D4AF37] resize-none"
+              className="w-full bg-black border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-sm text-white placeholder-silver-gray focus:outline-none focus:border-[var(--color-brand-gold)] resize-none"
               placeholder="Explain why this correction is needed..."
             />
           </div>
 
           {error && (
-            <div className="flex items-start gap-2 text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+            <div className="flex items-start gap-2 text-sm text-silver bg-silver/10 border border-silver/20 rounded-lg p-3">
               <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
               <span>{error}</span>
             </div>
@@ -98,14 +98,14 @@ export default function CorrectionModal({ record, student, onClose, onSubmit }: 
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors"
+              className="flex-1 px-4 py-2 bg-graphite hover:bg-[var(--color-border-secondary)] text-white rounded-lg transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="flex-1 px-4 py-2 bg-[#D4AF37] hover:bg-[#F4E4A6] text-gray-950 font-semibold rounded-lg transition-colors disabled:opacity-50"
+              className="flex-1 px-4 py-2 bg-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold-light)] text-black font-semibold rounded-lg transition-colors disabled:opacity-50"
             >
               {submitting ? 'Submitting...' : 'Submit Correction'}
             </button>

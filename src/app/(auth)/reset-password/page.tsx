@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import { Logo } from '@/components/brand'
 
 export default function ResetPasswordPage() {
   const [email, setEmail] = useState('')
@@ -32,16 +33,18 @@ export default function ResetPasswordPage() {
 
   if (success) {
     return (
-      <div className="bg-gray-900/80 backdrop-blur-sm border border-gray-800 rounded-2xl p-8 shadow-2xl text-center">
-        <div className="text-5xl mb-4">📧</div>
+      <div className="bg-[var(--color-background-primary)]/80 backdrop-blur-sm border border-[var(--color-border-primary)] rounded-2xl p-8 shadow-2xl text-center">
+        <div className="flex justify-center mb-4">
+          <Logo variant="icon" theme="gold" size="xl" />
+        </div>
         <h1 className="text-2xl font-bold text-white mb-4">Check Your Email</h1>
-        <p className="text-gray-400 mb-6">
+        <p className="text-[var(--color-text-muted)] mb-6">
           We&apos;ve sent a password reset link to <strong>{email}</strong>.
           Please check your inbox and follow the instructions.
         </p>
         <Link
           href="/login"
-          className="inline-block px-6 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] transition-colors"
+          className="inline-block px-6 py-3 bg-[var(--color-brand-gold)] text-black font-semibold rounded-lg hover:bg-[var(--color-brand-gold-light)] transition-colors"
         >
           Back to Login
         </Link>
@@ -50,22 +53,24 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="bg-gray-900/80 backdrop-blur-sm border border-gray-800 rounded-2xl p-8 shadow-2xl">
+    <div className="bg-[var(--color-background-primary)]/80 backdrop-blur-sm border border-[var(--color-border-primary)] rounded-2xl p-8 shadow-2xl">
       <div className="text-center mb-8">
-        <div className="text-5xl mb-4">🔐</div>
+        <div className="flex justify-center mb-4">
+          <Logo variant="icon" theme="gold" size="xl" />
+        </div>
         <h1 className="text-2xl font-bold text-white mb-2">Reset Password</h1>
-        <p className="text-gray-400">Enter your email to receive a reset link</p>
+        <p className="text-[var(--color-text-muted)]">Enter your email to receive a reset link</p>
       </div>
 
       {error && (
-        <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-lg mb-6 text-sm">
+        <div className="bg-silver/10 border border-silver/20 text-silver px-4 py-3 rounded-lg mb-6 text-sm">
           {error}
         </div>
       )}
 
       <form onSubmit={handleReset} className="space-y-5">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+          <label htmlFor="email" className="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
             Email Address
           </label>
           <input
@@ -74,7 +79,7 @@ export default function ResetPasswordPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-colors"
+            className="w-full px-4 py-3 bg-[var(--color-background-secondary)] border border-[var(--color-border-primary)] rounded-lg text-white placeholder-silver-gray focus:outline-none focus:border-[var(--color-brand-gold)] focus:ring-1 focus:ring-[var(--color-brand-gold)] transition-colors"
             placeholder="you@example.com"
           />
         </div>
@@ -82,21 +87,21 @@ export default function ResetPasswordPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 px-4 bg-gradient-to-r from-[#D4AF37] to-[#B8941F] text-gray-950 font-semibold rounded-lg hover:from-[#F4E4A6] hover:to-[#D4AF37] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#D4AF37]/20"
+          className="w-full py-3 px-4 bg-gradient-to-r from-[var(--color-brand-gold)] to-[var(--color-brand-gold)] text-black font-semibold rounded-lg hover:from-[var(--color-brand-gold-light)] hover:to-[var(--color-brand-gold)] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-gold/20"
         >
           {loading ? 'Sending...' : 'Send Reset Link'}
         </button>
       </form>
 
-      <div className="mt-6 text-center text-sm text-gray-400">
+      <div className="mt-6 text-center text-sm text-[var(--color-text-muted)]">
         Remember your password?{' '}
-        <Link href="/login" className="text-[#D4AF37] hover:text-[#F4E4A6] font-medium transition-colors">
+        <Link href="/login" className="text-[var(--color-brand-gold)] hover:text-[var(--color-brand-gold-light)] font-medium transition-colors">
           Sign in
         </Link>
       </div>
 
-      <div className="mt-8 pt-6 border-t border-gray-800 text-center">
-        <Link href="/" className="text-gray-500 hover:text-gray-300 text-sm transition-colors">
+      <div className="mt-8 pt-6 border-t border-[var(--color-border-primary)] text-center">
+        <Link href="/" className="text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] text-sm transition-colors">
           ← Back to home
         </Link>
       </div>

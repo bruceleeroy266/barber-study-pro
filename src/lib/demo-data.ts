@@ -1542,8 +1542,8 @@ export const demoSchoolConfiguration: SchoolConfiguration = {
     subscription_status: 'trial',
   },
   branding: {
-    primaryColor: '#D4AF37',
-    secondaryColor: '#1F2937',
+    primaryColor: 'var(--color-brand-gold)',
+    secondaryColor: 'var(--color-brand-graphite)',
     logoUrl: null,
     faviconUrl: null,
   },

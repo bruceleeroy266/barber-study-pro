@@ -156,13 +156,15 @@ describe('FlashcardClient — Chapter 20', () => {
     expect(await screen.findByText(/Card 1 of 60/i)).toBeInTheDocument()
 
     const progress = screen.getByRole('progressbar')
-    expect(progress).toHaveAttribute('aria-valuenow', '2')
+    // ProgressBar shows percentage: card 1 of 60 = (1/60)*100 = 1.666...
+    expect(progress).toHaveAttribute('aria-valuenow', '1.6666666666666667')
 
     const nextButton = screen.getByRole('button', { name: /Next/i })
     fireEvent.click(nextButton)
 
     await waitFor(() => {
-      expect(progress).toHaveAttribute('aria-valuenow', '3')
+      // Card 2 of 60 = (2/60)*100 = 3.333...
+      expect(progress).toHaveAttribute('aria-valuenow', '3.3333333333333335')
     })
   })
 

@@ -27,7 +27,7 @@ export default async function SchoolOwnerDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 p-6 md:p-8">
+    <div className="min-h-screen bg-black p-6 md:p-8">
       <BackButton fallbackHref="/admin" label="Back to admin dashboard" />
       <div className="mt-6">
         <SchoolDashboard schoolId={profile.school_id} />

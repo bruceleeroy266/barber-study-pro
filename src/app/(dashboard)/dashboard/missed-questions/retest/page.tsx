@@ -96,9 +96,9 @@ export default async function RetestWeakAreasPage() {
     return (
       <div className="space-y-6">
         <h1 className="text-3xl font-bold text-white">Retest Weak Areas</h1>
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 text-center">
-          <p className="text-gray-400 text-lg">No missed questions to retest.</p>
-          <p className="text-sm text-gray-500 mt-2">
+        <div className="bg-charcoal border border-graphite rounded-xl p-8 text-center" role="status" aria-live="polite">
+          <p className="text-silver text-lg">No missed questions to retest.</p>
+          <p className="text-sm text-silver-gray mt-2">
             Complete some quizzes first — your missed questions will appear here.
           </p>
         </div>
@@ -119,12 +119,12 @@ export default async function RetestWeakAreasPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-white mb-2">Retest Weak Areas</h1>
-        <p className="text-gray-400">
+        <p className="text-silver">
           {quizQuestions.length} question{quizQuestions.length === 1 ? '' : 's'} from your missed question bank.
         </p>
       </div>
 
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+      <div className="bg-charcoal border border-graphite rounded-xl p-6">
         <QuizClient
           quiz={quiz}
           questions={quizQuestions}

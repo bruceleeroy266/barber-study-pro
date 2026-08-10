@@ -44,10 +44,10 @@ export function trendDirection(scores: number[]): 'improving' | 'stable' | 'decl
 }
 
 export function scoreToColor(score: number): string {
-  if (score >= 80) return 'text-green-400'
-  if (score >= 70) return 'text-yellow-400'
-  if (score >= 60) return 'text-orange-400'
-  return 'text-red-400'
+  if (score >= 80) return 'text-gold'
+  if (score >= 70) return 'text-warm-bronze'
+  if (score >= 60) return 'text-warm-bronze'
+  return 'text-silver'
 }
 
 export function chapterIdToNumber(chapterId: string): number {

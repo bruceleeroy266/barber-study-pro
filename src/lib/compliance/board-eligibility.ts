@@ -75,15 +75,15 @@ export function determineBoardEligibility(inputs: ComplianceScoreInputs): BoardE
   switch (status) {
     case 'eligible':
       label = 'Eligible for Board'
-      colorClass = 'text-green-400'
+      colorClass = 'text-gold'
       break
     case 'near_eligible':
       label = 'Nearly Eligible'
-      colorClass = 'text-yellow-400'
+      colorClass = 'text-warm-bronze'
       break
     default:
       label = 'Not Eligible'
-      colorClass = 'text-red-400'
+      colorClass = 'text-silver'
   }
 
   return {

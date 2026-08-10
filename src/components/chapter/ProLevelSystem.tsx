@@ -52,7 +52,7 @@ export default function ProLevelSystem({ levels, theme }: ProLevelSystemProps) {
                 className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-all"
                 style={{
                   background: isCompleted
-                    ? 'linear-gradient(135deg, #10B981, #059669)'
+                    ? 'linear-gradient(135deg, var(--color-brand-gold), var(--color-brand-gold-light))'
                     : isExpanded
                       ? `linear-gradient(135deg, ${t.primary}, ${t.primaryDark})`
                       : `${t.primary}15`,
@@ -62,7 +62,7 @@ export default function ProLevelSystem({ levels, theme }: ProLevelSystemProps) {
                 {isCompleted ? (
                   <CheckCircle className="w-6 h-6 text-white" />
                 ) : (
-                  <Crown className="w-6 h-6" style={{ color: isExpanded ? '#fff' : t.primary }} />
+                  <Crown className="w-6 h-6" style={{ color: isExpanded ? 'var(--color-brand-white)' : t.primary }} />
                 )}
               </div>
 
@@ -76,7 +76,7 @@ export default function ProLevelSystem({ levels, theme }: ProLevelSystemProps) {
                     {level.level}
                   </span>
                   {isCompleted && (
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-500/15 text-green-400">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-gold/15 text-gold">
                       Achieved
                     </span>
                   )}

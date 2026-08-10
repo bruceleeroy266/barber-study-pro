@@ -119,11 +119,11 @@ export default async function StudentComplianceDashboard() {
   const alerts = buildComplianceAlerts(inputs)
 
   return (
-    <div className="min-h-screen bg-gray-950 p-6 lg:p-8">
+    <div className="min-h-screen bg-[var(--color-background-primary)] p-6 lg:p-8">
       <div className="max-w-6xl mx-auto space-y-8">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">State Board Compliance</h1>
-          <p className="text-gray-400">Track your licensing readiness and graduation requirements</p>
+          <p className="text-[var(--color-text-muted)]">Track your licensing readiness and graduation requirements</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -136,30 +136,30 @@ export default async function StudentComplianceDashboard() {
           <div className="lg:col-span-2">
             <ComplianceAlertsPanel alerts={alerts} />
           </div>
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+          <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6">
             <h2 className="text-lg font-semibold text-white mb-4">Recommendations</h2>
             <ul className="space-y-3">
               {compliance.graduationReadiness.remainingItems.length === 0 ? (
-                <li className="text-sm text-green-400 flex items-start gap-2">
+                <li className="text-sm text-gold flex items-start gap-2">
                   <span>✓</span> All requirements met. Schedule your board exam.
                 </li>
               ) : (
                 compliance.graduationReadiness.remainingItems.slice(0, 5).map((item, idx) => (
-                  <li key={idx} className="text-sm text-gray-300 flex items-start gap-2">
-                    <span className="text-[#D4AF37]">•</span>
+                  <li key={idx} className="text-sm text-[var(--color-text-secondary)] flex items-start gap-2">
+                    <span className="text-[var(--color-brand-gold)]">•</span>
                     {item}
                   </li>
                 ))
               )}
               {compliance.attendanceSummary.isAtRisk && (
-                <li className="text-sm text-gray-300 flex items-start gap-2">
-                  <span className="text-[#D4AF37]">•</span>
+                <li className="text-sm text-[var(--color-text-secondary)] flex items-start gap-2">
+                  <span className="text-[var(--color-brand-gold)]">•</span>
                   Improve attendance to avoid licensing delays.
                 </li>
               )}
               {compliance.readiness.score < 70 && (
-                <li className="text-sm text-gray-300 flex items-start gap-2">
-                  <span className="text-[#D4AF37]">•</span>
+                <li className="text-sm text-[var(--color-text-secondary)] flex items-start gap-2">
+                  <span className="text-[var(--color-brand-gold)]">•</span>
                   Review missed questions and weak areas to boost readiness.
                 </li>
               )}

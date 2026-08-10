@@ -6,11 +6,11 @@ export default async function MaintenancePage({ searchParams }: MaintenancePageP
   const { message } = await searchParams
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center p-6">
-      <div className="max-w-md w-full bg-gray-900 border border-gray-800 rounded-2xl p-8 text-center">
-        <div className="w-16 h-16 bg-[#D4AF37]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+    <div className="min-h-screen bg-black flex items-center justify-center p-6">
+      <div className="max-w-md w-full bg-charcoal border border-graphite rounded-2xl p-8 text-center">
+        <div className="w-16 h-16 bg-[var(--color-brand-gold)]/10 rounded-full flex items-center justify-center mx-auto mb-6">
           <svg
-            className="w-8 h-8 text-[#D4AF37]"
+            className="w-8 h-8 text-[var(--color-brand-gold)]"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -30,11 +30,11 @@ export default async function MaintenancePage({ searchParams }: MaintenancePageP
           </svg>
         </div>
         <h1 className="text-2xl font-bold text-white mb-4">Under Maintenance</h1>
-        <p className="text-gray-400 mb-6">
+        <p className="text-silver mb-6">
           {message ??
             'ASCYN PRO is undergoing scheduled maintenance. Please check back soon.'}
         </p>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-silver-gray">
           Platform administrators may still sign in.
         </p>
       </div>

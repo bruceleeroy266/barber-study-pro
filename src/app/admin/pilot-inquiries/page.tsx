@@ -30,11 +30,11 @@ type PilotInquiry = {
 }
 
 const statusStyles: Record<string, string> = {
-  new: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-  contacted: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
-  approved: 'bg-green-500/10 text-green-400 border-green-500/20',
-  declined: 'bg-red-500/10 text-red-400 border-red-500/20',
-  spam: 'bg-gray-500/10 text-gray-400 border-gray-500/20',
+  new: 'bg-silver/10 text-silver border-silver/20',
+  contacted: 'bg-warm-bronze/10 text-warm-bronze border-warm-bronze/20',
+  approved: 'bg-gold/10 text-gold border-gold/20',
+  declined: 'bg-silver/10 text-silver border-silver/20',
+  spam: 'bg-silver-gray/10 text-silver border-silver-gray/20',
 }
 
 const statusIcons: Record<string, React.ReactNode> = {
@@ -84,23 +84,23 @@ export default async function PilotInquiriesPage() {
   const rows: PilotInquiry[] = inquiries ?? []
 
   return (
-    <div className="min-h-screen bg-gray-950 p-4 md:p-8">
+    <div className="min-h-screen bg-black p-4 md:p-8">
         <BackButton fallbackHref="/admin" label="Back to admin dashboard" />
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-white mb-2">Pilot Inquiries</h1>
-            <p className="text-gray-400">
+            <p className="text-silver">
               {rows.length} submission{rows.length === 1 ? '' : 's'} found
             </p>
           </div>
         </div>
 
         {rows.length === 0 ? (
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-12 text-center">
-            <p className="text-gray-400 text-lg">No pilot inquiries yet.</p>
-            <p className="text-gray-500 text-sm mt-2">
-              Submissions from the <Link href="/pilot" className="text-[#D4AF37] hover:underline">/pilot</Link> page will appear here.
+          <div className="bg-charcoal border border-graphite rounded-xl p-12 text-center">
+            <p className="text-silver text-lg">No pilot inquiries yet.</p>
+            <p className="text-silver-gray text-sm mt-2">
+              Submissions from the <Link href="/pilot" className="text-[var(--color-brand-gold)] hover:underline">/pilot</Link> page will appear here.
             </p>
           </div>
         ) : (
@@ -108,8 +108,8 @@ export default async function PilotInquiriesPage() {
             {rows.map((inquiry) => (
               <div
                 key={inquiry.id}
-                className={`bg-gray-900 border rounded-xl p-6 transition-colors ${
-                  inquiry.is_test ? 'border-dashed border-yellow-500/30' : 'border-gray-800'
+                className={`bg-charcoal border rounded-xl p-6 transition-colors ${
+                  inquiry.is_test ? 'border-dashed border-warm-bronze/30' : 'border-graphite'
                 }`}
               >
                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
@@ -123,73 +123,73 @@ export default async function PilotInquiriesPage() {
                         {inquiry.status.charAt(0).toUpperCase() + inquiry.status.slice(1)}
                       </span>
                       {inquiry.is_test && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full border bg-yellow-500/10 text-yellow-400 border-yellow-500/20">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full border bg-warm-bronze/10 text-warm-bronze border-warm-bronze/20">
                           TEST
                         </span>
                       )}
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                      <div className="flex items-center gap-2 text-gray-300">
-                        <Mail className="w-4 h-4 text-[#D4AF37]" />
+                      <div className="flex items-center gap-2 text-light-gray">
+                        <Mail className="w-4 h-4 text-[var(--color-brand-gold)]" />
                         <span>{inquiry.contact_name}</span>
-                        <span className="text-gray-500">•</span>
+                        <span className="text-silver-gray">•</span>
                         <a
                           href={`mailto:${inquiry.email}`}
-                          className="text-[#D4AF37] hover:underline"
+                          className="text-[var(--color-brand-gold)] hover:underline"
                         >
                           {inquiry.email}
                         </a>
                       </div>
 
                       {inquiry.phone && (
-                        <div className="flex items-center gap-2 text-gray-300">
-                          <Phone className="w-4 h-4 text-[#D4AF37]" />
+                        <div className="flex items-center gap-2 text-light-gray">
+                          <Phone className="w-4 h-4 text-[var(--color-brand-gold)]" />
                           <a href={`tel:${inquiry.phone}`} className="hover:text-white">
                             {inquiry.phone}
                           </a>
                         </div>
                       )}
 
-                      <div className="flex items-center gap-2 text-gray-300">
-                        <Tag className="w-4 h-4 text-[#D4AF37]" />
+                      <div className="flex items-center gap-2 text-light-gray">
+                        <Tag className="w-4 h-4 text-[var(--color-brand-gold)]" />
                         <span>{inquiry.program_type}</span>
                         {inquiry.cohort_size && (
-                          <span className="text-gray-500">• Cohort {inquiry.cohort_size}</span>
+                          <span className="text-silver-gray">• Cohort {inquiry.cohort_size}</span>
                         )}
                       </div>
 
-                      <div className="flex items-center gap-2 text-gray-300">
-                        <Calendar className="w-4 h-4 text-[#D4AF37]" />
+                      <div className="flex items-center gap-2 text-light-gray">
+                        <Calendar className="w-4 h-4 text-[var(--color-brand-gold)]" />
                         <span>{formatDate(inquiry.created_at)}</span>
                       </div>
                     </div>
 
                     {(inquiry.utm_source || inquiry.utm_medium || inquiry.utm_campaign) && (
                       <div className="flex flex-wrap items-center gap-2 pt-2">
-                        <span className="text-xs text-gray-500 uppercase tracking-wider">UTM</span>
+                        <span className="text-xs text-silver-gray uppercase tracking-wider">UTM</span>
                         {inquiry.utm_source && (
-                          <span className="px-2 py-1 text-xs rounded bg-gray-800 text-gray-300">
+                          <span className="px-2 py-1 text-xs rounded bg-graphite text-light-gray">
                             source: {inquiry.utm_source}
                           </span>
                         )}
                         {inquiry.utm_medium && (
-                          <span className="px-2 py-1 text-xs rounded bg-gray-800 text-gray-300">
+                          <span className="px-2 py-1 text-xs rounded bg-graphite text-light-gray">
                             medium: {inquiry.utm_medium}
                           </span>
                         )}
                         {inquiry.utm_campaign && (
-                          <span className="px-2 py-1 text-xs rounded bg-gray-800 text-gray-300">
+                          <span className="px-2 py-1 text-xs rounded bg-graphite text-light-gray">
                             campaign: {inquiry.utm_campaign}
                           </span>
                         )}
                         {inquiry.utm_term && (
-                          <span className="px-2 py-1 text-xs rounded bg-gray-800 text-gray-300">
+                          <span className="px-2 py-1 text-xs rounded bg-graphite text-light-gray">
                             term: {inquiry.utm_term}
                           </span>
                         )}
                         {inquiry.utm_content && (
-                          <span className="px-2 py-1 text-xs rounded bg-gray-800 text-gray-300">
+                          <span className="px-2 py-1 text-xs rounded bg-graphite text-light-gray">
                             content: {inquiry.utm_content}
                           </span>
                         )}
@@ -197,8 +197,8 @@ export default async function PilotInquiriesPage() {
                     )}
 
                     {inquiry.message && (
-                      <div className="bg-gray-950/50 border border-gray-800 rounded-lg p-4 mt-2">
-                        <p className="text-gray-300 text-sm whitespace-pre-wrap">{inquiry.message}</p>
+                      <div className="bg-black/50 border border-graphite rounded-lg p-4 mt-2">
+                        <p className="text-light-gray text-sm whitespace-pre-wrap">{inquiry.message}</p>
                       </div>
                     )}
                   </div>
@@ -212,7 +212,7 @@ export default async function PilotInquiriesPage() {
                       defaultSubject={`RE: ASCYN PRO Pilot Inquiry - ${inquiry.school_name}`}
                     />
                     {inquiry.is_test && (
-                      <span className="text-xs text-yellow-500/80">Safe to delete</span>
+                      <span className="text-xs text-warm-bronze/80">Safe to delete</span>
                     )}
                   </div>
                 </div>

@@ -7,6 +7,7 @@ import { isSupabaseConfigured } from '@/lib/demo-helpers'
 import { isTypingTarget } from '@/lib/keyboard-shortcuts'
 import { Flag } from 'lucide-react'
 import { Flashcard } from '@/types'
+import { Button, Card, Badge, ProgressBar, EmptyState, Alert } from '@/components/ui'
 
 interface FlashcardClientProps {
   flashcards: Flashcard[]
@@ -319,35 +320,35 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
   if (effectiveFlashcards.length === 0 && studyMode === 'flagged') {
     return (
       <div className="space-y-6">
-        <div className="flex justify-center gap-2 p-1 bg-gray-800 rounded-lg">
-          <button
+        <div className="flex justify-center gap-2 p-1 bg-[var(--color-background-secondary)] rounded-lg">
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={() => handleModeChange('all')}
             aria-pressed={false}
-            className="px-4 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2 focus:ring-offset-gray-900 text-gray-300 hover:text-white"
           >
             All Flashcards
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="primary"
+            size="sm"
             onClick={() => handleModeChange('flagged')}
             aria-pressed={true}
-            className="px-4 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2 focus:ring-offset-gray-900 bg-[#D4AF37] text-gray-900"
           >
             Flagged Flashcards
-          </button>
+          </Button>
         </div>
-        <div className="text-center p-8 bg-gray-800/50 rounded-xl border border-gray-700">
-          <p className="text-gray-300 mb-2">No flagged flashcards yet.</p>
-          <p className="text-sm text-gray-500">Study in All Flashcards mode and click 🚩 Need More Practice on any card you want to review again.</p>
-        </div>
+        <EmptyState
+          title="No flagged flashcards yet."
+          description="Study in All Flashcards mode and click 🚩 Need More Practice on any card you want to review again."
+        />
       </div>
     )
   }
 
   if (!currentCard) {
     return (
-      <div className="text-center p-8 text-gray-400">
-        No flashcards available.
-      </div>
+      <EmptyState title="No flashcards available." />
     )
   }
 
@@ -357,73 +358,60 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
       <div
         role="group"
         aria-label="Flashcard study mode"
-        className="flex justify-center gap-2 p-1 bg-gray-800 rounded-lg"
+        className="flex justify-center gap-2 p-1 bg-[var(--color-background-secondary)] rounded-lg"
       >
-        <button
+        <Button
+          variant={studyMode === 'all' ? 'primary' : 'ghost'}
+          size="sm"
           onClick={() => handleModeChange('all')}
           aria-pressed={studyMode === 'all'}
-          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2 focus:ring-offset-gray-900 ${
-            studyMode === 'all' ? 'bg-[#D4AF37] text-gray-900' : 'text-gray-300 hover:text-white'
-          }`}
         >
           All Flashcards
-        </button>
-        <button
+        </Button>
+        <Button
+          variant={studyMode === 'flagged' ? 'primary' : 'ghost'}
+          size="sm"
           onClick={() => handleModeChange('flagged')}
           aria-pressed={studyMode === 'flagged'}
-          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2 focus:ring-offset-gray-900 ${
-            studyMode === 'flagged' ? 'bg-[#D4AF37] text-gray-900' : 'text-gray-300 hover:text-white'
-          }`}
         >
           Flagged Flashcards
-        </button>
+        </Button>
       </div>
 
       {/* Progress bar */}
-      <div
-        className="w-full bg-gray-800 rounded-full h-2"
-        role="progressbar"
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={Math.round(progress)}
+      <ProgressBar
+        value={progress}
+        variant="default"
+        size="md"
+        showLabel={false}
         aria-label={`Flashcard progress: card ${safeIndex + 1} of ${effectiveFlashcards.length}`}
-      >
-        <div
-          className="bg-[#D4AF37] h-2 rounded-full transition-all duration-300"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
-      <div className="text-center text-sm text-gray-400">
+      />
+      <div className="text-center text-sm text-[var(--color-text-muted)]">
         Card {safeIndex + 1} of {effectiveFlashcards.length}
         {studyMode === 'flagged' && (
-          <span className="ml-2 text-[#D4AF37]">({flaggedIds.size} flagged)</span>
+          <span className="ml-2 text-[var(--color-brand-gold)]">({flaggedIds.size} flagged)</span>
         )}
       </div>
 
       {/* Error alerts */}
       {flagError && (
-        <div
-          role="alert"
-          className="rounded-lg p-4 bg-red-500/10 border border-red-500/30 text-red-400 text-sm"
-        >
+        <Alert variant="error" className="mb-4">
           <p className="font-medium">{flagError}</p>
-        </div>
+        </Alert>
       )}
 
       {saveError && (
-        <div
-          role="alert"
-          className="rounded-lg p-4 bg-red-500/10 border border-red-500/30 text-red-400 text-sm"
-        >
+        <Alert variant="error" className="mb-4">
           <p className="font-medium mb-2">{saveError}</p>
-          <button
+          <Button
+            variant="outline"
+            size="sm"
             onClick={handleMarkComplete}
             disabled={saving}
-            className="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-md text-xs font-medium transition-colors disabled:opacity-50"
           >
             {saving ? 'Retrying...' : 'Try Again'}
-          </button>
-        </div>
+          </Button>
+        </Alert>
       )}
 
       {/* Flashcard */}
@@ -438,7 +426,7 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
             handleFlip()
           }
         }}
-        className="relative h-64 md:h-80 cursor-pointer perspective-1000 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2 focus:ring-offset-gray-900 rounded-xl"
+        className="relative h-64 md:h-80 cursor-pointer perspective-1000 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)] focus:ring-offset-2 focus:ring-offset-gray-900 rounded-xl"
       >
         <div
           className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d ${
@@ -451,25 +439,25 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
         >
           {/* Front */}
           <div
-            className="absolute inset-0 bg-gray-800 border border-gray-700 rounded-xl p-8 flex items-center justify-center backface-hidden"
+            className="absolute inset-0 bg-[var(--color-background-secondary)] border border-[var(--color-border-primary)] rounded-xl p-8 flex items-center justify-center backface-hidden"
             style={{ backfaceVisibility: 'hidden' }}
           >
             <div className="text-center">
               {isFlagged && (
-                <div className="inline-flex items-center gap-1 px-2 py-1 mb-3 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-medium">
+                <div className="inline-flex items-center gap-1 px-2 py-1 mb-3 rounded-full bg-silver/10 border border-silver/30 text-silver text-xs font-medium">
                   <Flag className="w-3 h-3" aria-hidden="true" />
                   <span>Needs Practice</span>
                 </div>
               )}
-              <p className="text-sm text-gray-500 mb-4">Question</p>
+              <p className="text-sm text-[var(--color-text-muted)] mb-4">Question</p>
               <p className="text-xl md:text-2xl text-white font-medium">{currentCard.front}</p>
-              <p className="text-xs text-gray-600 mt-8">Click to flip</p>
+              <p className="text-xs text-silver-gray mt-8">Click to flip</p>
             </div>
           </div>
 
           {/* Back */}
           <div
-            className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/10 to-gray-800 border border-[#D4AF37]/30 rounded-xl p-8 flex items-center justify-center"
+            className="absolute inset-0 bg-gradient-to-br from-[var(--color-brand-gold)]/10 to-graphite border border-[var(--color-brand-gold)]/30 rounded-xl p-8 flex items-center justify-center"
             style={{
               backfaceVisibility: 'hidden',
               transform: 'rotateY(180deg)'
@@ -477,15 +465,15 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
           >
             <div className="text-center">
               {isFlagged && (
-                <div className="inline-flex items-center gap-1 px-2 py-1 mb-3 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-medium">
+                <div className="inline-flex items-center gap-1 px-2 py-1 mb-3 rounded-full bg-silver/10 border border-silver/30 text-silver text-xs font-medium">
                   <Flag className="w-3 h-3" aria-hidden="true" />
                   <span>Needs Practice</span>
                 </div>
               )}
-              <p className="text-sm text-[#D4AF37] mb-4">Answer</p>
+              <p className="text-sm text-[var(--color-brand-gold)] mb-4">Answer</p>
               <p className="text-xl md:text-2xl text-white font-medium">{currentCard.back}</p>
               {currentCard.category && (
-                <span className="inline-block mt-4 px-3 py-1 bg-gray-700 text-gray-300 text-xs rounded-full">
+                <span className="inline-block mt-4 px-3 py-1 bg-[var(--color-border-secondary)] text-[var(--color-text-secondary)] text-xs rounded-full">
                   {currentCard.category}
                 </span>
               )}
@@ -496,59 +484,58 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
 
       {/* Controls */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-        <button
+        <Button
+          variant="secondary"
           onClick={handlePrevious}
           disabled={safeIndex === 0}
-          className="w-full sm:w-auto px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2 focus:ring-offset-gray-900"
+          className="w-full sm:w-auto"
         >
           ← Previous
-        </button>
+        </Button>
 
         <div className="flex flex-wrap items-center justify-center gap-2 w-full sm:w-auto">
-          <button
+          <Button
+            variant={isFlagged ? 'outline' : 'secondary'}
+            size="sm"
             onClick={toggleFlag}
             disabled={isLoadingFlags || !userId || !backendFlaggingReady}
             aria-pressed={isFlagged}
             aria-label={isFlagged ? 'Remove flag from this flashcard' : 'Flag this flashcard for more practice'}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50 ${
-              isFlagged
-                ? 'bg-red-500/10 text-red-400 border border-red-500/30 hover:bg-red-500/20'
-                : 'bg-gray-800 text-gray-300 border border-gray-700 hover:bg-gray-700 hover:text-white'
-            }`}
           >
             <span className="flex items-center gap-1.5">
               <Flag className="w-4 h-4" aria-hidden="true" />
               {isFlagged ? 'Remove Flag' : 'Need More Practice'}
             </span>
-          </button>
+          </Button>
 
           {!completed && safeIndex === effectiveFlashcards.length - 1 && (
-            <button
+            <Button
+              variant="primary"
               onClick={handleMarkComplete}
               disabled={saving}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 disabled:opacity-50 transition-colors focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2 focus:ring-offset-gray-900"
             >
               {saving ? 'Saving...' : '✓ Mark Complete'}
-            </button>
+            </Button>
           )}
           {completed && (
-            <span className="px-4 py-2 bg-green-500/10 text-green-400 rounded-lg">
+            <Badge variant="success" size="lg">
               ✓ Completed
-            </span>
+            </Badge>
           )}
         </div>
 
-        <button
+        <Button
+          variant="secondary"
           onClick={handleNext}
           disabled={safeIndex === effectiveFlashcards.length - 1}
-          className="w-full sm:w-auto px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2 focus:ring-offset-gray-900"
+          className="w-full sm:w-auto"
         >
           Next →
-        </button>
+        </Button>
       </div>
 
       {/* Keyboard hint */}
-      <p className="text-center text-xs text-gray-600">
+      <p className="text-center text-xs text-silver-gray">
         Press spacebar to flip • Use arrow keys to navigate
       </p>
     </div>

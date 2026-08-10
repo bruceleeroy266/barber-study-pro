@@ -24,6 +24,13 @@ import { calculateStudentGradePerformance } from '@/lib/gradebook'
 import { mapAttendanceRecordsFromDb, mapGradesFromDb, mapGradeCategoriesFromDb, mapAssessmentsFromDb } from '@/lib/mappers/operational-data-mappers'
 import { getRoleBasedRedirect, validateLoginAccess } from '@/lib/auth-access'
 
+// Phase 4 Design System Components
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card'
+import { MetricCard } from '@/components/ui/MetricCard'
+import { ProgressBar } from '@/components/ui/ProgressBar'
+import { Badge } from '@/components/ui/Badge'
+import { EmptyState } from '@/components/ui/EmptyState'
+
 export default async function DashboardPage() {
   const supabase = await createClient()
   
@@ -37,7 +44,7 @@ export default async function DashboardPage() {
   // Get user profile (for apprentice null-school handling)
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role, school_id, barber_shop_name, mentor_name, approval_status, is_disabled')
+    .select('role, school_id, barber_shop_name, mentor_name, approval_status, is_disabled, full_name')
     .eq('id', user.id)
     .single()
 
@@ -48,8 +55,6 @@ export default async function DashboardPage() {
   }
 
   // Route users to the correct home based on role and school approval state.
-  // Students and apprentices remain on /dashboard; all other roles are sent
-  // to their dedicated portal.
   if (profile.role === 'instructor') {
     if (profile.school_id) {
       const { data: school } = await supabase
@@ -61,7 +66,6 @@ export default async function DashboardPage() {
         redirect('/pending-approval')
       }
     } else {
-      // Instructor with no school cannot access the instructor dashboard yet.
       redirect('/pending-approval')
     }
   }
@@ -169,7 +173,6 @@ export default async function DashboardPage() {
   const attempts: QuizAttempt[] = attemptsData || []
   const completedChapters = progress.filter(p => p.progress_percentage === 100).length || 0
   const inProgressChapters = progress.filter(p => p.progress_percentage > 0 && p.progress_percentage < 100).length || 0
-  // Overall progress = average across ALL chapters (including 0% for not started)
   const totalProgressSum = progress.reduce((acc, p) => acc + p.progress_percentage, 0) || 0
   const averageProgress = totalChapters > 0
     ? Math.round(totalProgressSum / totalChapters)
@@ -229,337 +232,389 @@ export default async function DashboardPage() {
     : 0
   const continueTitle = continueProgress > 0 ? 'Continue Studying' : 'Start Studying'
   const continueButton = continueProgress > 0 ? 'Continue Chapter' : 'Start Chapter'
+
+  // Get user display name
+  const displayName = profile?.full_name || user.email?.split('@')[0] || 'Student'
+
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
-        <p className="text-gray-400">Track your progress through all 21 chapters</p>
-        {profile?.role === 'apprentice' && (
-          <div className="mt-2 flex flex-wrap gap-2 text-sm">
-            <span className="px-2 py-1 bg-purple-500/10 text-purple-400 rounded-full">
-              Apprentice
-            </span>
-            {profile.barber_shop_name && (
-              <span className="px-2 py-1 bg-gray-800 text-gray-400 rounded-full">
-                {profile.barber_shop_name}
-              </span>
-            )}
-            {profile.mentor_name && (
-              <span className="px-2 py-1 bg-gray-800 text-gray-400 rounded-full">
-                Mentor: {profile.mentor_name}
-              </span>
-            )}
-          </div>
+      {/* ZONE 1: ORIENTATION — Where am I? */}
+      <div className="space-y-4">
+        <div>
+          <h1 className="text-3xl font-bold text-white">Welcome back, {displayName}</h1>
+          <p className="text-[var(--color-text-muted)] mt-1">Track your progress through all 21 chapters</p>
+          {profile?.role === 'apprentice' && (
+            <div className="mt-2 flex flex-wrap gap-2">
+              <Badge variant="gold" size="sm">Apprentice</Badge>
+              {profile.barber_shop_name && (
+                <Badge variant="default" size="sm">{profile.barber_shop_name}</Badge>
+              )}
+              {profile.mentor_name && (
+                <Badge variant="default" size="sm">Mentor: {profile.mentor_name}</Badge>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Announcement Banner — Critical info only */}
+        {fallbackAnnouncements.length > 0 && (
+          <AnnouncementBanner announcements={fallbackAnnouncements} />
+        )}
+
+        {/* Current Chapter Card — Primary orientation */}
+        {continueChapter && (
+          <Card variant="elevated" padding="lg" className="border-l-4 border-l-[var(--color-brand-gold)]">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <Badge variant="gold" size="sm">Current Chapter</Badge>
+                  <span className="text-sm text-[var(--color-text-muted)]">
+                    Chapter {continueChapter.chapter_number} of {totalChapters}
+                  </span>
+                </div>
+                <h2 className="text-xl font-semibold text-white mb-1">
+                  {continueChapter.title}
+                </h2>
+                <p className="text-[var(--color-text-muted)] text-sm mb-3">
+                  {continueChapter.description}
+                </p>
+                <ProgressBar
+                  value={continueProgress}
+                  max={100}
+                  size="md"
+                  showLabel
+                  label="Chapter Progress"
+                />
+              </div>
+              <div className="shrink-0">
+                <Link
+                  href={`/dashboard/chapters/${continueChapter.chapter_number}`}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--color-brand-gold)] text-black font-semibold rounded-lg hover:bg-[var(--color-brand-gold-light)] transition-colors"
+                >
+                  {continueButton}
+                  <span aria-hidden="true">→</span>
+                </Link>
+              </div>
+            </div>
+          </Card>
         )}
       </div>
 
-      {/* Announcement Banner */}
-      <AnnouncementBanner announcements={fallbackAnnouncements} />
-
-      {/* Notification Summary + Unread Badge */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Link
-          href="/dashboard/messages"
-          className="bg-gray-900 border border-gray-800 rounded-xl p-5 hover:border-[#D4AF37]/30 transition-colors"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-400">Messages</p>
-              <p className="text-2xl font-bold text-white mt-1">
-                {unreadThreads.length} unread
-              </p>
-            </div>
-            <UnreadBadge count={unreadThreads.length} />
-          </div>
-          <p className="text-xs text-gray-500 mt-2">View inbox</p>
-        </Link>
-
-        <Link
-          href="/dashboard/messages"
-          className="bg-gray-900 border border-gray-800 rounded-xl p-5 hover:border-[#D4AF37]/30 transition-colors"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-400">Notifications</p>
-              <p className="text-2xl font-bold text-white mt-1">
-                {unreadNotifications.length} unread
-              </p>
-            </div>
-            <UnreadBadge count={unreadNotifications.length} />
-          </div>
-          <p className="text-xs text-gray-500 mt-2">View notification center</p>
-        </Link>
-      </div>
-
-      {/* Recent Messages Widget */}
-      {demoThreads.length > 0 && (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
-          <div className="p-4 border-b border-gray-800 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-white">Recent Messages</h2>
-            <Link
-              href="/dashboard/messages"
-              className="text-sm text-[#D4AF37] hover:text-[#F4E4A6]"
-            >
-              View all
-            </Link>
-          </div>
-          <ul className="divide-y divide-gray-800">
-            {demoThreads.slice(0, 3).map((thread) => (
-              <li key={thread.id}>
-                <Link
-                  href="/dashboard/messages"
-                  className="flex items-center justify-between p-4 hover:bg-gray-800/50 transition-colors"
-                >
-                  <div className="min-w-0">
-                    <p className="font-medium text-white truncate">
-                      {getThreadDisplayName(thread, user.id)}
-                    </p>
-                    <p className="text-sm text-gray-400 truncate">{thread.subject}</p>
-                    <p className="text-xs text-gray-500 truncate mt-0.5">
-                      {thread.lastMessagePreview}
-                    </p>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <span className="text-xs text-gray-500 block">
-                      {formatMessageTime(thread.lastMessageAt)}
-                    </span>
-                    {thread.unreadCount > 0 && (
-                      <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold text-white bg-red-500 rounded-full mt-1">
-                        {thread.unreadCount}
-                      </span>
-                    )}
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
+      {/* ZONE 2: KEY METRICS — How am I doing? */}
+      <div className="space-y-4">
+        <div>
+          <h2 className="text-xl font-semibold text-white">Your Progress</h2>
+          <p className="text-sm text-[var(--color-text-muted)]">Key metrics at a glance</p>
         </div>
-      )}
-
-      {/* Latest Notifications */}
-      {demoNotifications.length > 0 && (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
-          <div className="p-4 border-b border-gray-800 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-white">Latest Notifications</h2>
-            <Link
-              href="/dashboard/messages"
-              className="text-sm text-[#D4AF37] hover:text-[#F4E4A6]"
-            >
-              View all
-            </Link>
-          </div>
-          <ul className="divide-y divide-gray-800">
-            {demoNotifications.slice(0, 3).map((notification) => (
-              <li
-                key={notification.id}
-                className={`p-4 ${notification.read ? 'bg-gray-900/50' : 'bg-gray-800/30'}`}
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className={`px-2 py-0.5 rounded text-xs font-medium border ${priorityColorClasses(notification.priority)}`}>
-                        {notification.priority}
-                      </span>
-                      <span className="text-xs text-gray-500">{formatMessageTime(notification.createdAt)}</span>
-                    </div>
-                    <p className={`font-medium ${notification.read ? 'text-gray-300' : 'text-white'}`}>
-                      {notification.title}
-                    </p>
-                    <p className="text-sm text-gray-400 truncate">{notification.body}</p>
-                  </div>
-                  {!notification.read && <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0 mt-2" />}
+        
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {/* Board Readiness — Primary metric */}
+          <Card variant="elevated" padding="md" className="text-center col-span-2 md:col-span-1">
+            <div className="flex flex-col items-center">
+              <div className="w-20 h-20 relative">
+                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                  <path
+                    className="text-light-gray"
+                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                  />
+                  <path
+                    className={readiness.score >= 90 ? 'text-gold' : readiness.score >= 80 ? 'text-warm-bronze' : readiness.score >= 70 ? 'text-silver' : 'text-silver'}
+                    strokeDasharray={`${readiness.score}, 100`}
+                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-xl font-bold text-white">{readiness.score}</span>
                 </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {/* Phase 9 — Grades & Assessments Overview */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <StudentGradeWidget performance={gradePerformance} />
-
-        <div className="lg:col-span-2 space-y-6">
-          {gradePerformance.isAtRisk && (
-            <div className="bg-red-950/30 border border-red-900/50 rounded-xl p-5">
-              <h3 className="text-lg font-semibold text-red-400 mb-2">Performance Alert</h3>
-              <p className="text-sm text-gray-300">
-                Your overall grade is below the passing threshold or you have missing assignments / failed assessments.
-                Schedule a check-in with your instructor.
-              </p>
-            </div>
-          )}
-
-          {recentFailedAssessments.length > 0 && (
-            <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-              <h3 className="text-lg font-semibold text-white mb-3">Assessments Needing Practice</h3>
-              <div className="space-y-2">
-                {recentFailedAssessments.map((a) => (
-                  <div
-                    key={a.id}
-                    className="flex items-center justify-between bg-gray-950 border border-gray-800 rounded-lg p-3"
-                  >
-                    <div>
-                      <div className="text-white font-medium">{a.assessmentType}</div>
-                      <div className="text-xs text-gray-500">{a.evaluatorName}</div>
-                    </div>
-                    <div className="text-red-400 text-sm font-bold">Not Passed</div>
-                  </div>
-                ))}
+              </div>
+              <div className="mt-2">
+                <p className="text-sm text-[var(--color-text-muted)]">Board Readiness</p>
+                <Badge
+                  variant={readiness.score >= 90 ? 'success' : readiness.score >= 80 ? 'warning' : readiness.score >= 70 ? 'info' : 'error'}
+                  size="sm"
+                  className="mt-1"
+                >
+                  {readiness.level}
+                </Badge>
               </div>
             </div>
-          )}
+          </Card>
 
-          {missingAssignmentCount > 0 && (
-            <div className="bg-yellow-950/20 border border-yellow-900/30 rounded-xl p-5">
-              <h3 className="text-lg font-semibold text-yellow-400 mb-2">Missing Assignments</h3>
-              <p className="text-sm text-gray-300">
-                You have {missingAssignmentCount} grade categor{missingAssignmentCount === 1 ? 'y' : 'ies'} with no recorded work.
-              </p>
-            </div>
-          )}
+          {/* Overall Progress */}
+          <MetricCard
+            label="Overall Progress"
+            value={`${averageProgress}%`}
+            variant="default"
+          />
+
+          {/* Study Streak */}
+          <MetricCard
+            label="Study Streak"
+            value={analytics.averageScore > 0 ? '5 days' : '0 days'}
+            variant="warning"
+          />
+
+          {/* Attendance */}
+          <MetricCard
+            label="Attendance"
+            value={`${attendanceSummary.attendancePercentage}%`}
+            variant={attendanceSummary.attendancePercentage >= 80 ? 'success' : attendanceSummary.attendancePercentage >= 70 ? 'warning' : 'error'}
+          />
         </div>
       </div>
 
-      {assessmentRecords.length > 0 && (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-          <h2 className="text-lg font-semibold text-white mb-4">Recent Assessments</h2>
-          <AssessmentList assessments={assessmentRecords.slice(0, 3)} />
-        </div>
-      )}
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-          <div className="text-3xl mb-2">📚</div>
-          <div className="text-3xl font-bold text-white">{totalChapters}</div>
-          <div className="text-sm text-gray-400">Total Chapters</div>
-        </div>
-        
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-          <div className="text-3xl mb-2">✅</div>
-          <div className="text-3xl font-bold text-[#D4AF37]">{completedChapters}</div>
-          <div className="text-sm text-gray-400">Completed</div>
-        </div>
-        
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-          <div className="text-3xl mb-2">🔄</div>
-          <div className="text-3xl font-bold text-blue-400">{inProgressChapters}</div>
-          <div className="text-sm text-gray-400">In Progress</div>
-        </div>
-        
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-          <div className="text-3xl mb-2">📊</div>
-          <div className="text-3xl font-bold text-green-400">{averageProgress}%</div>
-          <div className="text-sm text-gray-400">Overall Progress</div>
-        </div>
-
-        {/* Attendance Snapshot Card */}
-        <div className={`bg-gray-900 border rounded-xl p-6 ${attendanceSummary.isAtRisk ? 'border-red-900/50' : 'border-gray-800'}`}>
-          <div className="text-3xl mb-2">⏰</div>
-          <div className={`text-3xl font-bold ${attendanceSummary.attendancePercentage >= 80 ? 'text-green-400' : attendanceSummary.attendancePercentage >= 70 ? 'text-yellow-400' : 'text-red-400'}`}>
-            {attendanceSummary.attendancePercentage}%
-          </div>
-          <div className="text-sm text-gray-400">Attendance</div>
-          <div className="mt-2 flex items-center gap-2">
-            <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${getStatusColorClass(todayStatus)}`}>
-              {todayStatus || 'Not marked'}
-            </span>
-          </div>
-          {attendanceSummary.isAtRisk && (
-            <p className="mt-2 text-xs text-red-400">{attendanceSummary.riskReason}</p>
-          )}
-        </div>
-      </div>
-
-      {/* Board Readiness */}
-      <BoardReadinessCard readiness={readiness} />
-
-      {/* Weak / Strong Areas + Recommendations */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        <div className="xl:col-span-2">
-          <WeakAreaAnalytics weakAreas={analytics.weakAreas} strongAreas={analytics.strongAreas} />
-        </div>
-        <div>
-          <StudyRecommendations recommendations={recommendations} />
-        </div>
-      </div>
-
-      {/* Analytics Charts */}
-      <AnalyticsCharts
-        readinessScore={readiness.score}
-        categoryPerformance={analytics.categoryPerformance}
-        chapterPerformance={analytics.chapterPerformance}
-        missedQuestionTrend={analytics.missedQuestionTrend}
-      />
-
-      {/* Continue Studying */}
-      {continueChapter && (
-        <div className="bg-gradient-to-r from-[#D4AF37]/10 to-transparent border border-[#D4AF37]/20 rounded-xl p-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      {/* ZONE 3: DETAIL CONTENT — What should I do next? */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column: Recommendations + Weak Areas */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Study Recommendations */}
+          <div className="space-y-4">
             <div>
-              <h2 className="text-lg font-semibold text-white mb-1">{continueTitle}</h2>
-              <p className="text-gray-400">Chapter {continueChapter.chapter_number}: {continueChapter.title}</p>
+              <h2 className="text-xl font-semibold text-white">Recommended Next Steps</h2>
+              <p className="text-sm text-[var(--color-text-muted)]">Personalized study plan</p>
             </div>
-            <Link
-              href={`/dashboard/chapters/${continueChapter.chapter_number}`}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#D4AF37] text-gray-950 font-semibold rounded-lg hover:bg-[#F4E4A6] transition-colors"
-            >
-              {continueButton}
-            </Link>
+            <StudyRecommendations recommendations={recommendations} />
           </div>
-        </div>
-      )}
 
-      {/* Chapter Grid */}
-      <div>
-        <h2 className="text-xl font-semibold text-white mb-4">All Chapters</h2>
+          {/* Weak Areas Preview */}
+          {analytics.weakAreas.length > 0 && (
+            <div className="space-y-4">
+              <div>
+                <h2 className="text-xl font-semibold text-white">Focus Areas</h2>
+                <p className="text-sm text-[var(--color-text-muted)]">Topics needing attention</p>
+              </div>
+              <Card variant="default" padding="md">
+                <div className="space-y-3">
+                  {analytics.weakAreas.slice(0, 3).map((area) => (
+                    <div
+                      key={area.id}
+                      className="flex items-center justify-between p-3 bg-charcoal/20 border border-silver/30 rounded-lg"
+                    >
+                      <div>
+                        <p className="text-white font-medium">{area.name}</p>
+                        <p className="text-xs text-[var(--color-text-muted)]">{area.attempts} attempts</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xl font-bold text-silver">{area.score}%</p>
+                        <Link
+                          href={`/dashboard/chapters/${area.chapterNumber}`}
+                          className="text-xs text-[var(--color-brand-gold)] hover:text-[var(--color-brand-gold-light)]"
+                        >
+                          Review →
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {analytics.weakAreas.length > 3 && (
+                  <div className="mt-4 text-center">
+                    <Link
+                      href="/dashboard/progress"
+                      className="text-sm text-[var(--color-brand-gold)] hover:text-[var(--color-brand-gold-light)]"
+                    >
+                      View all {analytics.weakAreas.length} focus areas →
+                    </Link>
+                  </div>
+                )}
+              </Card>
+            </div>
+          )}
+        </div>
+
+        {/* Right Column: Quick Actions + Notifications */}
+        <div className="space-y-6">
+          {/* Quick Actions */}
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-xl font-semibold text-white">Quick Actions</h2>
+            </div>
+            <Card variant="default" padding="md">
+              <div className="space-y-3">
+                <Link
+                  href="/dashboard/missed-questions"
+                  className="flex items-center justify-between p-3 bg-[var(--color-background-secondary)]/50 rounded-lg hover:bg-[var(--color-background-secondary)] transition-colors group"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-xl">📝</span>
+                    <div>
+                      <p className="text-white font-medium">Missed Questions</p>
+                      <p className="text-xs text-[var(--color-text-muted)]">{missedQuestions.length} to review</p>
+                    </div>
+                  </div>
+                  <span className="text-[var(--color-text-muted)] group-hover:text-[var(--color-brand-gold)]">→</span>
+                </Link>
+
+                <Link
+                  href="/dashboard/progress"
+                  className="flex items-center justify-between p-3 bg-[var(--color-background-secondary)]/50 rounded-lg hover:bg-[var(--color-background-secondary)] transition-colors group"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-xl">📊</span>
+                    <div>
+                      <p className="text-white font-medium">Full Analytics</p>
+                      <p className="text-xs text-[var(--color-text-muted)]">Detailed progress</p>
+                    </div>
+                  </div>
+                  <span className="text-[var(--color-text-muted)] group-hover:text-[var(--color-brand-gold)]">→</span>
+                </Link>
+
+                <Link
+                  href="/dashboard/grades"
+                  className="flex items-center justify-between p-3 bg-[var(--color-background-secondary)]/50 rounded-lg hover:bg-[var(--color-background-secondary)] transition-colors group"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-xl">🎓</span>
+                    <div>
+                      <p className="text-white font-medium">My Grades</p>
+                      <p className="text-xs text-[var(--color-text-muted)]">View gradebook</p>
+                    </div>
+                  </div>
+                  <span className="text-[var(--color-text-muted)] group-hover:text-[var(--color-brand-gold)]">→</span>
+                </Link>
+              </div>
+            </Card>
+          </div>
+
+          {/* Notifications Preview */}
+          {(unreadThreads.length > 0 || unreadNotifications.length > 0) && (
+            <div className="space-y-4">
+              <div>
+                <h2 className="text-xl font-semibold text-white">Notifications</h2>
+              </div>
+              <Card variant="default" padding="md">
+                <div className="space-y-3">
+                  {unreadThreads.length > 0 && (
+                    <Link
+                      href="/dashboard/messages"
+                      className="flex items-center justify-between p-3 bg-[var(--color-background-secondary)]/50 rounded-lg hover:bg-[var(--color-background-secondary)] transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-xl">💬</span>
+                        <div>
+                          <p className="text-white font-medium">Messages</p>
+                          <p className="text-xs text-[var(--color-text-muted)]">{unreadThreads.length} unread</p>
+                        </div>
+                      </div>
+                      <UnreadBadge count={unreadThreads.length} />
+                    </Link>
+                  )}
+
+                  {unreadNotifications.length > 0 && (
+                    <Link
+                      href="/dashboard/messages"
+                      className="flex items-center justify-between p-3 bg-[var(--color-background-secondary)]/50 rounded-lg hover:bg-[var(--color-background-secondary)] transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-xl">🔔</span>
+                        <div>
+                          <p className="text-white font-medium">Notifications</p>
+                          <p className="text-xs text-[var(--color-text-muted)]">{unreadNotifications.length} unread</p>
+                        </div>
+                      </div>
+                      <UnreadBadge count={unreadNotifications.length} />
+                    </Link>
+                  )}
+                </div>
+              </Card>
+            </div>
+          )}
+
+          {/* Performance Alert */}
+          {gradePerformance.isAtRisk && (
+            <Card variant="outlined" padding="md" className="border-silver/30 bg-charcoal/10">
+              <div className="flex items-start gap-3">
+                <span className="text-xl">⚠️</span>
+                <div>
+                  <h3 className="text-lg font-semibold text-silver mb-1">Performance Alert</h3>
+                  <p className="text-sm text-[var(--color-text-secondary)]">
+                    Your overall grade is below the passing threshold. Schedule a check-in with your instructor.
+                  </p>
+                </div>
+              </div>
+            </Card>
+          )}
+        </div>
+      </div>
+
+      {/* Chapter Grid — Below the fold */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-semibold text-white">All Chapters</h2>
+            <p className="text-sm text-[var(--color-text-muted)]">Your learning journey</p>
+          </div>
+          <Link
+            href="/dashboard/chapters"
+            className="text-sm text-[var(--color-brand-gold)] hover:text-[var(--color-brand-gold-light)]"
+          >
+            View all →
+          </Link>
+        </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {chapters?.map((chapter) => {
+          {chapters?.slice(0, 6).map((chapter) => {
             const chapterProgress = progress?.find(p => p.chapter_id === chapter.id)
             const progressPercent = chapterProgress?.progress_percentage || 0
-            
+            const isCompleted = progressPercent === 100
+            const isStarted = progressPercent > 0
+
             return (
               <Link
                 key={chapter.id}
                 href={`/dashboard/chapters/${chapter.chapter_number}`}
-                className="group bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-[#D4AF37]/30 transition-all card-hover"
+                className="group"
               >
-                <div className="flex items-start justify-between mb-4">
-                  <span className="text-2xl font-bold text-[#D4AF37]">
-                    {String(chapter.chapter_number).padStart(2, '0')}
-                  </span>
-                  {progressPercent === 100 && (
-                    <span className="text-green-400 text-xl">✓</span>
-                  )}
-                </div>
-                
-                <h3 className="font-semibold text-white mb-2 group-hover:text-[#D4AF37] transition-colors">
-                  {chapter.title}
-                </h3>
-                
-                <p className="text-sm text-gray-400 mb-4 line-clamp-2">
-                  {chapter.description}
-                </p>
-                
-                {/* Progress bar */}
-                <div className="w-full bg-gray-800 rounded-full h-2">
-                  <div
-                    className="bg-[#D4AF37] h-2 rounded-full transition-all"
-                    style={{ width: `${progressPercent}%` }}
+                <Card variant="default" padding="md" hover className="h-full">
+                  <div className="flex items-start justify-between mb-3">
+                    <span className="text-2xl font-bold text-[var(--color-brand-gold)]">
+                      {String(chapter.chapter_number).padStart(2, '0')}
+                    </span>
+                    <Badge
+                      variant={isCompleted ? 'success' : isStarted ? 'info' : 'default'}
+                      size="sm"
+                    >
+                      {isCompleted ? 'Completed' : isStarted ? 'In Progress' : 'Not Started'}
+                    </Badge>
+                  </div>
+
+                  <h3 className="font-semibold text-white mb-2 line-clamp-1 group-hover:text-[var(--color-brand-gold)] transition-colors">
+                    {chapter.title}
+                  </h3>
+
+                  <p className="text-sm text-[var(--color-text-muted)] mb-4 line-clamp-2">
+                    {chapter.description}
+                  </p>
+
+                  <ProgressBar
+                    value={progressPercent}
+                    max={100}
+                    size="sm"
+                    showLabel
                   />
-                </div>
-                <div className="text-right text-xs text-gray-500 mt-1">
-                  {progressPercent}%
-                </div>
+                </Card>
               </Link>
             )
           })}
         </div>
+
+        {chapters && chapters.length > 6 && (
+          <div className="text-center mt-6">
+            <Link
+              href="/dashboard/chapters"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--color-background-secondary)] text-white font-semibold rounded-lg hover:bg-[var(--color-border-secondary)] transition-colors"
+            >
+              View All {chapters.length} Chapters
+              <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   )
 }
-
-

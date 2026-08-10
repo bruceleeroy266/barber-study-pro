@@ -99,11 +99,11 @@ export default function ProScenario({ scenarios, theme }: ProScenarioProps) {
 
                   if (isRevealed) {
                     if (isCorrectOption) {
-                      borderColor = '#10B981'
+                      borderColor = 'var(--color-brand-gold)'
                       bgColor = 'rgba(16, 185, 129, 0.08)'
                       glowEffect = '0 0 20px rgba(16, 185, 129, 0.15)'
                     } else if (isSelected && !isCorrectOption) {
-                      borderColor = '#EF4444'
+                      borderColor = 'var(--color-brand-silver)'
                       bgColor = 'rgba(239, 68, 68, 0.06)'
                     }
                   } else if (isSelected) {
@@ -130,7 +130,7 @@ export default function ProScenario({ scenarios, theme }: ProScenarioProps) {
                         className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5 transition-all"
                         style={{
                           backgroundColor: isSelected ? t.primary : `${t.primary}15`,
-                          color: isSelected ? '#fff' : t.primary,
+                          color: isSelected ? 'var(--color-brand-white)' : t.primary,
                           border: `1px solid ${isSelected ? t.primary : `${t.primary}30`}`,
                         }}
                       >
@@ -152,10 +152,10 @@ export default function ProScenario({ scenarios, theme }: ProScenarioProps) {
                         )}
                       </div>
                       {isRevealed && isCorrectOption && (
-                        <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#10B981' }} />
+                        <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'var(--color-brand-gold)' }} />
                       )}
                       {isRevealed && isSelected && !isCorrectOption && (
-                        <XCircle className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#EF4444' }} />
+                        <XCircle className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'var(--color-brand-silver)' }} />
                       )}
                       {!isRevealed && (
                         <ChevronRight className="w-4 h-4 flex-shrink-0 mt-1 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: t.primary }} />
@@ -175,7 +175,7 @@ export default function ProScenario({ scenarios, theme }: ProScenarioProps) {
                     background: selected !== undefined
                       ? `linear-gradient(135deg, ${t.primary}, ${t.primaryDark})`
                       : t.backgroundAlt,
-                    color: selected !== undefined ? '#fff' : t.textMuted,
+                    color: selected !== undefined ? 'var(--color-brand-white)' : t.textMuted,
                     boxShadow: selected !== undefined ? `0 4px 16px ${t.primary}30` : 'none',
                   }}
                 >
@@ -190,7 +190,7 @@ export default function ProScenario({ scenarios, theme }: ProScenarioProps) {
                     className="rounded-lg p-4"
                     style={{
                       backgroundColor: isCorrect ? 'rgba(16, 185, 129, 0.08)' : 'rgba(245, 166, 35, 0.08)',
-                      borderLeft: `3px solid ${isCorrect ? '#10B981' : '#F59E0B'}`,
+                      borderLeft: `3px solid ${isCorrect ? 'var(--color-brand-gold)' : 'var(--color-brand-warm-bronze)'}`,
                     }}
                   >
                     <p className="text-sm" style={{ color: t.textMuted }}>

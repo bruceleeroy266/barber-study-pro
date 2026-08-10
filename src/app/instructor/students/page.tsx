@@ -88,15 +88,15 @@ function computeStudentStats(
 function readinessBadgeClasses(level: string): string {
   switch (level) {
     case 'Ready':
-      return 'bg-green-500/20 text-green-400 border-green-500/30'
+      return 'bg-gold/20 text-gold border-gold/30'
     case 'Nearly Ready':
-      return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
+      return 'bg-warm-bronze/20 text-warm-bronze border-warm-bronze/30'
     case 'Needs Review':
-      return 'bg-orange-500/20 text-orange-400 border-orange-500/30'
+      return 'bg-warm-bronze/20 text-warm-bronze border-warm-bronze/30'
     case 'At Risk':
-      return 'bg-red-500/20 text-red-400 border-red-500/30'
+      return 'bg-silver/20 text-silver border-silver/30'
     default:
-      return 'bg-gray-700 text-gray-300 border-gray-600'
+      return 'bg-[var(--color-border-secondary)] text-[var(--color-text-secondary)] border-silver-gray'
   }
 }
 
@@ -179,43 +179,43 @@ export default async function InstructorStudentsPage() {
   })
 
   return (
-    <div className="min-h-screen bg-gray-950 p-6 md:p-8">
+    <div className="min-h-screen bg-[var(--color-background-primary)] p-6 md:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Students</h1>
-          <p className="text-gray-400">
+          <p className="text-[var(--color-text-muted)]">
             {schoolName} — Manage and monitor your student roster
           </p>
         </div>
 
         {/* Key Metrics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-            <div className="text-2xl font-bold text-[#D4AF37]">{totalStudents}</div>
-            <div className="text-xs text-gray-400 mt-1">Total Students</div>
+          <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-5">
+            <div className="text-2xl font-bold text-[var(--color-brand-gold)]">{totalStudents}</div>
+            <div className="text-xs text-[var(--color-text-muted)] mt-1">Total Students</div>
           </div>
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-            <div className="text-2xl font-bold text-blue-400">{activeStudents}</div>
-            <div className="text-xs text-gray-400 mt-1">Active This Week</div>
+          <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-5">
+            <div className="text-2xl font-bold text-silver">{activeStudents}</div>
+            <div className="text-xs text-[var(--color-text-muted)] mt-1">Active This Week</div>
           </div>
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-            <div className={`text-2xl font-bold ${atRiskStudents.length > 0 ? 'text-red-400' : 'text-green-400'}`}>
+          <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-5">
+            <div className={`text-2xl font-bold ${atRiskStudents.length > 0 ? 'text-silver' : 'text-gold'}`}>
               {atRiskStudents.length}
             </div>
-            <div className="text-xs text-gray-400 mt-1">At-Risk Students</div>
+            <div className="text-xs text-[var(--color-text-muted)] mt-1">At-Risk Students</div>
           </div>
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-            <div className="text-2xl font-bold text-green-400">
+          <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-5">
+            <div className="text-2xl font-bold text-gold">
               {studentStats.filter((s) => s.readinessLevel === 'Ready').length}
             </div>
-            <div className="text-xs text-gray-400 mt-1">Board Ready</div>
+            <div className="text-xs text-[var(--color-text-muted)] mt-1">Board Ready</div>
           </div>
         </div>
 
         {/* At-Risk Students Alert */}
         {atRiskStudents.length > 0 && (
-          <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-6">
-            <h2 className="text-lg font-semibold text-red-400 mb-4 flex items-center gap-2">
+          <div className="bg-silver/10 border border-silver/30 rounded-xl p-6">
+            <h2 className="text-lg font-semibold text-silver mb-4 flex items-center gap-2">
               <span>⚠️</span> Students Needing Attention ({atRiskStudents.length})
             </h2>
             <div className="space-y-3">
@@ -227,12 +227,12 @@ export default async function InstructorStudentsPage() {
                 if (student.daysSinceActive !== null && student.daysSinceActive > 14) factors.push('Inactive')
                 
                 return (
-                  <div key={student.id} className="flex items-center justify-between bg-gray-900/50 rounded-lg p-4">
+                  <div key={student.id} className="flex items-center justify-between bg-[var(--color-background-primary)]/50 rounded-lg p-4">
                     <div className="flex items-center gap-4">
                       <StudentIdentity student={student} />
                       <div className="flex flex-wrap gap-1">
                         {factors.map((factor) => (
-                          <span key={factor} className="px-2 py-0.5 bg-red-500/20 text-red-400 rounded text-xs">
+                          <span key={factor} className="px-2 py-0.5 bg-silver/20 text-silver rounded text-xs">
                             {factor}
                           </span>
                         ))}
@@ -240,7 +240,7 @@ export default async function InstructorStudentsPage() {
                     </div>
                     <Link
                       href={`/instructor/student/${student.id}`}
-                      className="px-4 py-2 bg-[#D4AF37] hover:bg-[#F4E4A6] text-gray-950 font-semibold rounded-lg transition-colors text-sm"
+                      className="px-4 py-2 bg-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold-light)] text-black font-semibold rounded-lg transition-colors text-sm"
                     >
                       View Details →
                     </Link>
@@ -249,7 +249,7 @@ export default async function InstructorStudentsPage() {
               })}
             </div>
             {atRiskStudents.length > 5 && (
-              <p className="text-sm text-gray-400 mt-4">
+              <p className="text-sm text-[var(--color-text-muted)] mt-4">
                 +{atRiskStudents.length - 5} more at-risk students
               </p>
             )}
@@ -257,10 +257,10 @@ export default async function InstructorStudentsPage() {
         )}
 
         {/* Student Roster */}
-        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
-          <div className="p-6 border-b border-gray-800">
+        <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl overflow-hidden">
+          <div className="p-6 border-b border-[var(--color-border-primary)]">
             <h2 className="text-xl font-semibold text-white">Student Roster</h2>
-            <p className="text-sm text-gray-400 mt-1">
+            <p className="text-sm text-[var(--color-text-muted)] mt-1">
               {totalStudents} student{totalStudents === 1 ? '' : 's'} in your school
             </p>
           </div>
@@ -269,7 +269,7 @@ export default async function InstructorStudentsPage() {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="text-left text-sm text-gray-400 border-b border-gray-800">
+                  <tr className="text-left text-sm text-[var(--color-text-muted)] border-b border-[var(--color-border-primary)]">
                     <th className="p-4">Student</th>
                     <th className="p-4">Role</th>
                     <th className="p-4">Overall Progress</th>
@@ -281,25 +281,25 @@ export default async function InstructorStudentsPage() {
                 </thead>
                 <tbody className="text-sm">
                   {studentStats.map((student) => (
-                    <tr key={student.id} className="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors">
+                    <tr key={student.id} className="border-b border-[var(--color-border-primary)]/50 hover:bg-[var(--color-background-secondary)]/30 transition-colors">
                       <td className="p-4">
                         <StudentIdentity student={student} />
                       </td>
                       <td className="p-4">
-                        <span className="capitalize text-gray-300">{student.role}</span>
+                        <span className="capitalize text-[var(--color-text-secondary)]">{student.role}</span>
                       </td>
                       <td className="p-4">
                         <div className="flex items-center gap-3">
-                          <div className="flex-1 bg-gray-800 rounded-full h-2 w-24">
+                          <div className="flex-1 bg-[var(--color-background-secondary)] rounded-full h-2 w-24">
                             <div
                               className={`h-2 rounded-full ${
-                                student.overallProgress >= 80 ? 'bg-green-500' :
-                                student.overallProgress >= 50 ? 'bg-yellow-500' : 'bg-red-500'
+                                student.overallProgress >= 80 ? 'bg-gold' :
+                                student.overallProgress >= 50 ? 'bg-warm-bronze' : 'bg-silver'
                               }`}
                               style={{ width: `${student.overallProgress}%` }}
                             />
                           </div>
-                          <span className="text-gray-300 text-xs w-10 text-right">{student.overallProgress}%</span>
+                          <span className="text-[var(--color-text-secondary)] text-xs w-10 text-right">{student.overallProgress}%</span>
                         </div>
                       </td>
                       <td className="p-4">
@@ -314,20 +314,20 @@ export default async function InstructorStudentsPage() {
                       </td>
                       <td className="p-4">
                         <span className={`font-semibold ${
-                          student.avgQuizScore >= 80 ? 'text-green-400' :
-                          student.avgQuizScore >= 60 ? 'text-yellow-400' :
-                          student.avgQuizScore > 0 ? 'text-red-400' : 'text-gray-500'
+                          student.avgQuizScore >= 80 ? 'text-gold' :
+                          student.avgQuizScore >= 60 ? 'text-warm-bronze' :
+                          student.avgQuizScore > 0 ? 'text-silver' : 'text-[var(--color-text-muted)]'
                         }`}>
                           {student.avgQuizScore > 0 ? `${student.avgQuizScore}%` : '—'}
                         </span>
                       </td>
-                      <td className="p-4 text-gray-400">
+                      <td className="p-4 text-[var(--color-text-muted)]">
                         {student.daysSinceActive !== null ? `${student.daysSinceActive}d ago` : 'Never'}
                       </td>
                       <td className="p-4">
                         <Link
                           href={`/instructor/student/${student.id}`}
-                          className="text-[#D4AF37] hover:text-[#F4E4A6] font-medium"
+                          className="text-[var(--color-brand-gold)] hover:text-[var(--color-brand-gold-light)] font-medium"
                         >
                           View →
                         </Link>
@@ -338,9 +338,9 @@ export default async function InstructorStudentsPage() {
               </table>
             </div>
           ) : (
-            <div className="p-8 text-center text-gray-400">
+            <div className="p-8 text-center text-[var(--color-text-muted)]">
               No students found in your school yet.
-              <p className="text-sm text-gray-500 mt-2">
+              <p className="text-sm text-[var(--color-text-muted)] mt-2">
                 Students will appear here once they sign up and select &quot;{schoolName}&quot;.
               </p>
             </div>

@@ -20,6 +20,7 @@ import {
 } from 'lucide-react'
 import { Profile } from '@/types'
 import { isAdmin } from '@/lib/auth-helpers'
+import { Logo } from '@/components/brand'
 
 interface AdminNavProps {
   user: Profile | null
@@ -61,16 +62,16 @@ export default function AdminNav({ user }: AdminNavProps) {
   return (
     <>
       {/* Mobile header */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-800 px-4 py-3">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-charcoal/95 backdrop-blur-sm border-b border-graphite px-4 py-3">
         <div className="flex items-center justify-between">
           <Link href="/admin" className="flex items-center gap-2">
-            <img src="/logo.svg" alt="ASCYN PRO" className="h-7 w-auto" />
-            <Shield className="w-4 h-4 text-[#D4AF37]" />
+            <Logo variant="horizontal" theme="dark" size="sm" />
+            <Shield className="w-4 h-4 text-[var(--color-brand-gold)]" />
           </Link>
           <button
             type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="p-2 text-gray-400 hover:text-white"
+            className="p-2 text-silver hover:text-white"
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
           >
             {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -80,7 +81,7 @@ export default function AdminNav({ user }: AdminNavProps) {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="lg:hidden fixed inset-0 z-40 bg-gray-950 pt-16">
+        <div className="lg:hidden fixed inset-0 z-40 bg-black pt-16">
           <nav className="p-4 space-y-2">
             {navLinks.map((link) => {
               const Icon = link.icon
@@ -92,8 +93,8 @@ export default function AdminNav({ user }: AdminNavProps) {
                   onClick={() => setMobileOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                     active
-                      ? 'bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/20'
-                      : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                      ? 'bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/20'
+                      : 'text-silver hover:bg-graphite hover:text-white'
                   }`}
                 >
                   <Icon className="w-5 h-5" />
@@ -104,7 +105,7 @@ export default function AdminNav({ user }: AdminNavProps) {
             <button
               type="button"
               onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+              className="w-full flex items-center gap-3 px-4 py-3 text-silver hover:bg-silver/10 rounded-lg transition-colors"
             >
               <LogOut className="w-5 h-5" />
               <span className="font-medium">Logout</span>
@@ -114,17 +115,17 @@ export default function AdminNav({ user }: AdminNavProps) {
       )}
 
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 bg-gray-900 border-r border-gray-800 flex-col">
+      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 bg-charcoal border-r border-graphite flex-col">
         <div className="p-6">
           <Link href="/admin" className="flex items-center gap-2 mb-8">
-            <img src="/logo.svg" alt="ASCYN PRO" className="h-8 w-auto" />
-            <Shield className="w-5 h-5 text-[#D4AF37]" />
+            <Logo variant="horizontal" theme="dark" size="md" />
+            <Shield className="w-5 h-5 text-[var(--color-brand-gold)]" />
           </Link>
 
-          <div className="mb-6 pb-6 border-b border-gray-800">
-            <p className="text-sm text-gray-400 mb-1">Admin,</p>
+          <div className="mb-6 pb-6 border-b border-graphite">
+            <p className="text-sm text-silver mb-1">Admin,</p>
             <p className="font-medium text-white truncate">{user?.full_name || 'Administrator'}</p>
-            <span className="inline-block mt-2 px-2 py-1 bg-[#D4AF37]/10 text-[#D4AF37] text-xs rounded capitalize">
+            <span className="inline-block mt-2 px-2 py-1 bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] text-xs rounded capitalize">
               {user?.role || 'admin'}
             </span>
           </div>
@@ -139,8 +140,8 @@ export default function AdminNav({ user }: AdminNavProps) {
                   href={link.href}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                     active
-                      ? 'bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/20'
-                      : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                      ? 'bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/20'
+                      : 'text-silver hover:bg-graphite hover:text-white'
                   }`}
                 >
                   <Icon className="w-5 h-5" />
@@ -151,11 +152,11 @@ export default function AdminNav({ user }: AdminNavProps) {
           </nav>
         </div>
 
-        <div className="mt-auto p-6 border-t border-gray-800">
+        <div className="mt-auto p-6 border-t border-graphite">
           <button
             type="button"
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+            className="w-full flex items-center gap-3 px-4 py-3 text-silver hover:bg-silver/10 rounded-lg transition-colors"
           >
             <LogOut className="w-5 h-5" />
             <span className="font-medium">Logout</span>

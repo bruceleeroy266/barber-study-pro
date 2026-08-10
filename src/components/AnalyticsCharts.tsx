@@ -22,10 +22,10 @@ function BarChart({ data, color }: { data: { label: string; value: number }[]; c
       {data.map((item) => (
         <div key={item.label} className="space-y-1">
           <div className="flex justify-between text-xs">
-            <span className="text-gray-400 truncate mr-2">{item.label}</span>
+            <span className="text-silver truncate mr-2">{item.label}</span>
             <span className="text-white font-medium">{item.value}%</span>
           </div>
-          <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+          <div className="h-2 bg-graphite rounded-full overflow-hidden">
             <div
               className={`h-full ${color} rounded-full`}
               style={{ width: `${(item.value / max) * 100}%` }}
@@ -39,7 +39,7 @@ function BarChart({ data, color }: { data: { label: string; value: number }[]; c
 
 function LineChart({ data }: { data: { date: string; count: number }[] }) {
   if (data.length === 0) {
-    return <p className="text-gray-500 text-sm">No data available.</p>
+    return <p className="text-silver-gray text-sm">No data available.</p>
   }
 
   const max = Math.max(1, ...data.map((d) => d.count))
@@ -80,7 +80,7 @@ function LineChart({ data }: { data: { date: string; count: number }[] }) {
           )
         })}
       </svg>
-      <div className="flex justify-between text-xs text-gray-500 mt-2">
+      <div className="flex justify-between text-xs text-silver-gray mt-2">
         {data.filter((_, i) => i % 3 === 0 || i === data.length - 1).map((d, i) => (
           <span key={i}>{formatDate(d.date)}</span>
         ))}
@@ -95,7 +95,7 @@ function ReadinessGauge({ score }: { score: number }) {
       <div className="w-32 h-32 relative">
         <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
           <path
-            className="text-gray-800"
+            className="text-light-gray"
             d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
             fill="none"
             stroke="currentColor"
@@ -103,9 +103,9 @@ function ReadinessGauge({ score }: { score: number }) {
           />
           <path
             className={
-              score >= 90 ? 'text-green-400' :
-              score >= 80 ? 'text-yellow-400' :
-              score >= 70 ? 'text-orange-400' : 'text-red-400'
+              score >= 90 ? 'text-gold' :
+              score >= 80 ? 'text-warm-bronze' :
+              score >= 70 ? 'text-warm-bronze' : 'text-silver'
             }
             strokeDasharray={`${score}, 100`}
             d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
@@ -118,7 +118,7 @@ function ReadinessGauge({ score }: { score: number }) {
           <span className="text-2xl font-bold text-white">{score}</span>
         </div>
       </div>
-      <p className="text-sm text-gray-400 mt-2">Current Readiness</p>
+      <p className="text-sm text-silver mt-2">Current Readiness</p>
     </div>
   )
 }
@@ -143,31 +143,31 @@ export default function AnalyticsCharts({
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+      <div className="bg-charcoal border border-graphite rounded-xl p-6">
         <h3 className="text-lg font-semibold text-white mb-4">Readiness Score</h3>
         <ReadinessGauge score={readinessScore} />
       </div>
 
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+      <div className="bg-charcoal border border-graphite rounded-xl p-6">
         <h3 className="text-lg font-semibold text-white mb-4">Missed Question Trend</h3>
         <LineChart data={missedQuestionTrend} />
       </div>
 
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+      <div className="bg-charcoal border border-graphite rounded-xl p-6">
         <h3 className="text-lg font-semibold text-white mb-4">Category Performance</h3>
         {categories.length > 0 ? (
-          <BarChart data={categories} color="bg-blue-500" />
+          <BarChart data={categories} color="bg-silver" />
         ) : (
-          <p className="text-gray-500 text-sm">Complete quizzes to see category performance.</p>
+          <p className="text-silver-gray text-sm">Complete quizzes to see category performance.</p>
         )}
       </div>
 
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+      <div className="bg-charcoal border border-graphite rounded-xl p-6">
         <h3 className="text-lg font-semibold text-white mb-4">Chapter Performance</h3>
         {chapters.length > 0 ? (
-          <BarChart data={chapters} color="bg-[#D4AF37]" />
+          <BarChart data={chapters} color="bg-[var(--color-brand-gold)]" />
         ) : (
-          <p className="text-gray-500 text-sm">Complete quizzes to see chapter performance.</p>
+          <p className="text-silver-gray text-sm">Complete quizzes to see chapter performance.</p>
         )}
       </div>
     </div>

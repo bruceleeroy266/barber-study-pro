@@ -36,27 +36,27 @@ export function formatPreviewText(body: string, maxLength = 80): string {
 export function priorityColorClasses(priority: NotificationPriority): string {
   switch (priority) {
     case 'urgent':
-      return 'bg-red-500/20 text-red-400 border-red-500/30'
+      return 'bg-silver/20 text-silver border-silver/30'
     case 'high':
-      return 'bg-orange-500/20 text-orange-400 border-orange-500/30'
+      return 'bg-warm-bronze/20 text-warm-bronze border-warm-bronze/30'
     case 'medium':
-      return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
+      return 'bg-warm-bronze/20 text-warm-bronze border-warm-bronze/30'
     case 'low':
     default:
-      return 'bg-gray-700 text-gray-300 border-gray-600'
+      return 'bg-[var(--color-border-secondary)] text-light-gray border-silver-gray'
   }
 }
 
 export function priorityDotClass(priority: NotificationPriority): string {
   switch (priority) {
     case 'urgent':
-      return 'bg-red-500'
+      return 'bg-silver'
     case 'high':
-      return 'bg-orange-500'
+      return 'bg-warm-bronze'
     case 'medium':
-      return 'bg-yellow-500'
+      return 'bg-warm-bronze'
     case 'low':
     default:
-      return 'bg-gray-500'
+      return 'bg-silver-gray'
   }
 }

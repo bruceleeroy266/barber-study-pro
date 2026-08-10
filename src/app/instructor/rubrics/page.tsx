@@ -36,12 +36,12 @@ export default async function InstructorRubricsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 p-6 md:p-8">
+    <div className="min-h-screen bg-[var(--color-background-primary)] p-6 md:p-8">
         <BackButton fallbackHref="/instructor" label="Back to instructor dashboard" />
       <div className="max-w-7xl mx-auto space-y-8">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Assessment Rubrics</h1>
-          <p className="text-gray-400">Review rubric criteria and practice evaluation</p>
+          <p className="text-[var(--color-text-muted)]">Review rubric criteria and practice evaluation</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -54,7 +54,7 @@ export default async function InstructorRubricsPage() {
         </div>
 
         {rubrics.length === 0 && (
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 text-center text-gray-500">
+          <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-8 text-center text-[var(--color-text-muted)]">
             No rubrics found.
           </div>
         )}

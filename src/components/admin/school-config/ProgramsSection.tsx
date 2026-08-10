@@ -106,12 +106,12 @@ export default function ProgramsSection({ config, onChange }: Props) {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-white mb-1">Academic Programs</h2>
-          <p className="text-sm text-gray-400">Programs offered by the school and their requirements</p>
+          <p className="text-sm text-silver">Programs offered by the school and their requirements</p>
         </div>
         <button
           type="button"
           onClick={() => setIsAdding(true)}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-[#D4AF37] text-gray-950 hover:bg-[#c4a030] transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-[var(--color-brand-gold)] text-black hover:bg-[var(--color-brand-gold)] transition-colors"
         >
           <Plus className="w-4 h-4" />
           Add Program
@@ -120,13 +120,13 @@ export default function ProgramsSection({ config, onChange }: Props) {
 
       {/* Add New Program Form */}
       {isAdding && (
-        <div className="bg-gray-950 border border-[#D4AF37]/30 rounded-lg p-4 space-y-4">
+        <div className="bg-black border border-[var(--color-brand-gold)]/30 rounded-lg p-4 space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-medium text-white">Add New Program</h3>
             <button
               type="button"
               onClick={() => setIsAdding(false)}
-              className="text-gray-400 hover:text-white"
+              className="text-silver hover:text-white"
             >
               <X className="w-5 h-5" />
             </button>
@@ -134,14 +134,14 @@ export default function ProgramsSection({ config, onChange }: Props) {
 
           {/* Templates */}
           <div>
-            <p className="text-sm text-gray-400 mb-2">Quick Templates:</p>
+            <p className="text-sm text-silver mb-2">Quick Templates:</p>
             <div className="flex flex-wrap gap-2">
               {PROGRAM_TEMPLATES.map((template) => (
                 <button
                   key={template.name}
                   type="button"
                   onClick={() => applyTemplate(template)}
-                  className="px-3 py-1.5 rounded-lg text-sm bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700 transition-colors"
+                  className="px-3 py-1.5 rounded-lg text-sm bg-graphite text-light-gray hover:bg-[var(--color-border-secondary)] border border-[var(--color-border-secondary)] transition-colors"
                 >
                   {template.name}
                 </button>
@@ -151,20 +151,20 @@ export default function ProgramsSection({ config, onChange }: Props) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-300 mb-1">
-                Program Name <span className="text-red-400">*</span>
+              <label className="block text-sm font-medium text-light-gray mb-1">
+                Program Name <span className="text-silver">*</span>
               </label>
               <input
                 type="text"
                 value={newProgram.name || ''}
                 onChange={(e) => setNewProgram({ ...newProgram, name: e.target.value })}
-                className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+                className="w-full bg-charcoal border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)]"
                 placeholder="e.g., Barbering"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">
+              <label className="block text-sm font-medium text-light-gray mb-1">
                 Required Hours
               </label>
               <input
@@ -172,12 +172,12 @@ export default function ProgramsSection({ config, onChange }: Props) {
                 min={0}
                 value={newProgram.requiredHours || 0}
                 onChange={(e) => setNewProgram({ ...newProgram, requiredHours: Number(e.target.value) })}
-                className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+                className="w-full bg-charcoal border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)]"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">
+              <label className="block text-sm font-medium text-light-gray mb-1">
                 Required Assessments
               </label>
               <input
@@ -185,12 +185,12 @@ export default function ProgramsSection({ config, onChange }: Props) {
                 min={0}
                 value={newProgram.requiredAssessments || 0}
                 onChange={(e) => setNewProgram({ ...newProgram, requiredAssessments: Number(e.target.value) })}
-                className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+                className="w-full bg-charcoal border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)]"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">
+              <label className="block text-sm font-medium text-light-gray mb-1">
                 Required Practicals
               </label>
               <input
@@ -198,7 +198,7 @@ export default function ProgramsSection({ config, onChange }: Props) {
                 min={0}
                 value={newProgram.requiredPracticals || 0}
                 onChange={(e) => setNewProgram({ ...newProgram, requiredPracticals: Number(e.target.value) })}
-                className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+                className="w-full bg-charcoal border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)]"
               />
             </div>
           </div>
@@ -207,7 +207,7 @@ export default function ProgramsSection({ config, onChange }: Props) {
             <button
               type="button"
               onClick={() => setIsAdding(false)}
-              className="px-4 py-2 rounded-lg text-sm font-medium border border-gray-700 text-gray-300 hover:bg-gray-800 transition-colors"
+              className="px-4 py-2 rounded-lg text-sm font-medium border border-[var(--color-border-secondary)] text-light-gray hover:bg-graphite transition-colors"
             >
               Cancel
             </button>
@@ -215,7 +215,7 @@ export default function ProgramsSection({ config, onChange }: Props) {
               type="button"
               onClick={handleAddProgram}
               disabled={!newProgram.name?.trim()}
-              className="px-4 py-2 rounded-lg text-sm font-medium bg-[#D4AF37] text-gray-950 hover:bg-[#c4a030] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-4 py-2 rounded-lg text-sm font-medium bg-[var(--color-brand-gold)] text-black hover:bg-[var(--color-brand-gold)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               Add Program
             </button>
@@ -228,8 +228,8 @@ export default function ProgramsSection({ config, onChange }: Props) {
         {programs.map((program) => (
           <div
             key={program.id}
-            className={`bg-gray-950 border rounded-lg p-4 transition-colors ${
-              program.active ? 'border-gray-800' : 'border-gray-800 opacity-60'
+            className={`bg-black border rounded-lg p-4 transition-colors ${
+              program.active ? 'border-graphite' : 'border-graphite opacity-60'
             }`}
           >
             {editingId === program.id ? (
@@ -237,19 +237,19 @@ export default function ProgramsSection({ config, onChange }: Props) {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                    <label className="block text-sm font-medium text-light-gray mb-1">
                       Program Name
                     </label>
                     <input
                       type="text"
                       value={editForm.name || ''}
                       onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                      className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+                      className="w-full bg-charcoal border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                    <label className="block text-sm font-medium text-light-gray mb-1">
                       Required Hours
                     </label>
                     <input
@@ -257,12 +257,12 @@ export default function ProgramsSection({ config, onChange }: Props) {
                       min={0}
                       value={editForm.requiredHours || 0}
                       onChange={(e) => setEditForm({ ...editForm, requiredHours: Number(e.target.value) })}
-                      className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+                      className="w-full bg-charcoal border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                    <label className="block text-sm font-medium text-light-gray mb-1">
                       Required Assessments
                     </label>
                     <input
@@ -270,12 +270,12 @@ export default function ProgramsSection({ config, onChange }: Props) {
                       min={0}
                       value={editForm.requiredAssessments || 0}
                       onChange={(e) => setEditForm({ ...editForm, requiredAssessments: Number(e.target.value) })}
-                      className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+                      className="w-full bg-charcoal border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                    <label className="block text-sm font-medium text-light-gray mb-1">
                       Required Practicals
                     </label>
                     <input
@@ -283,7 +283,7 @@ export default function ProgramsSection({ config, onChange }: Props) {
                       min={0}
                       value={editForm.requiredPracticals || 0}
                       onChange={(e) => setEditForm({ ...editForm, requiredPracticals: Number(e.target.value) })}
-                      className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+                      className="w-full bg-charcoal border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)]"
                     />
                   </div>
                 </div>
@@ -292,7 +292,7 @@ export default function ProgramsSection({ config, onChange }: Props) {
                   <button
                     type="button"
                     onClick={handleCancelEdit}
-                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm border border-gray-700 text-gray-300 hover:bg-gray-800 transition-colors"
+                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm border border-[var(--color-border-secondary)] text-light-gray hover:bg-graphite transition-colors"
                   >
                     <X className="w-4 h-4" />
                     Cancel
@@ -300,7 +300,7 @@ export default function ProgramsSection({ config, onChange }: Props) {
                   <button
                     type="button"
                     onClick={handleSaveEdit}
-                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm bg-[#D4AF37] text-gray-950 hover:bg-[#c4a030] transition-colors"
+                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm bg-[var(--color-brand-gold)] text-black hover:bg-[var(--color-brand-gold)] transition-colors"
                   >
                     <Check className="w-4 h-4" />
                     Save
@@ -316,14 +316,14 @@ export default function ProgramsSection({ config, onChange }: Props) {
                     <span
                       className={`px-2 py-0.5 rounded text-xs font-medium ${
                         program.active
-                          ? 'bg-green-500/10 text-green-400 border border-green-500/20'
-                          : 'bg-gray-800 text-gray-400 border border-gray-700'
+                          ? 'bg-gold/10 text-gold border border-gold/20'
+                          : 'bg-graphite text-silver border border-[var(--color-border-secondary)]'
                       }`}
                     >
                       {program.active ? 'Active' : 'Inactive'}
                     </span>
                   </div>
-                  <div className="flex items-center gap-6 mt-2 text-sm text-gray-400">
+                  <div className="flex items-center gap-6 mt-2 text-sm text-silver">
                     <span>{program.requiredHours} hours</span>
                     <span>{program.requiredAssessments} assessments</span>
                     <span>{program.requiredPracticals} practicals</span>
@@ -336,8 +336,8 @@ export default function ProgramsSection({ config, onChange }: Props) {
                     onClick={() => toggleActive(program.id)}
                     className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                       program.active
-                        ? 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 hover:bg-yellow-500/20'
-                        : 'bg-green-500/10 text-green-400 border border-green-500/20 hover:bg-green-500/20'
+                        ? 'bg-warm-bronze/10 text-warm-bronze border border-warm-bronze/20 hover:bg-warm-bronze/20'
+                        : 'bg-gold/10 text-gold border border-gold/20 hover:bg-gold/20'
                     }`}
                   >
                     {program.active ? 'Deactivate' : 'Activate'}
@@ -345,7 +345,7 @@ export default function ProgramsSection({ config, onChange }: Props) {
                   <button
                     type="button"
                     onClick={() => handleEditProgram(program)}
-                    className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+                    className="p-2 rounded-lg text-silver hover:text-white hover:bg-graphite transition-colors"
                     title="Edit program"
                   >
                     <Edit2 className="w-4 h-4" />
@@ -353,7 +353,7 @@ export default function ProgramsSection({ config, onChange }: Props) {
                   <button
                     type="button"
                     onClick={() => handleDeleteProgram(program.id)}
-                    className="p-2 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors"
+                    className="p-2 rounded-lg text-silver hover:text-silver hover:bg-silver/10 transition-colors"
                     title="Delete program"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -366,12 +366,12 @@ export default function ProgramsSection({ config, onChange }: Props) {
       </div>
 
       {programs.length === 0 && (
-        <div className="text-center py-8 bg-gray-950 border border-gray-800 rounded-lg">
-          <p className="text-gray-400">No programs configured.</p>
+        <div className="text-center py-8 bg-black border border-graphite rounded-lg">
+          <p className="text-silver">No programs configured.</p>
           <button
             type="button"
             onClick={() => setIsAdding(true)}
-            className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-[#D4AF37] text-gray-950 hover:bg-[#c4a030] transition-colors"
+            className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-[var(--color-brand-gold)] text-black hover:bg-[var(--color-brand-gold)] transition-colors"
           >
             <Plus className="w-4 h-4" />
             Add Your First Program

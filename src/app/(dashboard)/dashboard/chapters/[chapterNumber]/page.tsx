@@ -89,8 +89,8 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
   return (
     <div className="space-y-8">
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-gray-400">
-        <Link href="/dashboard/chapters" className="hover:text-[#D4AF37] transition-colors">
+      <div className="flex items-center gap-2 text-sm text-silver">
+        <Link href="/dashboard/chapters" className="hover:text-[var(--color-brand-gold)] transition-colors">
           Chapters
         </Link>
         <span>/</span>
@@ -101,7 +101,7 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
       <div>
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-[#D4AF37] transition-colors"
+          className="inline-flex items-center gap-2 text-sm text-silver hover:text-[var(--color-brand-gold)] transition-colors"
         >
           ← Back to Dashboard
         </Link>
@@ -138,14 +138,14 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
 
       {/* Flashcards Section */}
       {flashcards && flashcards.length > 0 && (
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
+        <div className="bg-charcoal border border-graphite rounded-2xl p-8">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-xl font-semibold text-white">Flashcards</h2>
-              <p className="text-gray-400 text-sm">Master key concepts with interactive flashcards</p>
+              <p className="text-silver text-sm">Master key concepts with interactive flashcards</p>
             </div>
             {progress?.flashcards_completed && (
-              <span className="px-3 py-1 bg-green-500/10 text-green-400 text-sm rounded-full">
+              <span className="px-3 py-1 bg-gold/10 text-gold text-sm rounded-full">
                 ✓ Completed
               </span>
             )}
@@ -162,14 +162,14 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
 
       {/* Quiz Section */}
       {quiz && questions && questions.length > 0 && (
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
+        <div className="bg-charcoal border border-graphite rounded-2xl p-8">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-xl font-semibold text-white">Chapter Quiz</h2>
-              <p className="text-gray-400 text-sm">Test your knowledge with {questions.length} questions</p>
+              <p className="text-silver text-sm">Test your knowledge with {questions.length} questions</p>
             </div>
             {progress?.quiz_completed && (
-              <span className="px-3 py-1 bg-green-500/10 text-green-400 text-sm rounded-full">
+              <span className="px-3 py-1 bg-gold/10 text-gold text-sm rounded-full">
                 ✓ Completed
               </span>
             )}
@@ -204,7 +204,7 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
         {num > 1 && (
           <Link
             href={`/dashboard/chapters/${num - 1}`}
-            className="flex items-center gap-2 text-gray-400 hover:text-[#D4AF37] transition-colors"
+            className="flex items-center gap-2 text-silver hover:text-[var(--color-brand-gold)] transition-colors"
           >
             ← Chapter {num - 1}
           </Link>
@@ -212,7 +212,7 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
         {num < 21 && (
           <Link
             href={`/dashboard/chapters/${num + 1}`}
-            className="flex items-center gap-2 text-gray-400 hover:text-[#D4AF37] transition-colors ml-auto"
+            className="flex items-center gap-2 text-silver hover:text-[var(--color-brand-gold)] transition-colors ml-auto"
           >
             Chapter {num + 1} →
           </Link>

@@ -41,23 +41,23 @@ export default async function PendingApprovalPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-950 p-4">
-      <div className="bg-gray-900/80 backdrop-blur-sm border border-gray-800 rounded-2xl p-8 shadow-2xl max-w-md w-full text-center">
+    <div className="min-h-screen flex items-center justify-center bg-black p-4">
+      <div className="bg-charcoal/80 backdrop-blur-sm border border-graphite rounded-2xl p-8 shadow-2xl max-w-md w-full text-center">
         <div className="text-5xl mb-4">⏳</div>
         <h1 className="text-2xl font-bold text-white mb-4">
           Account Pending Approval
         </h1>
-        <p className="text-gray-400 mb-6">
+        <p className="text-silver mb-6">
           Your instructor account and school have been submitted for administrator
           review. You will receive an email once your school is activated.
         </p>
-        <p className="text-sm text-gray-500 mb-6">
+        <p className="text-sm text-silver-gray mb-6">
           If you believe this is an error, please contact your platform
           administrator.
         </p>
         <Link
           href="/login"
-          className="inline-block py-3 px-6 bg-gray-800 text-white font-semibold rounded-lg hover:bg-gray-700 transition-all duration-200 border border-gray-600"
+          className="inline-block py-3 px-6 bg-graphite text-white font-semibold rounded-lg hover:bg-[var(--color-border-secondary)] transition-all duration-200 border border-silver-gray"
         >
           Go to Login
         </Link>

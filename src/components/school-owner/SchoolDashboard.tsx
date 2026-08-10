@@ -284,39 +284,39 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 p-6 lg:p-8">
+    <div className="min-h-screen bg-black p-6 lg:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">School Dashboard</h1>
-          <p className="text-gray-400">Executive visibility into school performance, students, and instructors</p>
+          <p className="text-silver">Executive visibility into school performance, students, and instructors</p>
         </div>
 
         <SchoolHealthScore health={health} />
 
         <SchoolOverviewMetrics metrics={metrics} />
 
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+        <div className="bg-charcoal border border-graphite rounded-xl p-6">
           <h2 className="text-lg font-semibold text-white mb-4">State Board Compliance</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-gray-950 border border-gray-800 rounded-lg p-4">
-              <p className="text-sm text-gray-400">School Compliance Rate</p>
+            <div className="bg-black border border-graphite rounded-lg p-4">
+              <p className="text-sm text-silver">School Compliance Rate</p>
               <p className="text-2xl font-bold text-white">{avgComplianceScore}%</p>
             </div>
-            <div className="bg-gray-950 border border-gray-800 rounded-lg p-4">
-              <p className="text-sm text-gray-400">Eligible Students</p>
-              <p className="text-2xl font-bold text-green-400">{eligibleStudents}</p>
+            <div className="bg-black border border-graphite rounded-lg p-4">
+              <p className="text-sm text-silver">Eligible Students</p>
+              <p className="text-2xl font-bold text-gold">{eligibleStudents}</p>
             </div>
-            <div className="bg-gray-950 border border-gray-800 rounded-lg p-4">
-              <p className="text-sm text-gray-400">Near Eligibility</p>
-              <p className="text-2xl font-bold text-yellow-400">{nearEligibleStudents}</p>
+            <div className="bg-black border border-graphite rounded-lg p-4">
+              <p className="text-sm text-silver">Near Eligibility</p>
+              <p className="text-2xl font-bold text-warm-bronze">{nearEligibleStudents}</p>
             </div>
-            <div className="bg-gray-950 border border-gray-800 rounded-lg p-4">
-              <p className="text-sm text-gray-400">At-Risk Students</p>
-              <p className="text-2xl font-bold text-red-400">{complianceAtRisk}</p>
+            <div className="bg-black border border-graphite rounded-lg p-4">
+              <p className="text-sm text-silver">At-Risk Students</p>
+              <p className="text-2xl font-bold text-silver">{complianceAtRisk}</p>
             </div>
           </div>
           <div className="mt-4">
-            <p className="text-sm text-gray-400">{complianceReport.summary}</p>
+            <p className="text-sm text-silver">{complianceReport.summary}</p>
           </div>
         </div>
 

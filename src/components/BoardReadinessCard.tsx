@@ -3,6 +3,7 @@
 import { BoardReadiness } from '@/types'
 import { getReadinessColorClass, getReadinessBgClass } from '@/lib/readiness'
 import { Award, Target, BookOpen, Zap, Calendar } from 'lucide-react'
+import { Card, ProgressBar } from '@/components/ui'
 
 interface BoardReadinessCardProps {
   readiness: BoardReadiness
@@ -13,14 +14,14 @@ export default function BoardReadinessCard({ readiness }: BoardReadinessCardProp
   const bgClass = getReadinessBgClass(readiness.score)
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 space-y-6">
+    <Card variant="default" padding="lg" className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-            <Award className="w-5 h-5 text-[#D4AF37]" />
+            <Award className="w-5 h-5 text-[var(--color-brand-gold)]" />
             Board Readiness
           </h2>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-sm text-silver mt-1">
             Updated {new Date(readiness.updatedAt).toLocaleDateString()}
           </p>
         </div>
@@ -32,7 +33,7 @@ export default function BoardReadinessCard({ readiness }: BoardReadinessCardProp
           <div className="w-16 h-16 relative">
             <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
               <path
-                className="text-gray-800"
+                className="text-light-gray"
                 d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                 fill="none"
                 stroke="currentColor"
@@ -53,70 +54,65 @@ export default function BoardReadinessCard({ readiness }: BoardReadinessCardProp
 
       {/* Progress bar */}
       <div>
-        <div className="flex justify-between text-xs text-gray-400 mb-1">
+        <div className="flex justify-between text-xs text-silver mb-1">
           <span>At Risk</span>
           <span>Needs Review</span>
           <span>Nearly Ready</span>
           <span>Ready</span>
         </div>
-        <div className="h-3 bg-gray-800 rounded-full overflow-hidden">
-          <div
-            className={`h-full ${bgClass} transition-all duration-500`}
-            style={{ width: `${readiness.score}%` }}
-          />
-        </div>
+        <ProgressBar value={readiness.score} variant="default" size="lg" showLabel={false} />
       </div>
 
       {/* Stats grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-gray-950 border border-gray-800 rounded-lg p-4">
-          <div className="flex items-center gap-2 text-gray-400 text-xs mb-1">
+        <Card variant="ghost" padding="sm">
+          <div className="flex items-center gap-2 text-silver text-xs mb-1">
             <Target className="w-4 h-4" />
             Avg Quiz Score
           </div>
           <p className="text-xl font-bold text-white">{readiness.quizAverage}%</p>
-        </div>
-        <div className="bg-gray-950 border border-gray-800 rounded-lg p-4">
-          <div className="flex items-center gap-2 text-gray-400 text-xs mb-1">
+        </Card>
+        <Card variant="ghost" padding="sm">
+          <div className="flex items-center gap-2 text-silver text-xs mb-1">
             <BookOpen className="w-4 h-4" />
             Chapters Done
           </div>
           <p className="text-xl font-bold text-white">
             {readiness.chaptersCompleted}/{readiness.totalChapters}
           </p>
-        </div>
-        <div className="bg-gray-950 border border-gray-800 rounded-lg p-4">
-          <div className="flex items-center gap-2 text-gray-400 text-xs mb-1">
+        </Card>
+        <Card variant="ghost" padding="sm">
+          <div className="flex items-center gap-2 text-silver text-xs mb-1">
             <Zap className="w-4 h-4" />
             Questions
           </div>
           <p className="text-xl font-bold text-white">{readiness.totalQuestionsAnswered}</p>
-        </div>
-        <div className="bg-gray-950 border border-gray-800 rounded-lg p-4">
-          <div className="flex items-center gap-2 text-gray-400 text-xs mb-1">
+        </Card>
+        <Card variant="ghost" padding="sm">
+          <div className="flex items-center gap-2 text-silver text-xs mb-1">
             <Calendar className="w-4 h-4" />
             Study Time
           </div>
           <p className="text-xl font-bold text-white">{readiness.recommendedStudyMinutes}m</p>
-        </div>
+        </Card>
       </div>
 
       {/* Trend */}
       <div className="flex items-center gap-2 text-sm">
-        <span className="text-gray-400">Recent trend:</span>
+        <span className="text-silver">Recent trend:</span>
         <span
           className={`font-medium ${
             readiness.improvementTrend === 'improving'
-              ? 'text-green-400'
+              ? 'text-gold'
               : readiness.improvementTrend === 'declining'
-              ? 'text-red-400'
-              : 'text-yellow-400'
+              ? 'text-silver'
+              : 'text-warm-bronze'
           }`}
         >
           {readiness.improvementTrend.charAt(0).toUpperCase() +
             readiness.improvementTrend.slice(1)}
         </span>
       </div>
-    </div>
+    </Card>
   )
 }

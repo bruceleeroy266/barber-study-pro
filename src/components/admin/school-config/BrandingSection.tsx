@@ -11,7 +11,7 @@ interface Props {
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null
-  return <p className="text-sm text-red-400 mt-1">{message}</p>
+  return <p className="text-sm text-silver mt-1">{message}</p>
 }
 
 export default function BrandingSection({ config, onChange, errors }: Props) {
@@ -65,13 +65,13 @@ export default function BrandingSection({ config, onChange, errors }: Props) {
     <div className="space-y-6">
       <div>
         <h2 className="text-xl font-semibold text-white mb-1">Branding</h2>
-        <p className="text-sm text-gray-400">Customize your school&apos;s visual identity</p>
+        <p className="text-sm text-silver">Customize your school&apos;s visual identity</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Primary Color */}
-        <div className="bg-gray-950 border border-gray-800 rounded-lg p-4">
-          <label htmlFor="primary-color" className="block text-sm font-medium text-gray-300 mb-2">
+        <div className="bg-black border border-graphite rounded-lg p-4">
+          <label htmlFor="primary-color" className="block text-sm font-medium text-light-gray mb-2">
             Primary Color
           </label>
           <div className="flex items-center gap-3">
@@ -80,26 +80,26 @@ export default function BrandingSection({ config, onChange, errors }: Props) {
               type="color"
               value={branding.primaryColor}
               onChange={(e) => handleColorChange('primaryColor', e.target.value)}
-              className="h-12 w-12 rounded bg-transparent cursor-pointer border border-gray-700"
+              className="h-12 w-12 rounded bg-transparent cursor-pointer border border-[var(--color-border-secondary)]"
             />
             <input
               type="text"
               value={branding.primaryColor}
               onChange={(e) => handleColorChange('primaryColor', e.target.value)}
               aria-invalid={!!errors.brandingPrimaryColor}
-              className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37] aria-invalid:border-red-500 font-mono text-sm"
-              placeholder="#D4AF37"
+              className="flex-1 bg-charcoal border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)] aria-invalid:border-silver font-mono text-sm"
+              placeholder="var(--color-brand-gold)"
             />
           </div>
           <FieldError message={errors.brandingPrimaryColor} />
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-silver-gray mt-2">
             Used for buttons, links, and primary accents throughout the platform.
           </p>
         </div>
 
         {/* Secondary Color */}
-        <div className="bg-gray-950 border border-gray-800 rounded-lg p-4">
-          <label htmlFor="secondary-color" className="block text-sm font-medium text-gray-300 mb-2">
+        <div className="bg-black border border-graphite rounded-lg p-4">
+          <label htmlFor="secondary-color" className="block text-sm font-medium text-light-gray mb-2">
             Secondary Color
           </label>
           <div className="flex items-center gap-3">
@@ -108,33 +108,33 @@ export default function BrandingSection({ config, onChange, errors }: Props) {
               type="color"
               value={branding.secondaryColor}
               onChange={(e) => handleColorChange('secondaryColor', e.target.value)}
-              className="h-12 w-12 rounded bg-transparent cursor-pointer border border-gray-700"
+              className="h-12 w-12 rounded bg-transparent cursor-pointer border border-[var(--color-border-secondary)]"
             />
             <input
               type="text"
               value={branding.secondaryColor}
               onChange={(e) => handleColorChange('secondaryColor', e.target.value)}
               aria-invalid={!!errors.brandingSecondaryColor}
-              className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37] aria-invalid:border-red-500 font-mono text-sm"
-              placeholder="#1F2937"
+              className="flex-1 bg-charcoal border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)] aria-invalid:border-silver font-mono text-sm"
+              placeholder="var(--color-brand-graphite)"
             />
           </div>
           <FieldError message={errors.brandingSecondaryColor} />
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-silver-gray mt-2">
             Used for backgrounds, cards, and secondary UI elements.
           </p>
         </div>
       </div>
 
       {/* Logo Upload */}
-      <div className="bg-gray-950 border border-gray-800 rounded-lg p-4">
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+      <div className="bg-black border border-graphite rounded-lg p-4">
+        <label className="block text-sm font-medium text-light-gray mb-2">
           School Logo
         </label>
 
         {branding.logoUrl ? (
           <div className="flex items-center gap-4">
-            <div className="relative w-24 h-24 bg-gray-900 rounded-lg border border-gray-700 overflow-hidden">
+            <div className="relative w-24 h-24 bg-charcoal rounded-lg border border-[var(--color-border-secondary)] overflow-hidden">
               <img
                 src={branding.logoUrl}
                 alt="School logo"
@@ -142,11 +142,11 @@ export default function BrandingSection({ config, onChange, errors }: Props) {
               />
             </div>
             <div className="flex-1">
-              <p className="text-sm text-gray-400 mb-2">Logo uploaded successfully</p>
+              <p className="text-sm text-silver mb-2">Logo uploaded successfully</p>
               <button
                 type="button"
                 onClick={handleRemoveLogo}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm text-red-400 hover:bg-red-500/10 border border-red-500/20 transition-colors"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm text-silver hover:bg-silver/10 border border-silver/20 transition-colors"
               >
                 <X className="w-4 h-4" />
                 Remove Logo
@@ -154,7 +154,7 @@ export default function BrandingSection({ config, onChange, errors }: Props) {
             </div>
           </div>
         ) : (
-          <div className="border-2 border-dashed border-gray-700 rounded-lg p-6 text-center">
+          <div className="border-2 border-dashed border-[var(--color-border-secondary)] rounded-lg p-6 text-center">
             <input
               ref={fileInputRef}
               type="file"
@@ -169,18 +169,18 @@ export default function BrandingSection({ config, onChange, errors }: Props) {
             >
               {isUploading ? (
                 <>
-                  <div className="w-10 h-10 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin" />
-                  <span className="text-sm text-gray-400">Uploading...</span>
+                  <div className="w-10 h-10 border-2 border-[var(--color-brand-gold)] border-t-transparent rounded-full animate-spin" />
+                  <span className="text-sm text-silver">Uploading...</span>
                 </>
               ) : (
                 <>
-                  <div className="w-12 h-12 bg-gray-900 rounded-lg flex items-center justify-center">
-                    <ImageIcon className="w-6 h-6 text-gray-500" />
+                  <div className="w-12 h-12 bg-charcoal rounded-lg flex items-center justify-center">
+                    <ImageIcon className="w-6 h-6 text-silver-gray" />
                   </div>
-                  <span className="text-sm text-gray-400">
+                  <span className="text-sm text-silver">
                     Click to upload logo
                   </span>
-                  <span className="text-xs text-gray-600">
+                  <span className="text-xs text-silver-gray">
                     PNG, JPG, SVG up to 2MB
                   </span>
                 </>
@@ -189,15 +189,15 @@ export default function BrandingSection({ config, onChange, errors }: Props) {
           </div>
         )}
 
-        <p className="text-xs text-gray-500 mt-2">
+        <p className="text-xs text-silver-gray mt-2">
           Recommended size: 200x200 pixels. Logo will appear in the navigation and on certificates.
         </p>
       </div>
 
       {/* Preview */}
-      <div className="bg-gray-950 border border-gray-800 rounded-lg p-4">
-        <p className="text-sm font-medium text-gray-300 mb-3">Preview</p>
-        <div className="flex items-center gap-4 p-4 bg-gray-900 rounded-lg">
+      <div className="bg-black border border-graphite rounded-lg p-4">
+        <p className="text-sm font-medium text-light-gray mb-3">Preview</p>
+        <div className="flex items-center gap-4 p-4 bg-charcoal rounded-lg">
           <div
             className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold"
             style={{ backgroundColor: branding.primaryColor }}
@@ -206,7 +206,7 @@ export default function BrandingSection({ config, onChange, errors }: Props) {
           </div>
           <div>
             <p className="text-white font-medium">{config.school.name}</p>
-            <p className="text-sm text-gray-400">School Portal</p>
+            <p className="text-sm text-silver">School Portal</p>
           </div>
         </div>
       </div>

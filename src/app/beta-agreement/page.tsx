@@ -250,18 +250,18 @@ function BetaAgreementContent() {
 
   if (initError) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center p-6">
-        <div className="max-w-md w-full bg-gray-900 border border-red-900/50 rounded-xl p-8 text-center">
-          <AlertTriangle className="w-12 h-12 text-red-400 mx-auto mb-4" />
+      <div className="min-h-screen bg-black flex items-center justify-center p-6">
+        <div className="max-w-md w-full bg-charcoal border border-silver/50 rounded-xl p-8 text-center">
+          <AlertTriangle className="w-12 h-12 text-silver mx-auto mb-4" />
           <h1 className="text-xl font-bold text-white mb-2">Unable to load agreement</h1>
-          <p className="text-gray-400 mb-4">
+          <p className="text-silver mb-4">
             Supabase initialization failed. Please refresh the page or contact support if the issue persists.
           </p>
-          <p className="text-red-400 text-sm mb-6">{initError}</p>
+          <p className="text-silver text-sm mb-6">{initError}</p>
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="px-6 py-2 bg-[#D4AF37] hover:bg-[#c4a030] text-black font-semibold rounded-lg transition-colors"
+            className="px-6 py-2 bg-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold)] text-black font-semibold rounded-lg transition-colors"
           >
             Refresh Page
           </button>
@@ -271,25 +271,25 @@ function BetaAgreementContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 p-6 lg:p-8">
+    <div className="min-h-screen bg-black p-6 lg:p-8">
       <div className="max-w-3xl mx-auto print:mx-0">
         <div className="mb-8 print:hidden">
           <h1 className="text-3xl font-bold text-white mb-2">
             ASCYN PRO Beta Tester Agreement & Confidentiality Notice
           </h1>
-          <p className="text-gray-400">
+          <p className="text-silver">
             Version {BETA_AGREEMENT_VERSION} · Effective {EFFECTIVE_DATE}
           </p>
         </div>
 
         <div
           id="agreement-document"
-          className="bg-gray-900 border border-gray-800 rounded-xl p-6 lg:p-8 mb-8 print:bg-white print:text-black print:border-none print:shadow-none"
+          className="bg-charcoal border border-graphite rounded-xl p-6 lg:p-8 mb-8 print:bg-white print:text-black print:border-none print:shadow-none"
         >
           <div className="prose prose-invert max-w-none print:prose-black print:text-sm">
-            <h1 className="text-2xl font-bold mb-4 lg:hidden print:block print:text-xl print:mb-2">
+            <h2 className="text-2xl font-bold mb-4 lg:hidden print:block print:text-xl print:mb-2">
               ASCYN PRO Beta Tester Agreement & Confidentiality Notice
-            </h1>
+            </h2>
             <p className="print:mb-1"><strong>Version:</strong> {BETA_AGREEMENT_VERSION}</p>
             <p className="print:mb-2"><strong>Effective Date:</strong> {EFFECTIVE_DATE}</p>
 
@@ -364,14 +364,14 @@ function BetaAgreementContent() {
           </div>
         </div>
 
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 lg:p-8 mb-8 print:hidden">
+        <div className="bg-charcoal border border-graphite rounded-xl p-6 lg:p-8 mb-8 print:hidden">
           <h2 className="text-lg font-semibold text-white mb-6">Tester Information</h2>
 
           <div className="space-y-4 mb-6">
             <div>
               <label
                 htmlFor="tester-name"
-                className="block text-sm font-medium text-gray-400 mb-1"
+                className="block text-sm font-medium text-silver mb-1"
               >
                 Tester Name
               </label>
@@ -381,7 +381,7 @@ function BetaAgreementContent() {
                 value={name}
                 onChange={(e) => handleNameChange(e.target.value)}
                 disabled={isBusy}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] disabled:opacity-50"
+                className="w-full px-4 py-3 bg-graphite border border-[var(--color-border-secondary)] rounded-lg text-white placeholder-silver-gray focus:border-[var(--color-brand-gold)] focus:ring-1 focus:ring-[var(--color-brand-gold)] disabled:opacity-50"
                 placeholder="Enter your full name"
                 required
               />
@@ -390,7 +390,7 @@ function BetaAgreementContent() {
             <div>
               <label
                 htmlFor="tester-email"
-                className="block text-sm font-medium text-gray-400 mb-1"
+                className="block text-sm font-medium text-silver mb-1"
               >
                 Tester Email
               </label>
@@ -400,7 +400,7 @@ function BetaAgreementContent() {
                 value={email}
                 onChange={(e) => handleEmailChange(e.target.value)}
                 disabled={isBusy}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] disabled:opacity-50"
+                className="w-full px-4 py-3 bg-graphite border border-[var(--color-border-secondary)] rounded-lg text-white placeholder-silver-gray focus:border-[var(--color-brand-gold)] focus:ring-1 focus:ring-[var(--color-brand-gold)] disabled:opacity-50"
                 placeholder="Enter your email address"
                 required
               />
@@ -414,34 +414,34 @@ function BetaAgreementContent() {
               checked={agreed}
               onChange={(e) => handleAgreedChange(e.target.checked)}
               disabled={isBusy}
-              className="mt-1 h-5 w-5 rounded border-gray-700 bg-gray-800 text-[#D4AF37] focus:ring-[#D4AF37] disabled:opacity-50"
+              className="mt-1 h-5 w-5 rounded border-[var(--color-border-secondary)] bg-graphite text-[var(--color-brand-gold)] focus:ring-[var(--color-brand-gold)] disabled:opacity-50"
             />
-            <label htmlFor="agree-checkbox" className="text-gray-300">
+            <label htmlFor="agree-checkbox" className="text-light-gray">
               I agree to the ASCYN PRO Beta Tester Agreement & Confidentiality Notice.
             </label>
           </div>
 
           {error && (
-            <p className="text-red-400 text-sm mb-4" role="alert">
+            <p className="text-silver text-sm mb-4" role="alert">
               {error}
             </p>
           )}
 
           {saved && !error && (
-            <p className="text-green-400 text-sm mb-4">
+            <p className="text-gold text-sm mb-4">
               Agreement accepted. You may continue to the checklist.
             </p>
           )}
 
           {!loaded && (
-            <p className="text-gray-500 text-sm mb-4">Loading agreement status…</p>
+            <p className="text-silver-gray text-sm mb-4">Loading agreement status…</p>
           )}
 
           <div className="flex flex-col sm:flex-row gap-4">
             <button
               type="button"
               onClick={handlePrint}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors print:hidden"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-graphite hover:bg-[var(--color-border-secondary)] text-white rounded-lg transition-colors print:hidden"
             >
               <Printer className="w-5 h-5" />
               Print Agreement
@@ -451,7 +451,7 @@ function BetaAgreementContent() {
               type="button"
               onClick={handleContinue}
               disabled={!canContinue || isContinuePending}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#D4AF37] hover:bg-[#c4a030] disabled:opacity-50 disabled:cursor-not-allowed text-black font-semibold rounded-lg transition-colors print:hidden"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold)] disabled:opacity-50 disabled:cursor-not-allowed text-black font-semibold rounded-lg transition-colors print:hidden"
             >
               {isContinuePending ? 'Continuing…' : 'Continue'}
               <ArrowRight className="w-5 h-5" />
@@ -466,8 +466,8 @@ function BetaAgreementContent() {
 export default function BetaAgreementPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center p-6">
-        <div className="max-w-3xl mx-auto text-center text-gray-400">
+      <div className="min-h-screen bg-black flex items-center justify-center p-6">
+        <div className="max-w-3xl mx-auto text-center text-silver">
           Loading agreement…
         </div>
       </div>
