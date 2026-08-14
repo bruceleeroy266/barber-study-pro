@@ -617,6 +617,17 @@ function DemoStudentContent() {
     if (!isPresentationMode) return
 
     function handleKeyDown(e: KeyboardEvent) {
+      // Skip if user is typing in an input, textarea, select, or editable element
+      const target = e.target as HTMLElement
+      if (
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.tagName === 'SELECT' ||
+        target.isContentEditable
+      ) {
+        return
+      }
+
       switch (e.key) {
         case 'ArrowRight':
         case ' ':
