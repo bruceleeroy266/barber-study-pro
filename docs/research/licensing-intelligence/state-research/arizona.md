@@ -1,7 +1,7 @@
-# Alaska — State Licensing Research
+# Arizona — State Licensing Research
 
-**State:** Alaska  
-**License Type:** Barber (multiple tracks)  
+**State:** Arizona  
+**License Type:** Barber  
 **Research Date:** 2026-08-14  
 **Status:** CONFIRMED
 
@@ -11,19 +11,10 @@
 
 | Field | Value |
 |-------|-------|
-| **State Board** | Alaska Board of Barbers and Hairdressers |
+| **State Board** | UNKNOWN / REQUIRES VERIFICATION |
 | **License Name** | Barber |
 | **Theory Exam Required** | Yes |
-| **Practical Exam Required** | Practical proficiency handled differently from traditional external state practical-exam model |
-
----
-
-## Examination Tracks Identified
-
-| Track | Notes |
-|-------|-------|
-| Barber 1 / No Chemical | Separate track identified |
-| Barber Stylist | Separate track identified |
+| **Practical Exam Required** | Yes — computer-based practical identified |
 
 ---
 
@@ -32,8 +23,8 @@
 | Field | Value | Confidence |
 |-------|-------|------------|
 | **Exam Developer** | NIC | CONFIRMED |
-| **Exam Administrator** | Prov | CONFIRMED |
-| **Exam Name** | NIC Barber Examination | CONFIRMED |
+| **Exam Administrator** | PCS | CONFIRMED |
+| **Exam Name** | NIC Barber Theory Examination | CONFIRMED |
 
 ---
 
@@ -41,8 +32,9 @@
 
 | Field | Value | Confidence |
 |-------|-------|------------|
-| **Practical Required** | Handled differently from traditional external model | CONFIRMED |
-| **Practical Administrator** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **Practical Required** | Yes | CONFIRMED |
+| **Practical Format** | Computer-based practical | CONFIRMED |
+| **Practical Administrator** | PCS | CONFIRMED |
 
 ---
 
@@ -69,7 +61,7 @@
 
 ## ASCYN PRO Implication
 
-Alaska uses NIC content administered through Prov — the same developer/administrator split as Oklahoma. Multiple exam tracks (Barber 1 / No Chemical and Barber Stylist) mean a single state can have more than one barber examination path. The practical proficiency model differs from the traditional external state practical exam.
+Arizona uses NIC content administered through PCS — a different administrator than Oklahoma (Prov) or Connecticut/Delaware (Prometric). This reinforces that NIC content can be delivered through multiple administrators. The computer-based practical is notable — not all states use traditional hands-on practical exams.
 
 ---
 
@@ -77,8 +69,8 @@ Alaska uses NIC content administered through Prov — the same developer/adminis
 
 | Source | Type | Date Accessed | Confidence |
 |--------|------|---------------|------------|
-| Alaska Board of Barbers and Hairdressers | State licensing board | 2026-08-14 | CONFIRMED |
-| NIC/Prov examination materials | Exam documentation | 2026-08-14 | CONFIRMED |
+| Arizona state licensing information | State licensing board | 2026-08-14 | CONFIRMED |
+| NIC/PCS examination materials | Exam documentation | 2026-08-14 | CONFIRMED |
 
 ---
 
@@ -88,7 +80,6 @@ Alaska uses NIC content administered through Prov — the same developer/adminis
 |------|-----------|--------|
 | Exam blueprint | Quarterly | CIB updates |
 | Administrator | Annually | Provider changes |
-| Track structure | Annually | State may modify tracks |
 
 ---
 

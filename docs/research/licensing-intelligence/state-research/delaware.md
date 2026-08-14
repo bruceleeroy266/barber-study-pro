@@ -1,9 +1,9 @@
 # Delaware — State Licensing Research
 
 **State:** Delaware  
-**License Type:** Barber  
+**License Type:** Barber (multiple tracks)  
 **Research Date:** 2026-08-14  
-**Status:** PARTIAL — Initial research complete, developer TBD
+**Status:** CONFIRMED
 
 ---
 
@@ -18,21 +18,47 @@
 
 ---
 
+## Examination Tracks Identified
+
+| Track | Type |
+|-------|------|
+| Barber 1 No Chemical Theory | Theory |
+| Barber 1 No Chemical Practical | Practical |
+| Barber Styling Theory | Theory |
+| Barber Styling Practical | Practical |
+
+**Architecture Note:** One state can contain multiple barber exam tracks. Do not model jurisdiction → single barber exam.
+
+---
+
 ## Theory Examination
 
 | Field | Value | Confidence |
 |-------|-------|------------|
-| **Exam Developer** | TBD | PENDING RESEARCH |
+| **Exam Developer** | NIC | CONFIRMED |
 | **Exam Administrator** | Prometric | CONFIRMED |
-| **Exam Name** | TBD | PENDING RESEARCH |
+| **Exam Name** | NIC Barber Examinations (multiple tracks) | CONFIRMED |
 
 ---
 
-## Finding
+## Practical Examination
 
-Prometric handles examination administration for the Delaware Board of Cosmetology and Barbering.
+| Field | Value | Confidence |
+|-------|-------|------------|
+| **Practical Required** | Yes | CONFIRMED |
+| **Practical Tracks** | Barber 1 No Chemical Practical; Barber Styling Practical | CONFIRMED |
+| **Practical Administrator** | Prometric | CONFIRMED |
 
-**Research Needed:** Identify exam developer for Delaware barber examination.
+---
+
+## Candidate Information Bulletin
+
+| Field | Value | Confidence |
+|-------|-------|------------|
+| **CIB Source** | NIC (via Prometric) | CONFIRMED |
+| **CIB Effective Date** | August 1, 2024 | CONFIRMED |
+| **CIB URL** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **CIB Version** | UNKNOWN / REQUIRES VERIFICATION | — |
 
 ---
 
@@ -40,35 +66,15 @@ Prometric handles examination administration for the Delaware Board of Cosmetolo
 
 | Field | Value | Status |
 |-------|-------|--------|
-| **Blueprint Source** | TBD | PENDING RESEARCH |
-| **Domain Structure** | TBD | PENDING RESEARCH |
-| **Domain Weights** | TBD | PENDING RESEARCH |
-
----
-
-## Candidate Information Bulletin
-
-| Field | Value | Status |
-|-------|-------|--------|
-| **CIB Source** | TBD | PENDING RESEARCH |
-| **CIB URL** | TBD | PENDING RESEARCH |
-| **CIB Version** | TBD | PENDING RESEARCH |
-| **Effective Date** | TBD | PENDING RESEARCH |
-
----
-
-## Practical Examination
-
-| Field | Value | Status |
-|-------|-------|--------|
-| **Practical Required** | Yes | CONFIRMED |
-| **Practical Administrator** | TBD | PENDING RESEARCH |
+| **Blueprint Source** | NIC Barber Examinations | CONFIRMED |
+| **Domain Structure** | UNKNOWN / REQUIRES VERIFICATION | PENDING |
+| **Domain Weights** | UNKNOWN / REQUIRES VERIFICATION | PENDING |
 
 ---
 
 ## ASCYN PRO Implication
 
-Delaware uses Prometric as administrator. The exam developer is not yet confirmed. This requires additional research to complete the picture.
+Delaware confirms that a single state can have multiple barber exam tracks (Barber 1 No Chemical and Barber Styling), each with separate theory and practical examinations. This means any future data model must support multiple exams per state per license type.
 
 ---
 
@@ -85,11 +91,9 @@ Delaware uses Prometric as administrator. The exam developer is not yet confirme
 
 | Item | Frequency | Reason |
 |------|-----------|--------|
-| Exam developer | High priority | Complete research |
-| Exam blueprint | After developer identified | CIB updates |
-| Administrator | Annually | Provider changes |
+| CIB version/effective date | Quarterly | CIB updates |
+| Track structure | Annually | State may modify tracks |
 
 ---
 
-*Last Updated: 2026-08-14*  
-*Next Review: 2026-11-14*
+*Last Updated: 2026-08-14*

@@ -12,6 +12,137 @@ This document captures architectural risks identified during research. These ris
 
 ---
 
+## Cross-State Architecture Findings (Batch 1 + Batch 2 — 2026-08-14)
+
+**Finding:** The national barber licensing landscape cannot be accurately represented as simply `State → NIC or PSI`.
+
+### FINDING 1 — APPLICATION PROCESSOR MAY BE A SEPARATE ROLE
+
+Illinois demonstrates a three-role model:
+
+**Exam Developer** → **Application/Eligibility Processor** → **Testing/Delivery Vendor**
+
+| Role | Illinois Example |
+|------|-----------------|
+| Exam Developer / Content Owner | NIC |
+| Application / Eligibility Processor | Continental Testing Services (CTS) |
+| Testing / Delivery Vendor | PSI |
+
+**Implication:** Do NOT create one generic `exam_provider` concept. At least three potentially distinct roles exist.
+
+---
+
+### FINDING 2 — ADMINISTRATOR DOES NOT IDENTIFY THE EXAM
+
+Indiana demonstrates:
+
+**PSI administration** ≠ **PSI National Exam**
+
+Indiana uses PSI to administer a **state-specific examination** (the Board chose to continue updating its own questions rather than adopting the PSI National exam).
+
+**Implication:** The exam developer/content owner must be tracked independently of the administrator.
+
+---
+
+### FINDING 3 — LICENSE STAGE MATTERS
+
+Kentucky demonstrates that examination requirements can differ according to the stage of licensure:
+
+```
+Kentucky
+└── Barber Profession
+    ├── Probationary / Apprentice Barber → Written Examination
+    └── Barber (post-experience) → Practical Examination
+```
+
+**Implication:** Future research must not model simply `State → Barber → Exam`. Preserve license stage as a distinct concept.
+
+---
+
+### FINDING 4 — ONE LICENSE MAY REQUIRE MULTIPLE EXAMS
+
+Kansas demonstrates a structure involving:
+
+- NIC Barber Stylist Theory (via Prov) — 80% minimum
+- Kansas Rules & Regulations Examination — 80% minimum
+- Kansas Board Practical Examination
+
+**Implication:** `License → Single Exam` is not a safe assumption. Future architecture should support `License → Multiple Examination Requirements`.
+
+---
+
+### FINDING 5 — ADDITIONAL SERVICE CREDENTIALS MAY EXIST
+
+Iowa demonstrates that professional authorization may include an additional service-specific certification (shaving certification) beyond the primary barber license.
+
+**Implication:** Future licensing intelligence may need to distinguish **Primary License** from **Endorsement / Certification / Service Authorization**.
+
+---
+
+### FINDING 6 — PRACTICAL DELIVERY VARIES SIGNIFICANTLY
+
+Across Batch 1 + Batch 2, practical structures identified include:
+
+| Delivery Type | States |
+|---------------|--------|
+| Traditional external practical | Alabama, Colorado, Georgia |
+| Board-administered practical | Kansas, Kentucky |
+| Computer-based practical | Arizona |
+| Remote/virtual practical | Maine, Maryland |
+| School/instructor proficiency | Alaska |
+| No state practical licensing exam | California |
+
+**Implication:** Practical examination delivery type must be a distinct field in any future data model.
+
+---
+
+### Updated Research Taxonomy (Batch 1 + Batch 2)
+
+Based on all research to date, the current research taxonomy is:
+
+```
+Jurisdiction / State
+  └── Profession
+        └── License
+              └── License Stage
+                    └── Credential / Endorsement (if applicable)
+                          └── Examination Requirement
+                                └── Exam
+                                      └── Exam Developer / Content Owner
+                                            └── Application / Eligibility Processor (if applicable)
+                                                  └── Administrator / Delivery Vendor
+                                                        └── Exam Version
+                                                              └── Effective Date
+                                                                    └── CIB
+                                                                          └── Exam Blueprint
+                                                                                └── Domain / Competency
+                                                                                      └── Passing Standard
+                                                                                            └── Practical Requirement / Delivery Type
+```
+
+**Status:** RESEARCH ONLY — Do NOT implement this as a database schema.
+
+---
+
+### Developer/Administrator Patterns Identified (Batch 1 + Batch 2)
+
+| Pattern | Developer | Administrator | States |
+|---------|-----------|---------------|--------|
+| NIC + Prov | NIC | Prov | Alaska, Maine, Oklahoma |
+| NIC + PCS | NIC | PCS | Arizona |
+| NIC + Prometric | NIC | Prometric | Connecticut, Delaware |
+| NIC + CTS + PSI | NIC | CTS (application) + PSI (delivery) | Illinois |
+| PSI + PSI | PSI | PSI | Alabama, California, Colorado, Georgia, Maryland |
+| State-specific + PSI | State | PSI | Indiana |
+| State-specific + Pearson VUE | UNKNOWN | Pearson VUE | Florida |
+| State-board-controlled | State Board | State Board | Kentucky |
+| NIC + Prov (likely) | NIC | Prov | Idaho (unconfirmed) |
+| Vendor transition | UNKNOWN | Prometric → PSI | Hawaii |
+| Multiple sources | NIC + State Board | Prov + State Board | Kansas |
+| UNKNOWN | UNKNOWN | UNKNOWN | Arkansas, Louisiana |
+
+---
+
 ## Technical Risks
 
 ### TR1: Historical Performance Recalculation
@@ -40,6 +171,8 @@ This document captures architectural risks identified during research. These ris
 
 **Status:** IDENTIFIED — No mitigation implemented
 
+**Batch 1 Evidence:** 6 distinct developer/administrator patterns confirmed across just 10 states.
+
 ---
 
 ### TR3: Multi-State Complexity
@@ -53,6 +186,8 @@ This document captures architectural risks identified during research. These ris
 **Mitigation:** Phased rollout; start with Oklahoma; validate before expanding
 
 **Status:** IDENTIFIED — Mitigation: Phased approach
+
+**Batch 1 Evidence:** 10 states researched; 6 distinct patterns identified; multiple exam tracks per state confirmed.
 
 ---
 
@@ -79,6 +214,20 @@ This document captures architectural risks identified during research. These ris
 **Likelihood:** Medium — Migration would be required for new architecture
 
 **Mitigation:** Comprehensive backup; staged migration; extensive testing
+
+**Status:** IDENTIFIED — No mitigation implemented
+
+---
+
+### TR6: Exam Track Proliferation
+
+**Risk:** States with multiple exam tracks (e.g., Delaware's 4 tracks) could multiply data model complexity.
+
+**Impact:** Medium — Each track may have different blueprints and versions
+
+**Likelihood:** High — Batch 1 confirmed multiple tracks in Delaware and Alaska
+
+**Mitigation:** Design for multiple exams per state per license type from the start
 
 **Status:** IDENTIFIED — No mitigation implemented
 
@@ -167,6 +316,7 @@ This document captures architectural risks identified during research. These ris
 | TR3: Multi-state complexity | Medium | High | Medium |
 | TR4: Integration complexity | Medium | Medium | Medium |
 | TR5: Data migration | High | Medium | High |
+| TR6: Exam track proliferation | Medium | High | Medium |
 | SR1: Feature creep | High | Medium | High |
 | SR2: Competitive mispositioning | High | Low | Medium |
 | SR3: Validation failure | High | Medium | High |

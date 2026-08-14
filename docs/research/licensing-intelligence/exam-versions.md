@@ -26,10 +26,17 @@ Exam
 
 ## Version Tracking
 
-| State | Exam | Version | Effective Date | End Date | CIB Reference | Notes |
-|-------|------|---------|----------------|----------|---------------|-------|
+| State | Exam | Version | Effective Date | End Date | CIB/Guide Reference | Notes |
+|-------|------|---------|----------------|----------|---------------------|-------|
+| Alabama | PSI National Barber Styling | Test Taker Guide v1.0 | 2026-05-01 | Current | Test Taker Guide v1.0 | PSI developed + administered |
+| California | PSI National Barber | Blueprint eff. 2026-04-01 | 2026-04-01 | Current | Blueprint eff. 2026-04-01 | Updated blueprint; practical eliminated 2022-01-01 |
+| Colorado | PSI National Barber | Test Taker Guide v1.5 | 2026-01-27 | Current | Test Taker Guide v1.5 | PSI developed + administered |
+| Delaware | NIC Barber Examinations | CIB eff. 2024-08-01 | 2024-08-01 | Current | CIB eff. 2024-08-01 | Multiple tracks; NIC via Prometric |
+| Georgia | PSI National Master Barber | Test Taker Guide v2.1 | 2026-04-28 | Current | Test Taker Guide v2.1 | PSI developed + administered |
+| Hawaii | Barber Examination | Vendor transition | 2026-01-01 | Current | UNKNOWN / REQUIRES VERIFICATION | Prometric → PSI vendor change |
+| Kansas | NIC Barber Stylist Theory | CIB eff. 2026-01-05 | 2026-01-05 | Current | NIC CIB eff. 2026-01-05 | NIC content via Prov |
+| Maryland | PSI National Barber | Updated content eff. 2026-02-26 | 2026-02-26 | Current | Updated PSI content eff. 2026-02-26 | PSI developed + administered |
 | Oklahoma | Barber Theory (NIC) | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | Current | UNKNOWN / REQUIRES VERIFICATION | NIC content via Prov |
-| — | — | — | — | — | — | Additional states PENDING RESEARCH |
 
 ---
 
@@ -39,6 +46,7 @@ Exam
 - Curriculum aligned to an outdated blueprint may not cover current exam content
 - Historical data (e.g., "what was on the 2023 exam?") may be needed for research
 - States may transition between exam developers, creating version gaps
+- California's blueprint update (2026-04-01) demonstrates that blueprint versions change independently of CIB versions
 
 ---
 

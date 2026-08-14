@@ -8,7 +8,7 @@
 
 ## Purpose
 
-Track Candidate Information Bulletins (CIBs) by state and exam. CIBs are authoritative documents that describe exam content, structure, and policies.
+Track Candidate Information Bulletins (CIBs) and Test Taker Guides by state and exam. CIBs are authoritative documents that describe exam content, structure, and policies.
 
 ---
 
@@ -37,13 +37,26 @@ Exam → Exam Version → Effective Date → CIB → Blueprint
 
 ---
 
-## CIB Tracking
+## CIB / Test Taker Guide Tracking
 
-| State | Exam | CIB Version | Effective Date | Source URL | Date Verified | Confidence | Notes |
-|-------|------|-------------|----------------|------------|---------------|------------|-------|
-| Oklahoma | Barber Theory | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | NIC content administered through Prov |
+| State | Exam | CIB/Guide Version | Effective Date | Source URL | Date Verified | Confidence | Notes |
+|-------|------|-------------------|----------------|------------|---------------|------------|-------|
+| Alabama | PSI National Barber Styling | Test Taker Guide v1.0 | 2026-05-01 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | PSI developed + administered |
+| Alaska | NIC Barber Examination | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | NIC content via Prov; multiple tracks |
+| Arizona | NIC Barber Theory | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | NIC content via PCS |
+| Arkansas | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | Do not infer developer |
+| California | PSI National Barber | Blueprint eff. 2026-04-01 | 2026-04-01 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | PSI developed + administered; practical eliminated 2022 |
+| Colorado | PSI National Barber | Test Taker Guide v1.5 | 2026-01-27 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | PSI developed + administered |
+| Connecticut | NIC National Barber Styling Theory | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | NIC content via Prometric; 110 total / 100 weighted questions |
+| Delaware | NIC Barber Examinations (multiple tracks) | CIB eff. 2024-08-01 | 2024-08-01 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | NIC content via Prometric; 4 exam tracks |
+| Florida | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | DBPR publishes CIBs; Pearson VUE administers |
+| Georgia | PSI National Master Barber | Test Taker Guide v2.1 | 2026-04-28 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | PSI developed + administered |
+| Hawaii | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | Vendor transition: Prometric → PSI eff. 2026-01-01 |
+| Indiana | Indiana state-specific | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | State-specific exam; PSI administers |
+| Kansas | NIC Barber Stylist Theory | CIB eff. 2026-01-05 | 2026-01-05 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | NIC content via Prov; plus state rules exam |
+| Maryland | PSI National Barber | Updated content eff. 2026-02-26 | 2026-02-26 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | PSI developed + administered |
+| Oklahoma | Barber Theory (NIC) | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | NIC content via Prov |
 | Texas | Barber Theory | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | See state research |
-| — | — | — | — | — | — | — | Additional states PENDING RESEARCH |
 
 ---
 

@@ -24,7 +24,7 @@ National barber licensing research covering:
 | Role | Definition | Examples |
 |------|------------|----------|
 | **Exam Developer** | Organization responsible for examination content | NIC, PSI |
-| **Exam Administrator** | Organization responsible for delivering the examination | Prov, PSI, Prometric, DL Roope, state boards |
+| **Exam Administrator** | Organization responsible for delivering the examination | Prov, PSI, Prometric, DL Roope, PCS, Pearson VUE, state boards |
 
 **These are NOT the same concept and must not be collapsed.**
 
@@ -39,22 +39,72 @@ National barber licensing research covering:
 | [Prov](prov.md) | Administrator | Initial research | ✅ Active |
 | [Prometric](prometric.md) | Administrator | Initial research | ✅ Active |
 | [DL Roope](dl-roope.md) | Administrator | Initial research | ✅ Active |
+| PCS | Administrator | Batch 1 research | ✅ Active |
+| Pearson VUE | Administrator | Batch 1 research | ✅ Active |
 
 ---
 
 ## State Research
 
+### Batch 1 — Confirmed (7)
+
 | State | License Type | Exam Developer | Administrator | Status | Documentation |
 |-------|--------------|----------------|---------------|--------|---------------|
-| [Oklahoma](state-research/oklahoma.md) | Barber | NIC | Prov | CONFIRMED | ✅ Active |
-| [Texas](state-research/texas.md) | Class A Barber | PSI | PSI | CONFIRMED | ✅ Active |
-| [Alaska](state-research/alaska.md) | Barber | NIC | Prov | CONFIRMED | ✅ Active |
-| [Delaware](state-research/delaware.md) | Barber | TBD | Prometric | PARTIAL | ✅ Active |
-| [Washington](state-research/washington.md) | Barber | NIC | DL Roope | CONFIRMED | ✅ Active |
-| [Wisconsin](state-research/wisconsin.md) | Barber | NIC | DL Roope | CONFIRMED | ✅ Active |
-| [West Virginia](state-research/west-virginia.md) | Barber | NIC | DL Roope | CONFIRMED | ✅ Active |
+| [Alabama](state-research/alabama.md) | Barber | PSI | PSI | CONFIRMED | ✅ Active |
+| [Alaska](state-research/alaska.md) | Barber (multiple tracks) | NIC | Prov | CONFIRMED | ✅ Active |
+| [Arizona](state-research/arizona.md) | Barber | NIC | PCS | CONFIRMED | ✅ Active |
+| [California](state-research/california.md) | Barber | PSI | PSI | CONFIRMED | ✅ Active |
+| [Colorado](state-research/colorado.md) | Barber | PSI | PSI | CONFIRMED | ✅ Active |
+| [Delaware](state-research/delaware.md) | Barber (multiple tracks) | NIC | Prometric | CONFIRMED | ✅ Active |
+| [Georgia](state-research/georgia.md) | Master Barber | PSI | PSI | CONFIRMED | ✅ Active |
+
+### Batch 1 — Partial (3)
+
+| State | License Type | Exam Developer | Administrator | Status | Documentation |
+|-------|--------------|----------------|---------------|--------|---------------|
+| [Arkansas](state-research/arkansas.md) | Barber | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | PARTIAL | ✅ Active |
+| [Connecticut](state-research/connecticut.md) | Barber | NIC | Prometric | PARTIAL | ✅ Active |
+| [Florida](state-research/florida.md) | Barber / Restricted Barber | UNKNOWN / REQUIRES VERIFICATION | Pearson VUE | PARTIAL | ✅ Active |
+
+### Batch 2 — Confirmed (5)
+
+| State | License Type | Exam Developer | Administrator | Status | Documentation |
+|-------|--------------|----------------|---------------|--------|---------------|
+| [Indiana](state-research/indiana.md) | Barber | Indiana (state-specific) | PSI | CONFIRMED | ✅ Active |
+| [Kansas](state-research/kansas.md) | Barber | NIC + Kansas Board | Prov + Kansas Board | CONFIRMED | ✅ Active |
+| [Kentucky](state-research/kentucky.md) | Barber (multi-stage) | UNKNOWN / REQUIRES VERIFICATION | Kentucky Board | CONFIRMED | ✅ Active |
+| [Maine](state-research/maine.md) | Barber | NIC | Prov | CONFIRMED | ✅ Active |
+| [Maryland](state-research/maryland.md) | Barber / Master Barber | PSI | PSI | CONFIRMED | ✅ Active |
+
+### Batch 2 — Partial (5)
+
+| State | License Type | Exam Developer | Administrator | Status | Documentation |
+|-------|--------------|----------------|---------------|--------|---------------|
+| [Hawaii](state-research/hawaii.md) | Barber | UNKNOWN / REQUIRES VERIFICATION | PSI (eff. 2026-01-01) | PARTIAL | ✅ Active |
+| [Idaho](state-research/idaho.md) | Barber | NIC (likely) | Prov (likely) | PARTIAL | ✅ Active |
+| [Illinois](state-research/illinois.md) | Barber | NIC | CTS + PSI | PARTIAL | ✅ Active |
+| [Iowa](state-research/iowa.md) | Barber | NIC/national (recognized) | UNKNOWN / REQUIRES VERIFICATION | PARTIAL | ✅ Active |
+| [Louisiana](state-research/louisiana.md) | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | PARTIAL | ✅ Active |
+
+### Pre-Batch 1 — Partial
+
+| State | License Type | Exam Developer | Administrator | Status | Documentation |
+|-------|--------------|----------------|---------------|--------|---------------|
+| [Oklahoma](state-research/oklahoma.md) | Barber | NIC | Prov | PARTIAL | ✅ Active |
+| [Texas](state-research/texas.md) | Class A Barber | PSI | PSI | PARTIAL | ✅ Active |
+| [Washington](state-research/washington.md) | Barber | NIC | DL Roope | PARTIAL | ✅ Active |
+| [Wisconsin](state-research/wisconsin.md) | Barber | NIC | DL Roope | PARTIAL | ✅ Active |
+| [West Virginia](state-research/west-virginia.md) | Barber | NIC | DL Roope | PARTIAL | ✅ Active |
 
 **Remaining States:** PENDING RESEARCH — Do not populate without verification.
+
+---
+
+## Cross-State Finding (Batch 1 + Batch 2)
+
+**The national landscape cannot be accurately represented as simply `State → NIC or PSI`.**
+
+Six major cross-state findings identified across 20 states. See [Architecture Risks](../architecture-research/architecture-risks.md) for detailed findings and [50-State Master Map](50-state-master-map.md) for the pattern matrix.
 
 ---
 
@@ -63,22 +113,23 @@ National barber licensing research covering:
 | Document | Purpose | Status |
 |----------|---------|--------|
 | [National Overview](national-overview.md) | National licensing landscape | ✅ Active |
-| [Candidate Information Bulletins](candidate-information-bulletins.md) | CIB tracking and versioning | 📝 Template |
-| [Exam Blueprints](exam-blueprints.md) | Blueprint structures and domains | 📝 Template |
-| [Exam Versions](exam-versions.md) | Version tracking and effective dates | 📝 Template |
-| [50-State Master Map](50-state-master-map.md) | Comprehensive state matrix | 📝 Template |
+| [Candidate Information Bulletins](candidate-information-bulletins.md) | CIB tracking and versioning | ✅ Active |
+| [Exam Blueprints](exam-blueprints.md) | Blueprint structures and domains | ✅ Active |
+| [Exam Versions](exam-versions.md) | Version tracking and effective dates | ✅ Active |
+| [50-State Master Map](50-state-master-map.md) | Comprehensive state matrix | ✅ Active |
 
 ---
 
 ## National Administration Landscape
 
-Initial research indicates barber/cosmetology examination administration can involve:
+Barber/cosmetology examination administration involves:
 
 - **Prov**
 - **PSI**
 - **Prometric**
 - **DL Roope**
 - **PCS**
+- **Pearson VUE**
 - **Individual state boards/agencies**
 
 **Conclusion:** Future ASCYN PRO architecture should NOT assume a single national exam provider.
@@ -115,7 +166,9 @@ Exam → Exam Version → Effective Date → CIB → Blueprint
 4. Prov
 5. Prometric
 6. DL Roope
-7. Other officially designated examination administrators
+7. PCS
+8. Pearson VUE
+9. Other officially designated examination administrators
 
 **Third-party 50-state summaries** may be useful for discovery but should NOT become authoritative ASCYN PRO licensing data without verification.
 

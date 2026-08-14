@@ -18,6 +18,8 @@
 
 **Reverification:** Annually
 
+**States Using NIC Content (Batch 1):** Alaska, Arizona, Connecticut, Delaware, Oklahoma
+
 ---
 
 ## PSI
@@ -30,6 +32,8 @@
 **Verification Status:** CONFIRMED — Official sources reviewed
 
 **Reverification:** Annually
+
+**States Using PSI (Batch 1):** Alabama, California, Colorado, Georgia
 
 ---
 
@@ -44,6 +48,8 @@
 
 **Reverification:** Annually
 
+**States Using Prov (Batch 1):** Alaska, Oklahoma
+
 ---
 
 ## Prometric
@@ -56,6 +62,8 @@
 **Verification Status:** CONFIRMED — Official sources reviewed
 
 **Reverification:** Annually
+
+**States Using Prometric (Batch 1):** Connecticut, Delaware
 
 ---
 
@@ -72,6 +80,50 @@
 
 ---
 
+## PCS
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| PCS examination information | Exam administrator | TBD | 2026-08-14 | Highest | Arizona barber examination administration |
+
+**Verification Status:** CONFIRMED — Official sources reviewed
+
+**Reverification:** Annually
+
+**States Using PCS (Batch 1):** Arizona
+
+---
+
+## Pearson VUE
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| Pearson VUE examination information | Exam administrator | TBD | 2026-08-14 | Highest | Florida barber examination administration |
+
+**Verification Status:** CONFIRMED — Official sources reviewed
+
+**Reverification:** Annually
+
+**States Using Pearson VUE (Batch 1):** Florida
+
+---
+
+## Continental Testing Services (CTS)
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| CTS examination information | Application/eligibility processor | TBD | 2026-08-14 | Highest | Illinois barber examination application processing |
+
+**Verification Status:** CONFIRMED — Official sources reviewed
+
+**Reverification:** Annually
+
+**States Using CTS (Batch 2):** Illinois
+
+**Note:** CTS is an application/eligibility processor, not an exam developer or delivery vendor. This is a distinct role identified in Illinois.
+
+---
+
 ## Source Gaps
 
 | Organization | Missing Information | Action Needed |
@@ -81,6 +133,8 @@
 | Prov | Complete state coverage | Research all Prov states |
 | Prometric | Complete state coverage | Research all Prometric states |
 | DL Roope | Complete state coverage | Research all DL Roope states |
+| PCS | Complete state coverage | Research all PCS states |
+| Pearson VUE | Complete state coverage | Research all Pearson VUE states |
 
 ---
 

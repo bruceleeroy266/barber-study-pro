@@ -16,6 +16,7 @@
 | [Unvalidated Hypotheses](unvalidated-hypotheses.md) | Hypotheses requiring validation | ✅ Active |
 | [NABBA Positioning](nabba-positioning.md) | Conference positioning strategy | ✅ Active |
 | [Deferred Ideas](deferred-ideas.md) | Ideas deferred for future consideration | ✅ Active |
+| [Business Intelligence](business-intelligence.md) | Market sizing and expansion analysis data | ✅ Active |
 
 ---
 
