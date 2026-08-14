@@ -45,6 +45,11 @@ Exam
 | Oregon | Barbering Field-of-Practice + Laws & Rules | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | Current | UNKNOWN / REQUIRES VERIFICATION | Two written exams; 75% passing |
 | Pennsylvania | Pennsylvania Barber Examinations | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | Current | UNKNOWN / REQUIRES VERIFICATION | Pearson VUE; 100 scored + 15 pretest |
 | South Carolina | NIC Barber Examinations | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | Current | UNKNOWN / REQUIRES VERIFICATION | NIC via Prov; 70% passing |
+| Virginia | NIC Barber Examinations | Prov transition | 2025-01-01 | Current | UNKNOWN / REQUIRES VERIFICATION | Prov assumed examination responsibilities |
+| Virginia | Barber Training Hours | 750 hours | 2025-12-01 | Current | N/A | Reduced from 1,100 hours |
+| Washington | NIC Barber Examinations | Prov transition | 2026-05-01 | Current | UNKNOWN / REQUIRES VERIFICATION | Previously DL Roope |
+| Wisconsin | Barber Written/Practical CIB | Current version | 2026-08-31 | 2026-08-31 | Barber Written CIB / Barber Practical CIB | Current material |
+| Wisconsin | Barber Written/Practical CIB | Future version | 2026-09-01 | Current | Barber Written CIB / Barber Practical CIB | Future scheduled version |
 
 ---
 

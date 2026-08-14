@@ -223,7 +223,75 @@ Oregon reinforces that a practical examination can be administered by the educat
 
 ---
 
-### Updated Examination-Type Taxonomy (Batches 1–4)
+### FINDING 18 — PUBLISHED EXAM OUTCOMES CAN REVEAL MARKET NEED (Batch 5)
+
+Texas publishes examination performance showing a substantial difference between written and practical barber results.
+
+| Examination | Pass Rate |
+|-------------|-----------|
+| Written | 37.25% |
+| Practical | 89.80% |
+
+**Implication:** Preserve aggregate examination outcomes as **Market / Educational Intelligence**, not **Individual pass prediction**.
+
+---
+
+### FINDING 19 — SCHOOL EXAM REPORTING INFRASTRUCTURE EXISTS (Batch 5)
+
+Texas/PSI provides school examination reporting/export capabilities.
+
+| Feature | Detail |
+|---------|--------|
+| Effective Date | August 1, 2026 |
+| Export Formats | Excel, PDF, CSV, HTML |
+
+**Implication:** Preserve as potential future integration research, school analytics research, market validation. Do NOT implement an integration.
+
+---
+
+### FINDING 20 — TRAINING REQUIREMENTS ARE VERSIONED (Batch 5)
+
+Virginia demonstrates that required educational hours can change over time.
+
+| Effective Date | Hours |
+|----------------|-------|
+| December 1, 2025 | 750 hours |
+| Prior | 1,100 hours |
+
+**Implication:** Future research architecture must preserve **Requirement**, **Effective Date**, **Historical Value**.
+
+---
+
+### FINDING 21 — FUTURE EXAM VERSIONS MAY BE PUBLISHED BEFORE EFFECTIVE DATE (Batch 5)
+
+Wisconsin currently has both:
+
+- Current exam material (through August 31, 2026)
+- Future exam material (effective September 1, 2026)
+
+published simultaneously.
+
+**Implication:** Do not overwrite one with the other. Future licensing intelligence must support effective-dated versions.
+
+---
+
+### FINDING 22 — INTEGRATED COMPETENCY EXAMS EXIST (Batch 5)
+
+Utah's ICA demonstrates that knowledge and practical competency may be integrated into one assessment structure.
+
+**Implication:** Add **Integrated Competency Assessment** to the research exam-format taxonomy. Do NOT assume theory and practical always occur as completely separate examination events.
+
+---
+
+### FINDING 23 — PROVIDER RELATIONSHIPS MAY BE LICENSE-TRACK-SPECIFIC (Batch 5)
+
+West Virginia and Wyoming reinforce that provider/exam relationships may differ according to the specific barber credential or track.
+
+**Implication:** Practical-delivery information belongs at the appropriate exam/license-track level rather than only at state level.
+
+---
+
+### Updated Examination-Type Taxonomy (Batches 1–5)
 
 - Theory / Written
 - Practical
@@ -234,12 +302,13 @@ Oregon reinforces that a practical examination can be administered by the educat
 - Service-specific certification
 - Computer-based practical
 - Remote / virtual practical
+- Integrated Competency Assessment
 
 **Status:** RESEARCH ONLY — Do NOT implement as application architecture.
 
 ---
 
-### Updated Research Taxonomy (Batches 1–4)
+### Updated Research Taxonomy (Batches 1–5)
 
 Based on all research to date, the current research taxonomy is:
 
@@ -267,30 +336,34 @@ Jurisdiction / State
 
 ---
 
-### Developer/Administrator Patterns Identified (Batches 1–4)
+### Developer/Administrator Patterns Identified (Batches 1–5)
 
 | Pattern | Developer | Administrator | States |
 |---------|-----------|---------------|--------|
-| NIC + Prov | NIC | Prov | Alaska, Maine, New Hampshire, Oklahoma, South Carolina |
+| NIC + Prov | NIC | Prov | Alaska, Maine, New Hampshire, Oklahoma, South Carolina, Utah, Virginia, Washington |
 | NIC + PCS | NIC | PCS | Arizona, New Mexico |
 | NIC + Prometric | NIC | Prometric | Connecticut, Delaware |
 | NIC + CTS + PSI | NIC | CTS (application) + PSI (delivery) | Illinois |
 | NIC + Board (multiple exams) | NIC + State Board | Prov + State Board | Kansas, Mississippi |
 | NIC + UNKNOWN (transition) | NIC | UNKNOWN (Prometric/DL Roope transition) | Montana |
-| PSI + PSI | PSI | PSI | Alabama, California, Colorado, Georgia, Maryland, Michigan |
+| NIC + DL Roope | NIC | DL Roope | Wisconsin |
+| PSI + PSI | PSI | PSI | Alabama, California, Colorado, Georgia, Maryland, Michigan, Texas |
 | PSI theory-only | PSI | PSI | Massachusetts |
-| PSI-administered (developer unknown) | UNKNOWN | PSI | Rhode Island |
+| PSI-administered (developer unknown) | UNKNOWN | PSI | Rhode Island, Tennessee |
 | State-specific + PSI | State | PSI | Indiana |
 | State-specific + Pearson VUE | UNKNOWN | Pearson VUE | Florida |
 | Pearson VUE (multi-role) | Pearson VUE | Pearson VUE | Pennsylvania |
-| State-board-controlled | State Board | State Board | Kentucky, Minnesota, Nebraska, Nevada, Ohio |
+| State-board-controlled | State Board | State Board | Kentucky, Minnesota, Nebraska, Nevada, Ohio, South Dakota |
 | State-controlled (multi-stage) | State Board | State Board | North Carolina |
 | State-specific + state-administered | State | State | New York |
 | State-specific + school-administered practical | State | School | Oregon |
 | NIC + Prov (likely) | NIC | Prov | Idaho (unconfirmed) |
 | Vendor transition | UNKNOWN | Prometric → PSI | Hawaii |
+| Vendor transition | NIC | DL Roope → Prov | Washington |
+| Vendor transition | NIC | UNKNOWN → Prov | Virginia |
 | Prometric / IQT | UNKNOWN | Prometric / IQT | New Jersey |
-| UNKNOWN | UNKNOWN | UNKNOWN | Arkansas, Louisiana, Missouri, North Dakota |
+| Multiple provider footprints | NIC | UNKNOWN (multiple) | West Virginia |
+| UNKNOWN | UNKNOWN | UNKNOWN | Arkansas, Louisiana, Missouri, North Dakota, Vermont |
 
 ---
 

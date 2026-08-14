@@ -6,6 +6,58 @@
 
 ---
 
+## 2026-08-14 — 50-State Barber Research Batch 5 Archived
+
+### Added
+
+- **State Research Records** — South Dakota, Tennessee, Texas, Utah, Vermont, Virginia, Washington, West Virginia, Wisconsin, Wyoming (10 states)
+- **CIB Records** — West Virginia 2026 Prov CIB, Wisconsin Barber Written/Practical CIBs (current + future versions)
+- **Exam Version Records** — Virginia Prov transition (2025-01-01), Virginia training-hour change (2025-12-01), Washington Prov transition (2026-05-01), Wisconsin current version (through 2026-08-31), Wisconsin future version (2026-09-01)
+- **Passing Standards** — South Dakota theory 75%
+- **Source Records** — 10 new state source sections
+- **Cross-State Architecture Findings** — 6 new findings from Batch 5 (published exam outcomes, school exam reporting, training requirements versioned, future exam versions, integrated competency exams, license-track-specific providers)
+- **Business Intelligence** — Texas FY2025 examination statistics, Texas school reporting infrastructure
+- **Exam Format Taxonomy** — Added Integrated Competency Assessment
+
+### Updated
+
+- **50-State Master Map** — All 10 Batch 5 states added; pattern matrix expanded; summary updated (33 CONFIRMED, 17 PARTIAL, 0 PENDING)
+- **Licensing Intelligence Index** — Added Batch 5 state tables
+- **Architecture Risks** — Added Findings 18–23; updated developer/administrator pattern matrix; updated examination-type taxonomy
+- **State Sources** — Added South Dakota, Tennessee, Texas, Utah, Vermont, Virginia, Washington, West Virginia, Wisconsin, Wyoming
+- **CIB Index** — Added South Dakota, Tennessee, Texas, Utah, Vermont, Virginia, Washington, West Virginia, Wisconsin, Wyoming records
+- **Exam Versions** — Added Virginia (2 records), Washington, Wisconsin (2 records)
+
+### Key Findings
+
+- **8 states CONFIRMED:** South Dakota, Tennessee, Texas, Utah, Virginia, Washington, Wisconsin, Wyoming
+- **2 states PARTIAL:** Vermont, West Virginia
+- **Published exam outcomes can reveal market need** (Texas: 37.25% written vs 89.80% practical pass rates)
+- **School exam reporting infrastructure exists** (Texas/PSI: Excel, PDF, CSV, HTML exports eff. 2026-08-01)
+- **Training requirements are versioned** (Virginia: 1,100 → 750 hours eff. 2025-12-01)
+- **Future exam versions may be published before effective date** (Wisconsin: current + future CIBs)
+- **Integrated competency exams exist** (Utah: ICA structure)
+- **Provider relationships may be license-track-specific** (West Virginia, Wyoming)
+
+### National Research Count
+
+- **50 of 50 states** have entered the research pipeline
+- **33 CONFIRMED**
+- **17 PARTIAL**
+- **0 PENDING**
+
+**National Milestone:** All 50 states have now gone through the batch research methodology.
+
+### Next Phase
+
+**PARTIAL-STATE CLOSURE / NATIONAL RECONCILIATION** — Do NOT begin until Batch 5 is reviewed, approved, and committed.
+
+### Decisions
+
+No new decisions. Existing decisions remain active.
+
+---
+
 ## 2026-08-14 — 50-State Barber Research Batch 4 Archived
 
 ### Added

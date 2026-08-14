@@ -3,7 +3,7 @@
 **State:** Wisconsin  
 **License Type:** Barber  
 **Research Date:** 2026-08-14  
-**Status:** CONFIRMED — Initial research complete
+**Status:** CONFIRMED
 
 ---
 
@@ -18,55 +18,52 @@
 
 ---
 
-## Theory Examination
+## Examination Vendor
 
-| Field | Value | Confidence |
-|-------|-------|------------|
-| **Exam Developer** | NIC | CONFIRMED |
-| **Exam Administrator** | DL Roope | CONFIRMED |
-| **Exam Name** | NIC Barber Examination | CONFIRMED |
+Wisconsin's Department of Safety and Professional Services identifies:
 
----
+**DL Roope Administration Inc.**
 
-## Finding
-
-NIC's jurisdiction information identifies DL Roope in the administration structure for Wisconsin.
+as its contracted examination vendor for initial barber applicants.
 
 ---
 
-## Exam Blueprint
+## Examination Materials
 
-| Field | Value | Status |
-|-------|-------|--------|
-| **Blueprint Source** | NIC Barber Examination | CONFIRMED |
-| **Domain Structure** | TBD | PENDING RESEARCH |
-| **Domain Weights** | TBD | PENDING RESEARCH |
+Current Wisconsin examination material includes separate:
 
----
-
-## Candidate Information Bulletin
-
-| Field | Value | Status |
-|-------|-------|--------|
-| **CIB Source** | NIC | CONFIRMED |
-| **CIB URL** | TBD | PENDING RESEARCH |
-| **CIB Version** | TBD | PENDING RESEARCH |
-| **Effective Date** | TBD | PENDING RESEARCH |
+| Document | Type |
+|----------|------|
+| **Barber Written CIB** | Theory examination |
+| **Barber Practical CIB** | Practical examination |
 
 ---
 
-## Practical Examination
+## Live Version Transition
 
-| Field | Value | Status |
-|-------|-------|--------|
-| **Practical Required** | Yes | CONFIRMED |
-| **Practical Administrator** | TBD | PENDING RESEARCH |
+Current DL Roope material identifies barber examination materials applicable:
+
+| Version | Effective Period |
+|---------|----------------|
+| **Current** | through August 31, 2026 |
+| **Future** | effective September 1, 2026 |
+
+**Because the research date is August 14, 2026, preserve BOTH records.**
+
+**Do NOT replace the current August examination record with the future September version.**
 
 ---
 
-## ASCYN PRO Implication
+## Architecture / Research Implication
 
-Wisconsin follows the NIC/DL Roope pattern, consistent with Washington and West Virginia.
+Wisconsin provides an excellent example of:
+
+- **Current Version**
+- **Future Scheduled Version**
+
+existing simultaneously.
+
+Future licensing intelligence must support **effective-dated versions**.
 
 ---
 
@@ -75,8 +72,8 @@ Wisconsin follows the NIC/DL Roope pattern, consistent with Washington and West 
 | Source | Type | Date Accessed | Confidence |
 |--------|------|---------------|------------|
 | Wisconsin Department of Safety and Professional Services | State licensing board | 2026-08-14 | CONFIRMED |
-| NIC jurisdiction information | Exam developer | 2026-08-14 | CONFIRMED |
-| DL Roope information | Exam administrator | 2026-08-14 | CONFIRMED |
+| DL Roope examination information | Exam administrator | 2026-08-14 | CONFIRMED |
+| NIC examination materials | Exam developer | 2026-08-14 | CONFIRMED |
 
 ---
 
@@ -84,8 +81,8 @@ Wisconsin follows the NIC/DL Roope pattern, consistent with Washington and West 
 
 | Item | Frequency | Reason |
 |------|-----------|--------|
-| Exam blueprint | Annually | CIB updates |
-| Administrator | Annually | Provider changes |
+| Exam versions | Quarterly | Version transitions |
+| CIB updates | Quarterly | New versions |
 
 ---
 

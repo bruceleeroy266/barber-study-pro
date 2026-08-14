@@ -2,7 +2,7 @@
 
 **Document:** 50-State Master Map  
 **Last Updated:** 2026-08-14  
-**Status:** ACTIVE — Batch 1 + Batch 2 + Batch 3 + Batch 4 Research Archived
+**Status:** ACTIVE — Batch 1 + Batch 2 + Batch 3 + Batch 4 + Batch 5 Research Archived
 
 ---
 
@@ -66,16 +66,16 @@ Comprehensive tracking of barber licensing examination requirements for all 50 U
 | Pennsylvania | ✅ CONFIRMED | Barber | Yes | Pearson VUE | Pearson VUE | Yes — Pearson VUE practical | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
 | Rhode Island | 🔶 PARTIAL | Barber Stylist | Yes | UNKNOWN / REQUIRES VERIFICATION | PSI | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL |
 | South Carolina | ✅ CONFIRMED | Barber | Yes | NIC | Prov | Yes — NIC practical | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
-| South Dakota | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| Tennessee | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| Texas | 🔶 PARTIAL | See [state research](state-research/texas.md) | — | — | — | — | — | 2026-08-14 | PARTIAL |
-| Utah | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| Vermont | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| Virginia | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| Washington | 🔶 PARTIAL | See [state research](state-research/washington.md) | — | — | — | — | — | 2026-08-14 | PARTIAL |
-| West Virginia | 🔶 PARTIAL | See [state research](state-research/west-virginia.md) | — | — | — | — | — | 2026-08-14 | PARTIAL |
-| Wisconsin | 🔶 PARTIAL | See [state research](state-research/wisconsin.md) | — | — | — | — | — | 2026-08-14 | PARTIAL |
-| Wyoming | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
+| South Dakota | ✅ CONFIRMED | Barber | Yes | NIC | UNKNOWN / REQUIRES VERIFICATION | Yes — Board practical | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
+| Tennessee | ✅ CONFIRMED | Master Barber (multiple credentials) | Yes | UNKNOWN / REQUIRES VERIFICATION | PSI | Yes — PSI practical | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
+| Texas | ✅ CONFIRMED | Class A Barber | Yes | PSI | PSI | Yes — PSI practical | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
+| Utah | ✅ CONFIRMED | Barber | Yes | NIC | Prov | Yes — ICA (Integrated Competency Assessment) | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
+| Vermont | 🔶 PARTIAL | Barber | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | Prov | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL |
+| Virginia | ✅ CONFIRMED | Barber | Yes | NIC | Prov (eff. 2025-01-01) | Yes — NIC practical | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
+| Washington | ✅ CONFIRMED | Barber | Yes | NIC | Prov (eff. 2026-05-01; previously DL Roope) | Yes | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
+| West Virginia | 🔶 PARTIAL | Barber (multiple tracks) | Yes | NIC | UNKNOWN / REQUIRES VERIFICATION (multiple footprints) | Yes | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL |
+| Wisconsin | ✅ CONFIRMED | Barber | Yes | NIC | DL Roope | Yes — DL Roope practical | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
+| Wyoming | ✅ CONFIRMED | Barber (multiple tracks) | Yes | NIC | Prov | Yes — track-specific formats | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
 
 ---
 
@@ -83,41 +83,47 @@ Comprehensive tracking of barber licensing examination requirements for all 50 U
 
 | Status | Count |
 |--------|-------|
-| ✅ CONFIRMED | 25 |
-| 🔶 PARTIAL | 20 |
-| ⬜ PENDING RESEARCH | 5 |
+| ✅ CONFIRMED | 33 |
+| 🔶 PARTIAL | 17 |
+| ⬜ PENDING RESEARCH | 0 |
+
+**National Milestone:** All 50 states have now gone through the batch research methodology.
 
 ---
 
-## Cross-State Finding (Batch 1 + Batch 2 + Batch 3 + Batch 4)
+## Cross-State Finding (Batch 1 + Batch 2 + Batch 3 + Batch 4 + Batch 5)
 
 **The national landscape cannot be accurately represented as simply `State → NIC or PSI`.**
 
-Batches 1–4 have identified materially different arrangements:
+Batches 1–5 have identified materially different arrangements:
 
 | Pattern | States |
 |---------|--------|
-| NIC + Prov | Alaska, Maine, New Hampshire, Oklahoma, South Carolina |
+| NIC + Prov | Alaska, Maine, New Hampshire, Oklahoma, South Carolina, Utah, Virginia, Washington |
 | NIC + PCS | Arizona, New Mexico |
 | NIC + Prometric | Connecticut, Delaware |
 | NIC + CTS + PSI | Illinois |
 | NIC + Board (multiple exams) | Kansas, Mississippi |
 | NIC + UNKNOWN (transition) | Montana |
-| PSI-developed + PSI-administered | Alabama, California, Colorado, Georgia, Maryland, Michigan |
+| NIC + DL Roope | Wisconsin |
+| PSI-developed + PSI-administered | Alabama, California, Colorado, Georgia, Maryland, Michigan, Texas |
 | PSI theory-only (partial participation) | Massachusetts |
-| PSI-administered (developer unknown) | Rhode Island |
+| PSI-administered (developer unknown) | Rhode Island, Tennessee |
 | State-specific + PSI-administered | Indiana |
 | State-specific + Pearson VUE | Florida |
 | Pearson VUE (multi-role) | Pennsylvania |
-| State-board-controlled | Kentucky, Minnesota, Nebraska, Nevada, Ohio |
+| State-board-controlled | Kentucky, Minnesota, Nebraska, Nevada, Ohio, South Dakota |
 | State-controlled (multi-stage) | North Carolina |
 | State-controlled (requires verification) | Arkansas, Louisiana, North Dakota |
 | State-specific + state-administered | New York |
 | State-specific + school-administered practical | Oregon |
 | NIC + Prov (likely, unconfirmed) | Idaho |
 | Vendor transition (Prometric → PSI) | Hawaii |
+| Vendor transition (DL Roope → Prov) | Washington |
+| Vendor transition (unknown → Prov) | Virginia |
 | Prometric / IQT | New Jersey |
-| UNKNOWN (requires verification) | Missouri |
+| Multiple provider footprints | West Virginia |
+| UNKNOWN (requires verification) | Missouri, Vermont |
 
 **Architecture Implication:** Exam developer, administrator, license track, exam version, and blueprint must remain conceptually separate in any future data model.
 
@@ -130,4 +136,5 @@ Do NOT populate unknown information by guessing. Use **UNKNOWN / REQUIRES VERIFI
 ---
 
 *Last Updated: 2026-08-14*
-*Batch 4 Archived: 2026-08-14*
+*Batch 5 Archived: 2026-08-14*
+*National Research Complete: 50 of 50 states*

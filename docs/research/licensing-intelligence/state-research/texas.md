@@ -3,7 +3,7 @@
 **State:** Texas  
 **License Type:** Class A Barber  
 **Research Date:** 2026-08-14  
-**Status:** CONFIRMED — Initial research complete
+**Status:** CONFIRMED
 
 ---
 
@@ -18,59 +18,76 @@
 
 ---
 
-## Theory Examination
+## Examination Structure
 
-| Field | Value | Confidence |
-|-------|-------|------------|
-| **Exam Developer** | PSI | CONFIRMED |
-| **Exam Administrator** | PSI | CONFIRMED |
-| **Exam Name** | Texas Class A Barber Theory Examination | CONFIRMED |
+Texas Class A Barber candidates must pass:
 
----
+| Component | Required | Vendor |
+|-----------|----------|--------|
+| **Written Examination** | Yes | PSI |
+| **Practical Examination** | Yes | PSI |
 
-## Critical Finding
-
-Texas uses PSI for examination administration AND maintains examination/CIB information specific to its Class A Barber licensing structure.
-
-**Implication:** The exact state + license + examination + version must determine which blueprint applies. Do not infer the blueprint solely from the administrator.
+PSI is the third-party examination vendor.
 
 ---
 
-## Exam Blueprint
+## Exam Eligibility
 
-| Field | Value | Status |
-|-------|-------|--------|
-| **Blueprint Source** | Texas-specific PSI examination | CONFIRMED |
-| **Domain Structure** | TBD | PENDING RESEARCH |
-| **Domain Weights** | TBD | PENDING RESEARCH |
+A Class A Barber student can become eligible for the written examination after completing:
 
----
+| Milestone | Hours |
+|-----------|-------|
+| **Written Exam Eligibility** | 900 of 1,000 hours |
+| **Program Completion / Practical / Licensure Eligibility** | 1,000 hours |
 
-## Candidate Information Bulletin
+**Preserve the distinction between:**
 
-| Field | Value | Status |
-|-------|-------|--------|
-| **CIB Source** | PSI / Texas TDLR | CONFIRMED |
-| **CIB URL** | TBD | PENDING RESEARCH |
-| **CIB Version** | TBD | PENDING RESEARCH |
-| **Effective Date** | TBD | PENDING RESEARCH |
+- **Written Exam Eligibility** (900 hours)
+- **Program Completion / Practical / Licensure Eligibility** (1,000 hours)
 
 ---
 
-## Practical Examination
+## Business Intelligence — Examination Statistics
 
-| Field | Value | Status |
-|-------|-------|--------|
-| **Practical Required** | Yes | CONFIRMED |
-| **Practical Administrator** | TBD | PENDING RESEARCH |
+Texas publishes examination statistics.
+
+### FY2025 Class A Barber Results
+
+| Examination | Passed | Failed | Pass Rate |
+|-------------|--------|--------|-----------|
+| **Written** | 3,150 | 5,307 | 37.25% |
+| **Practical** | 2,669 | 303 | 89.80% |
+
+**Do NOT convert these historical aggregate statistics into claims about an individual student's probability of passing.**
 
 ---
 
-## ASCYN PRO Implication
+## School Reporting Infrastructure
 
-Texas demonstrates that PSI can serve as both developer AND administrator for state-specific examinations. This differs from the NIC/Prov relationship in Oklahoma.
+Texas announced that beginning **August 1, 2026**, Texas/PSI schools would have a new method for accessing school examination reports.
 
-**Key Learning:** Research the actual examination associated with each state rather than inferring the blueprint solely from the administrator.
+Identified report/export formats:
+
+- Excel
+- PDF
+- CSV
+- HTML
+
+**Preserve this as future integration/market-intelligence research. This does NOT authorize an integration.**
+
+---
+
+## Architecture / Business Implication
+
+Texas should be flagged as a potentially important future expansion-analysis state because of:
+
+- Candidate volume
+- Published written pass-rate challenge
+- Large written/practical performance gap
+- School examination reporting
+- Early written-exam eligibility
+
+**Do NOT assign a final expansion rank yet.**
 
 ---
 
@@ -79,7 +96,7 @@ Texas demonstrates that PSI can serve as both developer AND administrator for st
 | Source | Type | Date Accessed | Confidence |
 |--------|------|---------------|------------|
 | Texas Department of Licensing and Regulation | State licensing board | 2026-08-14 | CONFIRMED |
-| PSI Texas information | Exam developer/administrator | 2026-08-14 | CONFIRMED |
+| PSI Texas information | Exam vendor | 2026-08-14 | CONFIRMED |
 
 ---
 
@@ -88,8 +105,8 @@ Texas demonstrates that PSI can serve as both developer AND administrator for st
 | Item | Frequency | Reason |
 |------|-----------|--------|
 | Exam blueprint | Annually | CIB updates |
-| Administrator | Annually | Provider changes |
-| State-specific requirements | Annually | Policy changes |
+| Examination statistics | Annually | New fiscal year data |
+| School reporting | Annually | Infrastructure changes |
 
 ---
 

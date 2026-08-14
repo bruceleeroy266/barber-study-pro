@@ -3,7 +3,7 @@
 **State:** Washington  
 **License Type:** Barber  
 **Research Date:** 2026-08-14  
-**Status:** CONFIRMED — Initial research complete
+**Status:** CONFIRMED
 
 ---
 
@@ -18,55 +18,49 @@
 
 ---
 
-## Theory Examination
+## Examination Structure
 
-| Field | Value | Confidence |
-|-------|-------|------------|
-| **Exam Developer** | NIC | CONFIRMED |
-| **Exam Administrator** | DL Roope | CONFIRMED |
-| **Exam Name** | NIC Barber Examination | CONFIRMED |
+Washington requires applicable:
 
----
-
-## Finding
-
-NIC's jurisdiction information identifies DL Roope in the administration structure for Washington.
+| Component | Required |
+|-----------|----------|
+| **Written Examination** | Yes |
+| **Practical Examination** | Yes |
 
 ---
 
-## Exam Blueprint
+## Vendor Transition
 
-| Field | Value | Status |
-|-------|-------|--------|
-| **Blueprint Source** | NIC Barber Examination | CONFIRMED |
-| **Domain Structure** | TBD | PENDING RESEARCH |
-| **Domain Weights** | TBD | PENDING RESEARCH |
+Washington changed its examination vendor effective **May 1, 2026**.
 
----
+| Period | Administrator |
+|--------|---------------|
+| **Current (eff. May 1, 2026)** | Prov |
+| **Previous** | DL Roope |
 
-## Candidate Information Bulletin
+Prov administers NIC examinations for Washington's Department of Licensing.
 
-| Field | Value | Status |
-|-------|-------|--------|
-| **CIB Source** | NIC | CONFIRMED |
-| **CIB URL** | TBD | PENDING RESEARCH |
-| **CIB Version** | TBD | PENDING RESEARCH |
-| **Effective Date** | TBD | PENDING RESEARCH |
+**Do NOT overwrite the historical provider relationship.**
 
 ---
 
-## Practical Examination
+## Early Exam Eligibility
 
-| Field | Value | Status |
-|-------|-------|--------|
-| **Practical Required** | Yes | CONFIRMED |
-| **Practical Administrator** | TBD | PENDING RESEARCH |
+Candidates may become eligible for examination when they are within:
+
+**100 hours**
+
+of completing their required education.
 
 ---
 
-## ASCYN PRO Implication
+## Architecture / Research Implication
 
-Washington follows the NIC/DL Roope pattern. This reinforces the developer/administrator distinction with a different administrator than Oklahoma (Prov).
+Washington reinforces:
+
+- **Vendor history**
+- **Effective dates**
+- **Early exam eligibility**
 
 ---
 
@@ -75,8 +69,9 @@ Washington follows the NIC/DL Roope pattern. This reinforces the developer/admin
 | Source | Type | Date Accessed | Confidence |
 |--------|------|---------------|------------|
 | Washington State Department of Licensing | State licensing board | 2026-08-14 | CONFIRMED |
-| NIC jurisdiction information | Exam developer | 2026-08-14 | CONFIRMED |
-| DL Roope information | Exam administrator | 2026-08-14 | CONFIRMED |
+| NIC examination materials | Exam developer | 2026-08-14 | CONFIRMED |
+| Prov examination information | Exam administrator | 2026-08-14 | CONFIRMED |
+| DL Roope historical information | Previous administrator | 2026-08-14 | CONFIRMED |
 
 ---
 
@@ -85,7 +80,7 @@ Washington follows the NIC/DL Roope pattern. This reinforces the developer/admin
 | Item | Frequency | Reason |
 |------|-----------|--------|
 | Exam blueprint | Annually | CIB updates |
-| Administrator | Annually | Provider changes |
+| Vendor relationships | Annually | Contract changes |
 
 ---
 

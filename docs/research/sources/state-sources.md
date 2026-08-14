@@ -440,6 +440,124 @@
 
 ---
 
+## South Dakota
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| South Dakota Board of Barber Examiners | State licensing board | TBD | 2026-08-14 | Highest | NIC theory + Board practical; 75% theory passing |
+| NIC examination materials | Exam developer | https://www.nic.org | 2026-08-14 | Highest | NIC Barber Styling Written Theory |
+
+**Verification Status:** CONFIRMED
+
+---
+
+## Tennessee
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| Tennessee Board of Barber Examiners | State licensing board | TBD | 2026-08-14 | Highest | Multiple credentials; PSI administration |
+| PSI examination information | Exam administrator | https://www.psiexams.com | 2026-08-14 | Highest | Theory + practical administration |
+
+**Verification Status:** CONFIRMED — Developer not confirmed
+
+---
+
+## Texas
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| Texas Department of Licensing and Regulation | State licensing board | https://www.tdlr.texas.gov | 2026-08-14 | Highest | Licensing requirements; examination statistics |
+| PSI Texas information | Exam vendor | https://www.psiexams.com | 2026-08-14 | Highest | Written + practical administration; school reporting |
+
+**Verification Status:** CONFIRMED
+
+---
+
+## Utah
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| Utah Division of Occupational and Professional Licensing | State licensing authority | TBD | 2026-08-14 | Highest | ICA structure |
+| NIC examination materials | Exam developer | https://www.nic.org | 2026-08-14 | Highest | NIC theory + practical |
+| Prov examination information | Exam administrator | https://www.provexam.com | 2026-08-14 | Highest | Administration |
+
+**Verification Status:** CONFIRMED
+
+---
+
+## Vermont
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| NIC jurisdiction information | Exam developer | https://www.nic.org | 2026-08-14 | Highest | Prov association |
+| Vermont Office of Professional Regulation | State licensing authority | TBD | 2026-08-14 | Highest | Barbers & Cosmetologists program |
+
+**Verification Status:** PARTIAL — Limited first-party confirmation
+
+---
+
+## Virginia
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| Virginia Board for Barbers and Cosmetology | State licensing board | TBD | 2026-08-14 | Highest | Prov transition eff. 2025-01-01; training-hour change |
+| NIC examination materials | Exam developer | https://www.nic.org | 2026-08-14 | Highest | NIC theory + practical |
+| Prov examination information | Exam administrator | https://www.provexam.com | 2026-08-14 | Highest | Current administrator |
+
+**Verification Status:** CONFIRMED
+
+---
+
+## Washington
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| Washington State Department of Licensing | State licensing board | TBD | 2026-08-14 | Highest | Vendor transition eff. 2026-05-01 |
+| NIC examination materials | Exam developer | https://www.nic.org | 2026-08-14 | Highest | NIC examinations |
+| Prov examination information | Exam administrator | https://www.provexam.com | 2026-08-14 | Highest | Current administrator |
+| DL Roope historical information | Previous administrator | TBD | 2026-08-14 | Highest | Historical record |
+
+**Verification Status:** CONFIRMED
+
+---
+
+## West Virginia
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| West Virginia Board of Barbers and Cosmetologists | State licensing board | TBD | 2026-08-14 | Highest | Multiple provider footprints |
+| Prov examination information | Exam administrator | https://www.provexam.com | 2026-08-14 | Highest | 2026 CIB identified |
+| DL Roope/Prometric information | Exam administrator | TBD | 2026-08-14 | Highest | Barber 1 (No Chemical) pathway |
+| NIC examination materials | Exam developer | https://www.nic.org | 2026-08-14 | Highest | NIC Barber 1 |
+
+**Verification Status:** PARTIAL — Track/provider relationships not resolved
+
+---
+
+## Wisconsin
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| Wisconsin Department of Safety and Professional Services | State licensing board | TBD | 2026-08-14 | Highest | DL Roope contracted vendor |
+| DL Roope examination information | Exam administrator | TBD | 2026-08-14 | Highest | Written + Practical CIBs; version transition |
+| NIC examination materials | Exam developer | https://www.nic.org | 2026-08-14 | Highest | NIC content |
+
+**Verification Status:** CONFIRMED
+
+---
+
+## Wyoming
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| Wyoming Board of Barber Examiners | State licensing board | TBD | 2026-08-14 | Highest | Track-specific examination formats |
+| NIC examination materials | Exam developer | https://www.nic.org | 2026-08-14 | Highest | NIC theory + practical |
+| Prov examination information | Exam administrator | https://www.provexam.com | 2026-08-14 | Highest | Administration |
+
+**Verification Status:** CONFIRMED
+
+---
+
 ## Texas
 
 | Source | Type | URL | Date Accessed | Reliability | Notes |

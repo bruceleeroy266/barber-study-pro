@@ -1,9 +1,9 @@
 # West Virginia — State Licensing Research
 
 **State:** West Virginia  
-**License Type:** Barber  
+**License Type:** Barber (multiple tracks)  
 **Research Date:** 2026-08-14  
-**Status:** CONFIRMED — Initial research complete
+**Status:** PARTIAL
 
 ---
 
@@ -12,61 +12,65 @@
 | Field | Value |
 |-------|-------|
 | **State Board** | West Virginia Board of Barbers and Cosmetologists |
-| **License Name** | Barber |
+| **License Tracks** | Multiple tracks identified |
 | **Theory Exam Required** | Yes |
 | **Practical Exam Required** | Yes |
 
 ---
 
-## Theory Examination
+## Current Research Findings
 
-| Field | Value | Confidence |
-|-------|-------|------------|
-| **Exam Developer** | NIC | CONFIRMED |
-| **Exam Administrator** | DL Roope | CONFIRMED |
-| **Exam Name** | NIC Barber Examination | CONFIRMED |
+West Virginia requires careful treatment because current research shows **multiple examination/provider footprints**.
 
----
+### Prov Track
 
-## Finding
+A current **2026 Prov West Virginia Barber & Cosmetology CIB** was identified.
 
-NIC's jurisdiction information identifies DL Roope in the administration structure for West Virginia.
+Prov examination infrastructure includes:
+- Computer-based written examination options
+- Remote written examination options
 
----
+### DL Roope/Prometric Track
 
-## Exam Blueprint
+Current DL Roope/Prometric-related material also identifies a:
 
-| Field | Value | Status |
-|-------|-------|--------|
-| **Blueprint Source** | NIC Barber Examination | CONFIRMED |
-| **Domain Structure** | TBD | PENDING RESEARCH |
-| **Domain Weights** | TBD | PENDING RESEARCH |
+**West Virginia Barber 1 (No Chemical)** pathway using:
+- NIC Barber 1 written
+- NIC Barber 1 practical
 
 ---
 
-## Candidate Information Bulletin
+## Important Guardrail
 
-| Field | Value | Status |
-|-------|-------|--------|
-| **CIB Source** | NIC | CONFIRMED |
-| **CIB URL** | TBD | PENDING RESEARCH |
-| **CIB Version** | TBD | PENDING RESEARCH |
-| **Effective Date** | TBD | PENDING RESEARCH |
+**Do NOT collapse these findings into:**
 
----
+```
+West Virginia → One Provider
+```
 
-## Practical Examination
-
-| Field | Value | Status |
-|-------|-------|--------|
-| **Practical Required** | Yes | CONFIRMED |
-| **Practical Administrator** | TBD | PENDING RESEARCH |
+**until current license-track/provider relationships are resolved.**
 
 ---
 
-## ASCYN PRO Implication
+## Requires Verification
 
-West Virginia follows the NIC/DL Roope pattern, consistent with Washington and Wisconsin.
+| Field | Status | Notes |
+|-------|--------|-------|
+| **Which current barber license track uses Prov** | UNKNOWN / REQUIRES VERIFICATION | Not resolved |
+| **Which current barber license track uses DL Roope/Prometric** | UNKNOWN / REQUIRES VERIFICATION | If still applicable |
+| **Current administrator by track** | UNKNOWN / REQUIRES VERIFICATION | Not resolved |
+| **Current practical administrator by track** | UNKNOWN / REQUIRES VERIFICATION | Not resolved |
+| **Transition/effective dates** | UNKNOWN / REQUIRES VERIFICATION | Not resolved |
+| **Current CIB by license track** | UNKNOWN / REQUIRES VERIFICATION | Not resolved |
+| **Passing standards** | UNKNOWN / REQUIRES VERIFICATION | Not resolved |
+
+---
+
+## Architecture / Research Implication
+
+West Virginia reinforces that:
+
+**Provider relationship may be license-track-specific.**
 
 ---
 
@@ -75,8 +79,9 @@ West Virginia follows the NIC/DL Roope pattern, consistent with Washington and W
 | Source | Type | Date Accessed | Confidence |
 |--------|------|---------------|------------|
 | West Virginia Board of Barbers and Cosmetologists | State licensing board | 2026-08-14 | CONFIRMED |
-| NIC jurisdiction information | Exam developer | 2026-08-14 | CONFIRMED |
-| DL Roope information | Exam administrator | 2026-08-14 | CONFIRMED |
+| Prov examination information | Exam administrator | 2026-08-14 | CONFIRMED |
+| DL Roope/Prometric information | Exam administrator | 2026-08-14 | CONFIRMED |
+| NIC examination materials | Exam developer | 2026-08-14 | CONFIRMED |
 
 ---
 
@@ -84,8 +89,9 @@ West Virginia follows the NIC/DL Roope pattern, consistent with Washington and W
 
 | Item | Frequency | Reason |
 |------|-----------|--------|
-| Exam blueprint | Annually | CIB updates |
-| Administrator | Annually | Provider changes |
+| License track/provider relationships | Next research batch | Resolve current structure |
+| CIB by track | Next research batch | Locate official documentation |
+| Passing standards | Next research batch | Confirm standards |
 
 ---
 

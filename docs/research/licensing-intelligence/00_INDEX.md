@@ -126,6 +126,26 @@ National barber licensing research covering:
 | [North Dakota](state-research/north-dakota.md) | Barber (multi-stage) | UNKNOWN / REQUIRES VERIFICATION | North Dakota Board | PARTIAL | ✅ Active |
 | [Rhode Island](state-research/rhode-island.md) | Barber Stylist | UNKNOWN / REQUIRES VERIFICATION | PSI | PARTIAL | ✅ Active |
 
+### Batch 5 — Confirmed (8)
+
+| State | License Type | Exam Developer | Administrator | Status | Documentation |
+|-------|--------------|----------------|---------------|--------|---------------|
+| [South Dakota](state-research/south-dakota.md) | Barber | NIC | UNKNOWN / REQUIRES VERIFICATION | CONFIRMED | ✅ Active |
+| [Tennessee](state-research/tennessee.md) | Master Barber (multiple credentials) | UNKNOWN / REQUIRES VERIFICATION | PSI | CONFIRMED | ✅ Active |
+| [Texas](state-research/texas.md) | Class A Barber | PSI | PSI | CONFIRMED | ✅ Active |
+| [Utah](state-research/utah.md) | Barber | NIC | Prov | CONFIRMED | ✅ Active |
+| [Virginia](state-research/virginia.md) | Barber | NIC | Prov | CONFIRMED | ✅ Active |
+| [Washington](state-research/washington.md) | Barber | NIC | Prov | CONFIRMED | ✅ Active |
+| [Wisconsin](state-research/wisconsin.md) | Barber | NIC | DL Roope | CONFIRMED | ✅ Active |
+| [Wyoming](state-research/wyoming.md) | Barber (multiple tracks) | NIC | Prov | CONFIRMED | ✅ Active |
+
+### Batch 5 — Partial (2)
+
+| State | License Type | Exam Developer | Administrator | Status | Documentation |
+|-------|--------------|----------------|---------------|--------|---------------|
+| [Vermont](state-research/vermont.md) | Barber | UNKNOWN / REQUIRES VERIFICATION | Prov | PARTIAL | ✅ Active |
+| [West Virginia](state-research/west-virginia.md) | Barber (multiple tracks) | NIC | UNKNOWN / REQUIRES VERIFICATION | PARTIAL | ✅ Active |
+
 ### Pre-Batch 1 — Partial
 
 | State | License Type | Exam Developer | Administrator | Status | Documentation |
@@ -140,11 +160,11 @@ National barber licensing research covering:
 
 ---
 
-## Cross-State Finding (Batch 1 + Batch 2 + Batch 3 + Batch 4)
+## Cross-State Finding (Batch 1 + Batch 2 + Batch 3 + Batch 4 + Batch 5)
 
 **The national landscape cannot be accurately represented as simply `State → NIC or PSI`.**
 
-Seventeen major cross-state findings identified across 40 states. See [Architecture Risks](../architecture-research/architecture-risks.md) for detailed findings and [50-State Master Map](50-state-master-map.md) for the pattern matrix.
+Twenty-three major cross-state findings identified across 50 states. See [Architecture Risks](../architecture-research/architecture-risks.md) for detailed findings and [50-State Master Map](50-state-master-map.md) for the pattern matrix.
 
 ---
 
@@ -221,4 +241,5 @@ See [Licensing Sources](../sources/licensing-sources.md) and [State Sources](../
 ---
 
 *Last Updated: 2026-08-14*
-*Batch 4 Archived: 2026-08-14*
+*Batch 5 Archived: 2026-08-14*
+*National Research Complete: 50 of 50 states*
