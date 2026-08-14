@@ -1117,8 +1117,9 @@
   color: var(--color-brand-white) !important;
 }
 
-.presentation-mode.high-contrast .text-[#B8860B],
-.presentation-mode.high-contrast .text-[#c9a000] {
+/* Target Tailwind arbitrary value classes using attribute selectors for safety */
+.presentation-mode.high-contrast [class*="text-[#B8860B]"],
+.presentation-mode.high-contrast [class*="text-[#c9a000]"] {
   color: #FFD700 !important;
 }
 
@@ -1126,7 +1127,7 @@
   background: var(--color-brand-charcoal) !important;
 }
 
-.presentation-mode.high-contrast .border-[#1a2332]\/10 {
+.presentation-mode.high-contrast [class*="border-[#1a2332]/10"] {
   border-color: var(--color-border-secondary) !important;
 }
 
