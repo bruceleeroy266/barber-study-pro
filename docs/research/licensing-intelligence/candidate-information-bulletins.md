@@ -60,7 +60,13 @@ Exam → Exam Version → Effective Date → CIB → Blueprint
 | Missouri | Missouri Cosmetology and Barber Exams | CIB 2026.01.05 | 2026-01-05 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | Prov administers; developer not confirmed |
 | New Hampshire | NIC Barber 1 / NIC Barber Styling | Prov CIB | 2026-01-05 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | Two license tracks; Prov administers |
 | New Jersey | New Jersey Barber CIB | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | Prometric/IQT; developer not confirmed |
+| New Mexico | NIC Barber Examinations | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | NIC content via PCS; theory + practical + state law |
+| North Carolina | Apprentice Barber Written Examination | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | Board maintains CIB/material; version not confirmed |
 | Oklahoma | Barber Theory (NIC) | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | NIC content via Prov |
+| Oregon | Barbering Field-of-Practice + Laws & Rules | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | Two written exams; school-administered practical |
+| Pennsylvania | Pennsylvania Barber Examinations | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | Pearson VUE multi-role; 100 scored + 15 pretest |
+| Rhode Island | Barber Stylist Theory | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | PSI administers; developer not confirmed |
+| South Carolina | NIC Barber Examinations | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | NIC content via Prov; 70% passing; 90% early testing |
 | Texas | Barber Theory | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | See state research |
 
 ---

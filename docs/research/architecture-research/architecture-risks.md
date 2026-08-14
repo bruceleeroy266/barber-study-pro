@@ -151,7 +151,79 @@ Massachusetts participates in PSI's national program for **theory only**. No sep
 
 ---
 
-### Updated Examination-Type Taxonomy (Batches 1–3)
+### FINDING 13 — OFFICIAL EXAM REFERENCE SOURCES MATTER (Batch 4)
+
+Oregon and Pennsylvania demonstrate that official examination programs may identify specific textbooks/reference materials.
+
+| State | Reference Sources |
+|-------|-----------------|
+| Oregon | Milady, Pivot Point |
+| Pennsylvania | Milady Standard Barbering 7th ed. (2025), Pivot Point Fundamentals: Barbering 1st ed. (2018) |
+
+**Potential future conceptual relationship:**
+
+```
+Exam → Exam Version → Official Reference Source → Edition / Effective Period
+```
+
+**Do NOT implement.**
+
+**Implication:** Keep examination-reference intelligence separate from claims that a state exam is "Milady" or "Pivot Point." A reference textbook is NOT the same thing as an exam developer.
+
+---
+
+### FINDING 14 — EXAM ORGANIZATIONS MAY PERFORM MULTIPLE ROLES (Batch 4)
+
+Pennsylvania demonstrates that one organization can potentially perform:
+
+- Application processing
+- Exam creation
+- Exam scoring
+- Exam reporting
+- Exam delivery/administration
+
+**Implication:** Preserve the roles conceptually rather than creating one generic provider concept. Do NOT collapse those roles conceptually merely because one vendor currently performs several of them.
+
+---
+
+### FINDING 15 — EXAM ELIGIBILITY AND LICENSURE ELIGIBILITY CAN DIFFER (Batch 4)
+
+South Carolina permits examination before completion of 100% of required school hours.
+
+| Threshold | Requirement |
+|-----------|-------------|
+| **Exam Eligibility** | 90% program completion |
+| **Licensure Eligibility** | 100% program completion |
+
+**Implication:** Distinguish conceptually between **Eligible to Test** and **Eligible for License**.
+
+---
+
+### FINDING 16 — SCHOOL OUTCOME DATA MAY BE AN EXTERNAL INTELLIGENCE SOURCE (Batch 4)
+
+Oregon indicates school graduate examination reports may be available upon request.
+
+**Implication:** Preserve this as potential future business/market intelligence. Do NOT create scraping, collection or analytics functionality.
+
+---
+
+### FINDING 17 — SCHOOL-ADMINISTERED PRACTICALS EXIST (Batch 4)
+
+Oregon reinforces that a practical examination can be administered by the educational institution rather than a state Board or national testing vendor.
+
+**Practical-delivery taxonomy should preserve:**
+
+- State/Board administered
+- External testing vendor
+- Computer-based
+- Remote/virtual
+- School-administered
+- Proficiency-based
+- No separate practical
+
+---
+
+### Updated Examination-Type Taxonomy (Batches 1–4)
 
 - Theory / Written
 - Practical
@@ -167,7 +239,7 @@ Massachusetts participates in PSI's national program for **theory only**. No sep
 
 ---
 
-### Updated Research Taxonomy (Batches 1–3)
+### Updated Research Taxonomy (Batches 1–4)
 
 Based on all research to date, the current research taxonomy is:
 
@@ -195,25 +267,30 @@ Jurisdiction / State
 
 ---
 
-### Developer/Administrator Patterns Identified (Batches 1–3)
+### Developer/Administrator Patterns Identified (Batches 1–4)
 
 | Pattern | Developer | Administrator | States |
 |---------|-----------|---------------|--------|
-| NIC + Prov | NIC | Prov | Alaska, Maine, New Hampshire, Oklahoma |
-| NIC + PCS | NIC | PCS | Arizona |
+| NIC + Prov | NIC | Prov | Alaska, Maine, New Hampshire, Oklahoma, South Carolina |
+| NIC + PCS | NIC | PCS | Arizona, New Mexico |
 | NIC + Prometric | NIC | Prometric | Connecticut, Delaware |
 | NIC + CTS + PSI | NIC | CTS (application) + PSI (delivery) | Illinois |
 | NIC + Board (multiple exams) | NIC + State Board | Prov + State Board | Kansas, Mississippi |
 | NIC + UNKNOWN (transition) | NIC | UNKNOWN (Prometric/DL Roope transition) | Montana |
 | PSI + PSI | PSI | PSI | Alabama, California, Colorado, Georgia, Maryland, Michigan |
 | PSI theory-only | PSI | PSI | Massachusetts |
+| PSI-administered (developer unknown) | UNKNOWN | PSI | Rhode Island |
 | State-specific + PSI | State | PSI | Indiana |
 | State-specific + Pearson VUE | UNKNOWN | Pearson VUE | Florida |
-| State-board-controlled | State Board | State Board | Kentucky, Minnesota, Nebraska, Nevada |
+| Pearson VUE (multi-role) | Pearson VUE | Pearson VUE | Pennsylvania |
+| State-board-controlled | State Board | State Board | Kentucky, Minnesota, Nebraska, Nevada, Ohio |
+| State-controlled (multi-stage) | State Board | State Board | North Carolina |
+| State-specific + state-administered | State | State | New York |
+| State-specific + school-administered practical | State | School | Oregon |
 | NIC + Prov (likely) | NIC | Prov | Idaho (unconfirmed) |
 | Vendor transition | UNKNOWN | Prometric → PSI | Hawaii |
 | Prometric / IQT | UNKNOWN | Prometric / IQT | New Jersey |
-| UNKNOWN | UNKNOWN | UNKNOWN | Arkansas, Louisiana, Missouri |
+| UNKNOWN | UNKNOWN | UNKNOWN | Arkansas, Louisiana, Missouri, North Dakota |
 
 ---
 

@@ -106,6 +106,26 @@ National barber licensing research covering:
 | [Montana](state-research/montana.md) | Barber | NIC | UNKNOWN / REQUIRES VERIFICATION | PARTIAL | ✅ Active |
 | [New Jersey](state-research/new-jersey.md) | Barber | UNKNOWN / REQUIRES VERIFICATION | Prometric / IQT | PARTIAL | ✅ Active |
 
+### Batch 4 — Confirmed (6)
+
+| State | License Type | Exam Developer | Administrator | Status | Documentation |
+|-------|--------------|----------------|---------------|--------|---------------|
+| [New Mexico](state-research/new-mexico.md) | Barber | NIC | PCS | CONFIRMED | ✅ Active |
+| [Ohio](state-research/ohio.md) | Barber | Ohio (state) | Ohio State Cosmetology and Barber Board | CONFIRMED | ✅ Active |
+| [Oklahoma](state-research/oklahoma.md) | Barber | NIC | Prov | CONFIRMED | ✅ Active |
+| [Oregon](state-research/oregon.md) | Barber | Oregon (state) | Oregon Health Licensing Office | CONFIRMED | ✅ Active |
+| [Pennsylvania](state-research/pennsylvania.md) | Barber | Pearson VUE | Pearson VUE | CONFIRMED | ✅ Active |
+| [South Carolina](state-research/south-carolina.md) | Barber | NIC | Prov | CONFIRMED | ✅ Active |
+
+### Batch 4 — Partial (4)
+
+| State | License Type | Exam Developer | Administrator | Status | Documentation |
+|-------|--------------|----------------|---------------|--------|---------------|
+| [New York](state-research/new-york.md) | Barber Operator | UNKNOWN / REQUIRES VERIFICATION | New York Department of State | PARTIAL | ✅ Active |
+| [North Carolina](state-research/north-carolina.md) | Barber (multi-stage) | UNKNOWN / REQUIRES VERIFICATION | North Carolina Board | PARTIAL | ✅ Active |
+| [North Dakota](state-research/north-dakota.md) | Barber (multi-stage) | UNKNOWN / REQUIRES VERIFICATION | North Dakota Board | PARTIAL | ✅ Active |
+| [Rhode Island](state-research/rhode-island.md) | Barber Stylist | UNKNOWN / REQUIRES VERIFICATION | PSI | PARTIAL | ✅ Active |
+
 ### Pre-Batch 1 — Partial
 
 | State | License Type | Exam Developer | Administrator | Status | Documentation |
@@ -120,11 +140,11 @@ National barber licensing research covering:
 
 ---
 
-## Cross-State Finding (Batch 1 + Batch 2 + Batch 3)
+## Cross-State Finding (Batch 1 + Batch 2 + Batch 3 + Batch 4)
 
 **The national landscape cannot be accurately represented as simply `State → NIC or PSI`.**
 
-Twelve major cross-state findings identified across 30 states. See [Architecture Risks](../architecture-research/architecture-risks.md) for detailed findings and [50-State Master Map](50-state-master-map.md) for the pattern matrix.
+Seventeen major cross-state findings identified across 40 states. See [Architecture Risks](../architecture-research/architecture-risks.md) for detailed findings and [50-State Master Map](50-state-master-map.md) for the pattern matrix.
 
 ---
 
@@ -201,3 +221,4 @@ See [Licensing Sources](../sources/licensing-sources.md) and [State Sources](../
 ---
 
 *Last Updated: 2026-08-14*
+*Batch 4 Archived: 2026-08-14*

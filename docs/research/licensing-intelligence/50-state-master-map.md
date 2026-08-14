@@ -2,7 +2,7 @@
 
 **Document:** 50-State Master Map  
 **Last Updated:** 2026-08-14  
-**Status:** ACTIVE — Batch 1 + Batch 2 + Batch 3 Research Archived
+**Status:** ACTIVE — Batch 1 + Batch 2 + Batch 3 + Batch 4 Research Archived
 
 ---
 
@@ -56,26 +56,16 @@ Comprehensive tracking of barber licensing examination requirements for all 50 U
 | Nevada | ✅ CONFIRMED | Barber | Yes + Oral | Nevada (state-specific) | Nevada Board | Yes + Oral | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
 | New Hampshire | ✅ CONFIRMED | Barber / Master Barber | Yes | NIC | Prov (current; previously DL Roope/Prometric) | UNKNOWN / REQUIRES VERIFICATION | Prov CIB eff. 2026-01-05 | 2026-08-14 | CONFIRMED |
 | New Jersey | 🔶 PARTIAL | Barber | Yes | UNKNOWN / REQUIRES VERIFICATION | Prometric / IQT | UNKNOWN / REQUIRES VERIFICATION | NJ Barber CIB (version UNKNOWN) | 2026-08-14 | PARTIAL |
-| Massachusetts | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| Michigan | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| Minnesota | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| Mississippi | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| Missouri | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| Montana | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| Nebraska | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| Nevada | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| New Hampshire | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| New Jersey | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| New Mexico | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| New York | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| North Carolina | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| North Dakota | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| Ohio | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| Oklahoma | 🔶 PARTIAL | See [state research](state-research/oklahoma.md) | Yes | NIC | Prov | — | — | 2026-08-14 | PARTIAL |
-| Oregon | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| Pennsylvania | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| Rhode Island | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
-| South Carolina | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
+| New Mexico | ✅ CONFIRMED | Barber | Yes | NIC | PCS | Yes — NIC practical | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
+| New York | 🔶 PARTIAL | Barber Operator | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | New York Department of State | Yes — state practical | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL |
+| North Carolina | 🔶 PARTIAL | Barber (multi-stage) | Yes — Apprentice stage | UNKNOWN / REQUIRES VERIFICATION | North Carolina Board | Yes — both stages | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL |
+| North Dakota | 🔶 PARTIAL | Barber (multi-stage) | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | North Dakota Board | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL |
+| Ohio | ✅ CONFIRMED | Barber | Yes | Ohio (state) | Ohio State Cosmetology and Barber Board | Yes — Board practical | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
+| Oklahoma | ✅ CONFIRMED | Barber | Yes | NIC | Prov | Yes | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
+| Oregon | ✅ CONFIRMED | Barber | Yes — 2 written exams | Oregon (state) | Oregon Health Licensing Office | Yes — school-administered | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
+| Pennsylvania | ✅ CONFIRMED | Barber | Yes | Pearson VUE | Pearson VUE | Yes — Pearson VUE practical | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
+| Rhode Island | 🔶 PARTIAL | Barber Stylist | Yes | UNKNOWN / REQUIRES VERIFICATION | PSI | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL |
+| South Carolina | ✅ CONFIRMED | Barber | Yes | NIC | Prov | Yes — NIC practical | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
 | South Dakota | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
 | Tennessee | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
 | Texas | 🔶 PARTIAL | See [state research](state-research/texas.md) | — | — | — | — | — | 2026-08-14 | PARTIAL |
@@ -93,33 +83,38 @@ Comprehensive tracking of barber licensing examination requirements for all 50 U
 
 | Status | Count |
 |--------|-------|
-| ✅ CONFIRMED | 19 |
-| 🔶 PARTIAL | 16 |
-| ⬜ PENDING RESEARCH | 15 |
+| ✅ CONFIRMED | 25 |
+| 🔶 PARTIAL | 20 |
+| ⬜ PENDING RESEARCH | 5 |
 
 ---
 
-## Cross-State Finding (Batch 1 + Batch 2 + Batch 3)
+## Cross-State Finding (Batch 1 + Batch 2 + Batch 3 + Batch 4)
 
 **The national landscape cannot be accurately represented as simply `State → NIC or PSI`.**
 
-Batches 1–3 have identified materially different arrangements:
+Batches 1–4 have identified materially different arrangements:
 
 | Pattern | States |
 |---------|--------|
-| NIC + Prov | Alaska, Maine, New Hampshire, Oklahoma |
-| NIC + PCS | Arizona |
+| NIC + Prov | Alaska, Maine, New Hampshire, Oklahoma, South Carolina |
+| NIC + PCS | Arizona, New Mexico |
 | NIC + Prometric | Connecticut, Delaware |
 | NIC + CTS + PSI | Illinois |
 | NIC + Board (multiple exams) | Kansas, Mississippi |
 | NIC + UNKNOWN (transition) | Montana |
 | PSI-developed + PSI-administered | Alabama, California, Colorado, Georgia, Maryland, Michigan |
 | PSI theory-only (partial participation) | Massachusetts |
+| PSI-administered (developer unknown) | Rhode Island |
 | State-specific + PSI-administered | Indiana |
 | State-specific + Pearson VUE | Florida |
-| State-board-controlled | Kentucky, Minnesota, Nebraska, Nevada |
+| Pearson VUE (multi-role) | Pennsylvania |
+| State-board-controlled | Kentucky, Minnesota, Nebraska, Nevada, Ohio |
+| State-controlled (multi-stage) | North Carolina |
+| State-controlled (requires verification) | Arkansas, Louisiana, North Dakota |
+| State-specific + state-administered | New York |
+| State-specific + school-administered practical | Oregon |
 | NIC + Prov (likely, unconfirmed) | Idaho |
-| State-board-controlled (requires verification) | Arkansas, Louisiana |
 | Vendor transition (Prometric → PSI) | Hawaii |
 | Prometric / IQT | New Jersey |
 | UNKNOWN (requires verification) | Missouri |
@@ -135,3 +130,4 @@ Do NOT populate unknown information by guessing. Use **UNKNOWN / REQUIRES VERIFI
 ---
 
 *Last Updated: 2026-08-14*
+*Batch 4 Archived: 2026-08-14*

@@ -40,7 +40,11 @@ Exam
 | Michigan | PSI National Barber | PSI National adoption | 2024-10-02 | 2026-02-11 | PSI National program | Replaced Michigan state exam |
 | Michigan | PSI National Barber | Updated content | 2026-02-11 | Current | Updated PSI content | Current version |
 | New Hampshire | NIC Barber 1 / Barber Styling | Prov CIB | 2026-01-05 | Current | Prov CIB eff. 2026-01-05 | Two license tracks |
+| New Mexico | NIC Barber Examinations | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | Current | UNKNOWN / REQUIRES VERIFICATION | NIC via PCS; theory + practical + state law |
 | Oklahoma | Barber Theory (NIC) | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | Current | UNKNOWN / REQUIRES VERIFICATION | NIC content via Prov |
+| Oregon | Barbering Field-of-Practice + Laws & Rules | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | Current | UNKNOWN / REQUIRES VERIFICATION | Two written exams; 75% passing |
+| Pennsylvania | Pennsylvania Barber Examinations | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | Current | UNKNOWN / REQUIRES VERIFICATION | Pearson VUE; 100 scored + 15 pretest |
+| South Carolina | NIC Barber Examinations | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | Current | UNKNOWN / REQUIRES VERIFICATION | NIC via Prov; 70% passing |
 
 ---
 

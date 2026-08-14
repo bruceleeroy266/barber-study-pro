@@ -3,7 +3,7 @@
 **State:** Oklahoma  
 **License Type:** Barber  
 **Research Date:** 2026-08-14  
-**Status:** CONFIRMED — Initial research complete
+**Status:** CONFIRMED
 
 ---
 
@@ -18,65 +18,54 @@
 
 ---
 
+## Examination Structure
+
+Oklahoma distinguishes between **exam developer/content owner** and **exam administrator/delivery vendor**.
+
+| Role | Organization | Confidence |
+|------|--------------|------------|
+| **Exam Developer / Content Owner** | NIC | CONFIRMED |
+| **Exam Administrator / Delivery Vendor** | Prov | CONFIRMED |
+
+---
+
 ## Theory Examination
 
 | Field | Value | Confidence |
 |-------|-------|------------|
 | **Exam Developer** | NIC | CONFIRMED |
 | **Exam Administrator** | Prov | CONFIRMED |
-| **Exam Name** | NIC Barber Styling Theory Examination | CONFIRMED |
-
----
-
-## Exam Blueprint
-
-### NIC Barber Styling Theory Examination
-
-| Domain | Weight | Question Allocation | Source | Confidence |
-|--------|--------|---------------------|--------|------------|
-| Scientific Concepts | 35% | TBD | NIC CIB | CONFIRMED |
-| Implements & Equipment | 10% | TBD | NIC CIB | CONFIRMED |
-| Hair Care Services | 40% | TBD | NIC CIB | CONFIRMED |
-| Facial Hair & Skin Care Services | 15% | TBD | NIC CIB | CONFIRMED |
-
-**Total:** 100%
-
----
-
-## Candidate Information Bulletin
-
-| Field | Value | Status |
-|-------|-------|--------|
-| **CIB Source** | NIC | CONFIRMED |
-| **CIB URL** | TBD | PENDING RESEARCH |
-| **CIB Version** | TBD | PENDING RESEARCH |
-| **Effective Date** | TBD | PENDING RESEARCH |
+| **Exam Name** | NIC Barber Theory Examination | CONFIRMED |
+| **Content** | NIC examination content | CONFIRMED |
 
 ---
 
 ## Practical Examination
 
-| Field | Value | Status |
-|-------|-------|--------|
+| Field | Value | Confidence |
+|-------|-------|------------|
 | **Practical Required** | Yes | CONFIRMED |
-| **Practical Administrator** | TBD | PENDING RESEARCH |
+| **Administrator** | Prov | CONFIRMED |
 
 ---
 
 ## Critical Architectural Distinction
 
-**DO NOT model Oklahoma as:**
-```
-exam_provider = NIC
-```
+**Oklahoma independently validates the distinction between:**
 
-**Accurate model:**
-```
-Oklahoma → Barber License → NIC Examination → Administered through Prov
-```
+| Concept | Role | Oklahoma Example |
+|---------|------|------------------|
+| **Exam Developer** | Creates examination content | NIC |
+| **Exam Administrator / Delivery Vendor** | Delivers/administers examination | Prov |
 
-**Exam Developer:** NIC (content creator)  
-**Exam Administrator:** Prov (delivery provider)
+**Preserve this distinction.**
+
+```
+Oklahoma
+└── Barber License
+    └── NIC Barber Theory Examination
+        └── Administered through Prov
+```
 
 ---
 
@@ -94,8 +83,8 @@ Oklahoma is ASCYN PRO's home state and initial market. The confirmed NIC/Prov re
 | Source | Type | Date Accessed | Confidence |
 |--------|------|---------------|------------|
 | Oklahoma State Board of Cosmetology and Barbering | State licensing board | 2026-08-14 | CONFIRMED |
-| NIC Barber CIB | Exam developer documentation | 2026-08-14 | CONFIRMED |
-| Prov Oklahoma information | Exam administrator documentation | 2026-08-14 | CONFIRMED |
+| NIC examination materials | Exam developer | 2026-08-14 | CONFIRMED |
+| Prov examination information | Exam administrator | 2026-08-14 | CONFIRMED |
 
 ---
 

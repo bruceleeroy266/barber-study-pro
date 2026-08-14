@@ -6,6 +6,51 @@
 
 ---
 
+## 2026-08-14 — 50-State Barber Research Batch 4 Archived
+
+### Added
+
+- **State Research Records** — New Mexico, New York, North Carolina, North Dakota, Ohio, Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina (10 states)
+- **CIB Records** — New Mexico NIC (UNKNOWN), North Carolina Apprentice Written (UNKNOWN), Oregon written exams (UNKNOWN), Pennsylvania Pearson VUE (UNKNOWN), Rhode Island Barber Stylist Theory (UNKNOWN), South Carolina NIC (UNKNOWN)
+- **Exam Version Records** — New Mexico, Oregon, Pennsylvania, South Carolina (all UNKNOWN / REQUIRES VERIFICATION)
+- **Passing Standards** — New Mexico 75% (theory/practical/law), Oregon 75% (written exams), South Carolina 70%
+- **Examination Reference Sources** — Oregon (Milady, Pivot Point), Pennsylvania (Milady Standard Barbering 7th ed. 2025, Pivot Point Fundamentals: Barbering 1st ed. 2018)
+- **Source Records** — 10 new state source sections
+- **Cross-State Architecture Findings** — 5 new findings from Batch 4 (official exam reference sources, multi-role exam organizations, exam vs licensure eligibility, school outcome data, school-administered practicals)
+- **Business Intelligence** — Oregon school graduate examination reports availability
+
+### Updated
+
+- **50-State Master Map** — All 10 Batch 4 states added; pattern matrix expanded; summary updated (25 CONFIRMED, 20 PARTIAL, 5 PENDING)
+- **Licensing Intelligence Index** — Added Batch 4 state tables
+- **Architecture Risks** — Added Findings 13–17; updated developer/administrator pattern matrix
+- **State Sources** — Added New Mexico, New York, North Carolina, North Dakota, Ohio, Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina
+- **CIB Index** — Added New Mexico, North Carolina, Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina records
+- **Exam Versions** — Added New Mexico, Oklahoma, Oregon, Pennsylvania, South Carolina records
+
+### Key Findings
+
+- **6 states CONFIRMED:** New Mexico, Ohio, Oklahoma, Oregon, Pennsylvania, South Carolina
+- **4 states PARTIAL:** New York, North Carolina, North Dakota, Rhode Island
+- **Official exam reference sources matter** (Oregon: Milady/Pivot Point; Pennsylvania: Milady 7th ed./Pivot Point 1st ed.)
+- **Exam organizations may perform multiple roles** (Pennsylvania: Pearson VUE does application, creation, scoring, reporting, delivery)
+- **Exam eligibility and licensure eligibility can differ** (South Carolina: 90% to test, 100% to license)
+- **School outcome data may be external intelligence source** (Oregon: graduate exam reports available upon request)
+- **School-administered practicals exist** (Oregon: practical administered by educational institution)
+
+### National Research Count
+
+- **40 of 50 states** have entered the research pipeline
+- **25 CONFIRMED**
+- **20 PARTIAL** (includes pre-Batch 1 partial states)
+- **5 PENDING**
+
+### Decisions
+
+No new decisions. Existing decisions remain active.
+
+---
+
 ## 2026-08-14 — 50-State Barber Research Batch 3 Archived
 
 ### Added
