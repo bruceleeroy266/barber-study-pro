@@ -36,6 +36,10 @@ Exam
 | Hawaii | Barber Examination | Vendor transition | 2026-01-01 | Current | UNKNOWN / REQUIRES VERIFICATION | Prometric → PSI vendor change |
 | Kansas | NIC Barber Stylist Theory | CIB eff. 2026-01-05 | 2026-01-05 | Current | NIC CIB eff. 2026-01-05 | NIC content via Prov |
 | Maryland | PSI National Barber | Updated content eff. 2026-02-26 | 2026-02-26 | Current | Updated PSI content eff. 2026-02-26 | PSI developed + administered |
+| Massachusetts | PSI National Barber (theory only) | Barber v1.0 | 2026-04-15 | Current | Barber v1.0 | Theory-only participation |
+| Michigan | PSI National Barber | PSI National adoption | 2024-10-02 | 2026-02-11 | PSI National program | Replaced Michigan state exam |
+| Michigan | PSI National Barber | Updated content | 2026-02-11 | Current | Updated PSI content | Current version |
+| New Hampshire | NIC Barber 1 / Barber Styling | Prov CIB | 2026-01-05 | Current | Prov CIB eff. 2026-01-05 | Two license tracks |
 | Oklahoma | Barber Theory (NIC) | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | Current | UNKNOWN / REQUIRES VERIFICATION | NIC content via Prov |
 
 ---

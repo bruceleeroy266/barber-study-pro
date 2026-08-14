@@ -86,17 +86,88 @@ Across Batch 1 + Batch 2, practical structures identified include:
 | Delivery Type | States |
 |---------------|--------|
 | Traditional external practical | Alabama, Colorado, Georgia |
-| Board-administered practical | Kansas, Kentucky |
+| Board-administered practical | Kansas, Kentucky, Minnesota, Mississippi, Nebraska |
 | Computer-based practical | Arizona |
 | Remote/virtual practical | Maine, Maryland |
 | School/instructor proficiency | Alaska |
-| No state practical licensing exam | California |
+| No state practical licensing exam | California, Massachusetts |
 
 **Implication:** Practical examination delivery type must be a distinct field in any future data model.
 
 ---
 
-### Updated Research Taxonomy (Batch 1 + Batch 2)
+### FINDING 7 — PROFESSION-SPECIFIC EXAMINATION SYSTEMS (Batch 3)
+
+Nebraska demonstrates that examination structures can differ by profession within the same state. Nebraska barbering and Nebraska cosmetology do NOT share the same examination structure.
+
+**Implication:** Never infer barber examination requirements from cosmetology examination arrangements. The minimum safe research relationship is `State → Profession → License → Exam Requirement`.
+
+---
+
+### FINDING 8 — STATE-SPECIFIC KNOWLEDGE EXAMINATIONS (Batch 3)
+
+Mississippi demonstrates a three-component structure:
+
+- **National Theory** (NIC Barber Theory)
+- **State Law/Sanitation** (Mississippi Law & Sanitation Examination)
+- **Practical** (Mississippi Barber Practical Examination)
+
+**Implication:** A future licensure-readiness model may require separate measurement of national technical knowledge and state-specific regulatory knowledge.
+
+---
+
+### FINDING 9 — ORAL EXAMINATIONS EXIST (Batch 3)
+
+Nevada requires an **oral examination** component in addition to written and practical.
+
+**Implication:** Exam types must not be limited to `Theory + Practical`. The examination-type taxonomy now includes: Theory/Written, Practical, State Law/Jurisprudence, Sanitation, Oral, Proficiency, Service-specific certification, Computer-based practical, Remote/virtual practical.
+
+---
+
+### FINDING 10 — EXAM MIGRATIONS MUST BE HISTORICAL (Batch 3)
+
+Michigan transitioned from a state exam to PSI National (October 2, 2024), then updated PSI content (February 11, 2026). New Hampshire transitioned from DL Roope/Prometric to Prov.
+
+**Implication:** Do not overwrite historical exam/provider relationships when a state changes programs. Preserve full transition history.
+
+---
+
+### FINDING 11 — LICENSE SUBTYPE MATTERS (Batch 3)
+
+New Hampshire uses different NIC examination tracks for different license levels:
+
+- Barber → NIC Barber 1
+- Master Barber → NIC Barber Styling
+
+**Implication:** License subtype must remain part of the research taxonomy.
+
+---
+
+### FINDING 12 — NATIONAL PROGRAM PARTICIPATION CAN BE PARTIAL (Batch 3)
+
+Massachusetts participates in PSI's national program for **theory only**. No separate practical licensing examination was identified.
+
+**Implication:** Do NOT assume national-program participation means a jurisdiction uses every component of that program.
+
+---
+
+### Updated Examination-Type Taxonomy (Batches 1–3)
+
+- Theory / Written
+- Practical
+- State Law / Jurisprudence
+- Sanitation
+- Oral
+- Proficiency
+- Service-specific certification
+- Computer-based practical
+- Remote / virtual practical
+
+**Status:** RESEARCH ONLY — Do NOT implement as application architecture.
+
+---
+
+### Updated Research Taxonomy (Batches 1–3)
 
 Based on all research to date, the current research taxonomy is:
 
@@ -124,22 +195,25 @@ Jurisdiction / State
 
 ---
 
-### Developer/Administrator Patterns Identified (Batch 1 + Batch 2)
+### Developer/Administrator Patterns Identified (Batches 1–3)
 
 | Pattern | Developer | Administrator | States |
 |---------|-----------|---------------|--------|
-| NIC + Prov | NIC | Prov | Alaska, Maine, Oklahoma |
+| NIC + Prov | NIC | Prov | Alaska, Maine, New Hampshire, Oklahoma |
 | NIC + PCS | NIC | PCS | Arizona |
 | NIC + Prometric | NIC | Prometric | Connecticut, Delaware |
 | NIC + CTS + PSI | NIC | CTS (application) + PSI (delivery) | Illinois |
-| PSI + PSI | PSI | PSI | Alabama, California, Colorado, Georgia, Maryland |
+| NIC + Board (multiple exams) | NIC + State Board | Prov + State Board | Kansas, Mississippi |
+| NIC + UNKNOWN (transition) | NIC | UNKNOWN (Prometric/DL Roope transition) | Montana |
+| PSI + PSI | PSI | PSI | Alabama, California, Colorado, Georgia, Maryland, Michigan |
+| PSI theory-only | PSI | PSI | Massachusetts |
 | State-specific + PSI | State | PSI | Indiana |
 | State-specific + Pearson VUE | UNKNOWN | Pearson VUE | Florida |
-| State-board-controlled | State Board | State Board | Kentucky |
+| State-board-controlled | State Board | State Board | Kentucky, Minnesota, Nebraska, Nevada |
 | NIC + Prov (likely) | NIC | Prov | Idaho (unconfirmed) |
 | Vendor transition | UNKNOWN | Prometric → PSI | Hawaii |
-| Multiple sources | NIC + State Board | Prov + State Board | Kansas |
-| UNKNOWN | UNKNOWN | UNKNOWN | Arkansas, Louisiana |
+| Prometric / IQT | UNKNOWN | Prometric / IQT | New Jersey |
+| UNKNOWN | UNKNOWN | UNKNOWN | Arkansas, Louisiana, Missouri |
 
 ---
 

@@ -86,6 +86,26 @@ National barber licensing research covering:
 | [Iowa](state-research/iowa.md) | Barber | NIC/national (recognized) | UNKNOWN / REQUIRES VERIFICATION | PARTIAL | ✅ Active |
 | [Louisiana](state-research/louisiana.md) | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | PARTIAL | ✅ Active |
 
+### Batch 3 — Confirmed (7)
+
+| State | License Type | Exam Developer | Administrator | Status | Documentation |
+|-------|--------------|----------------|---------------|--------|---------------|
+| [Massachusetts](state-research/massachusetts.md) | Barber | PSI | PSI | CONFIRMED | ✅ Active |
+| [Michigan](state-research/michigan.md) | Barber | PSI | PSI | CONFIRMED | ✅ Active |
+| [Minnesota](state-research/minnesota.md) | Barber | Minnesota (state-controlled) | Minnesota Board | CONFIRMED | ✅ Active |
+| [Mississippi](state-research/mississippi.md) | Barber | NIC + Mississippi Board | Mississippi Board | CONFIRMED | ✅ Active |
+| [Nebraska](state-research/nebraska.md) | Barber | Nebraska (state) | Nebraska Board | CONFIRMED | ✅ Active |
+| [Nevada](state-research/nevada.md) | Barber | Nevada (state-specific) | Nevada Board | CONFIRMED | ✅ Active |
+| [New Hampshire](state-research/new-hampshire.md) | Barber / Master Barber | NIC | Prov | CONFIRMED | ✅ Active |
+
+### Batch 3 — Partial (3)
+
+| State | License Type | Exam Developer | Administrator | Status | Documentation |
+|-------|--------------|----------------|---------------|--------|---------------|
+| [Missouri](state-research/missouri.md) | Barber | UNKNOWN / REQUIRES VERIFICATION | Prov | PARTIAL | ✅ Active |
+| [Montana](state-research/montana.md) | Barber | NIC | UNKNOWN / REQUIRES VERIFICATION | PARTIAL | ✅ Active |
+| [New Jersey](state-research/new-jersey.md) | Barber | UNKNOWN / REQUIRES VERIFICATION | Prometric / IQT | PARTIAL | ✅ Active |
+
 ### Pre-Batch 1 — Partial
 
 | State | License Type | Exam Developer | Administrator | Status | Documentation |
@@ -100,11 +120,11 @@ National barber licensing research covering:
 
 ---
 
-## Cross-State Finding (Batch 1 + Batch 2)
+## Cross-State Finding (Batch 1 + Batch 2 + Batch 3)
 
 **The national landscape cannot be accurately represented as simply `State → NIC or PSI`.**
 
-Six major cross-state findings identified across 20 states. See [Architecture Risks](../architecture-research/architecture-risks.md) for detailed findings and [50-State Master Map](50-state-master-map.md) for the pattern matrix.
+Twelve major cross-state findings identified across 30 states. See [Architecture Risks](../architecture-research/architecture-risks.md) for detailed findings and [50-State Master Map](50-state-master-map.md) for the pattern matrix.
 
 ---
 

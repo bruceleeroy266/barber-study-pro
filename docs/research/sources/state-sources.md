@@ -224,6 +224,114 @@
 
 ---
 
+## Massachusetts
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| Massachusetts state licensing information | State licensing board | TBD | 2026-08-14 | Highest | Theory-only PSI participation |
+| PSI examination information | Exam developer/administrator | https://www.psiexams.com | 2026-08-14 | Highest | Barber v1.0 eff. 2026-04-15 |
+
+**Verification Status:** CONFIRMED
+
+---
+
+## Michigan
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| Michigan state licensing information | State licensing board | TBD | 2026-08-14 | Highest | PSI adoption 2024-10-02; updated content 2026-02-11 |
+| PSI examination information | Exam developer/administrator | https://www.psiexams.com | 2026-08-14 | Highest | PSI National program |
+
+**Verification Status:** CONFIRMED
+
+---
+
+## Minnesota
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| Minnesota Board of Barber Examiners | State licensing board | TBD | 2026-08-14 | Highest | State-controlled examination |
+
+**Verification Status:** CONFIRMED
+
+---
+
+## Mississippi
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| Mississippi Board of Barber Examiners | State licensing board | TBD | 2026-08-14 | Highest | NIC theory + state law/sanitation + practical |
+| NIC examination materials | Exam developer | https://www.nic.org | 2026-08-14 | Highest | NIC Barber Theory |
+
+**Verification Status:** CONFIRMED
+
+---
+
+## Missouri
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| Missouri Board of Cosmetology and Barber Examiners | State licensing board | TBD | 2026-08-14 | Highest | CIB 2026.01.05 |
+| Prov examination information | Exam administrator | https://www.provexam.com | 2026-08-14 | Highest | Administration |
+
+**Verification Status:** PARTIAL — Developer not yet confirmed
+
+---
+
+## Montana
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| Montana state regulatory material | State licensing board | TBD | 2026-08-14 | Highest | NIC theory + practical; 75% passing; administrator transition |
+| NIC examination materials | Exam developer | https://www.nic.org | 2026-08-14 | Highest | Content developer |
+
+**Verification Status:** PARTIAL — Administrator transition not fully resolved
+
+---
+
+## Nebraska
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| Nebraska Board of Barber Examiners | State licensing board | TBD | 2026-08-14 | Highest | State-controlled; written + practical |
+
+**Verification Status:** CONFIRMED
+
+---
+
+## Nevada
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| Nevada State Barbers' Health and Sanitation Board | State licensing board | TBD | 2026-08-14 | Highest | State-specific; written + practical + oral |
+
+**Verification Status:** CONFIRMED
+
+---
+
+## New Hampshire
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| New Hampshire state licensing information | State licensing board | TBD | 2026-08-14 | Highest | Barber + Master Barber tracks; Prov administers |
+| NIC examination materials | Exam developer | https://www.nic.org | 2026-08-14 | Highest | NIC Barber 1 / Barber Styling |
+| Prov examination information | Exam administrator | https://www.provexam.com | 2026-08-14 | Highest | CIB eff. 2026-01-05 |
+
+**Verification Status:** CONFIRMED
+
+---
+
+## New Jersey
+
+| Source | Type | URL | Date Accessed | Reliability | Notes |
+|--------|------|-----|---------------|-------------|-------|
+| New Jersey state licensing information | State licensing board | TBD | 2026-08-14 | Highest | Prometric/IQT network |
+| Prometric / IQT examination information | Exam administrator | https://www.prometric.com | 2026-08-14 | Highest | NJ Barber CIB identified |
+
+**Verification Status:** PARTIAL — Developer and practical not yet confirmed
+
+---
+
 ## Oklahoma
 
 | Source | Type | URL | Date Accessed | Reliability | Notes |

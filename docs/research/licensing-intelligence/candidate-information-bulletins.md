@@ -55,6 +55,11 @@ Exam → Exam Version → Effective Date → CIB → Blueprint
 | Indiana | Indiana state-specific | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | State-specific exam; PSI administers |
 | Kansas | NIC Barber Stylist Theory | CIB eff. 2026-01-05 | 2026-01-05 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | NIC content via Prov; plus state rules exam |
 | Maryland | PSI National Barber | Updated content eff. 2026-02-26 | 2026-02-26 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | PSI developed + administered |
+| Massachusetts | PSI National Barber (theory only) | Barber v1.0 | 2026-04-15 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | Theory-only participation; no separate practical |
+| Michigan | PSI National Barber | UNKNOWN / REQUIRES VERIFICATION | 2024-10-02 (adoption); 2026-02-11 (updated content) | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | Transitioned from state exam to PSI National |
+| Missouri | Missouri Cosmetology and Barber Exams | CIB 2026.01.05 | 2026-01-05 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | Prov administers; developer not confirmed |
+| New Hampshire | NIC Barber 1 / NIC Barber Styling | Prov CIB | 2026-01-05 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | Two license tracks; Prov administers |
+| New Jersey | New Jersey Barber CIB | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | Prometric/IQT; developer not confirmed |
 | Oklahoma | Barber Theory (NIC) | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | NIC content via Prov |
 | Texas | Barber Theory | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | See state research |
 

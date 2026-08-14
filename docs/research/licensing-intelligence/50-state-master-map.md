@@ -2,7 +2,7 @@
 
 **Document:** 50-State Master Map  
 **Last Updated:** 2026-08-14  
-**Status:** ACTIVE — Batch 1 + Batch 2 Research Archived
+**Status:** ACTIVE — Batch 1 + Batch 2 + Batch 3 Research Archived
 
 ---
 
@@ -46,6 +46,16 @@ Comprehensive tracking of barber licensing examination requirements for all 50 U
 | Louisiana | 🔶 PARTIAL | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL |
 | Maine | ✅ CONFIRMED | Barber | Yes | NIC | Prov | Yes — remote practical | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
 | Maryland | ✅ CONFIRMED | Barber / Master Barber | Yes | PSI | PSI | Yes — PSI virtual practical | Updated PSI content eff. 2026-02-26 | 2026-08-14 | CONFIRMED |
+| Massachusetts | ✅ CONFIRMED | Barber | Yes | PSI | PSI | No separate practical identified | Barber v1.0, eff. 2026-04-15 | 2026-08-14 | CONFIRMED |
+| Michigan | ✅ CONFIRMED | Barber | Yes | PSI | PSI | Yes — PSI National practical | PSI adoption eff. 2024-10-02; updated content eff. 2026-02-11 | 2026-08-14 | CONFIRMED |
+| Minnesota | ✅ CONFIRMED | Barber | Yes | Minnesota (state-controlled) | Minnesota Board | Yes — Board-administered | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
+| Mississippi | ✅ CONFIRMED | Barber | Yes — multiple exams | NIC + Mississippi Board | Mississippi Board | Yes — Board practical | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
+| Missouri | 🔶 PARTIAL | Barber | Yes | UNKNOWN / REQUIRES VERIFICATION | Prov | Yes | CIB 2026.01.05 | 2026-08-14 | PARTIAL |
+| Montana | 🔶 PARTIAL | Barber | Yes | NIC | UNKNOWN / REQUIRES VERIFICATION (transition: Prometric/DL Roope) | Yes | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL |
+| Nebraska | ✅ CONFIRMED | Barber | Yes | Nebraska (state) | Nebraska Board | Yes — Board practical | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
+| Nevada | ✅ CONFIRMED | Barber | Yes + Oral | Nevada (state-specific) | Nevada Board | Yes + Oral | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
+| New Hampshire | ✅ CONFIRMED | Barber / Master Barber | Yes | NIC | Prov (current; previously DL Roope/Prometric) | UNKNOWN / REQUIRES VERIFICATION | Prov CIB eff. 2026-01-05 | 2026-08-14 | CONFIRMED |
+| New Jersey | 🔶 PARTIAL | Barber | Yes | UNKNOWN / REQUIRES VERIFICATION | Prometric / IQT | UNKNOWN / REQUIRES VERIFICATION | NJ Barber CIB (version UNKNOWN) | 2026-08-14 | PARTIAL |
 | Massachusetts | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
 | Michigan | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
 | Minnesota | ⬜ PENDING RESEARCH | — | — | — | — | — | — | — | — |
@@ -83,34 +93,36 @@ Comprehensive tracking of barber licensing examination requirements for all 50 U
 
 | Status | Count |
 |--------|-------|
-| ✅ CONFIRMED | 12 |
-| 🔶 PARTIAL | 13 |
-| ⬜ PENDING RESEARCH | 25 |
+| ✅ CONFIRMED | 19 |
+| 🔶 PARTIAL | 16 |
+| ⬜ PENDING RESEARCH | 15 |
 
 ---
 
-## Cross-State Finding (Batch 1 + Batch 2)
+## Cross-State Finding (Batch 1 + Batch 2 + Batch 3)
 
 **The national landscape cannot be accurately represented as simply `State → NIC or PSI`.**
 
-Batch 1 + Batch 2 have identified materially different arrangements:
+Batches 1–3 have identified materially different arrangements:
 
 | Pattern | States |
 |---------|--------|
-| NIC + Prov | Alaska, Maine, Oklahoma |
+| NIC + Prov | Alaska, Maine, New Hampshire, Oklahoma |
 | NIC + PCS | Arizona |
 | NIC + Prometric | Connecticut, Delaware |
 | NIC + CTS + PSI | Illinois |
-| PSI-developed + PSI-administered | Alabama, California, Colorado, Georgia, Maryland |
+| NIC + Board (multiple exams) | Kansas, Mississippi |
+| NIC + UNKNOWN (transition) | Montana |
+| PSI-developed + PSI-administered | Alabama, California, Colorado, Georgia, Maryland, Michigan |
+| PSI theory-only (partial participation) | Massachusetts |
 | State-specific + PSI-administered | Indiana |
 | State-specific + Pearson VUE | Florida |
-| State-board-controlled | Kentucky |
+| State-board-controlled | Kentucky, Minnesota, Nebraska, Nevada |
 | NIC + Prov (likely, unconfirmed) | Idaho |
 | State-board-controlled (requires verification) | Arkansas, Louisiana |
 | Vendor transition (Prometric → PSI) | Hawaii |
-| Multiple exams from different sources | Kansas |
-| Multi-stage license pathway | Kentucky |
-| Additional service credential | Iowa |
+| Prometric / IQT | New Jersey |
+| UNKNOWN (requires verification) | Missouri |
 
 **Architecture Implication:** Exam developer, administrator, license track, exam version, and blueprint must remain conceptually separate in any future data model.
 

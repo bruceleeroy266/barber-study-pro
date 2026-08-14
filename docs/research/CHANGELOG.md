@@ -6,6 +6,51 @@
 
 ---
 
+## 2026-08-14 — 50-State Barber Research Batch 3 Archived
+
+### Added
+
+- **State Research Records** — Massachusetts, Michigan, Minnesota, Mississippi, Missouri, Montana, Nebraska, Nevada, New Hampshire, New Jersey (10 states)
+- **CIB Records** — Massachusetts Barber v1.0 (2026-04-15), Missouri CIB 2026.01.05, New Hampshire Prov CIB (2026-01-05), New Jersey Barber CIB (version UNKNOWN)
+- **Exam Version Records** — Michigan PSI adoption (2024-10-02), Michigan updated content (2026-02-11), Massachusetts Barber v1.0 (2026-04-15), New Hampshire Prov CIB (2026-01-05)
+- **Passing Standards** — Montana theory 75%, Montana practical 75%
+- **Source Records** — 10 new state source sections
+- **Cross-State Architecture Findings** — 6 new findings from Batch 3 (profession-specific exams, state-specific knowledge exams, oral exams, exam migrations, license subtype, partial national program participation)
+- **Examination-Type Taxonomy** — Added Oral, Sanitation to taxonomy
+
+### Updated
+
+- **50-State Master Map** — All 10 Batch 3 states added; pattern matrix expanded; summary updated (19 CONFIRMED, 16 PARTIAL, 15 PENDING)
+- **Licensing Intelligence Index** — Added Batch 3 state tables
+- **Architecture Risks** — Added Findings 7–12; updated examination-type taxonomy; updated developer/administrator pattern matrix
+- **State Sources** — Added Massachusetts, Michigan, Minnesota, Mississippi, Missouri, Montana, Nebraska, Nevada, New Hampshire, New Jersey
+- **CIB Index** — Added Massachusetts, Michigan, Missouri, New Hampshire, New Jersey records
+- **Exam Versions** — Added Michigan (2 records), Massachusetts, New Hampshire
+
+### Key Findings
+
+- **7 states CONFIRMED:** Massachusetts, Michigan, Minnesota, Mississippi, Nebraska, Nevada, New Hampshire
+- **3 states PARTIAL:** Missouri, Montana, New Jersey
+- **Profession-specific examination systems** (Nebraska: barbering ≠ cosmetology)
+- **State-specific knowledge examinations** (Mississippi: NIC theory + state law/sanitation + practical)
+- **Oral examinations exist** (Nevada: written + practical + oral)
+- **Exam migrations must be historical** (Michigan: state exam → PSI National → updated PSI content)
+- **License subtype matters** (New Hampshire: Barber → NIC Barber 1; Master Barber → NIC Barber Styling)
+- **National program participation can be partial** (Massachusetts: PSI theory only, no practical)
+
+### National Research Count
+
+- **30 of 50 states** have entered the research pipeline
+- **19 CONFIRMED**
+- **16 PARTIAL** (includes pre-Batch 1 partial states)
+- **15 PENDING**
+
+### Decisions
+
+No new decisions. Existing decisions remain active.
+
+---
+
 ## 2026-08-14 — 50-State Barber Research Batch 2 Archived
 
 ### Added
