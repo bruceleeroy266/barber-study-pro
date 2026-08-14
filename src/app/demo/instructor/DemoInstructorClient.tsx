@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import {
   AlertTriangle,
@@ -21,11 +21,8 @@ import {
   Lightbulb,
   ChevronRight,
   Menu,
-  Maximize2,
-  Minimize2,
   Presentation,
-  Contrast,
-  RotateCcw,
+  GraduationCap,
 } from 'lucide-react'
 import { Logo } from '@/components/brand'
 import { Card, Button, Badge } from '@/components/ui'
@@ -35,10 +32,12 @@ import {
   getClassTopicAverages,
   getClassOverview,
   getTopicName,
+  getPrimaryLearningGap,
   ISABELLA_LEARNING_GAP,
   DEMO_CLASS_NAME,
 } from '@/lib/demo-environment-data'
 import type { DemoStudentProfile } from '@/lib/demo-environment-data'
+import { DemoPresentationProvider, useDemoPresentation, PresentationControls } from '../DemoPresentationContext'
 
 // ───────────────────────────────────────────────
 // Types
@@ -159,14 +158,42 @@ function TopicProgressBar({
 }
 
 // ───────────────────────────────────────────────
-// Main Component
+// Main Component (wrapped with provider)
 // ───────────────────────────────────────────────
 
 export default function DemoInstructorClient() {
+  return (
+    <DemoPresentationProvider>
+      <DemoInstructorContent />
+    </DemoPresentationProvider>
+  )
+}
+
+// ───────────────────────────────────────────────
+// Instructor Demo Content
+// ───────────────────────────────────────────────
+
+function DemoInstructorContent() {
   const students = getDemoClassStudents()
   const classOverview = getClassOverview()
   const classTopicAverages = getClassTopicAverages()
   const studentsNeedingAttention = getStudentsNeedingAttention()
+  
+  const {
+    setPerspective,
+    isPresentationMode,
+    setIsPresentationMode,
+    toggleFullscreen,
+    highContrast,
+    setHighContrast,
+    resetTrigger,
+    setGuidedStep,
+  } = useDemoPresentation()
+  
+  // Set perspective on mount
+  useEffect(() => {
+    setPerspective('instructor')
+  }, [setPerspective])
   
   // View state
   const [viewMode, setViewMode] = useState<ViewMode>('dashboard')
@@ -191,10 +218,7 @@ export default function DemoInstructorClient() {
   const [showAddNote, setShowAddNote] = useState(false)
   const [noteSaved, setNoteSaved] = useState(false)
   
-  // Presentation mode state
-  const [isPresentationMode, setIsPresentationMode] = useState(false)
-  const [isFullscreen, setIsFullscreen] = useState(false)
-  const [highContrast, setHighContrast] = useState(false)
+  // Mobile nav state
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
 
   // Filter students based on search and filter
@@ -334,16 +358,27 @@ export default function DemoInstructorClient() {
     ])
     setNoteText('')
     setShowAddNote(false)
-  }, [])
+    setGuidedStep('Dashboard')
+  }, [setGuidedStep])
 
-  // Presentation mode handlers
-  const toggleFullscreen = useCallback(() => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().then(() => setIsFullscreen(true)).catch(() => {})
-    } else {
-      document.exitFullscreen().then(() => setIsFullscreen(false)).catch(() => {})
+  // Handle external reset trigger
+  const prevResetTrigger = useRef(0)
+  useEffect(() => {
+    if (resetTrigger > prevResetTrigger.current) {
+      prevResetTrigger.current = resetTrigger
+      // Use setTimeout to avoid synchronous setState in effect
+      setTimeout(() => resetDemo(), 0)
     }
-  }, [])
+  }, [resetTrigger, resetDemo])
+
+  // Update guided step based on view mode
+  useEffect(() => {
+    if (viewMode === 'dashboard') {
+      setGuidedStep('Dashboard')
+    } else if (selectedStudent) {
+      setGuidedStep(selectedStudent.name.split(' ')[0])
+    }
+  }, [viewMode, selectedStudent, setGuidedStep])
 
   // Keyboard navigation for presentation mode
   useEffect(() => {
@@ -370,7 +405,7 @@ export default function DemoInstructorClient() {
         case 'h':
         case 'H':
           e.preventDefault()
-          setHighContrast((v) => !v)
+          setHighContrast(!highContrast)
           break
         case 'r':
         case 'R':
@@ -382,30 +417,24 @@ export default function DemoInstructorClient() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isPresentationMode, viewMode, toggleFullscreen, resetDemo])
-
-  // Listen for fullscreen changes
-  useEffect(() => {
-    function handleFullscreenChange() {
-      setIsFullscreen(!!document.fullscreenElement)
-    }
-    document.addEventListener('fullscreenchange', handleFullscreenChange)
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)
-  }, [])
+  }, [isPresentationMode, viewMode, toggleFullscreen, resetDemo, highContrast, setHighContrast, setIsPresentationMode])
 
   // CSV Export
   const downloadCsv = () => {
     const headers = ['Name', 'Program', 'Progress', 'Quiz Average', 'Readiness', 'Risk Status', 'Primary Gap', 'Last Active']
-    const rows = students.map((s) => [
-      s.name,
-      s.program,
-      `${s.overallProgress}%`,
-      `${s.avgQuizScore}%`,
-      `${s.readinessScore}`,
-      s.riskStatus,
-      s.primaryLearningGap ? getTopicName(s.primaryLearningGap) : 'None',
-      s.lastActivityDescription,
-    ])
+    const rows = students.map((s) => {
+      const primaryGap = getPrimaryLearningGap(s)
+      return [
+        s.name,
+        s.program,
+        `${s.overallProgress}%`,
+        `${s.avgQuizScore}%`,
+        `${s.readinessScore}`,
+        s.riskStatus,
+        primaryGap ? getTopicName(primaryGap) : 'None',
+        s.lastActivityDescription,
+      ]
+    })
     const csv = [headers, ...rows]
       .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
       .join('\n')
@@ -655,11 +684,14 @@ export default function DemoInstructorClient() {
                     <RiskBadge status={student.riskStatus} />
                   </td>
                   <td className="py-3 px-4">
-                    {student.primaryLearningGap ? (
-                      <span className="text-sm text-silver">{getTopicName(student.primaryLearningGap)}</span>
-                    ) : (
-                      <span className="text-sm text-silver-gray">—</span>
-                    )}
+                    {(() => {
+                      const primaryGap = getPrimaryLearningGap(student)
+                      return primaryGap ? (
+                        <span className="text-sm text-silver">{getTopicName(primaryGap)}</span>
+                      ) : (
+                        <span className="text-sm text-silver-gray">—</span>
+                      )
+                    })()}
                   </td>
                   <td className="py-3 px-4 text-right">
                     <Button
@@ -975,55 +1007,31 @@ export default function DemoInstructorClient() {
     } ${isPresentationMode ? 'presentation-mode' : ''}`}>
       {/* Presentation Mode Controls */}
       {isPresentationMode && (
-        <div className="fixed bottom-4 right-4 z-[100] flex items-center gap-2 bg-black/80 backdrop-blur-md rounded-xl p-3 shadow-2xl">
-          <button
-            onClick={() => setViewMode('dashboard')}
-            className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-            title="Back to Dashboard"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <span className="text-white/50 text-sm px-2">
-            {viewMode === 'dashboard' ? 'Dashboard' : selectedStudent?.name || 'Student Detail'}
-          </span>
-          <div className="w-px h-6 bg-white/20 mx-1" />
-          <button
-            onClick={toggleFullscreen}
-            className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-            title="Toggle fullscreen (F)"
-          >
-            {isFullscreen ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
-          </button>
-          <button
-            onClick={() => setHighContrast((v) => !v)}
-            className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-            title="Toggle high contrast (H)"
-          >
-            <Contrast className="w-5 h-5" />
-          </button>
-          <button
-            onClick={resetDemo}
-            className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-            title="Reset demo (R)"
-          >
-            <RotateCcw className="w-5 h-5" />
-          </button>
-          <div className="w-px h-6 bg-white/20 mx-1" />
-          <button
-            onClick={() => setIsPresentationMode(false)}
-            className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-            title="Exit presentation (Esc)"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+        <PresentationControls
+          viewLabel={viewMode === 'dashboard' ? 'Dashboard' : selectedStudent?.name.split(' ')[0] || 'Student'}
+          onBack={() => {
+            if (viewMode === 'student-detail') {
+              closeStudentDetail()
+            }
+          }}
+          onNext={() => {
+            // Could add guided navigation here
+          }}
+          canGoBack={viewMode === 'student-detail'}
+          canGoNext={false}
+          showPerspectiveSwitch={true}
+          perspectiveSwitchLabel="View Student Perspective"
+          perspectiveSwitchHref="/demo/student"
+          onReset={resetDemo}
+          onExit={() => setIsPresentationMode(false)}
+        />
       )}
 
       {/* Presentation Mode Toggle */}
       {!isPresentationMode && (
         <button
           onClick={() => setIsPresentationMode(true)}
-          className="fixed bottom-4 right-4 z-[100] flex items-center gap-2 px-4 py-3 bg-[var(--color-brand-gold)] text-white font-semibold rounded-xl shadow-lg hover:bg-[var(--color-brand-gold-light)] transition-colors"
+          className="fixed bottom-20 right-4 z-[100] flex items-center gap-2 px-4 py-3 bg-[var(--color-brand-gold)] text-white font-semibold rounded-xl shadow-lg hover:bg-[var(--color-brand-gold-light)] transition-colors"
           title="Enter presentation mode"
         >
           <Presentation className="w-5 h-5" />
@@ -1074,6 +1082,16 @@ export default function DemoInstructorClient() {
             </div>
 
             <div className="flex items-center gap-3">
+              {/* View Student Perspective — subtle demo transition */}
+              <Link
+                href="/demo/student"
+                className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-silver hover:text-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold)]/5 rounded-md transition-colors"
+                title="Switch to Student Demo"
+              >
+                <GraduationCap className="w-3.5 h-3.5" />
+                <span>Student View</span>
+              </Link>
+              
               <Link
                 href="/demo"
                 className="hidden sm:inline-flex items-center gap-1 text-xs uppercase tracking-widest text-[var(--color-brand-gold)] hover:text-[var(--color-brand-gold-light)] transition-colors"

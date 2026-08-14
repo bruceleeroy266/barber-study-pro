@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react'
 import Link from 'next/link'
 import {
   BookOpen,
@@ -17,11 +17,7 @@ import {
   Award,
   Menu,
   X,
-  Maximize2,
-  Minimize2,
   Presentation,
-  Contrast,
-  RotateCcw,
   Play,
   RotateCw,
   Lightbulb,
@@ -29,17 +25,19 @@ import {
   ChevronLeft,
   Eye,
   EyeOff,
+  Users,
 } from 'lucide-react'
 import { Logo } from '@/components/brand'
 import { Card, Button, Badge } from '@/components/ui'
 import { getPrimaryDemoStudent, DEMO_TOPICS } from '@/lib/demo-environment-data'
 import type { DemoStudentProfile } from '@/lib/demo-environment-data'
+import { DemoPresentationProvider, useDemoPresentation, PresentationControls } from '../DemoPresentationContext'
 
 // ───────────────────────────────────────────────
 // Types
 // ───────────────────────────────────────────────
 
-type ViewMode = 'dashboard' | 'chapter' | 'quiz' | 'results' | 'study' | 'flashcards'
+type ViewMode = 'dashboard' | 'chapter' | 'quiz' | 'results' | 'study' | 'flashcards' | 'targeted-review'
 
 interface QuizQuestion {
   id: string
@@ -66,80 +64,131 @@ interface Flashcard {
   category: string
 }
 
+// Targeted Review State
+interface TargetedReviewState {
+  topicId: string
+  topicName: string
+  historicalScore: number
+  sessionScore: number | null
+  currentQuestionIndex: number
+  selectedAnswer: number | null
+  showExplanation: boolean
+  results: QuizResult[]
+  stage: 'intro' | 'content' | 'quiz' | 'results'
+}
+
 // ───────────────────────────────────────────────
-// Chapter 10 Quiz Questions — Scalp Disorders Focus
+// Targeted Review Content — Scalp Disorders & Infections
 // ───────────────────────────────────────────────
 
-const CHAPTER_10_QUIZ_QUESTIONS: QuizQuestion[] = [
+const TARGETED_REVIEW_CONTENT = {
+  topicId: 'scalp-disorders',
+  topicName: 'Scalp Disorders & Infections',
+  chapterNumber: 10,
+  introduction: {
+    title: 'Targeted Review: Scalp Disorders & Infections',
+    description: 'This focused review addresses your identified learning gap in recognizing contagious scalp conditions — a critical safety topic for the board exam.',
+    historicalContext: 'Your Chapter 10 quiz showed difficulty identifying contagious scalp conditions. This review will strengthen your understanding of when to stop service and refer clients.',
+  },
+  keyConcepts: [
+    {
+      title: 'Tinea Capitis (Ringworm of the Scalp)',
+      content: 'A highly contagious fungal infection causing scaly, itchy patches with hair loss. The hair often breaks off at the scalp, leaving black dots. Barbers must refuse service and refer to a physician.',
+      keyPoint: 'CONTAGIOUS — Stop service immediately',
+    },
+    {
+      title: 'Tinea Barbae (Barber\'s Itch)',
+      content: 'A fungal infection of the beard area causing red, inflamed pustules around hair follicles. Often spread through contaminated razors or towels. Requires medical treatment.',
+      keyPoint: 'CONTAGIOUS — Stop service immediately',
+    },
+    {
+      title: 'Scabies',
+      content: 'A parasitic infestation caused by mites burrowing under the skin. Causes intense itching, especially at night. Visible as thin, wavy lines on the skin. Highly contagious through skin-to-skin contact.',
+      keyPoint: 'CONTAGIOUS — Stop service immediately',
+    },
+    {
+      title: 'Pediculosis Capitis (Head Lice)',
+      content: 'An infestation of head lice causing itching and visible nits (eggs) attached to hair shafts. Spreads through close contact and shared tools. Requires medicated treatment.',
+      keyPoint: 'CONTAGIOUS — Stop service immediately',
+    },
+    {
+      title: 'Folliculitis vs. Pseudofolliculitis',
+      content: 'Folliculitis is a bacterial infection of hair follicles (pustules). Pseudofolliculitis (razor bumps) is inflammation from ingrown hairs, not infection. Only folliculitis requires referral.',
+      keyPoint: 'Folliculitis: CONTAGIOUS | Pseudofolliculitis: NOT contagious',
+    },
+  ],
+}
+
+const TARGETED_REVIEW_QUESTIONS: QuizQuestion[] = [
   {
-    id: 'q1',
-    question: 'Which type of alopecia is characterized by sudden patchy hair loss and is considered an autoimmune disorder?',
+    id: 'tr-q1',
+    question: 'Which scalp condition is characterized by scaly patches with broken hair leaving black dots, and requires immediate service refusal?',
     options: [
-      'Androgenic alopecia',
       'Alopecia areata',
-      'Traction alopecia',
-      'Postpartum alopecia',
-    ],
-    correctIndex: 1,
-    explanation: 'Alopecia areata is an autoimmune disorder where the immune system attacks hair follicles, causing sudden patchy hair loss. It is one of the most frequently tested conditions on barber board exams.',
-    topicId: 'scalp-disorders',
-    concept: 'Alopecia Areata',
-  },
-  {
-    id: 'q2',
-    question: 'What is tinea capitis and why is it critical for barbers to recognize?',
-    options: [
-      'A bacterial infection requiring antibiotics',
-      'A contagious fungal infection of the scalp (ringworm)',
-      'A non-contagious form of dandruff',
-      'Normal hair shedding in children',
-    ],
-    correctIndex: 1,
-    explanation: 'Tinea capitis is a contagious fungal infection of the scalp (ringworm). Barbers must recognize it to refuse service and prevent spreading it to other clients.',
-    topicId: 'scalp-disorders',
-    concept: 'Tinea Capitis',
-  },
-  {
-    id: 'q3',
-    question: 'What is the difference between a furuncle and a carbuncle?',
-    options: [
-      'A furuncle is fungal; a carbuncle is bacterial',
-      'A furuncle affects one follicle; a carbuncle involves multiple follicles',
-      'A furuncle is painless; a carbuncle is painful',
-      'There is no difference — they are the same condition',
-    ],
-    correctIndex: 1,
-    explanation: 'A furuncle (boil) is an acute bacterial infection of a single hair follicle. A carbuncle is a larger, deep-seated infection involving multiple follicles. Both require medical referral.',
-    topicId: 'scalp-disorders',
-    concept: 'Furuncles and Carbuncles',
-  },
-  {
-    id: 'q4',
-    question: 'Which condition is characterized by an acute bacterial infection of a hair follicle that produces constant pain and a pustule?',
-    options: [
       'Tinea capitis',
       'Pityriasis capitis simplex',
-      'Furuncle',
-      'Alopecia areata',
-    ],
-    correctIndex: 2,
-    explanation: 'A furuncle (boil) is an acute bacterial infection of a hair follicle that produces constant pain and a pustule. Barbers must refer clients because it is contagious and requires medical treatment.',
-    topicId: 'scalp-disorders',
-    concept: 'Furuncle Identification',
-  },
-  {
-    id: 'q5',
-    question: 'What is pediculosis capitis?',
-    options: [
-      'A fungal infection of the scalp',
-      'Head lice infestation',
-      'Excessive dandruff production',
-      'Hair loss from chemical damage',
+      'Pseudofolliculitis barbae',
     ],
     correctIndex: 1,
-    explanation: 'Pediculosis capitis is head lice infestation. It is highly contagious and requires immediate referral. Barbers must not perform services on clients with lice.',
+    explanation: 'Tinea capitis (ringworm of the scalp) presents as scaly patches with hair broken at the scalp level, leaving characteristic black dots. It is highly contagious and requires immediate service refusal and medical referral.',
     topicId: 'scalp-disorders',
-    concept: 'Pediculosis Capitis',
+    concept: 'Tinea Capitis Identification',
+  },
+  {
+    id: 'tr-q2',
+    question: 'What is the key difference between folliculitis and pseudofolliculitis?',
+    options: [
+      'Folliculitis is fungal; pseudofolliculitis is bacterial',
+      'Folliculitis is a contagious infection; pseudofolliculitis is non-contagious inflammation from ingrown hairs',
+      'Folliculitis only affects the scalp; pseudofolliculitis only affects the beard',
+      'There is no difference — both require medical referral',
+    ],
+    correctIndex: 1,
+    explanation: 'Folliculitis is a bacterial infection of hair follicles that is contagious and requires referral. Pseudofolliculitis (razor bumps) is inflammation from ingrown hairs and is NOT contagious — it can be managed with proper shaving technique.',
+    topicId: 'scalp-disorders',
+    concept: 'Folliculitis vs. Pseudofolliculitis',
+  },
+  {
+    id: 'tr-q3',
+    question: 'A client presents with intense itching and thin, wavy lines on the scalp and neck. What condition should you suspect?',
+    options: [
+      'Tinea barbae',
+      'Scabies',
+      'Furuncle',
+      'Seborrheic dermatitis',
+    ],
+    correctIndex: 1,
+    explanation: 'Scabies presents with intense itching (especially at night) and characteristic thin, wavy lines where mites have burrowed under the skin. It is highly contagious through skin-to-skin contact and requires immediate service refusal.',
+    topicId: 'scalp-disorders',
+    concept: 'Scabies Recognition',
+  },
+  {
+    id: 'tr-q4',
+    question: 'Which condition is commonly called "barber\'s itch" and affects the beard area with inflamed pustules?',
+    options: [
+      'Tinea capitis',
+      'Tinea barbae',
+      'Pediculosis capitis',
+      'Carbuncle',
+    ],
+    correctIndex: 1,
+    explanation: 'Tinea barbae (barber\'s itch) is a fungal infection of the beard area causing red, inflamed pustules around hair follicles. It is often spread through contaminated razors or towels and requires medical treatment.',
+    topicId: 'scalp-disorders',
+    concept: 'Tinea Barbae',
+  },
+  {
+    id: 'tr-q5',
+    question: 'When examining a client, you notice small white specks attached firmly to hair shafts near the scalp. What should you do?',
+    options: [
+      'Proceed with service — this is just dandruff',
+      'Stop service immediately — this indicates pediculosis capitis (head lice)',
+      'Apply medicated shampoo and continue',
+      'Recommend a different hairstyle',
+    ],
+    correctIndex: 1,
+    explanation: 'White specks (nits) firmly attached to hair shafts indicate pediculosis capitis (head lice). Unlike dandruff which brushes off easily, nits are glued to the hair. This is highly contagious and requires immediate service refusal and referral for medicated treatment.',
+    topicId: 'scalp-disorders',
+    concept: 'Pediculosis Capitis Protocol',
   },
 ]
 
@@ -348,11 +397,38 @@ function TopicProgressBar({
 }
 
 // ───────────────────────────────────────────────
-// Main Component
+// Main Component (wrapped with provider)
 // ───────────────────────────────────────────────
 
 export default function DemoStudentClient() {
+  return (
+    <DemoPresentationProvider>
+      <DemoStudentContent />
+    </DemoPresentationProvider>
+  )
+}
+
+// ───────────────────────────────────────────────
+// Student Demo Content
+// ───────────────────────────────────────────────
+
+function DemoStudentContent() {
   const student = getPrimaryDemoStudent()
+  const {
+    setPerspective,
+    isPresentationMode,
+    setIsPresentationMode,
+    toggleFullscreen,
+    highContrast,
+    setHighContrast,
+    resetTrigger,
+    setGuidedStep,
+  } = useDemoPresentation()
+  
+  // Set perspective on mount
+  useEffect(() => {
+    setPerspective('student')
+  }, [setPerspective])
   
   // View state
   const [viewMode, setViewMode] = useState<ViewMode>('dashboard')
@@ -366,10 +442,10 @@ export default function DemoStudentClient() {
   const [showFlashcardAnswer, setShowFlashcardAnswer] = useState(false)
   const [chapter15QuizMode, setChapter15QuizMode] = useState(false)
   
-  // Presentation mode state
-  const [isPresentationMode, setIsPresentationMode] = useState(false)
-  const [isFullscreen, setIsFullscreen] = useState(false)
-  const [highContrast, setHighContrast] = useState(false)
+  // Targeted review state
+  const [targetedReview, setTargetedReview] = useState<TargetedReviewState | null>(null)
+  
+  // Mobile nav state
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
 
   // Get primary learning gap info
@@ -377,8 +453,10 @@ export default function DemoStudentClient() {
   const primaryGapScore = student.primaryLearningGap ? getTopicScore(student, student.primaryLearningGap) : 0
 
   // Get current quiz questions based on mode
-  const currentQuizQuestions = chapter15QuizMode ? CHAPTER_15_QUIZ_QUESTIONS : CHAPTER_10_QUIZ_QUESTIONS
-  const currentQuizTitle = chapter15QuizMode ? 'Chapter 15 Quiz' : 'Chapter 10 Review'
+  const currentQuizQuestions = useMemo(() => {
+    return chapter15QuizMode ? CHAPTER_15_QUIZ_QUESTIONS : (targetedReview ? TARGETED_REVIEW_QUESTIONS : [])
+  }, [chapter15QuizMode, targetedReview])
+  const currentQuizTitle = chapter15QuizMode ? 'Chapter 15 Quiz' : 'Targeted Review Quiz'
   const currentQuizSubtitle = chapter15QuizMode ? "Men's Hair Replacement" : 'Scalp Disorders & Infections'
 
   // Quiz handlers
@@ -389,12 +467,31 @@ export default function DemoStudentClient() {
     setSelectedAnswer(null)
     setShowExplanation(false)
     setQuizResults([])
-  }, [])
+  }, [setChapter15QuizMode, setViewMode, setCurrentQuestionIndex, setSelectedAnswer, setShowExplanation, setQuizResults])
+
+  // Start targeted review for primary learning gap
+  const startTargetedReview = useCallback(() => {
+    if (!student.primaryLearningGap) return
+    
+    const gapScore = getTopicScore(student, student.primaryLearningGap)
+    setTargetedReview({
+      topicId: student.primaryLearningGap,
+      topicName: getTopicName(student.primaryLearningGap),
+      historicalScore: gapScore,
+      sessionScore: null,
+      currentQuestionIndex: 0,
+      selectedAnswer: null,
+      showExplanation: false,
+      results: [],
+      stage: 'intro',
+    })
+    setViewMode('targeted-review')
+  }, [student, setTargetedReview, setViewMode])
 
   const handleAnswerSelect = useCallback((index: number) => {
     if (showExplanation) return
     setSelectedAnswer(index)
-  }, [showExplanation])
+  }, [showExplanation, setSelectedAnswer])
 
   const handleSubmitAnswer = useCallback(() => {
     if (selectedAnswer === null) return
@@ -402,28 +499,55 @@ export default function DemoStudentClient() {
     const question = currentQuizQuestions[currentQuestionIndex]
     const isCorrect = selectedAnswer === question.correctIndex
     
-    setQuizResults((prev) => [
-      ...prev,
-      {
-        questionId: question.id,
-        selectedIndex: selectedAnswer,
-        correct: isCorrect,
-        topicId: question.topicId,
-        concept: question.concept,
-      },
-    ])
-    setShowExplanation(true)
-  }, [selectedAnswer, currentQuestionIndex, currentQuizQuestions])
+    const result: QuizResult = {
+      questionId: question.id,
+      selectedIndex: selectedAnswer,
+      correct: isCorrect,
+      topicId: question.topicId,
+      concept: question.concept,
+    }
+    
+    if (targetedReview) {
+      // Update targeted review state
+      setTargetedReview(prev => prev ? {
+        ...prev,
+        results: [...prev.results, result],
+        showExplanation: true,
+      } : null)
+    } else {
+      setQuizResults((prev) => [...prev, result])
+      setShowExplanation(true)
+    }
+  }, [selectedAnswer, currentQuestionIndex, currentQuizQuestions, targetedReview, setTargetedReview, setQuizResults, setShowExplanation])
 
   const handleNextQuestion = useCallback(() => {
     if (currentQuestionIndex < currentQuizQuestions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1)
       setSelectedAnswer(null)
       setShowExplanation(false)
+      
+      if (targetedReview) {
+        setTargetedReview(prev => prev ? {
+          ...prev,
+          currentQuestionIndex: prev.currentQuestionIndex + 1,
+          selectedAnswer: null,
+          showExplanation: false,
+        } : null)
+      }
     } else {
+      // Calculate final score for targeted review
+      if (targetedReview) {
+        const correct = targetedReview.results.filter(r => r.correct).length
+        const score = Math.round((correct / targetedReview.results.length) * 100)
+        setTargetedReview(prev => prev ? {
+          ...prev,
+          sessionScore: score,
+          stage: 'results',
+        } : null)
+      }
       setViewMode('results')
     }
-  }, [currentQuestionIndex, currentQuizQuestions.length])
+  }, [currentQuestionIndex, currentQuizQuestions.length, targetedReview, setCurrentQuestionIndex, setSelectedAnswer, setShowExplanation, setTargetedReview, setViewMode])
 
   const resetQuiz = useCallback(() => {
     setViewMode('dashboard')
@@ -432,7 +556,8 @@ export default function DemoStudentClient() {
     setShowExplanation(false)
     setQuizResults([])
     setChapter15QuizMode(false)
-  }, [])
+    setTargetedReview(null)
+  }, [setViewMode, setCurrentQuestionIndex, setSelectedAnswer, setShowExplanation, setQuizResults, setChapter15QuizMode, setTargetedReview])
 
   // Flashcard handlers
   const nextFlashcard = useCallback(() => {
@@ -440,30 +565,52 @@ export default function DemoStudentClient() {
       setCurrentFlashcardIndex((prev) => prev + 1)
       setShowFlashcardAnswer(false)
     }
-  }, [currentFlashcardIndex])
+  }, [currentFlashcardIndex, setCurrentFlashcardIndex, setShowFlashcardAnswer])
 
   const prevFlashcard = useCallback(() => {
     if (currentFlashcardIndex > 0) {
       setCurrentFlashcardIndex((prev) => prev - 1)
       setShowFlashcardAnswer(false)
     }
-  }, [currentFlashcardIndex])
+  }, [currentFlashcardIndex, setCurrentFlashcardIndex, setShowFlashcardAnswer])
 
-  // Presentation mode handlers
-  const toggleFullscreen = useCallback(() => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().then(() => setIsFullscreen(true)).catch(() => {})
-    } else {
-      document.exitFullscreen().then(() => setIsFullscreen(false)).catch(() => {})
-    }
-  }, [])
-
+  // Reset demo state
   const resetDemo = useCallback(() => {
-    resetQuiz()
     setViewMode('dashboard')
+    setCurrentQuestionIndex(0)
+    setSelectedAnswer(null)
+    setShowExplanation(false)
+    setQuizResults([])
+    setChapter15QuizMode(false)
+    setTargetedReview(null)
     setCurrentFlashcardIndex(0)
     setShowFlashcardAnswer(false)
-  }, [resetQuiz])
+    setGuidedStep('Dashboard')
+  }, [setGuidedStep, setViewMode, setCurrentQuestionIndex, setSelectedAnswer, setShowExplanation, setQuizResults, setChapter15QuizMode, setTargetedReview, setCurrentFlashcardIndex, setShowFlashcardAnswer])
+
+  // Handle external reset trigger
+  const prevResetTrigger = useRef(0)
+  useEffect(() => {
+    if (resetTrigger > prevResetTrigger.current) {
+      prevResetTrigger.current = resetTrigger
+      // Use setTimeout to avoid synchronous setState in effect
+      setTimeout(() => resetDemo(), 0)
+    }
+  }, [resetTrigger, resetDemo])
+
+  // Update guided step based on view mode
+  useEffect(() => {
+    const stepMap: Record<ViewMode, string> = {
+      dashboard: 'Dashboard',
+      chapter: 'Chapter',
+      study: 'Study Material',
+      flashcards: 'Flashcards',
+      quiz: 'Review Quiz',
+      results: 'Results',
+      'targeted-review': 'Targeted Review',
+    }
+    setGuidedStep(stepMap[viewMode])
+  }, [viewMode, setGuidedStep])
 
   // Keyboard navigation for presentation mode
   useEffect(() => {
@@ -478,6 +625,10 @@ export default function DemoStudentClient() {
             handleSubmitAnswer()
           } else if (viewMode === 'quiz' && showExplanation) {
             handleNextQuestion()
+          } else if (viewMode === 'targeted-review' && targetedReview?.stage === 'quiz' && !targetedReview.showExplanation && targetedReview.selectedAnswer !== null) {
+            handleSubmitAnswer()
+          } else if (viewMode === 'targeted-review' && targetedReview?.stage === 'quiz' && targetedReview.showExplanation) {
+            handleNextQuestion()
           } else if (viewMode === 'flashcards') {
             if (!showFlashcardAnswer) {
               setShowFlashcardAnswer(true)
@@ -491,6 +642,12 @@ export default function DemoStudentClient() {
           if (viewMode === 'quiz' && currentQuestionIndex > 0 && !showExplanation) {
             setCurrentQuestionIndex((prev) => prev - 1)
             setSelectedAnswer(null)
+          } else if (viewMode === 'targeted-review' && targetedReview && targetedReview.currentQuestionIndex > 0 && !targetedReview.showExplanation) {
+            setTargetedReview(prev => prev ? {
+              ...prev,
+              currentQuestionIndex: prev.currentQuestionIndex - 1,
+              selectedAnswer: null,
+            } : null)
           } else if (viewMode === 'flashcards') {
             prevFlashcard()
           }
@@ -503,7 +660,7 @@ export default function DemoStudentClient() {
         case 'h':
         case 'H':
           e.preventDefault()
-          setHighContrast((v) => !v)
+          setHighContrast(!highContrast)
           break
         case 'r':
         case 'R':
@@ -522,16 +679,7 @@ export default function DemoStudentClient() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isPresentationMode, viewMode, showExplanation, selectedAnswer, currentQuestionIndex, showFlashcardAnswer, handleSubmitAnswer, handleNextQuestion, nextFlashcard, prevFlashcard, toggleFullscreen, resetDemo])
-
-  // Listen for fullscreen changes
-  useEffect(() => {
-    function handleFullscreenChange() {
-      setIsFullscreen(!!document.fullscreenElement)
-    }
-    document.addEventListener('fullscreenchange', handleFullscreenChange)
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)
-  }, [])
+  }, [isPresentationMode, viewMode, showExplanation, selectedAnswer, currentQuestionIndex, showFlashcardAnswer, targetedReview, handleSubmitAnswer, handleNextQuestion, nextFlashcard, prevFlashcard, toggleFullscreen, resetDemo, highContrast, setHighContrast, setIsPresentationMode])
 
   // Calculate quiz score
   const correctAnswers = quizResults.filter((r) => r.correct).length
@@ -645,7 +793,7 @@ export default function DemoStudentClient() {
                     Review {primaryGapTopic} to improve your understanding of contagious conditions and board exam readiness.
                   </p>
                   <Button
-                    onClick={() => startQuiz(false)}
+                    onClick={startTargetedReview}
                     variant="outline"
                     className="border-[var(--color-brand-gold)] text-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold)]/10"
                   >
@@ -1311,7 +1459,7 @@ export default function DemoStudentClient() {
         </Card>
 
         {/* Action Buttons */}
-        <div className="flex justify-center gap-4">
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
           <Button
             onClick={resetQuiz}
             variant="outline"
@@ -1320,9 +1468,356 @@ export default function DemoStudentClient() {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Dashboard
           </Button>
+          
+          {/* View Instructor Perspective — Demo Transition */}
+          <Link href="/demo/instructor">
+            <Button
+              variant="outline"
+              className="border-[var(--color-brand-gold)]/30 text-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold)]/10 w-full sm:w-auto"
+            >
+              <Users className="w-4 h-4 mr-2" />
+              View Instructor Perspective
+            </Button>
+          </Link>
         </div>
       </div>
     )
+  }
+
+  // ───────────────────────────────────────────────
+  // Render: Targeted Review View
+  // ───────────────────────────────────────────────
+
+  const renderTargetedReview = () => {
+    if (!targetedReview) return null
+
+    // Stage: Introduction
+    if (targetedReview.stage === 'intro') {
+      return (
+        <div className="max-w-3xl mx-auto space-y-8">
+          <div className="flex items-center gap-4">
+            <Button
+              onClick={() => setViewMode('dashboard')}
+              variant="ghost"
+              className="text-silver hover:text-white"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Dashboard
+            </Button>
+          </div>
+
+          <Card variant="default" padding="lg" className="bg-[var(--color-brand-gold)]/5 border-[var(--color-brand-gold)]/30">
+            <div className="text-center">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-brand-gold)]/10 border border-[var(--color-brand-gold)]/20 rounded-full text-[var(--color-brand-gold)] text-sm font-medium mb-6">
+                <Target className="w-4 h-4" />
+                Targeted Review
+              </div>
+              <h1 className="text-3xl font-bold text-white mb-4">
+                {TARGETED_REVIEW_CONTENT.introduction.title}
+              </h1>
+              <p className="text-xl text-silver mb-6">
+                {TARGETED_REVIEW_CONTENT.introduction.description}
+              </p>
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 rounded-lg mb-6">
+                <span className="text-silver">Historical Topic Performance:</span>
+                <span className="text-2xl font-bold text-warm-bronze">{targetedReview.historicalScore}%</span>
+              </div>
+              <p className="text-silver text-sm">
+                {TARGETED_REVIEW_CONTENT.introduction.historicalContext}
+              </p>
+            </div>
+          </Card>
+
+          <Card variant="default" padding="lg" className="bg-[var(--color-brand-black)] border-white/10">
+            <h2 className="text-xl font-bold text-white mb-4">Key Concepts to Review</h2>
+            <div className="space-y-4">
+              {TARGETED_REVIEW_CONTENT.keyConcepts.map((concept, index) => (
+                <div key={index} className="p-4 bg-white/5 rounded-lg border border-white/10">
+                  <div className="flex items-start justify-between gap-4 mb-2">
+                    <h3 className="font-semibold text-white">{concept.title}</h3>
+                    <Badge variant="default" className="border-[var(--color-brand-gold)]/30 text-[var(--color-brand-gold)] text-xs shrink-0">
+                      {concept.keyPoint}
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-silver">{concept.content}</p>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <div className="flex justify-center">
+            <Button
+              onClick={() => setTargetedReview(prev => prev ? { ...prev, stage: 'quiz' } : null)}
+              className="bg-[var(--color-brand-gold)] text-[var(--color-background-primary)] hover:bg-[var(--color-brand-gold-light)] font-bold px-8 py-4 text-lg"
+            >
+              Start Knowledge Check
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+          </div>
+        </div>
+      )
+    }
+
+    // Stage: Quiz
+    if (targetedReview.stage === 'quiz') {
+      const question = TARGETED_REVIEW_QUESTIONS[targetedReview.currentQuestionIndex]
+      const showResult = targetedReview.showExplanation
+      const isCorrect = targetedReview.selectedAnswer === question.correctIndex
+
+      return (
+        <div className="max-w-3xl mx-auto space-y-6">
+          <div className="flex items-center gap-4">
+            <Button
+              onClick={() => setTargetedReview(prev => prev ? { ...prev, stage: 'intro', currentQuestionIndex: 0, selectedAnswer: null, showExplanation: false, results: [] } : null)}
+              variant="ghost"
+              className="text-silver hover:text-white"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Review
+            </Button>
+          </div>
+
+          {/* Progress */}
+          <div className="flex items-center justify-between text-sm text-silver">
+            <span>Question {targetedReview.currentQuestionIndex + 1} of {TARGETED_REVIEW_QUESTIONS.length}</span>
+            <span>{targetedReview.topicName}</span>
+          </div>
+          <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+            <div
+              className="h-full bg-[var(--color-brand-gold)] rounded-full transition-all duration-300"
+              style={{ width: `${((targetedReview.currentQuestionIndex + 1) / TARGETED_REVIEW_QUESTIONS.length) * 100}%` }}
+            />
+          </div>
+
+          {/* Question Card */}
+          <Card variant="default" padding="lg" className="bg-[var(--color-brand-black)] border-white/10">
+            <h2 className="text-xl font-bold text-white mb-6">
+              {question.question}
+            </h2>
+
+            <div className="space-y-3">
+              {question.options.map((option, index) => {
+                const isSelected = targetedReview.selectedAnswer === index
+                let buttonClass = 'w-full text-left p-4 rounded-lg border transition-all '
+                
+                if (showResult) {
+                  if (index === question.correctIndex) {
+                    buttonClass += 'border-gold bg-gold/10 text-white'
+                  } else if (isSelected && !isCorrect) {
+                    buttonClass += 'border-silver bg-silver/10 text-silver'
+                  } else {
+                    buttonClass += 'border-white/10 bg-white/5 text-silver'
+                  }
+                } else {
+                  if (isSelected) {
+                    buttonClass += 'border-[var(--color-brand-gold)] bg-[var(--color-brand-gold)]/10 text-white'
+                  } else {
+                    buttonClass += 'border-white/10 bg-white/5 text-silver hover:border-white/20 hover:bg-white/10'
+                  }
+                }
+
+                return (
+                  <button
+                    key={index}
+                    onClick={() => !showResult && setTargetedReview(prev => prev ? { ...prev, selectedAnswer: index } : null)}
+                    disabled={showResult}
+                    className={buttonClass}
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                        showResult && index === question.correctIndex ? 'bg-gold text-black' :
+                        showResult && isSelected && !isCorrect ? 'bg-silver text-black' :
+                        isSelected ? 'bg-[var(--color-brand-gold)] text-black' :
+                        'bg-white/10 text-silver'
+                      }`}>
+                        {String.fromCharCode(65 + index)}
+                      </span>
+                      <span className="flex-1">{option}</span>
+                      {showResult && index === question.correctIndex && (
+                        <CheckCircle className="w-5 h-5 text-gold" />
+                      )}
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* Explanation */}
+            {showResult && (
+              <div className={`mt-6 p-4 rounded-lg ${
+                isCorrect ? 'bg-gold/10 border border-gold/30' : 'bg-silver/10 border border-silver/30'
+              }`}>
+                <div className="flex items-start gap-3">
+                  {isCorrect ? (
+                    <CheckCircle className="w-5 h-5 text-gold shrink-0 mt-0.5" />
+                  ) : (
+                    <AlertCircle className="w-5 h-5 text-silver shrink-0 mt-0.5" />
+                  )}
+                  <div>
+                    <p className={`font-semibold mb-1 ${isCorrect ? 'text-gold' : 'text-silver'}`}>
+                      {isCorrect ? 'Correct!' : 'Incorrect'}
+                    </p>
+                    <p className="text-silver text-sm">{question.explanation}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-3 mt-6">
+              {!showResult ? (
+                <Button
+                  onClick={handleSubmitAnswer}
+                  disabled={targetedReview.selectedAnswer === null}
+                  className="bg-[var(--color-brand-gold)] text-[var(--color-background-primary)] hover:bg-[var(--color-brand-gold-light)] disabled:opacity-50"
+                >
+                  Submit Answer
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleNextQuestion}
+                  className="bg-[var(--color-brand-gold)] text-[var(--color-background-primary)] hover:bg-[var(--color-brand-gold-light)]"
+                >
+                  {targetedReview.currentQuestionIndex < TARGETED_REVIEW_QUESTIONS.length - 1 ? 'Next Question' : 'See Results'}
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              )}
+            </div>
+          </Card>
+        </div>
+      )
+    }
+
+    // Stage: Results
+    if (targetedReview.stage === 'results') {
+      const correctCount = targetedReview.results.filter(r => r.correct).length
+      const sessionScore = targetedReview.sessionScore || 0
+      const isImproved = sessionScore > targetedReview.historicalScore
+      const missedConcepts = targetedReview.results
+        .filter(r => !r.correct)
+        .map(r => r.concept)
+        .filter((value, index, self) => self.indexOf(value) === index)
+
+      return (
+        <div className="max-w-3xl mx-auto space-y-8">
+          {/* Score Card */}
+          <Card variant="default" padding="lg" className={`text-center ${
+            sessionScore >= 80 ? 'bg-gold/10 border-gold/30' : 'bg-[var(--color-brand-black)] border-white/10'
+          }`}>
+            <div className={`text-6xl font-bold mb-2 ${sessionScore >= 80 ? 'text-gold' : 'text-white'}`}>
+              {sessionScore}%
+            </div>
+            <p className="text-xl text-silver mb-4">
+              {correctCount} of {targetedReview.results.length} correct
+            </p>
+            <Badge
+              variant={sessionScore >= 80 ? 'gold' : 'default'}
+              className={sessionScore >= 80 ? 'bg-gold text-black' : 'border-silver text-silver'}
+            >
+              {sessionScore >= 80 ? 'Review Passed' : 'Additional Review Recommended'}
+            </Badge>
+          </Card>
+
+          {/* Performance Comparison */}
+          <Card variant="default" padding="lg" className="bg-[var(--color-brand-black)] border-white/10">
+            <h3 className="text-lg font-bold text-white mb-4 text-center">Performance Comparison</h3>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="text-center p-4 bg-white/5 rounded-lg">
+                <p className="text-sm text-silver mb-1">Historical Topic Performance</p>
+                <p className="text-3xl font-bold text-silver">{targetedReview.historicalScore}%</p>
+                <p className="text-xs text-silver-gray mt-1">Chapter 10 Quiz</p>
+              </div>
+              <div className="text-center p-4 bg-[var(--color-brand-gold)]/10 rounded-lg border border-[var(--color-brand-gold)]/30">
+                <p className="text-sm text-silver mb-1">Today&apos;s Review</p>
+                <p className="text-3xl font-bold text-[var(--color-brand-gold)]">{sessionScore}%</p>
+                <p className="text-xs text-[var(--color-brand-gold)] mt-1 flex items-center justify-center gap-1">
+                  {isImproved ? (
+                    <>
+                      <TrendingUp className="w-3 h-3" />
+                      Improving
+                    </>
+                  ) : (
+                    'Session Result'
+                  )}
+                </p>
+              </div>
+            </div>
+            {isImproved && (
+              <div className="mt-4 p-4 bg-[var(--color-brand-gold)]/5 rounded-lg border border-[var(--color-brand-gold)]/20">
+                <p className="text-center text-silver">
+                  <span className="font-semibold text-white">You&apos;re improving in {targetedReview.topicName}.</span>{' '}
+                  Your targeted review shows progress. Continue practicing to maintain this improvement for the board exam.
+                </p>
+              </div>
+            )}
+          </Card>
+
+          {/* Missed Concepts */}
+          {missedConcepts.length > 0 && (
+            <Card variant="default" padding="lg" className="bg-[var(--color-brand-black)] border-white/10">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-full bg-[var(--color-brand-gold)]/20 flex items-center justify-center shrink-0">
+                  <Lightbulb className="w-6 h-6 text-[var(--color-brand-gold)]" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-bold text-white mb-2">
+                    Recommended Next Steps
+                  </h3>
+                  <p className="text-silver mb-4">
+                    Focus on these concepts to strengthen your understanding:
+                  </p>
+                  <div className="space-y-3">
+                    {missedConcepts.map((concept, index) => (
+                      <div key={index} className="p-3 bg-white/5 rounded-lg border border-white/10">
+                        <p className="font-semibold text-white">Review: {concept}</p>
+                        <p className="text-sm text-silver mt-1">
+                          This concept is covered in Chapter 10 curriculum content.
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex flex-wrap gap-3 mt-4">
+                    <Button
+                      onClick={() => setTargetedReview(prev => prev ? { ...prev, stage: 'quiz', currentQuestionIndex: 0, selectedAnswer: null, showExplanation: false, results: [] } : null)}
+                      variant="outline"
+                      className="border-[var(--color-brand-gold)] text-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold)]/10"
+                    >
+                      <RotateCw className="w-4 h-4 mr-2" />
+                      Retake Review
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          )}
+
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <Button
+              onClick={resetQuiz}
+              variant="outline"
+              className="border-white/20 text-silver hover:bg-white/5"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Dashboard
+            </Button>
+            
+            {/* View Instructor Perspective — Demo Transition */}
+            <Link href="/demo/instructor">
+              <Button
+                variant="outline"
+                className="border-[var(--color-brand-gold)]/30 text-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold)]/10 w-full sm:w-auto"
+              >
+                <Users className="w-4 h-4 mr-2" />
+                View Instructor Perspective
+              </Button>
+            </Link>
+          </div>
+        </div>
+      )
+    }
+
+    return null
   }
 
   // ───────────────────────────────────────────────
@@ -1335,77 +1830,53 @@ export default function DemoStudentClient() {
     } ${isPresentationMode ? 'presentation-mode' : ''}`}>
       {/* Presentation Mode Controls */}
       {isPresentationMode && (
-        <div className="fixed bottom-4 right-4 z-[100] flex items-center gap-2 bg-black/80 backdrop-blur-md rounded-xl p-3 shadow-2xl">
-          <button
-            onClick={() => setViewMode('dashboard')}
-            className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-            title="Back to Dashboard"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <span className="text-white/50 text-sm px-2">
-            {viewMode === 'dashboard' ? 'Dashboard' :
-             viewMode === 'chapter' ? 'Chapter' :
-             viewMode === 'study' ? 'Study' :
-             viewMode === 'flashcards' ? `Card ${currentFlashcardIndex + 1}/${CHAPTER_15_FLASHCARDS.length}` :
-             viewMode === 'quiz' ? `Q${currentQuestionIndex + 1}/${currentQuizQuestions.length}` :
-             'Results'}
-          </span>
-          <button
-            onClick={() => {
-              if (viewMode === 'dashboard') setViewMode('chapter')
-              else if (viewMode === 'chapter') setViewMode('study')
-              else if (viewMode === 'study') setViewMode('flashcards')
-              else if (viewMode === 'flashcards') {
-                if (!showFlashcardAnswer) setShowFlashcardAnswer(true)
-                else nextFlashcard()
-              }
-              else if (viewMode === 'quiz' && !showExplanation && selectedAnswer !== null) handleSubmitAnswer()
-              else if (viewMode === 'quiz' && showExplanation) handleNextQuestion()
-            }}
-            className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-            title="Next (→)"
-          >
-            <ArrowRight className="w-5 h-5" />
-          </button>
-          <div className="w-px h-6 bg-white/20 mx-1" />
-          <button
-            onClick={toggleFullscreen}
-            className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-            title="Toggle fullscreen (F)"
-          >
-            {isFullscreen ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
-          </button>
-          <button
-            onClick={() => setHighContrast((v) => !v)}
-            className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-            title="Toggle high contrast (H)"
-          >
-            <Contrast className="w-5 h-5" />
-          </button>
-          <button
-            onClick={resetDemo}
-            className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-            title="Reset demo (R)"
-          >
-            <RotateCcw className="w-5 h-5" />
-          </button>
-          <div className="w-px h-6 bg-white/20 mx-1" />
-          <button
-            onClick={() => setIsPresentationMode(false)}
-            className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-            title="Exit presentation (Esc)"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+        <PresentationControls
+          viewLabel={
+            viewMode === 'dashboard' ? 'Dashboard' :
+            viewMode === 'chapter' ? 'Chapter' :
+            viewMode === 'study' ? 'Study' :
+            viewMode === 'flashcards' ? `Card ${currentFlashcardIndex + 1}/${CHAPTER_15_FLASHCARDS.length}` :
+            viewMode === 'quiz' ? `Q${currentQuestionIndex + 1}/${currentQuizQuestions.length}` :
+            viewMode === 'targeted-review' ? 'Targeted Review' :
+            'Results'
+          }
+          onBack={() => {
+            if (viewMode === 'chapter') setViewMode('dashboard')
+            else if (viewMode === 'study') setViewMode('chapter')
+            else if (viewMode === 'flashcards') setViewMode('chapter')
+            else if (viewMode === 'quiz') setViewMode('dashboard')
+            else if (viewMode === 'results') setViewMode('dashboard')
+            else if (viewMode === 'targeted-review') {
+              setTargetedReview(null)
+              setViewMode('dashboard')
+            }
+          }}
+          onNext={() => {
+            if (viewMode === 'dashboard') setViewMode('chapter')
+            else if (viewMode === 'chapter') setViewMode('study')
+            else if (viewMode === 'study') setViewMode('flashcards')
+            else if (viewMode === 'flashcards') {
+              if (!showFlashcardAnswer) setShowFlashcardAnswer(true)
+              else nextFlashcard()
+            }
+            else if (viewMode === 'quiz' && !showExplanation && selectedAnswer !== null) handleSubmitAnswer()
+            else if (viewMode === 'quiz' && showExplanation) handleNextQuestion()
+          }}
+          canGoBack={viewMode !== 'dashboard'}
+          canGoNext={viewMode !== 'results' && viewMode !== 'targeted-review'}
+          showPerspectiveSwitch={true}
+          perspectiveSwitchLabel="View Instructor Perspective"
+          perspectiveSwitchHref="/demo/instructor"
+          onReset={resetDemo}
+          onExit={() => setIsPresentationMode(false)}
+        />
       )}
 
       {/* Presentation Mode Toggle */}
       {!isPresentationMode && (
         <button
           onClick={() => setIsPresentationMode(true)}
-          className="fixed bottom-4 right-4 z-[100] flex items-center gap-2 px-4 py-3 bg-[var(--color-brand-gold)] text-white font-semibold rounded-xl shadow-lg hover:bg-[var(--color-brand-gold-light)] transition-colors"
+          className="fixed bottom-20 right-4 z-[100] flex items-center gap-2 px-4 py-3 bg-[var(--color-brand-gold)] text-white font-semibold rounded-xl shadow-lg hover:bg-[var(--color-brand-gold-light)] transition-colors"
           title="Enter presentation mode"
         >
           <Presentation className="w-5 h-5" />
@@ -1470,6 +1941,16 @@ export default function DemoStudentClient() {
             </div>
 
             <div className="flex items-center gap-3">
+              {/* View Instructor Perspective — subtle demo transition */}
+              <Link
+                href="/demo/instructor"
+                className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-silver hover:text-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold)]/5 rounded-md transition-colors"
+                title="Switch to Instructor Demo"
+              >
+                <Users className="w-3.5 h-3.5" />
+                <span>Instructor View</span>
+              </Link>
+              
               <Link
                 href="/demo"
                 className="hidden sm:inline-flex items-center gap-1 text-xs uppercase tracking-widest text-[var(--color-brand-gold)] hover:text-[var(--color-brand-gold-light)] transition-colors"
@@ -1537,6 +2018,7 @@ export default function DemoStudentClient() {
         {viewMode === 'flashcards' && renderFlashcards()}
         {viewMode === 'quiz' && renderQuiz()}
         {viewMode === 'results' && renderResults()}
+        {viewMode === 'targeted-review' && renderTargetedReview()}
       </div>
 
       {/* Footer */}

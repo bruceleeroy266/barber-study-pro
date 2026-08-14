@@ -1150,6 +1150,29 @@ export function getTopic(topicId: string): DemoTopic | undefined {
   return DEMO_TOPICS.find((t) => t.id === topicId)
 }
 
+/** Get the primary learning gap for a student (derived from lowest mastery score in weak areas) */
+export function getPrimaryLearningGap(student: DemoStudentProfile): string | null {
+  // If explicitly set, use that
+  if (student.primaryLearningGap) {
+    return student.primaryLearningGap
+  }
+  
+  // Otherwise, derive from weak areas with lowest score
+  if (student.weakAreas.length === 0) {
+    return null
+  }
+  
+  const weakTopicsWithScores = student.weakAreas
+    .map(topicId => {
+      const mastery = student.topicMastery.find(t => t.topicId === topicId)
+      return { topicId, score: mastery?.score ?? 0 }
+    })
+    .filter(t => t.score > 0) // Only consider topics with actual scores
+    .sort((a, b) => a.score - b.score)
+  
+  return weakTopicsWithScores.length > 0 ? weakTopicsWithScores[0].topicId : null
+}
+
 // ───────────────────────────────────────────────
 // ISABELLA'S LEARNING GAP — DETAILED DATA
 // For the Student ↔ Instructor connection demo.
