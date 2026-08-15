@@ -3,7 +3,7 @@
 **State:** Iowa  
 **License Type:** Barber  
 **Research Date:** 2026-08-14  
-**Status:** PARTIAL — Multiple fields require verification
+**Status:** CONFIRMED — Core examination structure established
 
 ---
 
@@ -11,10 +11,26 @@
 
 | Field | Value |
 |-------|-------|
-| **State Board** | UNKNOWN / REQUIRES VERIFICATION |
+| **State Board** | Iowa Board of Barbering and Cosmetology |
 | **License Name** | Barber |
-| **Theory Exam Required** | Yes |
+| **Theory Exam Required** | Yes — national examination prescribed by the Board |
 | **Practical Exam Required** | UNKNOWN / REQUIRES VERIFICATION |
+
+---
+
+## Licensing/Examination Transition
+
+Iowa's licensing/examination structure is **version-sensitive**.
+
+| Field | Value | Confidence |
+|-------|-------|------------|
+| **Transition Date** | July 1, 2024 | CONFIRMED |
+| **Change** | Moved to national theory examination requirement for combined licensing pathway | CONFIRMED |
+| **Framework** | Combined barbering/cosmetology licensing framework | CONFIRMED |
+
+**Important Historical / Version Finding:** For applicable applicants under the newer combined licensing structure, Iowa moved to a national theory examination requirement involving the **NIC Cosmetology Theory examination** beginning July 1, 2024.
+
+**Guardrail:** Do NOT overwrite older requirements as though the same examination structure always existed. Preserve this as a versioned/historical requirement.
 
 ---
 
@@ -22,10 +38,10 @@
 
 | Field | Value | Confidence |
 |-------|-------|------------|
-| **Exam Developer** | NIC / national theory pathway recognized | PARTIAL |
+| **Exam Developer** | NIC | CONFIRMED |
 | **Exam Administrator** | UNKNOWN / REQUIRES VERIFICATION | — |
-| **Exam Name** | UNKNOWN / REQUIRES VERIFICATION | — |
-| **Passing Standard** | 75% | CONFIRMED |
+| **Exam Name** | NIC Cosmetology Theory (for combined pathway) | CONFIRMED |
+| **Passing Standard** | 75% or greater | CONFIRMED |
 
 ---
 
@@ -75,7 +91,7 @@ Iowa has a separate **shaving certification** requirement/pathway.
 
 ## ASCYN PRO Implication
 
-Iowa's shaving certification demonstrates that licensing intelligence may need to distinguish between a primary license and additional endorsements/certifications/service authorizations. The 75% passing standard is higher than many states (typically 70-75%). The relationship between the practical examination and the shaving certification pathway requires further research.
+Iowa demonstrates that **the profession/license structure itself can change** — not merely testing vendors. The July 1, 2024 transition to a combined barbering/cosmetology framework with the NIC Cosmetology Theory examination shows that regulatory changes can alter license structure, examination requirements, and applicable national examinations. Future conceptual architecture needs historical/effective-date awareness at the licensing-requirement level.
 
 ---
 
@@ -83,7 +99,8 @@ Iowa's shaving certification demonstrates that licensing intelligence may need t
 
 | Source | Type | Date Accessed | Confidence |
 |--------|------|---------------|------------|
-| Iowa state licensing information | State licensing board | 2026-08-14 | CONFIRMED |
+| Iowa Board of Barbering and Cosmetology | State licensing board | 2026-08-14 | CONFIRMED |
+| Iowa administrative rules | Regulatory authority | 2026-08-14 | CONFIRMED |
 
 ---
 
@@ -91,10 +108,10 @@ Iowa's shaving certification demonstrates that licensing intelligence may need t
 
 | Item | Frequency | Reason |
 |------|-----------|--------|
-| Exam developer/administrator | High priority | Complete initial research |
+| Exam administrator | High priority | Complete initial research |
 | CIB/blueprint | High priority | Required for curriculum alignment |
 | Practical exam structure | High priority | Close gap |
-| Shaving certification relationship | High priority | Clarify pathway |
+| Track-specific details | High priority | Clarify combined vs. separate pathways |
 
 ---
 

@@ -6,6 +6,63 @@
 
 ---
 
+## 2026-08-14 — Partial-State Closure Batch 3 Archived
+
+### Added
+
+- **State Research Updates** — Hawaii, Idaho, Illinois, Iowa, Louisiana (5 states)
+- **CIB Records** — Illinois NIC Barber Examination, Iowa NIC Cosmetology Theory (combined pathway)
+- **Exam Version Records** — Hawaii vendor transition (2026-01-01), Iowa licensing/examination transition (2024-07-01), Illinois future language availability (2026-10-01)
+- **Passing Standards** — Illinois 75%, Iowa ≥75%
+- **Cross-State Architecture Findings** — 4 new findings from Closure Batch 3 (multi-organization workflows, vendor transitions, license structure changes, school/instructor registration participation)
+- **Source Records** — Updated authoritative sources for 5 states
+
+### Updated
+
+- **50-State Master Map** — Status updates for 5 states; summary updated (47 CONFIRMED, 3 PARTIAL, 0 PENDING)
+- **Licensing Intelligence Index** — Updated state tables
+- **Architecture Risks** — Added Findings 29–32; updated developer/administrator pattern matrix; updated examination-type taxonomy
+- **State Sources** — Updated Hawaii, Idaho, Illinois, Iowa, Louisiana
+- **CIB Index** — Updated Hawaii, added Idaho, Illinois, Iowa, Louisiana
+
+### Status Changes
+
+| State | Before | After |
+|-------|--------|-------|
+| Hawaii | PARTIAL | CONFIRMED |
+| Idaho | PARTIAL | CONFIRMED |
+| Illinois | PARTIAL | CONFIRMED |
+| Iowa | PARTIAL | CONFIRMED |
+| Louisiana | PARTIAL | CONFIRMED |
+
+### Key Findings
+
+- **5 states upgraded to CONFIRMED:** Hawaii, Idaho, Illinois, Iowa, Louisiana
+- **Examination workflows may involve multiple organizations** (Illinois: IDFPR → CTS → NIC → PSI)
+- **Testing-vendor transitions require effective dates** (Hawaii: Prometric → PSI eff. 2026-01-01)
+- **The profession/license structure itself can change** (Iowa: combined framework eff. 2024-07-01)
+- **Schools and instructors can participate in exam registration** (Idaho: schools register students; instructors register apprentices)
+- **Illinois future language availability:** English, Spanish, Chinese, Korean, Vietnamese eff. 2026-10-01
+
+### National Research Count
+
+- **50 of 50 states** have entered the research pipeline
+- **47 CONFIRMED**
+- **3 PARTIAL**
+- **0 PENDING**
+
+### Remaining PARTIAL States
+
+- Rhode Island
+- Vermont
+- West Virginia
+
+### Decisions
+
+No new decisions. Existing decisions remain active.
+
+---
+
 ## 2026-08-14 — Partial-State Closure Batch 2 Archived
 
 ### Added

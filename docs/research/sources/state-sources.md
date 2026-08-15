@@ -116,10 +116,11 @@
 
 | Source | Type | URL | Date Accessed | Reliability | Notes |
 |--------|------|-----|---------------|-------------|-------|
-| Hawaii state licensing information | State licensing board | TBD | 2026-08-14 | Highest | Vendor transition: Prometric → PSI eff. 2026-01-01 |
+| Hawaii Board of Barbering and Cosmetology | State licensing board | TBD | 2026-08-14 | Highest | Vendor transition: Prometric → PSI eff. 2026-01-01; Board approval before PSI registration |
+| Hawaii DCCA | State regulatory agency | TBD | 2026-08-14 | Highest | Regulatory oversight |
 | PSI examination information | Exam administrator | https://www.psiexams.com | 2026-08-14 | Highest | Current testing vendor |
 
-**Verification Status:** PARTIAL — Exam developer not yet confirmed
+**Verification Status:** CONFIRMED — Core examination structure established
 
 ---
 
@@ -127,11 +128,10 @@
 
 | Source | Type | URL | Date Accessed | Reliability | Notes |
 |--------|------|-----|---------------|-------------|-------|
-| Idaho Board examination resources | State licensing board | TBD | 2026-08-14 | Highest | Prov and NIC resources identified |
-| NIC examination resources | Exam developer | https://www.nic.org | 2026-08-14 | Highest | NIC content relevance |
-| Prov examination resources | Exam administrator | https://www.provexam.com | 2026-08-14 | Highest | Administration resource |
+| Idaho Board of Barber and Cosmetology | State licensing board | TBD | 2026-08-14 | Highest | Prov registration; schools/instructors register students; Barber + Barber Stylist tracks |
+| Prov examination resources | Exam administrator | https://www.provexam.com | 2026-08-14 | Highest | Examination registration/administration |
 
-**Verification Status:** PARTIAL — Complete relationship not yet confirmed
+**Verification Status:** CONFIRMED — Core examination structure established
 
 ---
 
@@ -139,12 +139,12 @@
 
 | Source | Type | URL | Date Accessed | Reliability | Notes |
 |--------|------|-----|---------------|-------------|-------|
-| Illinois state licensing information | State licensing board | TBD | 2026-08-14 | Highest | Three-role model identified |
+| Illinois IDFPR | State licensing board | TBD | 2026-08-14 | Highest | Four-role model: IDFPR → CTS → NIC → PSI; 75% passing; future languages eff. 2026-10-01 |
 | NIC examination content | Exam developer | https://www.nic.org | 2026-08-14 | Highest | Content developer |
 | Continental Testing Services | Application/eligibility processor | TBD | 2026-08-14 | Highest | Application processing |
 | PSI testing-center network | Testing/delivery vendor | https://www.psiexams.com | 2026-08-14 | Highest | Computerized delivery |
 
-**Verification Status:** PARTIAL — Practical exam not yet confirmed
+**Verification Status:** CONFIRMED — Core examination structure established
 
 ---
 
@@ -163,9 +163,10 @@
 
 | Source | Type | URL | Date Accessed | Reliability | Notes |
 |--------|------|-----|---------------|-------------|-------|
-| Iowa state licensing information | State licensing board | TBD | 2026-08-14 | Highest | 75% passing; shaving certification pathway |
+| Iowa Board of Barbering and Cosmetology | State licensing board | TBD | 2026-08-14 | Highest | Combined framework; NIC Cosmetology Theory eff. 2024-07-01; 75% passing; shaving certification |
+| Iowa administrative rules | Regulatory authority | TBD | 2026-08-14 | Highest | Licensing/examination transition rules |
 
-**Verification Status:** PARTIAL — Exam developer/administrator not yet confirmed
+**Verification Status:** CONFIRMED — Core examination structure established
 
 ---
 
@@ -195,9 +196,10 @@
 
 | Source | Type | URL | Date Accessed | Reliability | Notes |
 |--------|------|-----|---------------|-------------|-------|
-| — | — | — | — | — | Requires authoritative verification |
+| Louisiana Board of Barber Examiners | State licensing board | TBD | 2026-08-14 | Highest | Board-centered examination; practical + written + oral; ~3 month cycle |
+| Louisiana state law | Statutory authority | TBD | 2026-08-14 | Highest | Examination structure established |
 
-**Verification Status:** PARTIAL — All fields require verification
+**Verification Status:** CONFIRMED — Core examination structure established
 
 ---
 

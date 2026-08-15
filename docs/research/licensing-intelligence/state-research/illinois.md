@@ -3,7 +3,7 @@
 **State:** Illinois  
 **License Type:** Barber  
 **Research Date:** 2026-08-14  
-**Status:** PARTIAL — Practical examination and CIB require verification
+**Status:** CONFIRMED — Core examination structure established
 
 ---
 
@@ -11,10 +11,25 @@
 
 | Field | Value |
 |-------|-------|
-| **State Board** | UNKNOWN / REQUIRES VERIFICATION |
+| **State Board** | Illinois Department of Financial and Professional Regulation (IDFPR) |
 | **License Name** | Barber |
 | **Theory Exam Required** | Yes |
 | **Practical Exam Required** | UNKNOWN / REQUIRES VERIFICATION |
+
+---
+
+## Multi-Organization Examination Workflow
+
+Illinois demonstrates a **multi-organization examination workflow** with distinct roles:
+
+| Role | Organization | Confidence |
+|------|-------------|------------|
+| **Regulator** | Illinois IDFPR | CONFIRMED |
+| **Application / Eligibility Processor** | Continental Testing Services (CTS) | CONFIRMED |
+| **Exam Developer / Content Owner** | NIC | CONFIRMED |
+| **Testing / Delivery Vendor** | PSI | CONFIRMED |
+
+**Architecture Implication:** These roles must remain conceptually distinct. Do NOT create one generic `exam_provider` concept.
 
 ---
 
@@ -25,21 +40,24 @@
 | **Exam Developer** | NIC | CONFIRMED |
 | **Application/Eligibility Processor** | Continental Testing Services (CTS) | CONFIRMED |
 | **Testing/Delivery Network** | PSI testing-center network | CONFIRMED |
-| **Exam Name** | Illinois Barber Examination (NIC content) | CONFIRMED |
+| **Exam Name** | NIC Barber Examination | CONFIRMED |
+| **Passing Standard** | 75% | CONFIRMED |
 
 ---
 
-## Important Finding: Three Distinct Roles
+## Future Language Change
 
-Illinois demonstrates that the national model may involve more than just Exam Developer and Exam Administrator. There may also be a separate **Application/Eligibility Processor**.
+Current IDFPR information states that effective **October 1, 2026**, barber examinations will be available in:
 
-| Role | Organization | Confidence |
-|------|-------------|------------|
-| **Exam Developer / Content Owner** | NIC | CONFIRMED |
-| **Application / Eligibility Processor** | Continental Testing Services (CTS) | CONFIRMED |
-| **Testing / Delivery Vendor** | PSI | CONFIRMED |
+| Language | Status |
+|----------|--------|
+| English | Current |
+| Spanish | Future effective 2026-10-01 |
+| Chinese | Future effective 2026-10-01 |
+| Korean | Future effective 2026-10-01 |
+| Vietnamese | Future effective 2026-10-01 |
 
-**Architecture Implication:** Do NOT create one generic `exam_provider` concept in future architecture. At least three potentially distinct roles exist.
+**Important:** Store this as a **future-effective examination attribute**, not as though it were already historically effective before October 1, 2026.
 
 ---
 
@@ -57,9 +75,9 @@ Illinois demonstrates that the national model may involve more than just Exam De
 | Field | Value | Status |
 |-------|-------|--------|
 | **CIB Source** | NIC | CONFIRMED |
-| **CIB URL** | UNKNOWN / REQUIRES VERIFICATION | PENDING |
-| **CIB Version** | UNKNOWN / REQUIRES VERIFICATION | PENDING |
-| **Effective Date** | UNKNOWN / REQUIRES VERIFICATION | PENDING |
+| **CIB URL** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **CIB Version** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **Effective Date** | UNKNOWN / REQUIRES VERIFICATION | — |
 
 ---
 
@@ -68,15 +86,14 @@ Illinois demonstrates that the national model may involve more than just Exam De
 | Field | Value | Status |
 |-------|-------|--------|
 | **Blueprint Source** | NIC | CONFIRMED |
-| **Domain Structure** | UNKNOWN / REQUIRES VERIFICATION | PENDING |
-| **Domain Weights** | UNKNOWN / REQUIRES VERIFICATION | PENDING |
-| **Passing Standard** | UNKNOWN / REQUIRES VERIFICATION | PENDING |
+| **Domain Structure** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **Domain Weights** | UNKNOWN / REQUIRES VERIFICATION | — |
 
 ---
 
 ## ASCYN PRO Implication
 
-Illinois is a critical finding for future architecture. The three-role model (Developer → Application Processor → Delivery Vendor) means that a simple two-role developer/administrator distinction may be insufficient for some states. Any future data model must accommodate this complexity.
+Illinois is a critical finding for future architecture. The **four-role model** (Regulator → Application Processor → Exam Developer → Delivery Vendor) means that a simple two-role developer/administrator distinction is insufficient for some states. The future language availability (October 1, 2026) demonstrates the need for effective-dated examination attributes.
 
 ---
 
@@ -84,7 +101,7 @@ Illinois is a critical finding for future architecture. The three-role model (De
 
 | Source | Type | Date Accessed | Confidence |
 |--------|------|---------------|------------|
-| Illinois state licensing information | State licensing board | 2026-08-14 | CONFIRMED |
+| Illinois IDFPR | State licensing board | 2026-08-14 | CONFIRMED |
 | NIC examination content | Exam developer | 2026-08-14 | CONFIRMED |
 | Continental Testing Services | Application/eligibility processor | 2026-08-14 | CONFIRMED |
 | PSI testing-center network | Testing/delivery vendor | 2026-08-14 | CONFIRMED |
@@ -97,7 +114,7 @@ Illinois is a critical finding for future architecture. The three-role model (De
 |------|-----------|--------|
 | Practical exam requirement | High priority | Close gap |
 | CIB version/effective date | High priority | Required for curriculum alignment |
-| Passing standard | High priority | Close gap |
+| Language availability implementation | Monitor | Track October 2026 implementation |
 
 ---
 

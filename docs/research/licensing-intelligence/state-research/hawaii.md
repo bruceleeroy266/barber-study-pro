@@ -3,7 +3,7 @@
 **State:** Hawaii  
 **License Type:** Barber  
 **Research Date:** 2026-08-14  
-**Status:** PARTIAL — Multiple fields require verification
+**Status:** CONFIRMED — Core examination structure established
 
 ---
 
@@ -11,20 +11,10 @@
 
 | Field | Value |
 |-------|-------|
-| **State Board** | UNKNOWN / REQUIRES VERIFICATION |
+| **State Board** | Hawaii Board of Barbering and Cosmetology |
 | **License Name** | Barber |
 | **Theory Exam Required** | Yes |
 | **Practical Exam Required** | UNKNOWN / REQUIRES VERIFICATION |
-
----
-
-## Theory Examination
-
-| Field | Value | Confidence |
-|-------|-------|------------|
-| **Exam Developer** | UNKNOWN / REQUIRES VERIFICATION | — |
-| **Exam Administrator** | PSI | CONFIRMED |
-| **Exam Name** | UNKNOWN / REQUIRES VERIFICATION | — |
 
 ---
 
@@ -33,10 +23,19 @@
 | Field | Value | Confidence |
 |-------|-------|------------|
 | **Previous Vendor** | Prometric | CONFIRMED |
-| **Current Vendor** | PSI | CONFIRMED |
+| **Current Vendor** | PSI Services LLC | CONFIRMED |
 | **Transition Effective Date** | January 1, 2026 | CONFIRMED |
 
 **Important:** Preserve this vendor change historically. Do NOT overwrite the fact that Prometric previously administered the program.
+
+---
+
+## Examination Process
+
+| Field | Value | Confidence |
+|-------|-------|------------|
+| **Board Approval Required** | Yes — before candidate registration with PSI | CONFIRMED |
+| **Candidate Registration** | Through PSI after Board approval | CONFIRMED |
 
 ---
 
@@ -45,6 +44,18 @@
 Hawaii recognizes certain passing NIC or PSI examination results from other jurisdictions for potential examination waiver purposes.
 
 **Confidence:** CONFIRMED
+
+**Guardrail:** Do NOT infer that Hawaii's current examination is NIC-developed merely because Hawaii recognizes NIC examination passage for waiver purposes.
+
+---
+
+## Theory Examination
+
+| Field | Value | Confidence |
+|-------|-------|------------|
+| **Exam Developer** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **Exam Administrator** | PSI Services LLC | CONFIRMED |
+| **Exam Name** | UNKNOWN / REQUIRES VERIFICATION | — |
 
 ---
 
@@ -61,10 +72,12 @@ Hawaii recognizes certain passing NIC or PSI examination results from other juri
 
 | Field | Value | Status |
 |-------|-------|--------|
-| **CIB Source** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **CIB Source** | PSI | CONFIRMED |
 | **CIB URL** | UNKNOWN / REQUIRES VERIFICATION | — |
 | **CIB Version** | UNKNOWN / REQUIRES VERIFICATION | — |
 | **Effective Date** | UNKNOWN / REQUIRES VERIFICATION | — |
+
+**Note:** Current PSI candidate examination information/bulletin is available.
 
 ---
 
@@ -89,7 +102,8 @@ Hawaii demonstrates why administrator + effective date + historical record must 
 
 | Source | Type | Date Accessed | Confidence |
 |--------|------|---------------|------------|
-| Hawaii state licensing information | State licensing board | 2026-08-14 | CONFIRMED |
+| Hawaii Board of Barbering and Cosmetology | State licensing board | 2026-08-14 | CONFIRMED |
+| Hawaii DCCA | State regulatory agency | 2026-08-14 | CONFIRMED |
 | PSI examination information | Exam administrator | 2026-08-14 | CONFIRMED |
 
 ---
@@ -99,7 +113,7 @@ Hawaii demonstrates why administrator + effective date + historical record must 
 | Item | Frequency | Reason |
 |------|-----------|--------|
 | Exam developer | High priority | Complete initial research |
-| CIB/blueprint | High priority | Required for curriculum alignment |
+| CIB version | High priority | Required for curriculum alignment |
 | Practical exam | High priority | Close gap |
 | Passing standard | High priority | Close gap |
 

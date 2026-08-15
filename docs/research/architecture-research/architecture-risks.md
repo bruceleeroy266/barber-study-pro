@@ -385,7 +385,69 @@ Future research architecture may eventually require concepts such as:
 
 ---
 
-### Updated Examination-Type Taxonomy (Batches 1–5 + Closure Batch 1 + Closure Batch 2)
+### FINDING 29 — EXAMINATION WORKFLOWS MAY INVOLVE MULTIPLE ORGANIZATIONS (Closure Batch 3)
+
+Illinois demonstrates a **four-role examination workflow**:
+
+| Role | Organization |
+|------|-------------|
+| **Regulator** | Illinois IDFPR |
+| **Application / Eligibility Processor** | Continental Testing Services (CTS) |
+| **Exam Developer / Content Owner** | NIC |
+| **Exam Delivery Vendor** | PSI |
+
+**Implication:** These roles must remain conceptually distinct. Do NOT implement architecture changes yet.
+
+**Status:** RESEARCH ONLY — Do NOT implement architecture changes.
+
+---
+
+### FINDING 30 — TESTING-VENDOR TRANSITIONS REQUIRE EFFECTIVE DATES (Closure Batch 3)
+
+Hawaii demonstrates:
+
+| Transition | Effective Date |
+|------------|---------------|
+| Prometric → PSI | 2026-01-01 |
+
+**Implication:** Historical/current provider relationships should eventually be versioned rather than overwritten. Research only. Do NOT implement.
+
+**Status:** RESEARCH ONLY — Do NOT implement architecture changes.
+
+---
+
+### FINDING 31 — THE PROFESSION/LICENSE STRUCTURE ITSELF CAN CHANGE (Closure Batch 3)
+
+Iowa demonstrates that regulatory changes can alter:
+
+| Aspect | Change |
+|--------|--------|
+| **License Structure** | Combined barbering/cosmetology framework |
+| **Examination Requirements** | National theory examination requirement |
+| **Applicable National Examination** | NIC Cosmetology Theory (eff. 2024-07-01) |
+
+**Implication:** Future conceptual architecture needs historical/effective-date awareness at the licensing-requirement level. Do NOT implement.
+
+**Status:** RESEARCH ONLY — Do NOT implement architecture changes.
+
+---
+
+### FINDING 32 — SCHOOLS AND INSTRUCTORS CAN PARTICIPATE IN EXAMINATION REGISTRATION (Closure Batch 3)
+
+Idaho Board material establishes that:
+
+| Participant | Role |
+|-------------|------|
+| **Schools** | Register students for examinations |
+| **Apprenticeship Instructors** | Register apprentices |
+
+**Implication:** Schools may participate directly in the licensure pipeline rather than serving only as education providers. Preserve this as a business/product-strategy research finding. Do NOT build functionality from it yet.
+
+**Status:** RESEARCH ONLY — Do NOT implement architecture changes.
+
+---
+
+### Updated Examination-Type Taxonomy (Batches 1–5 + Closure Batch 1 + Closure Batch 2 + Closure Batch 3)
 
 - Theory / Written
 - Practical
@@ -402,7 +464,7 @@ Future research architecture may eventually require concepts such as:
 
 ---
 
-### Updated Research Taxonomy (Batches 1–5 + Closure Batch 1 + Closure Batch 2)
+### Updated Research Taxonomy (Batches 1–5 + Closure Batch 1 + Closure Batch 2 + Closure Batch 3)
 
 Based on all research to date, the current research taxonomy is:
 
@@ -430,14 +492,14 @@ Jurisdiction / State
 
 ---
 
-### Developer/Administrator Patterns Identified (Batches 1–5 + Closure Batch 1 + Closure Batch 2)
+### Developer/Administrator Patterns Identified (Batches 1–5 + Closure Batch 1 + Closure Batch 2 + Closure Batch 3)
 
 | Pattern | Developer | Administrator | States |
 |---------|-----------|---------------|--------|
 | NIC + Prov | NIC | Prov | Alaska, Maine, Montana, New Hampshire, Oklahoma, South Carolina, Utah, Virginia, Washington |
 | NIC + PCS | NIC | PCS | Arizona, New Mexico |
 | NIC + Prometric | NIC | Prometric | Connecticut, Delaware |
-| NIC + CTS + PSI | NIC | CTS (application) + PSI (delivery) | Illinois |
+| NIC + CTS + PSI (four-role) | NIC | CTS (application) + PSI (delivery) | Illinois |
 | NIC + Board (multiple exams) | NIC + State Board | Prov + State Board | Kansas, Mississippi |
 | NIC + DL Roope | NIC | DL Roope | Wisconsin |
 | PSI + PSI | PSI | PSI | Alabama, California, Colorado, Georgia, Maryland, Michigan, Texas |
@@ -448,16 +510,16 @@ Jurisdiction / State
 | Pearson VUE (multi-role) | Pearson VUE | Pearson VUE | Pennsylvania |
 | State-board-controlled | State Board | State Board | Kentucky, Minnesota, Nebraska, Nevada, Ohio, South Dakota |
 | State-controlled (multi-stage) | State Board | State Board | North Carolina |
-| State/Board-administered | State Board | State Board | Arkansas, North Dakota |
+| State/Board-administered | State Board | State Board | Arkansas, Louisiana, North Dakota |
 | State-specific + state-administered | State | State | New York |
 | State-specific + school-administered practical | State | School | Oregon |
-| NIC + Prov (likely) | NIC | Prov | Idaho (unconfirmed) |
+| NIC + Prov (likely, unconfirmed) | NIC | Prov | Idaho |
 | Vendor transition | UNKNOWN | Prometric → PSI | Hawaii |
 | Vendor transition | NIC | DL Roope → Prov | Washington |
 | Vendor transition | NIC | UNKNOWN → Prov | Virginia |
 | Prometric | UNKNOWN | Prometric | New Jersey |
 | Multiple provider footprints | NIC | UNKNOWN (multiple) | West Virginia |
-| UNKNOWN | UNKNOWN | UNKNOWN | Louisiana, Vermont |
+| UNKNOWN | UNKNOWN | UNKNOWN | Vermont |
 
 ---
 
@@ -656,3 +718,4 @@ Jurisdiction / State
 *Last Updated: 2026-08-14*
 *Closure Batch 1 Archived: 2026-08-14*
 *Closure Batch 2 Archived: 2026-08-14*
+*Closure Batch 3 Archived: 2026-08-14*

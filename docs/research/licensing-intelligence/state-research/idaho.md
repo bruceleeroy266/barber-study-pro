@@ -3,7 +3,7 @@
 **State:** Idaho  
 **License Type:** Barber  
 **Research Date:** 2026-08-14  
-**Status:** PARTIAL — Multiple fields require verification
+**Status:** CONFIRMED — Core examination structure established
 
 ---
 
@@ -11,10 +11,32 @@
 
 | Field | Value |
 |-------|-------|
-| **State Board** | UNKNOWN / REQUIRES VERIFICATION |
+| **State Board** | Idaho Board of Barber and Cosmetology |
 | **License Name** | Barber |
-| **Theory Exam Required** | Yes |
+| **Theory Exam Required** | Yes — national examination requirement |
 | **Practical Exam Required** | UNKNOWN / REQUIRES VERIFICATION |
+
+---
+
+## Examination Registration
+
+| Field | Value | Confidence |
+|-------|-------|------------|
+| **Registration Administrator** | Prov | CONFIRMED |
+| **School Registration** | Schools register their students for examinations | CONFIRMED |
+| **Apprenticeship Registration** | Apprenticeship instructors register apprentices | CONFIRMED |
+| **Out-of-State Applicants** | May receive Verification of Eligibility and then contact Prov | CONFIRMED |
+
+---
+
+## License Tracks
+
+Idaho maintains distinct license tracks:
+
+| Track | Status |
+|-------|--------|
+| **Barber** | CONFIRMED |
+| **Barber Stylist** | CONFIRMED |
 
 ---
 
@@ -22,11 +44,11 @@
 
 | Field | Value | Confidence |
 |-------|-------|------------|
-| **Exam Developer** | NIC (likely) | PARTIAL |
-| **Exam Administrator** | Prov (likely) | PARTIAL |
+| **Exam Developer** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **Exam Administrator** | Prov | CONFIRMED |
 | **Exam Name** | UNKNOWN / REQUIRES VERIFICATION | — |
 
-**Note:** Idaho Board resources identify Prov among examination resources and NIC examination resources. Available evidence supports continued relevance of NIC barber examination materials. However, the complete relationship is not yet confirmed.
+**Guardrail:** Idaho Board resources reference both Prov and NIC, but do NOT automatically record NIC as the current content developer for every barber examination track unless authoritative evidence specifically establishes that relationship.
 
 ---
 
@@ -65,7 +87,7 @@
 
 ## ASCYN PRO Implication
 
-Idaho likely follows the NIC + Prov pattern (similar to Alaska and Oklahoma), but this is not yet fully confirmed. The historical NIC practical material caveat is important — exam structures change over time and historical documents should not be assumed current.
+Idaho demonstrates that **schools and instructors can participate directly in the licensure pipeline** by registering students and apprentices for examinations. This is a business/product-strategy research finding with potential implications for school-facing features. The Prov examination registration/administration relationship is confirmed, but the exam developer requires verification.
 
 ---
 
@@ -73,9 +95,8 @@ Idaho likely follows the NIC + Prov pattern (similar to Alaska and Oklahoma), bu
 
 | Source | Type | Date Accessed | Confidence |
 |--------|------|---------------|------------|
-| Idaho Board examination resources | State licensing board | 2026-08-14 | PARTIAL |
-| NIC examination resources | Exam developer | 2026-08-14 | PARTIAL |
-| Prov examination resources | Exam administrator | 2026-08-14 | PARTIAL |
+| Idaho Board of Barber and Cosmetology | State licensing board | 2026-08-14 | CONFIRMED |
+| Prov examination resources | Exam administrator | 2026-08-14 | CONFIRMED |
 
 ---
 
@@ -83,7 +104,7 @@ Idaho likely follows the NIC + Prov pattern (similar to Alaska and Oklahoma), bu
 
 | Item | Frequency | Reason |
 |------|-----------|--------|
-| Exam developer/administrator relationship | High priority | Confirm NIC + Prov pattern |
+| Exam developer | High priority | Confirm content owner |
 | CIB/blueprint | High priority | Required for curriculum alignment |
 | Practical exam structure | High priority | Do not rely on historical material |
 | Passing standard | High priority | Close gap |

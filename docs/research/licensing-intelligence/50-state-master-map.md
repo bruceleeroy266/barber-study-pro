@@ -36,14 +36,14 @@ Comprehensive tracking of barber licensing examination requirements for all 50 U
 | Delaware | ✅ CONFIRMED | Barber (multiple tracks) | Yes | NIC | Prometric | Yes — multiple practical tracks | CIB eff. 2024-08-01 | 2026-08-14 | CONFIRMED |
 | Florida | ✅ CONFIRMED | Barber / Restricted Barber | Yes | UNKNOWN / REQUIRES VERIFICATION | Pearson VUE | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
 | Georgia | ✅ CONFIRMED | Master Barber | Yes | PSI | PSI | Yes — PSI practical | Test Taker Guide v2.1, eff. 2026-04-28 | 2026-08-14 | CONFIRMED |
-| Hawaii | 🔶 PARTIAL | Barber | Yes | UNKNOWN / REQUIRES VERIFICATION | PSI (eff. 2026-01-01; previously Prometric) | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL |
-| Idaho | 🔶 PARTIAL | Barber | Yes | NIC (likely) | Prov (likely) | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL |
-| Illinois | 🔶 PARTIAL | Barber | Yes | NIC | CTS (application) + PSI (delivery) | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL |
+| Hawaii | ✅ CONFIRMED | Barber | Yes | UNKNOWN / REQUIRES VERIFICATION | PSI (eff. 2026-01-01; previously Prometric) | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
+| Idaho | ✅ CONFIRMED | Barber | Yes | UNKNOWN / REQUIRES VERIFICATION | Prov | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
+| Illinois | ✅ CONFIRMED | Barber | Yes | NIC | CTS (application) + PSI (delivery) | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
 | Indiana | ✅ CONFIRMED | Barber | Yes | Indiana (state-specific) | PSI | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
-| Iowa | 🔶 PARTIAL | Barber | Yes | NIC/national (recognized) | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL |
+| Iowa | ✅ CONFIRMED | Barber | Yes | NIC | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
 | Kansas | ✅ CONFIRMED | Barber | Yes — multiple exams | NIC + Kansas Board | Prov + Kansas Board | Yes — Board-administered | NIC CIB eff. 2026-01-05 | 2026-08-14 | CONFIRMED |
 | Kentucky | ✅ CONFIRMED | Barber (multi-stage) | Yes — at probationary stage | UNKNOWN / REQUIRES VERIFICATION | Kentucky Board | Yes — at Barber stage | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
-| Louisiana | 🔶 PARTIAL | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL |
+| Louisiana | ✅ CONFIRMED | Barber | Yes | UNKNOWN / REQUIRES VERIFICATION | Louisiana Board of Barber Examiners | Yes — practical demonstration | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
 | Maine | ✅ CONFIRMED | Barber | Yes | NIC | Prov | Yes — remote practical | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
 | Maryland | ✅ CONFIRMED | Barber / Master Barber | Yes | PSI | PSI | Yes — PSI virtual practical | Updated PSI content eff. 2026-02-26 | 2026-08-14 | CONFIRMED |
 | Massachusetts | ✅ CONFIRMED | Barber | Yes | PSI | PSI | No separate practical identified | Barber v1.0, eff. 2026-04-15 | 2026-08-14 | CONFIRMED |
@@ -83,11 +83,11 @@ Comprehensive tracking of barber licensing examination requirements for all 50 U
 
 | Status | Count |
 |--------|-------|
-| ✅ CONFIRMED | 42 |
-| 🔶 PARTIAL | 8 |
+| ✅ CONFIRMED | 47 |
+| 🔶 PARTIAL | 3 |
 | ⬜ PENDING RESEARCH | 0 |
 
-**National Milestone:** All 50 states have now gone through the batch research methodology. Partial-State Closure Batch 1 and Batch 2 complete.
+**National Milestone:** All 50 states have now gone through the batch research methodology. Partial-State Closure Batches 1, 2, and 3 complete.
 
 ---
 
@@ -99,11 +99,12 @@ Batches 1–5 have identified materially different arrangements:
 
 | Pattern | States |
 |---------|--------|
-| State/Board-administered | Arkansas, North Dakota |
+| State/Board-administered | Arkansas, Louisiana, North Dakota |
 | NIC + Prov | Alaska, Maine, Montana, New Hampshire, Oklahoma, South Carolina, Utah, Virginia, Washington |
+| NIC + Prov (likely, unconfirmed) | Idaho |
 | NIC + PCS | Arizona, New Mexico |
 | NIC + Prometric | Connecticut, Delaware |
-| NIC + CTS + PSI | Illinois |
+| NIC + CTS + PSI | Illinois (four-role model) |
 | NIC + Board (multiple exams) | Kansas, Mississippi |
 | NIC + DL Roope | Wisconsin |
 | PSI-developed + PSI-administered | Alabama, California, Colorado, Georgia, Maryland, Michigan, Texas |
@@ -122,7 +123,7 @@ Batches 1–5 have identified materially different arrangements:
 | Vendor transition (unknown → Prov) | Virginia |
 | Prometric | New Jersey |
 | Multiple provider footprints | West Virginia |
-| UNKNOWN (requires verification) | Louisiana, Vermont |
+| UNKNOWN (requires verification) | Vermont |
 
 **Architecture Implication:** Exam developer, administrator, license track, exam version, and blueprint must remain conceptually separate in any future data model.
 
@@ -138,4 +139,5 @@ Do NOT populate unknown information by guessing. Use **UNKNOWN / REQUIRES VERIFI
 *Batch 5 Archived: 2026-08-14*
 *Closure Batch 1 Archived: 2026-08-14*
 *Closure Batch 2 Archived: 2026-08-14*
+*Closure Batch 3 Archived: 2026-08-14*
 *National Research Complete: 50 of 50 states*

@@ -66,25 +66,25 @@ National barber licensing research covering:
 | [Connecticut](state-research/connecticut.md) | Barber | UNKNOWN / REQUIRES VERIFICATION | Prometric | CONFIRMED | ✅ Active |
 | [Florida](state-research/florida.md) | Barber / Restricted Barber | UNKNOWN / REQUIRES VERIFICATION | Pearson VUE | CONFIRMED | ✅ Active |
 
-### Batch 2 — Confirmed (5)
+### Batch 2 — Confirmed (6)
 
 | State | License Type | Exam Developer | Administrator | Status | Documentation |
 |-------|--------------|----------------|---------------|--------|---------------|
+| [Hawaii](state-research/hawaii.md) | Barber | UNKNOWN / REQUIRES VERIFICATION | PSI (eff. 2026-01-01) | CONFIRMED | ✅ Active |
+| [Idaho](state-research/idaho.md) | Barber | UNKNOWN / REQUIRES VERIFICATION | Prov | CONFIRMED | ✅ Active |
 | [Indiana](state-research/indiana.md) | Barber | Indiana (state-specific) | PSI | CONFIRMED | ✅ Active |
 | [Kansas](state-research/kansas.md) | Barber | NIC + Kansas Board | Prov + Kansas Board | CONFIRMED | ✅ Active |
 | [Kentucky](state-research/kentucky.md) | Barber (multi-stage) | UNKNOWN / REQUIRES VERIFICATION | Kentucky Board | CONFIRMED | ✅ Active |
 | [Maine](state-research/maine.md) | Barber | NIC | Prov | CONFIRMED | ✅ Active |
 | [Maryland](state-research/maryland.md) | Barber / Master Barber | PSI | PSI | CONFIRMED | ✅ Active |
 
-### Batch 2 — Partial (5)
+### Batch 2 — Partial (3)
 
 | State | License Type | Exam Developer | Administrator | Status | Documentation |
 |-------|--------------|----------------|---------------|--------|---------------|
-| [Hawaii](state-research/hawaii.md) | Barber | UNKNOWN / REQUIRES VERIFICATION | PSI (eff. 2026-01-01) | PARTIAL | ✅ Active |
-| [Idaho](state-research/idaho.md) | Barber | NIC (likely) | Prov (likely) | PARTIAL | ✅ Active |
-| [Illinois](state-research/illinois.md) | Barber | NIC | CTS + PSI | PARTIAL | ✅ Active |
-| [Iowa](state-research/iowa.md) | Barber | NIC/national (recognized) | UNKNOWN / REQUIRES VERIFICATION | PARTIAL | ✅ Active |
-| [Louisiana](state-research/louisiana.md) | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | PARTIAL | ✅ Active |
+| [Illinois](state-research/illinois.md) | Barber | NIC | CTS + PSI | CONFIRMED | ✅ Active |
+| [Iowa](state-research/iowa.md) | Barber | NIC | UNKNOWN / REQUIRES VERIFICATION | CONFIRMED | ✅ Active |
+| [Louisiana](state-research/louisiana.md) | Barber | UNKNOWN / REQUIRES VERIFICATION | Louisiana Board of Barber Examiners | CONFIRMED | ✅ Active |
 
 ### Batch 3 — Confirmed (8)
 
@@ -244,4 +244,5 @@ See [Licensing Sources](../sources/licensing-sources.md) and [State Sources](../
 *Batch 5 Archived: 2026-08-14*
 *Closure Batch 1 Archived: 2026-08-14*
 *Closure Batch 2 Archived: 2026-08-14*
+*Closure Batch 3 Archived: 2026-08-14*
 *National Research Complete: 50 of 50 states*

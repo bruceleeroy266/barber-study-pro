@@ -3,7 +3,7 @@
 **State:** Louisiana  
 **License Type:** Barber  
 **Research Date:** 2026-08-14  
-**Status:** PARTIAL — Requires authoritative verification across all fields
+**Status:** CONFIRMED — Core examination structure established
 
 ---
 
@@ -11,10 +11,32 @@
 
 | Field | Value |
 |-------|-------|
-| **State Board** | UNKNOWN / REQUIRES VERIFICATION |
-| **License Name** | UNKNOWN / REQUIRES VERIFICATION |
-| **Theory Exam Required** | UNKNOWN / REQUIRES VERIFICATION |
-| **Practical Exam Required** | UNKNOWN / REQUIRES VERIFICATION |
+| **State Board** | Louisiana Board of Barber Examiners |
+| **License Name** | Barber |
+| **Theory Exam Required** | Yes — written test required |
+| **Practical Exam Required** | Yes — practical demonstration required |
+| **Oral Exam Required** | Yes — oral test required |
+
+---
+
+## Examination Structure
+
+Louisiana law establishes a **Board-centered examination system**.
+
+### Confirmed Examination Components
+
+| Component | Requirement | Confidence |
+|-----------|-------------|------------|
+| **Practical Demonstration** | Required | CONFIRMED |
+| **Written Test** | Required | CONFIRMED |
+| **Oral Test** | Required | CONFIRMED |
+
+### Examination Cycle
+
+| Field | Value | Confidence |
+|-------|-------|------------|
+| **Statutory Cycle** | Approximately every three months | CONFIRMED |
+| **Conducted By** | Louisiana Board of Barber Examiners | CONFIRMED |
 
 ---
 
@@ -23,11 +45,11 @@
 | Field | Value | Confidence |
 |-------|-------|------------|
 | **Exam Developer** | UNKNOWN / REQUIRES VERIFICATION | — |
-| **Exam Administrator** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **Exam Administrator** | Louisiana Board of Barber Examiners | CONFIRMED |
 | **Exam Name** | UNKNOWN / REQUIRES VERIFICATION | — |
 | **Passing Standard** | UNKNOWN / REQUIRES VERIFICATION | — |
 
-**Do NOT infer NIC, PSI, Prov, Prometric, or any specific national blueprint without verified current Louisiana/official testing documentation.**
+**Guardrail:** Do NOT infer current passing score, detailed current blueprint, CIB version, or outside testing vendor unless supported by authoritative evidence.
 
 ---
 
@@ -35,8 +57,18 @@
 
 | Field | Value | Confidence |
 |-------|-------|------------|
-| **Practical Required** | UNKNOWN / REQUIRES VERIFICATION | — |
-| **Practical Administrator** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **Practical Required** | Yes — practical demonstration | CONFIRMED |
+| **Practical Administrator** | Louisiana Board of Barber Examiners | CONFIRMED |
+| **Practical Structure** | UNKNOWN / REQUIRES VERIFICATION | — |
+
+---
+
+## Oral Examination
+
+| Field | Value | Confidence |
+|-------|-------|------------|
+| **Oral Required** | Yes — oral test | CONFIRMED |
+| **Oral Administrator** | Louisiana Board of Barber Examiners | CONFIRMED |
 
 ---
 
@@ -63,7 +95,7 @@
 
 ## ASCYN PRO Implication
 
-Louisiana requires additional authoritative verification before any conclusions can be drawn. No assumptions should be made about exam developer, administrator, or exam structure.
+Louisiana operates a **Board-centered examination system** with practical, written, and oral components conducted approximately every three months. This is a state-administered model distinct from national vendor arrangements. The statutory examination cycle is notable for scheduling and planning purposes.
 
 ---
 
@@ -71,7 +103,8 @@ Louisiana requires additional authoritative verification before any conclusions 
 
 | Source | Type | Date Accessed | Confidence |
 |--------|------|---------------|------------|
-| — | — | — | — |
+| Louisiana Board of Barber Examiners | State licensing board | 2026-08-14 | CONFIRMED |
+| Louisiana state law | Statutory authority | 2026-08-14 | CONFIRMED |
 
 ---
 
@@ -79,7 +112,9 @@ Louisiana requires additional authoritative verification before any conclusions 
 
 | Item | Frequency | Reason |
 |------|-----------|--------|
-| All fields | High priority | Complete initial research |
+| Passing standard | High priority | Close gap |
+| CIB/blueprint | High priority | Required for curriculum alignment |
+| Exam developer/content | High priority | Complete initial research |
 
 ---
 
