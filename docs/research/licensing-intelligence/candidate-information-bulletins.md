@@ -84,7 +84,6 @@ Exam → Exam Version → Effective Date → CIB → Blueprint
 | West Virginia | West Virginia Barber & Cosmetology CIB | 2025.12.01 | 2025-12-01 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | Prov current administrator; DL Roope historical; Series 1 eff. 2024-05-08 |
 | Wisconsin | Barber Written CIB / Barber Practical CIB | Current through 2026-08-31; Future eff. 2026-09-01 | 2026-08-31 / 2026-09-01 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | DL Roope; live version transition |
 | Wyoming | NIC Barber Examinations | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | Track-specific formats |
-| Texas | Barber Theory | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | See state research |
 
 ---
 

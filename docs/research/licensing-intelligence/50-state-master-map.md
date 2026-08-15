@@ -101,7 +101,6 @@ Batches 1–5 have identified materially different arrangements:
 |---------|--------|
 | State/Board-administered | Arkansas, Louisiana, North Dakota |
 | NIC + Prov | Alaska, Maine, Montana, New Hampshire, Oklahoma, South Carolina, Utah, Vermont, Virginia, Washington |
-| NIC + Prov (likely, unconfirmed) | Idaho |
 | NIC + PCS | Arizona, New Mexico |
 | NIC + Prometric | Connecticut, Delaware |
 | NIC + CTS + PSI | Illinois (four-role model) |
@@ -117,13 +116,8 @@ Batches 1–5 have identified materially different arrangements:
 | State-controlled (multi-stage) | North Carolina |
 | State-specific + state-administered | New York |
 | State-specific + school-administered practical | Oregon |
-| NIC + Prov (likely, unconfirmed) | Idaho |
 | Vendor transition (Prometric → PSI) | Hawaii |
 | Vendor transition (DL Roope → Prov) | Washington, West Virginia |
-| Vendor transition (unknown → Prov) | Virginia |
-| Prometric | New Jersey |
-| Multiple provider footprints | West Virginia |
-| UNKNOWN (requires verification) | Vermont |
 
 **Architecture Implication:** Exam developer, administrator, license track, exam version, and blueprint must remain conceptually separate in any future data model.
 

@@ -565,50 +565,6 @@
 
 ---
 
-## Texas
-
-| Source | Type | URL | Date Accessed | Reliability | Notes |
-|--------|------|-----|---------------|-------------|-------|
-| Texas Department of Licensing and Regulation | State licensing board | https://www.tdlr.texas.gov | 2026-08-14 | Highest | Licensing requirements |
-| Texas PSI information | State licensing board | TBD | 2026-08-14 | Highest | Exam administration |
-
-**Verification Status:** CONFIRMED — Official sources reviewed
-
----
-
-## Washington
-
-| Source | Type | URL | Date Accessed | Reliability | Notes |
-|--------|------|-----|---------------|-------------|-------|
-| Washington State Department of Licensing | State licensing board | TBD | 2026-08-14 | Highest | Licensing requirements |
-| Washington NIC/DL Roope information | State licensing board | TBD | 2026-08-14 | Highest | Exam administration |
-
-**Verification Status:** CONFIRMED — Official sources reviewed
-
----
-
-## Wisconsin
-
-| Source | Type | URL | Date Accessed | Reliability | Notes |
-|--------|------|-----|---------------|-------------|-------|
-| Wisconsin Department of Safety and Professional Services | State licensing board | TBD | 2026-08-14 | Highest | Licensing requirements |
-| Wisconsin NIC/DL Roope information | State licensing board | TBD | 2026-08-14 | Highest | Exam administration |
-
-**Verification Status:** CONFIRMED — Official sources reviewed
-
----
-
-## West Virginia
-
-| Source | Type | URL | Date Accessed | Reliability | Notes |
-|--------|------|-----|---------------|-------------|-------|
-| West Virginia Board of Barbers and Cosmetologists | State licensing board | TBD | 2026-08-14 | Highest | Licensing requirements |
-| West Virginia NIC/DL Roope information | State licensing board | TBD | 2026-08-14 | Highest | Exam administration |
-
-**Verification Status:** CONFIRMED — Official sources reviewed
-
----
-
 ## Pending Research
 
 | State | Status | Action Needed |
