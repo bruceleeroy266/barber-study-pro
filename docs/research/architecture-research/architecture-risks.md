@@ -333,7 +333,59 @@ State → Profession → License Stage → Eligibility → Examination Requireme
 
 ---
 
-### Updated Examination-Type Taxonomy (Batches 1–5 + Closure Batch 1)
+### FINDING 26 — STATE/BOARD-ADMINISTERED EXAMINATION SYSTEMS (Closure Batch 2)
+
+Arkansas and North Dakota demonstrate **Board-centered examination systems** where the state board directly administers examinations rather than using a national testing vendor.
+
+| State | Examination Components | Administrator |
+|-------|------------------------|---------------|
+| Arkansas | Practical + Written + Oral | Arkansas State Board of Barber Examiners |
+| North Dakota | Written + Practical + Oral | North Dakota Board of Barber Examiners |
+
+**Implication:** National licensing architecture must not assume every examination is administered by PSI, Prov, Prometric, DL Roope, Pearson VUE, PCS, or another national vendor. Preserve **State/Board Administered** as a distinct administrator type.
+
+**Status:** RESEARCH ONLY — Do NOT implement architecture changes.
+
+---
+
+### FINDING 27 — ORAL BARBER EXAMINATIONS STILL EXIST (Closure Batch 2)
+
+Arkansas and North Dakota establish **oral testing** as part of their statutory barber examination structures.
+
+| State | Oral Component |
+|-------|---------------|
+| Arkansas | Required by Board |
+| North Dakota | Required by statute |
+
+**Implication:** Preserve **Oral** as a distinct examination-component type alongside Theory/Written, Practical, State Law, Integrated Competency Assessment, and other verified formats.
+
+**Status:** RESEARCH ONLY — Do NOT implement architecture changes.
+
+---
+
+### FINDING 28 — PROPOSED LICENSING STRUCTURES MUST NOT REPLACE EFFECTIVE LAW (Closure Batch 2)
+
+New Jersey's 2026 legislative activity demonstrates the need to distinguish:
+
+| Category | Treatment |
+|----------|-----------|
+| **Current Effective Requirement** | Documented as confirmed research |
+| **Proposed/Pending Requirement** | Tracked separately; NOT treated as current law |
+
+Future research architecture may eventually require concepts such as:
+- Effective
+- Future effective
+- Proposed
+- Repealed/superseded
+- Historical
+
+**Implication:** Do NOT implement this architecture now. Preserve the distinction between current effective requirements and proposed/pending legislation.
+
+**Status:** RESEARCH ONLY — Do NOT implement architecture changes.
+
+---
+
+### Updated Examination-Type Taxonomy (Batches 1–5 + Closure Batch 1 + Closure Batch 2)
 
 - Theory / Written
 - Practical
@@ -350,7 +402,7 @@ State → Profession → License Stage → Eligibility → Examination Requireme
 
 ---
 
-### Updated Research Taxonomy (Batches 1–5)
+### Updated Research Taxonomy (Batches 1–5 + Closure Batch 1 + Closure Batch 2)
 
 Based on all research to date, the current research taxonomy is:
 
@@ -378,16 +430,15 @@ Jurisdiction / State
 
 ---
 
-### Developer/Administrator Patterns Identified (Batches 1–5)
+### Developer/Administrator Patterns Identified (Batches 1–5 + Closure Batch 1 + Closure Batch 2)
 
 | Pattern | Developer | Administrator | States |
 |---------|-----------|---------------|--------|
-| NIC + Prov | NIC | Prov | Alaska, Maine, New Hampshire, Oklahoma, South Carolina, Utah, Virginia, Washington |
+| NIC + Prov | NIC | Prov | Alaska, Maine, Montana, New Hampshire, Oklahoma, South Carolina, Utah, Virginia, Washington |
 | NIC + PCS | NIC | PCS | Arizona, New Mexico |
 | NIC + Prometric | NIC | Prometric | Connecticut, Delaware |
 | NIC + CTS + PSI | NIC | CTS (application) + PSI (delivery) | Illinois |
 | NIC + Board (multiple exams) | NIC + State Board | Prov + State Board | Kansas, Mississippi |
-| NIC + UNKNOWN (transition) | NIC | UNKNOWN (Prometric/DL Roope transition) | Montana |
 | NIC + DL Roope | NIC | DL Roope | Wisconsin |
 | PSI + PSI | PSI | PSI | Alabama, California, Colorado, Georgia, Maryland, Michigan, Texas |
 | PSI theory-only | PSI | PSI | Massachusetts |
@@ -397,15 +448,16 @@ Jurisdiction / State
 | Pearson VUE (multi-role) | Pearson VUE | Pearson VUE | Pennsylvania |
 | State-board-controlled | State Board | State Board | Kentucky, Minnesota, Nebraska, Nevada, Ohio, South Dakota |
 | State-controlled (multi-stage) | State Board | State Board | North Carolina |
+| State/Board-administered | State Board | State Board | Arkansas, North Dakota |
 | State-specific + state-administered | State | State | New York |
 | State-specific + school-administered practical | State | School | Oregon |
 | NIC + Prov (likely) | NIC | Prov | Idaho (unconfirmed) |
 | Vendor transition | UNKNOWN | Prometric → PSI | Hawaii |
 | Vendor transition | NIC | DL Roope → Prov | Washington |
 | Vendor transition | NIC | UNKNOWN → Prov | Virginia |
-| Prometric / IQT | UNKNOWN | Prometric / IQT | New Jersey |
+| Prometric | UNKNOWN | Prometric | New Jersey |
 | Multiple provider footprints | NIC | UNKNOWN (multiple) | West Virginia |
-| UNKNOWN | UNKNOWN | UNKNOWN | Arkansas, Louisiana, Missouri, North Dakota, Vermont |
+| UNKNOWN | UNKNOWN | UNKNOWN | Louisiana, Vermont |
 
 ---
 
@@ -603,3 +655,4 @@ Jurisdiction / State
 
 *Last Updated: 2026-08-14*
 *Closure Batch 1 Archived: 2026-08-14*
+*Closure Batch 2 Archived: 2026-08-14*

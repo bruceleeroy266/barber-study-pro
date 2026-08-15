@@ -44,7 +44,7 @@ Exam → Exam Version → Effective Date → CIB → Blueprint
 | Alabama | PSI National Barber Styling | Test Taker Guide v1.0 | 2026-05-01 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | PSI developed + administered |
 | Alaska | NIC Barber Examination | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | NIC content via Prov; multiple tracks |
 | Arizona | NIC Barber Theory | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | NIC content via PCS |
-| Arkansas | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | Do not infer developer |
+| Arkansas | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | Board-centered examination; do not infer developer |
 | California | PSI National Barber | Blueprint eff. 2026-04-01 | 2026-04-01 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | PSI developed + administered; practical eliminated 2022 |
 | Colorado | PSI National Barber | Test Taker Guide v1.5 | 2026-01-27 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | PSI developed + administered |
 | Connecticut | Connecticut Barber Examination | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | Prometric administers; scores transmitted to CT DPH; English/Spanish |
@@ -57,12 +57,14 @@ Exam → Exam Version → Effective Date → CIB → Blueprint
 | Maryland | PSI National Barber | Updated content eff. 2026-02-26 | 2026-02-26 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | PSI developed + administered |
 | Massachusetts | PSI National Barber (theory only) | Barber v1.0 | 2026-04-15 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | Theory-only participation; no separate practical |
 | Michigan | PSI National Barber | UNKNOWN / REQUIRES VERIFICATION | 2024-10-02 (adoption); 2026-02-11 (updated content) | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | Transitioned from state exam to PSI National |
-| Missouri | Missouri Cosmetology and Barber Exams | CIB 2026.01.05 | 2026-01-05 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | Prov administers; developer not confirmed |
+| Missouri | Missouri Cosmetology and Barber Exams | CIB 2026.01.05 | 2026-01-05 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | Prov administers Barber Styling Written + Practical; separate State Law Test |
+| Montana | NIC Barber Examinations | UNKNOWN / REQUIRES VERIFICATION | 2026-01-01 (updated exams) | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | NIC content via Prov; Barber 1 + Barber Styling tracks |
 | New Hampshire | NIC Barber 1 / NIC Barber Styling | Prov CIB | 2026-01-05 | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | Two license tracks; Prov administers |
-| New Jersey | New Jersey Barber CIB | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | Prometric/IQT; developer not confirmed |
+| New Jersey | New Jersey Barber CIB | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | Prometric administers written; Board practical separate; $53 fee eff. 2023-12-01 |
 | New Mexico | NIC Barber Examinations | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | NIC content via PCS; theory + practical + state law |
 | New York | Barber Operator Examinations | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | NY DOS administers practical; 70% practical passing |
 | North Carolina | Apprentice Barber Written Examination | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | Board maintains CIB/material; practical ≥70 each portion |
+| North Dakota | Master Barber License Exam Instructions | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED | Board-centered; written + practical + oral |
 | Oklahoma | Barber Theory (NIC) | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | NIC content via Prov |
 | Oregon | Barbering Field-of-Practice + Laws & Rules | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | Two written exams; school-administered practical |
 | Pennsylvania | Pennsylvania Barber Examinations | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL | Pearson VUE multi-role; 100 scored + 15 pretest |

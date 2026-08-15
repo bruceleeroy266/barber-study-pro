@@ -3,7 +3,7 @@
 **State:** New Jersey  
 **License Type:** Barber  
 **Research Date:** 2026-08-14  
-**Status:** PARTIAL — Multiple fields require verification
+**Status:** CONFIRMED — Core examination structure established
 
 ---
 
@@ -11,30 +11,46 @@
 
 | Field | Value |
 |-------|-------|
-| **State Board** | UNKNOWN / REQUIRES VERIFICATION |
+| **State Board** | New Jersey State Board of Cosmetology and Hairstyling |
 | **License Name** | Barber |
-| **Theory Exam Required** | Yes — written barber examination pathway confirmed |
-| **Practical Exam Required** | UNKNOWN / REQUIRES VERIFICATION |
+| **Theory Exam Required** | Yes — written licensing examination confirmed |
+| **Practical Exam Required** | Yes — Board practical examination process confirmed |
 
 ---
 
-## Theory Examination
+## Examination Structure
+
+Current New Jersey Board material establishes that **Prometric** administers written licensing examinations for the New Jersey State Board of Cosmetology and Hairstyling.
+
+### Written Examination
 
 | Field | Value | Confidence |
 |-------|-------|------------|
 | **Exam Developer** | UNKNOWN / REQUIRES VERIFICATION | — |
-| **Exam Administrator** | Prometric / IQT testing network | CONFIRMED |
+| **Exam Administrator** | Prometric | CONFIRMED |
 | **Exam Name** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **CIB** | NJ Barber CIB | CONFIRMED |
 
----
-
-## Practical Examination
+### Practical Examination
 
 | Field | Value | Confidence |
 |-------|-------|------------|
-| **Practical Required** | UNKNOWN / REQUIRES VERIFICATION | — |
-| **Practical Administrator** | UNKNOWN / REQUIRES VERIFICATION | — |
-| **Practical Delivery Method** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **Practical Required** | Yes | CONFIRMED |
+| **Practical Administrator** | New Jersey State Board of Cosmetology and Hairstyling | CONFIRMED |
+| **Practical Delivery Method** | Board practical examination process | CONFIRMED |
+
+**Important Distinction:** Preserve the separation between **Prometric written examination administration** and **Board practical examination process**.
+
+---
+
+## Current Written Examination Fee
+
+| Field | Value | Confidence |
+|-------|-------|------------|
+| **Fee Amount** | $53 | CONFIRMED |
+| **Effective Date** | December 1, 2023 | CONFIRMED |
+
+**Note:** Examination fees are administrative information subject to change. Do NOT treat as permanent.
 
 ---
 
@@ -43,7 +59,7 @@
 | Field | Value | Confidence |
 |-------|-------|------------|
 | **CIB Name** | New Jersey Barber CIB | CONFIRMED |
-| **CIB Source** | Prometric / IQT | CONFIRMED |
+| **CIB Source** | Prometric | CONFIRMED |
 | **CIB URL** | UNKNOWN / REQUIRES VERIFICATION | — |
 | **CIB Version** | UNKNOWN / REQUIRES VERIFICATION | — |
 | **Effective Date** | UNKNOWN / REQUIRES VERIFICATION | — |
@@ -61,22 +77,34 @@
 
 ---
 
+## Legislative Guardrail
+
+**2026 New Jersey legislative activity** was identified concerning a proposed general barber licensing structure.
+
+**Do NOT treat proposed legislation as current law.**
+
+Preserve:
+
+| Category | Treatment |
+|----------|-----------|
+| **CURRENTLY EFFECTIVE REQUIREMENTS** | Documented above |
+| **PROPOSED / PENDING LEGISLATION** | Separate tracking required |
+
+---
+
 ## Fields Requiring Verification
 
-- Exact current practical requirement
-- Practical administrator/delivery method
 - Exact exam developer/content ownership
+- CIB version and effective date
 - Current blueprint
 - Passing standard
-- CIB version/effective date
-
-**Do NOT infer these fields from older interstate summaries.**
+- Proposed legislation status and details
 
 ---
 
 ## ASCYN PRO Implication
 
-New Jersey uses the Prometric/IQT testing network — a different administrator arrangement than other Prometric states (Connecticut, Delaware). The dedicated New Jersey Barber CIB suggests state-specific examination content, but the developer/content owner is not yet confirmed.
+New Jersey uses **Prometric** for written barber examinations with a dedicated **NJ Barber CIB**. The practical examination is administered through the **Board's own process** — a distinction from states where one vendor handles both components. The $53 written examination fee (effective December 1, 2023) is confirmed administrative information.
 
 ---
 
@@ -84,8 +112,8 @@ New Jersey uses the Prometric/IQT testing network — a different administrator 
 
 | Source | Type | Date Accessed | Confidence |
 |--------|------|---------------|------------|
-| New Jersey state licensing information | State licensing board | 2026-08-14 | CONFIRMED |
-| Prometric / IQT examination information | Exam administrator | 2026-08-14 | CONFIRMED |
+| New Jersey State Board of Cosmetology and Hairstyling | State licensing board | 2026-08-14 | CONFIRMED |
+| Prometric examination information | Exam administrator | 2026-08-14 | CONFIRMED |
 
 ---
 
@@ -94,9 +122,9 @@ New Jersey uses the Prometric/IQT testing network — a different administrator 
 | Item | Frequency | Reason |
 |------|-----------|--------|
 | Exam developer/content | High priority | Complete initial research |
-| Practical exam | High priority | Close gap |
 | CIB version/effective date | High priority | Close gap |
 | Passing standard | High priority | Close gap |
+| Proposed legislation | Monitor | Track status changes |
 
 ---
 

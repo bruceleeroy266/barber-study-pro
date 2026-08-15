@@ -1,9 +1,9 @@
 # North Dakota — State Licensing Research
 
 **State:** North Dakota  
-**License Type:** Barber (multiple stages)  
+**License Type:** Barber  
 **Research Date:** 2026-08-14  
-**Status:** PARTIAL
+**Status:** CONFIRMED — Core examination structure established
 
 ---
 
@@ -12,42 +12,99 @@
 | Field | Value |
 |-------|-------|
 | **State Board** | North Dakota Board of Barber Examiners |
-| **License Stages** | Apprentice / Registered Barber concepts established in state law |
-| **Theory Exam Required** | UNKNOWN / REQUIRES VERIFICATION |
-| **Practical Exam Required** | UNKNOWN / REQUIRES VERIFICATION |
+| **License Name** | Barber |
+| **Theory Exam Required** | Yes — written examination required |
+| **Practical Exam Required** | Yes — practical examination required |
+| **Oral Exam Required** | Yes — required by statute |
 
 ---
 
-## Confirmed Information
+## Examination Structure
 
-### State-Controlled Examination Structure
+North Dakota Board and statutory material establish a **Board-centered barber examination structure**.
 
-North Dakota maintains a state barber regulatory/examination structure through its Board of Barber Examiners.
+### Master Barber License Exam Instructions
 
-State law establishes:
-- Barber examination requirements
-- Separate apprentice/registered-barber concepts
+Current Board material includes **Master Barber License Exam Instructions**.
 
 ---
 
-## Requires Verification
+## Written Examination
 
-| Field | Status | Notes |
-|-------|--------|-------|
-| **Written/Theory Components** | UNKNOWN / REQUIRES VERIFICATION | Exact current components not confirmed |
-| **Practical Components** | UNKNOWN / REQUIRES VERIFICATION | Not confirmed |
-| **Exam Developer/Content** | UNKNOWN / REQUIRES VERIFICATION | Do NOT infer NIC, PSI or another national exam provider |
-| **Current CIB or Examination Guide** | UNKNOWN / REQUIRES VERIFICATION | No CIB identified |
-| **Blueprint** | UNKNOWN / REQUIRES VERIFICATION | No blueprint identified |
-| **Passing Standard** | UNKNOWN / REQUIRES VERIFICATION | Not published in reviewed material |
-
-**Do NOT infer NIC, PSI or another national exam provider.**
+| Field | Value | Confidence |
+|-------|-------|------------|
+| **Format** | Multiple choice, True/false, Essay questions | CONFIRMED |
+| **Allotted Time** | 2 hours | CONFIRMED |
+| **Administrator** | North Dakota Board of Barber Examiners | CONFIRMED |
 
 ---
 
-## Architecture / Research Implication
+## Practical Examination
 
-North Dakota maintains a **state-controlled examination ecosystem** similar to Minnesota, Nebraska, and other Batch 3 confirmed states. However, specific examination components require verification.
+| Field | Value | Confidence |
+|-------|-------|------------|
+| **Allotted Time** | Approximately 2 hours | CONFIRMED |
+| **Tasks Include** | Haircutting, Straight-razor shaving, Facial/scalp massage, Shampooing, Cleanup | CONFIRMED |
+| **Administrator** | North Dakota Board of Barber Examiners | CONFIRMED |
+
+---
+
+## Oral Examination
+
+| Field | Value | Confidence |
+|-------|-------|------------|
+| **Required** | Yes — by statute | CONFIRMED |
+| **Administrator** | North Dakota Board of Barber Examiners | CONFIRMED |
+
+---
+
+## Statutory Examination Structure
+
+North Dakota barber examination law includes:
+
+| Component | Requirement |
+|-----------|-------------|
+| **Practical Demonstration** | Required |
+| **Written Test** | Required |
+| **Oral Test** | Required |
+
+---
+
+## Candidate Information Bulletin
+
+| Field | Value | Status |
+|-------|-------|--------|
+| **CIB/Guide Name** | Master Barber License Exam Instructions | CONFIRMED |
+| **CIB Source** | North Dakota Board of Barber Examiners | CONFIRMED |
+| **CIB URL** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **CIB Version** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **Effective Date** | UNKNOWN / REQUIRES VERIFICATION | — |
+
+---
+
+## Exam Blueprint
+
+| Field | Value | Status |
+|-------|-------|--------|
+| **Blueprint Source** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **Domain Structure** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **Domain Weights** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **Passing Standard** | UNKNOWN / REQUIRES VERIFICATION | — |
+
+---
+
+## Fields Requiring Verification
+
+- Passing score/standard
+- Blueprint details
+- CIB version and effective date
+- Historical exam transitions
+
+---
+
+## ASCYN PRO Implication
+
+North Dakota operates a **Board-centered examination system** with written (multiple choice, true/false, essay), practical (2 hours, specific tasks), and oral (statutory) components. The Master Barber License Exam Instructions are confirmed. This is a state-administered model distinct from national vendor arrangements.
 
 ---
 
@@ -64,11 +121,10 @@ North Dakota maintains a **state-controlled examination ecosystem** similar to M
 
 | Item | Frequency | Reason |
 |------|-----------|--------|
-| Exam components | Next research batch | Confirm theory and practical structure |
-| Exam developer | Next research batch | Identify content owner |
-| CIB/blueprint | Next research batch | Locate official documentation |
+| Passing standard | High priority | Close gap |
+| Blueprint | High priority | Required for curriculum alignment |
+| CIB version | High priority | Close gap |
 
 ---
 
-*Last Updated: 2026-08-14*  
-*Next Review: 2026-11-14*
+*Last Updated: 2026-08-14*

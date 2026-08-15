@@ -6,6 +6,57 @@
 
 ---
 
+## 2026-08-14 — Partial-State Closure Batch 2 Archived
+
+### Added
+
+- **State Research Updates** — Arkansas, Missouri, Montana, New Jersey, North Dakota (5 states)
+- **CIB Records** — Missouri Prov CIB 2026.01.05, New Jersey Barber CIB, North Dakota Master Barber License Exam Instructions
+- **Exam Version Records** — Montana updated NIC barber examinations effective 2026-01-01
+- **Passing Standards** — Arkansas ≥75% in all subjects examined
+- **Cross-State Architecture Findings** — 3 new findings from Closure Batch 2 (state/board-administered exams, oral examinations, proposed vs. effective law)
+- **Source Records** — Updated authoritative sources for 5 states
+
+### Updated
+
+- **50-State Master Map** — Status updates for 5 states; summary updated (42 CONFIRMED, 8 PARTIAL, 0 PENDING)
+- **Licensing Intelligence Index** — Updated state tables
+- **Architecture Risks** — Added Findings 26–28; updated developer/administrator pattern matrix; updated examination-type taxonomy
+- **State Sources** — Updated Arkansas, Missouri, Montana, New Jersey, North Dakota
+- **CIB Index** — Updated Arkansas, Missouri, Montana, New Jersey, North Dakota
+
+### Status Changes
+
+| State | Before | After |
+|-------|--------|-------|
+| Arkansas | PARTIAL | CONFIRMED |
+| Missouri | PARTIAL | CONFIRMED |
+| Montana | PARTIAL | CONFIRMED |
+| New Jersey | PARTIAL | CONFIRMED |
+| North Dakota | PARTIAL | CONFIRMED |
+
+### Key Findings
+
+- **5 states upgraded to CONFIRMED:** Arkansas, Missouri, Montana, New Jersey, North Dakota
+- **State/Board-administered examination systems exist** (Arkansas, North Dakota)
+- **Oral barber examinations still exist** (Arkansas, North Dakota)
+- **Proposed licensing structures must not replace effective law** (New Jersey legislative activity)
+- **Montana updated NIC examinations effective 2026-01-01** (Barber 1 + Barber Styling tracks)
+- **New Jersey written examination fee: $53 effective 2023-12-01**
+
+### National Research Count
+
+- **50 of 50 states** have entered the research pipeline
+- **42 CONFIRMED**
+- **8 PARTIAL**
+- **0 PENDING**
+
+### Decisions
+
+No new decisions. Existing decisions remain active.
+
+---
+
 ## 2026-08-14 — Partial-State Closure Batch 1 Archived
 
 ### Added

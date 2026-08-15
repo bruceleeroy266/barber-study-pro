@@ -3,7 +3,7 @@
 **State:** Arkansas  
 **License Type:** Barber  
 **Research Date:** 2026-08-14  
-**Status:** PARTIAL — Multiple fields require verification
+**Status:** CONFIRMED — Core examination structure established
 
 ---
 
@@ -13,8 +13,29 @@
 |-------|-------|
 | **State Board** | Arkansas State Board of Barber Examiners |
 | **License Name** | Barber |
-| **Theory Exam Required** | Yes — examination requirements exist |
-| **Practical Exam Required** | UNKNOWN / REQUIRES VERIFICATION |
+| **Theory Exam Required** | Yes — written test required |
+| **Practical Exam Required** | Yes — practical demonstration required |
+| **Oral Exam Required** | Yes — oral test required |
+
+---
+
+## Examination Structure
+
+Arkansas State Board of Barber Examiners materials establish a **Board-centered barber examination system**.
+
+### Confirmed Core Structure
+
+| Component | Requirement | Confidence |
+|-----------|-------------|------------|
+| **Practical Demonstration** | Required | CONFIRMED |
+| **Written Test** | Required | CONFIRMED |
+| **Oral Test** | Required | CONFIRMED |
+
+### Passing Standard
+
+| Standard | Value | Confidence |
+|----------|-------|------------|
+| **Minimum Score** | At least 75% in all subjects examined | CONFIRMED |
 
 ---
 
@@ -23,10 +44,10 @@
 | Field | Value | Confidence |
 |-------|-------|------------|
 | **Exam Developer** | UNKNOWN / REQUIRES VERIFICATION | — |
-| **Exam Administrator** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **Exam Administrator** | Arkansas State Board of Barber Examiners (Board-centered) | CONFIRMED |
 | **Exam Name** | UNKNOWN / REQUIRES VERIFICATION | — |
 
-**Do NOT infer NIC, PSI, Prov, Pearson VUE, PCS, DL Roope, Prometric, or another provider without authoritative evidence.**
+**Note:** Arkansas operates a Board-centered examination system. Do NOT infer an outside testing vendor unless authoritative barber-specific evidence establishes one.
 
 ---
 
@@ -34,8 +55,18 @@
 
 | Field | Value | Confidence |
 |-------|-------|------------|
-| **Practical Required** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **Practical Required** | Yes — practical demonstration | CONFIRMED |
 | **Practical Structure** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **Practical Administrator** | Arkansas State Board of Barber Examiners | CONFIRMED |
+
+---
+
+## Oral Examination
+
+| Field | Value | Confidence |
+|-------|-------|------------|
+| **Oral Required** | Yes — oral test | CONFIRMED |
+| **Oral Administrator** | Arkansas State Board of Barber Examiners | CONFIRMED |
 
 ---
 
@@ -60,6 +91,14 @@
 
 ---
 
+## Important Guardrail
+
+**Do NOT mix Arkansas barber examination requirements with separate cosmetology examination rules.**
+
+**Do NOT infer an outside testing vendor unless authoritative barber-specific evidence establishes one.**
+
+---
+
 ## Business Intelligence (Separate from Licensing)
 
 | Field | Value | Confidence |
@@ -74,7 +113,7 @@
 
 ## ASCYN PRO Implication
 
-Arkansas requires further research before any licensing conclusions can be drawn. The state board regulates barber licensing, but the exam developer, administrator, and exam structure are not yet confirmed.
+Arkansas operates a **Board-centered examination system** with practical, written, and oral components. The 75% passing standard across all subjects is confirmed. This is a state-administered model distinct from national vendor arrangements.
 
 ---
 
@@ -90,7 +129,8 @@ Arkansas requires further research before any licensing conclusions can be drawn
 
 | Item | Frequency | Reason |
 |------|-----------|--------|
-| All exam fields | High priority | Complete initial research |
+| Exam developer/content | High priority | Complete initial research |
+| CIB/blueprint | High priority | Required for curriculum alignment |
 | Business intelligence | Annually | Enrollment data changes |
 
 ---

@@ -3,7 +3,7 @@
 **State:** Montana  
 **License Type:** Barber  
 **Research Date:** 2026-08-14  
-**Status:** PARTIAL — Administrator transition requires verification
+**Status:** CONFIRMED — Core examination structure established
 
 ---
 
@@ -11,10 +11,29 @@
 
 | Field | Value |
 |-------|-------|
-| **State Board** | UNKNOWN / REQUIRES VERIFICATION |
+| **State Board** | Montana Board of Barbers and Cosmetologists |
 | **License Name** | Barber |
 | **Theory Exam Required** | Yes |
 | **Practical Exam Required** | Yes |
+
+---
+
+## Examination Structure
+
+Montana Board material establishes updated NIC barber examinations administered through Prov.
+
+### Confirmed Exam Tracks
+
+| Track | Components | Confidence |
+|-------|------------|------------|
+| **Barber 1 (Chemical)** | Theory + Practical | CONFIRMED |
+| **Barber Styling (Nonchemical)** | Theory + Practical | CONFIRMED |
+
+### Updated Examination Effective Date
+
+| Field | Value | Confidence |
+|-------|-------|------------|
+| **Updated NIC Examinations Effective** | January 1, 2026 | CONFIRMED |
 
 ---
 
@@ -23,7 +42,8 @@
 | Field | Value | Confidence |
 |-------|-------|------------|
 | **Exam Developer** | NIC | CONFIRMED |
-| **Exam Administrator** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **Exam Administrator** | Prov | CONFIRMED |
+| **Exam Name** | NIC Barber 1 / Barber Styling Theory | CONFIRMED |
 | **Passing Standard** | 75% | CONFIRMED |
 
 ---
@@ -33,22 +53,9 @@
 | Field | Value | Confidence |
 |-------|-------|------------|
 | **Practical Required** | Yes | CONFIRMED |
-| **Practical Administrator** | UNKNOWN / REQUIRES VERIFICATION — transition involving Prometric and DL Roope | PARTIAL |
+| **Practical Developer** | NIC | CONFIRMED |
+| **Practical Administrator** | Prov | CONFIRMED |
 | **Passing Standard** | 75% | CONFIRMED |
-
----
-
-## Administrator Transition
-
-Current evidence indicates a practical-administration transition involving Prometric and DL Roope.
-
-| Field | Value | Confidence |
-|-------|-------|------------|
-| **Transition Involving** | Prometric and DL Roope | PARTIAL |
-| **Effective Date** | UNKNOWN / REQUIRES VERIFICATION | — |
-| **Current Administrator** | UNKNOWN / REQUIRES VERIFICATION | — |
-
-**Guardrail:** Do not overwrite prior administrator records. Preserve vendor transitions when confirmed.
 
 ---
 
@@ -57,9 +64,9 @@ Current evidence indicates a practical-administration transition involving Prome
 | Field | Value | Status |
 |-------|-------|--------|
 | **CIB Source** | NIC | CONFIRMED |
-| **CIB URL** | UNKNOWN / REQUIRES VERIFICATION | PENDING |
-| **CIB Version** | UNKNOWN / REQUIRES VERIFICATION | PENDING |
-| **Effective Date** | UNKNOWN / REQUIRES VERIFICATION | PENDING |
+| **CIB URL** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **CIB Version** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **Effective Date** | 2026-01-01 (updated examinations) | CONFIRMED |
 
 ---
 
@@ -68,24 +75,38 @@ Current evidence indicates a practical-administration transition involving Prome
 | Field | Value | Status |
 |-------|-------|--------|
 | **Blueprint Source** | NIC | CONFIRMED |
-| **Domain Structure** | UNKNOWN / REQUIRES VERIFICATION | PENDING |
-| **Domain Weights** | UNKNOWN / REQUIRES VERIFICATION | PENDING |
+| **Domain Structure** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **Domain Weights** | UNKNOWN / REQUIRES VERIFICATION | — |
+
+---
+
+## Architecture Implication
+
+Montana reinforces:
+
+```
+State → Profession → License/Exam Track → Exam Components
+```
+
+rather than:
+
+```
+State → One Barber Exam
+```
 
 ---
 
 ## Fields Requiring Verification
 
-- Exact current theory administrator
-- Exact current practical administrator
-- Effective date of administrator transition
-- Current barber-specific CIB
-- Complete administrator split
+- Current barber-specific CIB version
+- Complete blueprint details
+- Historical administrator transition details (Prometric/DL Roope)
 
 ---
 
 ## ASCYN PRO Implication
 
-Montana's administrator transition (Prometric/DL Roope) is another example of why vendor history must be preserved. The 75% passing standard for both theory and practical is higher than many states. NIC content is confirmed for both theory and practical.
+Montana uses **NIC content via Prov** with two distinct barber examination tracks (Barber 1 Chemical and Barber Styling Nonchemical). Updated NIC examinations became effective January 1, 2026. The 75% passing standard applies to both theory and practical.
 
 ---
 
@@ -93,8 +114,9 @@ Montana's administrator transition (Prometric/DL Roope) is another example of wh
 
 | Source | Type | Date Accessed | Confidence |
 |--------|------|---------------|------------|
-| Montana state regulatory material | State licensing board | 2026-08-14 | CONFIRMED |
+| Montana Board of Barbers and Cosmetologists | State licensing board | 2026-08-14 | CONFIRMED |
 | NIC examination materials | Exam developer | 2026-08-14 | CONFIRMED |
+| Prov examination information | Exam administrator | 2026-08-14 | CONFIRMED |
 
 ---
 
@@ -102,8 +124,8 @@ Montana's administrator transition (Prometric/DL Roope) is another example of wh
 
 | Item | Frequency | Reason |
 |------|-----------|--------|
-| Administrator transition | High priority | Confirm current administrator |
-| CIB/blueprint | High priority | Required for curriculum alignment |
+| CIB version | High priority | Required for curriculum alignment |
+| Blueprint details | High priority | Required for curriculum alignment |
 
 ---
 

@@ -3,7 +3,7 @@
 **State:** Missouri  
 **License Type:** Barber  
 **Research Date:** 2026-08-14  
-**Status:** PARTIAL — Multiple fields require verification
+**Status:** CONFIRMED — Core examination structure established
 
 ---
 
@@ -13,8 +13,29 @@
 |-------|-------|
 | **State Board** | Missouri Board of Cosmetology and Barber Examiners |
 | **License Name** | Barber |
-| **Theory Exam Required** | Yes |
-| **Practical Exam Required** | Yes — identified within current examination structure |
+| **Theory Exam Required** | Yes — Barber Styling Written confirmed |
+| **Practical Exam Required** | Yes — Barber Styling Practical confirmed |
+
+---
+
+## Examination Structure
+
+Current Missouri/Prov examination material establishes barber examination tracks.
+
+### Confirmed Examination Tracks
+
+| Track | Component | Confidence |
+|-------|-----------|------------|
+| **Barber Styling** | Written | CONFIRMED |
+| **Barber Styling** | Practical | CONFIRMED |
+
+### Separate State Law Component
+
+| Component | Administrator | Confidence |
+|-----------|---------------|------------|
+| **State Law Test** | Missouri Board of Cosmetology and Barber Examiners | CONFIRMED |
+
+**Note:** The State Law Test is a separate component from the Prov-administered Barber Styling examinations.
 
 ---
 
@@ -24,9 +45,9 @@
 |-------|-------|------------|
 | **Exam Developer** | UNKNOWN / REQUIRES VERIFICATION | — |
 | **Exam Administrator** | Prov, Inc. | CONFIRMED |
-| **Exam Name** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **Exam Name** | Barber Styling Written | CONFIRMED |
 
-**Note:** Missouri Board material discusses Prov and NIC examinations, but the exact barber theory developer/content relationship is not yet confirmed.
+**Guardrail:** Do NOT infer exact content ownership/developer or passing standards unless authoritative material establishes them.
 
 ---
 
@@ -34,7 +55,7 @@
 
 | Field | Value | Confidence |
 |-------|-------|------------|
-| **Practical Required** | Yes | CONFIRMED |
+| **Practical Required** | Yes — Barber Styling Practical | CONFIRMED |
 | **Practical Administrator** | Prov | CONFIRMED |
 
 ---
@@ -63,17 +84,16 @@
 
 ## Fields Requiring Verification
 
-- Exact current barber examination track
-- Exact barber theory developer/content
-- Exact NIC relationship
+- Exact barber theory developer/content ownership
 - Current barber-specific blueprint
 - Current passing standard
+- Exact NIC relationship (if any)
 
 ---
 
 ## ASCYN PRO Implication
 
-Missouri uses Prov for examination administration with a CIB dated 2026.01.05. The NIC relationship is discussed in Board material but not yet confirmed for the specific barber theory exam. Further research is needed to complete the picture.
+Missouri uses **Prov** for Barber Styling written and practical examinations, with a separate **State Law Test** administered by the Missouri Board. The CIB dated 2026.01.05 is confirmed. The developer/content owner for the Barber Styling examinations requires verification.
 
 ---
 
@@ -91,7 +111,6 @@ Missouri uses Prov for examination administration with a CIB dated 2026.01.05. T
 | Item | Frequency | Reason |
 |------|-----------|--------|
 | Exam developer/content | High priority | Complete initial research |
-| NIC relationship | High priority | Confirm or deny |
 | Blueprint | High priority | Required for curriculum alignment |
 | Passing standard | High priority | Close gap |
 

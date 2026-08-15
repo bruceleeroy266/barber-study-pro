@@ -42,9 +42,9 @@
 
 | Source | Type | URL | Date Accessed | Reliability | Notes |
 |--------|------|-----|---------------|-------------|-------|
-| Arkansas State Board of Barber Examiners | State licensing board | TBD | 2026-08-14 | Highest | Licensing requirements; school/enrollment data |
+| Arkansas State Board of Barber Examiners | State licensing board | TBD | 2026-08-14 | Highest | Board-centered examination; practical + written + oral; 75% passing standard |
 
-**Verification Status:** PARTIAL — Exam developer/administrator not yet confirmed
+**Verification Status:** CONFIRMED — Core examination structure established
 
 ---
 
@@ -271,10 +271,10 @@
 
 | Source | Type | URL | Date Accessed | Reliability | Notes |
 |--------|------|-----|---------------|-------------|-------|
-| Missouri Board of Cosmetology and Barber Examiners | State licensing board | TBD | 2026-08-14 | Highest | CIB 2026.01.05 |
-| Prov examination information | Exam administrator | https://www.provexam.com | 2026-08-14 | Highest | Administration |
+| Missouri Board of Cosmetology and Barber Examiners | State licensing board | TBD | 2026-08-14 | Highest | Barber Styling Written + Practical via Prov; separate State Law Test |
+| Prov examination information | Exam administrator | https://www.provexam.com | 2026-08-14 | Highest | CIB 2026.01.05 |
 
-**Verification Status:** PARTIAL — Developer not yet confirmed
+**Verification Status:** CONFIRMED — Core examination structure established
 
 ---
 
@@ -282,10 +282,11 @@
 
 | Source | Type | URL | Date Accessed | Reliability | Notes |
 |--------|------|-----|---------------|-------------|-------|
-| Montana state regulatory material | State licensing board | TBD | 2026-08-14 | Highest | NIC theory + practical; 75% passing; administrator transition |
+| Montana Board of Barbers and Cosmetologists | State licensing board | TBD | 2026-08-14 | Highest | NIC examinations via Prov; Barber 1 + Barber Styling tracks; updated exams eff. 2026-01-01 |
 | NIC examination materials | Exam developer | https://www.nic.org | 2026-08-14 | Highest | Content developer |
+| Prov examination information | Exam administrator | https://www.provexam.com | 2026-08-14 | Highest | Administration |
 
-**Verification Status:** PARTIAL — Administrator transition not fully resolved
+**Verification Status:** CONFIRMED — Core examination structure established
 
 ---
 
@@ -325,10 +326,10 @@
 
 | Source | Type | URL | Date Accessed | Reliability | Notes |
 |--------|------|-----|---------------|-------------|-------|
-| New Jersey state licensing information | State licensing board | TBD | 2026-08-14 | Highest | Prometric/IQT network |
-| Prometric / IQT examination information | Exam administrator | https://www.prometric.com | 2026-08-14 | Highest | NJ Barber CIB identified |
+| New Jersey State Board of Cosmetology and Hairstyling | State licensing board | TBD | 2026-08-14 | Highest | Prometric administers written; Board practical separate; $53 fee eff. 2023-12-01 |
+| Prometric examination information | Exam administrator | https://www.prometric.com | 2026-08-14 | Highest | NJ Barber CIB identified |
 
-**Verification Status:** PARTIAL — Developer and practical not yet confirmed
+**Verification Status:** CONFIRMED — Core examination structure established
 
 ---
 
@@ -368,10 +369,10 @@
 
 | Source | Type | URL | Date Accessed | Reliability | Notes |
 |--------|------|-----|---------------|-------------|-------|
-| North Dakota Board of Barber Examiners | State licensing board | TBD | 2026-08-14 | Highest | State-controlled examination structure |
-| North Dakota state law | Statutory authority | TBD | 2026-08-14 | Highest | Apprentice/registered-barber concepts |
+| North Dakota Board of Barber Examiners | State licensing board | TBD | 2026-08-14 | Highest | Board-centered examination; Master Barber License Exam Instructions; written + practical + oral |
+| North Dakota state law | Statutory authority | TBD | 2026-08-14 | Highest | Oral examination required by statute |
 
-**Verification Status:** PARTIAL — Exam components not yet confirmed
+**Verification Status:** CONFIRMED — Core examination structure established
 
 ---
 

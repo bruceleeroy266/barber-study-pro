@@ -46,23 +46,23 @@ National barber licensing research covering:
 
 ## State Research
 
-### Batch 1 — Confirmed (7)
+### Batch 1 — Confirmed (8)
 
 | State | License Type | Exam Developer | Administrator | Status | Documentation |
 |-------|--------------|----------------|---------------|--------|---------------|
 | [Alabama](state-research/alabama.md) | Barber | PSI | PSI | CONFIRMED | ✅ Active |
 | [Alaska](state-research/alaska.md) | Barber (multiple tracks) | NIC | Prov | CONFIRMED | ✅ Active |
 | [Arizona](state-research/arizona.md) | Barber | NIC | PCS | CONFIRMED | ✅ Active |
+| [Arkansas](state-research/arkansas.md) | Barber | UNKNOWN / REQUIRES VERIFICATION | Arkansas State Board of Barber Examiners | CONFIRMED | ✅ Active |
 | [California](state-research/california.md) | Barber | PSI | PSI | CONFIRMED | ✅ Active |
 | [Colorado](state-research/colorado.md) | Barber | PSI | PSI | CONFIRMED | ✅ Active |
 | [Delaware](state-research/delaware.md) | Barber (multiple tracks) | NIC | Prometric | CONFIRMED | ✅ Active |
 | [Georgia](state-research/georgia.md) | Master Barber | PSI | PSI | CONFIRMED | ✅ Active |
 
-### Batch 1 — Partial (3)
+### Batch 1 — Partial (2)
 
 | State | License Type | Exam Developer | Administrator | Status | Documentation |
 |-------|--------------|----------------|---------------|--------|---------------|
-| [Arkansas](state-research/arkansas.md) | Barber | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | PARTIAL | ✅ Active |
 | [Connecticut](state-research/connecticut.md) | Barber | UNKNOWN / REQUIRES VERIFICATION | Prometric | CONFIRMED | ✅ Active |
 | [Florida](state-research/florida.md) | Barber / Restricted Barber | UNKNOWN / REQUIRES VERIFICATION | Pearson VUE | CONFIRMED | ✅ Active |
 
@@ -86,7 +86,7 @@ National barber licensing research covering:
 | [Iowa](state-research/iowa.md) | Barber | NIC/national (recognized) | UNKNOWN / REQUIRES VERIFICATION | PARTIAL | ✅ Active |
 | [Louisiana](state-research/louisiana.md) | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | PARTIAL | ✅ Active |
 
-### Batch 3 — Confirmed (7)
+### Batch 3 — Confirmed (8)
 
 | State | License Type | Exam Developer | Administrator | Status | Documentation |
 |-------|--------------|----------------|---------------|--------|---------------|
@@ -94,36 +94,36 @@ National barber licensing research covering:
 | [Michigan](state-research/michigan.md) | Barber | PSI | PSI | CONFIRMED | ✅ Active |
 | [Minnesota](state-research/minnesota.md) | Barber | Minnesota (state-controlled) | Minnesota Board | CONFIRMED | ✅ Active |
 | [Mississippi](state-research/mississippi.md) | Barber | NIC + Mississippi Board | Mississippi Board | CONFIRMED | ✅ Active |
+| [Missouri](state-research/missouri.md) | Barber | UNKNOWN / REQUIRES VERIFICATION | Prov | CONFIRMED | ✅ Active |
+| [Montana](state-research/montana.md) | Barber | NIC | Prov | CONFIRMED | ✅ Active |
 | [Nebraska](state-research/nebraska.md) | Barber | Nebraska (state) | Nebraska Board | CONFIRMED | ✅ Active |
 | [Nevada](state-research/nevada.md) | Barber | Nevada (state-specific) | Nevada Board | CONFIRMED | ✅ Active |
 | [New Hampshire](state-research/new-hampshire.md) | Barber / Master Barber | NIC | Prov | CONFIRMED | ✅ Active |
 
-### Batch 3 — Partial (3)
+### Batch 3 — Partial (1)
 
 | State | License Type | Exam Developer | Administrator | Status | Documentation |
 |-------|--------------|----------------|---------------|--------|---------------|
-| [Missouri](state-research/missouri.md) | Barber | UNKNOWN / REQUIRES VERIFICATION | Prov | PARTIAL | ✅ Active |
-| [Montana](state-research/montana.md) | Barber | NIC | UNKNOWN / REQUIRES VERIFICATION | PARTIAL | ✅ Active |
-| [New Jersey](state-research/new-jersey.md) | Barber | UNKNOWN / REQUIRES VERIFICATION | Prometric / IQT | PARTIAL | ✅ Active |
+| [New Jersey](state-research/new-jersey.md) | Barber | UNKNOWN / REQUIRES VERIFICATION | Prometric | CONFIRMED | ✅ Active |
 
-### Batch 4 — Confirmed (6)
+### Batch 4 — Confirmed (7)
 
 | State | License Type | Exam Developer | Administrator | Status | Documentation |
 |-------|--------------|----------------|---------------|--------|---------------|
 | [New Mexico](state-research/new-mexico.md) | Barber | NIC | PCS | CONFIRMED | ✅ Active |
+| [New York](state-research/new-york.md) | Barber Operator | UNKNOWN / REQUIRES VERIFICATION | New York Department of State | CONFIRMED | ✅ Active |
+| [North Carolina](state-research/north-carolina.md) | Barber (multi-stage) | UNKNOWN / REQUIRES VERIFICATION | North Carolina Board | CONFIRMED | ✅ Active |
+| [North Dakota](state-research/north-dakota.md) | Barber | UNKNOWN / REQUIRES VERIFICATION | North Dakota Board | CONFIRMED | ✅ Active |
 | [Ohio](state-research/ohio.md) | Barber | Ohio (state) | Ohio State Cosmetology and Barber Board | CONFIRMED | ✅ Active |
 | [Oklahoma](state-research/oklahoma.md) | Barber | NIC | Prov | CONFIRMED | ✅ Active |
 | [Oregon](state-research/oregon.md) | Barber | Oregon (state) | Oregon Health Licensing Office | CONFIRMED | ✅ Active |
 | [Pennsylvania](state-research/pennsylvania.md) | Barber | Pearson VUE | Pearson VUE | CONFIRMED | ✅ Active |
 | [South Carolina](state-research/south-carolina.md) | Barber | NIC | Prov | CONFIRMED | ✅ Active |
 
-### Batch 4 — Partial (4)
+### Batch 4 — Partial (1)
 
 | State | License Type | Exam Developer | Administrator | Status | Documentation |
 |-------|--------------|----------------|---------------|--------|---------------|
-| [New York](state-research/new-york.md) | Barber Operator | UNKNOWN / REQUIRES VERIFICATION | New York Department of State | CONFIRMED | ✅ Active |
-| [North Carolina](state-research/north-carolina.md) | Barber (multi-stage) | UNKNOWN / REQUIRES VERIFICATION | North Carolina Board | CONFIRMED | ✅ Active |
-| [North Dakota](state-research/north-dakota.md) | Barber (multi-stage) | UNKNOWN / REQUIRES VERIFICATION | North Dakota Board | PARTIAL | ✅ Active |
 | [Rhode Island](state-research/rhode-island.md) | Barber Stylist | UNKNOWN / REQUIRES VERIFICATION | PSI | PARTIAL | ✅ Active |
 
 ### Batch 5 — Confirmed (8)
@@ -243,4 +243,5 @@ See [Licensing Sources](../sources/licensing-sources.md) and [State Sources](../
 *Last Updated: 2026-08-14*
 *Batch 5 Archived: 2026-08-14*
 *Closure Batch 1 Archived: 2026-08-14*
+*Closure Batch 2 Archived: 2026-08-14*
 *National Research Complete: 50 of 50 states*
