@@ -424,10 +424,10 @@
 
 | Source | Type | URL | Date Accessed | Reliability | Notes |
 |--------|------|-----|---------------|-------------|-------|
-| Rhode Island Department of Health | State licensing authority | TBD | 2026-08-14 | Highest | Licensing requirements |
-| PSI examination information | Exam administrator | https://www.psiexams.com | 2026-08-14 | Highest | Barber Stylist Theory administration |
+| Rhode Island Department of Health | State licensing authority | TBD | 2026-08-14 | Highest | Licensing requirements; Barber Stylist examination structure |
+| PSI examination information | Exam administrator | https://www.psiexams.com | 2026-08-14 | Highest | Barber Stylist Theory administration since 2015-11-01; directs candidates to NIC materials |
 
-**Verification Status:** PARTIAL — Developer and practical not yet confirmed
+**Verification Status:** CONFIRMED — Core examination structure established
 
 ---
 
@@ -492,10 +492,12 @@
 
 | Source | Type | URL | Date Accessed | Reliability | Notes |
 |--------|------|-----|---------------|-------------|-------|
-| NIC jurisdiction information | Exam developer | https://www.nic.org | 2026-08-14 | Highest | Prov association |
-| Vermont Office of Professional Regulation | State licensing authority | TBD | 2026-08-14 | Highest | Barbers & Cosmetologists program |
+| Vermont Office of Professional Regulation | State licensing authority | TBD | 2026-08-14 | Highest | Prov transition eff. 2023-11-01; Barber & Cosmetology program |
+| Prov examination information | Exam administrator | https://www.provexam.com | 2026-08-14 | Highest | Current administrator of NIC examinations |
+| Vermont Barber & Cosmetology CIB — 2026.01.05 | Official CIB | TBD | 2026-08-14 | Highest | Theory: testing center OR remote; Practical: remote |
+| NIC examination materials | Exam developer | https://www.nic.org | 2026-08-14 | Highest | Examination content developer |
 
-**Verification Status:** PARTIAL — Limited first-party confirmation
+**Verification Status:** CONFIRMED — Core examination structure established
 
 ---
 
@@ -528,12 +530,14 @@
 
 | Source | Type | URL | Date Accessed | Reliability | Notes |
 |--------|------|-----|---------------|-------------|-------|
-| West Virginia Board of Barbers and Cosmetologists | State licensing board | TBD | 2026-08-14 | Highest | Multiple provider footprints |
-| Prov examination information | Exam administrator | https://www.provexam.com | 2026-08-14 | Highest | 2026 CIB identified |
-| DL Roope/Prometric information | Exam administrator | TBD | 2026-08-14 | Highest | Barber 1 (No Chemical) pathway |
-| NIC examination materials | Exam developer | https://www.nic.org | 2026-08-14 | Highest | NIC Barber 1 |
+| West Virginia Board of Barbers and Cosmetologists | State licensing board | TBD | 2026-08-14 | Highest | Barber 1 and Barber Styling tracks; Series 1 eff. 2024-05-08 |
+| Prov examination information | Exam administrator | https://www.provexam.com | 2026-08-14 | Highest | Current administrator; CIB 2025.12.01 |
+| West Virginia Barber & Cosmetology CIB — 2025.12.01 | Official CIB | TBD | 2026-08-14 | Highest | Current examination bulletin |
+| West Virginia Series 1 regulation | Regulatory authority | TBD | 2026-08-14 | Highest | Procedures, Criteria, and Curricula for Examination and Licensure eff. 2024-05-08 |
+| DL Roope historical information | Previous administrator | TBD | 2026-08-14 | Highest | Historical administrator with NIC-related materials |
+| NIC examination materials | Exam developer | https://www.nic.org | 2026-08-14 | Highest | Historical examination content |
 
-**Verification Status:** PARTIAL — Track/provider relationships not resolved
+**Verification Status:** CONFIRMED — Core examination structure established
 
 ---
 

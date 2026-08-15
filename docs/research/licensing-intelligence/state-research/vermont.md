@@ -3,7 +3,7 @@
 **State:** Vermont  
 **License Type:** Barber (Barbers & Cosmetologists program)  
 **Research Date:** 2026-08-14  
-**Status:** PARTIAL
+**Status:** CONFIRMED
 
 ---
 
@@ -12,19 +12,57 @@
 | Field | Value |
 |-------|-------|
 | **State Board** | Vermont Office of Professional Regulation — Barbers & Cosmetologists |
-| **License Name** | UNKNOWN / REQUIRES VERIFICATION |
-| **Theory Exam Required** | UNKNOWN / REQUIRES VERIFICATION |
-| **Practical Exam Required** | UNKNOWN / REQUIRES VERIFICATION |
+| **License Name** | Barber Stylist |
+| **Theory Exam Required** | Yes |
+| **Practical Exam Required** | Yes |
 
 ---
 
 ## Confirmed Information
 
-Current NIC jurisdiction information associates Vermont's Barbers & Cosmetologists program with:
+### Examination Administrator Transition
 
 | Field | Value | Confidence |
 |-------|-------|------------|
-| **Exam Administrator** | Prov | CONFIRMED |
+| **Transition Date** | November 1, 2023 | CONFIRMED |
+| **Current Administrator** | Prov, Inc. | CONFIRMED |
+| **Examination Content** | NIC examinations | CONFIRMED |
+
+### Current CIB
+
+| Field | Value | Confidence |
+|-------|-------|------------|
+| **CIB Version** | Vermont Barber & Cosmetology CIB — 2026.01.05 | CONFIRMED |
+| **Contracted Administrator** | Prov, Inc. | CONFIRMED |
+| **Examination Content** | NIC examinations including Barber Stylist | CONFIRMED |
+
+### Required Components
+
+Barber Stylist candidates must pass:
+
+| Component | Required |
+|-----------|----------|
+| Theory | Yes |
+| Practical | Yes |
+
+### Delivery Methods
+
+| Component | Delivery Method | Confidence |
+|-----------|---------------|------------|
+| **Theory** | Testing center OR remote | CONFIRMED |
+| **Practical** | Remote | CONFIRMED |
+
+**Important:** Preserve examination component and examination delivery method as separate research concepts.
+
+---
+
+## Historical Passing Standard Guardrail
+
+Historical Vermont/PCS materials identified a **75** passing standard.
+
+**DO NOT automatically assign that historical standard to the current Prov examination system without current authoritative confirmation.**
+
+Record historical information separately from current requirements.
 
 ---
 
@@ -32,23 +70,19 @@ Current NIC jurisdiction information associates Vermont's Barbers & Cosmetologis
 
 | Field | Status | Notes |
 |-------|--------|-------|
-| **Exact current barber license track** | UNKNOWN / REQUIRES VERIFICATION | Not confirmed |
-| **Theory requirement** | UNKNOWN / REQUIRES VERIFICATION | Not confirmed |
-| **Practical requirement** | UNKNOWN / REQUIRES VERIFICATION | Not confirmed |
-| **Exact exam developer/content** | UNKNOWN / REQUIRES VERIFICATION | Do NOT infer from administrator |
-| **Administrator relationship from Vermont first-party material** | UNKNOWN / REQUIRES VERIFICATION | NIC jurisdiction map only |
-| **CIB** | UNKNOWN / REQUIRES VERIFICATION | No CIB identified |
-| **Blueprint** | UNKNOWN / REQUIRES VERIFICATION | No blueprint identified |
-| **Passing standard** | UNKNOWN / REQUIRES VERIFICATION | Not published |
-| **Exam version/effective date** | UNKNOWN / REQUIRES VERIFICATION | Not identified |
-
-**Do NOT convert a national jurisdiction map into claims beyond what it actually establishes.**
+| **Current Passing Standard** | UNKNOWN / REQUIRES VERIFICATION | Historical 75% under PCS; do NOT carry forward to Prov without confirmation |
+| **Current Blueprint** | UNKNOWN / REQUIRES VERIFICATION | No blueprint identified |
+| **Exam Developer/Content Ownership** | UNKNOWN / REQUIRES VERIFICATION | NIC content via Prov; do not infer beyond evidence |
+| **Historical CIB versions** | UNKNOWN / REQUIRES VERIFICATION | Pre-2026.01.05 versions not identified |
 
 ---
 
 ## Architecture / Research Implication
 
-Vermont demonstrates the risk of inferring examination details from national jurisdiction maps without first-party state confirmation.
+Vermont demonstrates:
+1. **Vendor transitions require effective dates** — Prov transition eff. 2023-11-01
+2. **Remote practical examinations exist** — Current CIB establishes remote delivery of Barber Stylist practical
+3. **Historical passing standards must not automatically carry forward** — 75% under PCS ≠ confirmed under Prov
 
 ---
 
@@ -56,8 +90,10 @@ Vermont demonstrates the risk of inferring examination details from national jur
 
 | Source | Type | Date Accessed | Confidence |
 |--------|------|---------------|------------|
-| NIC jurisdiction information | Exam developer | 2026-08-14 | CONFIRMED |
-| Vermont Office of Professional Regulation | State licensing authority | 2026-08-14 | PARTIAL |
+| Vermont Office of Professional Regulation | State licensing authority | 2026-08-14 | CONFIRMED |
+| Prov examination information | Exam administrator | 2026-08-14 | CONFIRMED |
+| Vermont Barber & Cosmetology CIB — 2026.01.05 | Official CIB | 2026-08-14 | CONFIRMED |
+| NIC examination materials | Exam developer | 2026-08-14 | CONFIRMED |
 
 ---
 
@@ -65,9 +101,9 @@ Vermont demonstrates the risk of inferring examination details from national jur
 
 | Item | Frequency | Reason |
 |------|-----------|--------|
-| License track | Next research batch | Confirm exact credential |
-| Exam requirements | Next research batch | Confirm theory and practical |
-| CIB/blueprint | Next research batch | Locate official documentation |
+| Current passing standard | Next research batch | Confirm under Prov system |
+| Blueprint | Next research batch | Locate official documentation |
+| Historical CIB versions | As needed | Archive pre-2026.01.05 versions |
 
 ---
 

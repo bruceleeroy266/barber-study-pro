@@ -447,7 +447,66 @@ Idaho Board material establishes that:
 
 ---
 
-### Updated Examination-Type Taxonomy (Batches 1–5 + Closure Batch 1 + Closure Batch 2 + Closure Batch 3)
+### FINDING 33 — PRACTICAL EXAMINATIONS CAN BE ADMINISTERED REMOTELY (Closure Batch 4)
+
+Vermont's current Prov CIB establishes **remote delivery** of the Barber Stylist practical examination.
+
+**Implication:** Preserve **Practical Examination** separately from **Practical Examination Delivery Method**. Do NOT assume practical examinations require in-person delivery.
+
+**Status:** RESEARCH ONLY — Do NOT implement architecture changes.
+
+---
+
+### FINDING 34 — EXAMINATION DELIVERY METHOD IS A DISTINCT ATTRIBUTE (Closure Batch 4)
+
+National research now demonstrates examination components may be delivered through different methods.
+
+**Potential research taxonomy includes:**
+- In-person testing center
+- Remote examination
+- Board-administered
+- School-administered
+- Other verified delivery structures
+
+**Implication:** Do NOT implement architecture changes. Preserve delivery method as a distinct research attribute.
+
+**Status:** RESEARCH ONLY — Do NOT implement architecture changes.
+
+---
+
+### FINDING 35 — HISTORICAL PASSING STANDARDS MUST NOT AUTOMATICALLY CARRY INTO NEW EXAM SYSTEMS (Closure Batch 4)
+
+Vermont demonstrates that a historically verified passing standard under one examination/vendor structure does NOT automatically prove the same passing standard under a later provider/version.
+
+**Preserve:**
+- Provider
+- Exam Version
+- Passing Standard
+- Effective Date
+
+as conceptually distinct/version-aware research attributes.
+
+**Implication:** Do NOT implement. Research only.
+
+**Status:** RESEARCH ONLY — Do NOT implement architecture changes.
+
+---
+
+### FINDING 36 — HISTORICAL PROVIDER RELATIONSHIPS MUST BE PRESERVED (Closure Batch 4)
+
+West Virginia demonstrates:
+- **Historical administrator:** DL Roope
+- **Current administrator:** Prov
+
+Provider changes should eventually be represented historically rather than overwriting prior relationships.
+
+**Implication:** Research only. Do NOT implement.
+
+**Status:** RESEARCH ONLY — Do NOT implement architecture changes.
+
+---
+
+### Updated Examination-Type Taxonomy (Batches 1–5 + Closure Batch 1 + Closure Batch 2 + Closure Batch 3 + Closure Batch 4)
 
 - Theory / Written
 - Practical
@@ -464,7 +523,7 @@ Idaho Board material establishes that:
 
 ---
 
-### Updated Research Taxonomy (Batches 1–5 + Closure Batch 1 + Closure Batch 2 + Closure Batch 3)
+### Updated Research Taxonomy (Batches 1–5 + Closure Batch 1 + Closure Batch 2 + Closure Batch 3 + Closure Batch 4)
 
 Based on all research to date, the current research taxonomy is:
 
@@ -492,11 +551,11 @@ Jurisdiction / State
 
 ---
 
-### Developer/Administrator Patterns Identified (Batches 1–5 + Closure Batch 1 + Closure Batch 2 + Closure Batch 3)
+### Developer/Administrator Patterns Identified (Batches 1–5 + Closure Batch 1 + Closure Batch 2 + Closure Batch 3 + Closure Batch 4)
 
 | Pattern | Developer | Administrator | States |
 |---------|-----------|---------------|--------|
-| NIC + Prov | NIC | Prov | Alaska, Maine, Montana, New Hampshire, Oklahoma, South Carolina, Utah, Virginia, Washington |
+| NIC + Prov | NIC | Prov | Alaska, Maine, Montana, New Hampshire, Oklahoma, South Carolina, Utah, Vermont, Virginia, Washington |
 | NIC + PCS | NIC | PCS | Arizona, New Mexico |
 | NIC + Prometric | NIC | Prometric | Connecticut, Delaware |
 | NIC + CTS + PSI (four-role) | NIC | CTS (application) + PSI (delivery) | Illinois |
@@ -515,7 +574,7 @@ Jurisdiction / State
 | State-specific + school-administered practical | State | School | Oregon |
 | NIC + Prov (likely, unconfirmed) | NIC | Prov | Idaho |
 | Vendor transition | UNKNOWN | Prometric → PSI | Hawaii |
-| Vendor transition | NIC | DL Roope → Prov | Washington |
+| Vendor transition | NIC | DL Roope → Prov | Washington, West Virginia |
 | Vendor transition | NIC | UNKNOWN → Prov | Virginia |
 | Prometric | UNKNOWN | Prometric | New Jersey |
 | Multiple provider footprints | NIC | UNKNOWN (multiple) | West Virginia |
@@ -719,3 +778,4 @@ Jurisdiction / State
 *Closure Batch 1 Archived: 2026-08-14*
 *Closure Batch 2 Archived: 2026-08-14*
 *Closure Batch 3 Archived: 2026-08-14*
+*Closure Batch 4 Archived: 2026-08-14*

@@ -120,11 +120,9 @@ National barber licensing research covering:
 | [Pennsylvania](state-research/pennsylvania.md) | Barber | Pearson VUE | Pearson VUE | CONFIRMED | ✅ Active |
 | [South Carolina](state-research/south-carolina.md) | Barber | NIC | Prov | CONFIRMED | ✅ Active |
 
-### Batch 4 — Partial (1)
+### Batch 4 — Partial (0)
 
-| State | License Type | Exam Developer | Administrator | Status | Documentation |
-|-------|--------------|----------------|---------------|--------|---------------|
-| [Rhode Island](state-research/rhode-island.md) | Barber Stylist | UNKNOWN / REQUIRES VERIFICATION | PSI | PARTIAL | ✅ Active |
+No states remain in PARTIAL status after Closure Batch 4.
 
 ### Batch 5 — Confirmed (8)
 
@@ -139,12 +137,9 @@ National barber licensing research covering:
 | [Wisconsin](state-research/wisconsin.md) | Barber | NIC | DL Roope | CONFIRMED | ✅ Active |
 | [Wyoming](state-research/wyoming.md) | Barber (multiple tracks) | NIC | Prov | CONFIRMED | ✅ Active |
 
-### Batch 5 — Partial (2)
+### Batch 5 — Partial (0)
 
-| State | License Type | Exam Developer | Administrator | Status | Documentation |
-|-------|--------------|----------------|---------------|--------|---------------|
-| [Vermont](state-research/vermont.md) | Barber | UNKNOWN / REQUIRES VERIFICATION | Prov | PARTIAL | ✅ Active |
-| [West Virginia](state-research/west-virginia.md) | Barber (multiple tracks) | NIC | UNKNOWN / REQUIRES VERIFICATION | PARTIAL | ✅ Active |
+No states remain in PARTIAL status after Closure Batch 4.
 
 ### Pre-Batch 1 — Partial
 
@@ -245,4 +240,6 @@ See [Licensing Sources](../sources/licensing-sources.md) and [State Sources](../
 *Closure Batch 1 Archived: 2026-08-14*
 *Closure Batch 2 Archived: 2026-08-14*
 *Closure Batch 3 Archived: 2026-08-14*
+*Closure Batch 4 Archived: 2026-08-14*
 *National Research Complete: 50 of 50 states*
+*State-Level Closure Phase Complete: 2026-08-14*

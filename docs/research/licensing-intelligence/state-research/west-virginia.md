@@ -3,7 +3,7 @@
 **State:** West Virginia  
 **License Type:** Barber (multiple tracks)  
 **Research Date:** 2026-08-14  
-**Status:** PARTIAL
+**Status:** CONFIRMED
 
 ---
 
@@ -12,43 +12,71 @@
 | Field | Value |
 |-------|-------|
 | **State Board** | West Virginia Board of Barbers and Cosmetologists |
-| **License Tracks** | Multiple tracks identified |
+| **License Tracks** | Barber 1, Barber Styling |
 | **Theory Exam Required** | Yes |
 | **Practical Exam Required** | Yes |
 
 ---
 
-## Current Research Findings
+## Current Administrator
 
-West Virginia requires careful treatment because current research shows **multiple examination/provider footprints**.
-
-### Prov Track
-
-A current **2026 Prov West Virginia Barber & Cosmetology CIB** was identified.
-
-Prov examination infrastructure includes:
-- Computer-based written examination options
-- Remote written examination options
-
-### DL Roope/Prometric Track
-
-Current DL Roope/Prometric-related material also identifies a:
-
-**West Virginia Barber 1 (No Chemical)** pathway using:
-- NIC Barber 1 written
-- NIC Barber 1 practical
+| Field | Value | Confidence |
+|-------|-------|------------|
+| **Current Administrator** | Prov | CONFIRMED |
 
 ---
 
-## Important Guardrail
+## Current Barber Examination Tracks
 
-**Do NOT collapse these findings into:**
+### Barber 1
 
-```
-West Virginia → One Provider
-```
+| Component | Required |
+|-----------|----------|
+| Theory | Yes |
+| Practical | Yes |
 
-**until current license-track/provider relationships are resolved.**
+### Barber Styling
+
+| Component | Required |
+|-----------|----------|
+| Theory | Yes |
+| Practical | Yes |
+
+---
+
+## Current CIB
+
+| Field | Value | Confidence |
+|-------|-------|------------|
+| **CIB Version** | West Virginia Barber & Cosmetology CIB — 2025.12.01 | CONFIRMED |
+
+---
+
+## Current Regulatory Record
+
+| Field | Value | Confidence |
+|-------|-------|------------|
+| **Regulation** | Series 1 — Procedures, Criteria, and Curricula for Examination and Licensure | CONFIRMED |
+| **Effective Date** | May 8, 2024 | CONFIRMED |
+
+---
+
+## Historical Provider
+
+| Field | Value | Confidence |
+|-------|-------|------------|
+| **Historical Administrator** | DL Roope | CONFIRMED |
+| **Historical Relationship** | NIC-related examination materials | CONFIRMED |
+
+**Preserve Historical Administrator separately from Current Administrator.**
+
+---
+
+## Guardrail
+
+**Do NOT infer a current passing standard if authoritative current evidence does not establish one.**
+
+Preserve unsupported blueprint/content fields as UNKNOWN.
 
 ---
 
@@ -56,21 +84,20 @@ West Virginia → One Provider
 
 | Field | Status | Notes |
 |-------|--------|-------|
-| **Which current barber license track uses Prov** | UNKNOWN / REQUIRES VERIFICATION | Not resolved |
-| **Which current barber license track uses DL Roope/Prometric** | UNKNOWN / REQUIRES VERIFICATION | If still applicable |
-| **Current administrator by track** | UNKNOWN / REQUIRES VERIFICATION | Not resolved |
-| **Current practical administrator by track** | UNKNOWN / REQUIRES VERIFICATION | Not resolved |
-| **Transition/effective dates** | UNKNOWN / REQUIRES VERIFICATION | Not resolved |
-| **Current CIB by license track** | UNKNOWN / REQUIRES VERIFICATION | Not resolved |
-| **Passing standards** | UNKNOWN / REQUIRES VERIFICATION | Not resolved |
+| **Current Passing Standard** | UNKNOWN / REQUIRES VERIFICATION | Not established in current authoritative evidence |
+| **Current Blueprint** | UNKNOWN / REQUIRES VERIFICATION | No blueprint identified |
+| **Exam Developer/Content Ownership** | UNKNOWN / REQUIRES VERIFICATION | NIC historical relationship; current content ownership requires verification |
+| **Practical Delivery Method** | UNKNOWN / REQUIRES VERIFICATION | Not confirmed |
+| **Historical CIB versions** | UNKNOWN / REQUIRES VERIFICATION | Pre-2025.12.01 versions not identified |
 
 ---
 
 ## Architecture / Research Implication
 
-West Virginia reinforces that:
-
-**Provider relationship may be license-track-specific.**
+West Virginia demonstrates:
+1. **Historical provider relationships must be preserved** — DL Roope → Prov transition
+2. **Provider changes should eventually be represented historically** rather than overwriting prior relationships
+3. **Multiple examination tracks may exist** — Barber 1 and Barber Styling
 
 ---
 
@@ -80,7 +107,9 @@ West Virginia reinforces that:
 |--------|------|---------------|------------|
 | West Virginia Board of Barbers and Cosmetologists | State licensing board | 2026-08-14 | CONFIRMED |
 | Prov examination information | Exam administrator | 2026-08-14 | CONFIRMED |
-| DL Roope/Prometric information | Exam administrator | 2026-08-14 | CONFIRMED |
+| West Virginia Barber & Cosmetology CIB — 2025.12.01 | Official CIB | 2026-08-14 | CONFIRMED |
+| West Virginia Series 1 regulation | Regulatory authority | 2026-08-14 | CONFIRMED |
+| DL Roope historical information | Previous administrator | 2026-08-14 | CONFIRMED |
 | NIC examination materials | Exam developer | 2026-08-14 | CONFIRMED |
 
 ---
@@ -89,9 +118,9 @@ West Virginia reinforces that:
 
 | Item | Frequency | Reason |
 |------|-----------|--------|
-| License track/provider relationships | Next research batch | Resolve current structure |
-| CIB by track | Next research batch | Locate official documentation |
-| Passing standards | Next research batch | Confirm standards |
+| Current passing standard | Next research batch | Confirm under current Prov system |
+| Blueprint | Next research batch | Locate official documentation |
+| Historical CIB versions | As needed | Archive pre-2025.12.01 versions |
 
 ---
 
