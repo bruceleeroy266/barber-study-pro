@@ -3,7 +3,7 @@
 **State:** North Carolina  
 **License Type:** Barber (multiple stages)  
 **Research Date:** 2026-08-14  
-**Status:** PARTIAL  
+**Status:** CONFIRMED  
 **Strategic Importance:** HIGH — NABBA research and validation planning
 
 ---
@@ -14,7 +14,7 @@
 |-------|-------|
 | **State Board** | North Carolina Board of Barber Examiners |
 | **License Stages** | Apprentice Barber → Licensed Barber |
-| **Theory Exam Required** | Yes — at Apprentice stage |
+| **Written Exam Required** | Yes — at Apprentice stage |
 | **Practical Exam Required** | Yes — at both stages |
 
 ---
@@ -39,6 +39,8 @@ North Carolina maintains separate examination requirements associated with diffe
 
 **Note:** Current terminology replaces the older "registered barber" terminology with "licensed barber."
 
+"Master Barber" may also appear informally/secondarily in related discussion, but preserve the Board's current terminology.
+
 ---
 
 ## Examination Infrastructure
@@ -51,13 +53,23 @@ The North Carolina Board maintains:
 
 ---
 
+## Passing Standards
+
+### Apprentice Practical Examination
+
+Current Board instructions require:
+
+**At least 70 on each portion of the practical examination.**
+
+---
+
 ## Requires Verification
 
 | Field | Status | Notes |
 |-------|--------|-------|
 | **Apprentice Written Exam Developer** | UNKNOWN / REQUIRES VERIFICATION | Exact developer/content owner not confirmed |
 | **Apprentice Written Blueprint** | UNKNOWN / REQUIRES VERIFICATION | Current blueprint not identified |
-| **Passing Standards** | UNKNOWN / REQUIRES VERIFICATION | Not published in reviewed material |
+| **Written Passing Standard** | UNKNOWN / REQUIRES VERIFICATION | Not published in reviewed material |
 | **Current CIB Version/Effective Date** | UNKNOWN / REQUIRES VERIFICATION | Version not confirmed |
 
 ---
@@ -99,7 +111,8 @@ North Carolina is flagged as strategically important because of current ASCYN PR
 | Item | Frequency | Reason |
 |------|-----------|--------|
 | Written exam developer | Next research batch | Identify content owner |
-| Blueprint | Next research batch | Locate official documentation |
+| Written blueprint | Next research batch | Locate official documentation |
+| Written passing standard | Next research batch | Confirm standard |
 | CIB version | Next research batch | Confirm current version |
 
 ---

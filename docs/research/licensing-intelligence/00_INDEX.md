@@ -63,8 +63,8 @@ National barber licensing research covering:
 | State | License Type | Exam Developer | Administrator | Status | Documentation |
 |-------|--------------|----------------|---------------|--------|---------------|
 | [Arkansas](state-research/arkansas.md) | Barber | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | PARTIAL | ✅ Active |
-| [Connecticut](state-research/connecticut.md) | Barber | NIC | Prometric | PARTIAL | ✅ Active |
-| [Florida](state-research/florida.md) | Barber / Restricted Barber | UNKNOWN / REQUIRES VERIFICATION | Pearson VUE | PARTIAL | ✅ Active |
+| [Connecticut](state-research/connecticut.md) | Barber | UNKNOWN / REQUIRES VERIFICATION | Prometric | CONFIRMED | ✅ Active |
+| [Florida](state-research/florida.md) | Barber / Restricted Barber | UNKNOWN / REQUIRES VERIFICATION | Pearson VUE | CONFIRMED | ✅ Active |
 
 ### Batch 2 — Confirmed (5)
 
@@ -121,8 +121,8 @@ National barber licensing research covering:
 
 | State | License Type | Exam Developer | Administrator | Status | Documentation |
 |-------|--------------|----------------|---------------|--------|---------------|
-| [New York](state-research/new-york.md) | Barber Operator | UNKNOWN / REQUIRES VERIFICATION | New York Department of State | PARTIAL | ✅ Active |
-| [North Carolina](state-research/north-carolina.md) | Barber (multi-stage) | UNKNOWN / REQUIRES VERIFICATION | North Carolina Board | PARTIAL | ✅ Active |
+| [New York](state-research/new-york.md) | Barber Operator | UNKNOWN / REQUIRES VERIFICATION | New York Department of State | CONFIRMED | ✅ Active |
+| [North Carolina](state-research/north-carolina.md) | Barber (multi-stage) | UNKNOWN / REQUIRES VERIFICATION | North Carolina Board | CONFIRMED | ✅ Active |
 | [North Dakota](state-research/north-dakota.md) | Barber (multi-stage) | UNKNOWN / REQUIRES VERIFICATION | North Dakota Board | PARTIAL | ✅ Active |
 | [Rhode Island](state-research/rhode-island.md) | Barber Stylist | UNKNOWN / REQUIRES VERIFICATION | PSI | PARTIAL | ✅ Active |
 
@@ -242,4 +242,5 @@ See [Licensing Sources](../sources/licensing-sources.md) and [State Sources](../
 
 *Last Updated: 2026-08-14*
 *Batch 5 Archived: 2026-08-14*
+*Closure Batch 1 Archived: 2026-08-14*
 *National Research Complete: 50 of 50 states*

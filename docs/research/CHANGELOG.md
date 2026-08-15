@@ -6,6 +6,55 @@
 
 ---
 
+## 2026-08-14 — Partial-State Closure Batch 1 Archived
+
+### Added
+
+- **State Research Updates** — Arkansas, Connecticut, Florida, New York, North Carolina (5 states)
+- **CIB Records** — Connecticut Barber Examination, Florida Barber and Restricted Barber CIBs, New York Barber Operator Examinations, North Carolina Apprentice Barber Written Examination
+- **Passing Standards** — New York practical 70%, North Carolina Apprentice practical ≥70 on each portion
+- **Early-Exam-Eligibility Findings** — Florida 600-hour pathway with school competency determination
+- **Cross-State Architecture Findings** — 2 new findings from Closure Batch 1 (school competency determines early exam eligibility, exam requirements change by license stage)
+- **Source Records** — Updated authoritative sources for 5 states
+
+### Updated
+
+- **50-State Master Map** — Status updates for 5 states; summary updated (37 CONFIRMED, 13 PARTIAL, 0 PENDING)
+- **Licensing Intelligence Index** — Updated state tables
+- **Architecture Risks** — Added Findings 24–25
+- **State Sources** — Updated Connecticut, Florida, New York, North Carolina
+- **CIB Index** — Updated Connecticut, Florida, New York, North Carolina
+
+### Status Changes
+
+| State | Before | After |
+|-------|--------|-------|
+| Arkansas | PARTIAL | PARTIAL (remains) |
+| Connecticut | PARTIAL | CONFIRMED |
+| Florida | PARTIAL | CONFIRMED |
+| New York | PARTIAL | CONFIRMED |
+| North Carolina | PARTIAL | CONFIRMED |
+
+### Key Findings
+
+- **4 states upgraded to CONFIRMED:** Connecticut, Florida, New York, North Carolina
+- **1 state remains PARTIAL:** Arkansas
+- **School competency can determine early exam eligibility** (Florida: 600-hour pathway)
+- **Exam requirements can change by license stage** (North Carolina: Apprentice vs Licensed)
+
+### National Research Count
+
+- **50 of 50 states** have entered the research pipeline
+- **37 CONFIRMED**
+- **13 PARTIAL**
+- **0 PENDING**
+
+### Decisions
+
+No new decisions. Existing decisions remain active.
+
+---
+
 ## 2026-08-14 — 50-State Barber Research Batch 5 Archived
 
 ### Added

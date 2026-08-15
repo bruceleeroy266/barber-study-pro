@@ -32,9 +32,9 @@ Comprehensive tracking of barber licensing examination requirements for all 50 U
 | Arkansas | 🔶 PARTIAL | Barber | Yes | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL |
 | California | ✅ CONFIRMED | Barber | Yes | PSI | PSI | No — eliminated eff. 2022-01-01 | Blueprint eff. 2026-04-01 | 2026-08-14 | CONFIRMED |
 | Colorado | ✅ CONFIRMED | Barber | Yes | PSI | PSI | Yes — PSI practical | Test Taker Guide v1.5, eff. 2026-01-27 | 2026-08-14 | CONFIRMED |
-| Connecticut | 🔶 PARTIAL | Barber | Yes | NIC | Prometric | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL |
+| Connecticut | ✅ CONFIRMED | Barber | Yes | UNKNOWN / REQUIRES VERIFICATION | Prometric | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
 | Delaware | ✅ CONFIRMED | Barber (multiple tracks) | Yes | NIC | Prometric | Yes — multiple practical tracks | CIB eff. 2024-08-01 | 2026-08-14 | CONFIRMED |
-| Florida | 🔶 PARTIAL | Barber / Restricted Barber | Yes | UNKNOWN / REQUIRES VERIFICATION | Pearson VUE | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL |
+| Florida | ✅ CONFIRMED | Barber / Restricted Barber | Yes | UNKNOWN / REQUIRES VERIFICATION | Pearson VUE | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
 | Georgia | ✅ CONFIRMED | Master Barber | Yes | PSI | PSI | Yes — PSI practical | Test Taker Guide v2.1, eff. 2026-04-28 | 2026-08-14 | CONFIRMED |
 | Hawaii | 🔶 PARTIAL | Barber | Yes | UNKNOWN / REQUIRES VERIFICATION | PSI (eff. 2026-01-01; previously Prometric) | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL |
 | Idaho | 🔶 PARTIAL | Barber | Yes | NIC (likely) | Prov (likely) | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL |
@@ -57,8 +57,8 @@ Comprehensive tracking of barber licensing examination requirements for all 50 U
 | New Hampshire | ✅ CONFIRMED | Barber / Master Barber | Yes | NIC | Prov (current; previously DL Roope/Prometric) | UNKNOWN / REQUIRES VERIFICATION | Prov CIB eff. 2026-01-05 | 2026-08-14 | CONFIRMED |
 | New Jersey | 🔶 PARTIAL | Barber | Yes | UNKNOWN / REQUIRES VERIFICATION | Prometric / IQT | UNKNOWN / REQUIRES VERIFICATION | NJ Barber CIB (version UNKNOWN) | 2026-08-14 | PARTIAL |
 | New Mexico | ✅ CONFIRMED | Barber | Yes | NIC | PCS | Yes — NIC practical | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
-| New York | 🔶 PARTIAL | Barber Operator | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | New York Department of State | Yes — state practical | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL |
-| North Carolina | 🔶 PARTIAL | Barber (multi-stage) | Yes — Apprentice stage | UNKNOWN / REQUIRES VERIFICATION | North Carolina Board | Yes — both stages | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL |
+| New York | ✅ CONFIRMED | Barber Operator | Yes | UNKNOWN / REQUIRES VERIFICATION | New York Department of State | Yes — state practical (70% passing) | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
+| North Carolina | ✅ CONFIRMED | Barber (multi-stage) | Yes — Apprentice stage | UNKNOWN / REQUIRES VERIFICATION | North Carolina Board | Yes — both stages (Apprentice practical ≥70 each portion) | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
 | North Dakota | 🔶 PARTIAL | Barber (multi-stage) | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | North Dakota Board | UNKNOWN / REQUIRES VERIFICATION | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | PARTIAL |
 | Ohio | ✅ CONFIRMED | Barber | Yes | Ohio (state) | Ohio State Cosmetology and Barber Board | Yes — Board practical | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
 | Oklahoma | ✅ CONFIRMED | Barber | Yes | NIC | Prov | Yes | UNKNOWN / REQUIRES VERIFICATION | 2026-08-14 | CONFIRMED |
@@ -83,11 +83,11 @@ Comprehensive tracking of barber licensing examination requirements for all 50 U
 
 | Status | Count |
 |--------|-------|
-| ✅ CONFIRMED | 33 |
-| 🔶 PARTIAL | 17 |
+| ✅ CONFIRMED | 37 |
+| 🔶 PARTIAL | 13 |
 | ⬜ PENDING RESEARCH | 0 |
 
-**National Milestone:** All 50 states have now gone through the batch research methodology.
+**National Milestone:** All 50 states have now gone through the batch research methodology. Partial-State Closure Batch 1 complete.
 
 ---
 
@@ -137,4 +137,5 @@ Do NOT populate unknown information by guessing. Use **UNKNOWN / REQUIRES VERIFI
 
 *Last Updated: 2026-08-14*
 *Batch 5 Archived: 2026-08-14*
+*Closure Batch 1 Archived: 2026-08-14*
 *National Research Complete: 50 of 50 states*

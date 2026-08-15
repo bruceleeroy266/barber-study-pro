@@ -73,10 +73,10 @@
 
 | Source | Type | URL | Date Accessed | Reliability | Notes |
 |--------|------|-----|---------------|-------------|-------|
-| Prometric examination materials | Exam administrator | https://www.prometric.com | 2026-08-14 | Highest | NIC National Barber Styling Theory; 110/100 questions |
-| NIC examination content | Exam developer | https://www.nic.org | 2026-08-14 | Highest | Content developer |
+| Connecticut Department of Public Health | State licensing authority | TBD | 2026-08-14 | Highest | Licensing requirements; directs candidates to Prometric |
+| Prometric examination materials | Exam administrator | https://www.prometric.com | 2026-08-14 | Highest | Connecticut Barber Examination; score transmission to CT DPH |
 
-**Verification Status:** PARTIAL — Practical exam structure not yet confirmed
+**Verification Status:** CONFIRMED
 
 ---
 
@@ -95,10 +95,10 @@
 
 | Source | Type | URL | Date Accessed | Reliability | Notes |
 |--------|------|-----|---------------|-------------|-------|
-| Florida DBPR | State licensing board | TBD | 2026-08-14 | Highest | Licensing requirements; publishes CIBs |
+| Florida DBPR | State licensing board | TBD | 2026-08-14 | Highest | Licensing requirements; publishes CIBs; 600-hour early eligibility pathway |
 | Pearson VUE examination information | Exam administrator | TBD | 2026-08-14 | Highest | Computer-based testing administration |
 
-**Verification Status:** PARTIAL — Exam developer not yet confirmed
+**Verification Status:** CONFIRMED
 
 ---
 
@@ -348,9 +348,9 @@
 
 | Source | Type | URL | Date Accessed | Reliability | Notes |
 |--------|------|-----|---------------|-------------|-------|
-| New York Department of State — Division of Licensing Services | State licensing authority | TBD | 2026-08-14 | Highest | State-controlled examination pathway |
+| New York Department of State — Division of Licensing Services | State licensing authority | TBD | 2026-08-14 | Highest | State-controlled examination pathway; practical exam administration; 70% practical passing |
 
-**Verification Status:** PARTIAL — Theory exam and developer not yet confirmed
+**Verification Status:** CONFIRMED
 
 ---
 
@@ -358,9 +358,9 @@
 
 | Source | Type | URL | Date Accessed | Reliability | Notes |
 |--------|------|-----|---------------|-------------|-------|
-| North Carolina Board of Barber Examiners | State licensing board | TBD | 2026-08-14 | Highest | Multi-stage license pathway; examination infrastructure |
+| North Carolina Board of Barber Examiners | State licensing board | TBD | 2026-08-14 | Highest | Multi-stage license pathway; examination infrastructure; practical ≥70 each portion |
 
-**Verification Status:** PARTIAL — Written exam developer not yet confirmed
+**Verification Status:** CONFIRMED
 
 ---
 

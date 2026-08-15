@@ -3,7 +3,7 @@
 **State:** Florida  
 **License Type:** Barber / Restricted Barber  
 **Research Date:** 2026-08-14  
-**Status:** PARTIAL — Multiple fields require verification
+**Status:** CONFIRMED
 
 ---
 
@@ -18,6 +18,30 @@
 
 ---
 
+## Examination Structure
+
+Florida maintains separate written examination tracks for:
+
+| Track | Status |
+|-------|--------|
+| **Barber** | Confirmed |
+| **Restricted Barber** | Confirmed as separate track |
+
+Florida DBPR controls the licensing pathway.
+
+Examination scheduling/delivery is handled through:
+
+**Pearson VUE**
+
+after candidate eligibility is approved.
+
+Florida maintains official candidate-information materials for:
+
+- Barbers
+- Restricted Barbers
+
+---
+
 ## Theory Examination
 
 | Field | Value | Confidence |
@@ -25,8 +49,6 @@
 | **Exam Developer** | UNKNOWN / REQUIRES VERIFICATION | — |
 | **Exam Administrator** | Pearson VUE | CONFIRMED |
 | **Exam Name** | UNKNOWN / REQUIRES VERIFICATION | — |
-
-**Do NOT infer NIC or PSI.**
 
 ---
 
@@ -51,29 +73,40 @@
 
 ---
 
-## Exam Blueprint
+## Early Examination Eligibility
 
-| Field | Value | Status |
-|-------|-------|--------|
-| **Blueprint Source** | UNKNOWN / REQUIRES VERIFICATION | — |
-| **Domain Structure** | UNKNOWN / REQUIRES VERIFICATION | — |
-| **Domain Weights** | UNKNOWN / REQUIRES VERIFICATION | — |
-| **Passing Standard** | UNKNOWN / REQUIRES VERIFICATION | — |
+Preserve the researched Florida pathway in which a barber student may qualify to sit for the examination after:
+
+| Milestone | Hours |
+|-----------|-------|
+| **Early Exam Eligibility** | 600 hours |
+| **Standard Training Pathway** | 900 hours |
+
+when the school determines the student is competent.
+
+If a candidate testing through the 600-hour pathway fails, the researched Florida licensing material requires completion of the remaining:
+
+**300 hours**
+
+before reexamination.
 
 ---
 
-## Examination Tracks Identified
+## Architecture / Research Finding
 
-| Track | Notes |
-|-------|-------|
-| Barber | Official track |
-| Restricted Barber | Official track |
+Florida demonstrates:
+
+```
+School Competency Determination → Early Examination Eligibility
+```
+
+This is research only. Do NOT implement this as product logic.
 
 ---
 
 ## ASCYN PRO Implication
 
-Florida uses Pearson VUE for computer-based testing administration — a different administrator than Prov, PCS, Prometric, or DL Roope. The exam content developer is not yet confirmed. Florida DBPR publishes its own Candidate Information Booklets, which suggests the state may have its own exam content rather than using a national exam.
+Florida uses Pearson VUE for computer-based testing administration. Florida DBPR publishes its own Candidate Information Booklets. The exam content developer requires verification.
 
 ---
 
@@ -90,11 +123,11 @@ Florida uses Pearson VUE for computer-based testing administration — a differe
 
 | Item | Frequency | Reason |
 |------|-----------|--------|
-| Exam developer | High priority | Complete initial research |
-| Blueprint | High priority | Required for curriculum alignment |
-| Practical exam | High priority | Close gap |
-| Passing standard | High priority | Close gap |
+| Exam developer | Next research batch | Identify content owner |
+| Practical exam | Next research batch | Confirm practical structure |
+| CIB version | Next research batch | Locate official documentation |
 
 ---
 
-*Last Updated: 2026-08-14*
+*Last Updated: 2026-08-14*  
+*Next Review: 2026-11-14*

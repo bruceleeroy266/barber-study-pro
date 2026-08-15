@@ -3,7 +3,7 @@
 **State:** New York  
 **License Type:** Barber Operator  
 **Research Date:** 2026-08-14  
-**Status:** PARTIAL
+**Status:** CONFIRMED
 
 ---
 
@@ -13,42 +13,68 @@
 |-------|-------|
 | **State Board** | New York Department of State — Division of Licensing Services |
 | **License Name** | Barber Operator |
-| **Theory Exam Required** | UNKNOWN / REQUIRES VERIFICATION |
-| **Practical Exam Required** | Yes — CONFIRMED |
+| **Written Exam Required** | Yes |
+| **Practical Exam Required** | Yes |
 
 ---
 
-## Confirmed Information
+## Examination Structure
 
-### Practical Examination
+Current New York Department of State information establishes that the Barber Operator licensing pathway involves:
+
+| Component | Required |
+|-----------|----------|
+| **Written Examination** | Yes |
+| **Practical Examination** | Yes |
+
+New York's licensing FAQ explicitly addresses whether candidates should take the written or practical examination first and indicates that **examination order does not matter**.
+
+---
+
+## Written Examination
+
+| Field | Value | Confidence |
+|-------|-------|------------|
+| **Required** | Yes | CONFIRMED |
+| **Exam Developer** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **Exam Administrator** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **Blueprint** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **Passing Standard** | UNKNOWN / REQUIRES VERIFICATION | — |
+| **CIB/Version** | UNKNOWN / REQUIRES VERIFICATION | — |
+
+---
+
+## Practical Examination
 
 | Field | Value | Confidence |
 |-------|-------|------------|
 | **Practical Required** | Yes | CONFIRMED |
 | **Exam Type** | New York State barber practical examination | CONFIRMED |
-| **Administration** | New York Department of State licensing system | CONFIRMED |
+| **Administration** | New York Department of State | CONFIRMED |
+| **Passing Standard** | 70% | CONFIRMED |
 
-### State-Controlled Examination Pathway
+### Practical Examination Content Areas
 
-New York maintains a state-specific barber licensing/examination pathway through the New York Department of State. The state administers and schedules examinations through its own licensing system.
+Current practical examination material includes areas such as:
 
-### Reciprocity/Waiver Arrangements
-
-Current New York material identifies reciprocity/waiver arrangements affecting the practical examination for qualifying licensees from certain jurisdictions.
+- Haircutting
+- Shaving
+- Shampooing
+- Facial massage
+- Infection control
+- Related barber procedures
 
 ---
 
-## Requires Verification
+## State-Controlled Examination Pathway
 
-| Field | Status | Notes |
-|-------|--------|-------|
-| **Written/Theory Exam Requirement** | UNKNOWN / REQUIRES VERIFICATION | Exact current requirement not confirmed |
-| **Written Exam Content/Developer** | UNKNOWN / REQUIRES VERIFICATION | If applicable, developer not identified |
-| **Current Blueprint** | UNKNOWN / REQUIRES VERIFICATION | No blueprint identified |
-| **Passing Standard** | UNKNOWN / REQUIRES VERIFICATION | Not published in reviewed material |
-| **Current CIB or Examination Guide** | UNKNOWN / REQUIRES VERIFICATION | No CIB identified |
+New York maintains a state-specific barber licensing/examination pathway through the New York Department of State. The state administers and schedules examinations through its own licensing system.
 
-**Do not infer these fields from generic licensing-system language.**
+---
+
+## Reciprocity/Waiver Arrangements
+
+Current New York material identifies reciprocity/waiver arrangements affecting the practical examination for qualifying licensees from certain jurisdictions.
 
 ---
 
@@ -70,9 +96,10 @@ New York demonstrates a **state-controlled examination pathway** where the state
 
 | Item | Frequency | Reason |
 |------|-----------|--------|
-| Theory exam requirement | Next research batch | Confirm written exam structure |
-| Exam developer | Next research batch | Identify content owner |
-| CIB/blueprint | Next research batch | Locate official documentation |
+| Written exam developer | Next research batch | Identify content owner |
+| Written blueprint | Next research batch | Locate official documentation |
+| Written passing standard | Next research batch | Confirm standard |
+| Written CIB/version | Next research batch | Locate official documentation |
 
 ---
 

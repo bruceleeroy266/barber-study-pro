@@ -291,7 +291,49 @@ West Virginia and Wyoming reinforce that provider/exam relationships may differ 
 
 ---
 
-### Updated Examination-Type Taxonomy (Batches 1–5)
+### FINDING 24 — SCHOOL COMPETENCY CAN DETERMINE EARLY EXAM ELIGIBILITY (Closure Batch 1)
+
+Florida demonstrates a pathway where:
+
+**School competency determination**
+
+can permit:
+
+**early examination eligibility**
+
+before completion of the standard maximum education-hour pathway.
+
+| Concept | Florida Example |
+|---------|-----------------|
+| Training Requirement | 900 hours standard |
+| Exam Eligibility Threshold | 600 hours |
+| School Competency Determination | Required for early eligibility |
+| Reexamination Requirement | Remaining 300 hours if failed |
+
+**Implication:** Preserve conceptually as potentially distinct research concepts. Do NOT implement.
+
+---
+
+### FINDING 25 — EXAM REQUIREMENTS CAN CHANGE BY LICENSE STAGE (Closure Batch 1)
+
+North Carolina demonstrates:
+
+```
+Apprentice Barber → Written + Practical
+Licensed Barber → Practical
+```
+
+This strengthens the conceptual research relationship:
+
+```
+State → Profession → License Stage → Eligibility → Examination Requirement → Examination Component
+```
+
+**Implication:** Do NOT implement this architecture. Preserve as research only.
+
+---
+
+### Updated Examination-Type Taxonomy (Batches 1–5 + Closure Batch 1)
 
 - Theory / Written
 - Practical
@@ -560,3 +602,4 @@ Jurisdiction / State
 ---
 
 *Last Updated: 2026-08-14*
+*Closure Batch 1 Archived: 2026-08-14*

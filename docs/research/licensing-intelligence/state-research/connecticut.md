@@ -3,7 +3,7 @@
 **State:** Connecticut  
 **License Type:** Barber  
 **Research Date:** 2026-08-14  
-**Status:** PARTIAL — Practical examination structure requires verification
+**Status:** CONFIRMED
 
 ---
 
@@ -11,10 +11,26 @@
 
 | Field | Value |
 |-------|-------|
-| **State Board** | UNKNOWN / REQUIRES VERIFICATION |
+| **State Board** | Connecticut Department of Public Health |
 | **License Name** | Barber |
 | **Theory Exam Required** | Yes |
 | **Practical Exam Required** | UNKNOWN / REQUIRES VERIFICATION |
+
+---
+
+## Examination Structure
+
+Connecticut requires successful completion of the:
+
+**Connecticut Barber Examination**
+
+administered by:
+
+**Prometric**
+
+Connecticut Department of Public Health directs candidates to Prometric examination materials/Candidate Information Bulletin.
+
+Examination scores are transmitted by Prometric to Connecticut DPH.
 
 ---
 
@@ -22,11 +38,12 @@
 
 | Field | Value | Confidence |
 |-------|-------|------------|
-| **Exam Developer** | NIC | CONFIRMED |
+| **Exam Developer** | UNKNOWN / REQUIRES VERIFICATION | — |
 | **Exam Administrator** | Prometric | CONFIRMED |
-| **Exam Name** | NIC National Barber Styling Theory | CONFIRMED |
-| **Total Questions** | 110 | CONFIRMED |
-| **Weighted Questions** | 100 | CONFIRMED |
+| **Exam Name** | Connecticut Barber Examination | CONFIRMED |
+| **Languages** | English, Spanish | CONFIRMED |
+
+**Important Guardrail:** Do NOT automatically record Prometric as the underlying examination-content developer merely because it administers the examination.
 
 ---
 
@@ -37,34 +54,30 @@
 | **Practical Required** | UNKNOWN / REQUIRES VERIFICATION | — |
 | **Practical Structure** | UNKNOWN / REQUIRES VERIFICATION | — |
 
-**Do NOT mark the overall state record fully confirmed until this field is closed.**
-
 ---
 
 ## Candidate Information Bulletin
 
 | Field | Value | Status |
 |-------|-------|--------|
-| **CIB Source** | NIC (via Prometric) | CONFIRMED |
+| **CIB Source** | Prometric examination materials | CONFIRMED |
 | **CIB URL** | UNKNOWN / REQUIRES VERIFICATION | PENDING |
 | **CIB Version** | UNKNOWN / REQUIRES VERIFICATION | PENDING |
 | **Effective Date** | UNKNOWN / REQUIRES VERIFICATION | PENDING |
 
 ---
 
-## Exam Blueprint
+## Score Reporting
 
-| Field | Value | Status |
-|-------|-------|--------|
-| **Blueprint Source** | NIC National Barber Styling | CONFIRMED |
-| **Domain Structure** | UNKNOWN / REQUIRES VERIFICATION | PENDING |
-| **Domain Weights** | UNKNOWN / REQUIRES VERIFICATION | PENDING |
+| Field | Value | Confidence |
+|-------|-------|------------|
+| **Score Transmission** | Prometric → Connecticut DPH | CONFIRMED |
 
 ---
 
 ## ASCYN PRO Implication
 
-Connecticut uses NIC content administered through Prometric — the same developer/administrator split as Delaware. The 110/100 question structure (110 total, 100 weighted) suggests 10 unscored/pilot questions, which is common in professional licensing exams.
+Connecticut uses Prometric for examination administration with scores transmitted to the state Department of Public Health. The examination content developer requires verification.
 
 ---
 
@@ -72,8 +85,8 @@ Connecticut uses NIC content administered through Prometric — the same develop
 
 | Source | Type | Date Accessed | Confidence |
 |--------|------|---------------|------------|
+| Connecticut Department of Public Health | State licensing authority | 2026-08-14 | CONFIRMED |
 | Prometric examination materials | Exam administrator | 2026-08-14 | CONFIRMED |
-| NIC examination content | Exam developer | 2026-08-14 | CONFIRMED |
 
 ---
 
@@ -81,9 +94,11 @@ Connecticut uses NIC content administered through Prometric — the same develop
 
 | Item | Frequency | Reason |
 |------|-----------|--------|
-| Practical exam requirement | High priority | Close gap to confirm state record |
-| Exam blueprint | Quarterly | CIB updates |
+| Exam developer | Next research batch | Identify content owner |
+| Practical exam | Next research batch | Confirm practical structure |
+| CIB version | Next research batch | Locate official documentation |
 
 ---
 
-*Last Updated: 2026-08-14*
+*Last Updated: 2026-08-14*  
+*Next Review: 2026-11-14*

@@ -26,7 +26,7 @@
 | **Exam Administrator** | UNKNOWN / REQUIRES VERIFICATION | — |
 | **Exam Name** | UNKNOWN / REQUIRES VERIFICATION | — |
 
-**Do NOT infer NIC or PSI.**
+**Do NOT infer NIC, PSI, Prov, Pearson VUE, PCS, DL Roope, Prometric, or another provider without authoritative evidence.**
 
 ---
 
