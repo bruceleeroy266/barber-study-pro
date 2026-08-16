@@ -414,4 +414,36 @@ export const chapter2PremiumQuizQuestions: QuizQuestion[] = [
     difficulty: 'hard',
     order_index: 30,
   },
+
+  // ═══════════════════════════════════════════════════════════
+  // PHASE 5A ADDITIONS — C-2-07 Goal Tracking & Achievement
+  // Added 2026-08-16 per ASCYN_PRO_CH02_PHASE5A_C-2-07_CHECKPOINT.md
+  // Addresses GAP-3: C-2-07 zero quiz coverage
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: 'qq-2-031',
+    quiz_id: 'quiz-2',
+    question: 'A barber student sets a goal to "build a full client book within 12 months of graduating." After 3 months, they have only 5 regular clients. According to Chapter 2\'s goal-tracking principles, what should the student do first?',
+    answer_a: 'Abandon the goal and set a smaller one',
+    answer_b: 'Review their progress data, identify what is and isn\'t working, and adjust their action steps',
+    answer_c: 'Work longer hours without changing their approach',
+    answer_d: 'Wait until the 6-month mark before evaluating progress',
+    correct_answer: 'b',
+    explanation: 'Goal tracking requires regular progress review and adjustment. The chapter teaches that tracking systems (journals, visual trackers, accountability partners) exist precisely so you can identify shortfalls early and adjust your action steps — not abandon the goal or ignore the data. Waiting longer without evaluating wastes time; working harder without changing approach repeats the same results.',
+    difficulty: 'medium',
+    order_index: 31,
+  },
+  {
+    id: 'qq-2-032',
+    quiz_id: 'quiz-2',
+    question: 'Which of the following is NOT a recommended goal-tracking method according to Chapter 2?',
+    answer_a: 'Keeping a daily progress journal',
+    answer_b: 'Using visual trackers like charts or apps',
+    answer_c: 'Relying on memory alone to recall weekly progress',
+    answer_d: 'Sharing goals with an accountability partner',
+    correct_answer: 'c',
+    explanation: 'Chapter 2 recommends three specific tracking methods: progress journals (write daily accomplishments), visual trackers (charts, calendars, apps showing streaks/milestones), and accountability partners (someone who checks in on your progress). Relying on memory alone is not a tracking system — it provides no external record, no visible momentum, and no accountability structure.',
+    difficulty: 'easy',
+    order_index: 32,
+  },
 ]
