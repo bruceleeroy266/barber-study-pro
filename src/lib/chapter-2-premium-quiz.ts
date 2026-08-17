@@ -446,4 +446,34 @@ export const chapter2PremiumQuizQuestions: QuizQuestion[] = [
     difficulty: 'easy',
     order_index: 32,
   },
+  // ═══════════════════════════════════════════════════════════
+  // Added 2026-08-16 per ASCYN_PRO_CH02_PHASE5A_C-2-13_CHECKPOINT.md
+  // Addresses GAP-4: C-2-13 zero quiz coverage
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: 'qq-2-034',
+    quiz_id: 'quiz-2',
+    question: 'A client mentions during their haircut that they are going through a divorce. Which of the following best describes your professional obligation?',
+    answer_a: 'You may share this with coworkers if they promise not to tell anyone else',
+    answer_b: 'You must keep this information confidential as part of your ethical and professional duty',
+    answer_c: 'You may share this with other clients if it comes up in conversation',
+    answer_d: 'You should ask the client for permission before discussing it with anyone',
+    correct_answer: 'b',
+    explanation: 'Client confidentiality is a core ethical obligation in barbering. Personal information and private conversations shared during services must be protected. Sharing with coworkers or other clients violates this trust. The obligation exists because clients share personal information during services, and protecting their privacy builds trust. D is incorrect because the source establishes protecting client personal information and private conversations as a professional obligation. In this scenario, the appropriate response is to maintain confidentiality.',
+    difficulty: 'easy',
+    order_index: 34,
+  },
+  {
+    id: 'qq-2-035',
+    quiz_id: 'quiz-2',
+    question: 'A client tells you about a personal health issue during their appointment. Later, a coworker asks you, "What was that client talking about earlier? They seemed upset." What should you do?',
+    answer_a: 'Share the information with the coworker since they work with the same clients',
+    answer_b: 'Keep the client\'s information confidential and not share it with the coworker',
+    answer_c: 'Tell the coworker to ask the client directly',
+    answer_d: 'Share only general information without specific details',
+    correct_answer: 'b',
+    explanation: 'Client confidentiality requires protecting personal information and health details — not even with coworkers or friends. When a coworker asks about a client\'s private conversation, the appropriate response is to maintain confidentiality. Sharing the information or sharing partial details violates the principle that what happens in your chair stays in your chair. C is incorrect because the barber\'s professional obligation is to protect the client\'s information and not disclose it. Telling the coworker to ask the client does not change or replace that obligation.',
+    difficulty: 'medium',
+    order_index: 35,
+  },
 ]
