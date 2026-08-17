@@ -1,8 +1,10 @@
 // Chapter 2 Premium Flashcard System
-// Life Skills — 45 premium flashcards
-// Categories: Foundation Knowledge, Definitions, Board Exam Alerts, Visual Identification,
-//             Scenario Thinking, Procedure/Process Knowledge, Safety Concepts, Memory Reinforcement
-// Source: Chapter 2 textbook curriculum, learning objectives, and board exam concepts
+// Life Skills — 50 flashcards (49 active, 1 deactivated)
+// Categories: Foundation Knowledge, Definitions, Professional Practice, Visual Identification,
+//             Scenario Thinking, Procedure/Process Knowledge, Safety Concepts, Memory Reinforcement,
+//             Career Readiness, Client Service, Workplace Practice
+// Source: ASCYN-original Chapter 2 curriculum content
+// Phase 5B-P0: 13 cards corrected for source integrity (2026-08-17)
 
 import { Flashcard } from '@/types'
 
@@ -13,8 +15,8 @@ export const chapter2PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-2-001',
     chapter_id: 'ch-2',
-    front: 'According to the Chapter 2 curriculum, what percentage of barber success comes from life and business skills versus technical skills?',
-    back: '60% of barber success comes from life and business skills. Only 40% comes from technical skills like cutting, styling, and sanitation. This is why life skills are equally essential to master.',
+    front: 'Why do life skills matter as much as technical skills for a barber\'s long-term career success?',
+    back: 'Technical skill gets you licensed, but life skills build your career. Most barber school graduates have similar technical training — what separates thriving barbers from struggling ones is showing up consistently, managing money wisely, building genuine client relationships, and handling stress without burning out.',
     category: 'Foundation Knowledge',
     difficulty: 'easy',
     order_index: 1,
@@ -23,8 +25,8 @@ export const chapter2PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-2-002',
     chapter_id: 'ch-2',
-    front: 'List the seven essential life skills that barbers need for career success.',
-    back: '1) Communication, 2) Decision-making, 3) Image-building, 4) Customer service, 5) Self-actualization, 6) Goal-setting, and 7) Time management. These skills ensure positive interactions with diverse clients and coworkers.',
+    front: 'What key life skills separate successful barbers from those who struggle, according to the ASCYN Chapter 2 curriculum?',
+    back: 'The ASCYN curriculum identifies these essential life skills: consistent punctuality and reliability, wise money management, genuine client relationship building, stress management without burnout, effective communication, goal setting and tracking, and time management. These skills ensure positive interactions with diverse clients and coworkers and form the foundation of a sustainable career.',
     category: 'Foundation Knowledge',
     difficulty: 'medium',
     order_index: 2,
@@ -43,8 +45,8 @@ export const chapter2PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-2-004',
     chapter_id: 'ch-2',
-    front: 'What are the three destructive habits that kill productivity, according to Chapter 2?',
-    back: '1) Procrastination — putting things off; 2) Perfectionism — unhealthy need to do everything flawlessly; 3) Lack of a game plan — no organized goals or direction. All three prevent progress.',
+    front: 'What common habits prevent barbers from making progress toward their goals?',
+    back: 'Three habits consistently undermine progress: delaying important tasks instead of acting now, letting the need for flawless results prevent completion, and operating without a clear plan or direction. The ASCYN curriculum teaches that discipline — not motivation — is what carries you through these barriers. Building daily habits and systems is more reliable than waiting for inspiration.',
     category: 'Foundation Knowledge',
     difficulty: 'easy',
     order_index: 4,
@@ -196,14 +198,14 @@ export const chapter2PremiumFlashcards: Flashcard[] = [
   },
 
   // ═══════════════════════════════════════════════════════════════
-  // CATEGORY 3: BOARD EXAM ALERTS (6 cards)
+  // CATEGORY 3: PROFESSIONAL PRACTICE (6 cards) — formerly Board Exam Alerts
   // ═══════════════════════════════════════════════════════════════
   {
     id: 'fc-2-019',
     chapter_id: 'ch-2',
-    front: 'BOARD EXAM ALERT: What are the five professional actions that demonstrate ethical conduct on the state board exam?',
-    back: '1) Provide skilled and competent services, 2) Be honest, courteous, and sincere, 3) Keep client information confidential (discretion), 4) Participate in continuing education, 5) Give accurate information about treatments and products.',
-    category: 'Board Exam Alerts',
+    front: 'What are the five core ethical practices that every professional barber should demonstrate?',
+    back: '1) Deliver skilled and competent services to every client, 2) Be honest and courteous in all interactions, 3) Protect client confidentiality by never sharing personal information, 4) Commit to ongoing education to keep skills current, 5) Give accurate information about treatments and products so clients can make informed decisions.',
+    category: 'Professional Practice',
     difficulty: 'medium',
     order_index: 19,
     is_active: true,
@@ -211,9 +213,9 @@ export const chapter2PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-2-020',
     chapter_id: 'ch-2',
-    front: 'BOARD EXAM ALERT: Why is client confidentiality a legal and ethical requirement that may appear on licensing exams?',
-    back: 'Clients share personal information during services. Protecting their privacy builds trust and is a core ethical obligation. Violating confidentiality can result in disciplinary action, fines, or license revocation.',
-    category: 'Board Exam Alerts',
+    front: 'Why is client confidentiality a core ethical obligation for barbers?',
+    back: 'Clients share personal information during services — health details, private conversations, and personal preferences. Protecting their privacy builds trust and is a core ethical obligation. What happens in your chair stays in your chair. Never share client personal information with coworkers, friends, or anyone else.',
+    category: 'Professional Practice',
     difficulty: 'medium',
     order_index: 20,
     is_active: true,
@@ -221,9 +223,9 @@ export const chapter2PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-2-021',
     chapter_id: 'ch-2',
-    front: 'BOARD EXAM ALERT: What is the recommended emergency fund amount that state board exams may reference as a financial responsibility standard?',
-    back: 'State boards and financial literacy standards recommend starting with $1,000, building to 3 months of expenses, and ultimately maintaining 6 months of expenses as an emergency fund.',
-    category: 'Board Exam Alerts',
+    front: 'What is the recommended approach to building an emergency fund as a barber?',
+    back: 'Start with a $1,000 mini emergency fund for unexpected expenses. Build to 3 months of living expenses, then aim for 6 months as your ultimate goal. This protects against income gaps common in the barbering profession.',
+    category: 'Career Readiness',
     difficulty: 'easy',
     order_index: 21,
     is_active: true,
@@ -231,9 +233,9 @@ export const chapter2PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-2-022',
     chapter_id: 'ch-2',
-    front: 'BOARD EXAM ALERT: When recommending products to clients, what is the ethical rule that protects both the barber and the client?',
-    back: 'Only recommend products that genuinely help the client. Recommending unnecessary products destroys trust and may violate consumer protection laws. Ethical barbers prioritize client benefit over commission.',
-    category: 'Board Exam Alerts',
+    front: 'When recommending products to clients, what is the ethical rule that protects both the barber and the client?',
+    back: 'Only recommend products that genuinely help the client. If a product won\'t help their hair, don\'t sell it. Recommending unnecessary products destroys trust. Ethical barbers prioritize client benefit over commission — clients can sense when you\'re looking out for their best interest.',
+    category: 'Professional Practice',
     difficulty: 'easy',
     order_index: 22,
     is_active: true,
@@ -241,9 +243,9 @@ export const chapter2PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-2-023',
     chapter_id: 'ch-2',
-    front: 'BOARD EXAM ALERT: What is the service recovery paradox, and why should barbers understand it for both the exam and real practice?',
-    back: 'The service recovery paradox states that clients whose problems are resolved professionally often become MORE loyal than clients who never experienced issues. This means complaints are opportunities, not threats.',
-    category: 'Board Exam Alerts',
+    front: 'What is the service recovery paradox, and why is it important for barbers to understand?',
+    back: 'The service recovery paradox states that clients whose problems are resolved quickly and professionally often become MORE loyal than clients who never experienced issues. A complaint handled with grace becomes a story they tell about how much you care — not about the mistake. This means complaints are opportunities, not threats.',
+    category: 'Client Service',
     difficulty: 'hard',
     order_index: 23,
     is_active: true,
@@ -251,9 +253,9 @@ export const chapter2PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-2-024',
     chapter_id: 'ch-2',
-    front: 'BOARD EXAM ALERT: What is the most important rule of shop etiquette regarding another barber\'s regular clients?',
+    front: 'What is the most important rule of shop etiquette regarding another barber\'s regular clients?',
     back: 'Never poach another barber\'s regular clients. If their client asks you for a cut, redirect them back to their regular barber. Violating this destroys shop harmony and professional reputation.',
-    category: 'Board Exam Alerts',
+    category: 'Workplace Practice',
     difficulty: 'easy',
     order_index: 24,
     is_active: true,
@@ -471,8 +473,8 @@ export const chapter2PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-2-044',
     chapter_id: 'ch-2',
-    front: 'MEMORY DRILL: List the four memory and study techniques recommended for barber students.',
-    back: '1) REPETITION — verbal, written, and hands-on practice; 2) ORGANIZATION — break topics into smaller segments; 3) MNEMONICS — acronyms (SHAPES for skin functions), word associations, songs/rhymes; 4) MIND MAPPING — visual branching from central topics.',
+    front: 'What study techniques does the ASCYN curriculum recommend for barber students to improve retention?',
+    back: 'The ASCYN curriculum recommends these evidence-based study approaches: active learning (practice while explaining out loud, teach a classmate, create flashcards), spaced repetition (review material over days and weeks, not just once), focused study blocks (25-minute Pomodoro sessions), and hands-on practice (film yourself cutting, work on mannequins, build a portfolio). These techniques build both understanding and muscle memory.',
     category: 'Memory Reinforcement',
     difficulty: 'easy',
     order_index: 44,
@@ -486,13 +488,13 @@ export const chapter2PremiumFlashcards: Flashcard[] = [
     category: 'Memory Reinforcement',
     difficulty: 'hard',
     order_index: 45,
-    is_active: true,
+    is_active: false,
   },
   {
     id: 'fc-2-046',
     chapter_id: 'ch-2',
-    front: 'MEMORY DRILL: What are the five action steps for building self-esteem and achieving success?',
-    back: '1) Build self-esteem (trust your abilities, use positive affirmations), 2) Visualize success (imagine working in your dream shop), 3) Build on your strengths, 4) Be kind to yourself (eliminate negative self-talk), 5) Stay true to yourself (be authentic and professional).',
+    front: 'What daily practices does the ASCYN curriculum recommend for building confidence and a success mindset?',
+    back: 'The ASCYN curriculum recommends these practices: trust your developing abilities and use positive self-talk, spend time visualizing yourself succeeding in your dream shop, identify and build on your existing strengths, treat yourself with kindness by eliminating negative self-talk, and stay authentic to your values while maintaining professionalism. These practices compound over time into genuine confidence.',
     category: 'Memory Reinforcement',
     difficulty: 'medium',
     order_index: 46,
@@ -511,8 +513,8 @@ export const chapter2PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-2-048',
     chapter_id: 'ch-2',
-    front: 'MEMORY DRILL: What are the five professional ethics actions every barber must practice?',
-    back: '1) Provide skilled and competent services, 2) Be honest, courteous, and sincere, 3) Keep client information confidential, 4) Participate in continuing education, 5) Give accurate information about treatments and products.',
+    front: 'What ethical practices does the ASCYN curriculum identify as essential for every barber?',
+    back: 'The ASCYN curriculum identifies these core ethical practices: deliver skilled and competent services to every client, be honest and courteous in all interactions, protect client confidentiality by never sharing personal information, commit to ongoing education to keep skills current, and give accurate information about treatments and products so clients can make informed decisions. These practices build the trust that sustains a barbering career.',
     category: 'Memory Reinforcement',
     difficulty: 'medium',
     order_index: 48,
