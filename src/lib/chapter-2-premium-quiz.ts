@@ -1,14 +1,14 @@
 // Chapter 2 Premium Quiz — Flashcard-Driven Multiple Choice System
-// Life Skills — 30 questions generated from Chapter 2 flashcard curriculum
+// Life Skills — 35 questions generated from Chapter 2 flashcard curriculum
 // Randomized order, randomized answers, board-exam style
 // Source: chapter-2-premium-flashcards.ts (50 cards)
 
 import { QuizQuestion } from '@/types'
 
 // ───────────────────────────────────────────────
-// CHAPTER 2 QUIZ: Life Skills (30 Questions)
-// Difficulty mix: 10 easy, 10 medium, 10 hard
-// Correct answer distribution: A=8, B=8, C=7, D=7
+// CHAPTER 2 QUIZ: Life Skills (35 Questions)
+// Difficulty mix: 12 easy, 13 medium, 10 hard
+// Correct answer distribution: A=8, B=12, C=8, D=7
 // Sources: Foundation, Definitions, Board Exam, Visual ID, Scenarios, Procedures, Safety, Memory
 // ───────────────────────────────────────────────
 
@@ -475,5 +475,18 @@ export const chapter2PremiumQuizQuestions: QuizQuestion[] = [
     explanation: 'Client confidentiality requires protecting personal information and health details — not even with coworkers or friends. When a coworker asks about a client\'s private conversation, the appropriate response is to maintain confidentiality. Sharing the information or sharing partial details violates the principle that what happens in your chair stays in your chair. C is incorrect because the barber\'s professional obligation is to protect the client\'s information and not disclose it. Telling the coworker to ask the client does not change or replace that obligation.',
     difficulty: 'medium',
     order_index: 35,
+  },
+  {
+    id: 'qq-2-037',
+    quiz_id: 'quiz-2',
+    question: 'A barber has been working 6 days a week for 3 months, skipping lunch breaks, and answering client texts until midnight. They feel exhausted and irritable. According to Chapter 2\'s work-life balance principles, which of the following is the MOST appropriate first step?',
+    answer_a: 'Continue the current schedule without changing any work or communication boundaries',
+    answer_b: 'Set boundaries for client communication and take days off',
+    answer_c: 'Quit the job and find a less demanding career',
+    answer_d: 'Ignore the symptoms because they are normal for new barbers',
+    correct_answer: 'b',
+    explanation: 'Chapter 2 teaches that work-life balance requires setting boundaries (mental-health block), prioritizing sleep and nutrition (physical-self-care block), and recognizing burnout warning signs (burnout-signs block). The barber\'s symptoms — exhaustion and irritability — match the burnout warning signs. The most appropriate first step is to set boundaries, which is explicitly taught as a work-life balance strategy. A is incorrect because the approved content teaches that setting boundaries is a work-life balance strategy, and continuing without changing any boundaries is the opposite of that strategy. C is not the best answer because the question asks for the response that applies Chapter 2\'s work-life-balance strategies. The approved content specifically teaches setting boundaries and taking days off. D is incorrect because the chapter teaches that burnout signs should be recognized and addressed, not ignored.',
+    difficulty: 'medium',
+    order_index: 37,
   },
 ]
