@@ -1,16 +1,20 @@
 // Chapter 2 Premium Quiz — Flashcard-Driven Multiple Choice System
-// Life Skills — 39 questions generated from Chapter 2 flashcard curriculum
+// Life Skills — 40 questions generated from Chapter 2 flashcard curriculum
 // Randomized order, randomized answers, board-exam style
 // Source: chapter-2-premium-flashcards.ts (50 cards)
 
 import { QuizQuestion } from '@/types'
 
 // ───────────────────────────────────────────────
-// CHAPTER 2 QUIZ: Life Skills (39 Questions)
-// Difficulty mix: 14 easy, 15 medium, 10 hard
-// Correct answer distribution: A=8, B=15, C=9, D=7
+// CHAPTER 2 QUIZ: Life Skills (40 Questions)
+// Difficulty mix: 14 easy, 16 medium, 10 hard
+// Correct answer distribution: A=8, B=16, C=9, D=7
 // Sources: Foundation, Definitions, Board Exam, Visual ID, Scenarios, Procedures, Safety, Memory
 // ───────────────────────────────────────────────
+// Phase 5A additions: qq-2-034 through qq-2-042
+// qq-2-042: C-2-25 (Leadership & Mentorship) — medium, Comprehension, correct=B
+//   NOT eligible for Practice Final or DIRECT VERIFIED exam-readiness
+//   Concept mapping: C-2-25 only, no subconcept, no secondary mappings
 
 export const chapter2PremiumQuizQuestions: QuizQuestion[] = [
   // ═══════════════════════════════════════════════════════════
@@ -556,5 +560,25 @@ export const chapter2PremiumQuizQuestions: QuizQuestion[] = [
     explanation: 'Chapter 2\'s career milestones identify Year 2 as the "Skill Refiner" stage, where barbers should specialize in one technique (fades, beard sculpting, designs), attend industry events, build social media presence, and start mentoring newer barbers. With 18 months of experience and 60 regular clients, this barber is between Year 1 (Foundation Builder) and Year 2 (Skill Refiner). Specializing in one technique is the most appropriate next step. A is incorrect because opening a shop is a Year 5 milestone, not appropriate for this stage. C is incorrect because building passive income is a Year 5 milestone. D is incorrect because developing a personal brand is a Year 3 milestone.',
     difficulty: 'medium',
     order_index: 41,
+  },
+  // ═══════════════════════════════════════════════════════════
+  // PHASE 5A — C-2-25: Leadership & Mentorship
+  // qq-2-042: medium, Comprehension, correct=B
+  // Concept: C-2-25 only | No subconcept | No secondary mappings
+  // Eligible: Chapter Quiz, Adaptive Review, Remediation Assessment
+  // NOT eligible: Practice Final, DIRECT VERIFIED exam-readiness
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: 'qq-2-042',
+    quiz_id: 'quiz-2',
+    question: 'According to Chapter 2, when a barber leader gives constructive feedback, what should the feedback focus on?',
+    answer_a: 'Identifying everything the person did wrong so they understand the full scope of the problem',
+    answer_b: 'What is working and what can be adjusted',
+    answer_c: 'Comparing the person\'s performance to the best barber in the shop',
+    answer_d: 'Delivering criticism first so the person takes the feedback seriously',
+    correct_answer: 'b',
+    explanation: 'Chapter 2 teaches that constructive feedback should focus on what is working and what can be adjusted. This is one of the four qualities of a barber leader — giving constructive feedback means helping someone understand their strengths and identifying specific areas for improvement, not simply pointing out everything that went wrong. A is incorrect because focusing only on errors without acknowledging what is working does not match the source\'s description of constructive feedback. C is incorrect because the source does not describe comparing performers as a constructive feedback practice. D is incorrect because the source does not establish that criticism must come first for feedback to be effective.',
+    difficulty: 'medium',
+    order_index: 42,
   },
 ]
