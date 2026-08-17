@@ -1,14 +1,14 @@
 // Chapter 2 Premium Quiz — Flashcard-Driven Multiple Choice System
-// Life Skills — 35 questions generated from Chapter 2 flashcard curriculum
+// Life Skills — 37 questions generated from Chapter 2 flashcard curriculum
 // Randomized order, randomized answers, board-exam style
 // Source: chapter-2-premium-flashcards.ts (50 cards)
 
 import { QuizQuestion } from '@/types'
 
 // ───────────────────────────────────────────────
-// CHAPTER 2 QUIZ: Life Skills (35 Questions)
-// Difficulty mix: 12 easy, 13 medium, 10 hard
-// Correct answer distribution: A=8, B=12, C=8, D=7
+// CHAPTER 2 QUIZ: Life Skills (37 Questions)
+// Difficulty mix: 13 easy, 14 medium, 10 hard
+// Correct answer distribution: A=8, B=13, C=9, D=7
 // Sources: Foundation, Definitions, Board Exam, Visual ID, Scenarios, Procedures, Safety, Memory
 // ───────────────────────────────────────────────
 
@@ -488,5 +488,39 @@ export const chapter2PremiumQuizQuestions: QuizQuestion[] = [
     explanation: 'Chapter 2 teaches that work-life balance requires setting boundaries (mental-health block), prioritizing sleep and nutrition (physical-self-care block), and recognizing burnout warning signs (burnout-signs block). The barber\'s symptoms — exhaustion and irritability — match the burnout warning signs. The most appropriate first step is to set boundaries, which is explicitly taught as a work-life balance strategy. A is incorrect because the approved content teaches that setting boundaries is a work-life balance strategy, and continuing without changing any boundaries is the opposite of that strategy. C is not the best answer because the question asks for the response that applies Chapter 2\'s work-life-balance strategies. The approved content specifically teaches setting boundaries and taking days off. D is incorrect because the chapter teaches that burnout signs should be recognized and addressed, not ignored.',
     difficulty: 'medium',
     order_index: 37,
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // PHASE 5A ADDITIONS — C-2-23 Cultural Competence & Inclusive Service
+  // Added 2026-08-16 per ASCYN_PRO_CH02_PHASE5A_C-2-23_CHECKPOINT.md
+  // Addresses GAP-7: C-2-23 zero quiz coverage
+  // Eligible: Chapter Quiz, Adaptive Review, Remediation Assessment
+  // NOT eligible: Practice Final, DIRECT VERIFIED exam-readiness contribution
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: 'qq-2-038',
+    quiz_id: 'quiz-2',
+    question: 'According to Chapter 2, what is the BEST approach when serving a client whose background or preferences you are unsure about?',
+    answer_a: 'Assume their preferences based on their appearance to save time',
+    answer_b: 'Ask respectful questions and let them guide the conversation',
+    answer_c: 'Avoid conversation entirely to prevent making mistakes',
+    answer_d: 'Use the same techniques and communication style for every client',
+    correct_answer: 'b',
+    explanation: 'Chapter 2 teaches that cultural competence means approaching every client with curiosity, respect, and a willingness to learn. The inclusive-practices block specifically instructs barbers not to assume someone\'s background, preferences, or style based on appearance, but instead to ask respectful questions and let the client guide the conversation. A is incorrect because assuming preferences based on appearance contradicts the source teaching. C is incorrect because avoidance is not the source-supported approach; respectful engagement is. D is incorrect because the source emphasizes adapting to individual clients rather than using a uniform approach.',
+    difficulty: 'easy',
+    order_index: 38,
+  },
+  {
+    id: 'qq-2-039',
+    quiz_id: 'quiz-2',
+    question: 'A new client sits in your chair and mentions they prefer a specific term for their hair texture that you have not heard before. According to Chapter 2\'s cultural competence principles, what should you do?',
+    answer_a: 'Politely correct them with the technical term you learned in school',
+    answer_b: 'Ignore the term and continue using your usual terminology',
+    answer_c: 'Ask them to explain the term and then use their preferred language',
+    answer_d: 'Assume they are using slang and translate it to standard terminology',
+    correct_answer: 'c',
+    explanation: 'Chapter 2\'s cultural-scenarios block teaches that when a client uses a term you are unfamiliar with, the appropriate response is to ask them politely to explain and then use their preferred terms. This shows respect for the client\'s identity and builds trust. A is incorrect because correcting the client prioritizes the barber\'s knowledge over the client\'s comfort. B is incorrect because ignoring the client\'s preferred term dismisses their identity. D is not the source-supported answer because the source explicitly states not to assume someone\'s preferences or style based on appearance and teaches the barber to ask respectful questions.',
+    difficulty: 'medium',
+    order_index: 39,
   },
 ]
