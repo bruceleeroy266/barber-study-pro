@@ -1,14 +1,14 @@
 // Chapter 2 Premium Quiz — Flashcard-Driven Multiple Choice System
-// Life Skills — 37 questions generated from Chapter 2 flashcard curriculum
+// Life Skills — 39 questions generated from Chapter 2 flashcard curriculum
 // Randomized order, randomized answers, board-exam style
 // Source: chapter-2-premium-flashcards.ts (50 cards)
 
 import { QuizQuestion } from '@/types'
 
 // ───────────────────────────────────────────────
-// CHAPTER 2 QUIZ: Life Skills (37 Questions)
-// Difficulty mix: 13 easy, 14 medium, 10 hard
-// Correct answer distribution: A=8, B=13, C=9, D=7
+// CHAPTER 2 QUIZ: Life Skills (39 Questions)
+// Difficulty mix: 14 easy, 15 medium, 10 hard
+// Correct answer distribution: A=8, B=15, C=9, D=7
 // Sources: Foundation, Definitions, Board Exam, Visual ID, Scenarios, Procedures, Safety, Memory
 // ───────────────────────────────────────────────
 
@@ -522,5 +522,39 @@ export const chapter2PremiumQuizQuestions: QuizQuestion[] = [
     explanation: 'Chapter 2\'s cultural-scenarios block teaches that when a client uses a term you are unfamiliar with, the appropriate response is to ask them politely to explain and then use their preferred terms. This shows respect for the client\'s identity and builds trust. A is incorrect because correcting the client prioritizes the barber\'s knowledge over the client\'s comfort. B is incorrect because ignoring the client\'s preferred term dismisses their identity. D is not the source-supported answer because the source explicitly states not to assume someone\'s preferences or style based on appearance and teaches the barber to ask respectful questions.',
     difficulty: 'medium',
     order_index: 39,
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // PHASE 5A ADDITIONS — C-2-24 Career Planning & Specialization
+  // Added 2026-08-17 per ASCYN_PRO_CH02_PHASE5A_C-2-24_CHECKPOINT.md
+  // Addresses GAP-8: C-2-24 zero quiz coverage
+  // Eligible: Chapter Quiz, Adaptive Review, Remediation Assessment
+  // NOT eligible: Practice Final, DIRECT VERIFIED exam-readiness contribution
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: 'qq-2-040',
+    quiz_id: 'quiz-2',
+    question: 'According to Chapter 2, what is the primary purpose of a career roadmap?',
+    answer_a: 'To guarantee career success within five years',
+    answer_b: 'To give direction, support better decisions, and maintain motivation',
+    answer_c: 'To identify the single most profitable specialization',
+    answer_d: 'To establish a fixed timeline that must be followed exactly',
+    correct_answer: 'b',
+    explanation: 'Chapter 2 teaches that a career roadmap gives you direction, helps you make better decisions, and keeps you motivated when progress feels slow. The plan doesn\'t need to be perfect — it needs to exist and be reviewed regularly as a living document that grows with you. A is incorrect because the source does not claim that a roadmap guarantees success; it presents the roadmap as a tool for direction and motivation, not a guarantee. C is incorrect because while the source discusses specialization paths, it does not claim that a roadmap\'s purpose is to identify the most profitable one; profitability is not the focus. D is incorrect because the source explicitly states the plan "doesn\'t need to be perfect" and should be "a living document that grows with you" — not a fixed timeline that must be followed exactly.',
+    difficulty: 'easy',
+    order_index: 40,
+  },
+  {
+    id: 'qq-2-041',
+    quiz_id: 'quiz-2',
+    question: 'A barber has been licensed for 18 months, has 60 regular clients, and has mastered 5 core cuts. According to Chapter 2\'s career milestones, which activity is MOST appropriate for this barber\'s current stage?',
+    answer_a: 'Opening their own shop and hiring a team',
+    answer_b: 'Specializing in one technique like fades or beard sculpting',
+    answer_c: 'Building passive income streams through product sales',
+    answer_d: 'Developing a personal brand and launching a signature style',
+    correct_answer: 'b',
+    explanation: 'Chapter 2\'s career milestones identify Year 2 as the "Skill Refiner" stage, where barbers should specialize in one technique (fades, beard sculpting, designs), attend industry events, build social media presence, and start mentoring newer barbers. With 18 months of experience and 60 regular clients, this barber is between Year 1 (Foundation Builder) and Year 2 (Skill Refiner). Specializing in one technique is the most appropriate next step. A is incorrect because opening a shop is a Year 5 milestone, not appropriate for this stage. C is incorrect because building passive income is a Year 5 milestone. D is incorrect because developing a personal brand is a Year 3 milestone.',
+    difficulty: 'medium',
+    order_index: 41,
   },
 ]
