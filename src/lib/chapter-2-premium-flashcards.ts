@@ -1,10 +1,11 @@
 // Chapter 2 Premium Flashcard System
-// Life Skills — 58 flashcards (57 active, 1 deactivated)
+// Life Skills — 65 flashcards (64 active, 1 deactivated)
 // Categories: Foundation Knowledge, Definitions, Professional Practice, Visual Identification,
 //             Scenario Thinking, Procedure/Process Knowledge, Safety Concepts, Memory Reinforcement,
 //             Career Readiness, Client Service, Workplace Practice
 // Source: ASCYN-original Chapter 2 curriculum content
 // Phase 5B-P0: 13 cards corrected for source integrity (2026-08-17)
+// Phase 5B-P2: 7 cards added for C-2-23, C-2-24, C-2-25 concept coverage (2026-08-18)
 
 import { Flashcard } from '@/types'
 
@@ -630,6 +631,87 @@ export const chapter2PremiumFlashcards: Flashcard[] = [
     category: 'Memory Reinforcement',
     difficulty: 'medium',
     order_index: 58,
+    is_active: true,
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  // PHASE 5B-P2: C-2-23, C-2-24, C-2-25 CONCEPT COVERAGE (7 cards)
+  // Added 2026-08-18 — ASCYN-ORIGINAL
+  // ═══════════════════════════════════════════════════════════════
+
+  // C-2-23: Cultural Competence & Inclusive Practices (3 cards)
+  {
+    id: 'fc-2-059',
+    chapter_id: 'ch-2',
+    front: 'What are the four inclusive barbering practices that help serve every client with respect?',
+    back: '1) Respect hair texture diversity — different hair types require different techniques, tools, and products; ask about their hair history and preferences. 2) Adapt your communication style — read cues and adjust; not everyone communicates the same way. 3) Avoid assumptions — don\'t assume background, preferences, or style based on appearance; ask respectful questions. 4) Create a welcoming environment — your shop should feel safe and inclusive for everyone.',
+    category: 'Professional Practice',
+    difficulty: 'medium',
+    order_index: 59,
+    is_active: true,
+  },
+  {
+    id: 'fc-2-060',
+    chapter_id: 'ch-2',
+    front: 'A client with a hair texture you\'re unfamiliar with sits in your chair. According to Chapter 2, what should you do before cutting?',
+    back: 'Ask the client about their hair history and preferences, then research appropriate techniques before proceeding. Different hair textures require different approaches — guessing can damage hair and lose trust. Humility and curiosity build more trust than false confidence.',
+    category: 'Scenario Thinking',
+    difficulty: 'medium',
+    order_index: 60,
+    is_active: true,
+  },
+  {
+    id: 'fc-2-061',
+    chapter_id: 'ch-2',
+    front: 'According to Chapter 2, what is the business value of cultural competence, and how can you self-assess your cultural awareness?',
+    back: 'Business value: The barber who makes everyone feel welcome builds a clientele that no marketing budget can buy. Self-assessment: Ask yourself — Did I ask about their hair history and preferences? Did I use respectful language and avoid stereotypes? Did I adapt my communication style? Did I make them feel welcome? Did I seek to learn something new?',
+    category: 'Foundation Knowledge',
+    difficulty: 'easy',
+    order_index: 61,
+    is_active: true,
+  },
+
+  // C-2-24: Career Planning & Specialization (2 cards)
+  {
+    id: 'fc-2-062',
+    chapter_id: 'ch-2',
+    front: 'What does it mean that a career roadmap should be a "living document"?',
+    back: 'A career roadmap should be reviewed regularly and grow with you. It doesn\'t need to be perfect — it needs to exist. The plan gives you direction, helps you make better decisions, and keeps you motivated when progress feels slow.',
+    category: 'Career Readiness',
+    difficulty: 'easy',
+    order_index: 62,
+    is_active: true,
+  },
+  {
+    id: 'fc-2-063',
+    chapter_id: 'ch-2',
+    front: 'What are the four specialization opportunities identified in Chapter 2, and what does each path focus on?',
+    back: '1) Precision Fades — focus on becoming known for the cleanest fades in your city. 2) Hair Art & Designs — focus on developing artistic shaving and design skills. 3) Beard Sculpting — focus on mastering beard shaping, conditioning, and maintenance. 4) Barber Educator — focus on teaching the next generation through education, workshops, or online courses.',
+    category: 'Career Readiness',
+    difficulty: 'medium',
+    order_index: 63,
+    is_active: true,
+  },
+
+  // C-2-25: Leadership & Mentorship (2 cards)
+  {
+    id: 'fc-2-064',
+    chapter_id: 'ch-2',
+    front: 'What are the four qualities of a barber leader according to Chapter 2?',
+    back: '1) Leads by Example — show up early, stay late, practice consistently, and treat everyone with respect. 2) Gives Constructive Feedback — when helping others, focus on what\'s working and what to adjust. 3) Builds Team Culture — a leader sets the tone: positive, collaborative, and growth-oriented. 4) Invests in Others — share knowledge freely.',
+    category: 'Professional Practice',
+    difficulty: 'medium',
+    order_index: 64,
+    is_active: true,
+  },
+  {
+    id: 'fc-2-065',
+    chapter_id: 'ch-2',
+    front: 'What are five ways you can start mentoring others today, according to Chapter 2?',
+    back: '1) Help a struggling classmate with a technique you have mastered. 2) Share study resources and flashcard decks with your peers. 3) Offer to practice on each other and give honest, kind feedback. 4) Introduce newer students to barbers you admire in the community. 5) Document your learning journey so others can learn from your mistakes.',
+    category: 'Professional Practice',
+    difficulty: 'easy',
+    order_index: 65,
     is_active: true,
   },
 ]
