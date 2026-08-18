@@ -129,6 +129,21 @@ export function isDemoFallbackEnabled(): boolean {
 }
 
 /**
+ * Phase 6B-1 R-3 — Production safeguard for instructor-facing demo data.
+ *
+ * Returns true ONLY when BOTH:
+ *   1. Explicit demo mode is enabled (NEXT_PUBLIC_DEMO_MODE === 'true'), AND
+ *   2. The app is NOT running in production (NODE_ENV !== 'production').
+ *
+ * This ensures demo/fallback fictional student data can NEVER be substituted
+ * for real data in a production deployment, even if the demo-mode env var is
+ * accidentally set to 'true' in production.
+ */
+export function isDemoDataAllowed(): boolean {
+  return isExplicitDemoMode() && process.env.NODE_ENV !== 'production'
+}
+
+/**
  * True when the app should run in a safe local demo environment: explicit demo
  * mode AND no real Supabase project configured. In this state auth bypass and
  * in-memory demo data are acceptable.

@@ -5,7 +5,8 @@ import { Profile, StudentProgress, QuizAttempt, HourLog, ReadinessLevel, Attenda
 import { localChapters } from '@/lib/local-data'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 import { demoStudents, demoStudentProgress, demoStudentQuizAttempts, demoHourLogs, demoAttendanceRecords, getDemoNotificationsForUser, getDemoThreadsForUser, demoGrades, demoGradeCategories, demoAssessments } from '@/lib/demo-data'
-import { isDemoFallbackEnabled } from '@/lib/demo-helpers'
+import { isDemoDataAllowed } from '@/lib/demo-helpers'
+import DemoDataBanner from '@/components/DemoDataBanner'
 import { calculateBoardReadiness, getReadinessColorClass } from '@/lib/readiness'
 import { analyzePerformance } from '@/lib/analytics'
 import { getAttendanceConcerns, getStatusColorClass } from '@/lib/attendance'
@@ -187,9 +188,13 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
 
   let rosterStudents: Profile[] = (students as Profile[]) || []
 
-  // Demo fallback: if no real student data is available, show safe demo roster
-  if (rosterStudents.length === 0 && isDemoFallbackEnabled()) {
+  // Demo fallback: if no real student data is available, show safe demo roster.
+  // Phase 6B-1 R-3: demo data is NEVER substituted in production.
+  const demoAllowed = isDemoDataAllowed()
+  let usingDemoData = false
+  if (rosterStudents.length === 0 && demoAllowed) {
     rosterStudents = demoStudents.filter((s) => s.school_id === schoolId || !schoolId)
+    if (rosterStudents.length > 0) usingDemoData = true
   }
 
   const studentIds = rosterStudents.map((s) => s.id)
@@ -212,7 +217,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
   // Build demo fallback for progress/attempts when real tables are empty
   let progressRecords: StudentProgress[] = (allProgress as StudentProgress[]) || []
   let attemptRecords: QuizAttempt[] = (allAttempts as QuizAttempt[]) || []
-  if (rosterStudents.length > 0 && progressRecords.length === 0 && attemptRecords.length === 0 && isDemoFallbackEnabled()) {
+  if (rosterStudents.length > 0 && progressRecords.length === 0 && attemptRecords.length === 0 && demoAllowed) {
     progressRecords = demoStudentProgress.filter((p) => studentIds.includes(p.user_id))
     attemptRecords = demoStudentQuizAttempts.filter((a) => studentIds.includes(a.user_id))
   }
@@ -225,7 +230,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     .in('user_id', studentIds.length > 0 ? studentIds : ['__none__'])
 
   let hourLogRecords: HourLog[] = mapHourLogsFromDb(allHourLogs || []) || []
-  if (hourLogRecords.length === 0 && isDemoFallbackEnabled()) {
+  if (hourLogRecords.length === 0 && demoAllowed) {
     hourLogRecords = demoHourLogs.filter((h) => studentIds.includes(h.user_id))
   }
 
@@ -237,7 +242,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     .in('user_id', studentIds.length > 0 ? studentIds : ['__none__'])
 
   let attendanceRecords: AttendanceRecord[] = mapAttendanceRecordsFromDb(allAttendance || []) || []
-  if (attendanceRecords.length === 0 && isDemoFallbackEnabled()) {
+  if (attendanceRecords.length === 0 && demoAllowed) {
     attendanceRecords = demoAttendanceRecords.filter((a) => studentIds.includes(a.userId))
   }
 
@@ -249,7 +254,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     .in('student_id', studentIds.length > 0 ? studentIds : ['__none__'])
 
   let gradeRecords: Grade[] = mapGradesFromDb(allGrades || []) || []
-  if (gradeRecords.length === 0 && isDemoFallbackEnabled()) {
+  if (gradeRecords.length === 0 && demoAllowed) {
     gradeRecords = demoGrades.filter((g) => studentIds.includes(g.studentId))
   }
 
@@ -259,7 +264,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     .or(`school_id.eq.${schoolId},school_id.is.null`)
 
   let gradeCategories: GradeCategory[] = mapGradeCategoriesFromDb(allCategories || []) || []
-  if (gradeCategories.length === 0 && isDemoFallbackEnabled()) {
+  if (gradeCategories.length === 0 && demoAllowed) {
     gradeCategories = demoGradeCategories
   }
 
@@ -270,7 +275,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     .in('student_id', studentIds.length > 0 ? studentIds : ['__none__'])
 
   let assessmentRecords: Assessment[] = mapAssessmentsFromDb(allAssessments || []) || []
-  if (assessmentRecords.length === 0 && isDemoFallbackEnabled()) {
+  if (assessmentRecords.length === 0 && demoAllowed) {
     assessmentRecords = demoAssessments.filter((a) => studentIds.includes(a.studentId))
   }
 
@@ -309,8 +314,8 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
   const attendanceConcerns = getAttendanceConcerns(rosterStudents, attendanceRecords)
 
   // Phase 8A messaging demo data
-  const demoNotifications = isDemoFallbackEnabled() ? getDemoNotificationsForUser(user.id) : []
-  const demoThreads = isDemoFallbackEnabled() ? getDemoThreadsForUser(user.id) : []
+  const demoNotifications = demoAllowed ? getDemoNotificationsForUser(user.id) : []
+  const demoThreads = demoAllowed ? getDemoThreadsForUser(user.id) : []
   const unreadThreadCount = demoThreads.reduce((sum, t) => sum + t.unreadCount, 0)
   const unreadNotificationCount = demoNotifications.filter((n) => !n.read).length
   const threadsNeedingResponse = demoThreads.filter((t) => t.unreadCount > 0)
@@ -398,6 +403,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
   return (
     <div className="min-h-screen bg-[var(--color-background-primary)] p-6 md:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
+        {usingDemoData && <DemoDataBanner />}
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Instructor Dashboard</h1>
           <p className="text-[var(--color-text-muted)]">

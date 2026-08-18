@@ -6,6 +6,8 @@ import { localChapters, getLocalQuiz } from '@/lib/local-data'
 import { allQuizQuestions } from '@/lib/quiz-data'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 import { demoStudents, demoStudentProgress, demoStudentQuizAttempts, demoInstructorNotes, demoHourLogs, demoAttendanceRecords, demoInstructorAttendanceNotes } from '@/lib/demo-data'
+import { isDemoDataAllowed } from '@/lib/demo-helpers'
+import DemoDataBanner from '@/components/DemoDataBanner'
 import { getDemoMissedQuestionsForUser } from '@/lib/demo-analytics'
 import { calculateBoardReadiness } from '@/lib/readiness'
 import { analyzePerformance } from '@/lib/analytics'
@@ -188,14 +190,18 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
 
   const typedStudent = student as Profile | null
 
-  // Demo fallback: if real data is unavailable, check demo students
+  // Demo fallback: if real data is unavailable, check demo students.
+  // Phase 6B-1 R-3: demo data is NEVER substituted in production.
+  const demoAllowed = isDemoDataAllowed()
+  let usingDemoData = false
   let resolvedStudent: Profile | null = typedStudent
-  if (!resolvedStudent) {
+  if (!resolvedStudent && demoAllowed) {
     resolvedStudent = demoStudents.find(
       (s) =>
         s.id === studentId &&
         (s.school_id === instructorProfile.school_id || !instructorProfile.school_id)
     ) || null
+    if (resolvedStudent) usingDemoData = true
   }
 
   if (!resolvedStudent) {
@@ -226,12 +232,12 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
   // Demo fallback for progress, attempts, and notes
   let progressRecords: StudentProgress[] = (progress as StudentProgress[]) || []
   let attemptRecords: QuizAttempt[] = (attempts as QuizAttempt[]) || []
-  if (progressRecords.length === 0 && attemptRecords.length === 0) {
+  if (progressRecords.length === 0 && attemptRecords.length === 0 && demoAllowed) {
     progressRecords = demoStudentProgress.filter((p) => p.user_id === studentId)
     attemptRecords = demoStudentQuizAttempts.filter((a) => a.user_id === studentId)
     attemptRecords.sort((a, b) => new Date(b.completed_at).getTime() - new Date(a.completed_at).getTime())
   }
-  if (noteRecords.length === 0 && !notesError) {
+  if (noteRecords.length === 0 && !notesError && demoAllowed) {
     noteRecords = demoInstructorNotes.filter((n) => n.student_id === studentId)
   }
 
@@ -244,7 +250,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     .order('date', { ascending: false })
 
   let hourLogRecords: HourLog[] = mapHourLogsFromDb(hourLogs || []) || []
-  if (hourLogRecords.length === 0) {
+  if (hourLogRecords.length === 0 && demoAllowed) {
     hourLogRecords = demoHourLogs.filter((h) => h.user_id === studentId)
     hourLogRecords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   }
@@ -266,10 +272,10 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
 
   let attendanceRecords: AttendanceRecord[] = mapAttendanceRecordsFromDb(attendance || []) || []
   let attendanceNoteRecords: InstructorAttendanceNote[] = mapAttendanceNotesFromDb(attendanceNotes || []) || []
-  if (attendanceRecords.length === 0) {
+  if (attendanceRecords.length === 0 && demoAllowed) {
     attendanceRecords = demoAttendanceRecords.filter((a) => a.userId === studentId)
   }
-  if (attendanceNoteRecords.length === 0) {
+  if (attendanceNoteRecords.length === 0 && demoAllowed) {
     attendanceNoteRecords = demoInstructorAttendanceNotes.filter((n) => n.studentId === studentId)
   }
 
@@ -333,7 +339,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     chapters,
     questions,
   })
-  if (missedQuestions.length === 0) {
+  if (missedQuestions.length === 0 && demoAllowed) {
     missedQuestions = getDemoMissedQuestionsForUser(studentId)
   }
 
@@ -366,6 +372,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
   return (
     <div className="min-h-screen bg-black p-6 md:p-8">
       <div className="max-w-5xl mx-auto space-y-8">
+        {usingDemoData && <DemoDataBanner />}
         {/* Back navigation */}
         <BackButton fallbackHref="/instructor" label="Back to roster" />
 

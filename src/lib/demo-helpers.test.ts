@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest'
-import { isLocalSupabaseUrl } from './demo-helpers'
+import { describe, it, expect, vi, afterEach } from 'vitest'
+import { isLocalSupabaseUrl, isDemoDataAllowed, isExplicitDemoMode } from './demo-helpers'
 
 describe('isLocalSupabaseUrl', () => {
   it.each([
@@ -33,5 +33,62 @@ describe('isLocalSupabaseUrl', () => {
     '',
   ])('rejects %s', (url) => {
     expect(isLocalSupabaseUrl(url)).toBe(false)
+  })
+})
+
+describe('isDemoDataAllowed — Phase 6B-1 R-3 production safeguard', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs()
+  })
+
+  it('returns true in development with demo mode enabled', () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('NEXT_PUBLIC_DEMO_MODE', 'true')
+    expect(isDemoDataAllowed()).toBe(true)
+  })
+
+  it('returns false in development with demo mode disabled', () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('NEXT_PUBLIC_DEMO_MODE', 'false')
+    expect(isDemoDataAllowed()).toBe(false)
+  })
+
+  it('returns false in development with demo mode unset', () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('NEXT_PUBLIC_DEMO_MODE', '')
+    expect(isDemoDataAllowed()).toBe(false)
+  })
+
+  it('returns false in production even when demo mode is explicitly enabled', () => {
+    vi.stubEnv('NODE_ENV', 'production')
+    vi.stubEnv('NEXT_PUBLIC_DEMO_MODE', 'true')
+    expect(isDemoDataAllowed()).toBe(false)
+  })
+
+  it('returns false in production with demo mode disabled', () => {
+    vi.stubEnv('NODE_ENV', 'production')
+    vi.stubEnv('NEXT_PUBLIC_DEMO_MODE', 'false')
+    expect(isDemoDataAllowed()).toBe(false)
+  })
+
+  it('returns false in production with demo mode unset', () => {
+    vi.stubEnv('NODE_ENV', 'production')
+    vi.stubEnv('NEXT_PUBLIC_DEMO_MODE', '')
+    expect(isDemoDataAllowed()).toBe(false)
+  })
+
+  it('returns true in test environment with demo mode enabled (test is not production)', () => {
+    vi.stubEnv('NODE_ENV', 'test')
+    vi.stubEnv('NEXT_PUBLIC_DEMO_MODE', 'true')
+    // Test environment is not production, so demo data is allowed when demo mode is on
+    expect(isDemoDataAllowed()).toBe(true)
+  })
+
+  it('isExplicitDemoMode still returns true when NEXT_PUBLIC_DEMO_MODE is true regardless of NODE_ENV', () => {
+    vi.stubEnv('NODE_ENV', 'production')
+    vi.stubEnv('NEXT_PUBLIC_DEMO_MODE', 'true')
+    expect(isExplicitDemoMode()).toBe(true)
+    // But isDemoDataAllowed must still block it
+    expect(isDemoDataAllowed()).toBe(false)
   })
 })

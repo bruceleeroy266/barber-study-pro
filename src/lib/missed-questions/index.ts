@@ -111,32 +111,89 @@ export async function saveMissedQuestions(
     return { ok: true }
   }
 
-  // Upsert in two steps: increment times_missed for existing records, insert new ones.
+  // Two-step upsert: increment times_missed for existing records, insert new ones.
   // We use the unique (user_id, question_id) constraint to avoid duplicates.
-  const upsertRows = inputs.map((input) => ({
-    user_id: userId,
-    question_id: input.questionId,
-    quiz_id: input.quizId,
-    question_text: input.question,
-    correct_answer: input.correctAnswer,
-    student_answer: input.studentAnswer,
-    explanation: input.explanation,
-    chapter_id: input.chapterId,
-    chapter_number: input.chapterNumber,
-    category: input.category,
-    missed_at: new Date().toISOString(),
-  }))
+  const questionIds = inputs.map((i) => i.questionId)
 
-  const { error } = await supabase
+  // Step 1: Fetch existing records to determine current times_missed values.
+  const { data: existingRows, error: fetchError } = await supabase
     .from('missed_questions')
-    .upsert(upsertRows, {
-      onConflict: 'user_id,question_id',
-      ignoreDuplicates: false,
-    })
+    .select('question_id, times_missed')
+    .eq('user_id', userId)
+    .in('question_id', questionIds)
 
-  if (error) {
-    console.error('[MissedQuestions] Failed to save to Supabase:', error)
-    return { ok: false, error: error.message }
+  if (fetchError) {
+    console.error('[MissedQuestions] Failed to fetch existing records:', fetchError)
+    return { ok: false, error: fetchError.message }
+  }
+
+  const existingMap = new Map(
+    (existingRows as { question_id: string; times_missed: number }[] | null)?.map(
+      (r) => [r.question_id, r.times_missed]
+    ) ?? []
+  )
+
+  const now = new Date().toISOString()
+  const toInsert: Record<string, unknown>[] = []
+  const toUpdate: { question_id: string; times_missed: number }[] = []
+
+  for (const input of inputs) {
+    const existingTimesMissed = existingMap.get(input.questionId)
+    if (existingTimesMissed !== undefined) {
+      // Existing record: increment times_missed
+      toUpdate.push({
+        question_id: input.questionId,
+        times_missed: existingTimesMissed + 1,
+      })
+    } else {
+      // New record: insert with times_missed = 1
+      toInsert.push({
+        user_id: userId,
+        question_id: input.questionId,
+        quiz_id: input.quizId,
+        question_text: input.question,
+        correct_answer: input.correctAnswer,
+        student_answer: input.studentAnswer,
+        explanation: input.explanation,
+        chapter_id: input.chapterId,
+        chapter_number: input.chapterNumber,
+        category: input.category,
+        times_missed: 1,
+        missed_at: now,
+      })
+    }
+  }
+
+  // Step 2a: Insert new records
+  if (toInsert.length > 0) {
+    const { error: insertError } = await supabase
+      .from('missed_questions')
+      .insert(toInsert)
+
+    if (insertError) {
+      console.error('[MissedQuestions] Failed to insert new records:', insertError)
+      return { ok: false, error: insertError.message }
+    }
+  }
+
+  // Step 2b: Update existing records (increment times_missed, refresh missed_at)
+  for (const update of toUpdate) {
+    const { error: updateError } = await supabase
+      .from('missed_questions')
+      .update({
+        times_missed: update.times_missed,
+        missed_at: now,
+        student_answer: inputs.find((i) => i.questionId === update.question_id)?.studentAnswer,
+        correct_answer: inputs.find((i) => i.questionId === update.question_id)?.correctAnswer,
+        explanation: inputs.find((i) => i.questionId === update.question_id)?.explanation,
+      })
+      .eq('user_id', userId)
+      .eq('question_id', update.question_id)
+
+    if (updateError) {
+      console.error('[MissedQuestions] Failed to update record:', updateError)
+      return { ok: false, error: updateError.message }
+    }
   }
 
   return { ok: true }
