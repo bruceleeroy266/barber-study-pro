@@ -1,20 +1,27 @@
 // Chapter 2 Premium Quiz — Flashcard-Driven Multiple Choice System
-// Life Skills — 40 questions generated from Chapter 2 flashcard curriculum
+// Life Skills — 50 questions generated from Chapter 2 flashcard curriculum
 // Randomized order, randomized answers, board-exam style
-// Source: chapter-2-premium-flashcards.ts (50 cards)
+// Source: chapter-2-premium-flashcards.ts (58 cards)
 
 import { QuizQuestion } from '@/types'
 
 // ───────────────────────────────────────────────
-// CHAPTER 2 QUIZ: Life Skills (40 Questions)
-// Difficulty mix: 14 easy, 16 medium, 10 hard
-// Correct answer distribution: A=8, B=16, C=9, D=7
+// CHAPTER 2 QUIZ: Life Skills (50 Questions)
+// Difficulty mix: 15 easy, 20 medium, 15 hard
+// Correct answer distribution: A=10, B=20, C=12, D=8
 // Sources: Foundation, Definitions, Board Exam, Visual ID, Scenarios, Procedures, Safety, Memory
 // ───────────────────────────────────────────────
 // Phase 5A additions: qq-2-034 through qq-2-042
 // qq-2-042: C-2-25 (Leadership & Mentorship) — medium, Comprehension, correct=B
 //   NOT eligible for Practice Final or DIRECT VERIFIED exam-readiness
 //   Concept mapping: C-2-25 only, no subconcept, no secondary mappings
+// Phase 5B-P1.5 additions: qq-2-043 through qq-2-050
+// qq-2-043: C-2-04 (Mission & Purpose) — medium, Analysis, correct=B
+// qq-2-044 through qq-2-047: C-2-05 (Positive Professional Attitude)
+// qq-2-048: SC-2-02-b (Self-Esteem) — easy, Comprehension, correct=B
+// qq-2-049: C-2-11 (Note-Taking) — medium, Application, correct=B
+// qq-2-050: SC-2-12-b (Ethical Product Recommendation) — medium, Application, correct=B
+//   NOT eligible for Practice Final or DIRECT VERIFIED exam-readiness
 
 export const chapter2PremiumQuizQuestions: QuizQuestion[] = [
   // ═══════════════════════════════════════════════════════════
@@ -580,5 +587,127 @@ export const chapter2PremiumQuizQuestions: QuizQuestion[] = [
     explanation: 'Chapter 2 teaches that constructive feedback should focus on what is working and what can be adjusted. This is one of the four qualities of a barber leader — giving constructive feedback means helping someone understand their strengths and identifying specific areas for improvement, not simply pointing out everything that went wrong. A is incorrect because focusing only on errors without acknowledging what is working does not match the source\'s description of constructive feedback. C is incorrect because the source does not describe comparing performers as a constructive feedback practice. D is incorrect because the source does not establish that criticism must come first for feedback to be effective.',
     difficulty: 'medium',
     order_index: 42,
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // PHASE 5B-P1.5 ADDITIONS — C-2-04 Mission & Purpose
+  // Added 2026-08-18 per ASCYN_PRO_CH02_PHASE5B_P1_5_FINAL_HUMAN_REVIEW.md
+  // Addresses GAP-1: C-2-04 no dedicated content section
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: 'qq-2-043',
+    quiz_id: 'quiz-2',
+    question: 'A barber writes: "I provide quality haircuts because I believe everyone deserves to feel confident, and I\'m building toward owning my own shop." Which mission statement component is MISSING?',
+    answer_a: 'Purpose (what you do and why)',
+    answer_b: 'Values (guiding principles)',
+    answer_c: 'Direction (where you\'re heading)',
+    answer_d: 'All components are present',
+    correct_answer: 'b',
+    explanation: 'The statement includes purpose ("provide quality haircuts... everyone deserves to feel confident") and direction ("owning my own shop") but lacks explicit values — the principles that guide HOW they work.',
+    difficulty: 'medium',
+    order_index: 43,
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // PHASE 5B-P1.5 ADDITIONS — C-2-05 Positive Professional Attitude
+  // Added 2026-08-18 per ASCYN_PRO_CH02_PHASE5B_P1_5_FINAL_HUMAN_REVIEW.md
+  // Addresses GAP-2: C-2-05 no dedicated content section
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: 'qq-2-044',
+    quiz_id: 'quiz-2',
+    question: 'Which of the following is NOT one of the four key behaviors of a positive professional attitude?',
+    answer_a: 'Emotional composure',
+    answer_b: 'Technical skill mastery',
+    answer_c: 'Respectful communication',
+    answer_d: 'Genuine interest',
+    correct_answer: 'b',
+    explanation: 'The four behaviors are emotional composure, respectful communication, genuine interest, and professional positivity. Technical skill is important but separate from attitude.',
+    difficulty: 'easy',
+    order_index: 44,
+  },
+  {
+    id: 'qq-2-045',
+    quiz_id: 'quiz-2',
+    question: 'A barber is running 30 minutes behind. A walk-in client is visibly frustrated. Which response demonstrates emotional composure?',
+    answer_a: '"I\'m doing my best — you\'ll have to wait like everyone else."',
+    answer_b: '"I apologize for the wait. I want to give you my full attention. I can take you at [time] or book you for later."',
+    answer_c: '"If you\'re in a hurry, maybe you should come back another day."',
+    answer_d: 'Ignore the frustration and keep working',
+    correct_answer: 'b',
+    explanation: 'Composure means choosing a professional response rather than reacting to the client\'s frustration with your own stress. Option B acknowledges the issue, respects the client, and offers solutions.',
+    difficulty: 'medium',
+    order_index: 45,
+  },
+  {
+    id: 'qq-2-046',
+    quiz_id: 'quiz-2',
+    question: 'Why is "genuine interest" considered a professional attitude behavior rather than just being friendly?',
+    answer_a: 'It is not considered a professional behavior',
+    answer_b: 'It creates connection and loyalty by caring about clients as individuals, not transactions',
+    answer_c: 'It is only important for building personal friendships',
+    answer_d: 'It requires no effort or skill',
+    correct_answer: 'b',
+    explanation: 'Genuine interest is a professional skill that builds trust and retention — it\'s strategic, not just social. It requires intentional effort to remember details and follow up.',
+    difficulty: 'medium',
+    order_index: 46,
+  },
+  {
+    id: 'qq-2-047',
+    quiz_id: 'quiz-2',
+    question: 'A coworker is complaining loudly about a difficult client. You disagree with their assessment. How do you maintain professional attitude?',
+    answer_a: 'Join in to show support for your coworker',
+    answer_b: 'Correct your coworker immediately in front of others',
+    answer_c: 'Listen respectfully, don\'t engage in negative talk, redirect to solutions or excuse yourself professionally',
+    answer_d: 'Report your coworker to the manager immediately',
+    correct_answer: 'c',
+    explanation: 'Professional attitude means maintaining respect for all parties and not participating in gossip or negativity. Option C shows respect for the coworker while not compromising your professionalism.',
+    difficulty: 'hard',
+    order_index: 47,
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // PHASE 5B-P1.5 ADDITIONS — Three YELLOW Assessment Gaps
+  // Added 2026-08-18 per ASCYN_PRO_CH02_PHASE5B_P1_5_FINAL_HUMAN_REVIEW.md
+  // Addresses GAP-10 (Self-esteem), GAP-11 (Note-taking), GAP-12 (Ethical product recommendation)
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: 'qq-2-048',
+    quiz_id: 'quiz-2',
+    question: 'According to Chapter 2, how does high self-esteem impact a barber\'s professional performance?',
+    answer_a: 'It has no impact on professional performance',
+    answer_b: 'Helps handle challenges, accept criticism, and project confidence',
+    answer_c: 'Only matters for personal life, not work',
+    answer_d: 'Makes barbers overconfident and careless',
+    correct_answer: 'b',
+    explanation: 'High self-esteem enables barbers to handle challenges, accept constructive criticism, and project confidence — all of which attract and retain clients.',
+    difficulty: 'easy',
+    order_index: 48,
+  },
+  {
+    id: 'qq-2-049',
+    quiz_id: 'quiz-2',
+    question: 'What is the recommended first step in the note-taking process for barber students?',
+    answer_a: 'Write down everything the instructor says verbatim',
+    answer_b: 'Listen for emphasized words and directives like "you need to know"',
+    answer_c: 'Wait until after class to take notes',
+    answer_d: 'Only use abbreviations and symbols',
+    correct_answer: 'b',
+    explanation: 'The note-taking process begins with active listening for emphasized content, then using templates/key words, writing complete sentences, reviewing within 24 hours, and transferring to long-term memory tools.',
+    difficulty: 'medium',
+    order_index: 49,
+  },
+  {
+    id: 'qq-2-050',
+    quiz_id: 'quiz-2',
+    question: 'A client asks if they should buy an expensive styling product. You know a less expensive product would work equally well for their hair type. What is the ethical recommendation?',
+    answer_a: 'Recommend the expensive product to earn more commission',
+    answer_b: 'Recommend the less expensive product that genuinely helps the client',
+    answer_c: 'Let the client decide without giving any recommendation',
+    answer_d: 'Recommend both products and let the client choose',
+    correct_answer: 'b',
+    explanation: 'Ethical product recommendation means prioritizing client benefit over commission. Recommending unnecessary expensive products destroys trust.',
+    difficulty: 'medium',
+    order_index: 50,
   },
 ]

@@ -1,5 +1,5 @@
 // Chapter 2 Premium Flashcard System
-// Life Skills — 50 flashcards (49 active, 1 deactivated)
+// Life Skills — 58 flashcards (57 active, 1 deactivated)
 // Categories: Foundation Knowledge, Definitions, Professional Practice, Visual Identification,
 //             Scenario Thinking, Procedure/Process Knowledge, Safety Concepts, Memory Reinforcement,
 //             Career Readiness, Client Service, Workplace Practice
@@ -538,6 +538,98 @@ export const chapter2PremiumFlashcards: Flashcard[] = [
     category: 'Memory Reinforcement',
     difficulty: 'medium',
     order_index: 50,
+    is_active: true,
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  // PHASE 5B-P1.5 ADDITIONS — C-2-04 Mission & Purpose
+  // Added 2026-08-18 per ASCYN_PRO_CH02_PHASE5B_P1_5_FINAL_HUMAN_REVIEW.md
+  // Addresses GAP-1: C-2-04 no dedicated content section
+  // ═══════════════════════════════════════════════════════════════
+  {
+    id: 'fc-2-051',
+    chapter_id: 'ch-2',
+    front: 'What are the three components of an effective mission statement?',
+    back: 'Purpose (what you do and why), Values (guiding principles), and Direction (where you\'re heading). Together they form your professional compass.',
+    category: 'Definitions',
+    difficulty: 'easy',
+    order_index: 51,
+    is_active: true,
+  },
+  {
+    id: 'fc-2-052',
+    chapter_id: 'ch-2',
+    front: 'What is the four-step process for creating a personal mission statement?',
+    back: 'Reflect (what drew you to barbering), Draft (write 2-3 sentences), Refine (read aloud, adjust), Commit (write where you\'ll see it daily). Review annually as you grow.',
+    category: 'Procedure/Process Knowledge',
+    difficulty: 'medium',
+    order_index: 52,
+    is_active: true,
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  // PHASE 5B-P1.5 ADDITIONS — C-2-05 Positive Professional Attitude
+  // Added 2026-08-18 per ASCYN_PRO_CH02_PHASE5B_P1_5_FINAL_HUMAN_REVIEW.md
+  // Addresses GAP-2: C-2-05 no dedicated content section
+  // ═══════════════════════════════════════════════════════════════
+  {
+    id: 'fc-2-053',
+    chapter_id: 'ch-2',
+    front: 'What is emotional composure in a barbering context?',
+    back: 'Maintaining professionalism when situations get difficult — choosing your response rather than reacting impulsively. Take a breath, listen fully, respond professionally.',
+    category: 'Definitions',
+    difficulty: 'easy',
+    order_index: 53,
+    is_active: true,
+  },
+  {
+    id: 'fc-2-054',
+    chapter_id: 'ch-2',
+    front: 'What does respectful communication include for barbers?',
+    back: 'Professional tone, words that build up, listening to understand, adapting to each person. Respect builds loyalty and trust with clients and coworkers.',
+    category: 'Definitions',
+    difficulty: 'easy',
+    order_index: 54,
+    is_active: true,
+  },
+  {
+    id: 'fc-2-055',
+    chapter_id: 'ch-2',
+    front: 'What is genuine interest in a client service context?',
+    back: 'Caring about people as individuals — remembering details, asking follow-up questions, noticing changes, celebrating wins. Creates connection and loyalty.',
+    category: 'Definitions',
+    difficulty: 'easy',
+    order_index: 55,
+    is_active: true,
+  },
+  {
+    id: 'fc-2-056',
+    chapter_id: 'ch-2',
+    front: 'What is professional positivity and what is it NOT?',
+    back: 'Approaching work with energy and optimism — finding solutions, seeing challenges as growth, focusing on what you can control. NOT fake happiness or ignoring problems.',
+    category: 'Definitions',
+    difficulty: 'medium',
+    order_index: 56,
+    is_active: true,
+  },
+  {
+    id: 'fc-2-057',
+    chapter_id: 'ch-2',
+    front: 'A client says, "I hate how my hair turned out." How do you respond with professional attitude?',
+    back: 'Stay calm (composure), listen fully without defending (respect), acknowledge their feelings ("I understand you\'re disappointed"), and focus on solutions ("Let me fix this for you").',
+    category: 'Scenario Thinking',
+    difficulty: 'medium',
+    order_index: 57,
+    is_active: true,
+  },
+  {
+    id: 'fc-2-058',
+    chapter_id: 'ch-2',
+    front: 'What are the four key behaviors of a positive professional attitude?',
+    back: 'Emotional composure (stay calm), Respectful communication (treat with dignity), Genuine interest (care about individuals), Professional positivity (focus on solutions).',
+    category: 'Memory Reinforcement',
+    difficulty: 'medium',
+    order_index: 58,
     is_active: true,
   },
 ]

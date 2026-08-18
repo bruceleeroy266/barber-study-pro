@@ -1782,6 +1782,113 @@ export const chapterContentData: Record<string, ChapterContent> = {
       },
 
       // ============================================================
+      // NEW SECTION 11.5: Mission & Purpose (C-2-04)
+      // ============================================================
+      {
+        type: 'contentBlock',
+        id: 'mission-foundations',
+        title: 'What Makes a Mission Statement Effective?',
+        content: "A mission statement is more than a sentence — it's your professional compass. Effective mission statements have three components: (1) **Purpose** — what you do and why you do it; (2) **Values** — the principles that guide your work; (3) **Direction** — where you're heading professionally. A mission statement answers: \"Who am I as a barber? What do I stand for? Where am I going?\"",
+        highlight: 'Purpose + Values + Direction = Your Professional Compass',
+      },
+      {
+        type: 'contentBlock',
+        id: 'mission-creation',
+        title: 'Building Your Mission Statement',
+        content: "Creating your mission statement is a process, not a one-time task. Step 1: **Reflect** — What drew you to barbering? What do you want clients to feel? Step 2: **Draft** — Write 2-3 sentences combining your purpose, values, and direction. Step 3: **Refine** — Read it aloud. Does it sound like you? Does it inspire you? Step 4: **Commit** — Write it where you'll see it daily. Your mission statement should evolve as you grow — review it annually.",
+        highlight: 'Reflect → Draft → Refine → Commit',
+      },
+      {
+        type: 'checklist',
+        id: 'mission-evaluation',
+        title: 'Is Your Mission Statement Working?',
+        items: [
+          { text: 'Clear purpose — I know what I do and why' },
+          { text: 'Values-driven — My principles are evident' },
+          { text: 'Direction-focused — I know where I\'m heading' },
+          { text: 'Personally meaningful — It resonates with me' },
+          { text: 'Actionable — It guides my daily decisions' },
+          { text: 'Memorable — I can recall it without reading' },
+        ],
+      },
+
+      // ============================================================
+      // NEW SECTION 11.6: Positive Professional Attitude (C-2-05)
+      // ============================================================
+      {
+        type: 'contentBlock',
+        id: 'attitude-framework',
+        title: 'Building Your Professional Attitude',
+        content: "Your technical skills get you licensed. Your professional attitude determines how far you go. A positive professional attitude isn't just \"being nice\" — it's a set of learnable behaviors that shape every client interaction. These behaviors include: staying calm under pressure, communicating with respect, showing genuine interest in others, and maintaining professionalism even when situations are difficult. The good news: attitude is a skill. You can develop it with awareness and practice.",
+        highlight: 'Attitude is a skill you can build',
+      },
+      {
+        type: 'contentBlock',
+        id: 'attitude-composure',
+        title: 'Staying Calm Under Pressure',
+        content: "Emotional composure means maintaining professionalism when situations get difficult. A client criticizes your work. A coworker is having a bad day. You're running 30 minutes behind. In these moments, your response defines your professionalism. Composure doesn't mean suppressing emotions — it means choosing your response rather than reacting impulsively. Take a breath. Listen fully. Respond professionally. Your calm presence de-escalates tension and builds trust.",
+        highlight: 'Choose your response, don\'t react impulsively',
+      },
+      {
+        type: 'contentBlock',
+        id: 'attitude-communication',
+        title: 'Communicating with Respect',
+        content: "Respectful communication means treating every person — clients, coworkers, yourself — with dignity. This includes: using a professional tone (not too casual, not too stiff), choosing words that build up rather than tear down, listening to understand rather than to reply, and adapting your communication style to each person. A client who feels respected becomes a loyal client. A coworker who feels respected becomes an ally.",
+        highlight: 'Respect builds loyalty and trust',
+      },
+      {
+        type: 'contentBlock',
+        id: 'attitude-interest',
+        title: 'Showing Genuine Interest',
+        content: "Genuine interest means caring about people as individuals, not just as transactions. Remember details about your clients' lives. Ask follow-up questions. Notice when something is different. Celebrate their wins. This isn't \"fake friendliness\" — it's recognizing that every person in your chair has a story, and you have the privilege of being part of their day. Genuine interest creates connection, and connection creates loyalty.",
+        highlight: 'People remember how you made them feel',
+      },
+      {
+        type: 'contentBlock',
+        id: 'attitude-positivity',
+        title: 'Maintaining Professional Positivity',
+        content: "Professional positivity means approaching your work with energy and optimism — without being fake. It's finding solutions instead of complaining. It's seeing challenges as opportunities to grow. It's maintaining hope even when things are hard. This doesn't mean ignoring problems or pretending everything is perfect. It means choosing to focus on what you can control and bringing your best self to work every day. Your positivity is contagious — it affects your clients, your coworkers, and your own satisfaction.",
+        highlight: 'Focus on what you can control',
+      },
+      {
+        type: 'scenarioBlock',
+        id: 'attitude-scenarios',
+        title: 'Applying Your Professional Attitude',
+        scenarios: [
+          {
+            situation: "A client says, \"I hate how my hair turned out.\" How do you respond with composure and respect?",
+            options: [
+              { letter: 'A', text: 'Defend your work and explain why the cut is technically correct', feedback: '❌ Defensiveness escalates conflict. Listen first, then respond professionally.' },
+              { letter: 'B', text: 'Stay calm, listen fully, acknowledge their feelings, and focus on solutions', feedback: '✅ Correct! Composure + respect + genuine interest = professional attitude.' },
+              { letter: 'C', text: 'Offer a refund immediately to make them go away', feedback: '❌ Refunds without understanding the issue miss the opportunity to build loyalty.' },
+              { letter: 'D', text: 'Tell them they are being unreasonable', feedback: '❌ Dismissing client feelings destroys trust and violates respectful communication.' },
+            ],
+            correctAnswer: 'B',
+          },
+          {
+            situation: "A coworker is complaining loudly about another client. How do you maintain professionalism?",
+            options: [
+              { letter: 'A', text: 'Join in to show support for your coworker', feedback: '❌ Participating in negativity violates respectful communication and damages shop culture.' },
+              { letter: 'B', text: 'Listen respectfully, don\'t engage in negative talk, redirect to solutions or excuse yourself professionally', feedback: '✅ Correct! Maintain respect for all parties without compromising your professionalism.' },
+              { letter: 'C', text: 'Correct your coworker immediately in front of others', feedback: '❌ Public correction creates conflict. Address privately if necessary.' },
+              { letter: 'D', text: 'Report your coworker to the manager immediately', feedback: '❌ Escalating immediately without attempting professional redirection is not the first step.' },
+            ],
+            correctAnswer: 'B',
+          },
+          {
+            situation: "You're having a terrible day, but a client just sat in your chair. How do you show genuine interest despite your mood?",
+            options: [
+              { letter: 'A', text: 'Tell the client about your bad day so they understand your mood', feedback: '❌ Clients deserve your professional best regardless of personal circumstances.' },
+              { letter: 'B', text: 'Focus on the client — ask about their day, remember details from previous visits, be present', feedback: '✅ Correct! Professional attitude means choosing to bring your best self to every client interaction.' },
+              { letter: 'C', text: 'Rush through the cut to get it over with', feedback: '❌ Rushing violates quality standards and shows lack of genuine interest.' },
+              { letter: 'D', text: 'Cancel the appointment and go home', feedback: '❌ Cancelling without emergency violates reliability and professionalism.' },
+            ],
+            correctAnswer: 'B',
+          },
+        ],
+      },
+
+      // ============================================================
       // NEW SECTION 12: Cultural Competence & Inclusive Service
       // ============================================================
       {
