@@ -103,6 +103,8 @@ function renderQuiz(props?: { nextChapterNumber?: number | null; bestAttempt?: Q
   )
 }
 
+// End-of-quiz feedback flow: Submit Answer records and advances directly.
+// The final question's button reads "Submit & Finish Quiz".
 async function completeQuiz(correctCount: number) {
   renderQuiz()
 
@@ -116,14 +118,12 @@ async function completeQuiz(correctCount: number) {
     const answerKey = isCorrect ? correctOption : wrongOption
 
     fireEvent.click(screen.getByText(new RegExp(`${answerKey.toUpperCase()}\\.`)))
-    fireEvent.click(screen.getByRole('button', { name: /Submit Answer/i }))
 
-    if (i < sampleQuestions.length - 1) {
-      fireEvent.click(screen.getByRole('button', { name: /Next Question/i }))
-    }
+    const isLast = i === sampleQuestions.length - 1
+    fireEvent.click(
+      screen.getByRole('button', { name: isLast ? /Submit & Finish Quiz/i : /Submit Answer/i })
+    )
   }
-
-  fireEvent.click(screen.getByRole('button', { name: /Finish Quiz/i }))
 
   await waitFor(() => {
     expect(mocks.insert).toHaveBeenCalled()
@@ -145,6 +145,25 @@ describe('QuizClient', () => {
     expect(screen.getByText(/Some questions may require information from your assigned course materials/i)).toBeInTheDocument()
     expect(screen.getByText(/Passing: 80%/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Start Quiz/i })).toBeInTheDocument()
+  })
+
+  it('does not reveal correctness, explanations, or a live score during the attempt', () => {
+    renderQuiz()
+    fireEvent.click(screen.getByRole('button', { name: /Start Quiz/i }))
+
+    // Answer the first question correctly.
+    fireEvent.click(screen.getByText(/B\./))
+    fireEvent.click(screen.getByRole('button', { name: /Submit Answer/i }))
+
+    // No explanation should appear during the attempt.
+    expect(screen.queryByText(/Explanation/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(sampleQuestions[0].explanation!)).not.toBeInTheDocument()
+
+    // No live running score should be displayed.
+    expect(screen.queryByText(/Score:/i)).not.toBeInTheDocument()
+
+    // We should have advanced to question 2 with no correctness feedback.
+    expect(screen.getByText(/Question 2 of 2/i)).toBeInTheDocument()
   })
 
   it('shows the failing guidance and primary retake action when score is below 80%', async () => {
@@ -188,19 +207,17 @@ describe('QuizClient', () => {
       const isCorrect = i < 4
       const answerKey = isCorrect ? 'b' : 'a'
       fireEvent.click(screen.getByText(new RegExp(`${answerKey.toUpperCase()}\\.`)))
-      fireEvent.click(screen.getByRole('button', { name: /Submit Answer/i }))
-      if (i < fiveQuestions.length - 1) {
-        fireEvent.click(screen.getByRole('button', { name: /Next Question/i }))
-      }
+      const isLast = i === fiveQuestions.length - 1
+      fireEvent.click(
+        screen.getByRole('button', { name: isLast ? /Submit & Finish Quiz/i : /Submit Answer/i })
+      )
     }
-
-    fireEvent.click(screen.getByRole('button', { name: /Finish Quiz/i }))
 
     await waitFor(() => {
       expect(mocks.insert).toHaveBeenCalled()
     })
 
-    expect(screen.getByText(/Quiz passed\. Review your missed questions/i)).toBeInTheDocument()
+    expect(screen.getByText(/Quiz passed\. Review your answers below/i)).toBeInTheDocument()
     expect(screen.getByText('80%')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Continue to Chapter 2/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Retake Quiz/i })).toBeInTheDocument()
@@ -209,8 +226,23 @@ describe('QuizClient', () => {
   it('shows the passing guidance when score is above 80%', async () => {
     await completeQuiz(2)
 
-    expect(await screen.findByText(/Quiz passed. Review your missed questions/i, {}, { timeout: 2000 })).toBeInTheDocument()
+    expect(await screen.findByText(/Quiz passed. Review your answers below/i, {}, { timeout: 2000 })).toBeInTheDocument()
     expect(await screen.findByRole('link', { name: /Continue to Chapter 2/i }, { timeout: 2000 })).toBeInTheDocument()
+  })
+
+  it('shows review of ALL questions with correct and missed status at the end', async () => {
+    await completeQuiz(1)
+
+    // Answer review header reflects all questions.
+    expect(await screen.findByText(/Answer Review \(2 questions\)/i, {}, { timeout: 2000 })).toBeInTheDocument()
+
+    // Both a Correct and a Missed badge are present.
+    expect(screen.getByText('Correct')).toBeInTheDocument()
+    expect(screen.getByText('Missed')).toBeInTheDocument()
+
+    // Explanations are shown at the end for reviewed questions.
+    expect(screen.getByText(sampleQuestions[0].explanation!)).toBeInTheDocument()
+    expect(screen.getByText(sampleQuestions[1].explanation!)).toBeInTheDocument()
   })
 
   it('shows the missed-questions review link when questions were missed', async () => {
@@ -250,13 +282,11 @@ describe('QuizClient', () => {
     for (let i = 0; i < sampleQuestions.length; i++) {
       const question = sampleQuestions[i]
       fireEvent.click(screen.getByText(new RegExp(`${question.correct_answer.toUpperCase()}\\.`)))
-      fireEvent.click(screen.getByRole('button', { name: /Submit Answer/i }))
-      if (i < sampleQuestions.length - 1) {
-        fireEvent.click(screen.getByRole('button', { name: /Next Question/i }))
-      }
+      const isLast = i === sampleQuestions.length - 1
+      fireEvent.click(
+        screen.getByRole('button', { name: isLast ? /Submit & Finish Quiz/i : /Submit Answer/i })
+      )
     }
-
-    fireEvent.click(screen.getByRole('button', { name: /Finish Quiz/i }))
 
     await waitFor(() => {
       expect(screen.getByRole('link', { name: /Return to Dashboard/i })).toHaveAttribute('href', '/dashboard')
@@ -286,12 +316,11 @@ describe('QuizClient', () => {
       const question = sampleQuestions[i]
       const wrongOption = Object.keys({ a: '', b: '', c: '', d: '' }).find((k) => k !== question.correct_answer) as string
       fireEvent.click(screen.getByText(new RegExp(`${wrongOption.toUpperCase()}\\.`)))
-      fireEvent.click(screen.getByRole('button', { name: /Submit Answer/i }))
-      if (i < sampleQuestions.length - 1) {
-        fireEvent.click(screen.getByRole('button', { name: /Next Question/i }))
-      }
+      const isLast = i === sampleQuestions.length - 1
+      fireEvent.click(
+        screen.getByRole('button', { name: isLast ? /Submit & Finish Quiz/i : /Submit Answer/i })
+      )
     }
-    fireEvent.click(screen.getByRole('button', { name: /Finish Quiz/i }))
 
     await waitFor(() => {
       // Upsert should keep the higher best score.

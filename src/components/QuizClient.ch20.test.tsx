@@ -104,14 +104,11 @@ async function completeQuiz(answerCorrectly: boolean[]) {
     const answerKey = isCorrect ? question.correct_answer : getWrongAnswerKey(question.correct_answer)
 
     clickOption(answerKey)
-    fireEvent.click(screen.getByRole('button', { name: /Submit Answer/i }))
-
-    if (i < chapter20PremiumQuizQuestions.length - 1) {
-      fireEvent.click(screen.getByRole('button', { name: /Next Question/i }))
-    }
+    const isLast = i === chapter20PremiumQuizQuestions.length - 1
+    fireEvent.click(
+      screen.getByRole('button', { name: isLast ? /Submit & Finish Quiz/i : /Submit Answer/i })
+    )
   }
-
-  fireEvent.click(screen.getByRole('button', { name: /Finish Quiz/i }))
 
   await waitFor(() => {
     expect(mocks.insert).toHaveBeenCalled()
@@ -139,7 +136,7 @@ describe('QuizClient — Chapter 20', () => {
     expect(screen.getByText(/Passing: 80%/i)).toBeInTheDocument()
   })
 
-  it('navigates through questions and displays explanations', () => {
+  it('does not display explanations or correctness during the attempt', () => {
     renderQuiz()
     fireEvent.click(screen.getByRole('button', { name: /Start Quiz/i }))
 
@@ -147,8 +144,18 @@ describe('QuizClient — Chapter 20', () => {
     clickOption(firstQuestion.correct_answer)
     fireEvent.click(screen.getByRole('button', { name: /Submit Answer/i }))
 
-    expect(screen.getByText(/Explanation/i)).toBeInTheDocument()
-    expect(screen.getByText(firstQuestion.explanation!)).toBeInTheDocument()
+    // End-of-quiz feedback: no explanation or correctness reveal mid-quiz.
+    expect(screen.queryByText(/Explanation/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(firstQuestion.explanation!)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Score:/i)).not.toBeInTheDocument()
+  })
+
+  it('displays explanations in the end-of-quiz answer review', async () => {
+    const answers = Array(17).fill(true)
+    await completeQuiz(answers)
+
+    expect(await screen.findByText(/Answer Review \(17 questions\)/i, {}, { timeout: 2000 })).toBeInTheDocument()
+    expect(screen.getByText(chapter20PremiumQuizQuestions[0].explanation!)).toBeInTheDocument()
   })
 
   it('passes when 15 of 17 answers are correct (88%)', async () => {
@@ -223,12 +230,11 @@ describe('QuizClient — Chapter 20', () => {
     for (let i = 0; i < chapter20PremiumQuizQuestions.length; i++) {
       const question = chapter20PremiumQuizQuestions[i]
       clickOption(getWrongAnswerKey(question.correct_answer))
-      fireEvent.click(screen.getByRole('button', { name: /Submit Answer/i }))
-      if (i < chapter20PremiumQuizQuestions.length - 1) {
-        fireEvent.click(screen.getByRole('button', { name: /Next Question/i }))
-      }
+      const isLast = i === chapter20PremiumQuizQuestions.length - 1
+      fireEvent.click(
+        screen.getByRole('button', { name: isLast ? /Submit & Finish Quiz/i : /Submit Answer/i })
+      )
     }
-    fireEvent.click(screen.getByRole('button', { name: /Finish Quiz/i }))
 
     await waitFor(() => {
       expect(mocks.upsert).toHaveBeenCalledWith(
@@ -246,12 +252,11 @@ describe('QuizClient — Chapter 20', () => {
     for (let i = 0; i < chapter20PremiumQuizQuestions.length; i++) {
       const question = chapter20PremiumQuizQuestions[i]
       clickOption(question.correct_answer)
-      fireEvent.click(screen.getByRole('button', { name: /Submit Answer/i }))
-      if (i < chapter20PremiumQuizQuestions.length - 1) {
-        fireEvent.click(screen.getByRole('button', { name: /Next Question/i }))
-      }
+      const isLast = i === chapter20PremiumQuizQuestions.length - 1
+      fireEvent.click(
+        screen.getByRole('button', { name: isLast ? /Submit & Finish Quiz/i : /Submit Answer/i })
+      )
     }
-    fireEvent.click(screen.getByRole('button', { name: /Finish Quiz/i }))
 
     await waitFor(() => {
       expect(screen.getByRole('link', { name: /Return to Dashboard/i })).toHaveAttribute('href', '/dashboard')

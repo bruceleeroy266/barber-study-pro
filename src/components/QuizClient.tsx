@@ -76,7 +76,6 @@ export default function QuizClient({
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
   const [answers, setAnswers] = useState<Record<string, string>>({})
-  const [showExplanation, setShowExplanation] = useState(false)
   const [completed, setCompleted] = useState(false)
   const [score, setScore] = useState(0)
   const [saving, setSaving] = useState(false)
@@ -92,45 +91,35 @@ export default function QuizClient({
 
   const question = shuffledQuestions[currentQuestion]
   const progress = ((currentQuestion + 1) / shuffledQuestions.length) * 100
+  const isLastQuestion = currentQuestion === shuffledQuestions.length - 1
 
   const handleSelectAnswer = useCallback((answer: string) => {
-    if (showExplanation) return
     setSelectedAnswer(answer)
-  }, [showExplanation])
+  }, [])
 
-  const handleSubmitAnswer = useCallback(() => {
-    if (!selectedAnswer || !question) return
-
-    const isCorrect = selectedAnswer === question.correctKey
-    if (isCorrect) {
-      setScore((prev) => prev + 1)
-    }
-
-    setAnswers((prev) => ({ ...prev, [question.original.id]: selectedAnswer }))
-    setShowExplanation(true)
-  }, [selectedAnswer, question])
-
-  const finishQuiz = useCallback(async () => {
+  const finishQuiz = useCallback(async (finalAnswers: Record<string, string>) => {
     if (!userId) {
+      // Compute score locally for display even without persistence.
+      const localScore = shuffledQuestions.reduce(
+        (acc, sq) => (finalAnswers[sq.original.id] === sq.correctKey ? acc + 1 : acc),
+        0
+      )
+      setScore(localScore)
       setCompleted(true)
       return
     }
 
     setSaving(true)
-    // Calculate final score using the dedicated scoring helper. The current
-    // question's answer is already in `answers` when the user clicked Submit, but
-    // the helper merges `selectedAnswer` as a safeguard against any state timing
-    // edge case and ensures each question is counted exactly once.
-    // Do NOT use score state - it was already incremented during gameplay.
+    // Calculate final score using the dedicated scoring helper. Each question is
+    // counted exactly once from the recorded answers.
     const scoringQuestions = shuffledQuestions.map((sq) => ({
       id: sq.original.id,
       correctKey: sq.correctKey,
     }))
-    const allAnswers = { ...answers, [question!.original.id]: selectedAnswer }
     const {
       score: finalScore,
       percentage,
-    } = calculateQuizScore(scoringQuestions, answers, question!.original.id, selectedAnswer)
+    } = calculateQuizScore(scoringQuestions, finalAnswers)
 
     try {
       await supabase.from('quiz_attempts').insert({
@@ -139,7 +128,7 @@ export default function QuizClient({
         score: finalScore,
         total_questions: shuffledQuestions.length,
         percentage,
-        answers_json: { ...answers, [question!.original.id]: selectedAnswer },
+        answers_json: finalAnswers,
         completed_at: new Date().toISOString(),
       })
 
@@ -192,9 +181,9 @@ export default function QuizClient({
       const chapterNumber = parseInt(chapterId.replace(/^ch-/, ''), 10) || 0
       const category = chapterNumber ? getCategoryForChapter(chapterNumber) : 'General'
       const missed = shuffledQuestions
-        .filter((sq) => allAnswers[sq.original.id] !== sq.correctKey)
+        .filter((sq) => finalAnswers[sq.original.id] !== sq.correctKey)
         .map((sq) => {
-          const studentKey = allAnswers[sq.original.id] ?? ''
+          const studentKey = finalAnswers[sq.original.id] ?? ''
           const correctOption = sq.options.find((o) => o.key === sq.correctKey)
           const studentOption = sq.options.find((o) => o.key === studentKey)
           return {
@@ -228,24 +217,29 @@ export default function QuizClient({
     } finally {
       setSaving(false)
     }
-  }, [answers, selectedAnswer, question, shuffledQuestions, userId, quiz.id, chapterId, bestAttempt, passingScore])
+  }, [shuffledQuestions, userId, quiz.id, chapterId, bestAttempt, passingScore])
 
-  const handleNext = useCallback(() => {
-    if (currentQuestion < shuffledQuestions.length - 1) {
+  // End-of-quiz feedback: record the answer and advance without revealing
+  // correctness. On the final question, submit all answers and show results.
+  const handleSubmitAnswer = useCallback(() => {
+    if (!selectedAnswer || !question) return
+
+    const newAnswers = { ...answers, [question.original.id]: selectedAnswer }
+    setAnswers(newAnswers)
+
+    if (isLastQuestion) {
+      finishQuiz(newAnswers)
+    } else {
       setCurrentQuestion((prev) => prev + 1)
       setSelectedAnswer(null)
-      setShowExplanation(false)
-    } else {
-      finishQuiz()
     }
-  }, [currentQuestion, shuffledQuestions.length, finishQuiz])
+  }, [selectedAnswer, question, answers, isLastQuestion, finishQuiz])
 
   const restartQuiz = useCallback(() => {
     setStarted(false)
     setCurrentQuestion(0)
     setSelectedAnswer(null)
     setAnswers({})
-    setShowExplanation(false)
     setCompleted(false)
     setScore(0)
   }, [])
@@ -283,6 +277,9 @@ export default function QuizClient({
           <p className="text-[var(--color-text-muted)] text-sm">
             Questions and answers are randomized each attempt
           </p>
+          <p className="text-[var(--color-text-muted)] text-sm">
+            You will receive your results and full answer review at the end of the quiz
+          </p>
         </div>
 
         {/* ASCYN study notice */}
@@ -304,12 +301,9 @@ export default function QuizClient({
     )
   }
 
-  // Build missed questions for review
+  // Build review list for ALL questions at the end of the quiz
   const missedQuestions = completed
-    ? shuffledQuestions.filter((sq) => {
-        const userAnswer = answers[sq.original.id] || selectedAnswer
-        return userAnswer !== sq.correctKey
-      })
+    ? shuffledQuestions.filter((sq) => answers[sq.original.id] !== sq.correctKey)
     : []
 
   // ── RESULTS SCREEN ──
@@ -337,50 +331,60 @@ export default function QuizClient({
 
         {passed ? (
           <p className="text-gold mb-6 font-medium">
-            Quiz passed. Review your missed questions, flashcards, and course materials anytime, or retake the quiz to improve your score.
+            Quiz passed. Review your answers below, then continue or retake the quiz to improve your score.
           </p>
         ) : (
           <p className="text-warm-bronze mb-6 font-medium">
-            Review the flashcards and the corresponding lesson, then retake the quiz.
+            Review the flashcards and the corresponding lesson, then retake the quiz. Your full answer review is below.
           </p>
         )}
 
-        {/* Missed Questions Review */}
-        {missedQuestions.length > 0 && (
-          <div className="mt-8 text-left">
-            <h4 className="text-lg font-semibold text-white mb-4">
-              Review Missed Questions ({missedQuestions.length})
-            </h4>
-            <div className="space-y-4">
-              {missedQuestions.map((sq, idx) => {
-                const userAnswerKey = answers[sq.original.id] || selectedAnswer
-                const userOption = sq.options.find((o) => o.key === userAnswerKey)
-                const correctOption = sq.options.find((o) => o.key === sq.correctKey)
-                return (
-                  <Card key={sq.original.id} variant="default" padding="md" className="text-left">
-                    <p className="text-sm text-[var(--color-text-muted)] mb-2">Question {idx + 1}</p>
-                    <p className="text-white font-medium mb-3">{sq.original.question}</p>
-                    <div className="space-y-2">
-                      <div className="flex items-start gap-2 text-silver">
-                        <span className="font-bold">Your answer:</span>
-                        <span>{userOption ? `${userOption.label}. ${userOption.text}` : 'No answer'}</span>
-                      </div>
-                      <div className="flex items-start gap-2 text-gold">
-                        <span className="font-bold">Correct answer:</span>
-                        <span>{correctOption ? `${correctOption.label}. ${correctOption.text}` : ''}</span>
-                      </div>
+        {/* Full Answer Review — ALL questions */}
+        <div className="mt-8 text-left">
+          <h4 className="text-lg font-semibold text-white mb-4">
+            Answer Review ({shuffledQuestions.length} questions)
+          </h4>
+          <div className="space-y-4">
+            {shuffledQuestions.map((sq, idx) => {
+              const userAnswerKey = answers[sq.original.id]
+              const userOption = sq.options.find((o) => o.key === userAnswerKey)
+              const correctOption = sq.options.find((o) => o.key === sq.correctKey)
+              const isCorrect = userAnswerKey === sq.correctKey
+
+              return (
+                <Card
+                  key={sq.original.id}
+                  variant={isCorrect ? 'default' : 'outlined'}
+                  padding="md"
+                  className={`text-left ${isCorrect ? '' : 'border-warm-bronze'}`}
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-sm text-[var(--color-text-muted)]">Question {idx + 1}</p>
+                    <Badge variant={isCorrect ? 'success' : 'warning'}>
+                      {isCorrect ? 'Correct' : 'Missed'}
+                    </Badge>
+                  </div>
+                  <p className="text-white font-medium mb-3">{sq.original.question}</p>
+                  <div className="space-y-2">
+                    <div className="flex items-start gap-2 text-silver">
+                      <span className="font-bold">Your answer:</span>
+                      <span>{userOption ? `${userOption.label}. ${userOption.text}` : 'No answer'}</span>
                     </div>
-                    {sq.original.explanation && (
-                      <p className="mt-3 text-sm text-[var(--color-text-secondary)] bg-[var(--color-border-secondary)]/50 rounded-lg p-3">
-                        {sq.original.explanation}
-                      </p>
-                    )}
-                  </Card>
-                )
-              })}
-            </div>
+                    <div className="flex items-start gap-2 text-gold">
+                      <span className="font-bold">Correct answer:</span>
+                      <span>{correctOption ? `${correctOption.label}. ${correctOption.text}` : ''}</span>
+                    </div>
+                  </div>
+                  {sq.original.explanation && (
+                    <p className="mt-3 text-sm text-[var(--color-text-secondary)] bg-[var(--color-border-secondary)]/50 rounded-lg p-3">
+                      {sq.original.explanation}
+                    </p>
+                  )}
+                </Card>
+              )
+            })}
           </div>
-        )}
+        </div>
 
         {/* Targeted Remediation */}
         {remediation.length > 0 && competencies.length > 0 && (
@@ -448,15 +452,17 @@ export default function QuizClient({
   }
 
   // ── QUESTION SCREEN ──
+  // End-of-quiz feedback: no correctness reveal, no live score, no explanations
+  // during the attempt. Student selects an answer and submits to advance.
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Header — question position only; no live score */}
       <div className="flex items-center justify-between text-sm">
         <span className="text-[var(--color-text-muted)]">
           Question {currentQuestion + 1} of {shuffledQuestions.length}
         </span>
-        <span className="text-[var(--color-brand-gold)] font-medium">
-          Score: {score}
+        <span className="text-[var(--color-text-muted)]">
+          Results at end of quiz
         </span>
       </div>
 
@@ -478,21 +484,13 @@ export default function QuizClient({
         <div className="space-y-3">
           {question.options.map((option) => {
             const isSelected = selectedAnswer === option.key
-            const isCorrect = question.correctKey === option.key
-            const showCorrect = showExplanation && isCorrect
-            const showWrong = showExplanation && isSelected && !isCorrect
 
             return (
               <button
                 key={option.key}
                 onClick={() => handleSelectAnswer(option.key)}
-                disabled={showExplanation}
                 className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 ${
-                  showCorrect
-                    ? 'bg-gold/10 border-gold text-gold'
-                    : showWrong
-                    ? 'bg-silver/10 border-silver text-silver'
-                    : isSelected
+                  isSelected
                     ? 'bg-[var(--color-brand-gold)]/10 border-[var(--color-brand-gold)] text-white'
                     : 'bg-[var(--color-border-secondary)]/50 border-silver-gray text-[var(--color-text-secondary)] hover:bg-[var(--color-border-secondary)] hover:border-silver-gray'
                 }`}
@@ -503,41 +501,22 @@ export default function QuizClient({
             )
           })}
         </div>
-
-        {/* Explanation */}
-        {showExplanation && question.original.explanation && (
-          <Alert variant="info" className="mt-6">
-            <p className="font-semibold mb-1 text-sm uppercase tracking-wider">Explanation</p>
-            <p className="leading-relaxed">{question.original.explanation}</p>
-          </Alert>
-        )}
       </Card>
 
-      {/* Actions */}
+      {/* Actions — single submit-and-advance; no per-question feedback */}
       <div className="flex justify-end">
-        {!showExplanation ? (
-          <Button
-            variant="primary"
-            size="lg"
-            onClick={handleSubmitAnswer}
-            disabled={!selectedAnswer}
-          >
-            Submit Answer
-          </Button>
-        ) : (
-          <Button
-            variant="primary"
-            size="lg"
-            onClick={handleNext}
-            disabled={saving}
-          >
-            {saving
-              ? 'Saving...'
-              : currentQuestion === shuffledQuestions.length - 1
-              ? 'Finish Quiz'
-              : 'Next Question'}
-          </Button>
-        )}
+        <Button
+          variant="primary"
+          size="lg"
+          onClick={handleSubmitAnswer}
+          disabled={!selectedAnswer || saving}
+        >
+          {saving
+            ? 'Saving...'
+            : isLastQuestion
+            ? 'Submit & Finish Quiz'
+            : 'Submit Answer'}
+        </Button>
       </div>
     </div>
   )
