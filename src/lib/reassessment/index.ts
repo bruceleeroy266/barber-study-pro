@@ -66,7 +66,24 @@ export {
   getMappingProviderRegistry,
   hasCanonicalMappingProvider,
   resetMappingProviderRegistry,
+  getConceptDetectionProvider,
+  getDetectionProviderRegistry,
+  hasConceptDetectionProvider,
+  resetDetectionProviderRegistry,
+  initializeChapter2DetectionProvider,
+  type ConceptDetectionResult,
+  type IConceptDetectionProvider,
 } from './provider-registry'
 
 // Chapter 2 Adapter (reference implementation)
 export { Chapter2MappingProvider, getChapter2MappingProvider, resetChapter2MappingProvider } from './adapters/chapter-2-adapter'
+
+// Chapter 2 Detection Provider
+export {
+  Chapter2DetectionProvider,
+  createChapter2DetectionProvider,
+  getChapter2DetectionProvider,
+  resetChapter2DetectionProvider,
+  type Chapter2DetectionProviderConfig,
+  type FetchQuizAttemptsCallback,
+} from './adapters/chapter-2-detection-provider'
