@@ -18,6 +18,7 @@ interface RemediationOutcomeProps {
   studentState: StudentRemediationState
   onTryAgain?: () => void
   onRefresh?: () => void
+  isRefreshing?: boolean
 }
 
 export default function RemediationOutcome({
@@ -26,6 +27,7 @@ export default function RemediationOutcome({
   studentState,
   onTryAgain,
   onRefresh,
+  isRefreshing = false,
 }: RemediationOutcomeProps) {
   const renderIcon = () => {
     switch (studentState) {
@@ -137,6 +139,7 @@ export default function RemediationOutcome({
             <Button
               variant="primary"
               onClick={onTryAgain}
+              disabled={isRefreshing}
             >
               <RefreshCw className="w-4 h-4 mr-2" aria-hidden="true" />
               Try Another Knowledge Check
@@ -146,6 +149,7 @@ export default function RemediationOutcome({
             <Button
               variant="outline"
               onClick={onRefresh}
+              loading={isRefreshing}
             >
               Return to Dashboard
             </Button>

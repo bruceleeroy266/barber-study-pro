@@ -78,6 +78,8 @@ export default function RemediationContentRenderer({
             >
               <button
                 onClick={() => toggleSection(section.id)}
+                aria-expanded={isExpanded}
+                aria-controls={`remediation-section-${section.id}`}
                 className="w-full p-4 flex items-center justify-between text-left hover:bg-white/5 transition-colors"
               >
                 <div className="flex items-center gap-3">
@@ -101,7 +103,7 @@ export default function RemediationContentRenderer({
               </button>
 
               {isExpanded && (
-                <div className="border-t border-graphite p-4">
+                <div id={`remediation-section-${section.id}`} className="border-t border-graphite p-4">
                   <ChapterContent sections={[section]} />
                   {!isViewed && (
                     <div className="mt-4 flex justify-end">

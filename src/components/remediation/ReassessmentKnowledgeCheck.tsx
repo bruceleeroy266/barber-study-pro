@@ -23,12 +23,14 @@ interface ReassessmentKnowledgeCheckProps {
   }
   onSubmit: (answer: string) => void
   isLoading: boolean
+  disabled?: boolean
 }
 
 export default function ReassessmentKnowledgeCheck({
   question,
   onSubmit,
   isLoading,
+  disabled = false,
 }: ReassessmentKnowledgeCheckProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
 
@@ -40,7 +42,7 @@ export default function ReassessmentKnowledgeCheck({
   ]
 
   const handleSubmit = () => {
-    if (selectedAnswer) {
+    if (selectedAnswer && !isLoading && !disabled) {
       onSubmit(selectedAnswer)
     }
   }
@@ -71,12 +73,13 @@ export default function ReassessmentKnowledgeCheck({
             <button
               key={option.key}
               onClick={() => setSelectedAnswer(option.key)}
-              disabled={isLoading}
+              disabled={isLoading || disabled}
+              aria-pressed={selectedAnswer === option.key}
               className={`w-full p-4 rounded-xl border text-left transition-all ${
                 selectedAnswer === option.key
                   ? 'border-[var(--color-brand-gold)] bg-[var(--color-brand-gold)]/10'
                   : 'border-[var(--color-border-primary)] bg-[var(--color-background-secondary)] hover:border-[var(--color-brand-gold)]/50'
-              } ${isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+              } ${(isLoading || disabled) ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
             >
               <div className="flex items-center gap-3">
                 <span
@@ -100,7 +103,8 @@ export default function ReassessmentKnowledgeCheck({
             variant="primary"
             size="lg"
             onClick={handleSubmit}
-            disabled={!selectedAnswer || isLoading}
+            disabled={!selectedAnswer || isLoading || disabled}
+            loading={isLoading}
           >
             {isLoading ? 'Submitting...' : 'Submit Answer'}
           </Button>

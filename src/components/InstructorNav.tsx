@@ -3,11 +3,12 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutDashboard, Users, Calendar, Calculator, FileCheck, MessageSquare, ClipboardCheck, LogOut, GraduationCap } from 'lucide-react'
+import { LayoutDashboard, Users, Calendar, Calculator, FileCheck, MessageSquare, ClipboardCheck, LogOut, GraduationCap, AlertTriangle } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { Profile } from '@/types'
 import { logLogout } from '@/app/(auth)/actions'
 import { Logo } from '@/components/brand'
+import EscalationBadge from '@/components/instructor/EscalationBadge'
 
 interface InstructorNavProps {
   user: Profile | null
@@ -22,6 +23,7 @@ const navItems = [
   { href: '/instructor/messages', label: 'Messages', icon: MessageSquare },
   { href: '/instructor/assessments', label: 'Assessments', icon: ClipboardCheck },
   { href: '/instructor/rubrics', label: 'Rubrics', icon: GraduationCap },
+  { href: '/instructor/escalations', label: 'Escalations', icon: AlertTriangle, badge: true },
 ]
 
 export default function InstructorNav({ user }: InstructorNavProps) {
@@ -103,6 +105,7 @@ export default function InstructorNav({ user }: InstructorNavProps) {
                 >
                   <Icon className="w-5 h-5" />
                   <span className="font-medium">{item.label}</span>
+                  {'badge' in item && item.badge && <EscalationBadge />}
                 </Link>
               )
             })}
@@ -140,6 +143,7 @@ export default function InstructorNav({ user }: InstructorNavProps) {
               >
                 <Icon className="w-5 h-5" />
                 <span className="font-medium">{item.label}</span>
+                {'badge' in item && item.badge && <EscalationBadge />}
               </Link>
             )
           })}

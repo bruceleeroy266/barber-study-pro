@@ -1,13 +1,15 @@
 'use client'
 
 /**
- * Phase 6C-3 — Remediation Page Client Component
+ * Phase 6C-3 / 6C-4 — Remediation Page Client Component
  *
  * Client-side interactive remediation experience.
  * Orchestrates targeted review, flashcards, and reassessment.
+ * Phase 6C-4 adds request in-flight safeguards, explicit recovery states,
+ * and accessibility hardening without changing remediation policy.
  */
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import type {
   StudentRemediationState,
@@ -19,7 +21,7 @@ import RemediationContentRenderer from './RemediationContentRenderer'
 import RemediationFlashcardReview from './RemediationFlashcardReview'
 import ReassessmentKnowledgeCheck from './ReassessmentKnowledgeCheck'
 import RemediationOutcome from './RemediationOutcome'
-import { Button, Card, Alert, Badge } from '@/components/ui'
+import { Button, Card, Badge, AlertPanel } from '@/components/ui'
 
 interface RemediationPageClientProps {
   cycleId: string
@@ -40,7 +42,24 @@ export default function RemediationPageClient({
   const [studentState, setStudentState] = useState<StudentRemediationState>(initialState)
   const [progress, setProgress] = useState(initialProgress)
   const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [activeAction, setActiveAction] = useState<
+    | 'start-review'
+    | 'complete-review'
+    | 'start-reassessment'
+    | 'submit-answer'
+    | 'refresh'
+    | null
+  >(null)
+  const [viewedContentIds, setViewedContentIds] = useState<Set<string>>(
+    () => new Set(assignments.filter((a) => a.assignmentType === 'content_block' && a.status === 'completed').map((a) => a.assetId))
+  )
+  const [reviewedFlashcardIds, setReviewedFlashcardIds] = useState<Set<string>>(
+    () => new Set(assignments.filter((a) => a.assignmentType === 'flashcard' && a.status === 'completed').map((a) => a.assetId))
+  )
+  const [reservationStartedAt, setReservationStartedAt] = useState<Date | null>(null)
+
+  const isLoading = activeAction !== null
+  const actionInFlight = useMemo(() => activeAction !== null, [activeAction])
 
   // Reassessment state
   const [reassessmentData, setReassessmentData] = useState<{
@@ -64,6 +83,28 @@ export default function RemediationPageClient({
     outcome: string
     studentState: StudentRemediationState
   } | null>(null)
+
+  const reservationIsStale = useMemo(() => {
+    if (!reservationStartedAt) return false
+    const elapsedMs = Date.now() - reservationStartedAt.getTime()
+    return elapsedMs > 60 * 60 * 1000
+  }, [reservationStartedAt])
+
+  const beginAction = useCallback((action: NonNullable<typeof activeAction>) => {
+    let accepted = false
+    setActiveAction((current) => {
+      if (current !== null) {
+        return current
+      }
+      accepted = true
+      return action
+    })
+    return accepted
+  }, [])
+
+  const endAction = useCallback(() => {
+    setActiveAction(null)
+  }, [])
 
   // Record an event
   const recordEvent = useCallback(async (eventType: string, assetId?: string) => {
@@ -89,19 +130,24 @@ export default function RemediationPageClient({
 
   // Start review
   const handleStartReview = useCallback(async () => {
-    setIsLoading(true)
+    if (!beginAction('start-review')) return
     setError(null)
     const success = await recordEvent('review_started')
     if (success) {
       setStudentState('review_in_progress')
     }
-    setIsLoading(false)
-  }, [recordEvent])
+    endAction()
+  }, [beginAction, endAction, recordEvent])
 
   // Mark content viewed
   const handleContentViewed = useCallback(async (contentBlockId: string) => {
     const success = await recordEvent('content_viewed', contentBlockId)
     if (success) {
+      setViewedContentIds((prev) => {
+        const next = new Set(prev)
+        next.add(contentBlockId)
+        return next
+      })
       setProgress((prev) => ({
         ...prev,
         completed: Math.min(prev.completed + 1, prev.total),
@@ -114,6 +160,11 @@ export default function RemediationPageClient({
   const handleFlashcardReviewed = useCallback(async (flashcardId: string) => {
     const success = await recordEvent('flashcard_reviewed', flashcardId)
     if (success) {
+      setReviewedFlashcardIds((prev) => {
+        const next = new Set(prev)
+        next.add(flashcardId)
+        return next
+      })
       setProgress((prev) => ({
         ...prev,
         completed: Math.min(prev.completed + 1, prev.total),
@@ -124,18 +175,18 @@ export default function RemediationPageClient({
 
   // Complete review
   const handleCompleteReview = useCallback(async () => {
-    setIsLoading(true)
+    if (!beginAction('complete-review')) return
     setError(null)
     const success = await recordEvent('review_completed')
     if (success) {
       setStudentState('review_completed')
     }
-    setIsLoading(false)
-  }, [recordEvent])
+    endAction()
+  }, [beginAction, endAction, recordEvent])
 
   // Start reassessment
   const handleStartReassessment = useCallback(async () => {
-    setIsLoading(true)
+    if (!beginAction('start-reassessment')) return
     setError(null)
 
     try {
@@ -151,7 +202,7 @@ export default function RemediationPageClient({
           setStudentState('pool_exhausted')
           return
         }
-        throw new Error(data.error || 'Failed to start knowledge check')
+        throw new Error(data.error || 'We could not prepare your knowledge check. Please try again.')
       }
 
       setReassessmentData({
@@ -160,20 +211,25 @@ export default function RemediationPageClient({
         quizAttemptId: data.quizAttemptId,
         question: data.question,
       })
+      setReservationStartedAt(new Date())
       setStudentState('reassessment_in_progress')
     } catch (err) {
       console.error('[Remediation] Reassessment start error:', err)
-      setError(err instanceof Error ? err.message : 'Failed to start knowledge check')
+      setError(err instanceof Error ? err.message : 'We could not prepare your knowledge check. Please try again.')
     } finally {
-      setIsLoading(false)
+      endAction()
     }
-  }, [cycleId])
+  }, [beginAction, cycleId, endAction])
 
   // Submit reassessment answer
   const handleSubmitAnswer = useCallback(async (answer: string) => {
     if (!reassessmentData) return
+    if (reservationIsStale) {
+      setError('This knowledge check session has expired. Refresh to resume safely from your saved progress.')
+      return
+    }
 
-    setIsLoading(true)
+    if (!beginAction('submit-answer')) return
     setError(null)
 
     try {
@@ -191,7 +247,13 @@ export default function RemediationPageClient({
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to submit answer')
+        if (response.status === 409) {
+          throw new Error('This knowledge check has already been completed. Refresh to view your current status.')
+        }
+        if (response.status === 404) {
+          throw new Error('This knowledge check session is no longer valid. Refresh to resume from your saved progress.')
+        }
+        throw new Error(data.error || 'We could not submit your answer. Please try again.')
       }
 
       setOutcome({
@@ -201,13 +263,14 @@ export default function RemediationPageClient({
       })
       setStudentState(data.studentState)
       setReassessmentData(null)
+      setReservationStartedAt(null)
     } catch (err) {
       console.error('[Remediation] Answer submission error:', err)
-      setError(err instanceof Error ? err.message : 'Failed to submit answer')
+      setError(err instanceof Error ? err.message : 'We could not submit your answer. Please try again.')
     } finally {
-      setIsLoading(false)
+      endAction()
     }
-  }, [cycleId, reassessmentData])
+  }, [beginAction, cycleId, endAction, reassessmentData, reservationIsStale])
 
   // Try another reassessment (for pending outcomes)
   const handleTryAgain = useCallback(() => {
@@ -217,8 +280,10 @@ export default function RemediationPageClient({
 
   // Refresh the page data
   const handleRefresh = useCallback(() => {
+    if (!beginAction('refresh')) return
     router.refresh()
-  }, [router])
+    window.setTimeout(() => endAction(), 500)
+  }, [beginAction, endAction, router])
 
   // Render based on student state
   const renderContent = () => {
@@ -226,6 +291,11 @@ export default function RemediationPageClient({
       case 'targeted_review':
         return (
           <div className="space-y-6">
+            <AlertPanel
+              title="Resume anytime"
+              description="Your progress is saved as you go. If you leave or refresh, you can safely return to this page and continue from your last completed step."
+              variant="info"
+            />
             <Card className="p-6">
               <h2 className="text-lg font-semibold text-white mb-4">
                 Review Materials
@@ -237,23 +307,28 @@ export default function RemediationPageClient({
               <Button
                 variant="primary"
                 onClick={handleStartReview}
-                disabled={isLoading}
+                disabled={actionInFlight}
+                loading={activeAction === 'start-review'}
+                aria-describedby="start-review-help"
               >
-                {isLoading ? 'Starting...' : 'Start Review'}
+                {activeAction === 'start-review' ? 'Starting...' : 'Start Review'}
               </Button>
+              <p id="start-review-help" className="text-xs text-silver-gray mt-3">
+                Your review progress is saved automatically as you complete each activity.
+              </p>
             </Card>
 
             <RemediationContentRenderer
               contentBlocks={contentBundle.contentBlocks}
               onContentViewed={handleContentViewed}
-              viewedContentIds={new Set()}
+              viewedContentIds={viewedContentIds}
             />
 
             {contentBundle.flashcards.length > 0 && (
               <RemediationFlashcardReview
                 flashcards={contentBundle.flashcards}
                 onFlashcardReviewed={handleFlashcardReviewed}
-                reviewedFlashcardIds={new Set()}
+                reviewedFlashcardIds={reviewedFlashcardIds}
               />
             )}
           </div>
@@ -262,17 +337,22 @@ export default function RemediationPageClient({
       case 'review_in_progress':
         return (
           <div className="space-y-6">
+            <AlertPanel
+              title="Progress saved"
+              description="You can refresh or leave this page and come back later. Completed review activities will remain marked as complete."
+              variant="info"
+            />
             <RemediationContentRenderer
               contentBlocks={contentBundle.contentBlocks}
               onContentViewed={handleContentViewed}
-              viewedContentIds={new Set()}
+              viewedContentIds={viewedContentIds}
             />
 
             {contentBundle.flashcards.length > 0 && (
               <RemediationFlashcardReview
                 flashcards={contentBundle.flashcards}
                 onFlashcardReviewed={handleFlashcardReviewed}
-                reviewedFlashcardIds={new Set()}
+                reviewedFlashcardIds={reviewedFlashcardIds}
               />
             )}
 
@@ -289,9 +369,10 @@ export default function RemediationPageClient({
                 <Button
                   variant="primary"
                   onClick={handleCompleteReview}
-                  disabled={isLoading || progress.completed < progress.total}
+                  disabled={actionInFlight || progress.completed < progress.total}
+                  loading={activeAction === 'complete-review'}
                 >
-                  {isLoading ? 'Completing...' : 'Complete Review'}
+                  {activeAction === 'complete-review' ? 'Completing...' : 'Complete Review'}
                 </Button>
               </div>
               {progress.completed < progress.total && (
@@ -306,6 +387,11 @@ export default function RemediationPageClient({
       case 'review_completed':
         return (
           <div className="space-y-6">
+            <AlertPanel
+              title="Ready when you are"
+              description="Your review is saved. You can start the knowledge check now or return later without losing your review progress."
+              variant="success"
+            />
             <Card className="p-6">
               <div className="text-center">
                 <Badge variant="success" size="lg" className="mb-4">
@@ -322,9 +408,10 @@ export default function RemediationPageClient({
                   variant="primary"
                   size="lg"
                   onClick={handleStartReassessment}
-                  disabled={isLoading}
+                  disabled={actionInFlight}
+                  loading={activeAction === 'start-reassessment'}
                 >
-                  {isLoading ? 'Preparing...' : 'Start Knowledge Check'}
+                  {activeAction === 'start-reassessment' ? 'Preparing...' : 'Start Knowledge Check'}
                 </Button>
               </div>
             </Card>
@@ -334,20 +421,31 @@ export default function RemediationPageClient({
       case 'reassessment_in_progress':
         if (!reassessmentData) {
           return (
-            <Alert variant="error">
-              <p>Knowledge check data not available. Please try again.</p>
-              <Button variant="outline" onClick={handleRefresh} className="mt-2">
-                Refresh
-              </Button>
-            </Alert>
+            <AlertPanel
+              title="Knowledge check unavailable"
+              description="We could not restore this knowledge check session. Refresh the page to resume safely from your saved progress."
+              variant="error"
+              action={{ label: 'Refresh', onClick: handleRefresh }}
+            />
           )
         }
         return (
-          <ReassessmentKnowledgeCheck
-            question={reassessmentData.question}
-            onSubmit={handleSubmitAnswer}
-            isLoading={isLoading}
-          />
+          <div className="space-y-4">
+            {reservationIsStale && (
+              <AlertPanel
+                title="Knowledge check session expired"
+                description="This question session is no longer current. Refresh the page to resume from your saved progress and continue safely."
+                variant="warning"
+                action={{ label: 'Refresh', onClick: handleRefresh }}
+              />
+            )}
+            <ReassessmentKnowledgeCheck
+              question={reassessmentData.question}
+              onSubmit={handleSubmitAnswer}
+              isLoading={activeAction === 'submit-answer'}
+              disabled={reservationIsStale}
+            />
+          </div>
         )
 
       case 'pending_more_evidence':
@@ -370,20 +468,32 @@ export default function RemediationPageClient({
       case 'pool_exhausted':
       case 'already_completed':
         return (
-          <RemediationOutcome
-            isCorrect={outcome?.isCorrect ?? false}
-            outcome={outcome?.outcome ?? ''}
-            studentState={studentState}
-            onTryAgain={undefined}
-            onRefresh={handleRefresh}
-          />
+          <div className="space-y-4">
+            {studentState === 'pool_exhausted' && (
+              <AlertPanel
+                title="No more practice questions available"
+                description="You have used all currently available practice questions for this topic. Your instructor can provide the next step."
+                variant="info"
+              />
+            )}
+            <RemediationOutcome
+              isCorrect={outcome?.isCorrect ?? false}
+              outcome={outcome?.outcome ?? ''}
+              studentState={studentState}
+              onTryAgain={undefined}
+              onRefresh={handleRefresh}
+              isRefreshing={activeAction === 'refresh'}
+            />
+          </div>
         )
 
       default:
         return (
-          <Alert variant="info">
-            <p>Loading your remediation experience...</p>
-          </Alert>
+          <AlertPanel
+            title="Loading"
+            description="Loading your remediation experience..."
+            variant="info"
+          />
         )
     }
   }
@@ -391,17 +501,13 @@ export default function RemediationPageClient({
   return (
     <div className="space-y-6">
       {error && (
-        <Alert variant="error">
-          <p className="font-medium">{error}</p>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setError(null)}
-            className="mt-2"
-          >
-            Dismiss
-          </Button>
-        </Alert>
+        <AlertPanel
+          title="Something needs your attention"
+          description={error}
+          variant="error"
+          dismissible
+          onDismiss={() => setError(null)}
+        />
       )}
 
       {renderContent()}
