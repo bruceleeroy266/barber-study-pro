@@ -46,7 +46,12 @@ const mocks = vi.hoisted(() => {
   const eq2 = vi.fn().mockReturnValue({ maybeSingle })
   const eq = vi.fn().mockReturnValue({ eq: eq2, maybeSingle })
   const select = vi.fn().mockReturnValue({ eq })
-  const insert = vi.fn().mockResolvedValue({ error: null })
+  
+  // Mock for quiz_attempts insert with .select('id').single() chain
+  const single = vi.fn().mockResolvedValue({ data: { id: 'mock-attempt-id-123' }, error: null })
+  const selectAfterInsert = vi.fn().mockReturnValue({ single })
+  const insert = vi.fn().mockReturnValue({ select: selectAfterInsert })
+  
   const upsert = vi.fn().mockResolvedValue({ error: null })
 
   return {
@@ -56,6 +61,8 @@ const mocks = vi.hoisted(() => {
     eq2,
     maybeSingle,
     upsert,
+    single,
+    selectAfterInsert,
     from: vi.fn().mockImplementation((table: string) => {
       if (table === 'quiz_attempts') {
         return { insert }
@@ -135,7 +142,10 @@ describe('QuizClient', () => {
     vi.clearAllMocks()
     vi.restoreAllMocks()
     mockShuffleDeterministic()
-    mocks.insert.mockResolvedValue({ error: null })
+    // Reset the insert mock to support .select('id').single() chain
+    const single = vi.fn().mockResolvedValue({ data: { id: 'mock-attempt-id-123' }, error: null })
+    const selectAfterInsert = vi.fn().mockReturnValue({ single })
+    mocks.insert.mockReturnValue({ select: selectAfterInsert })
     mocks.upsert.mockResolvedValue({ error: null })
     mocks.saveMissedQuestions.mockResolvedValue({ ok: true })
   })

@@ -122,15 +122,31 @@ export default function QuizClient({
     } = calculateQuizScore(scoringQuestions, finalAnswers)
 
     try {
-      await supabase.from('quiz_attempts').insert({
-        user_id: userId,
-        quiz_id: quiz.id,
-        score: finalScore,
-        total_questions: shuffledQuestions.length,
-        percentage,
-        answers_json: finalAnswers,
-        completed_at: new Date().toISOString(),
-      })
+      // Insert quiz attempt and capture the persisted ID for exact binding
+      const { data: insertedAttempt, error: insertError } = await supabase
+        .from('quiz_attempts')
+        .insert({
+          user_id: userId,
+          quiz_id: quiz.id,
+          score: finalScore,
+          total_questions: shuffledQuestions.length,
+          percentage,
+          answers_json: finalAnswers,
+          completed_at: new Date().toISOString(),
+        })
+        .select('id')
+        .single()
+
+      if (insertError) {
+        console.error('[QuizClient] Failed to persist quiz attempt:', insertError)
+        throw insertError
+      }
+
+      const persistedQuizAttemptId = insertedAttempt?.id
+      if (!persistedQuizAttemptId) {
+        console.error('[QuizClient] No quiz attempt ID returned from insert')
+        throw new Error('Failed to obtain quiz attempt ID')
+      }
 
       // Preserve existing progress flags and only mark the quiz complete on a PASS.
       let flashcardsCompleted = false
@@ -207,6 +223,28 @@ export default function QuizClient({
         const saveResult = await saveMissedQuestions(userId, missed)
         if (!saveResult.ok) {
           console.error('[QuizClient] Failed to save missed questions:', saveResult.error)
+        }
+      }
+
+      // Phase 6C-5: Trigger detection orchestration after quiz completion
+      // This runs server-side detection and creates remediation cycles if needed
+      // CRITICAL: Pass the exact persisted quiz_attempt.id for deterministic binding
+      if (isSupabaseConfigured() && chapterId === 'ch-2' && persistedQuizAttemptId) {
+        try {
+          const response = await fetch('/api/remediation/detect', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              chapterId,
+              quizAttemptId: persistedQuizAttemptId,
+            }),
+          })
+          if (!response.ok) {
+            console.warn('[QuizClient] Detection orchestration returned non-OK status:', response.status)
+          }
+        } catch (detectionError) {
+          // Detection failure should not block quiz completion
+          console.error('[QuizClient] Detection orchestration failed:', detectionError)
         }
       }
 

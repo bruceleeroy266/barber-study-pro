@@ -20,9 +20,14 @@ import AnnouncementBanner from '@/components/messaging/AnnouncementBanner'
 import UnreadBadge from '@/components/messaging/UnreadBadge'
 import StudentGradeWidget from '@/components/gradebook/StudentGradeWidget'
 import AssessmentList from '@/components/assessments/AssessmentList'
+import RemediationStatusCard, { ActiveRemediationCycle } from '@/components/RemediationStatusCard'
 import { calculateStudentGradePerformance } from '@/lib/gradebook'
 import { mapAttendanceRecordsFromDb, mapGradesFromDb, mapGradeCategoriesFromDb, mapAssessmentsFromDb } from '@/lib/mappers/operational-data-mappers'
 import { getRoleBasedRedirect, validateLoginAccess } from '@/lib/auth-access'
+import { createSupabaseStudentRemediationClient } from '@/lib/remediation/supabase-client'
+import { createStudentRemediationService } from '@/lib/remediation/student-service'
+import { chapter2Concepts } from '@/lib/chapter-2-concepts/concepts'
+import type { ConceptId } from '@/lib/chapter-2-concepts/types'
 
 // Phase 4 Design System Components
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card'
@@ -108,6 +113,91 @@ export default async function DashboardPage() {
 
   const attendanceSummary = calculateAttendanceSummary(user.id, attendanceRecords)
   const { status: todayStatus } = getTodayAttendanceStatus(attendanceRecords, user.id)
+
+  // Phase 6C-5: Fetch active remediation cycles for the student
+  let activeRemediationCycles: ActiveRemediationCycle[] = []
+  try {
+    const remediationClient = createSupabaseStudentRemediationClient()
+    const remediationService = createStudentRemediationService(remediationClient)
+    
+    // Query active cycles directly from the database
+    const { data: cyclesData } = await supabase
+      .from('remediation_cycles')
+      .select('*')
+      .eq('user_id', user.id)
+      .neq('status', 'evaluated')
+      .is('outcome', null)
+      .order('targeted_at', { ascending: false })
+
+    if (cyclesData && cyclesData.length > 0) {
+      activeRemediationCycles = await Promise.all(
+        (cyclesData as Array<{
+          id: string
+          user_id: string
+          concept_id: string
+          chapter_id: string
+          cycle_number: number
+          detection_state: string
+          detection_confidence: string
+          detection_evidence: Record<string, unknown>
+          status: string
+          targeted_at: string
+          review_started_at: string | null
+          review_completed_at: string | null
+          reassessment_started_at: string | null
+          reassessment_completed_at: string | null
+          evaluated_at: string | null
+          outcome: string | null
+          post_remediation_state: string | null
+          created_at: string
+          updated_at: string
+        }>).map(async (cycle) => {
+          // Get concept name
+          const concept = chapter2Concepts.find((c) => c.id === cycle.concept_id)
+          const conceptName = concept?.name ?? cycle.concept_id
+
+          // Derive student state
+          const studentState = remediationService.deriveStudentState({
+            id: cycle.id,
+            userId: cycle.user_id,
+            conceptId: cycle.concept_id as ConceptId,
+            chapterId: cycle.chapter_id,
+            cycleNumber: cycle.cycle_number,
+            detectionState: cycle.detection_state as import('@/lib/chapter-2-concepts/detection').DetectionState,
+            detectionConfidence: cycle.detection_confidence as import('@/lib/chapter-2-concepts/detection').DetectionConfidence,
+            detectionEvidence: cycle.detection_evidence as unknown as import('@/lib/chapter-2-concepts/detection').ConceptEvidence,
+            status: cycle.status as import('@/lib/remediation/student-service').RemediationCycleStatus,
+            targetedAt: new Date(cycle.targeted_at),
+            reviewStartedAt: cycle.review_started_at ? new Date(cycle.review_started_at) : null,
+            reviewCompletedAt: cycle.review_completed_at ? new Date(cycle.review_completed_at) : null,
+            reassessmentStartedAt: cycle.reassessment_started_at ? new Date(cycle.reassessment_started_at) : null,
+            reassessmentCompletedAt: cycle.reassessment_completed_at ? new Date(cycle.reassessment_completed_at) : null,
+            evaluatedAt: cycle.evaluated_at ? new Date(cycle.evaluated_at) : null,
+            outcome: cycle.outcome as import('@/lib/evaluation/types').EvaluationOutcome | null,
+            postRemediationState: cycle.post_remediation_state,
+            createdAt: new Date(cycle.created_at),
+            updatedAt: new Date(cycle.updated_at),
+          })
+
+          // Get review progress
+          const progressResult = await remediationService.getReviewProgress(cycle.id, user.id)
+          const progressPercentage = 'error' in progressResult ? 0 : progressResult.percentage
+
+          return {
+            id: cycle.id,
+            conceptId: cycle.concept_id,
+            conceptName,
+            studentState,
+            progressPercentage,
+            targetedAt: cycle.targeted_at,
+          }
+        })
+      )
+    }
+  } catch (remediationError) {
+    // Remediation fetch failure should not block dashboard
+    console.error('[Dashboard] Failed to fetch remediation cycles:', remediationError)
+  }
 
   // Phase 9 — gradebook & assessments data
   const gradesQuery = supabase.from('grades').select('*').eq('student_id', user.id)
@@ -297,6 +387,11 @@ export default async function DashboardPage() {
               </div>
             </div>
           </Card>
+        )}
+
+        {/* Phase 6C-5: Active Remediation Cycles */}
+        {activeRemediationCycles.length > 0 && (
+          <RemediationStatusCard cycles={activeRemediationCycles} />
         )}
       </div>
 

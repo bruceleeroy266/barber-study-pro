@@ -55,3 +55,17 @@ export {
   SupabaseStudentRemediationDbClient,
   createSupabaseStudentRemediationClient,
 } from './supabase-client'
+
+// Detection Orchestrator (Phase 6C-5)
+export type {
+  DetectionOrchestrationResult,
+  ConceptRequiringIntervention,
+  IDetectionOrchestratorDbClient,
+  SupabaseDetectionOrchestratorConfig,
+} from './detection-orchestrator'
+export {
+  DetectionOrchestratorService,
+  SupabaseDetectionOrchestratorDbClient,
+  createDetectionOrchestratorService,
+  createSupabaseDetectionOrchestrator,
+} from './detection-orchestrator'

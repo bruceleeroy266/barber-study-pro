@@ -16,6 +16,7 @@ import { allQuizQuestions } from '@/lib/quiz-data'
 import { getThreadDisplayName, formatMessageTime, priorityColorClasses } from '@/lib/messaging'
 import UnreadBadge from '@/components/messaging/UnreadBadge'
 import StudentIdentity from '@/components/StudentIdentity'
+import EscalationBadge from '@/components/instructor/EscalationBadge'
 import { mapHourLogsFromDb, mapAttendanceRecordsFromDb, mapGradesFromDb, mapGradeCategoriesFromDb, mapAssessmentsFromDb } from '@/lib/mappers/operational-data-mappers'
 
 interface RosterStudent extends Profile {
@@ -404,11 +405,23 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     <div className="min-h-screen bg-[var(--color-background-primary)] p-6 md:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
         {usingDemoData && <DemoDataBanner />}
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Instructor Dashboard</h1>
-          <p className="text-[var(--color-text-muted)]">
-            {schoolName} — Student roster and progress overview
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-white mb-2">Instructor Dashboard</h1>
+            <p className="text-[var(--color-text-muted)]">
+              {schoolName} — Student roster and progress overview
+            </p>
+          </div>
+          {/* Phase 6C-5: Escalation Badge */}
+          <div className="flex items-center gap-4">
+            <Link
+              href="/instructor/escalations"
+              className="flex items-center gap-2 px-4 py-2 bg-[var(--color-background-secondary)] border border-[var(--color-border-primary)] rounded-lg hover:border-[var(--color-brand-gold)]/30 transition-colors"
+            >
+              <span className="text-sm text-[var(--color-text-secondary)]">Escalations</span>
+              <EscalationBadge />
+            </Link>
+          </div>
         </div>
 
         {/* Key Metrics */}
