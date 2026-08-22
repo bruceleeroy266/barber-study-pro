@@ -62,6 +62,47 @@ export interface InviteUserFormData {
 
 const MANAGEABLE_ROLES: AppRole[] = ['student', 'instructor', 'apprentice', 'admin', 'school_admin']
 
+/**
+ * Creates a domain record (student or instructor) for a user profile.
+ * This is called AFTER the profile has been successfully created/upserted.
+ * 
+ * Idempotency: Uses the database UNIQUE(profile_id, school_id) constraint.
+ * PostgreSQL error 23505 (unique violation) is treated as success (record already exists).
+ * 
+ * @param serviceClient - Service-role client (bypasses RLS)
+ * @param profileId - The profile/user ID (from auth.users)
+ * @param role - The user's role
+ * @param schoolId - The authoritative school ID (from validated profile)
+ * @returns ActionResult indicating success or failure
+ */
+async function createDomainRecord(
+  serviceClient: ReturnType<typeof createServiceRoleClient>,
+  profileId: string,
+  role: AppRole,
+  schoolId: string | null
+): Promise<ActionResult> {
+  // Only create domain records for student and instructor roles with a valid school_id
+  if (!schoolId || (role !== 'student' && role !== 'instructor')) {
+    return { success: true }
+  }
+
+  const table = role === 'student' ? 'students' : 'instructors'
+  const { error } = await serviceClient.from(table).insert({
+    profile_id: profileId,
+    school_id: schoolId,
+  })
+
+  if (error) {
+    // PostgreSQL 23505 = unique_violation (record already exists — idempotent success)
+    if (error.code === '23505') {
+      return { success: true }
+    }
+    return { success: false, error: `Failed to create ${role} record: ${error.message}` }
+  }
+
+  return { success: true }
+}
+
 async function getCurrentAdmin(): Promise<ActionResult<AdminContext>> {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -355,6 +396,23 @@ export async function createUser(formData: UserFormData): Promise<ActionResult<{
     return { success: false, error: profileError.message }
   }
 
+  // Create domain record (student/instructor) if applicable.
+  // This occurs AFTER profile creation succeeds. If domain record creation fails,
+  // the profile is preserved (partial success) and the error is reported.
+  const domainResult = await createDomainRecord(
+    serviceClient,
+    authData.user.id,
+    formData.role,
+    formData.school_id
+  )
+
+  if (!domainResult.success) {
+    // Partial success: auth user and profile exist, but domain record failed.
+    // Do NOT delete the auth user/profile — that would be destructive.
+    // Report the error so the admin knows manual intervention may be needed.
+    return { success: false, error: domainResult.error }
+  }
+
   await logUserManagementAction(
     admin,
     authData.user.id,
@@ -487,6 +545,23 @@ export async function inviteUser(formData: InviteUserFormData): Promise<ActionRe
     // Best-effort cleanup: delete the invited auth user if profile upsert failed.
     await serviceClient.auth.admin.deleteUser(inviteData.user.id)
     return { success: false, error: profileError.message }
+  }
+
+  // Create domain record (student/instructor) if applicable.
+  // This occurs AFTER profile upsert succeeds. If domain record creation fails,
+  // the profile is preserved (partial success) and the error is reported.
+  const domainResult = await createDomainRecord(
+    serviceClient,
+    inviteData.user.id,
+    formData.role,
+    formData.school_id
+  )
+
+  if (!domainResult.success) {
+    // Partial success: auth user and profile exist, but domain record failed.
+    // Do NOT delete the auth user/profile — that would be destructive.
+    // Report the error so the admin knows manual intervention may be needed.
+    return { success: false, error: domainResult.error }
   }
 
   await logUserManagementAction(
