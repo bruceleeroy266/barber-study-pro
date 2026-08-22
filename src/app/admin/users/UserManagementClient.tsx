@@ -17,6 +17,7 @@ import {
 } from './actions'
 import { AppRole } from '@/types'
 import Modal from '@/components/ui/Modal'
+import EnrollmentModal from './EnrollmentModal'
 
 interface CurrentUser {
   id: string
@@ -62,6 +63,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
   const [showInviteForm, setShowInviteForm] = useState(false)
   const [deleteCandidate, setDeleteCandidate] = useState<UserListItem | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [enrollmentStudent, setEnrollmentStudent] = useState<UserListItem | null>(null)
   const [isPending, startTransition] = useTransition()
 
   const LIMIT = 50
@@ -547,6 +549,14 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                       >
                         Reset password
                       </button>
+                      {user.role === 'student' && (
+                        <button
+                          onClick={() => setEnrollmentStudent(user)}
+                          className="px-2 py-1 text-xs bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/30 rounded hover:bg-[var(--color-brand-gold)]/20"
+                        >
+                          Enroll
+                        </button>
+                      )}
                       <button
                         onClick={() => setDeleteCandidate(user)}
                         disabled={user.id === currentUser.id}
@@ -592,6 +602,17 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
           </div>
         </div>
       </div>
+
+      {/* Enrollment Modal */}
+      {enrollmentStudent && (
+        <EnrollmentModal
+          isOpen={!!enrollmentStudent}
+          onClose={() => setEnrollmentStudent(null)}
+          studentId={enrollmentStudent.id}
+          studentName={enrollmentStudent.full_name}
+          studentEmail={enrollmentStudent.email}
+        />
+      )}
 
       <Modal
         isOpen={!!deleteCandidate}
