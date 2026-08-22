@@ -1,6 +1,15 @@
-import { useState } from 'react'
+'use client'
+
+import { useState, useEffect, useCallback } from 'react'
 import { SchoolConfiguration, AcademicProgram } from '@/types'
-import { Plus, Trash2, Edit2, Check, X } from 'lucide-react'
+import { Plus, Trash2, Edit2, Check, X, Loader2, AlertCircle } from 'lucide-react'
+import {
+  getPrograms,
+  createProgram,
+  updateProgram,
+  deactivateProgram,
+  ProgramListItem,
+} from '@/app/admin/school/programs/actions'
 
 interface Props {
   config: SchoolConfiguration
@@ -15,8 +24,23 @@ const PROGRAM_TEMPLATES = [
   { name: 'Instructor Training', requiredHours: 1000, requiredAssessments: 5, requiredPracticals: 10 },
 ]
 
-export default function ProgramsSection({ config, onChange }: Props) {
-  const { programs } = config
+function mapDbToAcademicProgram(db: ProgramListItem): AcademicProgram {
+  return {
+    id: db.id,
+    name: db.name,
+    requiredHours: db.required_hours,
+    requiredAssessments: db.required_assessments,
+    requiredPracticals: db.required_practicals,
+    active: db.is_active,
+  }
+}
+
+export default function ProgramsSection({ config: _config, onChange }: Props) {
+  // config.programs is intentionally NOT used as display source.
+  // dbPrograms (loaded from server) is the single source of truth.
+  const [dbPrograms, setDbPrograms] = useState<ProgramListItem[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [actionError, setActionError] = useState<string | null>(null)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editForm, setEditForm] = useState<Partial<AcademicProgram>>({})
   const [isAdding, setIsAdding] = useState(false)
@@ -26,70 +50,36 @@ export default function ProgramsSection({ config, onChange }: Props) {
     requiredAssessments: 10,
     requiredPracticals: 20,
   })
+  const [pendingAction, setPendingAction] = useState<string | null>(null)
 
-  function generateId() {
-    return `program-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-  }
-
-  function handleAddProgram() {
-    if (!newProgram.name?.trim()) return
-
-    const program: AcademicProgram = {
-      id: generateId(),
-      name: newProgram.name.trim(),
-      requiredHours: newProgram.requiredHours ?? 1500,
-      requiredAssessments: newProgram.requiredAssessments ?? 10,
-      requiredPracticals: newProgram.requiredPracticals ?? 20,
-      active: true,
+  // Load programs from database on mount
+  const loadPrograms = useCallback(async () => {
+    setIsLoading(true)
+    setActionError(null)
+    const result = await getPrograms()
+    setIsLoading(false)
+    if (result.success && result.data) {
+      setDbPrograms(result.data)
+      // Sync the parent config with DB-backed programs (single source of truth)
+      const academicPrograms = result.data.map(mapDbToAcademicProgram)
+      onChange(academicPrograms)
+    } else if (result.error) {
+      setActionError(result.error)
     }
+  }, [onChange])
 
-    onChange([...programs, program])
-    setNewProgram({ name: '', requiredHours: 1500, requiredAssessments: 10, requiredPracticals: 20 })
-    setIsAdding(false)
-  }
+  useEffect(() => {
+    loadPrograms()
+  }, [loadPrograms])
 
   function handleEditProgram(program: AcademicProgram) {
     setEditingId(program.id)
     setEditForm(program)
   }
 
-  function handleSaveEdit() {
-    if (!editingId || !editForm.name?.trim()) return
-
-    onChange(
-      programs.map((p) =>
-        p.id === editingId
-          ? {
-              ...p,
-              name: editForm.name!.trim(),
-              requiredHours: editForm.requiredHours ?? p.requiredHours,
-              requiredAssessments: editForm.requiredAssessments ?? p.requiredAssessments,
-              requiredPracticals: editForm.requiredPracticals ?? p.requiredPracticals,
-            }
-          : p
-      )
-    )
-    setEditingId(null)
-    setEditForm({})
-  }
-
   function handleCancelEdit() {
     setEditingId(null)
     setEditForm({})
-  }
-
-  function handleDeleteProgram(id: string) {
-    if (programs.length <= 1) {
-      alert('At least one program is required.')
-      return
-    }
-    onChange(programs.filter((p) => p.id !== id))
-  }
-
-  function toggleActive(id: string) {
-    onChange(
-      programs.map((p) => (p.id === id ? { ...p, active: !p.active } : p))
-    )
   }
 
   function applyTemplate(template: typeof PROGRAM_TEMPLATES[0]) {
@@ -101,6 +91,85 @@ export default function ProgramsSection({ config, onChange }: Props) {
     })
   }
 
+  // --------------------------------------------------------------------------
+  // Database-backed actions
+  // --------------------------------------------------------------------------
+
+  async function handleDbCreate() {
+    const name = newProgram.name?.trim()
+    if (!name) return
+
+    setPendingAction('create')
+    setActionError(null)
+
+    const result = await createProgram({
+      name,
+      required_hours: newProgram.requiredHours ?? 1500,
+      required_assessments: newProgram.requiredAssessments ?? 10,
+      required_practicals: newProgram.requiredPracticals ?? 20,
+    })
+
+    setPendingAction(null)
+
+    if (result.success) {
+      setNewProgram({ name: '', requiredHours: 1500, requiredAssessments: 10, requiredPracticals: 20 })
+      setIsAdding(false)
+      await loadPrograms()
+    } else {
+      setActionError(result.error ?? 'Failed to create program.')
+    }
+  }
+
+  async function handleDbUpdate(programId: string) {
+    if (!editForm.name?.trim()) return
+
+    setPendingAction(`update-${programId}`)
+    setActionError(null)
+
+    const result = await updateProgram(programId, {
+      name: editForm.name.trim(),
+      required_hours: editForm.requiredHours,
+      required_assessments: editForm.requiredAssessments,
+      required_practicals: editForm.requiredPracticals,
+    })
+
+    setPendingAction(null)
+
+    if (result.success) {
+      setEditingId(null)
+      setEditForm({})
+      await loadPrograms()
+    } else {
+      setActionError(result.error ?? 'Failed to update program.')
+    }
+  }
+
+  async function handleDbDeactivate(programId: string) {
+    // Count only non-deleted DB programs for the minimum-one-program guard.
+    const activeDbPrograms = dbPrograms.filter((p) => p.deleted_at === null)
+    if (activeDbPrograms.length <= 1) {
+      setActionError('At least one program is required.')
+      return
+    }
+
+    setPendingAction(`deactivate-${programId}`)
+    setActionError(null)
+
+    const result = await deactivateProgram(programId)
+
+    setPendingAction(null)
+
+    if (result.success) {
+      await loadPrograms()
+    } else {
+      setActionError(result.error ?? 'Failed to deactivate program.')
+    }
+  }
+
+  // Single source of truth: always use DB-loaded programs.
+  // If DB is still loading and empty, show nothing (loading state handles this).
+  const displayPrograms = dbPrograms.map(mapDbToAcademicProgram)
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -111,12 +180,27 @@ export default function ProgramsSection({ config, onChange }: Props) {
         <button
           type="button"
           onClick={() => setIsAdding(true)}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-[var(--color-brand-gold)] text-black hover:bg-[var(--color-brand-gold)] transition-colors"
+          disabled={isLoading}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-[var(--color-brand-gold)] text-black hover:bg-[var(--color-brand-gold)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           <Plus className="w-4 h-4" />
           Add Program
         </button>
       </div>
+
+      {actionError && (
+        <div className="flex items-center gap-2 px-4 py-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+          <AlertCircle className="w-4 h-4 shrink-0" />
+          {actionError}
+        </div>
+      )}
+
+      {isLoading && dbPrograms.length === 0 && (
+        <div className="flex items-center justify-center py-8">
+          <Loader2 className="w-6 h-6 animate-spin text-[var(--color-brand-gold)]" />
+          <span className="ml-2 text-sm text-silver">Loading programs…</span>
+        </div>
+      )}
 
       {/* Add New Program Form */}
       {isAdding && (
@@ -207,16 +291,18 @@ export default function ProgramsSection({ config, onChange }: Props) {
             <button
               type="button"
               onClick={() => setIsAdding(false)}
-              className="px-4 py-2 rounded-lg text-sm font-medium border border-[var(--color-border-secondary)] text-light-gray hover:bg-graphite transition-colors"
+              disabled={pendingAction === 'create'}
+              className="px-4 py-2 rounded-lg text-sm font-medium border border-[var(--color-border-secondary)] text-light-gray hover:bg-graphite disabled:opacity-50 transition-colors"
             >
               Cancel
             </button>
             <button
               type="button"
-              onClick={handleAddProgram}
-              disabled={!newProgram.name?.trim()}
-              className="px-4 py-2 rounded-lg text-sm font-medium bg-[var(--color-brand-gold)] text-black hover:bg-[var(--color-brand-gold)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              onClick={handleDbCreate}
+              disabled={!newProgram.name?.trim() || pendingAction === 'create'}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-[var(--color-brand-gold)] text-black hover:bg-[var(--color-brand-gold)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
+              {pendingAction === 'create' && <Loader2 className="w-4 h-4 animate-spin" />}
               Add Program
             </button>
           </div>
@@ -225,7 +311,7 @@ export default function ProgramsSection({ config, onChange }: Props) {
 
       {/* Programs List */}
       <div className="space-y-3">
-        {programs.map((program) => (
+        {displayPrograms.map((program) => (
           <div
             key={program.id}
             className={`bg-black border rounded-lg p-4 transition-colors ${
@@ -292,16 +378,19 @@ export default function ProgramsSection({ config, onChange }: Props) {
                   <button
                     type="button"
                     onClick={handleCancelEdit}
-                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm border border-[var(--color-border-secondary)] text-light-gray hover:bg-graphite transition-colors"
+                    disabled={pendingAction === `update-${program.id}`}
+                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm border border-[var(--color-border-secondary)] text-light-gray hover:bg-graphite disabled:opacity-50 transition-colors"
                   >
                     <X className="w-4 h-4" />
                     Cancel
                   </button>
                   <button
                     type="button"
-                    onClick={handleSaveEdit}
-                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm bg-[var(--color-brand-gold)] text-black hover:bg-[var(--color-brand-gold)] transition-colors"
+                    onClick={() => handleDbUpdate(program.id)}
+                    disabled={pendingAction === `update-${program.id}`}
+                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm bg-[var(--color-brand-gold)] text-black hover:bg-[var(--color-brand-gold)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
+                    {pendingAction === `update-${program.id}` && <Loader2 className="w-4 h-4 animate-spin" />}
                     <Check className="w-4 h-4" />
                     Save
                   </button>
@@ -333,8 +422,9 @@ export default function ProgramsSection({ config, onChange }: Props) {
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => toggleActive(program.id)}
-                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                    onClick={() => handleDbDeactivate(program.id)}
+                    disabled={pendingAction === `deactivate-${program.id}`}
+                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 ${
                       program.active
                         ? 'bg-warm-bronze/10 text-warm-bronze border border-warm-bronze/20 hover:bg-warm-bronze/20'
                         : 'bg-gold/10 text-gold border border-gold/20 hover:bg-gold/20'
@@ -352,11 +442,16 @@ export default function ProgramsSection({ config, onChange }: Props) {
                   </button>
                   <button
                     type="button"
-                    onClick={() => handleDeleteProgram(program.id)}
-                    className="p-2 rounded-lg text-silver hover:text-silver hover:bg-silver/10 transition-colors"
+                    onClick={() => handleDbDeactivate(program.id)}
+                    disabled={pendingAction === `deactivate-${program.id}`}
+                    className="p-2 rounded-lg text-silver hover:text-silver hover:bg-silver/10 transition-colors disabled:opacity-50"
                     title="Delete program"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    {pendingAction === `deactivate-${program.id}` ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="w-4 h-4" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -365,7 +460,7 @@ export default function ProgramsSection({ config, onChange }: Props) {
         ))}
       </div>
 
-      {programs.length === 0 && (
+      {displayPrograms.length === 0 && !isLoading && (
         <div className="text-center py-8 bg-black border border-graphite rounded-lg">
           <p className="text-silver">No programs configured.</p>
           <button
@@ -381,3 +476,5 @@ export default function ProgramsSection({ config, onChange }: Props) {
     </div>
   )
 }
+
+
