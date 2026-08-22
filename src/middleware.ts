@@ -208,7 +208,8 @@ export async function middleware(request: NextRequest) {
         pathname === '/admin' ||
         pathname === '/admin/users' ||
         pathname.startsWith('/admin/users/') ||
-        pathname === '/admin/school/configuration'
+        pathname === '/admin/school/configuration' ||
+        pathname === '/admin/school'
       const allowed =
         isAdmin(userRole ?? '') ||
         (isSchoolAdminAllowedRoute && isSchoolAdmin(userRole ?? ''))

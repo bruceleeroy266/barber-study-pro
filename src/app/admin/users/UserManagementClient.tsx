@@ -176,6 +176,8 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
     <div className="space-y-6">
       {message && (
         <div
+          role="status"
+          aria-live="polite"
           className={`rounded-lg border p-4 ${
             message.type === 'success'
               ? 'border-gold/30 bg-gold/10 text-gold'
@@ -448,15 +450,15 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
           <table className="w-full text-left">
             <thead className="bg-[var(--color-background-primary)] border-b border-[var(--color-border-primary)]">
               <tr>
-                <th className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Name</th>
-                <th className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Email</th>
-                <th className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Role</th>
-                <th className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">School</th>
-                <th className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Status</th>
-                <th className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Disabled</th>
-                <th className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Pwd Change</th>
-                <th className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Created</th>
-                <th className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Actions</th>
+                <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Name</th>
+                <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Email</th>
+                <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Role</th>
+                <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">School</th>
+                <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Status</th>
+                <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Disabled</th>
+                <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Password Reset</th>
+                <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Created</th>
+                <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-graphite">
@@ -538,7 +540,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                         onClick={() => handleAction(requirePasswordChange, user.id)}
                         className="px-2 py-1 text-xs bg-[var(--color-background-secondary)] text-[var(--color-text-secondary)] border border-[var(--color-border-primary)] rounded hover:border-[var(--color-brand-gold)]/50"
                       >
-                        Require pwd change
+                        Require password reset
                       </button>
                       <button
                         onClick={() => {
@@ -550,12 +552,26 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                         Reset password
                       </button>
                       {user.role === 'student' && (
-                        <button
-                          onClick={() => setEnrollmentStudent(user)}
-                          className="px-2 py-1 text-xs bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/30 rounded hover:bg-[var(--color-brand-gold)]/20"
-                        >
-                          Enroll
-                        </button>
+                        <span className="inline-flex items-center gap-1">
+                          {typeof user.enrollment_count === 'number' && (
+                            <span
+                              className={`inline-flex items-center px-1.5 py-0.5 text-xs rounded-full ${
+                                user.enrollment_count > 0
+                                  ? 'bg-gold/10 text-gold border border-gold/20'
+                                  : 'bg-[var(--color-border-secondary)] text-[var(--color-text-muted)] border border-silver-gray'
+                              }`}
+                              title={`${user.enrollment_count} active enrollment${user.enrollment_count !== 1 ? 's' : ''}`}
+                            >
+                              {user.enrollment_count} program{user.enrollment_count !== 1 ? 's' : ''}
+                            </span>
+                          )}
+                          <button
+                            onClick={() => setEnrollmentStudent(user)}
+                            className="px-2 py-1 text-xs bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/30 rounded hover:bg-[var(--color-brand-gold)]/20"
+                          >
+                            Enroll
+                          </button>
+                        </span>
                       )}
                       <button
                         onClick={() => setDeleteCandidate(user)}

@@ -45,7 +45,7 @@ export default function SchoolHealthScore({ health }: Props) {
           </div>
           <div className="mt-2 text-center">
             <p className={`text-lg font-semibold ${health.colorClass}`}>{health.label}</p>
-            <p className="text-xs text-silver-gray">School Health Score</p>
+            <p className="text-xs text-silver-gray" title="Composite score based on attendance, academic performance, compliance, and student progress">School Health Score</p>
           </div>
         </div>
 

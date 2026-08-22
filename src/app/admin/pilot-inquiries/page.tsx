@@ -100,6 +100,13 @@ export default async function PilotInquiriesPage() {
           </div>
         </div>
 
+        {error && (
+          <div role="alert" aria-live="polite" className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+            <p className="text-red-400 font-medium">Failed to load pilot inquiries</p>
+            <p className="text-red-400/80 text-sm mt-1">Please try refreshing the page. If the problem persists, contact support.</p>
+          </div>
+        )}
+
         {rows.length === 0 ? (
           <div className="bg-charcoal border border-graphite rounded-xl p-12 text-center">
             <p className="text-silver text-lg">No pilot inquiries yet.</p>
@@ -170,34 +177,38 @@ export default async function PilotInquiriesPage() {
                     </div>
 
                     {(inquiry.utm_source || inquiry.utm_medium || inquiry.utm_campaign) && (
-                      <div className="flex flex-wrap items-center gap-2 pt-2">
-                        <span className="text-xs text-silver-gray uppercase tracking-wider">UTM</span>
-                        {inquiry.utm_source && (
-                          <span className="px-2 py-1 text-xs rounded bg-graphite text-light-gray">
-                            source: {inquiry.utm_source}
-                          </span>
-                        )}
-                        {inquiry.utm_medium && (
-                          <span className="px-2 py-1 text-xs rounded bg-graphite text-light-gray">
-                            medium: {inquiry.utm_medium}
-                          </span>
-                        )}
-                        {inquiry.utm_campaign && (
-                          <span className="px-2 py-1 text-xs rounded bg-graphite text-light-gray">
-                            campaign: {inquiry.utm_campaign}
-                          </span>
-                        )}
-                        {inquiry.utm_term && (
-                          <span className="px-2 py-1 text-xs rounded bg-graphite text-light-gray">
-                            term: {inquiry.utm_term}
-                          </span>
-                        )}
-                        {inquiry.utm_content && (
-                          <span className="px-2 py-1 text-xs rounded bg-graphite text-light-gray">
-                            content: {inquiry.utm_content}
-                          </span>
-                        )}
-                      </div>
+                      <details className="pt-2">
+                        <summary className="text-xs text-silver-gray uppercase tracking-wider cursor-pointer hover:text-light-gray">
+                          Tracking parameters
+                        </summary>
+                        <div className="flex flex-wrap items-center gap-2 pt-2">
+                          {inquiry.utm_source && (
+                            <span className="px-2 py-1 text-xs rounded bg-graphite text-light-gray">
+                              source: {inquiry.utm_source}
+                            </span>
+                          )}
+                          {inquiry.utm_medium && (
+                            <span className="px-2 py-1 text-xs rounded bg-graphite text-light-gray">
+                              medium: {inquiry.utm_medium}
+                            </span>
+                          )}
+                          {inquiry.utm_campaign && (
+                            <span className="px-2 py-1 text-xs rounded bg-graphite text-light-gray">
+                              campaign: {inquiry.utm_campaign}
+                            </span>
+                          )}
+                          {inquiry.utm_term && (
+                            <span className="px-2 py-1 text-xs rounded bg-graphite text-light-gray">
+                              term: {inquiry.utm_term}
+                            </span>
+                          )}
+                          {inquiry.utm_content && (
+                            <span className="px-2 py-1 text-xs rounded bg-graphite text-light-gray">
+                              content: {inquiry.utm_content}
+                            </span>
+                          )}
+                        </div>
+                      </details>
                     )}
 
                     {inquiry.message && (

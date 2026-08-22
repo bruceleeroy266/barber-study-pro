@@ -16,6 +16,7 @@ export interface UserListItem {
   approval_status: 'pending' | 'approved' | 'rejected'
   is_disabled: boolean
   requires_password_change: boolean
+  enrollment_count?: number
   created_at: string
   updated_at: string
 }
@@ -271,6 +272,60 @@ export async function getUsers(filters: UserFilters = {}): Promise<ActionResult<
       updated_at: String(row.updated_at),
     }
   })
+
+  // Fetch enrollment counts for students
+  const studentProfileIds = users.filter((u) => u.role === 'student').map((u) => u.id)
+  if (studentProfileIds.length > 0) {
+    const serviceClient = createServiceRoleClient()
+    // Resolve profile IDs to canonical student IDs first
+    const { data: studentRecords } = await serviceClient
+      .from('students')
+      .select('id, profile_id')
+      .in('profile_id', studentProfileIds)
+
+    if (studentRecords && studentRecords.length > 0) {
+      const studentIdToProfileId = new Map<string, string>()
+      const canonicalStudentIds: string[] = []
+      for (const rec of studentRecords) {
+        studentIdToProfileId.set(String(rec.id), String(rec.profile_id))
+        canonicalStudentIds.push(String(rec.id))
+      }
+
+      const { data: enrollmentCounts } = await serviceClient
+        .from('enrollments')
+        .select('student_id')
+        .in('student_id', canonicalStudentIds)
+        .eq('is_active', true)
+
+      if (enrollmentCounts) {
+        const countByStudentId = new Map<string, number>()
+        for (const row of enrollmentCounts) {
+          const sid = String(row.student_id)
+          countByStudentId.set(sid, (countByStudentId.get(sid) ?? 0) + 1)
+        }
+        // Map back to profile IDs
+        const countByProfileId = new Map<string, number>()
+        for (const [studentId, count] of countByStudentId) {
+          const profileId = studentIdToProfileId.get(studentId)
+          if (profileId) {
+            countByProfileId.set(profileId, count)
+          }
+        }
+        for (const user of users) {
+          if (user.role === 'student') {
+            user.enrollment_count = countByProfileId.get(user.id) ?? 0
+          }
+        }
+      }
+    } else {
+      // No student records — set all student enrollment counts to 0
+      for (const user of users) {
+        if (user.role === 'student') {
+          user.enrollment_count = 0
+        }
+      }
+    }
+  }
 
   return { success: true, data: { users, count: count ?? 0 } }
 }

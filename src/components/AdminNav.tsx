@@ -55,9 +55,12 @@ export default function AdminNav({ user }: AdminNavProps) {
 
   const navLinks = isAdmin(user?.role ?? '')
     ? adminLinks
-    : adminLinks.filter((link) =>
-        ['/admin', '/admin/users', '/admin/school/configuration'].includes(link.href)
-      )
+    : [
+        ...adminLinks.filter((link) =>
+          ['/admin', '/admin/users', '/admin/school/configuration'].includes(link.href)
+        ),
+        { href: '/admin/school', label: 'School Dashboard', icon: LayoutDashboard },
+      ]
 
   return (
     <>

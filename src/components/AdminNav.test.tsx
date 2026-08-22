@@ -98,9 +98,29 @@ describe('AdminNav', () => {
     const schoolAdmin: Profile = { ...adminProfile, role: 'school_admin', full_name: 'School Admin' }
     render(<AdminNav user={schoolAdmin} />)
 
-    expect(screen.getByRole('link', { name: /Dashboard/i })).toBeInTheDocument()
+    // Use exact text matching to avoid ambiguity with 'School Dashboard'
+    expect(screen.getAllByRole('link', { name: /^Dashboard$/i }).length).toBeGreaterThan(0)
     expect(screen.getByRole('link', { name: /Users/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /School Settings/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /School Dashboard/i })).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /Pilot Inquiries/i })).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /Audit History/i })).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /System Health/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /Maintenance/i })).not.toBeInTheDocument()
+  })
+
+  it('school admin sees School Dashboard link pointing to /admin/school', () => {
+    const schoolAdmin: Profile = { ...adminProfile, role: 'school_admin', full_name: 'School Admin' }
+    render(<AdminNav user={schoolAdmin} />)
+
+    const schoolDashboardLink = screen.getByRole('link', { name: /School Dashboard/i })
+    expect(schoolDashboardLink).toHaveAttribute('href', '/admin/school')
+  })
+
+  it('platform admin does not see School Dashboard link in nav', () => {
+    render(<AdminNav user={adminProfile} />)
+
+    // Platform admin sees the full admin links but not the school-specific dashboard link
+    expect(screen.queryByRole('link', { name: /School Dashboard/i })).not.toBeInTheDocument()
   })
 })

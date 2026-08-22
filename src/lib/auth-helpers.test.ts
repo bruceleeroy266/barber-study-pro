@@ -2,8 +2,9 @@ import { describe, it, expect } from 'vitest'
 import { isAdmin, isInstructorOrAdmin, isLearner, isSchoolAdmin } from './auth-helpers'
 
 describe('auth-helpers role checks', () => {
-  it('isAdmin only for admin', () => {
+  it('isAdmin for admin and platform_super_admin', () => {
     expect(isAdmin('admin')).toBe(true)
+    expect(isAdmin('platform_super_admin')).toBe(true)
     expect(isAdmin('student')).toBe(false)
     expect(isAdmin('instructor')).toBe(false)
     expect(isAdmin('school_admin')).toBe(false)

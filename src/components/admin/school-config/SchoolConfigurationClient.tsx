@@ -164,7 +164,7 @@ export default function SchoolConfigurationClient({
             )}
             {isDemo && (
               <div className="bg-warm-bronze/10 border border-warm-bronze/20 rounded-lg px-4 py-2 text-sm text-warm-bronze">
-                Demo mode: changes are not persisted
+                Demo mode: changes are not saved
               </div>
             )}
           </div>
@@ -327,7 +327,7 @@ export default function SchoolConfigurationClient({
               )}
               {isDemo && (
                 <span className="block sm:inline sm:ml-2 text-warm-bronze/80">
-                  Demo preview: settings will not persist after refresh.
+                  Demo preview: settings will not be saved after refresh.
                 </span>
               )}
             </div>
