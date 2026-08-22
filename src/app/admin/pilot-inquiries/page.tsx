@@ -4,6 +4,7 @@ import { isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
 import Link from 'next/link'
 import { Mail, Phone, Calendar, Tag, Trash2, CheckCircle, XCircle, HelpCircle, AlertCircle } from 'lucide-react'
 import ReplyModal from './ReplyModal'
+import CreateSchoolModal from './CreateSchoolModal'
 import BackButton from '@/components/ui/BackButton'
 
 export const dynamic = 'force-dynamic'
@@ -27,6 +28,8 @@ type PilotInquiry = {
   is_test: boolean
   status: 'new' | 'contacted' | 'approved' | 'declined' | 'spam'
   notes: string | null
+  school_id: string | null
+  school_created_at: string | null
 }
 
 const statusStyles: Record<string, string> = {
@@ -211,6 +214,15 @@ export default async function PilotInquiriesPage() {
                       schoolName={inquiry.school_name}
                       defaultSubject={`RE: ASCYN PRO Pilot Inquiry - ${inquiry.school_name}`}
                     />
+                    {inquiry.status === 'approved' && (
+                      <CreateSchoolModal
+                        inquiryId={inquiry.id}
+                        schoolName={inquiry.school_name}
+                        contactName={inquiry.contact_name}
+                        email={inquiry.email}
+                        alreadyCreated={!!inquiry.school_id}
+                      />
+                    )}
                     {inquiry.is_test && (
                       <span className="text-xs text-warm-bronze/80">Safe to delete</span>
                     )}
