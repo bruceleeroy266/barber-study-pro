@@ -4,6 +4,7 @@ import { isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
 import Link from 'next/link'
 import { Mail, Phone, Calendar, Tag, Trash2, CheckCircle, XCircle, HelpCircle, AlertCircle } from 'lucide-react'
 import ReplyModal from './ReplyModal'
+import ApproveInquiryModal from './ApproveInquiryModal'
 import CreateSchoolModal from './CreateSchoolModal'
 import BackButton from '@/components/ui/BackButton'
 
@@ -213,6 +214,13 @@ export default async function PilotInquiriesPage() {
                       contactName={inquiry.contact_name}
                       schoolName={inquiry.school_name}
                       defaultSubject={`RE: ASCYN PRO Pilot Inquiry - ${inquiry.school_name}`}
+                    />
+                    <ApproveInquiryModal
+                      inquiryId={inquiry.id}
+                      schoolName={inquiry.school_name}
+                      contactName={inquiry.contact_name}
+                      email={inquiry.email}
+                      currentStatus={inquiry.status}
                     />
                     {inquiry.status === 'approved' && (
                       <CreateSchoolModal

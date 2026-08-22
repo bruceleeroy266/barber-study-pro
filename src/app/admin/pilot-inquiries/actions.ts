@@ -12,6 +12,19 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'ASCYN PRO <hello@ascynpro.com>'
 
+/**
+ * Returns the canonical site URL for auth redirects.
+ * Mirrors the established inviteUser() implementation: in production always
+ * returns the approved ascynpro.com origin to prevent redirect manipulation
+ * through environment variables.
+ */
+function getSiteUrl(): string {
+  if (process.env.NODE_ENV === 'production') {
+    return 'https://ascynpro.com'
+  }
+  return process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') || 'http://localhost:3000'
+}
+
 export async function sendPilotInquiryReply(
   inquiryId: string,
   subject: string,
@@ -99,6 +112,165 @@ export async function sendPilotInquiryReply(
     return { success: true }
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : String(err) }
+  }
+}
+
+// ============================================================================
+// Phase 7A Slice 5.5 (P0-1) — Approve Pilot Inquiry
+// ============================================================================
+
+export type ApprovePilotInquiryResult = {
+  success: boolean
+  /** The resulting status after the call ('approved' on success). */
+  status?: string
+  /** True when the inquiry was already approved (idempotent no-op). */
+  alreadyApproved?: boolean
+  error?: string
+}
+
+/**
+ * Approve a pilot inquiry (platform-admin only).
+ *
+ * Authorization: independently verifies the caller is a platform admin
+ * (role='admin', school_id IS NULL) using the caller's own session, then
+ * invokes the approve_pilot_inquiry() RPC which re-validates authorization
+ * and transition legality database-side. Direct API/RPC invocation cannot
+ * bypass authorization because the RPC performs its own platform-admin check.
+ *
+ * Legal transitions (enforced by the RPC):
+ *   new | contacted -> approved (allowed)
+ *   approved -> approved (idempotent no-op)
+ *   declined | spam -> approved (rejected)
+ *
+ * Approval and school creation remain separate explicit actions: this action
+ * only transitions the inquiry to 'approved'; createSchoolFromInquiry()
+ * performs school provisioning as a distinct, separately authorized step.
+ */
+export async function approvePilotInquiry(
+  inquiryId: string
+): Promise<ApprovePilotInquiryResult> {
+  try {
+    // ========================================================================
+    // 1. AUTHENTICATE AND AUTHORIZE THE CALLER (SERVER-SIDE)
+    // ========================================================================
+    const supabase = await createClient()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+    if (authError || !user) {
+      return { success: false, error: 'Authentication required.' }
+    }
+
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('role, school_id')
+      .eq('id', user.id)
+      .single()
+
+    if (profileError || !profile) {
+      return { success: false, error: 'Profile not found.' }
+    }
+
+    // Only platform admins (role='admin', school_id IS NULL) may approve inquiries.
+    if (profile.role !== 'admin' || profile.school_id !== null) {
+      void logSecurityEvent('permission_denied', 'denied', 'Non-platform-admin attempted pilot inquiry approval', {
+        userId: user.id,
+        email: user.email,
+        role: profile.role,
+        schoolId: profile.school_id,
+        resource: '/admin/pilot-inquiries',
+        resourceId: inquiryId,
+        action: 'approve_inquiry',
+      })
+      return { success: false, error: 'Only platform administrators may approve pilot inquiries.' }
+    }
+
+    // ========================================================================
+    // 2. VALIDATE INPUT
+    // ========================================================================
+    if (!inquiryId || typeof inquiryId !== 'string' || inquiryId.trim().length === 0) {
+      return { success: false, error: 'Inquiry ID is required.' }
+    }
+
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+    if (!uuidRegex.test(inquiryId.trim())) {
+      return { success: false, error: 'Invalid inquiry ID format.' }
+    }
+
+    const trimmedInquiryId = inquiryId.trim()
+
+    // ========================================================================
+    // 3. FETCH CURRENT STATUS (UX OPTIMIZATION; RPC IS AUTHORITATIVE)
+    // ========================================================================
+    const { data: inquiry, error: inquiryError } = await supabase
+      .from('pilot_inquiries')
+      .select('id, status')
+      .eq('id', trimmedInquiryId)
+      .single()
+
+    if (inquiryError || !inquiry) {
+      return { success: false, error: 'Pilot inquiry not found.' }
+    }
+
+    const wasAlreadyApproved = inquiry.status === 'approved'
+
+    // ========================================================================
+    // 4. INVOKE THE APPROVAL RPC (TRANSACTIONAL, AUTHORITATIVE)
+    // ========================================================================
+    // The RPC enforces platform-admin authorization and legal transitions
+    // database-side under a SELECT ... FOR UPDATE row lock.
+    const { data: rpcStatus, error: rpcError } = await supabase
+      .rpc('approve_pilot_inquiry', { p_pilot_inquiry_id: trimmedInquiryId })
+
+    if (rpcError) {
+      void logSecurityEvent('sensitive_config_change', 'failure', `Pilot inquiry approval RPC failed: ${rpcError.message}`, {
+        userId: user.id,
+        email: user.email,
+        role: profile.role,
+        resource: '/admin/pilot-inquiries',
+        resourceId: trimmedInquiryId,
+        action: 'approve_inquiry',
+        metadata: { rpcError: rpcError.message, inquiryId: trimmedInquiryId },
+      })
+      return { success: false, error: `Approval failed: ${rpcError.message}` }
+    }
+
+    // ========================================================================
+    // 5. WRITE AUDIT LOG (NON-TRANSACTIONAL, FIRE-AND-FORGET)
+    // ========================================================================
+    void logSecurityEvent(
+      'sensitive_config_change',
+      'success',
+      wasAlreadyApproved
+        ? `Pilot inquiry ${trimmedInquiryId} was already approved (idempotent)`
+        : `Pilot inquiry ${trimmedInquiryId} approved`,
+      {
+        userId: user.id,
+        email: user.email,
+        role: profile.role,
+        resource: '/admin/pilot-inquiries',
+        resourceId: trimmedInquiryId,
+        action: 'approve_inquiry',
+        metadata: {
+          inquiryId: trimmedInquiryId,
+          previousStatus: inquiry.status,
+          newStatus: rpcStatus,
+          alreadyApproved: wasAlreadyApproved,
+        },
+      }
+    )
+
+    revalidatePath('/admin/pilot-inquiries')
+
+    return {
+      success: true,
+      status: (rpcStatus as string) ?? 'approved',
+      alreadyApproved: wasAlreadyApproved,
+    }
+  } catch (err) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : String(err),
+    }
   }
 }
 
@@ -252,52 +424,296 @@ export async function createSchoolFromInquiry(
     const alreadyExisted = inquiry.school_id === schoolId
 
     // ==========================================================================
-    // 5. CREATE SCHOOL ADMIN INVITATION (NON-TRANSACTIONAL)
+    // 5. SEND SCHOOL ADMIN AUTHENTICATION INVITATION (NON-TRANSACTIONAL)
     // ==========================================================================
-    // Use the service-role client for the invitation insert because:
-    //   - The school_onboarding_invitations table has no INSERT policy for
-    //     authenticated users (by design from Slice 1).
-    //   - The service-role client bypasses RLS for server-side operations.
+    // Phase 7A Slice 5.5 (P0-2): completes the school-creation workflow so
+    // the designated school administrator receives a REAL ASCYN PRO
+    // authentication invitation.
     //
-    // The invitation targets the school returned by the RPC — never a
-    // client-supplied school_id.
+    // This reuses the established production inviteUser()/Supabase invitation
+    // architecture (serviceClient.auth.admin.inviteUserByEmail + profile
+    // upsert through the safe service-role path) rather than creating a
+    // second authentication system.
+    //
+    // Security properties:
+    //   - The invited user is associated ONLY with the school returned by the
+    //     RPC (never a client-supplied school_id) -> cross-school assignment
+    //     is impossible through this path.
+    //   - The assigned role is hardcoded 'school_admin' -> role escalation is
+    //     impossible through this path.
+    //   - The profile is created/updated through the established safe upsert
+    //     path (onConflict: 'id'), identical to inviteUser().
+    //   - The school_onboarding_invitations lifecycle record is maintained
+    //     (auth_user_id backfilled; duplicate/revoked/expired states handled).
+    //   - Existing-account state is handled safely: if the email already has
+    //     an auth account, we do NOT reassign that account across tenants;
+    //     the failure is surfaced for manual remediation.
+    //   - If the authentication invitation fails, the flow reports a partial
+    //     success (school preserved) and does NOT falsely report full success.
     let invitationError: string | null = null
     try {
       const serviceClient = createServiceRoleClient()
+      const normalizedEmail = inquiry.email.toLowerCase().trim()
 
-      // Check for existing invitation to prevent duplicates.
-      const { data: existingInvitation } = await serviceClient
-        .from('school_onboarding_invitations')
-        .select('id')
-        .eq('school_id', schoolId)
-        .eq('email', inquiry.email)
-        .eq('role', 'school_admin')
-        .neq('status', 'revoked')
-        .maybeSingle()
+      // ----------------------------------------------------------------------
+      // 5a. Check for an existing auth account (existing-account state).
+      // ----------------------------------------------------------------------
+      const { data: existingUsers, error: listError } = await serviceClient.auth.admin.listUsers()
+      if (listError) {
+        invitationError = `Failed to check existing auth users: ${listError.message}`
+      } else {
+        const existingAuthUser = existingUsers.users.find(
+          (u) => u.email?.toLowerCase() === normalizedEmail
+        )
 
-      if (!existingInvitation) {
-        const expiresAt = new Date()
-        expiresAt.setDate(expiresAt.getDate() + 7) // 7-day expiration
-
-        const { error: inviteError } = await serviceClient
+        // --------------------------------------------------------------------
+        // 5b. Check the invitation lifecycle record for this school+email+role.
+        // --------------------------------------------------------------------
+        const { data: existingInvitation } = await serviceClient
           .from('school_onboarding_invitations')
-          .insert({
-            school_id: schoolId,
-            pilot_inquiry_id: trimmedInquiryId,
-            invited_by: user.id,
-            email: inquiry.email,
-            full_name: inquiry.contact_name || inquiry.school_name,
-            role: 'school_admin',
-            status: 'pending',
-            expires_at: expiresAt.toISOString(),
-          })
+          .select('id, status, auth_user_id, expires_at')
+          .eq('school_id', schoolId)
+          .eq('email', normalizedEmail)
+          .eq('role', 'school_admin')
+          .maybeSingle()
 
-        if (inviteError) {
-          // 23505 = unique violation — invitation already exists (race condition)
-          if (inviteError.code !== '23505') {
-            invitationError = inviteError.message
+        const invitationExpired =
+          existingInvitation?.expires_at != null &&
+          new Date(existingInvitation.expires_at).getTime() < Date.now()
+
+        // Determine whether we need to (re)send the auth invitation:
+        //   - No lifecycle record -> send.
+        //   - Record exists but is revoked or expired -> send (retry path).
+        //   - Record is pending/accepted and unexpired -> do not resend
+        //     (duplicate-invitation prevention; idempotent retry returns the
+        //     existing state).
+        const shouldSendInvite =
+          !existingInvitation ||
+          existingInvitation.status === 'revoked' ||
+          existingInvitation.status === 'expired' ||
+          invitationExpired
+
+        if (existingAuthUser) {
+          // ------------------------------------------------------------------
+          // Existing-account state: the email already has an auth account.
+          // ------------------------------------------------------------------
+          // We must NOT silently reassign an existing account across tenants
+          // or escalate its role. Check whether the existing profile already
+          // belongs to THIS school with the school_admin role (idempotent
+          // retry of a previously completed onboarding).
+          const { data: existingProfile } = await serviceClient
+            .from('profiles')
+            .select('id, role, school_id')
+            .eq('id', existingAuthUser.id)
+            .maybeSingle()
+
+          const alreadyOnboarded =
+            existingProfile?.role === 'school_admin' &&
+            existingProfile?.school_id === schoolId
+
+          if (alreadyOnboarded) {
+            // Idempotent retry: ensure the lifecycle record exists and is
+            // linked to the auth user. No new invitation email is sent.
+            if (!existingInvitation) {
+              const expiresAt = new Date()
+              expiresAt.setDate(expiresAt.getDate() + 7)
+              const { error: insertError } = await serviceClient
+                .from('school_onboarding_invitations')
+                .insert({
+                  school_id: schoolId,
+                  pilot_inquiry_id: trimmedInquiryId,
+                  invited_by: user.id,
+                  email: normalizedEmail,
+                  full_name: inquiry.contact_name || inquiry.school_name,
+                  role: 'school_admin',
+                  auth_user_id: existingAuthUser.id,
+                  status: 'accepted',
+                  accepted_at: new Date().toISOString(),
+                  expires_at: expiresAt.toISOString(),
+                })
+              // 23505 = unique violation — record already exists (race).
+              if (insertError && insertError.code !== '23505') {
+                invitationError = `Invitation lifecycle record failed: ${insertError.message}`
+              }
+            } else if (!existingInvitation.auth_user_id) {
+              const { error: linkError } = await serviceClient
+                .from('school_onboarding_invitations')
+                .update({ auth_user_id: existingAuthUser.id })
+                .eq('id', existingInvitation.id)
+              if (linkError) {
+                invitationError = `Invitation lifecycle link failed: ${linkError.message}`
+              }
+            }
+          } else {
+            // The email belongs to a DIFFERENT tenant or a different role.
+            // Reassigning would be a cross-school assignment / role-escalation
+            // risk. Surface for manual remediation; do NOT modify the
+            // existing account.
+            invitationError =
+              'An auth account with this email already exists and is not the school administrator for this school. Manual remediation is required to avoid cross-school assignment.'
+          }
+        } else if (shouldSendInvite) {
+          // ------------------------------------------------------------------
+          // 5c. Send the real Supabase authentication invitation email.
+          // ------------------------------------------------------------------
+          // inviteUserByEmail sends the actual invitation email; the user
+          // sets their own password via the /auth/callback -> /auth/set-password
+          // flow (established production path).
+          const redirectTo = `${getSiteUrl()}/auth/callback`
+          const { data: inviteData, error: inviteError } =
+            await serviceClient.auth.admin.inviteUserByEmail(normalizedEmail, {
+              redirectTo,
+              data: {
+                full_name: inquiry.contact_name || inquiry.school_name,
+                role: 'school_admin',
+              },
+            })
+
+          if (inviteError || !inviteData.user) {
+            // Invitation-provider failure: the school is preserved, but the
+            // flow must NOT report full success.
+            invitationError =
+              inviteError?.message ?? 'Invitation provider returned no user.'
+          } else {
+            // ----------------------------------------------------------------
+            // 5d. Create/update the profile through the established safe path.
+            // ----------------------------------------------------------------
+            // The Supabase Auth trigger on_auth_user_created inserts a profile
+            // when the auth user is created, but it cannot set school_id or
+            // approval_status. Upsert guarantees exactly one profile and
+            // safely overwrites trigger-created defaults with the validated
+            // values. Role is hardcoded 'school_admin'; school_id is the
+            // RPC-returned school.
+            const { error: profileError } = await serviceClient
+              .from('profiles')
+              .upsert(
+                {
+                  id: inviteData.user.id,
+                  email: normalizedEmail,
+                  full_name: inquiry.contact_name || inquiry.school_name,
+                  role: 'school_admin',
+                  school_id: schoolId,
+                  approval_status: 'approved',
+                  is_disabled: false,
+                  requires_password_change: false,
+                },
+                { onConflict: 'id' }
+              )
+
+            if (profileError) {
+              // Best-effort cleanup: delete the invited auth user if the
+              // profile upsert failed (mirrors inviteUser() behavior).
+              await serviceClient.auth.admin.deleteUser(inviteData.user.id)
+              invitationError = `Profile creation failed: ${profileError.message}`
+            } else {
+              // ------------------------------------------------------------
+              // 5e. Maintain the school_onboarding_invitations lifecycle record.
+              // ------------------------------------------------------------
+              const expiresAt = new Date()
+              expiresAt.setDate(expiresAt.getDate() + 7) // 7-day expiration
+
+              if (existingInvitation && (existingInvitation.status === 'revoked' || existingInvitation.status === 'expired' || invitationExpired)) {
+                // Retry path: revoke the stale record and create a fresh one
+                // so the (school_id, email, role) uniqueness constraint is
+                // preserved while the lifecycle reflects the new invitation.
+                await serviceClient
+                  .from('school_onboarding_invitations')
+                  .update({
+                    status: 'revoked',
+                    revoked_at: new Date().toISOString(),
+                    revoked_by: user.id,
+                  })
+                  .eq('id', existingInvitation.id)
+
+                const { error: reinsertError } = await serviceClient
+                  .from('school_onboarding_invitations')
+                  .insert({
+                    school_id: schoolId,
+                    pilot_inquiry_id: trimmedInquiryId,
+                    invited_by: user.id,
+                    email: normalizedEmail,
+                    full_name: inquiry.contact_name || inquiry.school_name,
+                    role: 'school_admin',
+                    auth_user_id: inviteData.user.id,
+                    status: 'pending',
+                    expires_at: expiresAt.toISOString(),
+                  })
+
+                if (reinsertError) {
+                  if (reinsertError.code === '23505') {
+                    // Unique conflict on retry: update the surviving record.
+                    const { error: updateError } = await serviceClient
+                      .from('school_onboarding_invitations')
+                      .update({
+                        auth_user_id: inviteData.user.id,
+                        status: 'pending',
+                        invited_by: user.id,
+                        pilot_inquiry_id: trimmedInquiryId,
+                        expires_at: expiresAt.toISOString(),
+                        revoked_at: null,
+                        revoked_by: null,
+                      })
+                      .eq('school_id', schoolId)
+                      .eq('email', normalizedEmail)
+                      .eq('role', 'school_admin')
+                    if (updateError) {
+                      invitationError = `Invitation lifecycle record failed: ${updateError.message}`
+                    }
+                  } else {
+                    invitationError = `Invitation lifecycle record failed: ${reinsertError.message}`
+                  }
+                }
+              } else if (!existingInvitation) {
+                const { error: insertError } = await serviceClient
+                  .from('school_onboarding_invitations')
+                  .insert({
+                    school_id: schoolId,
+                    pilot_inquiry_id: trimmedInquiryId,
+                    invited_by: user.id,
+                    email: normalizedEmail,
+                    full_name: inquiry.contact_name || inquiry.school_name,
+                    role: 'school_admin',
+                    auth_user_id: inviteData.user.id,
+                    status: 'pending',
+                    expires_at: expiresAt.toISOString(),
+                  })
+
+                if (insertError) {
+                  // 23505 = unique violation — invitation already exists (race
+                  // condition). Backfill auth_user_id on the surviving record.
+                  if (insertError.code === '23505') {
+                    const { error: linkError } = await serviceClient
+                      .from('school_onboarding_invitations')
+                      .update({ auth_user_id: inviteData.user.id })
+                      .eq('school_id', schoolId)
+                      .eq('email', normalizedEmail)
+                      .eq('role', 'school_admin')
+                    if (linkError) {
+                      invitationError = `Invitation lifecycle link failed: ${linkError.message}`
+                    }
+                  } else {
+                    invitationError = `Invitation lifecycle record failed: ${insertError.message}`
+                  }
+                }
+              } else {
+                // Existing pending/accepted unexpired record: backfill the
+                // auth_user_id if missing (idempotent retry after a prior
+                // partial failure).
+                if (!existingInvitation.auth_user_id) {
+                  const { error: linkError } = await serviceClient
+                    .from('school_onboarding_invitations')
+                    .update({ auth_user_id: inviteData.user.id })
+                    .eq('id', existingInvitation.id)
+                  if (linkError) {
+                    invitationError = `Invitation lifecycle link failed: ${linkError.message}`
+                  }
+                }
+              }
+            }
           }
         }
+        // else: existing pending/accepted unexpired invitation and no auth
+        // account yet -> duplicate-invitation prevention; nothing to do.
       }
     } catch (err) {
       invitationError = err instanceof Error ? err.message : String(err)
