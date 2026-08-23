@@ -11,6 +11,7 @@ import { getRoleBasedRedirect, validateLoginAccess } from '@/lib/auth-access'
 import { canAccessRoute } from '@/lib/auth-helpers'
 import { Logo } from '@/components/brand'
 import { logAuthError } from '@/lib/error-logging'
+import { FormError } from '@/components/ui/FormError'
 
 function debugLogin(message: string, detail?: unknown) {
   if (process.env.NODE_ENV !== 'production') {
@@ -177,6 +178,7 @@ function LoginForm() {
   }
 
   const errorMessage = error ? ERROR_MESSAGES[error] : null
+  const credentialsInvalid = error === 'invalid_credentials'
 
   return (
     <div className="bg-[var(--color-background-primary)]/80 backdrop-blur-sm border border-[var(--color-border-primary)] rounded-2xl p-8 shadow-2xl">
@@ -189,12 +191,19 @@ function LoginForm() {
       </div>
 
       {errorMessage && (
-        <div className="bg-silver/10 border border-silver/20 text-silver px-4 py-3 rounded-lg mb-6 text-sm">
-          {errorMessage}
-        </div>
+        <FormError
+          id="login-error"
+          title="Sign-in failed"
+          message={errorMessage}
+          className="mb-6"
+        />
       )}
 
-      <form onSubmit={handleLogin} className="space-y-5">
+      <form
+        onSubmit={handleLogin}
+        className="space-y-5"
+        aria-describedby={errorMessage ? 'login-error' : undefined}
+      >
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
             Email Address
@@ -205,6 +214,8 @@ function LoginForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            aria-invalid={credentialsInvalid ? true : undefined}
+            aria-describedby={errorMessage ? 'login-error' : undefined}
             className="w-full px-4 py-3 bg-[var(--color-background-secondary)] border border-[var(--color-border-primary)] rounded-lg text-white placeholder-silver-gray focus:outline-none focus:border-[var(--color-brand-gold)] focus:ring-1 focus:ring-[var(--color-brand-gold)] transition-colors"
             placeholder="you@example.com"
           />
@@ -220,6 +231,8 @@ function LoginForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            aria-invalid={credentialsInvalid ? true : undefined}
+            aria-describedby={errorMessage ? 'login-error' : undefined}
             className="w-full px-4 py-3 bg-[var(--color-background-secondary)] border border-[var(--color-border-primary)] rounded-lg text-white placeholder-silver-gray focus:outline-none focus:border-[var(--color-brand-gold)] focus:ring-1 focus:ring-[var(--color-brand-gold)] transition-colors"
             placeholder="••••••••"
           />

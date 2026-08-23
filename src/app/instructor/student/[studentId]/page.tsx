@@ -384,9 +384,11 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                 {resolvedStudent.full_name.charAt(0).toUpperCase()}
               </span>
             </div>
-            <div className="flex-1">
-              <h1 className="text-3xl font-bold text-white">{resolvedStudent.full_name}</h1>
-              <p className="text-silver">{resolvedStudent.email}</p>
+            <div className="min-w-0 flex-1">
+              <h1 className="break-words text-3xl font-bold leading-tight text-white">
+                {resolvedStudent.full_name}
+              </h1>
+              <p className="break-all text-silver">{resolvedStudent.email}</p>
               <div className="flex flex-wrap items-center gap-3 mt-2 text-sm">
                 <span className="px-2 py-0.5 bg-graphite text-light-gray rounded capitalize">
                   {resolvedStudent.role}

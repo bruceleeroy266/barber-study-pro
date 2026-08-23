@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { trackEvent, trackPageView } from '@/lib/analytics/events'
 import { storeUtmParams, getCurrentUtmContext } from '@/lib/analytics/utm'
 import { Logo } from '@/components/brand'
+import { FormError } from '@/components/ui/FormError'
 
 function getFourWeeksFromToday(): string {
   const date = new Date()
@@ -163,7 +164,15 @@ export default function PilotPage() {
             </div>
           ) : (
             <div className="bg-[var(--color-brand-black)] border border-white/10 rounded-2xl p-8 md:p-12">
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form
+                action="/api/email"
+                method="post"
+                onSubmit={handleSubmit}
+                className="space-y-6"
+                aria-describedby={error ? 'pilot-form-error' : undefined}
+              >
+                <input type="hidden" name="formType" value="pilot" />
+
                 {/* Honeypot */}
                 <div className="hidden" aria-hidden="true">
                   <label htmlFor="website">Website</label>
@@ -339,9 +348,11 @@ export default function PilotPage() {
                 </div>
 
                 {error && (
-                  <div className="bg-silver/10 border border-silver/20 text-silver px-4 py-3 rounded-lg text-sm">
-                    {error}
-                  </div>
+                  <FormError
+                    id="pilot-form-error"
+                    title="Pilot inquiry not submitted"
+                    message={error}
+                  />
                 )}
 
                 <div className="pt-4">

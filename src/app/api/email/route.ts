@@ -42,6 +42,31 @@ function sanitize(value: unknown): string {
   return String(value).trim()
 }
 
+async function parseSubmissionBody(request: NextRequest): Promise<Record<string, unknown> | null> {
+  const contentType = request.headers.get('content-type')?.toLowerCase() || ''
+
+  try {
+    if (contentType.includes('application/json')) {
+      const body = await request.json()
+      return body && typeof body === 'object' && !Array.isArray(body)
+        ? body as Record<string, unknown>
+        : null
+    }
+
+    if (
+      contentType.includes('application/x-www-form-urlencoded') ||
+      contentType.includes('multipart/form-data')
+    ) {
+      const formData = await request.formData()
+      return Object.fromEntries(formData.entries())
+    }
+  } catch {
+    return null
+  }
+
+  return null
+}
+
 function validateEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
@@ -103,9 +128,19 @@ function emailWrapper(content: string, previewText: string) {
   `.trim()
 }
 
+export async function GET() {
+  return NextResponse.json(
+    { error: 'Method not allowed. Submit this form with POST.' },
+    { status: 405, headers: { Allow: 'POST' } }
+  )
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
+    const body = await parseSubmissionBody(request)
+    if (!body) {
+      return NextResponse.json({ error: 'Invalid submission body.' }, { status: 400 })
+    }
 
     // Honeypot — if filled, silently accept but do nothing
     if (sanitize(body.website).length > 0) {

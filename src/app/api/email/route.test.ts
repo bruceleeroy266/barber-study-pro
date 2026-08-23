@@ -51,11 +51,12 @@ vi.mock('@/lib/supabase-service-role', () => ({
 }))
 
 // Import route after mocks and env are configured.
-const { POST } = await import('./route')
+const { GET, POST } = await import('./route')
 
 function buildRequest(body: object) {
   return new NextRequest('http://localhost:3000/api/email', {
     method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   })
 }
@@ -190,5 +191,68 @@ describe('/api/email', () => {
 
     expect(res.status).toBe(400)
     expect(json.error).toMatch(/name and email are required/i)
+  })
+
+  it('accepts the native form POST fallback without query-string data', async () => {
+    const body = new URLSearchParams({
+      formType: 'pilot',
+      schoolName: 'Native Form School',
+      contactName: 'Native Contact',
+      email: 'native@example.com',
+      programType: 'Barbering',
+    })
+    const req = new NextRequest('http://localhost:3000/api/email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body,
+    })
+
+    const res = await POST(req)
+
+    expect(res.status).toBe(200)
+    expect(req.nextUrl.search).toBe('')
+    expect(pilotInquiriesChain.insert).toHaveBeenCalledWith(
+      expect.objectContaining({ email: 'native@example.com', school_name: 'Native Form School' })
+    )
+  })
+
+  it('rejects malformed JSON safely', async () => {
+    const req = new NextRequest('http://localhost:3000/api/email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{not-json',
+    })
+
+    const res = await POST(req)
+
+    expect(res.status).toBe(400)
+    await expect(res.json()).resolves.toEqual({ error: 'Invalid submission body.' })
+    expect(pilotInquiriesChain.insert).not.toHaveBeenCalled()
+  })
+
+  it('handles repeated valid submissions under the existing rate-limit contract', async () => {
+    const body = {
+      formType: 'pilot',
+      schoolName: 'Repeat School',
+      contactName: 'Repeat Contact',
+      email: 'repeat@example.com',
+      programType: 'Barbering',
+    }
+
+    const first = await POST(buildRequest(body))
+    const second = await POST(buildRequest(body))
+
+    expect(first.status).toBe(200)
+    expect(second.status).toBe(200)
+    expect(pilotInquiriesChain.insert).toHaveBeenCalledTimes(2)
+  })
+
+  it('does not mutate on GET', async () => {
+    const res = await GET()
+
+    expect(res.status).toBe(405)
+    expect(res.headers.get('allow')).toBe('POST')
+    expect(pilotInquiriesChain.insert).not.toHaveBeenCalled()
+    expect(mockResendSend).not.toHaveBeenCalled()
   })
 })

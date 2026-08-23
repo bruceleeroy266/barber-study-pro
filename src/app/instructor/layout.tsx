@@ -35,7 +35,7 @@ export default async function InstructorLayout({
     <div className="min-h-screen bg-black">
       <BackButtonPrevention />
       <InstructorNav user={profile} />
-      <main id="main-content" className="lg:pl-64 min-h-screen">
+      <main id="main-content" className="min-h-screen pt-16 lg:pl-64 lg:pt-0">
         <div className="p-4 lg:p-8 max-w-7xl mx-auto">
           {children}
         </div>
