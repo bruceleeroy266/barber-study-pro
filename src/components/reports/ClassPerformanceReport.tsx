@@ -1,7 +1,7 @@
 'use client'
 
 import { Profile, Grade, GradeCategory, Assessment } from '@/types'
-import { calculateStudentGradePerformance, getGradeColorClass } from '@/lib/gradebook'
+import { calculateClassGradeSummary, getGradeColorClass } from '@/lib/gradebook'
 
 interface ClassPerformanceReportProps {
   students: Profile[]
@@ -16,19 +16,13 @@ export default function ClassPerformanceReport({
   categories,
   assessments,
 }: ClassPerformanceReportProps) {
-  const performances = students.map((student) =>
-    calculateStudentGradePerformance(student.id, grades, categories, assessments)
+  const summary = calculateClassGradeSummary(
+    students.map((student) => student.id),
+    grades,
+    categories,
+    assessments
   )
-
-  const classAverage =
-    performances.length > 0
-      ? Math.round(
-          (performances.reduce((sum, p) => sum + p.overallGrade, 0) / performances.length) * 10
-        ) / 10
-      : 0
-
-  const atRiskCount = performances.filter((p) => p.isAtRisk).length
-  const passingCount = performances.filter((p) => p.overallGrade >= 70).length
+  const { performances, classAverage, atRiskCount, passingCount } = summary
 
   const categoryAverages = categories
     .filter((c) => c.isActive)
@@ -53,16 +47,18 @@ export default function ClassPerformanceReport({
       <div className="grid grid-cols-3 gap-6 mb-8">
         <div className="bg-gray-50 rounded-lg p-4">
           <p className="text-sm text-silver-gray">Class Average</p>
-          <p className={`text-3xl font-bold ${getGradeColorClass(classAverage)}`}>{classAverage}%</p>
+          <p className={`text-3xl font-bold ${classAverage === null ? 'text-silver-gray' : getGradeColorClass(classAverage)}`}>
+            {classAverage === null ? '—' : `${classAverage}%`}
+          </p>
         </div>
         <div className="bg-gray-50 rounded-lg p-4">
           <p className="text-sm text-silver-gray">Passing Students</p>
           <p className="text-3xl font-bold text-gold">
-            {passingCount}/{performances.length}
+            {passingCount}/{summary.gradedPerformances.length}
           </p>
         </div>
         <div className="bg-gray-50 rounded-lg p-4">
-          <p className="text-sm text-silver-gray">At Risk</p>
+          <p className="text-sm text-silver-gray">Gradebook At Risk</p>
           <p className="text-3xl font-bold text-silver">{atRiskCount}</p>
         </div>
       </div>

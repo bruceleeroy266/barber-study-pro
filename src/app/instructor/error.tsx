@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import Link from 'next/link'
+import { logBoundaryError } from '@/lib/error-logging'
 
 export default function InstructorError({
   error,
@@ -11,7 +12,7 @@ export default function InstructorError({
   reset: () => void
 }) {
   useEffect(() => {
-    console.error('[InstructorError]', error)
+    logBoundaryError(error, { componentStack: error.digest }, 'instructor-error')
   }, [error])
 
   return (

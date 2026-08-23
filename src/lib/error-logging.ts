@@ -52,15 +52,27 @@ export function logError(
     environment: process.env.NODE_ENV || 'unknown',
   }
 
-  // Console logging with structured format
-  const logFn = severity === 'fatal' ? console.error : severity === 'warning' ? console.warn : console.error
-  logFn(`[${severity.toUpperCase()}] [${context.source}] ${err.message}`, {
-    ...loggedError,
-    stack: undefined, // Don't duplicate stack in the object
-  })
+  const isBrowser = typeof window !== 'undefined'
+  const isProductionBrowser = isBrowser && process.env.NODE_ENV === 'production'
+  const logFn = severity === 'warning' ? console.warn : console.error
 
-  if (err.stack && severity !== 'warning') {
-    console.error(err.stack)
+  if (isProductionBrowser) {
+    // Browser consoles are client-visible. Emit only stable context and an
+    // optional opaque Next.js digest; never expose messages, stacks, or PII.
+    logFn(`[${severity.toUpperCase()}] [${context.source}] Client error`, {
+      digest: loggedError.digest,
+      timestamp: loggedError.timestamp,
+    })
+  } else {
+    // Development browser output and protected server logs retain diagnostics.
+    logFn(`[${severity.toUpperCase()}] [${context.source}] ${err.message}`, {
+      ...loggedError,
+      stack: undefined,
+    })
+
+    if (err.stack && severity !== 'warning') {
+      console.error(err.stack)
+    }
   }
 
   // Report to external service (placeholder for Sentry/etc.)

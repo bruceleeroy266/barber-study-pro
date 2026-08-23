@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import Link from 'next/link'
+import { logBoundaryError } from '@/lib/error-logging'
 
 export default function AdminError({
   error,
@@ -11,7 +12,7 @@ export default function AdminError({
   reset: () => void
 }) {
   useEffect(() => {
-    console.error('[AdminError]', error)
+    logBoundaryError(error, { componentStack: error.digest }, 'admin-error')
   }, [error])
 
   return (

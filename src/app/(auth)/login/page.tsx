@@ -10,6 +10,13 @@ import { logFailedLogin } from '../actions'
 import { getRoleBasedRedirect, validateLoginAccess } from '@/lib/auth-access'
 import { canAccessRoute } from '@/lib/auth-helpers'
 import { Logo } from '@/components/brand'
+import { logAuthError } from '@/lib/error-logging'
+
+function debugLogin(message: string, detail?: unknown) {
+  if (process.env.NODE_ENV !== 'production') {
+    console.debug(`[Login] ${message}`, detail ?? '')
+  }
+}
 
 type LoginError =
   | 'invalid_credentials'
@@ -73,31 +80,30 @@ function LoginForm() {
         )
       }
 
-      console.log('[Login] Attempting signInWithPassword for', email)
+      debugLogin('Attempting sign-in')
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
 
       if (signInError) {
-        console.error('[Login] signInWithPassword error:', signInError)
         recordLoginAttempt(email, false)
         throw signInError
       }
 
-      console.log('[Login] signInWithPassword success, user:', data.user?.id)
+      debugLogin('Sign-in succeeded')
       recordLoginAttempt(email, true)
 
       // Check if email is verified (if email confirmation is required)
       if (data.user && data.user.email_confirmed_at === null) {
-        console.log('[Login] Email not confirmed, redirecting to verify-email')
+        debugLogin('Email confirmation required')
         await supabase.auth.signOut()
         router.push(`/auth/verify-email?email=${encodeURIComponent(data.user.email || '')}`)
         return
       }
 
       // Load profile and enforce approval / disabled checks.
-      console.log('[Login] Fetching profile for', data.user.id)
+      debugLogin('Fetching profile')
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('*')
@@ -105,17 +111,19 @@ function LoginForm() {
         .single()
 
       if (profileError || !profile) {
-        console.error('[Login] Profile error:', profileError, 'profile:', profile)
+        if (process.env.NODE_ENV !== 'production') {
+          console.error('[Login] Profile lookup failed:', profileError)
+        }
         await supabase.auth.signOut()
         setError('missing_profile')
         setLoading(false)
         return
       }
 
-      console.log('[Login] Profile fetched, validating access')
+      debugLogin('Validating access')
       const access = validateLoginAccess(profile)
       if (!access.ok) {
-        console.error('[Login] Access denied:', access)
+        debugLogin('Access denied', access.errorKey)
         await supabase.auth.signOut()
         setError((access.errorKey as LoginError) ?? 'unknown')
         setLoading(false)
@@ -124,7 +132,7 @@ function LoginForm() {
 
       // Force password change on first login for seeded/invited accounts.
       if (profile.requires_password_change) {
-        console.log('[Login] Password change required')
+        debugLogin('Password change required')
         router.push('/update-password?reason=required')
         return
       }
@@ -138,14 +146,14 @@ function LoginForm() {
         redirect && redirect !== '/dashboard' && canAccessRoute(profile.role, redirect)
           ? redirect
           : roleRedirect
-      console.log('[Login] Redirecting to', target)
+      debugLogin('Redirecting', target)
       
       // Use window.location for a full page reload to ensure clean state
       // This prevents any cached React state from showing the wrong dashboard
       window.location.href = target
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to sign in'
-      console.error('[Login] Caught error during login:', err)
+      logAuthError(err, 'sign-in')
       if (
         message.toLowerCase().includes('invalid login credentials')
       ) {

@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import Link from 'next/link'
+import { logBoundaryError } from '@/lib/error-logging'
 
 export default function DashboardError({
   error,
@@ -11,7 +12,7 @@ export default function DashboardError({
   reset: () => void
 }) {
   useEffect(() => {
-    console.error('[DashboardError]', error)
+    logBoundaryError(error, { componentStack: error.digest }, 'dashboard-error')
   }, [error])
 
   return (

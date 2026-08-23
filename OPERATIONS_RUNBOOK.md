@@ -129,9 +129,11 @@ pg_dump -h db.hgyznydxepjsvbjsirpv.supabase.co -U postgres -d postgres > backup.
 
 | Role | Email | Password | Purpose |
 |---|---|---|---|
-| Admin | admin@ascyn-smoke.test | SmokeTest123! | Admin testing |
-| Instructor | instructor@ascyn-smoke.test | SmokeTest123! | Instructor testing |
-| Student | student@ascyn-smoke.test | SmokeTest123! | Student testing |
+| Admin | admin@ascyn-smoke.test | Set via secure `TEST_ADMIN_PASSWORD` configuration | Admin testing |
+| Instructor | instructor@ascyn-smoke.test | Set via secure `TEST_INSTRUCTOR_PASSWORD` configuration | Instructor testing |
+| Student | student@ascyn-smoke.test | Set via secure `TEST_STUDENT_PASSWORD` configuration | Student testing |
+
+> Security note: production QA accounts are disabled by default. Never store reusable production credentials in this runbook or pre-fill them in application UI.
 
 ### 3.2 Pilot Accounts
 

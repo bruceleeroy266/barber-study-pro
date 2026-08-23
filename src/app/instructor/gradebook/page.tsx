@@ -2,18 +2,19 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Grade, GradeCategory, Profile } from '@/types'
+import { Assessment, Grade, GradeCategory, Profile } from '@/types'
 import { supabase } from '@/lib/supabase'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
-import { isDemoFallbackEnabled } from '@/lib/demo-helpers'
+import { isDemoDataAllowed } from '@/lib/demo-helpers'
 import {
   demoStudents,
   demoGradeCategories,
   demoGrades,
+  demoAssessments,
   getDemoGradeHistoryForGrade,
 } from '@/lib/demo-data'
 import { saveGrade } from './actions'
-import { mapGradesFromDb, mapGradeCategoriesFromDb } from '@/lib/mappers/operational-data-mappers'
+import { mapAssessmentsFromDb, mapGradesFromDb, mapGradeCategoriesFromDb } from '@/lib/mappers/operational-data-mappers'
 import GradebookTable from '@/components/gradebook/GradebookTable'
 import GradeEntryForm from '@/components/gradebook/GradeEntryForm'
 import GradeHistoryModal from '@/components/gradebook/GradeHistoryModal'
@@ -28,6 +29,7 @@ export default function InstructorGradebookPage() {
   const [students, setStudents] = useState<Profile[]>([])
   const [grades, setGrades] = useState<Grade[]>([])
   const [categories, setCategories] = useState<GradeCategory[]>([])
+  const [assessments, setAssessments] = useState<Assessment[]>([])
   const [editingGrade, setEditingGrade] = useState<Grade | null>(null)
   const [historyGrade, setHistoryGrade] = useState<Grade | null>(null)
   const [saveError, setSaveError] = useState<string | null>(null)
@@ -67,7 +69,7 @@ export default function InstructorGradebookPage() {
         .in('role', ['student', 'apprentice'])
 
       let rosterStudents: Profile[] = (studentsData as Profile[]) || []
-      if (rosterStudents.length === 0 && isDemoFallbackEnabled()) {
+      if (rosterStudents.length === 0 && isDemoDataAllowed()) {
         rosterStudents = demoStudents.filter((s) => s.school_id === schoolId || !schoolId)
       }
       setStudents(rosterStudents)
@@ -81,7 +83,7 @@ export default function InstructorGradebookPage() {
         .in('student_id', studentIds.length > 0 ? studentIds : ['__none__'])
 
       let gradeRecords: Grade[] = mapGradesFromDb(gradesData || [])
-      if (gradeRecords.length === 0 && isDemoFallbackEnabled()) {
+      if (gradeRecords.length === 0 && isDemoDataAllowed()) {
         gradeRecords = demoGrades.filter((g) => studentIds.includes(g.studentId))
       }
       setGrades(gradeRecords)
@@ -92,10 +94,24 @@ export default function InstructorGradebookPage() {
         .or(`school_id.eq.${schoolId},school_id.is.null`)
 
       let categoryRecords: GradeCategory[] = mapGradeCategoriesFromDb(categoriesData || [])
-      if (categoryRecords.length === 0 && isDemoFallbackEnabled()) {
+      if (categoryRecords.length === 0 && isDemoDataAllowed()) {
         categoryRecords = demoGradeCategories.filter((c) => c.schoolId === schoolId || !c.schoolId)
       }
       setCategories(categoryRecords)
+
+      const { data: assessmentsData } = await supabase
+        .from('assessments')
+        .select('*')
+        .eq('school_id', schoolId)
+        .in('student_id', studentIds.length > 0 ? studentIds : ['__none__'])
+
+      let assessmentRecords: Assessment[] = mapAssessmentsFromDb(assessmentsData || [])
+      if (assessmentRecords.length === 0 && isDemoDataAllowed()) {
+        assessmentRecords = demoAssessments.filter((assessment) =>
+          studentIds.includes(assessment.studentId)
+        )
+      }
+      setAssessments(assessmentRecords)
 
       setLoading(false)
     }
@@ -116,7 +132,7 @@ export default function InstructorGradebookPage() {
   async function handleSaveGrade(grade: Grade) {
     setSaveError(null)
 
-    if (isDemoFallbackEnabled()) {
+    if (isDemoDataAllowed()) {
       setGrades((prev) => {
         const exists = prev.find((g) => g.id === grade.id)
         if (exists) {
@@ -189,7 +205,7 @@ export default function InstructorGradebookPage() {
                 students={students}
                 grades={grades}
                 categories={categories}
-                assessments={[]}
+                assessments={assessments}
               />
             </div>
           </div>

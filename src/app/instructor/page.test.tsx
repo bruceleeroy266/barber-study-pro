@@ -127,6 +127,21 @@ describe('InstructorPage school scoping and identity', () => {
     expect(screen.queryByTestId('demo-data-banner')).toBeNull()
     expect(screen.queryByText(/DEMO DATA/)).toBeNull()
   })
+
+  it('distinguishes learning metrics from Gradebook metrics and does not treat ungraded students as 0%', async () => {
+    mockIsDemoDataAllowed.mockReturnValue(false)
+    const page = await InstructorPage({ searchParams: Promise.resolve({}) })
+    render(page)
+
+    expect(screen.getByText('Curriculum Progress')).toBeInTheDocument()
+    expect(screen.getByText('Quiz Attempt Average')).toBeInTheDocument()
+    expect(screen.getByText('Learning Support Flags')).toBeInTheDocument()
+    expect(screen.getByText('Gradebook At Risk')).toBeInTheDocument()
+
+    const gradeAverageCard = screen.getByText('Graded Student Average').parentElement
+    expect(gradeAverageCard).toHaveTextContent('—')
+    expect(gradeAverageCard).not.toHaveTextContent('0%')
+  })
 })
 
 describe('InstructorPage — Phase 6B-1 R-3 demo data safeguards', () => {

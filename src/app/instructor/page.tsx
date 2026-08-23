@@ -10,7 +10,7 @@ import DemoDataBanner from '@/components/DemoDataBanner'
 import { calculateBoardReadiness, getReadinessColorClass } from '@/lib/readiness'
 import { analyzePerformance } from '@/lib/analytics'
 import { getAttendanceConcerns, getStatusColorClass } from '@/lib/attendance'
-import { calculateStudentGradePerformance, getGradeColorClass } from '@/lib/gradebook'
+import { calculateClassGradeSummary, getGradeColorClass } from '@/lib/gradebook'
 import AssessmentList from '@/components/assessments/AssessmentList'
 import { allQuizQuestions } from '@/lib/quiz-data'
 import { getThreadDisplayName, formatMessageTime, priorityColorClasses } from '@/lib/messaging'
@@ -280,22 +280,16 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     assessmentRecords = demoAssessments.filter((a) => studentIds.includes(a.studentId))
   }
 
-  const classPerformances = rosterStudents.map((student) => {
-    const missingCount = gradeCategories.filter((c) => {
-      return gradeRecords.filter((g) => g.studentId === student.id && g.categoryId === c.id && !g.isExcused).length === 0
-    }).length
-    return calculateStudentGradePerformance(student.id, gradeRecords, gradeCategories, assessmentRecords, missingCount)
-  })
-
-  const classAvgGrade = classPerformances.length > 0
-    ? Math.round((classPerformances.reduce((sum, p) => sum + p.overallGrade, 0) / classPerformances.length) * 10) / 10
-    : 0
-
-  const gradeAtRiskCount = classPerformances.filter((p) => p.isAtRisk).length
-  const topPerformers = [...classPerformances]
-    .sort((a, b) => b.overallGrade - a.overallGrade)
-    .slice(0, 3)
-    .map((p) => rosterStudents.find((s) => s.id === p.studentId))
+  const classGradeSummary = calculateClassGradeSummary(
+    studentIds,
+    gradeRecords,
+    gradeCategories,
+    assessmentRecords
+  )
+  const classAvgGrade = classGradeSummary.classAverage
+  const gradeAtRiskCount = classGradeSummary.atRiskCount
+  const topPerformers = classGradeSummary.topStudentIds
+    .map((studentId) => rosterStudents.find((student) => student.id === studentId))
     .filter(Boolean) as Profile[]
 
   const recentAssessments = [...assessmentRecords]
@@ -443,7 +437,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
             }`}>
               {classAvgProgress}%
             </div>
-            <div className="text-xs text-[var(--color-text-muted)] mt-1">Class Avg Progress</div>
+            <div className="text-xs text-[var(--color-text-muted)] mt-1">Curriculum Progress</div>
           </div>
 
           <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-5">
@@ -454,7 +448,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
             }`}>
               {classAvgQuiz > 0 ? `${classAvgQuiz}%` : '—'}
             </div>
-            <div className="text-xs text-[var(--color-text-muted)] mt-1">Class Avg Quiz Score</div>
+            <div className="text-xs text-[var(--color-text-muted)] mt-1">Quiz Attempt Average</div>
           </div>
 
           <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-5">
@@ -466,14 +460,14 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
             }`}>
               {classAvgReadiness > 0 ? classAvgReadiness : '—'}
             </div>
-            <div className="text-xs text-[var(--color-text-muted)] mt-1">Avg Board Readiness</div>
+            <div className="text-xs text-[var(--color-text-muted)] mt-1">Board Readiness</div>
           </div>
 
           <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-5">
             <div className={`text-2xl font-bold ${atRiskStudents.length > 0 ? 'text-silver' : 'text-gold'}`}>
               {atRiskStudents.length}
             </div>
-            <div className="text-xs text-[var(--color-text-muted)] mt-1">At-Risk Students</div>
+            <div className="text-xs text-[var(--color-text-muted)] mt-1">Learning Support Flags</div>
           </div>
         </div>
 
@@ -572,7 +566,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
           <div className="p-6 border-b border-[var(--color-border-primary)] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h2 className="text-xl font-semibold text-white">Gradebook Overview</h2>
-              <p className="text-sm text-[var(--color-text-muted)] mt-1">Class grade averages and at-risk students</p>
+              <p className="text-sm text-[var(--color-text-muted)] mt-1">Instructor-entered grades and assessment records</p>
             </div>
             <Link
               href="/instructor/gradebook"
@@ -584,12 +578,14 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 border-b border-[var(--color-border-primary)]">
             <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-4 text-center">
-              <div className={`text-3xl font-bold ${getGradeColorClass(classAvgGrade)}`}>{classAvgGrade}%</div>
-              <div className="text-xs text-[var(--color-text-muted)] mt-1">Class Avg Grade</div>
+              <div className={`text-3xl font-bold ${classAvgGrade === null ? 'text-[var(--color-text-muted)]' : getGradeColorClass(classAvgGrade)}`}>
+                {classAvgGrade === null ? '—' : `${classAvgGrade}%`}
+              </div>
+              <div className="text-xs text-[var(--color-text-muted)] mt-1">Graded Student Average</div>
             </div>
             <div className="bg-[var(--color-background-primary)] border border-silver/30 rounded-xl p-4 text-center">
               <div className="text-3xl font-bold text-silver">{gradeAtRiskCount}</div>
-              <div className="text-xs text-[var(--color-text-muted)] mt-1">At-Risk Students</div>
+              <div className="text-xs text-[var(--color-text-muted)] mt-1">Gradebook At Risk</div>
             </div>
             <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-4 text-center">
               <div className="text-3xl font-bold text-silver">{assessmentRecords.length}</div>
@@ -607,7 +603,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
               {topPerformers.length > 0 ? (
                 <div className="space-y-2">
                   {topPerformers.map((student, idx) => {
-                    const perf = classPerformances.find((p) => p.studentId === student.id)
+                    const perf = classGradeSummary.performances.find((p) => p.studentId === student.id)
                     return (
                       <div
                         key={student.id}

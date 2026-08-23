@@ -1,5 +1,14 @@
 import { Grade, GradeCategory, GradeBreakdown, StudentGradePerformance, Assessment } from '@/types'
 
+export interface ClassGradeSummary {
+  performances: StudentGradePerformance[]
+  gradedPerformances: StudentGradePerformance[]
+  classAverage: number | null
+  atRiskCount: number
+  passingCount: number
+  topStudentIds: string[]
+}
+
 export function calculateCategoryAverage(grades: Grade[]): number {
   if (grades.length === 0) return 0
   const total = grades.reduce((sum, g) => sum + g.percentage, 0)
@@ -113,6 +122,54 @@ export function calculateStudentGradePerformance(
     isAtRisk,
     missingAssignments,
     recentAssessments,
+  }
+}
+
+export function calculateClassGradeSummary(
+  studentIds: string[],
+  grades: Grade[],
+  categories: GradeCategory[],
+  assessments: Assessment[]
+): ClassGradeSummary {
+  const activeCategories = categories.filter((category) => category.isActive)
+  const performances = studentIds.map((studentId) => {
+    const studentGrades = grades.filter((grade) => grade.studentId === studentId && !grade.isExcused)
+    const missingCategoryCount = activeCategories.filter(
+      (category) => !studentGrades.some((grade) => grade.categoryId === category.id)
+    ).length
+
+    return calculateStudentGradePerformance(
+      studentId,
+      grades,
+      categories,
+      assessments,
+      missingCategoryCount
+    )
+  })
+
+  const gradedStudentIds = new Set(
+    grades.filter((grade) => !grade.isExcused).map((grade) => grade.studentId)
+  )
+  const gradedPerformances = performances.filter((performance) =>
+    gradedStudentIds.has(performance.studentId)
+  )
+  const classAverage = gradedPerformances.length > 0
+    ? Math.round(
+        (gradedPerformances.reduce((sum, performance) => sum + performance.overallGrade, 0) /
+          gradedPerformances.length) * 10
+      ) / 10
+    : null
+
+  return {
+    performances,
+    gradedPerformances,
+    classAverage,
+    atRiskCount: performances.filter((performance) => performance.isAtRisk).length,
+    passingCount: gradedPerformances.filter((performance) => performance.overallGrade >= 70).length,
+    topStudentIds: [...gradedPerformances]
+      .sort((a, b) => b.overallGrade - a.overallGrade)
+      .slice(0, 3)
+      .map((performance) => performance.studentId),
   }
 }
 

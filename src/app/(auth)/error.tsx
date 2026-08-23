@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import Link from 'next/link'
+import { logBoundaryError } from '@/lib/error-logging'
 
 export default function AuthError({
   error,
@@ -11,7 +12,7 @@ export default function AuthError({
   reset: () => void
 }) {
   useEffect(() => {
-    console.error('[AuthError]', error)
+    logBoundaryError(error, { componentStack: error.digest }, 'auth-error')
   }, [error])
 
   return (
