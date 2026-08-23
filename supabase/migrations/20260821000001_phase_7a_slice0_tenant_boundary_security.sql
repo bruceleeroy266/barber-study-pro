@@ -1,5 +1,5 @@
 -- ============================================================================
--- Migration: 20260821000000_phase_7a_slice0_tenant_boundary_security
+-- Migration: 20260821000001_phase_7a_slice0_tenant_boundary_security
 -- Phase 7A Slice 0 — Tenant-Boundary Security Correction
 --
 -- CRITICAL SECURITY FIX: Prevents authenticated users from modifying

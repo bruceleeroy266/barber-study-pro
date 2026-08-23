@@ -67,10 +67,9 @@ create table if not exists public.follow_up_evidence (
   recorded_at timestamptz not null default now(),
 
   -- Constraints
-  constraint valid_mapped_question_count check (mapped_question_count >= 0),
-  constraint attempt_after_tracking_entry check (
-    attempt_completed_at >= (select entered_cpw_at from public.sustained_performance_tracking where id = tracking_id)
-  )
+  constraint valid_mapped_question_count check (mapped_question_count >= 0)
+  -- Note: attempt_after_tracking_entry check removed - PostgreSQL does not allow subqueries in CHECK constraints
+  -- This invariant is enforced by the application layer and the record_follow_up_evidence function
 );
 
 -- Deduplication: one evidence record per tracking period per quiz attempt
@@ -248,6 +247,10 @@ $$ language plpgsql security definer;
 -- evidence must be recorded separately via record_follow_up_evidence()
 -- which performs authoritative verification.
 
+-- Drop the old 6-parameter version first (from 20260819000000)
+-- PostgreSQL CREATE OR REPLACE with different signature creates overload, not replacement
+drop function if exists public.record_detection_state_transition(uuid, text, text, text, jsonb, uuid);
+
 create or replace function public.record_detection_state_transition(
   p_user_id uuid,
   p_concept_id text,
@@ -341,6 +344,116 @@ comment on function public.record_follow_up_evidence is
 
 comment on function public.record_detection_state_transition is
   'Records a detection state transition from the Phase 6B-3 detection engine. Manages sustained_performance_tracking lifecycle ONLY. Follow-up evidence must be recorded separately via record_follow_up_evidence().';
+
+-- ============================================================================
+-- 6. TABLE GRANT REPAIR
+-- ============================================================================
+-- Repair table-level grants for authenticated and service_role.
+-- Earlier migrations revoked privileges from authenticated but did not
+-- consistently re-grant the minimum required SELECT for RLS policy
+-- evaluation. This section restores the necessary grants.
+
+-- Schools: SELECT for all roles (public read)
+grant select on public.schools to anon, authenticated, service_role;
+
+-- Programs: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.programs to authenticated, service_role;
+
+-- Students: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.students to authenticated, service_role;
+
+-- Instructors: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.instructors to authenticated, service_role;
+
+-- Profiles: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.profiles to authenticated, service_role;
+
+-- Enrollments: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.enrollments to authenticated, service_role;
+
+-- Quiz attempts: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.quiz_attempts to authenticated, service_role;
+
+-- Missed questions: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.missed_questions to authenticated, service_role;
+
+-- Student progress: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.student_progress to authenticated, service_role;
+
+-- Pilot inquiries: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.pilot_inquiries to authenticated, service_role;
+
+-- School settings: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.school_settings to authenticated, service_role;
+
+-- Owner notifications: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.owner_notifications to authenticated, service_role;
+
+-- Beta agreements: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.beta_agreements to authenticated, service_role;
+
+-- User management audit logs: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.user_management_audit_logs to authenticated, service_role;
+
+-- Hour logs: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.hour_logs to authenticated, service_role;
+
+-- Grades: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.grades to authenticated, service_role;
+
+-- Assessments: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.assessments to authenticated, service_role;
+
+-- Instructor notes: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.instructor_notes to authenticated, service_role;
+
+-- Attendance records: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.attendance_records to authenticated, service_role;
+
+-- Notifications: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.notifications to authenticated, service_role;
+
+-- Maintenance mode: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.maintenance_mode to authenticated, service_role;
+
+-- Backup status: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.backup_status to authenticated, service_role;
+
+-- Background jobs: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.background_jobs to authenticated, service_role;
+
+-- Feature flags: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.feature_flags to authenticated, service_role;
+
+-- Beta feedback: SELECT for authenticated (needed for RLS policy evaluation)
+grant select on public.beta_feedback to authenticated, service_role;
+
+-- Full CRUD for service_role on all tables (test setup and admin operations)
+grant select, insert, update, delete on public.schools to service_role;
+grant select, insert, update, delete on public.programs to service_role;
+grant select, insert, update, delete on public.students to service_role;
+grant select, insert, update, delete on public.instructors to service_role;
+grant select, insert, update, delete on public.profiles to service_role;
+grant select, insert, update, delete on public.enrollments to service_role;
+grant select, insert, update, delete on public.quiz_attempts to service_role;
+grant select, insert, update, delete on public.missed_questions to service_role;
+grant select, insert, update, delete on public.student_progress to service_role;
+grant select, insert, update, delete on public.pilot_inquiries to service_role;
+grant select, insert, update, delete on public.school_settings to service_role;
+grant select, insert, update, delete on public.owner_notifications to service_role;
+grant select, insert, update, delete on public.beta_agreements to service_role;
+grant select, insert, update, delete on public.user_management_audit_logs to service_role;
+grant select, insert, update, delete on public.hour_logs to service_role;
+grant select, insert, update, delete on public.grades to service_role;
+grant select, insert, update, delete on public.assessments to service_role;
+grant select, insert, update, delete on public.instructor_notes to service_role;
+grant select, insert, update, delete on public.attendance_records to service_role;
+grant select, insert, update, delete on public.notifications to service_role;
+grant select, insert, update, delete on public.maintenance_mode to service_role;
+grant select, insert, update, delete on public.backup_status to service_role;
+grant select, insert, update, delete on public.background_jobs to service_role;
+grant select, insert, update, delete on public.feature_flags to service_role;
+grant select, insert, update, delete on public.beta_feedback to service_role;
 
 -- ============================================================================
 -- END OF MIGRATION
