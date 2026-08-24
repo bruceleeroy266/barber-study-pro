@@ -1,6 +1,6 @@
 # Production Authentication Release Gate
 
-ASCYN PRO releases must fail closed unless both production account-integrity and production authentication smoke checks pass.
+ASCYN PRO releases must fail closed unless all production authentication gates pass.
 
 ## Required sequence
 
@@ -11,7 +11,8 @@ ASCYN PRO releases must fail closed unless both production account-integrity and
 5. PRODUCTION BROWSER MATRIX
 6. PRODUCTION ACCOUNT-INTEGRITY GATE
 7. PRODUCTION AUTHENTICATION SMOKE GATE
-8. FINAL RELEASE GO
+8. PRODUCTION AUTHENTICATION LIFECYCLE GATE
+9. FINAL RELEASE GO
 
 ## Account-integrity gate
 
@@ -48,6 +49,47 @@ Rules:
 - credentials live only in protected secret storage
 - accounts are least-privilege and identifiable as automation
 - rotate or revoke after exposure or incident response
+
+## Authentication lifecycle gate
+
+**MANDATORY:** Verify complete user lifecycle for all smoke roles before release GO.
+
+### Required Lifecycle Stages
+
+For each smoke role (`student`, `instructor`, `school_admin`, `admin`):
+
+#### 1. LOGIN
+- email + password → session established → correct role dashboard
+
+#### 2. REFRESH
+- authenticated page refresh → session remains valid
+
+#### 3. PROTECTED ROUTE
+- authenticated user → authorized protected route succeeds
+
+#### 4. CROSS-ROLE ACCESS
+- user attempts another role's protected area → denied/rerouted appropriately
+
+#### 5. LOGOUT
+- logout → session invalidated → auth cookies/session cleared appropriately
+
+#### 6. POST-LOGOUT
+- direct navigation to protected route → denied
+
+#### 7. LOGIN AGAIN
+- same legitimate account → fresh authentication succeeds → correct dashboard
+
+#### 8. INVITATION/SETUP
+- invitation → verification → authenticated setup session → create password → correct dashboard
+
+#### 9. PASSWORD RECOVERY
+- Forgot Password → recovery email → verification → authenticated recovery session → create new password → correct destination
+
+### Failure Policy
+
+**FAIL CLOSED:** If any mandatory authentication lifecycle gate fails, the release MUST NOT receive GO.
+
+No error state may accidentally grant access. Invalid or expired links with NO valid authenticated session must continue to fail closed.
 
 ## Cleanup safeguard rule
 

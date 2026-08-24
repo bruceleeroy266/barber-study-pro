@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useCallback, useState } from 'react'
+import { Suspense, useCallback, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
@@ -35,11 +35,99 @@ function CallbackHandler() {
   const [isExchanging, setIsExchanging] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [hasVerificationError, setHasVerificationError] = useState(false)
+  const [isCheckingSession, setIsCheckingSession] = useState(true)
+  const [autoSessionDetected, setAutoSessionDetected] = useState(false)
 
   // Determine which flow to use based on available parameters
   const hasPkceCode = Boolean(code)
   const hasTokenHash = Boolean(token && type)
   const isValidTokenHashFlow = hasTokenHash && isSupportedVerificationType(type)
+  
+  // PRODUCTION CONTRACT: Also check for fragment-session flow where only type is present
+  // After Supabase /auth/v1/verify redirects, the callback may only have ?type=xxx
+  // with the session in the URL fragment (auto-detected by Supabase client)
+  // Note: This is ONLY for the fragment flow - empty token string is treated as invalid
+  const hasTypeOnly = Boolean(type && token === null && code === null)
+  const isValidFragmentFlow = hasTypeOnly && isSupportedVerificationType(type)
+  const shouldCheckAutoSession = hasPkceCode || isValidTokenHashFlow || isValidFragmentFlow
+
+  // SYSTEMIC CORRECTION: Check for auto-established session on page load
+  // Supabase may automatically verify the token when the page loads, establishing
+  // a session before the user clicks Continue. We must detect this and route
+  // appropriately WITHOUT requiring the user to click Continue again.
+  useEffect(() => {
+    let cancelled = false
+
+    async function checkAutoSession() {
+      // Only check for auto-session if we have valid callback parameters
+      if (!shouldCheckAutoSession) {
+        setIsCheckingSession(false)
+        return
+      }
+
+      try {
+        // Small delay to allow Supabase client to process URL fragment
+        await new Promise(resolve => setTimeout(resolve, 100))
+        
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+        
+        if (cancelled) return
+
+        if (sessionError || !session) {
+          // No auto-session established - user must click Continue to verify manually
+          setIsCheckingSession(false)
+          return
+        }
+
+        // Auto-session detected! Route based on flow type
+        setAutoSessionDetected(true)
+        
+        // Get user profile for role-based routing
+        const { data: { user } } = await supabase.auth.getUser()
+        
+        if (cancelled) return
+        
+        if (!user) {
+          setIsCheckingSession(false)
+          return
+        }
+
+        // Route based on verification type
+        if (type === 'invite') {
+          router.push('/auth/set-password')
+          return
+        }
+        
+        if (type === 'recovery') {
+          router.push('/auth/update-password')
+          return
+        }
+
+        // For other types (email confirmation, etc.), route by profile role
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single()
+
+        if (cancelled) return
+
+        const redirectPath = getRoleBasedRedirect(profile?.role)
+        router.push(redirectPath.startsWith('/login') ? next : redirectPath)
+        return
+      } catch {
+        if (!cancelled) {
+          setIsCheckingSession(false)
+        }
+      }
+    }
+
+    checkAutoSession()
+
+    return () => {
+      cancelled = true
+    }
+  }, [shouldCheckAutoSession, type, next, router])
 
   const completeSignIn = useCallback(async () => {
     // Handle PKCE code exchange flow
@@ -191,8 +279,20 @@ function CallbackHandler() {
     setHasVerificationError(true)
   }, [code, token, type, next, router, hasPkceCode, isValidTokenHashFlow])
 
+  // Show loading state while checking for auto-established session
+  if (isCheckingSession) {
+    return (
+      <div className="w-full max-w-md text-center">
+        <div className="text-5xl mb-4">🔒</div>
+        <div className="text-silver">Verifying your session...</div>
+      </div>
+    )
+  }
+
   // Show error state if no valid auth parameters are present
-  if (!hasPkceCode && !isValidTokenHashFlow) {
+  // Note: For fragment flow (type only), we show Continue button as fallback
+  // in case auto-session detection didn't find a session
+  if (!hasPkceCode && !isValidTokenHashFlow && !isValidFragmentFlow) {
     return (
       <div className="w-full max-w-md text-center" role="alert" aria-live="assertive">
         <div className="text-5xl mb-4" aria-hidden="true">🔒</div>
@@ -207,6 +307,17 @@ function CallbackHandler() {
         >
           Sign in
         </Link>
+      </div>
+    )
+  }
+
+  // If auto-session was detected and routed, this component will unmount
+  // Show a brief confirmation if still rendering
+  if (autoSessionDetected) {
+    return (
+      <div className="w-full max-w-md text-center">
+        <div className="text-5xl mb-4">✓</div>
+        <div className="text-silver">Session verified. Redirecting...</div>
       </div>
     )
   }

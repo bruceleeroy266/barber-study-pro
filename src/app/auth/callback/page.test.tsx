@@ -12,10 +12,11 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => mockSearchParams,
 }))
 
-const { exchangeCodeForSession, verifyOtp, getUser, from } = vi.hoisted(() => ({
+const { exchangeCodeForSession, verifyOtp, getUser, getSession, from } = vi.hoisted(() => ({
   exchangeCodeForSession: vi.fn(),
   verifyOtp: vi.fn(),
   getUser: vi.fn(),
+  getSession: vi.fn(),
   from: vi.fn(),
 }))
 
@@ -25,6 +26,7 @@ vi.mock('@/lib/supabase', () => ({
       exchangeCodeForSession,
       verifyOtp,
       getUser,
+      getSession,
     },
     from,
   },
@@ -40,6 +42,7 @@ describe('CallbackPage', () => {
     exchangeCodeForSession.mockResolvedValue({ error: null })
     verifyOtp.mockResolvedValue({ error: null })
     getUser.mockResolvedValue({ data: { user: null } })
+    getSession.mockResolvedValue({ data: { session: null }, error: null })
     from.mockReturnValue({
       select: () => ({
         eq: () => ({
@@ -50,19 +53,156 @@ describe('CallbackPage', () => {
   })
 
   // ============================================
+  // AUTO-SESSION DETECTION TESTS (SYSTEMIC CORRECTION)
+  // These tests verify the callback detects Supabase's
+  // automatic session establishment from URL fragments
+  // ============================================
+
+  describe('Auto-Session Detection (Systemic Correction)', () => {
+    it('AUTO-SESSION: detects auto-established session for invite flow and redirects to set-password', async () => {
+      // Simulate Supabase auto-verification establishing a session on page load
+      setSearchParams({ token: 'auto-verified-token', type: 'invite' })
+      getSession.mockResolvedValue({ 
+        data: { session: { access_token: 'valid-token', user: { id: 'user-id' } } }, 
+        error: null 
+      })
+      getUser.mockResolvedValue({ 
+        data: { user: { id: 'user-id', email: 'invited@ascynpro.test' } } 
+      })
+
+      render(<CallbackPage />)
+
+      // Should show loading state initially
+      expect(screen.getByText(/verifying your session/i)).toBeInTheDocument()
+
+      // Wait for auto-session detection and redirect
+      await waitFor(() => {
+        expect(push).toHaveBeenCalledWith('/auth/set-password')
+      }, { timeout: 2000 })
+    })
+
+    it('AUTO-SESSION: detects auto-established session for recovery flow and redirects to update-password', async () => {
+      setSearchParams({ token: 'auto-recovery-token', type: 'recovery' })
+      getSession.mockResolvedValue({ 
+        data: { session: { access_token: 'valid-token', user: { id: 'user-id' } } }, 
+        error: null 
+      })
+      getUser.mockResolvedValue({ 
+        data: { user: { id: 'user-id', email: 'recovery@ascynpro.test' } } 
+      })
+
+      render(<CallbackPage />)
+
+      await waitFor(() => {
+        expect(push).toHaveBeenCalledWith('/auth/update-password')
+      }, { timeout: 2000 })
+    })
+
+    it('AUTO-SESSION: detects auto-established session for email confirmation and routes by role', async () => {
+      setSearchParams({ token: 'email-confirm-token', type: 'email' })
+      getSession.mockResolvedValue({ 
+        data: { session: { access_token: 'valid-token', user: { id: 'student-id' } } }, 
+        error: null 
+      })
+      getUser.mockResolvedValue({ 
+        data: { user: { id: 'student-id', email: 'student@ascynpro.test' } } 
+      })
+      from.mockReturnValue({
+        select: () => ({
+          eq: () => ({
+            single: () => Promise.resolve({ data: { role: 'student' }, error: null }),
+          }),
+        }),
+      })
+
+      render(<CallbackPage />)
+
+      await waitFor(() => {
+        expect(push).toHaveBeenCalledWith('/dashboard')
+      }, { timeout: 2000 })
+    })
+
+    it('AUTO-SESSION: falls back to manual verification when no auto-session exists', async () => {
+      setSearchParams({ token: 'manual-token', type: 'invite' })
+      getSession.mockResolvedValue({ data: { session: null }, error: null })
+
+      render(<CallbackPage />)
+
+      // Should show Continue button after loading
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
+      })
+
+      // Click Continue to trigger manual verification
+      fireEvent.click(screen.getByRole('button', { name: /continue/i }))
+
+      await waitFor(() => {
+        expect(verifyOtp).toHaveBeenCalledWith({
+          token_hash: 'manual-token',
+          type: 'invite',
+        })
+      })
+    })
+
+    it('AUTO-SESSION: handles PKCE code flow with auto-session detection', async () => {
+      setSearchParams({ code: 'pkce-code', type: 'invite' })
+      getSession.mockResolvedValue({ 
+        data: { session: { access_token: 'valid-token', user: { id: 'user-id' } } }, 
+        error: null 
+      })
+      getUser.mockResolvedValue({ 
+        data: { user: { id: 'user-id', email: 'pkce@ascynpro.test' } } 
+      })
+
+      render(<CallbackPage />)
+
+      await waitFor(() => {
+        expect(push).toHaveBeenCalledWith('/auth/set-password')
+      }, { timeout: 2000 })
+    })
+
+    it('AUTO-SESSION: does not redirect when session check fails', async () => {
+      setSearchParams({ token: 'invalid-token', type: 'invite' })
+      getSession.mockResolvedValue({ 
+        data: { session: null }, 
+        error: { message: 'Session check failed' } 
+      })
+
+      render(<CallbackPage />)
+
+      // Should show Continue button after loading
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
+      })
+
+      // Should not have redirected
+      expect(push).not.toHaveBeenCalled()
+    })
+  })
+
+  // ============================================
   // EXISTING PKCE CODE FLOW TESTS (should pass)
   // ============================================
 
-  it('renders a confirmation button and does not exchange the code automatically', () => {
+  it('renders a confirmation button and does not exchange the code automatically', async () => {
     setSearchParams({ code: 'test-auth-code', type: 'invite' })
     render(<CallbackPage />)
-    expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
+    
+    // Wait for session check to complete
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
+    })
     expect(exchangeCodeForSession).not.toHaveBeenCalled()
   })
 
   it('redirects invited users to /auth/set-password after confirming with PKCE code', async () => {
     setSearchParams({ code: 'test-auth-code', type: 'invite' })
     render(<CallbackPage />)
+
+    // Wait for session check to complete
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
+    })
 
     fireEvent.click(screen.getByRole('button', { name: /continue/i }))
 
@@ -75,6 +215,11 @@ describe('CallbackPage', () => {
   it('redirects password-recovery users to /auth/update-password with PKCE code', async () => {
     setSearchParams({ code: 'recovery-code', type: 'recovery' })
     render(<CallbackPage />)
+
+    // Wait for session check to complete
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
+    })
 
     fireEvent.click(screen.getByRole('button', { name: /continue/i }))
 
@@ -103,6 +248,11 @@ describe('CallbackPage', () => {
 
     render(<CallbackPage />)
 
+    // Wait for session check to complete
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
+    })
+
     fireEvent.click(screen.getByRole('button', { name: /continue/i }))
 
     await waitFor(() => {
@@ -110,11 +260,14 @@ describe('CallbackPage', () => {
     })
   })
 
-  it('shows an error when the code is missing', () => {
+  it('shows an error when the code is missing', async () => {
     setSearchParams({})
     render(<CallbackPage />)
 
-    expect(screen.getByText(/invitation link is invalid or expired/i)).toBeInTheDocument()
+    // Wait for session check to complete
+    await waitFor(() => {
+      expect(screen.getByText(/invitation link is invalid or expired/i)).toBeInTheDocument()
+    })
     expect(screen.queryByRole('button', { name: /continue/i })).not.toBeInTheDocument()
   })
 
@@ -123,6 +276,11 @@ describe('CallbackPage', () => {
     exchangeCodeForSession.mockResolvedValue({ error: { message: 'Code is expired' } })
 
     render(<CallbackPage />)
+
+    // Wait for session check to complete
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
+    })
 
     fireEvent.click(screen.getByRole('button', { name: /continue/i }))
 
@@ -152,6 +310,11 @@ describe('CallbackPage', () => {
 
     render(<CallbackPage />)
 
+    // Wait for session check to complete
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
+    })
+
     fireEvent.click(screen.getByRole('button', { name: /continue/i }))
 
     await waitFor(() => {
@@ -172,9 +335,10 @@ describe('CallbackPage', () => {
       
       render(<CallbackPage />)
 
-      // The current implementation shows "invalid or expired" because it only looks for 'code'
-      // After fix: should render the confirmation button and call verifyOtp
-      expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
+      // Wait for session check to complete
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
+      })
       
       fireEvent.click(screen.getByRole('button', { name: /continue/i }))
 
@@ -194,7 +358,10 @@ describe('CallbackPage', () => {
       
       render(<CallbackPage />)
 
-      expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
+      // Wait for session check to complete
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
+      })
       
       fireEvent.click(screen.getByRole('button', { name: /continue/i }))
 
@@ -227,6 +394,11 @@ describe('CallbackPage', () => {
 
       render(<CallbackPage />)
 
+      // Wait for session check to complete
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
+      })
+
       fireEvent.click(screen.getByRole('button', { name: /continue/i }))
 
       await waitFor(() => {
@@ -243,6 +415,11 @@ describe('CallbackPage', () => {
 
       render(<CallbackPage />)
 
+      // Wait for session check to complete
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
+      })
+
       fireEvent.click(screen.getByRole('button', { name: /continue/i }))
 
       await waitFor(() => {
@@ -257,8 +434,10 @@ describe('CallbackPage', () => {
       
       render(<CallbackPage />)
 
-      // After fix: should show error for unsupported type
-      expect(screen.getByText(/invalid or expired|unsupported/i)).toBeInTheDocument()
+      // Wait for session check to complete
+      await waitFor(() => {
+        expect(screen.getByText(/invalid or expired|unsupported/i)).toBeInTheDocument()
+      })
     })
 
     it('REPRODUCTION: does not leak token in error messages', async () => {
@@ -267,6 +446,11 @@ describe('CallbackPage', () => {
       verifyOtp.mockResolvedValue({ error: { message: 'Verification failed' } })
 
       render(<CallbackPage />)
+
+      // Wait for session check to complete
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
+      })
 
       fireEvent.click(screen.getByRole('button', { name: /continue/i }))
 
@@ -290,6 +474,11 @@ describe('CallbackPage', () => {
       getUser.mockResolvedValue({ data: { user: null } })
 
       render(<CallbackPage />)
+
+      // Wait for session check to complete
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
+      })
 
       // Initially, Continue should be enabled
       const continueButton = screen.getByRole('button', { name: /continue/i })
@@ -326,6 +515,11 @@ describe('CallbackPage', () => {
 
       render(<CallbackPage />)
 
+      // Wait for session check to complete
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
+      })
+
       fireEvent.click(screen.getByRole('button', { name: /continue/i }))
 
       await waitFor(() => {
@@ -343,6 +537,11 @@ describe('CallbackPage', () => {
 
       render(<CallbackPage />)
 
+      // Wait for session check to complete
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
+      })
+
       fireEvent.click(screen.getByRole('button', { name: /continue/i }))
 
       await waitFor(() => {
@@ -357,6 +556,11 @@ describe('CallbackPage', () => {
 
       render(<CallbackPage />)
 
+      // Wait for session check to complete
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
+      })
+
       fireEvent.click(screen.getByRole('button', { name: /continue/i }))
 
       await waitFor(() => {
@@ -365,13 +569,15 @@ describe('CallbackPage', () => {
       })
     })
 
-    it('REGRESSION: prevents unauthenticated access via Continue with no token', () => {
+    it('REGRESSION: prevents unauthenticated access via Continue with no token', async () => {
       setSearchParams({}) // No token, no code
       
       render(<CallbackPage />)
 
-      // Should show error state with NO Continue button
-      expect(screen.getByText(/invitation link is invalid or expired/i)).toBeInTheDocument()
+      // Wait for session check to complete
+      await waitFor(() => {
+        expect(screen.getByText(/invitation link is invalid or expired/i)).toBeInTheDocument()
+      })
       expect(screen.queryByRole('button', { name: /continue/i })).not.toBeInTheDocument()
       
       // Should only show Sign In link
@@ -384,6 +590,11 @@ describe('CallbackPage', () => {
       getUser.mockResolvedValue({ data: { user: null } })
 
       render(<CallbackPage />)
+
+      // Wait for session check to complete
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
+      })
 
       fireEvent.click(screen.getByRole('button', { name: /continue/i }))
 
@@ -402,27 +613,34 @@ describe('CallbackPage', () => {
   // ============================================
 
   describe('Edge Cases', () => {
-    it('handles missing both code and token parameters', () => {
+    it('handles missing both code and token parameters with type only (fragment flow)', async () => {
       setSearchParams({ type: 'invite' })
       render(<CallbackPage />)
 
-      expect(screen.getByText(/invitation link is invalid or expired/i)).toBeInTheDocument()
-      expect(screen.queryByRole('button', { name: /continue/i })).not.toBeInTheDocument()
+      // Wait for session check to complete - should show Continue button for fragment flow fallback
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument()
+      })
     })
 
-    it('handles empty token parameter', () => {
+    it('handles empty token parameter', async () => {
       setSearchParams({ token: '', type: 'invite' })
       render(<CallbackPage />)
 
-      expect(screen.getByText(/invitation link is invalid or expired/i)).toBeInTheDocument()
+      // Wait for session check to complete
+      await waitFor(() => {
+        expect(screen.getByText(/invitation link is invalid or expired/i)).toBeInTheDocument()
+      })
     })
 
-    it('handles missing type parameter with token', () => {
+    it('handles missing type parameter with token', async () => {
       setSearchParams({ token: 'some-token' })
       render(<CallbackPage />)
 
-      // Without type, we cannot determine the verification flow
-      expect(screen.getByText(/invitation link is invalid or expired/i)).toBeInTheDocument()
+      // Wait for session check to complete
+      await waitFor(() => {
+        expect(screen.getByText(/invitation link is invalid or expired/i)).toBeInTheDocument()
+      })
     })
   })
 })
