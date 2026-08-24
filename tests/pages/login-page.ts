@@ -21,7 +21,7 @@ export class LoginPage extends BasePage {
     
     // Initialize locators
     this.emailInput = page.locator('input[type="email"]');
-    this.passwordInput = page.locator('input[type="password"]');
+    this.passwordInput = page.getByLabel('Password', { exact: true });
     this.submitButton = page.locator('button[type="submit"]');
     this.signupLink = page.locator('a[href*="signup"], text=Sign Up');
     this.resetPasswordLink = page.locator('a[href*="reset"], text=Forgot Password');

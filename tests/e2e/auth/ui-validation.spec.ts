@@ -77,28 +77,23 @@ test.describe('Authentication UI - Password Masking', () => {
     expect(inputType).toBe('password');
   });
 
-  test('should toggle password visibility if implemented', async ({ cleanPage }) => {
+  test('should toggle password visibility and preserve the value', async ({ cleanPage }) => {
     const loginPage = new LoginPage(cleanPage);
     await loginPage.goto();
-    
-    // Look for password toggle button
-    const toggleButton = cleanPage.locator('[data-testid="password-toggle"], button:has-text("Show"), button:has-text("Hide"), .password-toggle');
-    
-    if (await toggleButton.isVisible()) {
-      // Click to show password
-      await toggleButton.click();
-      
-      // Check input type changed to text
-      let inputType = await loginPage.passwordInput.getAttribute('type');
-      expect(inputType).toBe('text');
-      
-      // Click to hide password
-      await toggleButton.click();
-      
-      // Check input type changed back to password
-      inputType = await loginPage.passwordInput.getAttribute('type');
-      expect(inputType).toBe('password');
-    }
+    await loginPage.passwordInput.fill('testpassword123');
+
+    const showButton = cleanPage.getByRole('button', { name: 'Show password' });
+    await expect(showButton).toBeVisible();
+    await showButton.click();
+
+    await expect(loginPage.passwordInput).toHaveAttribute('type', 'text');
+    await expect(loginPage.passwordInput).toHaveValue('testpassword123');
+
+    const hideButton = cleanPage.getByRole('button', { name: 'Hide password' });
+    await hideButton.click();
+
+    await expect(loginPage.passwordInput).toHaveAttribute('type', 'password');
+    await expect(loginPage.passwordInput).toHaveValue('testpassword123');
   });
 });
 

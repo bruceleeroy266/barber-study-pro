@@ -12,6 +12,7 @@ import { canAccessRoute } from '@/lib/auth-helpers'
 import { Logo } from '@/components/brand'
 import { logAuthError } from '@/lib/error-logging'
 import { FormError } from '@/components/ui/FormError'
+import { PasswordInput } from '@/components/ui/PasswordInput'
 
 function debugLogin(message: string, detail?: unknown) {
   if (process.env.NODE_ENV !== 'production') {
@@ -210,7 +211,9 @@ function LoginForm() {
           </label>
           <input
             id="email"
+            name="email"
             type="email"
+            autoComplete="username"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -225,9 +228,10 @@ function LoginForm() {
           <label htmlFor="password" className="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
             Password
           </label>
-          <input
+          <PasswordInput
             id="password"
-            type="password"
+            name="password"
+            autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required

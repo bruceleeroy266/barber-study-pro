@@ -49,6 +49,25 @@ describe('LoginPage credential safety', () => {
     expect(screen.getByLabelText(/^password$/i)).toHaveValue('')
   })
 
+  it('provides password-manager semantics and an accessible visibility control', () => {
+    render(<LoginPage />)
+
+    expect(screen.getByLabelText(/email address/i)).toHaveAttribute('autocomplete', 'username')
+    const password = screen.getByLabelText(/^password$/i)
+    expect(password).toHaveAttribute('autocomplete', 'current-password')
+    expect(password).toHaveAttribute('type', 'password')
+
+    fireEvent.change(password, { target: { value: 'unchanged-secret' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Show password' }))
+    expect(password).toHaveAttribute('type', 'text')
+    expect(password).toHaveValue('unchanged-secret')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Hide password' }))
+    expect(password).toHaveAttribute('type', 'password')
+    expect(password).toHaveValue('unchanged-secret')
+    expect(supabase.auth.signInWithPassword).not.toHaveBeenCalled()
+  })
+
   it('announces and focuses a prominent invalid-credentials error', async () => {
     vi.mocked(supabase.auth.signInWithPassword).mockResolvedValueOnce({
       data: { user: null, session: null },
