@@ -26,13 +26,14 @@ afterAll(async () => {
 describe('School Creation and Data Integrity', () => {
   describe('Approved Inquiry to School Creation', () => {
     test('Platform admin can create school from approved inquiry', async () => {
-      const client = getServiceClient()
+      const serviceClient = getServiceClient()
+      const platformAdminClient = await createAuthenticatedClient(TEST_ACTORS.PLATFORM_ADMIN)
+      const schoolName = `New Test School ${Date.now()}`
 
-      // Create a pilot inquiry
-      const { data: inquiry, error: inquiryError } = await client
+      const { data: inquiry, error: inquiryError } = await serviceClient
         .from('pilot_inquiries')
         .insert({
-          school_name: 'New Test School',
+          school_name: schoolName,
           contact_name: 'Test Contact',
           email: 'contact@newtestschool.local',
           program_type: 'barbering',
@@ -45,49 +46,32 @@ describe('School Creation and Data Integrity', () => {
       expect(inquiryError).toBeNull()
       expect(inquiry).toBeDefined()
 
-      // Create school from inquiry using the RPC function
-      const { data: schoolId, error: rpcError } = await client.rpc(
+      const { data: schoolId, error: rpcError } = await platformAdminClient.rpc(
         'create_school_from_inquiry',
-        { inquiry_id: inquiry.id }
+        { p_pilot_inquiry_id: inquiry.id }
       )
 
-      // Note: This may fail if function requires specific auth context
-      // Document the actual behavior
-      if (rpcError) {
-        console.log('RPC Error (expected if auth context required):', rpcError.message)
-        
-        // Alternative: Create school directly
-        const { data: school, error: schoolError } = await client
-          .from('schools')
-          .insert({
-            name: inquiry.school_name,
-            slug: inquiry.school_name.toLowerCase().replace(/\s+/g, '-'),
-            contact_email: inquiry.contact_email,
-            is_active: true,
-          })
-          .select()
-          .single()
+      expect(rpcError).toBeNull()
+      expect(schoolId).toBeDefined()
 
-        expect(schoolError).toBeNull()
-        expect(school).toBeDefined()
+      const [{ data: school }, { data: settings }, { data: programs }, { data: linkedInquiry }] =
+        await Promise.all([
+          serviceClient.from('schools').select('*').eq('id', schoolId).single(),
+          serviceClient.from('school_settings').select('*').eq('school_id', schoolId).single(),
+          serviceClient.from('programs').select('*').eq('school_id', schoolId),
+          serviceClient.from('pilot_inquiries').select('school_id').eq('id', inquiry.id).single(),
+        ])
 
-        // Link inquiry to school
-        await client
-          .from('pilot_inquiries')
-          .update({ school_id: school.id })
-          .eq('id', inquiry.id)
+      expect(school?.name).toBe(schoolName)
+      expect(settings?.school_id).toBe(schoolId)
+      expect(programs).toHaveLength(1)
+      expect(programs?.[0].name).toBe('Barbering')
+      expect(linkedInquiry?.school_id).toBe(schoolId)
 
-        // Cleanup
-        await client.from('schools').delete().eq('id', school.id)
-      } else {
-        expect(schoolId).toBeDefined()
-        
-        // Cleanup
-        await client.from('schools').delete().eq('id', schoolId)
-      }
-
-      // Cleanup inquiry
-      await client.from('pilot_inquiries').delete().eq('id', inquiry.id)
+      await serviceClient.from('programs').delete().eq('school_id', schoolId)
+      await serviceClient.from('school_settings').delete().eq('school_id', schoolId)
+      await serviceClient.from('pilot_inquiries').delete().eq('id', inquiry.id)
+      await serviceClient.from('schools').delete().eq('id', schoolId)
     })
 
     test('School creation includes default settings', async () => {

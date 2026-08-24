@@ -15,7 +15,7 @@ import * as path from 'path';
 
 const MIGRATION_PATH = path.join(
   __dirname,
-  '../../../supabase/migrations/20260821000000_phase_7a_slice0_tenant_boundary_security.sql'
+  '../../../supabase/migrations/20260821000001_phase_7a_slice0_tenant_boundary_security.sql'
 );
 
 describe('Phase 7A Slice 0 — Tenant-Boundary Security Correction', () => {

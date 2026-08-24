@@ -1,26 +1,23 @@
 /**
- * Audit Logging Verification Tests
- * 
- * Verifies that security-sensitive actions are properly logged.
+ * Security Logging Integration Tests
+ *
+ * Verifies the real persistence and RLS boundary used by the application
+ * security logger. Raw database denials do not automatically invoke
+ * application logging, so each positive control writes through the trusted
+ * service-role boundary and reads through the affected user's session.
  */
 
-import { describe, test, expect, beforeAll, afterAll, beforeEach } from 'vitest'
+import { describe, test, expect, beforeAll, afterAll } from 'vitest'
 import { assertTestEnvironment } from '../setup/production-guard'
 import {
   setupTestEnvironment,
   cleanupTestEnvironment,
   createAuthenticatedClient,
+  createAnonClient,
   getServiceClient,
   resolveActorId,
 } from '../setup/db-helpers'
-import {
-  getSecurityLogsForUser,
-  getSecurityLogsByType,
-  verifySecurityEventLogged,
-  clearSecurityLogs,
-  waitForSecurityLog,
-} from '../setup/audit-helpers'
-import { TEST_ACTORS, TEST_SCHOOLS } from '../setup/test-actors'
+import { TEST_ACTORS, type TestActor } from '../setup/test-actors'
 
 beforeAll(async () => {
   assertTestEnvironment()
@@ -31,245 +28,160 @@ afterAll(async () => {
   await cleanupTestEnvironment()
 })
 
-beforeEach(async () => {
-  // Clear security logs before each test for isolation
-  await clearSecurityLogs()
-})
+type SecurityEventType =
+  | 'failed_login'
+  | 'permission_denied'
+  | 'role_change'
+  | 'school_isolation_violation'
+  | 'sensitive_config_change'
 
-describe('Audit Logging Verification', () => {
-  describe('Authentication Events', () => {
-    test('Failed login is logged', async () => {
-      const client = await createAuthenticatedClient(TEST_ACTORS.STUDENT_A)
-      
-      // Attempt login with wrong password
-      const { error } = await client.auth.signInWithPassword({
-        email: TEST_ACTORS.STUDENT_A.email,
-        password: 'WrongPassword123!',
-      })
+type SecurityEventResult = 'denied' | 'success' | 'failure'
 
-      // Note: Supabase Auth may handle failed attempts internally
-      // Application-level logging would be in security_logs
-      
-      // Check if any security logs were created
-      const logs = await getSecurityLogsByType('failed_login')
-      
-      // Document actual behavior
-      console.log('Failed login logs found:', logs.length)
-    })
+function marker(label: string): string {
+  return `integration-${label}-${Date.now()}-${crypto.randomUUID()}`
+}
 
-    test('Successful login creates session', async () => {
-      const client = await createAuthenticatedClient(TEST_ACTORS.STUDENT_A)
-      const studentAId = resolveActorId('STUDENT_A')
-      
-      const { data: { session } } = await client.auth.getSession()
-      expect(session).not.toBeNull()
-      
-      // Verify user can access their data
-      const { data, error } = await client
-        .from('students')
-        .select('*')
-        .eq('profile_id', studentAId)
-      
-      expect(error).toBeNull()
-      expect(data?.length).toBe(1)
-    })
+async function persistSecurityEvent(
+  actorKey: keyof typeof TEST_ACTORS,
+  type: SecurityEventType,
+  result: SecurityEventResult,
+  resourceId: string
+): Promise<string> {
+  const actor = TEST_ACTORS[actorKey]
+  const userId = resolveActorId(actorKey)
+  const { error } = await getServiceClient().from('security_logs').insert({
+    type,
+    user_id: userId,
+    email: actor.email,
+    role: actor.role,
+    school_id: actor.schoolId,
+    resource: 'integration-security-control',
+    resource_id: resourceId,
+    action: 'verify',
+    result,
+    reason: `Positive control for ${type}`,
+    metadata: { source: 'integration-test' },
   })
 
-  describe('Permission Denied Events', () => {
-    test('Cross-school access attempt is logged', async () => {
-      const client = await createAuthenticatedClient(TEST_ACTORS.STUDENT_A)
-      const studentAId = resolveActorId('STUDENT_A')
-      
-      // Attempt to access School B data
-      await client
-        .from('students')
-        .select('*')
-        .eq('school_id', TEST_SCHOOLS.SCHOOL_B.id)
+  expect(error).toBeNull()
+  return userId
+}
 
-      // Check for permission denied logs
-      // Note: RLS silently filters, so no error is raised
-      // Application-level logging would capture this
-      
-      const logs = await getSecurityLogsForUser(studentAId)
-      console.log('Security logs for cross-school access:', logs.length)
+async function readOwnEvent(actor: TestActor, resourceId: string) {
+  const client = await createAuthenticatedClient(actor)
+  const { data, error } = await client
+    .from('security_logs')
+    .select('*')
+    .eq('resource_id', resourceId)
+    .single()
+
+  expect(error).toBeNull()
+  expect(data).toBeDefined()
+  return data
+}
+
+describe('Security Logging Persistence and Access Controls', () => {
+  test('Trusted server logging persists a complete security event', async () => {
+    const resourceId = marker('complete-event')
+    const userId = await persistSecurityEvent('STUDENT_A', 'permission_denied', 'denied', resourceId)
+    const log = await readOwnEvent(TEST_ACTORS.STUDENT_A, resourceId)
+
+    expect(log).toMatchObject({
+      type: 'permission_denied',
+      user_id: userId,
+      email: TEST_ACTORS.STUDENT_A.email,
+      role: 'student',
+      school_id: TEST_ACTORS.STUDENT_A.schoolId,
+      resource: 'integration-security-control',
+      resource_id: resourceId,
+      action: 'verify',
+      result: 'denied',
     })
-
-    test('Unauthorized write attempt is logged', async () => {
-      const client = await createAuthenticatedClient(TEST_ACTORS.STUDENT_A)
-      
-      // Attempt unauthorized write
-      await client
-        .from('programs')
-        .insert({
-          school_id: TEST_SCHOOLS.SCHOOL_A.id,
-          name: 'Unauthorized Program',
-        })
-
-      // Check for logs
-      const logs = await getSecurityLogsByType('permission_denied')
-      console.log('Permission denied logs:', logs.length)
-    })
+    expect(log.id).toBeDefined()
+    expect(log.reason).toBeDefined()
+    expect(log.metadata).toEqual({ source: 'integration-test' })
+    expect(log.created_at).toBeDefined()
   })
 
-  describe('Role Change Events', () => {
-    test('Role escalation attempt is logged', async () => {
-      const client = await createAuthenticatedClient(TEST_ACTORS.STUDENT_A)
-      const studentAId = resolveActorId('STUDENT_A')
-      
-      // Attempt to change own role
-      await client
-        .from('profiles')
-        .update({ role: 'admin' })
-        .eq('id', studentAId)
+  test('Event owner can read their own security log', async () => {
+    const resourceId = marker('owner-read')
+    await persistSecurityEvent('STUDENT_A', 'failed_login', 'failure', resourceId)
 
-      // Check for role change logs
-      const logs = await getSecurityLogsByType('role_change')
-      console.log('Role change logs:', logs.length)
-    })
+    const log = await readOwnEvent(TEST_ACTORS.STUDENT_A, resourceId)
+    expect(log.resource_id).toBe(resourceId)
   })
 
-  describe('School Isolation Violations', () => {
-    test('Cross-school write attempt is logged', async () => {
-      const client = await createAuthenticatedClient(TEST_ACTORS.SCHOOL_ADMIN_A)
-      
-      // Attempt to modify School B data
-      await client
-        .from('programs')
-        .update({ name: 'Hacked Program' })
-        .eq('school_id', TEST_SCHOOLS.SCHOOL_B.id)
+  test('Another user cannot read the event owner security log', async () => {
+    const resourceId = marker('cross-user-read')
+    await persistSecurityEvent('STUDENT_A', 'permission_denied', 'denied', resourceId)
 
-      // Check for isolation violation logs
-      const logs = await getSecurityLogsByType('school_isolation_violation')
-      console.log('Isolation violation logs:', logs.length)
-    })
+    const otherUser = await createAuthenticatedClient(TEST_ACTORS.STUDENT_B)
+    const { data, error } = await otherUser
+      .from('security_logs')
+      .select('*')
+      .eq('resource_id', resourceId)
+
+    expect(error).toBeNull()
+    expect(data).toEqual([])
   })
 
-  describe('Sensitive Configuration Changes', () => {
-    test('School settings update is logged', async () => {
-      const client = await createAuthenticatedClient(TEST_ACTORS.SCHOOL_ADMIN_A)
-      
-      // Update school settings
-      await client
-        .from('school_settings')
-        .update({ name: 'Updated School Name' })
-        .eq('school_id', TEST_SCHOOLS.SCHOOL_A.id)
+  test('Anonymous clients cannot read security logs', async () => {
+    const resourceId = marker('anonymous-read')
+    await persistSecurityEvent('STUDENT_A', 'permission_denied', 'denied', resourceId)
 
-      // Check for config change logs
-      const logs = await getSecurityLogsByType('sensitive_config_change')
-      console.log('Config change logs:', logs.length)
-    })
+    const { data, error } = await createAnonClient()
+      .from('security_logs')
+      .select('*')
+      .eq('resource_id', resourceId)
+
+    expect(error).not.toBeNull()
+    expect(data).toBeNull()
   })
 
-  describe('Audit Log Integrity', () => {
-    test('Security logs contain required fields', async () => {
-      const studentAId = resolveActorId('STUDENT_A')
-      
-      // Create a security event by attempting unauthorized access
-      const client = await createAuthenticatedClient(TEST_ACTORS.STUDENT_A)
-      
-      await client
-        .from('profiles')
-        .update({ role: 'admin' })
-        .eq('id', studentAId)
-
-      // Wait for log
-      const log = await waitForSecurityLog(
-        (l) => l.user_id === studentAId,
-        2000
-      )
-
-      if (log) {
-        // Verify required fields
-        expect(log.id).toBeDefined()
-        expect(log.type).toBeDefined()
-        expect(log.result).toBeDefined()
-        expect(log.created_at).toBeDefined()
-      } else {
-        // No log found - document this
-        console.log('No security log found for unauthorized access attempt')
-      }
+  test('Authenticated users cannot forge security log entries', async () => {
+    const client = await createAuthenticatedClient(TEST_ACTORS.STUDENT_A)
+    const { error } = await client.from('security_logs').insert({
+      type: 'role_change',
+      user_id: resolveActorId('STUDENT_A'),
+      result: 'success',
+      resource_id: marker('forged-event'),
     })
 
-    test('Audit logs are immutable', async () => {
-      const client = getServiceClient()
-      
-      // Get a log entry
-      const { data: logs } = await client
-        .from('security_logs')
-        .select('*')
-        .limit(1)
-
-      if (logs && logs.length > 0) {
-        const logId = logs[0].id
-        
-        // Attempt to modify log
-        const { error } = await client
-          .from('security_logs')
-          .update({ type: 'modified' })
-          .eq('id', logId)
-
-        // Should fail (no update policy or trigger prevents)
-        // Or verify log was not actually modified
-        const { data: checkLog } = await client
-          .from('security_logs')
-          .select('type')
-          .eq('id', logId)
-          .single()
-
-        // Log should be unchanged
-        expect(checkLog?.type).not.toBe('modified')
-      }
-    })
+    expect(error).not.toBeNull()
   })
 
-  describe('User Management Audit', () => {
-    test('User creation is audited', async () => {
-      const client = getServiceClient()
-      
-      // Create a test user
-      const { data: newUser } = await client.auth.admin.createUser({
-        email: 'audit-test@ascyn-test.local',
-        password: 'Test1234!',
-        email_confirm: true,
-      })
+  test('Security logs are immutable to their owner', async () => {
+    const resourceId = marker('immutable-event')
+    await persistSecurityEvent('STUDENT_A', 'role_change', 'success', resourceId)
+    const client = await createAuthenticatedClient(TEST_ACTORS.STUDENT_A)
 
-      if (newUser.user) {
-        // Check for audit log
-        const { data: auditLogs } = await client
-          .from('user_management_audit_logs')
-          .select('*')
-          .eq('target_user_id', newUser.user.id)
+    const { error: updateError } = await client
+      .from('security_logs')
+      .update({ type: 'failed_login' })
+      .eq('resource_id', resourceId)
+    const { error: deleteError } = await client
+      .from('security_logs')
+      .delete()
+      .eq('resource_id', resourceId)
 
-        console.log('User creation audit logs:', auditLogs?.length || 0)
+    expect(updateError).not.toBeNull()
+    expect(deleteError).not.toBeNull()
 
-        // Cleanup
-        await client.auth.admin.deleteUser(newUser.user.id)
-      }
-    })
+    const log = await readOwnEvent(TEST_ACTORS.STUDENT_A, resourceId)
+    expect(log.type).toBe('role_change')
+  })
 
-    test('Role change is audited', async () => {
-      const client = getServiceClient()
-      const studentAId = resolveActorId('STUDENT_A')
-      
-      // Update user role
-      await client
-        .from('profiles')
-        .update({ role: 'instructor' })
-        .eq('id', studentAId)
+  test.each([
+    ['failed_login', 'failure'],
+    ['permission_denied', 'denied'],
+    ['role_change', 'success'],
+    ['school_isolation_violation', 'denied'],
+    ['sensitive_config_change', 'success'],
+  ] as const)('%s events persist and are readable by the owner', async (type, result) => {
+    const resourceId = marker(type)
+    await persistSecurityEvent('STUDENT_A', type, result, resourceId)
 
-      // Check for audit log
-      const { data: auditLogs } = await client
-        .from('user_management_audit_logs')
-        .select('*')
-        .eq('target_user_id', studentAId)
-
-      console.log('Role change audit logs:', auditLogs?.length || 0)
-
-      // Restore original role
-      await client
-        .from('profiles')
-        .update({ role: 'student' })
-        .eq('id', studentAId)
-    })
+    const log = await readOwnEvent(TEST_ACTORS.STUDENT_A, resourceId)
+    expect(log).toMatchObject({ type, result, resource_id: resourceId })
   })
 })
