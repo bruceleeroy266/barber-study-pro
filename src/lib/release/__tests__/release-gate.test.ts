@@ -4,6 +4,7 @@ import {
   RELEASE_PIPELINE_CONTRACT,
   AUTHENTICATION_LIFECYCLE_REQUIREMENTS,
   PRODUCTION_SMOKE_ROLES,
+  PRODUCTION_AUTH_REDIRECT_REQUIREMENTS,
 } from '../release-gate'
 
 describe('release-gate', () => {
@@ -46,5 +47,24 @@ describe('release-gate', () => {
     expect(PRODUCTION_SMOKE_ROLES).toContain('instructor')
     expect(PRODUCTION_SMOKE_ROLES).toContain('school_admin')
     expect(PRODUCTION_SMOKE_ROLES).toContain('admin')
+  })
+
+  it('requires production auth redirect gate before release go', () => {
+    expect(RELEASE_PIPELINE_CONTRACT).toContain('PRODUCTION AUTH REDIRECT GATE')
+    expect(RELEASE_PIPELINE_CONTRACT.indexOf('PRODUCTION AUTH REDIRECT GATE')).toBeLessThan(
+      RELEASE_PIPELINE_CONTRACT.indexOf('FINAL RELEASE GO')
+    )
+    expect(RELEASE_PIPELINE_CONTRACT.indexOf('PRODUCTION AUTH REDIRECT GATE')).toBeGreaterThan(
+      RELEASE_PIPELINE_CONTRACT.indexOf('PRODUCTION AUTHENTICATION LIFECYCLE GATE')
+    )
+  })
+
+  it('defines production auth redirect requirements', () => {
+    expect(PRODUCTION_AUTH_REDIRECT_REQUIREMENTS).toContain('SITE URL IS ASCYNPRO.COM')
+    expect(PRODUCTION_AUTH_REDIRECT_REQUIREMENTS).toContain('NO LOCALHOST REDIRECTS')
+    expect(PRODUCTION_AUTH_REDIRECT_REQUIREMENTS).toContain('NO 127.0.0.1 REDIRECTS')
+    expect(PRODUCTION_AUTH_REDIRECT_REQUIREMENTS).toContain('NO ::1 REDIRECTS')
+    expect(PRODUCTION_AUTH_REDIRECT_REQUIREMENTS).toContain('HTTPS ONLY')
+    expect(PRODUCTION_AUTH_REDIRECT_REQUIREMENTS).toContain('ALL AUTH EMAIL TYPES COVERED')
   })
 })

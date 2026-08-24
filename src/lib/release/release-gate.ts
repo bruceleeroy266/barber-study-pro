@@ -7,6 +7,7 @@ export const RELEASE_PIPELINE_CONTRACT = [
   'PRODUCTION ACCOUNT-INTEGRITY GATE',
   'PRODUCTION AUTHENTICATION SMOKE GATE',
   'PRODUCTION AUTHENTICATION LIFECYCLE GATE',
+  'PRODUCTION AUTH REDIRECT GATE',
   'FINAL RELEASE GO',
 ] as const
 
@@ -42,3 +43,20 @@ export const PRODUCTION_SMOKE_ROLES = [
 
 export type AuthenticationLifecycleRequirement = typeof AUTHENTICATION_LIFECYCLE_REQUIREMENTS[number]
 export type ProductionSmokeRole = typeof PRODUCTION_SMOKE_ROLES[number]
+
+/**
+ * Production Auth Redirect Requirements
+ * 
+ * Every production release MUST verify that authentication redirects
+ * NEVER resolve to localhost, 127.0.0.1, ::1, or development-only URLs.
+ */
+export const PRODUCTION_AUTH_REDIRECT_REQUIREMENTS = [
+  'SITE URL IS ASCYNPRO.COM',
+  'NO LOCALHOST REDIRECTS',
+  'NO 127.0.0.1 REDIRECTS',
+  'NO ::1 REDIRECTS',
+  'HTTPS ONLY',
+  'ALL AUTH EMAIL TYPES COVERED',
+] as const
+
+export type ProductionAuthRedirectRequirement = typeof PRODUCTION_AUTH_REDIRECT_REQUIREMENTS[number]

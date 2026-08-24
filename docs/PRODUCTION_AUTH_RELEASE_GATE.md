@@ -91,6 +91,22 @@ For each smoke role (`student`, `instructor`, `school_admin`, `admin`):
 
 No error state may accidentally grant access. Invalid or expired links with NO valid authenticated session must continue to fail closed.
 
+## Production auth redirect gate
+
+**MANDATORY:** Verify that production authentication redirects NEVER resolve to localhost, 127.0.0.1, ::1, or development-only URLs.
+
+### Required Checks
+
+- Production Supabase Site URL is `https://ascynpro.com`
+- Production Supabase Redirect URLs include `https://ascynpro.com/auth/callback`
+- No production auth email redirects to `localhost`, `127.0.0.1`, `::1`, or local Supabase URLs
+- All auth email types (invite, recovery, confirmation) use production redirects
+- HTTPS is enforced for all production auth redirects
+
+### Failure Policy
+
+**FAIL CLOSED:** If any production auth redirect resolves to localhost or development URLs, the release MUST NOT receive GO.
+
 ## Cleanup safeguard rule
 
 Any cleanup or remediation flow must provide:
