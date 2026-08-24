@@ -278,6 +278,126 @@ describe('CallbackPage', () => {
   })
 
   // ============================================
+  // REGRESSION TESTS: ACCOUNT SETUP STATE MISMATCH
+  // These tests reproduce the exact production defect
+  // where Continue allowed access despite error display
+  // ============================================
+
+  describe('Account Setup State Mismatch (Regression)', () => {
+    it('REGRESSION: disables Continue button after verification error', async () => {
+      setSearchParams({ token: 'invalid-token', type: 'invite' })
+      verifyOtp.mockResolvedValue({ error: { message: 'Token expired' } })
+      getUser.mockResolvedValue({ data: { user: null } })
+
+      render(<CallbackPage />)
+
+      // Initially, Continue should be enabled
+      const continueButton = screen.getByRole('button', { name: /continue/i })
+      expect(continueButton).not.toBeDisabled()
+
+      fireEvent.click(continueButton)
+
+      await waitFor(() => {
+        expect(screen.getByText(/invalid or expired/i)).toBeInTheDocument()
+      })
+
+      // After error, Continue should be disabled
+      await waitFor(() => {
+        const buttonAfterError = screen.getByRole('button', { name: /verification failed/i })
+        expect(buttonAfterError).toBeDisabled()
+      })
+    })
+
+    it('REGRESSION: redirects to set-password when session exists despite token error', async () => {
+      // This reproduces Gabriel's exact scenario:
+      // Token verification fails BUT session was already established
+      setSearchParams({ token: 'used-token', type: 'invite' })
+      verifyOtp.mockResolvedValue({ error: { message: 'Token already used' } })
+      getUser.mockResolvedValue({ 
+        data: { user: { id: 'gabriel-id', email: 'ascynproofficial@gmail.com' } } 
+      })
+      from.mockReturnValue({
+        select: () => ({
+          eq: () => ({
+            single: () => Promise.resolve({ data: { role: 'admin' }, error: null }),
+          }),
+        }),
+      })
+
+      render(<CallbackPage />)
+
+      fireEvent.click(screen.getByRole('button', { name: /continue/i }))
+
+      await waitFor(() => {
+        // Should redirect to set-password, NOT to /admin
+        expect(push).toHaveBeenCalledWith('/auth/set-password')
+      })
+    })
+
+    it('REGRESSION: redirects to update-password when session exists for recovery flow', async () => {
+      setSearchParams({ token: 'used-recovery-token', type: 'recovery' })
+      verifyOtp.mockResolvedValue({ error: { message: 'Token already used' } })
+      getUser.mockResolvedValue({ 
+        data: { user: { id: 'user-id', email: 'user@ascynpro.test' } } 
+      })
+
+      render(<CallbackPage />)
+
+      fireEvent.click(screen.getByRole('button', { name: /continue/i }))
+
+      await waitFor(() => {
+        expect(push).toHaveBeenCalledWith('/auth/update-password')
+      })
+    })
+
+    it('REGRESSION: shows error and disables button when no session exists', async () => {
+      setSearchParams({ token: 'invalid-token', type: 'invite' })
+      verifyOtp.mockResolvedValue({ error: { message: 'Invalid token' } })
+      getUser.mockResolvedValue({ data: { user: null } })
+
+      render(<CallbackPage />)
+
+      fireEvent.click(screen.getByRole('button', { name: /continue/i }))
+
+      await waitFor(() => {
+        expect(screen.getByText(/invalid or expired/i)).toBeInTheDocument()
+        expect(push).not.toHaveBeenCalled()
+      })
+    })
+
+    it('REGRESSION: prevents unauthenticated access via Continue with no token', () => {
+      setSearchParams({}) // No token, no code
+      
+      render(<CallbackPage />)
+
+      // Should show error state with NO Continue button
+      expect(screen.getByText(/invitation link is invalid or expired/i)).toBeInTheDocument()
+      expect(screen.queryByRole('button', { name: /continue/i })).not.toBeInTheDocument()
+      
+      // Should only show Sign In link
+      expect(screen.getByRole('link', { name: /sign in/i })).toBeInTheDocument()
+    })
+
+    it('REGRESSION: prevents unauthenticated access via Continue with invalid token and no session', async () => {
+      setSearchParams({ token: 'malicious-token', type: 'invite' })
+      verifyOtp.mockResolvedValue({ error: { message: 'Invalid token' } })
+      getUser.mockResolvedValue({ data: { user: null } })
+
+      render(<CallbackPage />)
+
+      fireEvent.click(screen.getByRole('button', { name: /continue/i }))
+
+      await waitFor(() => {
+        // Should NOT redirect to any protected route
+        expect(push).not.toHaveBeenCalledWith('/admin')
+        expect(push).not.toHaveBeenCalledWith('/dashboard')
+        expect(push).not.toHaveBeenCalledWith('/instructor')
+        expect(push).not.toHaveBeenCalledWith('/school')
+      })
+    })
+  })
+
+  // ============================================
   // EDGE CASE TESTS
   // ============================================
 

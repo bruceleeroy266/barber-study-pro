@@ -34,6 +34,7 @@ function CallbackHandler() {
 
   const [isExchanging, setIsExchanging] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [hasVerificationError, setHasVerificationError] = useState(false)
 
   // Determine which flow to use based on available parameters
   const hasPkceCode = Boolean(code)
@@ -50,6 +51,31 @@ function CallbackHandler() {
 
       if (exchangeError) {
         setIsExchanging(false)
+        setHasVerificationError(true)
+        
+        // Check if a session already exists (e.g., from auto-verification on page load)
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+          // Session exists - redirect to password setup instead of showing error
+          if (type === 'invite') {
+            router.push('/auth/set-password')
+            return
+          }
+          if (type === 'recovery') {
+            router.push('/auth/update-password')
+            return
+          }
+          // For other types, redirect to role-based dashboard
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .single()
+          const redirectPath = getRoleBasedRedirect(profile?.role)
+          router.push(redirectPath.startsWith('/login') ? next : redirectPath)
+          return
+        }
+        
         setError('This invitation link is invalid or expired. Please request a new invitation.')
         return
       }
@@ -99,6 +125,31 @@ function CallbackHandler() {
 
       if (verifyError) {
         setIsExchanging(false)
+        setHasVerificationError(true)
+        
+        // Check if a session already exists (e.g., from auto-verification on page load)
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+          // Session exists - redirect to password setup instead of showing error
+          if (type === 'invite') {
+            router.push('/auth/set-password')
+            return
+          }
+          if (type === 'recovery') {
+            router.push('/auth/update-password')
+            return
+          }
+          // For other types, redirect to role-based dashboard
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .single()
+          const redirectPath = getRoleBasedRedirect(profile?.role)
+          router.push(redirectPath.startsWith('/login') ? next : redirectPath)
+          return
+        }
+        
         setError('This invitation link is invalid or expired. Please request a new invitation.')
         return
       }
@@ -137,6 +188,7 @@ function CallbackHandler() {
 
     // Neither flow has valid parameters
     setError('This invitation link is invalid or has expired.')
+    setHasVerificationError(true)
   }, [code, token, type, next, router, hasPkceCode, isValidTokenHashFlow])
 
   // Show error state if no valid auth parameters are present
@@ -176,10 +228,10 @@ function CallbackHandler() {
 
         <button
           onClick={completeSignIn}
-          disabled={isExchanging}
+          disabled={isExchanging || hasVerificationError}
           className="w-full py-3 px-4 bg-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold)] disabled:opacity-50 disabled:cursor-not-allowed text-black font-semibold rounded-lg transition-colors mb-4"
         >
-          {isExchanging ? 'Verifying...' : 'Continue'}
+          {isExchanging ? 'Verifying...' : hasVerificationError ? 'Verification Failed' : 'Continue'}
         </button>
 
         <div className="text-center text-sm">
