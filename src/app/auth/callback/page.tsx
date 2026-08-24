@@ -6,68 +6,141 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { getRoleBasedRedirect, isSafeRedirectPath } from '@/lib/auth-access'
 
+/**
+ * Supported email verification types for token_hash verification.
+ * These match Supabase's EmailOtpType but are explicitly allowlisted
+ * to prevent accepting arbitrary verification types.
+ */
+const SUPPORTED_VERIFICATION_TYPES = ['invite', 'recovery', 'email', 'signup'] as const
+type SupportedVerificationType = (typeof SUPPORTED_VERIFICATION_TYPES)[number]
+
+function isSupportedVerificationType(type: string | null): type is SupportedVerificationType {
+  return type !== null && SUPPORTED_VERIFICATION_TYPES.includes(type as SupportedVerificationType)
+}
+
 function CallbackHandler() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
+  // PKCE flow parameters
   const code = searchParams.get('code')
+  
+  // Token hash verification parameters (from Supabase email templates)
+  const token = searchParams.get('token')
   const type = searchParams.get('type')
+  
   const rawNext = searchParams.get('next')
   const next = isSafeRedirectPath(rawNext) ? rawNext : '/dashboard'
 
   const [isExchanging, setIsExchanging] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  // Determine which flow to use based on available parameters
+  const hasPkceCode = Boolean(code)
+  const hasTokenHash = Boolean(token && type)
+  const isValidTokenHashFlow = hasTokenHash && isSupportedVerificationType(type)
+
   const completeSignIn = useCallback(async () => {
-    if (!code) {
-      setError('This invitation link is invalid or has expired.')
+    // Handle PKCE code exchange flow
+    if (hasPkceCode) {
+      setIsExchanging(true)
+      setError(null)
+
+      const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
+
+      if (exchangeError) {
+        setIsExchanging(false)
+        setError('This invitation link is invalid or expired. Please request a new invitation.')
+        return
+      }
+
+      // Password recovery flows go straight to the update-password page.
+      if (type === 'recovery') {
+        router.push('/auth/update-password')
+        return
+      }
+
+      // Invited users must set a password before accessing the platform.
+      if (type === 'invite') {
+        router.push('/auth/set-password')
+        return
+      }
+
+      // For any other authenticated callback, route by profile role.
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+
+      if (!user) {
+        router.push('/login')
+        return
+      }
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+
+      const redirectPath = getRoleBasedRedirect(profile?.role)
+      router.push(redirectPath.startsWith('/login') ? next : redirectPath)
       return
     }
 
-    setIsExchanging(true)
-    setError(null)
+    // Handle token hash verification flow (from Supabase email templates)
+    if (isValidTokenHashFlow) {
+      setIsExchanging(true)
+      setError(null)
 
-    const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
+      const { error: verifyError } = await supabase.auth.verifyOtp({
+        token_hash: token,
+        type: type as SupportedVerificationType,
+      })
 
-    if (exchangeError) {
-      setIsExchanging(false)
-      setError('This invitation link is invalid or expired. Please request a new invitation.')
+      if (verifyError) {
+        setIsExchanging(false)
+        setError('This invitation link is invalid or expired. Please request a new invitation.')
+        return
+      }
+
+      // Route based on verification type
+      if (type === 'recovery') {
+        router.push('/auth/update-password')
+        return
+      }
+
+      if (type === 'invite') {
+        router.push('/auth/set-password')
+        return
+      }
+
+      // For email confirmation and other types, route by profile role
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+
+      if (!user) {
+        router.push('/login')
+        return
+      }
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+
+      const redirectPath = getRoleBasedRedirect(profile?.role)
+      router.push(redirectPath.startsWith('/login') ? next : redirectPath)
       return
     }
 
-    // Password recovery flows go straight to the update-password page.
-    if (type === 'recovery') {
-      router.push('/auth/update-password')
-      return
-    }
+    // Neither flow has valid parameters
+    setError('This invitation link is invalid or has expired.')
+  }, [code, token, type, next, router, hasPkceCode, isValidTokenHashFlow])
 
-    // Invited users must set a password before accessing the platform.
-    if (type === 'invite') {
-      router.push('/auth/set-password')
-      return
-    }
-
-    // For any other authenticated callback, route by profile role.
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-
-    if (!user) {
-      router.push('/login')
-      return
-    }
-
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-
-    const redirectPath = getRoleBasedRedirect(profile?.role)
-    router.push(redirectPath.startsWith('/login') ? next : redirectPath)
-  }, [code, next, router, type])
-
-  if (!code) {
+  // Show error state if no valid auth parameters are present
+  if (!hasPkceCode && !isValidTokenHashFlow) {
     return (
       <div className="w-full max-w-md text-center" role="alert" aria-live="assertive">
         <div className="text-5xl mb-4" aria-hidden="true">🔒</div>
