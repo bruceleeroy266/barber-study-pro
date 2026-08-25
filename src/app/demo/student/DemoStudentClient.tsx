@@ -454,8 +454,8 @@ function DemoStudentContent() {
 
   // Get current quiz questions based on mode
   const currentQuizQuestions = useMemo(() => {
-    return chapter15QuizMode ? CHAPTER_15_QUIZ_QUESTIONS : (targetedReview ? TARGETED_REVIEW_QUESTIONS : [])
-  }, [chapter15QuizMode, targetedReview])
+    return chapter15QuizMode ? CHAPTER_15_QUIZ_QUESTIONS : TARGETED_REVIEW_QUESTIONS
+  }, [chapter15QuizMode])
   const currentQuizTitle = chapter15QuizMode ? 'Chapter 15 Quiz' : 'Targeted Review Quiz'
   const currentQuizSubtitle = chapter15QuizMode ? "Men's Hair Replacement" : 'Scalp Disorders & Infections'
 
