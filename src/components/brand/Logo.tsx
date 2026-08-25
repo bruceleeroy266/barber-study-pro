@@ -94,6 +94,13 @@ const sizeMap: Record<LogoSize, number> = {
   '4xl': 160,
 }
 
+/* ─── Responsive size helpers ─── */
+const responsiveSizeMap: Record<string, LogoSize> = {
+  mobile: 'md',   // 48px
+  tablet: 'lg',   // 64px
+  desktop: '3xl', // 140px
+}
+
 /* ─── Aspect ratios ─── */
 const aspectMap: Record<Exclude<LogoVariant, 'icon' | 'horizontal' | 'vertical'>, number> = {
   full: 1916 / 821,      // ~2.334:1
@@ -217,7 +224,7 @@ export const Logo = forwardRef<HTMLImageElement, LogoProps>(
         alt={decorative ? '' : (ariaLabel ?? 'ASCYN PRO')}
         width={computedWidth}
         height={computedHeight}
-        className={cn('object-contain', className)}
+        className={cn('object-contain max-w-none', className)}
         aria-hidden={decorative}
         role={decorative ? 'presentation' : 'img'}
         loading="eager"

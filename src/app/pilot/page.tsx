@@ -86,8 +86,8 @@ export default function PilotPage() {
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center">
               <Logo variant="compact" size="md" className="sm:hidden" />
-              <Logo variant="compact" size="lg" className="hidden sm:block lg:hidden" />
-              <Logo variant="full" size="3xl" className="hidden lg:block" />
+              <Logo variant="compact" size="lg" className="hidden sm:block md:hidden" />
+              <Logo variant="full" size="3xl" className="hidden md:block" />
             </Link>
             <div className="flex items-center gap-3">
               <Link
