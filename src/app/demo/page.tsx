@@ -13,9 +13,10 @@ export default function DemoLandingPage() {
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-[var(--color-background-primary)]/95 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-16 lg:h-[88px]">
             <Link href="/" className="flex items-center">
-              <Logo variant="compact" size="xl" className="lg:hidden" />
+              <Logo variant="compact" size="lg" className="sm:hidden" />
+              <Logo variant="compact" width={80} className="hidden sm:block lg:hidden" />
               <Logo variant="full" width={180} className="hidden lg:block" />
             </Link>
           </div>

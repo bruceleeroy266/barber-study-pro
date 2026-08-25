@@ -69,7 +69,7 @@ export default function InstructorNav({ user }: InstructorNavProps) {
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-charcoal/95 backdrop-blur-sm border-b border-graphite px-4 py-3">
         <div className="flex items-center justify-between">
           <Link href="/instructor" className="flex items-center">
-            <Logo variant="compact" size="lg" className="lg:hidden" />
+            <Logo variant="compact" size="md" className="lg:hidden" />
             <Logo variant="full" size="3xl" className="hidden lg:block" />
           </Link>
           <button
