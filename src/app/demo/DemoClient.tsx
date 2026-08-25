@@ -289,8 +289,8 @@ export default function DemoClient() {
         <nav className="sticky top-0 z-50 bg-[var(--color-brand-off-white)]/95 backdrop-blur-md border-b border-[var(--color-brand-deep-navy)]/8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Logo variant="compact" size="md" className="lg:hidden" />
-              <Logo variant="full" size="lg" className="hidden lg:block" />
+              <Logo variant="compact" size="lg" className="lg:hidden" />
+              <Logo variant="full" size="3xl" className="hidden lg:block" />
               <span className="font-semibold tracking-tight text-sm text-[var(--color-brand-deep-navy)] lg:hidden">
                 ASCYN PRO
               </span>

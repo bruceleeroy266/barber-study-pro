@@ -15,8 +15,8 @@ export default function DemoLandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center">
-              <Logo variant="compact" size="lg" className="lg:hidden" />
-              <Logo variant="full" size="xl" className="hidden lg:block" />
+              <Logo variant="compact" size="xl" className="lg:hidden" />
+              <Logo variant="full" width={180} className="hidden lg:block" />
             </Link>
           </div>
         </div>
@@ -123,7 +123,7 @@ export default function DemoLandingPage() {
       <footer className="border-t border-white/10 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <Logo variant="full" size="sm" />
+            <Logo variant="full" size="md" />
             <p className="text-silver-gray text-sm">
               © 2026 ASCYN PRO. Built for future licensed professionals.
             </p>

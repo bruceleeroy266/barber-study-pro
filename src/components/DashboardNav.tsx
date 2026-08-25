@@ -97,8 +97,8 @@ export default function DashboardNav({ user }: DashboardNavProps) {
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-sm border-b border-graphite px-4 py-3">
         <div className="flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center">
-            <Logo variant="compact" size="md" className="lg:hidden" />
-            <Logo variant="full" size="lg" className="hidden lg:block" />
+            <Logo variant="compact" size="lg" className="lg:hidden" />
+            <Logo variant="full" size="3xl" className="hidden lg:block" />
           </Link>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -152,7 +152,7 @@ export default function DashboardNav({ user }: DashboardNavProps) {
       <aside className="hidden lg:block fixed left-0 top-0 bottom-0 w-64 bg-charcoal border-r border-graphite">
         <div className="p-6">
           <Link href="/dashboard" className="flex items-center gap-3 mb-8">
-            <Logo variant="full" size="lg" />
+            <Logo variant="full" size="3xl" />
             <div>
               <span className="text-xs text-silver-gray">v2.0</span>
             </div>

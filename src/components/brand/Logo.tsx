@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils'
 
 export type LogoVariant = 'full' | 'compact' | 'icon' | 'horizontal' | 'vertical'
 export type LogoTheme = 'light' | 'dark' | 'gold' | 'white' | 'monochrome'
-export type LogoSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
+export type LogoSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl'
 
 export interface LogoProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src' | 'alt'> {
   /** Logo layout variant */
@@ -90,6 +90,8 @@ const sizeMap: Record<LogoSize, number> = {
   lg: 64,
   xl: 96,
   '2xl': 128,
+  '3xl': 140,
+  '4xl': 160,
 }
 
 /* ─── Aspect ratios ─── */
