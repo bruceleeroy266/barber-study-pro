@@ -2046,8 +2046,7 @@ function DemoStudentContent() {
       {!isPresentationMode && (
         <footer className="border-t border-white/10 py-8 mt-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <Logo variant="horizontal" theme="dark" size="sm" />
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <p className="text-silver-gray text-sm">
                 © 2026 ASCYN PRO. Built for future licensed professionals.
               </p>
