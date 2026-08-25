@@ -1176,6 +1176,17 @@ function DemoStudentContent() {
   // ───────────────────────────────────────────────
 
   const renderQuiz = () => {
+    // Guard: If no quiz questions are available, return to dashboard
+    if (currentQuizQuestions.length === 0) {
+      // Use setTimeout to avoid state update during render
+      setTimeout(() => setViewMode('dashboard'), 0)
+      return (
+        <div className="max-w-3xl mx-auto text-center py-12">
+          <p className="text-silver">Loading quiz...</p>
+        </div>
+      )
+    }
+
     const question = currentQuizQuestions[currentQuestionIndex]
     const progress = ((currentQuestionIndex + 1) / currentQuizQuestions.length) * 100
 
@@ -1911,10 +1922,8 @@ function DemoStudentContent() {
         <nav className="sticky top-0 z-50 bg-[var(--color-background-primary)]/95 backdrop-blur-md border-b border-white/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Logo variant="icon" theme="gold" size="sm" />
-              <span className="font-semibold tracking-tight text-sm text-white">
-                ASCYN PRO
-              </span>
+              <Logo variant="compact" size="md" className="lg:hidden" />
+              <Logo variant="full" size="3xl" className="hidden lg:block" />
             </div>
 
             {/* Desktop nav */}
