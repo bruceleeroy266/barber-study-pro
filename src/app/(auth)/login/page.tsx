@@ -185,7 +185,7 @@ function LoginForm() {
     <div className="bg-[var(--color-background-primary)]/80 backdrop-blur-sm border border-[var(--color-border-primary)] rounded-2xl p-8 shadow-2xl">
       <div className="text-center mb-8">
         <div className="flex justify-center mb-4">
-          <Logo variant="icon" theme="gold" size="xl" />
+          <Logo variant="compact" size="xl" />
         </div>
         <h1 className="text-2xl font-bold text-white mb-2">Pilot Login</h1>
         <p className="text-[var(--color-text-muted)]">Sign in to your approved ASCYN PRO account</p>
@@ -289,7 +289,7 @@ export default function LoginPage() {
         <div className="bg-[var(--color-background-primary)]/80 backdrop-blur-sm border border-[var(--color-border-primary)] rounded-2xl p-8 shadow-2xl">
           <div className="text-center">
             <div className="flex justify-center mb-4">
-              <Logo variant="icon" theme="gold" size="xl" />
+              <Logo variant="compact" size="xl" />
             </div>
             <h1 className="text-2xl font-bold text-white mb-2">
               Pilot Login

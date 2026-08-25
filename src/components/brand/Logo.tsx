@@ -1,21 +1,24 @@
-import { forwardRef, HTMLAttributes, ImgHTMLAttributes } from 'react'
+import { forwardRef, ImgHTMLAttributes } from 'react'
 import { cn } from '@/lib/utils'
 
 /* ============================================
-   Logo Component Library
+   ASCYN PRO Official Brand Logo Component
    ============================================
-   Centralized brand asset system for ASCYN PRO.
-   Supports all logo variants, themes, and sizes.
+   Centralized brand asset system using the
+   official transparent PNG source assets.
+
+   Supports responsive switching between full
+   logo and A-mark based on viewport/context.
    ============================================ */
 
-export type LogoVariant = 'full' | 'icon' | 'horizontal' | 'vertical'
+export type LogoVariant = 'full' | 'compact' | 'icon' | 'horizontal' | 'vertical'
 export type LogoTheme = 'light' | 'dark' | 'gold' | 'white' | 'monochrome'
 export type LogoSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 
 export interface LogoProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src' | 'alt'> {
   /** Logo layout variant */
   variant?: LogoVariant
-  /** Color theme */
+  /** Color theme (legacy compat — all official assets are transparent PNG) */
   theme?: LogoTheme
   /** Predefined size */
   size?: LogoSize
@@ -27,94 +30,140 @@ export interface LogoProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'sr
   'aria-label'?: string
   /** Whether the logo is decorative only */
   decorative?: boolean
+  /** Force specific asset source (advanced) */
+  src?: string
 }
 
-const sizeMap: Record<LogoSize, { width: number; height: number }> = {
-  xs: { width: 24, height: 24 },
-  sm: { width: 32, height: 32 },
-  md: { width: 40, height: 40 },
-  lg: { width: 48, height: 48 },
-  xl: { width: 64, height: 64 },
-  '2xl': { width: 96, height: 96 },
+/* ─── Official asset paths ─── */
+const ASSETS = {
+  full: {
+    sm: '/brand/logo-full-128.png',
+    md: '/brand/logo-full-256.png',
+    lg: '/brand/logo-full-512.png',
+    xl: '/brand/logo-full-transparent.png',
+    srcSet:
+      '/brand/logo-full-128.png 128w, ' +
+      '/brand/logo-full-256.png 256w, ' +
+      '/brand/logo-full-512.png 512w, ' +
+      '/brand/logo-full-transparent.png 1916w',
+  },
+  compact: {
+    sm: '/brand/logo-a-mark-64.png',
+    md: '/brand/logo-a-mark-128.png',
+    lg: '/brand/logo-a-mark-256.png',
+    xl: '/brand/logo-a-mark-transparent.png',
+    srcSet:
+      '/brand/logo-a-mark-64.png 64w, ' +
+      '/brand/logo-a-mark-128.png 128w, ' +
+      '/brand/logo-a-mark-256.png 256w, ' +
+      '/brand/logo-a-mark-transparent.png 1536w',
+  },
+  // Legacy SVG fallbacks for icon/horizontal/vertical (placeholder system)
+  icon: {
+    dark: '/brand/icon-dark.svg',
+    gold: '/brand/icon-gold.svg',
+    white: '/brand/icon-white.svg',
+    monochrome: '/brand/icon-mono.svg',
+    light: '/brand/icon-light.svg',
+  },
+  horizontal: {
+    dark: '/brand/horizontal-dark.svg',
+    gold: '/brand/horizontal-gold.svg',
+    white: '/brand/horizontal-white.svg',
+    monochrome: '/brand/horizontal-mono.svg',
+    light: '/brand/horizontal-light.svg',
+  },
+  vertical: {
+    dark: '/brand/vertical-dark.svg',
+    gold: '/brand/vertical-gold.svg',
+    white: '/brand/vertical-white.svg',
+    monochrome: '/brand/vertical-mono.svg',
+    light: '/brand/vertical-light.svg',
+  },
+} as const
+
+/* ─── Size maps (width in px) ─── */
+const sizeMap: Record<LogoSize, number> = {
+  xs: 24,
+  sm: 32,
+  md: 40,
+  lg: 48,
+  xl: 64,
+  '2xl': 96,
 }
 
-const variantAspectMap: Record<LogoVariant, number> = {
-  full: 200 / 40,      // 5:1 horizontal
-  icon: 1,             // 1:1 square
-  horizontal: 200 / 40, // 5:1
-  vertical: 40 / 200,  // 1:5 (stacked)
+/* ─── Aspect ratios ─── */
+const aspectMap: Record<Exclude<LogoVariant, 'icon' | 'horizontal' | 'vertical'>, number> = {
+  full: 1916 / 821,      // ~2.334:1
+  compact: 1536 / 1024,  // ~1.5:1
 }
 
-function getLogoSrc(variant: LogoVariant, theme: LogoTheme): string {
-  const base = '/brand'
-  
-  if (variant === 'icon') {
-    switch (theme) {
-      case 'gold':
-        return `${base}/icon-gold.svg`
-      case 'white':
-        return `${base}/icon-white.svg`
-      case 'monochrome':
-        return `${base}/icon-mono.svg`
-      case 'light':
-        return `${base}/icon-light.svg`
-      case 'dark':
-      default:
-        return `${base}/icon-dark.svg`
-    }
+function getOfficialSrc(
+  variant: 'full' | 'compact',
+  size: LogoSize,
+  customWidth?: number | string
+): { src: string; srcSet?: string; sizes?: string } {
+  const width = typeof customWidth === 'number' ? customWidth : sizeMap[size]
+  const asset = ASSETS[variant]
+
+  // Pick appropriate resolution based on display width
+  let src: string
+  if (width <= 64) src = asset.sm
+  else if (width <= 128) src = asset.md
+  else if (width <= 256) src = asset.lg
+  else src = asset.xl
+
+  return {
+    src,
+    srcSet: asset.srcSet,
+    sizes: `(max-width: 64px) 64px, (max-width: 128px) 128px, (max-width: 256px) 256px, 100vw`,
   }
-  
-  if (variant === 'vertical') {
-    switch (theme) {
-      case 'gold':
-        return `${base}/vertical-gold.svg`
-      case 'white':
-        return `${base}/vertical-white.svg`
-      case 'monochrome':
-        return `${base}/vertical-mono.svg`
-      case 'light':
-        return `${base}/vertical-light.svg`
-      case 'dark':
-      default:
-        return `${base}/vertical-dark.svg`
-    }
-  }
-  
-  // full / horizontal
+}
+
+function getLegacySrc(variant: 'icon' | 'horizontal' | 'vertical', theme: LogoTheme): string {
+  const themeAssets = ASSETS[variant]
   switch (theme) {
     case 'gold':
-      return `${base}/horizontal-gold.svg`
+      return themeAssets.gold
     case 'white':
-      return `${base}/horizontal-white.svg`
+      return themeAssets.white
     case 'monochrome':
-      return `${base}/horizontal-mono.svg`
+      return themeAssets.monochrome
     case 'light':
-      return `${base}/horizontal-light.svg`
+      return themeAssets.light
     case 'dark':
     default:
-      return `${base}/horizontal-dark.svg`
+      return themeAssets.dark
   }
 }
 
 /**
- * ASCYN PRO Logo component.
- * 
+ * ASCYN PRO Official Logo component.
+ *
+ * Uses the official transparent PNG assets for `full` and `compact` variants.
+ * Legacy SVG placeholders remain for `icon`, `horizontal`, `vertical`.
+ *
  * @example
- * // Default horizontal dark theme
+ * // Default: full logo, auto-sized
  * <Logo />
- * 
+ *
  * @example
- * // Icon only, gold theme, large
- * <Logo variant="icon" theme="gold" size="lg" />
- * 
+ * // Compact A-mark for constrained spaces
+ * <Logo variant="compact" size="sm" />
+ *
+ * @example
+ * // Responsive: full on desktop, compact on mobile (via CSS/media queries)
+ * <Logo variant="full" className="hidden sm:block" />
+ * <Logo variant="compact" className="sm:hidden" />
+ *
  * @example
  * // Custom dimensions
- * <Logo variant="full" width={160} height={32} />
+ * <Logo variant="full" width={200} />
  */
 export const Logo = forwardRef<HTMLImageElement, LogoProps>(
   (
     {
-      variant = 'horizontal',
+      variant = 'full',
       theme = 'dark',
       size = 'md',
       width,
@@ -122,29 +171,54 @@ export const Logo = forwardRef<HTMLImageElement, LogoProps>(
       className,
       decorative = false,
       'aria-label': ariaLabel,
+      src: forcedSrc,
       ...props
     },
     ref
   ) => {
-    const src = getLogoSrc(variant, theme)
-    const defaultSize = sizeMap[size]
-    const aspect = variantAspectMap[variant]
-    
-    const computedWidth = width ?? defaultSize.width
-    const computedHeight = height ?? (typeof computedWidth === 'number' 
-      ? Math.round(computedWidth / aspect) 
-      : defaultSize.height)
+    const isOfficial = variant === 'full' || variant === 'compact'
+    const computedWidth = width ?? sizeMap[size]
+
+    let src: string
+    let srcSet: string | undefined
+    let sizes: string | undefined
+    let computedHeight: number | string
+
+    if (forcedSrc) {
+      src = forcedSrc
+      computedHeight = height ?? (typeof computedWidth === 'number' ? computedWidth : sizeMap[size])
+    } else if (isOfficial) {
+      const official = getOfficialSrc(variant, size, typeof computedWidth === 'number' ? computedWidth : undefined)
+      src = official.src
+      srcSet = official.srcSet
+      sizes = official.sizes
+      const aspect = aspectMap[variant]
+      computedHeight = height ?? (typeof computedWidth === 'number' ? Math.round(computedWidth / aspect) : Math.round(sizeMap[size] / aspect))
+    } else {
+      // Legacy SVG
+      src = getLegacySrc(variant, theme)
+      const legacyAspects: Record<string, number> = {
+        icon: 1,
+        horizontal: 5,
+        vertical: 1 / 5,
+      }
+      const aspect = legacyAspects[variant] ?? 5
+      computedHeight = height ?? (typeof computedWidth === 'number' ? Math.round(computedWidth / aspect) : sizeMap[size])
+    }
 
     return (
       <img
         ref={ref}
         src={src}
+        srcSet={srcSet}
+        sizes={sizes}
         alt={decorative ? '' : (ariaLabel ?? 'ASCYN PRO')}
         width={computedWidth}
         height={computedHeight}
         className={cn('object-contain', className)}
         aria-hidden={decorative}
         role={decorative ? 'presentation' : 'img'}
+        loading="eager"
         {...props}
       />
     )
@@ -156,6 +230,12 @@ Logo.displayName = 'Logo'
 /* ============================================
    Convenience Components
    ============================================ */
+
+export type LogoCompactProps = Omit<LogoProps, 'variant'>
+
+export function LogoCompact(props: LogoCompactProps) {
+  return <Logo variant="compact" {...props} />
+}
 
 export type LogoIconProps = Omit<LogoProps, 'variant'>
 
@@ -184,9 +264,14 @@ export const brandAssets = {
     ico: '/favicon.ico',
     svg: '/brand/icon-gold.svg',
   },
-  appleTouchIcon: '/brand/apple-touch-icon.png',
+  appleTouchIcon: '/brand/icon-180.svg',
   ogImage: '/brand/og-image.png',
   ogImageSquare: '/brand/og-image-square.png',
+  // Official transparent assets
+  fullLogo: '/brand/logo-full-transparent.png',
+  fullLogoSrcSet: ASSETS.full.srcSet,
+  compactLogo: '/brand/logo-a-mark-transparent.png',
+  compactLogoSrcSet: ASSETS.compact.srcSet,
 } as const
 
 export default Logo

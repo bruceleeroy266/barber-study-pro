@@ -11,7 +11,7 @@ export default function SignupPage() {
   return (
     <div className="bg-[var(--color-background-primary)]/80 backdrop-blur-sm border border-[var(--color-border-primary)] rounded-2xl p-8 shadow-2xl text-center">
       <div className="flex justify-center mb-4">
-        <Logo variant="icon" theme="gold" size="xl" />
+        <Logo variant="compact" size="xl" />
       </div>
       <h1 className="text-2xl font-bold text-white mb-4">Pilot Access Only</h1>
       <p className="text-[var(--color-text-muted)] mb-6">

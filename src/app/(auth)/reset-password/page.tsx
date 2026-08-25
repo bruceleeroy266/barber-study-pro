@@ -35,7 +35,7 @@ export default function ResetPasswordPage() {
     return (
       <div className="bg-[var(--color-background-primary)]/80 backdrop-blur-sm border border-[var(--color-border-primary)] rounded-2xl p-8 shadow-2xl text-center">
         <div className="flex justify-center mb-4">
-          <Logo variant="icon" theme="gold" size="xl" />
+          <Logo variant="compact" size="xl" />
         </div>
         <h1 className="text-2xl font-bold text-white mb-4">Check Your Email</h1>
         <p className="text-[var(--color-text-muted)] mb-6">
@@ -56,7 +56,7 @@ export default function ResetPasswordPage() {
     <div className="bg-[var(--color-background-primary)]/80 backdrop-blur-sm border border-[var(--color-border-primary)] rounded-2xl p-8 shadow-2xl">
       <div className="text-center mb-8">
         <div className="flex justify-center mb-4">
-          <Logo variant="icon" theme="gold" size="xl" />
+          <Logo variant="compact" size="xl" />
         </div>
         <h1 className="text-2xl font-bold text-white mb-2">Reset Password</h1>
         <p className="text-[var(--color-text-muted)]">Enter your email to receive a reset link</p>
