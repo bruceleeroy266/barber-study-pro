@@ -122,7 +122,8 @@ export default function DemoRequestPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center">
-              <Logo variant="horizontal" theme="dark" size="sm" />
+              <Logo variant="compact" size="md" className="lg:hidden" />
+              <Logo variant="full" size="lg" className="hidden lg:block" />
             </Link>
             <div className="flex items-center gap-3">
               <Link

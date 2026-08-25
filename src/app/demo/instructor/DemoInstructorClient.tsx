@@ -1066,8 +1066,9 @@ function DemoInstructorContent() {
         <nav className="sticky top-0 z-50 bg-[var(--color-background-primary)]/95 backdrop-blur-md border-b border-white/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Logo variant="icon" theme="gold" size="sm" />
-              <span className="font-semibold tracking-tight text-sm text-white">
+              <Logo variant="compact" size="md" className="lg:hidden" />
+              <Logo variant="full" size="lg" className="hidden lg:block" />
+              <span className="font-semibold tracking-tight text-sm text-white lg:hidden">
                 ASCYN PRO
               </span>
             </div>
@@ -1161,7 +1162,7 @@ function DemoInstructorContent() {
         <footer className="border-t border-white/10 py-8 mt-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <Logo variant="horizontal" theme="dark" size="sm" />
+              <Logo variant="full" size="md" />
               <p className="text-silver-gray text-sm">
                 © 2026 ASCYN PRO. Built for future licensed professionals.
               </p>

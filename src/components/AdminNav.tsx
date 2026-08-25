@@ -68,8 +68,8 @@ export default function AdminNav({ user }: AdminNavProps) {
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-charcoal/95 backdrop-blur-sm border-b border-graphite px-4 py-3">
         <div className="flex items-center justify-between">
           <Link href="/admin" className="flex items-center gap-2">
-            <Logo variant="compact" size="sm" className="sm:hidden" />
-            <Logo variant="full" size="sm" className="hidden sm:block" />
+            <Logo variant="compact" size="md" className="lg:hidden" />
+            <Logo variant="full" size="lg" className="hidden lg:block" />
             <Shield className="w-4 h-4 text-[var(--color-brand-gold)]" />
           </Link>
           <button
@@ -122,7 +122,7 @@ export default function AdminNav({ user }: AdminNavProps) {
       <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 bg-charcoal border-r border-graphite flex-col">
         <div className="p-6">
           <Link href="/admin" className="flex items-center gap-2 mb-8">
-            <Logo variant="full" size="md" />
+            <Logo variant="full" size="lg" />
             <Shield className="w-5 h-5 text-[var(--color-brand-gold)]" />
           </Link>
 

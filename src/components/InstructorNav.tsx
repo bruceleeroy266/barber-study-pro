@@ -69,8 +69,8 @@ export default function InstructorNav({ user }: InstructorNavProps) {
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-charcoal/95 backdrop-blur-sm border-b border-graphite px-4 py-3">
         <div className="flex items-center justify-between">
           <Link href="/instructor" className="flex items-center">
-            <Logo variant="compact" size="sm" className="sm:hidden" />
-            <Logo variant="full" size="sm" className="hidden sm:block" />
+            <Logo variant="compact" size="md" className="lg:hidden" />
+            <Logo variant="full" size="lg" className="hidden lg:block" />
           </Link>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -125,7 +125,7 @@ export default function InstructorNav({ user }: InstructorNavProps) {
       <aside className="hidden lg:block fixed left-0 top-0 bottom-0 w-64 bg-charcoal border-r border-graphite">
         <div className="p-6">
           <Link href="/instructor" className="flex items-center">
-            <Logo variant="full" size="md" />
+            <Logo variant="full" size="lg" />
           </Link>
         </div>
         

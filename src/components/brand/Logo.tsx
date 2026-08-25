@@ -86,10 +86,10 @@ const ASSETS = {
 const sizeMap: Record<LogoSize, number> = {
   xs: 24,
   sm: 32,
-  md: 40,
-  lg: 48,
-  xl: 64,
-  '2xl': 96,
+  md: 48,
+  lg: 64,
+  xl: 96,
+  '2xl': 128,
 }
 
 /* ─── Aspect ratios ─── */
