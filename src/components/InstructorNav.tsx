@@ -89,8 +89,8 @@ export default function InstructorNav({ user }: InstructorNavProps) {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-40 bg-black pt-16">
-          <nav className="p-4 space-y-2">
+        <div className="lg:hidden fixed inset-0 z-40 bg-black pt-16 overflow-y-auto">
+          <nav className="p-4 space-y-2 pb-8">
             {navItems.map((item) => {
               const Icon = item.icon
               return (
