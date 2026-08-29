@@ -494,14 +494,16 @@ function DemoStudentContent() {
   }, [showExplanation, setSelectedAnswer])
 
   const handleSubmitAnswer = useCallback(() => {
-    if (selectedAnswer === null) return
+    // Determine which answer state to use based on mode
+    const currentSelectedAnswer = targetedReview ? targetedReview.selectedAnswer : selectedAnswer
+    if (currentSelectedAnswer === null) return
     
     const question = currentQuizQuestions[currentQuestionIndex]
-    const isCorrect = selectedAnswer === question.correctIndex
+    const isCorrect = currentSelectedAnswer === question.correctIndex
     
     const result: QuizResult = {
       questionId: question.id,
-      selectedIndex: selectedAnswer,
+      selectedIndex: currentSelectedAnswer,
       correct: isCorrect,
       topicId: question.topicId,
       concept: question.concept,
@@ -521,11 +523,10 @@ function DemoStudentContent() {
   }, [selectedAnswer, currentQuestionIndex, currentQuizQuestions, targetedReview, setTargetedReview, setQuizResults, setShowExplanation])
 
   const handleNextQuestion = useCallback(() => {
-    if (currentQuestionIndex < currentQuizQuestions.length - 1) {
-      setCurrentQuestionIndex((prev) => prev + 1)
-      setSelectedAnswer(null)
-      setShowExplanation(false)
-      
+    // Determine current index based on mode
+    const currentIndex = targetedReview ? targetedReview.currentQuestionIndex : currentQuestionIndex
+    
+    if (currentIndex < currentQuizQuestions.length - 1) {
       if (targetedReview) {
         setTargetedReview(prev => prev ? {
           ...prev,
@@ -533,6 +534,10 @@ function DemoStudentContent() {
           selectedAnswer: null,
           showExplanation: false,
         } : null)
+      } else {
+        setCurrentQuestionIndex((prev) => prev + 1)
+        setSelectedAnswer(null)
+        setShowExplanation(false)
       }
     } else {
       // Calculate final score for targeted review
