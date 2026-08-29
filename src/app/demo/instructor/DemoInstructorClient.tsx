@@ -1013,7 +1013,7 @@ function DemoInstructorContent() {
   // ───────────────────────────────────────────────
 
   return (
-    <main className={`min-h-screen text-white ${
+    <main className={`min-h-screen text-white pb-24 sm:pb-0 ${
       highContrast ? 'bg-black' : 'bg-[var(--color-background-primary)]'
     } ${isPresentationMode ? 'presentation-mode' : ''}`}>
       {/* Presentation Mode Controls */}
@@ -1042,7 +1042,7 @@ function DemoInstructorContent() {
       {!isPresentationMode && (
         <button
           onClick={() => setIsPresentationMode(true)}
-          className="fixed bottom-20 right-4 z-[100] flex items-center gap-2 px-4 py-3 bg-[var(--color-brand-gold)] text-white font-semibold rounded-xl shadow-lg hover:bg-[var(--color-brand-gold-light)] transition-colors"
+          className="fixed bottom-[max(0.75rem,env(safe-area-inset-bottom))] right-3 sm:bottom-20 sm:right-4 z-[100] flex items-center gap-2 p-3 sm:px-4 sm:py-3 bg-[var(--color-brand-gold)] text-white font-semibold rounded-xl shadow-lg hover:bg-[var(--color-brand-gold-light)] transition-colors"
           title="Enter presentation mode"
         >
           <Presentation className="w-5 h-5" />
