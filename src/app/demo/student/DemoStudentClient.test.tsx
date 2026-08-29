@@ -1,11 +1,17 @@
 /**
- * Regression test for D-004: Targeted Review Knowledge Check Submission
+ * Regression tests for D-004 and D-005: Targeted Review
  * 
- * Bug: handleSubmitAnswer checked local selectedAnswer state instead of
- * targetedReview.selectedAnswer, causing Submit Answer to fail silently.
+ * D-004: handleSubmitAnswer checked local selectedAnswer state instead of
+ *   targetedReview.selectedAnswer, causing Submit Answer to fail silently.
+ *   Fix: Updated handleSubmitAnswer and handleNextQuestion to use the correct
+ *   state source based on whether targetedReview mode is active.
  * 
- * Fix: Updated handleSubmitAnswer and handleNextQuestion to use the correct
- * state source based on whether targetedReview mode is active.
+ * D-005: handleNextQuestion called setViewMode('results') when targeted review
+ *   completed, causing renderResults() to render instead of the targeted review's
+ *   own results stage. renderResults() reads from quizResults (empty in targeted
+ *   review mode), producing 0%, 0 of 0 correct, and empty Question Breakdown.
+ *   Fix: When targetedReview is active, stay in 'targeted-review' viewMode so
+ *   renderTargetedReview() renders the results stage with targetedReview.results.
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -163,5 +169,144 @@ describe('Targeted Review State Logic', () => {
     const currentSelectedAnswer = targetedReview ? targetedReview.selectedAnswer : selectedAnswer
     
     expect(currentSelectedAnswer).toBe(1)
+  })
+})
+
+describe('D-005: Targeted Review Results Display', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  /**
+   * Helper: navigate from dashboard → targeted review intro → quiz → answer all 5 questions.
+   * answerPattern: array of 5 booleans — true = select correct answer, false = select wrong answer.
+   * All 5 targeted review questions have correctIndex = 1.
+   * 
+   * The option buttons are plain <button> elements (not the mocked Button component).
+   * We find them by their text content within the question card.
+   */
+  async function completeTargetedReview(answerPattern: boolean[]) {
+    // All 5 questions and their options (from TARGETED_REVIEW_QUESTIONS)
+    const questionOptions = [
+      ['Alopecia areata', 'Tinea capitis', 'Pityriasis capitis simplex', 'Pseudofolliculitis barbae'],
+      ['Folliculitis is fungal; pseudofolliculitis is bacterial', 'Folliculitis is a contagious infection; pseudofolliculitis is non-contagious inflammation from ingrown hairs', 'Folliculitis only affects the scalp; pseudofolliculitis only affects the beard', 'There is no difference — both require medical referral'],
+      ['Tinea barbae', 'Scabies', 'Furuncle', 'Seborrheic dermatitis'],
+      ['Tinea capitis', 'Tinea barbae', 'Pediculosis capitis', 'Carbuncle'],
+      ['Proceed with service — this is just dandruff', 'Stop service immediately — this indicates pediculosis capitis (head lice)', 'Apply medicated shampoo and continue', 'Recommend a different hairstyle'],
+    ]
+
+    // 1. Click "Start Review" on dashboard
+    const startReviewButton = screen.getByText('Start Review')
+    fireEvent.click(startReviewButton)
+
+    // 2. Should now be on targeted review intro — click "Start Knowledge Check"
+    await waitFor(() => {
+      expect(screen.getByText('Start Knowledge Check')).toBeInTheDocument()
+    })
+    fireEvent.click(screen.getByText('Start Knowledge Check'))
+
+    // 3. Answer all 5 questions
+    for (let i = 0; i < 5; i++) {
+      // Wait for the question to appear
+      await waitFor(() => {
+        expect(screen.getByText(`Question ${i + 1} of 5`)).toBeInTheDocument()
+      })
+
+      // Select an answer: correct = index 1, incorrect = index 0
+      const targetIndex = answerPattern[i] ? 1 : 0
+      const optionText = questionOptions[i][targetIndex]
+      
+      // Find the option button by its text content
+      const optionButton = screen.getByText(optionText).closest('button')!
+      fireEvent.click(optionButton)
+
+      // Click "Submit Answer"
+      await waitFor(() => {
+        expect(screen.getByText('Submit Answer')).toBeInTheDocument()
+      })
+      fireEvent.click(screen.getByText('Submit Answer'))
+
+      // Wait for explanation to appear, then click Next/See Results
+      await waitFor(() => {
+        const nextButton = screen.queryByText('Next Question') || screen.queryByText('See Results')
+        expect(nextButton).toBeInTheDocument()
+      })
+      const nextButton = screen.queryByText('Next Question') || screen.queryByText('See Results')
+      fireEvent.click(nextButton!)
+    }
+  }
+
+  it('should display targeted review results with correct score for 2/5 correct (40%)', async () => {
+    render(<DemoStudentClient />)
+
+    // Complete review: 2 correct, 3 incorrect = 40%
+    await completeTargetedReview([true, false, true, false, false])
+
+    // Should be on targeted review results stage, NOT normal quiz results
+    await waitFor(() => {
+      // Score should show 40% (appears in score card and Today's Review)
+      const scoreElements = screen.getAllByText('40%')
+      expect(scoreElements.length).toBeGreaterThanOrEqual(1)
+    })
+
+    // Should show "2 of 5 correct"
+    expect(screen.getByText('2 of 5 correct')).toBeInTheDocument()
+
+    // Should show "Additional Review Recommended" (40% < 80%)
+    expect(screen.getByText('Additional Review Recommended')).toBeInTheDocument()
+
+    // Should show historical score of 62%
+    expect(screen.getByText('62%')).toBeInTheDocument()
+
+    // Should show "Today's Review" with 40%
+    expect(screen.getByText("Today's Review")).toBeInTheDocument()
+
+    // Should show missed concepts (3 incorrect answers)
+    expect(screen.getByText('Recommended Next Steps')).toBeInTheDocument()
+  })
+
+  it('should display targeted review results with correct score for 5/5 correct (100%)', async () => {
+    render(<DemoStudentClient />)
+
+    // Complete review: all 5 correct = 100%
+    await completeTargetedReview([true, true, true, true, true])
+
+    await waitFor(() => {
+      const scoreElements = screen.getAllByText('100%')
+      expect(scoreElements.length).toBeGreaterThanOrEqual(1)
+    })
+
+    expect(screen.getByText('5 of 5 correct')).toBeInTheDocument()
+    expect(screen.getByText('Review Passed')).toBeInTheDocument()
+  })
+
+  it('should display targeted review results with correct score for 0/5 correct (0%)', async () => {
+    render(<DemoStudentClient />)
+
+    // Complete review: all 5 incorrect = 0%
+    await completeTargetedReview([false, false, false, false, false])
+
+    await waitFor(() => {
+      // Score should show 0% (appears in score card and Today's Review)
+      const scoreElements = screen.getAllByText('0%')
+      expect(scoreElements.length).toBeGreaterThanOrEqual(1)
+    })
+
+    expect(screen.getByText('0 of 5 correct')).toBeInTheDocument()
+    expect(screen.getByText('Additional Review Recommended')).toBeInTheDocument()
+  })
+
+  it('should NOT render normal quiz results when targeted review completes', async () => {
+    render(<DemoStudentClient />)
+
+    await completeTargetedReview([true, false, true, false, false])
+
+    await waitFor(() => {
+      const scoreElements = screen.getAllByText('40%')
+      expect(scoreElements.length).toBeGreaterThanOrEqual(1)
+    })
+
+    // The normal quiz results would show "0 of 0 correct" — this should NOT appear
+    expect(screen.queryByText('0 of 0 correct')).not.toBeInTheDocument()
   })
 })

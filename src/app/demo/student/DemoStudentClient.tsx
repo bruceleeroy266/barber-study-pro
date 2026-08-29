@@ -549,8 +549,12 @@ function DemoStudentContent() {
           sessionScore: score,
           stage: 'results',
         } : null)
+        // Stay in 'targeted-review' viewMode so renderTargetedReview() renders
+        // the results stage. Do NOT switch to 'results' viewMode — that would
+        // render renderResults() which reads from the empty quizResults state.
+      } else {
+        setViewMode('results')
       }
-      setViewMode('results')
     }
   }, [currentQuestionIndex, currentQuizQuestions.length, targetedReview, setCurrentQuestionIndex, setSelectedAnswer, setShowExplanation, setTargetedReview, setViewMode])
 
