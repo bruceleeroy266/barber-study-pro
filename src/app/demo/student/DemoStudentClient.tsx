@@ -1564,9 +1564,9 @@ function DemoStudentContent() {
             <div className="space-y-4">
               {TARGETED_REVIEW_CONTENT.keyConcepts.map((concept, index) => (
                 <div key={index} className="p-4 bg-white/5 rounded-lg border border-white/10">
-                  <div className="flex items-start justify-between gap-4 mb-2">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4 mb-2">
                     <h3 className="font-semibold text-white">{concept.title}</h3>
-                    <Badge variant="default" className="border-[var(--color-brand-gold)]/30 text-[var(--color-brand-gold)] text-xs shrink-0">
+                    <Badge variant="default" className="border-[var(--color-brand-gold)]/30 text-[var(--color-brand-gold)] text-xs sm:shrink-0 self-start whitespace-normal text-left">
                       {concept.keyPoint}
                     </Badge>
                   </div>
