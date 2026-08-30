@@ -7,10 +7,19 @@ import { createContext, useContext, useState, useCallback, useEffect, ReactNode 
 // ───────────────────────────────────────────────
 
 export function useIsMobile(breakpoint: number = 640): boolean {
-  const [isMobile, setIsMobile] = useState(false)
+  // Initialize synchronously from window.innerWidth to prevent hydration mismatch
+  // and race conditions where the user interacts before useEffect fires.
+  // On the server (no window), default to false (desktop) — this is safe because
+  // the guard modal will still render correctly on mobile after hydration.
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return window.innerWidth < breakpoint
+  })
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < breakpoint)
+    // Re-check on mount to handle any edge cases (e.g., viewport changed between
+    // initial state and effect, or window was resized during hydration)
     checkMobile()
     window.addEventListener('resize', checkMobile)
     return () => window.removeEventListener('resize', checkMobile)

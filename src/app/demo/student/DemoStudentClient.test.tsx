@@ -62,24 +62,28 @@ vi.mock('@/lib/demo-environment-data', () => ({
 }))
 
 // Mock the presentation context
-vi.mock('../DemoPresentationContext', () => ({
-  DemoPresentationProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  useDemoPresentation: () => ({
-    setPerspective: vi.fn(),
-    isPresentationMode: false,
-    setIsPresentationMode: vi.fn(),
-    isMobile: false,
-    showMobileGuard: false,
-    setShowMobileGuard: vi.fn(),
-    toggleFullscreen: vi.fn(),
-    highContrast: false,
-    setHighContrast: vi.fn(),
-    resetTrigger: 0,
-    setGuidedStep: vi.fn(),
-  }),
-  PresentationControls: () => null,
-  MobilePresentationGuard: () => null,
-}))
+vi.mock('../DemoPresentationContext', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../DemoPresentationContext')>()
+  return {
+    ...actual,
+    DemoPresentationProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+    useDemoPresentation: () => ({
+      setPerspective: vi.fn(),
+      isPresentationMode: false,
+      setIsPresentationMode: vi.fn(),
+      isMobile: false,
+      showMobileGuard: false,
+      setShowMobileGuard: vi.fn(),
+      toggleFullscreen: vi.fn(),
+      highContrast: false,
+      setHighContrast: vi.fn(),
+      resetTrigger: 0,
+      setGuidedStep: vi.fn(),
+    }),
+    PresentationControls: () => null,
+    MobilePresentationGuard: () => null,
+  }
+})
 
 // Mock UI components
 vi.mock('@/components/ui', () => ({
@@ -142,6 +146,73 @@ describe('D-011: Mobile Presentation Mode Guard', () => {
     // 2. showMobileGuard state controls the guard modal
     // 3. handleEnterPresentationMode checks isMobile before activating
     // This is verified by the code structure and TypeScript compilation
+  })
+
+  it('should detect mobile viewport synchronously on first render (regression test for real-device failure)', async () => {
+    // This test reproduces the real-device failure mode where the user
+    // taps Presentation Mode before useEffect fires. The fix ensures
+    // useIsMobile initializes synchronously from window.innerWidth.
+    
+    // Mock window.innerWidth to simulate a phone-sized viewport
+    const originalInnerWidth = window.innerWidth
+    Object.defineProperty(window, 'innerWidth', {
+      writable: true,
+      configurable: true,
+      value: 375, // iPhone width
+    })
+
+    // Import the actual hook (not the mocked one)
+    const { useIsMobile } = await vi.importActual<typeof import('../DemoPresentationContext')>('../DemoPresentationContext')
+    
+    // Create a test component that uses the real hook
+    function TestComponent() {
+      const isMobile = useIsMobile(640)
+      return <div data-testid="mobile-indicator">{isMobile ? 'mobile' : 'desktop'}</div>
+    }
+
+    render(<TestComponent />)
+    
+    // CRITICAL: On first render (before useEffect), the hook must detect mobile
+    // This is the regression test for the real-device failure
+    expect(screen.getByTestId('mobile-indicator')).toHaveTextContent('mobile')
+    
+    // Restore original innerWidth
+    Object.defineProperty(window, 'innerWidth', {
+      writable: true,
+      configurable: true,
+      value: originalInnerWidth,
+    })
+  })
+
+  it('should detect desktop viewport synchronously on first render', async () => {
+    // Mock window.innerWidth to simulate a desktop viewport
+    const originalInnerWidth = window.innerWidth
+    Object.defineProperty(window, 'innerWidth', {
+      writable: true,
+      configurable: true,
+      value: 1920, // Desktop width
+    })
+
+    // Import the actual hook (not the mocked one)
+    const { useIsMobile } = await vi.importActual<typeof import('../DemoPresentationContext')>('../DemoPresentationContext')
+    
+    // Create a test component that uses the real hook
+    function TestComponent() {
+      const isMobile = useIsMobile(640)
+      return <div data-testid="mobile-indicator">{isMobile ? 'mobile' : 'desktop'}</div>
+    }
+
+    render(<TestComponent />)
+    
+    // On first render, the hook must detect desktop
+    expect(screen.getByTestId('mobile-indicator')).toHaveTextContent('desktop')
+    
+    // Restore original innerWidth
+    Object.defineProperty(window, 'innerWidth', {
+      writable: true,
+      configurable: true,
+      value: originalInnerWidth,
+    })
   })
 })
 
