@@ -655,7 +655,8 @@ function DemoInstructorContent() {
           </div>
         </div>
 
-        <div className="overflow-x-auto">
+        {/* Desktop table — hidden on mobile */}
+        <div className="hidden sm:block overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-white/10">
@@ -719,6 +720,64 @@ function DemoInstructorContent() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile card layout — hidden on sm and up */}
+        <div className="sm:hidden space-y-3">
+          {filteredStudents.map((student) => {
+            const primaryGap = getPrimaryLearningGap(student)
+            return (
+              <button
+                key={student.id}
+                onClick={() => openStudent(student)}
+                className="w-full text-left p-4 rounded-lg border border-white/10 bg-white/5 hover:border-[var(--color-brand-gold)]/30 hover:bg-[var(--color-brand-gold)]/5 transition-all"
+              >
+                {/* Name, program, status */}
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div className="min-w-0">
+                    <p className="text-white font-medium truncate">{student.name}</p>
+                    <p className="text-xs text-silver-gray">{student.program}</p>
+                  </div>
+                  <RiskBadge status={student.riskStatus} />
+                </div>
+
+                {/* Metrics grid */}
+                <div className="grid grid-cols-3 gap-3 mb-3">
+                  <div>
+                    <p className="text-[10px] text-silver-gray uppercase tracking-wider mb-0.5">Progress</p>
+                    <p className="text-sm text-white font-medium">{student.overallProgress}%</p>
+                    <div className="mt-1">
+                      <ProgressBar value={student.overallProgress} />
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-silver-gray uppercase tracking-wider mb-0.5">Quiz Avg</p>
+                    <p className="text-sm text-white font-medium">{student.avgQuizScore}%</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-silver-gray uppercase tracking-wider mb-0.5">Readiness</p>
+                    <p className={`text-sm font-medium ${student.readinessScore >= 80 ? 'text-gold' : student.readinessScore >= 60 ? 'text-warm-bronze' : 'text-silver'}`}>
+                      {student.readinessScore}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Primary gap + action */}
+                <div className="flex items-center justify-between gap-2 pt-2 border-t border-white/10">
+                  <div className="min-w-0">
+                    <p className="text-[10px] text-silver-gray uppercase tracking-wider">Primary Gap</p>
+                    <p className="text-sm text-silver">
+                      {primaryGap ? getTopicName(primaryGap) : '—'}
+                    </p>
+                  </div>
+                  <span className="inline-flex items-center text-xs text-[var(--color-brand-gold)] whitespace-nowrap">
+                    View
+                    <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
+                  </span>
+                </div>
+              </button>
+            )
+          })}
         </div>
       </Card>
     </div>
