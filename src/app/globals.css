@@ -1045,61 +1045,93 @@
    NABBA PRESENTATION MODE
    ============================================ */
 
-.presentation-mode {
-  font-size: 1.25rem;
+/* Mobile guard: disable presentation scaling on phone-sized viewports */
+@media (max-width: 639px) {
+  .presentation-mode {
+    font-size: inherit !important;
+  }
+  
+  .presentation-mode .presentation-section {
+    min-height: auto !important;
+    display: block !important;
+  }
+  
+  .presentation-mode h1,
+  .presentation-mode h2,
+  .presentation-mode h3,
+  .presentation-mode p,
+  .presentation-mode li,
+  .presentation-mode .text-sm,
+  .presentation-mode .text-xs,
+  .presentation-mode button,
+  .presentation-mode a,
+  .presentation-mode .text-5xl,
+  .presentation-mode .text-6xl,
+  .presentation-mode .text-4xl {
+    font-size: inherit !important;
+    line-height: inherit !important;
+    padding: inherit !important;
+  }
 }
 
-.presentation-mode .presentation-section {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
+/* Desktop/tablet presentation mode (640px and above) */
+@media (min-width: 640px) {
+  .presentation-mode {
+    font-size: 1.25rem;
+  }
 
-.presentation-mode h1 {
-  font-size: 4rem !important;
-  line-height: 1.1 !important;
-}
+  .presentation-mode .presentation-section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 
-.presentation-mode h2 {
-  font-size: 3rem !important;
-  line-height: 1.2 !important;
-}
+  .presentation-mode h1 {
+    font-size: 4rem !important;
+    line-height: 1.1 !important;
+  }
 
-.presentation-mode h3 {
-  font-size: 2rem !important;
-}
+  .presentation-mode h2 {
+    font-size: 3rem !important;
+    line-height: 1.2 !important;
+  }
 
-.presentation-mode p,
-.presentation-mode li {
-  font-size: 1.5rem !important;
-  line-height: 1.6 !important;
-}
+  .presentation-mode h3 {
+    font-size: 2rem !important;
+  }
 
-.presentation-mode .text-sm {
-  font-size: 1.25rem !important;
-}
+  .presentation-mode p,
+  .presentation-mode li {
+    font-size: 1.5rem !important;
+    line-height: 1.6 !important;
+  }
 
-.presentation-mode .text-xs {
-  font-size: 1rem !important;
-}
+  .presentation-mode .text-sm {
+    font-size: 1.25rem !important;
+  }
 
-.presentation-mode button,
-.presentation-mode a {
-  font-size: 1.25rem !important;
-  padding: var(--spacing-4) var(--spacing-8) !important;
-}
+  .presentation-mode .text-xs {
+    font-size: 1rem !important;
+  }
 
-.presentation-mode .text-5xl {
-  font-size: 6rem !important;
-}
+  .presentation-mode button,
+  .presentation-mode a {
+    font-size: 1.25rem !important;
+    padding: var(--spacing-4) var(--spacing-8) !important;
+  }
 
-.presentation-mode .text-6xl {
-  font-size: 8rem !important;
-}
+  .presentation-mode .text-5xl {
+    font-size: 6rem !important;
+  }
 
-.presentation-mode .text-4xl {
-  font-size: 5rem !important;
+  .presentation-mode .text-6xl {
+    font-size: 8rem !important;
+  }
+
+  .presentation-mode .text-4xl {
+    font-size: 5rem !important;
+  }
 }
 
 /* High contrast mode */

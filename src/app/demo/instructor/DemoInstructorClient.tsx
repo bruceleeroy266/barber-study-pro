@@ -37,7 +37,7 @@ import {
   DEMO_CLASS_NAME,
 } from '@/lib/demo-environment-data'
 import type { DemoStudentProfile } from '@/lib/demo-environment-data'
-import { DemoPresentationProvider, useDemoPresentation, PresentationControls } from '../DemoPresentationContext'
+import { DemoPresentationProvider, useDemoPresentation, PresentationControls, MobilePresentationGuard } from '../DemoPresentationContext'
 
 // ───────────────────────────────────────────────
 // Types
@@ -183,6 +183,9 @@ function DemoInstructorContent() {
     setPerspective,
     isPresentationMode,
     setIsPresentationMode,
+    isMobile,
+    showMobileGuard,
+    setShowMobileGuard,
     toggleFullscreen,
     highContrast,
     setHighContrast,
@@ -379,6 +382,15 @@ function DemoInstructorContent() {
       setGuidedStep(selectedStudent.name.split(' ')[0])
     }
   }, [viewMode, selectedStudent, setGuidedStep])
+
+  // Handle presentation mode activation with mobile guard
+  const handleEnterPresentationMode = useCallback(() => {
+    if (isMobile) {
+      setShowMobileGuard(true)
+    } else {
+      setIsPresentationMode(true)
+    }
+  }, [isMobile, setShowMobileGuard, setIsPresentationMode])
 
   // Keyboard navigation for presentation mode
   useEffect(() => {
@@ -1075,8 +1087,11 @@ function DemoInstructorContent() {
     <main className={`min-h-screen text-white pb-24 sm:pb-0 ${
       highContrast ? 'bg-black' : 'bg-[var(--color-background-primary)]'
     } ${isPresentationMode ? 'presentation-mode' : ''}`}>
+      {/* Mobile Presentation Guard */}
+      {showMobileGuard && <MobilePresentationGuard />}
+
       {/* Presentation Mode Controls */}
-      {isPresentationMode && (
+      {isPresentationMode && !isMobile && (
         <PresentationControls
           viewLabel={viewMode === 'dashboard' ? 'Dashboard' : selectedStudent?.name.split(' ')[0] || 'Student'}
           onBack={() => {
@@ -1098,9 +1113,9 @@ function DemoInstructorContent() {
       )}
 
       {/* Presentation Mode Toggle */}
-      {!isPresentationMode && (
+      {!isPresentationMode && !showMobileGuard && (
         <button
-          onClick={() => setIsPresentationMode(true)}
+          onClick={handleEnterPresentationMode}
           className="fixed bottom-[max(0.75rem,env(safe-area-inset-bottom))] right-3 sm:bottom-20 sm:right-4 z-[100] flex items-center gap-2 p-3 sm:px-4 sm:py-3 bg-[var(--color-brand-gold)] text-white font-semibold rounded-xl shadow-lg hover:bg-[var(--color-brand-gold-light)] transition-colors"
           title="Enter presentation mode"
         >

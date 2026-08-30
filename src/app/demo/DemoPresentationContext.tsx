@@ -1,6 +1,23 @@
 'use client'
 
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react'
+
+// ───────────────────────────────────────────────
+// Mobile Detection Hook
+// ───────────────────────────────────────────────
+
+export function useIsMobile(breakpoint: number = 640): boolean {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < breakpoint)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [breakpoint])
+
+  return isMobile
+}
 
 // ───────────────────────────────────────────────
 // Types
@@ -16,6 +33,11 @@ interface DemoPresentationContextType {
   // Presentation mode
   isPresentationMode: boolean
   setIsPresentationMode: (v: boolean) => void
+  
+  // Mobile guard
+  isMobile: boolean
+  showMobileGuard: boolean
+  setShowMobileGuard: (v: boolean) => void
   
   // Fullscreen
   isFullscreen: boolean
@@ -52,6 +74,8 @@ export function DemoPresentationProvider({ children }: { children: ReactNode }) 
   const [highContrast, setHighContrast] = useState(false)
   const [resetTrigger, setResetTrigger] = useState(0)
   const [guidedStep, setGuidedStep] = useState('Dashboard')
+  const isMobile = useIsMobile(640)
+  const [showMobileGuard, setShowMobileGuard] = useState(false)
 
   const toggleFullscreen = useCallback(() => {
     if (!document.fullscreenElement) {
@@ -73,6 +97,9 @@ export function DemoPresentationProvider({ children }: { children: ReactNode }) 
         setPerspective,
         isPresentationMode,
         setIsPresentationMode,
+        isMobile,
+        showMobileGuard,
+        setShowMobileGuard,
         isFullscreen,
         setIsFullscreen,
         toggleFullscreen,
@@ -105,7 +132,7 @@ export function useDemoPresentation() {
 // Presentation Controls Component
 // ───────────────────────────────────────────────
 
-import { ArrowLeft, ArrowRight, Maximize2, Minimize2, Contrast, RotateCcw, X, Users, GraduationCap } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Maximize2, Minimize2, Contrast, RotateCcw, X, Users, GraduationCap, Presentation } from 'lucide-react'
 import Link from 'next/link'
 
 interface PresentationControlsProps {
@@ -255,6 +282,44 @@ export function PresentationControls({
           title="Exit presentation (Esc)"
         >
           <X className="w-5 h-5" />
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ───────────────────────────────────────────────
+// Mobile Guard Component
+// ───────────────────────────────────────────────
+
+export function MobilePresentationGuard() {
+  const { setShowMobileGuard, setIsPresentationMode } = useDemoPresentation()
+
+  const handleClose = () => {
+    setShowMobileGuard(false)
+    setIsPresentationMode(false)
+  }
+
+  return (
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4">
+      <div className="bg-[var(--color-brand-charcoal)] border border-[var(--color-brand-gold)]/30 rounded-2xl max-w-md w-full p-6 sm:p-8 text-center shadow-2xl">
+        <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-[var(--color-brand-gold)]/20 flex items-center justify-center">
+          <Presentation className="w-8 h-8 text-[var(--color-brand-gold)]" />
+        </div>
+        
+        <h2 className="text-xl sm:text-2xl font-bold text-white mb-3">
+          Presentation Mode
+        </h2>
+        
+        <p className="text-silver text-base sm:text-lg mb-6 leading-relaxed">
+          Presentation Mode is optimized for larger screens. For the best demo experience, use a tablet, laptop, or external display.
+        </p>
+        
+        <button
+          onClick={handleClose}
+          className="w-full py-3 px-6 bg-[var(--color-brand-gold)] text-[var(--color-background-primary)] font-bold rounded-xl hover:bg-[var(--color-brand-gold-light)] transition-colors"
+        >
+          Continue to Demo
         </button>
       </div>
     </div>
