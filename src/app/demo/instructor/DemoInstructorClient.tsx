@@ -609,18 +609,18 @@ function DemoInstructorContent() {
             <Users className="w-5 h-5 text-[var(--color-brand-gold)]" />
             <h2 className="text-lg font-bold text-white">Student Roster</h2>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="relative">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            <div className="relative w-full sm:w-auto">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-silver-gray" />
               <input
                 type="text"
                 placeholder="Search students..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder:text-silver-gray focus:outline-none focus:border-[var(--color-brand-gold)]/50 w-48"
+                className="pl-9 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder:text-silver-gray focus:outline-none focus:border-[var(--color-brand-gold)]/50 w-full sm:w-48"
               />
             </div>
-            <div className="flex gap-1">
+            <div className="flex gap-1 flex-wrap">
               <button
                 onClick={() => setRosterFilter('all')}
                 className={`px-3 py-1.5 text-xs rounded-md transition-colors ${
