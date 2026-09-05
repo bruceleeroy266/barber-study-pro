@@ -77,10 +77,10 @@ export default function RemediationOutcome({
         return (
           <div className="space-y-2">
             <p className="text-white text-lg">
-              Your instructor will provide additional support for this topic.
+              Additional instructor support is recommended for this topic.
             </p>
             <p className="text-silver">
-              This is a normal part of learning. Your instructor has been notified and will help you strengthen your understanding.
+              This is a normal part of learning. Continue reviewing the study materials and check in with your instructor for additional guidance.
             </p>
           </div>
         )
@@ -91,8 +91,7 @@ export default function RemediationOutcome({
               You have completed all available practice questions for this topic.
             </p>
             <p className="text-silver">
-              Your instructor has been notified and will provide additional guidance.
-              You can continue reviewing the study materials.
+              Continue reviewing the study materials and check in with your instructor for additional guidance.
             </p>
           </div>
         )
