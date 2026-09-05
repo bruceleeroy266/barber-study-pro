@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import BusinessCard from './BusinessCard'
 
 export const metadata: Metadata = {
-  title: 'Malenny Saenz | ASCYN PRO',
-  description: 'Connect with Malenny Saenz of ASCYN PRO.',
-  keywords: ['Malenny Saenz', 'ASCYN PRO', 'digital business card'],
+  title: 'Malenny Saenz | Co-Founder & Head of Marketing — ASCYN PRO',
+  description: 'Connect with Malenny Saenz, Co-Founder & Head of Marketing at ASCYN PRO.',
+  keywords: ['Malenny Saenz', 'ASCYN PRO', 'Co-Founder', 'Head of Marketing', 'digital business card'],
   authors: [{ name: 'Malenny Saenz' }],
   creator: 'ASCYN PRO',
   publisher: 'ASCYN PRO',
@@ -15,9 +15,9 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://ascynpro.com/malenny',
     siteName: 'ASCYN PRO',
-    title: 'Malenny Saenz | ASCYN PRO',
-    description: 'Connect with Malenny Saenz of ASCYN PRO.',
-    images: [{ url: '/brand/og-image.svg', width: 1200, height: 630, alt: 'Malenny Saenz | ASCYN PRO' }],
+    title: 'Malenny Saenz | Co-Founder & Head of Marketing — ASCYN PRO',
+    description: 'Connect with Malenny Saenz, Co-Founder & Head of Marketing at ASCYN PRO.',
+    images: [{ url: '/brand/og-image.svg', width: 1200, height: 630, alt: 'Malenny Saenz | Co-Founder & Head of Marketing — ASCYN PRO' }],
     firstName: 'Malenny',
     lastName: 'Saenz',
     username: 'malenny',
