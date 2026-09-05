@@ -11,8 +11,6 @@ const CARD_DATA = {
   fullName: 'Malenny Saenz',
   title: 'Co-Founder & Head of Marketing',
   organization: 'ASCYN PRO',
-  phone: '(405) 985-0600',
-  phoneRaw: '4059850600',
   email: 'malenny@ascynpro.com',
   website: 'ascynpro.com',
   websiteUrl: 'https://ascynpro.com',
@@ -28,12 +26,11 @@ export default function BusinessCard() {
   const [imageError, setImageError] = useState(false)
   useEffect(() => { setCanShare(typeof navigator !== 'undefined' && 'share' in navigator); track('page_view') }, [])
 
-  const call = useCallback(() => { track('call_click'); window.location.href = `tel:+1${CARD_DATA.phoneRaw}` }, [])
   const email = useCallback(() => { track('email_click'); window.location.href = `mailto:${CARD_DATA.email}` }, [])
   const website = useCallback(() => { track('website_click'); window.open(CARD_DATA.websiteUrl, '_blank', 'noopener,noreferrer') }, [])
   const save = useCallback(() => {
     track('save_contact_click')
-    downloadVCard({ firstName: CARD_DATA.firstName, lastName: CARD_DATA.lastName, title: CARD_DATA.title, organization: CARD_DATA.organization, phone: CARD_DATA.phoneRaw, email: CARD_DATA.email, website: CARD_DATA.websiteUrl }, 'Malenny-Saenz-ASCYN-PRO')
+    downloadVCard({ firstName: CARD_DATA.firstName, lastName: CARD_DATA.lastName, title: CARD_DATA.title, organization: CARD_DATA.organization, email: CARD_DATA.email, website: CARD_DATA.websiteUrl }, 'Malenny-Saenz-ASCYN-PRO')
   }, [])
   const share = useCallback(async () => {
     track('share_click')
@@ -66,13 +63,11 @@ export default function BusinessCard() {
           </div>
 
           <div className="space-y-3 mb-8 max-w-xs mx-auto">
-            <a href={`tel:+1${CARD_DATA.phoneRaw}`} className="block p-3 rounded-xl bg-[var(--color-brand-charcoal)] border border-white/10"><span className="text-xs text-[var(--color-brand-silver-gray)] uppercase tracking-wider">Phone</span><p className="font-medium">{CARD_DATA.phone}</p></a>
             <a href={`mailto:${CARD_DATA.email}`} className="block p-3 rounded-xl bg-[var(--color-brand-charcoal)] border border-white/10"><span className="text-xs text-[var(--color-brand-silver-gray)] uppercase tracking-wider">Email</span><p className="font-medium">{CARD_DATA.email}</p></a>
             <a href={CARD_DATA.websiteUrl} className="block p-3 rounded-xl bg-[var(--color-brand-charcoal)] border border-white/10"><span className="text-xs text-[var(--color-brand-silver-gray)] uppercase tracking-wider">Website</span><p className="font-medium">{CARD_DATA.website}</p></a>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 mb-6">
-            <button onClick={call} className={actionClass}><span className="text-xl">☎</span><span className="text-sm font-semibold">Call</span></button>
+          <div className="grid grid-cols-3 gap-3 mb-6">
             <button onClick={email} className={actionClass}><span className="text-xl">✉</span><span className="text-sm font-semibold">Email</span></button>
             <button onClick={website} className={actionClass}><span className="text-xl">◎</span><span className="text-sm font-semibold">Website</span></button>
             <button onClick={save} className={actionClass}><span className="text-xl">＋</span><span className="text-sm font-semibold">Save Contact</span></button>
