@@ -9,7 +9,7 @@ const CARD_DATA = {
   firstName: 'Malenny',
   lastName: 'Saenz',
   fullName: 'Malenny Saenz',
-  title: 'ASCYN PRO',
+  title: 'Co-Founder & Head of Marketing',
   organization: 'ASCYN PRO',
   phone: '(405) 985-0600',
   phoneRaw: '4059850600',
@@ -37,7 +37,7 @@ export default function BusinessCard() {
   }, [])
   const share = useCallback(async () => {
     track('share_click')
-    if (navigator.share) await navigator.share({ title: `${CARD_DATA.fullName} | ${CARD_DATA.organization}`, text: `Connect with ${CARD_DATA.fullName} of ${CARD_DATA.organization}.`, url: CARD_DATA.cardUrl }).catch(() => {})
+    if (navigator.share) await navigator.share({ title: `${CARD_DATA.fullName} | ${CARD_DATA.title} — ${CARD_DATA.organization}`, text: `Connect with ${CARD_DATA.fullName}, ${CARD_DATA.title} of ${CARD_DATA.organization}.`, url: CARD_DATA.cardUrl }).catch(() => {})
   }, [])
 
   const actionClass = 'flex flex-col items-center justify-center gap-1.5 p-4 rounded-xl bg-[var(--color-brand-charcoal)] border border-white/10 hover:border-[var(--color-brand-gold)]/40 hover:bg-[var(--color-brand-gold)]/5 active:scale-[0.98] transition-all'
@@ -62,6 +62,7 @@ export default function BusinessCard() {
           <div className="text-center mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold text-[var(--color-brand-gold)] tracking-tight mb-1">{CARD_DATA.fullName}</h1>
             <p className="text-base sm:text-lg text-white/90 font-medium">{CARD_DATA.title}</p>
+            <p className="text-sm text-[var(--color-brand-silver-gray)]">{CARD_DATA.organization}</p>
           </div>
 
           <div className="space-y-3 mb-8 max-w-xs mx-auto">
