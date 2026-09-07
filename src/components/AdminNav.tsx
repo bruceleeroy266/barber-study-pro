@@ -17,6 +17,7 @@ import {
   Menu,
   X,
   Shield,
+  Target,
 } from 'lucide-react'
 import { Profile } from '@/types'
 import { isAdmin } from '@/lib/auth-helpers'
@@ -28,6 +29,7 @@ interface AdminNavProps {
 
 const adminLinks = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/admin/nabba/leads', label: 'NABBA Leads', icon: Target },
   { href: '/admin/users', label: 'Users', icon: Users },
   { href: '/admin/school/configuration', label: 'School Settings', icon: Settings },
   { href: '/admin/pilot-inquiries', label: 'Pilot Inquiries', icon: Plane },
