@@ -12,11 +12,11 @@
 |---|------|--------|-------|
 | 1 | Verify primary laptop charged (100%) | ☐ | Keep charger plugged in |
 | 2 | Verify backup laptop/tablet charged | ☐ | Test startup |
-| 3 | Connect to venue WiFi | ☐ | Test speed |
-| 4 | Start hotspot backup | ☐ | Verify connection |
+| 3 | Start OFFLINE demo server on primary laptop — do NOT rely on venue WiFi | ☐ | See NABBA_OFFLINE_SETUP.md |
+| 4 | (Optional) Venue WiFi/hotspot for lead capture only | ☐ | Demo must run with zero internet |
 | 5 | Test projector/display connection | ☐ | Check resolution |
-| 6 | Verify demo URL loads | ☐ | https://ascynpro.com/demo |
-| 7 | Start local demo server | ☐ | Backup ready |
+| 6 | Verify OFFLINE demo loads at http://localhost:3000/demo | ☐ | Primary path (no internet) |
+| 7 | (If online) Verify production URL loads | ☐ | https://ascynpro.com/demo — secondary |
 | 8 | Open screenshot folder | ☐ | Quick access |
 | 9 | Test video playback | ☐ | Volume check |
 | 10 | Verify PDF handouts accessible | ☐ | Test opening |

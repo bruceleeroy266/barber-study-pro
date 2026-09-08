@@ -18,13 +18,13 @@ ASCYN PRO has a **functional demo environment** with static demo pages for stude
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Conference Date | ⚠️ **TBD** | Master plan references 2026-09-20, but no confirmed date found in codebase |
-| Venue | ❓ Unknown | Not documented in codebase |
-| Booth Requirements | ❓ Unknown | Not documented |
+| Conference Date | ✅ **2026-09-20** (founder-confirmed 2026-09-08) | Travel: fly 9/19, return 9/21 — booked |
+| Venue | ✅ North Carolina (founder-confirmed 2026-09-08) | Travel + hotel booked |
+| Booth Requirements | ✅ Minimal booth (founder-approved 2026-09-08) | Table cover, retractable banner, QR board/stands, 1–2 laptops, external display; NO backdrop (Maura) |
 | Presentation Slot | ❓ Unknown | Not documented |
 | Target Audience | ✅ Documented | School owners, instructors, NABBA officials, state board stakeholders |
 
-**Action Required:** Confirm NABBA 2026 conference date, venue, and booth specifications.
+~~**Action Required:** Confirm NABBA 2026 conference date, venue, and booth specifications.~~ ✅ RESOLVED 2026-09-08 — founder confirmed (see table).
 
 ---
 

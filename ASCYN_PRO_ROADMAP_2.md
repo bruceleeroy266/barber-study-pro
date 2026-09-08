@@ -170,18 +170,18 @@ This roadmap turns ASCYN PRO from a feature-heavy demo into a disciplined, relea
 
 **Focus Areas:**
 - Polish demo flows for 30s, 3min, and 10min booth demos
-- Create cinematic promo video and loop it on booth TV
+- Loop the cinematic promo video on the booth external display — video EXISTS outside repo (locked content, incl. Isabella login sequence); final-file availability + continuous-loop playback test pending (2026-09-08)
 - Print brochures (Student / Instructor / School Owner editions)
 - Order branded apparel (black polos or quarter-zips, gold logo)
-- Prepare booth materials: backdrop, banners, tablecloth, floor mat, QR signs, business cards
+- Prepare booth materials (founder-approved minimal kit, 2026-09-08): branded table cover, retractable stand/banner, QR board, QR table stands, business cards — NO backdrop (Maura's request)
 - Build lead capture process
 - Prepare answers for difficult questions
 - Practice demo repeatedly
-- Ensure mobile demo works offline-ish or on conference Wi-Fi
+- Ensure demo works fully OFFLINE — no reliance on venue Wi-Fi (see NABBA_OFFLINE_SETUP.md, verified 2026-09-08)
 
 **Deliverables:**
 - Booth material checklist complete
-- Promo video finalized
+- Promo video finalized — ✅ exists externally (locked); final MP4 availability + loop test before departure
 - Lead capture system live
 - Demo script and FAQ document
 - NABBA-ready production deploy

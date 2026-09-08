@@ -1,7 +1,9 @@
 # ASCYN PRO — NABBA Booth Workflow
 **Conference Demonstration Guide**  
-**Version:** 1.0  
-**Date:** 2026-08-09  
+**Version:** 1.1  
+**Date:** 2026-08-09 (updated 2026-09-08)  
+
+> ⚠️ **FOUNDER UPDATE 2026-09-08:** Booth is intentionally **MINIMAL** — branded table cover, retractable stand/banner, QR board, QR table stands, 1–2 laptops, external display (looping video), power gear. **NO large backdrop** (per Maura's request). Equipment list and layout below updated to match. Event: **2026-09-20, North Carolina** (fly 9/19, return 9/21 — booked).
 
 ---
 
@@ -11,46 +13,54 @@
 
 | Item | Quantity | Status |
 |------|----------|--------|
-| Primary laptop | 1 | ☐ |
-| Backup laptop/tablet | 1 | ☐ |
+| ASCYN PRO branded table cover | 1 | ☐ |
+| ASCYN PRO retractable stand/banner | 1 | ☐ |
+| QR board | 1 | ☐ |
+| QR table stands | 2 | ☐ |
+| Demo/attendee laptop(s) — offline build installed (see NABBA_OFFLINE_SETUP.md) | 1–2 | ☐ |
+| External display (looping promo/demo video) + HDMI cable | 1 | ☐ |
+| HDMI/USB-C adapters | 2 | ☐ |
 | Power strips | 2 | ☐ |
 | Extension cords | 2 | ☐ |
-| HDMI adapters | 2 | ☐ |
-| Portable monitor | 1 | ☐ |
+| Laptop chargers | 2 | ☐ |
+| Phone chargers | 2 | ☐ |
 | Business cards | 200 | ☐ |
 | One-pagers | 100 | ☐ |
-| QR code displays | 3 | ☐ |
-| Tablecloth/banner | 1 | ☐ |
+| Paper lead-capture sheets + pens (offline fallback) | 1 pad + 4 pens | ☐ |
 | Water bottles | 4 | ☐ |
-| Phone chargers | 2 | ☐ |
-| Backup hotspot | 1 | ☐ |
+| Backup hotspot (lead capture only — demo must NOT need it) | 1 | ☐ |
+
+**Removed 2026-09-08 (founder/Maura):** large backdrop. ~~Tablecloth/banner~~ → table cover + retractable banner.
 
 ### 1.2 Booth Layout
 
 ```
 ┌─────────────────────────────────────┐
-│           BACKDROP/BANNER           │
-│         "ASCYN PRO"                 │
-│    "Board-Aligned Curriculum"       │
+│   RETRACTABLE BANNER  +  QR BOARD   │
+│   "ASCYN PRO"          (scan me)    │
 ├─────────────────────────────────────┤
 │                                     │
 │  ┌─────────┐      ┌─────────┐      │
-│  │ Laptop  │      │ Monitor │      │
-│  │ (Demo)  │      │ (Mirror)│      │
-│  └─────────┘      └─────────┘      │
-│                                     │
+│  │ Laptop  │      │External │      │
+│  │(hands-on│      │display: │      │
+│  │  demo)  │      │looping  │      │
+│  └─────────┘      │ video)  │      │
+│                   └─────────┘      │
 │  ┌─────────────────────────┐       │
-│  │    Table with:          │       │
+│  │ Table (branded cover):  │       │
+│  │  • QR table stands      │       │
 │  │  • Business cards       │       │
 │  │  • One-pagers           │       │
-│  │  • QR codes             │       │
-│  │  • Lead capture tablet  │       │
+│  │  • Paper lead sheets    │       │
 │  └─────────────────────────┘       │
 │                                     │
 │         [Standing Room]             │
 │                                     │
 └─────────────────────────────────────┘
 ```
+
+**Minimal booth per founder update 2026-09-08 — NO large backdrop (Maura's request).**
+Flow: PASSIVE (video loops on external display, zero staff interaction) → ENGAGEMENT (Gabriel/Malenny qualify: student/instructor/school/board) → EXPERIENCE (attendee drives the laptop) → CAPTURE (QR code or NABBA lead-capture entry; paper fallback) → FOLLOW-UP (post-NABBA).
 
 ---
 

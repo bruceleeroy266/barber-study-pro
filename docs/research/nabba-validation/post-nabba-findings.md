@@ -17,9 +17,9 @@ Document findings, insights, and strategic implications discovered after the NAB
 | Field | Value |
 |-------|-------|
 | **Event** | NABBA (National Association of Barber Boards of America) |
-| **Date** | PENDING |
-| **Location** | PENDING |
-| **ASCYN PRO Attendees** | Gabriel Arcaina |
+| **Date** | 2026-09-20 ✅ (founder-confirmed 2026-09-08) |
+| **Location** | North Carolina ✅ (founder-confirmed 2026-09-08) |
+| **ASCYN PRO Attendees** | Gabriel Arcaina + Malenny Saenz |
 
 ---
 

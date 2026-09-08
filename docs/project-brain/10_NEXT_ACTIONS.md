@@ -251,8 +251,8 @@ Migration: 20260805000000_extend_school_settings_phase10.sql"
 **What:** Prepare for NABBA booth launch.
 
 **Deliverables:**
-- [ ] Booth materials (backdrop, banners, tablecloth, floor mat)
-- [ ] Promo video
+- [ ] Booth materials — FOUNDER UPDATE 2026-09-08: minimal kit (table cover, retractable banner, QR board, QR table stands, laptops, external display, power gear); NO backdrop
+- [ ] Promo video — EXTERNAL ASSET (exists outside repo, locked content); final-file verification + loop playback test pending
 - [ ] Brochures (Student / Instructor / School Owner editions)
 - [ ] Branded apparel
 - [ ] Lead capture system

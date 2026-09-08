@@ -11,9 +11,9 @@
 | Field | Value |
 |-------|-------|
 | **Event** | NABBA Conference |
-| **Date** | 2026-09-20 |
+| **Date** | 2026-09-20 ✅ (founder-confirmed 2026-09-08; fly 9/19, return 9/21 — booked) |
 | **Purpose** | Product validation and market research |
-| **Booth** | TBD |
+| **Booth** | Minimal (founder-approved 2026-09-08): table cover, retractable banner, QR board/stands, 1–2 laptops, external display — NO backdrop |
 
 ---
 

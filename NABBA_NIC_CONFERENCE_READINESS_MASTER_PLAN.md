@@ -8,6 +8,21 @@
 
 ---
 
+> ## ⚠️ FOUNDER UPDATE — 2026-09-08 (supersedes conflicting items below)
+>
+> Founder-confirmed current truth; where this plan disagrees, **this box wins**:
+> - **Event:** NABBA 2026-09-20, North Carolina. Travel: fly out 2026-09-19, return 2026-09-21. Flights + hotel **booked** (Gabriel + Malenny).
+> - **Booth:** intentionally **MINIMAL** — branded table cover, retractable stand/banner, QR board, QR table stands, 1–2 laptops, external display (looping video), power/cables/adapters. **NO large backdrop** (per Maura's request).
+> - **BTH-001** "Reserve booth space": stale — attendance confirmed; documentation confirmation only, NOT a blocker.
+> - **Lead capture:** built and verified (migration live, RLS locked, `/admin/nabba/leads` login-gated; founder-verified E2E 2026-09-08). Paper fallback for offline.
+> - **Offline demo:** production build → `npm start` serves demo with zero internet — see `NABBA_OFFLINE_SETUP.md`.
+> - **Promo video:** exists outside this repo (locked content, incl. Isabella login sequence); final-file + loop-playback verification pending.
+> - Superseded items below are annotated inline: backdrop (BRD-003, BTH-003), travel (OPS-005), Week 7 schedule, backdrop/travel risk & gap rows, and the 42.25/100 readiness score.
+>
+> _Do not resurrect superseded items without explicit founder direction._
+
+---
+
 ## Executive Summary
 
 ASCYN PRO enters conference season with a **live production platform**, **active pilot operations**, and **verified technical infrastructure**. The platform has passed all 41 Production Acceptance Tests and serves 6 verified accounts (2 pilot users, 4 QA accounts). However, **critical gaps exist** in conference readiness: the Phase 10 Sprint 1 code is uncommitted, no marketing materials exist, no demo environment is prepared, and no networking strategy is defined.
@@ -191,8 +206,8 @@ ASCYN PRO enters conference season with a **live production platform**, **active
 |----|------|--------|----------|
 | BRD-001 | Finalize logo files (vector, PNG, favicon) | 🔴 Pending | 🟠 High |
 | BRD-002 | Create brand color palette documentation | 🔴 Pending | 🟡 Medium |
-| BRD-003 | Design booth backdrop/banner | 🔴 Pending | 🔴 Critical |
-| BRD-004 | Create branded tablecloth | 🔴 Pending | 🟡 Medium |
+| BRD-003 | ~~Design booth backdrop/banner~~ **SUPERSEDED 2026-09-08** — no backdrop (Maura/founder); retractable banner only | ✅ Closed | — |
+| BRD-004 | Create branded tablecloth → branded table cover (approved minimal-booth item) | 🟡 Physical verification pending | 🟡 Medium |
 | BRD-005 | Design branded swag (stickers, pens, etc.) | 🔴 Pending | 🟢 Nice to Have |
 | BRD-006 | Create branded email signature | 🔴 Pending | 🟢 Nice to Have |
 | BRD-007 | Verify brand consistency across all materials | 🔴 Pending | 🟠 High |
@@ -238,11 +253,11 @@ ASCYN PRO enters conference season with a **live production platform**, **active
 
 | ID | Task | Status | Priority |
 |----|------|--------|----------|
-| BTH-001 | Reserve booth space at NABBA | 🔴 Pending | 🔴 Critical |
-| BTH-002 | Design booth layout | 🔴 Pending | 🟠 High |
-| BTH-003 | Order booth backdrop/banner | 🔴 Pending | 🔴 Critical |
-| BTH-004 | Order branded tablecloth | 🔴 Pending | 🟡 Medium |
-| BTH-005 | Prepare demo hardware (laptop, tablet, monitor) | 🔴 Pending | 🔴 Critical |
+| BTH-001 | Reserve booth space at NABBA | ⚠️ Stale — attendance confirmed 2026-09-08 (travel+hotel booked; Maura sent booth requirements); documentation confirmation only, NOT a blocker | 🟡 Low |
+| BTH-002 | Design booth layout | ✅ Done — founder-approved minimal booth (2026-09-08) | — |
+| BTH-003 | ~~Order booth backdrop/banner~~ **SUPERSEDED 2026-09-08** — no backdrop per founder/Maura | ✅ Closed | — |
+| BTH-004 | Order branded tablecloth → branded table cover | 🟡 Physical verification pending | 🟡 Medium |
+| BTH-005 | Prepare demo hardware (1–2 laptops + external display per founder 2026-09-08) | 🟡 Device setup pending — see NABBA_OFFLINE_SETUP.md | 🔴 Critical |
 | BTH-006 | Prepare backup hardware | 🔴 Pending | 🟠 High |
 | BTH-007 | Order business cards (500+) | 🔴 Pending | 🔴 Critical |
 | BTH-008 | Order brochures/flyers (200+) | 🔴 Pending | 🟠 High |
@@ -337,7 +352,7 @@ ASCYN PRO enters conference season with a **live production platform**, **active
 | OPS-002 | Define escalation procedures | 🔴 Pending | 🟠 High |
 | OPS-003 | Prepare emergency contact list | 🔴 Pending | 🟠 High |
 | OPS-004 | Create daily checklist for conference | 🔴 Pending | 🟡 Medium |
-| OPS-005 | Plan travel and accommodation | 🔴 Pending | 🔴 Critical |
+| OPS-005 | Plan travel and accommodation | ✅ Done 2026-09-08 — flights + hotel booked (fly 9/19, return 9/21) | — |
 | OPS-006 | Prepare expense tracking system | 🔴 Pending | 🟡 Medium |
 
 ### Future Planning
@@ -386,7 +401,7 @@ ASCYN PRO enters conference season with a **live production platform**, **active
 | LED-001 | Create lead capture form | Required for follow-up |
 | LED-003 | Set up CRM/spreadsheet | Required for lead management |
 | FOL-001 | Send thank-you emails | Required for relationship building |
-| OPS-005 | Plan travel and accommodation | Required for attendance |
+| OPS-005 | ~~Plan travel and accommodation~~ ✅ Done 2026-09-08 | ~~Required for attendance~~ Booked |
 
 ### 🟠 High (Should Complete Before NABBA)
 
@@ -562,7 +577,7 @@ ASCYN PRO enters conference season with a **live production platform**, **active
 | LED-001 | Create lead capture form | Ping | 2 | None | Low | None | Form tested |
 | LED-003 | Set up CRM/spreadsheet | Ping | 2 | None | Low | None | System ready |
 | FOL-001 | Send thank-you emails | Gabriel | 2 | LED-003 | Low | None | Template ready |
-| OPS-005 | Plan travel and accommodation | Gabriel | 4 | None | Medium | Availability | Travel booked |
+| OPS-005 | ~~Plan travel and accommodation~~ ✅ DONE 2026-09-08 | Gabriel | — | — | — | — | Flights + hotel booked |
 
 **Total Critical Hours:** ~70 hours
 
@@ -698,8 +713,8 @@ ASCYN PRO enters conference season with a **live production platform**, **active
 | Thu 8/15 | BUS-008: Create lead capture system | Ping | 3 |
 | Thu 8/15 | LED-001: Create lead capture form | Ping | 2 |
 | Fri 8/16 | LED-003: Set up CRM/spreadsheet | Ping | 2 |
-| Fri 8/16 | BTH-001: Reserve booth space | Gabriel | 2 |
-| Sat 8/17 | BTH-003: Order booth backdrop | Gabriel | 2 |
+| Fri 8/16 | BTH-001: Reserve booth space — ⚠️ stale (attendance confirmed 2026-09-08; documentation confirmation only) | Gabriel | — |
+| Sat 8/17 | ~~BTH-003: Order booth backdrop~~ SUPERSEDED 2026-09-08 — no backdrop | Gabriel | — |
 | Sat 8/17 | BTH-007: Order business cards | Gabriel | 1 |
 | Sun 8/18 | NET-001: Identify target attendees | Gabriel | 3 |
 | Sun 8/18 | NET-004: Create elevator pitch | Ping | 2 |
@@ -798,24 +813,21 @@ ASCYN PRO enters conference season with a **live production platform**, **active
 
 **Week 6 Total:** ~39 hours
 
-### Week 7: September 16-20, 2026 (NABBA Week)
+### Week 7: NABBA Week — ✅ CORRECTED 2026-09-08 (founder-confirmed itinerary)
 
 **Theme:** NABBA Execution
 
-| Day | Tasks | Owner | Hours |
-|-----|-------|-------|-------|
-| Mon 9/16 | Travel to NABBA | Gabriel | 8 |
-| Mon 9/16 | Booth setup | Gabriel | 4 |
-| Tue 9/17 | NABBA Day 1 | Gabriel | 10 |
-| Tue 9/17 | Evening networking | Gabriel | 3 |
-| Wed 9/18 | NABBA Day 2 | Gabriel | 10 |
-| Wed 9/18 | Evening networking | Gabriel | 3 |
-| Thu 9/19 | NABBA Day 3 | Gabriel | 10 |
-| Thu 9/19 | Booth teardown | Gabriel | 2 |
-| Fri 9/20 | Travel home | Gabriel | 8 |
-| Fri 9/20 | FOL-001: Send thank-you emails | Gabriel | 2 |
+> ⚠️ Supersedes the original 9/16–9/20 schedule. Founder-confirmed 2026-09-08: fly to North Carolina **Sat 9/19**, event **Sun 9/20**, return **Mon 9/21**. Flights + hotel booked (Gabriel + Malenny). Booth is intentionally minimal (no backdrop).
 
-**Week 7 Total:** ~60 hours (conference days)
+| Day | Tasks | Owner |
+|-----|-------|-------|
+| Sat 9/19 | Travel to North Carolina; booth setup if venue access available | Gabriel + Malenny |
+| Sun 9/20 | **NABBA EVENT DAY** — passive looping video → engagement → hands-on demo → QR/lead capture | Gabriel + Malenny |
+| Sun 9/20 | Booth teardown | Gabriel + Malenny |
+| Mon 9/21 | Travel home | Gabriel + Malenny |
+| Within 24h post-event | FOL-001 thank-you emails; enter any paper-fallback leads into `/admin/nabba/leads` | Gabriel |
+
+**Week 7 Total:** 1 event day + 2 travel days
 
 ### Post-NABBA: September 21-30, 2026
 
@@ -927,7 +939,7 @@ ASCYN PRO enters conference season with a **live production platform**, **active
 |-----|----------|--------|------------|
 | No finalized logo files | 🟠 High | Cannot create materials | Finalize files |
 | No brand color palette | 🟡 Medium | Inconsistent colors | Document palette |
-| No booth backdrop | 🔴 Critical | Unprofessional presence | Design and order |
+| ~~No booth backdrop~~ SUPERSEDED 2026-09-08 — minimal booth intentionally has no backdrop (Maura/founder) | — | — | — |
 | No branded tablecloth | 🟡 Medium | Unprofessional presence | Order tablecloth |
 | No brand consistency verification | 🟠 High | Inconsistent branding | Verify consistency |
 
@@ -1432,11 +1444,11 @@ ASCYN PRO enters conference season with a **live production platform**, **active
 | **Operations** | 30 | 10% | 3.00 | No conference operations plan |
 | **Business** | 40 | 10% | 4.00 | Business model defined, but no pilot agreements |
 | **Brand** | 50 | 10% | 5.00 | Logo exists, but no brand guidelines or materials |
-| **Conference Readiness** | 25 | 10% | 2.50 | No booth, no materials, no travel plan |
+| **Conference Readiness** | 25 | 10% | 2.50 | ~~No booth, no materials, no travel plan~~ SUPERSEDED 2026-09-08 |
 | **Networking Readiness** | 30 | 5% | 1.50 | No target list, no conversation starters |
 | **Pilot Readiness** | 70 | 5% | 3.50 | Pilot active, but no recruitment materials |
 | **Presentation Readiness** | 40 | 5% | 2.00 | Demo script exists, but no slides or rehearsal |
-| **Overall** | — | 100% | **42.25** | **Not conference-ready** |
+| **Overall** | — | 100% | **42.25** | **Not conference-ready** — ⚠️ HISTORICAL (2026-08-05); superseded by 2026-09-08 founder update, see banner |
 
 ### Score Breakdown
 
@@ -1476,8 +1488,8 @@ ASCYN PRO enters conference season with a **live production platform**, **active
 - ❌ No demo procedures documented
 - ❌ No troubleshooting guide
 - ❌ No escalation procedures
-- ❌ No travel plan
-- ❌ No booth materials
+- ❌ No travel plan — **SUPERSEDED 2026-09-08: flights + hotel booked**
+- ❌ No booth materials — **SUPERSEDED 2026-09-08: minimal kit approved, physical verification pending**
 
 **Business: 40/100**
 - ✅ Business model defined
@@ -1491,17 +1503,17 @@ ASCYN PRO enters conference season with a **live production platform**, **active
 - ✅ Logo exists
 - ✅ Brand colors defined
 - ❌ No brand guidelines
-- ❌ No booth backdrop
+- ❌ No booth backdrop — **SUPERSEDED 2026-09-08: intentional (Maura/founder)**
 - ❌ No branded materials
 - ❌ No brand consistency verification
 
-**Conference Readiness: 25/100**
-- ❌ No booth reserved
-- ❌ No booth materials
-- ❌ No travel booked
-- ❌ No demo hardware prepared
-- ❌ No lead capture system
-- ❌ No staffing plan
+**Conference Readiness: 25/100** — ⚠️ SUPERSEDED 2026-09-08 (see banner): attendance + travel confirmed, minimal kit approved, lead capture live & founder-verified
+- ~~❌ No booth reserved~~ — attendance confirmed; documentation confirmation only
+- ~~❌ No booth materials~~ — minimal kit approved; physical verification pending
+- ~~❌ No travel booked~~ — flights + hotel booked
+- ❌ No demo hardware prepared — device setup pending (see NABBA_OFFLINE_SETUP.md)
+- ~~❌ No lead capture system~~ — built + founder-verified 2026-09-08
+- ~~❌ No staffing plan~~ — two-person booth (Gabriel + Malenny), passive→engage→demo model
 
 **Networking Readiness: 30/100**
 - ❌ No target attendee list
@@ -1526,16 +1538,16 @@ ASCYN PRO enters conference season with a **live production platform**, **active
 - ❌ No rehearsal
 - ❌ No audience-specific presentations
 
-### Overall Readiness: 42/100
+### Overall Readiness: 42/100 — ⚠️ HISTORICAL (2026-08-05); superseded by 2026-09-08 founder update + verification pass (see banner)
 
-**Status:** 🔴 **NOT CONFERENCE-READY**
+**Status:** 🔴 **NOT CONFERENCE-READY** (stale assessment)
 
 **Critical Blockers:**
 1. Phase 10 Sprint 1 uncommitted
 2. No marketing materials
-3. No demo environment
-4. No booth reservation
-5. No travel plan
+3. ~~No demo environment~~ — RESOLVED 2026-09-08: offline demo procedure verified (NABBA_OFFLINE_SETUP.md)
+4. ~~No booth reservation~~ — RESOLVED 2026-09-08: attendance confirmed; documentation confirmation only
+5. ~~No travel plan~~ — RESOLVED 2026-09-08: flights + hotel booked
 
 **Time to Ready:** 6 weeks (with focused effort)
 
