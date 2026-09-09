@@ -180,8 +180,8 @@ describe('Chapter2DetectionProvider', () => {
     it('builds evidence from legitimate persisted quiz attempts', async () => {
       // Create attempt with questions from target concept
       const attempt = createMockQuizAttempt(MOCK_ATTEMPT_ID_1, {
-        [TEST_CONCEPT_QUESTIONS[0]]: 'a', // correct
-        [TEST_CONCEPT_QUESTIONS[1]]: 'b', // incorrect
+        [TEST_CONCEPT_QUESTIONS[0]]: 'b', // correct
+        [TEST_CONCEPT_QUESTIONS[1]]: 'a', // incorrect
       })
       attemptsMap.set(MOCK_ATTEMPT_ID_1, attempt)
 
@@ -196,7 +196,7 @@ describe('Chapter2DetectionProvider', () => {
     it('correctly filters evidence to target concept questions only', async () => {
       // Create attempt with mixed questions (target + unrelated)
       const attempt = createMockQuizAttempt(MOCK_ATTEMPT_ID_1, {
-        [TEST_CONCEPT_QUESTIONS[0]]: 'a', // target concept - correct
+        [TEST_CONCEPT_QUESTIONS[0]]: 'b', // target concept - correct
         [UNRELATED_QUESTIONS[0]]: 'b', // unrelated concept - incorrect
       })
       attemptsMap.set(MOCK_ATTEMPT_ID_1, attempt)
@@ -247,7 +247,7 @@ describe('Chapter2DetectionProvider', () => {
       // Create attempt with ONLY unrelated concept questions
       const attempt = createMockQuizAttempt(MOCK_ATTEMPT_ID_1, {
         [UNRELATED_QUESTIONS[0]]: 'b', // unrelated - incorrect
-        [UNRELATED_QUESTIONS[1]]: 'b', // unrelated - incorrect
+        [UNRELATED_QUESTIONS[1]]: 'a', // unrelated - incorrect
       })
       attemptsMap.set(MOCK_ATTEMPT_ID_1, attempt)
 
@@ -262,9 +262,9 @@ describe('Chapter2DetectionProvider', () => {
     it('mixed attempts only count target concept questions', async () => {
       // Create attempt with more unrelated than target questions
       const attempt = createMockQuizAttempt(MOCK_ATTEMPT_ID_1, {
-        [TEST_CONCEPT_QUESTIONS[0]]: 'a', // target - correct
+        [TEST_CONCEPT_QUESTIONS[0]]: 'b', // target - correct
         [UNRELATED_QUESTIONS[0]]: 'b', // unrelated - incorrect
-        [UNRELATED_QUESTIONS[1]]: 'b', // unrelated - incorrect
+        [UNRELATED_QUESTIONS[1]]: 'a', // unrelated - incorrect
         [UNRELATED_QUESTIONS[2]]: 'b', // unrelated - incorrect
       })
       attemptsMap.set(MOCK_ATTEMPT_ID_1, attempt)
@@ -288,8 +288,8 @@ describe('Chapter2DetectionProvider', () => {
     it('detection state comes from Phase 6B-3 detectConceptState()', async () => {
       // Create evidence that should trigger 'currently_performing_well'
       const attempt = createMockQuizAttempt(MOCK_ATTEMPT_ID_1, {
-        [TEST_CONCEPT_QUESTIONS[0]]: 'a',
-        [TEST_CONCEPT_QUESTIONS[1]]: 'a',
+        [TEST_CONCEPT_QUESTIONS[0]]: 'b',
+        [TEST_CONCEPT_QUESTIONS[1]]: 'b',
         [TEST_CONCEPT_QUESTIONS[2]]: 'a',
       })
       attemptsMap.set(MOCK_ATTEMPT_ID_1, attempt)
@@ -304,7 +304,7 @@ describe('Chapter2DetectionProvider', () => {
     it('detection confidence comes from Phase 6B-3 engine', async () => {
       // Create minimal evidence (low confidence)
       const attempt = createMockQuizAttempt(MOCK_ATTEMPT_ID_1, {
-        [TEST_CONCEPT_QUESTIONS[0]]: 'a',
+        [TEST_CONCEPT_QUESTIONS[0]]: 'b',
       })
       attemptsMap.set(MOCK_ATTEMPT_ID_1, attempt)
 
@@ -317,8 +317,8 @@ describe('Chapter2DetectionProvider', () => {
 
     it('evidence structure matches Phase 6B-3 buildConceptEvidence()', async () => {
       const attempt = createMockQuizAttempt(MOCK_ATTEMPT_ID_1, {
-        [TEST_CONCEPT_QUESTIONS[0]]: 'a',
-        [TEST_CONCEPT_QUESTIONS[1]]: 'b',
+        [TEST_CONCEPT_QUESTIONS[0]]: 'b',
+        [TEST_CONCEPT_QUESTIONS[1]]: 'a',
       })
       attemptsMap.set(MOCK_ATTEMPT_ID_1, attempt)
 
@@ -338,17 +338,17 @@ describe('Chapter2DetectionProvider', () => {
       // Create evidence of repeated weakness (multiple misses)
       const attempt1 = createMockQuizAttempt(
         MOCK_ATTEMPT_ID_1,
-        { [TEST_CONCEPT_QUESTIONS[0]]: 'b' },
+        { [TEST_CONCEPT_QUESTIONS[0]]: 'a' },
         '2026-08-17T12:00:00Z'
       )
       const attempt2 = createMockQuizAttempt(
         MOCK_ATTEMPT_ID_2,
-        { [TEST_CONCEPT_QUESTIONS[0]]: 'b' },
+        { [TEST_CONCEPT_QUESTIONS[0]]: 'a' },
         '2026-08-18T12:00:00Z'
       )
       const attempt3 = createMockQuizAttempt(
         MOCK_ATTEMPT_ID_3,
-        { [TEST_CONCEPT_QUESTIONS[0]]: 'b' },
+        { [TEST_CONCEPT_QUESTIONS[0]]: 'a' },
         '2026-08-19T12:00:00Z'
       )
       attemptsMap.set(MOCK_ATTEMPT_ID_1, attempt1)
@@ -485,8 +485,8 @@ describe('Production Safety', () => {
 
     // Create evidence that would be 'currently_performing_well'
     const attempt = createMockQuizAttempt(MOCK_ATTEMPT_ID_1, {
-      [TEST_CONCEPT_QUESTIONS[0]]: 'a',
-      [TEST_CONCEPT_QUESTIONS[1]]: 'a',
+      [TEST_CONCEPT_QUESTIONS[0]]: 'b',
+      [TEST_CONCEPT_QUESTIONS[1]]: 'b',
       [TEST_CONCEPT_QUESTIONS[2]]: 'a',
     })
     attemptsMap.set(MOCK_ATTEMPT_ID_1, attempt)

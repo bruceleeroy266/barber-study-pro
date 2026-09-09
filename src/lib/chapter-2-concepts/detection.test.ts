@@ -94,7 +94,7 @@ describe('Phase 6B-3 Stress Test Scenarios', () => {
 
     it('P2: 1 attempt / 1 correct → insufficient_evidence', () => {
       const attempts = [
-        createQuizAttempt('a1', { 'qq-2-037': 'b' }, '2026-01-01T00:00:00Z'), // correct
+        createQuizAttempt('a1', { 'qq-2-037': 'c' }, '2026-01-01T00:00:00Z'), // correct
       ]
       const evidence = buildConceptEvidence(SINGLE_Q_CONCEPT, attempts)
       const result = detectConceptState(evidence)
@@ -106,7 +106,7 @@ describe('Phase 6B-3 Stress Test Scenarios', () => {
 
     it('P3: 2 attempts / 1 correct + 1 miss → insufficient_evidence (single-Q protection)', () => {
       const attempts = [
-        createQuizAttempt('a1', { 'qq-2-037': 'b' }, '2026-01-01T00:00:00Z'), // correct
+        createQuizAttempt('a1', { 'qq-2-037': 'c' }, '2026-01-01T00:00:00Z'), // correct
         createQuizAttempt('a2', { 'qq-2-037': 'a' }, '2026-01-02T00:00:00Z'), // wrong
       ]
       const evidence = buildConceptEvidence(SINGLE_Q_CONCEPT, attempts)
@@ -120,7 +120,7 @@ describe('Phase 6B-3 Stress Test Scenarios', () => {
     it('P4: 2 attempts / 2 misses → insufficient_evidence (single-Q protection)', () => {
       const attempts = [
         createQuizAttempt('a1', { 'qq-2-037': 'a' }, '2026-01-01T00:00:00Z'), // wrong
-        createQuizAttempt('a2', { 'qq-2-037': 'c' }, '2026-01-02T00:00:00Z'), // wrong
+        createQuizAttempt('a2', { 'qq-2-037': 'b' }, '2026-01-02T00:00:00Z'), // wrong
       ]
       const evidence = buildConceptEvidence(SINGLE_Q_CONCEPT, attempts)
       const result = detectConceptState(evidence)
@@ -133,8 +133,8 @@ describe('Phase 6B-3 Stress Test Scenarios', () => {
 
     it('P5: 3 attempts / 1 miss → insufficient_evidence (single-Q protection)', () => {
       const attempts = [
-        createQuizAttempt('a1', { 'qq-2-037': 'b' }, '2026-01-01T00:00:00Z'), // correct
-        createQuizAttempt('a2', { 'qq-2-037': 'b' }, '2026-01-02T00:00:00Z'), // correct
+        createQuizAttempt('a1', { 'qq-2-037': 'c' }, '2026-01-01T00:00:00Z'), // correct
+        createQuizAttempt('a2', { 'qq-2-037': 'c' }, '2026-01-02T00:00:00Z'), // correct
         createQuizAttempt('a3', { 'qq-2-037': 'a' }, '2026-01-03T00:00:00Z'), // wrong
       ]
       const evidence = buildConceptEvidence(SINGLE_Q_CONCEPT, attempts)
@@ -147,9 +147,9 @@ describe('Phase 6B-3 Stress Test Scenarios', () => {
 
     it('P6: 3 attempts / 2 misses → insufficient_evidence (single-Q protection)', () => {
       const attempts = [
-        createQuizAttempt('a1', { 'qq-2-037': 'b' }, '2026-01-01T00:00:00Z'), // correct
+        createQuizAttempt('a1', { 'qq-2-037': 'c' }, '2026-01-01T00:00:00Z'), // correct
         createQuizAttempt('a2', { 'qq-2-037': 'a' }, '2026-01-02T00:00:00Z'), // wrong
-        createQuizAttempt('a3', { 'qq-2-037': 'c' }, '2026-01-03T00:00:00Z'), // wrong
+        createQuizAttempt('a3', { 'qq-2-037': 'b' }, '2026-01-03T00:00:00Z'), // wrong
       ]
       const evidence = buildConceptEvidence(SINGLE_Q_CONCEPT, attempts)
       const result = detectConceptState(evidence)
@@ -163,7 +163,7 @@ describe('Phase 6B-3 Stress Test Scenarios', () => {
     it('P7: 3 attempts / 3 misses → insufficient_evidence (single-Q protection)', () => {
       const attempts = [
         createQuizAttempt('a1', { 'qq-2-037': 'a' }, '2026-01-01T00:00:00Z'), // wrong
-        createQuizAttempt('a2', { 'qq-2-037': 'c' }, '2026-01-02T00:00:00Z'), // wrong
+        createQuizAttempt('a2', { 'qq-2-037': 'b' }, '2026-01-02T00:00:00Z'), // wrong
         createQuizAttempt('a3', { 'qq-2-037': 'd' }, '2026-01-03T00:00:00Z'), // wrong
       ]
       const evidence = buildConceptEvidence(SINGLE_Q_CONCEPT, attempts)
@@ -177,10 +177,10 @@ describe('Phase 6B-3 Stress Test Scenarios', () => {
 
     it('P8: 4 attempts / 2 misses → emerging_weakness (single-Q, alternating)', () => {
       const attempts = [
-        createQuizAttempt('a1', { 'qq-2-037': 'b' }, '2026-01-01T00:00:00Z'), // correct
+        createQuizAttempt('a1', { 'qq-2-037': 'c' }, '2026-01-01T00:00:00Z'), // correct
         createQuizAttempt('a2', { 'qq-2-037': 'a' }, '2026-01-02T00:00:00Z'), // wrong
-        createQuizAttempt('a3', { 'qq-2-037': 'b' }, '2026-01-03T00:00:00Z'), // correct
-        createQuizAttempt('a4', { 'qq-2-037': 'c' }, '2026-01-04T00:00:00Z'), // wrong
+        createQuizAttempt('a3', { 'qq-2-037': 'c' }, '2026-01-03T00:00:00Z'), // correct
+        createQuizAttempt('a4', { 'qq-2-037': 'b' }, '2026-01-04T00:00:00Z'), // wrong
       ]
       const evidence = buildConceptEvidence(SINGLE_Q_CONCEPT, attempts)
       const result = detectConceptState(evidence)
@@ -196,8 +196,8 @@ describe('Phase 6B-3 Stress Test Scenarios', () => {
     it('P9: repeated misses → 1 correct → emerging_weakness (not improving)', () => {
       const attempts = [
         createQuizAttempt('a1', { 'qq-2-037': 'a' }, '2026-01-01T00:00:00Z'), // wrong
-        createQuizAttempt('a2', { 'qq-2-037': 'c' }, '2026-01-02T00:00:00Z'), // wrong
-        createQuizAttempt('a3', { 'qq-2-037': 'b' }, '2026-01-03T00:00:00Z'), // correct
+        createQuizAttempt('a2', { 'qq-2-037': 'b' }, '2026-01-02T00:00:00Z'), // wrong
+        createQuizAttempt('a3', { 'qq-2-037': 'c' }, '2026-01-03T00:00:00Z'), // correct
         createQuizAttempt('a4', { 'qq-2-037': 'a' }, '2026-01-04T00:00:00Z'), // wrong (need 2 consecutive correct for improving)
       ]
       const evidence = buildConceptEvidence(SINGLE_Q_CONCEPT, attempts)
@@ -211,9 +211,9 @@ describe('Phase 6B-3 Stress Test Scenarios', () => {
     it('P10: repeated misses → 2 consecutive correct → improving', () => {
       const attempts = [
         createQuizAttempt('a1', { 'qq-2-037': 'a' }, '2026-01-01T00:00:00Z'), // wrong
-        createQuizAttempt('a2', { 'qq-2-037': 'c' }, '2026-01-02T00:00:00Z'), // wrong
-        createQuizAttempt('a3', { 'qq-2-037': 'b' }, '2026-01-03T00:00:00Z'), // correct
-        createQuizAttempt('a4', { 'qq-2-037': 'b' }, '2026-01-04T00:00:00Z'), // correct
+        createQuizAttempt('a2', { 'qq-2-037': 'b' }, '2026-01-02T00:00:00Z'), // wrong
+        createQuizAttempt('a3', { 'qq-2-037': 'c' }, '2026-01-03T00:00:00Z'), // correct
+        createQuizAttempt('a4', { 'qq-2-037': 'c' }, '2026-01-04T00:00:00Z'), // correct
       ]
       const evidence = buildConceptEvidence(SINGLE_Q_CONCEPT, attempts)
       const result = detectConceptState(evidence)
@@ -227,11 +227,11 @@ describe('Phase 6B-3 Stress Test Scenarios', () => {
     it('P11: early misses → sustained correct → currently_performing_well', () => {
       const attempts = [
         createQuizAttempt('a1', { 'qq-2-037': 'a' }, '2026-01-01T00:00:00Z'), // wrong
-        createQuizAttempt('a2', { 'qq-2-037': 'b' }, '2026-01-02T00:00:00Z'), // correct
-        createQuizAttempt('a3', { 'qq-2-037': 'b' }, '2026-01-03T00:00:00Z'), // correct
-        createQuizAttempt('a4', { 'qq-2-037': 'b' }, '2026-01-04T00:00:00Z'), // correct
-        createQuizAttempt('a5', { 'qq-2-037': 'b' }, '2026-01-05T00:00:00Z'), // correct
-        createQuizAttempt('a6', { 'qq-2-037': 'b' }, '2026-01-06T00:00:00Z'), // correct
+        createQuizAttempt('a2', { 'qq-2-037': 'c' }, '2026-01-02T00:00:00Z'), // correct
+        createQuizAttempt('a3', { 'qq-2-037': 'c' }, '2026-01-03T00:00:00Z'), // correct
+        createQuizAttempt('a4', { 'qq-2-037': 'c' }, '2026-01-04T00:00:00Z'), // correct
+        createQuizAttempt('a5', { 'qq-2-037': 'c' }, '2026-01-05T00:00:00Z'), // correct
+        createQuizAttempt('a6', { 'qq-2-037': 'c' }, '2026-01-06T00:00:00Z'), // correct
       ]
       const evidence = buildConceptEvidence(SINGLE_Q_CONCEPT, attempts)
       const result = detectConceptState(evidence)
@@ -243,11 +243,11 @@ describe('Phase 6B-3 Stress Test Scenarios', () => {
 
     it('P12: early correct → recent repeated misses → repeated_weakness', () => {
       const attempts = [
-        createQuizAttempt('a1', { 'qq-2-037': 'b' }, '2026-01-01T00:00:00Z'), // correct
-        createQuizAttempt('a2', { 'qq-2-037': 'b' }, '2026-01-02T00:00:00Z'), // correct
-        createQuizAttempt('a3', { 'qq-2-037': 'b' }, '2026-01-03T00:00:00Z'), // correct
+        createQuizAttempt('a1', { 'qq-2-037': 'c' }, '2026-01-01T00:00:00Z'), // correct
+        createQuizAttempt('a2', { 'qq-2-037': 'c' }, '2026-01-02T00:00:00Z'), // correct
+        createQuizAttempt('a3', { 'qq-2-037': 'c' }, '2026-01-03T00:00:00Z'), // correct
         createQuizAttempt('a4', { 'qq-2-037': 'a' }, '2026-01-04T00:00:00Z'), // wrong
-        createQuizAttempt('a5', { 'qq-2-037': 'c' }, '2026-01-05T00:00:00Z'), // wrong
+        createQuizAttempt('a5', { 'qq-2-037': 'b' }, '2026-01-05T00:00:00Z'), // wrong
       ]
       const evidence = buildConceptEvidence(SINGLE_Q_CONCEPT, attempts)
       const result = detectConceptState(evidence)
@@ -330,7 +330,7 @@ describe('Phase 6B-3 Stress Test Scenarios', () => {
       const attempts = [
         createQuizAttempt(
           'a1',
-          { 'qq-2-003': 'b', 'qq-2-004': 'b' }, // wrong (correct is 'a')
+          { 'qq-2-003': 'a', 'qq-2-004': 'a' }, // wrong (correct is 'a')
           '2026-01-01T00:00:00Z',
         ),
         createQuizAttempt(
@@ -353,7 +353,7 @@ describe('Phase 6B-3 Stress Test Scenarios', () => {
       const attempts = [
         createQuizAttempt(
           'a1',
-          { 'qq-2-003': 'b', 'qq-2-004': 'b', 'qq-2-012': 'b' }, // wrong
+          { 'qq-2-003': 'a', 'qq-2-004': 'a', 'qq-2-012': 'b' }, // wrong
           '2026-01-01T00:00:00Z',
         ),
         createQuizAttempt(
@@ -380,7 +380,7 @@ describe('Phase 6B-3 Stress Test Scenarios', () => {
       const attempts = [
         createQuizAttempt(
           'a1',
-          { 'qq-2-003': 'b', 'qq-2-004': 'b', 'qq-2-012': 'b', 'qq-2-024': 'b' }, // wrong
+          { 'qq-2-003': 'a', 'qq-2-004': 'a', 'qq-2-012': 'b', 'qq-2-024': 'b' }, // wrong
           '2026-01-01T00:00:00Z',
         ),
         createQuizAttempt(
@@ -650,7 +650,7 @@ describe('Evidence Building', () => {
     const attempts = [
       createQuizAttempt(
         'a1',
-        { 'qq-2-001': 'a', 'qq-2-003': 'b' }, // qq-2-003 is C-2-21, not C-2-01
+        { 'qq-2-001': 'a', 'qq-2-003': 'a' }, // qq-2-003 is C-2-21, not C-2-01
         '2026-01-01T00:00:00Z',
       ),
     ]
@@ -804,8 +804,8 @@ describe('Learning Objective Rollup', () => {
 describe('Regression Tests', () => {
   it('qq-2-037 (C-2-16) single-question concept requires 4+ observations', () => {
     const attempts = [
-      createQuizAttempt('a1', { 'qq-2-037': 'b' }, '2026-01-01T00:00:00Z'),
-      createQuizAttempt('a2', { 'qq-2-037': 'c' }, '2026-01-02T00:00:00Z'),
+      createQuizAttempt('a1', { 'qq-2-037': 'c' }, '2026-01-01T00:00:00Z'),
+      createQuizAttempt('a2', { 'qq-2-037': 'b' }, '2026-01-02T00:00:00Z'),
       createQuizAttempt('a3', { 'qq-2-037': 'd' }, '2026-01-03T00:00:00Z'),
     ]
 
@@ -821,7 +821,7 @@ describe('Regression Tests', () => {
     const attempts = [
       createQuizAttempt(
         'a1',
-        { 'qq-2-003': 'b', 'qq-2-004': 'b', 'qq-2-012': 'b', 'qq-2-024': 'b' }, // all wrong
+        { 'qq-2-003': 'a', 'qq-2-004': 'a', 'qq-2-012': 'b', 'qq-2-024': 'b' }, // all wrong
         '2026-01-01T00:00:00Z',
       ),
       createQuizAttempt(
