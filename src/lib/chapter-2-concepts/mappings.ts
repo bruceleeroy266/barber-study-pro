@@ -308,4 +308,37 @@ export const chapter2QuizQuestionMappings: readonly QuizQuestionConceptMapping[]
   { questionId: 'qq-2-048', conceptId: 'C-2-02', subconceptId: 'SC-2-02-b' },
   { questionId: 'qq-2-049', conceptId: 'C-2-11' },
   { questionId: 'qq-2-050', conceptId: 'C-2-12', subconceptId: 'SC-2-12-b' },
+
+  // ───────────────────────────────────────────
+  // POST-LOCK REASSESSMENT RESERVE (qq-2-051 to qq-2-075)
+  // Founder-approved Option A (2026-09-09): one reserve question per active
+  // concept. Reserve questions live in chapter-2-reassessment-questions.ts
+  // and are NEVER served by the initial quiz; they become available only
+  // through the 6C reassessment path after historical exclusion.
+  // ───────────────────────────────────────────
+  { questionId: 'qq-2-051', conceptId: 'C-2-09' },
+  { questionId: 'qq-2-052', conceptId: 'C-2-10' },
+  { questionId: 'qq-2-053', conceptId: 'C-2-15' },
+  { questionId: 'qq-2-054', conceptId: 'C-2-16' },
+  { questionId: 'qq-2-055', conceptId: 'C-2-18' },
+  { questionId: 'qq-2-056', conceptId: 'C-2-19' },
+  { questionId: 'qq-2-057', conceptId: 'C-2-20' },
+  { questionId: 'qq-2-058', conceptId: 'C-2-25' },
+  { questionId: 'qq-2-059', conceptId: 'C-2-26' },
+  { questionId: 'qq-2-060', conceptId: 'C-2-01' },
+  { questionId: 'qq-2-061', conceptId: 'C-2-02' },
+  { questionId: 'qq-2-062', conceptId: 'C-2-03' },
+  { questionId: 'qq-2-063', conceptId: 'C-2-04' },
+  { questionId: 'qq-2-064', conceptId: 'C-2-05' },
+  { questionId: 'qq-2-065', conceptId: 'C-2-06', subconceptId: 'SC-2-06-a' },
+  { questionId: 'qq-2-066', conceptId: 'C-2-07' },
+  { questionId: 'qq-2-067', conceptId: 'C-2-08', subconceptId: 'SC-2-08-b' },
+  { questionId: 'qq-2-068', conceptId: 'C-2-11' },
+  { questionId: 'qq-2-069', conceptId: 'C-2-12', subconceptId: 'SC-2-12-a' },
+  { questionId: 'qq-2-070', conceptId: 'C-2-13' },
+  { questionId: 'qq-2-071', conceptId: 'C-2-14' },
+  { questionId: 'qq-2-072', conceptId: 'C-2-17' },
+  { questionId: 'qq-2-073', conceptId: 'C-2-23' },
+  { questionId: 'qq-2-074', conceptId: 'C-2-24' },
+  { questionId: 'qq-2-075', conceptId: 'C-2-21', subconceptId: 'SC-2-21-a' },
 ] as const

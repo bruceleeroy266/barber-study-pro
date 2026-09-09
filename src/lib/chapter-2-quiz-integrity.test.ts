@@ -16,6 +16,7 @@
 
 import { describe, it, expect } from 'vitest'
 import { chapter2PremiumQuizQuestions } from './chapter-2-premium-quiz'
+import { chapter2ReassessmentQuestions } from './chapter-2-reassessment-questions'
 import { chapter2QuizQuestionMappings } from './chapter-2-concepts/mappings'
 import {
   chapter2Concepts,
@@ -30,7 +31,12 @@ const fileSource = readFileSync(
   'utf-8'
 )
 
-const byId = new Map(questions.map((q) => [q.id, q]))
+// Initial-bank scope: the locked 48. Mapping resolution additionally unions
+// the 25-question reassessment reserve (post-lock Option A) so every mapping
+// in the combined 73-entry table resolves to a real question.
+const byId = new Map(
+  [...questions, ...chapter2ReassessmentQuestions].map((q) => [q.id, q]),
+)
 const mappingByQuestion = new Map<string, string>(
   chapter2QuizQuestionMappings.map((m) => [m.questionId, m.conceptId])
 )
@@ -117,7 +123,7 @@ describe('Chapter 2 quiz — canonical mapping integrity', () => {
       expect(conceptId, `${q.id} unmapped`).toBeDefined()
       expect(ACTIVE_CONCEPT_IDS).toContain(conceptId)
     }
-    expect(chapter2QuizQuestionMappings).toHaveLength(48)
+    expect(chapter2QuizQuestionMappings).toHaveLength(73)
     for (const m of chapter2QuizQuestionMappings) {
       expect(byId.has(m.questionId)).toBe(true)
     }

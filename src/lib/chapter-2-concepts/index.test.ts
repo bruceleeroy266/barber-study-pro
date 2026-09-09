@@ -35,6 +35,7 @@ import {
 } from './mappings'
 import { chapter2PremiumFlashcards } from '../chapter-2-premium-flashcards'
 import { chapter2PremiumQuizQuestions } from '../chapter-2-premium-quiz'
+import { chapter2ReassessmentQuestions } from '../chapter-2-reassessment-questions'
 import { chapterContentData } from '../chapter-content'
 import type { ConceptId, SubconceptId, LearningObjectiveId } from './types'
 
@@ -76,7 +77,13 @@ function getInactiveFlashcardIds(): Set<string> {
 }
 
 function getProductionQuizQuestionIds(): Set<string> {
-  return new Set(chapter2PremiumQuizQuestions.map((q) => q.id))
+  // Combined production bank: 48 locked initial + 25 reassessment reserve
+  // (post-lock Option A). Every mapping must resolve to one of these IDs.
+  return new Set(
+    [...chapter2PremiumQuizQuestions, ...chapter2ReassessmentQuestions].map(
+      (q) => q.id,
+    ),
+  )
 }
 
 // ───────────────────────────────────────────────
@@ -305,9 +312,9 @@ describe('Chapter 2 Concept Runtime Architecture', () => {
   // ─────────────────────────────────────────────
 
   describe('Quiz Question Mappings', () => {
-    it('all 48 production quiz questions are accounted for in mappings', () => {
+    it('all 73 production quiz questions (48 initial + 25 reserve) are accounted for in mappings', () => {
       const mappedIds = new Set(chapter2QuizQuestionMappings.map((m) => m.questionId))
-      expect(mappedIds.size).toBe(48)
+      expect(mappedIds.size).toBe(73)
       for (const id of productionQuizIds) {
         expect(mappedIds.has(id as `qq-2-${string}`), `Quiz question '${id}' not mapped`).toBe(true)
       }
@@ -382,10 +389,10 @@ describe('Chapter 2 Concept Runtime Architecture', () => {
       expect(mapping!.conceptId).toBe('C-2-16')
     })
 
-    it('C-2-16 has exactly 1 quiz question (qq-2-037)', () => {
+    it('C-2-16 has 2 quiz questions (qq-2-037 + post-lock reserve qq-2-054)', () => {
       const mappings = chapter2QuizQuestionMappings.filter((m) => m.conceptId === 'C-2-16')
-      expect(mappings).toHaveLength(1)
-      expect(mappings[0].questionId).toBe('qq-2-037')
+      expect(mappings).toHaveLength(2)
+      expect(mappings.map((m) => m.questionId).sort()).toEqual(['qq-2-037', 'qq-2-054'])
     })
 
     it('fc-2-045 is mapped to C-2-05 but is inactive', () => {
@@ -464,8 +471,8 @@ describe('Chapter 2 Concept Runtime Architecture', () => {
       // Flashcards: 65 total (64 active + 1 inactive)
       expect(chapter2FlashcardMappings.length).toBe(65)
 
-      // Quiz questions: 48 total
-      expect(chapter2QuizQuestionMappings.length).toBe(48)
+      // Quiz questions: 73 total (48 locked initial + 25 reassessment reserve)
+      expect(chapter2QuizQuestionMappings.length).toBe(73)
     })
 
     it('reports correct concept counts', () => {

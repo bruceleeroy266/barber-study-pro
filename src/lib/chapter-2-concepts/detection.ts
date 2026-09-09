@@ -20,6 +20,7 @@ import type {
 import { chapter2Concepts } from './concepts'
 import { chapter2QuizQuestionMappings } from './mappings'
 import { chapter2PremiumQuizQuestions } from '../chapter-2-premium-quiz'
+import { chapter2ReassessmentQuestions } from '../chapter-2-reassessment-questions'
 import type { QuizAttempt } from '@/types'
 
 // ───────────────────────────────────────────────
@@ -116,7 +117,11 @@ const questionToConceptMap = new Map(
   chapter2QuizQuestionMappings.map((m) => [m.questionId, m]),
 )
 const questionCorrectAnswerMap = new Map(
-  chapter2PremiumQuizQuestions.map((q) => [q.id, q.correct_answer]),
+  // Post-lock additive: union the reassessment reserve so reserve answers
+  // count as detection/evaluation evidence (unknown IDs are skipped below).
+  [...chapter2PremiumQuizQuestions, ...chapter2ReassessmentQuestions].map(
+    (q) => [q.id, q.correct_answer],
+  ),
 )
 
 function getConceptQuestionCount(conceptId: ConceptId): number {

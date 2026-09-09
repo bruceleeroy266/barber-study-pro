@@ -23,6 +23,8 @@ import { chapter2Concepts, ACTIVE_CONCEPT_IDS } from '../chapter-2-concepts/conc
 import { chapter2PremiumFlashcards } from '../chapter-2-premium-flashcards'
 import { chapter2KeyTerms } from '../chapter-2-key-terms'
 import type { Chapter2KeyTerm } from '../chapter-2-key-terms'
+import { chapter2PremiumQuizQuestions } from '../chapter-2-premium-quiz'
+import { chapter2ReassessmentQuestions } from '../chapter-2-reassessment-questions'
 import { getChapterContent } from '../chapter-content'
 import type { RemediationContentBundle } from './student-service'
 
@@ -158,11 +160,20 @@ export function buildRemediationContentBundle(conceptId: ConceptId): Remediation
  * The question must already be reserved via selectAndReserveQuestion().
  */
 export function getQuizQuestionById(questionId: string): import('@/types').QuizQuestion | null {
-  // Dynamic import to avoid circular dependencies
-  const { chapter2PremiumQuizQuestions } = require('../chapter-2-premium-quiz')
-  return chapter2PremiumQuizQuestions.find(
-    (q: import('@/types').QuizQuestion) => q.id === questionId
-  ) ?? null
+  // Static imports: both quiz modules are pure data (import only '@/types'),
+  // so no circular dependency is possible. The reassessment reserve (added
+  // post-lock, Option A) is resolvable here so the 6C reassessment
+  // start/submit paths can serve and score reserve questions, while the
+  // initial quiz serving path continues to read the premium bank only.
+  return (
+    chapter2PremiumQuizQuestions.find(
+      (q: import('@/types').QuizQuestion) => q.id === questionId
+    ) ??
+    chapter2ReassessmentQuestions.find(
+      (q: import('@/types').QuizQuestion) => q.id === questionId
+    ) ??
+    null
+  )
 }
 
 /**

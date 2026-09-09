@@ -54,8 +54,11 @@ const UNRELATED_QUESTIONS = chapter2QuizQuestionMappings
   .filter((m) => m.conceptId === UNRELATED_CONCEPT_ID)
   .map((m) => m.questionId)
 
-// Single question concept for edge case testing
-const SINGLE_QUESTION_CONCEPT = 'C-2-16' // Work-Life Balance - single question (qq-2-037)
+// Minimal-evidence concept for edge case testing. Post-expansion (Option A),
+// every active concept has 2+ questions — C-2-16 now has qq-2-037 + reserve
+// qq-2-054 — so no true single-question concept remains; the insufficient-
+// evidence path is exercised via a single observation instead.
+const MINIMAL_EVIDENCE_CONCEPT = 'C-2-16' // Work-Life Balance
 
 function createMockQuizAttempt(
   id: string,
@@ -416,14 +419,15 @@ describe('Chapter2DetectionProvider', () => {
       expect(result).toBeNull()
     })
 
-    it('handles single-question concepts with insufficient evidence', async () => {
-      // C-2-16 has only one question (qq-2-037)
+    it('returns insufficient_evidence for a concept with too few observations', async () => {
+      // Post-expansion C-2-16 has two questions (qq-2-037 + reserve qq-2-054);
+      // one observation is still below the multi-question minimum.
       const attempt = createMockQuizAttempt(MOCK_ATTEMPT_ID_1, {
         'qq-2-037': 'a',
       })
       attemptsMap.set(MOCK_ATTEMPT_ID_1, attempt)
 
-      const result = await provider.detectConceptState(SINGLE_QUESTION_CONCEPT, [
+      const result = await provider.detectConceptState(MINIMAL_EVIDENCE_CONCEPT, [
         MOCK_ATTEMPT_ID_1,
       ])
 

@@ -72,14 +72,16 @@ function createEvidence(
 // ───────────────────────────────────────────────
 
 describe('Phase 6B-3 Stress Test Scenarios', () => {
-  // Single-question concept: C-2-16 (qq-2-037 only)
+  // C-2-16 had 1 question pre-expansion (qq-2-037); post-lock Option A added
+  // reserve qq-2-054, so it is now a multi-question concept. These scenarios
+  // exercise observation-threshold behavior (multi-question minimum = 2).
   const SINGLE_Q_CONCEPT: ConceptId = 'C-2-16'
   // Multi-question concept: C-2-01 (qq-2-001, qq-2-021)
   const MULTI_Q_CONCEPT: ConceptId = 'C-2-01'
   // 4+ question concept: C-2-21 (qq-2-003, qq-2-004, qq-2-012, qq-2-024, qq-2-042)
   const FOUR_PLUS_Q_CONCEPT: ConceptId = 'C-2-21'
 
-  describe('Single-Question Concepts', () => {
+  describe('Observation-Threshold Behavior (C-2-16, now 2 questions)', () => {
     it('P1: 1 attempt / 1 miss → insufficient_evidence', () => {
       const attempts = [
         createQuizAttempt('a1', { 'qq-2-037': 'a' }, '2026-01-01T00:00:00Z'), // wrong (correct is 'b')
@@ -104,7 +106,7 @@ describe('Phase 6B-3 Stress Test Scenarios', () => {
       expect(result.evidence.correct).toBe(1)
     })
 
-    it('P3: 2 attempts / 1 correct + 1 miss → insufficient_evidence (single-Q protection)', () => {
+    it('P3: 2 attempts / 1 correct + 1 miss → emerging_weakness (multi-Q minimum met)', () => {
       const attempts = [
         createQuizAttempt('a1', { 'qq-2-037': 'c' }, '2026-01-01T00:00:00Z'), // correct
         createQuizAttempt('a2', { 'qq-2-037': 'a' }, '2026-01-02T00:00:00Z'), // wrong
@@ -112,12 +114,12 @@ describe('Phase 6B-3 Stress Test Scenarios', () => {
       const evidence = buildConceptEvidence(SINGLE_Q_CONCEPT, attempts)
       const result = detectConceptState(evidence)
 
-      // Single-question concepts require 4+ observations
-      expect(result.state).toBe('insufficient_evidence')
+      // Multi-question concepts reach detection at 2+ observations
+      expect(result.state).toBe('emerging_weakness')
       expect(result.evidence.totalObservations).toBe(2)
     })
 
-    it('P4: 2 attempts / 2 misses → insufficient_evidence (single-Q protection)', () => {
+    it('P4: 2 attempts / 2 misses → emerging_weakness (multi-Q minimum met)', () => {
       const attempts = [
         createQuizAttempt('a1', { 'qq-2-037': 'a' }, '2026-01-01T00:00:00Z'), // wrong
         createQuizAttempt('a2', { 'qq-2-037': 'b' }, '2026-01-02T00:00:00Z'), // wrong
@@ -125,13 +127,13 @@ describe('Phase 6B-3 Stress Test Scenarios', () => {
       const evidence = buildConceptEvidence(SINGLE_Q_CONCEPT, attempts)
       const result = detectConceptState(evidence)
 
-      // Single-question concepts require 4+ observations
-      expect(result.state).toBe('insufficient_evidence')
+      // 2 observations meets the multi-question minimum; 3+ needed for repeated
+      expect(result.state).toBe('emerging_weakness')
       expect(result.evidence.totalObservations).toBe(2)
       expect(result.evidence.misses).toBe(2)
     })
 
-    it('P5: 3 attempts / 1 miss → insufficient_evidence (single-Q protection)', () => {
+    it('P5: 3 attempts / 1 miss → emerging_weakness (below repeated threshold)', () => {
       const attempts = [
         createQuizAttempt('a1', { 'qq-2-037': 'c' }, '2026-01-01T00:00:00Z'), // correct
         createQuizAttempt('a2', { 'qq-2-037': 'c' }, '2026-01-02T00:00:00Z'), // correct
@@ -140,12 +142,12 @@ describe('Phase 6B-3 Stress Test Scenarios', () => {
       const evidence = buildConceptEvidence(SINGLE_Q_CONCEPT, attempts)
       const result = detectConceptState(evidence)
 
-      // Single-question concepts require 4+ observations
-      expect(result.state).toBe('insufficient_evidence')
+      // 1 miss in 3 observations: neither performing well nor repeated weakness
+      expect(result.state).toBe('emerging_weakness')
       expect(result.evidence.totalObservations).toBe(3)
     })
 
-    it('P6: 3 attempts / 2 misses → insufficient_evidence (single-Q protection)', () => {
+    it('P6: 3 attempts / 2 misses → repeated_weakness (multi-Q minimum met)', () => {
       const attempts = [
         createQuizAttempt('a1', { 'qq-2-037': 'c' }, '2026-01-01T00:00:00Z'), // correct
         createQuizAttempt('a2', { 'qq-2-037': 'a' }, '2026-01-02T00:00:00Z'), // wrong
@@ -154,13 +156,13 @@ describe('Phase 6B-3 Stress Test Scenarios', () => {
       const evidence = buildConceptEvidence(SINGLE_Q_CONCEPT, attempts)
       const result = detectConceptState(evidence)
 
-      // Single-question concepts require 4+ observations
-      expect(result.state).toBe('insufficient_evidence')
+      // 3+ observations with 2+ misses (non-alternating) = repeated weakness
+      expect(result.state).toBe('repeated_weakness')
       expect(result.evidence.totalObservations).toBe(3)
       expect(result.evidence.misses).toBe(2)
     })
 
-    it('P7: 3 attempts / 3 misses → insufficient_evidence (single-Q protection)', () => {
+    it('P7: 3 attempts / 3 misses → repeated_weakness (multi-Q minimum met)', () => {
       const attempts = [
         createQuizAttempt('a1', { 'qq-2-037': 'a' }, '2026-01-01T00:00:00Z'), // wrong
         createQuizAttempt('a2', { 'qq-2-037': 'b' }, '2026-01-02T00:00:00Z'), // wrong
@@ -169,8 +171,8 @@ describe('Phase 6B-3 Stress Test Scenarios', () => {
       const evidence = buildConceptEvidence(SINGLE_Q_CONCEPT, attempts)
       const result = detectConceptState(evidence)
 
-      // Single-question concepts require 4+ observations
-      expect(result.state).toBe('insufficient_evidence')
+      // 3+ observations with 3 misses (non-alternating) = repeated weakness
+      expect(result.state).toBe('repeated_weakness')
       expect(result.evidence.totalObservations).toBe(3)
       expect(result.evidence.misses).toBe(3)
     })
@@ -562,9 +564,12 @@ describe('Edge Cases', () => {
     expect(result.flags).toContain('question_specific_issue')
   })
 
-  it('single-question concept flag', () => {
+  it('post-expansion, no active concept is flagged single_question_concept', () => {
+    // Option A expansion gave every active concept 2+ mapped questions, so the
+    // single-question protection/flag is dormant for Chapter 2. The flag logic
+    // remains in place for any future single-question chapter.
     const evidence = createEvidence({
-      conceptId: 'C-2-16', // Single-question concept
+      conceptId: 'C-2-16', // Now a 2-question concept (qq-2-037 + reserve qq-2-054)
       totalObservations: 4,
       uniqueQuestions: 1,
       misses: 2,
@@ -573,7 +578,7 @@ describe('Edge Cases', () => {
     })
     const result = detectConceptState(evidence)
 
-    expect(result.flags).toContain('single_question_concept')
+    expect(result.flags).not.toContain('single_question_concept')
   })
 })
 
@@ -802,7 +807,11 @@ describe('Learning Objective Rollup', () => {
 // ───────────────────────────────────────────────
 
 describe('Regression Tests', () => {
-  it('qq-2-037 (C-2-16) single-question concept requires 4+ observations', () => {
+  it('qq-2-037 (C-2-16) — post-expansion multi-question concept detects at 3 observations', () => {
+    // Pre-expansion C-2-16 required 4+ observations (single-question
+    // protection). Post-lock Option A added reserve qq-2-054, so the
+    // multi-question minimum (2) now applies and 3 observations with 2 misses
+    // produce repeated_weakness.
     const attempts = [
       createQuizAttempt('a1', { 'qq-2-037': 'c' }, '2026-01-01T00:00:00Z'),
       createQuizAttempt('a2', { 'qq-2-037': 'b' }, '2026-01-02T00:00:00Z'),
@@ -812,9 +821,8 @@ describe('Regression Tests', () => {
     const evidence = buildConceptEvidence('C-2-16', attempts)
     const result = detectConceptState(evidence)
 
-    // 3 observations < 4 required for single-question concepts
-    expect(result.state).toBe('insufficient_evidence')
-    expect(result.flags).toContain('single_question_concept')
+    expect(result.state).toBe('repeated_weakness')
+    expect(result.flags).not.toContain('single_question_concept')
   })
 
   it('C-2-21 (4 questions) can achieve high confidence', () => {
