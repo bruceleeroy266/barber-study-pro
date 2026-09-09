@@ -112,7 +112,9 @@ async function fetchStudentRowIds(
   return map
 }
 
-/** Map students.id → program_id for active enrollments. */
+/** Map students.id → program_id for active enrollments.
+ *  A student with multiple active enrollments resolves to the most recently
+ *  created one (deterministic ORDER BY created_at DESC; first row wins). */
 async function fetchActiveEnrollmentProgramIds(
   supabase: SupabaseLike,
   studentRowIds: string[]
@@ -124,6 +126,7 @@ async function fetchActiveEnrollmentProgramIds(
       .from('enrollments')
       .select('student_id, program_id, status, is_active, deleted_at')
       .in('student_id', studentRowIds)
+      .order('created_at', { ascending: false })
     if (error || !Array.isArray(data)) return map
     for (const row of data as Array<{ student_id: string; program_id: string; status: string | null; is_active: boolean | null; deleted_at: string | null }>) {
       if (!row?.student_id || !row?.program_id) continue

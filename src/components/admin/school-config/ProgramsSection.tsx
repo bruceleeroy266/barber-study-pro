@@ -24,6 +24,10 @@ const PROGRAM_TEMPLATES = [
   { name: 'Instructor Training', requiredHours: 1000, requiredAssessments: 5, requiredPracticals: 10 },
 ]
 
+// Founder directive 2026-09-08: admins must see this before changing required hours.
+const REQUIRED_HOURS_EXPLAINER =
+  'Changing required hours affects hour-based progress, compliance, eligibility, and readiness calculations.'
+
 function mapDbToAcademicProgram(db: ProgramListItem): AcademicProgram {
   return {
     id: db.id,
@@ -91,6 +95,11 @@ export default function ProgramsSection({ config: _config, onChange }: Props) {
     })
   }
 
+  // Active-enrollment count for a DB program row (drives the change warning).
+  function activeEnrollmentsFor(programId: string): number {
+    return dbPrograms.find((p) => p.id === programId)?.active_enrollments ?? 0
+  }
+
   // --------------------------------------------------------------------------
   // Database-backed actions
   // --------------------------------------------------------------------------
@@ -122,6 +131,25 @@ export default function ProgramsSection({ config: _config, onChange }: Props) {
 
   async function handleDbUpdate(programId: string) {
     if (!editForm.name?.trim()) return
+
+    // Founder directive 2026-09-08: explicit confirmation before changing an
+    // existing program's required hours, with an active-enrollment warning.
+    const original = dbPrograms.find((p) => p.id === programId)
+    const hoursChanged =
+      original !== undefined &&
+      editForm.requiredHours !== undefined &&
+      editForm.requiredHours !== original.required_hours
+    if (hoursChanged) {
+      const activeEnrollments = original.active_enrollments ?? 0
+      const enrollmentWarning =
+        activeEnrollments > 0
+          ? `\n\nThis program has ${activeEnrollments} active enrollment${activeEnrollments === 1 ? '' : 's'}. ${REQUIRED_HOURS_EXPLAINER}`
+          : ''
+      const confirmed = window.confirm(
+        `Change required hours for "${original.name}" from ${original.required_hours} to ${editForm.requiredHours}?${enrollmentWarning}`
+      )
+      if (!confirmed) return
+    }
 
     setPendingAction(`update-${programId}`)
     setActionError(null)
@@ -258,6 +286,7 @@ export default function ProgramsSection({ config: _config, onChange }: Props) {
                 onChange={(e) => setNewProgram({ ...newProgram, requiredHours: Number(e.target.value) })}
                 className="w-full bg-charcoal border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)]"
               />
+              <p className="mt-1 text-xs text-silver">{REQUIRED_HOURS_EXPLAINER}</p>
             </div>
 
             <div>
@@ -345,6 +374,7 @@ export default function ProgramsSection({ config: _config, onChange }: Props) {
                       onChange={(e) => setEditForm({ ...editForm, requiredHours: Number(e.target.value) })}
                       className="w-full bg-charcoal border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)]"
                     />
+                    <p className="mt-1 text-xs text-silver">{REQUIRED_HOURS_EXPLAINER}</p>
                   </div>
 
                   <div>
@@ -373,6 +403,13 @@ export default function ProgramsSection({ config: _config, onChange }: Props) {
                     />
                   </div>
                 </div>
+
+                {activeEnrollmentsFor(program.id) > 0 && (
+                  <p className="text-sm text-warm-bronze/90">
+                    This program has {activeEnrollmentsFor(program.id)} active enrollment
+                    {activeEnrollmentsFor(program.id) === 1 ? '' : 's'}. {REQUIRED_HOURS_EXPLAINER}
+                  </p>
+                )}
 
                 <div className="flex justify-end gap-3">
                   <button

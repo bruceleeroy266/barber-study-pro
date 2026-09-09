@@ -12,7 +12,8 @@ import {
   demoAssessments,
 } from '@/lib/demo-data'
 import { isDemoFallbackEnabled } from '@/lib/demo-helpers'
-import { buildStudentCompliance, buildComplianceAlerts } from '@/lib/compliance'
+import { buildStudentCompliance, buildComplianceAlerts, thresholdsWithRequiredHours } from '@/lib/compliance'
+import { resolveStudentProgramRequirements } from '@/lib/programs/requirements'
 import ComplianceScoreWidget from '@/components/compliance/ComplianceScoreWidget'
 import BoardEligibilityWidget from '@/components/compliance/BoardEligibilityWidget'
 import GraduationReadinessWidget from '@/components/compliance/GraduationReadinessWidget'
@@ -104,6 +105,20 @@ export default async function StudentComplianceDashboard() {
       ? demoAssessments
       : []
 
+  // Per-program parity (founder directive 2026-09-08): student-facing
+  // compliance uses the same configured program required_hours as instructor
+  // and school-owner surfaces. Demo/fallback keeps the app-wide default.
+  const isRealStudent = Boolean(
+    currentProfile &&
+      (currentProfile.role === 'student' || currentProfile.role === 'apprentice') &&
+      profile?.school_id
+  )
+  const thresholds = thresholdsWithRequiredHours(
+    isRealStudent
+      ? (await resolveStudentProgramRequirements(supabase, profile.school_id, student.id)).requiredHours
+      : undefined
+  )
+
   const inputs = {
     student,
     attendanceRecords,
@@ -113,6 +128,7 @@ export default async function StudentComplianceDashboard() {
     grades,
     gradeCategories,
     assessments,
+    thresholds,
   }
 
   const compliance = buildStudentCompliance(inputs)

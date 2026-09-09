@@ -61,6 +61,7 @@ type QueryBuilder = Promise<unknown> & {
   select: () => QueryBuilder
   is: () => QueryBuilder
   eq: () => QueryBuilder
+  in: () => QueryBuilder
   order: () => QueryBuilder
   single: () => Promise<unknown>
 }
@@ -70,6 +71,7 @@ function createQueryBuilder(response: Promise<unknown>): QueryBuilder {
     select: () => self,
     is: () => self,
     eq: () => self,
+    in: () => self,
     order: () => self,
     single: () => response,
   } as QueryBuilder
@@ -88,6 +90,7 @@ function mockServiceClient(overrides?: {
   singleResponse?: Promise<unknown>
   insertResponse?: Promise<unknown>
   updateResponse?: Promise<unknown>
+  enrollmentListResponse?: Promise<unknown>
 }) {
   const listResponse = overrides?.listResponse ?? Promise.resolve({
     data: [
@@ -135,6 +138,12 @@ function mockServiceClient(overrides?: {
     error: null,
   })
 
+  const enrollmentListResponse = overrides?.enrollmentListResponse ?? Promise.resolve({
+    data: [],
+    error: null,
+  })
+  const enrollmentBuilder = createQueryBuilder(enrollmentListResponse)
+
   const listBuilder = createQueryBuilder(listResponse)
   const singleBuilder = createQueryBuilder(singleResponse)
 
@@ -157,6 +166,11 @@ function mockServiceClient(overrides?: {
 
   return {
     from: vi.fn().mockImplementation((table: string) => {
+      if (table === 'enrollments') {
+        return {
+          select: vi.fn().mockReturnValue(enrollmentBuilder),
+        }
+      }
       if (table !== 'programs') {
         throw new Error(`Unexpected table in test: ${table}`)
       }
@@ -1023,6 +1037,7 @@ describe('Phase 7A Slice 5: Slice 0–4 Regression Security', () => {
     const logSpy = vi.fn()
     vi.doMock('@/lib/security/audit-logger', () => ({
       logPermissionDenied: logSpy,
+      logSensitiveConfigChange: vi.fn().mockResolvedValue(undefined),
     }))
 
     vi.doMock('@/lib/supabase-server', () => ({
@@ -1050,5 +1065,167 @@ describe('Phase 7A Slice 5: Slice 0–4 Regression Security', () => {
       resource: PROGRAM_ID,
       action: 'update',
     }))
+  })
+})
+
+// ============================================================================
+// PROGRAM REQUIREMENTS HARDENING (founder directive 2026-09-08)
+// - positive-integer required_hours validation
+// - active-enrollment counts in getPrograms
+// - sensitive_config_change audit on successful required-hours changes
+// ============================================================================
+
+describe('Program hardening: validation (positive integer required_hours)', () => {
+  beforeEach(() => {
+    vi.resetModules()
+  })
+
+  async function setup() {
+    vi.doMock('@/lib/supabase-server', () => ({
+      createClient: vi.fn().mockResolvedValue(mockAuthUser('school_admin', RISE_SCHOOL_ID)),
+    }))
+    vi.doMock('@/lib/supabase-service-role', () => ({
+      createServiceRoleClient: vi.fn().mockReturnValue(mockServiceClient()),
+    }))
+    return await importActions()
+  }
+
+  it.each([0, -100, 1.5, NaN])('createProgram rejects required_hours=%s', async (value) => {
+    const { createProgram: createAction } = await setup()
+    const result = await createAction({ name: 'Test', required_hours: value })
+    expect(result.success).toBe(false)
+    expect(result.error).toMatch(/required hours must be between/i)
+  })
+
+  it.each([0, -100, 1.5, NaN, 100_000])('updateProgram rejects required_hours=%s', async (value) => {
+    const { updateProgram: updateAction } = await setup()
+    const result = await updateAction(PROGRAM_ID, { required_hours: value })
+    expect(result.success).toBe(false)
+    expect(result.error).toMatch(/required hours must be between/i)
+  })
+
+  it('updateProgram accepts a valid positive integer (1200)', async () => {
+    const { updateProgram: updateAction } = await setup()
+    const result = await updateAction(PROGRAM_ID, { required_hours: 1200 })
+    expect(result.success).toBe(true)
+  })
+})
+
+describe('Program hardening: getPrograms active_enrollments counts', () => {
+  beforeEach(() => {
+    vi.resetModules()
+  })
+
+  it('counts only active, non-deleted enrollments per program', async () => {
+    vi.doMock('@/lib/supabase-server', () => ({
+      createClient: vi.fn().mockResolvedValue(mockAuthUser('school_admin', RISE_SCHOOL_ID)),
+    }))
+    vi.doMock('@/lib/supabase-service-role', () => ({
+      createServiceRoleClient: vi.fn().mockReturnValue(mockServiceClient({
+        enrollmentListResponse: Promise.resolve({
+          data: [
+            { program_id: PROGRAM_ID, status: 'active', is_active: true, deleted_at: null },
+            { program_id: PROGRAM_ID, status: 'completed', is_active: true, deleted_at: null },
+            { program_id: PROGRAM_ID, status: 'active', is_active: false, deleted_at: null },
+            { program_id: PROGRAM_ID, status: 'active', is_active: true, deleted_at: '2026-01-01T00:00:00Z' },
+            { program_id: OTHER_PROGRAM_ID, status: 'active', is_active: true, deleted_at: null },
+          ],
+          error: null,
+        }),
+      })),
+    }))
+
+    const { getPrograms: getAction } = await importActions()
+    const result = await getAction()
+
+    expect(result.success).toBe(true)
+    expect(result.data?.[0]?.active_enrollments).toBe(1)
+  })
+})
+
+describe('Program hardening: sensitive_config_change audit on required-hours change', () => {
+  beforeEach(() => {
+    vi.resetModules()
+  })
+
+  function mockAuditLogger() {
+    const logSensitive = vi.fn().mockResolvedValue(undefined)
+    const logDenied = vi.fn().mockResolvedValue(undefined)
+    vi.doMock('@/lib/security/audit-logger', () => ({
+      logSensitiveConfigChange: logSensitive,
+      logPermissionDenied: logDenied,
+    }))
+    return { logSensitive, logDenied }
+  }
+
+  function mockAuthedService() {
+    vi.doMock('@/lib/supabase-server', () => ({
+      createClient: vi.fn().mockResolvedValue(mockAuthUser('school_admin', RISE_SCHOOL_ID)),
+    }))
+    vi.doMock('@/lib/supabase-service-role', () => ({
+      createServiceRoleClient: vi.fn().mockReturnValue(mockServiceClient()),
+    }))
+  }
+
+  it('logs actor, school, program, field, old and new values when required_hours changes', async () => {
+    const { logSensitive } = mockAuditLogger()
+    mockAuthedService()
+
+    const { updateProgram: updateAction } = await importActions()
+    const result = await updateAction(PROGRAM_ID, { required_hours: 1200 })
+
+    expect(result.success).toBe(true)
+    expect(logSensitive).toHaveBeenCalledTimes(1)
+    expect(logSensitive).toHaveBeenCalledWith(
+      'program.required_hours',
+      expect.objectContaining({
+        userId: ADMIN_USER_ID,
+        email: ADMIN_EMAIL,
+        role: 'school_admin',
+        schoolId: RISE_SCHOOL_ID,
+        resourceId: PROGRAM_ID,
+        action: 'update',
+        metadata: expect.objectContaining({
+          programId: PROGRAM_ID,
+          programName: 'Barbering Fundamentals',
+          field: 'required_hours',
+          oldValue: 1500,
+          newValue: 1200,
+        }),
+      })
+    )
+  })
+
+  it('does not log when required_hours is unchanged', async () => {
+    const { logSensitive } = mockAuditLogger()
+    mockAuthedService()
+
+    const { updateProgram: updateAction } = await importActions()
+    const result = await updateAction(PROGRAM_ID, { required_hours: 1500 })
+
+    expect(result.success).toBe(true)
+    expect(logSensitive).not.toHaveBeenCalled()
+  })
+
+  it('does not log for non-hours updates', async () => {
+    const { logSensitive } = mockAuditLogger()
+    mockAuthedService()
+
+    const { updateProgram: updateAction } = await importActions()
+    const result = await updateAction(PROGRAM_ID, { name: 'Renamed Program' })
+
+    expect(result.success).toBe(true)
+    expect(logSensitive).not.toHaveBeenCalled()
+  })
+
+  it('does not log when the update fails validation', async () => {
+    const { logSensitive } = mockAuditLogger()
+    mockAuthedService()
+
+    const { updateProgram: updateAction } = await importActions()
+    const result = await updateAction(PROGRAM_ID, { required_hours: 0 })
+
+    expect(result.success).toBe(false)
+    expect(logSensitive).not.toHaveBeenCalled()
   })
 })

@@ -47,6 +47,7 @@ interface MockProgram {
   created_at: string
   updated_at: string
   deleted_at: string | null
+  active_enrollments?: number
 }
 
 function createMockProgram(overrides?: Partial<MockProgram>): MockProgram {
@@ -62,6 +63,7 @@ function createMockProgram(overrides?: Partial<MockProgram>): MockProgram {
     created_at: '2026-08-22T00:00:00Z',
     updated_at: '2026-08-22T00:00:00Z',
     deleted_at: null,
+    active_enrollments: 0,
     ...overrides,
   }
 }
@@ -152,6 +154,8 @@ describe('ProgramsSection — P1-1 UI/State Synchronization', () => {
     mockCreateProgram.mockReset().mockResolvedValue({ success: true, data: { id: 'new-id' } })
     mockUpdateProgram.mockReset().mockResolvedValue({ success: true })
     mockDeactivateProgram.mockReset().mockResolvedValue({ success: true })
+    // Required-hours confirmation gate (founder directive 2026-09-08): default to confirmed.
+    window.confirm = vi.fn().mockReturnValue(true)
   })
 
   it('loads and displays programs from the database on mount', async () => {
@@ -482,5 +486,123 @@ describe('ProgramsSection — P1-1 UI/State Synchronization', () => {
 
     // Program should still be active
     expect(screen.getByText('Active')).toBeInTheDocument()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Required-hours change safeguards (founder directive 2026-09-08)
+// ---------------------------------------------------------------------------
+
+const mockConfirm = vi.fn()
+
+describe('ProgramsSection — required-hours change safeguards', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockGetPrograms.mockReset().mockResolvedValue({ success: true, data: [] })
+    mockCreateProgram.mockReset().mockResolvedValue({ success: true, data: { id: 'new-id' } })
+    mockUpdateProgram.mockReset().mockResolvedValue({ success: true })
+    mockDeactivateProgram.mockReset().mockResolvedValue({ success: true })
+    mockConfirm.mockReset().mockReturnValue(true)
+    window.confirm = mockConfirm
+  })
+
+  it('asks for confirmation before changing required hours; saves on confirm', async () => {
+    const program = createMockProgram({ id: 'prog-1', name: 'Barbering', required_hours: 1500 })
+    mockGetPrograms.mockResolvedValue({ success: true, data: [program] })
+
+    render(<ProgramsSection config={createConfig()} onChange={vi.fn()} />)
+    await waitFor(() => expect(screen.getByText('Barbering')).toBeInTheDocument())
+
+    fireEvent.click(screen.getByRole('button', { name: /edit program/i }))
+    fireEvent.change(screen.getByDisplayValue('1500'), { target: { value: '1200' } })
+    fireEvent.click(screen.getByRole('button', { name: /save/i }))
+
+    expect(mockConfirm).toHaveBeenCalledTimes(1)
+    expect(mockConfirm).toHaveBeenCalledWith(expect.stringContaining('from 1500 to 1200'))
+    await waitFor(() =>
+      expect(mockUpdateProgram).toHaveBeenCalledWith(
+        'prog-1',
+        expect.objectContaining({ required_hours: 1200 })
+      )
+    )
+  })
+
+  it('does NOT save when the admin cancels the confirmation', async () => {
+    mockConfirm.mockReturnValue(false)
+    const program = createMockProgram({ id: 'prog-1', name: 'Barbering', required_hours: 1500 })
+    mockGetPrograms.mockResolvedValue({ success: true, data: [program] })
+
+    render(<ProgramsSection config={createConfig()} onChange={vi.fn()} />)
+    await waitFor(() => expect(screen.getByText('Barbering')).toBeInTheDocument())
+
+    fireEvent.click(screen.getByRole('button', { name: /edit program/i }))
+    fireEvent.change(screen.getByDisplayValue('1500'), { target: { value: '1200' } })
+    fireEvent.click(screen.getByRole('button', { name: /save/i }))
+
+    expect(mockConfirm).toHaveBeenCalledTimes(1)
+    expect(mockUpdateProgram).not.toHaveBeenCalled()
+    // Edit form stays open so the admin can retry or cancel explicitly
+    expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument()
+  })
+
+  it('warns about active enrollments in the edit form and in the confirmation', async () => {
+    const program = createMockProgram({
+      id: 'prog-1',
+      name: 'Barbering',
+      required_hours: 1500,
+      active_enrollments: 2,
+    })
+    mockGetPrograms.mockResolvedValue({ success: true, data: [program] })
+
+    render(<ProgramsSection config={createConfig()} onChange={vi.fn()} />)
+    await waitFor(() => expect(screen.getByText('Barbering')).toBeInTheDocument())
+
+    fireEvent.click(screen.getByRole('button', { name: /edit program/i }))
+
+    // Warning visible in the edit form
+    expect(screen.getByText(/2 active enrollments/)).toBeInTheDocument()
+
+    fireEvent.change(screen.getByDisplayValue('1500'), { target: { value: '1200' } })
+    fireEvent.click(screen.getByRole('button', { name: /save/i }))
+
+    expect(mockConfirm).toHaveBeenCalledWith(expect.stringContaining('2 active enrollments'))
+    expect(mockConfirm).toHaveBeenCalledWith(
+      expect.stringContaining('hour-based progress, compliance, eligibility, and readiness')
+    )
+  })
+
+  it('does not ask for confirmation when hours are unchanged', async () => {
+    const program = createMockProgram({ id: 'prog-1', name: 'Barbering', required_hours: 1500 })
+    mockGetPrograms.mockResolvedValue({ success: true, data: [program] })
+
+    render(<ProgramsSection config={createConfig()} onChange={vi.fn()} />)
+    await waitFor(() => expect(screen.getByText('Barbering')).toBeInTheDocument())
+
+    fireEvent.click(screen.getByRole('button', { name: /edit program/i }))
+    fireEvent.change(screen.getByDisplayValue('Barbering'), { target: { value: 'Barbering Pro' } })
+    fireEvent.click(screen.getByRole('button', { name: /save/i }))
+
+    expect(mockConfirm).not.toHaveBeenCalled()
+    await waitFor(() =>
+      expect(mockUpdateProgram).toHaveBeenCalledWith(
+        'prog-1',
+        expect.objectContaining({ name: 'Barbering Pro' })
+      )
+    )
+  })
+
+  it('shows the required-hours explainer in the edit and add forms', async () => {
+    const program = createMockProgram({ id: 'prog-1', name: 'Barbering', required_hours: 1500 })
+    mockGetPrograms.mockResolvedValue({ success: true, data: [program] })
+
+    render(<ProgramsSection config={createConfig()} onChange={vi.fn()} />)
+    await waitFor(() => expect(screen.getByText('Barbering')).toBeInTheDocument())
+
+    fireEvent.click(screen.getByRole('button', { name: /edit program/i }))
+    expect(
+      screen.getAllByText(
+        /Changing required hours affects hour-based progress, compliance, eligibility, and readiness calculations/
+      ).length
+    ).toBeGreaterThan(0)
   })
 })

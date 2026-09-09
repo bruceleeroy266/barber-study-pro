@@ -3,7 +3,7 @@
 import { createClient } from '@/lib/supabase-server'
 import { createServiceRoleClient } from '@/lib/supabase-service-role'
 import { isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
-import { logPermissionDenied } from '@/lib/security/audit-logger'
+import { logPermissionDenied, logSensitiveConfigChange } from '@/lib/security/audit-logger'
 
 // ============================================================================
 // TYPES
@@ -21,6 +21,8 @@ export interface ProgramListItem {
   created_at: string
   updated_at: string
   deleted_at: string | null
+  /** Active enrollments in this program (status='active', is_active≠false, not deleted). */
+  active_enrollments: number
 }
 
 export interface CreateProgramInput {
@@ -144,7 +146,32 @@ export async function getPrograms(): Promise<ActionResult<ProgramListItem[]>> {
     created_at: String(row.created_at),
     updated_at: String(row.updated_at),
     deleted_at: null,
+    active_enrollments: 0,
   }))
+
+  // Active-enrollment counts per program — the admin UI warns before changing
+  // required_hours on programs with enrolled students (founder directive 2026-09-08).
+  const programIds = programs.map((p) => p.id)
+  if (programIds.length > 0) {
+    const { data: enrollmentRows, error: enrollmentError } = await serviceClient
+      .from('enrollments')
+      .select('program_id, status, is_active, deleted_at')
+      .in('program_id', programIds)
+    if (enrollmentError) {
+      return { success: false, error: `Failed to fetch enrollment counts: ${enrollmentError.message}` }
+    }
+    for (const row of (enrollmentRows ?? []) as Array<{
+      program_id: string | null
+      status: string | null
+      is_active: boolean | null
+      deleted_at: string | null
+    }>) {
+      if (!row?.program_id) continue
+      if (row.status !== 'active' || row.is_active === false || row.deleted_at) continue
+      const program = programs.find((p) => p.id === row.program_id)
+      if (program) program.active_enrollments += 1
+    }
+  }
 
   return { success: true, data: programs }
 }
@@ -190,8 +217,8 @@ export async function createProgram(
   }
 
   const requiredHours = input.required_hours ?? 1500
-  if (!Number.isFinite(requiredHours) || requiredHours < 0 || requiredHours > 99999) {
-    return { success: false, error: 'Required hours must be between 0 and 99,999.' }
+  if (!Number.isInteger(requiredHours) || requiredHours <= 0 || requiredHours > 99999) {
+    return { success: false, error: 'Required hours must be between 1 and 99,999 (whole numbers only).' }
   }
 
   const requiredAssessments = input.required_assessments ?? 0
@@ -281,9 +308,10 @@ export async function updateProgram(
   const serviceClient = createServiceRoleClient()
 
   // Fetch the program to verify tenant boundary and that it's not deleted.
+  // required_hours is included so successful changes can be audited old→new.
   const { data: program, error: fetchError } = await serviceClient
     .from('programs')
-    .select('id, school_id, name, deleted_at')
+    .select('id, school_id, name, required_hours, deleted_at')
     .eq('id', programId)
     .single()
 
@@ -332,8 +360,8 @@ export async function updateProgram(
   }
 
   if (input.required_hours !== undefined) {
-    if (!Number.isFinite(input.required_hours) || input.required_hours < 0 || input.required_hours > 99999) {
-      return { success: false, error: 'Required hours must be between 0 and 99,999.' }
+    if (!Number.isInteger(input.required_hours) || input.required_hours <= 0 || input.required_hours > 99999) {
+      return { success: false, error: 'Required hours must be between 1 and 99,999 (whole numbers only).' }
     }
     updatePayload.required_hours = input.required_hours
   }
@@ -374,6 +402,27 @@ export async function updateProgram(
       return { success: false, error: 'A program with that name already exists at this school.' }
     }
     return { success: false, error: `Failed to update program: ${error.message}` }
+  }
+
+  // Audit successful required-hours changes (founder directive 2026-09-08):
+  // actor, school, program, field, old→new, timestamp. Logging never blocks
+  // the update (logSensitiveConfigChange swallows its own failures).
+  if (updatePayload.required_hours !== undefined && updatePayload.required_hours !== program.required_hours) {
+    await logSensitiveConfigChange('program.required_hours', {
+      userId: admin.userId,
+      email: admin.email,
+      role: admin.role,
+      schoolId: program.school_id,
+      resourceId: programId,
+      action: 'update',
+      metadata: {
+        programId,
+        programName: program.name,
+        field: 'required_hours',
+        oldValue: program.required_hours,
+        newValue: updatePayload.required_hours,
+      },
+    })
   }
 
   return { success: true }
