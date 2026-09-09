@@ -44,6 +44,7 @@ export {
   getFlashcardIdsForConcept,
   filterContentByConcept,
   filterFlashcardsByConcept,
+  filterKeyTermsByConcept,
   buildRemediationContentBundle,
   getQuizQuestionById,
   getConceptQuestionCount,

@@ -8,6 +8,8 @@ import ChapterHeader from '@/components/chapter/ChapterHeader'
 import MasteryPanel from '@/components/chapter/MasteryPanel'
 import RemediationPanel from '@/components/chapter/RemediationPanel'
 import { getChapterContent } from '@/lib/chapter-content'
+import { chapterKeyTerms } from '@/lib/chapter-2-key-terms'
+import KeyTermsPanel from '@/components/chapter/KeyTermsPanel'
 import { localChapters, getLocalFlashcards, getLocalQuiz, getLocalQuizQuestions } from '@/lib/local-data'
 
 interface ChapterPageProps {
@@ -141,6 +143,16 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
         sections={chapterContent?.sections || []}
         theme={chapterContent?.theme}
       />
+
+      {/* Key Terms — student-facing glossary, rendered only for chapters with a
+           typed key-term dataset (currently Chapter 2). Data-driven: no chapter
+           hardcode; future chapters register in chapterKeyTerms. */}
+      {(chapterKeyTerms[chapter.id]?.length ?? 0) > 0 && (
+        <KeyTermsPanel
+          terms={chapterKeyTerms[chapter.id]}
+          theme={chapterContent?.theme}
+        />
+      )}
 
       {/* Flashcards Section */}
       {flashcards && flashcards.length > 0 && (

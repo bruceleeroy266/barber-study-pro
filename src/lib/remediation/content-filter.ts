@@ -19,8 +19,10 @@ import {
   chapter2FlashcardMappings,
   chapter2QuizQuestionMappings,
 } from '../chapter-2-concepts/mappings'
-import { chapter2Concepts } from '../chapter-2-concepts/concepts'
+import { chapter2Concepts, ACTIVE_CONCEPT_IDS } from '../chapter-2-concepts/concepts'
 import { chapter2PremiumFlashcards } from '../chapter-2-premium-flashcards'
+import { chapter2KeyTerms } from '../chapter-2-key-terms'
+import type { Chapter2KeyTerm } from '../chapter-2-key-terms'
 import { getChapterContent } from '../chapter-content'
 import type { RemediationContentBundle } from './student-service'
 
@@ -161,6 +163,24 @@ export function getQuizQuestionById(questionId: string): import('@/types').QuizQ
   return chapter2PremiumQuizQuestions.find(
     (q: import('@/types').QuizQuestion) => q.id === questionId
   ) ?? null
+}
+
+/**
+ * Filter Chapter 2 key terms by concept.
+ *
+ * Thin remediation-compatible wrapper over the canonical key-term dataset.
+ * Returns only terms whose inline concept mapping matches an ACTIVE concept;
+ * retired (C-2-22) and unknown concepts return [].
+ *
+ * Phase 2B boundary: key terms are a study aid and are NOT part of
+ * RemediationContentBundle. This helper only exposes the data; it does not
+ * change 6C detection, reassessment, or outcome evaluation.
+ */
+export function filterKeyTermsByConcept(conceptId: ConceptId): readonly Chapter2KeyTerm[] {
+  if (!ACTIVE_CONCEPT_IDS.includes(conceptId)) {
+    return []
+  }
+  return chapter2KeyTerms.filter((term) => term.conceptId === conceptId)
 }
 
 /**
