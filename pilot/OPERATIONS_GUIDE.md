@@ -239,3 +239,14 @@ This guide provides instructions for running ASCYN PRO pilot operations on a dai
 ---
 
 **End of Operations Guide**
+
+---
+
+## Pilot Policies (Internal — Not for Public/School-Facing Copy)
+
+**Added:** 2026-09-08 (founder decision)
+
+| Policy | Detail |
+|---|---|
+| **External pilot capacity** | Maximum **2 simultaneous external pilots** initially. Internal operational capacity limit only — do **not** publish the numeric cap in public or school-facing marketing copy. |
+| **Day 75 student survey** | The 90-day external school pilot includes an **anonymous 8-question student experience survey** at Day 75. The approved survey instrument (the 8 questions) has **not yet been authored/located** — do not invent questions; instrument pending founder approval. Public copy references the survey without listing questions. |

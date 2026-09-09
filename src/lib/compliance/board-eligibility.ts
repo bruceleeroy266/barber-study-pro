@@ -8,15 +8,17 @@
  */
 
 import { BoardEligibilityResult, BoardEligibilityStatus } from '@/types'
-import { DEFAULT_COMPLIANCE_THRESHOLDS } from './compliance-rules'
+import { ComplianceRuleThresholds, DEFAULT_COMPLIANCE_THRESHOLDS } from './compliance-rules'
 import { ComplianceScoreInputs } from './compliance-score'
 
 function addIfMissing(condition: boolean, list: string[], message: string): void {
   if (condition) list.push(message)
 }
 
-export function determineBoardEligibility(inputs: ComplianceScoreInputs): BoardEligibilityResult {
-  const thresholds = DEFAULT_COMPLIANCE_THRESHOLDS
+export function determineBoardEligibility(
+  inputs: ComplianceScoreInputs,
+  thresholds: ComplianceRuleThresholds = DEFAULT_COMPLIANCE_THRESHOLDS
+): BoardEligibilityResult {
   const missingRequirements: string[] = []
   const reasons: string[] = []
 

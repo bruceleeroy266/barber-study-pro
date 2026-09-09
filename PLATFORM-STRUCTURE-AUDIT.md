@@ -322,7 +322,7 @@ Homepage → Login → Dashboard → Chapters → Chapter Page → Flashcards/Qu
 - `chapter-01-flashcards.html` through `chapter-21-flashcards.html` — V1 flashcards
 - `chapter-01-quiz.html` through `chapter-21-quiz.html` — V1 quizzes
 - `admin-dashboard.html`, `my-progress.html`, `missed-questions.html`
-- `key-terms.html`, `visual-resources.html`, `oklahoma-rules.html`
+- `key-terms.html`, `visual-resources.html`, `oklahoma-rules.html` (now archived at `legacy/v1-html/oklahoma-rules.html`)
 - `privacy.html`, `terms.html`
 
 ### Assessment
@@ -337,7 +337,7 @@ Homepage → Login → Dashboard → Chapters → Chapter Page → Flashcards/Qu
 | `login.html`, `signup.html` | ❌ NO — V2 has auth | Archive |
 | `key-terms.html` | ✅ YES — May have useful terms | Archive as source |
 | `visual-resources.html` | ✅ YES — Images/diagrams | Archive as source |
-| `oklahoma-rules.html` | ✅ YES — State-specific content | Archive as source |
+| `legacy/v1-html/oklahoma-rules.html` | ✅ YES — State-specific content | Archive as source |
 | `privacy.html`, `terms.html` | ✅ YES — Legal text needed | Copy to V2 |
 
 ### Recommendation

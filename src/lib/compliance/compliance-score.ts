@@ -8,6 +8,7 @@
 
 import { ComplianceScore, ComplianceRequirement } from '@/types'
 import {
+  ComplianceRuleThresholds,
   DEFAULT_COMPLIANCE_THRESHOLDS,
   COMPLIANCE_WEIGHTS,
   getStatusForThreshold,
@@ -29,9 +30,10 @@ function clamp(value: number, min = 0, max = 100): number {
   return Math.max(min, Math.min(max, value))
 }
 
-export function calculateComplianceScore(inputs: ComplianceScoreInputs): ComplianceScore {
-  const thresholds = DEFAULT_COMPLIANCE_THRESHOLDS
-
+export function calculateComplianceScore(
+  inputs: ComplianceScoreInputs,
+  thresholds: ComplianceRuleThresholds = DEFAULT_COMPLIANCE_THRESHOLDS
+): ComplianceScore {
   const attendanceStatus = getStatusForThreshold(inputs.attendancePercentage, thresholds.minimumAttendancePercentage)
   const attendanceScore = clamp(inputs.attendancePercentage)
 

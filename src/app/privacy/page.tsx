@@ -65,7 +65,7 @@ export default function PrivacyPage() {
         </Section>
 
         <Section title="7. Analytics and Cookies">
-          <p>ASCYN PRO may use cookies that are necessary for authentication, security, and core service functionality. Google Analytics 4 and Microsoft Clarity are configured for the service but are not currently active for production analytics collection. If that status changes, this policy will be updated to describe the applicable analytics use.</p>
+          <p>ASCYN PRO may use cookies that are necessary for authentication, security, and core service functionality. Vercel Web Analytics and Vercel Speed Insights are currently active on the service; they collect aggregated, privacy-preserving usage and performance information (such as page views and site performance metrics) and do not use advertising or cross-site tracking cookies. Google Analytics 4 and Microsoft Clarity are configured for the service but are not currently active for production analytics collection. If that status changes, this policy will be updated to describe the applicable analytics use.</p>
         </Section>
 
         <Section title="8. Your Choices and Rights">

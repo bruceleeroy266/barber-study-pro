@@ -2,13 +2,15 @@
 
 **Welcome, Pilot Participants!**
 
-You are among the first users to experience ASCYN PRO, an AI-powered professional licensing education platform designed to help students pass their board exams with confidence.
+You are among the first users to experience ASCYN PRO, a professional licensing education platform designed to help students pass their board exams with confidence.
 
 ---
 
 ## About This Pilot
 
 ASCYN PRO is currently in **pilot phase** — a limited release to selected users who will help us refine the platform before broader launch. Your participation is invaluable.
+
+> **Scope:** This document governs the **internal RISE Program pilot** (2–4 weeks, named accounts below). It does **not** define the terms of the **90-day external school pilot program** offered to schools; those terms are defined separately in the public pilot materials.
 
 ### Pilot Objectives
 
@@ -24,7 +26,7 @@ ASCYN PRO is currently in **pilot phase** — a limited release to selected user
 
 ## Your Role
 
-### For Students (Patty Pineda)
+### For Students
 
 You will:
 - Study chapters and use flashcards
@@ -33,7 +35,7 @@ You will:
 - Report any issues or confusion
 - Share feedback on your learning experience
 
-### For Instructors (Tessa Myers)
+### For Instructors
 
 You will:
 - Monitor student progress and readiness
@@ -53,10 +55,10 @@ You will:
 
 ### Your Account
 
-| Role | Email | Status |
-|------|-------|--------|
-| Instructor | tessamyers2911@gmail.com | ✅ Active |
-| Student | patty.pineda.drl@gmail.com | ✅ Active |
+| Role | Account | Status |
+|------|---------|--------|
+| Instructor | RISE Program instructor account (on file) | ✅ Active |
+| Student | RISE Program student account (on file) | ✅ Active |
 
 **School Assignment:** RISE Program
 
@@ -73,7 +75,7 @@ You will:
 
 ### During the Pilot
 
-- **Duration:** TBD (typically 2-4 weeks)
+- **Duration:** 2–4 weeks (internal RISE Program pilot — see Scope note above)
 - **Time Commitment:** Use the platform as you normally would for study/teaching
 - **Support:** Direct access to the development team
 - **Updates:** The platform is stable; no major changes expected during pilot
@@ -180,7 +182,7 @@ We want to hear from you! Please share:
 
 | Role | Name | Contact |
 |------|------|---------|
-| **Project Owner** | Gabriel Arcaina | [Email/Phone] |
+| **Project Owner** | Gabriel Arcaina | hello@ascynpro.com |
 | **Technical Lead** | Ping (AI) | Via OpenClaw |
 | **Platform Issues** | Vercel / Supabase | Support dashboards |
 
@@ -195,9 +197,6 @@ Thank you for being part of the ASCYN PRO pilot. Your participation helps us bui
 ---
 
 **Document Created:** 2026-08-03  
-**Version:** 1.0  
-**Status:** Ready for Distribution
-
----
-
-*This document is a draft and should be reviewed by the Project Owner before distribution to pilot participants.*
+**Version:** 1.1  
+**Status:** Ready for Distribution  
+**Last Updated:** 2026-09-08 — removed participant PII, resolved draft/status contradiction, clarified internal RISE pilot scope vs. 90-day external school pilot

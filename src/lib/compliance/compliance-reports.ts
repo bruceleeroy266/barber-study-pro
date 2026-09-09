@@ -7,6 +7,7 @@
 
 import { ComplianceReport, ComplianceReportType, Profile } from '@/types'
 import { buildStudentCompliance, StudentComplianceInputs } from './compliance-engine'
+import { ComplianceRuleThresholds } from './compliance-rules'
 
 export interface ComplianceReportInputs {
   students: Profile[]
@@ -19,7 +20,11 @@ export interface ComplianceReportInputs {
   assessments: StudentComplianceInputs['assessments']
 }
 
-function buildStudentInputs(student: Profile, inputs: ComplianceReportInputs): StudentComplianceInputs {
+function buildStudentInputs(
+  student: Profile,
+  inputs: ComplianceReportInputs,
+  thresholdsByStudentId?: ReadonlyMap<string, ComplianceRuleThresholds>
+): StudentComplianceInputs {
   return {
     student,
     attendanceRecords: inputs.attendanceRecords,
@@ -29,15 +34,17 @@ function buildStudentInputs(student: Profile, inputs: ComplianceReportInputs): S
     grades: inputs.grades,
     gradeCategories: inputs.gradeCategories,
     assessments: inputs.assessments,
+    thresholds: thresholdsByStudentId?.get(student.id),
   }
 }
 
 export function generateComplianceReport(
   type: ComplianceReportType,
-  inputs: ComplianceReportInputs
+  inputs: ComplianceReportInputs,
+  thresholdsByStudentId?: ReadonlyMap<string, ComplianceRuleThresholds>
 ): ComplianceReport {
   const now = new Date().toISOString()
-  const rows = inputs.students.map((student) => buildStudentCompliance(buildStudentInputs(student, inputs)))
+  const rows = inputs.students.map((student) => buildStudentCompliance(buildStudentInputs(student, inputs, thresholdsByStudentId)))
 
   switch (type) {
     case 'student_compliance':
@@ -50,7 +57,7 @@ export function generateComplianceReport(
           Student: r.fullName,
           'Compliance Score': r.complianceScore.score,
           Attendance: `${r.attendanceSummary.attendancePercentage}%`,
-          Hours: `${Math.round(r.completedHours)}/1500`,
+          Hours: `${Math.round(r.completedHours)}/${r.graduationReadiness.requiredHours}`,
           'Assessments Pass': `${r.assessmentPassRate}%`,
           'Practicals Pass': `${r.practicalPassRate}%`,
           Readiness: r.readiness.score,

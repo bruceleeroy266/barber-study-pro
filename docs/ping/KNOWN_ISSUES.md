@@ -273,22 +273,39 @@
 - **Title:** No analytics configured (no Vercel Analytics or Speed Insights)
 - **Description:** No analytics are configured. This prevents tracking user behavior, performance metrics, and other analytics data.
 - **Priority:** Low
-- **Status:** Open
+- **Status:** Resolved
 - **Date Opened:** 2026-07-26
+- **Date Resolved:** 2026-09-08
 - **Related Project:** ASCYN PRO
 - **Owner:** Ping
+- **Resolution:** Vercel Web Analytics and Vercel Speed Insights are enabled and verified live in production (2026-09-08): `/_vercel/insights/script.js` and `/_vercel/speed-insights/script.js` serve 200 with active ingestion endpoints, and the components render site-wide via the root layout (`src/components/analytics/VercelAnalytics.tsx`, mounted in `src/app/layout.tsx`). Google Analytics 4 and Microsoft Clarity remain configured but inactive (env-gated behind `NEXT_PUBLIC_GA_MEASUREMENT_ID` / `NEXT_PUBLIC_CLARITY_PROJECT_ID`). Privacy Policy §7 updated to disclose active Vercel analytics collection.
+
+---
+
+### ISSUE-013: Demo Claims Per-State Board Alignment That Does Not Exist Yet
+
+- **ID:** ISSUE-013
+- **Title:** Locked demo copy claims state-board-specific alignment the product does not currently provide
+- **Description:** The locked NABBA demo (`src/app/demo/DemoClient.tsx`, ~line 1467) tells visitors ASCYN PRO offers "Customized content and practice exams aligned to specific state board requirements and regulations." The platform currently ships one standard barbering curriculum; it does **not** customize content or practice exams per state board. With the nationwide pilot approved (founder decision 2026-09-08), this claim will be seen by schools outside Oklahoma and needs content review.
+- **Priority:** Medium
+- **Status:** Open
+- **Date Opened:** 2026-09-08
+- **Related Project:** ASCYN PRO
+- **Owner:** Ping (content review with Gabriel)
 - **Notes:**
-  - No Vercel Analytics or Speed Insights found
-  - Last verified: 2026-07-26
-- **Workaround:** None — analytics are not available
-- **Permanent Fix:** Install and configure Vercel Analytics and Speed Insights
+  - Affects: `src/app/demo/DemoClient.tsx` (~line 1467, FAQ/schools copy)
+  - Demo content is LOCKED for NABBA — do **not** edit before the event
+  - Scheduled for post-NABBA content review; either implement per-state alignment or soften the claim
+  - Related: hour/state displays were de-hard-coded the same day (programs.required_hours + schools.state now drive instructor student-detail and compliance surfaces)
+- **Workaround:** None — claim remains visible in locked demo until post-NABBA review
+- **Permanent Fix:** Post-NABBA content review: revise the claim to match actual product behavior, or build the per-state alignment it describes
 - **Resolution:** (Not yet resolved)
 
 ---
 
 ## Resolved Issues
 
-*(No resolved issues yet)*
+- **ISSUE-012** (No Analytics Configured) — Resolved 2026-09-08. See entry above.
 
 ---
 

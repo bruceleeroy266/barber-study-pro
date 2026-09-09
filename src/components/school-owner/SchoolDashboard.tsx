@@ -23,6 +23,7 @@ import {
   generateSchoolReport,
 } from '@/lib/school-owner/school-analytics'
 import { buildStudentCompliance, generateComplianceReport } from '@/lib/compliance'
+import { resolveStudentProgramRequirements } from '@/lib/programs/requirements'
 import SchoolOverviewMetrics from './SchoolOverviewMetrics'
 import ComplianceReportingCenter from '@/components/compliance/ComplianceReportingCenter'
 import SchoolHealthScore from './SchoolHealthScore'
@@ -40,6 +41,11 @@ interface SchoolDashboardProps {
 export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps) {
   const supabase = await createClient()
   const queryErrors: string[] = []
+
+  // Resolve the school's configured program requirement (programs.required_hours)
+  // so analytics use the applicable value instead of any hard-coded assumption.
+  // Soft-fails to the schema default when no program is configured.
+  const programRequirements = await resolveStudentProgramRequirements(supabase, schoolId)
 
   const { data: studentsData, error: studentsError } = await supabase
     .from('profiles')
@@ -198,6 +204,7 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
     gradeCategories,
     assessments,
     notifications,
+    requiredHours: programRequirements.requiredHours,
   }
 
   const metrics = buildSchoolOverviewMetrics(inputs)

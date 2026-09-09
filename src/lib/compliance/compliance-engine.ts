@@ -14,7 +14,7 @@ import { localChapters } from '@/lib/local-data'
 import { calculateComplianceScore, ComplianceScoreInputs } from './compliance-score'
 import { determineBoardEligibility } from './board-eligibility'
 import { calculateGraduationReadiness } from './graduation-readiness'
-import { DEFAULT_COMPLIANCE_THRESHOLDS } from './compliance-rules'
+import { ComplianceRuleThresholds, DEFAULT_COMPLIANCE_THRESHOLDS } from './compliance-rules'
 
 export interface StudentComplianceInputs {
   student: Profile
@@ -25,10 +25,17 @@ export interface StudentComplianceInputs {
   grades: Grade[]
   gradeCategories: GradeCategory[]
   assessments: Assessment[]
+  /**
+   * Optional per-student thresholds (e.g. built from the student's program via
+   * thresholdsWithRequiredHours(programs.required_hours)). Defaults to
+   * DEFAULT_COMPLIANCE_THRESHOLDS, preserving prior behavior.
+   */
+  thresholds?: ComplianceRuleThresholds
 }
 
 export function buildStudentCompliance(inputs: StudentComplianceInputs) {
   const { student, attendanceRecords, hourLogs, quizAttempts, progress, grades, gradeCategories, assessments } = inputs
+  const thresholds = inputs.thresholds ?? DEFAULT_COMPLIANCE_THRESHOLDS
 
   const attSummary = calculateAttendanceSummary(
     student.id,
@@ -72,8 +79,8 @@ export function buildStudentCompliance(inputs: StudentComplianceInputs) {
     completedPracticals: passedPracticals,
   }
 
-  const complianceScore = calculateComplianceScore(complianceInputs)
-  const boardEligibility = determineBoardEligibility(complianceInputs)
+  const complianceScore = calculateComplianceScore(complianceInputs, thresholds)
+  const boardEligibility = determineBoardEligibility(complianceInputs, thresholds)
   const graduationReadiness = calculateGraduationReadiness({
     studentId: student.id,
     fullName: student.full_name,
@@ -83,7 +90,7 @@ export function buildStudentCompliance(inputs: StudentComplianceInputs) {
     attendancePercentage: attSummary.attendancePercentage,
     readinessScore: readiness.score,
     overallGrade,
-  })
+  }, thresholds)
 
   return {
     studentId: student.id,
@@ -103,7 +110,7 @@ export function buildStudentCompliance(inputs: StudentComplianceInputs) {
 export function buildComplianceAlerts(inputs: StudentComplianceInputs): ComplianceAlert[] {
   const { student, attendanceRecords, hourLogs, quizAttempts, progress, grades, gradeCategories, assessments } = inputs
   const alerts: ComplianceAlert[] = []
-  const thresholds = DEFAULT_COMPLIANCE_THRESHOLDS
+  const thresholds = inputs.thresholds ?? DEFAULT_COMPLIANCE_THRESHOLDS
 
   const attSummary = calculateAttendanceSummary(
     student.id,

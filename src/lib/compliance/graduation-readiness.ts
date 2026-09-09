@@ -7,7 +7,7 @@
  */
 
 import { GraduationReadiness } from '@/types'
-import { DEFAULT_COMPLIANCE_THRESHOLDS } from './compliance-rules'
+import { ComplianceRuleThresholds, DEFAULT_COMPLIANCE_THRESHOLDS } from './compliance-rules'
 
 export interface GraduationReadinessInputs {
   studentId: string
@@ -20,8 +20,10 @@ export interface GraduationReadinessInputs {
   overallGrade: number
 }
 
-export function calculateGraduationReadiness(inputs: GraduationReadinessInputs): GraduationReadiness {
-  const thresholds = DEFAULT_COMPLIANCE_THRESHOLDS
+export function calculateGraduationReadiness(
+  inputs: GraduationReadinessInputs,
+  thresholds: ComplianceRuleThresholds = DEFAULT_COMPLIANCE_THRESHOLDS
+): GraduationReadiness {
   const remainingItems: string[] = []
 
   const hoursRatio = Math.min(1, inputs.completedHours / thresholds.requiredHours)

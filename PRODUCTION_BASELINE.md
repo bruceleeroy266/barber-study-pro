@@ -303,8 +303,8 @@
 |---|---|---|
 | Deployment | ✅ Live | Automatic from `main` |
 | Edge Network | ✅ Live | Global CDN |
-| Analytics | ⚠️ Available | Not configured |
-| Speed Insights | ⚠️ Available | Not configured |
+| Analytics | ✅ Enabled | Vercel Web Analytics live in production (verified 2026-09-08); GA4 configured but inactive (env-gated) |
+| Speed Insights | ✅ Enabled | Vercel Speed Insights live in production (verified 2026-09-08); Microsoft Clarity configured but inactive (env-gated) |
 
 ---
 

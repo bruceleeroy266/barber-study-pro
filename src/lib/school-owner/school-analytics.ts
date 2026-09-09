@@ -30,8 +30,19 @@ import { calculateAttendanceSummary } from '@/lib/attendance'
 import { calculateBoardReadiness } from '@/lib/readiness'
 import { calculateOverallGrade, getLetterGrade } from '@/lib/gradebook'
 import { localChapters } from '@/lib/local-data'
+import { DEFAULT_REQUIRED_HOURS } from '@/lib/programs/requirements'
 
-export const REQUIRED_HOURS = 1500
+/**
+ * Resolve the applicable program's required hours for school analytics.
+ * Callers pass the school's configured programs.required_hours (resolved via
+ * src/lib/programs/requirements.ts); missing/invalid values fall back to the
+ * programs table schema default so legacy/demo behavior is preserved.
+ */
+function resolveRequiredHours(requiredHours?: number | null): number {
+  return typeof requiredHours === 'number' && Number.isFinite(requiredHours) && requiredHours > 0
+    ? requiredHours
+    : DEFAULT_REQUIRED_HOURS
+}
 
 export interface SchoolAnalyticsInputs {
   students: Profile[]
@@ -44,6 +55,8 @@ export interface SchoolAnalyticsInputs {
   gradeCategories: GradeCategory[]
   assessments: Assessment[]
   notifications: Notification[]
+  /** Applicable program's configured required_hours; falls back to the schema default when unset/invalid. */
+  requiredHours?: number | null
 }
 
 function getDaysAgo(days: number): string {
@@ -84,6 +97,7 @@ function studentAttendanceRecords(studentId: string, records: AttendanceRecord[]
 export function buildSchoolOverviewMetrics(inputs: SchoolAnalyticsInputs): SchoolOverviewMetrics {
   const { students, attendanceRecords, quizAttempts, progress, grades, gradeCategories, assessments, hourLogs } =
     inputs
+  const requiredHours = resolveRequiredHours(inputs.requiredHours)
 
   const totalStudents = students.length
   const activeStudents = students.filter((s) => s.role === 'student' || s.role === 'apprentice').length
@@ -143,7 +157,7 @@ export function buildSchoolOverviewMetrics(inputs: SchoolAnalyticsInputs): Schoo
     averageReadiness: average([readinessSum]),
     averageGrade: average([gradeSum]),
     completedHours: Math.round(completedHoursSum),
-    remainingHours: Math.max(0, totalStudents * REQUIRED_HOURS - Math.round(completedHoursSum)),
+    remainingHours: Math.max(0, totalStudents * requiredHours - Math.round(completedHoursSum)),
     assessmentCompletionRate:
       assessmentTotalCount > 0 ? Math.round((assessmentCompletedCount / assessmentTotalCount) * 100) : 0,
   }
@@ -152,6 +166,7 @@ export function buildSchoolOverviewMetrics(inputs: SchoolAnalyticsInputs): Schoo
 export function buildStudentPerformanceRows(inputs: SchoolAnalyticsInputs): StudentPerformanceRow[] {
   const { students, attendanceRecords, quizAttempts, progress, grades, gradeCategories, assessments, hourLogs } =
     inputs
+  const requiredHours = resolveRequiredHours(inputs.requiredHours)
 
   return students.map((student) => {
     const attSummary = calculateAttendanceSummary(student.id, studentAttendanceRecords(student.id, attendanceRecords))
@@ -193,7 +208,7 @@ export function buildStudentPerformanceRows(inputs: SchoolAnalyticsInputs): Stud
       readinessScore: readiness.score,
       overallGrade: overall,
       completedHours: Math.round(completedHours),
-      requiredHours: REQUIRED_HOURS,
+      requiredHours,
       assessmentPassRate: passRate,
       isAtRisk: riskReasons.length > 0,
       riskReasons,
@@ -252,6 +267,7 @@ export function buildInstructorPerformanceRows(inputs: SchoolAnalyticsInputs): I
 
 export function buildSchoolHealthScore(inputs: SchoolAnalyticsInputs): SchoolHealthScore {
   const metrics = buildSchoolOverviewMetrics(inputs)
+  const requiredHours = resolveRequiredHours(inputs.requiredHours)
 
   const attendanceScore = Math.min(100, metrics.averageAttendance)
   const readinessScore = Math.min(100, metrics.averageReadiness)
@@ -261,7 +277,7 @@ export function buildSchoolHealthScore(inputs: SchoolAnalyticsInputs): SchoolHea
     metrics.totalStudents > 0
       ? Math.min(
           100,
-          Math.round((metrics.completedHours / (metrics.totalStudents * REQUIRED_HOURS)) * 100)
+          Math.round((metrics.completedHours / (metrics.totalStudents * requiredHours)) * 100)
         )
       : 0
 
@@ -305,6 +321,7 @@ export function buildSchoolHealthScore(inputs: SchoolAnalyticsInputs): SchoolHea
 
 export function buildSchoolAlerts(inputs: SchoolAnalyticsInputs): SchoolOwnerAlert[] {
   const { students, attendanceRecords, quizAttempts, progress, assessments, notifications } = inputs
+  const requiredHours = resolveRequiredHours(inputs.requiredHours)
   const alerts: SchoolOwnerAlert[] = []
 
   const unreadNotifications = notifications.filter((n) => !n.read)
@@ -364,12 +381,12 @@ export function buildSchoolAlerts(inputs: SchoolAnalyticsInputs): SchoolOwnerAle
       .filter((h) => h.status === 'approved')
       .reduce((sum, h) => sum + h.minutes, 0)
     const completedHours = approvedMinutes / 60
-    if (completedHours < REQUIRED_HOURS * 0.5) {
+    if (completedHours < requiredHours * 0.5) {
       alerts.push({
         id: `hours-${student.id}`,
         type: 'missing_hours',
         title: 'Missing Hours',
-        description: `${student.full_name}: ${Math.round(completedHours)} of ${REQUIRED_HOURS} hours completed`,
+        description: `${student.full_name}: ${Math.round(completedHours)} of ${requiredHours} hours completed`,
         studentId: student.id,
         studentName: student.full_name,
         priority: 'medium',

@@ -5,8 +5,9 @@ import { Profile, StudentProgress, QuizAttempt, InstructorNote, HourLog, HourSta
 import { localChapters, getLocalQuiz } from '@/lib/local-data'
 import { allQuizQuestions } from '@/lib/quiz-data'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
-import { demoStudents, demoStudentProgress, demoStudentQuizAttempts, demoInstructorNotes, demoHourLogs, demoAttendanceRecords, demoInstructorAttendanceNotes } from '@/lib/demo-data'
+import { demoStudents, demoStudentProgress, demoStudentQuizAttempts, demoInstructorNotes, demoHourLogs, demoAttendanceRecords, demoInstructorAttendanceNotes, demoAcademicPrograms, demoSchool } from '@/lib/demo-data'
 import { isDemoDataAllowed } from '@/lib/demo-helpers'
+import { defaultProgramRequirements, resolveSchoolState, resolveStudentProgramRequirements } from '@/lib/programs/requirements'
 import DemoDataBanner from '@/components/DemoDataBanner'
 import { getDemoMissedQuestionsForUser } from '@/lib/demo-analytics'
 import { calculateBoardReadiness } from '@/lib/readiness'
@@ -208,6 +209,20 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     notFound()
   }
 
+  // Resolve the student's program requirements (programs.required_hours) and the
+  // school's configured state, so hour tracking and the Board Hours Summary use
+  // school-configured values instead of hard-coded single-state assumptions.
+  // Fallback chain: active enrollment's program → school's active program →
+  // default 1500 (matches the programs table schema default); missing state → '—'.
+  const [programRequirements, schoolState] = await Promise.all([
+    instructorProfile.school_id
+      ? resolveStudentProgramRequirements(supabase, instructorProfile.school_id, studentId)
+      : Promise.resolve(defaultProgramRequirements()),
+    instructorProfile.school_id
+      ? resolveSchoolState(supabase, instructorProfile.school_id)
+      : Promise.resolve(null),
+  ])
+
   // Use local chapters (not Supabase)
   const chapters = localChapters
 
@@ -282,7 +297,12 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
   const attendanceSummary = calculateAttendanceSummary(studentId, attendanceRecords)
   const recentAttendance = getRecentAttendance(attendanceRecords, studentId, 14)
 
-  const REQUIRED_MINUTES = 1500 * 60
+  // Demo-mode cosmetic fallback: the fictional demo school's configured values.
+  const demoProgram = demoAcademicPrograms.find((p) => p.active) ?? demoAcademicPrograms[0]
+  const programName = programRequirements.programName ?? (usingDemoData ? demoProgram?.name ?? null : null) ?? '—'
+  const boardState = schoolState ?? (usingDemoData ? demoSchool.state : null) ?? '—'
+
+  const REQUIRED_MINUTES = programRequirements.requiredHours * 60
   const approvedMinutes = hourLogRecords
     .filter((h) => h.status === 'approved')
     .reduce((sum, h) => sum + h.minutes, 0)
@@ -1067,8 +1087,8 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           {/* Student Info */}
           <div className="mb-6">
             <StudentIdentity student={resolvedStudent} variant="light" showRole />
-            <p className="text-sm text-silver-gray mt-2">Program: Barbering</p>
-            <p className="text-sm text-silver-gray">State: Oklahoma</p>
+            <p className="text-sm text-silver-gray mt-2">Program: {programName}</p>
+            <p className="text-sm text-silver-gray">State: {boardState}</p>
           </div>
 
           {/* Official Hour Totals */}

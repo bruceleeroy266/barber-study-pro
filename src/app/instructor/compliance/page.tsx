@@ -13,7 +13,8 @@ import {
 } from '@/lib/demo-data'
 import { isDemoFallbackEnabled } from '@/lib/demo-helpers'
 import BackButton from '@/components/ui/BackButton'
-import { buildStudentCompliance, buildComplianceAlerts, generateComplianceReport } from '@/lib/compliance'
+import { buildStudentCompliance, buildComplianceAlerts, generateComplianceReport, thresholdsWithRequiredHours, ComplianceRuleThresholds } from '@/lib/compliance'
+import { resolveProgramRequirementsForStudents } from '@/lib/programs/requirements'
 import ComplianceAlertsPanel from '@/components/compliance/ComplianceAlertsPanel'
 import ComplianceReportingCenter from '@/components/compliance/ComplianceReportingCenter'
 import { CheckCircle, AlertTriangle, Clock, Wrench, ClipboardCheck, Target } from 'lucide-react'
@@ -57,6 +58,15 @@ export default async function InstructorComplianceDashboard() {
 
   const studentIds = students.map((s) => s.id)
   const studentIdFilter = studentIds.length > 0 ? studentIds : ['__none__']
+
+  // Resolve each student's program requirements (programs.required_hours) so
+  // compliance surfaces reflect the school's configured program, not a
+  // hard-coded hours assumption. Falls back per student to the school program,
+  // then to the app-wide default.
+  const programRequirements = await resolveProgramRequirementsForStudents(supabase, schoolId, studentIds)
+  const thresholdsByStudentId = new Map<string, ComplianceRuleThresholds>(
+    studentIds.map((id) => [id, thresholdsWithRequiredHours(programRequirements.get(id)?.requiredHours)])
+  )
 
   const [attendanceRes, hoursRes, attemptsRes, progressRes, gradesRes, categoriesRes, assessmentsRes] =
     await Promise.all([
@@ -124,6 +134,7 @@ export default async function InstructorComplianceDashboard() {
       grades,
       gradeCategories,
       assessments,
+      thresholds: thresholdsByStudentId.get(student.id),
     })
   )
 
@@ -137,6 +148,7 @@ export default async function InstructorComplianceDashboard() {
       grades,
       gradeCategories,
       assessments,
+      thresholds: thresholdsByStudentId.get(student.id),
     })
   )
 
@@ -152,15 +164,18 @@ export default async function InstructorComplianceDashboard() {
   }
 
   const complianceReports = {
-    student_compliance: generateComplianceReport('student_compliance', reportInputs),
-    graduation_readiness: generateComplianceReport('graduation_readiness', reportInputs),
-    board_eligibility: generateComplianceReport('board_eligibility', reportInputs),
-    instructor_compliance: generateComplianceReport('instructor_compliance', reportInputs),
-    school_compliance: generateComplianceReport('school_compliance', reportInputs),
+    student_compliance: generateComplianceReport('student_compliance', reportInputs, thresholdsByStudentId),
+    graduation_readiness: generateComplianceReport('graduation_readiness', reportInputs, thresholdsByStudentId),
+    board_eligibility: generateComplianceReport('board_eligibility', reportInputs, thresholdsByStudentId),
+    instructor_compliance: generateComplianceReport('instructor_compliance', reportInputs, thresholdsByStudentId),
+    school_compliance: generateComplianceReport('school_compliance', reportInputs, thresholdsByStudentId),
   }
 
+  const requiredHoursFor = (studentId: string) =>
+    thresholdsByStudentId.get(studentId)?.requiredHours ?? programRequirements.get(studentId)?.requiredHours ?? 1500
+
   const atRiskStudents = studentCompliances.filter((c) => c.complianceScore.score < 70)
-  const missingHours = studentCompliances.filter((c) => c.completedHours < 1500 * 0.5)
+  const missingHours = studentCompliances.filter((c) => c.completedHours < requiredHoursFor(c.studentId) * 0.5)
   const missingPracticals = studentCompliances.filter((c) => c.practicalPassRate < 80)
   const missingAssessments = studentCompliances.filter((c) => c.assessmentPassRate < 80)
   const lowReadiness = studentCompliances.filter((c) => c.readiness.score < 70)
@@ -231,7 +246,7 @@ export default async function InstructorComplianceDashboard() {
                       <span className={`font-medium ${c.complianceScore.colorClass}`}>{c.complianceScore.score}</span>
                     </td>
                     <td className="px-4 py-3 text-[var(--color-text-secondary)]">{c.attendanceSummary.attendancePercentage}%</td>
-                    <td className="px-4 py-3 text-[var(--color-text-secondary)]">{Math.round(c.completedHours)}/1500</td>
+                    <td className="px-4 py-3 text-[var(--color-text-secondary)]">{Math.round(c.completedHours)}/{c.graduationReadiness.requiredHours}</td>
                     <td className="px-4 py-3 text-[var(--color-text-secondary)]">{c.assessmentPassRate}%</td>
                     <td className="px-4 py-3 text-[var(--color-text-secondary)]">{c.practicalPassRate}%</td>
                     <td className="px-4 py-3 text-[var(--color-text-secondary)]">{c.readiness.score}</td>

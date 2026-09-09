@@ -1,4 +1,5 @@
 import { Notification, NotificationPriority, AttendanceSummary, BoardReadiness, HourLog, StudentProgress, Grade, Assessment } from '@/types'
+import { DEFAULT_REQUIRED_HOURS } from '@/lib/programs/requirements'
 
 export interface NotificationInput {
   userId: string
@@ -9,6 +10,19 @@ export interface NotificationInput {
   progress?: StudentProgress[]
   grades?: Grade[]
   assessments?: Assessment[]
+  /** Applicable program's configured required_hours; falls back to the schema default when unset/invalid. */
+  requiredHours?: number | null
+}
+
+/**
+ * Resolve the applicable program's required hours for hour-pace checks.
+ * Falls back to DEFAULT_REQUIRED_HOURS (the programs table schema default)
+ * when the caller has no configured value.
+ */
+function resolveRequiredHours(requiredHours?: number | null): number {
+  return typeof requiredHours === 'number' && Number.isFinite(requiredHours) && requiredHours > 0
+    ? requiredHours
+    : DEFAULT_REQUIRED_HOURS
 }
 
 function buildNotification(
@@ -124,7 +138,8 @@ export function generateNotificationsFromReadiness(
 
 export function generateNotificationsFromHours(
   userId: string,
-  hourLogs: HourLog[]
+  hourLogs: HourLog[],
+  requiredHours?: number | null
 ): Notification[] {
   const notifications: Notification[] = []
   const approvedMinutes = hourLogs
@@ -133,7 +148,7 @@ export function generateNotificationsFromHours(
   const pendingMinutes = hourLogs
     .filter((h) => h.status === 'pending')
     .reduce((sum, h) => sum + h.minutes, 0)
-  const requiredMinutes = 1500 * 60 // rough demo requirement: 1500 hours
+  const requiredMinutes = resolveRequiredHours(requiredHours) * 60
 
   if (approvedMinutes < requiredMinutes * 0.5) {
     notifications.push(
@@ -295,7 +310,7 @@ export function generateAllNotifications(input: NotificationInput): Notification
     notifications.push(...generateNotificationsFromReadiness(input.userId, input.readiness))
   }
   if (input.hourLogs && input.hourLogs.length > 0) {
-    notifications.push(...generateNotificationsFromHours(input.userId, input.hourLogs))
+    notifications.push(...generateNotificationsFromHours(input.userId, input.hourLogs, input.requiredHours))
   }
   if (input.progress && input.progress.length > 0) {
     notifications.push(...generateNotificationsFromProgress(input.userId, input.progress))

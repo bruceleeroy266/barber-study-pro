@@ -27,6 +27,19 @@ export const DEFAULT_COMPLIANCE_THRESHOLDS: ComplianceRuleThresholds = {
   requiredPracticals: 10,
 }
 
+/**
+ * Build thresholds for a specific program by overriding only `requiredHours`
+ * with the school-configured value (programs.required_hours). All other
+ * thresholds stay at the app-wide defaults. A missing/invalid value preserves
+ * the default fallback behavior.
+ */
+export function thresholdsWithRequiredHours(requiredHours?: number | null): ComplianceRuleThresholds {
+  if (typeof requiredHours !== 'number' || !Number.isFinite(requiredHours) || requiredHours <= 0) {
+    return DEFAULT_COMPLIANCE_THRESHOLDS
+  }
+  return { ...DEFAULT_COMPLIANCE_THRESHOLDS, requiredHours }
+}
+
 export const COMPLIANCE_WEIGHTS = {
   attendance: 0.2,
   hours: 0.25,
