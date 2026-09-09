@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { createLead, updateLead } from '@/app/admin/nabba/leads/actions'
-import type { NabbaLead, LeadFormData, LeadTemperature, LeadStatus, LeadFollowUp, LeadInterest, LeadRole } from '@/types/nabba-leads'
+import type { NabbaLead, LeadFormData, LeadStatus, LeadFollowUp, LeadInterest, LeadRole } from '@/types/nabba-leads'
 import {
   LEAD_ROLE_OPTIONS,
   LEAD_INTEREST_OPTIONS,
@@ -49,6 +49,11 @@ export default function LeadForm({ existingLead, onSuccess, onCancel }: LeadForm
         }
       : { ...emptyForm }
   )
+  // Status is tracked in local state (NOT in LeadFormData) and persisted only
+  // via Save Changes — single write path. Previously the select was prop-bound
+  // with an onChange auto-save, while Save re-sent the original prop status,
+  // overwriting the user's selection.
+  const [status, setStatus] = useState<LeadStatus>(existingLead?.status ?? 'NEW')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isPending, startTransition] = useTransition()
   const [saved, setSaved] = useState(false)
@@ -72,7 +77,7 @@ export default function LeadForm({ existingLead, onSuccess, onCancel }: LeadForm
       if (existingLead) {
         const result = await updateLead(existingLead.id, {
           ...form,
-          status: existingLead.status,
+          status,
         })
         if (result.success && result.lead) {
           setSaved(true)
@@ -299,20 +304,15 @@ export default function LeadForm({ existingLead, onSuccess, onCancel }: LeadForm
         </select>
       </div>
 
-      {/* Status (edit mode only) */}
+      {/* Status (edit mode only) — local state, persisted via Save Changes */}
       {existingLead && (
         <div>
           <label className="flex items-center gap-2 text-sm font-medium text-[var(--color-text-secondary)] mb-2">
             Status
           </label>
           <select
-            value={existingLead.status}
-            onChange={(e) => {
-              const newStatus = e.target.value as LeadStatus
-              startTransition(async () => {
-                await updateLead(existingLead.id, { status: newStatus })
-              })
-            }}
+            value={status}
+            onChange={(e) => setStatus(e.target.value as LeadStatus)}
             className="w-full px-4 py-3 bg-[var(--color-background-secondary)] border border-[var(--color-border-primary)] rounded-xl text-white focus:outline-none focus:border-[var(--color-brand-gold)] focus:ring-1 focus:ring-[var(--color-brand-gold)] transition-colors text-base appearance-none"
           >
             {LEAD_STATUS_OPTIONS.map((s) => (
