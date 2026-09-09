@@ -30,6 +30,8 @@ export {
   isInstructorOrAdmin,
   isAdmin,
   isSchoolAdmin,
+  isPlatformAdminProfile,
+  type PlatformAdminProfileShape,
   isLearner,
   isKnownRole,
   getRoleDisplayName,

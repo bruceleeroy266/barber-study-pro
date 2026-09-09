@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase-server'
-import { isAdmin } from '@/lib/auth-helpers'
+import { isAdmin, isPlatformAdminProfile } from '@/lib/auth-helpers'
 import { hasPermission } from '@/lib/security/permissions'
 import { SecurityEventType } from '@/lib/security/audit-logger'
 
@@ -61,8 +61,10 @@ export async function getAuditHistory(filters: AuditFilters = {}): Promise<Audit
   }
 
   // Phase 13D: regular school admins can only view logs for their school.
-  // Platform super admins may view all logs.
-  const canViewPlatformLogs = hasPermission(profile.role, 'view_platform_analytics')
+  // Platform admins (role='admin', school_id IS NULL) and future platform
+  // super admins may view all logs.
+  const canViewPlatformLogs =
+    isPlatformAdminProfile(profile) || hasPermission(profile.role, 'view_platform_analytics')
   const effectiveSchoolId = canViewPlatformLogs ? filters.schoolId : profile.school_id
 
   try {

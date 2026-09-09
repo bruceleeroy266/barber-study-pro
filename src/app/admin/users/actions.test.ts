@@ -106,7 +106,11 @@ function createMockServiceClient(overrides: ServiceClientOverrides = {}) {
   }
 }
 
-function setupMocks(serviceClientOverrides: ServiceClientOverrides = {}, role = 'admin') {
+function setupMocks(
+  serviceClientOverrides: ServiceClientOverrides = {},
+  role = 'admin',
+  callerSchoolId: string | null = RISE_SCHOOL_ID
+) {
   const mockServiceClient = createMockServiceClient(serviceClientOverrides)
 
   vi.doMock('@/lib/supabase-server', () => ({
@@ -121,7 +125,7 @@ function setupMocks(serviceClientOverrides: ServiceClientOverrides = {}, role = 
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnValue({
             single: vi.fn().mockResolvedValue({
-              data: { role, school_id: RISE_SCHOOL_ID },
+              data: { role, school_id: callerSchoolId },
               error: null,
             }),
           }),
@@ -489,16 +493,20 @@ describe('Phase 7A Slice 3: Domain Record Creation', () => {
     it('does NOT create any domain record when inviting a school_admin', async () => {
       const studentsInsertSpy = vi.fn().mockResolvedValue({ data: null, error: null })
       const instructorsInsertSpy = vi.fn().mockResolvedValue({ data: null, error: null })
-      const mockServiceClient = setupMocks({
-        from: {
-          students: {
-            insert: studentsInsertSpy,
-          },
-          instructors: {
-            insert: instructorsInsertSpy,
+      const mockServiceClient = setupMocks(
+        {
+          from: {
+            students: {
+              insert: studentsInsertSpy,
+            },
+            instructors: {
+              insert: instructorsInsertSpy,
+            },
           },
         },
-      })
+        'admin',
+        null // caller is a platform admin (school-attached admins cannot create school_admins)
+      )
       const { inviteUser: inviteUserAction } = await import('./actions')
 
       const result = await inviteUserAction({
@@ -517,16 +525,20 @@ describe('Phase 7A Slice 3: Domain Record Creation', () => {
     it('does NOT create any domain record when inviting an admin', async () => {
       const studentsInsertSpy = vi.fn().mockResolvedValue({ data: null, error: null })
       const instructorsInsertSpy = vi.fn().mockResolvedValue({ data: null, error: null })
-      const mockServiceClient = setupMocks({
-        from: {
-          students: {
-            insert: studentsInsertSpy,
-          },
-          instructors: {
-            insert: instructorsInsertSpy,
+      const mockServiceClient = setupMocks(
+        {
+          from: {
+            students: {
+              insert: studentsInsertSpy,
+            },
+            instructors: {
+              insert: instructorsInsertSpy,
+            },
           },
         },
-      })
+        'admin',
+        null // caller is a platform admin (school-attached admins cannot create admins)
+      )
       const { inviteUser: inviteUserAction } = await import('./actions')
 
       const result = await inviteUserAction({
@@ -762,24 +774,28 @@ describe('Phase 7A Slice 3: Domain Record Creation', () => {
     it('uses the authoritative school_id from the validated form data', async () => {
       const customSchoolId = 'custom-school-id-12345'
       const studentsInsertSpy = vi.fn().mockResolvedValue({ data: null, error: null })
-      const mockServiceClient = setupMocks({
-        from: {
-          schools: {
-            select: () => ({
-              eq: () => ({
-                single: () =>
-                  Promise.resolve({
-                    data: { id: customSchoolId, is_active: true, deleted_at: null },
-                    error: null,
-                  }),
+      const mockServiceClient = setupMocks(
+        {
+          from: {
+            schools: {
+              select: () => ({
+                eq: () => ({
+                  single: () =>
+                    Promise.resolve({
+                      data: { id: customSchoolId, is_active: true, deleted_at: null },
+                      error: null,
+                    }),
+                }),
               }),
-            }),
-          },
-          students: {
-            insert: studentsInsertSpy,
+            },
+            students: {
+              insert: studentsInsertSpy,
+            },
           },
         },
-      })
+        'admin',
+        null // caller is a platform admin inviting to a school other than their own
+      )
       const { inviteUser: inviteUserAction } = await import('./actions')
 
       const result = await inviteUserAction({
@@ -906,16 +922,20 @@ describe('Phase 7A Slice 3: Domain Record Creation', () => {
     it('does NOT create any domain record when creating a school_admin', async () => {
       const studentsInsertSpy = vi.fn().mockResolvedValue({ data: null, error: null })
       const instructorsInsertSpy = vi.fn().mockResolvedValue({ data: null, error: null })
-      const mockServiceClient = setupMocks({
-        from: {
-          students: {
-            insert: studentsInsertSpy,
-          },
-          instructors: {
-            insert: instructorsInsertSpy,
+      const mockServiceClient = setupMocks(
+        {
+          from: {
+            students: {
+              insert: studentsInsertSpy,
+            },
+            instructors: {
+              insert: instructorsInsertSpy,
+            },
           },
         },
-      })
+        'admin',
+        null // caller is a platform admin (school-attached admins cannot create school_admins)
+      )
       const { createUser: createUserAction } = await import('./actions')
 
       const result = await createUserAction({
@@ -1163,7 +1183,8 @@ describe('Phase 7A Slice 3: Domain Record Creation', () => {
             },
           },
         },
-        'admin'
+        'admin',
+        null // platform admin: role='admin' AND school_id IS NULL
       )
       const { inviteUser: inviteUserAction } = await import('./actions')
 

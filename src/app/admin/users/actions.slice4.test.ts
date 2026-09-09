@@ -768,7 +768,7 @@ describe('Phase 7A Slice 4: getSchoolPrograms()', () => {
   })
 
   it('returns programs for the caller school', async () => {
-    setupEnrollmentMocks()
+    setupEnrollmentMocks({}, 'admin', null) // platform admin caller
     const { getSchoolPrograms: getProgramsAction } = await import('./actions')
 
     const result = await getProgramsAction()

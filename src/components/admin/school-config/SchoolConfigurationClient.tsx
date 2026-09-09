@@ -81,11 +81,19 @@ const tabs: TabDef[] = [
 interface SchoolConfigurationClientProps {
   initialConfig: SchoolConfiguration
   isDemo: boolean
+  /**
+   * Platform-admin only: the school being administered. Passed through to the
+   * save action, which re-validates it server-side. Undefined for
+   * school-attached admins (the server uses their own profile.school_id and
+   * never trusts a client-provided school id).
+   */
+  targetSchoolId?: string
 }
 
 export default function SchoolConfigurationClient({
   initialConfig,
   isDemo,
+  targetSchoolId,
 }: SchoolConfigurationClientProps) {
   const [activeTab, setActiveTab] = useState<TabId>('profile')
   const [config, setConfig] = useState<SchoolConfiguration>(initialConfig)
@@ -124,7 +132,7 @@ export default function SchoolConfigurationClient({
     setIsSaving(true)
     setFeedback(null)
 
-    const result = await saveSchoolConfiguration(config)
+    const result = await saveSchoolConfiguration(config, targetSchoolId)
 
     setIsSaving(false)
     setFeedback({

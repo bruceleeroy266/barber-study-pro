@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase-server'
-import { isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
+import { isAdmin, isSchoolAdmin, isPlatformAdminProfile } from '@/lib/auth-helpers'
 import { SchoolConfiguration } from '@/types'
 import { validateSchoolConfiguration, hasValidationErrors } from '@/lib/school-config/validation'
 import { logPermissionDenied, logSensitiveConfigChange } from '@/lib/security/audit-logger'
@@ -12,8 +12,13 @@ export interface SaveConfigurationResult {
   savedConfig?: SchoolConfiguration
 }
 
+function isValidUuid(value: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value)
+}
+
 export async function saveSchoolConfiguration(
-  config: SchoolConfiguration
+  config: SchoolConfiguration,
+  targetSchoolId?: string
 ): Promise<SaveConfigurationResult> {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -40,13 +45,49 @@ export async function saveSchoolConfiguration(
     return { success: false, message: 'Only administrators can save school settings.' }
   }
 
-  // Multi-school isolation: an admin must be assigned to a school and may only
-  // mutate settings for that school. Never accept a school id from the client.
-  if (!profile.school_id) {
-    return {
-      success: false,
-      message: 'You must be assigned to a school before you can save school settings.',
+  // Resolve the school being administered.
+  // - Platform admin (role='admin', school_id IS NULL): may administer any
+  //   school, identified by targetSchoolId and validated server-side against
+  //   active, non-deleted schools.
+  // - School-attached admin / school_admin: strictly their own school.
+  //   A client-provided targetSchoolId is NEVER trusted for these callers.
+  let effectiveSchoolId: string
+
+  if (isPlatformAdminProfile(profile)) {
+    if (!targetSchoolId || !isValidUuid(targetSchoolId)) {
+      return { success: false, message: 'A target school must be selected before saving.' }
     }
+
+    const { data: targetSchool } = await supabase
+      .from('schools')
+      .select('id, is_active, deleted_at')
+      .eq('id', targetSchoolId)
+      .single()
+
+    if (!targetSchool || !targetSchool.is_active || targetSchool.deleted_at) {
+      await logPermissionDenied('manage_settings', {
+        userId: user.id,
+        email: user.email,
+        role: profile.role,
+        schoolId: null,
+        resource: '/admin/school/configuration',
+        resourceId: targetSchoolId,
+        action: 'save',
+      })
+      return { success: false, message: 'The selected school is not active or does not exist.' }
+    }
+
+    effectiveSchoolId = targetSchool.id
+  } else {
+    // Multi-school isolation: an admin must be assigned to a school and may only
+    // mutate settings for that school. Never accept a school id from the client.
+    if (!profile.school_id) {
+      return {
+        success: false,
+        message: 'You must be assigned to a school before you can save school settings.',
+      }
+    }
+    effectiveSchoolId = profile.school_id
   }
 
   const errors = validateSchoolConfiguration(config)
@@ -78,7 +119,7 @@ export async function saveSchoolConfiguration(
     const { data: existingRow } = await supabase
       .from('school_settings')
       .select('settings')
-      .eq('school_id', profile.school_id)
+      .eq('school_id', effectiveSchoolId)
       .maybeSingle()
 
     const existingConfig = isSchoolConfiguration(existingRow?.settings)
@@ -112,7 +153,7 @@ export async function saveSchoolConfiguration(
         school_type: configWithTimestamp.school.school_type,
         updated_at: configWithTimestamp.updatedAt,
       })
-      .eq('id', profile.school_id)
+      .eq('id', effectiveSchoolId)
 
     if (schoolError) {
       console.error('[SchoolConfiguration] Failed to update schools table:', schoolError.message)
@@ -125,7 +166,7 @@ export async function saveSchoolConfiguration(
       .from('school_settings')
       .upsert(
         {
-          school_id: profile.school_id,
+          school_id: effectiveSchoolId,
           settings: configWithTimestamp as unknown as Record<string, unknown>,
           name: configWithTimestamp.school.name,
           branding: {
@@ -157,8 +198,8 @@ export async function saveSchoolConfiguration(
       userId: user.id,
       email: user.email,
       role: profile.role,
-      schoolId: profile.school_id,
-      resourceId: profile.school_id,
+      schoolId: effectiveSchoolId,
+      resourceId: effectiveSchoolId,
       action: 'save',
       metadata: { changedFields },
     })

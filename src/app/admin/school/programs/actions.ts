@@ -2,7 +2,7 @@
 
 import { createClient } from '@/lib/supabase-server'
 import { createServiceRoleClient } from '@/lib/supabase-service-role'
-import { isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
+import { isAdmin, isSchoolAdmin, isPlatformAdminProfile } from '@/lib/auth-helpers'
 import { logPermissionDenied, logSensitiveConfigChange } from '@/lib/security/audit-logger'
 
 // ============================================================================
@@ -86,7 +86,10 @@ async function getCurrentAdmin(): Promise<ActionResult<AdminContext>> {
       email: user.email ?? '',
       role: profile.role,
       schoolId: profile.school_id ?? null,
-      isPlatformAdmin: isAdmin(profile.role),
+      // Canonical platform admin: role='admin' AND school_id IS NULL.
+      // A school-attached 'admin' is tenant-scoped (security correction:
+      // previously isAdmin(role) alone granted platform scope).
+      isPlatformAdmin: isPlatformAdminProfile(profile),
     },
   }
 }

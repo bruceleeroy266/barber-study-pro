@@ -246,6 +246,31 @@ export function isSchoolAdmin(role: string | null | undefined): boolean {
   return hasPermission(role, 'view_school_dashboard')
 }
 
+/**
+ * Canonical platform administrator definition.
+ *
+ * A platform administrator is a profile with role='admin' AND school_id IS NULL.
+ * A school-attached 'admin' is tenant-scoped to their school and is NOT a
+ * platform admin — school-level administration should use the 'school_admin'
+ * role. This definition is enforced in both layers:
+ *   - application: this helper (used by admin server actions/pages)
+ *   - database: public.is_platform_admin() RLS helper (migration
+ *     20260909000000_platform_admin_cross_school_access)
+ *
+ * Fail-closed: a missing/undefined school_id does NOT qualify — the caller
+ * must have selected school_id explicitly.
+ */
+export interface PlatformAdminProfileShape {
+  role?: string | null
+  school_id?: string | null
+}
+
+export function isPlatformAdminProfile(
+  profile: PlatformAdminProfileShape | null | undefined
+): boolean {
+  return !!profile && profile.role === 'admin' && profile.school_id === null
+}
+
 export function isLearner(role: string | null | undefined): boolean {
   return role === 'student' || role === 'apprentice'
 }

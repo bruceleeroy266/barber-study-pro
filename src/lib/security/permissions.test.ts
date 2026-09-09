@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { canAccessRoute, hasPermission, isAdmin, isInstructorOrAdmin, isLearner } from './permissions'
+import { canAccessRoute, hasPermission, isAdmin, isInstructorOrAdmin, isLearner, isPlatformAdminProfile } from './permissions'
 
 describe('canAccessRoute', () => {
   it('allows student to /dashboard', () => {
@@ -99,5 +99,43 @@ describe('role helpers', () => {
     expect(isLearner('apprentice')).toBe(true)
     expect(isLearner('instructor')).toBe(false)
     expect(isLearner('admin')).toBe(false)
+  })
+})
+
+describe('isPlatformAdminProfile (canonical platform admin: role=admin AND school_id IS NULL)', () => {
+  it('returns true for admin with null school_id', () => {
+    expect(isPlatformAdminProfile({ role: 'admin', school_id: null })).toBe(true)
+  })
+
+  it('returns false for school-attached admin (tenant-scoped, not platform)', () => {
+    expect(isPlatformAdminProfile({ role: 'admin', school_id: 'some-school-id' })).toBe(false)
+  })
+
+  it('fails closed when school_id is undefined (not explicitly selected)', () => {
+    expect(isPlatformAdminProfile({ role: 'admin' })).toBe(false)
+    expect(isPlatformAdminProfile({ role: 'admin', school_id: undefined })).toBe(false)
+  })
+
+  it('returns false for school_admin even with null school_id', () => {
+    expect(isPlatformAdminProfile({ role: 'school_admin', school_id: null })).toBe(false)
+  })
+
+  it('returns false for school_admin with a school', () => {
+    expect(isPlatformAdminProfile({ role: 'school_admin', school_id: 'some-school-id' })).toBe(false)
+  })
+
+  it('returns false for non-admin roles', () => {
+    expect(isPlatformAdminProfile({ role: 'instructor', school_id: null })).toBe(false)
+    expect(isPlatformAdminProfile({ role: 'student', school_id: null })).toBe(false)
+    expect(isPlatformAdminProfile({ role: 'apprentice', school_id: null })).toBe(false)
+  })
+
+  it('returns false for platform_super_admin (separate future role, not the canonical definition)', () => {
+    expect(isPlatformAdminProfile({ role: 'platform_super_admin', school_id: null })).toBe(false)
+  })
+
+  it('returns false for null/undefined profile', () => {
+    expect(isPlatformAdminProfile(null)).toBe(false)
+    expect(isPlatformAdminProfile(undefined)).toBe(false)
   })
 })
