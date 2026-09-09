@@ -1066,7 +1066,7 @@ export const chapterContentData: Record<string, ChapterContent> = {
       {
         type: 'quote',
         id: 'clippers-quote',
-        quote: "Your clippers are just tools. You are the business.",
+        quote: 'Your clippers are the tools of the trade, but you are the business. Build your time management, money habits, and client relationships with the same care you give your fades.',
       },
 
       // Section 2: Setting and Achieving Goals (Tabbed)
@@ -1438,7 +1438,7 @@ export const chapterContentData: Record<string, ChapterContent> = {
           {
             icon: 'PiggyBank',
             title: 'The 50/30/20 Rule',
-            description: '50% Needs (rent, food, utilities), 30% Wants (entertainment), 20% Savings & Debt.',
+            description: 'One common budgeting framework: 50% Needs (rent, food, utilities), 30% Wants (entertainment), 20% Savings & Debt — a starting point you can adjust to your situation.',
           },
           {
             icon: 'ShieldCheck',
@@ -1456,8 +1456,8 @@ export const chapterContentData: Record<string, ChapterContent> = {
         type: 'contentBlock',
         id: 'barber-finances',
         title: 'Barber-Specific Financial Considerations',
-        content: "If You're a Booth Renter: Set aside 25-30% for taxes (you're self-employed). Track all business expenses (supplies, tools, education). Pay quarterly estimated taxes to avoid penalties. Consider forming an LLC for liability protection. If You're an Employee: Understand your commission structure completely. Track tips separately — they're taxable income too. Ask about benefits (health insurance, retirement). Know when you're eligible for raises.",
-        highlight: 'Set aside 25-30% for taxes',
+        content: "If You're a Booth Renter: plan ahead for taxes — you're self-employed and no employer withholds for you. Many tax professionals suggest setting aside roughly 25-30% of income as a starting point, but your actual obligation depends on your income, filing status, jurisdiction, and current tax rules, so consider consulting a tax professional. Track all business expenses (supplies, tools, education). Pay quarterly estimated taxes if required to avoid penalties. Consider forming an LLC for liability protection. If You're an Employee: Understand your commission structure completely. Track tips separately — they're taxable income too. Ask about benefits (health insurance, retirement). Know when you're eligible for raises.",
+        highlight: 'Plan ahead for self-employment taxes',
       },
       {
         type: 'milestoneList',
@@ -1466,7 +1466,7 @@ export const chapterContentData: Record<string, ChapterContent> = {
         milestones: [
           { year: 'Month 1', title: 'Separate Business Account', description: 'Open a separate business checking account to keep personal and business finances apart.' },
           { year: 'Month 3', title: '$1,000 Emergency Fund', description: 'Build a $1,000 mini emergency fund for unexpected expenses.' },
-          { year: 'Month 6', title: 'Consistently Save 20%', description: 'Make saving 20% of your income a consistent habit.' },
+          { year: 'Month 6', title: 'Consistent Savings Habit', description: 'Work toward saving a consistent share of each check — 20% is a strong target, but any consistent percentage beats none.' },
           { year: 'Year 1', title: '3 Months Expenses Saved', description: 'Have 3 months of living expenses saved in your emergency fund.' },
         ],
       },
@@ -1481,8 +1481,8 @@ export const chapterContentData: Record<string, ChapterContent> = {
           { level: 'Level 1: Aware', title: 'Track Every Dollar', description: 'For one week, write down every single purchase. Coffee, gas, snacks — everything. Awareness is the first step.', reward: 'Unlock: Awareness Badge 👁️' },
           { level: 'Level 2: Organized', title: 'Separate Business & Personal', description: 'Open a separate checking account for barber income and expenses. Never mix them again.', reward: 'Unlock: Organization Badge 📁' },
           { level: 'Level 3: Protected', title: 'Build Your $1,000 Emergency Fund', description: 'Save $1,000 as fast as possible. Sell stuff, pick up extra cuts, eat cheap. This fund prevents debt.', reward: 'Unlock: Security Badge 🛡️' },
-          { level: 'Level 4: Growing', title: 'Save 20% Consistently', description: 'Automate 20% of every check into savings. Pay yourself first, before any bills or fun money.', reward: 'Unlock: Growth Badge 📈' },
-          { level: 'Level 5: Wealth Builder', title: 'Invest in Your Future', description: 'Open a Roth IRA or investment account. Start with $50/month. Time + compound interest = wealth.', reward: 'Unlock: Wealth Badge 💎' },
+          { level: 'Level 4: Growing', title: 'Automate Your Savings', description: 'Set up automatic transfers to savings with every check — 20% is a strong target to work toward. Treat savings like a fixed expense, not an afterthought.', reward: 'Unlock: Growth Badge 📈' },
+          { level: 'Level 5: Wealth Builder', title: 'Invest in Your Future', description: 'Consider opening a Roth IRA or investment account — even small monthly contributions (for example, $50) benefit from time and compound growth.', reward: 'Unlock: Wealth Badge 💎' },
         ],
       },
 
@@ -2159,7 +2159,7 @@ export const chapterContentData: Record<string, ChapterContent> = {
       {
         type: 'quote',
         id: 'closing-quote',
-        quote: "The barber who masters life skills doesn't just build a career — they build a legacy. Technical skill opens the door. Character, discipline, and integrity keep you in the room.",
+        quote: 'Master your life skills and you build more than a career — you build a legacy. Technical skill opens the door; character, discipline, and integrity keep you in the room. Carry both into every shop you work in.',
       },
 
       // 🎮 INTERACTIVE: Final Boss Challenge

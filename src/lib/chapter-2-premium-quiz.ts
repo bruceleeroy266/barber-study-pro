@@ -1,14 +1,14 @@
 // Chapter 2 Premium Quiz — Flashcard-Driven Multiple Choice System
-// Life Skills — 50 questions generated from Chapter 2 flashcard curriculum
+// Life Skills — 48 questions generated from Chapter 2 flashcard curriculum
 // Randomized order, randomized answers, board-exam style
-// Source: chapter-2-premium-flashcards.ts (58 cards)
+// Source: chapter-2-premium-flashcards.ts (65 cards, 64 active)
 
 import { QuizQuestion } from '@/types'
 
 // ───────────────────────────────────────────────
-// CHAPTER 2 QUIZ: Life Skills (50 Questions)
-// Difficulty mix: 15 easy, 20 medium, 15 hard
-// Correct answer distribution: A=10, B=20, C=12, D=8
+// CHAPTER 2 QUIZ: Life Skills (48 Questions)
+// Difficulty mix: 16 easy, 21 medium, 11 hard
+// Correct answer distribution: A=6, B=39, C=3, D=0
 // Sources: Foundation, Definitions, Board Exam, Visual ID, Scenarios, Procedures, Safety, Memory
 // ───────────────────────────────────────────────
 // Phase 5A additions: qq-2-034 through qq-2-042
@@ -30,13 +30,13 @@ export const chapter2PremiumQuizQuestions: QuizQuestion[] = [
   {
     id: 'qq-2-001',
     quiz_id: 'quiz-2',
-    question: 'According to Chapter 2, what percentage of barber success comes from life and business skills?',
-    answer_a: '60%',
-    answer_b: '40%',
-    answer_c: '75%',
-    answer_d: '50%',
+    question: 'Why are life skills essential for a successful barbering career?',
+    answer_a: 'Technical skill alone is not enough — life skills and professional behaviors also shape long-term success',
+    answer_b: 'They replace the need for technical training and practice',
+    answer_c: 'They only matter once you own your own barbershop',
+    answer_d: 'They are only needed while you are still in barber school',
     correct_answer: 'a',
-    explanation: '60% of barber success comes from life and business skills. Only 40% comes from technical skills like cutting, styling, and sanitation.',
+    explanation: 'Cutting, styling, and sanitation skills are the foundation, but they are not the whole job. Managing time and money, communicating with clients, staying motivated, and handling stress are life skills that keep a barber growing long after school ends.',
     difficulty: 'easy',
     order_index: 1,
   },
@@ -62,7 +62,7 @@ export const chapter2PremiumQuizQuestions: QuizQuestion[] = [
     answer_c: '30%',
     answer_d: '50%',
     correct_answer: 'a',
-    explanation: 'The 50/30/20 rule allocates 50% to needs, 30% to wants, and 20% to savings and debt repayment.',
+    explanation: 'The 50/30/20 rule is one common budgeting framework: 50% to needs, 30% to wants, and 20% to savings and debt repayment. Treat it as a starting point you can adjust to your situation, not a fixed rule.',
     difficulty: 'easy',
     order_index: 3,
   },
@@ -177,13 +177,13 @@ export const chapter2PremiumQuizQuestions: QuizQuestion[] = [
   {
     id: 'qq-2-012',
     quiz_id: 'quiz-2',
-    question: 'What percentage of income should booth renters set aside for taxes?',
-    answer_a: '25-30%',
-    answer_b: '10-15%',
-    answer_c: '15-20%',
-    answer_d: '5-10%',
+    question: 'Why do tax professionals commonly advise booth renters to set aside money for taxes?',
+    answer_a: 'They are self-employed, so no employer withholds taxes for them and they owe self-employment tax',
+    answer_b: 'Because barbershops are exempt from income tax',
+    answer_c: 'Because employees never owe any taxes',
+    answer_d: 'Because cash tips are not taxable income',
     correct_answer: 'a',
-    explanation: 'Booth renters should set aside 25-30% of income for taxes since they are self-employed and responsible for their own tax payments, including self-employment tax.',
+    explanation: 'Booth renters are self-employed and responsible for their own tax payments, including self-employment tax, with no employer withholding. A commonly suggested starting range is roughly 25-30% of income, but the actual obligation depends on income, filing status, jurisdiction, and current tax rules — consult a tax professional.',
     difficulty: 'medium',
     order_index: 12,
   },

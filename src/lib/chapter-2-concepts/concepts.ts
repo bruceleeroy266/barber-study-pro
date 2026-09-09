@@ -4,6 +4,10 @@
  * 25 active concepts + 1 retired (C-2-22) + 18 subconcepts + 14 learning objectives.
  *
  * Governing document: ASCYN_PRO_CH02_CONCEPT_OBJECTIVE_MAP_v1.1.md (APPROVED)
+ * Provenance: Phase 1 Source Map (founder-approved 2026-09-09) —
+ *   TEXTBOOK_DERIVED = DIRECT MILADY (12 active concepts)
+ *   MILADY_SUPPORTED_EXPANSION = MILADY-SUPPORTED ASCYN EXPANSION (10 active concepts)
+ *   ASCYN_ORIGINAL = ASCYN ENRICHMENT (3 active concepts + retired C-2-22)
  */
 
 import type {
@@ -47,7 +51,7 @@ export const chapter2LearningObjectives: readonly Chapter2LearningObjective[] = 
   {
     id: 'LO-2-04',
     statement: 'Design and track short-term and long-term goals using structured frameworks (SMART, goal levels)',
-    sourceBasis: 'Textbook LO4; ASCYN Section 2',
+    sourceBasis: 'Textbook LO4 (goal tracking); Milady-supported ASCYN expansion (SMART frameworks); ASCYN Section 2',
     professionalRelevance: 'SUPPORTING',
     examRelevance: 'NONE',
     conceptIds: ['C-2-06', 'C-2-07'],
@@ -55,7 +59,7 @@ export const chapter2LearningObjectives: readonly Chapter2LearningObjective[] = 
   {
     id: 'LO-2-05',
     statement: 'Apply time management strategies to optimize barbershop productivity and client service',
-    sourceBasis: 'Textbook LO5; ASCYN Section 3',
+    sourceBasis: 'Textbook LO5 (time management); Milady-supported ASCYN expansion (tools & techniques); ASCYN Section 3',
     professionalRelevance: 'SUPPORTING',
     examRelevance: 'NONE',
     conceptIds: ['C-2-08', 'C-2-09'],
@@ -71,7 +75,7 @@ export const chapter2LearningObjectives: readonly Chapter2LearningObjective[] = 
   {
     id: 'LO-2-07',
     statement: 'Define professional ethics and apply ethical principles to barbering practice, including client confidentiality and service recovery',
-    sourceBasis: 'Textbook LO7; ASCYN Section 9',
+    sourceBasis: 'Textbook LO7 (ethics & confidentiality); Milady-supported ASCYN expansion (service recovery); ASCYN Section 9',
     professionalRelevance: 'CORE',
     examRelevance: 'INDIRECT_REFERENCE_ONLY',
     conceptIds: ['C-2-12', 'C-2-13', 'C-2-14'],
@@ -79,7 +83,7 @@ export const chapter2LearningObjectives: readonly Chapter2LearningObjective[] = 
   {
     id: 'LO-2-08',
     statement: 'Apply stress management and work-life balance strategies to maintain professional performance and personal well-being',
-    sourceBasis: 'ASCYN Section 5',
+    sourceBasis: 'Milady-supported ASCYN expansion (stress & balance themes); ASCYN Section 5',
     professionalRelevance: 'SUPPORTING',
     examRelevance: 'NONE',
     conceptIds: ['C-2-15', 'C-2-16'],
@@ -87,7 +91,7 @@ export const chapter2LearningObjectives: readonly Chapter2LearningObjective[] = 
   {
     id: 'LO-2-09',
     statement: 'Demonstrate professional communication skills, including active listening, client consultation, and conflict resolution',
-    sourceBasis: 'ASCYN Sections 8, 10',
+    sourceBasis: 'Textbook communication content; Milady-supported ASCYN expansion (listening, consultation, conflict); ASCYN Sections 8, 10',
     professionalRelevance: 'CORE',
     examRelevance: 'INDIRECT_REFERENCE_ONLY',
     conceptIds: ['C-2-17', 'C-2-18', 'C-2-19'],
@@ -95,7 +99,7 @@ export const chapter2LearningObjectives: readonly Chapter2LearningObjective[] = 
   {
     id: 'LO-2-10',
     statement: 'Develop a career advancement plan incorporating professional networking and specialization pathways',
-    sourceBasis: 'ASCYN Sections 6, 13',
+    sourceBasis: 'ASCYN enrichment (networking); Milady-supported ASCYN expansion (specialization); ASCYN Sections 6, 13',
     professionalRelevance: 'SUPPORTING',
     examRelevance: 'NONE',
     conceptIds: ['C-2-20', 'C-2-24'],
@@ -103,7 +107,7 @@ export const chapter2LearningObjectives: readonly Chapter2LearningObjective[] = 
   {
     id: 'LO-2-11',
     statement: 'Apply financial literacy principles to manage barbering business finances',
-    sourceBasis: 'ASCYN Section 7',
+    sourceBasis: 'ASCYN enrichment; ASCYN Section 7',
     professionalRelevance: 'SUPPORTING',
     examRelevance: 'NONE',
     conceptIds: ['C-2-21'],
@@ -111,7 +115,7 @@ export const chapter2LearningObjectives: readonly Chapter2LearningObjective[] = 
   {
     id: 'LO-2-12',
     statement: 'Demonstrate cultural competence and inclusive service practices for diverse clients',
-    sourceBasis: 'ASCYN Section 12',
+    sourceBasis: 'Milady-supported ASCYN expansion; ASCYN Section 12',
     professionalRelevance: 'CORE',
     examRelevance: 'INDIRECT_REFERENCE_ONLY',
     conceptIds: ['C-2-23'],
@@ -119,7 +123,7 @@ export const chapter2LearningObjectives: readonly Chapter2LearningObjective[] = 
   {
     id: 'LO-2-13',
     statement: 'Demonstrate leadership and mentorship skills in professional barbering settings',
-    sourceBasis: 'ASCYN Section 14',
+    sourceBasis: 'ASCYN enrichment; ASCYN Section 14',
     professionalRelevance: 'SUPPORTING',
     examRelevance: 'NONE',
     conceptIds: ['C-2-25'],
@@ -127,7 +131,7 @@ export const chapter2LearningObjectives: readonly Chapter2LearningObjective[] = 
   {
     id: 'LO-2-14',
     statement: 'Apply workplace professionalism and shop etiquette standards',
-    sourceBasis: 'ASCYN Section 15',
+    sourceBasis: 'Milady-supported ASCYN expansion; ASCYN Section 15',
     professionalRelevance: 'CORE',
     examRelevance: 'INDIRECT_REFERENCE_ONLY',
     conceptIds: ['C-2-26'],
@@ -331,7 +335,7 @@ export const chapter2Concepts: readonly Chapter2Concept[] = [
     importance: 'core',
     professionalRelevance: 'SUPPORTING',
     examRelevance: 'NONE',
-    sourceProvenance: 'TEXTBOOK_DERIVED',
+    sourceProvenance: 'MILADY_SUPPORTED_EXPANSION',
     learningObjectiveId: 'LO-2-04',
     status: 'active',
     subconcepts: getSubconceptsForConcept('C-2-06'),
@@ -364,7 +368,7 @@ export const chapter2Concepts: readonly Chapter2Concept[] = [
     importance: 'supporting',
     professionalRelevance: 'SUPPORTING',
     examRelevance: 'NONE',
-    sourceProvenance: 'TEXTBOOK_DERIVED',
+    sourceProvenance: 'MILADY_SUPPORTED_EXPANSION',
     learningObjectiveId: 'LO-2-05',
     status: 'active',
     subconcepts: getSubconceptsForConcept('C-2-09'),
@@ -419,7 +423,7 @@ export const chapter2Concepts: readonly Chapter2Concept[] = [
     importance: 'core',
     professionalRelevance: 'CORE',
     examRelevance: 'INDIRECT_REFERENCE_ONLY',
-    sourceProvenance: 'TEXTBOOK_DERIVED',
+    sourceProvenance: 'MILADY_SUPPORTED_EXPANSION',
     learningObjectiveId: 'LO-2-07',
     status: 'active',
     subconcepts: getSubconceptsForConcept('C-2-14'),
@@ -430,7 +434,7 @@ export const chapter2Concepts: readonly Chapter2Concept[] = [
     importance: 'core',
     professionalRelevance: 'SUPPORTING',
     examRelevance: 'NONE',
-    sourceProvenance: 'ASCYN_ORIGINAL',
+    sourceProvenance: 'MILADY_SUPPORTED_EXPANSION',
     learningObjectiveId: 'LO-2-08',
     status: 'active',
     subconcepts: getSubconceptsForConcept('C-2-15'),
@@ -441,7 +445,7 @@ export const chapter2Concepts: readonly Chapter2Concept[] = [
     importance: 'supporting',
     professionalRelevance: 'SUPPORTING',
     examRelevance: 'NONE',
-    sourceProvenance: 'ASCYN_ORIGINAL',
+    sourceProvenance: 'MILADY_SUPPORTED_EXPANSION',
     learningObjectiveId: 'LO-2-08',
     status: 'active',
     subconcepts: getSubconceptsForConcept('C-2-16'),
@@ -452,7 +456,7 @@ export const chapter2Concepts: readonly Chapter2Concept[] = [
     importance: 'core',
     professionalRelevance: 'CORE',
     examRelevance: 'INDIRECT_REFERENCE_ONLY',
-    sourceProvenance: 'ASCYN_ORIGINAL',
+    sourceProvenance: 'TEXTBOOK_DERIVED',
     learningObjectiveId: 'LO-2-09',
     status: 'active',
     subconcepts: getSubconceptsForConcept('C-2-17'),
@@ -463,7 +467,7 @@ export const chapter2Concepts: readonly Chapter2Concept[] = [
     importance: 'core',
     professionalRelevance: 'CORE',
     examRelevance: 'INDIRECT_REFERENCE_ONLY',
-    sourceProvenance: 'ASCYN_ORIGINAL',
+    sourceProvenance: 'MILADY_SUPPORTED_EXPANSION',
     learningObjectiveId: 'LO-2-09',
     status: 'active',
     subconcepts: getSubconceptsForConcept('C-2-18'),
@@ -474,7 +478,7 @@ export const chapter2Concepts: readonly Chapter2Concept[] = [
     importance: 'core',
     professionalRelevance: 'CORE',
     examRelevance: 'INDIRECT_REFERENCE_ONLY',
-    sourceProvenance: 'ASCYN_ORIGINAL',
+    sourceProvenance: 'MILADY_SUPPORTED_EXPANSION',
     learningObjectiveId: 'LO-2-09',
     status: 'active',
     subconcepts: getSubconceptsForConcept('C-2-19'),
@@ -524,7 +528,7 @@ export const chapter2Concepts: readonly Chapter2Concept[] = [
     importance: 'core',
     professionalRelevance: 'CORE',
     examRelevance: 'INDIRECT_REFERENCE_ONLY',
-    sourceProvenance: 'ASCYN_EXTENSION',
+    sourceProvenance: 'MILADY_SUPPORTED_EXPANSION',
     learningObjectiveId: 'LO-2-12',
     status: 'active',
     subconcepts: getSubconceptsForConcept('C-2-23'),
@@ -535,7 +539,7 @@ export const chapter2Concepts: readonly Chapter2Concept[] = [
     importance: 'supporting',
     professionalRelevance: 'SUPPORTING',
     examRelevance: 'NONE',
-    sourceProvenance: 'ASCYN_EXTENSION',
+    sourceProvenance: 'MILADY_SUPPORTED_EXPANSION',
     learningObjectiveId: 'LO-2-10',
     status: 'active',
     subconcepts: getSubconceptsForConcept('C-2-24'),
@@ -546,7 +550,7 @@ export const chapter2Concepts: readonly Chapter2Concept[] = [
     importance: 'supporting',
     professionalRelevance: 'SUPPORTING',
     examRelevance: 'NONE',
-    sourceProvenance: 'ASCYN_EXTENSION',
+    sourceProvenance: 'ASCYN_ORIGINAL',
     learningObjectiveId: 'LO-2-13',
     status: 'active',
     subconcepts: getSubconceptsForConcept('C-2-25'),
@@ -557,7 +561,7 @@ export const chapter2Concepts: readonly Chapter2Concept[] = [
     importance: 'core',
     professionalRelevance: 'CORE',
     examRelevance: 'INDIRECT_REFERENCE_ONLY',
-    sourceProvenance: 'ASCYN_EXTENSION',
+    sourceProvenance: 'MILADY_SUPPORTED_EXPANSION',
     learningObjectiveId: 'LO-2-14',
     status: 'active',
     subconcepts: getSubconceptsForConcept('C-2-26'),

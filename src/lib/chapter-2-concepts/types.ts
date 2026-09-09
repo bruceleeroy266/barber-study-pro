@@ -38,11 +38,12 @@ export type QuizQuestionId = `qq-2-${string}`
 // Classification Enums
 // ───────────────────────────────────────────────
 
-/** Source provenance classification */
+/** Source provenance classification (Phase 1 Source Map, founder-approved 2026-09-09) */
 export type SourceProvenance =
-  | 'TEXTBOOK_DERIVED'       // Underlying knowledge domain from textbook
-  | 'ASCYN_ORIGINAL'         // Original ASCYN PRO content
-  | 'ASCYN_EXTENSION'        // ASCYN expansion beyond textbook scope
+  | 'TEXTBOOK_DERIVED'           // DIRECT MILADY — underlying knowledge domain from textbook
+  | 'MILADY_SUPPORTED_EXPANSION' // MILADY-SUPPORTED ASCYN EXPANSION — Milady touches the area; ASCYN expands it independently
+  | 'ASCYN_ORIGINAL'             // ASCYN ENRICHMENT — original ASCYN PRO content beyond textbook scope
+  | 'ASCYN_EXTENSION'            // Legacy Phase 6B value — superseded by MILADY_SUPPORTED_EXPANSION / ASCYN_ORIGINAL; retained for type compatibility
 
 /** Concept importance level */
 export type ConceptImportance = 'core' | 'supporting' | 'enrichment'
