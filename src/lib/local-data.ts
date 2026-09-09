@@ -10,7 +10,10 @@ export const localChapters: Chapter[] = demoChapters
 
 // Helper: get flashcards for a chapter
 export function getLocalFlashcards(chapterId: string): Flashcard[] {
-  return demoFlashcards[chapterId] || []
+  // Student-serving path: serve only active flashcards. Canonical sources may
+  // intentionally retain inactive cards (e.g. Chapter 2's fc-2-045) for
+  // mappings/history; those must not reach students.
+  return (demoFlashcards[chapterId] || []).filter((fc) => fc.is_active)
 }
 
 // Helper: get quiz metadata for a chapter

@@ -119,8 +119,14 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
         theme={chapterContent?.theme}
       />
 
-      {/* Mastery Panel */}
-      {chapterContent && (
+      {/* Mastery Panel — rendered only when meaningful mastery data exists.
+           Chapter 2 mastery metadata lives in the canonical concept runtime
+           (chapter-2-concepts) and the 6C remediation cycle, not in
+           chapter-content; never render an empty mastery shell. */}
+      {chapterContent &&
+        (chapterContent.mastery ||
+          (chapterContent.competencies?.length ?? 0) > 0 ||
+          (chapterContent.learningObjectives?.length ?? 0) > 0) && (
         <MasteryPanel
           learningObjectives={chapterContent.learningObjectives}
           competencies={chapterContent.competencies}
@@ -189,8 +195,13 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
         </div>
       )}
 
-      {/* Persistent Remediation Review */}
-      {chapterContent && missedQuestionIds.length > 0 && (
+      {/* Persistent Remediation Review — rendered only when legacy remediation
+           paths exist. Chapter 2 remediation is owned by the production 6C
+           cycle (/dashboard/remediation); the legacy panel receives [] for
+           Chapter 2 and must not mount as an empty/nonfunctional panel. */}
+      {chapterContent &&
+        (chapterContent.remediation?.length ?? 0) > 0 &&
+        missedQuestionIds.length > 0 && (
         <RemediationPanel
           remediation={chapterContent.remediation || []}
           competencies={chapterContent.competencies || []}

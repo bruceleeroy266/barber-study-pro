@@ -78,7 +78,11 @@ function transform(
   }))
 }
 
-// Chapter 2: Orphaned cards (will be merged with active)
+// Chapter 2: DEPRECATED duplicate set — DO NOT merge into the serving path.
+// Canonical Chapter 2 flashcards live in chapter-2-premium-flashcards.ts
+// (65 cards; fc-2-045 intentionally inactive). The serving path
+// (demo-data.ts) deliberately skips batch1Flashcards['ch-2']; this legacy
+// 25-card expansion set is retained for history only.
 export const ch2Orphaned = transform(chapter2Flashcards, 2, '2o')
 
 // Chapter 4: No orphaned file found — will remain placeholder for now

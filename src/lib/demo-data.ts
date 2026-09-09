@@ -189,10 +189,11 @@ const realChapters = [1, 2, 3, 4, 7, 8, 9]
 for (const i of realChapters) {
   const chId = `ch-${i}`
   if (realFlashcards[chId]) {
+    // Preserve canonical is_active. Chapter 2's fc-2-045 is intentionally
+    // inactive; student serving filters inactive cards in getLocalFlashcards.
     demoFlashcards[chId] = realFlashcards[chId].map((fc, idx) => ({
       ...fc,
       order_index: idx + 1,
-      is_active: true,
     }))
   }
 }
@@ -217,7 +218,6 @@ if (realFlashcards['ch-10'] && realFlashcards['ch-10'].length > 0) {
   demoFlashcards['ch-10'] = realFlashcards['ch-10'].map((fc, idx) => ({
     ...fc,
     order_index: idx + 1,
-    is_active: true,
   }))
 }
 
@@ -226,7 +226,6 @@ if (realFlashcards['ch-11'] && realFlashcards['ch-11'].length > 0) {
   demoFlashcards['ch-11'] = realFlashcards['ch-11'].map((fc, idx) => ({
     ...fc,
     order_index: idx + 1,
-    is_active: true,
   }))
 }
 
@@ -235,7 +234,6 @@ if (realFlashcards['ch-12'] && realFlashcards['ch-12'].length > 0) {
   demoFlashcards['ch-12'] = realFlashcards['ch-12'].map((fc, idx) => ({
     ...fc,
     order_index: idx + 1,
-    is_active: true,
   }))
 }
 
@@ -244,7 +242,6 @@ if (realFlashcards['ch-13'] && realFlashcards['ch-13'].length > 0) {
   demoFlashcards['ch-13'] = realFlashcards['ch-13'].map((fc, idx) => ({
     ...fc,
     order_index: idx + 1,
-    is_active: true,
   }))
 }
 
@@ -253,7 +250,6 @@ if (realFlashcards['ch-14'] && realFlashcards['ch-14'].length > 0) {
   demoFlashcards['ch-14'] = realFlashcards['ch-14'].map((fc, idx) => ({
     ...fc,
     order_index: idx + 1,
-    is_active: true,
   }))
 }
 
@@ -262,7 +258,6 @@ if (realFlashcards['ch-15'] && realFlashcards['ch-15'].length > 0) {
   demoFlashcards['ch-15'] = realFlashcards['ch-15'].map((fc, idx) => ({
     ...fc,
     order_index: idx + 1,
-    is_active: true,
   }))
 }
 
@@ -271,7 +266,6 @@ if (realFlashcards['ch-16'] && realFlashcards['ch-16'].length > 0) {
   demoFlashcards['ch-16'] = realFlashcards['ch-16'].map((fc, idx) => ({
     ...fc,
     order_index: idx + 1,
-    is_active: true,
   }))
 }
 
@@ -280,7 +274,6 @@ if (realFlashcards['ch-18'] && realFlashcards['ch-18'].length > 0) {
   demoFlashcards['ch-18'] = realFlashcards['ch-18'].map((fc, idx) => ({
     ...fc,
     order_index: idx + 1,
-    is_active: true,
   }))
 }
 
@@ -289,7 +282,6 @@ if (realFlashcards['ch-19'] && realFlashcards['ch-19'].length > 0) {
   demoFlashcards['ch-19'] = realFlashcards['ch-19'].map((fc, idx) => ({
     ...fc,
     order_index: idx + 1,
-    is_active: true,
   }))
 }
 
@@ -298,7 +290,6 @@ if (realFlashcards['ch-20'] && realFlashcards['ch-20'].length > 0) {
   demoFlashcards['ch-20'] = realFlashcards['ch-20'].map((fc, idx) => ({
     ...fc,
     order_index: idx + 1,
-    is_active: true,
   }))
 }
 
@@ -307,7 +298,6 @@ if (realFlashcards['ch-21'] && realFlashcards['ch-21'].length > 0) {
   demoFlashcards['ch-21'] = realFlashcards['ch-21'].map((fc, idx) => ({
     ...fc,
     order_index: idx + 1,
-    is_active: true,
   }))
 }
 
@@ -337,8 +327,8 @@ for (let i = 5; i <= 21; i++) {
 export const demoQuizzes: Record<string, Quiz> = {
   // Chapter 1: Premium flashcard-driven quiz (30 questions)
   'ch-1': { id: 'quiz-1', chapter_id: 'ch-1', title: 'History of Barbering — Premium Quiz', description: '30 board-exam style questions. Passing score: 80%.', is_active: true, passing_score: 80 },
-  // Chapter 2: Premium flashcard-driven quiz (30 questions)
-  'ch-2': { id: 'quiz-2', chapter_id: 'ch-2', title: 'Life Skills — Premium Quiz', description: '30 board-exam style questions. Passing score: 80%.', is_active: true, passing_score: 80 },
+  // Chapter 2: Premium flashcard-driven quiz (48 questions)
+  'ch-2': { id: 'quiz-2', chapter_id: 'ch-2', title: 'Life Skills — Premium Quiz', description: '48 questions. Passing score: 80%.', is_active: true, passing_score: 80 },
   // Chapter 3: Premium flashcard-driven quiz (30 questions)
   'ch-3': { id: 'quiz-3', chapter_id: 'ch-3', title: 'Professional Image — Premium Quiz', description: '30 board-exam style questions. Passing score: 80%.', is_active: true, passing_score: 80 },
   // Chapter 4: Premium flashcard-driven quiz (30 questions)
