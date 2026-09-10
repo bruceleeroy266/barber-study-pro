@@ -17,6 +17,14 @@ import { buildRemediationContentBundle } from '@/lib/remediation/content-filter'
 import { STUDENT_STATE_LABELS, STUDENT_STATE_DESCRIPTIONS } from '@/lib/remediation/student-service'
 import type { ConceptId } from '@/lib/chapter-2-concepts/types'
 import RemediationPageClient from '@/components/remediation/RemediationPageClient'
+import WhyFocusCard from '@/components/chapter/remediation/WhyFocusCard'
+import CycleStepMap from '@/components/chapter/remediation/CycleStepMap'
+import {
+  buildFocusReason,
+  formatLastActivity,
+  deriveCycleStep,
+  buildCompletionGuidance,
+} from '@/lib/presentation/student-evidence'
 
 interface RemediationPageProps {
   params: Promise<{
@@ -118,6 +126,16 @@ export default async function RemediationPage({ params }: RemediationPageProps) 
           </div>
         )}
       </div>
+
+      {/* Tier 1 — Why am I here? (server-translated from the cycle's
+           persisted evidence snapshot; no diagnostic vocabulary) */}
+      <WhyFocusCard
+        conceptName={contentBundle.conceptName}
+        reason={buildFocusReason(cycle.detectionEvidence)}
+        lastActivity={formatLastActivity(cycle.detectionEvidence?.lastAttemptAt ?? null)}
+        guidance={buildCompletionGuidance(deriveCycleStep(studentState), studentState)}
+      />
+      <CycleStepMap currentStep={deriveCycleStep(studentState)} />
 
       {/* Client-Side Interactive Content */}
       <RemediationPageClient

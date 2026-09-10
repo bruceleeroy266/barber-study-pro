@@ -16,8 +16,9 @@ interface EscalationItem {
   id: string
   studentName: string
   studentEmail: string
-  conceptId: string
-  chapterId: string
+  conceptName: string
+  chapterTitle: string
+  evidenceSummary: string | null
   status: string
   unsuccessfulCycleCount: number
   createdAt: string
@@ -80,10 +81,13 @@ export default function EscalationList({ escalations }: EscalationListProps) {
                   <User className="w-4 h-4 text-silver" aria-hidden="true" />
                   <span className="font-medium text-white">{esc.studentName}</span>
                 </div>
-                <p className="text-sm text-silver mt-1">
-                  Concept: {esc.conceptId} &middot; Chapter: {esc.chapterId}
+                <p className="text-sm text-white mt-1 font-medium">
+                  {esc.conceptName} &middot; {esc.chapterTitle}
                 </p>
-                <p className="text-sm text-silver">
+                {esc.evidenceSummary && (
+                  <p className="text-xs text-silver mt-0.5">{esc.evidenceSummary}</p>
+                )}
+                <p className="text-sm text-silver mt-1">
                   {esc.unsuccessfulCycleCount} unsuccessful attempt{esc.unsuccessfulCycleCount !== 1 ? 's' : ''}
                 </p>
                 <p className="text-xs text-silver-gray mt-1">

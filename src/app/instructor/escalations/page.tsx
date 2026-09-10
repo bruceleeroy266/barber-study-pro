@@ -11,6 +11,11 @@ import { redirect } from 'next/navigation'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 import { createSupabaseInstructorClient } from '@/lib/instructor/supabase-client'
 import EscalationList from '@/components/instructor/EscalationList'
+import {
+  resolveConceptName,
+  resolveChapterTitle,
+  buildEvidenceSummary,
+} from '@/lib/presentation/instructor-diagnostics'
 
 export const dynamic = 'force-dynamic'
 
@@ -47,8 +52,10 @@ export default async function InstructorEscalationsPage() {
     id: esc.id,
     studentName: esc.student.full_name,
     studentEmail: esc.student.email,
-    conceptId: esc.conceptId,
-    chapterId: esc.chapterId,
+    // Tier 2: resolve engine identifiers + evidence into readable context
+    conceptName: resolveConceptName(esc.conceptId),
+    chapterTitle: resolveChapterTitle(esc.chapterId),
+    evidenceSummary: buildEvidenceSummary(esc.detectionEvidence ?? null),
     status: esc.status,
     unsuccessfulCycleCount: esc.unsuccessfulCycleCount,
     createdAt: esc.createdAt.toISOString(),

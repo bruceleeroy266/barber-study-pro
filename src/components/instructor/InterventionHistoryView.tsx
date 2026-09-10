@@ -24,10 +24,15 @@ import {
 } from 'lucide-react'
 import type { InterventionHistoryItem } from '@/lib/instructor/types'
 
+type ResolvedHistoryItem = InterventionHistoryItem & {
+  conceptName: string
+  chapterTitle: string
+}
+
 interface InterventionHistoryViewProps {
   studentName: string
   studentEmail: string
-  history: InterventionHistoryItem[]
+  history: ResolvedHistoryItem[]
 }
 
 function outcomeBadge(outcome: string | null) {
@@ -160,13 +165,13 @@ export default function InterventionHistoryView({
                 <div>
                   <div className="flex items-center gap-3">
                     <h2 className="text-lg font-semibold text-white">
-                      {item.conceptId}
+                      {item.conceptName}
                     </h2>
                     {statusBadge(item.status)}
                     {item.outcome && outcomeBadge(item.outcome)}
                   </div>
                   <p className="text-sm text-silver mt-1">
-                    Chapter: {item.chapterId} &middot; Cycle: {item.cycleId.slice(0, 8)}…
+                    {item.chapterTitle} &middot; Cycle: {item.cycleId.slice(0, 8)}…
                   </p>
                 </div>
               </div>

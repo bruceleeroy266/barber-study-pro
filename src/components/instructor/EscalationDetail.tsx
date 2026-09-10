@@ -21,6 +21,23 @@ import {
   FileText,
 } from 'lucide-react'
 
+interface EscalationDiagnostics {
+  conceptName: string
+  chapterTitle: string
+  detectionStateLabel: string | null
+  confidenceLabel: string | null
+  evidenceSummary: string | null
+  cycleCount: number
+  knowledgeChecksTaken: number
+  knowledgeChecksPassed: number
+  triggerReason: string
+  coaching: {
+    confusions: ReadonlyArray<{ topic: string; clarification: string }>
+    chapterGuidance: string
+    enrichmentNote: string | null
+  }
+}
+
 interface EscalationDetailProps {
   escalation: {
     id: string
@@ -42,6 +59,7 @@ interface EscalationDetailProps {
     followUpRequired: boolean | null
   }
   currentUserId: string
+  diagnostics: EscalationDiagnostics
 }
 
 function statusBadgeVariant(status: string): 'warning' | 'info' | 'success' | 'default' {
@@ -66,7 +84,7 @@ function statusLabel(status: string): string {
   }
 }
 
-export default function EscalationDetail({ escalation, currentUserId }: EscalationDetailProps) {
+export default function EscalationDetail({ escalation, currentUserId, diagnostics }: EscalationDetailProps) {
   const router = useRouter()
   const [isAcknowledging, setIsAcknowledging] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -204,11 +222,11 @@ export default function EscalationDetail({ escalation, currentUserId }: Escalati
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <p className="text-sm text-silver-gray">Concept</p>
-            <p className="text-white font-medium">{escalation.conceptId}</p>
+            <p className="text-white font-medium">{diagnostics.conceptName}</p>
           </div>
           <div>
             <p className="text-sm text-silver-gray">Chapter</p>
-            <p className="text-white">{escalation.chapterId}</p>
+            <p className="text-white">{diagnostics.chapterTitle}</p>
           </div>
           <div>
             <p className="text-sm text-silver-gray">Unsuccessful Attempts</p>
@@ -232,6 +250,53 @@ export default function EscalationDetail({ escalation, currentUserId }: Escalati
           <p className="text-white text-sm">
             {escalation.triggeringCycleIds.length} remediation cycle{escalation.triggeringCycleIds.length !== 1 ? 's' : ''}
           </p>
+        </div>
+      </Card>
+
+      {/* What ASCYN observed — Tier 2 engine-context translation */}
+      <Card className="p-6" aria-label="What ASCYN observed">
+        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+          <BookOpen className="w-5 h-5" aria-hidden="true" />
+          What ASCYN Observed
+        </h2>
+        {diagnostics.detectionStateLabel ? (
+          <p className="text-white font-medium">
+            {diagnostics.detectionStateLabel}
+            {diagnostics.confidenceLabel ? (
+              <span className="text-silver font-normal"> &middot; {diagnostics.confidenceLabel}</span>
+            ) : null}
+          </p>
+        ) : (
+          <p className="text-silver">Evidence snapshot not recorded for this escalation.</p>
+        )}
+        {diagnostics.evidenceSummary && (
+          <p className="text-sm text-silver mt-2">{diagnostics.evidenceSummary}</p>
+        )}
+        <p className="text-sm text-silver mt-2">
+          {diagnostics.cycleCount} remediation cycle{diagnostics.cycleCount !== 1 ? 's' : ''} for this topic
+          {' · '}knowledge checks: {diagnostics.knowledgeChecksTaken} taken, {diagnostics.knowledgeChecksPassed} passed
+        </p>
+        <p className="text-sm text-silver-gray mt-3 border-t border-graphite pt-3">
+          {diagnostics.triggerReason}
+        </p>
+
+        {/* Suggested coaching — from the locked instructor-notes dataset */}
+        <div className="mt-4 bg-graphite/50 rounded-lg p-4">
+          <p className="text-xs text-silver-gray uppercase tracking-wide mb-2">Suggested coaching</p>
+          {diagnostics.coaching.confusions.length > 0 && (
+            <ul className="space-y-2 mb-3">
+              {diagnostics.coaching.confusions.map((c) => (
+                <li key={c.topic} className="text-sm">
+                  <span className="text-white font-medium">{c.topic}: </span>
+                  <span className="text-silver">{c.clarification}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+          <p className="text-sm text-silver">{diagnostics.coaching.chapterGuidance}</p>
+          {diagnostics.coaching.enrichmentNote && (
+            <p className="text-xs text-silver-gray mt-2">{diagnostics.coaching.enrichmentNote}</p>
+          )}
         </div>
       </Card>
 

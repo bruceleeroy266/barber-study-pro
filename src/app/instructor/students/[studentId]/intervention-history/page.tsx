@@ -13,6 +13,10 @@ import { redirect, notFound } from 'next/navigation'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 import { createSupabaseInstructorClient } from '@/lib/instructor/supabase-client'
 import InterventionHistoryView from '@/components/instructor/InterventionHistoryView'
+import {
+  resolveConceptName,
+  resolveChapterTitle,
+} from '@/lib/presentation/instructor-diagnostics'
 
 export const dynamic = 'force-dynamic'
 
@@ -61,12 +65,19 @@ export default async function InterventionHistoryPage({ params }: PageProps) {
     profile.school_id
   )
 
+  // Tier 2 — resolve engine identifiers to readable names for the journey view
+  const resolvedHistory = history.map((item) => ({
+    ...item,
+    conceptName: resolveConceptName(item.conceptId),
+    chapterTitle: resolveChapterTitle(item.chapterId),
+  }))
+
   return (
     <div className="space-y-6">
       <InterventionHistoryView
         studentName={student.full_name}
         studentEmail={student.email}
-        history={history}
+        history={resolvedHistory}
       />
     </div>
   )

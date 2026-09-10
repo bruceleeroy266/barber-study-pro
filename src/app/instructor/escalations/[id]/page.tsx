@@ -9,6 +9,15 @@ import { redirect, notFound } from 'next/navigation'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 import { createSupabaseInstructorClient } from '@/lib/instructor/supabase-client'
 import EscalationDetail from '@/components/instructor/EscalationDetail'
+import {
+  resolveConceptName,
+  resolveChapterTitle,
+  summarizeObservation,
+  buildEvidenceSummary,
+  buildTriggerReason,
+  buildCoachingRecommendation,
+  buildKnowledgeCheckTally,
+} from '@/lib/presentation/instructor-diagnostics'
 
 export const dynamic = 'force-dynamic'
 
@@ -46,6 +55,29 @@ export default async function EscalationDetailPage({ params }: PageProps) {
     notFound()
   }
 
+  // Tier 2 — compose "What ASCYN observed" context server-side from the
+  // escalation's persisted evidence snapshot + intervention history.
+  const history = await instructorClient.getInterventionHistoryForStudent(
+    escalation.userId,
+    profile.school_id,
+  )
+  const conceptHistory = history.filter((h) => h.conceptId === escalation.conceptId)
+  const tally = buildKnowledgeCheckTally(conceptHistory)
+  const observation = summarizeObservation(escalation.detectionEvidence ?? null)
+
+  const diagnostics = {
+    conceptName: resolveConceptName(escalation.conceptId),
+    chapterTitle: resolveChapterTitle(escalation.chapterId),
+    detectionStateLabel: observation?.stateLabel ?? null,
+    confidenceLabel: observation?.confidenceLabel ?? null,
+    evidenceSummary: buildEvidenceSummary(escalation.detectionEvidence ?? null),
+    cycleCount: conceptHistory.length,
+    knowledgeChecksTaken: tally.taken,
+    knowledgeChecksPassed: tally.passed,
+    triggerReason: buildTriggerReason(escalation.unsuccessfulCycleCount),
+    coaching: buildCoachingRecommendation(escalation.conceptId),
+  }
+
   return (
     <div className="space-y-6">
       <EscalationDetail
@@ -69,6 +101,7 @@ export default async function EscalationDetailPage({ params }: PageProps) {
           followUpRequired: escalation.followUpRequired,
         }}
         currentUserId={user.id}
+        diagnostics={diagnostics}
       />
     </div>
   )
