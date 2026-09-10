@@ -64,11 +64,11 @@ export function generateStudyPlan(inputs: RecommendationsInputs): StudyRecommend
     recommendations.push({
       id: `rec-review-${userId}-missed`,
       type: 'review',
-      title: `Review ${missedQuestions.length} Missed Question${
+      title: `Review ${missedQuestions.length} Current Missed Question${
         missedQuestions.length === 1 ? '' : 's'
       }`,
       description:
-        'Retaking questions you missed is one of the fastest ways to raise your score.',
+        'These are questions your most recent answers show still need review.',
       chapterNumber: null,
       priority: missedQuestions.length >= 5 ? 'high' : 'medium',
       estimatedMinutes: Math.min(30, missedQuestions.length * 2),
