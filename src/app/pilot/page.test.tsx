@@ -36,12 +36,14 @@ describe('PilotPage submission contract', () => {
       json: async () => ({ success: true }),
     } as Response)
 
-    render(<PilotPage />)
+    const { container } = render(<PilotPage />)
     fireEvent.change(screen.getByLabelText(/school name/i), { target: { value: 'Wave 2 School' } })
     fireEvent.change(screen.getByLabelText(/contact name/i), { target: { value: 'Test Contact' } })
     fireEvent.change(screen.getByLabelText(/email address/i), { target: { value: 'contact@example.com' } })
     fireEvent.change(screen.getByLabelText(/program type/i), { target: { value: 'Barbering' } })
-    fireEvent.submit(screen.getByRole('button', { name: /submit pilot inquiry/i }).closest('form')!)
+    // Submit via the form itself: the contract under test is the submission
+    // behavior, not the (marketing-iterated) submit-button label.
+    fireEvent.submit(container.querySelector('form')!)
 
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1))
     const [url, init] = fetchMock.mock.calls[0]
@@ -62,8 +64,8 @@ describe('PilotPage submission contract', () => {
       json: async () => ({ success: false, error: 'Submission service unavailable.' }),
     } as Response)
 
-    render(<PilotPage />)
-    fireEvent.submit(screen.getByRole('button', { name: /submit pilot inquiry/i }).closest('form')!)
+    const { container } = render(<PilotPage />)
+    fireEvent.submit(container.querySelector('form')!)
 
     const alert = await screen.findByRole('alert')
     expect(alert).toHaveTextContent('Pilot inquiry not submitted')
