@@ -1,23 +1,16 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { trackEvent, trackPageView } from '@/lib/analytics/events'
 import { storeUtmParams, getCurrentUtmContext } from '@/lib/analytics/utm'
 import { Logo } from '@/components/brand'
 import { FormError } from '@/components/ui/FormError'
 
-function getFourWeeksFromToday(): string {
-  const date = new Date()
-  date.setDate(date.getDate() + 28)
-  return date.toISOString().split('T')[0]
-}
-
 export default function PilotPage() {
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const earliestStartDate = useMemo(() => getFourWeeksFromToday(), [])
 
   useEffect(() => {
     storeUtmParams()
@@ -118,9 +111,54 @@ export default function PilotPage() {
             Partner With ASCYN PRO
           </h1>
           <p className="text-xl text-silver max-w-2xl mx-auto">
-            Join a small group of Oklahoma schools piloting ASCYN PRO for the upcoming semester. 
-            No financial commitment. Full support included.
+            ASCYN PRO is a professional licensing platform that helps barbering students focus their study
+            and gives instructors early insight into learning gaps — before board exam day.
+            Qualified barbering schools can evaluate the full platform free for 90 days.
+            No credit card. No purchase obligation.
           </p>
+        </div>
+      </section>
+
+      {/* Pilot Offer */}
+      <section className="pb-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-[var(--color-brand-black)] border border-[var(--color-brand-gold)]/30 rounded-2xl p-8 md:p-10">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 text-center">The 90-Day School Pilot</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
+              {[
+                'Free for 90 days',
+                'Up to 30 active students per school',
+                'No credit card',
+                'No auto-renewal',
+                'No purchase obligation',
+                "Supplemental to the school's existing curriculum",
+              ].map((item) => (
+                <div key={item} className="flex items-center gap-2 text-light-gray">
+                  <span className="text-[var(--color-brand-gold)]">✓</span>
+                  {item}
+                </div>
+              ))}
+            </div>
+            <h3 className="text-[var(--color-brand-gold)] font-semibold mb-4 text-sm uppercase tracking-wide text-center">
+              What Happens During the Pilot
+            </h3>
+            <div className="space-y-4 max-w-xl mx-auto">
+              {[
+                { day: 'Day 30', title: 'Adoption Check', desc: 'Review participation and early usage.' },
+                { day: 'Day 60', title: 'Progress Review', desc: 'Review usage, progress, and areas needing support.' },
+                { day: 'Day 75', title: 'Anonymous Student Feedback', desc: 'Collect an anonymous student experience survey.' },
+                { day: 'Day 90', title: 'Final Review & Next Steps', desc: 'Review pilot results and decide on next steps.' },
+              ].map((step) => (
+                <div key={step.day} className="flex gap-4">
+                  <div className="w-16 shrink-0 text-[var(--color-brand-gold)] font-semibold text-sm pt-0.5">{step.day}</div>
+                  <div>
+                    <div className="text-white font-semibold">{step.title}</div>
+                    <div className="text-silver text-sm">{step.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -166,6 +204,10 @@ export default function PilotPage() {
             </div>
           ) : (
             <div className="bg-[var(--color-brand-black)] border border-white/10 rounded-2xl p-8 md:p-12">
+              <h2 className="text-2xl font-bold text-white mb-2">Request Pilot Access</h2>
+              <p className="text-silver text-sm mb-6">
+                Tell us about your school. Our team reviews every pilot request.
+              </p>
               <form
                 action="/api/email"
                 method="post"
@@ -202,7 +244,7 @@ export default function PilotPage() {
                       value={formData.schoolName}
                       onChange={(e) => updateField('schoolName', e.target.value)}
                       className="w-full px-4 py-3 bg-[var(--color-background-primary)] border border-white/10 rounded-lg text-white placeholder-silver-gray focus:outline-none focus:border-[var(--color-brand-gold)]/50 focus:ring-1 focus:ring-[var(--color-brand-gold)]/50 transition-colors"
-                      placeholder="Oklahoma Barber Academy"
+                      placeholder="Riverbend Barber Academy"
                     />
                   </div>
 
@@ -321,17 +363,10 @@ export default function PilotPage() {
                     type="date"
                     id="startDate"
                     name="startDate"
-                    min={earliestStartDate}
                     value={formData.startDate}
                     onChange={(e) => updateField('startDate', e.target.value)}
-                    className="w-full px-4 py-3 bg-[var(--color-background-primary)] border border-white/10 rounded-lg text-white focus:outline-none focus:border-[var(--color-brand-gold)]/50 focus:ring-1 focus:ring-[var(--color-brand-gold)]/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full px-4 py-3 bg-[var(--color-background-primary)] border border-white/10 rounded-lg text-white focus:outline-none focus:border-[var(--color-brand-gold)]/50 focus:ring-1 focus:ring-[var(--color-brand-gold)]/50 transition-colors"
                   />
-                  <p className="mt-2 text-sm text-warm-bronze/90">
-                    Pilot onboarding is temporarily paused while we complete final preparations.
-                    Thank you for your interest. We are using the next four weeks to complete
-                    testing and ensure the best possible experience for our pilot schools.
-                    We look forward to onboarding you soon.
-                  </p>
                 </div>
 
                 <div>
@@ -364,7 +399,7 @@ export default function PilotPage() {
                     onClick={() => trackEvent('pilot_request_clicked')}
                     className="w-full px-8 py-4 bg-[var(--color-brand-gold)] text-[var(--color-background-primary)] font-bold rounded-xl hover:bg-[var(--color-brand-gold-light)] transition-all shadow-lg shadow-gold/20 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    {loading ? 'Sending...' : 'Submit Pilot Inquiry'}
+                    {loading ? 'Sending...' : 'Request Pilot Access'}
                   </button>
                 </div>
 
