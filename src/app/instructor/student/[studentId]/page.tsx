@@ -26,6 +26,7 @@ import ProgressReportModal from './ProgressReportModal'
 import BackButton from '@/components/ui/BackButton'
 import { getInstructorNotes } from './actions'
 import { mapHourLogsFromDb, mapAttendanceRecordsFromDb, mapAttendanceNotesFromDb } from '@/lib/mappers/operational-data-mappers'
+import { getLastSignInAtMap } from '@/lib/instructor/last-login'
 
 interface StudentDetailPageProps {
   params: Promise<{
@@ -208,6 +209,12 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
   if (!resolvedStudent) {
     notFound()
   }
+
+  // Last Login signal (server-side only): auth.users.last_sign_in_at for this
+  // verified roster student. Skipped for demo students (fictional IDs have no
+  // Auth accounts); an unavailable lookup renders as absent.
+  const lastSignInMap = usingDemoData ? {} : await getLastSignInAtMap([studentId])
+  const lastLoginAt = lastSignInMap[studentId] ?? null
 
   // Resolve the student's program requirements (programs.required_hours) and the
   // school's configured state, so hour tracking and the Board Hours Summary use
@@ -418,7 +425,12 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                 </span>
                 {lastActivityAt && (
                   <span className="text-silver-gray">
-                    Last active {formatDaysAgo(lastActivityAt)}
+                    Last learning activity {formatDaysAgo(lastActivityAt)}
+                  </span>
+                )}
+                {lastLoginAt && (
+                  <span className="text-silver-gray">
+                    Last login {formatDaysAgo(lastLoginAt)}
                   </span>
                 )}
               </div>
@@ -430,6 +442,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
         <ProgressReportModal
           student={resolvedStudent}
           lastActivityAt={lastActivityAt}
+          lastLoginAt={lastLoginAt}
           overallProgress={overallProgress}
           avgQuizScore={avgQuizScore}
           readiness={readiness}

@@ -78,6 +78,12 @@ vi.mock('next/navigation', () => ({
   redirect: vi.fn(),
 }))
 
+// The page fetches the Last Login signal server-side via the service-role
+// client; mock it so the test never touches Auth admin APIs or server-only.
+vi.mock('@/lib/instructor/last-login', () => ({
+  getLastSignInAtMap: vi.fn().mockResolvedValue({}),
+}))
+
 // Mock demo-helpers so we can control isDemoDataAllowed per test
 vi.mock('@/lib/demo-helpers', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/lib/demo-helpers')>()

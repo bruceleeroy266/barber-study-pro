@@ -79,6 +79,9 @@ export default function QuizClient({
   const [completed, setCompleted] = useState(false)
   const [score, setScore] = useState(0)
   const [saving, setSaving] = useState(false)
+  // Visible failure states — progress/activity updates must never fail silently.
+  const [progressSaveError, setProgressSaveError] = useState<string | null>(null)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   // Book + ASCYN learning model: standard passing score is 80%.
   const passingScore = quiz.passing_score ?? 80
@@ -110,6 +113,8 @@ export default function QuizClient({
     }
 
     setSaving(true)
+    setSubmitError(null)
+    setProgressSaveError(null)
     // Calculate final score using the dedicated scoring helper. Each question is
     // counted exactly once from the recorded answers.
     const scoringQuestions = shuffledQuestions.map((sq) => ({
@@ -178,7 +183,12 @@ export default function QuizClient({
         quizCompleted
       )
 
-      await supabase
+      // Chapter progress + learning-activity timestamp (last_studied_at).
+      // The quiz attempt is already persisted above, so a failure here must
+      // NOT throw (that would hide the student's results) — but it must also
+      // NOT fail silently. Log it and surface a visible warning on the
+      // results screen.
+      const { error: progressUpsertError } = await supabase
         .from('student_progress')
         .upsert(
           {
@@ -192,6 +202,13 @@ export default function QuizClient({
           },
           { onConflict: 'user_id,chapter_id' }
         )
+
+      if (progressUpsertError) {
+        console.error('[QuizClient] Failed to update chapter progress/learning activity:', progressUpsertError)
+        setProgressSaveError(
+          'Your quiz score was saved, but updating your chapter progress failed. Your instructor may not see this attempt in your progress or learning activity yet. Please retake the quiz or contact support if this persists.'
+        )
+      }
 
       // Persist missed questions to Supabase so they survive logout/login.
       const chapterNumber = parseInt(chapterId.replace(/^ch-/, ''), 10) || 0
@@ -252,6 +269,9 @@ export default function QuizClient({
       setCompleted(true)
     } catch (err) {
       console.error('Error saving quiz:', err)
+      setSubmitError(
+        'We could not save your quiz results. Your answers are still here — press "Submit & Finish Quiz" to try again. If the problem continues, contact support.'
+      )
     } finally {
       setSaving(false)
     }
@@ -280,6 +300,8 @@ export default function QuizClient({
     setAnswers({})
     setCompleted(false)
     setScore(0)
+    setProgressSaveError(null)
+    setSubmitError(null)
   }, [])
 
   // Warn before leaving active quiz
@@ -366,6 +388,12 @@ export default function QuizClient({
         <p className="text-[var(--color-text-muted)] mb-2">
           You got {score} out of {shuffledQuestions.length} questions correct
         </p>
+
+        {progressSaveError && (
+          <Alert variant="warning" className="mb-6 text-left">
+            <p className="text-sm leading-relaxed">{progressSaveError}</p>
+          </Alert>
+        )}
 
         {passed ? (
           <p className="text-gold mb-6 font-medium">
@@ -542,6 +570,11 @@ export default function QuizClient({
       </Card>
 
       {/* Actions — single submit-and-advance; no per-question feedback */}
+      {submitError && (
+        <Alert variant="error" className="text-left">
+          <p className="text-sm leading-relaxed">{submitError}</p>
+        </Alert>
+      )}
       <div className="flex justify-end">
         <Button
           variant="primary"

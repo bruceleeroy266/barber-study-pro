@@ -21,7 +21,13 @@ interface WeakAreaInfo {
 
 interface ProgressReportModalProps {
   student: Profile
+  /** Most recent meaningful learning activity (student_progress.last_studied_at). */
   lastActivityAt: string | null
+  /**
+   * Most recent account sign-in (auth.users.last_sign_in_at), server-fetched.
+   * Optional so existing report consumers/tests remain valid; absent = hidden.
+   */
+  lastLoginAt?: string | null
   overallProgress: number
   avgQuizScore: number
   readiness: { label: string; score: number }
@@ -54,6 +60,7 @@ function formatDaysAgo(dateString: string | null): string {
 export default function ProgressReportModal({
   student,
   lastActivityAt,
+  lastLoginAt = null,
   overallProgress,
   avgQuizScore,
   readiness,
@@ -109,7 +116,10 @@ export default function ProgressReportModal({
             <StudentIdentity student={student} variant="light" showRole />
             <p className="text-sm text-silver-gray mt-2">Joined: {formatDate(student.created_at)}</p>
             {lastActivityAt && (
-              <p className="text-sm text-silver-gray">Last active: {formatDaysAgo(lastActivityAt)}</p>
+              <p className="text-sm text-silver-gray">Last learning activity: {formatDaysAgo(lastActivityAt)}</p>
+            )}
+            {lastLoginAt && (
+              <p className="text-sm text-silver-gray">Last login: {formatDaysAgo(lastLoginAt)}</p>
             )}
           </div>
 

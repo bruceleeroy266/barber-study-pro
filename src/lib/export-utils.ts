@@ -109,8 +109,8 @@ export const studentRosterColumns: ExportColumn[] = [
   { key: 'readinessLevel', label: 'Readiness Level' },
   { key: 'completedChapters', label: 'Chapters Completed' },
   { key: 'quizzesTaken', label: 'Quizzes Taken' },
-  { key: 'daysSinceActive', label: 'Days Since Active' },
-  { key: 'lastStudiedAt', label: 'Last Activity', format: formatDateForExport },
+  { key: 'daysSinceActive', label: 'Days Since Learning Activity' },
+  { key: 'lastStudiedAt', label: 'Last Learning Activity', format: formatDateForExport },
 ]
 
 /**

@@ -17,6 +17,7 @@ import { createSupabaseExclusionClient } from '@/lib/reassessment/supabase-clien
 import { createReassessmentService } from '@/lib/reassessment/reassessment-service'
 import { getQuizQuestionById } from '@/lib/remediation/content-filter'
 import { STUDENT_STATE_LABELS, STUDENT_STATE_DESCRIPTIONS } from '@/lib/remediation/student-service'
+import { recordLearningActivity } from '@/lib/learning-activity'
 
 export async function POST(
   request: NextRequest,
@@ -109,6 +110,11 @@ export async function POST(
 
     // Record reassessment started
     await service.recordReassessmentStarted(cycleId, user.id)
+
+    // Learning-activity tracking: starting a knowledge check is meaningful
+    // Chapter 2 learning work. Advance last_studied_at via the shared
+    // server-side mechanism (student-scoped client, RLS). Never blocks.
+    await recordLearningActivity(supabase, user.id, cycle.chapterId)
 
     return NextResponse.json({
       success: true,

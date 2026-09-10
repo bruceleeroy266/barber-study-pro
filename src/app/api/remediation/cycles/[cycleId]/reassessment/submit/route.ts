@@ -37,6 +37,7 @@ import { initializeChapter2DetectionProvider } from '@/lib/reassessment/provider
 import { STUDENT_STATE_LABELS, STUDENT_STATE_DESCRIPTIONS } from '@/lib/remediation/student-service'
 import type { StudentRemediationState } from '@/lib/remediation/student-service'
 import { chapter2QuizQuestionMappings } from '@/lib/chapter-2-concepts/mappings'
+import { recordLearningActivity } from '@/lib/learning-activity'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 
 export async function POST(
@@ -175,6 +176,11 @@ export async function POST(
         { status: 500 }
       )
     }
+
+    // Learning-activity tracking: submitting a knowledge-check answer is
+    // meaningful Chapter 2 learning work. Advance last_studied_at via the
+    // shared server-side mechanism (student-scoped client, RLS). Never blocks.
+    await recordLearningActivity(supabase, user.id, cycle.chapterId)
 
     // Record reassessment completed
     await service.recordReassessmentCompleted(cycleId, user.id)

@@ -12,6 +12,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { createSupabaseStudentRemediationClient } from '@/lib/remediation/supabase-client'
 import { createStudentRemediationService } from '@/lib/remediation/student-service'
+import { recordLearningActivity } from '@/lib/learning-activity'
 
 export async function POST(
   request: NextRequest,
@@ -95,6 +96,15 @@ export async function POST(
         { error: result.error },
         { status: 400 }
       )
+    }
+
+    // Learning-activity tracking: review started/content viewed/flashcard
+    // reviewed/review completed are all meaningful Chapter 2 learning work.
+    // Advance student_progress.last_studied_at via the shared server-side
+    // mechanism, using the student-scoped client (RLS). Never blocks the event.
+    const cycle = await dbClient.getCycleById(cycleId)
+    if (cycle) {
+      await recordLearningActivity(supabase, user.id, cycle.chapterId)
     }
 
     return NextResponse.json({ success: true })

@@ -18,14 +18,18 @@ import UnreadBadge from '@/components/messaging/UnreadBadge'
 import StudentIdentity from '@/components/StudentIdentity'
 import EscalationBadge from '@/components/instructor/EscalationBadge'
 import { mapHourLogsFromDb, mapAttendanceRecordsFromDb, mapGradesFromDb, mapGradeCategoriesFromDb, mapAssessmentsFromDb } from '@/lib/mappers/operational-data-mappers'
+import { getLastSignInAtMap } from '@/lib/instructor/last-login'
+import { deriveLearningVsLoginSignals } from '@/lib/instructor/activity-signals'
 
 interface RosterStudent extends Profile {
   overallProgress: number
   lastStudiedAt: string | null
+  lastLoginAt: string | null
   avgQuizScore: number
   quizzesTaken: number
   completedChapters: number
   daysSinceActive: number | null
+  daysSinceLogin: number | null
   readinessScore: number
   readinessLevel: ReadinessLevel
   weakestCategory: string | null
@@ -71,7 +75,8 @@ function computeStudentStats(
   allProgress: StudentProgress[],
   allAttempts: QuizAttempt[],
   chapters: { id: string; chapter_number: number; title: string }[],
-  questions: import('@/types').QuizQuestion[]
+  questions: import('@/types').QuizQuestion[],
+  lastSignInMap: Record<string, string | null> = {}
 ): RosterStudent[] {
   const totalChapters = chapters.length
 
@@ -93,9 +98,15 @@ function computeStudentStats(
       .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
     const lastStudiedAt = lastStudiedDates[0] || null
 
-    const daysSinceActive = lastStudiedAt
-      ? Math.floor((Date.now() - new Date(lastStudiedAt).getTime()) / (1000 * 60 * 60 * 24))
-      : null
+    // Two DISTINCT recency signals: learning activity (study work) vs login
+    // (account access). They are derived independently and never conflated.
+    const signals = deriveLearningVsLoginSignals({
+      lastStudiedAt,
+      lastSignInAt: lastSignInMap[student.id] ?? null,
+    })
+    const daysSinceActive = signals.daysSinceLearning
+    const daysSinceLogin = signals.daysSinceLogin
+    const lastLoginAt = signals.lastLoginAt
 
     const readiness = calculateBoardReadiness({
       userId: student.id,
@@ -118,10 +129,12 @@ function computeStudentStats(
       ...student,
       overallProgress,
       lastStudiedAt,
+      lastLoginAt,
       avgQuizScore,
       quizzesTaken: attempts.length,
       completedChapters,
       daysSinceActive,
+      daysSinceLogin,
       readinessScore: readiness.score,
       readinessLevel: readiness.level,
       weakestCategory,
@@ -199,6 +212,11 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
   }
 
   const studentIds = rosterStudents.map((s) => s.id)
+
+  // Last Login signal (server-side only): auth.users.last_sign_in_at for the
+  // verified school roster. Skipped for demo rosters (fictional IDs have no
+  // Auth accounts); unavailable lookups render as '—'.
+  const lastSignInMap = usingDemoData ? {} : await getLastSignInAtMap(studentIds)
 
   // Fetch progress and attempts for these students
   const { data: allProgress } = await supabase
@@ -321,7 +339,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     return acc
   }, {})
 
-  const studentStats = computeStudentStats(rosterStudents, progressRecords, attemptRecords, chapters, questions)
+  const studentStats = computeStudentStats(rosterStudents, progressRecords, attemptRecords, chapters, questions, lastSignInMap)
 
   // Filter by search query (name, email, or role)
   const filteredStudents = searchQuery
@@ -425,7 +443,10 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
             <div className="text-xs text-[var(--color-text-muted)] mt-1">Total Students</div>
           </div>
 
-          <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-5">
+          <div
+            className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-5"
+            title="Students with meaningful learning activity (study work: flashcards, quizzes, remediation) in the last 7 days. Logging in alone does not count."
+          >
             <div className="text-2xl font-bold text-silver">{activeStudents}</div>
             <div className="text-xs text-[var(--color-text-muted)] mt-1">Active This Week</div>
           </div>
@@ -902,7 +923,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
                     <th className="p-4">Readiness Score</th>
                     <th className="p-4">Status</th>
                     <th className="p-4">Weakest Category</th>
-                    <th className="p-4">Last Activity</th>
+                    <th className="p-4">Last Learning Activity</th>
                   </tr>
                 </thead>
                 <tbody className="text-sm">
@@ -1126,6 +1147,9 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
                   ? `Showing ${filteredStudents.length} of ${totalStudents} students`
                   : `${totalStudents} student${totalStudents === 1 ? '' : 's'} in your school`}
               </p>
+              <p className="text-xs text-[var(--color-text-muted)] mt-1">
+                Last Learning Activity = meaningful study work (flashcards, quizzes, remediation) — not the same as logging in. Last Login = most recent account sign-in.
+              </p>
             </div>
           </div>
 
@@ -1137,7 +1161,8 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
                     <th className="p-4">Student</th>
                     <th className="p-4">Role</th>
                     <th className="p-4">Overall Progress</th>
-                    <th className="p-4">Last Activity</th>
+                    <th className="p-4">Last Learning Activity</th>
+                    <th className="p-4">Last Login</th>
                     <th className="p-4">Quiz Average</th>
                     <th className="p-4">Actions</th>
                   </tr>
@@ -1167,6 +1192,9 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
                       </td>
                       <td className="p-4 text-[var(--color-text-muted)]">
                         {student.daysSinceActive !== null ? `${student.daysSinceActive}d ago` : 'Never'}
+                      </td>
+                      <td className="p-4 text-[var(--color-text-muted)]">
+                        {student.daysSinceLogin !== null ? `${student.daysSinceLogin}d ago` : '—'}
                       </td>
                       <td className="p-4">
                         <span className={`font-semibold ${
