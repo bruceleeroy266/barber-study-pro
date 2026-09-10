@@ -426,7 +426,7 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
             handleFlip()
           }
         }}
-        className="relative h-64 md:h-80 cursor-pointer perspective-1000 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)] focus:ring-offset-2 focus:ring-offset-gray-900 rounded-xl"
+        className="relative h-[min(28rem,58vh)] min-h-80 md:h-[26rem] cursor-pointer perspective-1000 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)] focus:ring-offset-2 focus:ring-offset-gray-900 rounded-xl"
       >
         <div
           className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d ${
@@ -439,10 +439,10 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
         >
           {/* Front */}
           <div
-            className="absolute inset-0 bg-[var(--color-background-secondary)] border border-[var(--color-border-primary)] rounded-xl p-8 flex items-center justify-center backface-hidden"
+            className="absolute inset-0 bg-[var(--color-background-secondary)] border border-[var(--color-border-primary)] rounded-xl px-5 py-6 sm:p-8 flex items-start sm:items-center justify-center overflow-y-auto overscroll-contain backface-hidden"
             style={{ backfaceVisibility: 'hidden' }}
           >
-            <div className="text-center">
+            <div className="text-center w-full my-auto">
               {isFlagged && (
                 <div className="inline-flex items-center gap-1 px-2 py-1 mb-3 rounded-full bg-silver/10 border border-silver/30 text-silver text-xs font-medium">
                   <Flag className="w-3 h-3" aria-hidden="true" />
@@ -450,20 +450,20 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
                 </div>
               )}
               <p className="text-sm text-[var(--color-text-muted)] mb-4">Question</p>
-              <p className="text-xl md:text-2xl text-white font-medium">{currentCard.front}</p>
+              <p className="text-lg sm:text-xl md:text-2xl text-white font-medium leading-relaxed break-words">{currentCard.front}</p>
               <p className="text-xs text-silver-gray mt-8">Click to flip</p>
             </div>
           </div>
 
           {/* Back */}
           <div
-            className="absolute inset-0 bg-gradient-to-br from-[var(--color-brand-gold)]/10 to-graphite border border-[var(--color-brand-gold)]/30 rounded-xl p-8 flex items-center justify-center"
+            className="absolute inset-0 bg-gradient-to-br from-[var(--color-brand-gold)]/10 to-graphite border border-[var(--color-brand-gold)]/30 rounded-xl px-5 py-6 sm:p-8 flex items-start sm:items-center justify-center overflow-y-auto overscroll-contain"
             style={{
               backfaceVisibility: 'hidden',
               transform: 'rotateY(180deg)'
             }}
           >
-            <div className="text-center">
+            <div className="text-center w-full my-auto">
               {isFlagged && (
                 <div className="inline-flex items-center gap-1 px-2 py-1 mb-3 rounded-full bg-silver/10 border border-silver/30 text-silver text-xs font-medium">
                   <Flag className="w-3 h-3" aria-hidden="true" />
@@ -471,7 +471,7 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
                 </div>
               )}
               <p className="text-sm text-[var(--color-brand-gold)] mb-4">Answer</p>
-              <p className="text-xl md:text-2xl text-white font-medium">{currentCard.back}</p>
+              <p className="text-base sm:text-lg md:text-xl text-white font-medium leading-relaxed break-words">{currentCard.back}</p>
               {currentCard.category && (
                 <span className="inline-block mt-4 px-3 py-1 bg-[var(--color-border-secondary)] text-[var(--color-text-secondary)] text-xs rounded-full">
                   {currentCard.category}
