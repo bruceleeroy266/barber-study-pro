@@ -24,13 +24,19 @@ export function buildMissedQuestions(
   inputs: AnalyticsInputs
 ): MissedQuestion[] {
   const { userId, attempts, chapters, questions } = inputs
-  const missed: MissedQuestion[] = []
 
   const chapterMap = new Map(chapters.map((c) => [c.id, c]))
   const questionMap = new Map(questions.map((q) => [q.id, q]))
-  const seen = new Map<string, MissedQuestion>()
+  const currentMisses = new Map<string, MissedQuestion>()
+  const missCounts = new Map<string, number>()
 
-  for (const attempt of attempts) {
+  // Latest answer is authoritative. Sorting makes this true even if callers
+  // provide attempt history in descending or otherwise unordered form.
+  const chronologicalAttempts = [...attempts].sort(
+    (a, b) => new Date(a.completed_at).getTime() - new Date(b.completed_at).getTime()
+  )
+
+  for (const attempt of chronologicalAttempts) {
     const chapterId = quizIdToChapterId(attempt.quiz_id)
     const chapter = chapterMap.get(chapterId)
     if (!chapter) continue
@@ -39,56 +45,52 @@ export function buildMissedQuestions(
       const question = questionMap.get(questionId)
       if (!question) continue
 
-      if (studentAnswerKey !== question.correct_answer) {
-        const existing = seen.get(questionId)
-        if (existing) {
-          existing.timesMissed += 1
-          if (new Date(attempt.completed_at) > new Date(existing.missedAt)) {
-            existing.missedAt = attempt.completed_at
-          }
-        } else {
-          const correctText =
-            question.correct_answer === 'a'
-              ? question.answer_a
-              : question.correct_answer === 'b'
-              ? question.answer_b
-              : question.correct_answer === 'c'
-              ? question.answer_c
-              : question.answer_d
-
-          const studentText =
-            studentAnswerKey === 'a'
-              ? question.answer_a
-              : studentAnswerKey === 'b'
-              ? question.answer_b
-              : studentAnswerKey === 'c'
-              ? question.answer_c
-              : question.answer_d
-
-          const missedQuestion: MissedQuestion = {
-            id: `missed-${userId}-${questionId}`,
-            userId,
-            questionId,
-            question: question.question,
-            correctAnswer: correctText,
-            studentAnswer: studentText,
-            explanation: question.explanation,
-            chapterId,
-            chapterNumber: chapter.chapter_number,
-            category: getCategoryForChapter(chapter.chapter_number),
-            quizId: attempt.quiz_id,
-            missedAt: attempt.completed_at,
-            retakenAt: null,
-            timesMissed: 1,
-          }
-          seen.set(questionId, missedQuestion)
-          missed.push(missedQuestion)
-        }
+      if (studentAnswerKey === question.correct_answer) {
+        currentMisses.delete(questionId)
+        continue
       }
+
+      const timesMissed = (missCounts.get(questionId) ?? 0) + 1
+      missCounts.set(questionId, timesMissed)
+
+      const correctText =
+        question.correct_answer === 'a'
+          ? question.answer_a
+          : question.correct_answer === 'b'
+          ? question.answer_b
+          : question.correct_answer === 'c'
+          ? question.answer_c
+          : question.answer_d
+
+      const studentText =
+        studentAnswerKey === 'a'
+          ? question.answer_a
+          : studentAnswerKey === 'b'
+          ? question.answer_b
+          : studentAnswerKey === 'c'
+          ? question.answer_c
+          : question.answer_d
+
+      currentMisses.set(questionId, {
+        id: `missed-${userId}-${questionId}`,
+        userId,
+        questionId,
+        question: question.question,
+        correctAnswer: correctText,
+        studentAnswer: studentText,
+        explanation: question.explanation,
+        chapterId,
+        chapterNumber: chapter.chapter_number,
+        category: getCategoryForChapter(chapter.chapter_number),
+        quizId: attempt.quiz_id,
+        missedAt: attempt.completed_at,
+        retakenAt: null,
+        timesMissed,
+      })
     }
   }
 
-  return missed.sort(
+  return Array.from(currentMisses.values()).sort(
     (a, b) => new Date(b.missedAt).getTime() - new Date(a.missedAt).getTime()
   )
 }
