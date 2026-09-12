@@ -32,23 +32,13 @@ export default function StudentAttendancePage() {
   const load = useCallback(async () => {
     setLoading(true)
     setError(null)
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
-      setError('Please sign in again.')
-      setLoading(false)
-      return
-    }
-    const today = new Date().toLocaleDateString('en-CA')
-    const { data, error: queryError } = await supabase
-      .from('attendance_records')
-      .select('id,status,clocked_in_at,clocked_out_at,minutes_present')
-      .eq('user_id', user.id)
-      .eq('date', today)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle()
+
+    // The database resolves "today" from the authenticated student's school
+    // timezone. Never trust the browser/device date for attendance boundaries.
+    const { data, error: queryError } = await supabase.rpc('student_today_attendance')
+
     if (queryError) setError(queryError.message)
-    setRecord(data ?? null)
+    setRecord((data as TodayRecord | null) ?? null)
     setLoading(false)
   }, [])
 
