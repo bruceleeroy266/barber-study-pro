@@ -52,7 +52,10 @@ export default function StudentAttendancePage() {
     setLoading(false)
   }, [])
 
-  useEffect(() => { void load() }, [load])
+  useEffect(() => {
+    const timer = window.setTimeout(() => { void load() }, 0)
+    return () => window.clearTimeout(timer)
+  }, [load])
 
   async function runClock(action: 'student_clock_in' | 'student_clock_out') {
     setWorking(true)
