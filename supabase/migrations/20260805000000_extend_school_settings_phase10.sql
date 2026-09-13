@@ -138,8 +138,32 @@ create policy "School admins can update own school" on public.schools
 -- 5. INDEXES FOR NEW COLUMNS
 -- ----------------------------------------------------------------------------
 
+create extension if not exists pg_trgm;
+
 create index if not exists idx_school_settings_school_info on public.school_settings using gin(school_info);
-create index if not exists idx_school_settings_address on public.school_settings using gin(address);
+
+do $$
+begin
+  if exists (
+    select 1 from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'school_settings'
+      and column_name = 'address'
+      and data_type = 'jsonb'
+  ) then
+    execute 'create index if not exists idx_school_settings_address on public.school_settings using gin(address)';
+  elsif exists (
+    select 1 from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'school_settings'
+      and column_name = 'address'
+      and data_type = 'text'
+  ) then
+    execute 'create index if not exists idx_school_settings_address on public.school_settings using gin(address gin_trgm_ops)';
+  end if;
+end
+$$;
+
 create index if not exists idx_school_settings_programs on public.school_settings using gin(programs);
 
 -- ----------------------------------------------------------------------------
