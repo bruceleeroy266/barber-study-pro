@@ -26,6 +26,29 @@ interface RemediationStatusCardProps {
   cycles: ActiveRemediationCycle[]
 }
 
+export function getRemediationActionLabel(state: StudentRemediationState): string {
+  switch (state) {
+    case 'targeted_review':
+      return 'Start Review'
+    case 'review_in_progress':
+      return 'Continue Review'
+    case 'review_completed':
+      return 'Start Knowledge Check'
+    case 'reassessment_in_progress':
+      return 'Resume Knowledge Check'
+    case 'pending_evaluation':
+      return 'View Status'
+    case 'pending_more_evidence':
+      return 'Continue Practice'
+    case 'successful':
+    case 'already_completed':
+      return 'View Result'
+    case 'unsuccessful':
+    case 'pool_exhausted':
+      return 'View Next Steps'
+  }
+}
+
 export default function RemediationStatusCard({ cycles }: RemediationStatusCardProps) {
   if (cycles.length === 0) {
     return null
@@ -76,7 +99,7 @@ export default function RemediationStatusCard({ cycles }: RemediationStatusCardP
                   href={`/dashboard/remediation/${cycle.id}`}
                   className="inline-flex items-center gap-2 px-5 py-2.5 bg-[var(--color-brand-gold)] text-black font-semibold rounded-lg hover:bg-[var(--color-brand-gold-light)] transition-colors"
                 >
-                  {cycle.studentState === 'review_completed' ? 'Start Knowledge Check' : 'Continue Review'}
+                  {getRemediationActionLabel(cycle.studentState)}
                   <span aria-hidden="true">→</span>
                 </Link>
               </div>
