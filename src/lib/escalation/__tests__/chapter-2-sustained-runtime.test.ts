@@ -146,4 +146,113 @@ describe('Chapter 2 sustained-performance runtime', () => {
     expect(mockService.recordDetectionTransition).not.toHaveBeenCalled()
     expect(mockService.recordFollowUpEvidence).not.toHaveBeenCalled()
   })
+
+  it('does not double-count follow-up evidence when the same quiz attempt was already recorded', async () => {
+    const mockService = service({
+      getTrackingState: vi.fn().mockResolvedValue(tracking()),
+      recordFollowUpEvidence: vi.fn().mockResolvedValue({ success: true, alreadyRecorded: true }),
+    })
+
+    const result = await syncChapter2SustainedPerformance({
+      userId: 'user-1',
+      chapterId: 'ch-2',
+      quizAttemptId: 'attempt-duplicate',
+      quizAttemptAnswers: { 'q-1': 'a' },
+      detectionResults: [detection('currently_performing_well')],
+      service: mockService,
+    })
+
+    expect(mockService.recordFollowUpEvidence).toHaveBeenCalledTimes(1)
+    expect(result.followUpEvidenceRecorded).toBe(0)
+    expect(result.errors).toHaveLength(0)
+  })
+
+  it('does not report a reset when the service already executed it for this tracking period', async () => {
+    const mockService = service({
+      getTrackingState: vi.fn().mockResolvedValue(tracking()),
+      checkResetEligibility: vi.fn().mockResolvedValue({ isEligible: true }),
+      executeReset: vi.fn().mockResolvedValue({ success: true, alreadyExecuted: true, resetId: 'reset-1' }),
+    })
+
+    const result = await syncChapter2SustainedPerformance({
+      userId: 'user-1',
+      chapterId: 'ch-2',
+      quizAttemptId: 'attempt-5',
+      quizAttemptAnswers: { 'q-1': 'a' },
+      detectionResults: [detection('currently_performing_well')],
+      service: mockService,
+    })
+
+    expect(mockService.executeReset).toHaveBeenCalledTimes(1)
+    expect(result.resetsExecuted).toBe(0)
+    expect(result.errors).toHaveLength(0)
+  })
+
+  it('captures a transition failure, skips reset for that concept, and keeps processing other concepts', async () => {
+    const failingService = service({
+      getTrackingState: vi.fn().mockResolvedValue(tracking()),
+      recordDetectionTransition: vi.fn().mockResolvedValue({ success: false, error: 'database unavailable' }),
+    })
+
+    const okServiceCalls = { transitions: 0 }
+    const otherConceptService = service({
+      getTrackingState: vi.fn().mockResolvedValue(null),
+      recordDetectionTransition: vi.fn().mockImplementation(async () => {
+        okServiceCalls.transitions++
+        return { success: true, trackingId: 'tracking-2' }
+      }),
+    })
+
+    const failed = await syncChapter2SustainedPerformance({
+      userId: 'user-1',
+      chapterId: 'ch-2',
+      quizAttemptId: 'attempt-6',
+      quizAttemptAnswers: { 'q-1': 'a' },
+      detectionResults: [detection('currently_performing_well')],
+      service: failingService,
+    })
+
+    expect(failed.transitionsRecorded).toBe(0)
+    expect(failed.errors).toHaveLength(1)
+    expect(failed.errors[0]).toContain('database unavailable')
+    expect(failingService.checkResetEligibility).not.toHaveBeenCalled()
+    expect(failingService.executeReset).not.toHaveBeenCalled()
+
+    // A second concept processed in the same run must be unaffected by the first failure.
+    const second = await syncChapter2SustainedPerformance({
+      userId: 'user-1',
+      chapterId: 'ch-2',
+      quizAttemptId: 'attempt-6',
+      quizAttemptAnswers: { 'q-1': 'a' },
+      detectionResults: [detection('currently_performing_well')],
+      service: otherConceptService,
+    })
+
+    expect(second.transitionsRecorded).toBe(1)
+    expect(second.errors).toHaveLength(0)
+    expect(okServiceCalls.transitions).toBe(1)
+  })
+
+  it('captures a follow-up evidence failure instead of silently losing it', async () => {
+    const mockService = service({
+      getTrackingState: vi.fn().mockResolvedValue(tracking()),
+      recordFollowUpEvidence: vi.fn().mockResolvedValue({ success: false, error: 'write conflict' }),
+    })
+
+    const result = await syncChapter2SustainedPerformance({
+      userId: 'user-1',
+      chapterId: 'ch-2',
+      quizAttemptId: 'attempt-7',
+      quizAttemptAnswers: { 'q-1': 'a' },
+      detectionResults: [detection('currently_performing_well')],
+      service: mockService,
+    })
+
+    expect(result.followUpEvidenceRecorded).toBe(0)
+    expect(result.errors).toHaveLength(1)
+    expect(result.errors[0]).toContain('write conflict')
+    // The transition itself is still recorded — one failed evidence write must
+    // not corrupt the tracking lifecycle.
+    expect(result.transitionsRecorded).toBe(1)
+  })
 })

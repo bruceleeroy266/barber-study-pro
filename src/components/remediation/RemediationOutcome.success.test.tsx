@@ -12,7 +12,9 @@ describe('RemediationOutcome successful state', () => {
       />
     )
 
-    expect(screen.getByText(/Strong Understanding/i)).toBeInTheDocument()
+    // Exact badge text — a substring match also hits the "strong understanding
+    // of this topic" sentence in the message body.
+    expect(screen.getByText('Strong Understanding')).toBeInTheDocument()
     expect(screen.getByText(/strong understanding in this focus area/i)).toBeInTheDocument()
     expect(screen.queryByText(/overall progress shows mastery/i)).not.toBeInTheDocument()
   })

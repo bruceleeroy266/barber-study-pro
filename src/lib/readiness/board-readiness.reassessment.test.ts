@@ -75,6 +75,7 @@ describe('board readiness and remediation reassessments', () => {
     expect(withRemediationEvidence.quizAverage).toBe(83)
     expect(withRemediationEvidence.totalQuestionsAnswered).toBe(48)
     expect(withRemediationEvidence.quizCompletionRate).toBe(baseline.quizCompletionRate)
+    expect(withRemediationEvidence.consistencyScore).toBe(baseline.consistencyScore)
     expect(withRemediationEvidence.improvementTrend).toBe(baseline.improvementTrend)
     expect(withRemediationEvidence.score).toBe(baseline.score)
   })
