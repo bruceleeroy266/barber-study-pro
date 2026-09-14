@@ -28,10 +28,6 @@ import type { EvaluationOutcome } from '../evaluation/types'
 import type { Flashcard, QuizQuestion } from '@/types'
 import type { ChapterSection } from '../chapter-content'
 
-// ───────────────────────────────────────────────
-// Remediation Cycle Types (from Phase 6C-2a)
-// ───────────────────────────────────────────────
-
 export type RemediationCycleStatus =
   | 'targeted'
   | 'in_review'
@@ -83,30 +79,18 @@ export interface RemediationCycleEvent {
   createdAt: Date
 }
 
-// ───────────────────────────────────────────────
-// Student-Facing State Types
-// ───────────────────────────────────────────────
-
-/**
- * Student-facing remediation state derived from internal cycle state.
- * Never expose internal detection-state terminology to students.
- */
 export type StudentRemediationState =
-  | 'targeted_review'           // Review assigned, not yet started
-  | 'review_in_progress'        // Student is reviewing materials
-  | 'review_completed'          // Review done, reassessment available
-  | 'reassessment_in_progress'  // Question reserved, awaiting submission
-  | 'pending_evaluation'        // Answer submitted, evaluation pending
-  | 'pending_more_evidence'     // Evaluation returned pending — cycle remains active
-  | 'successful'                // Terminal: currently_performing_well
-  | 'unsuccessful'              // Terminal: repeated_weakness
-  | 'pool_exhausted'            // No unseen questions remain
-  | 'already_completed'         // Cycle already terminal (successful/unsuccessful)
+  | 'targeted_review'
+  | 'review_in_progress'
+  | 'review_completed'
+  | 'reassessment_in_progress'
+  | 'pending_evaluation'
+  | 'pending_more_evidence'
+  | 'successful'
+  | 'unsuccessful'
+  | 'pool_exhausted'
+  | 'already_completed'
 
-/**
- * Student-friendly status label mapping.
- * Never expose detection states, confidence levels, or diagnostic terms.
- */
 export const STUDENT_STATE_LABELS: Record<StudentRemediationState, string> = {
   targeted_review: 'Getting Started',
   review_in_progress: 'Reviewing Materials',
@@ -120,9 +104,6 @@ export const STUDENT_STATE_LABELS: Record<StudentRemediationState, string> = {
   already_completed: 'Completed',
 } as const
 
-/**
- * Student-friendly status descriptions.
- */
 export const STUDENT_STATE_DESCRIPTIONS: Record<StudentRemediationState, string> = {
   targeted_review: 'Your instructor has identified an area to focus on. Review the materials below to get started.',
   review_in_progress: 'You are making progress through your review materials. Keep going!',
@@ -131,18 +112,11 @@ export const STUDENT_STATE_DESCRIPTIONS: Record<StudentRemediationState, string>
   pending_evaluation: 'Your answer is being reviewed...',
   pending_more_evidence: 'You are building your foundation. Continue practicing and try another knowledge check when ready.',
   successful: 'You have demonstrated strong understanding of this topic. Well done!',
-  unsuccessful: 'Your instructor will provide additional support for this topic.',
+  unsuccessful: 'This topic still needs attention. Continue reviewing the study materials and check in with your instructor for additional support.',
   pool_exhausted: 'You have completed all available practice questions for this topic. Continue reviewing the study materials and check in with your instructor for additional guidance.',
   already_completed: 'This focus area has already been completed.',
 } as const
 
-// ───────────────────────────────────────────────
-// Remediation Content Bundle
-// ───────────────────────────────────────────────
-
-/**
- * Content bundle for a remediation cycle, filtered by concept.
- */
 export interface RemediationContentBundle {
   conceptId: ConceptId
   conceptName: string
@@ -153,13 +127,6 @@ export interface RemediationContentBundle {
   flashcardCount: number
 }
 
-// ───────────────────────────────────────────────
-// Reassessment Types
-// ───────────────────────────────────────────────
-
-/**
- * Result of starting a reassessment (question reservation).
- */
 export interface ReassessmentStartResult {
   success: boolean
   questionId?: QuizQuestionId
@@ -169,9 +136,6 @@ export interface ReassessmentStartResult {
   error?: string
 }
 
-/**
- * Result of submitting a reassessment answer.
- */
 export interface ReassessmentSubmitResult {
   success: boolean
   isCorrect?: boolean
@@ -180,52 +144,23 @@ export interface ReassessmentSubmitResult {
   error?: string
 }
 
-// ───────────────────────────────────────────────
-// Student Remediation Service Interface
-// ───────────────────────────────────────────────
-
-/**
- * Database client interface for student remediation operations.
- * Abstracts Supabase for testability.
- */
 export interface IStudentRemediationDbClient {
-  // Cycle operations
   getCycleById(cycleId: string): Promise<RemediationCycle | null>
   getCycleAssignments(cycleId: string): Promise<RemediationAssignment[]>
   getCycleEvents(cycleId: string): Promise<RemediationCycleEvent[]>
   updateCycleStatus(cycleId: string, status: RemediationCycleStatus, fields?: Partial<RemediationCycle>): Promise<boolean>
   recordCycleEvent(cycleId: string, eventType: string, eventData?: Record<string, unknown>): Promise<string | null>
   updateAssignmentStatus(assignmentId: string, status: 'started' | 'completed'): Promise<boolean>
-
-  // Quiz attempt operations (for reassessment evidence)
   createQuizAttempt(userId: string, quizId: string, answersJson: Record<string, string>, score: number, totalQuestions: number): Promise<string | null>
   getQuizAttemptById(attemptId: string): Promise<{ id: string; userId: string; quizId: string; answersJson: Record<string, unknown>; completedAt: string } | null>
-
-  // Reassessment question history
   updateReassessmentQuestionHistory(reservationId: string, isCorrect: boolean): Promise<boolean>
 }
 
-/**
- * Student Remediation Service
- *
- * Orchestrates the student-facing remediation experience using existing
- * Phase 6C-2 services. Does NOT duplicate:
- *   - Exclusion engine logic (6C-2b)
- *   - Outcome matrix logic (6C-2d)
- *   - Escalation logic (6C-2c)
- *   - Canonical mapping logic (6B-2)
- */
 export class StudentRemediationService {
   constructor(
     private readonly dbClient: IStudentRemediationDbClient
   ) {}
 
-  /**
-   * Get a remediation cycle with server-side authorization.
-   *
-   * Security: Verifies the authenticated student owns the cycle.
-   * Never trust student-supplied user IDs, concept IDs, or chapter IDs.
-   */
   async getCycleForStudent(
     cycleId: string,
     authenticatedUserId: string
@@ -245,11 +180,6 @@ export class StudentRemediationService {
     return { cycle, assignments }
   }
 
-  /**
-   * Derive the student-facing state from the internal cycle state.
-   *
-   * Never expose internal detection-state terminology.
-   */
   deriveStudentState(
     cycle: RemediationCycle,
     poolExhaustion?: PoolExhaustionState | null
@@ -284,10 +214,6 @@ export class StudentRemediationService {
     return 'targeted_review'
   }
 
-  /**
-   * Start the targeted review for a cycle.
-   * Records the review_started event and updates cycle status.
-   */
   async startReview(cycleId: string, authenticatedUserId: string): Promise<{ success: boolean; error?: string }> {
     const result = await this.getCycleForStudent(cycleId, authenticatedUserId)
     if ('error' in result) {
@@ -309,9 +235,6 @@ export class StudentRemediationService {
     return { success: true }
   }
 
-  /**
-   * Mark a content block as viewed.
-   */
   async markContentViewed(
     cycleId: string,
     authenticatedUserId: string,
@@ -336,9 +259,6 @@ export class StudentRemediationService {
     return { success: true }
   }
 
-  /**
-   * Mark a flashcard as reviewed.
-   */
   async markFlashcardReviewed(
     cycleId: string,
     authenticatedUserId: string,
@@ -363,12 +283,6 @@ export class StudentRemediationService {
     return { success: true }
   }
 
-  /**
-   * Complete the targeted review.
-   *
-   * Policy: Targeted review is required before reassessment becomes available.
-   * No clock-based cooldown — review completion is the only gate.
-   */
   async completeReview(
     cycleId: string,
     authenticatedUserId: string
@@ -401,12 +315,6 @@ export class StudentRemediationService {
     return { success: true }
   }
 
-  /**
-   * Check if reassessment is available for a cycle.
-   *
-   * Policy: Targeted review must be completed before reassessment.
-   * No clock-based cooldown.
-   */
   async isReassessmentAvailable(
     cycleId: string,
     authenticatedUserId: string
@@ -429,9 +337,6 @@ export class StudentRemediationService {
     return { available: true }
   }
 
-  /**
-   * Record reassessment started event.
-   */
   async recordReassessmentStarted(
     cycleId: string,
     authenticatedUserId: string
@@ -449,9 +354,6 @@ export class StudentRemediationService {
     return { success: true }
   }
 
-  /**
-   * Record reassessment completed event.
-   */
   async recordReassessmentCompleted(
     cycleId: string,
     authenticatedUserId: string
@@ -469,9 +371,6 @@ export class StudentRemediationService {
     return { success: true }
   }
 
-  /**
-   * Get the review progress for a cycle.
-   */
   async getReviewProgress(
     cycleId: string,
     authenticatedUserId: string
@@ -489,10 +388,6 @@ export class StudentRemediationService {
     return { completed, total, percentage }
   }
 }
-
-// ───────────────────────────────────────────────
-// Factory Function
-// ───────────────────────────────────────────────
 
 export function createStudentRemediationService(
   dbClient: IStudentRemediationDbClient
