@@ -8,4 +8,11 @@ describe('student remediation copy', () => {
     expect(description).toContain('check in with your instructor')
     expect(description.toLowerCase()).not.toContain('has been notified')
   })
+
+  it('does not promise instructor action after a single unsuccessful cycle', () => {
+    const description = STUDENT_STATE_DESCRIPTIONS.unsuccessful
+
+    expect(description).toContain('check in with your instructor')
+    expect(description.toLowerCase()).not.toContain('your instructor will')
+  })
 })
