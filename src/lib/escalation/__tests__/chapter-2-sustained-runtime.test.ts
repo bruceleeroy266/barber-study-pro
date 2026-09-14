@@ -3,17 +3,18 @@ import type { ConceptDetectionResult } from '@/lib/chapter-2-concepts/detection'
 import type { SustainedPerformanceTracking } from '../types'
 import { syncChapter2SustainedPerformance } from '../chapter-2-sustained-runtime'
 
-const conceptId = 'ch2-c1' as const
+const conceptId = 'C-2-01' as const
+const learningObjectiveId = 'LO-2-01' as const
 
 function detection(state: ConceptDetectionResult['state']): ConceptDetectionResult {
   return {
     conceptId,
-    learningObjectiveId: 'ch2-lo1',
+    learningObjectiveId,
     state,
     confidence: 'high',
     evidence: {
       conceptId,
-      learningObjectiveId: 'ch2-lo1',
+      learningObjectiveId,
       totalObservations: 4,
       uniqueQuestions: 2,
       uniqueQuestionsMissed: state === 'currently_performing_well' ? 0 : 1,
