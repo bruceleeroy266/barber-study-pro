@@ -106,7 +106,7 @@ describe('Chapter 2 sustained-performance runtime', () => {
     expect(mockService.executeReset).toHaveBeenCalledWith('user-1', conceptId)
   })
 
-  it('breaks continuity for an existing tracking period when the concept leaves CPW and does not reset', async () => {
+  it('breaks continuity without crediting the failing attempt as follow-up evidence', async () => {
     const mockService = service({
       getTrackingState: vi.fn().mockResolvedValue(tracking()),
     })
@@ -121,6 +121,8 @@ describe('Chapter 2 sustained-performance runtime', () => {
     })
 
     expect(result.transitionsRecorded).toBe(1)
+    expect(result.followUpEvidenceRecorded).toBe(0)
+    expect(mockService.recordFollowUpEvidence).not.toHaveBeenCalled()
     expect(mockService.recordDetectionTransition).toHaveBeenCalledWith(
       expect.objectContaining({ newState: 'emerging_weakness' }),
     )
