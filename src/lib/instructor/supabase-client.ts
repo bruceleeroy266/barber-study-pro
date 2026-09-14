@@ -99,20 +99,51 @@ export class SupabaseInstructorDatabaseClient implements IInstructorDatabaseClie
       }
     }
 
-    const { error } = await this.supabase
+    const acknowledgedAt = new Date().toISOString()
+    const { data: claimed, error } = await this.supabase
       .from('instructor_escalations')
       .update({
         status: 'acknowledged',
         acknowledged_by: instructorId,
-        acknowledged_at: new Date().toISOString(),
+        acknowledged_at: acknowledgedAt,
       })
       .eq('id', escalationId)
       .eq('school_id', schoolId)
       .eq('status', 'pending')
       .is('acknowledged_by', null)
+      .select('id')
+      .maybeSingle()
 
     if (error) {
       return { success: false, error: error.message }
+    }
+
+    // The conditional update may affect zero rows if another instructor claimed
+    // the escalation after our initial read. Treat that as already acknowledged
+    // instead of recording a false ownership event for this instructor.
+    if (!claimed) {
+      const { data: current } = await this.supabase
+        .from('instructor_escalations')
+        .select('status, acknowledged_by')
+        .eq('id', escalationId)
+        .eq('school_id', schoolId)
+        .single()
+
+      if (current?.acknowledged_by) {
+        return {
+          success: false,
+          error: current.acknowledged_by === instructorId
+            ? 'Escalation already acknowledged by this instructor'
+            : 'Escalation already acknowledged by another instructor',
+          alreadyAcknowledged: true,
+        }
+      }
+
+      return {
+        success: false,
+        error: current ? `Cannot acknowledge escalation in status: ${current.status}` : 'Escalation not found',
+        alreadyAcknowledged: false,
+      }
     }
 
     await this.supabase
@@ -122,7 +153,7 @@ export class SupabaseInstructorDatabaseClient implements IInstructorDatabaseClie
         event_type: 'acknowledged',
         event_data: {
           acknowledged_by: instructorId,
-          acknowledged_at: new Date().toISOString(),
+          acknowledged_at: acknowledgedAt,
         },
         actor_id: instructorId,
       })
