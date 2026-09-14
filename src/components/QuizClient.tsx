@@ -25,9 +25,6 @@ interface QuizClientProps {
   competencies?: ChapterCompetency[]
 }
 
-// ───────────────────────────────────────────────
-// Randomization helpers
-// ───────────────────────────────────────────────
 function shuffleArray<T>(array: T[]): T[] {
   const shuffled = [...array]
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -79,6 +76,7 @@ export default function QuizClient({
   const [completed, setCompleted] = useState(false)
   const [score, setScore] = useState(0)
   const [saving, setSaving] = useState(false)
+  const [focusAreaCycleIds, setFocusAreaCycleIds] = useState<string[]>([])
   // Visible failure states — progress/activity updates must never fail silently.
   const [progressSaveError, setProgressSaveError] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -115,16 +113,15 @@ export default function QuizClient({
     setSaving(true)
     setSubmitError(null)
     setProgressSaveError(null)
+    setFocusAreaCycleIds([])
+
     // Calculate final score using the dedicated scoring helper. Each question is
     // counted exactly once from the recorded answers.
     const scoringQuestions = shuffledQuestions.map((sq) => ({
       id: sq.original.id,
       correctKey: sq.correctKey,
     }))
-    const {
-      score: finalScore,
-      percentage,
-    } = calculateQuizScore(scoringQuestions, finalAnswers)
+    const { score: finalScore, percentage } = calculateQuizScore(scoringQuestions, finalAnswers)
 
     try {
       // Insert quiz attempt and capture the persisted ID for exact binding
@@ -178,10 +175,7 @@ export default function QuizClient({
         existingBestScore,
         bestAttempt?.percentage ?? 0
       )
-      const progressPercentage = calculateChapterProgress(
-        flashcardsCompleted,
-        quizCompleted
-      )
+      const progressPercentage = calculateChapterProgress(flashcardsCompleted, quizCompleted)
 
       // Chapter progress + learning-activity timestamp (last_studied_at).
       // The quiz attempt is already persisted above, so a failure here must
@@ -211,8 +205,8 @@ export default function QuizClient({
       }
 
       // Persist missed questions to Supabase so they survive logout/login.
-      const chapterNumber = parseInt(chapterId.replace(/^ch-/, ''), 10) || 0
-      const category = chapterNumber ? getCategoryForChapter(chapterNumber) : 'General'
+      const parsedChapterNumber = parseInt(chapterId.replace(/^ch-/, ''), 10) || 0
+      const category = parsedChapterNumber ? getCategoryForChapter(parsedChapterNumber) : 'General'
       const missed = shuffledQuestions
         .filter((sq) => finalAnswers[sq.original.id] !== sq.correctKey)
         .map((sq) => {
@@ -228,7 +222,7 @@ export default function QuizClient({
             studentAnswer: studentOption ? `${studentOption.label}. ${studentOption.text}` : studentKey || 'No answer',
             explanation: sq.original.explanation ?? null,
             chapterId,
-            chapterNumber: chapterNumber || null,
+            chapterNumber: parsedChapterNumber || null,
             category,
           }
         })
@@ -251,13 +245,16 @@ export default function QuizClient({
           const response = await fetch('/api/remediation/detect', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              chapterId,
-              quizAttemptId: persistedQuizAttemptId,
-            }),
+            body: JSON.stringify({ chapterId, quizAttemptId: persistedQuizAttemptId }),
           })
           if (!response.ok) {
             console.warn('[QuizClient] Detection orchestration returned non-OK status:', response.status)
+          } else {
+            const detectionResult = await response.json()
+            const cycleIds = Array.isArray(detectionResult.cycleIds)
+              ? detectionResult.cycleIds.filter((id: unknown): id is string => typeof id === 'string' && id.length > 0)
+              : []
+            setFocusAreaCycleIds(cycleIds)
           }
         } catch (detectionError) {
           // Detection failure should not block quiz completion
@@ -300,6 +297,7 @@ export default function QuizClient({
     setAnswers({})
     setCompleted(false)
     setScore(0)
+    setFocusAreaCycleIds([])
     setProgressSaveError(null)
     setSubmitError(null)
   }, [])
@@ -334,12 +332,8 @@ export default function QuizClient({
           <p className="text-[var(--color-text-secondary)] font-medium">
             {shuffledQuestions.length} questions &bull; Multiple choice &bull; Passing: {passingScore}%
           </p>
-          <p className="text-[var(--color-text-muted)] text-sm">
-            Questions and answers are randomized each attempt
-          </p>
-          <p className="text-[var(--color-text-muted)] text-sm">
-            You will receive your results and full answer review at the end of the quiz
-          </p>
+          <p className="text-[var(--color-text-muted)] text-sm">Questions and answers are randomized each attempt</p>
+          <p className="text-[var(--color-text-muted)] text-sm">You will receive your results and full answer review at the end of the quiz</p>
         </div>
 
         {/* ASCYN study notice */}
@@ -350,11 +344,7 @@ export default function QuizClient({
           </p>
         </Alert>
 
-        <Button
-          variant="primary"
-          size="lg"
-          onClick={() => setStarted(true)}
-        >
+        <Button variant="primary" size="lg" onClick={() => setStarted(true)}>
           {bestAttempt ? 'Retake Quiz' : 'Start Quiz'}
         </Button>
       </div>
@@ -370,6 +360,7 @@ export default function QuizClient({
   if (completed) {
     const percentage = Math.round((score / shuffledQuestions.length) * 100)
     const passed = percentage >= passingScore
+    const primaryFocusAreaCycleId = focusAreaCycleIds[0] ?? null
 
     return (
       <div className="text-center py-8">
@@ -381,9 +372,7 @@ export default function QuizClient({
           {passed ? 'Quiz Passed!' : 'Quiz Completed'}
         </h3>
 
-        <div className="text-5xl font-bold text-[var(--color-brand-gold)] mb-2">
-          {percentage}%
-        </div>
+        <div className="text-5xl font-bold text-[var(--color-brand-gold)] mb-2">{percentage}%</div>
 
         <p className="text-[var(--color-text-muted)] mb-2">
           You got {score} out of {shuffledQuestions.length} questions correct
@@ -396,9 +385,36 @@ export default function QuizClient({
         )}
 
         {passed ? (
-          <p className="text-gold mb-6 font-medium">
-            Quiz passed. Review your answers below, then continue or retake the quiz to improve your score.
-          </p>
+          <>
+            <p className="text-gold mb-6 font-medium">
+              Quiz passed. Review your answers below, then continue or retake the quiz to improve your score.
+            </p>
+            {primaryFocusAreaCycleId && (
+              <Alert variant="info" className="mb-6 text-left">
+                <p className="font-semibold">You passed, and there is still one area worth strengthening.</p>
+                <p className="text-sm leading-relaxed mt-1">
+                  Your overall score met the chapter standard, but ASCYN identified a concept that would benefit from focused practice. You can continue to the next chapter or review the focus area first.
+                </p>
+                {focusAreaCycleIds.length > 1 && (
+                  <p className="text-sm leading-relaxed mt-1">
+                    You have {focusAreaCycleIds.length} focus areas available. The dashboard will keep all of them organized for you.
+                  </p>
+                )}
+              </Alert>
+            )}
+          </>
+        ) : primaryFocusAreaCycleId ? (
+          <Alert variant="info" className="mb-6 text-left">
+            <p className="font-semibold">A focused review is ready for you.</p>
+            <p className="text-sm leading-relaxed mt-1">
+              We found an area from this Chapter 2 attempt that would benefit from targeted practice. Start the focused review, then return to the quiz when you are ready.
+            </p>
+            {focusAreaCycleIds.length > 1 && (
+              <p className="text-sm leading-relaxed mt-1">
+                You have {focusAreaCycleIds.length} focus areas available. The dashboard will keep all of them organized for you.
+              </p>
+            )}
+          </Alert>
         ) : (
           <p className="text-warm-bronze mb-6 font-medium">
             Review the flashcards and the corresponding lesson, then retake the quiz. Your full answer review is below.
@@ -471,33 +487,29 @@ export default function QuizClient({
             <>
               {nextChapterNumber ? (
                 <Link href={`/dashboard/chapters/${nextChapterNumber}`}>
-                  <Button variant="primary" size="lg">
-                    Continue to Chapter {nextChapterNumber}
-                  </Button>
+                  <Button variant="primary" size="lg">Continue to Chapter {nextChapterNumber}</Button>
                 </Link>
               ) : (
                 <Link href="/dashboard">
-                  <Button variant="primary" size="lg">
-                    Return to Dashboard
-                  </Button>
+                  <Button variant="primary" size="lg">Return to Dashboard</Button>
                 </Link>
               )}
-              <Button
-                variant="secondary"
-                size="lg"
-                onClick={restartQuiz}
-              >
-                Retake Quiz
-              </Button>
+              {primaryFocusAreaCycleId && (
+                <Link href={`/dashboard/remediation/${primaryFocusAreaCycleId}`}>
+                  <Button variant="secondary" size="lg">Review Focus Area</Button>
+                </Link>
+              )}
+              <Button variant="secondary" size="lg" onClick={restartQuiz}>Retake Quiz</Button>
+            </>
+          ) : primaryFocusAreaCycleId ? (
+            <>
+              <Link href={`/dashboard/remediation/${primaryFocusAreaCycleId}`}>
+                <Button variant="primary" size="lg">Start Focused Review</Button>
+              </Link>
+              <Button variant="secondary" size="lg" onClick={restartQuiz}>Retake Quiz</Button>
             </>
           ) : (
-            <Button
-              variant="primary"
-              size="lg"
-              onClick={restartQuiz}
-            >
-              Review and Retake Quiz
-            </Button>
+            <Button variant="primary" size="lg" onClick={restartQuiz}>Review and Retake Quiz</Button>
           )}
         </div>
 
@@ -527,9 +539,7 @@ export default function QuizClient({
         <span className="text-[var(--color-text-muted)]">
           Question {currentQuestion + 1} of {shuffledQuestions.length}
         </span>
-        <span className="text-[var(--color-text-muted)]">
-          Results at end of quiz
-        </span>
+        <span className="text-[var(--color-text-muted)]">Results at end of quiz</span>
       </div>
 
       {/* Progress bar */}
@@ -543,9 +553,7 @@ export default function QuizClient({
 
       {/* Question card */}
       <Card variant="default" padding="lg">
-        <p className="text-lg text-white font-medium mb-6 leading-relaxed">
-          {question.original.question}
-        </p>
+        <p className="text-lg text-white font-medium mb-6 leading-relaxed">{question.original.question}</p>
 
         <div className="space-y-3">
           {question.options.map((option) => {
@@ -582,11 +590,7 @@ export default function QuizClient({
           onClick={handleSubmitAnswer}
           disabled={!selectedAnswer || saving}
         >
-          {saving
-            ? 'Saving...'
-            : isLastQuestion
-            ? 'Submit & Finish Quiz'
-            : 'Submit Answer'}
+          {saving ? 'Saving...' : isLastQuestion ? 'Submit & Finish Quiz' : 'Submit Answer'}
         </Button>
       </div>
     </div>

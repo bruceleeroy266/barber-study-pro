@@ -131,8 +131,8 @@ export const STUDENT_STATE_DESCRIPTIONS: Record<StudentRemediationState, string>
   pending_evaluation: 'Your answer is being reviewed...',
   pending_more_evidence: 'You are building your foundation. Continue practicing and try another knowledge check when ready.',
   successful: 'You have demonstrated strong understanding of this topic. Well done!',
-  unsuccessful: 'Your instructor will provide additional support for this topic.',
-  pool_exhausted: 'You have completed all available practice questions for this topic. Your instructor has been notified and will provide additional guidance.',
+  unsuccessful: 'This topic still needs attention. Continue reviewing the study materials and check in with your instructor for additional support.',
+  pool_exhausted: 'You have completed all available practice questions for this topic. Continue reviewing the study materials and check in with your instructor for additional guidance.',
   already_completed: 'This focus area has already been completed.',
 } as const
 

@@ -19,6 +19,25 @@ export interface ReadinessInputs {
   grades?: Grade[]
 }
 
+type ReadinessQuizAttempt = QuizAttempt & {
+  is_reassessment?: boolean | null
+}
+
+/**
+ * Board readiness measures chapter-quiz performance, not one-question
+ * remediation evidence. Reassessment attempts are intentionally excluded so
+ * a single 0%/100% knowledge check cannot swing the student's board-readiness
+ * score or quiz-completion coverage.
+ *
+ * Legacy/demo attempts that predate the is_reassessment column remain
+ * eligible because an absent flag means a normal chapter quiz attempt.
+ */
+function getReadinessEligibleAttempts(attempts: QuizAttempt[]): QuizAttempt[] {
+  return attempts.filter(
+    (attempt) => (attempt as ReadinessQuizAttempt).is_reassessment !== true
+  )
+}
+
 function getLevel(score: number): ReadinessLevel {
   if (score >= 90) return 'Ready'
   if (score >= 80) return 'Nearly Ready'
@@ -137,16 +156,17 @@ export function calculateBoardReadiness(inputs: ReadinessInputs): BoardReadiness
     grades,
   } = inputs
 
-  const quizAverage = averageAttemptScore(attempts)
-  const quizRate = quizCompletionRate(attempts, totalChapters)
+  const readinessAttempts = getReadinessEligibleAttempts(attempts)
+  const quizAverage = averageAttemptScore(readinessAttempts)
+  const quizRate = quizCompletionRate(readinessAttempts, totalChapters)
   const chapterRate = chapterCompletionRate(progress, totalChapters)
   const flashcardRate =
     flashcardDecksCompleted !== undefined
       ? Math.round((flashcardDecksCompleted / totalChapters) * 100)
       : flashcardEngagementRate(progress, totalChapters)
 
-  const consistency = consistencyScore(attempts, streakDays)
-  const trend = improvementTrend(attempts)
+  const consistency = consistencyScore(readinessAttempts, streakDays)
+  const trend = improvementTrend(readinessAttempts)
 
   // Quiz performance is the strongest predictor of board success.
   // Coverage metrics provide signal without over-penalizing students
@@ -174,7 +194,7 @@ export function calculateBoardReadiness(inputs: ReadinessInputs): BoardReadiness
     flashcardEngagementRate: flashcardRate,
     consistencyScore: consistency,
     improvementTrend: trend,
-    totalQuestionsAnswered: totalQuestionsAnswered(attempts),
+    totalQuestionsAnswered: totalQuestionsAnswered(readinessAttempts),
     chaptersCompleted: progress.filter((p) => p.progress_percentage === 100).length,
     totalChapters,
     recommendedStudyMinutes: recommendedStudyMinutes(clampedScore, 0),
