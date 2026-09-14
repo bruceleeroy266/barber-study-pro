@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import type { Profile } from '@/types'
-import type { InstructorEscalation, InstructorEscalationEvent } from '@/lib/escalation/types'
+import type { InstructorEscalation } from '@/lib/escalation/types'
 import type { InterventionHistoryItem, IInstructorDatabaseClient } from './types'
 
 interface SupabaseInstructorClientConfig {

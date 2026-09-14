@@ -16,7 +16,6 @@ import type {
   RemediationContentBundle,
   RemediationAssignment,
 } from '@/lib/remediation/student-service'
-import { STUDENT_STATE_LABELS, STUDENT_STATE_DESCRIPTIONS } from '@/lib/remediation/student-service'
 import RemediationContentRenderer from './RemediationContentRenderer'
 import RemediationFlashcardReview from './RemediationFlashcardReview'
 import ReassessmentKnowledgeCheck from './ReassessmentKnowledgeCheck'
