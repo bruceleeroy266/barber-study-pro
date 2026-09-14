@@ -90,6 +90,15 @@ export async function syncChapter2SustainedPerformance(params: {
         if (followUp.success && !followUp.alreadyRecorded) {
           result.followUpEvidenceRecorded++
         }
+
+        // A failed evidence write must be visible: silent loss would let a
+        // student sustain CPW for weeks without ever becoming reset-eligible,
+        // with no signal in the logs.
+        if (!followUp.success) {
+          result.errors.push(
+            `Follow-up evidence failed for ${detection.conceptId}: ${followUp.error ?? 'unknown error'}`,
+          )
+        }
       }
 
       const transition = await service.recordDetectionTransition({
