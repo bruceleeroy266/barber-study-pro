@@ -132,7 +132,7 @@ export const STUDENT_STATE_DESCRIPTIONS: Record<StudentRemediationState, string>
   pending_more_evidence: 'You are building your foundation. Continue practicing and try another knowledge check when ready.',
   successful: 'You have demonstrated strong understanding of this topic. Well done!',
   unsuccessful: 'Your instructor will provide additional support for this topic.',
-  pool_exhausted: 'You have completed all available practice questions for this topic. Your instructor has been notified and will provide additional guidance.',
+  pool_exhausted: 'You have completed all available practice questions for this topic. Continue reviewing the study materials and check in with your instructor for additional guidance.',
   already_completed: 'This focus area has already been completed.',
 } as const
 
@@ -236,7 +236,6 @@ export class StudentRemediationService {
       return { error: 'Remediation cycle not found' }
     }
 
-    // Server-side authorization: student must own the cycle
     if (cycle.userId !== authenticatedUserId) {
       return { error: 'Access denied' }
     }
@@ -255,7 +254,6 @@ export class StudentRemediationService {
     cycle: RemediationCycle,
     poolExhaustion?: PoolExhaustionState | null
   ): StudentRemediationState {
-    // Terminal states first
     if (cycle.outcome === 'successful') {
       return 'successful'
     }
@@ -263,32 +261,26 @@ export class StudentRemediationService {
       return 'unsuccessful'
     }
 
-    // Pool exhaustion
     if (poolExhaustion?.isExhausted) {
       return 'pool_exhausted'
     }
 
-    // Already evaluated (terminal)
     if (cycle.status === 'evaluated') {
       return 'already_completed'
     }
 
-    // Reassessment in progress
     if (cycle.reassessmentStartedAt && !cycle.reassessmentCompletedAt) {
       return 'reassessment_in_progress'
     }
 
-    // Review completed, reassessment available
     if (cycle.reviewCompletedAt) {
       return 'review_completed'
     }
 
-    // Review in progress
     if (cycle.reviewStartedAt) {
       return 'review_in_progress'
     }
 
-    // Default: targeted review
     return 'targeted_review'
   }
 
@@ -304,15 +296,12 @@ export class StudentRemediationService {
 
     const { cycle } = result
 
-    // Can only start review from targeted state
     if (cycle.status !== 'targeted' && cycle.status !== 'in_review') {
       return { success: false, error: 'Review cannot be started at this time' }
     }
 
-    // Record review started event
     await this.dbClient.recordCycleEvent(cycleId, 'review_started')
 
-    // Update cycle status
     await this.dbClient.updateCycleStatus(cycleId, 'in_review', {
       reviewStartedAt: new Date(),
     })
@@ -333,12 +322,10 @@ export class StudentRemediationService {
       return { success: false, error: result.error }
     }
 
-    // Record content viewed event
     await this.dbClient.recordCycleEvent(cycleId, 'content_viewed', {
       contentBlockId,
     })
 
-    // Update assignment status if exists
     const assignment = result.assignments.find(
       (a) => a.assignmentType === 'content_block' && a.assetId === contentBlockId
     )
@@ -362,12 +349,10 @@ export class StudentRemediationService {
       return { success: false, error: result.error }
     }
 
-    // Record flashcard reviewed event
     await this.dbClient.recordCycleEvent(cycleId, 'flashcard_reviewed', {
       flashcardId,
     })
 
-    // Update assignment status if exists
     const assignment = result.assignments.find(
       (a) => a.assignmentType === 'flashcard' && a.assetId === flashcardId
     )
@@ -395,12 +380,10 @@ export class StudentRemediationService {
 
     const { cycle, assignments } = result
 
-    // Can only complete review from in_review or targeted state
     if (cycle.status !== 'in_review' && cycle.status !== 'targeted') {
       return { success: false, error: 'Review cannot be completed at this time' }
     }
 
-    // Check that all assigned activities are completed
     const incompleteAssignments = assignments.filter((a) => a.status !== 'completed')
     if (incompleteAssignments.length > 0) {
       return {
@@ -409,10 +392,8 @@ export class StudentRemediationService {
       }
     }
 
-    // Record review completed event
     await this.dbClient.recordCycleEvent(cycleId, 'review_completed')
 
-    // Update cycle status
     await this.dbClient.updateCycleStatus(cycleId, 'review_completed', {
       reviewCompletedAt: new Date(),
     })
@@ -437,12 +418,10 @@ export class StudentRemediationService {
 
     const { cycle } = result
 
-    // Terminal cycles cannot be reassessed
     if (cycle.outcome === 'successful' || cycle.outcome === 'unsuccessful') {
       return { available: false, error: 'This focus area has already been completed' }
     }
 
-    // Review must be completed
     if (!cycle.reviewCompletedAt) {
       return { available: false, error: 'Please complete your review before starting the knowledge check' }
     }
