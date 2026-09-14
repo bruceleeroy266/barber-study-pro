@@ -58,10 +58,8 @@ export default function RemediationPageClient({
   )
   const [reservationStartedAt, setReservationStartedAt] = useState<Date | null>(null)
 
-  const isLoading = activeAction !== null
   const actionInFlight = useMemo(() => activeAction !== null, [activeAction])
 
-  // Reassessment state
   const [reassessmentData, setReassessmentData] = useState<{
     questionId: string
     reservationId: string
@@ -77,7 +75,6 @@ export default function RemediationPageClient({
     }
   } | null>(null)
 
-  // Outcome state
   const [outcome, setOutcome] = useState<{
     isCorrect: boolean
     outcome: string
@@ -106,7 +103,6 @@ export default function RemediationPageClient({
     setActiveAction(null)
   }, [])
 
-  // Record an event
   const recordEvent = useCallback(async (eventType: string, assetId?: string) => {
     try {
       const response = await fetch(`/api/remediation/cycles/${cycleId}/events`, {
@@ -128,7 +124,6 @@ export default function RemediationPageClient({
     }
   }, [cycleId])
 
-  // Start review
   const handleStartReview = useCallback(async () => {
     if (!beginAction('start-review')) return
     setError(null)
@@ -139,7 +134,6 @@ export default function RemediationPageClient({
     endAction()
   }, [beginAction, endAction, recordEvent])
 
-  // Mark content viewed
   const handleContentViewed = useCallback(async (contentBlockId: string) => {
     const success = await recordEvent('content_viewed', contentBlockId)
     if (success) {
@@ -156,7 +150,6 @@ export default function RemediationPageClient({
     }
   }, [recordEvent])
 
-  // Mark flashcard reviewed
   const handleFlashcardReviewed = useCallback(async (flashcardId: string) => {
     const success = await recordEvent('flashcard_reviewed', flashcardId)
     if (success) {
@@ -173,7 +166,6 @@ export default function RemediationPageClient({
     }
   }, [recordEvent])
 
-  // Complete review
   const handleCompleteReview = useCallback(async () => {
     if (!beginAction('complete-review')) return
     setError(null)
@@ -184,7 +176,6 @@ export default function RemediationPageClient({
     endAction()
   }, [beginAction, endAction, recordEvent])
 
-  // Start reassessment
   const handleStartReassessment = useCallback(async () => {
     if (!beginAction('start-reassessment')) return
     setError(null)
@@ -221,7 +212,6 @@ export default function RemediationPageClient({
     }
   }, [beginAction, cycleId, endAction])
 
-  // Submit reassessment answer
   const handleSubmitAnswer = useCallback(async (answer: string) => {
     if (!reassessmentData) return
     if (reservationIsStale) {
@@ -272,20 +262,21 @@ export default function RemediationPageClient({
     }
   }, [beginAction, cycleId, endAction, reassessmentData, reservationIsStale])
 
-  // Try another reassessment (for pending outcomes)
   const handleTryAgain = useCallback(() => {
     setOutcome(null)
     setStudentState('review_completed')
   }, [])
 
-  // Refresh the page data
   const handleRefresh = useCallback(() => {
     if (!beginAction('refresh')) return
     router.refresh()
     window.setTimeout(() => endAction(), 500)
   }, [beginAction, endAction, router])
 
-  // Render based on student state
+  const handleReturnToDashboard = useCallback(() => {
+    router.push('/dashboard')
+  }, [router])
+
   const renderContent = () => {
     switch (studentState) {
       case 'targeted_review':
@@ -451,15 +442,13 @@ export default function RemediationPageClient({
       case 'pending_more_evidence':
         return (
           <div className="space-y-6">
-            {outcome && (
-              <RemediationOutcome
-                isCorrect={outcome.isCorrect}
-                outcome={outcome.outcome}
-                studentState={outcome.studentState}
-                onTryAgain={handleTryAgain}
-                onRefresh={handleRefresh}
-              />
-            )}
+            <RemediationOutcome
+              isCorrect={outcome?.isCorrect ?? null}
+              outcome={outcome?.outcome ?? ''}
+              studentState="pending_more_evidence"
+              onTryAgain={handleTryAgain}
+              onRefresh={handleReturnToDashboard}
+            />
           </div>
         )
 
@@ -477,12 +466,11 @@ export default function RemediationPageClient({
               />
             )}
             <RemediationOutcome
-              isCorrect={outcome?.isCorrect ?? false}
+              isCorrect={outcome?.isCorrect ?? null}
               outcome={outcome?.outcome ?? ''}
               studentState={studentState}
               onTryAgain={undefined}
-              onRefresh={handleRefresh}
-              isRefreshing={activeAction === 'refresh'}
+              onRefresh={handleReturnToDashboard}
             />
           </div>
         )
