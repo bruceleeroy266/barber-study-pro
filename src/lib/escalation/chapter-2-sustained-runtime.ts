@@ -59,18 +59,24 @@ export async function syncChapter2SustainedPerformance(params: {
   for (const detection of detectionResults) {
     try {
       const trackingBefore = await service.getTrackingState(userId, detection.conceptId)
-      const isEnteringCpw = detection.state === 'currently_performing_well'
+      const isCurrentlyPerformingWell = detection.state === 'currently_performing_well'
 
       // Do not create tracking records for concepts that are not performing well.
       // Non-CPW states matter here only when an existing tracking period must be
-      // continued/broken.
-      if (!trackingBefore && !isEnteringCpw) {
+      // broken because current evidence no longer supports sustained performance.
+      if (!trackingBefore && !isCurrentlyPerformingWell) {
         continue
       }
 
       // The attempt that first establishes currently_performing_well starts the
-      // tracking period. Only later attempts may count as follow-up evidence.
-      if (trackingBefore && service.isActivelyTracking(trackingBefore)) {
+      // tracking period. Only later attempts that STILL support CPW may count as
+      // follow-up evidence. A weak/deteriorating attempt must break continuity,
+      // never be credited as evidence toward a future reset.
+      if (
+        isCurrentlyPerformingWell &&
+        trackingBefore &&
+        service.isActivelyTracking(trackingBefore)
+      ) {
         const followUp = await service.recordFollowUpEvidence(
           {
             userId,
@@ -105,7 +111,7 @@ export async function syncChapter2SustainedPerformance(params: {
 
       // A transition out of CPW only needs to break continuity. It can never
       // qualify for reset on the same observation.
-      if (!isEnteringCpw) {
+      if (!isCurrentlyPerformingWell) {
         continue
       }
 
