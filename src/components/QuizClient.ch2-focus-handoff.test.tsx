@@ -69,6 +69,15 @@ const question: QuizQuestion = {
   order_index: 1,
 }
 
+function makeFiveQuestions(): QuizQuestion[] {
+  return Array.from({ length: 5 }, (_, index) => ({
+    ...question,
+    id: `qq-2-pass-${index + 1}`,
+    question: `Chapter 2 concept check ${index + 1}?`,
+    order_index: index + 1,
+  }))
+}
+
 describe('QuizClient Chapter 2 focused-review handoff', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -124,5 +133,43 @@ describe('QuizClient Chapter 2 focused-review handoff', () => {
     const focusLink = await screen.findByRole('link', { name: /Start Focused Review/i })
     expect(focusLink).toHaveAttribute('href', '/dashboard/remediation/cycle-focus-123')
     expect(screen.getByText(/A focused review is ready for you/i)).toBeInTheDocument()
+  })
+
+  it('keeps a detected concept gap visible even when the overall Chapter 2 score passes', async () => {
+    const questions = makeFiveQuestions()
+
+    render(
+      <QuizClient
+        quiz={quiz}
+        questions={questions}
+        chapterId="ch-2"
+        chapterNumber={2}
+        nextChapterNumber={3}
+        userId="user-1"
+        bestAttempt={null}
+      />
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: /Start Quiz/i }))
+
+    for (let index = 0; index < questions.length; index++) {
+      const answerLabel = index < 4 ? /A\./ : /B\./
+      fireEvent.click(screen.getByText(answerLabel))
+      fireEvent.click(
+        screen.getByRole('button', {
+          name: index === questions.length - 1 ? /Submit & Finish Quiz/i : /Submit Answer/i,
+        })
+      )
+    }
+
+    expect(await screen.findByText('80%')).toBeInTheDocument()
+    expect(screen.getByText(/You passed, and there is still one area worth strengthening/i)).toBeInTheDocument()
+
+    const focusLink = screen.getByRole('link', { name: /Review Focus Area/i })
+    expect(focusLink).toHaveAttribute('href', '/dashboard/remediation/cycle-focus-123')
+    expect(screen.getByRole('link', { name: /Continue to Chapter 3/i })).toHaveAttribute(
+      'href',
+      '/dashboard/chapters/3'
+    )
   })
 })
