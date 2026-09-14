@@ -69,8 +69,8 @@ export default function RemediationOutcome({
             </p>
             <p className="text-silver">
               {isCorrect === null
-                ? 'Your completed knowledge check is saved, and your overall progress shows mastery. Well done!'
-                : `Your knowledge check answer was ${isCorrect ? 'correct' : 'incorrect'}, and your overall progress shows mastery. Well done!`}
+                ? 'Your completed knowledge check is saved, and this focus area is now resolved. Well done!'
+                : `Your knowledge check answer was ${isCorrect ? 'correct' : 'incorrect'}, and the evidence now shows strong understanding in this focus area. Well done!`}
             </p>
           </div>
         )
