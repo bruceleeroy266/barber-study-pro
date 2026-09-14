@@ -59,6 +59,14 @@ export async function syncChapter2SustainedPerformance(params: {
   for (const detection of detectionResults) {
     try {
       const trackingBefore = await service.getTrackingState(userId, detection.conceptId)
+      const isEnteringCpw = detection.state === 'currently_performing_well'
+
+      // Do not create tracking records for concepts that are not performing well.
+      // Non-CPW states matter here only when an existing tracking period must be
+      // continued/broken.
+      if (!trackingBefore && !isEnteringCpw) {
+        continue
+      }
 
       // The attempt that first establishes currently_performing_well starts the
       // tracking period. Only later attempts may count as follow-up evidence.
@@ -94,6 +102,12 @@ export async function syncChapter2SustainedPerformance(params: {
       }
 
       result.transitionsRecorded++
+
+      // A transition out of CPW only needs to break continuity. It can never
+      // qualify for reset on the same observation.
+      if (!isEnteringCpw) {
+        continue
+      }
 
       const eligibility = await service.checkResetEligibility(userId, detection.conceptId)
       if (!eligibility.isEligible) {
