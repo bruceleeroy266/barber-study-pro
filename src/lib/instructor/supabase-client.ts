@@ -49,6 +49,7 @@ export class SupabaseInstructorDatabaseClient implements IInstructorDatabaseClie
       .from('instructor_escalations')
       .select('*, student:profiles!instructor_escalations_user_id_fkey(*), acknowledgedByProfile:profiles!instructor_escalations_acknowledged_by_fkey(*)')
       .eq('school_id', schoolId)
+      .in('status', ['pending', 'acknowledged', 'in_progress'])
       .order('created_at', { ascending: false })
 
     if (error || !data) return []
