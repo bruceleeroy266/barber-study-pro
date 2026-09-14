@@ -25,9 +25,6 @@ interface QuizClientProps {
   competencies?: ChapterCompetency[]
 }
 
-// ───────────────────────────────────────────────
-// Randomization helpers
-// ───────────────────────────────────────────────
 function shuffleArray<T>(array: T[]): T[] {
   const shuffled = [...array]
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -80,14 +77,11 @@ export default function QuizClient({
   const [score, setScore] = useState(0)
   const [saving, setSaving] = useState(false)
   const [focusAreaCycleIds, setFocusAreaCycleIds] = useState<string[]>([])
-  // Visible failure states — progress/activity updates must never fail silently.
   const [progressSaveError, setProgressSaveError] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
 
-  // Book + ASCYN learning model: standard passing score is 80%.
   const passingScore = quiz.passing_score ?? 80
 
-  // Randomize questions and answers on each quiz start
   const shuffledQuestions = useMemo(() => {
     const randomized = shuffleArray(questions)
     return randomized.map(shuffleQuestionAnswers)
@@ -103,7 +97,6 @@ export default function QuizClient({
 
   const finishQuiz = useCallback(async (finalAnswers: Record<string, string>) => {
     if (!userId) {
-      // Compute score locally for display even without persistence.
       const localScore = shuffledQuestions.reduce(
         (acc, sq) => (finalAnswers[sq.original.id] === sq.correctKey ? acc + 1 : acc),
         0
@@ -117,19 +110,14 @@ export default function QuizClient({
     setSubmitError(null)
     setProgressSaveError(null)
     setFocusAreaCycleIds([])
-    // Calculate final score using the dedicated scoring helper. Each question is
-    // counted exactly once from the recorded answers.
+
     const scoringQuestions = shuffledQuestions.map((sq) => ({
       id: sq.original.id,
       correctKey: sq.correctKey,
     }))
-    const {
-      score: finalScore,
-      percentage,
-    } = calculateQuizScore(scoringQuestions, finalAnswers)
+    const { score: finalScore, percentage } = calculateQuizScore(scoringQuestions, finalAnswers)
 
     try {
-      // Insert quiz attempt and capture the persisted ID for exact binding
       const { data: insertedAttempt, error: insertError } = await supabase
         .from('quiz_attempts')
         .insert({
@@ -155,7 +143,6 @@ export default function QuizClient({
         throw new Error('Failed to obtain quiz attempt ID')
       }
 
-      // Preserve existing progress flags and only mark the quiz complete on a PASS.
       let flashcardsCompleted = false
       let existingQuizCompleted = false
       let existingBestScore = 0
@@ -180,16 +167,8 @@ export default function QuizClient({
         existingBestScore,
         bestAttempt?.percentage ?? 0
       )
-      const progressPercentage = calculateChapterProgress(
-        flashcardsCompleted,
-        quizCompleted
-      )
+      const progressPercentage = calculateChapterProgress(flashcardsCompleted, quizCompleted)
 
-      // Chapter progress + learning-activity timestamp (last_studied_at).
-      // The quiz attempt is already persisted above, so a failure here must
-      // NOT throw (that would hide the student's results) — but it must also
-      // NOT fail silently. Log it and surface a visible warning on the
-      // results screen.
       const { error: progressUpsertError } = await supabase
         .from('student_progress')
         .upsert(
@@ -212,9 +191,8 @@ export default function QuizClient({
         )
       }
 
-      // Persist missed questions to Supabase so they survive logout/login.
-      const chapterNumber = parseInt(chapterId.replace(/^ch-/, ''), 10) || 0
-      const category = chapterNumber ? getCategoryForChapter(chapterNumber) : 'General'
+      const parsedChapterNumber = parseInt(chapterId.replace(/^ch-/, ''), 10) || 0
+      const category = parsedChapterNumber ? getCategoryForChapter(parsedChapterNumber) : 'General'
       const missed = shuffledQuestions
         .filter((sq) => finalAnswers[sq.original.id] !== sq.correctKey)
         .map((sq) => {
@@ -230,14 +208,11 @@ export default function QuizClient({
             studentAnswer: studentOption ? `${studentOption.label}. ${studentOption.text}` : studentKey || 'No answer',
             explanation: sq.original.explanation ?? null,
             chapterId,
-            chapterNumber: chapterNumber || null,
+            chapterNumber: parsedChapterNumber || null,
             category,
           }
         })
 
-      // Only persist missed questions for real chapter quizzes. The weak-area
-      // retest uses synthetic question IDs (weak-*) that should not create new
-      // missed-question records; the original missed questions remain in the bank.
       if (missed.length > 0 && !quiz.id.startsWith('weak-area')) {
         const saveResult = await saveMissedQuestions(userId, missed)
         if (!saveResult.ok) {
@@ -245,18 +220,12 @@ export default function QuizClient({
         }
       }
 
-      // Phase 6C-5: Trigger detection orchestration after quiz completion.
-      // Capture returned cycle IDs so a student can move directly from the
-      // Chapter 2 results screen into the focused-review experience.
       if (isSupabaseConfigured() && chapterId === 'ch-2' && persistedQuizAttemptId) {
         try {
           const response = await fetch('/api/remediation/detect', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              chapterId,
-              quizAttemptId: persistedQuizAttemptId,
-            }),
+            body: JSON.stringify({ chapterId, quizAttemptId: persistedQuizAttemptId }),
           })
           if (!response.ok) {
             console.warn('[QuizClient] Detection orchestration returned non-OK status:', response.status)
@@ -268,7 +237,6 @@ export default function QuizClient({
             setFocusAreaCycleIds(cycleIds)
           }
         } catch (detectionError) {
-          // Detection failure should not block quiz completion
           console.error('[QuizClient] Detection orchestration failed:', detectionError)
         }
       }
@@ -285,8 +253,6 @@ export default function QuizClient({
     }
   }, [shuffledQuestions, userId, quiz.id, chapterId, bestAttempt, passingScore])
 
-  // End-of-quiz feedback: record the answer and advance without revealing
-  // correctness. On the final question, submit all answers and show results.
   const handleSubmitAnswer = useCallback(() => {
     if (!selectedAnswer || !question) return
 
@@ -313,7 +279,6 @@ export default function QuizClient({
     setSubmitError(null)
   }, [])
 
-  // Warn before leaving active quiz
   useEffect(() => {
     function handleBeforeUnload(e: BeforeUnloadEvent) {
       if (started && !completed) {
@@ -325,7 +290,6 @@ export default function QuizClient({
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
   }, [started, completed])
 
-  // ── START SCREEN ──
   if (!started) {
     return (
       <div className="text-center py-8">
@@ -343,15 +307,10 @@ export default function QuizClient({
           <p className="text-[var(--color-text-secondary)] font-medium">
             {shuffledQuestions.length} questions &bull; Multiple choice &bull; Passing: {passingScore}%
           </p>
-          <p className="text-[var(--color-text-muted)] text-sm">
-            Questions and answers are randomized each attempt
-          </p>
-          <p className="text-[var(--color-text-muted)] text-sm">
-            You will receive your results and full answer review at the end of the quiz
-          </p>
+          <p className="text-[var(--color-text-muted)] text-sm">Questions and answers are randomized each attempt</p>
+          <p className="text-[var(--color-text-muted)] text-sm">You will receive your results and full answer review at the end of the quiz</p>
         </div>
 
-        {/* ASCYN study notice */}
         <Alert variant="info" className="mb-6 text-left">
           <p className="text-sm leading-relaxed">
             Some questions may require information from your assigned course materials.
@@ -359,23 +318,17 @@ export default function QuizClient({
           </p>
         </Alert>
 
-        <Button
-          variant="primary"
-          size="lg"
-          onClick={() => setStarted(true)}
-        >
+        <Button variant="primary" size="lg" onClick={() => setStarted(true)}>
           {bestAttempt ? 'Retake Quiz' : 'Start Quiz'}
         </Button>
       </div>
     )
   }
 
-  // Build review list for ALL questions at the end of the quiz
   const missedQuestions = completed
     ? shuffledQuestions.filter((sq) => answers[sq.original.id] !== sq.correctKey)
     : []
 
-  // ── RESULTS SCREEN ──
   if (completed) {
     const percentage = Math.round((score / shuffledQuestions.length) * 100)
     const passed = percentage >= passingScore
@@ -391,9 +344,7 @@ export default function QuizClient({
           {passed ? 'Quiz Passed!' : 'Quiz Completed'}
         </h3>
 
-        <div className="text-5xl font-bold text-[var(--color-brand-gold)] mb-2">
-          {percentage}%
-        </div>
+        <div className="text-5xl font-bold text-[var(--color-brand-gold)] mb-2">{percentage}%</div>
 
         <p className="text-[var(--color-text-muted)] mb-2">
           You got {score} out of {shuffledQuestions.length} questions correct
@@ -406,9 +357,24 @@ export default function QuizClient({
         )}
 
         {passed ? (
-          <p className="text-gold mb-6 font-medium">
-            Quiz passed. Review your answers below, then continue or retake the quiz to improve your score.
-          </p>
+          <>
+            <p className="text-gold mb-6 font-medium">
+              Quiz passed. Review your answers below, then continue or retake the quiz to improve your score.
+            </p>
+            {primaryFocusAreaCycleId && (
+              <Alert variant="info" className="mb-6 text-left">
+                <p className="font-semibold">You passed, and there is still one area worth strengthening.</p>
+                <p className="text-sm leading-relaxed mt-1">
+                  Your overall score met the chapter standard, but ASCYN identified a concept that would benefit from focused practice. You can continue to the next chapter or review the focus area first.
+                </p>
+                {focusAreaCycleIds.length > 1 && (
+                  <p className="text-sm leading-relaxed mt-1">
+                    You have {focusAreaCycleIds.length} focus areas available. The dashboard will keep all of them organized for you.
+                  </p>
+                )}
+              </Alert>
+            )}
+          </>
         ) : primaryFocusAreaCycleId ? (
           <Alert variant="info" className="mb-6 text-left">
             <p className="font-semibold">A focused review is ready for you.</p>
@@ -427,7 +393,6 @@ export default function QuizClient({
           </p>
         )}
 
-        {/* Full Answer Review — ALL questions */}
         <div className="mt-8 text-left">
           <h4 className="text-lg font-semibold text-white mb-4">
             Answer Review ({shuffledQuestions.length} questions)
@@ -474,7 +439,6 @@ export default function QuizClient({
           </div>
         </div>
 
-        {/* Targeted Remediation */}
         {remediation.length > 0 && competencies.length > 0 && (
           <div className="mt-8">
             <RemediationPanel
@@ -487,58 +451,37 @@ export default function QuizClient({
           </div>
         )}
 
-        {/* Result actions */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
           {passed ? (
             <>
               {nextChapterNumber ? (
                 <Link href={`/dashboard/chapters/${nextChapterNumber}`}>
-                  <Button variant="primary" size="lg">
-                    Continue to Chapter {nextChapterNumber}
-                  </Button>
+                  <Button variant="primary" size="lg">Continue to Chapter {nextChapterNumber}</Button>
                 </Link>
               ) : (
                 <Link href="/dashboard">
-                  <Button variant="primary" size="lg">
-                    Return to Dashboard
-                  </Button>
+                  <Button variant="primary" size="lg">Return to Dashboard</Button>
                 </Link>
               )}
-              <Button
-                variant="secondary"
-                size="lg"
-                onClick={restartQuiz}
-              >
-                Retake Quiz
-              </Button>
+              {primaryFocusAreaCycleId && (
+                <Link href={`/dashboard/remediation/${primaryFocusAreaCycleId}`}>
+                  <Button variant="secondary" size="lg">Review Focus Area</Button>
+                </Link>
+              )}
+              <Button variant="secondary" size="lg" onClick={restartQuiz}>Retake Quiz</Button>
             </>
           ) : primaryFocusAreaCycleId ? (
             <>
               <Link href={`/dashboard/remediation/${primaryFocusAreaCycleId}`}>
-                <Button variant="primary" size="lg">
-                  Start Focused Review
-                </Button>
+                <Button variant="primary" size="lg">Start Focused Review</Button>
               </Link>
-              <Button
-                variant="secondary"
-                size="lg"
-                onClick={restartQuiz}
-              >
-                Retake Quiz
-              </Button>
+              <Button variant="secondary" size="lg" onClick={restartQuiz}>Retake Quiz</Button>
             </>
           ) : (
-            <Button
-              variant="primary"
-              size="lg"
-              onClick={restartQuiz}
-            >
-              Review and Retake Quiz
-            </Button>
+            <Button variant="primary" size="lg" onClick={restartQuiz}>Review and Retake Quiz</Button>
           )}
         </div>
 
-        {/* Missed questions review link */}
         {missedQuestions.length > 0 && (
           <div className="mt-6">
             <Link
@@ -554,22 +497,15 @@ export default function QuizClient({
     )
   }
 
-  // ── QUESTION SCREEN ──
-  // End-of-quiz feedback: no correctness reveal, no live score, no explanations
-  // during the attempt. Student selects an answer and submits to advance.
   return (
     <div className="space-y-6">
-      {/* Header — question position only; no live score */}
       <div className="flex items-center justify-between text-sm">
         <span className="text-[var(--color-text-muted)]">
           Question {currentQuestion + 1} of {shuffledQuestions.length}
         </span>
-        <span className="text-[var(--color-text-muted)]">
-          Results at end of quiz
-        </span>
+        <span className="text-[var(--color-text-muted)]">Results at end of quiz</span>
       </div>
 
-      {/* Progress bar */}
       <ProgressBar
         value={progress}
         variant="default"
@@ -578,11 +514,8 @@ export default function QuizClient({
         aria-label={`Quiz progress: question ${currentQuestion + 1} of ${shuffledQuestions.length}`}
       />
 
-      {/* Question card */}
       <Card variant="default" padding="lg">
-        <p className="text-lg text-white font-medium mb-6 leading-relaxed">
-          {question.original.question}
-        </p>
+        <p className="text-lg text-white font-medium mb-6 leading-relaxed">{question.original.question}</p>
 
         <div className="space-y-3">
           {question.options.map((option) => {
@@ -606,7 +539,6 @@ export default function QuizClient({
         </div>
       </Card>
 
-      {/* Actions — single submit-and-advance; no per-question feedback */}
       {submitError && (
         <Alert variant="error" className="text-left">
           <p className="text-sm leading-relaxed">{submitError}</p>
@@ -619,11 +551,7 @@ export default function QuizClient({
           onClick={handleSubmitAnswer}
           disabled={!selectedAnswer || saving}
         >
-          {saving
-            ? 'Saving...'
-            : isLastQuestion
-            ? 'Submit & Finish Quiz'
-            : 'Submit Answer'}
+          {saving ? 'Saving...' : isLastQuestion ? 'Submit & Finish Quiz' : 'Submit Answer'}
         </Button>
       </div>
     </div>
