@@ -13,7 +13,7 @@ import type { StudentRemediationState } from '@/lib/remediation/student-service'
 import { STUDENT_STATE_LABELS, STUDENT_STATE_DESCRIPTIONS } from '@/lib/remediation/student-service'
 
 interface RemediationOutcomeProps {
-  isCorrect: boolean
+  isCorrect: boolean | null
   outcome: string
   studentState: StudentRemediationState
   onTryAgain?: () => void
@@ -68,8 +68,9 @@ export default function RemediationOutcome({
               You have demonstrated strong understanding of this topic.
             </p>
             <p className="text-silver">
-              Your knowledge check answer was {isCorrect ? 'correct' : 'incorrect'}, and your overall progress shows mastery.
-              Well done!
+              {isCorrect === null
+                ? 'Your completed knowledge check is saved, and your overall progress shows mastery. Well done!'
+                : `Your knowledge check answer was ${isCorrect ? 'correct' : 'incorrect'}, and your overall progress shows mastery. Well done!`}
             </p>
           </div>
         )
@@ -102,8 +103,9 @@ export default function RemediationOutcome({
               You are building your foundation. Keep practicing!
             </p>
             <p className="text-silver">
-              Your answer was {isCorrect ? 'correct' : 'incorrect'}.
-              Continue reviewing the materials and try another knowledge check when you are ready.
+              {isCorrect === null
+                ? 'Your previous knowledge check is saved. Continue reviewing the materials and try another knowledge check when you are ready.'
+                : `Your answer was ${isCorrect ? 'correct' : 'incorrect'}. Continue reviewing the materials and try another knowledge check when you are ready.`}
             </p>
           </div>
         )
@@ -119,20 +121,16 @@ export default function RemediationOutcome({
   return (
     <Card className="p-8">
       <div className="text-center space-y-6">
-        {/* Icon */}
         <div className="flex justify-center">
           {renderIcon()}
         </div>
 
-        {/* Badge */}
         <div className="flex justify-center">
           {renderBadge()}
         </div>
 
-        {/* Message */}
         {renderMessage()}
 
-        {/* Actions */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
           {studentState === 'pending_more_evidence' && onTryAgain && (
             <Button
