@@ -79,6 +79,7 @@ export default function QuizClient({
   const [completed, setCompleted] = useState(false)
   const [score, setScore] = useState(0)
   const [saving, setSaving] = useState(false)
+  const [focusAreaCycleIds, setFocusAreaCycleIds] = useState<string[]>([])
   // Visible failure states — progress/activity updates must never fail silently.
   const [progressSaveError, setProgressSaveError] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -115,6 +116,7 @@ export default function QuizClient({
     setSaving(true)
     setSubmitError(null)
     setProgressSaveError(null)
+    setFocusAreaCycleIds([])
     // Calculate final score using the dedicated scoring helper. Each question is
     // counted exactly once from the recorded answers.
     const scoringQuestions = shuffledQuestions.map((sq) => ({
@@ -243,21 +245,27 @@ export default function QuizClient({
         }
       }
 
-      // Phase 6C-5: Trigger detection orchestration after quiz completion
-      // This runs server-side detection and creates remediation cycles if needed
-      // CRITICAL: Pass the exact persisted quiz_attempt.id for deterministic binding
+      // Phase 6C-5: Trigger detection orchestration after quiz completion.
+      // Capture returned cycle IDs so a student can move directly from the
+      // Chapter 2 results screen into the focused-review experience.
       if (isSupabaseConfigured() && chapterId === 'ch-2' && persistedQuizAttemptId) {
         try {
           const response = await fetch('/api/remediation/detect', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
+            body: JSON.stringify({
               chapterId,
               quizAttemptId: persistedQuizAttemptId,
             }),
           })
           if (!response.ok) {
             console.warn('[QuizClient] Detection orchestration returned non-OK status:', response.status)
+          } else {
+            const detectionResult = await response.json()
+            const cycleIds = Array.isArray(detectionResult.cycleIds)
+              ? detectionResult.cycleIds.filter((id: unknown): id is string => typeof id === 'string' && id.length > 0)
+              : []
+            setFocusAreaCycleIds(cycleIds)
           }
         } catch (detectionError) {
           // Detection failure should not block quiz completion
@@ -300,6 +308,7 @@ export default function QuizClient({
     setAnswers({})
     setCompleted(false)
     setScore(0)
+    setFocusAreaCycleIds([])
     setProgressSaveError(null)
     setSubmitError(null)
   }, [])
@@ -370,6 +379,7 @@ export default function QuizClient({
   if (completed) {
     const percentage = Math.round((score / shuffledQuestions.length) * 100)
     const passed = percentage >= passingScore
+    const primaryFocusAreaCycleId = focusAreaCycleIds[0] ?? null
 
     return (
       <div className="text-center py-8">
@@ -399,6 +409,18 @@ export default function QuizClient({
           <p className="text-gold mb-6 font-medium">
             Quiz passed. Review your answers below, then continue or retake the quiz to improve your score.
           </p>
+        ) : primaryFocusAreaCycleId ? (
+          <Alert variant="info" className="mb-6 text-left">
+            <p className="font-semibold">A focused review is ready for you.</p>
+            <p className="text-sm leading-relaxed mt-1">
+              We found an area from this Chapter 2 attempt that would benefit from targeted practice. Start the focused review, then return to the quiz when you are ready.
+            </p>
+            {focusAreaCycleIds.length > 1 && (
+              <p className="text-sm leading-relaxed mt-1">
+                You have {focusAreaCycleIds.length} focus areas available. The dashboard will keep all of them organized for you.
+              </p>
+            )}
+          </Alert>
         ) : (
           <p className="text-warm-bronze mb-6 font-medium">
             Review the flashcards and the corresponding lesson, then retake the quiz. Your full answer review is below.
@@ -482,6 +504,21 @@ export default function QuizClient({
                   </Button>
                 </Link>
               )}
+              <Button
+                variant="secondary"
+                size="lg"
+                onClick={restartQuiz}
+              >
+                Retake Quiz
+              </Button>
+            </>
+          ) : primaryFocusAreaCycleId ? (
+            <>
+              <Link href={`/dashboard/remediation/${primaryFocusAreaCycleId}`}>
+                <Button variant="primary" size="lg">
+                  Start Focused Review
+                </Button>
+              </Link>
               <Button
                 variant="secondary"
                 size="lg"
