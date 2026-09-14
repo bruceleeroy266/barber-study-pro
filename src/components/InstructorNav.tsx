@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutDashboard, Users, Calendar, Calculator, FileCheck, MessageSquare, ClipboardCheck, LogOut, GraduationCap, AlertTriangle } from 'lucide-react'
+import { LayoutDashboard, Users, Calendar, Calculator, FileCheck, MessageSquare, ClipboardCheck, LogOut, GraduationCap, AlertTriangle, BookOpen } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { Profile } from '@/types'
 import { logLogout } from '@/app/(auth)/actions'
@@ -23,6 +23,7 @@ const navItems = [
   { href: '/instructor/messages', label: 'Messages', icon: MessageSquare },
   { href: '/instructor/assessments', label: 'Assessments', icon: ClipboardCheck },
   { href: '/instructor/rubrics', label: 'Rubrics', icon: GraduationCap },
+  { href: '/instructor/chapters', label: 'Teaching Notes', icon: BookOpen },
   { href: '/instructor/escalations', label: 'Escalations', icon: AlertTriangle, badge: true },
 ]
 
@@ -30,6 +31,9 @@ export default function InstructorNav({ user }: InstructorNavProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
+
+  const isNavItemActive = (href: string) =>
+    pathname === href || (href !== '/instructor' && pathname.startsWith(`${href}/`))
 
   const handleLogout = async () => {
     try {
@@ -99,7 +103,7 @@ export default function InstructorNav({ user }: InstructorNavProps) {
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                    pathname === item.href
+                    isNavItemActive(item.href)
                       ? 'bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/20'
                       : 'text-silver hover:bg-graphite hover:text-white'
                   }`}
@@ -137,7 +141,7 @@ export default function InstructorNav({ user }: InstructorNavProps) {
                 key={item.href}
                 href={item.href}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                  pathname === item.href
+                  isNavItemActive(item.href)
                     ? 'bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/20'
                     : 'text-silver hover:bg-graphite hover:text-white'
                 }`}
