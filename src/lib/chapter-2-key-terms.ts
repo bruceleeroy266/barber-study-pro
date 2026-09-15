@@ -28,6 +28,7 @@ import {
   chapter2Concepts,
   chapter2LearningObjectives,
 } from './chapter-2-concepts/concepts'
+import { chapter3KeyTerms } from './chapter-3-key-terms'
 
 // ───────────────────────────────────────────────
 // Types
@@ -36,24 +37,34 @@ import {
 /** How thoroughly current assessments cover the term. */
 export type KeyTermAssessment = 'quiz' | 'flashcard-only' | 'partial'
 
-export interface Chapter2KeyTerm {
-  /** Stable ID: kt-2-### */
+/**
+ * Chapter-standard key-term shape shared across chapters. Chapter-specific
+ * datasets extend this base with branded concept/LO id types.
+ */
+export interface ChapterKeyTerm {
+  /** Stable ID: kt-{chapter}-### */
   id: string
   term: string
   /** Original ASCYN PRO wording — concise, student-friendly. */
   definition: string
-  conceptId: ConceptId
-  learningObjectiveId: LearningObjectiveId
+  conceptId: string
+  learningObjectiveId: string
   /** Term-level provenance (never blindly inherited from the concept). */
   sourceProvenance: SourceProvenance
   priority: 'CORE' | 'SUPPORTING' | 'ENRICHMENT'
   assessed: KeyTermAssessment
 }
 
-export interface KeyTermGroup {
+export interface Chapter2KeyTerm extends ChapterKeyTerm {
+  /** Stable ID: kt-2-### */
   conceptId: ConceptId
+  learningObjectiveId: LearningObjectiveId
+}
+
+export interface KeyTermGroup {
+  conceptId: string
   conceptName: string
-  terms: readonly Chapter2KeyTerm[]
+  terms: readonly ChapterKeyTerm[]
 }
 
 // ───────────────────────────────────────────────
@@ -474,8 +485,9 @@ export const chapter2KeyTerms: readonly Chapter2KeyTerm[] = [
 // Chapter registry (reusable chapter-standard shape)
 // ───────────────────────────────────────────────
 
-export const chapterKeyTerms: Record<string, readonly Chapter2KeyTerm[]> = {
+export const chapterKeyTerms: Record<string, readonly ChapterKeyTerm[]> = {
   'ch-2': chapter2KeyTerms,
+  'ch-3': chapter3KeyTerms,
 }
 
 // ───────────────────────────────────────────────
@@ -503,7 +515,7 @@ export function getKeyTermById(id: string): Chapter2KeyTerm | undefined {
  * Concepts without terms (and retired C-2-22) produce no group.
  */
 export function groupKeyTermsByConcept(
-  terms: readonly Chapter2KeyTerm[] = chapter2KeyTerms
+  terms: readonly ChapterKeyTerm[] = chapter2KeyTerms
 ): KeyTermGroup[] {
   const groups: KeyTermGroup[] = []
   const seen = new Set<string>()

@@ -1,13 +1,14 @@
 'use client'
 
 import { BookOpen } from 'lucide-react'
-import type { Chapter2KeyTerm } from '@/lib/chapter-2-key-terms'
+import type { ChapterKeyTerm } from '@/lib/chapter-2-key-terms'
 import { groupKeyTermsByConcept } from '@/lib/chapter-2-key-terms'
+import { groupChapter3KeyTermsByConcept } from '@/lib/chapter-3-key-terms'
 import type { ChapterTheme } from '@/lib/chapter-content'
 import { defaultTheme } from '@/lib/chapter-content'
 
 interface KeyTermsPanelProps {
-  terms: readonly Chapter2KeyTerm[]
+  terms: readonly ChapterKeyTerm[]
   theme?: ChapterTheme
 }
 
@@ -19,7 +20,9 @@ interface KeyTermsPanelProps {
  */
 export default function KeyTermsPanel({ terms, theme }: KeyTermsPanelProps) {
   const t = theme || defaultTheme
-  const groups = groupKeyTermsByConcept(terms)
+  const groups = terms[0]?.id.startsWith('kt-3-')
+    ? groupChapter3KeyTermsByConcept(terms)
+    : groupKeyTermsByConcept(terms)
 
   if (groups.length === 0) {
     return null
