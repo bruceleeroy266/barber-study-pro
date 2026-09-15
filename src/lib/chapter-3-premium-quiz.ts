@@ -79,7 +79,7 @@ export const chapter3PremiumQuizQuestions: QuizQuestion[] = [
     question: 'Which set lists the four important daily personal hygiene habits for a barber?',
     answer_a: 'Hand washing, self-checks and freshening, oral care, no smoking during work hours',
     answer_b: 'Daily haircut, clean shoes, pressed uniform, trimmed nails',
-    answer_c: 'Mouthwash, cologne, gloves, disinfectant spray',
+    answer_c: 'Mouthwash, cologne, gloves, hair spray',
     answer_d: 'Stretching, hand washing, posture checks, water intake',
     correct_answer: 'a',
     explanation: 'The four habits are: wash hands throughout the day (including at the start of each service), do self-checks and freshen up, brush and floss with mouthwash or mints, and do not smoke during work hours.',
