@@ -1,27 +1,48 @@
-// Chapter 3: Professional Image - PREMIUM QUIZ
-// 30 board-exam style questions generated from flashcard curriculum
-// Randomized question selection and answer order per attempt
+// Chapter 3: Professional Image — CANONICAL INITIAL QUIZ (C3-1)
+//
+// Rebuilt around the locked curriculum: exactly 30 original ASCYN PRO
+// questions mapped to the four concept families:
+//   LO1 ch3-healthful-habits   = 8 questions
+//   LO2 ch3-professional-image = 7 questions
+//   LO3 ch3-ergonomics         = 8 questions
+//   LO4 ch3-human-relations    = 7 questions
+// Difficulty: 12 easy / 12 medium / 6 hard (hard = application/scenario).
+//
+// Question → concept mapping lives in chapter-3-concepts/mappings.ts.
+// Question order and answer order are shuffled per attempt by QuizClient.
+//
+// Removed from the legacy bank (documented, IDs never reused):
+//   qq-3-006/010/011 — LO2 coverage balance (concepts retained as flashcards)
+//   qq-3-013 — tattoo policy → ASCYN enrichment (not core assessment)
+//   qq-3-015 — "7 seconds" claim had no source support (C3-C001)
+//   qq-3-017 — phone etiquette → ASCYN enrichment
+//   qq-3-020 — universal photo-consent legal claim removed (C3-C003)
+//   qq-3-023 — scope-of-practice → re-home recommendation (Ch9)
+//   qq-3-024 — gratuity etiquette → ASCYN enrichment
+//   qq-3-025/026/027 — station sanitation/dropped tools/sweeping → Ch4
+//   qq-3-029 — CE-maintains-licensure claim removed (C3-C004)
+//   qq-3-030 — client-base development → re-home recommendation (Ch17/20)
+//
+// Dead legacy utilities (generateChapter3Exam, randomizeQuestionAnswers,
+// chapter3QuizStats) were removed — QuizClient owns runtime shuffling and
+// nothing imported them (C3-C015).
 
 import { QuizQuestion } from '@/types'
 
-// -------------------------------------------------
-// CHAPTER 3: FULL QUESTION BANK (30 questions)
-// Generated from Chapter 3 flashcards
-// NATURAL answer distribution (NOT forced balanced)
-// -------------------------------------------------
 export const chapter3PremiumQuizQuestions: QuizQuestion[] = [
-  // PERSONAL HYGIENE (6 questions)
+  // ── LO1 · HEALTHFUL HABITS (8) ──
   {
     id: 'qq-3-001',
     quiz_id: 'quiz-3',
     question: 'Why is daily bathing essential for a professional barber?',
     answer_a: 'It prevents body odor, removes bacteria, and ensures cleanliness',
-    answer_b: 'It is required by state law every morning',
+    answer_b: 'It is only necessary when working with chemicals',
     answer_c: 'It helps style hair more effectively',
-    answer_d: 'It is only necessary before inspections',
+    answer_d: 'It is only necessary before shop inspections',
     correct_answer: 'a',
     explanation: 'Daily bathing prevents body odor, removes bacteria, and ensures personal cleanliness. Clients notice hygiene immediately.',
     difficulty: 'easy',
+    learningObjective: 'LO-3-01',
     order_index: 1,
   },
   {
@@ -30,25 +51,13 @@ export const chapter3PremiumQuizQuestions: QuizQuestion[] = [
     question: 'How often should a barber wash their hands during the workday?',
     answer_a: 'Only at the beginning and end of the shift',
     answer_b: 'Once every hour regardless of activity',
-    answer_c: 'Before and after every client, after eating, and after restroom use',
+    answer_c: 'Throughout the day, including at the start of each service, after eating, and after restroom use',
     answer_d: 'Only when hands look dirty',
     correct_answer: 'c',
-    explanation: 'Wash hands before and after EVERY client, after eating, after using the restroom, and anytime hands become contaminated.',
+    explanation: 'Wash hands throughout the day, including at the beginning of each service, after eating, after using the restroom, and anytime hands become contaminated.',
     difficulty: 'easy',
+    learningObjective: 'LO-3-01',
     order_index: 2,
-  },
-  {
-    id: 'qq-3-003',
-    quiz_id: 'quiz-3',
-    question: 'Why should barbers keep their nails short and clean?',
-    answer_a: 'Long nails are prohibited by fashion standards',
-    answer_b: 'Short nails prevent bacteria buildup and avoid scratching clients',
-    answer_c: 'Clients prefer the look of short nails',
-    answer_d: 'Long nails interfere with clipper operation',
-    correct_answer: 'b',
-    explanation: 'Short, clean nails prevent bacteria buildup, avoid scratching clients, and maintain a professional appearance.',
-    difficulty: 'easy',
-    order_index: 3,
   },
   {
     id: 'qq-3-004',
@@ -56,65 +65,140 @@ export const chapter3PremiumQuizQuestions: QuizQuestion[] = [
     question: 'What is the proper way to maintain oral hygiene as a barber?',
     answer_a: 'Chew gum throughout the day',
     answer_b: 'Rinse with water after meals only',
-    answer_c: 'Brush teeth at least twice daily and use mouthwash',
+    answer_c: 'Brush and floss daily and use mouthwash',
     answer_d: 'Oral hygiene is not important for barbers',
     correct_answer: 'c',
-    explanation: 'Brush teeth at least twice daily, use mouthwash, and keep breath mints available. You work in close proximity to clients.',
+    explanation: 'Brush and floss daily, use mouthwash, and keep breath mints available. You work in close proximity to clients.',
     difficulty: 'easy',
+    learningObjective: 'LO-3-01',
     order_index: 4,
+  },
+  {
+    id: 'qq-3-031',
+    quiz_id: 'quiz-3',
+    question: 'Which set lists the four important daily personal hygiene habits for a barber?',
+    answer_a: 'Hand washing, self-checks and freshening, oral care, no smoking during work hours',
+    answer_b: 'Daily haircut, clean shoes, pressed uniform, trimmed nails',
+    answer_c: 'Mouthwash, cologne, gloves, disinfectant spray',
+    answer_d: 'Stretching, hand washing, posture checks, water intake',
+    correct_answer: 'a',
+    explanation: 'The four habits are: wash hands throughout the day (including at the start of each service), do self-checks and freshen up, brush and floss with mouthwash or mints, and do not smoke during work hours.',
+    difficulty: 'easy',
+    learningObjective: 'LO-3-01',
+    order_index: 31,
+  },
+  {
+    id: 'qq-3-032',
+    quiz_id: 'quiz-3',
+    question: 'Why do healthful-habits guidelines emphasize getting enough sleep?',
+    answer_a: 'It gives you time to study product labels',
+    answer_b: 'It lets the body recover from fatigue so you look, think, and work better',
+    answer_c: 'It reduces the number of clients you need per day',
+    answer_d: 'It replaces the need for regular exercise',
+    correct_answer: 'b',
+    explanation: 'Adequate sleep — an average of seven to eight hours — lets the body recover from fatigue. Rested barbers look healthier, think clearly, and perform better.',
+    difficulty: 'easy',
+    learningObjective: 'LO-3-01',
+    order_index: 32,
+  },
+  {
+    id: 'qq-3-033',
+    quiz_id: 'quiz-3',
+    question: 'Which daily pattern best supports a barber\'s nutrition and hydration during a long shift?',
+    answer_a: 'Skipping meals to save time, then eating one large late dinner',
+    answer_b: 'Energy drinks between clients instead of water',
+    answer_c: 'Balanced meals with vitamins and minerals, plenty of water, and limiting sugar, salt, caffeine, and heavily processed foods',
+    answer_d: 'Whatever is fastest from the vending machine',
+    correct_answer: 'c',
+    explanation: 'What you eat affects health, appearance, personality, and job performance. A balanced diet plus water fuels long days; excess sugar, salt, caffeine, and processed foods work against you.',
+    difficulty: 'medium',
+    learningObjective: 'LO-3-01',
+    order_index: 33,
+  },
+  {
+    id: 'qq-3-034',
+    quiz_id: 'quiz-3',
+    question: 'According to the healthful-habits model, how should a barber manage stress?',
+    answer_a: 'Push through it — stress is part of the job and needs no management',
+    answer_b: 'By working extra hours to stay ahead of it',
+    answer_c: 'By avoiding all difficult clients permanently',
+    answer_d: 'Through rest, relaxation, exercise, and daily routines that give the body and mind time to recover',
+    correct_answer: 'd',
+    explanation: 'Stress is the inability to cope with a real or imagined threat. Manage it with rest, relaxation, exercise, and recovery routines — a life of moderation and balance creates harmony.',
+    difficulty: 'medium',
+    learningObjective: 'LO-3-01',
+    order_index: 34,
+  },
+  {
+    id: 'qq-3-035',
+    quiz_id: 'quiz-3',
+    question: 'A new barber averages five hours of sleep, drinks energy drinks instead of water, skips meals, and never exercises. They feel burned out by midweek. Which change set best matches healthful-habits guidance?',
+    answer_a: 'Add a second energy drink in the afternoon and power through',
+    answer_b: 'Take one day off per month to catch up on everything at once',
+    answer_c: 'Consistent sleep, water through the day, regular balanced meals, and regular physical activity',
+    answer_d: 'Switch to decaf coffee and keep everything else the same',
+    correct_answer: 'c',
+    explanation: 'The healthful-habits foundation is sleep for recovery, hydration and balanced nutrition for performance, exercise for stamina, and relaxation for stress relief — not short-term stimulant fixes.',
+    difficulty: 'hard',
+    learningObjective: 'LO-3-01',
+    order_index: 35,
+  },
+
+  // ── LO2 · PROFESSIONAL IMAGE & GROOMING (7) ──
+  {
+    id: 'qq-3-003',
+    quiz_id: 'quiz-3',
+    question: 'How should a barber maintain their nails for client services?',
+    answer_a: 'Let them grow to any length as long as polish is fresh',
+    answer_b: 'Keep them clean and well maintained, at a length that stays safe for client contact',
+    answer_c: 'Nail care only matters for manicurists',
+    answer_d: 'Cover them with gloves at all times',
+    correct_answer: 'b',
+    explanation: 'Keep nails clean and well maintained. Broken nails and chipped polish happen occasionally, but they should not be a regular occurrence in front of clients.',
+    difficulty: 'medium',
+    learningObjective: 'LO-3-02',
+    order_index: 3,
   },
   {
     id: 'qq-3-005',
     quiz_id: 'quiz-3',
-    question: 'Why should barbers avoid wearing strong fragrances?',
+    question: 'Why should barbers avoid wearing strong fragrances at work?',
     answer_a: 'Fragrance is too expensive for daily use',
-    answer_b: 'Strong fragrances can trigger allergies and overwhelm clients',
+    answer_b: 'Clients cannot smell fragrance over hair products',
     answer_c: 'Clients prefer the smell of hair products only',
-    answer_d: 'Fragrances are prohibited by state law',
-    correct_answer: 'b',
-    explanation: 'Strong cologne, perfume, or aftershave can trigger allergies, overwhelm clients in close quarters, and clash with shop sanitizers.',
+    answer_d: 'Strong fragrances can trigger allergies and overwhelm clients in close quarters',
+    correct_answer: 'd',
+    explanation: 'Perfume oils and strong scents can trigger allergies and overwhelm clients in close quarters. Many shops adopt no-fragrance policies.',
     difficulty: 'medium',
+    learningObjective: 'LO-3-02',
     order_index: 5,
   },
-  {
-    id: 'qq-3-006',
-    quiz_id: 'quiz-3',
-    question: 'How often should a barber\'s uniform or work clothes be washed?',
-    answer_a: 'Once a week is sufficient',
-    answer_b: 'Only when visible stains appear',
-    answer_c: 'Daily or after every shift',
-    answer_d: 'Once a month unless heavily soiled',
-    correct_answer: 'c',
-    explanation: 'Daily or after every shift. Hair clippings, product residue, and sweat accumulate quickly. A fresh uniform every day is essential.',
-    difficulty: 'easy',
-    order_index: 6,
-  },
-
-  // PROFESSIONAL DRESS (4 questions) - Distribution: A=1, B=1, C=1, D=1
   {
     id: 'qq-3-007',
     quiz_id: 'quiz-3',
     question: 'What type of footwear is most appropriate for barbers?',
     answer_a: 'Open-toed sandals for easy cleaning',
     answer_b: 'High heels for professional appearance',
-    answer_c: 'Closed-toe, non-slip, supportive shoes',
-    answer_d: 'Barefoot for better grip on wet floors',
+    answer_c: 'Supportive, polished, closed-toe shoes in good repair',
+    answer_d: 'Any comfortable shoe, even worn-out flip-flops',
     correct_answer: 'c',
-    explanation: 'Closed-toe, non-slip, supportive shoes protect against dropped tools, prevent slips on wet floors, and provide comfort during long hours.',
+    explanation: 'Supportive, polished, closed-toe shoes protect your feet around electrical tools and sharp implements and keep you comfortable through long hours of standing.',
     difficulty: 'easy',
+    learningObjective: 'LO-3-02',
     order_index: 7,
   },
   {
     id: 'qq-3-008',
     quiz_id: 'quiz-3',
     question: 'Why is it important for barbers to wear a clean uniform or apron?',
-    answer_a: 'It is required by federal law',
+    answer_a: 'It keeps hair clippings off the floor',
     answer_b: 'It protects clothing and presents a professional image',
     answer_c: 'Uniforms are provided free by all shops',
     answer_d: 'Clients cannot see stains anyway',
     correct_answer: 'b',
-    explanation: 'A clean uniform protects clothing from hair and products, presents a professional image, and shows clients you take hygiene seriously.',
+    explanation: 'A clean, pressed uniform protects your clothing and presents a professional image — keep it stain-free, not just dirt-free.',
     difficulty: 'easy',
+    learningObjective: 'LO-3-02',
     order_index: 8,
   },
   {
@@ -123,132 +207,184 @@ export const chapter3PremiumQuizQuestions: QuizQuestion[] = [
     question: 'What jewelry is considered appropriate for barbers to wear while working?',
     answer_a: 'Large dangling earrings and multiple bracelets',
     answer_b: 'Rings on every finger for style',
-    answer_c: 'Minimal jewelry - small stud earrings and simple wedding bands',
+    answer_c: 'Minimal accessories — nothing noisy, dangling into a client\'s face, or able to catch in equipment',
     answer_d: 'Any jewelry the barber personally prefers',
     correct_answer: 'c',
-    explanation: 'Minimal jewelry - small stud earrings, simple wedding bands. Avoid dangling jewelry, large rings, or bracelets that can catch hair or scratch clients.',
+    explanation: 'Accessorize carefully: nothing that makes noise, dangles into a client\'s face, or can catch in equipment. A waterproof wristwatch is a practical choice.',
     difficulty: 'medium',
+    learningObjective: 'LO-3-02',
     order_index: 9,
-  },
-  {
-    id: 'qq-3-010',
-    quiz_id: 'quiz-3',
-    question: 'Why should barbers avoid wearing revealing or inappropriate clothing?',
-    answer_a: 'It is against fashion trends',
-    answer_b: 'It looks unprofessional and may make clients uncomfortable',
-    answer_c: 'Revealing clothing is cheaper than uniforms',
-    answer_d: 'Clients prefer casual dress in barbershops',
-    correct_answer: 'b',
-    explanation: 'Revealing clothing looks unprofessional and may make clients uncomfortable. Barbering is a professional service - dress modestly and appropriately.',
-    difficulty: 'easy',
-    order_index: 10,
-  },
-
-  // GROOMING STANDARDS (4 questions) - Distribution: A=1, B=1, C=1, D=1
-  {
-    id: 'qq-3-011',
-    quiz_id: 'quiz-3',
-    question: 'What hairstyle is considered most professional for barbers?',
-    answer_a: 'Extreme colors and avant-garde styles to show creativity',
-    answer_b: 'Neat, clean, well-groomed hairstyle',
-    answer_c: 'Long hair covering the face for mystery',
-    answer_d: 'Whatever style is currently trending on social media',
-    correct_answer: 'b',
-    explanation: 'A neat, clean, well-groomed hairstyle. Avoid extreme colors or unkempt styles. You are a walking advertisement for your skills.',
-    difficulty: 'easy',
-    order_index: 11,
   },
   {
     id: 'qq-3-012',
     quiz_id: 'quiz-3',
     question: 'Why is it important for barbers to maintain well-groomed facial hair?',
-    answer_a: 'Facial hair is required by state licensing boards',
-    answer_b: 'It demonstrates your grooming skills to clients',
+    answer_a: 'Clients are not permitted to have beards',
+    answer_b: 'Facial hair protects against chemicals',
     answer_c: 'Clients prefer barbers with beards',
-    answer_d: 'Facial hair protects against chemicals',
-    correct_answer: 'b',
-    explanation: 'Well-groomed facial hair demonstrates your grooming skills to clients. If you cannot maintain your own beard, clients will question your ability to maintain theirs.',
+    answer_d: 'It demonstrates your grooming skills to clients',
+    correct_answer: 'd',
+    explanation: 'A neat, trimmed beard or mustache testifies to your barbering skill. If you prefer clean-shaven, shave daily to avoid undue stubble.',
     difficulty: 'easy',
+    learningObjective: 'LO-3-02',
     order_index: 12,
   },
   {
-    id: 'qq-3-013',
+    id: 'qq-3-036',
     quiz_id: 'quiz-3',
-    question: 'What should a barber do if they have a visible tattoo?',
-    answer_a: 'Show it proudly as personal expression',
-    answer_b: 'Follow shop policy - cover it if required',
-    answer_c: 'Remove it immediately',
-    answer_d: 'Ignore any shop policies about tattoos',
-    correct_answer: 'b',
-    explanation: 'Follow shop policy - cover it if required, or choose employers with flexible policies. Some shops require tattoos to be covered.',
-    difficulty: 'medium',
-    order_index: 13,
+    question: 'It is your first day at an upscale shop with a written dress code and a no-fragrance policy. Which choice best fits dressing for success?',
+    answer_a: 'Your boldest cologne and trendiest outfit — first impressions need personality',
+    answer_b: 'Gym shoes and headphones so you can zone in',
+    answer_c: 'Clean, pressed attire within the dress code, supportive polished shoes, minimal quiet accessories, and no fragrance',
+    answer_d: 'A borrowed smock with a faint bleach stain — nobody looks closely',
+    correct_answer: 'c',
+    explanation: 'Dressing for success means a professional image consistent with the shop: clean and pressed, functional and comfortable, careful accessories, supportive polished shoes, and respect for fragrance policy.',
+    difficulty: 'hard',
+    learningObjective: 'LO-3-02',
+    order_index: 36,
   },
+
+  // ── LO3 · ERGONOMICS & BODY MECHANICS (8) ──
   {
     id: 'qq-3-014',
     quiz_id: 'quiz-3',
     question: 'Why is good posture important when working as a barber?',
-    answer_a: 'It is required by OSHA regulations',
-    answer_b: 'It prevents back pain and projects confidence',
+    answer_a: 'It makes haircuts finish faster',
+    answer_b: 'It conveys confidence and prevents fatigue and chronic pain',
     answer_c: 'Clients can see your posture in the mirror',
-    answer_d: 'Good posture makes haircuts faster',
+    answer_d: 'Good posture improves your grip strength',
     correct_answer: 'b',
-    explanation: 'Good posture prevents back pain, projects confidence, and shows professionalism. Slouching looks lazy and can lead to chronic pain.',
+    explanation: 'Good posture conveys an image of confidence and prevents fatigue and the chronic neck, shoulder, back, and leg problems that come from working improperly.',
     difficulty: 'easy',
+    learningObjective: 'LO-3-03',
     order_index: 14,
   },
-
-  // CLIENT COMMUNICATION (6 questions) - Distribution: A=2, B=1, C=2, D=1
   {
-    id: 'qq-3-015',
+    id: 'qq-3-028',
     quiz_id: 'quiz-3',
-    question: 'How long do clients typically take to form a first impression of their barber?',
-    answer_a: '30 seconds',
-    answer_b: '5 minutes',
-    answer_c: '7 seconds',
-    answer_d: 'After the service is complete',
-    correct_answer: 'c',
-    explanation: 'Within the first 7 seconds. A clean, professional appearance signals competence and attention to detail before you even speak.',
+    question: 'What is the purpose of an anti-fatigue mat at a barber station?',
+    answer_a: 'To decorate the station with color',
+    answer_b: 'To prevent tools from rolling away',
+    answer_c: 'To catch hair clippings for easy cleanup',
+    answer_d: 'To reduce leg and back strain from standing',
+    correct_answer: 'd',
+    explanation: 'Anti-fatigue mats provide cushioned flooring that reduces leg and back strain from standing for long periods.',
     difficulty: 'easy',
-    order_index: 15,
+    learningObjective: 'LO-3-03',
+    order_index: 28,
   },
+  {
+    id: 'qq-3-037',
+    quiz_id: 'quiz-3',
+    question: 'What is ergonomics?',
+    answer_a: 'The study of muscle growth for physical labor',
+    answer_b: 'The science of designing the workplace and its equipment and tools to make body movements more comfortable, efficient, and safe',
+    answer_c: 'A stretching routine performed before each client',
+    answer_d: 'The practice of standing as still as possible while working',
+    correct_answer: 'b',
+    explanation: 'Ergonomics is the science of designing the workplace — along with its equipment and tools — to make specific body movements more comfortable, efficient, and safe.',
+    difficulty: 'medium',
+    learningObjective: 'LO-3-03',
+    order_index: 37,
+  },
+  {
+    id: 'qq-3-038',
+    quiz_id: 'quiz-3',
+    question: 'Which description matches correct standing posture for a barber?',
+    answer_a: 'Head up with chin parallel to the floor, neck elongated, chest lifted, shoulders level and relaxed, spine straight',
+    answer_b: 'Weight on one hip, shoulders rounded forward, chin tucked down',
+    answer_c: 'Knees locked, back arched, arms raised high',
+    answer_d: 'Leaning slightly on the station to take weight off the feet',
+    correct_answer: 'a',
+    explanation: 'Standing posture: head up with chin parallel to the floor, neck elongated and balanced above the shoulders, chest lifted without slouching, shoulders level and relaxed, spine straight.',
+    difficulty: 'medium',
+    learningObjective: 'LO-3-03',
+    order_index: 38,
+  },
+  {
+    id: 'qq-3-039',
+    quiz_id: 'quiz-3',
+    question: 'How should a barber position their arms and wrists while cutting?',
+    answer_a: 'Arms straight overhead for maximum reach, wrists bent back',
+    answer_b: 'Whatever feels natural — positioning does not matter',
+    answer_c: 'Elbows locked tight against the ribs, fists clenched on the shears',
+    answer_d: 'Arms at less than about a 60-degree angle from the body, wrists kept straight and neutral, without gripping tools tightly',
+    correct_answer: 'd',
+    explanation: 'Position arms at less than about a 60-degree angle when holding them away from the body, keep wrists straight or neutral, and avoid gripping tools tightly or constantly bending the wrist up or down.',
+    difficulty: 'medium',
+    learningObjective: 'LO-3-03',
+    order_index: 39,
+  },
+  {
+    id: 'qq-3-040',
+    quiz_id: 'quiz-3',
+    question: 'Which list names posture problems barbers are taught to recognize?',
+    answer_a: 'Hunchback, swayback, and combined hunchback-swayback',
+    answer_b: 'Runner\'s knee, tennis elbow, and swimmer\'s shoulder',
+    answer_c: 'Flat feet, bow legs, and pigeon toes',
+    answer_d: 'Whiplash, sprain, and strain',
+    correct_answer: 'a',
+    explanation: 'Common posture problems include hunchback (rounded upper back), swayback (exaggerated lower-back curve), and combined hunchback-swayback. Recognize them early and correct through awareness and exercise.',
+    difficulty: 'easy',
+    learningObjective: 'LO-3-03',
+    order_index: 40,
+  },
+  {
+    id: 'qq-3-041',
+    quiz_id: 'quiz-3',
+    question: 'After months of cutting, a barber develops wrist pain and numbness in the hand. What is the most likely issue, and which prevention set applies?',
+    answer_a: 'A skin allergy; switch soaps and keep cutting as usual',
+    answer_b: 'Normal aging; nothing can be done',
+    answer_c: 'Carpal tunnel syndrome; neutral wrists, ergonomic tools, stretching at intervals, and avoiding tight grips',
+    answer_d: 'A shoulder problem; only shoulder exercises will help',
+    correct_answer: 'c',
+    explanation: 'Wrist pain and numbness after repetitive hand movements points to carpal tunnel syndrome. Prevention: neutral wrist positions, ergonomically designed tools, no tight gripping, and regular stretch intervals.',
+    difficulty: 'hard',
+    learningObjective: 'LO-3-03',
+    order_index: 41,
+  },
+  {
+    id: 'qq-3-042',
+    quiz_id: 'quiz-3',
+    question: 'A barber ends every day with lower-back and shoulder fatigue and catches themselves bending forward and twisting to reach the client. Which setup change addresses the cause?',
+    answer_a: 'Raise the client chair so the client\'s head is at a comfortable working level, stand hip-width with knees slightly bent, and stretch or walk between clients',
+    answer_b: 'Lower the chair so you lean over less far, and lock your knees for stability',
+    answer_c: 'Move faster through each cut so there is less time to feel tired',
+    answer_d: 'Sit on the station ledge between clients without changing anything else',
+    correct_answer: 'a',
+    explanation: 'Bending and twisting to reach the client drives back and shoulder fatigue. Bring the client to you — chair at a comfortable working level, head tilted for access — keep a balanced stance, and counter repetitive positions with stretch and walk intervals.',
+    difficulty: 'hard',
+    learningObjective: 'LO-3-03',
+    order_index: 42,
+  },
+
+  // ── LO4 · HUMAN RELATIONS & COMMUNICATION (7) ──
   {
     id: 'qq-3-016',
     quiz_id: 'quiz-3',
-    question: 'What is active listening and why is it important in barbering?',
-    answer_a: 'Listening to music while cutting hair',
-    answer_b: 'Giving full attention, maintaining eye contact, and asking clarifying questions',
-    answer_c: 'Hearing the client while thinking about the next appointment',
-    answer_d: 'Letting the client talk without responding',
+    question: 'What does "talking less, listening more" mean in practice?',
+    answer_a: 'Letting the client talk while you plan the next appointment',
+    answer_b: 'Staying fully attentive to what the client says and asking questions whenever something is unclear',
+    answer_c: 'Hearing the client out, then doing what you had already decided',
+    answer_d: 'Avoiding all conversation during the service',
     correct_answer: 'b',
-    explanation: 'Active listening means giving full attention, maintaining eye contact, nodding, and asking clarifying questions. It ensures you understand exactly what the client wants.',
+    explanation: 'Practice good listening skills: stay fully attentive, and if something is unclear, ask questions to gain understanding.',
     difficulty: 'medium',
+    learningObjective: 'LO-3-04',
     order_index: 16,
-  },
-  {
-    id: 'qq-3-017',
-    quiz_id: 'quiz-3',
-    question: 'Why should barbers avoid using their phone during client services?',
-    answer_a: 'Phones are prohibited by law in barbershops',
-    answer_b: 'It is unprofessional, distracting, and makes clients feel undervalued',
-    answer_c: 'Phones interfere with clipper electronics',
-    answer_d: 'Clients prefer barbers who multitask',
-    correct_answer: 'b',
-    explanation: 'Using phones during services is unprofessional, distracts from quality work, and makes clients feel undervalued. Phones also harbor bacteria.',
-    difficulty: 'easy',
-    order_index: 17,
   },
   {
     id: 'qq-3-018',
     quiz_id: 'quiz-3',
     question: 'What should a barber do if they are running late for an appointment?',
     answer_a: 'Hope the client does not notice',
-    answer_b: 'Call the client as soon as possible to inform them',
+    answer_b: 'Cancel the appointment without explanation',
     answer_c: 'Rush through the current service to save time',
-    answer_d: 'Cancel the appointment without explanation',
-    correct_answer: 'b',
-    explanation: 'Call the client as soon as possible to inform them. Apologize sincerely, offer a revised time, and thank them for their patience.',
+    answer_d: 'Call the client as soon as possible to inform them',
+    correct_answer: 'd',
+    explanation: 'Call the client as soon as possible, apologize sincerely, offer a revised time, and thank them for their patience.',
     difficulty: 'medium',
+    learningObjective: 'LO-3-04',
     order_index: 18,
   },
   {
@@ -256,256 +392,71 @@ export const chapter3PremiumQuizQuestions: QuizQuestion[] = [
     quiz_id: 'quiz-3',
     question: 'How should a barber handle a client who is unhappy with their haircut?',
     answer_a: 'Defend your work and explain why they are wrong',
-    answer_b: 'Stay calm, listen, apologize, and offer to fix it immediately',
+    answer_b: 'Offer a discount but do not change the cut',
     answer_c: 'Tell them to go to another barber',
-    answer_d: 'Offer a discount but do not change the cut',
-    correct_answer: 'b',
-    explanation: 'Stay calm, listen without defending, apologize sincerely, and offer to fix it immediately. Say: "I\'m sorry you\'re not happy. Let me fix this for you right now."',
+    answer_d: 'Stay calm, listen, apologize sincerely, and offer to fix it promptly',
+    correct_answer: 'd',
+    explanation: 'Stay calm, listen without defending, apologize sincerely, and take care of the problem promptly and to the client\'s satisfaction.',
     difficulty: 'medium',
+    learningObjective: 'LO-3-04',
     order_index: 19,
   },
-  {
-    id: 'qq-3-020',
-    quiz_id: 'quiz-3',
-    question: 'Why is it important to get client permission before posting their photo on social media?',
-    answer_a: 'It is legally required and respects client privacy',
-    answer_b: 'Photos without permission get more likes',
-    answer_c: 'Clients enjoy surprise social media posts',
-    answer_d: 'Permission is only needed for celebrity clients',
-    correct_answer: 'a',
-    explanation: 'It is legally required and respects client privacy. Posting without consent can damage trust, violate privacy laws, and harm your professional reputation.',
-    difficulty: 'medium',
-    order_index: 20,
-  },
-
-  // PROFESSIONAL ETHICS (4 questions) - Distribution: A=1, B=1, C=1, D=1
   {
     id: 'qq-3-021',
     quiz_id: 'quiz-3',
     question: 'Why should barbers avoid gossiping about clients or coworkers?',
     answer_a: 'Gossip is boring to most people',
-    answer_b: 'It is unprofessional, damages trust, and violates confidentiality',
+    answer_b: 'It damages trust, creates a toxic work environment, and violates confidentiality',
     answer_c: 'Gossip takes too much time during work hours',
     answer_d: 'Clients enjoy hearing gossip about others',
     correct_answer: 'b',
-    explanation: 'Gossiping is unprofessional, damages trust, creates a toxic work environment, and violates client confidentiality.',
+    explanation: 'Gossip damages trust and violates the ethical standard of confidentiality. Professional barbers never discuss other clients or coworkers.',
     difficulty: 'medium',
+    learningObjective: 'LO-3-04',
     order_index: 21,
   },
   {
     id: 'qq-3-022',
     quiz_id: 'quiz-3',
     question: 'What is client confidentiality and why does it matter?',
-    answer_a: 'Keeping the client\'s appointment time private',
-    answer_b: 'Keeping personal information and conversations private',
+    answer_a: 'Keeping personal information and conversations private',
+    answer_b: 'Keeping the client\'s appointment time private',
     answer_c: 'Only sharing client information with coworkers',
     answer_d: 'Confidentiality is not important in barbering',
-    correct_answer: 'b',
-    explanation: 'Client confidentiality means keeping personal information, conversations, and details private. Violating it destroys trust and can have legal consequences.',
+    correct_answer: 'a',
+    explanation: 'Client confidentiality means keeping personal information, conversations, and details private. Violating that trust is hard to repair.',
     difficulty: 'easy',
+    learningObjective: 'LO-3-04',
     order_index: 22,
   },
   {
-    id: 'qq-3-023',
+    id: 'qq-3-043',
     quiz_id: 'quiz-3',
-    question: 'Why should a barber not diagnose skin or scalp conditions?',
-    answer_a: 'Barbers are not trained to recognize any skin conditions',
-    answer_b: 'Diagnosing is outside the barber\'s scope of practice',
-    answer_c: 'Clients do not want to hear about skin problems',
-    answer_d: 'Diagnosing conditions is too time-consuming',
-    correct_answer: 'b',
-    explanation: 'Barbers are not medical professionals. Diagnosing conditions is outside your scope of practice. Recognize abnormalities and refer clients to a dermatologist.',
-    difficulty: 'medium',
-    order_index: 23,
-  },
-  {
-    id: 'qq-3-024',
-    quiz_id: 'quiz-3',
-    question: 'What should a barber do if a client offers a large tip?',
-    answer_a: 'Refuse it to avoid tax complications',
-    answer_b: 'Accept it graciously with a sincere thank you',
-    answer_c: 'Share it with the shop owner',
-    answer_d: 'Ask for an even larger tip',
-    correct_answer: 'b',
-    explanation: 'Accept it graciously with a sincere thank you. Large tips reflect excellent service. Never demand tips or make clients feel obligated.',
-    difficulty: 'easy',
-    order_index: 24,
-  },
-
-  // SHOP STANDARDS (4 questions) - Distribution: A=1, B=1, C=1, D=1
-  {
-    id: 'qq-3-025',
-    quiz_id: 'quiz-3',
-    question: 'Why is it important to keep your barber station clean and organized?',
-    answer_a: 'It is required by the fire department',
-    answer_b: 'It shows professionalism and prevents cross-contamination',
-    answer_c: 'Clean stations take less time to set up',
-    answer_d: 'Clients do not notice station cleanliness',
-    correct_answer: 'b',
-    explanation: 'A clean station shows professionalism, prevents cross-contamination, helps you work efficiently, and makes clients feel comfortable.',
-    difficulty: 'easy',
-    order_index: 25,
-  },
-  {
-    id: 'qq-3-026',
-    quiz_id: 'quiz-3',
-    question: 'What is the proper way to handle tools that fall on the floor during a service?',
-    answer_a: 'Wipe them on your apron and continue using them',
-    answer_b: 'Replace them with clean tools or disinfect them thoroughly',
-    answer_c: 'Floor surfaces are clean enough for tools',
-    answer_d: 'Ask the client if they mind using the dropped tool',
-    correct_answer: 'b',
-    explanation: 'Replace them with clean tools or stop and disinfect them thoroughly before reuse. Tools that touch the floor are contaminated.',
-    difficulty: 'easy',
-    order_index: 26,
-  },
-  {
-    id: 'qq-3-027',
-    quiz_id: 'quiz-3',
-    question: 'Why should barbers sweep up hair clippings immediately after each client?',
-    answer_a: 'Sweeping is required every 30 minutes by law',
-    answer_b: 'It maintains hygiene, prevents slipping, and shows respect',
-    answer_c: 'Hair clippings are valuable for recycling',
-    answer_d: 'Clients enjoy watching the sweeping process',
-    correct_answer: 'b',
-    explanation: 'Immediate cleanup maintains hygiene, prevents slipping hazards, shows respect for the next client, and keeps the shop looking professional.',
-    difficulty: 'easy',
-    order_index: 27,
-  },
-  {
-    id: 'qq-3-028',
-    quiz_id: 'quiz-3',
-    question: 'What is the purpose of an anti-fatigue mat at a barber station?',
-    answer_a: 'To decorate the station with color',
-    answer_b: 'To reduce leg and back strain from standing',
-    answer_c: 'To catch hair clippings for easy cleanup',
-    answer_d: 'To prevent tools from rolling away',
-    correct_answer: 'b',
-    explanation: 'Anti-fatigue mats provide cushioned flooring that reduces leg and back strain from standing for long periods.',
-    difficulty: 'easy',
-    order_index: 28,
-  },
-
-  // PROFESSIONAL DEVELOPMENT (2 questions) - Distribution: A=1, D=1
-  {
-    id: 'qq-3-029',
-    quiz_id: 'quiz-3',
-    question: 'Why is continuing education important for barbers?',
-    answer_a: 'It keeps skills current and maintains licensure',
-    answer_b: 'It is only required for shop managers',
-    answer_c: 'Continuing education is optional in most states',
-    answer_d: 'Clients do not care about ongoing education',
+    question: 'A client sits down and says, "Just trim it over the ears." What is the most professional next step?',
+    answer_a: 'Clarify what "over the ears" means to them, then repeat your interpretation back before cutting',
+    answer_b: 'Start cutting — "trim" is clear enough',
+    answer_c: 'Show them a photo of your favorite cut and talk them into it',
+    answer_d: 'Ask a coworker what they think the client means',
     correct_answer: 'a',
-    explanation: 'Continuing education keeps skills current, introduces new techniques, maintains licensure, and shows clients you are committed to excellence.',
-    difficulty: 'medium',
-    order_index: 29,
+    explanation: 'Apply the three-step framework: organize your thoughts about what you need to know, clarify the client\'s terminology ("over the ears" can mean more than one thing), and repeat your interpretation so the client can confirm or correct it.',
+    difficulty: 'hard',
+    learningObjective: 'LO-3-04',
+    order_index: 43,
   },
   {
-    id: 'qq-3-030',
+    id: 'qq-3-044',
     quiz_id: 'quiz-3',
-    question: 'What is the most important factor in building a loyal client base?',
-    answer_a: 'Offering the lowest prices in town',
-    answer_b: 'Giving free services to regular clients',
-    answer_c: 'Spending the least time per client',
-    answer_d: 'Consistently delivering excellent service and building relationships',
-    correct_answer: 'd',
-    explanation: 'Consistently delivering excellent service and building genuine relationships. Clients return because of trust, quality, and how you make them feel.',
-    difficulty: 'medium',
-    order_index: 30,
+    question: 'Mid-service, a client loudly criticizes your work in front of other clients. Which response shows emotional control?',
+    answer_a: 'Stay even-tempered, listen, and address the concern professionally without showing anger',
+    answer_b: 'Point out everything wrong with their hair in return',
+    answer_c: 'Stop the service and ask them to leave immediately',
+    answer_d: 'Finish in silence and complain about them to coworkers afterward',
+    correct_answer: 'a',
+    explanation: 'Emotional control means responding rather than reacting — not revealing negative emotions through gestures, facial expressions, or conversation. Even-tempered professionals earn respect.',
+    difficulty: 'hard',
+    learningObjective: 'LO-3-04',
+    order_index: 44,
   },
 ]
 
-// -------------------------------------------------
-// RANDOMIZATION UTILITIES
-// -------------------------------------------------
-
-/**
- * Fisher-Yates shuffle algorithm
- * Unbiased randomization for questions and answers
- */
-function shuffleArray<T>(array: T[]): T[] {
-  const shuffled = [...array]
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
-  }
-  return shuffled
-}
-
-/**
- * Randomize answer order for a single question
- * Preserves correctness while shuffling A/B/C/D positions
- */
-export function randomizeQuestionAnswers(question: QuizQuestion): QuizQuestion {
-  const answers = [
-    { key: 'a', text: question.answer_a },
-    { key: 'b', text: question.answer_b },
-    { key: 'c', text: question.answer_c },
-    { key: 'd', text: question.answer_d },
-  ]
-
-  const shuffled = shuffleArray(answers)
-  const newCorrectKey = shuffled.find((a) => a.key === question.correct_answer)!
-  const correctIndex = shuffled.indexOf(newCorrectKey)
-  const correctLetter = ['a', 'b', 'c', 'd'][correctIndex]
-
-  return {
-    ...question,
-    answer_a: shuffled[0].text,
-    answer_b: shuffled[1].text,
-    answer_c: shuffled[2].text,
-    answer_d: shuffled[3].text,
-    correct_answer: correctLetter as 'a' | 'b' | 'c' | 'd',
-  }
-}
-
-/**
- * Generate a randomized 30-question exam from the full question bank
- * - Randomly selects 30 questions (or all if fewer than 30)
- * - Randomizes answer order for each question
- * - Ensures no duplicate questions in a single session
- */
-export function generateChapter3Exam(questionCount: number = 30): QuizQuestion[] {
-  // Check if we have enough questions
-  if (chapter3PremiumQuizQuestions.length === 0) {
-    console.warn('Chapter 3 quiz: No questions available')
-    return []
-  }
-
-  // Shuffle all questions
-  const shuffledQuestions = shuffleArray(chapter3PremiumQuizQuestions)
-
-  // Take the requested number of questions (or all available if fewer)
-  const selectedCount = Math.min(questionCount, shuffledQuestions.length)
-  const selectedQuestions = shuffledQuestions.slice(0, selectedCount)
-
-  // Randomize answer order for each selected question
-  return selectedQuestions.map(randomizeQuestionAnswers)
-}
-
-/**
- * Get the full question bank without randomization
- * Useful for review mode or admin views
- */
-export function getChapter3QuestionBank(): QuizQuestion[] {
-  return chapter3PremiumQuizQuestions
-}
-
-// Stats
-export const chapter3QuizStats = {
-  totalQuestions: chapter3PremiumQuizQuestions.length,
-  easy: chapter3PremiumQuizQuestions.filter((q) => q.difficulty === 'easy').length,
-  medium: chapter3PremiumQuizQuestions.filter((q) => q.difficulty === 'medium').length,
-  hard: chapter3PremiumQuizQuestions.filter((q) => q.difficulty === 'hard').length,
-  categories: [...new Set(chapter3PremiumQuizQuestions.map((q) => {
-    if (q.question.includes('hygiene') || q.question.includes('bath') || q.question.includes('hands') || q.question.includes('nails') || q.question.includes('oral') || q.question.includes('fragrance') || q.question.includes('uniform')) return 'Personal Hygiene'
-    if (q.question.includes('dress') || q.question.includes('footwear') || q.question.includes('jewelry') || q.question.includes('clothing')) return 'Professional Dress'
-    if (q.question.includes('groom') || q.question.includes('hair') || q.question.includes('facial') || q.question.includes('tattoo') || q.question.includes('posture')) return 'Grooming Standards'
-    if (q.question.includes('client') || q.question.includes('listen') || q.question.includes('phone') || q.question.includes('late') || q.question.includes('unhappy') || q.question.includes('social media')) return 'Client Communication'
-    if (q.question.includes('gossip') || q.question.includes('confidential') || q.question.includes('diagnose') || q.question.includes('tip')) return 'Professional Ethics'
-    if (q.question.includes('station') || q.question.includes('tools') || q.question.includes('sweep') || q.question.includes('mat')) return 'Shop Standards'
-    return 'Professional Development'
-  }))],
-}
-
-
+export default chapter3PremiumQuizQuestions
