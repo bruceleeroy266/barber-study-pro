@@ -2194,7 +2194,7 @@ export const chapterContentData: Record<string, ChapterContent> = {
           {
             icon: 'Handshake',
             title: 'First Impressions Are Everything',
-            text: 'Clients decide if they trust you within the first 7 seconds. A clean, professional appearance signals competence, attention to detail, and respect for your craft. When you look the part, clients relax and feel confident in your hands.',
+            text: 'First impressions open doors — to job interviews, new clients, and professional credibility. Barbers are held to a higher image standard because clients judge your skills by how you present yourself. A clean, professional appearance signals competence, attention to detail, and respect for your craft.',
           },
           {
             icon: 'TrendingUp',
@@ -2238,7 +2238,7 @@ export const chapterContentData: Record<string, ChapterContent> = {
             title: 'Hair and Nail Standards',
             bullets: [
               { label: 'Your Hair Speaks Volumes', description: 'As a barber, your hairstyle is your best advertisement. Keep it freshly cut, styled, and appropriate. Never let your own hair look neglected.' },
-              { label: 'Nail Care Essentials', description: 'Keep nails trimmed short — long nails harbor bacteria and can scratch clients. Clean under nails thoroughly. No chipped polish. Avoid artificial nails that trap bacteria.' },
+              { label: 'Nail Care Essentials', description: 'Keep nails clean and well maintained, at a length that suits your style while staying safe for client contact. Clean under nails thoroughly. Broken nails and chipped polish happen occasionally, but should not be a regular occurrence.' },
             ],
           },
           {
@@ -2262,6 +2262,47 @@ export const chapterContentData: Record<string, ChapterContent> = {
               { label: 'Fresh Capes & Neck Strips', description: 'Use fresh capes and neck strips for each client.' },
               { label: 'Hand Sanitizer', description: 'Keep hand sanitizer visible and use it.' },
               { label: 'Organized Products', description: 'Store products in clean, organized containers — no dust or residue.' },
+            ],
+          },
+        ],
+      },
+
+      // Section 2b: Healthful Daily Habits (LO1)
+      {
+        type: 'tabbed',
+        id: 'healthful-habits',
+        title: 'Healthful Habits for Daily Barbering',
+        subtitle: 'Your body is your most important tool — maintain it like one',
+        tabs: [
+          {
+            id: 'four-habits',
+            label: 'The Four Habits',
+            title: 'The Four Daily Hygiene Habits',
+            bullets: [
+              { label: '1. Wash Hands', description: 'Throughout the day, including at the beginning of each service, after eating, and after using the restroom.' },
+              { label: '2. Self-Checks', description: 'Freshen up as needed — including underarms — because you work in close contact with clients.' },
+              { label: '3. Oral Care', description: 'Brush and floss daily; use mouthwash or breath mints before close-contact services.' },
+              { label: '4. No Smoking During Work', description: 'Smoke odor lingers on hair, clothes, and hands. If you smoke on a break, brush your teeth, use mouthwash, and wash your hands before returning.' },
+            ],
+          },
+          {
+            id: 'rest-sleep',
+            label: 'Rest & Sleep',
+            title: 'Recovery Is a Professional Requirement',
+            bullets: [
+              { label: 'Seven to Eight Hours', description: 'Adequate sleep lets the body recover from fatigue — you look healthier, think clearly, and perform better.' },
+              { label: 'Relaxation = Change of Pace', description: 'A movie, reading, sports, or any activity that helps you unwind. Build it into your routine so you return refreshed.' },
+              { label: 'Plan for Breaks', description: 'Plan your day so you get breaks and a healthy lunch instead of running on empty.' },
+            ],
+          },
+          {
+            id: 'nutrition-hydration',
+            label: 'Nutrition & Hydration',
+            title: 'Fuel for Long Days on Your Feet',
+            bullets: [
+              { label: 'Balanced Diet', description: 'What you eat affects your health, appearance, personality, and job performance. Aim for balanced meals with vitamins and minerals.' },
+              { label: 'Drink Plenty of Water', description: 'Hydration supports energy and concentration. Dehydration causes fatigue, headaches, and poor focus.' },
+              { label: 'Go Easy On', description: 'Excess sugar, salt, caffeine, and fatty or highly processed foods work against you through a long shift.' },
             ],
           },
         ],
@@ -2422,8 +2463,8 @@ export const chapterContentData: Record<string, ChapterContent> = {
         type: 'contentBlock',
         id: 'stress-intro',
         title: 'Recognize Barbering Stressors',
-        content: 'Barbering comes with unique pressures: difficult clients, time constraints, physical demands, financial uncertainty, and the need to constantly stay creative. Acknowledging these stressors is the first step to managing them.',
-        highlight: 'Acknowledging these stressors',
+        content: 'Stress is the inability to cope with a real or imagined threat, producing mental and physical responses. Barbering adds its own pressures: difficult clients, time constraints, physical demands, financial uncertainty, and the need to constantly stay creative. Managing stress means building rest, relaxation, and exercise into your daily routine — a life of moderation and balance creates harmony.',
+        highlight: 'moderation and balance',
       },
       {
         type: 'featureGrid',
@@ -2589,8 +2630,8 @@ export const chapterContentData: Record<string, ChapterContent> = {
         type: 'contentBlock',
         id: 'client-chair',
         title: 'Client Chair Position',
-        content: 'Adjust chair height so client\'s head is at your elbow level. Use a chair that raises/lowers easily throughout the cut. Position client so you don\'t have to bend or reach.',
-        highlight: 'head is at your elbow level',
+        content: 'Adjust the chair height so the client\'s head is at a comfortable working level, and tilt the client\'s head as needed for better access. Position the client so you never have to bend forward or twist to reach.',
+        highlight: 'comfortable working level',
       },
       {
         type: 'contentBlock',
@@ -2683,6 +2724,13 @@ export const chapterContentData: Record<string, ChapterContent> = {
 
       // Section 7: Communication & Human Relations (Tabbed)
       {
+        type: 'contentBlock',
+        id: 'human-relations-foundations',
+        title: 'Human Relations, Rapport & Effective Communication',
+        content: 'Human relations are the interactions and relationships between two or more people — and building rapport, a close and empathetic relationship, is what turns first-time clients into regulars. Effective communication means successfully sharing information so it is understood: in the barbershop, that requires sending and receiving messages until you and the client mean the same thing.',
+        highlight: 'successfully sharing information so it is understood',
+      },
+      {
         type: 'tabbed',
         id: 'communication',
         title: 'Communication & Human Relations',
@@ -2774,9 +2822,16 @@ export const chapterContentData: Record<string, ChapterContent> = {
       // ============================================================
       {
         type: 'contentBlock',
+        id: 'ergonomics-foundations',
+        title: 'Ergonomics & Physical Presentation',
+        content: 'Ergonomics is the science of designing the workplace — along with its equipment and tools — to make specific body movements more comfortable, efficient, and safe. Your physical presentation — your posture and the way you walk and move — conveys confidence and can prevent fatigue and other physical problems throughout your career.',
+        highlight: 'comfortable, efficient, and safe',
+      },
+      {
+        type: 'contentBlock',
         id: 'posture-intro',
         title: 'Posture: The Foundation of Longevity',
-        content: "Your posture determines how long your career lasts. Poor alignment doesn't just cause pain — it shortens careers. Professional barbering practice recognizes four common posture problems that barbers develop over time: hunchback (rounded upper back), swayback (excessive lower back curve), flat back (loss of natural curves), and combined hunchback-swayback. Recognizing these patterns early and correcting them through awareness and exercise is essential for a sustainable career.",
+        content: "Your posture determines how long your career lasts. Poor alignment doesn't just cause pain — it shortens careers. The posture problems barbers most often develop are hunchback (rounded upper back), swayback (exaggerated lower-back curve), and combined hunchback-swayback — all measured against the spine's natural curves. Recognizing these patterns early and correcting them through awareness and exercise is essential for a sustainable career.",
         highlight: 'Your posture determines how long your career lasts',
       },
       {
@@ -2826,9 +2881,9 @@ export const chapterContentData: Record<string, ChapterContent> = {
             text: 'Lower back arches excessively, pelvis tilts forward. Caused by standing with weight shifted back. Leads to lower back pain and hip issues.',
           },
           {
-            icon: 'AlertTriangle',
-            title: 'Flat Back (Lost Curves)',
-            text: 'Natural spinal curves flatten. Caused by rigid standing posture. Leads to stiffness, reduced shock absorption, and spinal compression.',
+            icon: 'CheckCircle',
+            title: 'The Healthy Reference: Natural Spinal Curves',
+            text: 'A healthy spine keeps its natural curves — cervical (neck), thoracic (mid-back), and lumbar (lower back). Posture problems are measured against this alignment, so learn what good alignment looks like before correcting problems.',
           },
           {
             icon: 'AlertTriangle',
