@@ -8,6 +8,7 @@ import { isSupabaseConfigured } from '@/lib/demo-helpers'
 import { saveMissedQuestions } from '@/lib/missed-questions'
 import { getCategoryForChapter } from '@/lib/analytics'
 import { calculateQuizScore } from '@/lib/quiz-scoring'
+import { isConceptDetectionSupported } from '@/lib/remediation/chapter-registry'
 import { Quiz, QuizQuestion, QuizAttempt } from '@/types'
 import RemediationPanel from './chapter/RemediationPanel'
 import type { ChapterCompetency, ChapterRemediationPath } from '@/lib/chapter-content'
@@ -240,7 +241,9 @@ export default function QuizClient({
       // Phase 6C-5: Trigger detection orchestration after quiz completion
       // This runs server-side detection and creates remediation cycles if needed
       // CRITICAL: Pass the exact persisted quiz_attempt.id for deterministic binding
-      if (isSupabaseConfigured() && chapterId === 'ch-2' && persistedQuizAttemptId) {
+      // C3-2: chapter support is resolved through the chapter registry rather
+      // than a hard-coded chapter gate.
+      if (isSupabaseConfigured() && isConceptDetectionSupported(chapterId) && persistedQuizAttemptId) {
         try {
           const response = await fetch('/api/remediation/detect', {
             method: 'POST',
