@@ -25,11 +25,16 @@
 import { createClient } from '@supabase/supabase-js'
 import type { QuizAttempt } from '@/types'
 import type { ConceptId, ChapterId } from '@/lib/reassessment/types'
-import type { DetectionState, DetectionConfidence, ConceptEvidence } from '@/lib/chapter-2-concepts/detection'
-import { detectAllConceptGaps } from '@/lib/chapter-2-concepts/detection'
-import { chapter2QuizQuestionMappings, chapter2ContentMappings, chapter2FlashcardMappings } from '@/lib/chapter-2-concepts/mappings'
-import { chapter2Concepts } from '@/lib/chapter-2-concepts/concepts'
-import type { ConceptId as Chapter2ConceptId } from '@/lib/chapter-2-concepts/types'
+import type {
+  ConceptDetectionResult,
+  DetectionState,
+  DetectionConfidence,
+  ConceptEvidence,
+} from '@/lib/concept-detection/engine'
+import {
+  getChapterDetectionProvider,
+  type ChapterRemediationAssignment,
+} from './chapter-registry'
 
 // ───────────────────────────────────────────────
 // Types
@@ -151,8 +156,11 @@ export class DetectionOrchestratorService {
     quizAttemptId: string
   ): Promise<DetectionOrchestrationResult> {
     try {
-      // Only Chapter 2 is currently supported for concept-level detection
-      if (chapterId !== 'ch-2') {
+      // Only chapters with a registered concept-detection provider participate
+      // in the detection handoff (C3-2: registry resolution replaces the
+      // hard-coded 'ch-2' gate).
+      const provider = getChapterDetectionProvider(chapterId)
+      if (!provider) {
         return {
           success: true,
           cyclesCreated: 0,
@@ -177,8 +185,9 @@ export class DetectionOrchestratorService {
         }
       }
 
-      // 2. Run detection using Phase 6B-3 engine
-      const detectionResults = detectAllConceptGaps(quizAttempts)
+      // 2. Run detection using the chapter's registered provider
+      // (shared Phase 6B-3 engine + canonical chapter binding)
+      const detectionResults = provider.detectAll(quizAttempts)
 
       // 3. Filter for concepts requiring intervention
       const conceptsRequiringIntervention = this.filterConceptsRequiringIntervention(detectionResults)
@@ -212,8 +221,8 @@ export class DetectionOrchestratorService {
         // Get next cycle number
         const cycleNumber = await this.dbClient.getNextCycleNumber(userId, concept.conceptId)
 
-        // Generate assignments from canonical mappings
-        const assignments = this.buildAssignmentsForConcept(concept.conceptId)
+        // Generate assignments from canonical mappings (via provider)
+        const assignments = provider.buildAssignmentsForConcept(concept.conceptId)
 
         // Create new remediation cycle with assignments atomically
         const cycleId = await this.dbClient.createRemediationCycleWithAssignments({
@@ -278,14 +287,14 @@ export class DetectionOrchestratorService {
    *   - currently_performing_well: Student is doing well
    */
   private filterConceptsRequiringIntervention(
-    detectionResults: Map<Chapter2ConceptId, { conceptId: Chapter2ConceptId; learningObjectiveId: string; state: DetectionState; confidence: DetectionConfidence; evidence: ConceptEvidence; flags: string[]; lastUpdated: string }>
+    detectionResults: Map<ConceptId, ConceptDetectionResult>
   ): ConceptRequiringIntervention[] {
     const concepts: ConceptRequiringIntervention[] = []
 
     for (const [conceptId, result] of detectionResults) {
       if (INTERVENTION_STATES.includes(result.state)) {
         concepts.push({
-          conceptId: conceptId as ConceptId,
+          conceptId,
           detectionState: result.state,
           detectionConfidence: result.confidence,
           evidence: result.evidence,
@@ -297,73 +306,10 @@ export class DetectionOrchestratorService {
   }
 
   /**
-   * Build remediation assignments for a concept using canonical mappings.
-   *
-   * Assignments are generated from:
-   *   1. Content blocks mapped to the concept (chapter2ContentMappings)
-   *   2. Flashcards mapped to the concept (chapter2FlashcardMappings)
-   *
-   * Priority order:
-   *   1. Primary content blocks (isPrimary = true)
-   *   2. Secondary content blocks
-   *   3. Flashcards
-   *
-   * @returns Array of assignment objects (without cycleId)
-   */
-  private buildAssignmentsForConcept(
-    conceptId: ConceptId
-  ): Array<{
-    assignmentType: 'content_block' | 'flashcard'
-    assetId: string
-    priority: number
-    isPrimary: boolean
-  }> {
-    const assignments: Array<{
-      assignmentType: 'content_block' | 'flashcard'
-      assetId: string
-      priority: number
-      isPrimary: boolean
-    }> = []
-
-    let priority = 1
-
-    // Add content block assignments
-    const contentMappings = chapter2ContentMappings.filter(
-      (m) => m.conceptId === conceptId
-    )
-
-    for (const mapping of contentMappings) {
-      assignments.push({
-        assignmentType: 'content_block',
-        assetId: mapping.contentBlockId,
-        priority: priority++,
-        isPrimary: true, // Content blocks are primary learning material
-      })
-    }
-
-    // Add flashcard assignments
-    const flashcardMappings = chapter2FlashcardMappings.filter(
-      (m) => m.conceptId === conceptId
-    )
-
-    for (const mapping of flashcardMappings) {
-      assignments.push({
-        assignmentType: 'flashcard',
-        assetId: mapping.flashcardId,
-        priority: priority++,
-        isPrimary: false, // Flashcards are supplementary
-      })
-    }
-
-    return assignments
-  }
-
-  /**
    * Get the concept name for display purposes.
    */
-  getConceptName(conceptId: ConceptId): string {
-    const concept = chapter2Concepts.find((c) => c.id === conceptId)
-    return concept?.name ?? conceptId
+  getConceptName(conceptId: ConceptId, chapterId: ChapterId = 'ch-2'): string {
+    return getChapterDetectionProvider(chapterId)?.getConceptName(conceptId) ?? conceptId
   }
 }
 

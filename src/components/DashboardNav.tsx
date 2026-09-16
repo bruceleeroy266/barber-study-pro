@@ -7,6 +7,7 @@ import { LayoutDashboard, BookOpen, TrendingUp, User, LogOut, GraduationCap, Shi
 import { supabase } from '@/lib/supabase'
 import { Profile } from '@/types'
 import { isInstructorOrAdmin, isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
+import { isDashboardNavItemActive } from '@/lib/nav-active'
 import { logLogout } from '@/app/(auth)/actions'
 import { Logo } from '@/components/brand'
 
@@ -17,7 +18,6 @@ interface DashboardNavProps {
 const baseNavItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/dashboard/chapters', label: 'Chapters', icon: BookOpen },
-  { href: '/dashboard/chapters', label: 'Flashcards', icon: RotateCcw },
   { href: '/dashboard/missed-questions', label: 'Missed Questions', icon: RotateCcw },
   { href: '/dashboard/progress', label: 'My Progress', icon: TrendingUp },
   { href: '/dashboard/grades', label: 'Grades', icon: Calculator },
@@ -127,7 +127,7 @@ export default function DashboardNav({ user }: DashboardNavProps) {
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                    pathname === item.href
+                    isDashboardNavItemActive(pathname, item.href)
                       ? 'bg-gold/10 text-gold border border-gold/20'
                       : 'text-silver-gray hover:bg-charcoal hover:text-white'
                   }`}
@@ -174,7 +174,7 @@ export default function DashboardNav({ user }: DashboardNavProps) {
                   key={item.href}
                   href={item.href}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                    pathname === item.href
+                    isDashboardNavItemActive(pathname, item.href)
                       ? 'bg-gold/10 text-gold border border-gold/20'
                       : 'text-silver-gray hover:bg-graphite hover:text-white'
                   }`}

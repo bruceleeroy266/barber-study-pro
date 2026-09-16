@@ -1,32 +1,28 @@
 /**
- * Chapter 2 Concept-Level Learning-Gap Detection
+ * Chapter 3 Concept-Level Learning-Gap Detection (C3-2)
  *
- * Phase 6B-3: Evidence-calibrated detection of concept-level learning gaps
- * using the Phase 6B-2 typed concept runtime architecture.
+ * Thin Chapter 3 binding over the shared chapter-independent detection
+ * engine (src/lib/concept-detection/engine.ts). Supplies the locked C3-1
+ * canonical assets — the four concept families, the canonical
+ * question→concept mappings, and the 30-question bank's correct answers —
+ * and exposes the same detection semantics Chapter 2 uses.
  *
- * Governing documents:
- *   - ASCYN_PRO_CH02_PHASE6B3_CONCEPT_GAP_DETECTION_REVIEW.md
- *   - ASCYN_PRO_CH02_PHASE6B3_THRESHOLD_STRESS_TEST.md
+ * Canonical data discipline: question→concept mappings are PROJECTED from
+ * chapter-3-concepts/mappings.ts at module load. Nothing is duplicated or
+ * restated. Chapter 3 has no reassessment reserve yet (C3-3), so the
+ * correct-answer map contains only the canonical 30-question bank.
  *
  * Scope: Detection only. No remediation routing, no reassessment,
  * no mastery policy, no instructor UI, no student-facing labels.
- *
- * C3-2 Slice 1: This module is now a thin Chapter 2 binding over the shared
- * chapter-independent detection engine (src/lib/concept-detection/engine.ts).
- * The algorithm, thresholds, and state semantics live in the engine and are
- * unchanged; this file only supplies the canonical Chapter 2 data (concepts,
- * question mappings, and the question-bank correct-answer map, including the
- * reassessment reserve) and preserves the established export surface.
  */
 
 import type {
-  ConceptId,
-  LearningObjectiveId,
+  Chapter3ConceptFamilyId,
+  Chapter3LearningObjectiveId,
 } from './types'
-import { chapter2Concepts } from './concepts'
-import { chapter2QuizQuestionMappings } from './mappings'
-import { chapter2PremiumQuizQuestions } from '../chapter-2-premium-quiz'
-import { chapter2ReassessmentQuestions } from '../chapter-2-reassessment-questions'
+import { chapter3ConceptFamilies } from './concepts'
+import { chapter3QuizQuestionConceptMappings } from './mappings'
+import { chapter3PremiumQuizQuestions } from '../chapter-3-premium-quiz'
 import type { QuizAttempt } from '@/types'
 import * as engine from '../concept-detection/engine'
 
@@ -42,37 +38,44 @@ export type {
 } from '../concept-detection/engine'
 
 export type ConceptEvidence = engine.ConceptEvidence<
-  ConceptId,
-  LearningObjectiveId
+  Chapter3ConceptFamilyId,
+  Chapter3LearningObjectiveId
 >
 
 export type ConceptDetectionResult = engine.ConceptDetectionResult<
-  ConceptId,
-  LearningObjectiveId
+  Chapter3ConceptFamilyId,
+  Chapter3LearningObjectiveId
 >
 
 export type LearningObjectiveDetectionResult =
-  engine.LearningObjectiveDetectionResult<ConceptId, LearningObjectiveId>
+  engine.LearningObjectiveDetectionResult<
+    Chapter3ConceptFamilyId,
+    Chapter3LearningObjectiveId
+  >
 
 // ───────────────────────────────────────────────
-// Chapter 2 Detection Input (canonical data binding)
+// Chapter 3 Detection Input (canonical data binding)
 // ───────────────────────────────────────────────
 
-// Post-lock additive: union the reassessment reserve so reserve answers
-// count as detection/evaluation evidence (unknown IDs are skipped by the
-// engine when building evidence).
+// Project the canonical question→concept-family mappings into the engine's
+// input shape. The mappings module remains the single source of truth.
+const chapter3QuestionMappings: readonly engine.DetectionQuestionMapping<Chapter3ConceptFamilyId>[] =
+  chapter3QuizQuestionConceptMappings.map((m) => ({
+    questionId: m.questionId,
+    conceptId: m.conceptFamilyId,
+  }))
+
+// Correct answers come from the canonical 30-question bank only.
 const questionCorrectAnswerMap: ReadonlyMap<string, string> = new Map(
-  [...chapter2PremiumQuizQuestions, ...chapter2ReassessmentQuestions].map(
-    (q) => [q.id, q.correct_answer],
-  ),
+  chapter3PremiumQuizQuestions.map((q) => [q.id, q.correct_answer]),
 )
 
-const chapter2DetectionInput: engine.ConceptDetectionInput<
-  ConceptId,
-  LearningObjectiveId
+const chapter3DetectionInput: engine.ConceptDetectionInput<
+  Chapter3ConceptFamilyId,
+  Chapter3LearningObjectiveId
 > = {
-  concepts: chapter2Concepts,
-  questionMappings: chapter2QuizQuestionMappings,
+  concepts: chapter3ConceptFamilies,
+  questionMappings: chapter3QuestionMappings,
   correctAnswers: questionCorrectAnswerMap,
 }
 
@@ -81,19 +84,19 @@ const chapter2DetectionInput: engine.ConceptDetectionInput<
 // ───────────────────────────────────────────────
 
 /**
- * Build concept-level evidence from quiz attempts.
+ * Build concept-family-level evidence from quiz attempts.
  *
  * Uses quiz_attempts.answers_json as the authoritative historical source.
  * Does NOT use missed_questions.times_missed for historical reconstruction.
  */
 export function buildConceptEvidence(
-  conceptId: ConceptId,
+  conceptFamilyId: Chapter3ConceptFamilyId,
   quizAttempts: QuizAttempt[],
 ): ConceptEvidence {
   return engine.buildConceptEvidence(
-    conceptId,
+    conceptFamilyId,
     quizAttempts,
-    chapter2DetectionInput,
+    chapter3DetectionInput,
   )
 }
 
@@ -102,14 +105,12 @@ export function buildConceptEvidence(
 // ───────────────────────────────────────────────
 
 /**
- * Detect concept-level learning gap state and confidence.
- *
- * Implements the refined stress-tested thresholds from Phase 6B-3.
+ * Detect concept-family learning gap state and confidence.
  */
 export function detectConceptState(
   evidence: ConceptEvidence,
 ): ConceptDetectionResult {
-  return engine.detectConceptState(evidence, chapter2DetectionInput)
+  return engine.detectConceptState(evidence, chapter3DetectionInput)
 }
 
 // ───────────────────────────────────────────────
@@ -117,23 +118,23 @@ export function detectConceptState(
 // ───────────────────────────────────────────────
 
 /**
- * Detect learning gaps for all Chapter 2 concepts.
+ * Detect learning gaps for all four locked Chapter 3 concept families.
  */
 export function detectAllConceptGaps(
   quizAttempts: QuizAttempt[],
-): Map<ConceptId, ConceptDetectionResult> {
-  return engine.detectAllConceptGaps(quizAttempts, chapter2DetectionInput)
+): Map<Chapter3ConceptFamilyId, ConceptDetectionResult> {
+  return engine.detectAllConceptGaps(quizAttempts, chapter3DetectionInput)
 }
 
 /**
- * Detect learning gaps for concepts with evidence only.
+ * Detect learning gaps for concept families with evidence only.
  */
 export function detectConceptGapsWithEvidence(
   quizAttempts: QuizAttempt[],
-): Map<ConceptId, ConceptDetectionResult> {
+): Map<Chapter3ConceptFamilyId, ConceptDetectionResult> {
   return engine.detectConceptGapsWithEvidence(
     quizAttempts,
-    chapter2DetectionInput,
+    chapter3DetectionInput,
   )
 }
 
@@ -142,10 +143,10 @@ export function detectConceptGapsWithEvidence(
 // ───────────────────────────────────────────────
 
 /**
- * Roll up concept-level detection to learning objectives.
+ * Roll up concept-family detection to learning objectives (1:1 for Ch3).
  */
 export function rollupToLearningObjectives(
-  conceptResults: Map<ConceptId, ConceptDetectionResult>,
-): Map<LearningObjectiveId, LearningObjectiveDetectionResult> {
+  conceptResults: Map<Chapter3ConceptFamilyId, ConceptDetectionResult>,
+): Map<Chapter3LearningObjectiveId, LearningObjectiveDetectionResult> {
   return engine.rollupToLearningObjectives(conceptResults)
 }
