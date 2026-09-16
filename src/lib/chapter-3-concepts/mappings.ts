@@ -187,6 +187,80 @@ export const chapter3ContentConceptMappings: readonly Chapter3ContentConceptMapp
 ] as const
 
 // ───────────────────────────────────────────────
+// Reassessment Reserve → Concept (C3-3 — 60 reserve questions)
+// ───────────────────────────────────────────────
+
+export const chapter3ReassessmentQuestionConceptMappings: readonly Chapter3QuizQuestionConceptMapping[] = [
+  // ch3-healthful-habits (15) — qq-3-045..059
+  { questionId: 'qq-3-045', conceptFamilyId: 'ch3-healthful-habits' },
+  { questionId: 'qq-3-046', conceptFamilyId: 'ch3-healthful-habits' },
+  { questionId: 'qq-3-047', conceptFamilyId: 'ch3-healthful-habits' },
+  { questionId: 'qq-3-048', conceptFamilyId: 'ch3-healthful-habits' },
+  { questionId: 'qq-3-049', conceptFamilyId: 'ch3-healthful-habits' },
+  { questionId: 'qq-3-050', conceptFamilyId: 'ch3-healthful-habits' },
+  { questionId: 'qq-3-051', conceptFamilyId: 'ch3-healthful-habits' },
+  { questionId: 'qq-3-052', conceptFamilyId: 'ch3-healthful-habits' },
+  { questionId: 'qq-3-053', conceptFamilyId: 'ch3-healthful-habits' },
+  { questionId: 'qq-3-054', conceptFamilyId: 'ch3-healthful-habits' },
+  { questionId: 'qq-3-055', conceptFamilyId: 'ch3-healthful-habits' },
+  { questionId: 'qq-3-056', conceptFamilyId: 'ch3-healthful-habits' },
+  { questionId: 'qq-3-057', conceptFamilyId: 'ch3-healthful-habits' },
+  { questionId: 'qq-3-058', conceptFamilyId: 'ch3-healthful-habits' },
+  { questionId: 'qq-3-059', conceptFamilyId: 'ch3-healthful-habits' },
+
+  // ch3-professional-image (15) — qq-3-060..074
+  { questionId: 'qq-3-060', conceptFamilyId: 'ch3-professional-image' },
+  { questionId: 'qq-3-061', conceptFamilyId: 'ch3-professional-image' },
+  { questionId: 'qq-3-062', conceptFamilyId: 'ch3-professional-image' },
+  { questionId: 'qq-3-063', conceptFamilyId: 'ch3-professional-image' },
+  { questionId: 'qq-3-064', conceptFamilyId: 'ch3-professional-image' },
+  { questionId: 'qq-3-065', conceptFamilyId: 'ch3-professional-image' },
+  { questionId: 'qq-3-066', conceptFamilyId: 'ch3-professional-image' },
+  { questionId: 'qq-3-067', conceptFamilyId: 'ch3-professional-image' },
+  { questionId: 'qq-3-068', conceptFamilyId: 'ch3-professional-image' },
+  { questionId: 'qq-3-069', conceptFamilyId: 'ch3-professional-image' },
+  { questionId: 'qq-3-070', conceptFamilyId: 'ch3-professional-image' },
+  { questionId: 'qq-3-071', conceptFamilyId: 'ch3-professional-image' },
+  { questionId: 'qq-3-072', conceptFamilyId: 'ch3-professional-image' },
+  { questionId: 'qq-3-073', conceptFamilyId: 'ch3-professional-image' },
+  { questionId: 'qq-3-074', conceptFamilyId: 'ch3-professional-image' },
+
+  // ch3-ergonomics (15) — qq-3-075..089
+  { questionId: 'qq-3-075', conceptFamilyId: 'ch3-ergonomics' },
+  { questionId: 'qq-3-076', conceptFamilyId: 'ch3-ergonomics' },
+  { questionId: 'qq-3-077', conceptFamilyId: 'ch3-ergonomics' },
+  { questionId: 'qq-3-078', conceptFamilyId: 'ch3-ergonomics' },
+  { questionId: 'qq-3-079', conceptFamilyId: 'ch3-ergonomics' },
+  { questionId: 'qq-3-080', conceptFamilyId: 'ch3-ergonomics' },
+  { questionId: 'qq-3-081', conceptFamilyId: 'ch3-ergonomics' },
+  { questionId: 'qq-3-082', conceptFamilyId: 'ch3-ergonomics' },
+  { questionId: 'qq-3-083', conceptFamilyId: 'ch3-ergonomics' },
+  { questionId: 'qq-3-084', conceptFamilyId: 'ch3-ergonomics' },
+  { questionId: 'qq-3-085', conceptFamilyId: 'ch3-ergonomics' },
+  { questionId: 'qq-3-086', conceptFamilyId: 'ch3-ergonomics' },
+  { questionId: 'qq-3-087', conceptFamilyId: 'ch3-ergonomics' },
+  { questionId: 'qq-3-088', conceptFamilyId: 'ch3-ergonomics' },
+  { questionId: 'qq-3-089', conceptFamilyId: 'ch3-ergonomics' },
+
+  // ch3-human-relations (15) — qq-3-090..104
+  { questionId: 'qq-3-090', conceptFamilyId: 'ch3-human-relations' },
+  { questionId: 'qq-3-091', conceptFamilyId: 'ch3-human-relations' },
+  { questionId: 'qq-3-092', conceptFamilyId: 'ch3-human-relations' },
+  { questionId: 'qq-3-093', conceptFamilyId: 'ch3-human-relations' },
+  { questionId: 'qq-3-094', conceptFamilyId: 'ch3-human-relations' },
+  { questionId: 'qq-3-095', conceptFamilyId: 'ch3-human-relations' },
+  { questionId: 'qq-3-096', conceptFamilyId: 'ch3-human-relations' },
+  { questionId: 'qq-3-097', conceptFamilyId: 'ch3-human-relations' },
+  { questionId: 'qq-3-098', conceptFamilyId: 'ch3-human-relations' },
+  { questionId: 'qq-3-099', conceptFamilyId: 'ch3-human-relations' },
+  { questionId: 'qq-3-100', conceptFamilyId: 'ch3-human-relations' },
+  { questionId: 'qq-3-101', conceptFamilyId: 'ch3-human-relations' },
+  { questionId: 'qq-3-102', conceptFamilyId: 'ch3-human-relations' },
+  { questionId: 'qq-3-103', conceptFamilyId: 'ch3-human-relations' },
+  { questionId: 'qq-3-104', conceptFamilyId: 'ch3-human-relations' },
+] as const
+
+// ───────────────────────────────────────────────
 // Lookup helpers (future C3-2 consumers + tests)
 // ───────────────────────────────────────────────
 
@@ -194,7 +268,9 @@ const flashcardMap = new Map(
   chapter3FlashcardConceptMappings.map((m) => [m.flashcardId, m.conceptFamilyId])
 )
 const quizQuestionMap = new Map(
-  chapter3QuizQuestionConceptMappings.map((m) => [m.questionId, m.conceptFamilyId])
+  [...chapter3QuizQuestionConceptMappings, ...chapter3ReassessmentQuestionConceptMappings].map(
+    (m) => [m.questionId, m.conceptFamilyId]
+  )
 )
 const contentBlockMap = new Map(
   chapter3ContentConceptMappings.map((m) => [m.contentBlockId, m.conceptFamilyId])
