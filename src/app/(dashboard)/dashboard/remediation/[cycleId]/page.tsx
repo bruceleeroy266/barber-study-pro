@@ -13,7 +13,12 @@ import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createSupabaseStudentRemediationClient } from '@/lib/remediation/supabase-client'
 import { createStudentRemediationService } from '@/lib/remediation/student-service'
-import { buildRemediationContentBundle } from '@/lib/remediation/content-filter'
+import { getChapterContentProvider } from '@/lib/remediation/content-provider-registry'
+import {
+  createSupabaseKnowledgeCheckClient,
+  getKnowledgeCheckLength,
+  getKnowledgeCheckProgress,
+} from '@/lib/remediation/knowledge-check'
 import { STUDENT_STATE_LABELS, STUDENT_STATE_DESCRIPTIONS } from '@/lib/remediation/student-service'
 import type { ConceptId } from '@/lib/chapter-2-concepts/types'
 import RemediationPageClient from '@/components/remediation/RemediationPageClient'
@@ -62,14 +67,70 @@ export default async function RemediationPage({ params }: RemediationPageProps) 
   // Derive student-facing state
   const studentState = service.deriveStudentState(cycle)
 
-  // Build content bundle
-  const contentBundle = buildRemediationContentBundle(cycle.conceptId as ConceptId)
+  // Build content bundle from the cycle's chapter provider (C3-3: resolved
+  // from cycle.chapterId — no chapter-2-only assumption)
+  const contentProvider = getChapterContentProvider(cycle.chapterId)
+  if (!contentProvider) {
+    notFound()
+  }
+  const contentBundle = contentProvider.buildRemediationContentBundle(cycle.conceptId as ConceptId)
 
   // Get review progress
   const progressResult = await service.getReviewProgress(cycleId, user.id)
   const progress = 'error' in progressResult
     ? { completed: 0, total: 0, percentage: 0 }
     : progressResult
+
+  // Knowledge-check recovery data (C3-3 stages 5–6): persisted progress plus
+  // any open (reserved-but-not-consumed) question so a reload mid-check
+  // resumes exactly where the student left off.
+  const knowledgeCheckClient = createSupabaseKnowledgeCheckClient()
+  const requiredCount = getKnowledgeCheckLength(cycle.chapterId)
+  const kcProgress = await getKnowledgeCheckProgress(
+    knowledgeCheckClient,
+    cycleId,
+    user.id,
+    requiredCount
+  )
+
+  let openQuestion: {
+    questionId: string
+    reservationId: string
+    question: {
+      id: string
+      question: string
+      answer_a: string
+      answer_b: string
+      answer_c: string
+      answer_d: string
+      explanation: string | null
+    }
+  } | null = null
+
+  if (kcProgress.openReservation) {
+    const q = contentProvider.getQuizQuestionById(kcProgress.openReservation.questionId)
+    if (q) {
+      openQuestion = {
+        questionId: q.id,
+        reservationId: kcProgress.openReservation.reservationId,
+        question: {
+          id: q.id,
+          question: q.question,
+          answer_a: q.answer_a,
+          answer_b: q.answer_b,
+          answer_c: q.answer_c,
+          answer_d: q.answer_d,
+          explanation: q.explanation,
+        },
+      }
+    }
+  }
+
+  const knowledgeCheck = {
+    answeredCount: kcProgress.answeredCount,
+    totalQuestions: requiredCount,
+    openQuestion,
+  }
 
   return (
     <div className="space-y-8">
@@ -144,6 +205,7 @@ export default async function RemediationPage({ params }: RemediationPageProps) 
         contentBundle={contentBundle}
         assignments={assignments}
         progress={progress}
+        knowledgeCheck={knowledgeCheck}
       />
     </div>
   )

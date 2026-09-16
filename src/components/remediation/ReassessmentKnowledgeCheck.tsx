@@ -24,6 +24,9 @@ interface ReassessmentKnowledgeCheckProps {
   onSubmit: (answer: string) => void
   isLoading: boolean
   disabled?: boolean
+  /** C3-3 sequence progress — shown only when the check has more than one question. */
+  questionNumber?: number
+  totalQuestions?: number
 }
 
 export default function ReassessmentKnowledgeCheck({
@@ -31,6 +34,8 @@ export default function ReassessmentKnowledgeCheck({
   onSubmit,
   isLoading,
   disabled = false,
+  questionNumber,
+  totalQuestions,
 }: ReassessmentKnowledgeCheckProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
 
@@ -55,9 +60,15 @@ export default function ReassessmentKnowledgeCheck({
           <h2 className="text-xl font-semibold text-white">
             Knowledge Check
           </h2>
-          <p className="text-silver text-sm mt-1">
-            This is the question for your current attempt.
-          </p>
+          {totalQuestions !== undefined && totalQuestions > 1 && questionNumber !== undefined ? (
+            <p className="text-[var(--color-brand-gold)] text-sm font-medium mt-1">
+              Question {questionNumber} of {totalQuestions}
+            </p>
+          ) : (
+            <p className="text-silver text-sm mt-1">
+              This is the question for your current attempt.
+            </p>
+          )}
         </div>
 
         {/* Question */}

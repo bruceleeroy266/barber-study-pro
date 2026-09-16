@@ -21,8 +21,12 @@ import type {
   Chapter3LearningObjectiveId,
 } from './types'
 import { chapter3ConceptFamilies } from './concepts'
-import { chapter3QuizQuestionConceptMappings } from './mappings'
+import {
+  chapter3QuizQuestionConceptMappings,
+  chapter3ReassessmentQuestionConceptMappings,
+} from './mappings'
 import { chapter3PremiumQuizQuestions } from '../chapter-3-premium-quiz'
+import { chapter3ReassessmentQuestions } from '../chapter-3-reassessment-questions'
 import type { QuizAttempt } from '@/types'
 import * as engine from '../concept-detection/engine'
 
@@ -58,16 +62,25 @@ export type LearningObjectiveDetectionResult =
 // ───────────────────────────────────────────────
 
 // Project the canonical question→concept-family mappings into the engine's
-// input shape. The mappings module remains the single source of truth.
+// input shape. Post-lock additive (C3-3): the reassessment reserve mappings
+// are unioned so reserve questions count as detection/evaluation evidence —
+// exactly mirroring Chapter 2's binding. Initial-quiz detection is unchanged:
+// reserve IDs never appear in initial-quiz answers_json.
 const chapter3QuestionMappings: readonly engine.DetectionQuestionMapping<Chapter3ConceptFamilyId>[] =
-  chapter3QuizQuestionConceptMappings.map((m) => ({
-    questionId: m.questionId,
-    conceptId: m.conceptFamilyId,
-  }))
+  [...chapter3QuizQuestionConceptMappings, ...chapter3ReassessmentQuestionConceptMappings].map(
+    (m) => ({
+      questionId: m.questionId,
+      conceptId: m.conceptFamilyId,
+    }),
+  )
 
-// Correct answers come from the canonical 30-question bank only.
+// Correct answers come from the canonical 30-question bank plus the
+// reassessment reserve (C3-3), unknown IDs are skipped by the engine.
 const questionCorrectAnswerMap: ReadonlyMap<string, string> = new Map(
-  chapter3PremiumQuizQuestions.map((q) => [q.id, q.correct_answer]),
+  [...chapter3PremiumQuizQuestions, ...chapter3ReassessmentQuestions].map((q) => [
+    q.id,
+    q.correct_answer,
+  ]),
 )
 
 const chapter3DetectionInput: engine.ConceptDetectionInput<

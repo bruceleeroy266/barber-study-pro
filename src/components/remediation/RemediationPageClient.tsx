@@ -22,12 +22,32 @@ import ReassessmentKnowledgeCheck from './ReassessmentKnowledgeCheck'
 import RemediationOutcome from './RemediationOutcome'
 import { Button, Card, Badge, AlertPanel } from '@/components/ui'
 
+interface KnowledgeCheckQuestion {
+  id: string
+  question: string
+  answer_a: string
+  answer_b: string
+  answer_c: string
+  answer_d: string
+  explanation: string | null
+}
+
 interface RemediationPageClientProps {
   cycleId: string
   studentState: StudentRemediationState
   contentBundle: RemediationContentBundle
   assignments: RemediationAssignment[]
   progress: { completed: number; total: number; percentage: number }
+  /** C3-3 stages 5–6: persisted knowledge-check progress for reload recovery. */
+  knowledgeCheck?: {
+    answeredCount: number
+    totalQuestions: number
+    openQuestion?: {
+      questionId: string
+      reservationId: string
+      question: KnowledgeCheckQuestion
+    } | null
+  }
 }
 
 export default function RemediationPageClient({
@@ -36,6 +56,7 @@ export default function RemediationPageClient({
   contentBundle,
   assignments,
   progress: initialProgress,
+  knowledgeCheck,
 }: RemediationPageClientProps) {
   const router = useRouter()
   const [studentState, setStudentState] = useState<StudentRemediationState>(initialState)
@@ -62,17 +83,24 @@ export default function RemediationPageClient({
   const [reassessmentData, setReassessmentData] = useState<{
     questionId: string
     reservationId: string
-    quizAttemptId: string
-    question: {
-      id: string
-      question: string
-      answer_a: string
-      answer_b: string
-      answer_c: string
-      answer_d: string
-      explanation: string | null
+    quizAttemptId?: string
+    question: KnowledgeCheckQuestion
+  } | null>(() => {
+    // C3-3 stage 6: reload recovery — resume the exact open (reserved but
+    // not consumed) question from persisted state.
+    if (initialState === 'reassessment_in_progress' && knowledgeCheck?.openQuestion) {
+      return {
+        questionId: knowledgeCheck.openQuestion.questionId,
+        reservationId: knowledgeCheck.openQuestion.reservationId,
+        question: knowledgeCheck.openQuestion.question,
+      }
     }
-  } | null>(null)
+    return null
+  })
+  const [questionNumber, setQuestionNumber] = useState<number>(
+    () => (knowledgeCheck?.answeredCount ?? 0) + 1
+  )
+  const totalQuestions = knowledgeCheck?.totalQuestions ?? 1
 
   const [outcome, setOutcome] = useState<{
     isCorrect: boolean
@@ -175,7 +203,7 @@ export default function RemediationPageClient({
     endAction()
   }, [beginAction, endAction, recordEvent])
 
-  const handleStartReassessment = useCallback(async () => {
+  const startKnowledgeCheckQuestion = useCallback(async () => {
     if (!beginAction('start-reassessment')) return
     setError(null)
 
@@ -192,6 +220,12 @@ export default function RemediationPageClient({
           setStudentState('pool_exhausted')
           return
         }
+        if (data.knowledgeCheckComplete) {
+          setError(
+            'Your knowledge check for this focus area is already complete. Refresh to view your current status.'
+          )
+          return
+        }
         throw new Error(data.error || 'We could not prepare your knowledge check. Please try again.')
       }
 
@@ -201,6 +235,9 @@ export default function RemediationPageClient({
         quizAttemptId: data.quizAttemptId,
         question: data.question,
       })
+      if (data.knowledgeCheck?.questionNumber) {
+        setQuestionNumber(data.knowledgeCheck.questionNumber)
+      }
       setReservationStartedAt(new Date())
       setStudentState('reassessment_in_progress')
     } catch (err) {
@@ -245,6 +282,21 @@ export default function RemediationPageClient({
         throw new Error(data.error || 'We could not submit your answer. Please try again.')
       }
 
+      // C3-3 stage 5: mid-sequence answers (questions 1..N-1) do NOT show an
+      // outcome screen — continue directly to the next question. Only the
+      // final question's response carries an evaluation outcome.
+      if (
+        data.knowledgeCheck &&
+        data.knowledgeCheck.answeredCount < data.knowledgeCheck.totalQuestions
+      ) {
+        setOutcome(null)
+        setReassessmentData(null)
+        setReservationStartedAt(null)
+        endAction()
+        await startKnowledgeCheckQuestion()
+        return
+      }
+
       setOutcome({
         isCorrect: data.isCorrect,
         outcome: data.outcome,
@@ -259,7 +311,7 @@ export default function RemediationPageClient({
     } finally {
       endAction()
     }
-  }, [beginAction, cycleId, endAction, reassessmentData, reservationIsStale])
+  }, [beginAction, cycleId, endAction, reassessmentData, reservationIsStale, startKnowledgeCheckQuestion])
 
   const handleTryAgain = useCallback(() => {
     setOutcome(null)
@@ -397,7 +449,7 @@ export default function RemediationPageClient({
                 <Button
                   variant="primary"
                   size="lg"
-                  onClick={handleStartReassessment}
+                  onClick={startKnowledgeCheckQuestion}
                   disabled={actionInFlight}
                   loading={activeAction === 'start-reassessment'}
                 >
@@ -411,12 +463,24 @@ export default function RemediationPageClient({
       case 'reassessment_in_progress':
         if (!reassessmentData) {
           return (
-            <AlertPanel
-              title="Knowledge check unavailable"
-              description="We could not restore this knowledge check session. Refresh the page to resume safely from your saved progress."
-              variant="error"
-              action={{ label: 'Refresh', onClick: handleRefresh }}
-            />
+            <Card className="p-6 text-center">
+              <h2 className="text-lg font-semibold text-white mb-2">
+                Continue Knowledge Check
+              </h2>
+              <p className="text-silver mb-6">
+                {totalQuestions > 1
+                  ? `Your progress is saved. Continue with question ${questionNumber} of ${totalQuestions}.`
+                  : 'Your progress is saved. Continue your knowledge check when you are ready.'}
+              </p>
+              <Button
+                variant="primary"
+                onClick={startKnowledgeCheckQuestion}
+                disabled={actionInFlight}
+                loading={activeAction === 'start-reassessment'}
+              >
+                {activeAction === 'start-reassessment' ? 'Preparing...' : 'Continue Knowledge Check'}
+              </Button>
+            </Card>
           )
         }
         return (
@@ -434,6 +498,8 @@ export default function RemediationPageClient({
               onSubmit={handleSubmitAnswer}
               isLoading={activeAction === 'submit-answer'}
               disabled={reservationIsStale}
+              questionNumber={questionNumber}
+              totalQuestions={totalQuestions}
             />
           </div>
         )

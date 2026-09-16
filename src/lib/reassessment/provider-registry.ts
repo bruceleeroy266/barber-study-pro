@@ -11,13 +11,19 @@
  */
 
 import type { ChapterId, ICanonicalMappingProvider, ConceptId } from './types'
-import type { DetectionState, DetectionConfidence, ConceptEvidence } from '../chapter-2-concepts/detection'
+import type { DetectionState, DetectionConfidence, ConceptEvidence } from '../concept-detection/engine'
 import { getChapter2MappingProvider } from './adapters/chapter-2-adapter'
+import { getChapter3MappingProvider } from './adapters/chapter-3-adapter'
 import {
   Chapter2DetectionProvider,
   createChapter2DetectionProvider,
   type Chapter2DetectionProviderConfig,
 } from './adapters/chapter-2-detection-provider'
+import {
+  Chapter3DetectionProvider,
+  createChapter3DetectionProvider,
+  type Chapter3DetectionProviderConfig,
+} from './adapters/chapter-3-detection-provider'
 
 // ───────────────────────────────────────────────
 // Concept Detection Provider Interface
@@ -66,6 +72,8 @@ class MappingProviderRegistry {
   constructor() {
     // Register Chapter 2 as the reference implementation
     this.registerProvider(getChapter2MappingProvider())
+    // Register Chapter 3 (C3-3)
+    this.registerProvider(getChapter3MappingProvider())
   }
 
   /**
@@ -235,4 +243,43 @@ export function initializeChapter2DetectionProvider(
   const registry = getDetectionProviderRegistry()
   registry.registerProvider(provider)
   return provider
+}
+
+/**
+ * Initialize and register the Chapter 3 detection provider (C3-3).
+ *
+ * This function creates the Chapter3DetectionProvider with the given
+ * configuration and registers it in the detection provider registry.
+ *
+ * @param config - Configuration with fetchQuizAttempts callback
+ * @returns The registered Chapter3DetectionProvider instance
+ */
+export function initializeChapter3DetectionProvider(
+  config: Chapter3DetectionProviderConfig
+): Chapter3DetectionProvider {
+  const provider = createChapter3DetectionProvider(config)
+  const registry = getDetectionProviderRegistry()
+  registry.registerProvider(provider)
+  return provider
+}
+
+/**
+ * Initialize and register the detection provider for a chapter (C3-3).
+ *
+ * Chapter-aware resolution used by the reassessment submission path:
+ * resolves and registers the correct provider per chapter instead of
+ * hard-coding Chapter 2. Returns undefined for unsupported chapters
+ * (fail-closed).
+ */
+export function initializeChapterDetectionProvider(
+  chapterId: ChapterId,
+  config: Chapter2DetectionProviderConfig
+): IConceptDetectionProvider | undefined {
+  if (chapterId === 'ch-2') {
+    return initializeChapter2DetectionProvider(config)
+  }
+  if (chapterId === 'ch-3') {
+    return initializeChapter3DetectionProvider(config)
+  }
+  return undefined
 }

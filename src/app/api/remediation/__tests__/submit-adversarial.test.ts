@@ -61,9 +61,9 @@ vi.mock('@/lib/remediation/student-service', () => ({
   },
 }))
 
-vi.mock('@/lib/remediation/content-filter', () => ({
-  buildRemediationContentBundle: vi.fn(),
-  getQuizQuestionById: vi.fn(),
+vi.mock('@/lib/remediation/content-provider-registry', () => ({
+  getChapterContentProvider: vi.fn(),
+  hasChapterContentProvider: vi.fn(),
 }))
 
 vi.mock('@/lib/reassessment/supabase-client', () => ({
@@ -84,6 +84,16 @@ vi.mock('@/lib/evaluation/evaluation-service', () => ({
 
 vi.mock('@/lib/reassessment/provider-registry', () => ({
   initializeChapter2DetectionProvider: vi.fn(),
+  initializeChapterDetectionProvider: vi.fn(),
+  hasCanonicalMappingProvider: vi.fn(),
+  getCanonicalMappingProvider: vi.fn(),
+}))
+
+vi.mock('@/lib/remediation/knowledge-check', () => ({
+  createSupabaseKnowledgeCheckClient: vi.fn(),
+  getKnowledgeCheckLength: vi.fn(),
+  getKnowledgeCheckProgress: vi.fn(),
+  getConsumedAttemptId: vi.fn(),
 }))
 
 vi.mock('@supabase/supabase-js', () => ({
@@ -177,12 +187,23 @@ async function setupMocks(options: {
   const { createClient } = await import('@/lib/supabase-server')
   const { createSupabaseStudentRemediationClient } = await import('@/lib/remediation/supabase-client')
   const { createStudentRemediationService } = await import('@/lib/remediation/student-service')
-  const { getQuizQuestionById } = await import('@/lib/remediation/content-filter')
+  const { getChapterContentProvider } = await import('@/lib/remediation/content-provider-registry')
   const { createSupabaseEvaluationClient } = await import('@/lib/evaluation/supabase-client')
   const { createEvaluationService } = await import('@/lib/evaluation/evaluation-service')
   const { createSupabaseExclusionClient } = await import('@/lib/reassessment/supabase-client')
   const { createReassessmentService } = await import('@/lib/reassessment/reassessment-service')
   const { createClient: createSupabaseClient } = await import('@supabase/supabase-js')
+  const {
+    hasCanonicalMappingProvider,
+    getCanonicalMappingProvider,
+    initializeChapterDetectionProvider,
+  } = await import('@/lib/reassessment/provider-registry')
+  const {
+    createSupabaseKnowledgeCheckClient,
+    getKnowledgeCheckLength,
+    getKnowledgeCheckProgress,
+    getConsumedAttemptId,
+  } = await import('@/lib/remediation/knowledge-check')
 
   // Auth mock
   const user = options.authenticatedUser
@@ -208,12 +229,51 @@ async function setupMocks(options: {
   vi.mocked(createStudentRemediationService).mockReturnValue(mockService as any)
   vi.mocked(createSupabaseStudentRemediationClient).mockReturnValue({} as any)
 
-  // Question mock
-  vi.mocked(getQuizQuestionById).mockImplementation((id: string) => {
-    if (id === QUESTION_ID) return MOCK_QUESTION as any
-    if (id === WRONG_CONCEPT_QUESTION_ID) return { ...MOCK_QUESTION, id: WRONG_CONCEPT_QUESTION_ID } as any
-    return null
+  // Chapter-aware provider mocks (C3-3 architecture)
+  vi.mocked(hasCanonicalMappingProvider).mockReturnValue(true)
+  vi.mocked(getCanonicalMappingProvider).mockReturnValue({
+    chapterId: 'ch-2',
+    getConceptForQuestion: (questionId: string) => {
+      if (questionId === QUESTION_ID) return CONCEPT_ID
+      if (questionId === WRONG_CONCEPT_QUESTION_ID) return OTHER_CONCEPT_ID
+      return undefined
+    },
+    isQuestionMappedToConcept: (questionId: string, conceptId: string) =>
+      (questionId === QUESTION_ID && conceptId === CONCEPT_ID) ||
+      (questionId === WRONG_CONCEPT_QUESTION_ID && conceptId === OTHER_CONCEPT_ID),
+    getQuestionsForConcept: () => [QUESTION_ID],
+    getAllConceptIds: () => [CONCEPT_ID],
+    getAllQuestionIds: () => [QUESTION_ID, WRONG_CONCEPT_QUESTION_ID],
+  } as any)
+  vi.mocked(initializeChapterDetectionProvider).mockReturnValue({ chapterId: 'ch-2' } as any)
+
+  // Content provider mock — same question data as before, served through the
+  // chapter-aware registry seam.
+  vi.mocked(getChapterContentProvider).mockReturnValue({
+    chapterId: 'ch-2',
+    getQuizQuestionById: (id: string) => {
+      if (id === QUESTION_ID) return MOCK_QUESTION as any
+      if (id === WRONG_CONCEPT_QUESTION_ID) return { ...MOCK_QUESTION, id: WRONG_CONCEPT_QUESTION_ID } as any
+      return null
+    },
+  } as any)
+
+  // Knowledge-check sequencing mock — Chapter 2 semantics: the single
+  // persisted attempt completes the check and becomes the evaluation evidence.
+  vi.mocked(createSupabaseKnowledgeCheckClient).mockReturnValue({
+    getReassessmentReservationsForCycle: vi.fn().mockResolvedValue([]),
+    getReassessmentAttemptsForCycle: vi.fn().mockResolvedValue([]),
+    quizAttemptExists: vi.fn().mockResolvedValue(false),
+  } as any)
+  vi.mocked(getKnowledgeCheckLength).mockReturnValue(1)
+  vi.mocked(getKnowledgeCheckProgress).mockResolvedValue({
+    answeredAttemptIds: [REAL_ATTEMPT_ID],
+    answeredCount: 1,
+    requiredCount: 1,
+    isComplete: true,
+    openReservation: null,
   })
+  vi.mocked(getConsumedAttemptId).mockResolvedValue(null)
 
   // Supabase admin client mock (for RPC)
   const mockRpc = vi.fn().mockResolvedValue(
