@@ -262,3 +262,24 @@ export function initializeChapter3DetectionProvider(
   registry.registerProvider(provider)
   return provider
 }
+
+/**
+ * Initialize and register the detection provider for a chapter (C3-3).
+ *
+ * Chapter-aware resolution used by the reassessment submission path:
+ * resolves and registers the correct provider per chapter instead of
+ * hard-coding Chapter 2. Returns undefined for unsupported chapters
+ * (fail-closed).
+ */
+export function initializeChapterDetectionProvider(
+  chapterId: ChapterId,
+  config: Chapter2DetectionProviderConfig
+): IConceptDetectionProvider | undefined {
+  if (chapterId === 'ch-2') {
+    return initializeChapter2DetectionProvider(config)
+  }
+  if (chapterId === 'ch-3') {
+    return initializeChapter3DetectionProvider(config)
+  }
+  return undefined
+}

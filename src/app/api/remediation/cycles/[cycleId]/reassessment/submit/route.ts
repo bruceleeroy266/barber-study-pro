@@ -32,11 +32,14 @@ import { createSupabaseEvaluationClient } from '@/lib/evaluation/supabase-client
 import { createEvaluationService } from '@/lib/evaluation/evaluation-service'
 import { createSupabaseExclusionClient } from '@/lib/reassessment/supabase-client'
 import { createReassessmentService } from '@/lib/reassessment/reassessment-service'
-import { getQuizQuestionById } from '@/lib/remediation/content-filter'
-import { initializeChapter2DetectionProvider } from '@/lib/reassessment/provider-registry'
+import { getChapterContentProvider } from '@/lib/remediation/content-provider-registry'
+import {
+  hasCanonicalMappingProvider,
+  getCanonicalMappingProvider,
+  initializeChapterDetectionProvider,
+} from '@/lib/reassessment/provider-registry'
 import { STUDENT_STATE_LABELS, STUDENT_STATE_DESCRIPTIONS } from '@/lib/remediation/student-service'
 import type { StudentRemediationState } from '@/lib/remediation/student-service'
-import { chapter2QuizQuestionMappings } from '@/lib/chapter-2-concepts/mappings'
 import { recordLearningActivity } from '@/lib/learning-activity'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 
@@ -83,26 +86,42 @@ export async function POST(
 
     const { cycle } = cycleResult
 
-    // CORRECTION 4: Verify question→concept binding against canonical mapping
-    // The reserved question must be canonically mapped to the cycle's concept
-    const canonicalMapping = chapter2QuizQuestionMappings.find(
-      (m) => m.questionId === questionId
-    )
-    if (!canonicalMapping) {
+    // Chapter awareness (C3-3): all canonical resolution below is driven by
+    // cycle.chapterId. Unsupported chapters fail closed.
+    if (!hasCanonicalMappingProvider(cycle.chapterId)) {
+      return NextResponse.json(
+        { error: `Chapter ${cycle.chapterId} does not support reassessment` },
+        { status: 400 }
+      )
+    }
+
+    const contentProvider = getChapterContentProvider(cycle.chapterId)
+    if (!contentProvider) {
+      return NextResponse.json(
+        { error: `Chapter ${cycle.chapterId} does not support reassessment` },
+        { status: 400 }
+      )
+    }
+
+    // CORRECTION 4: Verify question→concept binding against the canonical
+    // mapping for the cycle's chapter (resolved from cycle.chapterId — no
+    // direct chapter-2 mapping assumptions).
+    const mappingProvider = getCanonicalMappingProvider(cycle.chapterId)
+    if (!mappingProvider.getConceptForQuestion(questionId)) {
       return NextResponse.json(
         { error: 'Question not found in canonical mapping' },
         { status: 400 }
       )
     }
-    if (canonicalMapping.conceptId !== cycle.conceptId) {
+    if (!mappingProvider.isQuestionMappedToConcept(questionId, cycle.conceptId)) {
       return NextResponse.json(
         { error: 'Question is not mapped to this remediation cycle\'s concept' },
         { status: 400 }
       )
     }
 
-    // Verify the question exists in the question bank and get the correct answer
-    const question = getQuizQuestionById(questionId)
+    // Verify the question exists in the chapter's question bank and get the correct answer
+    const question = contentProvider.getQuizQuestionById(questionId)
     if (!question) {
       return NextResponse.json(
         { error: 'Question not found' },
@@ -185,7 +204,8 @@ export async function POST(
     // Record reassessment completed
     await service.recordReassessmentCompleted(cycleId, user.id)
 
-    // Initialize the Chapter 2 detection provider for evaluation
+    // Initialize the chapter's detection provider for evaluation (C3-3:
+    // resolved from cycle.chapterId instead of hard-coding Chapter 2).
     const exclusionDbClient = createSupabaseExclusionClient()
     const reassessmentService = createReassessmentService(exclusionDbClient, cycle.chapterId)
 
@@ -199,11 +219,20 @@ export async function POST(
       return data || []
     }
 
-    initializeChapter2DetectionProvider({ fetchQuizAttempts })
+    const detectionProvider = initializeChapterDetectionProvider(cycle.chapterId, { fetchQuizAttempts })
+    if (!detectionProvider) {
+      return NextResponse.json(
+        { error: `Chapter ${cycle.chapterId} does not support reassessment` },
+        { status: 400 }
+      )
+    }
 
-    // Create evaluation service
+    // Create evaluation service WITH the resolved detection provider.
+    // C3-3 fix: the provider is actually supplied here — previously the
+    // service was constructed without it, so evaluateCycleWithDetection could
+    // never run and every submission remained permanently pending.
     const evaluationDbClient = createSupabaseEvaluationClient()
-    const evaluationService = createEvaluationService(evaluationDbClient)
+    const evaluationService = createEvaluationService(evaluationDbClient, detectionProvider)
 
     // Run the evaluation using the detection provider
     // CORRECTION 6: The evidence now satisfies 6C-2d validate_evaluation_evidence()

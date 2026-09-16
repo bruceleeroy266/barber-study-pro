@@ -15,7 +15,7 @@ import { createSupabaseStudentRemediationClient } from '@/lib/remediation/supaba
 import { createStudentRemediationService } from '@/lib/remediation/student-service'
 import { createSupabaseExclusionClient } from '@/lib/reassessment/supabase-client'
 import { createReassessmentService } from '@/lib/reassessment/reassessment-service'
-import { getQuizQuestionById } from '@/lib/remediation/content-filter'
+import { getChapterContentProvider } from '@/lib/remediation/content-provider-registry'
 import { STUDENT_STATE_LABELS, STUDENT_STATE_DESCRIPTIONS } from '@/lib/remediation/student-service'
 import { recordLearningActivity } from '@/lib/learning-activity'
 
@@ -61,6 +61,16 @@ export async function POST(
 
     const { cycle } = cycleResult
 
+    // Chapter awareness (C3-3): resolve the content provider for the cycle's
+    // chapter. Unsupported chapters fail closed.
+    const contentProvider = getChapterContentProvider(cycle.chapterId)
+    if (!contentProvider) {
+      return NextResponse.json(
+        { error: `Chapter ${cycle.chapterId} does not support reassessment` },
+        { status: 400 }
+      )
+    }
+
     // Create a placeholder quiz attempt ID for the reservation.
     // CORRECTION 3: This UUID is a reservation placeholder stored in
     // reassessment_question_history.quiz_attempt_id. It is NOT a real
@@ -99,8 +109,8 @@ export async function POST(
       )
     }
 
-    // Fetch the reserved question
-    const question = getQuizQuestionById(reservationResult.questionId!)
+    // Fetch the reserved question from the chapter's bank (initial + reserve)
+    const question = contentProvider.getQuizQuestionById(reservationResult.questionId!)
     if (!question) {
       return NextResponse.json(
         { error: 'Reserved question not found in question bank' },
