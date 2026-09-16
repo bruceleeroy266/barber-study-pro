@@ -6,7 +6,7 @@
  */
 
 import type { ChapterId, ConceptId } from '../reassessment/types'
-import type { DetectionState, DetectionConfidence, ConceptEvidence } from '../chapter-2-concepts/detection'
+import type { DetectionState, DetectionConfidence, ConceptEvidence } from '../concept-detection/engine'
 
 // ───────────────────────────────────────────────
 // Re-export for convenience

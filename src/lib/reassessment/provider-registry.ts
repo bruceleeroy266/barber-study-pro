@@ -11,13 +11,19 @@
  */
 
 import type { ChapterId, ICanonicalMappingProvider, ConceptId } from './types'
-import type { DetectionState, DetectionConfidence, ConceptEvidence } from '../chapter-2-concepts/detection'
+import type { DetectionState, DetectionConfidence, ConceptEvidence } from '../concept-detection/engine'
 import { getChapter2MappingProvider } from './adapters/chapter-2-adapter'
+import { getChapter3MappingProvider } from './adapters/chapter-3-adapter'
 import {
   Chapter2DetectionProvider,
   createChapter2DetectionProvider,
   type Chapter2DetectionProviderConfig,
 } from './adapters/chapter-2-detection-provider'
+import {
+  Chapter3DetectionProvider,
+  createChapter3DetectionProvider,
+  type Chapter3DetectionProviderConfig,
+} from './adapters/chapter-3-detection-provider'
 
 // ───────────────────────────────────────────────
 // Concept Detection Provider Interface
@@ -66,6 +72,8 @@ class MappingProviderRegistry {
   constructor() {
     // Register Chapter 2 as the reference implementation
     this.registerProvider(getChapter2MappingProvider())
+    // Register Chapter 3 (C3-3)
+    this.registerProvider(getChapter3MappingProvider())
   }
 
   /**
@@ -232,6 +240,24 @@ export function initializeChapter2DetectionProvider(
   config: Chapter2DetectionProviderConfig
 ): Chapter2DetectionProvider {
   const provider = createChapter2DetectionProvider(config)
+  const registry = getDetectionProviderRegistry()
+  registry.registerProvider(provider)
+  return provider
+}
+
+/**
+ * Initialize and register the Chapter 3 detection provider (C3-3).
+ *
+ * This function creates the Chapter3DetectionProvider with the given
+ * configuration and registers it in the detection provider registry.
+ *
+ * @param config - Configuration with fetchQuizAttempts callback
+ * @returns The registered Chapter3DetectionProvider instance
+ */
+export function initializeChapter3DetectionProvider(
+  config: Chapter3DetectionProviderConfig
+): Chapter3DetectionProvider {
+  const provider = createChapter3DetectionProvider(config)
   const registry = getDetectionProviderRegistry()
   registry.registerProvider(provider)
   return provider
