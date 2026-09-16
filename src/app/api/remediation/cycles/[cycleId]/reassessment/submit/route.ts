@@ -34,6 +34,12 @@ import { createSupabaseExclusionClient } from '@/lib/reassessment/supabase-clien
 import { createReassessmentService } from '@/lib/reassessment/reassessment-service'
 import { getChapterContentProvider } from '@/lib/remediation/content-provider-registry'
 import {
+  createSupabaseKnowledgeCheckClient,
+  getKnowledgeCheckLength,
+  getKnowledgeCheckProgress,
+  getConsumedAttemptId,
+} from '@/lib/remediation/knowledge-check'
+import {
   hasCanonicalMappingProvider,
   getCanonicalMappingProvider,
   initializeChapterDetectionProvider,
@@ -151,42 +157,66 @@ export async function POST(
       { auth: { persistSession: false, autoRefreshToken: false } }
     )
 
-    const { data: attemptId, error: consumeError } = await supabaseAdmin.rpc(
-      'consume_reservation_and_create_attempt',
-      {
-        p_reservation_id: reservationId,
-        p_cycle_id: cycleId,
-        p_question_id: questionId,
-        p_authenticated_user_id: user.id,
-        p_quiz_id: question.quiz_id,
-        p_answers_json: { [questionId]: answer },
-        p_score: isCorrect ? 1 : 0,
-        p_total_questions: 1,
-        p_is_correct: isCorrect,
-        p_target_concept_id: cycle.conceptId,
-      }
+    // Knowledge-check sequencing (C3-3 stages 5–6).
+    const knowledgeCheckClient = createSupabaseKnowledgeCheckClient()
+    const requiredCount = getKnowledgeCheckLength(cycle.chapterId)
+
+    // Application-layer replay idempotency (C3-3 stage 6): if this reservation
+    // is already consumed — including a consumed WRONG answer, which the
+    // database function cannot distinguish from open — return the persisted
+    // attempt instead of creating a duplicate.
+    const cycleReservations = await knowledgeCheckClient.getReassessmentReservationsForCycle(
+      cycleId,
+      user.id
+    )
+    const existingAttemptId = await getConsumedAttemptId(
+      knowledgeCheckClient,
+      cycleReservations,
+      reservationId
     )
 
-    if (consumeError) {
-      console.error('[Remediation API] Reservation consumption failed:', consumeError)
+    let attemptId: string | null = existingAttemptId
 
-      // Map specific validation errors to appropriate status codes
-      const message = consumeError.message || 'Reservation validation failed'
+    if (!attemptId) {
+      const { data: consumedAttemptId, error: consumeError } = await supabaseAdmin.rpc(
+        'consume_reservation_and_create_attempt',
+        {
+          p_reservation_id: reservationId,
+          p_cycle_id: cycleId,
+          p_question_id: questionId,
+          p_authenticated_user_id: user.id,
+          p_quiz_id: question.quiz_id,
+          p_answers_json: { [questionId]: answer },
+          p_score: isCorrect ? 1 : 0,
+          p_total_questions: 1,
+          p_is_correct: isCorrect,
+          p_target_concept_id: cycle.conceptId,
+        }
+      )
 
-      if (message.includes('not found')) {
-        return NextResponse.json({ error: message }, { status: 404 })
-      }
-      if (message.includes('different user') || message.includes('Access denied')) {
-        return NextResponse.json({ error: message }, { status: 403 })
-      }
-      if (message.includes('terminal outcome')) {
-        return NextResponse.json({ error: message }, { status: 409 })
-      }
-      if (message.includes('mismatch') || message.includes('does not belong')) {
+      if (consumeError) {
+        console.error('[Remediation API] Reservation consumption failed:', consumeError)
+
+        // Map specific validation errors to appropriate status codes
+        const message = consumeError.message || 'Reservation validation failed'
+
+        if (message.includes('not found')) {
+          return NextResponse.json({ error: message }, { status: 404 })
+        }
+        if (message.includes('different user') || message.includes('Access denied')) {
+          return NextResponse.json({ error: message }, { status: 403 })
+        }
+        if (message.includes('terminal outcome')) {
+          return NextResponse.json({ error: message }, { status: 409 })
+        }
+        if (message.includes('mismatch') || message.includes('does not belong')) {
+          return NextResponse.json({ error: message }, { status: 400 })
+        }
+
         return NextResponse.json({ error: message }, { status: 400 })
       }
 
-      return NextResponse.json({ error: message }, { status: 400 })
+      attemptId = consumedAttemptId
     }
 
     if (!attemptId) {
@@ -201,7 +231,36 @@ export async function POST(
     // shared server-side mechanism (student-scoped client, RLS). Never blocks.
     await recordLearningActivity(supabase, user.id, cycle.chapterId)
 
-    // Record reassessment completed
+    // Knowledge-check progress from persisted state (C3-3 stage 5).
+    const kcProgress = await getKnowledgeCheckProgress(
+      knowledgeCheckClient,
+      cycleId,
+      user.id,
+      requiredCount
+    )
+
+    // Questions 1..(N-1): record evidence ONLY — no evaluation, no cycle
+    // completion. The cycle must not terminally evaluate mid-sequence.
+    if (kcProgress.answeredCount < requiredCount) {
+      return NextResponse.json({
+        success: true,
+        isCorrect,
+        outcome: 'pending',
+        studentState: 'pending_more_evidence',
+        studentStateLabel: STUDENT_STATE_LABELS.pending_more_evidence,
+        studentStateDescription: STUDENT_STATE_DESCRIPTIONS.pending_more_evidence,
+        knowledgeCheck: {
+          answeredCount: kcProgress.answeredCount,
+          totalQuestions: requiredCount,
+          nextQuestionNumber: kcProgress.answeredCount + 1,
+        },
+        quizAttemptId: attemptId,
+        message: 'Your answer has been recorded. Continue to the next question.',
+      })
+    }
+
+    // The knowledge check is complete — record completion ONCE, then evaluate
+    // with ALL persisted reassessment attempts for this cycle as the evidence set.
     await service.recordReassessmentCompleted(cycleId, user.id)
 
     // Initialize the chapter's detection provider for evaluation (C3-3:
@@ -234,14 +293,17 @@ export async function POST(
     const evaluationDbClient = createSupabaseEvaluationClient()
     const evaluationService = createEvaluationService(evaluationDbClient, detectionProvider)
 
-    // Run the evaluation using the detection provider
+    // Run the evaluation using the detection provider, with the complete
+    // persisted evidence set for this knowledge check (N attempt IDs in
+    // completion order — exactly one for Chapter 2, five for Chapter 3).
     // CORRECTION 6: The evidence now satisfies 6C-2d validate_evaluation_evidence()
     // because the quiz_attempt was created with is_reassessment=true,
     // remediation_cycle_id=cycleId, and target_concept_id=cycle.conceptId
+    const evidenceIds = kcProgress.answeredAttemptIds.slice(0, requiredCount)
     const evaluationResult = await evaluationService.evaluateCycleWithDetection(
       cycleId,
       cycle.conceptId,
-      [attemptId]
+      evidenceIds
     )
 
     if (!evaluationResult.success) {
@@ -256,6 +318,10 @@ export async function POST(
         studentStateLabel: STUDENT_STATE_LABELS.pending_evaluation,
         studentStateDescription: STUDENT_STATE_DESCRIPTIONS.pending_evaluation,
         evaluationPending: true,
+        knowledgeCheck: {
+          answeredCount: kcProgress.answeredCount,
+          totalQuestions: requiredCount,
+        },
         quizAttemptId: attemptId,
         message: 'Your answer has been recorded. Evaluation is pending.',
       })
@@ -285,6 +351,10 @@ export async function POST(
       studentStateDescription: STUDENT_STATE_DESCRIPTIONS[studentState],
       evaluationId: evaluationResult.evaluationId,
       alreadyEvaluated: evaluationResult.alreadyEvaluated,
+      knowledgeCheck: {
+        answeredCount: kcProgress.answeredCount,
+        totalQuestions: requiredCount,
+      },
       quizAttemptId: attemptId,
     })
   } catch (error) {

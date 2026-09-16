@@ -11,7 +11,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { createSupabaseStudentRemediationClient } from '@/lib/remediation/supabase-client'
 import { createStudentRemediationService } from '@/lib/remediation/student-service'
-import { buildRemediationContentBundle } from '@/lib/remediation/content-filter'
+import { getChapterContentProvider } from '@/lib/remediation/content-provider-registry'
+import {
+  createSupabaseKnowledgeCheckClient,
+  getKnowledgeCheckLength,
+  getKnowledgeCheckProgress,
+} from '@/lib/remediation/knowledge-check'
 import { STUDENT_STATE_LABELS, STUDENT_STATE_DESCRIPTIONS } from '@/lib/remediation/student-service'
 import type { ConceptId } from '@/lib/chapter-2-concepts/types'
 
@@ -53,11 +58,49 @@ export async function GET(
     // Derive student-facing state
     const studentState = service.deriveStudentState(cycle)
 
-    // Build content bundle
-    const contentBundle = buildRemediationContentBundle(cycle.conceptId as ConceptId)
+    // Build content bundle from the cycle's chapter provider (C3-3: resolved
+    // from cycle.chapterId — no chapter-2-only assumption). Fail closed.
+    const contentProvider = getChapterContentProvider(cycle.chapterId)
+    if (!contentProvider) {
+      return NextResponse.json(
+        { error: `Chapter ${cycle.chapterId} does not support remediation` },
+        { status: 400 }
+      )
+    }
+    const contentBundle = contentProvider.buildRemediationContentBundle(cycle.conceptId as ConceptId)
 
     // Get review progress
     const progress = await service.getReviewProgress(cycleId, user.id)
+
+    // Knowledge-check progress (C3-3 stages 5–6) for reload-safe recovery.
+    const knowledgeCheckClient = createSupabaseKnowledgeCheckClient()
+    const requiredCount = getKnowledgeCheckLength(cycle.chapterId)
+    const kcProgress = await getKnowledgeCheckProgress(
+      knowledgeCheckClient,
+      cycleId,
+      user.id,
+      requiredCount
+    )
+
+    let openQuestion = null
+    if (kcProgress.openReservation) {
+      const q = contentProvider.getQuizQuestionById(kcProgress.openReservation.questionId)
+      if (q) {
+        openQuestion = {
+          questionId: q.id,
+          reservationId: kcProgress.openReservation.reservationId,
+          question: {
+            id: q.id,
+            question: q.question,
+            answer_a: q.answer_a,
+            answer_b: q.answer_b,
+            answer_c: q.answer_c,
+            answer_d: q.answer_d,
+            explanation: q.explanation,
+          },
+        }
+      }
+    }
 
     return NextResponse.json({
       cycle: {
@@ -89,6 +132,11 @@ export async function GET(
         hasSufficientMaterial: contentBundle.hasSufficientMaterial,
       },
       progress: 'error' in progress ? { completed: 0, total: 0, percentage: 0 } : progress,
+      knowledgeCheck: {
+        answeredCount: kcProgress.answeredCount,
+        totalQuestions: requiredCount,
+        openQuestion,
+      },
     })
   } catch (error) {
     console.error('[Remediation API] Error fetching cycle:', error)

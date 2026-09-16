@@ -16,6 +16,11 @@ import { createStudentRemediationService } from '@/lib/remediation/student-servi
 import { createSupabaseExclusionClient } from '@/lib/reassessment/supabase-client'
 import { createReassessmentService } from '@/lib/reassessment/reassessment-service'
 import { getChapterContentProvider } from '@/lib/remediation/content-provider-registry'
+import {
+  createSupabaseKnowledgeCheckClient,
+  getKnowledgeCheckLength,
+  getKnowledgeCheckProgress,
+} from '@/lib/remediation/knowledge-check'
 import { STUDENT_STATE_LABELS, STUDENT_STATE_DESCRIPTIONS } from '@/lib/remediation/student-service'
 import { recordLearningActivity } from '@/lib/learning-activity'
 
@@ -69,6 +74,73 @@ export async function POST(
         { error: `Chapter ${cycle.chapterId} does not support reassessment` },
         { status: 400 }
       )
+    }
+
+    // Knowledge-check sequencing (C3-3 stages 5–6): progress derives from
+    // persisted evidence only, so reload/replay is safe and idempotent.
+    const knowledgeCheckClient = createSupabaseKnowledgeCheckClient()
+    const requiredCount = getKnowledgeCheckLength(cycle.chapterId)
+    const kcProgress = await getKnowledgeCheckProgress(
+      knowledgeCheckClient,
+      cycleId,
+      user.id,
+      requiredCount
+    )
+
+    // The knowledge check is already complete — never reserve beyond it.
+    if (kcProgress.isComplete) {
+      return NextResponse.json(
+        {
+          success: false,
+          knowledgeCheckComplete: true,
+          knowledgeCheck: {
+            questionNumber: kcProgress.answeredCount,
+            totalQuestions: requiredCount,
+            answeredCount: kcProgress.answeredCount,
+          },
+          error: 'The knowledge check for this focus area is already complete.',
+        },
+        { status: 409 }
+      )
+    }
+
+    // Idempotent replay (C3-3 stage 6): an open (reserved-but-not-consumed)
+    // reservation returns the SAME question instead of reserving a new one.
+    // Reloading mid-check can never duplicate questions or lose one from the pool.
+    if (kcProgress.openReservation) {
+      const openQuestion = contentProvider.getQuizQuestionById(
+        kcProgress.openReservation.questionId
+      )
+      if (!openQuestion) {
+        return NextResponse.json(
+          { error: 'Reserved question not found in question bank' },
+          { status: 500 }
+        )
+      }
+
+      return NextResponse.json({
+        success: true,
+        replayed: true,
+        questionId: kcProgress.openReservation.questionId,
+        reservationId: kcProgress.openReservation.reservationId,
+        question: {
+          id: openQuestion.id,
+          question: openQuestion.question,
+          answer_a: openQuestion.answer_a,
+          answer_b: openQuestion.answer_b,
+          answer_c: openQuestion.answer_c,
+          answer_d: openQuestion.answer_d,
+          explanation: openQuestion.explanation,
+        },
+        knowledgeCheck: {
+          questionNumber: kcProgress.answeredCount + 1,
+          totalQuestions: requiredCount,
+          answeredCount: kcProgress.answeredCount,
+        },
+        studentState: 'reassessment_in_progress',
+        studentStateLabel: STUDENT_STATE_LABELS.reassessment_in_progress,
+        studentStateDescription: STUDENT_STATE_DESCRIPTIONS.reassessment_in_progress,
+      })
     }
 
     // Create a placeholder quiz attempt ID for the reservation.
@@ -139,6 +211,11 @@ export async function POST(
         answer_c: question.answer_c,
         answer_d: question.answer_d,
         explanation: question.explanation,
+      },
+      knowledgeCheck: {
+        questionNumber: kcProgress.answeredCount + 1,
+        totalQuestions: requiredCount,
+        answeredCount: kcProgress.answeredCount,
       },
       studentState: 'reassessment_in_progress',
       studentStateLabel: STUDENT_STATE_LABELS.reassessment_in_progress,
