@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { MessageSquare, CheckCircle, XCircle, Award, ChevronRight } from 'lucide-react'
 import type { ChapterTheme } from '@/lib/chapter-content'
 import { defaultTheme } from '@/lib/chapter-content'
+import { orderInteractiveAnswers } from '@/lib/presentation/stable-answer-order'
 
 interface ProScenarioOption {
   letter: string
@@ -30,9 +31,22 @@ export default function ProScenario({ scenarios, theme }: ProScenarioProps) {
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({})
   const [revealed, setRevealed] = useState<Set<number>>(new Set())
 
-  const selectAnswer = (scenarioIdx: number, letter: string) => {
+  const orderedScenarios = useMemo(
+    () => scenarios.map((scenario, scenarioIndex) => {
+      const correctIndex = scenario.options.findIndex((option) => option.letter === scenario.correctAnswer)
+      return orderInteractiveAnswers(
+        scenario.options,
+        correctIndex,
+        scenarioIndex,
+        `pro-scenario:${scenarios[0]?.situation ?? 'chapter-3'}`,
+      )
+    }),
+    [scenarios],
+  )
+
+  const selectAnswer = (scenarioIdx: number, originalLetter: string) => {
     if (revealed.has(scenarioIdx)) return
-    setSelectedAnswers(prev => ({ ...prev, [scenarioIdx]: letter }))
+    setSelectedAnswers(prev => ({ ...prev, [scenarioIdx]: originalLetter }))
   }
 
   const revealAnswer = (scenarioIdx: number) => {
@@ -45,6 +59,7 @@ export default function ProScenario({ scenarios, theme }: ProScenarioProps) {
         const isRevealed = revealed.has(sIdx)
         const selected = selectedAnswers[sIdx]
         const isCorrect = selected === scenario.correctAnswer
+        const displayOptions = orderedScenarios[sIdx] ?? []
 
         return (
           <div
@@ -58,7 +73,6 @@ export default function ProScenario({ scenarios, theme }: ProScenarioProps) {
               boxShadow: `0 4px 24px rgba(0,0,0,0.15)`,
             }}
           >
-            {/* Situation Header — Premium glassmorphism */}
             <div
               className="p-6"
               style={{
@@ -87,10 +101,9 @@ export default function ProScenario({ scenarios, theme }: ProScenarioProps) {
               )}
             </div>
 
-            {/* Options */}
             <div className="p-6">
               <div className="space-y-3 mb-5">
-                {scenario.options.map((option) => {
+                {displayOptions.map(({ item: option, displayLabel }) => {
                   const isSelected = selected === option.letter
                   const isCorrectOption = option.letter === scenario.correctAnswer
                   let borderColor = t.border
@@ -114,7 +127,7 @@ export default function ProScenario({ scenarios, theme }: ProScenarioProps) {
 
                   return (
                     <button
-                      key={option.letter}
+                      key={`${option.letter}-${displayLabel}`}
                       onClick={() => selectAnswer(sIdx, option.letter)}
                       className="w-full text-left rounded-lg p-4 transition-all duration-300 text-sm flex items-start gap-4 group"
                       style={{
@@ -134,7 +147,7 @@ export default function ProScenario({ scenarios, theme }: ProScenarioProps) {
                           border: `1px solid ${isSelected ? t.primary : `${t.primary}30`}`,
                         }}
                       >
-                        {option.letter}
+                        {displayLabel}
                       </span>
                       <div className="flex-1 min-w-0">
                         <span style={{ color: t.text }}>{option.text}</span>
@@ -165,7 +178,6 @@ export default function ProScenario({ scenarios, theme }: ProScenarioProps) {
                 })}
               </div>
 
-              {/* Reveal Button */}
               {!isRevealed && (
                 <button
                   onClick={() => revealAnswer(sIdx)}
@@ -183,7 +195,6 @@ export default function ProScenario({ scenarios, theme }: ProScenarioProps) {
                 </button>
               )}
 
-              {/* Feedback + Pro Tip */}
               {isRevealed && selected && (
                 <div className="space-y-3">
                   <div
