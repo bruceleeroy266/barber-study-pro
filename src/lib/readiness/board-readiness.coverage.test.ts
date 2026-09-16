@@ -11,7 +11,7 @@ function attempt(chapter: number, percentage = 90): QuizAttempt {
     total_questions: 30,
     percentage,
     answers_json: {},
-    completed_at: `2026-09-${String(10 + chapter).padStart(2, '0')}T20:00:00Z`,
+    completed_at: '2026-09-16T20:00:00Z',
   }
 }
 
