@@ -11,6 +11,7 @@ import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { ProgressBar } from '@/components/ui/ProgressBar'
 import { STUDENT_STATE_LABELS, STUDENT_STATE_DESCRIPTIONS } from '@/lib/remediation/student-service'
+import { resolvePresentationConceptName } from '@/lib/presentation/concept-registry'
 import type { StudentRemediationState } from '@/lib/remediation/student-service'
 
 export interface ActiveRemediationCycle {
@@ -79,7 +80,7 @@ export default function RemediationStatusCard({ cycles }: RemediationStatusCardP
                   </Badge>
                 </div>
                 <h3 className="text-lg font-semibold text-white mb-1">
-                  {cycle.conceptName}
+                  {resolvePresentationConceptName(cycle.conceptId)}
                 </h3>
                 <p className="text-sm text-[var(--color-text-muted)] mb-3">
                   {STUDENT_STATE_DESCRIPTIONS[cycle.studentState]}
