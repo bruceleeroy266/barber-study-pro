@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { AnalyticsProviders } from "@/components/analytics";
+import { PilotStartDateGuard } from "@/components/pilot/PilotStartDateGuard";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono", display: "swap" });
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className="antialiased bg-black text-white min-h-screen">
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-[var(--color-brand-gold)] focus:text-black focus:font-semibold focus:rounded-lg focus:shadow-lg focus:outline-none">Skip to main content</a>
         {children}
+        <PilotStartDateGuard />
         <AnalyticsProviders />
       </body>
     </html>
