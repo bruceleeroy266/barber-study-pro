@@ -4,6 +4,12 @@
  * Filters Chapter 2 content by concept using the canonical concept mappings.
  * Does NOT create duplicate mappings — uses existing chapter-2-concepts/mappings.ts.
  *
+ * C3-3 Stage 1: This module is now a thin Chapter 2 facade over the
+ * chapter-aware remediation content provider registry
+ * (src/lib/remediation/content-provider-registry.ts). The export surface is
+ * preserved exactly for existing consumers; the Chapter 2 provider holds the
+ * canonical-data logic. Chapter 3 is served by its own registered provider.
+ *
  * Binding Rules:
  *   - Canonical concept mapping remains application-authoritative
  *   - No duplicate curriculum content
@@ -14,30 +20,31 @@
 import type { ConceptId } from '../chapter-2-concepts/types'
 import type { ChapterSection } from '../chapter-content'
 import type { Flashcard } from '@/types'
-import {
-  chapter2ContentMappings,
-  chapter2FlashcardMappings,
-  chapter2QuizQuestionMappings,
-} from '../chapter-2-concepts/mappings'
-import { chapter2Concepts, ACTIVE_CONCEPT_IDS } from '../chapter-2-concepts/concepts'
-import { chapter2PremiumFlashcards } from '../chapter-2-premium-flashcards'
-import { chapter2KeyTerms } from '../chapter-2-key-terms'
 import type { Chapter2KeyTerm } from '../chapter-2-key-terms'
-import { chapter2PremiumQuizQuestions } from '../chapter-2-premium-quiz'
-import { chapter2ReassessmentQuestions } from '../chapter-2-reassessment-questions'
-import { getChapterContent } from '../chapter-content'
 import type { RemediationContentBundle } from './student-service'
+import { getChapterContentProvider } from './content-provider-registry'
 
 // ───────────────────────────────────────────────
-// Content Filter Functions
+// Chapter 2 provider (canonical source)
+// ───────────────────────────────────────────────
+
+function ch2Provider() {
+  const provider = getChapterContentProvider('ch-2')
+  if (!provider) {
+    throw new Error('Chapter 2 remediation content provider is not registered')
+  }
+  return provider
+}
+
+// ───────────────────────────────────────────────
+// Content Filter Functions (Chapter 2 facade)
 // ───────────────────────────────────────────────
 
 /**
  * Get the concept name for display.
  */
 export function getConceptName(conceptId: ConceptId): string {
-  const concept = chapter2Concepts.find((c) => c.id === conceptId)
-  return concept?.name ?? 'Unknown Topic'
+  return ch2Provider().getConceptName(conceptId)
 }
 
 /**
@@ -45,21 +52,7 @@ export function getConceptName(conceptId: ConceptId): string {
  * Includes primary and secondary concept mappings.
  */
 export function getContentBlockIdsForConcept(conceptId: ConceptId): string[] {
-  const blockIds: string[] = []
-
-  for (const mapping of chapter2ContentMappings) {
-    // Primary mapping
-    if (mapping.conceptId === conceptId) {
-      blockIds.push(mapping.contentBlockId)
-      continue
-    }
-    // Secondary mappings
-    if (mapping.secondaryConceptIds?.includes(conceptId)) {
-      blockIds.push(mapping.contentBlockId)
-    }
-  }
-
-  return blockIds
+  return ch2Provider().getContentBlockIdsForConcept(conceptId)
 }
 
 /**
@@ -67,21 +60,7 @@ export function getContentBlockIdsForConcept(conceptId: ConceptId): string[] {
  * Only includes active flashcards.
  */
 export function getFlashcardIdsForConcept(conceptId: ConceptId): string[] {
-  const flashcardIds: string[] = []
-
-  for (const mapping of chapter2FlashcardMappings) {
-    // Primary mapping
-    if (mapping.conceptId === conceptId) {
-      flashcardIds.push(mapping.flashcardId)
-      continue
-    }
-    // Secondary mappings
-    if (mapping.secondaryConceptIds?.includes(conceptId)) {
-      flashcardIds.push(mapping.flashcardId)
-    }
-  }
-
-  return flashcardIds
+  return ch2Provider().getFlashcardIdsForConcept(conceptId)
 }
 
 /**
@@ -91,26 +70,7 @@ export function getFlashcardIdsForConcept(conceptId: ConceptId): string[] {
  * Preserves the original section structure and order.
  */
 export function filterContentByConcept(conceptId: ConceptId): ChapterSection[] {
-  const chapterContent = getChapterContent(2)
-  if (!chapterContent) {
-    return []
-  }
-
-  const mappedBlockIds = new Set(getContentBlockIdsForConcept(conceptId))
-
-  return chapterContent.sections.filter((section) => {
-    // Check if the section ID is mapped to this concept
-    if (mappedBlockIds.has(section.id)) {
-      return true
-    }
-
-    // For tabbed sections, check if any tab ID is mapped
-    if (section.type === 'tabbed' && 'tabs' in section) {
-      return section.tabs.some((tab: { id: string }) => mappedBlockIds.has(tab.id))
-    }
-
-    return false
-  })
+  return ch2Provider().filterContentByConcept(conceptId)
 }
 
 /**
@@ -119,11 +79,7 @@ export function filterContentByConcept(conceptId: ConceptId): ChapterSection[] {
  * Returns only active flashcards mapped to the concept.
  */
 export function filterFlashcardsByConcept(conceptId: ConceptId): Flashcard[] {
-  const mappedFlashcardIds = new Set(getFlashcardIdsForConcept(conceptId))
-
-  return chapter2PremiumFlashcards.filter(
-    (card) => card.is_active && mappedFlashcardIds.has(card.id)
-  )
+  return ch2Provider().filterFlashcardsByConcept(conceptId)
 }
 
 /**
@@ -132,25 +88,7 @@ export function filterFlashcardsByConcept(conceptId: ConceptId): Flashcard[] {
  * Includes gap detection for concepts with insufficient material.
  */
 export function buildRemediationContentBundle(conceptId: ConceptId): RemediationContentBundle {
-  const contentBlocks = filterContentByConcept(conceptId)
-  const flashcards = filterFlashcardsByConcept(conceptId)
-  const conceptName = getConceptName(conceptId)
-
-  const contentBlockCount = contentBlocks.length
-  const flashcardCount = flashcards.length
-
-  // Gap detection: flag concepts with < 2 content blocks or < 3 flashcards
-  const hasSufficientMaterial = contentBlockCount >= 2 && flashcardCount >= 3
-
-  return {
-    conceptId,
-    conceptName,
-    contentBlocks,
-    flashcards,
-    hasSufficientMaterial,
-    contentBlockCount,
-    flashcardCount,
-  }
+  return ch2Provider().buildRemediationContentBundle(conceptId)
 }
 
 /**
@@ -160,20 +98,12 @@ export function buildRemediationContentBundle(conceptId: ConceptId): Remediation
  * The question must already be reserved via selectAndReserveQuestion().
  */
 export function getQuizQuestionById(questionId: string): import('@/types').QuizQuestion | null {
-  // Static imports: both quiz modules are pure data (import only '@/types'),
-  // so no circular dependency is possible. The reassessment reserve (added
-  // post-lock, Option A) is resolvable here so the 6C reassessment
-  // start/submit paths can serve and score reserve questions, while the
-  // initial quiz serving path continues to read the premium bank only.
-  return (
-    chapter2PremiumQuizQuestions.find(
-      (q: import('@/types').QuizQuestion) => q.id === questionId
-    ) ??
-    chapter2ReassessmentQuestions.find(
-      (q: import('@/types').QuizQuestion) => q.id === questionId
-    ) ??
-    null
-  )
+  // Both quiz modules are pure data (import only '@/types'), so no circular
+  // dependency is possible. The reassessment reserve (added post-lock,
+  // Option A) is resolvable here so the 6C reassessment start/submit paths
+  // can serve and score reserve questions, while the initial quiz serving
+  // path continues to read the premium bank only.
+  return ch2Provider().getQuizQuestionById(questionId)
 }
 
 /**
@@ -188,10 +118,7 @@ export function getQuizQuestionById(questionId: string): import('@/types').QuizQ
  * change 6C detection, reassessment, or outcome evaluation.
  */
 export function filterKeyTermsByConcept(conceptId: ConceptId): readonly Chapter2KeyTerm[] {
-  if (!ACTIVE_CONCEPT_IDS.includes(conceptId)) {
-    return []
-  }
-  return chapter2KeyTerms.filter((term) => term.conceptId === conceptId)
+  return ch2Provider().filterKeyTermsByConcept(conceptId) as readonly Chapter2KeyTerm[]
 }
 
 /**
@@ -201,7 +128,5 @@ export function filterKeyTermsByConcept(conceptId: ConceptId): readonly Chapter2
  * by the exclusion engine during selectAndReserveQuestion().
  */
 export function getConceptQuestionCount(conceptId: ConceptId): number {
-  return chapter2QuizQuestionMappings.filter(
-    (m) => m.conceptId === conceptId
-  ).length
+  return ch2Provider().getConceptQuestionCount(conceptId)
 }
