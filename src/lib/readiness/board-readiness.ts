@@ -3,7 +3,7 @@
  * ASCYN PRO / ASCYN PRO V2
  *
  * Calculates a composite board readiness score for each student based on
- * quiz performance, chapter completion, flashcard engagement, consistency,
+ * quiz performance, curriculum coverage, flashcard engagement, consistency,
  * and recent improvement trends.
  */
 
@@ -23,15 +23,7 @@ type ReadinessQuizAttempt = QuizAttempt & {
   is_reassessment?: boolean | null
 }
 
-/**
- * Board readiness measures chapter-quiz performance, not one-question
- * remediation evidence. Reassessment attempts are intentionally excluded so
- * a single 0%/100% knowledge check cannot swing the student's board-readiness
- * score or quiz-completion coverage.
- *
- * Legacy/demo attempts that predate the is_reassessment column remain
- * eligible because an absent flag means a normal chapter quiz attempt.
- */
+/** Reassessment evidence is intentionally excluded from board-readiness coverage. */
 function getReadinessEligibleAttempts(attempts: QuizAttempt[]): QuizAttempt[] {
   return attempts.filter(
     (attempt) => (attempt as ReadinessQuizAttempt).is_reassessment !== true
@@ -63,19 +55,19 @@ function averageAttemptScore(attempts: QuizAttempt[]): number {
 function quizCompletionRate(attempts: QuizAttempt[], totalChapters: number): number {
   if (totalChapters === 0) return 0
   const uniqueQuizzes = new Set(attempts.map((a) => a.quiz_id)).size
-  return Math.round((uniqueQuizzes / totalChapters) * 100)
+  return Math.min(100, Math.round((uniqueQuizzes / totalChapters) * 100))
 }
 
 function chapterCompletionRate(progress: StudentProgress[], totalChapters: number): number {
   if (totalChapters === 0) return 0
   const completed = progress.filter((p) => p.progress_percentage === 100).length
-  return Math.round((completed / totalChapters) * 100)
+  return Math.min(100, Math.round((completed / totalChapters) * 100))
 }
 
 function flashcardEngagementRate(progress: StudentProgress[], totalChapters: number): number {
   if (totalChapters === 0) return 0
   const completed = progress.filter((p) => p.flashcards_completed).length
-  return Math.round((completed / totalChapters) * 100)
+  return Math.min(100, Math.round((completed / totalChapters) * 100))
 }
 
 function consistencyScore(attempts: QuizAttempt[], streakDays: number): number {
@@ -99,6 +91,7 @@ function improvementTrend(attempts: QuizAttempt[]): 'improving' | 'stable' | 'de
   const mid = Math.ceil(sorted.length / 2)
   const firstHalf = sorted.slice(0, mid)
   const secondHalf = sorted.slice(mid)
+  if (secondHalf.length === 0) return 'stable'
 
   const firstAvg = firstHalf.reduce((sum, a) => sum + a.percentage, 0) / firstHalf.length
   const secondAvg = secondHalf.reduce((sum, a) => sum + a.percentage, 0) / secondHalf.length
@@ -124,13 +117,14 @@ function gradeTrendAdjustment(grades: Grade[] | undefined): number {
   const mid = Math.ceil(sorted.length / 2)
   const firstHalf = sorted.slice(0, mid)
   const secondHalf = sorted.slice(mid)
+  if (secondHalf.length === 0) return 0
 
   const firstAvg = firstHalf.reduce((sum, g) => sum + g.percentage, 0) / firstHalf.length
   const secondAvg = secondHalf.reduce((sum, g) => sum + g.percentage, 0) / secondHalf.length
 
   const diff = secondAvg - firstAvg
-  if (diff >= 5) return 3
-  if (diff <= -5) return -3
+  if (diff >= 5) return 2
+  if (diff <= -5) return -2
   return 0
 }
 
@@ -162,22 +156,24 @@ export function calculateBoardReadiness(inputs: ReadinessInputs): BoardReadiness
   const chapterRate = chapterCompletionRate(progress, totalChapters)
   const flashcardRate =
     flashcardDecksCompleted !== undefined
-      ? Math.round((flashcardDecksCompleted / totalChapters) * 100)
+      ? Math.min(100, Math.round((flashcardDecksCompleted / Math.max(1, totalChapters)) * 100))
       : flashcardEngagementRate(progress, totalChapters)
 
   const consistency = consistencyScore(readinessAttempts, streakDays)
   const trend = improvementTrend(readinessAttempts)
 
-  // Quiz performance is the strongest predictor of board success.
-  // Coverage metrics provide signal without over-penalizing students
-  // who are still progressing through the 21-chapter program.
+  // C3-4: Board readiness must represent both demonstrated performance and
+  // breadth of curriculum evidence. A high score on only the first few chapter
+  // quizzes is useful evidence, but it is not equivalent to whole-board
+  // readiness. Coverage therefore carries meaningful weight instead of the
+  // legacy 4%/4%/4% contribution.
   const score = Math.round(
-    quizAverage * 0.85 +
-    quizRate * 0.04 +
-    chapterRate * 0.04 +
-    flashcardRate * 0.04 +
-    consistency * 0.03 +
-    (trend === 'improving' ? 5 : trend === 'declining' ? -5 : 0) +
+    quizAverage * 0.55 +
+    quizRate * 0.15 +
+    chapterRate * 0.15 +
+    flashcardRate * 0.10 +
+    consistency * 0.05 +
+    (trend === 'improving' ? 3 : trend === 'declining' ? -3 : 0) +
     gradeTrendAdjustment(grades)
   )
 
