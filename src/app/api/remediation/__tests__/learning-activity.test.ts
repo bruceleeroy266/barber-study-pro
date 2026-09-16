@@ -57,9 +57,9 @@ vi.mock('@/lib/remediation/student-service', () => ({
   },
 }))
 
-vi.mock('@/lib/remediation/content-filter', () => ({
-  buildRemediationContentBundle: vi.fn(),
-  getQuizQuestionById: vi.fn(),
+vi.mock('@/lib/remediation/content-provider-registry', () => ({
+  getChapterContentProvider: vi.fn(),
+  hasChapterContentProvider: vi.fn(),
 }))
 
 vi.mock('@/lib/reassessment/supabase-client', () => ({
@@ -80,6 +80,16 @@ vi.mock('@/lib/evaluation/evaluation-service', () => ({
 
 vi.mock('@/lib/reassessment/provider-registry', () => ({
   initializeChapter2DetectionProvider: vi.fn(),
+  initializeChapterDetectionProvider: vi.fn(),
+  hasCanonicalMappingProvider: vi.fn(),
+  getCanonicalMappingProvider: vi.fn(),
+}))
+
+vi.mock('@/lib/remediation/knowledge-check', () => ({
+  createSupabaseKnowledgeCheckClient: vi.fn(),
+  getKnowledgeCheckLength: vi.fn(),
+  getKnowledgeCheckProgress: vi.fn(),
+  getConsumedAttemptId: vi.fn(),
 }))
 
 vi.mock('@/lib/chapter-2-concepts/mappings', () => ({
@@ -101,7 +111,18 @@ vi.mock('@/lib/learning-activity', () => ({
 import { createClient } from '@/lib/supabase-server'
 import { createSupabaseStudentRemediationClient } from '@/lib/remediation/supabase-client'
 import { createStudentRemediationService } from '@/lib/remediation/student-service'
-import { getQuizQuestionById } from '@/lib/remediation/content-filter'
+import { getChapterContentProvider } from '@/lib/remediation/content-provider-registry'
+import {
+  hasCanonicalMappingProvider,
+  getCanonicalMappingProvider,
+  initializeChapterDetectionProvider,
+} from '@/lib/reassessment/provider-registry'
+import {
+  createSupabaseKnowledgeCheckClient,
+  getKnowledgeCheckLength,
+  getKnowledgeCheckProgress,
+  getConsumedAttemptId,
+} from '@/lib/remediation/knowledge-check'
 import { createReassessmentService } from '@/lib/reassessment/reassessment-service'
 import { createEvaluationService } from '@/lib/evaluation/evaluation-service'
 import { createClient as createSupabaseJsClient } from '@supabase/supabase-js'
@@ -247,17 +268,33 @@ describe('POST /api/remediation/cycles/[cycleId]/reassessment — learning activ
     vi.mocked(createReassessmentService).mockReturnValue({
       selectAndReserveQuestion: vi.fn().mockResolvedValue(reservationResult),
     } as never)
-    vi.mocked(getQuizQuestionById).mockReturnValue({
-      id: 'q-1',
-      quiz_id: 'quiz-2',
-      question: 'Question?',
-      answer_a: 'A',
-      answer_b: 'B',
-      answer_c: 'C',
-      answer_d: 'D',
-      correct_answer: 'a',
-      explanation: null,
+    vi.mocked(getChapterContentProvider).mockReturnValue({
+      chapterId: 'ch-2',
+      getQuizQuestionById: vi.fn().mockReturnValue({
+        id: 'q-1',
+        quiz_id: 'quiz-2',
+        question: 'Question?',
+        answer_a: 'A',
+        answer_b: 'B',
+        answer_c: 'C',
+        answer_d: 'D',
+        correct_answer: 'a',
+        explanation: null,
+      }),
     } as never)
+    vi.mocked(createSupabaseKnowledgeCheckClient).mockReturnValue({
+      getReassessmentReservationsForCycle: vi.fn().mockResolvedValue([]),
+      getReassessmentAttemptsForCycle: vi.fn().mockResolvedValue([]),
+      quizAttemptExists: vi.fn().mockResolvedValue(false),
+    } as never)
+    vi.mocked(getKnowledgeCheckLength).mockReturnValue(1)
+    vi.mocked(getKnowledgeCheckProgress).mockResolvedValue({
+      answeredAttemptIds: [],
+      answeredCount: 0,
+      requiredCount: 1,
+      isComplete: false,
+      openReservation: null,
+    })
     return service
   }
 
@@ -310,17 +347,45 @@ describe('POST /api/remediation/cycles/[cycleId]/reassessment/submit — learnin
     }
     vi.mocked(createSupabaseStudentRemediationClient).mockReturnValue({} as never)
     vi.mocked(createStudentRemediationService).mockReturnValue(service as never)
-    vi.mocked(getQuizQuestionById).mockReturnValue({
-      id: 'q-1',
-      quiz_id: 'quiz-2',
-      question: 'Question?',
-      answer_a: 'A',
-      answer_b: 'B',
-      answer_c: 'C',
-      answer_d: 'D',
-      correct_answer: 'a',
-      explanation: null,
+    vi.mocked(getChapterContentProvider).mockReturnValue({
+      chapterId: 'ch-2',
+      getQuizQuestionById: vi.fn().mockReturnValue({
+        id: 'q-1',
+        quiz_id: 'quiz-2',
+        question: 'Question?',
+        answer_a: 'A',
+        answer_b: 'B',
+        answer_c: 'C',
+        answer_d: 'D',
+        correct_answer: 'a',
+        explanation: null,
+      }),
     } as never)
+    vi.mocked(hasCanonicalMappingProvider).mockReturnValue(true)
+    vi.mocked(getCanonicalMappingProvider).mockReturnValue({
+      chapterId: 'ch-2',
+      getConceptForQuestion: (id: string) => (id === 'q-1' ? 'C-2-01' : undefined),
+      isQuestionMappedToConcept: (id: string, conceptId: string) =>
+        id === 'q-1' && conceptId === 'C-2-01',
+      getQuestionsForConcept: () => ['q-1'],
+      getAllConceptIds: () => ['C-2-01'],
+      getAllQuestionIds: () => ['q-1'],
+    } as never)
+    vi.mocked(initializeChapterDetectionProvider).mockReturnValue({ chapterId: 'ch-2' } as never)
+    vi.mocked(createSupabaseKnowledgeCheckClient).mockReturnValue({
+      getReassessmentReservationsForCycle: vi.fn().mockResolvedValue([]),
+      getReassessmentAttemptsForCycle: vi.fn().mockResolvedValue([]),
+      quizAttemptExists: vi.fn().mockResolvedValue(false),
+    } as never)
+    vi.mocked(getKnowledgeCheckLength).mockReturnValue(1)
+    vi.mocked(getKnowledgeCheckProgress).mockResolvedValue({
+      answeredAttemptIds: ['attempt-1'],
+      answeredCount: 1,
+      requiredCount: 1,
+      isComplete: true,
+      openReservation: null,
+    })
+    vi.mocked(getConsumedAttemptId).mockResolvedValue(null)
     vi.mocked(createSupabaseJsClient).mockReturnValue({
       rpc: vi.fn().mockResolvedValue(rpcResult),
       from: vi.fn(),
