@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Shield, CheckCircle2, Circle, Star, Sparkles } from 'lucide-react'
 import type { ChapterTheme } from '@/lib/chapter-content'
 import { defaultTheme } from '@/lib/chapter-content'
+import { orderInteractiveAnswers } from '@/lib/presentation/stable-answer-order'
 
 interface ConfidenceCard {
   situation: string
@@ -26,9 +27,22 @@ export default function ConfidenceBuilder({ cards, theme }: ConfidenceBuilderPro
   const [selectedResponses, setSelectedResponses] = useState<Record<number, number>>({})
   const [revealed, setRevealed] = useState<Set<number>>(new Set())
 
-  const selectResponse = (cardIdx: number, responseIdx: number) => {
+  const orderedCards = useMemo(
+    () => cards.map((card, cardIndex) => {
+      const professionalIndex = card.responses.findIndex((response) => response.isProfessional)
+      return orderInteractiveAnswers(
+        card.responses,
+        professionalIndex,
+        cardIndex,
+        `confidence-builder:${cards[0]?.situation ?? 'chapter-3'}`,
+      )
+    }),
+    [cards],
+  )
+
+  const selectResponse = (cardIdx: number, originalResponseIdx: number) => {
     if (revealed.has(cardIdx)) return
-    setSelectedResponses(prev => ({ ...prev, [cardIdx]: responseIdx }))
+    setSelectedResponses(prev => ({ ...prev, [cardIdx]: originalResponseIdx }))
   }
 
   const revealCard = (cardIdx: number) => {
@@ -41,6 +55,7 @@ export default function ConfidenceBuilder({ cards, theme }: ConfidenceBuilderPro
         const isRevealed = revealed.has(cIdx)
         const selected = selectedResponses[cIdx]
         const selectedResponse = selected !== undefined ? card.responses[selected] : null
+        const displayResponses = orderedCards[cIdx] ?? []
 
         return (
           <div
@@ -54,7 +69,6 @@ export default function ConfidenceBuilder({ cards, theme }: ConfidenceBuilderPro
               boxShadow: `0 8px 32px rgba(0,0,0,0.12)`,
             }}
           >
-            {/* Header */}
             <div
               className="p-5"
               style={{
@@ -76,10 +90,9 @@ export default function ConfidenceBuilder({ cards, theme }: ConfidenceBuilderPro
               </p>
             </div>
 
-            {/* Response Options */}
             <div className="p-5 space-y-3">
-              {card.responses.map((response, rIdx) => {
-                const isSelected = selected === rIdx
+              {displayResponses.map(({ item: response, originalIndex }) => {
+                const isSelected = selected === originalIndex
                 const showCorrect = isRevealed && response.isProfessional
                 const showIncorrect = isRevealed && isSelected && !response.isProfessional
 
@@ -99,8 +112,8 @@ export default function ConfidenceBuilder({ cards, theme }: ConfidenceBuilderPro
 
                 return (
                   <button
-                    key={rIdx}
-                    onClick={() => selectResponse(cIdx, rIdx)}
+                    key={originalIndex}
+                    onClick={() => selectResponse(cIdx, originalIndex)}
                     disabled={isRevealed}
                     className="w-full text-left rounded-lg p-4 transition-all duration-300 text-sm flex items-start gap-3"
                     style={{
@@ -132,7 +145,6 @@ export default function ConfidenceBuilder({ cards, theme }: ConfidenceBuilderPro
                 )
               })}
 
-              {/* Reveal Button */}
               {!isRevealed && (
                 <button
                   onClick={() => revealCard(cIdx)}
@@ -149,8 +161,7 @@ export default function ConfidenceBuilder({ cards, theme }: ConfidenceBuilderPro
                 </button>
               )}
 
-              {/* Insight */}
-              {isRevealed && (
+              {isRevealed && selectedResponse && (
                 <div
                   className="rounded-lg p-4 mt-3 flex items-start gap-3"
                   style={{
