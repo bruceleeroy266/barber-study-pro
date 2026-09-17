@@ -1,16 +1,18 @@
 /**
- * Knowledge Check Sequencing Tests (C3-3 Stages 5–7)
+ * Chapter 4 Knowledge Check Sequencing Tests (C4-3)
  *
- * Proves the five-question Knowledge Check contract from persisted state only:
- *   - per-chapter sequence lengths (ch-2 stays 1, ch-3 is 5, unknown falls back)
- *   - progress derivation: answered counts, completion, open-reservation
- *     detection (placeholder IDs), and correct handling of consumed WRONG answers
+ * Proves the five-question Knowledge Check contract for Chapter 4 from
+ * persisted state only — the same generic sequencing engine Chapter 3 uses,
+ * driven by the ch-4 length config and the ch-4 canonical pools:
+ *   - ch-4 knowledge-check length is 5
  *   - questions 1–4 cannot complete (and therefore cannot terminally evaluate)
  *   - question 5 completes with exactly the five persisted evidence IDs in order
+ *   - open-reservation detection and consumed-WRONG-answer handling
  *   - replay/idempotency: consumed reservations return their real attempt ID
  *   - exclusion engine: after a full initial-quiz attempt the eligible pool is
- *     exactly the 15 reserve questions (initial questions never substitute);
- *     pool exhaustion stays explicit; reservation conflicts retry safely
+ *     exactly the 15 reserve questions of the cycle's family (initial
+ *     questions never substitute); exhaustion stays explicit; reservation
+ *     conflicts retry safely
  */
 
 import { describe, it, expect } from 'vitest'
@@ -23,15 +25,14 @@ import {
   type ReassessmentReservationRow,
 } from '../knowledge-check'
 import { ReassessmentService } from '@/lib/reassessment/reassessment-service'
-import { HistoricalExclusionEngine } from '@/lib/reassessment/exclusion-engine'
 import { resetMappingProviderRegistry } from '@/lib/reassessment/provider-registry'
 import type {
   IExclusionDatabaseClient,
   HistoricalQuizAttempt,
   ReassessmentQuestionHistoryRecord,
 } from '@/lib/reassessment/types'
-import { chapter3PremiumQuizQuestions } from '@/lib/chapter-3-premium-quiz'
-import { chapter3ReassessmentQuestions } from '@/lib/chapter-3-reassessment-questions'
+import { chapter4PremiumQuizQuestions } from '@/lib/chapter-4-premium-quiz'
+import { chapter4ReassessmentQuestions } from '@/lib/chapter-4-reassessment-questions'
 
 // ───────────────────────────────────────────────
 // In-memory knowledge-check DB
@@ -79,25 +80,24 @@ class MockKnowledgeCheckDb implements IKnowledgeCheckDbClient {
 // Sequence length policy
 // ───────────────────────────────────────────────
 
-describe('knowledge-check sequence lengths', () => {
-  it('ch-2 stays at 1 (established behavior), ch-3 and ch-4 are 5, unknown falls back to 1', () => {
-    expect(getKnowledgeCheckLength('ch-2')).toBe(1)
-    expect(getKnowledgeCheckLength('ch-3')).toBe(5)
+describe('Chapter 4 knowledge-check length', () => {
+  it('ch-4 uses the five-question Knowledge Check; unsupported chapters fall back to 1', () => {
     expect(getKnowledgeCheckLength('ch-4')).toBe(5)
     expect(getKnowledgeCheckLength('ch-5')).toBe(1)
   })
 })
 
 // ───────────────────────────────────────────────
-// Progress derivation + the five-question flow
+// The five-question flow
 // ───────────────────────────────────────────────
 
-describe('getKnowledgeCheckProgress — the five-question sequence', () => {
+describe('getKnowledgeCheckProgress — the Chapter 4 five-question sequence', () => {
   it('questions 1–4 cannot complete (and therefore cannot terminally evaluate)', async () => {
     const db = new MockKnowledgeCheckDb()
+    const reserveIds = ['qq-4-046', 'qq-4-047', 'qq-4-048', 'qq-4-049']
 
     for (let q = 1; q <= 4; q++) {
-      db.reserveOpen(`res-${q}`, `qq-3-07${4 + q}`, `placeholder-${q}`)
+      db.reserveOpen(`res-${q}`, reserveIds[q - 1], `placeholder-${q}`)
       db.consume(`res-${q}`, `attempt-${q}`, q % 2 === 0)
       const progress = await getKnowledgeCheckProgress(db, 'cycle-1', 'user-1', 5)
 
@@ -109,7 +109,7 @@ describe('getKnowledgeCheckProgress — the five-question sequence', () => {
 
   it('question 5 completes with exactly the five persisted evidence IDs in completion order', async () => {
     const db = new MockKnowledgeCheckDb()
-    const reserveIds = ['qq-3-075', 'qq-3-076', 'qq-3-077', 'qq-3-078', 'qq-3-079']
+    const reserveIds = ['qq-4-046', 'qq-4-047', 'qq-4-048', 'qq-4-049', 'qq-4-050']
 
     for (let q = 1; q <= 5; q++) {
       db.reserveOpen(`res-${q}`, reserveIds[q - 1], `placeholder-${q}`)
@@ -133,9 +133,9 @@ describe('getKnowledgeCheckProgress — the five-question sequence', () => {
 
   it('detects an open (reserved-but-not-consumed) question for reload recovery', async () => {
     const db = new MockKnowledgeCheckDb()
-    db.reserveOpen('res-1', 'qq-3-075', 'placeholder-1')
+    db.reserveOpen('res-1', 'qq-4-046', 'placeholder-1')
     db.consume('res-1', 'attempt-1', true)
-    db.reserveOpen('res-2', 'qq-3-076', 'placeholder-2') // still open
+    db.reserveOpen('res-2', 'qq-4-047', 'placeholder-2') // still open
 
     const progress = await getKnowledgeCheckProgress(db, 'cycle-1', 'user-1', 5)
 
@@ -143,13 +143,13 @@ describe('getKnowledgeCheckProgress — the five-question sequence', () => {
     expect(progress.isComplete).toBe(false)
     expect(progress.openReservation).toEqual({
       reservationId: 'res-2',
-      questionId: 'qq-3-076',
+      questionId: 'qq-4-047',
     })
   })
 
   it('a consumed WRONG answer is not mistaken for an open reservation', async () => {
     const db = new MockKnowledgeCheckDb()
-    db.reserveOpen('res-1', 'qq-3-075', 'placeholder-1')
+    db.reserveOpen('res-1', 'qq-4-046', 'placeholder-1')
     db.consume('res-1', 'attempt-1', false) // wrong answer, is_correct stays false
 
     const progress = await getKnowledgeCheckProgress(db, 'cycle-1', 'user-1', 5)
@@ -163,10 +163,10 @@ describe('getKnowledgeCheckProgress — the five-question sequence', () => {
 // Replay / idempotent consumption
 // ───────────────────────────────────────────────
 
-describe('getConsumedAttemptId — replay idempotency', () => {
+describe('getConsumedAttemptId — Chapter 4 replay idempotency', () => {
   it('returns the persisted attempt for a consumed reservation (correct answer)', async () => {
     const db = new MockKnowledgeCheckDb()
-    db.reserveOpen('res-1', 'qq-3-075', 'placeholder-1')
+    db.reserveOpen('res-1', 'qq-4-046', 'placeholder-1')
     db.consume('res-1', 'attempt-1', true)
 
     const reservations = await db.getReassessmentReservationsForCycle()
@@ -175,7 +175,7 @@ describe('getConsumedAttemptId — replay idempotency', () => {
 
   it('returns the persisted attempt for a consumed WRONG answer (the DB-level hole)', async () => {
     const db = new MockKnowledgeCheckDb()
-    db.reserveOpen('res-1', 'qq-3-075', 'placeholder-1')
+    db.reserveOpen('res-1', 'qq-4-046', 'placeholder-1')
     db.consume('res-1', 'attempt-1', false)
 
     const reservations = await db.getReassessmentReservationsForCycle()
@@ -184,16 +184,10 @@ describe('getConsumedAttemptId — replay idempotency', () => {
 
   it('returns null for an open reservation (placeholder ID)', async () => {
     const db = new MockKnowledgeCheckDb()
-    db.reserveOpen('res-1', 'qq-3-075', 'placeholder-1')
+    db.reserveOpen('res-1', 'qq-4-046', 'placeholder-1')
 
     const reservations = await db.getReassessmentReservationsForCycle()
     expect(await getConsumedAttemptId(db, reservations, 'res-1')).toBeNull()
-  })
-
-  it('returns null for an unknown reservation ID', async () => {
-    const db = new MockKnowledgeCheckDb()
-    const reservations = await db.getReassessmentReservationsForCycle()
-    expect(await getConsumedAttemptId(db, reservations, 'res-999')).toBeNull()
   })
 })
 
@@ -269,26 +263,26 @@ function fullInitialAttempt(): HistoricalQuizAttempt {
   return {
     id: 'initial-attempt-1',
     userId: 'user-1',
-    quizId: 'quiz-3',
+    quizId: 'quiz-4',
     answersJson: Object.fromEntries(
-      chapter3PremiumQuizQuestions.map((q) => [q.id, q.correct_answer]),
+      chapter4PremiumQuizQuestions.map((q) => [q.id, q.correct_answer]),
     ),
-    completedAt: new Date('2026-09-16T10:00:00.000Z'),
+    completedAt: new Date('2026-09-17T10:00:00.000Z'),
   }
 }
 
-describe('exclusion engine — the five Knowledge Check questions are legitimate and concept-bound', () => {
+describe('exclusion engine — the Chapter 4 five Knowledge Check questions are legitimate and concept-bound', () => {
   it('after a full initial-quiz attempt, the eligible pool is exactly the 15 reserve questions', async () => {
     resetMappingProviderRegistry()
     const db = new MockExclusionDb([fullInitialAttempt()])
-    const service = new ReassessmentService(db, 'ch-3')
+    const service = new ReassessmentService(db, 'ch-4')
 
     // Consume five questions through the atomic select-and-reserve path.
     const selected: string[] = []
     for (let i = 0; i < 5; i++) {
       const result = await service.selectAndReserveQuestion(
         'user-1',
-        'ch3-ergonomics',
+        'ch4-disinfection-sterilization',
         'cycle-1',
         `placeholder-${i + 1}`
       )
@@ -298,29 +292,29 @@ describe('exclusion engine — the five Knowledge Check questions are legitimate
 
     // All five are reserve questions mapped to the cycle's family — never
     // silently substituted initial-quiz questions.
-    const initialIds = new Set(chapter3PremiumQuizQuestions.map((q) => q.id))
-    const ergoReserveIds = chapter3ReassessmentQuestions
-      .filter((q) => q.id >= 'qq-3-075' && q.id <= 'qq-3-089')
+    const initialIds = new Set(chapter4PremiumQuizQuestions.map((q) => q.id))
+    const disinfReserveIds = chapter4ReassessmentQuestions
+      .filter((q) => q.id >= 'qq-4-046' && q.id <= 'qq-4-060')
       .map((q) => q.id)
     expect(selected).toHaveLength(5)
     expect(new Set(selected).size).toBe(5)
     for (const id of selected) {
       expect(initialIds.has(id), `${id} is an initial-quiz question`).toBe(false)
-      expect(ergoReserveIds, `${id} not in the ergonomics reserve`).toContain(id)
+      expect(disinfReserveIds, `${id} not in the disinfection reserve`).toContain(id)
     }
     // Deterministic order: first five reserve questions by ID.
-    expect(selected).toEqual(['qq-3-075', 'qq-3-076', 'qq-3-077', 'qq-3-078', 'qq-3-079'])
+    expect(selected).toEqual(['qq-4-046', 'qq-4-047', 'qq-4-048', 'qq-4-049', 'qq-4-050'])
   })
 
   it('pool exhaustion is explicit after all 15 reserve questions are consumed', async () => {
     resetMappingProviderRegistry()
     const db = new MockExclusionDb([fullInitialAttempt()])
-    const service = new ReassessmentService(db, 'ch-3')
+    const service = new ReassessmentService(db, 'ch-4')
 
     for (let i = 0; i < 15; i++) {
       const result = await service.selectAndReserveQuestion(
         'user-1',
-        'ch3-ergonomics',
+        'ch4-disinfection-sterilization',
         'cycle-1',
         `placeholder-${i + 1}`
       )
@@ -329,15 +323,15 @@ describe('exclusion engine — the five Knowledge Check questions are legitimate
 
     const exhausted = await service.selectAndReserveQuestion(
       'user-1',
-      'ch3-ergonomics',
+      'ch4-disinfection-sterilization',
       'cycle-1',
       'placeholder-16'
     )
     expect(exhausted.success).toBe(false)
     expect(exhausted.poolExhaustion?.isExhausted).toBe(true)
-    expect(exhausted.poolExhaustion?.totalQuestionsInPool).toBe(23) // 8 initial + 15 reserve
+    expect(exhausted.poolExhaustion?.totalQuestionsInPool).toBe(21) // 6 initial + 15 reserve
     expect(db.exhaustionRecords).toHaveLength(1)
-    expect(db.exhaustionRecords[0].conceptId).toBe('ch3-ergonomics')
+    expect(db.exhaustionRecords[0].conceptId).toBe('ch4-disinfection-sterilization')
   })
 
   it('reservation conflicts retry with a different candidate (concurrency protection remains)', async () => {
@@ -345,43 +339,20 @@ describe('exclusion engine — the five Knowledge Check questions are legitimate
     const db = new MockExclusionDb([fullInitialAttempt()])
     // First candidate always conflicts — the service must skip it and reserve
     // the next eligible question, never returning the conflicting candidate.
-    db.conflictQuestionIds.add('qq-3-075')
-    const service = new ReassessmentService(db, 'ch-3')
+    db.conflictQuestionIds.add('qq-4-046')
+    const service = new ReassessmentService(db, 'ch-4')
 
     const result = await service.selectAndReserveQuestion(
       'user-1',
-      'ch3-ergonomics',
+      'ch4-disinfection-sterilization',
       'cycle-1',
       'placeholder-1'
     )
 
     expect(result.success).toBe(true)
-    expect(result.questionId).toBe('qq-3-076')
+    expect(result.questionId).toBe('qq-4-047')
     expect(result.reservationAttempts).toBeGreaterThan(1)
-    // The conflicting candidate was never returned; our reservation is qq-3-076.
-    expect(db.history.map((h) => h.questionId)).toContain('qq-3-076')
-  })
-})
-
-// ───────────────────────────────────────────────
-// Chapter 2 zero-regression spot checks + 80% policy
-// ───────────────────────────────────────────────
-
-describe('chapter 2 preservation + ch3 initial policy', () => {
-  it('ch-2 sequence stays single-question: one attempt completes the check', async () => {
-    const db = new MockKnowledgeCheckDb()
-    db.reserveOpen('res-1', 'qq-2-051', 'placeholder-1')
-    db.consume('res-1', 'attempt-1', true)
-
-    const progress = await getKnowledgeCheckProgress(db, 'cycle-1', 'user-1', getKnowledgeCheckLength('ch-2'))
-    expect(progress.isComplete).toBe(true)
-    expect(progress.answeredAttemptIds).toEqual(['attempt-1'])
-    // Evaluation for ch-2 uses exactly the single persisted attempt ID.
-    expect(progress.answeredAttemptIds.slice(0, 1)).toEqual(['attempt-1'])
-  })
-
-  it('the 80% Chapter 3 initial-quiz policy is untouched', async () => {
-    const { demoQuizzes } = await import('@/lib/demo-data')
-    expect(demoQuizzes['ch-3'].passing_score).toBe(80)
+    // The conflicting candidate was never returned; our reservation is qq-4-047.
+    expect(db.history.map((h) => h.questionId)).toContain('qq-4-047')
   })
 })
