@@ -13,6 +13,15 @@ const quizRanges: readonly [start: number, end: number, conceptFamilyId: Chapter
 ] as const
 export const chapter4QuizQuestionConceptMappings: readonly Chapter4QuizQuestionConceptMapping[] = quizRanges.flatMap(([start,end,conceptFamilyId]) => Array.from({length:end-start+1},(_,offset)=>({questionId:`qq-4-${String(start+offset).padStart(3,'0')}` as const,conceptFamilyId})))
 
+// Locked reassessment-reserve distribution (C4-3): 15 per family = 90.
+// Reserve IDs continue the sequence at qq-4-031; the pool can never
+// legitimately exhaust (5-question check × 3 DB-capped cycles per family).
+const reassessmentRanges: readonly [start: number, end: number, conceptFamilyId: Chapter4ConceptFamilyId][] = [
+  [31,45,'ch4-pathogens-transmission'], [46,60,'ch4-disinfection-sterilization'], [61,75,'ch4-cross-contamination'],
+  [76,90,'ch4-blood-exposure-ppe'], [91,105,'ch4-regulatory-chemical-safety'], [106,120,'ch4-safe-practice-compliance'],
+] as const
+export const chapter4ReassessmentQuestionConceptMappings: readonly Chapter4QuizQuestionConceptMapping[] = reassessmentRanges.flatMap(([start,end,conceptFamilyId]) => Array.from({length:end-start+1},(_,offset)=>({questionId:`qq-4-${String(start+offset).padStart(3,'0')}` as const,conceptFamilyId})))
+
 export function getChapter4ConceptForFlashcard(flashcardId:string):Chapter4ConceptFamilyId|null { return chapter4FlashcardConceptMappings.find(m=>m.flashcardId===flashcardId)?.conceptFamilyId ?? null }
 export function getChapter4ConceptForQuizQuestion(questionId:string):Chapter4ConceptFamilyId|null { return chapter4QuizQuestionConceptMappings.find(m=>m.questionId===questionId)?.conceptFamilyId ?? null }
 
