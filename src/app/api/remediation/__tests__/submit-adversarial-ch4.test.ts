@@ -13,6 +13,12 @@
  *   - questions outside the ch-4 canonical mapping rejected
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any -- Mock-heavy route
+   fixture: partial service/RPC fakes are cast to satisfy mocked factories,
+   the same pattern the incumbent adversarial harness uses (its 14 errors are
+   part of main's documented lint baseline). Kept file-local so C4-3 adds
+   zero new lint findings. */
+
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { NextRequest } from 'next/server'
 
