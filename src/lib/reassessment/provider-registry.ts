@@ -14,6 +14,7 @@ import type { ChapterId, ICanonicalMappingProvider, ConceptId } from './types'
 import type { DetectionState, DetectionConfidence, ConceptEvidence } from '../concept-detection/engine'
 import { getChapter2MappingProvider } from './adapters/chapter-2-adapter'
 import { getChapter3MappingProvider } from './adapters/chapter-3-adapter'
+import { getChapter4MappingProvider } from './adapters/chapter-4-adapter'
 import {
   Chapter2DetectionProvider,
   createChapter2DetectionProvider,
@@ -24,6 +25,11 @@ import {
   createChapter3DetectionProvider,
   type Chapter3DetectionProviderConfig,
 } from './adapters/chapter-3-detection-provider'
+import {
+  Chapter4DetectionProvider,
+  createChapter4DetectionProvider,
+  type Chapter4DetectionProviderConfig,
+} from './adapters/chapter-4-detection-provider'
 
 // ───────────────────────────────────────────────
 // Concept Detection Provider Interface
@@ -74,6 +80,8 @@ class MappingProviderRegistry {
     this.registerProvider(getChapter2MappingProvider())
     // Register Chapter 3 (C3-3)
     this.registerProvider(getChapter3MappingProvider())
+    // Register Chapter 4 (C4-3)
+    this.registerProvider(getChapter4MappingProvider())
   }
 
   /**
@@ -264,6 +272,24 @@ export function initializeChapter3DetectionProvider(
 }
 
 /**
+ * Initialize and register the Chapter 4 detection provider (C4-3).
+ *
+ * This function creates the Chapter4DetectionProvider with the given
+ * configuration and registers it in the detection provider registry.
+ *
+ * @param config - Configuration with fetchQuizAttempts callback
+ * @returns The registered Chapter4DetectionProvider instance
+ */
+export function initializeChapter4DetectionProvider(
+  config: Chapter4DetectionProviderConfig
+): Chapter4DetectionProvider {
+  const provider = createChapter4DetectionProvider(config)
+  const registry = getDetectionProviderRegistry()
+  registry.registerProvider(provider)
+  return provider
+}
+
+/**
  * Initialize and register the detection provider for a chapter (C3-3).
  *
  * Chapter-aware resolution used by the reassessment submission path:
@@ -280,6 +306,9 @@ export function initializeChapterDetectionProvider(
   }
   if (chapterId === 'ch-3') {
     return initializeChapter3DetectionProvider(config)
+  }
+  if (chapterId === 'ch-4') {
+    return initializeChapter4DetectionProvider(config)
   }
   return undefined
 }

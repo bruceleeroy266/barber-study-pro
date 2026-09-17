@@ -36,8 +36,8 @@ describe('Chapter 3 remediation content provider — registration', () => {
     expect(provider).toBeDefined()
     expect(hasChapterContentProvider('ch-3')).toBe(true)
     expect(hasChapterContentProvider('ch-2')).toBe(true)
-    expect(hasChapterContentProvider('ch-4')).toBe(false)
-    expect(getChapterContentProvider('ch-4')).toBeUndefined()
+    expect(hasChapterContentProvider('ch-5')).toBe(false)
+    expect(getChapterContentProvider('ch-5')).toBeUndefined()
   })
 
   it('resolves concept names for all four locked families', () => {

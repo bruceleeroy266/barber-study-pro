@@ -11,10 +11,12 @@ import {
   chapter4ContentConceptMappings,
   chapter4FlashcardConceptMappings,
   chapter4QuizQuestionConceptMappings,
+  chapter4ReassessmentQuestionConceptMappings,
   getChapter4ConceptForFlashcard,
   getChapter4ConceptForQuizQuestion,
 } from './mappings'
 import { chapter4PremiumContent } from '@/lib/chapter-4-premium'
+import { chapter4ReassessmentQuestions } from '@/lib/chapter-4-reassessment-questions'
 
 const expectedConceptCounts = {
   'ch4-pathogens-transmission': { flashcards: 9, quiz: 5 },
@@ -174,6 +176,67 @@ describe('Chapter 4 content foundation integrity', () => {
       expect(
         chapter4ContentConceptMappings.filter((mapping) => mapping.conceptFamilyId === conceptId).length,
       ).toBeGreaterThan(0)
+    }
+  })
+
+  it('serves exactly 90 reserve questions continuing the sequence with complete answers (C4-3)', () => {
+    expect(chapter4ReassessmentQuestions).toHaveLength(90)
+
+    // IDs and order continue the initial bank's sequence — no reuse, no gaps.
+    expect(chapter4ReassessmentQuestions.map((question) => question.id)).toEqual(
+      Array.from({ length: 90 }, (_, index) => `qq-4-${String(index + 31).padStart(3, '0')}`),
+    )
+    expect(chapter4ReassessmentQuestions.map((question) => question.order_index)).toEqual(
+      Array.from({ length: 90 }, (_, index) => index + 31),
+    )
+    expect(chapter4ReassessmentQuestions.every((question) => question.quiz_id === 'quiz-4')).toBe(true)
+
+    // Reserve IDs never enter the initial serving path.
+    const initialIds = new Set(chapter4PremiumQuizQuestions.map((question) => question.id))
+    for (const question of chapter4ReassessmentQuestions) expect(initialIds.has(question.id)).toBe(false)
+
+    // Complete, distinct answers + explanations; unique wording.
+    for (const question of chapter4ReassessmentQuestions) {
+      expect(['a', 'b', 'c', 'd']).toContain(question.correct_answer)
+      expect(new Set([question.answer_a, question.answer_b, question.answer_c, question.answer_d]).size).toBe(4)
+      expect(question.explanation?.trim()).not.toBe('')
+    }
+    expect(new Set(chapter4ReassessmentQuestions.map((question) => question.question.trim().toLowerCase())).size).toBe(90)
+  })
+
+  it('locks reserve difficulty at 6/6/3 per family with globally balanced answer positions (C4-3)', () => {
+    for (const conceptId of ACTIVE_CHAPTER4_CONCEPT_FAMILY_IDS) {
+      const questionIds = new Set<string>(
+        chapter4ReassessmentQuestionConceptMappings
+          .filter((mapping) => mapping.conceptFamilyId === conceptId)
+          .map((mapping) => mapping.questionId as string),
+      )
+      expect(questionIds.size).toBe(15)
+      const counts = chapter4ReassessmentQuestions
+        .filter((question) => questionIds.has(question.id))
+        .reduce<Record<string, number>>((acc, question) => {
+          acc[question.difficulty] = (acc[question.difficulty] ?? 0) + 1
+          return acc
+        }, {})
+      expect(counts).toEqual({ easy: 6, medium: 6, hard: 3 })
+    }
+
+    const positions = chapter4ReassessmentQuestions.reduce<Record<string, number>>((acc, question) => {
+      acc[question.correct_answer] = (acc[question.correct_answer] ?? 0) + 1
+      return acc
+    }, {})
+    expect(positions).toEqual({ a: 23, b: 23, c: 22, d: 22 })
+  })
+
+  it('maps every reserve question exactly once with no orphans (C4-3)', () => {
+    expect(chapter4ReassessmentQuestionConceptMappings).toHaveLength(90)
+    expect(new Set(chapter4ReassessmentQuestionConceptMappings.map((mapping) => mapping.questionId)).size).toBe(90)
+
+    const servedIds = new Set(chapter4ReassessmentQuestions.map((question) => question.id))
+    const conceptIds = new Set(ACTIVE_CHAPTER4_CONCEPT_FAMILY_IDS)
+    for (const mapping of chapter4ReassessmentQuestionConceptMappings) {
+      expect(servedIds.has(mapping.questionId)).toBe(true)
+      expect(conceptIds.has(mapping.conceptFamilyId)).toBe(true)
     }
   })
 })
