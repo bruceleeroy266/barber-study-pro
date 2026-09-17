@@ -44,6 +44,19 @@ import { chapter3KeyTerms } from '@/lib/chapter-3-key-terms'
 import { chapter3PremiumQuizQuestions } from '@/lib/chapter-3-premium-quiz'
 import { chapter3ReassessmentQuestions } from '@/lib/chapter-3-reassessment-questions'
 
+import {
+  chapter4ContentConceptMappings,
+  chapter4FlashcardConceptMappings,
+  chapter4QuizQuestionConceptMappings,
+} from '@/lib/chapter-4-concepts/mappings'
+import {
+  ACTIVE_CHAPTER4_CONCEPT_FAMILY_IDS,
+  chapter4ConceptFamilies,
+} from '@/lib/chapter-4-concepts/concepts'
+import { chapter4PremiumFlashcards } from '@/lib/chapter-4-premium-flashcards'
+import { chapter4PremiumQuizQuestions } from '@/lib/chapter-4-premium-quiz'
+import { chapter4ReassessmentQuestions } from '@/lib/chapter-4-reassessment-questions'
+
 import { getChapterContent } from '@/lib/chapter-content'
 
 // ───────────────────────────────────────────────
@@ -307,12 +320,107 @@ const chapter3Provider: ChapterRemediationContentProvider = {
 }
 
 // ───────────────────────────────────────────────
+// Chapter 4 Provider (C4-3)
+// ───────────────────────────────────────────────
+
+// Project the canonical Ch4 mappings (conceptFamilyId field) into the shared
+// provider shape. chapter-4-concepts/mappings.ts remains the single source
+// of truth — nothing is duplicated or restated.
+const chapter4ContentMappingsProjected: readonly { contentBlockId: string; conceptId: string }[] =
+  chapter4ContentConceptMappings.map((m) => ({
+    contentBlockId: m.contentBlockId,
+    conceptId: m.conceptFamilyId as string,
+  }))
+const chapter4FlashcardMappingsProjected: readonly { flashcardId: string; conceptId: string }[] =
+  chapter4FlashcardConceptMappings.map((m) => ({
+    flashcardId: m.flashcardId as string,
+    conceptId: m.conceptFamilyId as string,
+  }))
+const chapter4QuizMappingsProjected: readonly { questionId: string; conceptId: string }[] =
+  chapter4QuizQuestionConceptMappings.map((m) => ({
+    questionId: m.questionId as string,
+    conceptId: m.conceptFamilyId as string,
+  }))
+
+function isChapter4ConceptFamilyId(conceptId: string): boolean {
+  return (ACTIVE_CHAPTER4_CONCEPT_FAMILY_IDS as readonly string[]).includes(conceptId)
+}
+
+const chapter4Provider: ChapterRemediationContentProvider = {
+  chapterId: 'ch-4',
+
+  getConceptName(conceptId) {
+    return chapter4ConceptFamilies.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic'
+  },
+
+  getContentBlockIdsForConcept(conceptId) {
+    return chapter4ContentMappingsProjected
+      .filter((m) => m.conceptId === conceptId)
+      .map((m) => m.contentBlockId)
+  },
+
+  getFlashcardIdsForConcept(conceptId) {
+    return chapter4FlashcardMappingsProjected
+      .filter((m) => m.conceptId === conceptId)
+      .map((m) => m.flashcardId)
+  },
+
+  filterContentByConcept(conceptId) {
+    const mappedIds = new Set(
+      chapter4ContentMappingsProjected
+        .filter((m) => m.conceptId === conceptId)
+        .map((m) => m.contentBlockId),
+    )
+    return filterSectionsByMappedBlockIds(4, mappedIds)
+  },
+
+  filterFlashcardsByConcept(conceptId) {
+    const mappedIds = new Set(
+      chapter4FlashcardMappingsProjected
+        .filter((m) => m.conceptId === conceptId)
+        .map((m) => m.flashcardId),
+    )
+    return chapter4PremiumFlashcards.filter(
+      (card) => card.is_active && mappedIds.has(card.id),
+    )
+  },
+
+  buildRemediationContentBundle(conceptId) {
+    return buildBundle(this, conceptId)
+  },
+
+  getQuizQuestionById(questionId) {
+    return (
+      chapter4PremiumQuizQuestions.find((q) => q.id === questionId) ??
+      chapter4ReassessmentQuestions.find((q) => q.id === questionId) ??
+      null
+    )
+  },
+
+  filterKeyTermsByConcept(conceptId) {
+    // Chapter 4 has no key-terms dataset (deferred: student-page KeyTermsPanel
+    // scope, not C4-3). No C4-3 consumer renders key terms — the remediation
+    // page client has no key-term path. Contract requires [] for
+    // retired/unknown concepts; a valid-but-undataseted family also serves [].
+    if (!isChapter4ConceptFamilyId(conceptId)) {
+      return []
+    }
+    return []
+  },
+
+  getConceptQuestionCount(conceptId) {
+    return chapter4QuizMappingsProjected.filter((m) => m.conceptId === conceptId).length
+  },
+}
+
+// ───────────────────────────────────────────────
 // Registry
 // ───────────────────────────────────────────────
 
 const contentProviders = new Map<ChapterId, ChapterRemediationContentProvider>([
   ['ch-2', chapter2Provider],
   ['ch-3', chapter3Provider],
+  ['ch-4', chapter4Provider],
 ])
 
 /**
