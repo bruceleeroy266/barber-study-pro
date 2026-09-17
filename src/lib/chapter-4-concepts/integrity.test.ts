@@ -5,13 +5,16 @@ import {
   ACTIVE_CHAPTER4_CONCEPT_FAMILY_IDS,
   chapter4ConceptFamilies,
   chapter4LearningObjectives,
+  isChapter4ConceptFamilyId,
 } from './concepts'
 import {
+  chapter4ContentConceptMappings,
   chapter4FlashcardConceptMappings,
   chapter4QuizQuestionConceptMappings,
   getChapter4ConceptForFlashcard,
   getChapter4ConceptForQuizQuestion,
 } from './mappings'
+import { chapter4PremiumContent } from '@/lib/chapter-4-premium'
 
 const expectedConceptCounts = {
   'ch4-pathogens-transmission': { flashcards: 9, quiz: 5 },
@@ -133,5 +136,44 @@ describe('Chapter 4 content foundation integrity', () => {
   it('fails closed for unknown Chapter 4 content IDs', () => {
     expect(getChapter4ConceptForFlashcard('fc-4-999')).toBeNull()
     expect(getChapter4ConceptForQuizQuestion('qq-4-999')).toBeNull()
+  })
+
+  it('designates a valid, distinct primary learning objective per family (C4-2)', () => {
+    const objectiveIds = new Set(chapter4LearningObjectives.map((objective) => objective.id))
+    const primaries = chapter4ConceptFamilies.map((concept) => concept.learningObjectiveId)
+
+    for (const concept of chapter4ConceptFamilies) {
+      // Primary exists in the canonical LO set and is a member of the family's
+      // own many-to-many relationships (which stay intact).
+      expect(objectiveIds.has(concept.learningObjectiveId)).toBe(true)
+      expect(concept.learningObjectiveIds).toContain(concept.learningObjectiveId)
+    }
+
+    // The six primary assignments are the audited intentional set, all distinct.
+    expect(new Set(primaries).size).toBe(6)
+    expect(primaries).toEqual(['LO-4-02', 'LO-4-04', 'LO-4-03', 'LO-4-06', 'LO-4-01', 'LO-4-08'])
+  })
+
+  it('maps every Chapter 4 content mapping to a real section with full family coverage (C4-2)', () => {
+    expect(chapter4ContentConceptMappings.length).toBeGreaterThan(0)
+
+    // No duplicate or malformed section mappings.
+    expect(new Set(chapter4ContentConceptMappings.map((mapping) => mapping.contentBlockId)).size).toBe(
+      chapter4ContentConceptMappings.length,
+    )
+
+    // Every mapping references a known concept family and a REAL served section id.
+    const servedSectionIds = new Set(chapter4PremiumContent.sections.map((section) => section.id))
+    for (const mapping of chapter4ContentConceptMappings) {
+      expect(isChapter4ConceptFamilyId(mapping.conceptFamilyId)).toBe(true)
+      expect(servedSectionIds.has(mapping.contentBlockId), mapping.contentBlockId).toBe(true)
+    }
+
+    // Every canonical family has at least one PRIMARY content block — no orphan families.
+    for (const conceptId of ACTIVE_CHAPTER4_CONCEPT_FAMILY_IDS) {
+      expect(
+        chapter4ContentConceptMappings.filter((mapping) => mapping.conceptFamilyId === conceptId).length,
+      ).toBeGreaterThan(0)
+    }
   })
 })
