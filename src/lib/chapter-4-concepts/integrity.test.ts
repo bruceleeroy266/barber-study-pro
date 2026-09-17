@@ -99,8 +99,8 @@ describe('Chapter 4 content foundation integrity', () => {
       expect(question.answer_b.trim()).not.toBe('')
       expect(question.answer_c.trim()).not.toBe('')
       expect(question.answer_d.trim()).not.toBe('')
-      expect(new Set([question.answer_a, question.answer_b, question.answer_c, question.answer_d])).toHaveSize(4)
-      expect(question.explanation.trim()).not.toBe('')
+      expect(new Set([question.answer_a, question.answer_b, question.answer_c, question.answer_d]).size).toBe(4)
+      expect(question.explanation?.trim()).not.toBe('')
     }
   })
 
