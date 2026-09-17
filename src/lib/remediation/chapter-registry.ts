@@ -39,6 +39,13 @@ import {
   chapter3FlashcardConceptMappings,
 } from '@/lib/chapter-3-concepts/mappings'
 
+import { detectAllConceptGaps as detectAllChapter4ConceptGaps } from '@/lib/chapter-4-concepts/detection'
+import { chapter4ConceptFamilies } from '@/lib/chapter-4-concepts/concepts'
+import {
+  chapter4ContentConceptMappings,
+  chapter4FlashcardConceptMappings,
+} from '@/lib/chapter-4-concepts/mappings'
+
 // ───────────────────────────────────────────────
 // Provider Contract
 // ───────────────────────────────────────────────
@@ -174,12 +181,52 @@ const chapter3Provider: ChapterDetectionProvider = {
 }
 
 // ───────────────────────────────────────────────
+// Chapter 4 Provider (C4-2)
+// ───────────────────────────────────────────────
+
+// Project the canonical Ch4 mappings (conceptFamilyId field) into the shared
+// assignment-builder shape. mappings.ts remains the single source of truth.
+const chapter4ContentMappingsProjected = chapter4ContentConceptMappings.map((m) => ({
+  contentBlockId: m.contentBlockId,
+  conceptId: m.conceptFamilyId as string,
+}))
+const chapter4FlashcardMappingsProjected = chapter4FlashcardConceptMappings.map((m) => ({
+  flashcardId: m.flashcardId,
+  conceptId: m.conceptFamilyId as string,
+}))
+
+const chapter4Provider: ChapterDetectionProvider = {
+  chapterId: 'ch-4',
+
+  detectAll(attempts) {
+    const out = new Map<ConceptId, ConceptDetectionResult>()
+    for (const [conceptId, result] of detectAllChapter4ConceptGaps(attempts)) {
+      out.set(conceptId, result)
+    }
+    return out
+  },
+
+  getConceptName(conceptId) {
+    return chapter4ConceptFamilies.find((c) => c.id === conceptId)?.name ?? conceptId
+  },
+
+  buildAssignmentsForConcept(conceptId) {
+    return buildAssignments(
+      conceptId,
+      chapter4ContentMappingsProjected,
+      chapter4FlashcardMappingsProjected,
+    )
+  },
+}
+
+// ───────────────────────────────────────────────
 // Registry
 // ───────────────────────────────────────────────
 
 const providers = new Map<ChapterId, ChapterDetectionProvider>([
   ['ch-2', chapter2Provider],
   ['ch-3', chapter3Provider],
+  ['ch-4', chapter4Provider],
 ])
 
 /**
