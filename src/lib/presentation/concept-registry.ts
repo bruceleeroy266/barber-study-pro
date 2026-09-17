@@ -1,9 +1,11 @@
 import { chapter2Concepts, RETIRED_CONCEPT_IDS } from '@/lib/chapter-2-concepts/concepts'
 import { chapter3ConceptFamilies } from '@/lib/chapter-3-concepts/concepts'
+import { chapter4ConceptFamilies } from '@/lib/chapter-4-concepts/concepts'
 
 const conceptNameById = new Map<string, string>([
   ...chapter2Concepts.map((concept) => [concept.id as string, concept.name] as const),
   ...chapter3ConceptFamilies.map((concept) => [concept.id as string, concept.name] as const),
+  ...chapter4ConceptFamilies.map((concept) => [concept.id as string, concept.name] as const),
 ])
 
 const retiredConceptIds = new Set<string>(RETIRED_CONCEPT_IDS as readonly string[])
@@ -18,4 +20,8 @@ export function resolvePresentationConceptName(conceptId: string): string {
 
 export function isChapter3PresentationConcept(conceptId: string): boolean {
   return chapter3ConceptFamilies.some((concept) => concept.id === conceptId)
+}
+
+export function isChapter4PresentationConcept(conceptId: string): boolean {
+  return chapter4ConceptFamilies.some((concept) => concept.id === conceptId)
 }
