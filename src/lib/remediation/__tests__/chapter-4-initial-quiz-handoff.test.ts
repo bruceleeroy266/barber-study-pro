@@ -1,29 +1,29 @@
 /**
- * Chapter 3 Initial Quiz → Focus-Area Handoff (C3-2)
+ * Chapter 4 Initial Quiz → Focus-Area Handoff (C4-2)
  *
- * Proves the Chapter 3 handoff contract through the generic
+ * Proves the Chapter 4 handoff contract through the generic
  * detection/orchestration pipeline:
- *   - a completed Chapter 3 quiz attempt is analyzed against the four locked
- *     Chapter 3 concept families
+ *   - a completed Chapter 4 quiz attempt is analyzed against the six locked
+ *     Chapter 4 concept families
  *   - qualifying weak families produce correctly-shaped active cycles with
- *     assignments derived from the canonical Chapter 3 mappings
+ *     assignments derived from the canonical Chapter 4 mappings
  *   - replay/idempotency never creates duplicate active cycles
  *   - unregistered chapters remain inert
  *
- * Expected assignments are DERIVED from chapter-3-concepts/mappings.ts at
+ * Expected assignments are DERIVED from chapter-4-concepts/mappings.ts at
  * runtime — this test never restates canonical mappings.
  */
 
 import { describe, expect, it } from 'vitest'
-import { chapter3PremiumQuizQuestions } from '@/lib/chapter-3-premium-quiz'
+import { chapter4PremiumQuizQuestions } from '@/lib/chapter-4-premium-quiz'
 import {
-  chapter3ContentConceptMappings,
-  chapter3FlashcardConceptMappings,
-} from '@/lib/chapter-3-concepts/mappings'
+  chapter4ContentConceptMappings,
+  chapter4FlashcardConceptMappings,
+} from '@/lib/chapter-4-concepts/mappings'
 import {
-  CHAPTER3_CONCEPT_FAMILY_IDS,
-  chapter3ConceptFamilies,
-} from '@/lib/chapter-3-concepts/concepts'
+  ACTIVE_CHAPTER4_CONCEPT_FAMILY_IDS,
+  chapter4ConceptFamilies,
+} from '@/lib/chapter-4-concepts/concepts'
 import {
   DetectionOrchestratorService,
   type IDetectionOrchestratorDbClient,
@@ -46,30 +46,30 @@ function wrongAnswer(correct: string): string {
 
 function weakInitialAttempt(): QuizAttempt {
   const answers = Object.fromEntries(
-    chapter3PremiumQuizQuestions.map((question) => [
+    chapter4PremiumQuizQuestions.map((question) => [
       question.id,
       wrongAnswer(question.correct_answer),
     ]),
   )
 
   return {
-    id: 'attempt-ch3-initial-weak',
-    user_id: 'student-ch3',
-    quiz_id: 'quiz-3',
+    id: 'attempt-ch4-initial-weak',
+    user_id: 'student-ch4',
+    quiz_id: 'quiz-4',
     score: 0,
-    total_questions: chapter3PremiumQuizQuestions.length,
+    total_questions: chapter4PremiumQuizQuestions.length,
     percentage: 0,
     answers_json: answers,
-    completed_at: '2026-09-15T18:00:00.000Z',
+    completed_at: '2026-09-16T18:00:00.000Z',
   }
 }
 
-/** Three ergonomics-only attempts: M, M, C → repeated_weakness for that family. */
-function ergonomicsWeakAttempts(): QuizAttempt[] {
+/** Three disinfection-only attempts: M, M, C → repeated_weakness for that family. */
+function disinfectionWeakAttempts(): QuizAttempt[] {
   const outcomes: Array<Record<string, 'C' | 'M'>> = [
-    { 'qq-3-014': 'M' },
-    { 'qq-3-028': 'M' },
-    { 'qq-3-037': 'C' },
+    { 'qq-4-006': 'M' },
+    { 'qq-4-007': 'M' },
+    { 'qq-4-008': 'C' },
   ]
   return outcomes.map((outcome, index) => {
     const answers = Object.fromEntries(
@@ -77,17 +77,17 @@ function ergonomicsWeakAttempts(): QuizAttempt[] {
         questionId,
         result === 'M'
           ? wrongAnswer(
-              chapter3PremiumQuizQuestions.find((q) => q.id === questionId)!
+              chapter4PremiumQuizQuestions.find((q) => q.id === questionId)!
                 .correct_answer,
             )
-          : chapter3PremiumQuizQuestions.find((q) => q.id === questionId)!
+          : chapter4PremiumQuizQuestions.find((q) => q.id === questionId)!
               .correct_answer,
       ]),
     )
     return {
-      id: `attempt-ch3-ergo-${index + 1}`,
-      user_id: 'student-ch3',
-      quiz_id: 'quiz-3',
+      id: `attempt-ch4-disinf-${index + 1}`,
+      user_id: 'student-ch4',
+      quiz_id: 'quiz-4',
       score: 0,
       total_questions: 30,
       percentage: 0,
@@ -118,7 +118,7 @@ interface CreatedCycle {
   }>
 }
 
-class Chapter3HandoffDb implements IDetectionOrchestratorDbClient {
+class Chapter4HandoffDb implements IDetectionOrchestratorDbClient {
   readonly created: CreatedCycle[] = []
   private active = new Map<string, { id: string }>()
 
@@ -146,7 +146,7 @@ class Chapter3HandoffDb implements IDetectionOrchestratorDbClient {
     status: 'targeted'
     assignments: CreatedCycle['assignments']
   }): Promise<string | null> {
-    const id = `focus-ch3-${this.created.length + 1}`
+    const id = `focus-ch4-${this.created.length + 1}`
     this.created.push({
       id,
       userId: data.userId,
@@ -172,10 +172,10 @@ class Chapter3HandoffDb implements IDetectionOrchestratorDbClient {
 // ───────────────────────────────────────────────
 
 function expectedAssignmentsFor(conceptFamilyId: string) {
-  const content = chapter3ContentConceptMappings
+  const content = chapter4ContentConceptMappings
     .filter((m) => m.conceptFamilyId === conceptFamilyId)
     .map((m) => m.contentBlockId)
-  const flashcards = chapter3FlashcardConceptMappings
+  const flashcards = chapter4FlashcardConceptMappings
     .filter((m) => m.conceptFamilyId === conceptFamilyId)
     .map((m) => m.flashcardId)
   return { content, flashcards }
@@ -185,30 +185,30 @@ function expectedAssignmentsFor(conceptFamilyId: string) {
 // Tests
 // ───────────────────────────────────────────────
 
-describe('Chapter 3 initial quiz → focus-area handoff', () => {
+describe('Chapter 4 initial quiz → focus-area handoff', () => {
   it('creates one targeted cycle per weak family from a weak real 30-question attempt', async () => {
-    expect(chapter3PremiumQuizQuestions).toHaveLength(30)
+    expect(chapter4PremiumQuizQuestions).toHaveLength(30)
 
-    const db = new Chapter3HandoffDb([weakInitialAttempt()])
+    const db = new Chapter4HandoffDb([weakInitialAttempt()])
     const service = new DetectionOrchestratorService(db)
 
     const result = await service.orchestrateAfterQuizCompletion(
-      'student-ch3',
-      'ch-3',
-      'attempt-ch3-initial-weak',
+      'student-ch4',
+      'ch-4',
+      'attempt-ch4-initial-weak',
     )
 
     expect(result.success).toBe(true)
-    // All four families are all-miss with >= 3 observations → repeated_weakness.
-    expect(result.cyclesCreated).toBe(4)
+    // All six families are all-miss with >= 3 observations → repeated_weakness.
+    expect(result.cyclesCreated).toBe(6)
     expect(result.conceptsDetected.sort()).toEqual(
-      [...CHAPTER3_CONCEPT_FAMILY_IDS].sort(),
+      [...ACTIVE_CHAPTER4_CONCEPT_FAMILY_IDS].sort(),
     )
-    expect(db.created).toHaveLength(4)
+    expect(db.created).toHaveLength(6)
 
     for (const cycle of db.created) {
       // Cycle shape: chapter, status, sequencing, detection snapshot.
-      expect(cycle.chapterId).toBe('ch-3')
+      expect(cycle.chapterId).toBe('ch-4')
       expect(cycle.status).toBe('targeted')
       expect(cycle.cycleNumber).toBe(1)
       expect(cycle.detectionState).toBe('repeated_weakness')
@@ -217,7 +217,7 @@ describe('Chapter 3 initial quiz → focus-area handoff', () => {
       // Assignments equal the canonical mapping projection for this family.
       const expected = expectedAssignmentsFor(cycle.conceptId)
       expect(expected.content.length).toBeGreaterThan(0)
-      expect(expected.flashcards.length).toBe(12)
+      expect(expected.flashcards.length).toBeGreaterThan(0)
 
       const contentAssignments = cycle.assignments.filter(
         (a) => a.assignmentType === 'content_block',
@@ -240,25 +240,25 @@ describe('Chapter 3 initial quiz → focus-area handoff', () => {
     }
   })
 
-  it('attributes weakness to the correct Chapter 3 family only', async () => {
-    const db = new Chapter3HandoffDb(ergonomicsWeakAttempts())
+  it('attributes weakness to the correct Chapter 4 family only', async () => {
+    const db = new Chapter4HandoffDb(disinfectionWeakAttempts())
     const service = new DetectionOrchestratorService(db)
 
     const result = await service.orchestrateAfterQuizCompletion(
-      'student-ch3',
-      'ch-3',
-      'attempt-ch3-ergo-3',
+      'student-ch4',
+      'ch-4',
+      'attempt-ch4-disinf-3',
     )
 
     expect(result.success).toBe(true)
     expect(result.cyclesCreated).toBe(1)
-    expect(result.conceptsDetected).toEqual(['ch3-ergonomics'])
-    expect(db.created[0].conceptId).toBe('ch3-ergonomics')
+    expect(result.conceptsDetected).toEqual(['ch4-disinfection-sterilization'])
+    expect(db.created[0].conceptId).toBe('ch4-disinfection-sterilization')
     expect(db.created[0].detectionState).toBe('repeated_weakness')
 
-    // The cycle's assignments are exactly the ergonomics slice of the
+    // The cycle's assignments are exactly the disinfection slice of the
     // canonical mappings.
-    const expected = expectedAssignmentsFor('ch3-ergonomics')
+    const expected = expectedAssignmentsFor('ch4-disinfection-sterilization')
     expect(db.created[0].assignments.map((a) => a.assetId)).toEqual([
       ...expected.content,
       ...expected.flashcards,
@@ -266,41 +266,41 @@ describe('Chapter 3 initial quiz → focus-area handoff', () => {
   })
 
   it('does not duplicate active focus areas when detection replays', async () => {
-    const db = new Chapter3HandoffDb([weakInitialAttempt()])
+    const db = new Chapter4HandoffDb([weakInitialAttempt()])
     const service = new DetectionOrchestratorService(db)
 
     const first = await service.orchestrateAfterQuizCompletion(
-      'student-ch3',
-      'ch-3',
-      'attempt-ch3-initial-weak',
+      'student-ch4',
+      'ch-4',
+      'attempt-ch4-initial-weak',
     )
     const second = await service.orchestrateAfterQuizCompletion(
-      'student-ch3',
-      'ch-3',
-      'attempt-ch3-initial-weak',
+      'student-ch4',
+      'ch-4',
+      'attempt-ch4-initial-weak',
     )
 
-    expect(first.cyclesCreated).toBe(4)
+    expect(first.cyclesCreated).toBe(6)
     expect(second.cyclesCreated).toBe(0)
-    expect(second.existingCyclesFound).toBe(4)
+    expect(second.existingCyclesFound).toBe(6)
     expect(second.cycleIds).toEqual(first.cycleIds)
-    expect(db.created).toHaveLength(4)
+    expect(db.created).toHaveLength(6)
   })
 
   it('creates no cycles when the attempt shows no weakness', async () => {
     const cleanAttempt: QuizAttempt = {
       ...weakInitialAttempt(),
       answers_json: Object.fromEntries(
-        chapter3PremiumQuizQuestions.map((q) => [q.id, q.correct_answer]),
+        chapter4PremiumQuizQuestions.map((q) => [q.id, q.correct_answer]),
       ),
     }
-    const db = new Chapter3HandoffDb([cleanAttempt])
+    const db = new Chapter4HandoffDb([cleanAttempt])
     const service = new DetectionOrchestratorService(db)
 
     const result = await service.orchestrateAfterQuizCompletion(
-      'student-ch3',
-      'ch-3',
-      'attempt-ch3-initial-weak',
+      'student-ch4',
+      'ch-4',
+      'attempt-ch4-initial-weak',
     )
 
     expect(result.success).toBe(true)
@@ -310,13 +310,13 @@ describe('Chapter 3 initial quiz → focus-area handoff', () => {
   })
 
   it('remains inert for unregistered chapters', async () => {
-    const db = new Chapter3HandoffDb([weakInitialAttempt()])
+    const db = new Chapter4HandoffDb([weakInitialAttempt()])
     const service = new DetectionOrchestratorService(db)
 
     const result = await service.orchestrateAfterQuizCompletion(
-      'student-ch3',
+      'student-ch4',
       'ch-5',
-      'attempt-ch3-initial-weak',
+      'attempt-ch4-initial-weak',
     )
 
     expect(result.success).toBe(true)
@@ -325,11 +325,11 @@ describe('Chapter 3 initial quiz → focus-area handoff', () => {
     expect(db.created).toHaveLength(0)
   })
 
-  it('resolves Chapter 3 concept display names through the provider', () => {
-    const service = new DetectionOrchestratorService(new Chapter3HandoffDb([]))
-    for (const family of chapter3ConceptFamilies) {
-      expect(service.getConceptName(family.id, 'ch-3')).toBe(family.name)
+  it('resolves Chapter 4 concept display names through the provider', () => {
+    const service = new DetectionOrchestratorService(new Chapter4HandoffDb([]))
+    for (const family of chapter4ConceptFamilies) {
+      expect(service.getConceptName(family.id, 'ch-4')).toBe(family.name)
     }
-    expect(service.getConceptName('ch3-unknown', 'ch-3')).toBe('ch3-unknown')
+    expect(service.getConceptName('ch4-unknown', 'ch-4')).toBe('ch4-unknown')
   })
 })
