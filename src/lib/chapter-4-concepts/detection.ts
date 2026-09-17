@@ -10,8 +10,11 @@
  *
  * Canonical data discipline: question→concept mappings are PROJECTED from
  * chapter-4-concepts/mappings.ts at module load. Nothing is duplicated or
- * restated. Chapter 4 has no reassessment reserve yet (C4-3), so the
- * correct-answer map contains only the canonical 30-question bank.
+ * restated. Post-lock additive (C4-3): the reassessment reserve is unioned
+ * into the detection inputs so reserve questions count as detection and
+ * evaluation evidence — exactly mirroring the Chapter 2/3 bindings.
+ * Initial-quiz detection is unchanged: reserve IDs never appear in
+ * initial-quiz answers_json.
  *
  * Scope: Detection only. No remediation routing, no reassessment,
  * no mastery policy, no instructor UI, no student-facing labels.
@@ -22,8 +25,12 @@ import type {
   Chapter4LearningObjectiveId,
 } from './types'
 import { chapter4ConceptFamilies } from './concepts'
-import { chapter4QuizQuestionConceptMappings } from './mappings'
+import {
+  chapter4QuizQuestionConceptMappings,
+  chapter4ReassessmentQuestionConceptMappings,
+} from './mappings'
 import { chapter4PremiumQuizQuestions } from '../chapter-4-premium-quiz'
+import { chapter4ReassessmentQuestions } from '../chapter-4-reassessment-questions'
 import type { QuizAttempt } from '@/types'
 import * as engine from '../concept-detection/engine'
 
@@ -62,15 +69,20 @@ export type LearningObjectiveDetectionResult =
 // input shape. Only the initial 30-question bank participates — Chapter 4
 // has no reassessment reserve yet (C4-3 scope).
 const chapter4QuestionMappings: readonly engine.DetectionQuestionMapping<Chapter4ConceptFamilyId>[] =
-  chapter4QuizQuestionConceptMappings.map((m) => ({
-    questionId: m.questionId,
-    conceptId: m.conceptFamilyId,
-  }))
+  [...chapter4QuizQuestionConceptMappings, ...chapter4ReassessmentQuestionConceptMappings].map(
+    (m) => ({
+      questionId: m.questionId,
+      conceptId: m.conceptFamilyId,
+    }),
+  )
 
-// Correct answers come from the canonical 30-question bank; unknown IDs are
-// skipped by the engine (fail-closed).
+// Correct answers come from the canonical 30-question bank plus the
+// reassessment reserve (C4-3); unknown IDs are skipped by the engine.
 const questionCorrectAnswerMap: ReadonlyMap<string, string> = new Map(
-  chapter4PremiumQuizQuestions.map((q) => [q.id, q.correct_answer]),
+  [...chapter4PremiumQuizQuestions, ...chapter4ReassessmentQuestions].map((q) => [
+    q.id,
+    q.correct_answer,
+  ]),
 )
 
 const chapter4DetectionInput: engine.ConceptDetectionInput<
