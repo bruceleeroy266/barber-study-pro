@@ -24,7 +24,7 @@ import {
 import { ACTIVE_CONCEPT_IDS } from '@/lib/chapter-2-concepts/concepts'
 import { chapter3ConceptFamilies } from '@/lib/chapter-3-concepts/concepts'
 import { chapter4ConceptFamilies } from '@/lib/chapter-4-concepts/concepts'
-import type { ConceptEvidence } from '@/lib/chapter-2-concepts/detection'
+import type { ConceptEvidence } from '@/lib/concept-detection/engine'
 
 function makeEvidence(overrides: Partial<ConceptEvidence> = {}): ConceptEvidence {
   return {
