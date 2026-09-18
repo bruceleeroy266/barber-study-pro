@@ -10,7 +10,6 @@ const resend = process.env.RESEND_API_KEY
 
 const notificationService = NotificationService.createDefault(resend)
 
-const supabaseAdmin = createServiceRoleClient()
 
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'ASCYN PRO <hello@ascynpro.com>'
 const NOTIFICATION_FROM_EMAIL = process.env.NOTIFICATION_FROM_EMAIL || 'ASCYN PRO <notifications@ascynpro.com>'
@@ -221,6 +220,13 @@ export async function POST(request: NextRequest) {
     const isBarbering = programType === 'Barbering'
 
     // ── PERSIST TO DATABASE ─────────────────────────────────────────────────
+    // Create the privileged client lazily at request time so production builds
+    // never require the service-role secret during module evaluation.
+    const hasServiceRoleConfig = Boolean(
+      process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
+    )
+    const supabaseAdmin = hasServiceRoleConfig ? createServiceRoleClient() : null
+
     if (process.env.NODE_ENV === 'production' && isPilot && !supabaseAdmin) {
       console.error('[Email API] SUPABASE_SERVICE_ROLE_KEY or NEXT_PUBLIC_SUPABASE_URL is not configured.')
       return NextResponse.json(
