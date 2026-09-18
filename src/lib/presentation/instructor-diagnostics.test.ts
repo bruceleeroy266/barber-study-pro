@@ -22,6 +22,8 @@ import {
   buildKnowledgeCheckTally,
 } from './instructor-diagnostics'
 import { ACTIVE_CONCEPT_IDS } from '@/lib/chapter-2-concepts/concepts'
+import { chapter3ConceptFamilies } from '@/lib/chapter-3-concepts/concepts'
+import { chapter4ConceptFamilies } from '@/lib/chapter-4-concepts/concepts'
 import type { ConceptEvidence } from '@/lib/chapter-2-concepts/detection'
 
 function makeEvidence(overrides: Partial<ConceptEvidence> = {}): ConceptEvidence {
@@ -53,6 +55,20 @@ describe('resolveConceptName', () => {
     }
   })
 
+  it('resolves every Chapter 3 concept family to its canonical name', () => {
+    for (const family of chapter3ConceptFamilies) {
+      expect(resolveConceptName(family.id)).toBe(family.name)
+    }
+  })
+
+  it('resolves all six Chapter 4 infection-control concept families to canonical names', () => {
+    expect(chapter4ConceptFamilies).toHaveLength(6)
+    for (const family of chapter4ConceptFamilies) {
+      expect(resolveConceptName(family.id)).toBe(family.name)
+      expect(resolveConceptName(family.id)).not.toContain('Unknown concept')
+    }
+  })
+
   it('marks the retired concept explicitly', () => {
     expect(resolveConceptName('C-2-22')).toContain('retired concept')
   })
@@ -65,6 +81,12 @@ describe('resolveConceptName', () => {
 describe('resolveChapterTitle', () => {
   it('resolves ch-2 to its canonical title with number', () => {
     expect(resolveChapterTitle('ch-2')).toBe('Life Skills (Chapter 2)')
+  })
+
+  it('resolves Chapter 4 to its canonical title with number', () => {
+    const title = resolveChapterTitle('ch-4')
+    expect(title).toContain('(Chapter 4)')
+    expect(title).not.toBe('Chapter 4')
   })
 
   it('falls back to a numbered chapter for unknown IDs', () => {
@@ -142,6 +164,32 @@ describe('summarizeObservation', () => {
     expect(summary!.confidenceLabel).toMatch(/confidence/)
   })
 
+  it('routes every Chapter 4 concept family through Chapter 4 detection', () => {
+    for (const family of chapter4ConceptFamilies) {
+      const summary = summarizeObservation(makeEvidence({
+        conceptId: family.id,
+        learningObjectiveId: family.learningObjectiveId,
+      }))
+      expect(summary).not.toBeNull()
+      expect(summary!.stateLabel).toBe('Repeated difficulty')
+      expect(summary!.confidenceLabel).toMatch(/confidence/)
+    }
+  })
+
+  it('keeps Chapter 3 diagnostic routing working', () => {
+    const family = chapter3ConceptFamilies[0]
+    const summary = summarizeObservation(makeEvidence({
+      conceptId: family.id,
+      learningObjectiveId: family.learningObjectiveId,
+    }))
+    expect(summary).not.toBeNull()
+    expect(summary!.stateLabel).toBe('Repeated difficulty')
+  })
+
+  it('does not silently route an unknown future concept through Chapter 2', () => {
+    expect(summarizeObservation(makeEvidence({ conceptId: 'ch99-future-concept' }))).toBeNull()
+  })
+
   it('returns null for missing evidence', () => {
     expect(summarizeObservation(null)).toBeNull()
   })
@@ -162,6 +210,25 @@ describe('buildTriggerReason', () => {
 })
 
 describe('buildCoachingRecommendation', () => {
+  it('builds concept-specific Chapter 4 coaching for all six infection-control families', () => {
+    for (const family of chapter4ConceptFamilies) {
+      const rec = buildCoachingRecommendation(family.id)
+      expect(rec.confusions).toEqual([{ topic: family.name, clarification: family.description }])
+      expect(rec.chapterGuidance).toContain('Chapter 4')
+      expect(rec.chapterGuidance).toContain('infection-control')
+      expect(rec.chapterGuidance).toContain('Knowledge Check')
+      expect(rec.enrichmentNote).toBeNull()
+    }
+  })
+
+  it('keeps Chapter 3 coaching chapter-specific', () => {
+    const family = chapter3ConceptFamilies[0]
+    const rec = buildCoachingRecommendation(family.id)
+    expect(rec.confusions).toEqual([{ topic: family.name, clarification: family.description }])
+    expect(rec.chapterGuidance).toContain('Chapter 3')
+    expect(rec.enrichmentNote).toBeNull()
+  })
+
   it('includes concept-specific confusions when they exist (C-2-21)', () => {
     const rec = buildCoachingRecommendation('C-2-21')
     expect(rec.confusions.length).toBeGreaterThan(0)
