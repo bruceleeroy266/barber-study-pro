@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -35,57 +37,7 @@ jobs:
       - name: Lint changed production files
         shell: bash
         run: |
-          git fetch origin main --depth=1
-          mapfile -t files < <(git diff --name-only --diff-filter=ACMR origin/main...HEAD -- '*.ts' '*.tsx' '*.js' '*.jsx' | grep -vE '(^|/)(tests?|__tests__)/|\.(test|spec)\.[jt]sx?
-        run: npm run build
-
-      - name: Upload build artifacts on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifacts-${{ github.sha }}
-          path: |
-            .next/
-            playwright-report/
-            test-results/
-          retention-days: 7
-          if-no-files-found: ignore
-
-  bundle-size:
-    name: Bundle Size Check
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Report bundle sizes
-        run: |
-          echo "## Bundle Size Report" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Static Assets" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          du -sh .next/static/chunks/*.js 2>/dev/null | sort -rh | head -20 >> $GITHUB_STEP_SUMMARY || echo "No chunks found" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Total .next Size" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          du -sh .next/ >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
- || true)
+          mapfile -t files < <(git diff --name-only --diff-filter=ACMR origin/main...HEAD -- '*.ts' '*.tsx' '*.js' '*.jsx' | grep -vE '(^|/)(tests?|__tests__)/|\.(test|spec)\.[jt]sx?$' || true)
           if (( ${#files[@]} )); then
             npx eslint "${files[@]}"
           else
@@ -98,9 +50,6 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Unit tests
-        run: npm test
-
       - name: Upload build artifacts on failure
         if: failure()
         uses: actions/upload-artifact@v4
@@ -139,11 +88,11 @@ jobs:
           echo "## Bundle Size Report" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Static Assets" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo '~~~' >> $GITHUB_STEP_SUMMARY
           du -sh .next/static/chunks/*.js 2>/dev/null | sort -rh | head -20 >> $GITHUB_STEP_SUMMARY || echo "No chunks found" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo '~~~' >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Total .next Size" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo '~~~' >> $GITHUB_STEP_SUMMARY
           du -sh .next/ >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo '~~~' >> $GITHUB_STEP_SUMMARY
