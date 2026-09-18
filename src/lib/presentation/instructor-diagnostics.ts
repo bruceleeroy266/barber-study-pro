@@ -21,6 +21,7 @@ import type {
   DetectionConfidence,
 } from '@/lib/concept-detection/engine'
 import { chapter2InstructorNotes } from '@/lib/chapter-2-instructor-notes'
+import { chapter2Concepts } from '@/lib/chapter-2-concepts/concepts'
 import { chapter3ConceptFamilies } from '@/lib/chapter-3-concepts/concepts'
 import { chapter4ConceptFamilies } from '@/lib/chapter-4-concepts/concepts'
 import { localChapters } from '@/lib/local-data'
@@ -101,11 +102,16 @@ export function summarizeObservation(evidence: ConceptEvidence | null | undefine
 } | null {
   if (!evidence) return null
 
+  const isChapter2 = chapter2Concepts.some((concept) => concept.id === evidence.conceptId)
   const result = isChapter4PresentationConcept(evidence.conceptId)
     ? detectChapter4ConceptState(evidence as Parameters<typeof detectChapter4ConceptState>[0])
     : isChapter3PresentationConcept(evidence.conceptId)
       ? detectChapter3ConceptState(evidence as Parameters<typeof detectChapter3ConceptState>[0])
-      : detectChapter2ConceptState(evidence as Parameters<typeof detectChapter2ConceptState>[0])
+      : isChapter2
+        ? detectChapter2ConceptState(evidence as Parameters<typeof detectChapter2ConceptState>[0])
+        : null
+
+  if (!result) return null
 
   return {
     stateLabel: translateDetectionState(result.state),
