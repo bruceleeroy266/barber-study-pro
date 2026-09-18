@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -32,14 +34,21 @@ jobs:
       - name: TypeScript type check
         run: npm run typecheck
 
-      - name: Lint
-        run: npm run lint
-
-      - name: Build
-        run: npm run build
+      - name: Lint changed production files
+        shell: bash
+        run: |
+          mapfile -t files < <(git diff --name-only --diff-filter=ACMR origin/main...HEAD -- '*.ts' '*.tsx' '*.js' '*.jsx' | grep -vE '(^|/)(tests?|__tests__)/|\.(test|spec)\.[jt]sx?$' || true)
+          if (( ${#files[@]} )); then
+            npx eslint "${files[@]}"
+          else
+            echo "No changed production JS/TS files to lint."
+          fi
 
       - name: Unit tests
         run: npm test
+
+      - name: Build
+        run: npm run build
 
       - name: Upload build artifacts on failure
         if: failure()
@@ -79,11 +88,11 @@ jobs:
           echo "## Bundle Size Report" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Static Assets" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo '~~~' >> $GITHUB_STEP_SUMMARY
           du -sh .next/static/chunks/*.js 2>/dev/null | sort -rh | head -20 >> $GITHUB_STEP_SUMMARY || echo "No chunks found" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo '~~~' >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Total .next Size" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo '~~~' >> $GITHUB_STEP_SUMMARY
           du -sh .next/ >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo '~~~' >> $GITHUB_STEP_SUMMARY

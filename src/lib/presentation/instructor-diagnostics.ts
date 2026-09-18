@@ -12,15 +12,24 @@ import {
 import {
   detectConceptState as detectChapter3ConceptState,
 } from '@/lib/chapter-3-concepts/detection'
+import {
+  detectConceptState as detectChapter4ConceptState,
+} from '@/lib/chapter-4-concepts/detection'
 import type {
   ConceptEvidence,
   DetectionState,
   DetectionConfidence,
 } from '@/lib/concept-detection/engine'
 import { chapter2InstructorNotes } from '@/lib/chapter-2-instructor-notes'
+import { chapter2Concepts } from '@/lib/chapter-2-concepts/concepts'
 import { chapter3ConceptFamilies } from '@/lib/chapter-3-concepts/concepts'
+import { chapter4ConceptFamilies } from '@/lib/chapter-4-concepts/concepts'
 import { localChapters } from '@/lib/local-data'
-import { resolvePresentationConceptName, isChapter3PresentationConcept } from './concept-registry'
+import {
+  resolvePresentationConceptName,
+  isChapter3PresentationConcept,
+  isChapter4PresentationConcept,
+} from './concept-registry'
 import type { ConceptId } from '@/lib/reassessment/types'
 
 const chapterTitleById = new Map<string, string>(
@@ -93,9 +102,16 @@ export function summarizeObservation(evidence: ConceptEvidence | null | undefine
 } | null {
   if (!evidence) return null
 
-  const result = isChapter3PresentationConcept(evidence.conceptId)
-    ? detectChapter3ConceptState(evidence as Parameters<typeof detectChapter3ConceptState>[0])
-    : detectChapter2ConceptState(evidence as Parameters<typeof detectChapter2ConceptState>[0])
+  const isChapter2 = chapter2Concepts.some((concept) => concept.id === evidence.conceptId)
+  const result = isChapter4PresentationConcept(evidence.conceptId)
+    ? detectChapter4ConceptState(evidence as Parameters<typeof detectChapter4ConceptState>[0])
+    : isChapter3PresentationConcept(evidence.conceptId)
+      ? detectChapter3ConceptState(evidence as Parameters<typeof detectChapter3ConceptState>[0])
+      : isChapter2
+        ? detectChapter2ConceptState(evidence as Parameters<typeof detectChapter2ConceptState>[0])
+        : null
+
+  if (!result) return null
 
   return {
     stateLabel: translateDetectionState(result.state),
@@ -114,6 +130,18 @@ export interface CoachingRecommendation {
 }
 
 export function buildCoachingRecommendation(conceptId: ConceptId): CoachingRecommendation {
+  if (isChapter4PresentationConcept(conceptId)) {
+    const family = chapter4ConceptFamilies.find((concept) => concept.id === conceptId)
+    return {
+      confusions: family
+        ? [{ topic: family.name, clarification: family.description }]
+        : [],
+      chapterGuidance:
+        'Use the student’s persisted Chapter 4 evidence and targeted-review history to coach the specific infection-control or safety concept in a realistic barbering scenario. Reinforce the correct procedure and why it prevents harm or contamination, then have the student complete the assigned Knowledge Check before judging improvement.',
+      enrichmentNote: null,
+    }
+  }
+
   if (isChapter3PresentationConcept(conceptId)) {
     const family = chapter3ConceptFamilies.find((concept) => concept.id === conceptId)
     return {
