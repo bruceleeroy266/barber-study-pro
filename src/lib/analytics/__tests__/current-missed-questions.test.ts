@@ -9,7 +9,7 @@ const questionId = 'question-1'
 const baseInputs: Omit<AnalyticsInputs, 'attempts'> = {
   userId,
   progress: [],
-  chapters: [{ id: 'chapter-2', chapter_number: 2, title: 'Life Skills' }],
+  chapters: [{ id: 'ch-2', chapter_number: 2, title: 'Life Skills' }],
   questions: [{
     id: questionId,
     quiz_id: 'quiz-2',
