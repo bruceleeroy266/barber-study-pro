@@ -289,7 +289,17 @@ export default async function DashboardPage() {
     streakDays: analytics.averageScore > 0 ? 5 : 0,
   })
 
-  // Derive missed questions; fall back to demo data when none exist
+  // Use the persisted missed-question bank as the authoritative source so the
+  // dashboard count always matches /dashboard/missed-questions.
+  const { data: persistedMissedRows } = await supabase
+    .from('missed_questions')
+    .select('id')
+    .eq('user_id', user.id)
+
+  const persistedMissedCount = persistedMissedRows?.length ?? 0
+
+  // Keep derived/demo questions for recommendation context only when the
+  // persisted bank is empty. Do not use this fallback for the dashboard badge.
   const { buildMissedQuestions } = await import('@/lib/analytics')
   let missedQuestions = buildMissedQuestions({
     userId: user.id,
@@ -539,7 +549,7 @@ export default async function DashboardPage() {
                     <span className="text-xl">📝</span>
                     <div>
                       <p className="text-white font-medium">Missed Questions</p>
-                      <p className="text-xs text-[var(--color-text-muted)]">{missedQuestions.length} to review</p>
+                      <p className="text-xs text-[var(--color-text-muted)]">{persistedMissedCount} to review</p>
                     </div>
                   </div>
                   <span className="text-[var(--color-text-muted)] group-hover:text-[var(--color-brand-gold)]">→</span>
