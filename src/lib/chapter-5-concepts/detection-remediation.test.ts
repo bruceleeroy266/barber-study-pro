@@ -36,7 +36,7 @@ describe('Chapter 5 detection/remediation integrity (C5-3)', () => {
     for (const family of chapter5ConceptFamilies) {
       const bundle = provider!.buildRemediationContentBundle(family.id)
       expect(bundle.conceptId).toBe(family.id)
-      expect(bundle.contentBlockCount).toBeGreaterThan(0)
+      expect(bundle.contentBlockCount).toBeGreaterThanOrEqual(2)
       expect(bundle.flashcardCount).toBeGreaterThan(0)
       expect(bundle.hasSufficientMaterial).toBe(true)
       expect(provider!.filterFlashcardsByConcept(family.id).every(card => card.is_active)).toBe(true)
@@ -51,7 +51,7 @@ describe('Chapter 5 detection/remediation integrity (C5-3)', () => {
       const q = chapter5PremiumQuizQuestions.find(q => q.id === m.questionId)!
       answers[q.id] = q.correct_answer
     }
-    answers['qq-5-001'] = 'a'
+    answers['qq-5-035'] = 'a'
     const attempt: QuizAttempt = {
       id:'c5-att-1', user_id:'student-1', quiz_id:'quiz-5', score:5, total_questions:6,
       percentage:83, answers_json:answers, completed_at:'2026-09-19T12:00:00.000Z',
