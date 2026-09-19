@@ -42,7 +42,7 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
     id: 'fc-5-004',
     chapter_id: 'ch-5',
     front: 'CLIPPER GUARD SIZES: What length does a #2 guard cut?',
-    back: '1/4 inch (6mm). This is the most common guard for basic cuts. Memorize: #0=1/16in, #1=1/8in, #2=1/4in, #3=3/8in, #4=1/2in.',
+    back: 'Guard numbers and cutting lengths can vary by manufacturer or system. For a #2 guard, verify the cutting length marked or specified by the manufacturer for the exact guard and clipper system being used.',
     category: 'Combs & Brushes',
     difficulty: 'easy',
     order_index: 4,
@@ -96,7 +96,7 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
     id: 'fc-5-009',
     chapter_id: 'ch-5',
     front: 'What is the difference between a convex edge and a beveled edge on shears?',
-    back: 'Convex edge (hollow ground) is sharper and cuts more smoothly but is more fragile. Beveled edge is more durable and lasts longer but cuts less smoothly. Board exam alert.',
+    back: 'Convex edge (hollow ground) is sharper and cuts more smoothly but is more fragile. Beveled edge is more durable and lasts longer but cuts less smoothly. Exam-relevant distinction.',
     category: 'Shears & Scissors',
     difficulty: 'medium',
     order_index: 9,
@@ -590,13 +590,13 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
   },
 
   // ==========================================
-  // CATEGORY 7: BOARD EXAM ALERTS (8 cards)
+  // CATEGORY 7: EXAM-RELEVANT REVIEW (8 cards)
   // ==========================================
   {
     id: 'fc-5-057',
     chapter_id: 'ch-5',
-    front: 'EXAM-RELEVANT: List clipper guard sizes and their inch equivalents.',
-    back: '#0 = 1/16in (1.5mm), #1 = 1/8in (3mm), #2 = 1/4in (6mm), #3 = 3/8in (10mm), #4 = 1/2in (13mm), #5-8 = 5/8in to 1in. Memorize these — they appear on every exam.',
+    front: 'EXAM-RELEVANT: How should you determine a clipper guard\'s cutting length?',
+    back: 'Use the cutting length stated for the specific guard and clipper system. Number-to-length mappings are not universal across all manufacturers, so verify the manufacturer\'s markings or instructions rather than relying on a memorized universal chart.',
     category: 'Exam-Relevant Review',
     difficulty: 'medium',
     order_index: 57,
