@@ -58,6 +58,7 @@ import { chapter4PremiumQuizQuestions } from '@/lib/chapter-4-premium-quiz'
 import { chapter4ReassessmentQuestions } from '@/lib/chapter-4-reassessment-questions'
 
 import {
+  chapter5ContentConceptMappings,
   chapter5FlashcardConceptMappings,
   chapter5QuizQuestionConceptMappings,
 } from '@/lib/chapter-5-concepts/mappings'
@@ -428,6 +429,10 @@ const chapter4Provider: ChapterRemediationContentProvider = {
 // Chapter 5 Provider (C5-3)
 // ───────────────────────────────────────────────
 
+const chapter5ContentMappingsProjected = chapter5ContentConceptMappings.map((m) => ({
+  contentBlockId: m.contentBlockId,
+  conceptId: m.conceptFamilyId as string,
+}))
 const chapter5FlashcardMappingsProjected = chapter5FlashcardConceptMappings.map((m) => ({
   flashcardId: m.flashcardId as string,
   conceptId: m.conceptFamilyId as string,
@@ -448,9 +453,10 @@ const chapter5Provider: ChapterRemediationContentProvider = {
     return chapter5ConceptFamilies.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic'
   },
 
-  getContentBlockIdsForConcept() {
-    // Canonical Chapter 5 section mappings are not defined yet.
-    return []
+  getContentBlockIdsForConcept(conceptId) {
+    return chapter5ContentMappingsProjected
+      .filter((m) => m.conceptId === conceptId)
+      .map((m) => m.contentBlockId)
   },
 
   getFlashcardIdsForConcept(conceptId) {
@@ -459,8 +465,13 @@ const chapter5Provider: ChapterRemediationContentProvider = {
       .map((m) => m.flashcardId)
   },
 
-  filterContentByConcept() {
-    return []
+  filterContentByConcept(conceptId) {
+    const mappedIds = new Set(
+      chapter5ContentMappingsProjected
+        .filter((m) => m.conceptId === conceptId)
+        .map((m) => m.contentBlockId),
+    )
+    return filterSectionsByMappedBlockIds(5, mappedIds)
   },
 
   filterFlashcardsByConcept(conceptId) {
