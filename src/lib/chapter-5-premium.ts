@@ -160,7 +160,7 @@ export const chapter5PremiumContent: ChapterContent = {
             { label: 'BEST USES', description: 'Sectioning, scissor-over-comb, general cutting, detangling' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Carbon fiber and hard rubber combs are most durable and heat-resistant.' },
+            { text: 'EXAM-RELEVANT: Carbon fiber and hard rubber combs are most durable and heat-resistant.' },
             { text: 'Replace combs with worn or broken teeth - they snag hair and damage the cuticle.' },
           ],
         },
@@ -234,7 +234,7 @@ export const chapter5PremiumContent: ChapterContent = {
             { label: 'CARE', description: 'Cut ONLY clean hair. Never cut paper, plastic, or anything else.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Convex edges are sharper but more fragile. Beveled edges last longer but cut less smoothly.' },
+            { text: 'EXAM-RELEVANT: Convex edges are sharper but more fragile. Beveled edges last longer but cut less smoothly.' },
             { text: 'A nick in the blade from dropping requires professional repair - do NOT attempt to fix it yourself.' },
           ],
         },
@@ -264,7 +264,7 @@ export const chapter5PremiumContent: ChapterContent = {
             { label: 'FINGER REST/TANG', description: 'Provides balance and control - removable on many models' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Offset and crane handles reduce repetitive strain injury (RSI) risk.' },
+            { text: 'EXAM-RELEVANT: Offset and crane handles reduce repetitive strain injury (RSI) risk.' },
             { text: 'The finger rest is NOT just for pinky placement - it balances the shear for precision control.' },
           ],
         },
@@ -306,7 +306,7 @@ export const chapter5PremiumContent: ChapterContent = {
             { label: 'STEP 4', description: 'Keep fingers free - index, middle, and ring fingers available for comb work' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Palming is tested on practical exams. You must demonstrate smooth tool transitions.' },
+            { text: 'EXAM-RELEVANT: Palming is tested on practical exams. You must demonstrate smooth tool transitions.' },
             { text: 'PRO TIP: Practice palming 50 times daily for one week. It becomes muscle memory.' },
           ],
         },
@@ -352,7 +352,7 @@ export const chapter5PremiumContent: ChapterContent = {
             { label: 'GUIDE', description: 'Use previously cut hair as your guide - lift some cut with new section' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Scissor-over-comb is a core practical skill. Blade must stay parallel to comb.' },
+            { text: 'EXAM-RELEVANT: Scissor-over-comb is a core practical skill. Blade must stay parallel to comb.' },
             { text: 'COMMON MISTAKE: Angling the blade creates uneven lines and ruins the fade.' },
           ],
         },
@@ -399,7 +399,7 @@ export const chapter5PremiumContent: ChapterContent = {
             { label: 'GUARD SYSTEM', description: 'Snap-on attachment combs in sizes #0 through #8+' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Adjustable blades use a taper lever. Fixed blades require blade changes or guards for different lengths.' },
+            { text: 'EXAM-RELEVANT: Adjustable blades use a taper lever. Fixed blades require blade changes or guards for different lengths.' },
             { text: 'Always start with the LONGEST guard and work down - you can cut more off, you cannot put it back.' },
           ],
         },
@@ -503,7 +503,7 @@ export const chapter5PremiumContent: ChapterContent = {
             { label: 'BEST FOR', description: 'General face shaving, cheeks, broad areas' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Freehand is the foundation grip. Master this before learning others.' },
+            { text: 'EXAM-RELEVANT: Freehand is the foundation grip. Master this before learning others.' },
             { text: 'PRO TIP: Keep wrist straight - movement comes from shoulder and forearm, not wrist.' },
           ],
         },
@@ -533,7 +533,7 @@ export const chapter5PremiumContent: ChapterContent = {
             { label: 'BLADE ANGLE', description: 'Maintain 30-degree angle - critical for safety' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Reverse freehand is REQUIRED for upper lip and chin areas.' },
+            { text: 'EXAM-RELEVANT: Reverse freehand is REQUIRED for upper lip and chin areas.' },
             { text: 'NEVER use reverse freehand on the neck - wrong grip for the area.' },
           ],
         },
@@ -649,7 +649,7 @@ export const chapter5PremiumContent: ChapterContent = {
             { label: 'BEST FOR', description: 'Professional curls, waves, and texture work - the barber standard' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Marcel irons are the professional standard for thermal curling.' },
+            { text: 'EXAM-RELEVANT: Marcel irons are the professional standard for thermal curling.' },
             { text: 'PRO TIP: The rotating handle gives you infinite control - practice the wrist motion.' },
           ],
         },
@@ -679,7 +679,7 @@ export const chapter5PremiumContent: ChapterContent = {
             { label: 'SAFETY RULE 2', description: 'Never use near water - electrocution risk' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Always use a heat protectant product before blow-drying.' },
+            { text: 'EXAM-RELEVANT: Always use a heat protectant product before blow-drying.' },
             { text: 'PRO TIP: Finish with cool shot to set the style and close the cuticle.' },
           ],
         },
@@ -838,15 +838,15 @@ export const chapter5PremiumContent: ChapterContent = {
           label: 'HOT TOWEL',
           title: 'THE HOT TOWEL WRAP',
           bullets: [
-            { label: 'STEP 1', description: 'Heat towel in steamer or hot towel cabinet (160F+)' },
-            { label: 'STEP 2', description: 'Test temperature on YOUR WRIST before touching client' },
+            { label: 'STEP 1', description: 'Warm the towel using approved equipment according to manufacturer directions' },
+            { label: 'STEP 2', description: 'Verify the towel is at a safe, comfortable temperature before client contact' },
             { label: 'STEP 3', description: 'Wrap around face/neck for shaves - cover completely' },
-            { label: 'STEP 4', description: 'Leave for 2-3 minutes to soften beard hair' },
+            { label: 'STEP 4', description: 'Apply for an appropriate service time while monitoring client comfort' },
             { label: 'STEP 5', description: 'Remove and begin shave immediately while hair is soft' },
           ],
           facts: [
             { text: 'NEVER apply a hot towel without testing temperature - burns are serious injuries and liability issues.' },
-            { text: 'Hot towels open pores and soften hair - this reduces irritation and allows a closer shave.' },
+            { text: 'Warm towels can help soften beard hair and improve client comfort; avoid claims that heat physically opens pores.' },
           ],
         },
         {
@@ -855,14 +855,14 @@ export const chapter5PremiumContent: ChapterContent = {
           title: 'TOWEL HYGIENE STANDARDS',
           bullets: [
             { label: 'FRESH TOWEL', description: 'Use a clean, freshly laundered towel for EVERY client' },
-            { label: 'HOT WATER WASH', description: 'Wash at 160F+ with detergent to kill bacteria' },
+            { label: 'HOT WATER WASH', description: 'Launder according to current state rules and laundry-product directions' },
             { label: 'COMPLETE DRYING', description: 'Dry completely to prevent mildew and bacterial growth' },
             { label: 'CLOSED STORAGE', description: 'Store clean towels in a closed cabinet, never open air' },
             { label: 'REPLACE WORN TOWELS', description: 'Discard towels with stains, tears, or fraying edges' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Towels must be washed in hot water (160F+) to meet sanitation standards.' },
-            { text: 'A damp towel is a breeding ground for bacteria - never use a towel that is not completely dry.' },
+            { text: 'SANITATION ESSENTIAL: Follow current state rules and product directions for laundering, drying, and storing reusable towels.' },
+            { text: 'Use clean, properly laundered and dried towels and keep clean linens separated from used linens.' },
           ],
         },
       ],
@@ -896,7 +896,7 @@ export const chapter5PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'board-exam-tools',
-      title: 'BOARD EXAM CRITICAL ALERTS',
+      title: 'EXAM-RELEVANT TOOL & SAFETY REVIEW',
       content: 'These tool-related concepts appear on EVERY state board exam. Miss them, and you fail.\n\n1. CLIPPER GUARD SIZES: #0 = 1/16in, #1 = 1/8in, #2 = 1/4in, #3 = 3/8in, #4 = 1/2in. Memorize these conversions.\n\n2. SHEAR TENSION TEST: Hold tips up, lift one handle. Blades should open partially. Too loose = hair bends. Too tight = hand fatigue.\n\n3. BLADE MAINTENANCE: Clean after every use, oil before each use, spray disinfectant between clients, replace when dull.\n\n4. STRAIGHT RAZOR SAFETY: Stretch skin taut, minimal pressure, shave with grain first, dispose blades in sharps container.\n\n5. COMB TYPES: All-purpose (sectioning), taper (fades), clipper guards (length control), styling brushes (finishing).\n\n6. SANITATION: EPA-registered disinfectant, Barbicide immersion, 10-minute contact time, clean before disinfecting.\n\n7. TOWEL HYGIENE: Fresh towel per client, wash at 160F+, dry completely, store in closed cabinet.\n\n8. MOTOR TYPES: Magnetic (quiet, light), Rotary (powerful, professional standard), Cordless/Lithium (mobile, consistent power).\n\n9. SHEAR TYPES: Straight (standard), Thinning/Texturizing (removes bulk), Blending (blends clipper lines).\n\n10. NEVER USE DULL TOOLS: Pulling hair = dull blade. Replace immediately. Client comfort is non-negotiable.\n\n11. SHEAR PALMING: Never set shears down mid-cut. Palm them professionally. Transfer to palm, secure with thumb, free your fingers.\n\n12. RAZOR GRIPS: Four grips - freehand (general), backhand (broad areas), reverse freehand (upper lip/chin), reverse backhand (neck only). Know your zones.\n\n13. RAZOR GRINDS: Hollow-ground detects resistance and sings when sharp. Wedge grind powers through coarse beards. Match grind to beard type.\n\n14. THERMAL SAFETY: Test on tissue paper before client contact. Keep tools moving. Never use metal comb on scalp. Heat protectant is mandatory.\n\n15. TOOL CONSTRUCTION: Forged shears are denser and stronger than cast. Look for the weld line - it proves forged construction.',
       highlight: 'MEMORIZE THESE 15 POINTS',
     },
