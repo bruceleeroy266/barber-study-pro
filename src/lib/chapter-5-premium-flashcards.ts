@@ -116,7 +116,7 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
     id: 'fc-5-011',
     chapter_id: 'ch-5',
     front: 'How do you perform the shear tension test?',
-    back: 'Hold the shear tips pointing up. Lift one handle. The blades should open partially — not fall completely open (too loose) and not stay closed (too tight). Check tension regularly and whenever cutting performance suggests adjustment; follow the shear manufacturer's guidance.',
+    back: 'Hold the shear tips pointing up. Lift one handle. The blades should open partially — not fall completely open (too loose) and not stay closed (too tight). Check tension regularly and whenever cutting performance suggests adjustment; follow the shear manufacturer guidance guidance.',
     category: 'Shears & Scissors',
     difficulty: 'medium',
     order_index: 11,
