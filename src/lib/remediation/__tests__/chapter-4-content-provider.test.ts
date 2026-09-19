@@ -36,13 +36,13 @@ const EXPECTED_FLASHCARDS_PER_FAMILY: Record<string, number> = {
 }
 
 describe('Chapter 4 remediation content provider — registration', () => {
-  it('registers ch-4 and fails closed for unsupported chapters', () => {
+  it('registers ch-4 and registers all currently supported chapters', () => {
     expect(provider).toBeDefined()
     expect(hasChapterContentProvider('ch-4')).toBe(true)
     expect(hasChapterContentProvider('ch-2')).toBe(true)
     expect(hasChapterContentProvider('ch-3')).toBe(true)
-    expect(hasChapterContentProvider('ch-5')).toBe(false)
-    expect(getChapterContentProvider('ch-5')).toBeUndefined()
+    expect(hasChapterContentProvider('ch-5')).toBe(true)
+    expect(getChapterContentProvider('ch-5')).toBeDefined()
   })
 
   it('resolves concept names for all six locked families', () => {
