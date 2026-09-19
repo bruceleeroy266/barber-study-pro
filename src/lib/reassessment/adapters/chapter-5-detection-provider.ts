@@ -1,5 +1,5 @@
 /**
- * C4-3 — Chapter 5 Concept Detection Provider
+ * C5-3 — Chapter 5 Concept Detection Provider
  *
  * Concrete implementation of IConceptDetectionProvider for Chapter 5.
  * Bridges the locked Chapter 5 concept runtime to the chapter-agnostic
@@ -7,7 +7,7 @@
  * Chapter 2's and Chapter 3's detection providers satisfy.
  *
  * Architecture:
- *   - Reuses the canonical question→concept mappings (initial + reserve)
+ *   - Reuses the canonical question→concept mappings (initial bank)
  *     from chapter-5-concepts/mappings.ts
  *   - Delegates to the shared detection engine through the Chapter 5 binding
  *     (buildConceptEvidence + detectConceptState from chapter-5-concepts/detection)
