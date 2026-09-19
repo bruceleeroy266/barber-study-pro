@@ -249,7 +249,7 @@ export const chapter5PremiumContent: ChapterContent = {
             { label: 'TOO TIGHT', description: 'Blades do not move - causes hand fatigue and premature wear' },
           ],
           facts: [
-            { text: 'Check shear tension regularly and whenever cutting performance changes; use the manufacturer's adjustment guidance.' },
+            { text: 'Check shear tension regularly and whenever cutting performance changes; use the manufacturer guidance adjustment guidance.' },
             { text: 'Only adjust tension with the proper tool - never force the screw.' },
           ],
         },
@@ -373,7 +373,7 @@ export const chapter5PremiumContent: ChapterContent = {
         { text: 'CHECK TENSION before each use - perform the lift test every morning' },
         { text: 'NEVER DROP OR TOSS shears - a fall can create micro-fractures in the blade' },
         { text: 'STORE IN PROTECTIVE CASE - never loose in a drawer with other tools' },
-        { text: 'SHARPEN AS NEEDED - follow the shear manufacturer's guidance and use a qualified shear sharpener' },
+        { text: 'SHARPEN AS NEEDED - follow the shear manufacturer guidance guidance and use a qualified shear sharpener' },
         { text: 'CUT ONLY CLEAN HAIR - dirty hair contains minerals that dull edges' },
         { text: 'NEVER CUT PAPER, PLASTIC, OR ANYTHING NON-HAIR - instant edge damage' },
       ],
