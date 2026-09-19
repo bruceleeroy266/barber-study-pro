@@ -46,6 +46,10 @@ import {
   chapter4FlashcardConceptMappings,
 } from '@/lib/chapter-4-concepts/mappings'
 
+import { detectAllConceptGaps as detectAllChapter5ConceptGaps } from '@/lib/chapter-5-concepts/detection'
+import { chapter5ConceptFamilies } from '@/lib/chapter-5-concepts/concepts'
+import { chapter5FlashcardConceptMappings } from '@/lib/chapter-5-concepts/mappings'
+
 // ───────────────────────────────────────────────
 // Provider Contract
 // ───────────────────────────────────────────────
@@ -220,6 +224,37 @@ const chapter4Provider: ChapterDetectionProvider = {
 }
 
 // ───────────────────────────────────────────────
+// Chapter 5 Provider (C5-3)
+// ───────────────────────────────────────────────
+
+const chapter5FlashcardMappingsProjected = chapter5FlashcardConceptMappings.map((m) => ({
+  flashcardId: m.flashcardId,
+  conceptId: m.conceptFamilyId as string,
+}))
+
+const chapter5Provider: ChapterDetectionProvider = {
+  chapterId: 'ch-5',
+
+  detectAll(attempts) {
+    const out = new Map<ConceptId, ConceptDetectionResult>()
+    for (const [conceptId, result] of detectAllChapter5ConceptGaps(attempts)) {
+      out.set(conceptId, result)
+    }
+    return out
+  },
+
+  getConceptName(conceptId) {
+    return chapter5ConceptFamilies.find((c) => c.id === conceptId)?.name ?? conceptId
+  },
+
+  buildAssignmentsForConcept(conceptId) {
+    // C5-1 currently maps flashcards and quiz questions. Content-block
+    // assignments are added when canonical section mappings are introduced.
+    return buildAssignments(conceptId, [], chapter5FlashcardMappingsProjected)
+  },
+}
+
+// ───────────────────────────────────────────────
 // Registry
 // ───────────────────────────────────────────────
 
@@ -227,6 +262,7 @@ const providers = new Map<ChapterId, ChapterDetectionProvider>([
   ['ch-2', chapter2Provider],
   ['ch-3', chapter3Provider],
   ['ch-4', chapter4Provider],
+  ['ch-5', chapter5Provider],
 ])
 
 /**
