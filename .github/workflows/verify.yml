@@ -9,6 +9,9 @@ on:
 env:
   NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
   NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key-for-build' }}
+  # Build-time placeholder only. CI never uses this key against production;
+  # it prevents server-only modules from throwing while Next.js collects routes.
+  SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-role-key-for-build' }}
 
 jobs:
   verify:
