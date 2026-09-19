@@ -281,24 +281,19 @@ export default async function DashboardPage() {
     questions,
   })
 
-  // Derive the study streak from persisted study activity instead of a hardcoded value.
-  // A streak counts distinct UTC calendar days with at least one persisted study session.
-  // Today or yesterday may anchor the streak; an older last activity means the streak is broken.
-  const { data: studySessionRows } = await supabase
-    .from('study_sessions')
-    .select('start_time')
-    .eq('user_id', user.id)
-    .order('start_time', { ascending: false })
-
+  // Derive the study streak from persisted quiz activity.
+  // Quiz attempts are already part of the production dashboard data and provide
+  // a reliable record of days when the student actively studied.
   const studyDates = Array.from(new Set(
-    (studySessionRows || [])
-      .map((session) => session.start_time ? new Date(session.start_time).toISOString().slice(0, 10) : null)
+    attemptRecords
+      .map((attempt) => attempt.completed_at ? new Date(attempt.completed_at).toISOString().slice(0, 10) : null)
       .filter((date): date is string => Boolean(date))
   )).sort().reverse()
 
-  const toUtcDay = (date: string) => new Date(\`${date}T00:00:00.000Z\`).getTime()
+  const toUtcDay = (date: string) => new Date(`${date}T00:00:00.000Z`).getTime()
   const oneDayMs = 24 * 60 * 60 * 1000
-  const todayUtc = Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate())
+  const now = new Date()
+  const todayUtc = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
   const latestStudyDay = studyDates[0] ? toUtcDay(studyDates[0]) : null
   let studyStreakDays = 0
 
