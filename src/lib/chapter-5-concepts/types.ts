@@ -6,5 +6,6 @@ export type Chapter5FlashcardId = `fc-5-${string}`
 export type Chapter5QuizQuestionId = `qq-5-${string}`
 export interface Chapter5LearningObjective { id:Chapter5LearningObjectiveId; statement:string; sourceBasis:string; conceptFamilyIds:readonly Chapter5ConceptFamilyId[] }
 export interface Chapter5ConceptFamily { id:Chapter5ConceptFamilyId; name:string; learningObjectiveIds:readonly Chapter5LearningObjectiveId[]; learningObjectiveId:Chapter5LearningObjectiveId; description:string; importance:ConceptImportance; professionalRelevance:ProfessionalRelevance; examRelevance:ExamRelevance; sourceProvenance:SourceProvenance; status:ConceptStatus }
+export interface Chapter5ContentConceptMapping { contentBlockId:string; conceptFamilyId:Chapter5ConceptFamilyId }
 export interface Chapter5FlashcardConceptMapping { flashcardId:Chapter5FlashcardId; conceptFamilyId:Chapter5ConceptFamilyId }
 export interface Chapter5QuizQuestionConceptMapping { questionId:Chapter5QuizQuestionId; conceptFamilyId:Chapter5ConceptFamilyId }
