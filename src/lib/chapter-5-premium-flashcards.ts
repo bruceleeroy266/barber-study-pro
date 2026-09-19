@@ -562,7 +562,7 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
     id: 'fc-5-054',
     chapter_id: 'ch-5',
     front: 'How long is the minimum contact time for disinfectant immersion?',
-    back: '10 minutes. At 5 minutes you kill roughly 50% of pathogens. At 10 minutes you kill 99.9%. That 5-minute difference is the difference between safety and an outbreak. SET A TIMER.',
+    back: 'Use the full contact time stated on the EPA-registered disinfectant label. Contact time varies by product; keep the implement visibly wet or immersed for the labeled time and follow the manufacturer directions.',
     category: 'Station & Safety',
     difficulty: 'medium',
     order_index: 54,
