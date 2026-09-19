@@ -320,7 +320,7 @@ export const chapter5PremiumQuizQuestions: QuizQuestion[] = [
   {
     id: 'qq-5-024',
     quiz_id: 'quiz-5',
-    question: 'BOARD EXAM ALERT: Which razor grip is used for the upper lip and chin?',
+    question: 'Which razor grip is used for the upper lip and chin?',
     answer_a: 'Freehand grip',
     answer_b: 'Backhand grip',
     answer_c: 'Reverse backhand',
@@ -333,7 +333,7 @@ export const chapter5PremiumQuizQuestions: QuizQuestion[] = [
   {
     id: 'qq-5-025',
     quiz_id: 'quiz-5',
-    question: 'BOARD EXAM ALERT: Which razor grip is RESTRICTED to sides of neck only?',
+    question: 'Which razor grip is RESTRICTED to sides of neck only?',
     answer_a: 'Freehand grip',
     answer_b: 'Backhand grip',
     answer_c: 'Reverse freehand',
@@ -547,7 +547,7 @@ export const chapter5PremiumQuizQuestions: QuizQuestion[] = [
   {
     id: 'qq-5-041',
     quiz_id: 'quiz-5',
-    question: 'BOARD EXAM: What length does a #1 clipper guard cut?',
+    question: 'What length does a #1 clipper guard cut?',
     answer_a: '1/16 inch (1.5mm)',
     answer_b: '3/8 inch (10mm)',
     answer_c: '1/4 inch (6mm)',
@@ -560,7 +560,7 @@ export const chapter5PremiumQuizQuestions: QuizQuestion[] = [
   {
     id: 'qq-5-042',
     quiz_id: 'quiz-5',
-    question: 'BOARD EXAM: Which shear handle types reduce repetitive strain injury (RSI) risk?',
+    question: 'Which shear handle types reduce repetitive strain injury (RSI) risk?',
     answer_a: 'Opposing handles only',
     answer_b: 'Offset and crane handles',
     answer_c: 'Traditional straight handles',
@@ -573,7 +573,7 @@ export const chapter5PremiumQuizQuestions: QuizQuestion[] = [
   {
     id: 'qq-5-043',
     quiz_id: 'quiz-5',
-    question: 'BOARD EXAM: What is the difference between forged and cast shears?',
+    question: 'What is the difference between forged and cast shears?',
     answer_a: 'Forged shears are denser, stronger, and more durable',
     answer_b: 'Cast shears are denser and stronger',
     answer_c: 'There is no difference in quality',
@@ -586,7 +586,7 @@ export const chapter5PremiumQuizQuestions: QuizQuestion[] = [
   {
     id: 'qq-5-044',
     quiz_id: 'quiz-5',
-    question: 'BOARD EXAM: What are the three types of shears and their primary uses?',
+    question: 'What are the three types of shears and their primary uses?',
     answer_a: 'Straight (standard cutting), thinning (remove bulk), blending (blend clipper lines)',
     answer_b: 'Small, medium, and large shears for different hand sizes',
     answer_c: 'Cheap, mid-range, and expensive shears',
@@ -599,7 +599,7 @@ export const chapter5PremiumQuizQuestions: QuizQuestion[] = [
   {
     id: 'qq-5-045',
     quiz_id: 'quiz-5',
-    question: 'BOARD EXAM: Which motor type is quiet, light, and best for fine to medium hair?',
+    question: 'Which motor type is quiet, light, and best for fine to medium hair?',
     answer_a: 'Rotary motor',
     answer_b: 'Magnetic/Pivot motor',
     answer_c: 'Cordless lithium motor',
@@ -612,7 +612,7 @@ export const chapter5PremiumQuizQuestions: QuizQuestion[] = [
   {
     id: 'qq-5-046',
     quiz_id: 'quiz-5',
-    question: 'BOARD EXAM: What is the proper straight razor shaving sequence?',
+    question: 'What is the proper straight razor shaving sequence?',
     answer_a: 'Against the grain first, then with the grain',
     answer_b: 'Across the grain only',
     answer_c: 'With the grain first, then across, then against if needed',
