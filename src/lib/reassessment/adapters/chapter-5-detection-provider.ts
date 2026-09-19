@@ -89,7 +89,7 @@ export class Chapter5DetectionProvider implements IConceptDetectionProvider {
     // Build canonical mapping lookup from chapter-5-concepts/mappings.ts
     // (initial 50-question bank; reserve mappings are added when C5 reassessment content is introduced)
     this.conceptToQuestionsMap = new Map()
-    this.validConceptIds = new Set(ACTIVE_CHAPTER4_CONCEPT_FAMILY_IDS as readonly string[])
+    this.validConceptIds = new Set(ACTIVE_CHAPTER5_CONCEPT_FAMILY_IDS as readonly string[])
 
     for (const mapping of [
       ...chapter5QuizQuestionConceptMappings,
