@@ -8,9 +8,9 @@
  *
  * Architecture:
  *   - Reuses the canonical question→concept mappings (initial + reserve)
- *     from chapter-4-concepts/mappings.ts
+ *     from chapter-5-concepts/mappings.ts
  *   - Delegates to the shared detection engine through the Chapter 5 binding
- *     (buildConceptEvidence + detectConceptState from chapter-4-concepts/detection)
+ *     (buildConceptEvidence + detectConceptState from chapter-5-concepts/detection)
  *   - Does NOT duplicate detection thresholds, state logic, or evidence semantics
  *
  * Binding Rules:
@@ -23,13 +23,13 @@ import {
   chapter5QuizQuestionConceptMappings,
 } from '@/lib/chapter-5-concepts/mappings'
 import {
-  ACTIVE_CHAPTER4_CONCEPT_FAMILY_IDS,
-} from '@/lib/chapter-4-concepts/concepts'
+  ACTIVE_CHAPTER5_CONCEPT_FAMILY_IDS,
+} from '@/lib/chapter-5-concepts/concepts'
 import {
   buildConceptEvidence,
   detectConceptState,
   type ConceptDetectionResult as Chapter5BindingResult,
-} from '@/lib/chapter-4-concepts/detection'
+} from '@/lib/chapter-5-concepts/detection'
 import type { Chapter5ConceptFamilyId } from '@/lib/chapter-5-concepts/types'
 import type { QuizAttempt } from '@/types'
 import type {
@@ -74,7 +74,7 @@ export interface Chapter5DetectionProviderConfig {
  *   1. Validates that the concept exists in the locked Chapter 5 taxonomy
  *   2. Fetches quiz attempts via the injected callback
  *   3. Filters attempts to only include questions canonically mapped to the target family
- *   4. Delegates to the shared engine (via the Ch4 binding) for evidence + state
+ *   4. Delegates to the shared engine (via the Ch5 binding) for evidence + state
  */
 export class Chapter5DetectionProvider implements IConceptDetectionProvider {
   readonly chapterId: ChapterId = 'ch-5'
@@ -86,7 +86,7 @@ export class Chapter5DetectionProvider implements IConceptDetectionProvider {
   constructor(config: Chapter5DetectionProviderConfig) {
     this.fetchQuizAttempts = config.fetchQuizAttempts
 
-    // Build canonical mapping lookup from chapter-4-concepts/mappings.ts
+    // Build canonical mapping lookup from chapter-5-concepts/mappings.ts
     // (initial 50-question bank; reserve mappings are added when C5 reassessment content is introduced)
     this.conceptToQuestionsMap = new Map()
     this.validConceptIds = new Set(ACTIVE_CHAPTER4_CONCEPT_FAMILY_IDS as readonly string[])
@@ -162,20 +162,20 @@ export class Chapter5DetectionProvider implements IConceptDetectionProvider {
       return this.mapToProviderResult(result)
     }
 
-    // Build concept evidence using the shared engine (Ch4 binding)
+    // Build concept evidence using the shared engine (Ch5 binding)
     const evidence = buildConceptEvidence(
       conceptId as Chapter5ConceptFamilyId,
       filteredAttempts
     )
 
-    // Detect state using the shared engine (Ch4 binding)
+    // Detect state using the shared engine (Ch5 binding)
     const detectionResult = detectConceptState(evidence)
 
     return this.mapToProviderResult(detectionResult)
   }
 
   /**
-   * Map the Ch4 binding's detection result to the provider result format.
+   * Map the Ch5 binding's detection result to the provider result format.
    */
   private mapToProviderResult(result: Chapter5BindingResult): ConceptDetectionResult {
     return {
