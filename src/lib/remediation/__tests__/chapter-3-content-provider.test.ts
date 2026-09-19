@@ -32,12 +32,12 @@ import { chapter3KeyTerms } from '@/lib/chapter-3-key-terms'
 const provider = getChapterContentProvider('ch-3')
 
 describe('Chapter 3 remediation content provider — registration', () => {
-  it('registers ch-3 and fails closed for unsupported chapters', () => {
+  it('registers ch-3 and registers all currently supported chapters', () => {
     expect(provider).toBeDefined()
     expect(hasChapterContentProvider('ch-3')).toBe(true)
     expect(hasChapterContentProvider('ch-2')).toBe(true)
-    expect(hasChapterContentProvider('ch-5')).toBe(false)
-    expect(getChapterContentProvider('ch-5')).toBeUndefined()
+    expect(hasChapterContentProvider('ch-5')).toBe(true)
+    expect(getChapterContentProvider('ch-5')).toBeDefined()
   })
 
   it('resolves concept names for all four locked families', () => {
