@@ -869,6 +869,17 @@ export const chapter5PremiumContent: ChapterContent = {
     },
 
     // ==========================================
+    // SECTION 12.5: HAIR CLIPPINGS & SERVICE CLEANUP
+    // ==========================================
+    {
+      type: 'contentBlock',
+      id: 'hair-clippings-cleanup',
+      title: 'REMOVING HAIR CLIPPINGS SAFELY',
+      content: 'Loose hair clippings should be removed from the client and service area using clean, appropriate methods that protect client comfort and sanitation. Keep used linens and contaminated items separated from clean supplies, and follow current state rules for cleanup between clients. Do not use implements or linens from a previous client until they have been properly cleaned, disinfected, laundered, or discarded as applicable.',
+      highlight: 'REMOVE CLIPPINGS - SEPARATE USED ITEMS - RESET THE STATION',
+    },
+
+    // ==========================================
     // SECTION 13: TOOL TROUBLESHOOTING SCENARIO
     // ==========================================
     {
