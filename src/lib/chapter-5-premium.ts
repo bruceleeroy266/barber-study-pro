@@ -192,7 +192,7 @@ export const chapter5PremiumContent: ChapterContent = {
             { label: '#5-8 GUARDS', description: '5/8" to 1" - longer styles, bulk removal' },
           ],
           facts: [
-            { text: 'GUARD SIZES ARE UNIVERSAL across major clipper brands - memorize these conversions.' },
+            { text: 'Attachment-comb numbering and cut lengths can vary by manufacturer and system. Verify the guard markings and manufacturer specifications for the clipper you are using.' },
             { text: 'Always snap guards on firmly - loose guards cause uneven cuts and client injury.' },
           ],
         },
@@ -545,11 +545,11 @@ export const chapter5PremiumContent: ChapterContent = {
             { label: 'HAND POSITION', description: 'Palm up, elbow down to your side' },
             { label: 'MOVEMENT', description: 'Downward gliding strokes - smooth and controlled' },
             { label: 'RESTRICTION', description: 'SIDES OF NECK ONLY - never use on face' },
-            { label: 'SAFETY', description: 'This grip on the face is a critical error that fails exams' },
+            { label: 'SAFETY', description: 'Use this grip only where the curriculum or procedure specifies; keep razor handling controlled and within the taught shaving zones' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Reverse backhand is RESTRICTED to sides of neck. Using it elsewhere fails the practical.' },
-            { text: 'CRITICAL: This grip on the face risks serious cuts. Know your zones.' },
+            { text: 'Reverse backhand is taught for specific neck-area work. Follow the technique and safety zones required by your school, state, and current exam bulletin.' },
+            { text: 'SAFETY: Use only the razor grip appropriate for the area being shaved and maintain proper skin stretching and blade control.' },
           ],
         },
       ],
