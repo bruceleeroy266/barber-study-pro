@@ -695,7 +695,7 @@ export const chapter5PremiumContent: ChapterContent = {
           ],
           facts: [
             { text: 'A burn from a thermal tool can end your career - take safety seriously.' },
-            { text: 'BOARD EXAM ALERT: Thermal safety is tested on every state board exam.' },
+            { text: 'EXAM RELEVANCE: Thermal-tool identification and safety are important study topics; verify your current state and testing-provider bulletin for the exact exam scope.' },
           ],
         },
       ],
@@ -708,10 +708,10 @@ export const chapter5PremiumContent: ChapterContent = {
       type: 'scenarioBlock',
       id: 'razor-grip-scenario',
       title: 'RAZOR GRIP CHALLENGE',
-      subtitle: 'Wrong grip, wrong area - know your zones or fail',
+      subtitle: 'Match the razor grip to the area and maintain safe blade control',
       scenarios: [
         {
-          situation: "PRACTICAL EXAM: Your examiner asks you to demonstrate the proper razor grip for shaving the client's upper lip. Which grip do you use?",
+          situation: "TRAINING SCENARIO: Which taught razor grip is used for shaving the upper lip?",
           options: [
             { letter: 'A', text: 'Freehand grip - standard position', feedback: 'INCORRECT. Freehand is for general face shaving. The upper lip requires reverse freehand for precision and visibility.' },
             { letter: 'B', text: 'Reverse freehand - hand turned toward you, edge up', feedback: 'CORRECT. Reverse freehand provides the angle and control needed for the upper lip and chin areas.' },
