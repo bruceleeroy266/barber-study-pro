@@ -292,7 +292,7 @@ export default async function DashboardPage() {
 
   const studyDates = Array.from(new Set(
     (studySessionRows || [])
-      .map((session) => session.start_time ? new Date(session.start_time).toISOString().slice(0, 10) : null)
+      .map((session: { start_time: string | null }) => session.start_time ? new Date(session.start_time).toISOString().slice(0, 10) : null)
       .filter((date): date is string => Boolean(date))
   )).sort().reverse()
 
