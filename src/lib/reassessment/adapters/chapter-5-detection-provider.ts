@@ -21,7 +21,7 @@
 
 import {
   chapter5QuizQuestionConceptMappings,
-} from '@/lib/chapter-4-concepts/mappings'
+} from '@/lib/chapter-5-concepts/mappings'
 import {
   ACTIVE_CHAPTER4_CONCEPT_FAMILY_IDS,
 } from '@/lib/chapter-4-concepts/concepts'
@@ -30,7 +30,7 @@ import {
   detectConceptState,
   type ConceptDetectionResult as Chapter5BindingResult,
 } from '@/lib/chapter-4-concepts/detection'
-import type { Chapter5ConceptFamilyId } from '@/lib/chapter-4-concepts/types'
+import type { Chapter5ConceptFamilyId } from '@/lib/chapter-5-concepts/types'
 import type { QuizAttempt } from '@/types'
 import type {
   ConceptId,
