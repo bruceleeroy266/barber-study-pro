@@ -3,6 +3,7 @@ create table if not exists public.study_activity_days (
   user_id uuid not null references auth.users(id) on delete cascade,
   study_date date not null,
   active_seconds integer not null default 0 check (active_seconds >= 0),
+  timezone text not null default 'UTC',
   last_active_at timestamptz not null default now(),
   primary key (user_id, study_date)
 );
@@ -58,11 +59,12 @@ begin
   v_study_date := (now() at time zone v_timezone)::date;
   v_seconds := greatest(1, least(coalesce(p_seconds, 60), 60));
 
-  insert into public.study_activity_days (user_id, study_date, active_seconds, last_active_at)
-  values (v_user_id, v_study_date, v_seconds, now())
+  insert into public.study_activity_days (user_id, study_date, active_seconds, timezone, last_active_at)
+  values (v_user_id, v_study_date, v_seconds, v_timezone, now())
   on conflict (user_id, study_date)
   do update set
     active_seconds = study_activity_days.active_seconds + excluded.active_seconds,
+    timezone = excluded.timezone,
     last_active_at = now();
 end;
 $$;
