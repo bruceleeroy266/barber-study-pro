@@ -296,7 +296,7 @@ export default async function DashboardPage() {
       .filter((date): date is string => Boolean(date))
   )).sort().reverse()
 
-  const toUtcDay = (date: string) => new Date(\`${date}T00:00:00.000Z\`).getTime()
+  const toUtcDay = (date: string) => new Date(`${date}T00:00:00.000Z`).getTime()
   const oneDayMs = 24 * 60 * 60 * 1000
   const todayUtc = Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate())
   const latestStudyDay = studyDates[0] ? toUtcDay(studyDates[0]) : null
