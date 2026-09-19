@@ -1,6 +1,5 @@
-import type { Chapter5ConceptFamilyId,Chapter5FlashcardConceptMapping,Chapter5QuizQuestionConceptMapping } from './types'
+import type { Chapter5ConceptFamilyId,Chapter5ContentConceptMapping,Chapter5FlashcardConceptMapping,Chapter5QuizQuestionConceptMapping } from './types'
 
-export interface Chapter5ContentConceptMapping { contentBlockId:string; conceptFamilyId:Chapter5ConceptFamilyId }
 const fc=(ids:number[],conceptFamilyId:Chapter5ConceptFamilyId):Chapter5FlashcardConceptMapping[]=>ids.map(n=>({flashcardId:`fc-5-${String(n).padStart(3,'0')}`,conceptFamilyId}))
 const qq=(ids:number[],conceptFamilyId:Chapter5ConceptFamilyId):Chapter5QuizQuestionConceptMapping[]=>ids.map(n=>({questionId:`qq-5-${String(n).padStart(3,'0')}`,conceptFamilyId}))
 const cb=(ids:string[],conceptFamilyId:Chapter5ConceptFamilyId):Chapter5ContentConceptMapping[]=>ids.map(contentBlockId=>({contentBlockId,conceptFamilyId}))
