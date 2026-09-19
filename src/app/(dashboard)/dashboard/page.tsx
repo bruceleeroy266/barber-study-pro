@@ -281,12 +281,41 @@ export default async function DashboardPage() {
     questions,
   })
 
+  // Derive the study streak from persisted study activity instead of a hardcoded value.
+  // A streak counts distinct UTC calendar days with at least one persisted study session.
+  // Today or yesterday may anchor the streak; an older last activity means the streak is broken.
+  const { data: studySessionRows } = await supabase
+    .from('study_sessions')
+    .select('start_time')
+    .eq('user_id', user.id)
+    .order('start_time', { ascending: false })
+
+  const studyDates = Array.from(new Set(
+    (studySessionRows || [])
+      .map((session) => session.start_time ? new Date(session.start_time).toISOString().slice(0, 10) : null)
+      .filter((date): date is string => Boolean(date))
+  )).sort().reverse()
+
+  const toUtcDay = (date: string) => new Date(\`${date}T00:00:00.000Z\`).getTime()
+  const oneDayMs = 24 * 60 * 60 * 1000
+  const todayUtc = Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate())
+  const latestStudyDay = studyDates[0] ? toUtcDay(studyDates[0]) : null
+  let studyStreakDays = 0
+
+  if (latestStudyDay !== null && (todayUtc - latestStudyDay === 0 || todayUtc - latestStudyDay === oneDayMs)) {
+    studyStreakDays = 1
+    for (let index = 1; index < studyDates.length; index += 1) {
+      if (toUtcDay(studyDates[index - 1]) - toUtcDay(studyDates[index]) !== oneDayMs) break
+      studyStreakDays += 1
+    }
+  }
+
   const readiness = calculateBoardReadiness({
     userId: user.id,
     attempts: attemptRecords,
     progress: progressRecords,
     totalChapters,
-    streakDays: analytics.averageScore > 0 ? 5 : 0,
+    streakDays: studyStreakDays,
   })
 
   // Use the persisted missed-question bank as the authoritative source so the
@@ -461,7 +490,7 @@ export default async function DashboardPage() {
           {/* Study Streak */}
           <MetricCard
             label="Study Streak"
-            value={analytics.averageScore > 0 ? '5 days' : '0 days'}
+            value={`${studyStreakDays} ${studyStreakDays === 1 ? 'day' : 'days'}`}
             variant="warning"
           />
 
