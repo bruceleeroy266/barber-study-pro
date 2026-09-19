@@ -1,6 +1,6 @@
 // Chapter 5: Implements, Tools, and Equipment — PREMIUM FLASHCARDS
 // The Barber's Forge - precision, steel, mastery
-// Categories: Combs & Brushes, Shears, Clippers & Trimmers, Razors, Thermal Tools, Station & Safety, Board Exam Alerts
+// Categories: Combs & Brushes, Shears, Clippers & Trimmers, Razors, Thermal Tools, Station & Safety, Exam-Relevant Review
 
 import { Flashcard } from '@/types'
 
@@ -42,7 +42,7 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
     id: 'fc-5-004',
     chapter_id: 'ch-5',
     front: 'CLIPPER GUARD SIZES: What length does a #2 guard cut?',
-    back: '1/4 inch (6mm). This is the most common guard for basic cuts. Memorize: #0=1/16in, #1=1/8in, #2=1/4in, #3=3/8in, #4=1/2in.',
+    back: 'Guard numbers and cutting lengths can vary by manufacturer or system. For a #2 guard, verify the cutting length marked or specified by the manufacturer for the exact guard and clipper system being used.',
     category: 'Combs & Brushes',
     difficulty: 'easy',
     order_index: 4,
@@ -96,7 +96,7 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
     id: 'fc-5-009',
     chapter_id: 'ch-5',
     front: 'What is the difference between a convex edge and a beveled edge on shears?',
-    back: 'Convex edge (hollow ground) is sharper and cuts more smoothly but is more fragile. Beveled edge is more durable and lasts longer but cuts less smoothly. Board exam alert.',
+    back: 'Convex edge (hollow ground) is sharper and cuts more smoothly but is more fragile. Beveled edge is more durable and lasts longer but cuts less smoothly. Exam-relevant distinction.',
     category: 'Shears & Scissors',
     difficulty: 'medium',
     order_index: 9,
@@ -116,7 +116,7 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
     id: 'fc-5-011',
     chapter_id: 'ch-5',
     front: 'How do you perform the shear tension test?',
-    back: 'Hold the shear tips pointing up. Lift one handle. The blades should open partially — not fall completely open (too loose) and not stay closed (too tight). Do this before EVERY haircut.',
+    back: 'Hold the shear tips pointing up. Lift one handle. The blades should open partially — not fall completely open (too loose) and not stay closed (too tight). Check tension regularly and whenever cutting performance suggests adjustment; follow the shear manufacturer guidance guidance.',
     category: 'Shears & Scissors',
     difficulty: 'medium',
     order_index: 11,
@@ -196,7 +196,7 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
     id: 'fc-5-019',
     chapter_id: 'ch-5',
     front: 'What is the daily shear maintenance protocol?',
-    back: '1) Wipe blades clean after EVERY haircut. 2) Oil pivot point daily — 1 drop, open/close to distribute. 3) Check tension before each use. 4) Store in protective case. 5) Sharpen every 6-12 months. 6) Cut ONLY clean hair.',
+    back: '1) Wipe blades clean after EVERY haircut. 2) Oil pivot point daily — 1 drop, open/close to distribute. 3) Check tension before each use. 4) Store in protective case. 5) Sharpen as needed according to cutting performance and manufacturer guidance. 6) Cut ONLY clean hair.',
     category: 'Shears & Scissors',
     difficulty: 'medium',
     order_index: 19,
@@ -239,8 +239,8 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-5-023',
     chapter_id: 'ch-5',
-    front: 'Which motor type is the professional standard for handling all hair types?',
-    back: 'Rotary motor. It runs cooler, lasts longer, and has the power to cut through thick, coarse, and wet hair. Magnetic motors struggle with very thick or coarse hair.',
+    front: 'How should a barber choose among clipper motor designs?',
+    back: 'Motor designs have different operating characteristics. Select a professional clipper based on the motor, blade system, manufacturer specifications, hair characteristics, and intended service.',
     category: 'Clippers & Trimmers',
     difficulty: 'easy',
     order_index: 23,
@@ -334,7 +334,7 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
     id: 'fc-5-032',
     chapter_id: 'ch-5',
     front: 'What is stropping and how often should it be done?',
-    back: 'Stropping polishes and aligns the razor edge on leather. It does NOT remove metal. Done BEFORE every shave — 20-30 passes on canvas side, then 20-30 on leather side. Maintains edge between honings.',
+    back: 'Stropping refines and aligns a traditional straight-razor edge between honings. Technique and frequency depend on the razor, strop, edge condition, and manufacturer or training guidance.',
     category: 'Straight Razors',
     difficulty: 'medium',
     order_index: 32,
@@ -363,7 +363,7 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-5-035',
     chapter_id: 'ch-5',
-    front: 'BOARD EXAM ALERT: Which razor grip is used for the upper lip and chin?',
+    front: 'EXAM-RELEVANT: Which razor grip is used for the upper lip and chin?',
     back: 'Reverse freehand. Hand turned toward you, edge facing up, semi-curved strokes toward you. NEVER use reverse backhand on the face — it is restricted to sides of neck only.',
     category: 'Straight Razors',
     difficulty: 'medium',
@@ -373,7 +373,7 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-5-036',
     chapter_id: 'ch-5',
-    front: 'BOARD EXAM ALERT: Which razor grip is RESTRICTED to sides of neck only?',
+    front: 'EXAM-RELEVANT: Which razor grip is RESTRICTED to sides of neck only?',
     back: 'Reverse backhand. Palm up, elbow down, downward gliding strokes. Using this grip on the face is a critical safety error that will fail the practical exam and risks serious injury.',
     category: 'Straight Razors',
     difficulty: 'medium',
@@ -477,8 +477,8 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-5-046',
     chapter_id: 'ch-5',
-    front: 'Is heat protectant mandatory before using thermal tools?',
-    back: 'YES. Heat protectant is mandatory — no exceptions. It creates a barrier between the hair and thermal tool, preventing damage, breakage, and moisture loss. Apply to EVERY client before thermal contact.',
+    front: 'When should heat-protection products be used with thermal tools?',
+    back: 'Use an appropriate heat-protection product when indicated by the service, hair condition, product directions, and thermal-tool guidance. Also select a safe temperature and avoid excessive heat exposure.',
     category: 'Thermal Tools',
     difficulty: 'easy',
     order_index: 46,
@@ -511,8 +511,8 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-5-049',
     chapter_id: 'ch-5',
-    front: 'What temperature should towels be washed at to meet sanitation standards?',
-    back: '160°F+ (71°C+). Hot water washing kills bacteria and pathogens. Towels must also be completely dry before use and stored in a closed cabinet. Damp towels breed bacteria.',
+    front: 'How should reusable towels and linens be laundered and stored?',
+    back: 'Follow current state rules and laundry-product directions. Use the required wash/dry process, dry linens completely, and store clean linens in a clean, closed or covered location as required. Do not assume one universal wash temperature applies everywhere.',
     category: 'Station & Safety',
     difficulty: 'easy',
     order_index: 49,
@@ -531,8 +531,8 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-5-051',
     chapter_id: 'ch-5',
-    front: 'What temperature should a hot towel cabinet maintain?',
-    back: '160°F+ (71°C+). This temperature ensures towels are hot enough to soften beard hair and open pores for shaves. Always test on your wrist before applying to the client.',
+    front: 'What is the key safety rule before applying a hot towel to a client?',
+    back: 'Use the towel warmer according to its manufacturer instructions and verify the towel is at a safe, comfortable temperature before client contact. Avoid relying on one universal cabinet-temperature rule.',
     category: 'Station & Safety',
     difficulty: 'easy',
     order_index: 51,
@@ -542,7 +542,7 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
     id: 'fc-5-052',
     chapter_id: 'ch-5',
     front: 'What is styptic powder or pencil used for?',
-    back: 'Stops bleeding from minor nicks and cuts instantly. Every barber station must have styptic available. Apply directly to the small wound — it contracts blood vessels and seals the cut.',
+    back: 'Styptic products can help control minor bleeding when permitted and used according to product directions and current state infection-control rules. Avoid cross-contamination; follow the required blood-exposure procedure.',
     category: 'Station & Safety',
     difficulty: 'easy',
     order_index: 52,
@@ -552,7 +552,7 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
     id: 'fc-5-053',
     chapter_id: 'ch-5',
     front: 'What type of disinfectant is required for barbering tools?',
-    back: 'EPA-registered hospital-grade disinfectant. Must be proven effective against bacteria, viruses, AND fungi. Check the EPA registration number on the label. Household bleach is NOT sufficient.',
+    back: 'Use an EPA-registered disinfectant that is appropriate for the implement and meets current state-board requirements. Follow the product label for organisms, dilution, contact time, compatibility, and safe use.',
     category: 'Station & Safety',
     difficulty: 'medium',
     order_index: 53,
@@ -562,7 +562,7 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
     id: 'fc-5-054',
     chapter_id: 'ch-5',
     front: 'How long is the minimum contact time for disinfectant immersion?',
-    back: '10 minutes. At 5 minutes you kill roughly 50% of pathogens. At 10 minutes you kill 99.9%. That 5-minute difference is the difference between safety and an outbreak. SET A TIMER.',
+    back: 'Use the full contact time stated on the EPA-registered disinfectant label. Contact time varies by product; keep the implement visibly wet or immersed for the labeled time and follow the manufacturer directions.',
     category: 'Station & Safety',
     difficulty: 'medium',
     order_index: 54,
@@ -590,14 +590,14 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
   },
 
   // ==========================================
-  // CATEGORY 7: BOARD EXAM ALERTS (8 cards)
+  // CATEGORY 7: EXAM-RELEVANT REVIEW (8 cards)
   // ==========================================
   {
     id: 'fc-5-057',
     chapter_id: 'ch-5',
-    front: 'BOARD EXAM ALERT: List clipper guard sizes and their inch equivalents.',
-    back: '#0 = 1/16in (1.5mm), #1 = 1/8in (3mm), #2 = 1/4in (6mm), #3 = 3/8in (10mm), #4 = 1/2in (13mm), #5-8 = 5/8in to 1in. Memorize these — they appear on every exam.',
-    category: 'Board Exam Alert',
+    front: 'EXAM-RELEVANT: How should you determine a clipper guard\'s cutting length?',
+    back: 'Use the cutting length stated for the specific guard and clipper system. Number-to-length mappings are not universal across all manufacturers, so verify the manufacturer\'s markings or instructions rather than relying on a memorized universal chart.',
+    category: 'Exam-Relevant Review',
     difficulty: 'medium',
     order_index: 57,
     is_active: true,
@@ -605,9 +605,9 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-5-058',
     chapter_id: 'ch-5',
-    front: 'BOARD EXAM ALERT: What are the three shear handle types and which reduces RSI risk?',
+    front: 'EXAM-RELEVANT: What are the three shear handle types and which reduces RSI risk?',
     back: '1) Opposing — traditional straight design. 2) Offset — thumb hole set back, most ergonomic. 3) Crane — extreme offset with downward angle, maximum ergonomic benefit. Offset and crane reduce repetitive strain injury (RSI) risk.',
-    category: 'Board Exam Alert',
+    category: 'Exam-Relevant Review',
     difficulty: 'medium',
     order_index: 58,
     is_active: true,
@@ -615,9 +615,9 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-5-059',
     chapter_id: 'ch-5',
-    front: 'BOARD EXAM ALERT: What is the difference between forged and cast shears?',
+    front: 'EXAM-RELEVANT: What is the difference between forged and cast shears?',
     back: 'Forged shears are denser, stronger, and more durable than cast shears. Look for the weld line — it proves forged construction. Forged shears cost more but last significantly longer.',
-    category: 'Board Exam Alert',
+    category: 'Exam-Relevant Review',
     difficulty: 'hard',
     order_index: 59,
     is_active: true,
@@ -625,9 +625,9 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-5-060',
     chapter_id: 'ch-5',
-    front: 'BOARD EXAM ALERT: What are the three types of shears and their primary uses?',
+    front: 'EXAM-RELEVANT: What are the three types of shears and their primary uses?',
     back: '1) Straight shears — standard cutting, 90% of haircutting work. 2) Thinning/texturizing shears — remove bulk without changing length. 3) Blending shears — blend lines between clipper and shear work.',
-    category: 'Board Exam Alert',
+    category: 'Exam-Relevant Review',
     difficulty: 'medium',
     order_index: 60,
     is_active: true,
@@ -635,9 +635,9 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-5-061',
     chapter_id: 'ch-5',
-    front: 'BOARD EXAM ALERT: What are the four steps of clipper blade maintenance?',
+    front: 'EXAM-RELEVANT: What are the four steps of clipper blade maintenance?',
     back: '1) CLEAN after every use — brush out hair debris. 2) OIL before each use — 3 drops across blade. 3) SPRAY disinfectant between every client. 4) REPLACE when dull — pulling or snagging means replacement time.',
-    category: 'Board Exam Alert',
+    category: 'Exam-Relevant Review',
     difficulty: 'medium',
     order_index: 61,
     is_active: true,
@@ -645,9 +645,9 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-5-062',
     chapter_id: 'ch-5',
-    front: 'BOARD EXAM ALERT: What is the proper straight razor shaving sequence?',
+    front: 'EXAM-RELEVANT: What is the proper straight razor shaving sequence?',
     back: '1) Stretch skin taut. 2) Use minimal pressure — let razor weight do the work. 3) Shave WITH the grain first. 4) Then across the grain. 5) Then against the grain ONLY if needed and skin tolerates it.',
-    category: 'Board Exam Alert',
+    category: 'Exam-Relevant Review',
     difficulty: 'medium',
     order_index: 62,
     is_active: true,
@@ -655,9 +655,9 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-5-063',
     chapter_id: 'ch-5',
-    front: 'BOARD EXAM ALERT: What are the three motor types and their best uses?',
+    front: 'EXAM-RELEVANT: What are the three motor types and their best uses?',
     back: 'Magnetic/Pivot — quiet, light, best for fine to medium hair. Rotary — powerful, handles all hair types, professional standard. Cordless/Lithium — mobile, consistent power, most popular modern choice.',
-    category: 'Board Exam Alert',
+    category: 'Exam-Relevant Review',
     difficulty: 'medium',
     order_index: 63,
     is_active: true,
@@ -665,9 +665,9 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-5-064',
     chapter_id: 'ch-5',
-    front: 'BOARD EXAM ALERT: What are the five essential supplies every barber station must have?',
+    front: 'EXAM-RELEVANT: What are the five essential supplies every barber station must have?',
     back: '1) Neck strips — barrier protection. 2) EPA-registered disinfectant — tool sanitation. 3) Barbicide jar — immersion disinfection. 4) Styptic powder/pencil — stops bleeding. 5) Sharps container — safe blade disposal.',
-    category: 'Board Exam Alert',
+    category: 'Exam-Relevant Review',
     difficulty: 'medium',
     order_index: 64,
     is_active: true,
@@ -709,8 +709,8 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-5-068',
     chapter_id: 'ch-5',
-    front: 'SCENARIO: The practical exam examiner asks you to demonstrate the proper razor grip for the upper lip. Which grip do you use?',
-    back: 'Reverse freehand. Hand turned toward you, edge facing up, semi-curved strokes toward you. Freehand is for general face shaving. Reverse backhand is for NECK ONLY — using it on the face fails the exam.',
+    front: 'TRAINING SCENARIO: Which taught razor grip is used for the upper lip?',
+    back: 'Reverse freehand is the taught grip for this upper-lip scenario. Maintain proper skin stretching and blade control, and verify the exact procedure required by your school, state, and current exam bulletin.',
     category: 'Scenario Card',
     difficulty: 'hard',
     order_index: 68,
