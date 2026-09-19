@@ -95,6 +95,13 @@ export default async function DashboardPage() {
     .eq('user_id', user.id)
     .order('completed_at', { ascending: false })
 
+  // Active lesson/flashcard/quiz study days recorded by the dashboard tracker.
+  const { data: studyActivityData } = await supabase
+    .from('study_activity_days')
+    .select('study_date, timezone')
+    .eq('user_id', user.id)
+    .order('study_date', { ascending: false })
+
   // Get attendance records
   const attendanceQuery = supabase
     .from('attendance_records')
@@ -281,23 +288,31 @@ export default async function DashboardPage() {
     questions,
   })
 
-  // Derive the study streak from persisted quiz activity.
-  // Quiz attempts are already part of the production dashboard data and provide
-  // a reliable record of days when the student actively studied.
-  const studyDates = Array.from(new Set(
-    attemptRecords
+  // Derive the streak from all active dashboard study, with quiz attempts as
+  // backwards-compatible history from before active-time tracking launched.
+  const activityRows = (studyActivityData ?? []) as Array<{ study_date: string; timezone: string | null }>
+  const studyTimezone = activityRows[0]?.timezone || 'UTC'
+  const localToday = new Intl.DateTimeFormat('en-CA', {
+    timeZone: studyTimezone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date())
+
+  const studyDates = Array.from(new Set([
+    ...activityRows.map((row) => row.study_date),
+    ...attemptRecords
       .map((attempt) => attempt.completed_at ? new Date(attempt.completed_at).toISOString().slice(0, 10) : null)
-      .filter((date): date is string => Boolean(date))
-  )).sort().reverse()
+      .filter((date): date is string => Boolean(date)),
+  ])).sort().reverse()
 
   const toUtcDay = (date: string) => new Date(`${date}T00:00:00.000Z`).getTime()
   const oneDayMs = 24 * 60 * 60 * 1000
-  const now = new Date()
-  const todayUtc = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+  const todayDay = toUtcDay(localToday)
   const latestStudyDay = studyDates[0] ? toUtcDay(studyDates[0]) : null
   let studyStreakDays = 0
 
-  if (latestStudyDay !== null && (todayUtc - latestStudyDay === 0 || todayUtc - latestStudyDay === oneDayMs)) {
+  if (latestStudyDay !== null && (todayDay - latestStudyDay === 0 || todayDay - latestStudyDay === oneDayMs)) {
     studyStreakDays = 1
     for (let index = 1; index < studyDates.length; index += 1) {
       if (toUtcDay(studyDates[index - 1]) - toUtcDay(studyDates[index]) !== oneDayMs) break
