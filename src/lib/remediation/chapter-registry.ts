@@ -48,7 +48,7 @@ import {
 
 import { detectAllConceptGaps as detectAllChapter5ConceptGaps } from '@/lib/chapter-5-concepts/detection'
 import { chapter5ConceptFamilies } from '@/lib/chapter-5-concepts/concepts'
-import { chapter5FlashcardConceptMappings } from '@/lib/chapter-5-concepts/mappings'
+import { chapter5ContentConceptMappings, chapter5FlashcardConceptMappings } from '@/lib/chapter-5-concepts/mappings'
 
 // ───────────────────────────────────────────────
 // Provider Contract
@@ -227,6 +227,10 @@ const chapter4Provider: ChapterDetectionProvider = {
 // Chapter 5 Provider (C5-3)
 // ───────────────────────────────────────────────
 
+const chapter5ContentMappingsProjected = chapter5ContentConceptMappings.map((m) => ({
+  contentBlockId: m.contentBlockId,
+  conceptId: m.conceptFamilyId as string,
+}))
 const chapter5FlashcardMappingsProjected = chapter5FlashcardConceptMappings.map((m) => ({
   flashcardId: m.flashcardId,
   conceptId: m.conceptFamilyId as string,
@@ -248,9 +252,11 @@ const chapter5Provider: ChapterDetectionProvider = {
   },
 
   buildAssignmentsForConcept(conceptId) {
-    // C5-1 currently maps flashcards and quiz questions. Content-block
-    // assignments are added when canonical section mappings are introduced.
-    return buildAssignments(conceptId, [], chapter5FlashcardMappingsProjected)
+    return buildAssignments(
+      conceptId,
+      chapter5ContentMappingsProjected,
+      chapter5FlashcardMappingsProjected,
+    )
   },
 }
 
