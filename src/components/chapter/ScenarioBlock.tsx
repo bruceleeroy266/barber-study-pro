@@ -29,6 +29,7 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
   const [revealed, setRevealed] = useState<Set<number>>(new Set())
   const [timeLeft, setTimeLeft] = useState<Record<number, number>>({})
   const [timerExpired, setTimerExpired] = useState<Set<number>>(new Set())
+  const [timerStarted, setTimerStarted] = useState<Set<number>>(new Set())
   const intervalRefs = useRef<Record<number, NodeJS.Timeout>>({})
 
   // Cleanup all intervals on unmount
@@ -44,6 +45,7 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
       clearInterval(intervalRefs.current[scenarioIdx])
     }
 
+    setTimerStarted(prev => new Set(prev).add(scenarioIdx))
     setTimeLeft(prev => ({ ...prev, [scenarioIdx]: seconds }))
     setTimerExpired(prev => {
       const next = new Set(prev)
@@ -107,22 +109,12 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
       delete next[scenarioIdx]
       return next
     })
-
-    // Restart timer if scenario has timeLimit
-    const scenario = scenarios[scenarioIdx]
-    if (scenario?.timeLimit && scenario.timeLimit > 0) {
-      startTimer(scenarioIdx, scenario.timeLimit)
-    }
-  }
-
-  // Auto-start timers for scenarios with timeLimit when not yet started
-  useEffect(() => {
-    scenarios.forEach((scenario, idx) => {
-      if (scenario.timeLimit && scenario.timeLimit > 0 && !revealed.has(idx) && timeLeft[idx] === undefined) {
-        startTimer(idx, scenario.timeLimit)
-      }
+    setTimerStarted(prev => {
+      const next = new Set(prev)
+      next.delete(scenarioIdx)
+      return next
     })
-  }, [scenarios, revealed, timeLeft, startTimer])
+  }
 
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60)
@@ -139,6 +131,7 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
         const isExpired = timerExpired.has(sIdx)
         const currentTimeLeft = timeLeft[sIdx]
         const hasTimer = scenario.timeLimit && scenario.timeLimit > 0
+        const hasStarted = timerStarted.has(sIdx)
         const isUrgent = hasTimer && currentTimeLeft !== undefined && currentTimeLeft <= 10 && !isRevealed
 
         return (
@@ -165,7 +158,7 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
                 <span className="text-xs font-bold uppercase tracking-wide" style={{ color: t.primary }}>
                   Real Shop Scenario
                 </span>
-                {hasTimer && !isRevealed && (
+                {hasTimer && hasStarted && !isRevealed && (
                   <div
                     className="ml-auto flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold"
                     style={{
@@ -220,7 +213,21 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
                 </div>
               )}
 
-              <div className="space-y-2 mb-4">
+              {hasTimer && !hasStarted && !isRevealed && (
+                <button
+                  onClick={() => startTimer(sIdx, scenario.timeLimit!)}
+                  aria-label="Start timed scenario"
+                  className="w-full rounded-lg py-3 mb-4 text-sm font-semibold transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
+                  style={{
+                    backgroundColor: t.primary,
+                    color: 'var(--color-brand-white)',
+                  }}
+                >
+                  Start Scenario — {scenario.timeLimit} Seconds
+                </button>
+              )}
+
+                            <div className="space-y-2 mb-4">
                 {scenario.options.map((option) => {
                   const isSelected = selected === option.letter
                   const isCorrectOption = option.letter === scenario.correctAnswer
@@ -243,7 +250,10 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
                   return (
                     <button
                       key={option.letter}
-                      onClick={() => selectAnswer(sIdx, option.letter)}
+                      onClick={() => {
+                        if (Boolean(hasTimer) && !hasStarted) return
+                        selectAnswer(sIdx, option.letter)
+                      }}
                       aria-label={`Option ${option.letter}: ${option.text}`}
                       className="w-full text-left rounded-lg p-3 transition-all text-sm flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
                       style={{
@@ -251,7 +261,8 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
                         borderColor: borderColor,
                         borderWidth: '2px',
                         borderStyle: 'solid',
-                        cursor: isRevealed ? 'default' : 'pointer',
+                        cursor: isRevealed || (Boolean(hasTimer) && !hasStarted) ? 'default' : 'pointer',
+                        opacity: Boolean(hasTimer) && !hasStarted ? 0.55 : 1,
                       }}
                     >
                       <span
@@ -279,7 +290,7 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
               {!isRevealed && (
                 <button
                   onClick={() => revealAnswer(sIdx)}
-                  disabled={selected === undefined}
+                  disabled={selected === undefined || (Boolean(hasTimer) && !hasStarted)}
                   aria-label="Check answer"
                   className="w-full rounded-lg py-2.5 text-sm font-semibold transition-all disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
                   style={{
