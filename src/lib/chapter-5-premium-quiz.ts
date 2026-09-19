@@ -543,17 +543,17 @@ export const chapter5PremiumQuizQuestions: QuizQuestion[] = [
     order_index: 40,
   },
 
-  // BOARD EXAM ALERTS (6 questions)
+  // EXAM-RELEVANT REVIEW (6 questions)
   {
     id: 'qq-5-041',
     quiz_id: 'quiz-5',
-    question: 'What length does a #1 clipper guard cut?',
-    answer_a: '1/16 inch (1.5mm)',
-    answer_b: '3/8 inch (10mm)',
-    answer_c: '1/4 inch (6mm)',
-    answer_d: '1/8 inch (3mm)',
-    correct_answer: 'd',
-    explanation: '#1 = 1/8 inch (3mm). Memorize: #0=1/16in, #1=1/8in, #2=1/4in, #3=3/8in, #4=1/2in.',
+    question: 'What is the safest way to determine the cutting length of a numbered clipper guard?',
+    answer_a: 'Use the guard number alone because all systems are universal',
+    answer_b: 'Check the guard and clipper manufacturer\'s stated cutting length for that system',
+    answer_c: 'Assume every #1 guard cuts 1/8 inch',
+    answer_d: 'Estimate the length by looking at the guard',
+    correct_answer: 'b',
+    explanation: 'Guard numbering and cutting lengths can vary by manufacturer or system. Verify the stated cutting length for the specific guard and clipper system being used.',
     difficulty: 'easy',
     order_index: 41,
   },
