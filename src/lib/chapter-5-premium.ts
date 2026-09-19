@@ -249,7 +249,7 @@ export const chapter5PremiumContent: ChapterContent = {
             { label: 'TOO TIGHT', description: 'Blades do not move - causes hand fatigue and premature wear' },
           ],
           facts: [
-            { text: 'TENSION CHECK before EVERY haircut. This 5-second test prevents bad cuts and extends shear life.' },
+            { text: 'Check shear tension regularly and whenever cutting performance changes; use the manufacturer's adjustment guidance.' },
             { text: 'Only adjust tension with the proper tool - never force the screw.' },
           ],
         },
@@ -373,7 +373,7 @@ export const chapter5PremiumContent: ChapterContent = {
         { text: 'CHECK TENSION before each use - perform the lift test every morning' },
         { text: 'NEVER DROP OR TOSS shears - a fall can create micro-fractures in the blade' },
         { text: 'STORE IN PROTECTIVE CASE - never loose in a drawer with other tools' },
-        { text: 'SHARPEN EVERY 6-12 MONTHS - only use certified shear sharpeners' },
+        { text: 'SHARPEN AS NEEDED - follow the shear manufacturer's guidance and use a qualified shear sharpener' },
         { text: 'CUT ONLY CLEAN HAIR - dirty hair contains minerals that dull edges' },
         { text: 'NEVER CUT PAPER, PLASTIC, OR ANYTHING NON-HAIR - instant edge damage' },
       ],
@@ -428,7 +428,7 @@ export const chapter5PremiumContent: ChapterContent = {
             { label: 'CORDLESS/LITHIUM', description: 'Maximum mobility, consistent power. Modern battery tech provides corded-level performance. Most popular choice today.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Rotary motors are the professional standard for handling all hair types.' },
+            { text: 'Motor designs have different operating characteristics. Choose a professional clipper whose motor, blade system, and manufacturer-rated performance fit the hair and service.' },
             { text: 'Lithium-ion batteries provide consistent power until depleted - no gradual weakening like older battery types.' },
           ],
         },
@@ -478,7 +478,7 @@ export const chapter5PremiumContent: ChapterContent = {
         {
           icon: 'Sparkles',
           title: 'STROPPING',
-          description: 'Polishing and aligning edge on leather. Does NOT remove metal. Done BEFORE every shave. Canvas side first, then leather. 20-30 passes each side. Maintains edge between honings.',
+          description: 'Stropping refines and aligns a traditional straight-razor edge between honings. Technique and frequency depend on the razor, strop, condition of the edge, and manufacturer or training guidance.',
         },
       ],
     },
@@ -689,7 +689,7 @@ export const chapter5PremiumContent: ChapterContent = {
           title: 'THERMAL SAFETY - NON-NEGOTIABLE',
           bullets: [
             { label: 'THE TISSUE TEST', description: 'Drag iron across tissue - clean pass means ready, scorch means too hot' },
-            { label: 'HEAT PROTECTANT', description: 'Apply to EVERY client before thermal contact - no exceptions' },
+            { label: 'HEAT PROTECTANT', description: 'Use an appropriate heat-protection product when indicated by the service, hair condition, product directions, and thermal-tool guidance' },
             { label: 'KEEP MOVING', description: 'Stationary iron = burned hair and angry clients' },
             { label: 'NEVER METAL ON SCALP', description: 'Metal combs on scalp cause burns - maintain safe distance' },
           ],
@@ -782,7 +782,7 @@ export const chapter5PremiumContent: ChapterContent = {
         {
           icon: 'Shield',
           title: 'THERMAL TOOL STATION',
-          description: 'Marcel irons, pressing combs, curling irons, flat irons. Electric heater or stove for metal tools. Test temperature on tissue before client contact. Heat protectant mandatory.',
+          description: 'Marcel irons, pressing combs, curling irons, flat irons. Electric heater or stove for metal tools. Test tool temperature before client contact and use heat protection appropriate to the service, hair condition, product directions, and tool guidance.',
         },
       ],
     },
