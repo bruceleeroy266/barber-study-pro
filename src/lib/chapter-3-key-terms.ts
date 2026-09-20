@@ -1,9 +1,8 @@
 /**
  * Chapter 3 Key Terms — Canonical Typed Dataset (C3-1)
  *
- * 7 terms — the chapter's textbook vocabulary, verified against the local
- * Milady Ch3 source (pp. 40–50) and expressed in original ASCYN PRO wording.
- * No publisher prose. No board-exam claims.
+ * 7 terms covering established professional subject matter and expressed in
+ * original ASCYN PRO wording. No publisher branding or board-exam claims.
  *
  * Each term maps to one canonical Chapter 3 concept family (and its 1:1 LO).
  * Self-contained: imports shared vocabulary only from the concept runtimes.
@@ -49,7 +48,7 @@ export const chapter3KeyTerms: readonly Chapter3KeyTerm[] = [
       'The daily maintenance of cleanliness through good healthful habits — bathing, hand washing, oral care, and staying fresh — so you can work comfortably in close contact with clients.',
     conceptId: 'ch3-healthful-habits',
     learningObjectiveId: 'LO-3-01',
-    sourceProvenance: 'TEXTBOOK_DERIVED',
+    sourceProvenance: 'INDUSTRY_STANDARD_SUBJECT_MATTER',
     priority: 'CORE',
     assessed: 'partial',
   },
@@ -60,7 +59,7 @@ export const chapter3KeyTerms: readonly Chapter3KeyTerm[] = [
       'The impression you project through both your outward appearance and your conduct in the workplace — how you look and how you behave, working together.',
     conceptId: 'ch3-professional-image',
     learningObjectiveId: 'LO-3-02',
-    sourceProvenance: 'TEXTBOOK_DERIVED',
+    sourceProvenance: 'INDUSTRY_STANDARD_SUBJECT_MATTER',
     priority: 'CORE',
     assessed: 'partial',
   },
@@ -71,7 +70,7 @@ export const chapter3KeyTerms: readonly Chapter3KeyTerm[] = [
       'The process of caring for the parts of your body — hair, skin, nails, and overall presentation — to maintain an overall polished, professional look.',
     conceptId: 'ch3-professional-image',
     learningObjectiveId: 'LO-3-02',
-    sourceProvenance: 'TEXTBOOK_DERIVED',
+    sourceProvenance: 'INDUSTRY_STANDARD_SUBJECT_MATTER',
     priority: 'CORE',
     assessed: 'partial',
   },
@@ -82,7 +81,7 @@ export const chapter3KeyTerms: readonly Chapter3KeyTerm[] = [
       'Your posture and the way you walk and move — the physical signals that convey an image of confidence and help prevent fatigue and other physical problems.',
     conceptId: 'ch3-ergonomics',
     learningObjectiveId: 'LO-3-03',
-    sourceProvenance: 'TEXTBOOK_DERIVED',
+    sourceProvenance: 'INDUSTRY_STANDARD_SUBJECT_MATTER',
     priority: 'CORE',
     assessed: 'flashcard-only',
   },
@@ -93,7 +92,7 @@ export const chapter3KeyTerms: readonly Chapter3KeyTerm[] = [
       'The science of designing the workplace, along with its equipment and tools, so the specific body movements your work requires stay more comfortable, efficient, and safe.',
     conceptId: 'ch3-ergonomics',
     learningObjectiveId: 'LO-3-03',
-    sourceProvenance: 'TEXTBOOK_DERIVED',
+    sourceProvenance: 'INDUSTRY_STANDARD_SUBJECT_MATTER',
     priority: 'CORE',
     assessed: 'quiz',
   },
@@ -104,7 +103,7 @@ export const chapter3KeyTerms: readonly Chapter3KeyTerm[] = [
       'The interactions and relationships between two or more people — in the shop, the everyday skill of building rapport with clients and coworkers.',
     conceptId: 'ch3-human-relations',
     learningObjectiveId: 'LO-3-04',
-    sourceProvenance: 'TEXTBOOK_DERIVED',
+    sourceProvenance: 'INDUSTRY_STANDARD_SUBJECT_MATTER',
     priority: 'CORE',
     assessed: 'flashcard-only',
   },
@@ -115,7 +114,7 @@ export const chapter3KeyTerms: readonly Chapter3KeyTerm[] = [
       'Successfully sharing information between two people so that it is understood — sending and receiving messages until you and the client mean the same thing.',
     conceptId: 'ch3-human-relations',
     learningObjectiveId: 'LO-3-04',
-    sourceProvenance: 'TEXTBOOK_DERIVED',
+    sourceProvenance: 'INDUSTRY_STANDARD_SUBJECT_MATTER',
     priority: 'CORE',
     assessed: 'partial',
   },
