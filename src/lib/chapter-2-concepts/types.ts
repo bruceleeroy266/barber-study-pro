@@ -38,12 +38,15 @@ export type QuizQuestionId = `qq-2-${string}`
 // Classification Enums
 // ───────────────────────────────────────────────
 
-/** Source provenance classification (Phase 1 Source Map, founder-approved 2026-09-09) */
+/** Source provenance classification. Publisher-specific legacy values remain for compatibility while chapters migrate to neutral provenance. */
 export type SourceProvenance =
-  | 'TEXTBOOK_DERIVED'           // DIRECT MILADY — underlying knowledge domain from textbook
-  | 'MILADY_SUPPORTED_EXPANSION' // MILADY-SUPPORTED ASCYN EXPANSION — Milady touches the area; ASCYN expands it independently
-  | 'ASCYN_ORIGINAL'             // ASCYN ENRICHMENT — original ASCYN PRO content beyond textbook scope
-  | 'ASCYN_EXTENSION'            // Legacy Phase 6B value — superseded by MILADY_SUPPORTED_EXPANSION / ASCYN_ORIGINAL; retained for type compatibility
+  | 'INDUSTRY_STANDARD_SUBJECT_MATTER' // Established professional subject matter expressed in ASCYN PRO wording
+  | 'OFFICIAL_REGULATORY'              // Government/regulatory requirement or guidance
+  | 'OFFICIAL_EXAM_GUIDE'              // Verified official candidate guide / exam blueprint source
+  | 'TEXTBOOK_DERIVED'                 // Legacy value — migrate away from publisher-derived provenance
+  | 'MILADY_SUPPORTED_EXPANSION'       // Legacy value — migrate away from publisher-named provenance
+  | 'ASCYN_ORIGINAL'                   // Original ASCYN PRO content
+  | 'ASCYN_EXTENSION'                  // Legacy ASCYN extension value retained for compatibility
 
 /** Concept importance level */
 export type ConceptImportance = 'core' | 'supporting' | 'enrichment'
@@ -111,7 +114,7 @@ export interface Chapter2LearningObjective {
   id: LearningObjectiveId
   /** LO statement in original ASCYN PRO language */
   statement: string
-  /** Source basis (e.g., 'Textbook LO1; ASCYN Section 1') */
+  /** Source basis using neutral provenance language */
   sourceBasis: string
   /** Professional relevance */
   professionalRelevance: ProfessionalRelevance
