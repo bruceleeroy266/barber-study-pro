@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { AttendanceRecord, AttendanceStatus, Profile } from '@/types'
 import { useAttendance } from '@/hooks/useAttendance'
 import { useAttendanceFilters } from '@/hooks/useAttendanceFilters'
@@ -11,7 +11,7 @@ import AttendanceSummary from '@/components/attendance/AttendanceSummary'
 import CorrectionModal from '@/components/attendance/CorrectionModal'
 import AuditLog from '@/components/attendance/AuditLog'
 import ExportButton from '@/components/attendance/ExportButton'
-import { RefreshCw, Users } from 'lucide-react'
+import { RefreshCw, ClipboardCheck } from 'lucide-react'
 
 interface AttendanceClientProps {
   initialRecords: AttendanceRecord[]
@@ -75,6 +75,7 @@ export default function AttendanceClient({
 
   const [correctionRecord, setCorrectionRecord] = useState<AttendanceRecord | null>(null)
   const [auditRecord, setAuditRecord] = useState<AttendanceRecord | null>(null)
+  const [todayInitialized, setTodayInitialized] = useState(false)
 
   const filteredRecords = useMemo(() => {
     return records
@@ -107,6 +108,27 @@ export default function AttendanceClient({
     await refresh(filters)
   }
 
+  useEffect(() => {
+    if (todayInitialized || loading || records.some((record) => record.date === defaultDate)) return
+    setTodayInitialized(true)
+    void handleEnsureToday()
+    // Initialize today's roll once; advanced history remains available below.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [todayInitialized, loading, records, defaultDate])
+
+  const todayRecords = records.filter((record) => record.date === defaultDate)
+  const todayRecordByStudent = new Map(todayRecords.map((record) => [record.userId, record]))
+
+  const markToday = async (studentId: string, status: AttendanceStatus) => {
+    let record = todayRecordByStudent.get(studentId)
+    if (!record) {
+      await ensureTodayRecords()
+      await refresh()
+      record = records.find((item) => item.userId === studentId && item.date === defaultDate)
+    }
+    if (record) await updateStatus(record.id, status)
+  }
+
   const handleExport = (format: 'csv' | 'pdf') => {
     exportData(format, { from: dateFrom, to: dateTo })
   }
@@ -122,14 +144,10 @@ export default function AttendanceClient({
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <button
-              onClick={handleEnsureToday}
-              disabled={loading}
-              className="flex items-center gap-2 px-4 py-2 bg-graphite hover:bg-[var(--color-border-secondary)] text-white rounded-lg transition-colors disabled:opacity-50"
-            >
-              <Users className="w-4 h-4" />
-              Ensure Today Records
-            </button>
+            <div className="flex items-center gap-2 text-gold text-sm font-medium">
+              <ClipboardCheck className="w-4 h-4" />
+              Today's roll is ready below
+            </div>
             <button
               onClick={handleRefresh}
               disabled={loading}
@@ -142,7 +160,41 @@ export default function AttendanceClient({
           </div>
         </div>
 
-        <AttendanceSummary records={filteredRecords} />
+        <section className="rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-surface-primary)] p-4 md:p-6">
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold text-white">Take Today's Attendance</h2>
+            <p className="text-silver mt-1">Tap one status for each student. Changes save immediately.</p>
+          </div>
+          <div className="space-y-3">
+            {students.map((student) => {
+              const record = todayRecordByStudent.get(student.id)
+              const current = record?.status
+              return (
+                <div key={student.id} className="rounded-xl border border-[var(--color-border-secondary)] p-4">
+                  <div className="font-semibold text-white mb-3">{student.full_name}</div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {(['Present', 'Tardy', 'Absent', 'Excused'] as AttendanceStatus[]).map((status) => (
+                      <button
+                        key={status}
+                        type="button"
+                        disabled={loading || !record}
+                        onClick={() => markToday(student.id, status)}
+                        className={`min-h-12 rounded-lg border px-3 py-2 font-medium transition-colors disabled:opacity-50 ${current === status ? 'border-gold bg-gold/15 text-gold' : 'border-[var(--color-border-secondary)] bg-black text-silver hover:text-white'}`}
+                      >
+                        {status}{current === status ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </section>
+
+        <details className="rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-surface-primary)]">
+          <summary className="cursor-pointer p-4 md:p-6 text-lg font-semibold text-white">Attendance history, filters & export</summary>
+          <div className="px-4 pb-4 md:px-6 md:pb-6">
+            <AttendanceSummary records={filteredRecords} />
 
         {error && (
           <div className="bg-silver/10 border border-silver/20 rounded-lg p-4 text-silver">
@@ -150,7 +202,7 @@ export default function AttendanceClient({
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mt-6">
           <div className="lg:col-span-1">
             <AttendanceFilters
               students={students}
@@ -193,6 +245,8 @@ export default function AttendanceClient({
             />
           </div>
         </div>
+          </div>
+        </details>
       </div>
 
       {correctionRecord && (
