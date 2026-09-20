@@ -74,3 +74,6 @@ grant execute on function public.record_study_activity(integer, text) to authent
 
 create index if not exists idx_study_activity_days_user_date
   on public.study_activity_days(user_id, study_date desc);
+
+-- Allow authenticated users to SELECT rows permitted by RLS policies.
+grant select on table public.study_activity_days to authenticated;
