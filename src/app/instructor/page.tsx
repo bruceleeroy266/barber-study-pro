@@ -80,7 +80,7 @@ function computeStudentStats(
   chapters: { id: string; chapter_number: number; title: string }[],
   questions: import('@/types').QuizQuestion[],
   lastSignInMap: Record<string, string | null> = {},
-  studyActivity: Array<{ user_id: string; study_date: string; active_seconds: number; last_active_at: string }> = []
+  studyActivity: Array<{ user_id: string; study_date: string; active_seconds: number; last_active_at: string; timezone: string | null }> = []
 ): RosterStudent[] {
   const totalChapters = chapters.length
 
@@ -90,7 +90,7 @@ function computeStudentStats(
     const activity = studyActivity
       .filter((row) => row.user_id === student.id)
       .sort((a, b) => b.study_date.localeCompare(a.study_date))
-    const timezone = 'UTC'
+    const timezone = activity[0]?.timezone || 'UTC'
     const today = new Intl.DateTimeFormat('en-CA', { timeZone: timezone }).format(new Date())
     const studyMinutesToday = Math.floor(
       activity.filter((row) => row.study_date === today).reduce((sum, row) => sum + row.active_seconds, 0) / 60
@@ -262,7 +262,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
 
   const { data: studyActivityData } = await supabase
     .from('study_activity_days')
-    .select('user_id, study_date, active_seconds, last_active_at')
+    .select('user_id, study_date, active_seconds, last_active_at, timezone')
     .in('user_id', studentIds.length > 0 ? studentIds : ['__none__'])
 
   // Use local chapters as the source of truth for chapter count
@@ -375,7 +375,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     return acc
   }, {})
 
-  const studentStats = computeStudentStats(rosterStudents, progressRecords, attemptRecords, chapters, questions, lastSignInMap, (studyActivityData || []) as Array<{ user_id: string; study_date: string; active_seconds: number; last_active_at: string }>)
+  const studentStats = computeStudentStats(rosterStudents, progressRecords, attemptRecords, chapters, questions, lastSignInMap, (studyActivityData || []) as Array<{ user_id: string; study_date: string; active_seconds: number; last_active_at: string; timezone: string | null }>)
 
   // Filter by search query (name, email, or role)
   const filteredStudents = searchQuery
