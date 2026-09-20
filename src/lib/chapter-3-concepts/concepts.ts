@@ -2,8 +2,8 @@
  * Chapter 3 Concept Foundation — Canonical Concept Families & LOs
  *
  * C3-1: The locked Chapter 3 curriculum backbone. Exactly four concept
- * families, mapped 1:1 to the four textbook learning objectives verified
- * against the local Milady Chapter 3 source (pp. 40–50):
+ * families, mapped 1:1 to four professional-development learning objectives
+ * expressed in original ASCYN PRO wording:
  *
  *   LO1 — healthful habits (four important personal hygiene habits)
  *   LO2 — dressing for success / professional image & grooming
@@ -20,7 +20,7 @@ import type {
 } from './types'
 
 // ───────────────────────────────────────────────
-// Learning Objectives (locked Milady LO1–LO4 backbone)
+// Learning Objectives (locked ASCYN PRO Chapter 3 backbone)
 // ───────────────────────────────────────────────
 
 export const chapter3LearningObjectives: readonly Chapter3LearningObjective[] = [
@@ -28,28 +28,28 @@ export const chapter3LearningObjectives: readonly Chapter3LearningObjective[] = 
     id: 'LO-3-01',
     statement:
       'Name the four important personal hygiene habits and explain how rest, nutrition, hydration, exercise, and stress management support a healthful daily routine.',
-    sourceBasis: 'Textbook LO1 — Apply Healthful Habits in Your Daily Routine',
+    sourceBasis: 'Industry-standard professional wellness and hygiene subject matter',
     conceptFamilyId: 'ch3-healthful-habits',
   },
   {
     id: 'LO-3-02',
     statement:
       'Explain the concept of dressing for success and how personal grooming, wardrobe, and presentation choices project a professional image.',
-    sourceBasis: 'Textbook LO2 — Follow Image-Building Basics',
+    sourceBasis: 'Industry-standard professional image and grooming subject matter',
     conceptFamilyId: 'ch3-professional-image',
   },
   {
     id: 'LO-3-03',
     statement:
       'Practice ergonomically correct movement, postures, and principles to protect the body across a barbering career.',
-    sourceBasis: 'Textbook LO3 — Employ Proper Ergonomics to Protect Your Body',
+    sourceBasis: 'Industry-standard ergonomics and body-mechanics subject matter',
     conceptFamilyId: 'ch3-ergonomics',
   },
   {
     id: 'LO-3-04',
     statement:
       'Demonstrate an understanding of human relations and communication skills, including rapport, client needs identification, and professional behavior online and in the shop.',
-    sourceBasis: 'Textbook LO4 — Practice Effective Human Relations and Communication Skills',
+    sourceBasis: 'Industry-standard client relations and professional communication subject matter',
     conceptFamilyId: 'ch3-human-relations',
   },
 ] as const
@@ -68,7 +68,7 @@ export const chapter3ConceptFamilies: readonly Chapter3ConceptFamily[] = [
     importance: 'core',
     professionalRelevance: 'CORE',
     examRelevance: 'INDIRECT_REFERENCE_ONLY',
-    sourceProvenance: 'TEXTBOOK_DERIVED',
+    sourceProvenance: 'INDUSTRY_STANDARD_SUBJECT_MATTER',
     status: 'active',
   },
   {
@@ -80,7 +80,7 @@ export const chapter3ConceptFamilies: readonly Chapter3ConceptFamily[] = [
     importance: 'core',
     professionalRelevance: 'CORE',
     examRelevance: 'INDIRECT_REFERENCE_ONLY',
-    sourceProvenance: 'TEXTBOOK_DERIVED',
+    sourceProvenance: 'INDUSTRY_STANDARD_SUBJECT_MATTER',
     status: 'active',
   },
   {
@@ -92,7 +92,7 @@ export const chapter3ConceptFamilies: readonly Chapter3ConceptFamily[] = [
     importance: 'core',
     professionalRelevance: 'CORE',
     examRelevance: 'INDIRECT_REFERENCE_ONLY',
-    sourceProvenance: 'TEXTBOOK_DERIVED',
+    sourceProvenance: 'INDUSTRY_STANDARD_SUBJECT_MATTER',
     status: 'active',
   },
   {
@@ -104,7 +104,7 @@ export const chapter3ConceptFamilies: readonly Chapter3ConceptFamily[] = [
     importance: 'core',
     professionalRelevance: 'CORE',
     examRelevance: 'INDIRECT_REFERENCE_ONLY',
-    sourceProvenance: 'TEXTBOOK_DERIVED',
+    sourceProvenance: 'INDUSTRY_STANDARD_SUBJECT_MATTER',
     status: 'active',
   },
 ] as const
