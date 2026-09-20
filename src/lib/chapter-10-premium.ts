@@ -190,7 +190,7 @@ export const chapter10PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'hair-structure-intro',
       title: 'THE ANATOMY OF HAIR',
-      content: 'Hair is a KERATINIZED appendage of the skin — meaning it is made of dead protein cells pushed upward from living roots. Every strand has two main parts: the ROOT (below the skin surface) and the SHAFT (the visible portion).\n\nUnderstanding hair structure is not academic trivia — it is the foundation of every service you perform. Chemical services target specific layers. Cutting techniques interact with the cuticle. Product absorption depends on porosity, which is determined by cuticle condition.\n\nBOARD EXAM ALERT: Hair is approximately 90% keratin protein. The cortex is the target of all chemical services.',
+      content: 'Hair is a KERATINIZED appendage of the skin — meaning it is made of dead protein cells pushed upward from living roots. Every strand has two main parts: the ROOT (below the skin surface) and the SHAFT (the visible portion).\n\nUnderstanding hair structure is not academic trivia — it is the foundation of every service you perform. Chemical services target specific layers. Cutting techniques interact with the cuticle. Product absorption depends on porosity, which is determined by cuticle condition.\n\nKEY REVIEW: Hair is approximately 90% keratin protein. The cortex is the target of all chemical services.',
       highlight: 'ROOT = LIVING GROWTH | SHAFT = VISIBLE DEAD PROTEIN',
     },
 
@@ -213,7 +213,7 @@ export const chapter10PremiumContent: ChapterContent = {
             { label: 'BARBER RELEVANCE', description: 'Healthy follicles = healthy hair growth. Damaged follicles may produce weak or no hair. Inflammation around follicles signals infection.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: The follicle is the living portion of hair. The shaft is dead keratin.' },
+            { text: 'KEY REVIEW: The follicle is the living portion of hair. The shaft is dead keratin.' },
             { text: 'Folliculitis = inflammation of follicles. Never shave over active folliculitis.' },
           ],
         },
@@ -241,7 +241,7 @@ export const chapter10PremiumContent: ChapterContent = {
             { label: 'BARBER RELEVANCE', description: 'Without blood supply from the papilla, hair cannot grow. Scalp massage stimulates circulation to papillae.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: The dermal papilla is called "the mother of the hair" because it nourishes growth.' },
+            { text: 'KEY REVIEW: The dermal papilla is called "the mother of the hair" because it nourishes growth.' },
             { text: 'Poor circulation = undernourished papillae = weaker hair growth.' },
           ],
         },
@@ -269,7 +269,7 @@ export const chapter10PremiumContent: ChapterContent = {
             { label: 'BARBER RELEVANCE', description: 'Sebum production affects hair condition. Overproduction = oily scalp and hair. Underproduction = dryness and brittleness. Proper cleansing and conditioning balance sebum levels.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Sebaceous glands are attached to EVERY hair follicle. They secrete sebum through the same duct the hair emerges from.' },
+            { text: 'KEY REVIEW: Sebaceous glands are attached to EVERY hair follicle. They secrete sebum through the same duct the hair emerges from.' },
             { text: 'Hormonal changes (especially during puberty) can cause sebaceous glands to become overactive, leading to oily scalp and acne.' },
           ],
         },
@@ -295,7 +295,7 @@ export const chapter10PremiumContent: ChapterContent = {
             { label: 'DAMAGE SIGN', description: 'Raised or missing scales = rough texture, dull appearance, high porosity, breakage' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: The cuticle must be intact for healthy hair. Damage raises scales and increases porosity.' },
+            { text: 'KEY REVIEW: The cuticle must be intact for healthy hair. Damage raises scales and increases porosity.' },
             { text: 'When the cuticle is smooth and flat, hair reflects light and appears shiny. Damaged cuticles scatter light, causing dullness.' },
           ],
         },
@@ -309,7 +309,7 @@ export const chapter10PremiumContent: ChapterContent = {
             { label: 'BARBER RELEVANCE', description: 'Color, perms, and relaxers all work on the cortex. Damage here is permanent and cumulative.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: The cortex is approximately 90% of hair weight and the target of all chemical services.' },
+            { text: 'KEY REVIEW: The cortex is approximately 90% of hair weight and the target of all chemical services.' },
             { text: 'The cortex contains three types of side bonds: hydrogen, salt, and disulfide. These determine how hair responds to styling and chemicals.' },
           ],
         },
@@ -337,7 +337,7 @@ export const chapter10PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'peptide-bonds',
       title: 'PEPTIDE BONDS — THE BACKBONE OF HAIR',
-      content: 'Before the side bonds cross-link polypeptide chains, those chains must exist. PEPTIDE BONDS (also called END BONDS) are the strong chemical bonds that join amino acids together end-to-end in a definite order. Think of them as the backbone of the hair structure.\n\nUnlike side bonds, peptide bonds are NOT broken by water, heat, or normal chemical services. They are only broken by cutting the hair or by depilatory chemicals — which literally dissolve the hair by destroying these bonds permanently.\n\nBOARD EXAM ALERT: Peptide bonds join amino acids into polypeptide chains. Side bonds (hydrogen, salt, disulfide) cross-link those chains. Peptide bonds are strong and permanent; side bonds can be temporarily or chemically altered.',
+      content: 'Before the side bonds cross-link polypeptide chains, those chains must exist. PEPTIDE BONDS (also called END BONDS) are the strong chemical bonds that join amino acids together end-to-end in a definite order. Think of them as the backbone of the hair structure.\n\nUnlike side bonds, peptide bonds are NOT broken by water, heat, or normal chemical services. They are only broken by cutting the hair or by depilatory chemicals — which literally dissolve the hair by destroying these bonds permanently.\n\nKEY REVIEW: Peptide bonds join amino acids into polypeptide chains. Side bonds (hydrogen, salt, disulfide) cross-link those chains. Peptide bonds are strong and permanent; side bonds can be temporarily or chemically altered.',
       highlight: 'PEPTIDE BONDS = THE CHAIN | SIDE BONDS = THE CROSS-LINKS',
     },
 
@@ -367,7 +367,7 @@ export const chapter10PremiumContent: ChapterContent = {
         },
         {
           icon: 'AlertTriangle',
-          title: 'BOARD EXAM ALERT',
+          title: 'KEY REVIEW',
           description: 'Hydrogen + salt = temporary styling. Disulfide = permanent changes. Peptide (end) bonds are strong and only broken by cutting or depilatories.',
         },
       ],
@@ -392,7 +392,7 @@ export const chapter10PremiumContent: ChapterContent = {
             { label: 'GRAY/WHITE', description: 'Little or no melanin production. The hair appears transparent/white because light passes through without pigment absorption.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Eumelanin = brown/black. Pheomelanin = red/yellow. Gray = little/no melanin.' },
+            { text: 'KEY REVIEW: Eumelanin = brown/black. Pheomelanin = red/yellow. Gray = little/no melanin.' },
             { text: 'Melanin is produced in the hair bulb by melanocytes — the same cells that produce skin pigment.' },
           ],
         },
@@ -406,7 +406,7 @@ export const chapter10PremiumContent: ChapterContent = {
             { label: 'ELLIPTICAL', description: 'Extremely curly/kinky hair. Flat cross-section creates tight coils. Low elasticity, breaks easily, requires gentle handling.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Wave pattern is determined by cross-section shape — Round = straight, Oval = wavy, Elliptical = curly.' },
+            { text: 'KEY REVIEW: Wave pattern is determined by cross-section shape — Round = straight, Oval = wavy, Elliptical = curly.' },
             { text: 'Extremely curly hair has LOW ELASTICITY and breaks easily. It requires extra conditioning and gentle handling.' },
           ],
         },
@@ -494,7 +494,7 @@ export const chapter10PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'hair-analysis-protocol',
       title: '🔍 THE HAIR ANALYSIS PROTOCOL',
-      content: 'Before every service — EVERY service — you must analyze the hair and scalp. This is not optional. It is the professional standard that separates safe barbers from dangerous ones.\n\nUse ALL your senses:\n\nSIGHT: Look for dry or oily scalp, lesions, parasites, inflammation, broken hairs, or unusual patterns.\n\nTOUCH: Feel texture (coarse, medium, fine), density (thick, average, thin), porosity (how quickly hair absorbs moisture), and elasticity (how well it stretches and returns).\n\nSMELL & HEARING: Unusual odors can indicate infection or product buildup. Listen to the client\'s history — medications, recent illnesses, chemical services, and concerns.\n\nBOARD EXAM ALERT: Always perform scalp analysis before chemical services. Never proceed on irritated skin, parasites, or unknown lesions.',
+      content: 'Before every service — EVERY service — you must analyze the hair and scalp. This is not optional. It is the professional standard that separates safe barbers from dangerous ones.\n\nUse ALL your senses:\n\nSIGHT: Look for dry or oily scalp, lesions, parasites, inflammation, broken hairs, or unusual patterns.\n\nTOUCH: Feel texture (coarse, medium, fine), density (thick, average, thin), porosity (how quickly hair absorbs moisture), and elasticity (how well it stretches and returns).\n\nSMELL & HEARING: Unusual odors can indicate infection or product buildup. Listen to the client\'s history — medications, recent illnesses, chemical services, and concerns.\n\nKEY REVIEW: Always perform scalp analysis before chemical services. Never proceed on irritated skin, parasites, or unknown lesions.',
       highlight: 'ANALYZE BEFORE YOU ACT — EVERY TIME, EVERY CLIENT',
     },
 
@@ -572,7 +572,7 @@ export const chapter10PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'alopecia-intro',
       title: 'UNDERSTANDING HAIR LOSS (ALOPECIA)',
-      content: 'Hair loss is one of the most emotionally charged concerns clients bring to your chair. Understanding the types, causes, and treatments allows you to respond with empathy, accuracy, and appropriate referrals.\n\nHair loss affects millions of men and women. It can be temporary (stress, illness, medication) or permanent (genetic, scarring). Your role is not to treat medical hair loss — your role is to recognize it, support the client, and refer to appropriate professionals.\n\nBOARD EXAM ALERT: Androgenic alopecia is the most common type of hair loss — genetic and hormonal. Early detection and medical referral are important.',
+      content: 'Hair loss is one of the most emotionally charged concerns clients bring to your chair. Understanding the types, causes, and treatments allows you to respond with empathy, accuracy, and appropriate referrals.\n\nHair loss affects millions of men and women. It can be temporary (stress, illness, medication) or permanent (genetic, scarring). Your role is not to treat medical hair loss — your role is to recognize it, support the client, and refer to appropriate professionals.\n\nKEY REVIEW: Androgenic alopecia is the most common type of hair loss — genetic and hormonal. Early detection and medical referral are important.',
       highlight: 'RECOGNIZE — EMPATHIZE — REFER',
     },
 
@@ -595,7 +595,7 @@ export const chapter10PremiumContent: ChapterContent = {
             { label: 'TREATMENT', description: 'Minoxidil (topical, men and women), Finasteride (oral, men only). Early treatment is most effective.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Androgenic alopecia is the most common type of hair loss.' },
+            { text: 'KEY REVIEW: Androgenic alopecia is the most common type of hair loss.' },
             { text: 'This is a medical condition — barbers should recognize it, empathize, and refer to a physician or dermatologist.' },
           ],
         },
@@ -656,7 +656,7 @@ export const chapter10PremiumContent: ChapterContent = {
         },
         {
           icon: 'AlertTriangle',
-          title: 'BOARD EXAM ALERT',
+          title: 'KEY REVIEW',
           description: 'Shaving or cutting hair does NOT make it grow back faster, darker, or coarser. This is a myth. Blunt cutting may make hair appear thicker temporarily, but growth rate and texture are genetically determined.',
         },
       ],
@@ -706,7 +706,7 @@ export const chapter10PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'hypertrophies',
       title: 'HYPERTROPHIES — ABNORMAL SKIN GROWTHS',
-      content: 'Hypertrophies are abnormal growths on the skin such as moles, warts, or skin tags. They can appear anywhere on the scalp and are usually harmless — but barbers play a critical role in early detection of skin cancer.\n\nWHY IT MATTERS: When combing through hair, you must use extreme care to avoid catching the comb on these growths. Painful or bleeding growths should never be ignored.\n\nRED FLAGS: If a client\'s mole or growth has changed color, size, shape, or texture since their last visit, gently suggest they see a physician. You are not diagnosing — you are observing. That observation could save a life.\n\nBOARD EXAM ALERT: Barbers should never scrape the scalp during analysis. Always comb gently while parting hair to check for hypertrophies, abrasions, and parasites.',
+      content: 'Hypertrophies are abnormal growths on the skin such as moles, warts, or skin tags. They can appear anywhere on the scalp and are usually harmless — but barbers play a critical role in early detection of skin cancer.\n\nWHY IT MATTERS: When combing through hair, you must use extreme care to avoid catching the comb on these growths. Painful or bleeding growths should never be ignored.\n\nRED FLAGS: If a client\'s mole or growth has changed color, size, shape, or texture since their last visit, gently suggest they see a physician. You are not diagnosing — you are observing. That observation could save a life.\n\nKEY REVIEW: Barbers should never scrape the scalp during analysis. Always comb gently while parting hair to check for hypertrophies, abrasions, and parasites.',
       highlight: 'OBSERVE — PROTECT — REFER WHEN CHANGES APPEAR',
     },
 
@@ -766,7 +766,7 @@ export const chapter10PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'decision-framework',
       title: '⚖️ THE BARBER\'S DECISION FRAMEWORK',
-      content: 'When you spot something abnormal on a client\'s scalp or hair, you have a professional obligation to act. Here is your decision tree:\n\nSTEP 1 — ASSESS: Is this normal variation or a potential problem? When in doubt, assume it needs attention.\n\nSTEP 2 — CLASSIFY: Is this contagious or non-contagious? If contagious, STOP SERVICE IMMEDIATELY.\n\nSTEP 3 — ACT: For contagious conditions — politely explain, do not embarrass, sanitize your tools and station, and refer to a physician. For non-contagious conditions — proceed with caution, adjust technique, and suggest appropriate products or referrals.\n\nSTEP 4 — DOCUMENT: Note what you observed and what you recommended. Documentation protects you professionally.\n\nSTEP 5 — FOLLOW UP: On the client\'s next visit, ask about the condition. Show you care. Build trust.\n\nBOARD EXAM ALERT: Performing services on contagious scalp conditions is a sanitation violation that can result in license suspension.',
+      content: 'When you spot something abnormal on a client\'s scalp or hair, you have a professional obligation to act. Here is your decision tree:\n\nSTEP 1 — ASSESS: Is this normal variation or a potential problem? When in doubt, assume it needs attention.\n\nSTEP 2 — CLASSIFY: Is this contagious or non-contagious? If contagious, STOP SERVICE IMMEDIATELY.\n\nSTEP 3 — ACT: For contagious conditions — politely explain, do not embarrass, sanitize your tools and station, and refer to a physician. For non-contagious conditions — proceed with caution, adjust technique, and suggest appropriate products or referrals.\n\nSTEP 4 — DOCUMENT: Note what you observed and what you recommended. Documentation protects you professionally.\n\nSTEP 5 — FOLLOW UP: On the client\'s next visit, ask about the condition. Show you care. Build trust.\n\nKEY REVIEW: Performing services on contagious scalp conditions is a sanitation violation that can result in license suspension.',
       highlight: 'WHEN IN DOUBT, STOP AND REFER',
     },
 
@@ -848,7 +848,7 @@ export const chapter10PremiumContent: ChapterContent = {
             { label: 'PROTECT YOURSELF', description: 'Wear gloves when examining unknown scalp conditions. Wash hands thoroughly.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Performing services on contagious conditions is a sanitation violation with license suspension consequences.' },
+            { text: 'KEY REVIEW: Performing services on contagious conditions is a sanitation violation with license suspension consequences.' },
             { text: 'A single mistake with chemical services on compromised hair can destroy a client\'s hair and your reputation.' },
           ],
         },
