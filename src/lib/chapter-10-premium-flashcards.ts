@@ -1,5 +1,5 @@
 // Chapter 10: Properties and Disorders of the Hair and Scalp — PREMIUM FLASHCARDS
-// Generated from textbook images and premium content
+// Generated from reviewed subject-matter references and ASCYN PRO premium content
 // Focus: Trichology, hair structure, scalp disorders, analysis
 
 import type { Flashcard } from './flashcards-data'
@@ -84,14 +84,14 @@ export const chapter10PremiumFlashcards: Flashcard[] = [
   },
 
   // ═══════════════════════════════════════════════
-  // BOARD EXAM ALERTS
+  // KEY REVIEWS
   // ═══════════════════════════════════════════════
   {
     id: 'fc-10-008',
     chapter_id: 'ch-10',
-    front: 'BOARD EXAM ALERT: What are the four senses used in hair and scalp analysis?',
+    front: 'KEY REVIEW: What are the four senses used in hair and scalp analysis?',
     back: 'The four senses used are: SIGHT (observe dryness, oiliness), HEARING (listen to client about health and products), SMELL (detect scalp disorder odors), and TOUCH (analyze texture and condition — the most important sense).',
-    category: 'Board Exam Alert',
+    category: 'Key Review',
     difficulty: 'easy',
     order_index: 8,
     is_active: true,
@@ -99,9 +99,9 @@ export const chapter10PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-10-009',
     chapter_id: 'ch-10',
-    front: 'BOARD EXAM ALERT: Why should you always check the scalp BEFORE analyzing the hair?',
+    front: 'KEY REVIEW: Why should you always check the scalp BEFORE analyzing the hair?',
     back: 'Always check the scalp first because any disorders or conditions found there could prohibit a service from being performed. Contagious scalp conditions must be identified before any cutting, chemical, or treatment service.',
-    category: 'Board Exam Alert',
+    category: 'Key Review',
     difficulty: 'easy',
     order_index: 9,
     is_active: true,
@@ -109,9 +109,9 @@ export const chapter10PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-10-010',
     chapter_id: 'ch-10',
-    front: 'BOARD EXAM ALERT: What is "barber\'s itch" and what does it describe today?',
+    front: 'KEY REVIEW: What is "barber\'s itch" and what does it describe today?',
     back: 'Barber\'s itch was historically used to describe many skin conditions including folliculitis, tinea sycosis, and razor burn. Today it most frequently describes folliculitis or razor burn — inflammation of hair follicles often caused by shaving.',
-    category: 'Board Exam Alert',
+    category: 'Key Review',
     difficulty: 'medium',
     order_index: 10,
     is_active: true,
@@ -237,9 +237,9 @@ export const chapter10PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-10-021',
     chapter_id: 'ch-10',
-    front: 'BOARD EXAM ALERT: Which hair color has the highest density and which has the lowest?',
+    front: 'KEY REVIEW: Which hair color has the highest density and which has the lowest?',
     back: 'Blond hair has the HIGHEST density (about 140,000 hairs). Red hair has the LOWEST density (about 80,000 hairs). Brown has about 110,000 and black has about 108,000.',
-    category: 'Board Exam Alert',
+    category: 'Key Review',
     difficulty: 'medium',
     order_index: 21,
     is_active: true,
@@ -413,9 +413,9 @@ export const chapter10PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-10-037',
     chapter_id: 'ch-10',
-    front: 'BOARD EXAM ALERT: What is the difference between folliculitis barbae and pseudofolliculitis barbae?',
+    front: 'KEY REVIEW: What is the difference between folliculitis barbae and pseudofolliculitis barbae?',
     back: 'Folliculitis barbae is caused by bacterial or viral infection, irritation, or ingrown hairs. Pseudofolliculitis barbae is triggered by mechanical causes: improper shaving, friction, blockages, close shaving, too much pressure, dull blades, dirty blades, or shaving against the grain. Both require medical referral for serious cases.',
-    category: 'Board Exam Alert',
+    category: 'Key Review',
     difficulty: 'medium',
     order_index: 37,
     is_active: true,
@@ -579,9 +579,9 @@ export const chapter10PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-10-052',
     chapter_id: 'ch-10',
-    front: 'BOARD EXAM ALERT: What breaks each of the three bond types?',
+    front: 'KEY REVIEW: What breaks each of the three bond types?',
     back: 'HYDROGEN bonds: broken by WATER and HEAT (re-form when dry). SALT bonds: broken by ACIDIC or ALKALINE solutions (pH changes). DISULFIDE bonds: broken by CHEMICAL treatments (permanent waves, relaxers) or EXTREME HEAT. Normal thermal styling does NOT break disulfide bonds.',
-    category: 'Board Exam Alert',
+    category: 'Key Review',
     difficulty: 'medium',
     order_index: 52,
     is_active: true,
@@ -623,9 +623,9 @@ export const chapter10PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-10-056',
     chapter_id: 'ch-10',
-    front: 'BOARD EXAM ALERT: Can a barber treat head lice in the shop?',
+    front: 'KEY REVIEW: Can a barber treat head lice in the shop?',
     back: 'NO — head lice occurrences must NOT be treated in the barbershop. The client should be referred to a physician or pharmacist. The barber must also follow proper cleaning and disinfection procedures and advise the client to disinfect all household and personal items to avoid reinfestation.',
-    category: 'Board Exam Alert',
+    category: 'Key Review',
     difficulty: 'easy',
     order_index: 56,
     is_active: true,
@@ -745,9 +745,9 @@ export const chapter10PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-10-067',
     chapter_id: 'ch-10',
-    front: 'BOARD EXAM ALERT: Does shaving or cutting hair make it grow back faster, darker, or coarser?',
+    front: 'KEY REVIEW: Does shaving or cutting hair make it grow back faster, darker, or coarser?',
     back: 'NO — this is a MYTH. Shaving or cutting hair has NO effect on hair growth rate, color, or texture. When hair is blunt cut to the same length, it may grow back more evenly, but the hair itself is unchanged.',
-    category: 'Board Exam Alert',
+    category: 'Key Review',
     difficulty: 'easy',
     order_index: 67,
     is_active: true,
@@ -809,9 +809,9 @@ export const chapter10PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-10-073',
     chapter_id: 'ch-10',
-    front: 'BOARD EXAM ALERT: What are the COHNS elements and what percentage of each is found in normal hair?',
+    front: 'KEY REVIEW: What are the COHNS elements and what percentage of each is found in normal hair?',
     back: 'COHNS elements are the essential elements in human hair: CARBON (51%), OXYGEN (21%), HYDROGEN (6%), NITROGEN (17%), and SULFUR (5%). These elements are also found in skin and nails.',
-    category: 'Board Exam Alert',
+    category: 'Key Review',
     difficulty: 'medium',
     order_index: 73,
     is_active: true,
@@ -843,9 +843,9 @@ export const chapter10PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-10-076',
     chapter_id: 'ch-10',
-    front: 'BOARD EXAM ALERT: What are side bonds and why are they critical for hair services?',
+    front: 'KEY REVIEW: What are side bonds and why are they critical for hair services?',
     back: 'Side bonds (formerly called cross-bonds) cross-link polypeptide chains in the cortex. They account for the STRENGTH and ELASTICITY of human hair and play a critical role in blowdrying, wet setting, thermal styling, and ALL chemical processes. There are three types: hydrogen, salt, and disulfide bonds.',
-    category: 'Board Exam Alert',
+    category: 'Key Review',
     difficulty: 'medium',
     order_index: 76,
     is_active: true,
@@ -891,9 +891,9 @@ export const chapter10PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-10-080',
     chapter_id: 'ch-10',
-    front: 'BOARD EXAM ALERT: What is the difference between minoxidil and finasteride?',
+    front: 'KEY REVIEW: What is the difference between minoxidil and finasteride?',
     back: 'MINOXIDIL: topical, OVER-THE-COUNTER, both genders, no known negative side effects, applied twice daily. FINASTERIDE: oral PRESCRIPTION, MEN ONLY, more effective and convenient, but possible side effects include weight gain and loss of sexual function. Once stopped, all regrown hair is lost.',
-    category: 'Board Exam Alert',
+    category: 'Key Review',
     difficulty: 'medium',
     order_index: 80,
     is_active: true,
@@ -925,9 +925,9 @@ export const chapter10PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-10-083',
     chapter_id: 'ch-10',
-    front: 'BOARD EXAM ALERT: What is the difference between "hair color" (two words) and "haircolor" (one word)?',
+    front: 'KEY REVIEW: What is the difference between "hair color" (two words) and "haircolor" (one word)?',
     back: '"HAIR COLOR" (two words) refers to the NATURAL color of hair determined by nature. "HAIRCOLOR" (one word) is the industry term for ARTIFICIAL haircoloring products. This distinction is important on the state board exam.',
-    category: 'Board Exam Alert',
+    category: 'Key Review',
     difficulty: 'easy',
     order_index: 83,
     is_active: true,
@@ -1080,9 +1080,9 @@ export const chapter10PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-10-097',
     chapter_id: 'ch-10',
-    front: 'BOARD EXAM ALERT: Which types of alopecia require physician referral and which are reversible?',
+    front: 'KEY REVIEW: Which types of alopecia require physician referral and which are reversible?',
     back: 'Require physician referral: ALL types of abnormal alopecia (areata, totalis/universalis, syphilitica). REVERSIBLE: Alopecia syphilitica (hair grows back after disease is cured). NOT reversible: Alopecia senilis (permanent age-related loss). Androgenic alopecia is genetic and progressive.',
-    category: 'Board Exam Alert',
+    category: 'Key Review',
     difficulty: 'medium',
     order_index: 97,
     is_active: true,
@@ -1119,7 +1119,7 @@ export const chapter10PremiumFlashcards: Flashcard[] = [
   },
 
   // ═══════════════════════════════════════════════
-  // ENHANCEMENT PASS — GAPS FOUND FROM TEXTBOOK REVIEW
+  // ENHANCEMENT PASS — GAPS FOUND FROM CONTENT REVIEW
   // ═══════════════════════════════════════════════
 
   // ── SEBACEOUS GLAND ──
@@ -1290,9 +1290,9 @@ export const chapter10PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-10-107',
     chapter_id: 'ch-10',
-    front: 'BOARD EXAM ALERT: What skin conditions has "barber\'s itch" been used to describe historically?',
+    front: 'KEY REVIEW: What skin conditions has "barber\'s itch" been used to describe historically?',
     back: 'Historically, "barber\'s itch" described many conditions: folliculitis, tinea barbae (ringworm), and sycosis barbae. TODAY it most frequently describes FOLLICULITIS BARBAE. Sycosis barbae is caused by ringworm FUNGUS, not bacteria — do not confuse them.',
-    category: 'Board Exam Alert',
+    category: 'Key Review',
     difficulty: 'medium',
     order_index: 107,
     is_active: true,
