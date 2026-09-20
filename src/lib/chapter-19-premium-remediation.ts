@@ -568,7 +568,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     whyItMatters:
       'First impressions start before you speak. Polished behavior and follow-up show respect and professionalism.',
     sourceSection: 'Arrange for a Job Interview',
-    sourcePages: '724, 726, 727',
+    sourcePages: 'ASCYN PRO Chapter 19: Interviews and Agreements',
     learningObjective: 'LO-3',
     quizQuestionId: 'qq-19-14',
     flashcardIds: ['fc-ch19-045', 'fc-ch19-051', 'fc-ch19-052', 'fc-ch19-054'],
@@ -576,7 +576,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
       {
         order: 1,
         action: 'Review the lesson topics on',
-        resource: 'interview wardrobe, etiquette, and follow-up (pp. 724, 726, 727)',
+        resource: 'interview wardrobe, etiquette, and follow-up',
       },
       {
         order: 2,
