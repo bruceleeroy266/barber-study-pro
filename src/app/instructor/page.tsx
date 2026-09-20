@@ -91,7 +91,11 @@ function computeStudentStats(
       .filter((row) => row.user_id === student.id)
       .sort((a, b) => b.study_date.localeCompare(a.study_date))
     const timezone = activity[0]?.timezone || 'UTC'
-    const today = new Intl.DateTimeFormat('en-CA', { timeZone: timezone }).format(new Date())
+    const todayParts = new Intl.DateTimeFormat('en-US', {
+      timeZone: timezone, year: 'numeric', month: '2-digit', day: '2-digit',
+    }).formatToParts(new Date())
+    const part = (type: Intl.DateTimeFormatPartTypes) => todayParts.find((item) => item.type === type)?.value || ''
+    const today = `${part('year')}-${part('month')}-${part('day')}`
     const studyMinutesToday = Math.floor(
       activity.filter((row) => row.study_date === today).reduce((sum, row) => sum + row.active_seconds, 0) / 60
     )
@@ -124,7 +128,8 @@ function computeStudentStats(
       .map((p) => p.last_studied_at)
       .filter((d): d is string => !!d)
       .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
-    const lastStudiedAt = lastStudiedDates[0] || null
+    const legacyLastStudiedAt = lastStudiedDates[0] || null
+    const lastStudiedAt = lastStudyActivityAt || legacyLastStudiedAt
 
     // Two DISTINCT recency signals: learning activity (study work) vs login
     // (account access). They are derived independently and never conflated.
