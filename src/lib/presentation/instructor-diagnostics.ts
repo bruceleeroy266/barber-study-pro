@@ -15,6 +15,9 @@ import {
 import {
   detectConceptState as detectChapter4ConceptState,
 } from '@/lib/chapter-4-concepts/detection'
+import {
+  detectConceptState as detectChapter5ConceptState,
+} from '@/lib/chapter-5-concepts/detection'
 import type {
   ConceptEvidence,
   DetectionState,
@@ -24,11 +27,13 @@ import { chapter2InstructorNotes } from '@/lib/chapter-2-instructor-notes'
 import { chapter2Concepts } from '@/lib/chapter-2-concepts/concepts'
 import { chapter3ConceptFamilies } from '@/lib/chapter-3-concepts/concepts'
 import { chapter4ConceptFamilies } from '@/lib/chapter-4-concepts/concepts'
+import { chapter5ConceptFamilies } from '@/lib/chapter-5-concepts/concepts'
 import { localChapters } from '@/lib/local-data'
 import {
   resolvePresentationConceptName,
   isChapter3PresentationConcept,
   isChapter4PresentationConcept,
+  isChapter5PresentationConcept,
 } from './concept-registry'
 import type { ConceptId } from '@/lib/reassessment/types'
 
@@ -103,7 +108,9 @@ export function summarizeObservation(evidence: ConceptEvidence | null | undefine
   if (!evidence) return null
 
   const isChapter2 = chapter2Concepts.some((concept) => concept.id === evidence.conceptId)
-  const result = isChapter4PresentationConcept(evidence.conceptId)
+  const result = isChapter5PresentationConcept(evidence.conceptId)
+    ? detectChapter5ConceptState(evidence as Parameters<typeof detectChapter5ConceptState>[0])
+    : isChapter4PresentationConcept(evidence.conceptId)
     ? detectChapter4ConceptState(evidence as Parameters<typeof detectChapter4ConceptState>[0])
     : isChapter3PresentationConcept(evidence.conceptId)
       ? detectChapter3ConceptState(evidence as Parameters<typeof detectChapter3ConceptState>[0])
@@ -130,6 +137,18 @@ export interface CoachingRecommendation {
 }
 
 export function buildCoachingRecommendation(conceptId: ConceptId): CoachingRecommendation {
+  if (isChapter5PresentationConcept(conceptId)) {
+    const family = chapter5ConceptFamilies.find((concept) => concept.id === conceptId)
+    return {
+      confusions: family
+        ? [{ topic: family.name, clarification: family.description }]
+        : [],
+      chapterGuidance:
+        'Use the student’s persisted Chapter 5 evidence and targeted-review history to coach the specific tool, implement, equipment, or safety concept. Reinforce correct selection, handling, care, and safe professional use, then have the student complete the assigned Knowledge Check before judging improvement.',
+      enrichmentNote: null,
+    }
+  }
+
   if (isChapter4PresentationConcept(conceptId)) {
     const family = chapter4ConceptFamilies.find((concept) => concept.id === conceptId)
     return {
