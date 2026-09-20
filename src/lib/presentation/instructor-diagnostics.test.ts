@@ -98,6 +98,12 @@ describe('resolveChapterTitle', () => {
     expect(title).not.toBe('Chapter 4')
   })
 
+  it('resolves Chapter 5 to its canonical title for instructor presentation', () => {
+    const title = resolveChapterTitle('ch-5')
+    expect(title).toContain('(Chapter 5)')
+    expect(title).not.toBe('Chapter 5')
+  })
+
   it('falls back to a numbered chapter for unknown IDs', () => {
     expect(resolveChapterTitle('ch-99')).toBe('Chapter 99')
   })
