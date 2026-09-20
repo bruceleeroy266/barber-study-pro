@@ -89,15 +89,14 @@ export interface Chapter3ConceptFamily {
 }
 
 /**
- * A Chapter 3 learning objective (locked Milady LO1–LO4 backbone,
- * expressed in original ASCYN wording).
+ * A Chapter 3 learning objective expressed in original ASCYN PRO wording.
  */
 export interface Chapter3LearningObjective {
   /** Stable LO ID (e.g., 'LO-3-01') */
   id: Chapter3LearningObjectiveId
   /** LO statement in original ASCYN PRO language */
   statement: string
-  /** Source basis (e.g., 'Textbook LO1') */
+  /** Source basis using neutral subject-matter provenance */
   sourceBasis: string
   /** The single concept family serving this LO (1:1) */
   conceptFamilyId: Chapter3ConceptFamilyId
