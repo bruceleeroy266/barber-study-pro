@@ -11,7 +11,7 @@ import AttendanceSummary from '@/components/attendance/AttendanceSummary'
 import CorrectionModal from '@/components/attendance/CorrectionModal'
 import AuditLog from '@/components/attendance/AuditLog'
 import ExportButton from '@/components/attendance/ExportButton'
-import { RefreshCw, ClipboardCheck } from 'lucide-react'
+import { RefreshCw, ClipboardCheck, ChevronDown } from 'lucide-react'
 
 interface AttendanceClientProps {
   initialRecords: AttendanceRecord[]
@@ -76,6 +76,7 @@ export default function AttendanceClient({
   const [correctionRecord, setCorrectionRecord] = useState<AttendanceRecord | null>(null)
   const [auditRecord, setAuditRecord] = useState<AttendanceRecord | null>(null)
   const [todayInitialized, setTodayInitialized] = useState(false)
+  const [expandedStudentId, setExpandedStudentId] = useState<string | null>(null)
 
   const filteredRecords = useMemo(() => {
     return records
@@ -129,6 +130,11 @@ export default function AttendanceClient({
     if (record) await updateStatus(record.id, status)
   }
 
+  const markAllPresent = async () => {
+    const ids = todayRecords.map((record) => record.id)
+    if (ids.length > 0) await bulkUpdateStatus(ids, 'Present')
+  }
+
   const handleExport = (format: 'csv' | 'pdf') => {
     exportData(format, { from: dateFrom, to: dateTo })
   }
@@ -161,30 +167,62 @@ export default function AttendanceClient({
         </div>
 
         <section className="rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-surface-primary)] p-4 md:p-6">
-          <div className="mb-4">
-            <h2 className="text-2xl font-bold text-white">Take Today's Attendance</h2>
-            <p className="text-silver mt-1">Tap one status for each student. Changes save immediately.</p>
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-2xl font-bold text-white">Take Today's Attendance</h2>
+              <p className="text-silver mt-1">Tap a student to open attendance options. Changes save immediately.</p>
+            </div>
+            <button
+              type="button"
+              onClick={markAllPresent}
+              disabled={loading || todayRecords.length === 0}
+              className="min-h-11 rounded-lg border border-gold px-4 py-2 font-semibold text-gold hover:bg-gold/10 disabled:opacity-50"
+            >
+              Mark All Present
+            </button>
           </div>
-          <div className="space-y-3">
+          <div className="divide-y divide-[var(--color-border-secondary)] overflow-hidden rounded-xl border border-[var(--color-border-secondary)]">
             {students.map((student) => {
               const record = todayRecordByStudent.get(student.id)
               const current = record?.status
+              const expanded = expandedStudentId === student.id
               return (
-                <div key={student.id} className="rounded-xl border border-[var(--color-border-secondary)] p-4">
-                  <div className="font-semibold text-white mb-3">{student.full_name}</div>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    {(['Present', 'Tardy', 'Absent', 'Excused'] as AttendanceStatus[]).map((status) => (
-                      <button
-                        key={status}
-                        type="button"
-                        disabled={loading || !record}
-                        onClick={() => markToday(student.id, status)}
-                        className={`min-h-12 rounded-lg border px-3 py-2 font-medium transition-colors disabled:opacity-50 ${current === status ? 'border-gold bg-gold/15 text-gold' : 'border-[var(--color-border-secondary)] bg-black text-silver hover:text-white'}`}
-                      >
-                        {status}{current === status ? ' ✓' : ''}
-                      </button>
-                    ))}
-                  </div>
+                <div key={student.id} className="bg-black">
+                  <button
+                    type="button"
+                    onClick={() => setExpandedStudentId(expanded ? null : student.id)}
+                    className="flex min-h-16 w-full items-center justify-between gap-3 px-4 py-3 text-left"
+                    aria-expanded={expanded}
+                  >
+                    <div className="min-w-0">
+                      <div className="truncate font-semibold text-white">{student.full_name}</div>
+                      <div className={`text-sm ${current ? 'text-gold' : 'text-silver'}`}>
+                        {current ? `Attendance: ${current} ✓` : 'Attendance: Not marked'}
+                      </div>
+                    </div>
+                    <ChevronDown className={`h-5 w-5 shrink-0 text-silver transition-transform ${expanded ? 'rotate-180' : ''}`} />
+                  </button>
+                  {expanded && (
+                    <div className="border-t border-[var(--color-border-secondary)] px-4 pb-4 pt-3">
+                      <div className="mb-2 text-sm font-medium text-silver">Attendance</div>
+                      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                        {(['Present', 'Tardy', 'Absent', 'Excused'] as AttendanceStatus[]).map((status) => (
+                          <button
+                            key={status}
+                            type="button"
+                            disabled={loading || !record}
+                            onClick={async () => {
+                              await markToday(student.id, status)
+                              setExpandedStudentId(null)
+                            }}
+                            className={`min-h-12 rounded-lg border px-3 py-2 font-medium transition-colors disabled:opacity-50 ${current === status ? 'border-gold bg-gold/15 text-gold' : 'border-[var(--color-border-secondary)] bg-[var(--color-surface-primary)] text-silver hover:text-white'}`}
+                          >
+                            {status}{current === status ? ' ✓' : ''}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )
             })}
