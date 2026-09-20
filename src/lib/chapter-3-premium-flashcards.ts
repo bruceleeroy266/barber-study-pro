@@ -1,13 +1,13 @@
 // Chapter 3: Professional Image — CANONICAL FLASHCARD BANK (C3-1)
 //
-// Rebuilt around the locked curriculum: four concept families mapped 1:1 to
-// the textbook learning objectives (local Milady Ch3 source, pp. 40–50).
+// Rebuilt around the locked ASCYN PRO curriculum: four concept families mapped 1:1
+// to original learning objectives covering established professional subject matter.
 //   ch3-healthful-habits   (LO1) — 12 cards
 //   ch3-professional-image (LO2) — 12 cards
 //   ch3-ergonomics         (LO3) — 12 cards
 //   ch3-human-relations    (LO4) — 12 cards
 //
-// All wording is original ASCYN PRO. No publisher prose.
+// All wording is original ASCYN PRO.
 // Card → concept mapping lives in chapter-3-concepts/mappings.ts.
 //
 // ID discipline: retained/revised cards keep their original fc-3 IDs.
@@ -512,7 +512,7 @@ export const chapter3PremiumFlashcards: Flashcard[] = [
 ]
 
 // ═══════════════════════════════════════════════════════════════
-// ENRICHMENT SET — ASCYN-original, beyond the textbook scope.
+// ENRICHMENT SET — ASCYN-original, beyond the core Chapter 3 scope.
 // NOT wired into student serving (flashcards-data.ts imports only the
 // core bank). is_active: false documents that these are not part of the
 // core curriculum. Nothing here is represented as textbook-required or
