@@ -1,6 +1,6 @@
 /**
  * ASCYN PRO — Chapter 19 Premium Remediation
- * Milady Standard Barbering: Preparing for Licensure and Employment
+ * Preparing for Licensure and Employment — original ASCYN PRO remediation content
  *
  * This module exports a strongly typed remediation bank that links missed quiz
  * questions (qq-19-01 through qq-19-15) and learning objectives (LO-1 through LO-3)
@@ -33,13 +33,13 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     id: 'CH19-R-LO1',
     concept: 'Licensure is the gateway to employment',
     commonMistake:
-      'Some students think they can apply for barber jobs before they are licensed, or that a one-year apprenticeship replaces passing the state exam.',
+      'Some students assume the same licensing path applies everywhere or rely on outdated information about eligibility, examinations, or apprenticeship requirements.',
     correctUnderstanding:
-      'You must pass the state written and practical exams, file an application, and pay the licensing fee before you can legally work as a barber.',
+      'You must satisfy the licensing requirements that apply in your jurisdiction before performing work that legally requires that license. Requirements may include education or training, examination components, an application, fees, and other documentation.',
     whyItMatters:
-      'Shops hire licensed barbers. Working without a license can lead to fines, loss of work, or damage to your career before it starts.',
+      'Working outside applicable licensing rules can create legal and professional consequences. Students should verify current requirements with the official licensing agency.',
     sourceSection: 'Prepare for Licensure',
-    sourcePages: '707–713',
+    sourcePages: 'ASCYN PRO Chapter 19: Prepare for Licensure',
     learningObjective: 'LO-1',
     flashcardIds: [
       'fc-ch19-001',
@@ -61,7 +61,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
       {
         order: 1,
         action: 'Read the Phase 1 lesson section',
-        resource: 'Prepare for Licensure (pp. 707–713)',
+        resource: 'Prepare for Licensure',
       },
       {
         order: 2,
@@ -74,7 +74,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
         resource: 'with a peer or mentor',
       },
     ],
-    instructorGuidance: 'Coach students to build a study calendar early. Emphasize that state licensure is a legal requirement, not just a formality, and that hands-on practice matters as much as book study.',
+    instructorGuidance: 'Coach students to build a study calendar early. Emphasize that licensing requirements vary by jurisdiction and should be verified from official sources; where a skills component is required, hands-on practice should be part of preparation.',
   },
   {
     id: 'CH19-R-LO2',
@@ -86,7 +86,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     whyItMatters:
       'Employers choose confident, prepared applicants. A scattered job search can force you to take the first offer instead of the right shop.',
     sourceSection: 'Prepare for Employment',
-    sourcePages: '714–720',
+    sourcePages: 'ASCYN PRO Chapter 19: Employment Readiness',
     learningObjective: 'LO-2',
     flashcardIds: [
       'fc-ch19-026',
@@ -108,7 +108,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
       {
         order: 1,
         action: 'Read the Phase 1 lesson section',
-        resource: 'Prepare for Employment (pp. 714–720)',
+        resource: 'Employment Readiness',
       },
       {
         order: 2,
@@ -133,7 +133,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     whyItMatters:
       'A strong interview shows you are trustworthy and serious. Poor etiquette or signing a bad contract can cost you the job or limit your future work.',
     sourceSection: 'Arrange for a Job Interview',
-    sourcePages: '720–730',
+    sourcePages: 'ASCYN PRO Chapter 19: Interviews and Agreements',
     learningObjective: 'LO-3',
     flashcardIds: [
       'fc-ch19-040',
@@ -162,7 +162,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
       {
         order: 1,
         action: 'Read the Phase 1 lesson section',
-        resource: 'Arrange for a Job Interview (pp. 720–730)',
+        resource: 'Interviews and Agreements',
       },
       {
         order: 2,
@@ -183,11 +183,11 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     commonMistake:
       'Thinking an apprenticeship, a large online portfolio, or many applications can come before licensure.',
     correctUnderstanding:
-      'You must pass the required written and practical exams and receive your barber license before you can legally be hired.',
+      'You must complete the licensing requirements that apply to the work and jurisdiction before performing services that legally require that license.',
     whyItMatters:
-      'Shops cannot hire unlicensed barbers. Starting the job search before you are licensed wastes time and may break state rules.',
+      'Employment and licensing rules vary. A student can research opportunities before licensure, but should verify what work may legally be performed and what credentials an employer requires.',
     sourceSection: 'Prepare for Licensure',
-    sourcePages: '707–708',
+    sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-1',
     quizQuestionId: 'qq-19-01',
     flashcardIds: ['fc-ch19-001', 'fc-ch19-004', 'fc-ch19-005'],
@@ -195,7 +195,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
       {
         order: 1,
         action: 'Review the lesson introduction on',
-        resource: 'licensure as the gateway to work (pp. 707–708)',
+        resource: 'licensure as the gateway to work',
       },
       { order: 2, action: 'Study flashcards', resource: 'fc-ch19-001, fc-ch19-004, and fc-ch19-005' },
       { order: 3, action: 'Re-take missed question', resource: 'qq-19-01' },
@@ -213,7 +213,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     whyItMatters:
       'Good test strategies help you show what you know, but they only work when paired with real understanding of the material.',
     sourceSection: 'Prepare for Licensure',
-    sourcePages: '709',
+    sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-1',
     quizQuestionId: 'qq-19-02',
     flashcardIds: ['fc-ch19-006'],
@@ -239,7 +239,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     whyItMatters:
       'Tricks cannot replace knowledge. A well-prepared student can answer questions even when the wording is unfamiliar.',
     sourceSection: 'Prepare for Licensure',
-    sourcePages: '709',
+    sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-1',
     quizQuestionId: 'qq-19-03',
     flashcardIds: ['fc-ch19-007', 'fc-ch19-008'],
@@ -269,7 +269,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     whyItMatters:
       'A quick scan shows easy questions, hard questions, and how much time you have. This helps you avoid running out of time.',
     sourceSection: 'Prepare for Licensure',
-    sourcePages: '710',
+    sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-1',
     quizQuestionId: 'qq-19-04',
     flashcardIds: ['fc-ch19-011', 'fc-ch19-018'],
@@ -299,7 +299,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     whyItMatters:
       'Eliminating duplicate choices narrows your options and raises your chance of picking the right answer.',
     sourceSection: 'Prepare for Licensure',
-    sourcePages: '710–711',
+    sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-1',
     quizQuestionId: 'qq-19-05',
     flashcardIds: ['fc-ch19-012', 'fc-ch19-013'],
@@ -307,7 +307,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
       {
         order: 1,
         action: 'Review the lesson topic on',
-        resource: 'deductive reasoning (pp. 710–711)',
+        resource: 'deductive reasoning',
       },
       { order: 2, action: 'Study flashcards', resource: 'fc-ch19-012 and fc-ch19-013' },
       {
@@ -329,7 +329,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     whyItMatters:
       'Most barbering rules have exceptions. Recognizing absolutes helps you avoid falling for false statements.',
     sourceSection: 'Prepare for Licensure',
-    sourcePages: '711',
+    sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-1',
     quizQuestionId: 'qq-19-06',
     flashcardIds: ['fc-ch19-014'],
@@ -359,7 +359,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     whyItMatters:
       'You need to prove you can perform services safely and correctly. Knowing laws and marketing will not replace showing real technique.',
     sourceSection: 'Prepare for Licensure',
-    sourcePages: '713',
+    sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-1',
     quizQuestionId: 'qq-19-07',
     flashcardIds: ['fc-ch19-022', 'fc-ch19-023', 'fc-ch19-025'],
@@ -389,7 +389,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     whyItMatters:
       'Knowing your strengths and gaps helps you focus your training and talk confidently with employers about where you are growing.',
     sourceSection: 'Prepare for Employment',
-    sourcePages: '714',
+    sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-2',
     quizQuestionId: 'qq-19-08',
     flashcardIds: ['fc-ch19-026', 'fc-ch19-028'],
@@ -419,7 +419,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     whyItMatters:
       'Employers scan résumés quickly. A clear summary helps them see why you fit the position in about 20 seconds.',
     sourceSection: 'Prepare for Employment',
-    sourcePages: '716',
+    sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-2',
     quizQuestionId: 'qq-19-09',
     flashcardIds: ['fc-ch19-031', 'fc-ch19-035'],
@@ -449,7 +449,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     whyItMatters:
       "Employers want proof of results. 'Increased client retention by 20%' is stronger than 'talked to clients every day.'",
     sourceSection: 'Prepare for Employment',
-    sourcePages: '716–717',
+    sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-2',
     quizQuestionId: 'qq-19-10',
     flashcardIds: ['fc-ch19-032', 'fc-ch19-033', 'fc-ch19-036'],
@@ -457,7 +457,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
       {
         order: 1,
         action: 'Review the lesson topic on',
-        resource: 'résumé content (pp. 716–717)',
+        resource: 'résumé content',
       },
       { order: 2, action: 'Study flashcards', resource: 'fc-ch19-032, fc-ch19-033, and fc-ch19-036' },
       {
@@ -478,7 +478,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     whyItMatters:
       'Employers value people skills. Serving experience, retail sales, or teamwork can show you are ready to work with clients and coworkers.',
     sourceSection: 'Prepare for Employment',
-    sourcePages: '716',
+    sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-2',
     quizQuestionId: 'qq-19-11',
     flashcardIds: ['fc-ch19-034'],
@@ -508,7 +508,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     whyItMatters:
       'Photos and documents prove what you can do. A weak portfolio makes an employer doubt your experience.',
     sourceSection: 'Prepare for Employment',
-    sourcePages: '719–720',
+    sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-2',
     quizQuestionId: 'qq-19-12',
     flashcardIds: ['fc-ch19-037', 'fc-ch19-038', 'fc-ch19-039'],
@@ -516,7 +516,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
       {
         order: 1,
         action: 'Review the lesson topic on',
-        resource: 'employment portfolios (pp. 719–720)',
+        resource: 'employment portfolios',
       },
       { order: 2, action: 'Study flashcards', resource: 'fc-ch19-037, fc-ch19-038, and fc-ch19-039' },
       {
@@ -538,7 +538,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     whyItMatters:
       'A tailored cover letter shows you paid attention and are serious. Following up after about a week keeps your name in front of the employer.',
     sourceSection: 'Arrange for a Job Interview',
-    sourcePages: '720–722',
+    sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-3',
     quizQuestionId: 'qq-19-13',
     flashcardIds: ['fc-ch19-041', 'fc-ch19-042', 'fc-ch19-043'],
@@ -546,7 +546,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
       {
         order: 1,
         action: 'Review the lesson topic on',
-        resource: 'employer research and networking (pp. 720–722)',
+        resource: 'employer research and networking',
       },
       { order: 2, action: 'Study flashcards', resource: 'fc-ch19-041, fc-ch19-042, and fc-ch19-043' },
       {
@@ -568,7 +568,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     whyItMatters:
       'First impressions start before you speak. Polished behavior and follow-up show respect and professionalism.',
     sourceSection: 'Arrange for a Job Interview',
-    sourcePages: '724, 726, 727',
+    sourcePages: 'ASCYN PRO Chapter 19: Interviews and Agreements',
     learningObjective: 'LO-3',
     quizQuestionId: 'qq-19-14',
     flashcardIds: ['fc-ch19-045', 'fc-ch19-051', 'fc-ch19-052', 'fc-ch19-054'],
@@ -576,7 +576,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
       {
         order: 1,
         action: 'Review the lesson topics on',
-        resource: 'interview wardrobe, etiquette, and follow-up (pp. 724, 726, 727)',
+        resource: 'interview wardrobe, etiquette, and follow-up',
       },
       {
         order: 2,
@@ -602,7 +602,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     whyItMatters:
       'You have the right to fair hiring. Handling illegal questions professionally protects you and keeps the interview on track.',
     sourceSection: 'Arrange for a Job Interview',
-    sourcePages: '728–730',
+    sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-3',
     quizQuestionId: 'qq-19-15',
     flashcardIds: ['fc-ch19-056', 'fc-ch19-057', 'fc-ch19-060'],
@@ -610,7 +610,7 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
       {
         order: 1,
         action: 'Review the lesson topic on',
-        resource: 'legal aspects of interviews and contracts (pp. 728–730)',
+        resource: 'legal aspects of interviews and contracts',
       },
       { order: 2, action: 'Study flashcards', resource: 'fc-ch19-056, fc-ch19-057, and fc-ch19-060' },
       {
