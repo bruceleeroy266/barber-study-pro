@@ -872,7 +872,7 @@ export const chapter10PremiumQuizQuestions: QuizQuestion[] = [
     order_index: 65,
   },
 
-  // ── ENHANCEMENT QUESTIONS — GAPS FROM TEXTBOOK REVIEW ──
+  // ── ENHANCEMENT QUESTIONS — GAPS FROM CONTENT REVIEW ──
   {
     id: 'qq-10-066',
     quiz_id: 'quiz-10',
