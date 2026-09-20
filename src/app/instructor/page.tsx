@@ -33,6 +33,9 @@ interface RosterStudent extends Profile {
   readinessScore: number
   readinessLevel: ReadinessLevel
   weakestCategory: string | null
+  studyMinutesToday: number
+  studyStreakDays: number
+  lastStudyActivityAt: string | null
 }
 
 interface ChapterClassScore {
@@ -76,13 +79,38 @@ function computeStudentStats(
   allAttempts: QuizAttempt[],
   chapters: { id: string; chapter_number: number; title: string }[],
   questions: import('@/types').QuizQuestion[],
-  lastSignInMap: Record<string, string | null> = {}
+  lastSignInMap: Record<string, string | null> = {},
+  studyActivity: Array<{ user_id: string; study_date: string; active_seconds: number; last_active_at: string }> = []
 ): RosterStudent[] {
   const totalChapters = chapters.length
 
   return students.map((student) => {
     const progress = allProgress.filter((p) => p.user_id === student.id)
     const attempts = allAttempts.filter((a) => a.user_id === student.id)
+    const activity = studyActivity
+      .filter((row) => row.user_id === student.id)
+      .sort((a, b) => b.study_date.localeCompare(a.study_date))
+    const timezone = 'UTC'
+    const today = new Intl.DateTimeFormat('en-CA', { timeZone: timezone }).format(new Date())
+    const studyMinutesToday = Math.floor(
+      activity.filter((row) => row.study_date === today).reduce((sum, row) => sum + row.active_seconds, 0) / 60
+    )
+    const activityDates = Array.from(new Set(activity.map((row) => row.study_date))).sort().reverse()
+    const toDay = (date: string) => new Date(`${date}T00:00:00.000Z`).getTime()
+    const oneDay = 86_400_000
+    const todayDay = toDay(today)
+    const latestDay = activityDates[0] ? toDay(activityDates[0]) : null
+    let studyStreakDays = 0
+    if (latestDay !== null && (todayDay - latestDay === 0 || todayDay - latestDay === oneDay)) {
+      studyStreakDays = 1
+      for (let index = 1; index < activityDates.length; index += 1) {
+        if (toDay(activityDates[index - 1]) - toDay(activityDates[index]) !== oneDay) break
+        studyStreakDays += 1
+      }
+    }
+    const lastStudyActivityAt = activity
+      .map((row) => row.last_active_at)
+      .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())[0] || null
 
     const completedChapters = progress.filter((p) => p.progress_percentage === 100).length
     const totalProgressSum = progress.reduce((sum, p) => sum + p.progress_percentage, 0)
@@ -138,6 +166,9 @@ function computeStudentStats(
       readinessScore: readiness.score,
       readinessLevel: readiness.level,
       weakestCategory,
+      studyMinutesToday,
+      studyStreakDays,
+      lastStudyActivityAt,
     }
   })
 }
@@ -227,6 +258,11 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
   const { data: allAttempts } = await supabase
     .from('quiz_attempts')
     .select('*')
+    .in('user_id', studentIds.length > 0 ? studentIds : ['__none__'])
+
+  const { data: studyActivityData } = await supabase
+    .from('study_activity_days')
+    .select('user_id, study_date, active_seconds, last_active_at')
     .in('user_id', studentIds.length > 0 ? studentIds : ['__none__'])
 
   // Use local chapters as the source of truth for chapter count
@@ -339,7 +375,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     return acc
   }, {})
 
-  const studentStats = computeStudentStats(rosterStudents, progressRecords, attemptRecords, chapters, questions, lastSignInMap)
+  const studentStats = computeStudentStats(rosterStudents, progressRecords, attemptRecords, chapters, questions, lastSignInMap, (studyActivityData || []) as Array<{ user_id: string; study_date: string; active_seconds: number; last_active_at: string }>)
 
   // Filter by search query (name, email, or role)
   const filteredStudents = searchQuery
@@ -433,6 +469,38 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
               <span className="text-sm text-[var(--color-text-secondary)]">Escalations</span>
               <EscalationBadge />
             </Link>
+          </div>
+        </div>
+
+        <div className="bg-[var(--color-background-secondary)] border border-[var(--color-border-primary)] rounded-xl p-5">
+          <h2 className="text-lg font-semibold text-white mb-4">Student Study Activity</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-[var(--color-text-muted)] border-b border-[var(--color-border-primary)]">
+                  <th className="py-3 pr-4">Student</th>
+                  <th className="py-3 pr-4">Study Today</th>
+                  <th className="py-3 pr-4">Study Streak</th>
+                  <th className="py-3">Last Study Activity</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredStudents.map((student) => (
+                  <tr key={student.id} className="border-b border-[var(--color-border-primary)]/60 last:border-0">
+                    <td className="py-3 pr-4">
+                      <Link href={`/instructor/student/${student.id}`} className="text-white font-medium hover:text-[var(--color-brand-gold)]">
+                        {student.full_name}
+                      </Link>
+                    </td>
+                    <td className="py-3 pr-4 text-light-gray">{student.studyMinutesToday} min</td>
+                    <td className="py-3 pr-4 text-light-gray">{student.studyStreakDays} day{student.studyStreakDays === 1 ? '' : 's'}</td>
+                    <td className="py-3 text-light-gray">
+                      {student.lastStudyActivityAt ? new Date(student.lastStudyActivityAt).toLocaleString() : '—'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
 
