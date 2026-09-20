@@ -100,7 +100,9 @@ export interface StudentProgress {
   id: string
   user_id: string
   chapter_id: string
+  lesson_completed: boolean
   flashcards_completed: boolean
+  knowledge_checks_completed: boolean
   quiz_completed: boolean
   best_quiz_score: number | null
   last_studied_at: string | null
