@@ -25,6 +25,9 @@ interface RosterStudent extends Profile {
   readinessScore: number
   readinessLevel: string
   weakestCategory: string | null
+  studyMinutesToday: number
+  studyStreakDays: number
+  lastStudyActivityAt: string | null
 }
 
 function computeStudentStats(
@@ -33,13 +36,40 @@ function computeStudentStats(
   allAttempts: QuizAttempt[],
   chapters: { id: string; chapter_number: number; title: string }[],
   questions: import('@/types').QuizQuestion[],
-  lastSignInMap: Record<string, string | null> = {}
+  lastSignInMap: Record<string, string | null> = {},
+  studyActivity: Array<{ user_id: string; study_date: string; active_seconds: number; last_active_at: string; timezone: string | null }> = []
 ): RosterStudent[] {
   const totalChapters = chapters.length
 
   return students.map((student) => {
     const progress = allProgress.filter((p) => p.user_id === student.id)
     const attempts = allAttempts.filter((a) => a.user_id === student.id)
+    const activity = studyActivity
+      .filter((row) => row.user_id === student.id)
+      .sort((a, b) => new Date(b.last_active_at).getTime() - new Date(a.last_active_at).getTime())
+    const timezone = activity[0]?.timezone || 'UTC'
+    const todayParts = new Intl.DateTimeFormat('en-US', {
+      timeZone: timezone, year: 'numeric', month: '2-digit', day: '2-digit',
+    }).formatToParts(new Date())
+    const part = (type: Intl.DateTimeFormatPartTypes) => todayParts.find((item) => item.type === type)?.value || ''
+    const today = `${part('year')}-${part('month')}-${part('day')}`
+    const studyMinutesToday = Math.floor(
+      activity.filter((row) => row.study_date === today).reduce((sum, row) => sum + row.active_seconds, 0) / 60
+    )
+    const activityDates = Array.from(new Set(activity.map((row) => row.study_date))).sort().reverse()
+    const toDay = (date: string) => new Date(`${date}T00:00:00.000Z`).getTime()
+    const oneDay = 86_400_000
+    const todayDay = toDay(today)
+    const latestDay = activityDates[0] ? toDay(activityDates[0]) : null
+    let studyStreakDays = 0
+    if (latestDay !== null && (todayDay - latestDay === 0 || todayDay - latestDay === oneDay)) {
+      studyStreakDays = 1
+      for (let index = 1; index < activityDates.length; index += 1) {
+        if (toDay(activityDates[index - 1]) - toDay(activityDates[index]) !== oneDay) break
+        studyStreakDays += 1
+      }
+    }
+    const lastStudyActivityAt = activity[0]?.last_active_at || null
 
     const completedChapters = progress.filter((p) => p.progress_percentage === 100).length
     const totalProgressSum = progress.reduce((sum, p) => sum + p.progress_percentage, 0)
@@ -53,7 +83,8 @@ function computeStudentStats(
       .map((p) => p.last_studied_at)
       .filter((d): d is string => !!d)
       .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
-    const lastStudiedAt = lastStudiedDates[0] || null
+    const legacyLastStudiedAt = lastStudiedDates[0] || null
+    const lastStudiedAt = lastStudyActivityAt || legacyLastStudiedAt
 
     // Two DISTINCT recency signals: learning activity (study work) vs login
     // (account access). They are derived independently and never conflated.
@@ -94,6 +125,9 @@ function computeStudentStats(
       readinessScore: readiness.score,
       readinessLevel: readiness.level,
       weakestCategory,
+      studyMinutesToday,
+      studyStreakDays,
+      lastStudyActivityAt,
     }
   })
 }
@@ -169,6 +203,11 @@ export default async function InstructorStudentsPage() {
     .select('*')
     .in('user_id', studentIds.length > 0 ? studentIds : ['__none__'])
 
+  const { data: studyActivityData } = await supabase
+    .from('study_activity_days')
+    .select('user_id, study_date, active_seconds, last_active_at, timezone')
+    .in('user_id', studentIds.length > 0 ? studentIds : ['__none__'])
+
   const chapters = localChapters
   const questions = Object.values(allQuizQuestions).flat()
 
@@ -180,7 +219,15 @@ export default async function InstructorStudentsPage() {
     attemptRecords = demoStudentQuizAttempts.filter((a) => studentIds.includes(a.user_id))
   }
 
-  const studentStats = computeStudentStats(rosterStudents, progressRecords, attemptRecords, chapters, questions, lastSignInMap)
+  const studentStats = computeStudentStats(
+    rosterStudents,
+    progressRecords,
+    attemptRecords,
+    chapters,
+    questions,
+    lastSignInMap,
+    (studyActivityData || []) as Array<{ user_id: string; study_date: string; active_seconds: number; last_active_at: string; timezone: string | null }>
+  )
 
   // Sort by name
   studentStats.sort((a, b) => a.full_name.localeCompare(b.full_name))
@@ -284,7 +331,7 @@ export default async function InstructorStudentsPage() {
               {totalStudents} student{totalStudents === 1 ? '' : 's'} in your school
             </p>
             <p className="text-xs text-[var(--color-text-muted)] mt-1">
-              Last Learning Activity = meaningful study work (flashcards, quizzes, remediation) — not the same as logging in. Last Login = most recent account sign-in.
+              Study Today and Study Streak use active study tracking. Last Study reflects the most recent tracked study activity; Last Login is account sign-in.
             </p>
           </div>
 
@@ -298,7 +345,9 @@ export default async function InstructorStudentsPage() {
                     <th className="p-4">Overall Progress</th>
                     <th className="p-4">Readiness</th>
                     <th className="p-4">Quiz Average</th>
-                    <th className="p-4">Last Learning Activity</th>
+                    <th className="p-4">Study Today</th>
+                    <th className="p-4">Study Streak</th>
+                    <th className="p-4">Last Study</th>
                     <th className="p-4">Last Login</th>
                     <th className="p-4">Actions</th>
                   </tr>
@@ -345,11 +394,17 @@ export default async function InstructorStudentsPage() {
                           {student.avgQuizScore > 0 ? `${student.avgQuizScore}%` : '—'}
                         </span>
                       </td>
-                      <td className="p-4 text-[var(--color-text-muted)]">
-                        {student.daysSinceActive !== null ? `${student.daysSinceActive}d ago` : 'Never'}
+                      <td className="p-4 text-[var(--color-text-secondary)] whitespace-nowrap">
+                        {student.studyMinutesToday} min
                       </td>
-                      <td className="p-4 text-[var(--color-text-muted)]">
-                        {student.daysSinceLogin !== null ? `${student.daysSinceLogin}d ago` : '—'}
+                      <td className="p-4 text-[var(--color-text-secondary)] whitespace-nowrap">
+                        {student.studyStreakDays} day{student.studyStreakDays === 1 ? '' : 's'}
+                      </td>
+                      <td className="p-4 text-[var(--color-text-muted)] whitespace-nowrap">
+                        {student.daysSinceActive !== null ? (student.daysSinceActive === 0 ? 'Today' : `${student.daysSinceActive}d ago`) : 'Never'}
+                      </td>
+                      <td className="p-4 text-[var(--color-text-muted)] whitespace-nowrap">
+                        {student.daysSinceLogin !== null ? (student.daysSinceLogin === 0 ? 'Today' : `${student.daysSinceLogin}d ago`) : '—'}
                       </td>
                       <td className="p-4">
                         <Link
