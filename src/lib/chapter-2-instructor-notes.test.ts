@@ -89,10 +89,10 @@ describe('Chapter 2 Instructor Notes — boundaries', () => {
     expect(notes.assessmentGuidance).toMatch(/do not present/i)
   })
 
-  it('states all three provenance classes in the boundaries section', () => {
-    expect(notes.provenanceBoundaries).toMatch(/DIRECT MILADY/)
-    expect(notes.provenanceBoundaries).toMatch(/MILADY-SUPPORTED ASCYN EXPANSION/)
-    expect(notes.provenanceBoundaries).toMatch(/ASCYN ENRICHMENT/)
+  it('states neutral provenance boundaries', () => {
+    expect(notes.provenanceBoundaries).toMatch(/INDUSTRY-STANDARD SUBJECT MATTER/i)
+    expect(notes.provenanceBoundaries).toMatch(/ASCYN ENRICHMENT/i)
+    expect(notes.provenanceBoundaries).not.toMatch(/Milady|Pivot Point|CIMA/i)
   })
 
   it('contains no publisher prose markers', () => {
