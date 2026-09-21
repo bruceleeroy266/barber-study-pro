@@ -21,9 +21,10 @@ interface Scenario {
 interface ScenarioBlockProps {
   scenarios: Scenario[]
   theme?: ChapterTheme
+  onComplete?: () => void
 }
 
-export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) {
+export default function ScenarioBlock({ scenarios, theme, onComplete }: ScenarioBlockProps) {
   const t = theme || defaultTheme
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({})
   const [revealed, setRevealed] = useState<Set<number>>(new Set())
@@ -80,7 +81,11 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
       clearInterval(intervalRefs.current[scenarioIdx])
       delete intervalRefs.current[scenarioIdx]
     }
-    setRevealed(prev => new Set(prev).add(scenarioIdx))
+    setRevealed(prev => {
+      const next = new Set(prev).add(scenarioIdx)
+      if (next.size === scenarios.length) onComplete?.()
+      return next
+    })
   }
 
   const resetScenario = (scenarioIdx: number) => {
