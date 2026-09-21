@@ -24,6 +24,7 @@ import {
 import { ACTIVE_CONCEPT_IDS } from '@/lib/chapter-2-concepts/concepts'
 import { chapter3ConceptFamilies } from '@/lib/chapter-3-concepts/concepts'
 import { chapter4ConceptFamilies } from '@/lib/chapter-4-concepts/concepts'
+import { chapter5ConceptFamilies } from '@/lib/chapter-5-concepts/concepts'
 import type { ConceptEvidence } from '@/lib/concept-detection/engine'
 
 function makeEvidence(overrides: Partial<ConceptEvidence> = {}): ConceptEvidence {
@@ -69,6 +70,14 @@ describe('resolveConceptName', () => {
     }
   })
 
+  it('resolves all six Chapter 5 implements and equipment concept families to canonical names', () => {
+    expect(chapter5ConceptFamilies).toHaveLength(6)
+    for (const family of chapter5ConceptFamilies) {
+      expect(resolveConceptName(family.id)).toBe(family.name)
+      expect(resolveConceptName(family.id)).not.toContain('Unknown concept')
+    }
+  })
+
   it('marks the retired concept explicitly', () => {
     expect(resolveConceptName('C-2-22')).toContain('retired concept')
   })
@@ -87,6 +96,12 @@ describe('resolveChapterTitle', () => {
     const title = resolveChapterTitle('ch-4')
     expect(title).toContain('(Chapter 4)')
     expect(title).not.toBe('Chapter 4')
+  })
+
+  it('resolves Chapter 5 to its canonical title for instructor presentation', () => {
+    const title = resolveChapterTitle('ch-5')
+    expect(title).toContain('(Chapter 5)')
+    expect(title).not.toBe('Chapter 5')
   })
 
   it('falls back to a numbered chapter for unknown IDs', () => {
@@ -176,6 +191,18 @@ describe('summarizeObservation', () => {
     }
   })
 
+  it('routes every Chapter 5 concept family through Chapter 5 detection', () => {
+    for (const family of chapter5ConceptFamilies) {
+      const summary = summarizeObservation(makeEvidence({
+        conceptId: family.id,
+        learningObjectiveId: family.learningObjectiveId,
+      }))
+      expect(summary).not.toBeNull()
+      expect(summary!.stateLabel).toBe('Repeated difficulty')
+      expect(summary!.confidenceLabel).toMatch(/confidence/)
+    }
+  })
+
   it('keeps Chapter 3 diagnostic routing working', () => {
     const family = chapter3ConceptFamilies[0]
     const summary = summarizeObservation(makeEvidence({
@@ -216,6 +243,16 @@ describe('buildCoachingRecommendation', () => {
       expect(rec.confusions).toEqual([{ topic: family.name, clarification: family.description }])
       expect(rec.chapterGuidance).toContain('Chapter 4')
       expect(rec.chapterGuidance).toContain('infection-control')
+      expect(rec.chapterGuidance).toContain('Knowledge Check')
+      expect(rec.enrichmentNote).toBeNull()
+    }
+  })
+
+  it('builds concept-specific Chapter 5 coaching for all six families', () => {
+    for (const family of chapter5ConceptFamilies) {
+      const rec = buildCoachingRecommendation(family.id)
+      expect(rec.confusions).toEqual([{ topic: family.name, clarification: family.description }])
+      expect(rec.chapterGuidance).toContain('Chapter 5')
       expect(rec.chapterGuidance).toContain('Knowledge Check')
       expect(rec.enrichmentNote).toBeNull()
     }
