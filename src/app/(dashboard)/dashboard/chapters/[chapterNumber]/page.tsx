@@ -119,6 +119,10 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
         questionsCount={questions?.length || 0}
         bestAttempt={bestAttempt}
         theme={chapterContent?.theme}
+        chapterId={chapter.id}
+        userId={user.id}
+        lessonCompleted={progress?.lesson_completed || false}
+        knowledgeChecksCompleted={progress?.knowledge_checks_completed || false}
       />
 
       {/* Mastery Panel — rendered only when meaningful mastery data exists.
