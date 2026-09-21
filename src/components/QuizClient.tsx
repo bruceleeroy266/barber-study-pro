@@ -154,17 +154,21 @@ export default function QuizClient({
       // Preserve existing progress flags and only mark the quiz complete on a PASS.
       let flashcardsCompleted = false
       let existingQuizCompleted = false
+      let lessonCompleted = false
+      let knowledgeChecksCompleted = false
       let existingBestScore = 0
 
       if (isSupabaseConfigured()) {
         const { data: existingProgress } = await supabase
           .from('student_progress')
-          .select('flashcards_completed, quiz_completed, best_quiz_score')
+          .select('lesson_completed, flashcards_completed, knowledge_checks_completed, quiz_completed, best_quiz_score')
           .eq('user_id', userId)
           .eq('chapter_id', chapterId)
           .maybeSingle()
 
+        lessonCompleted = existingProgress?.lesson_completed ?? false
         flashcardsCompleted = existingProgress?.flashcards_completed ?? false
+        knowledgeChecksCompleted = existingProgress?.knowledge_checks_completed ?? false
         existingQuizCompleted = existingProgress?.quiz_completed ?? false
         existingBestScore = existingProgress?.best_quiz_score ?? 0
       }
@@ -176,7 +180,10 @@ export default function QuizClient({
         existingBestScore,
         bestAttempt?.percentage ?? 0
       )
-      const progressPercentage = calculateChapterProgress(flashcardsCompleted, quizCompleted)
+      const progressPercentage = calculateChapterProgress(flashcardsCompleted, quizCompleted, {
+        lessonCompleted,
+        knowledgeChecksCompleted,
+      })
 
       // Chapter progress + learning-activity timestamp (last_studied_at).
       // The quiz attempt is already persisted above, so a failure here must
