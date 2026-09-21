@@ -22,10 +22,16 @@ import AppearanceChecklist from './AppearanceChecklist'
 import ProTip from './ProTip'
 import ReflectionBlock from './ReflectionBlock'
 import HtmlContentBlock from './HtmlContentBlock'
+import { supabase } from '@/lib/supabase'
+import { calculateChapterProgress } from '@/lib/progress'
 
 interface ChapterContentProps {
   sections: ChapterSection[]
   theme?: ChapterTheme
+  chapterId?: string
+  userId?: string
+  lessonCompleted?: boolean
+  knowledgeChecksCompleted?: boolean
 }
 
 function SectionWrapper({
@@ -48,12 +54,34 @@ function SectionWrapper({
         </div>
       )}
       {children}
+      {userId && chapterId && !lessonCompleted && (
+        <button onClick={() => saveSignal('lesson_completed')} className="w-full rounded-lg border border-[var(--color-brand-gold)] px-4 py-3 font-semibold text-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold)]/10">
+          ✓ Mark Lesson Complete
+        </button>
+      )}
+      {lessonCompleted && <p className="text-sm text-[var(--color-brand-gold)]">✓ Lesson completed</p>}
+      {hasKnowledgeChecks && knowledgeChecksCompleted && <p className="text-sm text-[var(--color-brand-gold)]">✓ Knowledge checks completed</p>}
     </div>
   )
 }
 
-export default function ChapterContent({ sections, theme }: ChapterContentProps) {
+export default function ChapterContent({ sections, theme, chapterId, userId, lessonCompleted = false, knowledgeChecksCompleted = false }: ChapterContentProps) {
   const t = theme || defaultTheme
+  const hasKnowledgeChecks = sections.some((section) => section.type === 'scenarioBlock')
+
+  const saveSignal = async (signal: 'lesson_completed' | 'knowledge_checks_completed') => {
+    if (!userId || !chapterId) return
+    const { data: existing } = await supabase
+      .from('student_progress')
+      .select('lesson_completed, flashcards_completed, knowledge_checks_completed, quiz_completed')
+      .eq('user_id', userId)
+      .eq('chapter_id', chapterId)
+      .maybeSingle()
+    const lesson = signal === 'lesson_completed' ? true : (existing?.lesson_completed ?? false)
+    const knowledge = signal === 'knowledge_checks_completed' ? true : (existing?.knowledge_checks_completed ?? false)
+    const progressPercentage = calculateChapterProgress(existing?.flashcards_completed ?? false, existing?.quiz_completed ?? false, { lessonCompleted: lesson, knowledgeChecksCompleted: knowledge })
+    await supabase.from('student_progress').upsert({ user_id: userId, chapter_id: chapterId, [signal]: true, progress_percentage: progressPercentage, last_studied_at: new Date().toISOString(), updated_at: new Date().toISOString() }, { onConflict: 'user_id,chapter_id' })
+  }
 
   return (
     <div className="space-y-10">
@@ -132,7 +160,7 @@ export default function ChapterContent({ sections, theme }: ChapterContentProps)
           case 'scenarioBlock':
             return (
               <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <ScenarioBlock scenarios={section.scenarios} theme={t} />
+                <ScenarioBlock scenarios={section.scenarios} theme={t} onComplete={() => saveSignal('knowledge_checks_completed')} />
               </SectionWrapper>
             )
 
