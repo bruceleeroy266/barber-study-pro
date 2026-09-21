@@ -227,7 +227,7 @@ describe('QuizClient', () => {
       expect(mocks.insert).toHaveBeenCalled()
     })
 
-    expect(screen.getByText(/Quiz passed\. Review your answers below/i)).toBeInTheDocument()
+    expect(await screen.findByText(/Quiz passed\. Review your answers below/i, {}, { timeout: 2000 })).toBeInTheDocument()
     expect(screen.getByText('80%')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Continue to Chapter 2/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Retake Quiz/i })).toBeInTheDocument()

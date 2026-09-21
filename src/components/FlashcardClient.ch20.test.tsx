@@ -126,6 +126,10 @@ describe('FlashcardClient — Chapter 20', () => {
   it('flags a card for additional practice', async () => {
     renderFlashcards()
     const flagButton = await screen.findByRole('button', { name: /Flag this flashcard for more practice/i })
+    // Wait for the initial flagged-card query to finish before clicking. The
+    // control is rendered while loading but intentionally disabled until the
+    // backend flagging capability is confirmed.
+    await waitFor(() => expect(flagButton).toBeEnabled())
 
     fireEvent.click(flagButton)
 

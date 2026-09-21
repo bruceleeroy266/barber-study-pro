@@ -30,6 +30,11 @@ import {
   createChapter4DetectionProvider,
   type Chapter4DetectionProviderConfig,
 } from './adapters/chapter-4-detection-provider'
+import {
+  Chapter5DetectionProvider,
+  createChapter5DetectionProvider,
+  type Chapter5DetectionProviderConfig,
+} from './adapters/chapter-5-detection-provider'
 
 // ───────────────────────────────────────────────
 // Concept Detection Provider Interface
@@ -289,6 +294,15 @@ export function initializeChapter4DetectionProvider(
   return provider
 }
 
+export function initializeChapter5DetectionProvider(
+  config: Chapter5DetectionProviderConfig
+): Chapter5DetectionProvider {
+  const provider = createChapter5DetectionProvider(config)
+  const registry = getDetectionProviderRegistry()
+  registry.registerProvider(provider)
+  return provider
+}
+
 /**
  * Initialize and register the detection provider for a chapter (C3-3).
  *
@@ -309,6 +323,9 @@ export function initializeChapterDetectionProvider(
   }
   if (chapterId === 'ch-4') {
     return initializeChapter4DetectionProvider(config)
+  }
+  if (chapterId === 'ch-5') {
+    return initializeChapter5DetectionProvider(config)
   }
   return undefined
 }
