@@ -54,13 +54,6 @@ function SectionWrapper({
         </div>
       )}
       {children}
-      {userId && chapterId && !lessonCompleted && (
-        <button onClick={() => saveSignal('lesson_completed')} className="w-full rounded-lg border border-[var(--color-brand-gold)] px-4 py-3 font-semibold text-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold)]/10">
-          ✓ Mark Lesson Complete
-        </button>
-      )}
-      {lessonCompleted && <p className="text-sm text-[var(--color-brand-gold)]">✓ Lesson completed</p>}
-      {hasKnowledgeChecks && knowledgeChecksCompleted && <p className="text-sm text-[var(--color-brand-gold)]">✓ Knowledge checks completed</p>}
     </div>
   )
 }
@@ -236,6 +229,13 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
             return null
         }
       })}
+      {userId && chapterId && !lessonCompleted && (
+        <button onClick={() => saveSignal('lesson_completed')} className="w-full rounded-lg border border-[var(--color-brand-gold)] px-4 py-3 font-semibold text-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold)]/10">
+          ✓ Mark Lesson Complete
+        </button>
+      )}
+      {lessonCompleted && <p className="text-sm text-[var(--color-brand-gold)]">✓ Lesson completed</p>}
+      {hasKnowledgeChecks && knowledgeChecksCompleted && <p className="text-sm text-[var(--color-brand-gold)]">✓ Knowledge checks completed</p>}
     </div>
   )
 }
