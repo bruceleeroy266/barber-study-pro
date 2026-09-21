@@ -641,15 +641,15 @@ export const chapter5PremiumContent: ChapterContent = {
         {
           id: 'marcel-iron',
           label: 'MARCEL IRON',
-          title: 'MARCEL IRON - THE PRO STANDARD',
+          title: 'MARCEL IRON - MANUAL THERMAL CONTROL',
           bullets: [
             { label: 'DESIGN', description: 'Manual temperature control with rotating handle - no spring' },
             { label: 'CONTROL', description: 'Barrel heats evenly, clamp holds hair firmly without crushing' },
             { label: 'TECHNIQUE', description: 'Rotate handle to wind hair, hold 5-8 seconds, release smoothly' },
-            { label: 'BEST FOR', description: 'Professional curls, waves, and texture work - the barber standard' },
+            { label: 'BEST FOR', description: 'Creating curls, waves, and texture when the service and hair condition are appropriate' },
           ],
           facts: [
-            { text: 'EXAM-RELEVANT: Marcel irons are the professional standard for thermal curling.' },
+            { text: 'EXAM-RELEVANT: Know how a Marcel iron is identified, controlled, used, and handled safely; exact exam scope varies by jurisdiction and testing provider.' },
             { text: 'PRO TIP: The rotating handle gives you infinite control - practice the wrist motion.' },
           ],
         },
@@ -772,7 +772,7 @@ export const chapter5PremiumContent: ChapterContent = {
         {
           icon: 'Droplets',
           title: 'HOT TOWEL CABINET',
-          description: 'Maintains towels at 160F+ for hot towel services. Essential for straight razor shaves. Sanitize cabinet weekly. Never use a towel that is too hot - test on wrist first.',
+          description: 'Warms towels for hot towel services. Operate, clean, and maintain the cabinet according to manufacturer directions and applicable state rules. Verify a safe, comfortable towel temperature before client contact.',
         },
         {
           icon: 'Sparkles',
@@ -798,7 +798,7 @@ export const chapter5PremiumContent: ChapterContent = {
       items: [
         { text: 'NECK STRIPS - Paper or foam, placed before cape to prevent hair contact with skin' },
         { text: 'BARBER CAPES - Clean, disinfected, properly secured for every client' },
-        { text: 'TOWELS - White, plentiful, washed at 160F+, completely dry before use' },
+        { text: 'TOWELS - Clean, plentiful, laundered and dried according to current state rules and product directions, then stored to prevent contamination' },
         { text: 'EPA-REGISTERED DISINFECTANT - Hospital grade for tools and surfaces' },
         { text: 'BARBICIDE SOLUTION AND JAR - For immersion disinfection of combs and tools' },
         { text: 'DISPOSABLE GLOVES - Nitrile or latex, changed between clients' },
@@ -908,8 +908,8 @@ export const chapter5PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'board-exam-tools',
       title: 'EXAM-RELEVANT TOOL & SAFETY REVIEW',
-      content: 'These tool-related concepts appear on EVERY state board exam. Miss them, and you fail.\n\n1. CLIPPER GUARD SIZES: #0 = 1/16in, #1 = 1/8in, #2 = 1/4in, #3 = 3/8in, #4 = 1/2in. Memorize these conversions.\n\n2. SHEAR TENSION TEST: Hold tips up, lift one handle. Blades should open partially. Too loose = hair bends. Too tight = hand fatigue.\n\n3. BLADE MAINTENANCE: Clean after every use, oil before each use, spray disinfectant between clients, replace when dull.\n\n4. STRAIGHT RAZOR SAFETY: Stretch skin taut, minimal pressure, shave with grain first, dispose blades in sharps container.\n\n5. COMB TYPES: All-purpose (sectioning), taper (fades), clipper guards (length control), styling brushes (finishing).\n\n6. SANITATION: EPA-registered disinfectant, Barbicide immersion, 10-minute contact time, clean before disinfecting.\n\n7. TOWEL HYGIENE: Fresh towel per client, wash at 160F+, dry completely, store in closed cabinet.\n\n8. MOTOR TYPES: Magnetic (quiet, light), Rotary (powerful, professional standard), Cordless/Lithium (mobile, consistent power).\n\n9. SHEAR TYPES: Straight (standard), Thinning/Texturizing (removes bulk), Blending (blends clipper lines).\n\n10. NEVER USE DULL TOOLS: Pulling hair = dull blade. Replace immediately. Client comfort is non-negotiable.\n\n11. SHEAR PALMING: Never set shears down mid-cut. Palm them professionally. Transfer to palm, secure with thumb, free your fingers.\n\n12. RAZOR GRIPS: Four grips - freehand (general), backhand (broad areas), reverse freehand (upper lip/chin), reverse backhand (neck only). Know your zones.\n\n13. RAZOR GRINDS: Hollow-ground detects resistance and sings when sharp. Wedge grind powers through coarse beards. Match grind to beard type.\n\n14. THERMAL SAFETY: Test on tissue paper before client contact. Keep tools moving. Never use metal comb on scalp. Heat protectant is mandatory.\n\n15. TOOL CONSTRUCTION: Forged shears are denser and stronger than cast. Look for the weld line - it proves forged construction.',
-      highlight: 'MEMORIZE THESE 15 POINTS',
+      content: 'These are high-value tool and safety study topics. Exact exam content varies by jurisdiction and testing provider, so verify the current candidate bulletin and state requirements.\n\n1. CLIPPER GUARDS: Attachment-comb numbering and cut lengths can vary by manufacturer and system. Learn the markings on the equipment you use and verify manufacturer specifications.\n\n2. SHEAR TENSION TEST: Hold tips up, lift one handle. Blades should open partially. Too loose = hair bends. Too tight = hand fatigue.\n\n3. BLADE MAINTENANCE: Clean after every use, oil before each use, spray disinfectant between clients, replace when dull.\n\n4. STRAIGHT RAZOR SAFETY: Stretch skin taut, minimal pressure, shave with grain first, dispose blades in sharps container.\n\n5. COMB TYPES: All-purpose (sectioning), taper (fades), clipper guards (length control), styling brushes (finishing).\n\n6. DISINFECTION: Clean implements before disinfection, use an appropriate EPA-registered product when required, and follow the product label for dilution, contact time, and method of use.\n\n7. TOWEL HYGIENE: Use clean towels for each client; launder, dry, handle, and store reusable linens according to current state rules and product directions.\n\n8. CLIPPER POWER SYSTEMS: Compare tool designs by intended use, power, weight, maintenance needs, and manufacturer specifications rather than treating one motor type as a universal professional standard.\n\n9. SHEAR TYPES: Straight (standard), Thinning/Texturizing (removes bulk), Blending (blends clipper lines).\n\n10. NEVER USE DULL TOOLS: Pulling hair = dull blade. Replace immediately. Client comfort is non-negotiable.\n\n11. SHEAR PALMING: Never set shears down mid-cut. Palm them professionally. Transfer to palm, secure with thumb, free your fingers.\n\n12. RAZOR GRIPS: Four grips - freehand (general), backhand (broad areas), reverse freehand (upper lip/chin), reverse backhand (neck only). Know your zones.\n\n13. RAZOR GRINDS: Hollow-ground detects resistance and sings when sharp. Wedge grind powers through coarse beards. Match grind to beard type.\n\n14. THERMAL SAFETY: Verify tool temperature before client contact, keep heated tools controlled and away from skin, and use heat-protection products when indicated by the service, hair condition, product directions, and thermal-tool guidance.\n\n15. TOOL CONSTRUCTION: Learn the construction, materials, adjustment points, and care requirements of the implements you use; follow manufacturer specifications rather than relying on a single visual feature to establish construction quality.',
+      highlight: 'REVIEW THESE 15 POINTS - VERIFY CURRENT EXAM AND STATE REQUIREMENTS',
     },
 
     // ==========================================
