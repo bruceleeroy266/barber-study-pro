@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '@/lib/supabase'
-import { calculateChapterProgress } from '@/lib/progress'
+import { calculateChapterProgress, preserveLegacyFullCompletion } from '@/lib/progress'
 import { isSupabaseConfigured } from '@/lib/demo-helpers'
 import { isTypingTarget } from '@/lib/keyboard-shortcuts'
 import { Flag } from 'lucide-react'
@@ -299,11 +299,12 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
       let quizCompleted = false
       let lessonCompleted = false
       let knowledgeChecksCompleted = false
+      let existingProgressPercentage: number | null = null
 
       if (isSupabaseConfigured()) {
         const { data: existingProgress } = await supabase
           .from('student_progress')
-          .select('lesson_completed, knowledge_checks_completed, quiz_completed')
+          .select('lesson_completed, knowledge_checks_completed, quiz_completed, progress_percentage')
           .eq('user_id', userId)
           .eq('chapter_id', chapterId)
           .maybeSingle()
@@ -311,12 +312,17 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
         quizCompleted = existingProgress?.quiz_completed ?? false
         lessonCompleted = existingProgress?.lesson_completed ?? false
         knowledgeChecksCompleted = existingProgress?.knowledge_checks_completed ?? false
+        existingProgressPercentage = existingProgress?.progress_percentage ?? null
       }
 
-      const progressPercentage = calculateChapterProgress(true, quizCompleted, {
+      const calculatedProgress = calculateChapterProgress(true, quizCompleted, {
         lessonCompleted,
         knowledgeChecksCompleted,
       })
+      const progressPercentage = preserveLegacyFullCompletion(
+        calculatedProgress,
+        existingProgressPercentage
+      )
 
       const { error } = await supabase
         .from('student_progress')
