@@ -45,4 +45,26 @@ describe('Chapter 5 concept architecture integrity',()=>{
     expect(getChapter5ConceptForFlashcard('fc-5-999')).toBeNull()
     expect(getChapter5ConceptForQuizQuestion('qq-5-999')).toBeNull()
   })
+
+  it('guards Chapter 5 against audited unsupported absolutes and stale claims',()=>{
+    const corpus=[
+      JSON.stringify(chapter5PremiumFlashcards),
+      JSON.stringify(chapter5PremiumQuizQuestions),
+    ].join(' ')
+    const forbidden=[
+      '90% of haircutting',
+      '20-40 count',
+      '3 drops across blade',
+      'SIDES OF NECK ONLY',
+      'RESTRICTED to sides of neck only',
+      'NEVER use reverse backhand on the face',
+      'fails the exam',
+      'Japanese steel is premium',
+      'Palming is tested on practical exams',
+      'under 2 seconds',
+      'styptic powder or pencil stops',
+      'superior edge retention and craftsmanship',
+    ]
+    for(const phrase of forbidden) expect(corpus.toLowerCase()).not.toContain(phrase.toLowerCase())
+  })
 })
