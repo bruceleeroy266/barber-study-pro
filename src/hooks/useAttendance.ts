@@ -53,7 +53,7 @@ export interface UseAttendanceReturn {
   getAuditHistory: (recordId: string) => Promise<AttendanceAuditEntry[]>
   refresh: (filters?: AttendanceFilterState) => Promise<void>
   getRecordForStudentAndDate: (studentId: string, date: string) => AttendanceRecord | undefined
-  ensureTodayRecords: () => Promise<void>
+  ensureTodayRecords: () => Promise<AttendanceRecord[]>
   clearError: () => void
 }
 
