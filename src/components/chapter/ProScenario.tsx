@@ -24,9 +24,10 @@ interface ProScenarioItem {
 interface ProScenarioProps {
   scenarios: ProScenarioItem[]
   theme?: ChapterTheme
+  onComplete?: () => void
 }
 
-export default function ProScenario({ scenarios, theme }: ProScenarioProps) {
+export default function ProScenario({ scenarios, theme, onComplete }: ProScenarioProps) {
   const t = theme || defaultTheme
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({})
   const [revealed, setRevealed] = useState<Set<number>>(new Set())
@@ -50,7 +51,11 @@ export default function ProScenario({ scenarios, theme }: ProScenarioProps) {
   }
 
   const revealAnswer = (scenarioIdx: number) => {
-    setRevealed(prev => new Set(prev).add(scenarioIdx))
+    setRevealed(prev => {
+      const next = new Set(prev).add(scenarioIdx)
+      if (next.size === scenarios.length) onComplete?.()
+      return next
+    })
   }
 
   return (
