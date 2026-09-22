@@ -151,6 +151,23 @@ describe('FlashcardClient — Chapter 20', () => {
     })
   })
 
+  it('requires the answer to be reviewed before a card can be marked Got It', async () => {
+    renderFlashcards()
+    expect(await screen.findByText(/Card 1 of 60/i)).toBeInTheDocument()
+
+    const lockedMastery = screen.getByRole('button', {
+      name: /Flip this flashcard before marking it understood/i,
+    })
+    expect(lockedMastery).toBeDisabled()
+
+    fireEvent.click(screen.getByText(chapter20PremiumFlashcards[0].front))
+
+    const masteryButton = await screen.findByRole('button', {
+      name: /Mark this flashcard as understood/i,
+    })
+    expect(masteryButton).toBeEnabled()
+  })
+
   it('updates progress bar value as cards are navigated', async () => {
     renderFlashcards()
     expect(await screen.findByText(/Card 1 of 60/i)).toBeInTheDocument()
