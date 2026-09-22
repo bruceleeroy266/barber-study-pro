@@ -68,6 +68,14 @@ export async function markCurrentInvitationAccepted(): Promise<InvitationAccepta
     return { success: false, error: 'This invitation has been revoked. Ask your administrator for a new setup link.' }
   }
 
+  if (invitation.status === 'expired') {
+    return { success: false, error: 'This invitation has expired. Ask your administrator for a new setup link.' }
+  }
+
+  if (invitation.auth_user_id && String(invitation.auth_user_id) !== user.id) {
+    return { success: false, error: 'This invitation is linked to a different account.' }
+  }
+
   const now = new Date().toISOString()
   const { error: updateError } = await serviceClient
     .from('school_onboarding_invitations')
