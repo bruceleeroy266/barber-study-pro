@@ -38,7 +38,7 @@ export default function ScenarioBlock({ scenarios, theme, onComplete }: Scenario
     return () => {
       Object.values(intervalRefs.current).forEach(clearInterval)
     }
-  }, [])
+  }, [onComplete, scenarios.length])
 
   const startTimer = useCallback((scenarioIdx: number, seconds: number) => {
     // Clear any existing timer for this scenario
@@ -62,7 +62,11 @@ export default function ScenarioBlock({ scenarios, theme, onComplete }: Scenario
           clearInterval(intervalRefs.current[scenarioIdx])
           delete intervalRefs.current[scenarioIdx]
           setTimerExpired(expired => new Set(expired).add(scenarioIdx))
-          setRevealed(rev => new Set(rev).add(scenarioIdx))
+          setRevealed(rev => {
+            const next = new Set(rev).add(scenarioIdx)
+            if (next.size === scenarios.length) onComplete?.()
+            return next
+          })
           return { ...prev, [scenarioIdx]: 0 }
         }
         return { ...prev, [scenarioIdx]: current - 1 }
