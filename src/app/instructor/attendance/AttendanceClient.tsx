@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { AttendanceRecord, AttendanceStatus, Profile } from '@/types'
 import { useAttendance } from '@/hooks/useAttendance'
 import { useAttendanceFilters } from '@/hooks/useAttendanceFilters'
@@ -75,7 +75,7 @@ export default function AttendanceClient({
 
   const [correctionRecord, setCorrectionRecord] = useState<AttendanceRecord | null>(null)
   const [auditRecord, setAuditRecord] = useState<AttendanceRecord | null>(null)
-  const [todayInitialized, setTodayInitialized] = useState(false)
+  const todayInitialized = useRef(false)
   const [expandedStudentId, setExpandedStudentId] = useState<string | null>(null)
 
   const filteredRecords = useMemo(() => {
@@ -110,12 +110,12 @@ export default function AttendanceClient({
   }
 
   useEffect(() => {
-    if (todayInitialized || loading || records.some((record) => record.date === defaultDate)) return
-    setTodayInitialized(true)
+    if (todayInitialized.current || loading || records.some((record) => record.date === defaultDate)) return
+    todayInitialized.current = true
     void handleEnsureToday()
     // Initialize today's roll once; advanced history remains available below.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [todayInitialized, loading, records, defaultDate])
+  }, [loading, records, defaultDate])
 
   const todayRecords = records.filter((record) => record.date === defaultDate)
   const todayRecordByStudent = new Map(todayRecords.map((record) => [record.userId, record]))
@@ -123,9 +123,8 @@ export default function AttendanceClient({
   const markToday = async (studentId: string, status: AttendanceStatus) => {
     let record = todayRecordByStudent.get(studentId)
     if (!record) {
-      await ensureTodayRecords()
-      await refresh()
-      record = records.find((item) => item.userId === studentId && item.date === defaultDate)
+      const created = await ensureTodayRecords()
+      record = created.find((item) => item.userId === studentId && item.date === defaultDate)
     }
     if (record) await updateStatus(record.id, status)
   }
@@ -152,7 +151,7 @@ export default function AttendanceClient({
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-2 text-gold text-sm font-medium">
               <ClipboardCheck className="w-4 h-4" />
-              Today's roll is ready below
+              Today&apos;s roll is ready below
             </div>
             <button
               onClick={handleRefresh}
@@ -169,7 +168,7 @@ export default function AttendanceClient({
         <section className="rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-surface-primary)] p-4 md:p-6">
           <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-white">Take Today's Attendance</h2>
+              <h2 className="text-2xl font-bold text-white">Take Today&apos;s Attendance</h2>
               <p className="text-silver mt-1">Tap a student to open attendance options. Changes save immediately.</p>
             </div>
             <button
@@ -210,7 +209,7 @@ export default function AttendanceClient({
                           <button
                             key={status}
                             type="button"
-                            disabled={loading || !record}
+                            disabled={loading}
                             onClick={async () => {
                               await markToday(student.id, status)
                               setExpandedStudentId(null)

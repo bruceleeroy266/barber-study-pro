@@ -53,7 +53,7 @@ export interface UseAttendanceReturn {
   getAuditHistory: (recordId: string) => Promise<AttendanceAuditEntry[]>
   refresh: (filters?: AttendanceFilterState) => Promise<void>
   getRecordForStudentAndDate: (studentId: string, date: string) => AttendanceRecord | undefined
-  ensureTodayRecords: () => Promise<void>
+  ensureTodayRecords: () => Promise<AttendanceRecord[]>
   clearError: () => void
 }
 
@@ -310,8 +310,10 @@ export function useAttendance({
         setRecords((prev) => [...prev, ...changed])
       }
       setError(null)
+      return changed
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to create today\'s attendance records')
+      return []
     }
   }, [defaultDate, students, schoolId, currentUser, getRecordForStudentAndDate])
 
