@@ -24,7 +24,7 @@ import ProTip from './ProTip'
 import ReflectionBlock from './ReflectionBlock'
 import HtmlContentBlock from './HtmlContentBlock'
 import { supabase } from '@/lib/supabase'
-import { calculateChapterProgress } from '@/lib/progress'
+import { calculateChapterProgress, preserveLegacyFullCompletion } from '@/lib/progress'
 
 interface ChapterContentProps {
   sections: ChapterSection[]
@@ -80,13 +80,14 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
     if (!userId || !chapterId) return
     const { data: existing } = await supabase
       .from('student_progress')
-      .select('lesson_completed, flashcards_completed, knowledge_checks_completed, quiz_completed')
+      .select('lesson_completed, flashcards_completed, knowledge_checks_completed, quiz_completed, progress_percentage')
       .eq('user_id', userId)
       .eq('chapter_id', chapterId)
       .maybeSingle()
     const lesson = signal === 'lesson_completed' ? true : (existing?.lesson_completed ?? false)
     const knowledge = signal === 'knowledge_checks_completed' ? true : (existing?.knowledge_checks_completed ?? false)
-    const progressPercentage = calculateChapterProgress(existing?.flashcards_completed ?? false, existing?.quiz_completed ?? false, { lessonCompleted: lesson, knowledgeChecksCompleted: knowledge })
+    const calculatedProgress = calculateChapterProgress(existing?.flashcards_completed ?? false, existing?.quiz_completed ?? false, { lessonCompleted: lesson, knowledgeChecksCompleted: knowledge })
+    const progressPercentage = preserveLegacyFullCompletion(calculatedProgress, existing?.progress_percentage ?? null)
     const { error } = await supabase.from('student_progress').upsert({ user_id: userId, chapter_id: chapterId, [signal]: true, progress_percentage: progressPercentage, last_studied_at: new Date().toISOString(), updated_at: new Date().toISOString() }, { onConflict: 'user_id,chapter_id' })
     if (error) {
       console.error('[ChapterContent] Failed to save progress signal:', error.message)
