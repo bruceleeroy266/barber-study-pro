@@ -70,6 +70,9 @@ const mocks = vi.hoisted(() => {
       if (table === 'student_progress') {
         return { select, upsert }
       }
+      if (table === 'quiz_book_references') {
+        return { upsert }
+      }
       return {}
     }),
     saveMissedQuestions: vi.fn().mockResolvedValue({ ok: true }),
@@ -253,6 +256,37 @@ describe('QuizClient', () => {
     // Explanations are shown at the end for reviewed questions.
     expect(screen.getByText(sampleQuestions[0].explanation!)).toBeInTheDocument()
     expect(screen.getByText(sampleQuestions[1].explanation!)).toBeInTheDocument()
+  })
+
+  it('shows simple optional book, chapter, and page fields for every reviewed question and saves them', async () => {
+    await completeQuiz(2)
+
+    const bookInputs = await screen.findAllByPlaceholderText('Book name', {}, { timeout: 2000 })
+    const chapterInputs = screen.getAllByPlaceholderText('Chapter')
+    const pageInputs = screen.getAllByPlaceholderText('Page')
+    const saveButtons = screen.getAllByRole('button', { name: /Save Reference/i })
+
+    expect(bookInputs).toHaveLength(sampleQuestions.length)
+    expect(chapterInputs).toHaveLength(sampleQuestions.length)
+    expect(pageInputs).toHaveLength(sampleQuestions.length)
+
+    fireEvent.change(bookInputs[0], { target: { value: 'My Barbering Book' } })
+    fireEvent.change(chapterInputs[0], { target: { value: '5' } })
+    fireEvent.change(pageInputs[0], { target: { value: '127' } })
+    fireEvent.click(saveButtons[0])
+
+    await waitFor(() => {
+      expect(mocks.upsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          user_id: 'user-1',
+          quiz_id: 'quiz-1',
+          book: 'My Barbering Book',
+          chapter: '5',
+          page: '127',
+        }),
+        { onConflict: 'user_id,quiz_id,question_id' }
+      )
+    })
   })
 
   it('shows the missed-questions review link when questions were missed', async () => {
