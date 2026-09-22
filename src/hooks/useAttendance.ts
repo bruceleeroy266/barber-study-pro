@@ -310,8 +310,10 @@ export function useAttendance({
         setRecords((prev) => [...prev, ...changed])
       }
       setError(null)
+      return changed
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to create today\'s attendance records')
+      return []
     }
   }, [defaultDate, students, schoolId, currentUser, getRecordForStudentAndDate])
 
