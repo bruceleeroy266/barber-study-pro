@@ -123,9 +123,8 @@ export default function AttendanceClient({
   const markToday = async (studentId: string, status: AttendanceStatus) => {
     let record = todayRecordByStudent.get(studentId)
     if (!record) {
-      await ensureTodayRecords()
-      await refresh()
-      record = records.find((item) => item.userId === studentId && item.date === defaultDate)
+      const created = await ensureTodayRecords()
+      record = created.find((item) => item.userId === studentId && item.date === defaultDate)
     }
     if (record) await updateStatus(record.id, status)
   }
@@ -210,7 +209,7 @@ export default function AttendanceClient({
                           <button
                             key={status}
                             type="button"
-                            disabled={loading || !record}
+                            disabled={loading}
                             onClick={async () => {
                               await markToday(student.id, status)
                               setExpandedStudentId(null)
