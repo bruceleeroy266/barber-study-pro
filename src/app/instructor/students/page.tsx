@@ -281,8 +281,8 @@ export default async function InstructorStudentsPage() {
 
         {/* At-Risk Students Alert */}
         {atRiskStudents.length > 0 && (
-          <div className="bg-silver/10 border border-silver/30 rounded-xl p-6">
-            <h2 className="text-lg font-semibold text-silver mb-4 flex items-center gap-2">
+          <div className="bg-silver/10 border border-silver/30 rounded-xl p-4 sm:p-6">
+            <h2 className="text-lg font-semibold text-silver mb-4 flex items-start sm:items-center gap-2">
               <span>⚠️</span> Students Needing Attention ({atRiskStudents.length})
             </h2>
             <div className="space-y-3">
@@ -294,12 +294,18 @@ export default async function InstructorStudentsPage() {
                 if (student.daysSinceActive !== null && student.daysSinceActive > 14) factors.push('Inactive')
                 
                 return (
-                  <div key={student.id} className="flex items-center justify-between bg-[var(--color-background-primary)]/50 rounded-lg p-4">
-                    <div className="flex items-center gap-4">
+                  <div
+                    key={student.id}
+                    className="flex flex-col gap-4 bg-[var(--color-background-primary)]/50 rounded-lg p-4 sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div className="min-w-0 flex-1">
                       <StudentIdentity student={student} />
-                      <div className="flex flex-wrap gap-1">
+                      <div className="mt-3 flex flex-wrap gap-2">
                         {factors.map((factor) => (
-                          <span key={factor} className="px-2 py-0.5 bg-silver/20 text-silver rounded text-xs">
+                          <span
+                            key={factor}
+                            className="inline-flex max-w-full items-center rounded bg-silver/20 px-2 py-1 text-xs leading-tight text-silver"
+                          >
                             {factor}
                           </span>
                         ))}
@@ -307,7 +313,7 @@ export default async function InstructorStudentsPage() {
                     </div>
                     <Link
                       href={`/instructor/student/${student.id}`}
-                      className="px-4 py-2 bg-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold-light)] text-black font-semibold rounded-lg transition-colors text-sm"
+                      className="inline-flex w-full shrink-0 items-center justify-center rounded-lg bg-[var(--color-brand-gold)] px-4 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-[var(--color-brand-gold-light)] sm:w-auto"
                     >
                       View Details →
                     </Link>
