@@ -62,7 +62,9 @@ function SectionWrapper({
 export default function ChapterContent({ sections, theme, chapterId, userId, lessonCompleted = false, knowledgeChecksCompleted = false }: ChapterContentProps) {
   const t = theme || defaultTheme
   const knowledgeCheckSectionIds = useMemo(
-    () => sections.filter((section) => section.type === 'scenarioBlock').map((section) => section.id),
+    () => sections
+      .filter((section) => section.type === 'scenarioBlock' || section.type === 'proScenario')
+      .map((section) => section.id),
     [sections]
   )
   const hasKnowledgeChecks = knowledgeCheckSectionIds.length > 0
@@ -255,7 +257,11 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
           case 'proScenario':
             return (
               <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <ProScenario scenarios={section.scenarios} theme={t} />
+                <ProScenario
+                  scenarios={section.scenarios}
+                  theme={t}
+                  onComplete={() => handleKnowledgeCheckSectionComplete(section.id)}
+                />
               </SectionWrapper>
             )
 
