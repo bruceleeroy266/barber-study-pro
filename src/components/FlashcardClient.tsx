@@ -30,6 +30,10 @@ function getStudyModeStorageKey(chapterId: string) {
   return `flashcard-study-mode-${chapterId}`
 }
 
+function getMasteryStorageKey(chapterId: string, userId?: string) {
+  return `flashcard-mastery-${userId || 'anonymous'}-${chapterId}`
+}
+
 export default function FlashcardClient({ flashcards, chapterId, userId, isCompleted }: FlashcardClientProps) {
   const [studyMode, setStudyMode] = useState<StudyMode>(() => {
     if (typeof window === 'undefined') return 'all'
@@ -59,6 +63,21 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
   const [completed, setCompleted] = useState(isCompleted)
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
+  const [masteredIds, setMasteredIds] = useState<Set<string>>(() => {
+    if (typeof window === 'undefined') return new Set()
+    try {
+      const stored = JSON.parse(localStorage.getItem(getMasteryStorageKey(chapterId, userId)) || '[]')
+      return new Set(Array.isArray(stored) ? stored.filter((id): id is string => typeof id === 'string') : [])
+    } catch {
+      return new Set()
+    }
+  })
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const validIds = [...masteredIds].filter((id) => flashcards.some((card) => card.id === id))
+    localStorage.setItem(getMasteryStorageKey(chapterId, userId), JSON.stringify(validIds))
+  }, [masteredIds, flashcards, chapterId, userId])
 
   // Resolve the effective deck based on study mode.
   const effectiveFlashcards = useMemo(() => {
@@ -160,6 +179,8 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
 
   const currentCard = effectiveFlashcards[safeIndex]
   const isFlagged = currentCard ? flaggedIds.has(currentCard.id) : false
+  const isMastered = currentCard ? masteredIds.has(currentCard.id) : false
+  const allCardsMastered = flashcards.length > 0 && flashcards.every((card) => masteredIds.has(card.id))
   const progress = effectiveFlashcards.length > 0
     ? ((safeIndex + 1) / effectiveFlashcards.length) * 100
     : 0
@@ -180,6 +201,16 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
       setIsFlipped(false)
       setCurrentIndex((prev) => Math.max(prev - 1, 0))
     }
+  }
+
+  const markCurrentCardMastered = () => {
+    if (!currentCard) return
+    setMasteredIds((previous) => {
+      if (previous.has(currentCard.id)) return previous
+      const next = new Set(previous)
+      next.add(currentCard.id)
+      return next
+    })
   }
 
   const toggleFlag = async () => {
@@ -257,6 +288,11 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
       return
     }
 
+    if (!allCardsMastered) {
+      setSaveError(`Review and mark all ${flashcards.length} flashcards as Got It before completing this section.`)
+      return
+    }
+
     setSaving(true)
     setSaveError(null)
     try {
@@ -300,6 +336,9 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
       }
       setCompleted(true)
       setSaveError(null)
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem(getMasteryStorageKey(chapterId, userId))
+      }
     } catch (err: unknown) {
       const error = err instanceof Error ? err : new Error(String(err))
       console.error('[FlashcardClient] Error saving progress:', error.message)
@@ -502,6 +541,17 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
 
         <div className="flex flex-wrap items-center justify-center gap-2 w-full sm:w-auto">
           <Button
+            variant={isMastered ? 'outline' : 'primary'}
+            size="sm"
+            onClick={markCurrentCardMastered}
+            disabled={isMastered}
+            aria-pressed={isMastered}
+            aria-label={isMastered ? 'This flashcard is marked as understood' : 'Mark this flashcard as understood'}
+          >
+            {isMastered ? '✓ Got It' : 'Got It'}
+          </Button>
+
+          <Button
             variant={isFlagged ? 'outline' : 'secondary'}
             size="sm"
             onClick={toggleFlag}
@@ -519,9 +569,10 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
             <Button
               variant="primary"
               onClick={handleMarkComplete}
-              disabled={saving}
+              disabled={saving || !allCardsMastered}
+              title={!allCardsMastered ? `Mark all ${flashcards.length} cards as Got It first` : undefined}
             >
-              {saving ? 'Saving...' : '✓ Mark Complete'}
+              {saving ? 'Saving...' : allCardsMastered ? '✓ Mark Complete' : `Mastered ${masteredIds.size}/${flashcards.length}`}
             </Button>
           )}
           {completed && (
