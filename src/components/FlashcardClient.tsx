@@ -261,6 +261,8 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
     setSaveError(null)
     try {
       let quizCompleted = false
+      let lessonCompleted = false
+      let knowledgeChecksCompleted = false
 
       if (isSupabaseConfigured()) {
         const { data: existingProgress } = await supabase
@@ -271,11 +273,13 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
           .maybeSingle()
 
         quizCompleted = existingProgress?.quiz_completed ?? false
+        lessonCompleted = existingProgress?.lesson_completed ?? false
+        knowledgeChecksCompleted = existingProgress?.knowledge_checks_completed ?? false
       }
 
       const progressPercentage = calculateChapterProgress(true, quizCompleted, {
-        lessonCompleted: existingProgress?.lesson_completed ?? false,
-        knowledgeChecksCompleted: existingProgress?.knowledge_checks_completed ?? false,
+        lessonCompleted,
+        knowledgeChecksCompleted,
       })
 
       const { error } = await supabase
