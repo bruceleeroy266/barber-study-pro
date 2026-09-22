@@ -62,11 +62,10 @@ export default function ScenarioBlock({ scenarios, theme, onComplete }: Scenario
           clearInterval(intervalRefs.current[scenarioIdx])
           delete intervalRefs.current[scenarioIdx]
           setTimerExpired(expired => new Set(expired).add(scenarioIdx))
-          setRevealed(rev => {
-            const next = new Set(rev).add(scenarioIdx)
-            if (next.size === scenarios.length) onComplete?.()
-            return next
-          })
+          // Expiration reveals the correct response for safety/remediation,
+          // but it is not a completed knowledge check. Only an explicit
+          // submitted answer may contribute to the chapter's 20% signal.
+          setRevealed(rev => new Set(rev).add(scenarioIdx))
           return { ...prev, [scenarioIdx]: 0 }
         }
         return { ...prev, [scenarioIdx]: current - 1 }
@@ -80,6 +79,11 @@ export default function ScenarioBlock({ scenarios, theme, onComplete }: Scenario
   }
 
   const revealAnswer = (scenarioIdx: number) => {
+    // Never award completion for an unanswered scenario. The button is
+    // disabled in the UI until an option is selected, but keep this guard
+    // here so programmatic calls cannot bypass the progress requirement.
+    if (selectedAnswers[scenarioIdx] === undefined || revealed.has(scenarioIdx)) return
+
     // Stop timer if running
     if (intervalRefs.current[scenarioIdx]) {
       clearInterval(intervalRefs.current[scenarioIdx])
