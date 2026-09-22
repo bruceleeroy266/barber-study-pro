@@ -1,5 +1,6 @@
 'use client'
 
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { ChapterSection, ChapterTheme } from '@/lib/chapter-content'
 import { defaultTheme } from '@/lib/chapter-content'
 import InfoCard from './InfoCard'
@@ -60,9 +61,22 @@ function SectionWrapper({
 
 export default function ChapterContent({ sections, theme, chapterId, userId, lessonCompleted = false, knowledgeChecksCompleted = false }: ChapterContentProps) {
   const t = theme || defaultTheme
-  const hasKnowledgeChecks = sections.some((section) => section.type === 'scenarioBlock')
+  const knowledgeCheckSectionIds = useMemo(
+    () => sections.filter((section) => section.type === 'scenarioBlock').map((section) => section.id),
+    [sections]
+  )
+  const hasKnowledgeChecks = knowledgeCheckSectionIds.length > 0
+  const [completedKnowledgeCheckSections, setCompletedKnowledgeCheckSections] = useState<Set<string>>(
+    () => new Set(knowledgeChecksCompleted ? knowledgeCheckSectionIds : [])
+  )
+  const [knowledgeChecksSaved, setKnowledgeChecksSaved] = useState(knowledgeChecksCompleted)
 
-  const saveSignal = async (signal: 'lesson_completed' | 'knowledge_checks_completed') => {
+  const knowledgeCheckStorageKey = useMemo(
+    () => userId && chapterId ? `knowledge-check-sections-${userId}-${chapterId}` : null,
+    [userId, chapterId]
+  )
+
+  const saveSignal = useCallback(async (signal: 'lesson_completed' | 'knowledge_checks_completed') => {
     if (!userId || !chapterId) return
     const { data: existing } = await supabase
       .from('student_progress')
@@ -73,8 +87,75 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
     const lesson = signal === 'lesson_completed' ? true : (existing?.lesson_completed ?? false)
     const knowledge = signal === 'knowledge_checks_completed' ? true : (existing?.knowledge_checks_completed ?? false)
     const progressPercentage = calculateChapterProgress(existing?.flashcards_completed ?? false, existing?.quiz_completed ?? false, { lessonCompleted: lesson, knowledgeChecksCompleted: knowledge })
-    await supabase.from('student_progress').upsert({ user_id: userId, chapter_id: chapterId, [signal]: true, progress_percentage: progressPercentage, last_studied_at: new Date().toISOString(), updated_at: new Date().toISOString() }, { onConflict: 'user_id,chapter_id' })
-  }
+    const { error } = await supabase.from('student_progress').upsert({ user_id: userId, chapter_id: chapterId, [signal]: true, progress_percentage: progressPercentage, last_studied_at: new Date().toISOString(), updated_at: new Date().toISOString() }, { onConflict: 'user_id,chapter_id' })
+    if (error) {
+      console.error('[ChapterContent] Failed to save progress signal:', error.message)
+      return false
+    }
+    return true
+  }, [userId, chapterId])
+
+  useEffect(() => {
+    if (knowledgeChecksCompleted) {
+      setKnowledgeChecksSaved(true)
+      setCompletedKnowledgeCheckSections(new Set(knowledgeCheckSectionIds))
+      return
+    }
+    if (!knowledgeCheckStorageKey || typeof window === 'undefined') return
+
+    try {
+      const stored = JSON.parse(localStorage.getItem(knowledgeCheckStorageKey) || '[]')
+      if (!Array.isArray(stored)) return
+      const validIds = stored.filter((id): id is string => typeof id === 'string' && knowledgeCheckSectionIds.includes(id))
+      setCompletedKnowledgeCheckSections(new Set(validIds))
+    } catch {
+      localStorage.removeItem(knowledgeCheckStorageKey)
+    }
+  }, [knowledgeChecksCompleted, knowledgeCheckSectionIds, knowledgeCheckStorageKey])
+
+  useEffect(() => {
+    if (!knowledgeCheckStorageKey || typeof window === 'undefined' || knowledgeChecksSaved) return
+    localStorage.setItem(knowledgeCheckStorageKey, JSON.stringify([...completedKnowledgeCheckSections]))
+  }, [completedKnowledgeCheckSections, knowledgeCheckStorageKey, knowledgeChecksSaved])
+
+  useEffect(() => {
+    if (
+      knowledgeChecksSaved ||
+      knowledgeCheckSectionIds.length === 0 ||
+      !knowledgeCheckSectionIds.every((id) => completedKnowledgeCheckSections.has(id))
+    ) {
+      return
+    }
+
+    let cancelled = false
+    void saveSignal('knowledge_checks_completed').then((saved) => {
+      if (!cancelled && saved) {
+        setKnowledgeChecksSaved(true)
+        if (knowledgeCheckStorageKey && typeof window !== 'undefined') {
+          localStorage.removeItem(knowledgeCheckStorageKey)
+        }
+      }
+    })
+
+    return () => {
+      cancelled = true
+    }
+  }, [
+    completedKnowledgeCheckSections,
+    knowledgeCheckSectionIds,
+    knowledgeChecksSaved,
+    knowledgeCheckStorageKey,
+    saveSignal,
+  ])
+
+  const handleKnowledgeCheckSectionComplete = useCallback((sectionId: string) => {
+    setCompletedKnowledgeCheckSections((previous) => {
+      if (previous.has(sectionId)) return previous
+      const next = new Set(previous)
+      next.add(sectionId)
+      return next
+    })
+  }, [])
 
   return (
     <div className="space-y-10">
@@ -153,7 +234,11 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
           case 'scenarioBlock':
             return (
               <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <ScenarioBlock scenarios={section.scenarios} theme={t} onComplete={() => saveSignal('knowledge_checks_completed')} />
+                <ScenarioBlock
+                  scenarios={section.scenarios}
+                  theme={t}
+                  onComplete={() => handleKnowledgeCheckSectionComplete(section.id)}
+                />
               </SectionWrapper>
             )
 
@@ -235,7 +320,7 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
         </button>
       )}
       {lessonCompleted && <p className="text-sm text-[var(--color-brand-gold)]">✓ Lesson completed</p>}
-      {hasKnowledgeChecks && knowledgeChecksCompleted && <p className="text-sm text-[var(--color-brand-gold)]">✓ Knowledge checks completed</p>}
+      {hasKnowledgeChecks && knowledgeChecksSaved && <p className="text-sm text-[var(--color-brand-gold)]">✓ Knowledge checks completed</p>}
     </div>
   )
 }
