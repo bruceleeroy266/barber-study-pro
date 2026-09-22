@@ -66,15 +66,28 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
     [sections]
   )
   const hasKnowledgeChecks = knowledgeCheckSectionIds.length > 0
-  const [completedKnowledgeCheckSections, setCompletedKnowledgeCheckSections] = useState<Set<string>>(
-    () => new Set(knowledgeChecksCompleted ? knowledgeCheckSectionIds : [])
-  )
-  const [knowledgeChecksSaved, setKnowledgeChecksSaved] = useState(knowledgeChecksCompleted)
-
   const knowledgeCheckStorageKey = useMemo(
     () => userId && chapterId ? `knowledge-check-sections-${userId}-${chapterId}` : null,
     [userId, chapterId]
   )
+  const [completedKnowledgeCheckSections, setCompletedKnowledgeCheckSections] = useState<Set<string>>(() => {
+    if (knowledgeChecksCompleted) return new Set(knowledgeCheckSectionIds)
+    if (!knowledgeCheckStorageKey || typeof window === 'undefined') return new Set()
+
+    try {
+      const stored = JSON.parse(localStorage.getItem(knowledgeCheckStorageKey) || '[]')
+      if (!Array.isArray(stored)) return new Set()
+      return new Set(
+        stored.filter(
+          (id): id is string => typeof id === 'string' && knowledgeCheckSectionIds.includes(id)
+        )
+      )
+    } catch {
+      localStorage.removeItem(knowledgeCheckStorageKey)
+      return new Set()
+    }
+  })
+  const [knowledgeChecksSaved, setKnowledgeChecksSaved] = useState(knowledgeChecksCompleted)
 
   const saveSignal = useCallback(async (signal: 'lesson_completed' | 'knowledge_checks_completed') => {
     if (!userId || !chapterId) return
@@ -95,24 +108,6 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
     }
     return true
   }, [userId, chapterId])
-
-  useEffect(() => {
-    if (knowledgeChecksCompleted) {
-      setKnowledgeChecksSaved(true)
-      setCompletedKnowledgeCheckSections(new Set(knowledgeCheckSectionIds))
-      return
-    }
-    if (!knowledgeCheckStorageKey || typeof window === 'undefined') return
-
-    try {
-      const stored = JSON.parse(localStorage.getItem(knowledgeCheckStorageKey) || '[]')
-      if (!Array.isArray(stored)) return
-      const validIds = stored.filter((id): id is string => typeof id === 'string' && knowledgeCheckSectionIds.includes(id))
-      setCompletedKnowledgeCheckSections(new Set(validIds))
-    } catch {
-      localStorage.removeItem(knowledgeCheckStorageKey)
-    }
-  }, [knowledgeChecksCompleted, knowledgeCheckSectionIds, knowledgeCheckStorageKey])
 
   useEffect(() => {
     if (!knowledgeCheckStorageKey || typeof window === 'undefined' || knowledgeChecksSaved) return
