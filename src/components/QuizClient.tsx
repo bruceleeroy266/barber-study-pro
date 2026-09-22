@@ -157,6 +157,7 @@ export default function QuizClient({
       let lessonCompleted = false
       let knowledgeChecksCompleted = false
       let existingBestScore = 0
+      let existingProgressPercentage: number | null = null
 
       if (isSupabaseConfigured()) {
         const { data: existingProgress } = await supabase
@@ -171,6 +172,7 @@ export default function QuizClient({
         knowledgeChecksCompleted = existingProgress?.knowledge_checks_completed ?? false
         existingQuizCompleted = existingProgress?.quiz_completed ?? false
         existingBestScore = existingProgress?.best_quiz_score ?? 0
+        existingProgressPercentage = existingProgress?.progress_percentage ?? null
       }
 
       const quizPassed = percentage >= passingScore
@@ -186,7 +188,7 @@ export default function QuizClient({
       })
       const progressPercentage = preserveLegacyFullCompletion(
         calculatedProgress,
-        existingProgress?.progress_percentage ?? null
+        existingProgressPercentage
       )
 
       // Chapter progress + learning-activity timestamp (last_studied_at).
