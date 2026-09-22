@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  areKnowledgeCheckSectionsComplete,
   calculateChapterProgress,
   CHAPTER_PROGRESS_WEIGHTS,
   preserveLegacyFullCompletion,
@@ -41,6 +42,21 @@ describe('chapter progress weighting', () => {
         knowledgeChecksCompleted: true,
       })
     ).toBe(50)
+  })
+
+  it('requires every knowledge-check section before awarding the 20% signal', () => {
+    const required = ['scenario-a', 'scenario-b', 'pro-scenario']
+    expect(areKnowledgeCheckSectionsComplete(required, new Set(['scenario-a']))).toBe(false)
+    expect(
+      areKnowledgeCheckSectionsComplete(required, new Set(['scenario-a', 'scenario-b']))
+    ).toBe(false)
+    expect(
+      areKnowledgeCheckSectionsComplete(
+        required,
+        new Set(['scenario-a', 'scenario-b', 'pro-scenario'])
+      )
+    ).toBe(true)
+    expect(areKnowledgeCheckSectionsComplete([], new Set())).toBe(false)
   })
 
   it('grandfathers only previously stored 100% completion', () => {
