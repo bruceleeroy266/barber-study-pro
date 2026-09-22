@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { calculateChapterProgress, CHAPTER_PROGRESS_WEIGHTS } from './progress'
+import {
+  calculateChapterProgress,
+  CHAPTER_PROGRESS_WEIGHTS,
+  preserveLegacyFullCompletion,
+} from './progress'
 
 describe('chapter progress weighting', () => {
   it('keeps the agreed 15/15/20/50 weights', () => {
