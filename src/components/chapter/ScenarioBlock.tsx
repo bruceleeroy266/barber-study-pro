@@ -38,7 +38,7 @@ export default function ScenarioBlock({ scenarios, theme, onComplete }: Scenario
     return () => {
       Object.values(intervalRefs.current).forEach(clearInterval)
     }
-  }, [onComplete, scenarios.length])
+  }, [])
 
   const startTimer = useCallback((scenarioIdx: number, seconds: number) => {
     // Clear any existing timer for this scenario
@@ -72,7 +72,7 @@ export default function ScenarioBlock({ scenarios, theme, onComplete }: Scenario
         return { ...prev, [scenarioIdx]: current - 1 }
       })
     }, 1000)
-  }, [])
+  }, [onComplete, scenarios.length])
 
   const selectAnswer = (scenarioIdx: number, letter: string) => {
     if (revealed.has(scenarioIdx)) return
