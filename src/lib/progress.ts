@@ -39,3 +39,15 @@ export function calculateChapterProgress(
 
   return Math.min(100, progress)
 }
+
+
+/**
+ * Existing 100% rows were completed before lesson/knowledge-check signals existed.
+ * Preserve that historical completion without inventing activity flags.
+ */
+export function preserveLegacyFullCompletion(
+  calculatedProgress: number,
+  existingProgressPercentage?: number | null
+): number {
+  return existingProgressPercentage === 100 ? 100 : calculatedProgress
+}
