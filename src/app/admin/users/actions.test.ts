@@ -89,6 +89,21 @@ function createMockServiceClient(overrides: ServiceClientOverrides = {}) {
     user_management_audit_logs: {
       insert: () => Promise.resolve({ data: null, error: null }),
     },
+    school_onboarding_invitations: {
+      select: () => ({
+        eq: () => ({
+          eq: () => ({
+            eq: () => ({
+              maybeSingle: () => Promise.resolve({ data: null, error: null }),
+            }),
+          }),
+        }),
+      }),
+      insert: vi.fn().mockResolvedValue({ data: null, error: null }),
+      update: vi.fn().mockReturnValue({
+        eq: vi.fn().mockResolvedValue({ data: null, error: null }),
+      }),
+    },
     ...(overrides.from || {}),
   }
 
