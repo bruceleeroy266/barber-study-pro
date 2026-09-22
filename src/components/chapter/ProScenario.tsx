@@ -51,11 +51,10 @@ export default function ProScenario({ scenarios, theme, onComplete }: ProScenari
   }
 
   const revealAnswer = (scenarioIdx: number) => {
-    setRevealed(prev => {
-      const next = new Set(prev).add(scenarioIdx)
-      if (next.size === scenarios.length) onComplete?.()
-      return next
-    })
+    if (revealed.has(scenarioIdx)) return
+    const next = new Set(revealed).add(scenarioIdx)
+    setRevealed(next)
+    if (next.size === scenarios.length) onComplete?.()
   }
 
   return (
