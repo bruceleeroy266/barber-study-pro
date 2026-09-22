@@ -51,7 +51,9 @@ export default function ProScenario({ scenarios, theme, onComplete }: ProScenari
   }
 
   const revealAnswer = (scenarioIdx: number) => {
-    if (revealed.has(scenarioIdx)) return
+    // Keep completion tied to an actual student response even if this
+    // handler is invoked outside the normal disabled-button UI path.
+    if (revealed.has(scenarioIdx) || selectedAnswers[scenarioIdx] === undefined) return
     const next = new Set(revealed).add(scenarioIdx)
     setRevealed(next)
     if (next.size === scenarios.length) onComplete?.()
