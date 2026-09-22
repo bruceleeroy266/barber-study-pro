@@ -10,6 +10,7 @@ import {
   assignUserSchool,
   requirePasswordChange,
   resetUserPassword,
+  resendUserSetupLink,
   deleteUser,
   getUsers,
   getSchools,
@@ -147,7 +148,12 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
     })
 
     if (result.success) {
-      setMessage({ type: 'success', text: 'Invitation sent successfully' })
+      setMessage({
+        type: 'success',
+        text: result.data?.recoverySent
+          ? 'Account already existed. A fresh setup link was sent safely.'
+          : 'Invitation sent successfully',
+      })
       setShowInviteForm(false)
       await loadUsers(0)
     } else {
@@ -536,6 +542,20 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                   <td className="px-4 py-3 text-[var(--color-text-muted)] text-sm">{formatDate(user.created_at)}</td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-2">
+                      <button
+                        onClick={() => handleAction(resendUserSetupLink, user.id)}
+                        disabled={user.is_disabled || user.approval_status === 'rejected'}
+                        title={
+                          user.is_disabled
+                            ? 'Re-enable this account before sending an access link'
+                            : user.approval_status === 'rejected'
+                              ? 'Approve this account before sending an access link'
+                              : 'Send a fresh account setup / password recovery link'
+                        }
+                        className="px-2 py-1 text-xs bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/30 rounded hover:bg-[var(--color-brand-gold)]/20 disabled:opacity-40 disabled:cursor-not-allowed"
+                      >
+                        Send setup link
+                      </button>
                       <button
                         onClick={() => handleAction(requirePasswordChange, user.id)}
                         className="px-2 py-1 text-xs bg-[var(--color-background-secondary)] text-[var(--color-text-secondary)] border border-[var(--color-border-primary)] rounded hover:border-[var(--color-brand-gold)]/50"

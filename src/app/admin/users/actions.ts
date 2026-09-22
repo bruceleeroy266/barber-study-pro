@@ -504,7 +504,74 @@ function getSiteUrl(): string {
   return process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') || 'http://localhost:3000'
 }
 
-export async function inviteUser(formData: InviteUserFormData): Promise<ActionResult<{ id: string }>> {
+type InviteUserResult = { id: string; recoverySent?: boolean }
+
+async function sendAccountRecoveryEmail(
+  serviceClient: ReturnType<typeof createServiceRoleClient>,
+  email: string
+): Promise<ActionResult> {
+  const redirectTo = `${getSiteUrl()}/auth/callback?type=recovery`
+  const { error } = await serviceClient.auth.resetPasswordForEmail(email, { redirectTo })
+
+  if (error) {
+    return { success: false, error: `Failed to send setup link: ${error.message}` }
+  }
+
+  return { success: true }
+}
+
+export async function resendUserSetupLink(id: string): Promise<ActionResult> {
+  const adminResult = await getCurrentAdmin()
+  if (!adminResult.success || !adminResult.data) {
+    return { success: false, error: adminResult.error }
+  }
+
+  const admin = adminResult.data
+  const serviceClient = createServiceRoleClient()
+  const userResult = await getManagedUser(serviceClient, admin, id)
+
+  if (!userResult.success || !userResult.user) {
+    return { success: false, error: userResult.error }
+  }
+
+  const target = userResult.user
+
+  if (target.is_disabled) {
+    return { success: false, error: 'Cannot send an access link to a disabled account.' }
+  }
+
+  if (target.approval_status === 'rejected') {
+    return { success: false, error: 'Cannot send an access link to a rejected account.' }
+  }
+
+  const { data: authData, error: authError } = await serviceClient.auth.admin.getUserById(target.id)
+  if (authError || !authData.user || !authData.user.email) {
+    return { success: false, error: 'Authentication account not found for this user.' }
+  }
+
+  if (authData.user.email.toLowerCase() !== target.email.toLowerCase()) {
+    return { success: false, error: 'Authentication email does not match the managed profile.' }
+  }
+
+  const recoveryResult = await sendAccountRecoveryEmail(serviceClient, target.email.toLowerCase())
+  if (!recoveryResult.success) {
+    return recoveryResult
+  }
+
+  await logUserManagementAction(
+    admin,
+    target.id,
+    target.email,
+    'resend_setup_link',
+    {},
+    { delivery: 'recovery_email', role: target.role, school_id: target.school_id },
+    target.school_id
+  )
+
+  return { success: true }
+}
+
+export async function inviteUser(formData: InviteUserFormData): Promise<ActionResult<InviteUserResult>> {
   const adminResult = await getCurrentAdmin()
   if (!adminResult.success || !adminResult.data) {
     return { success: false, error: adminResult.error }
@@ -547,13 +614,65 @@ export async function inviteUser(formData: InviteUserFormData): Promise<ActionRe
   const serviceClient = createServiceRoleClient()
   const normalizedEmail = formData.email.toLowerCase().trim()
 
-  // Prevent duplicate email accounts in Auth.
+  // Existing Auth accounts are not blindly rejected. If the existing
+  // account already belongs to the SAME school and SAME role, treat this as
+  // invitation recovery and send a fresh setup/recovery email. Never mutate
+  // role or school during this path.
   const { data: existingUsers, error: listError } = await serviceClient.auth.admin.listUsers()
   if (listError) {
     return { success: false, error: 'Failed to check existing users' }
   }
-  if (existingUsers.users.some((u) => u.email?.toLowerCase() === normalizedEmail)) {
-    return { success: false, error: 'An account with this email already exists' }
+
+  const existingAuthUser = existingUsers.users.find(
+    (u) => u.email?.toLowerCase() === normalizedEmail
+  )
+
+  if (existingAuthUser) {
+    const { data: existingProfile, error: existingProfileError } = await serviceClient
+      .from('profiles')
+      .select('id, email, role, school_id, approval_status, is_disabled')
+      .eq('id', existingAuthUser.id)
+      .single()
+
+    if (existingProfileError || !existingProfile) {
+      return {
+        success: false,
+        error: 'An authentication account already exists, but its profile could not be verified. Contact a platform administrator.',
+      }
+    }
+
+    const existingSchoolId = existingProfile.school_id ? String(existingProfile.school_id) : null
+    if (String(existingProfile.role) !== String(formData.role) || existingSchoolId !== formData.school_id) {
+      return {
+        success: false,
+        error: 'An account with this email already exists under a different role or school.',
+      }
+    }
+
+    if (Boolean(existingProfile.is_disabled)) {
+      return { success: false, error: 'This account is disabled. Re-enable it before sending a new setup link.' }
+    }
+
+    if (String(existingProfile.approval_status) === 'rejected') {
+      return { success: false, error: 'This account was rejected. Change its approval status before sending a new setup link.' }
+    }
+
+    const recoveryResult = await sendAccountRecoveryEmail(serviceClient, normalizedEmail)
+    if (!recoveryResult.success) {
+      return { success: false, error: recoveryResult.error }
+    }
+
+    await logUserManagementAction(
+      admin,
+      existingAuthUser.id,
+      normalizedEmail,
+      'recover_existing_invitation',
+      {},
+      { delivery: 'recovery_email', role: existingProfile.role, school_id: existingSchoolId },
+      existingSchoolId
+    )
+
+    return { success: true, data: { id: existingAuthUser.id, recoverySent: true } }
   }
 
   // Note: we intentionally do not reject here if a profile row with the same
