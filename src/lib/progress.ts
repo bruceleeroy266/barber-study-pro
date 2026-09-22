@@ -51,3 +51,12 @@ export function preserveLegacyFullCompletion(
 ): number {
   return existingProgressPercentage === 100 ? 100 : calculatedProgress
 }
+
+
+export function areKnowledgeCheckSectionsComplete(
+  requiredSectionIds: readonly string[],
+  completedSectionIds: ReadonlySet<string>
+): boolean {
+  return requiredSectionIds.length > 0 &&
+    requiredSectionIds.every((sectionId) => completedSectionIds.has(sectionId))
+}
