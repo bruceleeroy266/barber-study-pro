@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { getRoleBasedRedirect } from '@/lib/auth-access'
+import { markCurrentInvitationAccepted } from '@/app/auth/invitation-actions'
 
 const MIN_PASSWORD_LENGTH = 8
 
@@ -81,6 +82,11 @@ export default function SetPasswordPage() {
       const { error: updateError } = await supabase.auth.updateUser({ password })
 
       if (updateError) throw updateError
+
+      const acceptanceResult = await markCurrentInvitationAccepted()
+      if (!acceptanceResult.success) {
+        throw new Error(acceptanceResult.error || 'Account setup completed, but invitation tracking could not be finalized.')
+      }
 
       setSuccess(true)
 
