@@ -67,7 +67,14 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
     if (typeof window === 'undefined') return new Set()
     try {
       const stored = JSON.parse(localStorage.getItem(getMasteryStorageKey(chapterId, userId)) || '[]')
-      return new Set(Array.isArray(stored) ? stored.filter((id): id is string => typeof id === 'string') : [])
+      return new Set(
+        Array.isArray(stored)
+          ? stored.filter(
+              (id): id is string =>
+                typeof id === 'string' && flashcards.some((card) => card.id === id)
+            )
+          : []
+      )
     } catch {
       return new Set()
     }
@@ -550,11 +557,18 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
             variant={isMastered ? 'outline' : 'primary'}
             size="sm"
             onClick={markCurrentCardMastered}
-            disabled={isMastered}
+            disabled={isMastered || !isFlipped}
             aria-pressed={isMastered}
-            aria-label={isMastered ? 'This flashcard is marked as understood' : 'Mark this flashcard as understood'}
+            aria-label={
+              isMastered
+                ? 'This flashcard is marked as understood'
+                : isFlipped
+                  ? 'Mark this flashcard as understood'
+                  : 'Flip this flashcard before marking it understood'
+            }
+            title={!isFlipped && !isMastered ? 'Flip the card and review the answer first' : undefined}
           >
-            {isMastered ? '✓ Got It' : 'Got It'}
+            {isMastered ? '✓ Got It' : isFlipped ? 'Got It' : 'Flip First'}
           </Button>
 
           <Button
