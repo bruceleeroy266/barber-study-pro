@@ -24,9 +24,10 @@ interface ProScenarioItem {
 interface ProScenarioProps {
   scenarios: ProScenarioItem[]
   theme?: ChapterTheme
+  onComplete?: () => void
 }
 
-export default function ProScenario({ scenarios, theme }: ProScenarioProps) {
+export default function ProScenario({ scenarios, theme, onComplete }: ProScenarioProps) {
   const t = theme || defaultTheme
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({})
   const [revealed, setRevealed] = useState<Set<number>>(new Set())
@@ -50,7 +51,12 @@ export default function ProScenario({ scenarios, theme }: ProScenarioProps) {
   }
 
   const revealAnswer = (scenarioIdx: number) => {
-    setRevealed(prev => new Set(prev).add(scenarioIdx))
+    // Keep completion tied to an actual student response even if this
+    // handler is invoked outside the normal disabled-button UI path.
+    if (revealed.has(scenarioIdx) || selectedAnswers[scenarioIdx] === undefined) return
+    const next = new Set(revealed).add(scenarioIdx)
+    setRevealed(next)
+    if (next.size === scenarios.length) onComplete?.()
   }
 
   return (

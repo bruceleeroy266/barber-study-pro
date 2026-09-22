@@ -142,6 +142,10 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
       <ChapterContent
         sections={chapterContent?.sections || []}
         theme={chapterContent?.theme}
+        chapterId={chapter.id}
+        userId={user.id}
+        lessonCompleted={progress?.lesson_completed || false}
+        knowledgeChecksCompleted={progress?.knowledge_checks_completed || false}
       />
 
       {/* Key Terms — student-facing glossary, rendered only for chapters with a

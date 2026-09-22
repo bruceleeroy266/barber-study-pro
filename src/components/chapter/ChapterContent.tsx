@@ -1,5 +1,6 @@
 'use client'
 
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { ChapterSection, ChapterTheme } from '@/lib/chapter-content'
 import { defaultTheme } from '@/lib/chapter-content'
 import InfoCard from './InfoCard'
@@ -22,10 +23,20 @@ import AppearanceChecklist from './AppearanceChecklist'
 import ProTip from './ProTip'
 import ReflectionBlock from './ReflectionBlock'
 import HtmlContentBlock from './HtmlContentBlock'
+import { supabase } from '@/lib/supabase'
+import {
+  areKnowledgeCheckSectionsComplete,
+  calculateChapterProgress,
+  preserveLegacyFullCompletion,
+} from '@/lib/progress'
 
 interface ChapterContentProps {
   sections: ChapterSection[]
   theme?: ChapterTheme
+  chapterId?: string
+  userId?: string
+  lessonCompleted?: boolean
+  knowledgeChecksCompleted?: boolean
 }
 
 function SectionWrapper({
@@ -52,8 +63,103 @@ function SectionWrapper({
   )
 }
 
-export default function ChapterContent({ sections, theme }: ChapterContentProps) {
+export default function ChapterContent({ sections, theme, chapterId, userId, lessonCompleted = false, knowledgeChecksCompleted = false }: ChapterContentProps) {
   const t = theme || defaultTheme
+  const knowledgeCheckSectionIds = useMemo(
+    () => sections
+      .filter((section) => section.type === 'scenarioBlock' || section.type === 'proScenario')
+      .map((section) => section.id),
+    [sections]
+  )
+  const hasKnowledgeChecks = knowledgeCheckSectionIds.length > 0
+  const knowledgeCheckStorageKey = useMemo(
+    () => userId && chapterId ? `knowledge-check-sections-${userId}-${chapterId}` : null,
+    [userId, chapterId]
+  )
+  const [completedKnowledgeCheckSections, setCompletedKnowledgeCheckSections] = useState<Set<string>>(() => {
+    if (knowledgeChecksCompleted) return new Set(knowledgeCheckSectionIds)
+    if (!knowledgeCheckStorageKey || typeof window === 'undefined') return new Set()
+
+    try {
+      const stored = JSON.parse(localStorage.getItem(knowledgeCheckStorageKey) || '[]')
+      if (!Array.isArray(stored)) return new Set()
+      return new Set(
+        stored.filter(
+          (id): id is string => typeof id === 'string' && knowledgeCheckSectionIds.includes(id)
+        )
+      )
+    } catch {
+      localStorage.removeItem(knowledgeCheckStorageKey)
+      return new Set()
+    }
+  })
+  const [knowledgeChecksSaved, setKnowledgeChecksSaved] = useState(knowledgeChecksCompleted)
+
+  const saveSignal = useCallback(async (signal: 'lesson_completed' | 'knowledge_checks_completed') => {
+    if (!userId || !chapterId) return
+    const { data: existing } = await supabase
+      .from('student_progress')
+      .select('lesson_completed, flashcards_completed, knowledge_checks_completed, quiz_completed, progress_percentage')
+      .eq('user_id', userId)
+      .eq('chapter_id', chapterId)
+      .maybeSingle()
+    const lesson = signal === 'lesson_completed' ? true : (existing?.lesson_completed ?? false)
+    const knowledge = signal === 'knowledge_checks_completed' ? true : (existing?.knowledge_checks_completed ?? false)
+    const calculatedProgress = calculateChapterProgress(existing?.flashcards_completed ?? false, existing?.quiz_completed ?? false, { lessonCompleted: lesson, knowledgeChecksCompleted: knowledge })
+    const progressPercentage = preserveLegacyFullCompletion(calculatedProgress, existing?.progress_percentage ?? null)
+    const { error } = await supabase.from('student_progress').upsert({ user_id: userId, chapter_id: chapterId, [signal]: true, progress_percentage: progressPercentage, last_studied_at: new Date().toISOString(), updated_at: new Date().toISOString() }, { onConflict: 'user_id,chapter_id' })
+    if (error) {
+      console.error('[ChapterContent] Failed to save progress signal:', error.message)
+      return false
+    }
+    return true
+  }, [userId, chapterId])
+
+  useEffect(() => {
+    if (!knowledgeCheckStorageKey || typeof window === 'undefined' || knowledgeChecksSaved) return
+    localStorage.setItem(knowledgeCheckStorageKey, JSON.stringify([...completedKnowledgeCheckSections]))
+  }, [completedKnowledgeCheckSections, knowledgeCheckStorageKey, knowledgeChecksSaved])
+
+  useEffect(() => {
+    if (
+      knowledgeChecksSaved ||
+      !areKnowledgeCheckSectionsComplete(
+        knowledgeCheckSectionIds,
+        completedKnowledgeCheckSections
+      )
+    ) {
+      return
+    }
+
+    let cancelled = false
+    void saveSignal('knowledge_checks_completed').then((saved) => {
+      if (!cancelled && saved) {
+        setKnowledgeChecksSaved(true)
+        if (knowledgeCheckStorageKey && typeof window !== 'undefined') {
+          localStorage.removeItem(knowledgeCheckStorageKey)
+        }
+      }
+    })
+
+    return () => {
+      cancelled = true
+    }
+  }, [
+    completedKnowledgeCheckSections,
+    knowledgeCheckSectionIds,
+    knowledgeChecksSaved,
+    knowledgeCheckStorageKey,
+    saveSignal,
+  ])
+
+  const handleKnowledgeCheckSectionComplete = useCallback((sectionId: string) => {
+    setCompletedKnowledgeCheckSections((previous) => {
+      if (previous.has(sectionId)) return previous
+      const next = new Set(previous)
+      next.add(sectionId)
+      return next
+    })
+  }, [])
 
   return (
     <div className="space-y-10">
@@ -132,7 +238,11 @@ export default function ChapterContent({ sections, theme }: ChapterContentProps)
           case 'scenarioBlock':
             return (
               <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <ScenarioBlock scenarios={section.scenarios} theme={t} />
+                <ScenarioBlock
+                  scenarios={section.scenarios}
+                  theme={t}
+                  onComplete={() => handleKnowledgeCheckSectionComplete(section.id)}
+                />
               </SectionWrapper>
             )
 
@@ -153,7 +263,11 @@ export default function ChapterContent({ sections, theme }: ChapterContentProps)
           case 'proScenario':
             return (
               <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <ProScenario scenarios={section.scenarios} theme={t} />
+                <ProScenario
+                  scenarios={section.scenarios}
+                  theme={t}
+                  onComplete={() => handleKnowledgeCheckSectionComplete(section.id)}
+                />
               </SectionWrapper>
             )
 
@@ -208,6 +322,13 @@ export default function ChapterContent({ sections, theme }: ChapterContentProps)
             return null
         }
       })}
+      {userId && chapterId && !lessonCompleted && (
+        <button onClick={() => saveSignal('lesson_completed')} className="w-full rounded-lg border border-[var(--color-brand-gold)] px-4 py-3 font-semibold text-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold)]/10">
+          ✓ Mark Lesson Complete
+        </button>
+      )}
+      {lessonCompleted && <p className="text-sm text-[var(--color-brand-gold)]">✓ Lesson completed</p>}
+      {hasKnowledgeChecks && knowledgeChecksSaved && <p className="text-sm text-[var(--color-brand-gold)]">✓ Knowledge checks completed</p>}
     </div>
   )
 }

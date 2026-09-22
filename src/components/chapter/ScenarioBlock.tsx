@@ -21,9 +21,10 @@ interface Scenario {
 interface ScenarioBlockProps {
   scenarios: Scenario[]
   theme?: ChapterTheme
+  onComplete?: () => void
 }
 
-export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) {
+export default function ScenarioBlock({ scenarios, theme, onComplete }: ScenarioBlockProps) {
   const t = theme || defaultTheme
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({})
   const [revealed, setRevealed] = useState<Set<number>>(new Set())
@@ -61,13 +62,16 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
           clearInterval(intervalRefs.current[scenarioIdx])
           delete intervalRefs.current[scenarioIdx]
           setTimerExpired(expired => new Set(expired).add(scenarioIdx))
+          // Expiration reveals the correct response for safety/remediation,
+          // but it is not a completed knowledge check. Only an explicit
+          // submitted answer may contribute to the chapter's 20% signal.
           setRevealed(rev => new Set(rev).add(scenarioIdx))
           return { ...prev, [scenarioIdx]: 0 }
         }
         return { ...prev, [scenarioIdx]: current - 1 }
       })
     }, 1000)
-  }, [])
+  }, [onComplete, scenarios.length])
 
   const selectAnswer = (scenarioIdx: number, letter: string) => {
     if (revealed.has(scenarioIdx)) return
@@ -75,12 +79,21 @@ export default function ScenarioBlock({ scenarios, theme }: ScenarioBlockProps) 
   }
 
   const revealAnswer = (scenarioIdx: number) => {
+    // Never award completion for an unanswered scenario. The button is
+    // disabled in the UI until an option is selected, but keep this guard
+    // here so programmatic calls cannot bypass the progress requirement.
+    if (selectedAnswers[scenarioIdx] === undefined || revealed.has(scenarioIdx)) return
+
     // Stop timer if running
     if (intervalRefs.current[scenarioIdx]) {
       clearInterval(intervalRefs.current[scenarioIdx])
       delete intervalRefs.current[scenarioIdx]
     }
-    setRevealed(prev => new Set(prev).add(scenarioIdx))
+    setRevealed(prev => {
+      const next = new Set(prev).add(scenarioIdx)
+      if (next.size === scenarios.length) onComplete?.()
+      return next
+    })
   }
 
   const resetScenario = (scenarioIdx: number) => {
