@@ -81,6 +81,10 @@ export default function QuizClient({
   // Visible failure states — progress/activity updates must never fail silently.
   const [progressSaveError, setProgressSaveError] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [bookReferences, setBookReferences] = useState<Record<string, { book: string; chapter: string; page: string }>>({})
+  const [bookReferenceSaving, setBookReferenceSaving] = useState<string | null>(null)
+  const [bookReferenceSaved, setBookReferenceSaved] = useState<string | null>(null)
+  const [bookReferenceError, setBookReferenceError] = useState<string | null>(null)
 
   // Book + ASCYN learning model: standard passing score is 80%.
   const passingScore = quiz.passing_score ?? 80
@@ -318,6 +322,56 @@ export default function QuizClient({
     setSubmitError(null)
   }, [])
 
+  const updateBookReference = useCallback((questionId: string, field: 'book' | 'chapter' | 'page', value: string) => {
+    setBookReferences((current) => ({
+      ...current,
+      [questionId]: {
+        book: current[questionId]?.book ?? '',
+        chapter: current[questionId]?.chapter ?? '',
+        page: current[questionId]?.page ?? '',
+        [field]: value,
+      },
+    }))
+    setBookReferenceSaved((savedId) => (savedId === questionId ? null : savedId))
+  }, [])
+
+  const saveBookReference = useCallback(async (questionId: string) => {
+    if (!userId) {
+      setBookReferenceError('Sign in to save a book reference.')
+      return
+    }
+
+    const reference = bookReferences[questionId] ?? { book: '', chapter: '', page: '' }
+    setBookReferenceSaving(questionId)
+    setBookReferenceSaved(null)
+    setBookReferenceError(null)
+
+    try {
+      const { error } = await supabase
+        .from('quiz_book_references')
+        .upsert(
+          {
+            user_id: userId,
+            quiz_id: quiz.id,
+            question_id: questionId,
+            book: reference.book.trim(),
+            chapter: reference.chapter.trim(),
+            page: reference.page.trim(),
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: 'user_id,quiz_id,question_id' }
+        )
+
+      if (error) throw error
+      setBookReferenceSaved(questionId)
+    } catch (error) {
+      console.error('[QuizClient] Failed to save book reference:', error)
+      setBookReferenceError('We could not save that book reference. Please try again.')
+    } finally {
+      setBookReferenceSaving(null)
+    }
+  }, [bookReferences, quiz.id, userId])
+
   // Warn before leaving active quiz
   useEffect(() => {
     function handleBeforeUnload(e: BeforeUnloadEvent) {
@@ -478,6 +532,58 @@ export default function QuizClient({
                       {sq.original.explanation}
                     </p>
                   )}
+                  <div className="mt-4 border-t border-[var(--color-border-secondary)] pt-4">
+                    <p className="text-sm font-semibold text-white mb-1">Book Reference <span className="font-normal text-[var(--color-text-muted)]">(optional)</span></p>
+                    <p className="text-xs text-[var(--color-text-muted)] mb-3">If you used your course book, add where you found it.</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <label className="text-xs text-[var(--color-text-muted)]">
+                        Book
+                        <input
+                          type="text"
+                          value={bookReferences[sq.original.id]?.book ?? ''}
+                          onChange={(event) => updateBookReference(sq.original.id, 'book', event.target.value)}
+                          placeholder="Book name"
+                          className="mt-1 w-full rounded-lg border border-[var(--color-border-secondary)] bg-[var(--color-background-secondary)] px-3 py-2 text-base text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)]"
+                        />
+                      </label>
+                      <label className="text-xs text-[var(--color-text-muted)]">
+                        Chapter
+                        <input
+                          type="text"
+                          value={bookReferences[sq.original.id]?.chapter ?? ''}
+                          onChange={(event) => updateBookReference(sq.original.id, 'chapter', event.target.value)}
+                          placeholder="Chapter"
+                          className="mt-1 w-full rounded-lg border border-[var(--color-border-secondary)] bg-[var(--color-background-secondary)] px-3 py-2 text-base text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)]"
+                        />
+                      </label>
+                      <label className="text-xs text-[var(--color-text-muted)]">
+                        Page
+                        <input
+                          type="text"
+                          value={bookReferences[sq.original.id]?.page ?? ''}
+                          onChange={(event) => updateBookReference(sq.original.id, 'page', event.target.value)}
+                          placeholder="Page"
+                          className="mt-1 w-full rounded-lg border border-[var(--color-border-secondary)] bg-[var(--color-background-secondary)] px-3 py-2 text-base text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)]"
+                        />
+                      </label>
+                    </div>
+                    <div className="mt-3 flex flex-wrap items-center gap-3">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => saveBookReference(sq.original.id)}
+                        disabled={bookReferenceSaving === sq.original.id}
+                      >
+                        {bookReferenceSaving === sq.original.id ? 'Saving...' : 'Save Reference'}
+                      </Button>
+                      {bookReferenceSaved === sq.original.id && (
+                        <span className="text-sm text-gold" role="status">Reference saved</span>
+                      )}
+                    </div>
+                    {bookReferenceError && bookReferenceSaving === null && (
+                      <p className="mt-2 text-sm text-warm-bronze" role="alert">{bookReferenceError}</p>
+                    )}
+                  </div>
                 </Card>
               )
             })}

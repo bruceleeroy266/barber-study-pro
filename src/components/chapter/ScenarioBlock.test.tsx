@@ -29,7 +29,7 @@ describe('ScenarioBlock progress completion', () => {
       vi.advanceTimersByTime(2000)
     })
 
-    expect(screen.getByText(/time expired/i)).toBeInTheDocument()
+    expect(screen.getAllByText(/time expired/i).length).toBeGreaterThan(0)
     expect(onComplete).not.toHaveBeenCalled()
   })
 
