@@ -130,7 +130,10 @@ export default function AttendanceClient({
   }
 
   const markAllPresent = async () => {
-    const ids = todayRecords.map((record) => record.id)
+    const created = await ensureTodayRecords()
+    const recordsByStudent = new Map(todayRecords.map((record) => [record.userId, record]))
+    for (const record of created) recordsByStudent.set(record.userId, record)
+    const ids = students.map((student) => recordsByStudent.get(student.id)?.id).filter((id): id is string => Boolean(id))
     if (ids.length > 0) await bulkUpdateStatus(ids, 'Present')
   }
 
@@ -174,7 +177,7 @@ export default function AttendanceClient({
             <button
               type="button"
               onClick={markAllPresent}
-              disabled={loading || todayRecords.length === 0}
+              disabled={loading || students.length === 0}
               className="min-h-11 rounded-lg border border-gold px-4 py-2 font-semibold text-gold hover:bg-gold/10 disabled:opacity-50"
             >
               Mark All Present

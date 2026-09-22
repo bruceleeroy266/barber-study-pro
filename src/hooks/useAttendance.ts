@@ -118,7 +118,6 @@ export function useAttendance({
   const updateStatus = useCallback(
     async (id: string, status: AttendanceStatus, reason?: string) => {
       const original = records.find((r) => r.id === id)
-      if (!original) return
 
       try {
         const updated = await updateAttendanceRecord(id, { status })
@@ -128,14 +127,17 @@ export function useAttendance({
           recordId: id,
           action: 'update',
           changedFields: {
-            status: { old: original.status, new: updated.status },
+            status: { old: original?.status ?? null, new: updated.status },
           },
           userId: currentUser.id,
           userName: currentUser.full_name,
           reason,
         })
 
-        setRecords((prev) => prev.map((r) => (r.id === id ? updated : r)))
+        setRecords((prev) => {
+          const exists = prev.some((r) => r.id === id)
+          return exists ? prev.map((r) => (r.id === id ? updated : r)) : [...prev, updated]
+        })
         setError(null)
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : 'Failed to update attendance status')
@@ -148,7 +150,7 @@ export function useAttendance({
     async (ids: string[], status: AttendanceStatus) => {
       const originals = records.filter((r) => ids.includes(r.id))
       try {
-        await bulkUpdateAttendance(ids, status)
+        const updatedRecords = await bulkUpdateAttendance(ids, status)
 
         for (const original of originals) {
           await logAuditEntry({
@@ -163,9 +165,14 @@ export function useAttendance({
           })
         }
 
-        setRecords((prev) =>
-          prev.map((r) => (ids.includes(r.id) ? { ...r, status, updatedAt: new Date().toISOString() } : r))
-        )
+        setRecords((prev) => {
+          const updatedById = new Map(updatedRecords.map((record) => [record.id, record]))
+          const next = prev.map((record) => updatedById.get(record.id) ?? record)
+          for (const record of updatedRecords) {
+            if (!prev.some((existing) => existing.id === record.id)) next.push(record)
+          }
+          return next
+        })
         clearSelection()
         setError(null)
       } catch (err: unknown) {
