@@ -2,9 +2,9 @@
 --
 -- The original RPC credited every heartbeat independently, so two visible tabs
 -- could add ~120 seconds for one real minute. This version serializes writes
--- per user and caps each increment by wall-clock time since the last accepted
--- heartbeat. Duplicate/concurrent heartbeats therefore share the same elapsed
--- time budget instead of multiplying it.
+-- per user and caps each increment by wall-clock time since the user's most
+-- recent accepted heartbeat across every study-date row. Duplicate/concurrent
+-- heartbeats therefore share one elapsed-time budget instead of multiplying it.
 create or replace function public.record_study_activity(
   p_seconds integer default 60,
   p_timezone text default 'UTC'
@@ -21,7 +21,7 @@ declare
   v_requested_seconds integer;
   v_credit_seconds integer;
   v_elapsed_seconds integer;
-  v_last_active_at timestamptz;
+  v_latest_active_at timestamptz;
   v_now timestamptz;
 begin
   if v_user_id is null then
@@ -47,45 +47,43 @@ begin
   v_now := clock_timestamp();
   v_study_date := (v_now at time zone v_timezone)::date;
 
-  select last_active_at
-    into v_last_active_at
+  -- Use the newest accepted heartbeat across ALL date rows. This prevents
+  -- duplicate credit not only across tabs but also across midnight boundaries
+  -- or clients reporting different valid timezones.
+  select max(last_active_at)
+    into v_latest_active_at
   from public.study_activity_days
-  where user_id = v_user_id
-    and study_date = v_study_date
-  for update;
+  where user_id = v_user_id;
 
-  if found then
+  if v_latest_active_at is null then
+    v_credit_seconds := v_requested_seconds;
+  else
     v_elapsed_seconds := greatest(
       0,
-      floor(extract(epoch from (v_now - v_last_active_at)))::integer
+      floor(extract(epoch from (v_now - v_latest_active_at)))::integer
     );
     v_credit_seconds := least(v_requested_seconds, v_elapsed_seconds);
-
-    update public.study_activity_days
-    set
-      active_seconds = active_seconds + v_credit_seconds,
-      timezone = v_timezone,
-      last_active_at = v_now
-    where user_id = v_user_id
-      and study_date = v_study_date;
-  else
-    -- The client does not send its first heartbeat until after an active
-    -- interval, so the first row may safely receive the bounded request.
-    insert into public.study_activity_days (
-      user_id,
-      study_date,
-      active_seconds,
-      timezone,
-      last_active_at
-    )
-    values (
-      v_user_id,
-      v_study_date,
-      v_requested_seconds,
-      v_timezone,
-      v_now
-    );
   end if;
+
+  insert into public.study_activity_days (
+    user_id,
+    study_date,
+    active_seconds,
+    timezone,
+    last_active_at
+  )
+  values (
+    v_user_id,
+    v_study_date,
+    v_credit_seconds,
+    v_timezone,
+    v_now
+  )
+  on conflict (user_id, study_date)
+  do update set
+    active_seconds = study_activity_days.active_seconds + excluded.active_seconds,
+    timezone = excluded.timezone,
+    last_active_at = excluded.last_active_at;
 end;
 $$;
 
