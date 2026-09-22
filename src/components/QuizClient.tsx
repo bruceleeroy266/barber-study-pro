@@ -3,7 +3,7 @@
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
-import { calculateChapterProgress } from '@/lib/progress'
+import { calculateChapterProgress, preserveLegacyFullCompletion } from '@/lib/progress'
 import { isSupabaseConfigured } from '@/lib/demo-helpers'
 import { saveMissedQuestions } from '@/lib/missed-questions'
 import { getCategoryForChapter } from '@/lib/analytics'
@@ -161,7 +161,7 @@ export default function QuizClient({
       if (isSupabaseConfigured()) {
         const { data: existingProgress } = await supabase
           .from('student_progress')
-          .select('lesson_completed, flashcards_completed, knowledge_checks_completed, quiz_completed, best_quiz_score')
+          .select('lesson_completed, flashcards_completed, knowledge_checks_completed, quiz_completed, best_quiz_score, progress_percentage')
           .eq('user_id', userId)
           .eq('chapter_id', chapterId)
           .maybeSingle()
@@ -180,10 +180,14 @@ export default function QuizClient({
         existingBestScore,
         bestAttempt?.percentage ?? 0
       )
-      const progressPercentage = calculateChapterProgress(flashcardsCompleted, quizCompleted, {
+      const calculatedProgress = calculateChapterProgress(flashcardsCompleted, quizCompleted, {
         lessonCompleted,
         knowledgeChecksCompleted,
       })
+      const progressPercentage = preserveLegacyFullCompletion(
+        calculatedProgress,
+        existingProgress?.progress_percentage ?? null
+      )
 
       // Chapter progress + learning-activity timestamp (last_studied_at).
       // The quiz attempt is already persisted above, so a failure here must
