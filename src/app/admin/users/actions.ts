@@ -472,6 +472,17 @@ export async function createUser(formData: UserFormData): Promise<ActionResult<{
     return { success: false, error: domainResult.error }
   }
 
+  const lifecycleResult = await ensurePendingInvitationLifecycle(serviceClient, admin, {
+    authUserId: inviteData.user.id,
+    email: normalizedEmail,
+    fullName: formData.full_name,
+    role: formData.role,
+    schoolId: formData.school_id,
+  })
+  if (!lifecycleResult.success) {
+    return { success: false, error: lifecycleResult.error }
+  }
+
   await logUserManagementAction(
     admin,
     authData.user.id,
@@ -505,6 +516,86 @@ function getSiteUrl(): string {
 }
 
 type InviteUserResult = { id: string; recoverySent?: boolean }
+
+const INVITATION_LIFECYCLE_ROLES = new Set<AppRole>(['school_admin', 'instructor', 'student'])
+
+async function ensurePendingInvitationLifecycle(
+  serviceClient: ReturnType<typeof createServiceRoleClient>,
+  admin: AdminContext,
+  input: {
+    authUserId: string
+    email: string
+    fullName: string
+    role: AppRole
+    schoolId: string | null
+  }
+): Promise<ActionResult> {
+  if (!input.schoolId || !INVITATION_LIFECYCLE_ROLES.has(input.role)) {
+    return { success: true }
+  }
+
+  const { data: existingInvitation, error: lookupError } = await serviceClient
+    .from('school_onboarding_invitations')
+    .select('id, status')
+    .eq('school_id', input.schoolId)
+    .eq('email', input.email)
+    .eq('role', input.role)
+    .maybeSingle()
+
+  if (lookupError) {
+    return { success: false, error: `Failed to verify invitation lifecycle: ${lookupError.message}` }
+  }
+
+  // Never reopen an invitation that was already accepted. A password recovery
+  // for an established user is not a new onboarding event.
+  if (existingInvitation?.status === 'accepted') {
+    return { success: true }
+  }
+
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+
+  if (existingInvitation) {
+    const { error: updateError } = await serviceClient
+      .from('school_onboarding_invitations')
+      .update({
+        auth_user_id: input.authUserId,
+        invited_by: admin.userId,
+        full_name: input.fullName,
+        status: 'pending',
+        invited_at: new Date().toISOString(),
+        accepted_at: null,
+        expires_at: expiresAt,
+        revoked_at: null,
+        revoked_by: null,
+      })
+      .eq('id', existingInvitation.id)
+
+    if (updateError) {
+      return { success: false, error: `Failed to refresh invitation lifecycle: ${updateError.message}` }
+    }
+
+    return { success: true }
+  }
+
+  const { error: insertError } = await serviceClient
+    .from('school_onboarding_invitations')
+    .insert({
+      school_id: input.schoolId,
+      invited_by: admin.userId,
+      email: input.email,
+      full_name: input.fullName,
+      role: input.role,
+      auth_user_id: input.authUserId,
+      status: 'pending',
+      expires_at: expiresAt,
+    })
+
+  if (insertError) {
+    return { success: false, error: `Failed to create invitation lifecycle: ${insertError.message}` }
+  }
+
+  return { success: true }
+}
 
 async function sendAccountRecoveryEmail(
   serviceClient: ReturnType<typeof createServiceRoleClient>,
@@ -660,6 +751,17 @@ export async function inviteUser(formData: InviteUserFormData): Promise<ActionRe
     const recoveryResult = await sendAccountRecoveryEmail(serviceClient, normalizedEmail)
     if (!recoveryResult.success) {
       return { success: false, error: recoveryResult.error }
+    }
+
+    const lifecycleResult = await ensurePendingInvitationLifecycle(serviceClient, admin, {
+      authUserId: existingAuthUser.id,
+      email: normalizedEmail,
+      fullName: formData.full_name,
+      role: formData.role,
+      schoolId: existingSchoolId,
+    })
+    if (!lifecycleResult.success) {
+      return { success: false, error: lifecycleResult.error }
     }
 
     await logUserManagementAction(
