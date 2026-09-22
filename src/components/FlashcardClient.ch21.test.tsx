@@ -168,7 +168,7 @@ describe('FlashcardClient — chapter 21', () => {
     })
   })
 
-  it('marks study complete after reaching the last card', async () => {
+  it('does not award completion merely for reaching the last card', async () => {
     renderFlashcards()
     expect(await screen.findByText(/Card 1 of 60/i)).toBeInTheDocument()
 
@@ -181,7 +181,8 @@ describe('FlashcardClient — chapter 21', () => {
       expect(screen.getByText(/Card 60 of 60/i)).toBeInTheDocument()
     })
 
-    expect(screen.getByRole('button', { name: /Mark Complete/i })).toBeInTheDocument()
+    const masteryGate = screen.getByRole('button', { name: /Mastered 0\/60/i })
+    expect(masteryGate).toBeDisabled()
   })
 
   it('preserves progress in localStorage when userId is not available', async () => {
