@@ -24,7 +24,11 @@ import ProTip from './ProTip'
 import ReflectionBlock from './ReflectionBlock'
 import HtmlContentBlock from './HtmlContentBlock'
 import { supabase } from '@/lib/supabase'
-import { calculateChapterProgress, preserveLegacyFullCompletion } from '@/lib/progress'
+import {
+  areKnowledgeCheckSectionsComplete,
+  calculateChapterProgress,
+  preserveLegacyFullCompletion,
+} from '@/lib/progress'
 
 interface ChapterContentProps {
   sections: ChapterSection[]
@@ -119,8 +123,10 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
   useEffect(() => {
     if (
       knowledgeChecksSaved ||
-      knowledgeCheckSectionIds.length === 0 ||
-      !knowledgeCheckSectionIds.every((id) => completedKnowledgeCheckSections.has(id))
+      !areKnowledgeCheckSectionsComplete(
+        knowledgeCheckSectionIds,
+        completedKnowledgeCheckSections
+      )
     ) {
       return
     }
