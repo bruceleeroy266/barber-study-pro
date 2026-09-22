@@ -273,8 +273,8 @@ export const chapter5PremiumContent: ChapterContent = {
           label: 'SHEAR TYPES',
           title: 'TYPES OF SHEARS',
           bullets: [
-            { label: 'STRAIGHT SHEARS', description: 'Standard cutting shear - 90% of haircutting work. 5"-7" lengths.' },
-            { label: 'THINNING/TEXTURIZING', description: 'One blade has teeth (20-40 count). Removes bulk without changing length.' },
+            { label: 'STRAIGHT SHEARS', description: 'Standard cutting shear for general haircutting; available in multiple lengths to suit hand size, technique, and service.' },
+            { label: 'THINNING/TEXTURIZING', description: 'One or both blades may incorporate teeth depending on design. Used to remove bulk or create texture; tooth count and cutting effect vary by manufacturer and model.' },
             { label: 'BLENDING SHEARS', description: 'Fewer, wider teeth than thinning shears. Blends lines between clipper and shear work.' },
             { label: 'LEFT-HANDED SHEARS', description: 'Blades are reversed for left-handed barbers. Using right-handed shears left-handed damages the edge.' },
           ],
@@ -544,7 +544,7 @@ export const chapter5PremiumContent: ChapterContent = {
           bullets: [
             { label: 'HAND POSITION', description: 'Palm up, elbow down to your side' },
             { label: 'MOVEMENT', description: 'Downward gliding strokes - smooth and controlled' },
-            { label: 'RESTRICTION', description: 'SIDES OF NECK ONLY - never use on face' },
+            { label: 'APPLICATION', description: 'Use according to the shaving procedure taught for the specific area; do not treat one face-versus-neck rule as universal' },
             { label: 'SAFETY', description: 'Use this grip only where the curriculum or procedure specifies; keep razor handling controlled and within the taught shaving zones' },
           ],
           facts: [
@@ -715,7 +715,7 @@ export const chapter5PremiumContent: ChapterContent = {
           options: [
             { letter: 'A', text: 'Freehand grip - standard position', feedback: 'INCORRECT. Freehand is for general face shaving. The upper lip requires reverse freehand for precision and visibility.' },
             { letter: 'B', text: 'Reverse freehand - hand turned toward you, edge up', feedback: 'CORRECT. Reverse freehand provides the angle and control needed for the upper lip and chin areas.' },
-            { letter: 'C', text: 'Reverse backhand - palm up, elbow down', feedback: 'DANGEROUS. Reverse backhand is for SIDES OF NECK ONLY. Using it on the face is a critical safety error that fails the exam.' },
+            { letter: 'C', text: 'Reverse backhand - palm up, elbow down', feedback: 'INCORRECT FOR THIS TAUGHT SEQUENCE. Use the razor position specified for the area and current practical procedure; do not assume a universal automatic-failure rule.' },
             { letter: 'D', text: 'Backhand grip - back of hand away', feedback: 'INCORRECT. Backhand is for broader areas like cheeks. It lacks the precision needed for the upper lip.' },
           ],
           correctAnswer: 'B',
