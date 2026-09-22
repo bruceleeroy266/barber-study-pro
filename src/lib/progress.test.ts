@@ -42,4 +42,11 @@ describe('chapter progress weighting', () => {
       })
     ).toBe(50)
   })
+
+  it('grandfathers only previously stored 100% completion', () => {
+    expect(preserveLegacyFullCompletion(15, 100)).toBe(100)
+    expect(preserveLegacyFullCompletion(65, 100)).toBe(100)
+    expect(preserveLegacyFullCompletion(15, 50)).toBe(15)
+    expect(preserveLegacyFullCompletion(15, null)).toBe(15)
+  })
 })
