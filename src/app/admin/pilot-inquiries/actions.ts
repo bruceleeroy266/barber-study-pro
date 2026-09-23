@@ -372,7 +372,7 @@ export async function createSchoolFromInquiry(
     // The RPC itself re-validates everything; this is a UX optimization.
     const { data: inquiry, error: inquiryError } = await supabase
       .from('pilot_inquiries')
-      .select('id, school_name, contact_name, email, status, school_id')
+      .select('id, school_name, contact_name, email, program_type, status, school_id')
       .eq('id', trimmedInquiryId)
       .single()
 
@@ -384,6 +384,14 @@ export async function createSchoolFromInquiry(
       return {
         success: false,
         error: `Inquiry must be approved before school creation. Current status: ${inquiry.status}.`,
+      }
+    }
+
+    const normalizedProgramType = String(inquiry.program_type || '').trim().toLowerCase()
+    if (normalizedProgramType !== 'barber' && normalizedProgramType !== 'barbering') {
+      return {
+        success: false,
+        error: 'ASCYN PRO pilot provisioning is currently limited to Barbering. Keep this inquiry on Early Access until its program is supported.',
       }
     }
 
