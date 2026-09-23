@@ -9,8 +9,15 @@
 -- Function dropped:
 --   - update_google_connections_updated_at() (created by google_connections migration)
 
--- Drop trigger first (depends on table and function)
-DROP TRIGGER IF EXISTS trigger_google_connections_updated_at ON google_connections;
+-- Drop trigger first when the legacy table exists. PostgreSQL still errors on
+-- DROP TRIGGER IF EXISTS ... ON <missing table>, so guard the relation itself.
+DO $
+BEGIN
+  IF to_regclass('public.google_connections') IS NOT NULL THEN
+    EXECUTE 'DROP TRIGGER IF EXISTS trigger_google_connections_updated_at ON public.google_connections';
+  END IF;
+END
+$;
 
 -- Drop function
 DROP FUNCTION IF EXISTS update_google_connections_updated_at();
