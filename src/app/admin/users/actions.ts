@@ -788,7 +788,7 @@ export async function inviteUser(formData: InviteUserFormData): Promise<ActionRe
   // invited auth user and overwrites trigger defaults with validated values.
 
   // Send the invitation email. The user will set their own password.
-  const redirectTo = `${getSiteUrl()}/auth/callback`
+  const redirectTo = `${getSiteUrl()}/auth/callback?type=invite`
   const { data: inviteData, error: inviteError } = await serviceClient.auth.admin.inviteUserByEmail(
     normalizedEmail,
     {
