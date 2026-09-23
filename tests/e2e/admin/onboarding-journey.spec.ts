@@ -223,6 +223,7 @@ async function inviteSchoolUser(
 }
 
 test.describe('Pilot onboarding certification', () => {
+  test.describe.configure({ retries: 0 })
   test('inquiry → approval → school → invites → acceptance → enrollment → instructor visibility', async ({ browser }) => {
     requireLocalCertificationEnvironment()
     const service = getServiceClient()
@@ -282,7 +283,10 @@ test.describe('Pilot onboarding certification', () => {
 
     await adminPage.getByRole('button', { name: 'Create School' }).click()
     await adminPage.getByRole('button', { name: 'Confirm & Create School' }).click()
-    await expect(adminPage.getByText('School created successfully!')).toBeVisible()
+
+    // School creation revalidates the page, so the durable "School Created"
+    // state is authoritative rather than a transient modal success message.
+    await expect(adminPage.getByText('School Created')).toBeVisible()
 
     const { data: provisionedInquiry, error: provisionError } = await service
       .from('pilot_inquiries')
