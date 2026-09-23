@@ -208,7 +208,7 @@ export async function POST(request: NextRequest) {
 
     const isSafeLocalCertification =
       process.env.ASCYN_TEST_ENVIRONMENT === 'true' &&
-      /^https?:\/\/(127\.0\.0\.1|localhost)(:\\d+)?(?:\/|$)/i.test(
+      /^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(?:\/|$)/i.test(
         process.env.NEXT_PUBLIC_SUPABASE_URL || ''
       )
 
