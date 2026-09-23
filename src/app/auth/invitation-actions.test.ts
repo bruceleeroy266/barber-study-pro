@@ -68,6 +68,7 @@ function setup(status: 'pending' | 'accepted' | 'expired' | 'revoked' = 'pending
   return { update, updateEqId, updateEqStatus }
 }
 
+// Preview retrigger: invitation lifecycle acceptance coverage.
 describe('markCurrentInvitationAccepted', () => {
   beforeEach(() => {
     vi.resetModules()
