@@ -501,11 +501,11 @@ function getSiteUrl(): string {
   const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '')
   const isSafeLocalCertification =
     process.env.ASCYN_TEST_ENVIRONMENT === 'true' &&
-    /^https?:\/\/(127\.0\.0\.1|localhost)(:\\d+)?(?:\/|$)/i.test(
+    /^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(?:\/|$)/i.test(
       process.env.NEXT_PUBLIC_SUPABASE_URL || ''
     ) &&
     !!configuredSiteUrl &&
-    /^https?:\/\/(127\.0\.0\.1|localhost)(:\\d+)?(?:\/|$)/i.test(configuredSiteUrl)
+    /^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(?:\/|$)/i.test(configuredSiteUrl)
 
   if (isSafeLocalCertification) {
     return configuredSiteUrl
