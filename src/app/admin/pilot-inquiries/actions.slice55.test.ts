@@ -109,6 +109,7 @@ const APPROVED_INQUIRY = {
   school_name: 'Test Barber School',
   contact_name: 'Jane Doe',
   email: 'jane@testbarber.edu',
+  program_type: 'Barbering',
   status: 'approved',
   school_id: null,
 }
