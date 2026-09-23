@@ -102,6 +102,7 @@ const APPROVED_INQUIRY = {
   school_name: 'Test Barber School',
   contact_name: 'Jane Doe',
   email: 'jane@testbarber.edu',
+  program_type: 'Barbering',
   status: 'approved',
   school_id: null,
 }
@@ -346,6 +347,21 @@ describe('createSchoolFromInquiry', () => {
 
       expect(result.success).toBe(false)
       expect(result.error).toContain('approved')
+    })
+
+    it('8b. Non-Barbering inquiry cannot provision a school', async () => {
+      const profileChain = setupAuthenticatedUser(PLATFORM_ADMIN_ID, 'admin', null)
+      const inquiryChain = setupInquiryFetch({
+        ...APPROVED_INQUIRY,
+        program_type: 'Cosmetology',
+      })
+      setupMockFrom(profileChain, inquiryChain)
+
+      const result = await createSchoolFromInquiry(INQUIRY_ID)
+
+      expect(result.success).toBe(false)
+      expect(result.error).toContain('limited to Barbering')
+      expect(mockRpc).not.toHaveBeenCalled()
     })
 
     it('9. Unknown inquiry is rejected', async () => {
