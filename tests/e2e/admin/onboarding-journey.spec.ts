@@ -271,9 +271,9 @@ test.describe('Pilot onboarding certification', () => {
     await adminPage.getByRole('button', { name: 'Approve' }).click()
     await adminPage.getByRole('button', { name: 'Confirm Approval' }).click()
     await expect(adminPage.getByText('Inquiry approved successfully!')).toBeVisible()
-    await adminPage.getByRole('button', { name: 'Done' }).click()
-    await adminPage.reload()
 
+    // Approval revalidates the page and can detach the modal controls. Verify
+    // the persisted transition, then reload to the durable approved UI state.
     const { data: approvedInquiry } = await service
       .from('pilot_inquiries')
       .select('status')
@@ -281,6 +281,8 @@ test.describe('Pilot onboarding certification', () => {
       .single()
     expect(approvedInquiry?.status).toBe('approved')
 
+    await adminPage.reload()
+    await expect(adminPage.getByRole('button', { name: 'Create School' })).toBeVisible()
     await adminPage.getByRole('button', { name: 'Create School' }).click()
     await adminPage.getByRole('button', { name: 'Confirm & Create School' }).click()
 
