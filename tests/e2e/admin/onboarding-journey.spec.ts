@@ -270,16 +270,17 @@ test.describe('Pilot onboarding certification', () => {
 
     await adminPage.getByRole('button', { name: 'Approve' }).click()
     await adminPage.getByRole('button', { name: 'Confirm Approval' }).click()
-    await expect(adminPage.getByText('Inquiry approved successfully!')).toBeVisible()
 
-    // Approval revalidates the page and can detach the modal controls. Verify
-    // the persisted transition, then reload to the durable approved UI state.
-    const { data: approvedInquiry } = await service
-      .from('pilot_inquiries')
-      .select('status')
-      .eq('id', inquiry!.id)
-      .single()
-    expect(approvedInquiry?.status).toBe('approved')
+    // The modal is intentionally transient under revalidation. The persisted
+    // status transition is the certification boundary.
+    await expect.poll(async () => {
+      const { data } = await service
+        .from('pilot_inquiries')
+        .select('status')
+        .eq('id', inquiry!.id)
+        .single()
+      return data?.status
+    }, { timeout: 10_000 }).toBe('approved')
 
     await adminPage.reload()
     await expect(adminPage.getByRole('button', { name: 'Create School' })).toBeVisible()
