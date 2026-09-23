@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import { markCurrentInvitationAccepted } from '@/app/auth/invitation-actions'
 
 export default function UpdatePasswordPage() {
   const router = useRouter()
@@ -70,6 +71,11 @@ export default function UpdatePasswordPage() {
       })
 
       if (updateError) throw updateError
+
+      const acceptanceResult = await markCurrentInvitationAccepted()
+      if (!acceptanceResult.success) {
+        throw new Error(acceptanceResult.error || 'Password updated, but invitation tracking could not be finalized.')
+      }
 
       setSuccess(true)
       // Redirect to login after a short delay so the user sees the success message.

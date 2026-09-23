@@ -10,10 +10,15 @@ const mocks = vi.hoisted(() => ({
   single: vi.fn().mockResolvedValue({ data: { role: 'instructor' }, error: null }),
   select: vi.fn(),
   from: vi.fn(),
+  markAccepted: vi.fn().mockResolvedValue({ success: true, tracked: true }),
 }))
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: mocks.push, refresh: vi.fn() }),
+}))
+
+vi.mock('@/app/auth/invitation-actions', () => ({
+  markCurrentInvitationAccepted: mocks.markAccepted,
 }))
 
 vi.mock('@/lib/supabase', () => ({
@@ -33,6 +38,7 @@ describe('SetPasswordPage', () => {
     mocks.getSession.mockResolvedValue({ data: { session: { access_token: 'invite-token' } }, error: null })
     mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } }, error: null })
     mocks.updateUser.mockResolvedValue({ error: null })
+    mocks.markAccepted.mockResolvedValue({ success: true, tracked: true })
 
     const eq = vi.fn().mockReturnValue({ single: mocks.single })
     mocks.select.mockReturnValue({ eq })
@@ -88,6 +94,7 @@ describe('SetPasswordPage', () => {
 
     await waitFor(() => {
       expect(mocks.updateUser).toHaveBeenCalledWith({ password: 'Password123' })
+      expect(mocks.markAccepted).toHaveBeenCalledTimes(1)
       expect(mocks.push).toHaveBeenCalledWith('/instructor')
     })
   })
