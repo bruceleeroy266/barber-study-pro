@@ -581,7 +581,7 @@ export async function createSchoolFromInquiry(
           // inviteUserByEmail sends the actual invitation email; the user
           // sets their own password via the /auth/callback -> /auth/set-password
           // flow (established production path).
-          const redirectTo = `${getSiteUrl()}/auth/callback`
+          const redirectTo = `${getSiteUrl()}/auth/callback?type=invite`
           const { data: inviteData, error: inviteError } =
             await serviceClient.auth.admin.inviteUserByEmail(normalizedEmail, {
               redirectTo,
