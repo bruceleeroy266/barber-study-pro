@@ -105,7 +105,7 @@ export const chapter6LymphaticEnhanced: FlashcardData[] = [
   { chapterNumber: 6, front: "Why is 'swollen node = infection' an unsafe conclusion?", back: "Swelling can have multiple causes; barbers should not diagnose from the sign alone.", category: "lymphatic", difficulty: "hard" },
   { chapterNumber: 6, front: "Which organ is the largest lymphatic organ?", back: "Spleen.", category: "lymphatic", difficulty: "medium" },
   { chapterNumber: 6, front: "Which organ supports T-cell development and is most active in childhood?", back: "Thymus.", category: "lymphatic", difficulty: "medium" },
-  { chapterNumber: 6, front: "What is lymph?", back: "A clear fluid that circulates through lymphatic vessels and eventually returns to the bloodstream.", category: "lymphatic", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which description BEST defines lymph?", back: "A clear fluid that circulates through lymphatic vessels and eventually returns to the bloodstream.", category: "lymphatic", difficulty: "medium" },
   { chapterNumber: 6, front: "Which function BEST belongs to the lymphatic/immune system?", back: "Fluid return, filtration, and immune defense.", category: "lymphatic", difficulty: "medium" },
   { chapterNumber: 6, front: "Which service rule should apply to a tender or abnormal lymph-node area?", back: "Do not massage or manipulate the area.", category: "lymphatic", difficulty: "hard" },
   { chapterNumber: 6, front: "How should a barber discuss a concerning swollen area?", back: "Describe what was observed without naming a disease and suggest appropriate evaluation.", category: "lymphatic", difficulty: "hard" },
