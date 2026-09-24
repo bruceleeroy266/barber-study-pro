@@ -311,7 +311,7 @@ export const chapter4PremiumContent: ChapterContent = {
           bullets: [
             { label: 'HEPATITIS B', description: 'Hepatitis B is a bloodborne viral infection relevant to occupational exposure. Vaccination is an important protection for workers with potential exposure, but it never replaces Standard Precautions.' },
             { label: 'HEPATITIS C', description: 'No vaccine. Often asymptomatic for years. Leading cause of liver transplants. Transmitted through blood contact. Can survive on surfaces for days.' },
-            { label: 'HIV', description: 'HIV is a bloodborne virus. Infection-control decisions should focus on preventing blood exposure rather than trying to judge risk from a client's appearance.' },
+            { label: 'HIV', description: 'HIV is a bloodborne virus. Infection-control decisions should focus on preventing blood exposure rather than trying to judge risk from a client\'s appearance.' },
           ],
           facts: [
             { text: '⚠️ CRITICAL: You CANNOT tell by looking if someone has HIV, Hep B, or Hep C. Assume EVERY client is infectious.' },
