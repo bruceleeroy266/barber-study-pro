@@ -4,8 +4,8 @@ import { ACTIVE_CHAPTER6_CONCEPT_FAMILY_IDS } from './chapter-6-concepts/concept
 import { getChapter6ConceptForFlashcard, getChapter6FlashcardEvidenceCount } from './chapter-6-concepts/mappings'
 
 describe('Chapter 6 C6-4 flashcard hardening', () => {
-  it('locks the deck at exactly 105 cards', () => {
-    expect(chapter6AllEnhanced).toHaveLength(105)
+  it('locks the deck at exactly 125 cards', () => {
+    expect(chapter6AllEnhanced).toHaveLength(125)
   })
 
   it('removes easy recall-only cards', () => {
