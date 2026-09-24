@@ -160,7 +160,7 @@
 
 **Findings:**
 - **Low:** The chapter description says "30 board-exam style questions" while the flashcard file header says "68 premium flashcards"; counts are accurate, but the UI simply says "Flashcards" and "Quiz Questions" without distinguishing Board vs. Professional tiers.
-- **Low:** Content components rely on `style={{ color: ... }}` for theming; no dark-mode fallback is needed because the app is dark, but verify contrast ratios for the rose-gold palette on mobile screens.
+- **Low:** Content components rely on `style={ { color: ... }}` for theming; no dark-mode fallback is needed because the app is dark, but verify contrast ratios for the rose-gold palette on mobile screens.
 
 ---
 
