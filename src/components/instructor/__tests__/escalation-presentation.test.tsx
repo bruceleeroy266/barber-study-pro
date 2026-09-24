@@ -176,5 +176,37 @@ describe('InterventionHistoryView', () => {
     expect(screen.getByText('Stress Management & Self-Care')).toBeInTheDocument()
     expect(screen.getByText(/Life Skills \(Chapter 2\)/)).toBeInTheDocument()
     expect(container.textContent).not.toMatch(/C-2-15/)
+    expect(container.textContent).not.toContain('cycle-abc123')
+    expect(container.textContent).not.toContain('repeated_weakness')
+    expect(container.textContent).not.toContain('currently_performing_well')
+  })
+
+  it('renders Chapter 6 instructor history without leaking internal identifiers or raw states', () => {
+    const c6Item = {
+      ...historyItem,
+      cycleId: 'c6-cycle-internal-123',
+      conceptId: 'ch6-endocrine',
+      chapterId: 'ch-6',
+      conceptName: 'Endocrine System',
+      chapterTitle: 'General Anatomy & Physiology (Chapter 6)',
+      detectionSummary: 'Repeated difficulty',
+      evaluationSummary: 'Improving after earlier misses',
+    }
+    const { container } = render(
+      <InterventionHistoryView
+        studentName="Jordan Smith"
+        studentEmail="jordan@example.com"
+        history={[c6Item]}
+      />,
+    )
+    expect(screen.getByText('Endocrine System')).toBeInTheDocument()
+    expect(screen.getByText(/General Anatomy & Physiology \(Chapter 6\)/)).toBeInTheDocument()
+    expect(screen.getByText('Repeated difficulty')).toBeInTheDocument()
+    expect(screen.getByText('Improving after earlier misses')).toBeInTheDocument()
+    expect(container.textContent).not.toContain('ch6-endocrine')
+    expect(container.textContent).not.toContain('ch-6')
+    expect(container.textContent).not.toContain('c6-cycle-internal-123')
+    expect(container.textContent).not.toContain('repeated_weakness')
+    expect(container.textContent).not.toContain('currently_performing_well')
   })
 })
