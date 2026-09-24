@@ -203,6 +203,19 @@ class CapacityExclusionDb implements IExclusionDatabaseClient {
   }
 }
 
+function extractReassessmentCue(question: string): string {
+  const patterns = [
+    /^Which statement BEST applies to (.+)\?$/,
+    /^A student is reviewing (.+)\. Which correction is MOST accurate\?$/,
+    /^On a difficult exam item about (.+), which choice should remain after eliminating the inaccurate options\?$/,
+  ]
+  for (const pattern of patterns) {
+    const match = question.match(pattern)
+    if (match) return match[1]
+  }
+  throw new Error(`Unrecognized Chapter 6 reassessment stem: ${question}`)
+}
+
 describe('C6-7 final Chapter 6 certification', () => {
   it('locks one coherent canonical chain with no orphaned or duplicate assets', () => {
     expect(chapter6LearningObjectives).toHaveLength(10)
@@ -322,6 +335,25 @@ describe('C6-7 final Chapter 6 certification', () => {
       expect(provider!.getQuizQuestionById(
         chapter6ReassessmentQuestionConceptMappings.find((m) => m.conceptFamilyId === familyId)!.questionId,
       )).not.toBeNull()
+    }
+  })
+
+  it('gives every five-question reassessment cycle five distinct factual targets', () => {
+    for (const familyId of ACTIVE_CHAPTER6_CONCEPT_FAMILY_IDS) {
+      const ids = chapter6ReassessmentQuestionConceptMappings
+        .filter((mapping) => mapping.conceptFamilyId === familyId)
+        .map((mapping) => mapping.questionId)
+
+      expect(ids).toHaveLength(15)
+
+      for (let cycle = 0; cycle < 3; cycle++) {
+        const cycleQuestions = ids
+          .slice(cycle * 5, cycle * 5 + 5)
+          .map((id) => chapter6ReassessmentQuestions.find((question) => question.id === id)!)
+
+        const cues = cycleQuestions.map((question) => extractReassessmentCue(question.question))
+        expect(new Set(cues).size).toBe(5)
+      }
     }
   })
 
