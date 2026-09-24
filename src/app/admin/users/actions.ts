@@ -684,7 +684,8 @@ export async function inviteUser(formData: InviteUserFormData): Promise<ActionRe
     return { success: false, error: 'School admins cannot create administrator accounts' }
   }
 
-  // Validate school assignment.
+  // Validate school assignment and capture school context for the invitation.
+  let invitationSchoolName = 'ASCYN PRO'
   if (formData.school_id) {
     if (!admin.isPlatformAdmin && formData.school_id !== admin.schoolId) {
       return { success: false, error: 'Cannot assign user to a different school' }
