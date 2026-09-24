@@ -172,7 +172,7 @@ export const chapter6PremiumContent: ChapterContent = {
             { label: 'Epithelial Tissue', description: 'Protective covering tissue. Forms skin, mucous membranes, and glands. This is the tissue you work with MOST as a barber.' },
             { label: 'Connective Tissue', description: 'Supports, protects, and binds other tissues. Includes bone, cartilage, fat, and blood. Provides structure to the body.' },
             { label: 'Muscular Tissue', description: 'Contracts and moves the body. Three types: skeletal (voluntary), smooth (involuntary), and cardiac (heart only).' },
-            { label: 'Nervous Tissue', description: 'Carries messages throughout the body via neurons. Forms the brain, spinal cord, and nerves. Controls all body functions.' },
+            { label: 'Nervous Tissue', description: 'Carries messages throughout the body via neurons. Forms the brain, spinal cord, and nerves and helps coordinate sensation, movement, and many automatic body functions.' },
           ],
           facts: [
             { text: '📋 In barbering, you work most directly with EPITHELIAL tissue (skin and hair) and MUSCULAR tissue (facial muscles during massage).' },
@@ -283,7 +283,7 @@ export const chapter6PremiumContent: ChapterContent = {
           title: 'The Spinal Column — 26 Vertebrae',
           bullets: [
             { label: 'Cervical (7)', description: 'Neck vertebrae. The top two (atlas and axis) allow head rotation. You support these during shampooing.' },
-            { label: 'Thoracic (12)', description: 'Upper back vertebrae. Connected to ribs. Poor posture here causes barber back pain.' },
+            { label: 'Thoracic (12)', description: 'Upper back vertebrae. Connected to ribs. Prolonged poor posture can contribute to upper-back discomfort during barbering.' },
             { label: 'Lumbar (5)', description: 'Lower back vertebrae. Bear most body weight. Standing all day stresses this region.' },
             { label: 'Sacrum (1)', description: 'Triangular bone at the base of the spine. Fused from 5 vertebrae.' },
             { label: 'Coccyx (1)', description: 'Tailbone. Fused from 3-5 vertebrae. Sits at the very bottom of the spine.' },
@@ -331,10 +331,10 @@ export const chapter6PremiumContent: ChapterContent = {
           bullets: [
             { label: 'Striated (Skeletal)', description: 'Voluntary muscles attached to bones. You control them consciously. Enables all purposeful movement.' },
             { label: 'Nonstriated (Smooth)', description: 'Involuntary muscles in internal organs. You cannot control them. Found in blood vessels and digestive tract.' },
-            { label: 'Cardiac', description: 'Involuntary muscle found ONLY in the heart. Has its own electrical conduction system. Never fatigues.' },
+            { label: 'Cardiac', description: 'Involuntary striated muscle found in the heart. Its specialized electrical conduction system supports continuous rhythmic contraction and high fatigue resistance.' },
           ],
           facts: [
-            { text: '📋 All facial muscles are STRIATED (voluntary) — clients can tense or relax them, affecting your shave and massage.' },
+            { text: '📋 Muscles of facial expression are skeletal (striated) muscles under voluntary control, although facial movement can also occur reflexively or automatically.' },
             { text: '📋 Arrector pili muscles are smooth (involuntary) — they cause goosebumps when clients are cold or nervous.' },
           ],
         },
@@ -362,7 +362,7 @@ export const chapter6PremiumContent: ChapterContent = {
           ],
           facts: [
             { text: '📋 BOARD EXAM ALERT: The nervous system is divided into CNS (brain + spinal cord) and PNS (all other nerves).' },
-            { text: '📋 Nerve damage in the face can cause paralysis — barbers must avoid excessive pressure on facial nerves during massage.' },
+            { text: '📋 Injury to facial nerves can impair sensation or movement. Barbers should avoid forceful pressure and stay within safe service technique.' },
           ],
         },
         {
@@ -371,12 +371,12 @@ export const chapter6PremiumContent: ChapterContent = {
           title: 'Cranial Nerves Most Relevant to Barbering',
           bullets: [
             { label: 'Cranial Nerve V (Trigeminal)', description: 'The largest cranial nerve. Controls chewing muscles and carries facial sensation. Three branches: ophthalmic, maxillary, mandibular.' },
-            { label: 'Cranial Nerve VII (Facial)', description: 'Controls facial expression muscles. Damage causes facial paralysis (Bell\'s palsy). Be gentle during facial massage.' },
-            { label: 'Cranial Nerve X (Vagus)', description: 'Longest cranial nerve. Extends to throat, heart, and digestive organs. Stimulated during deep neck massage — can cause dizziness.' },
+            { label: 'Cranial Nerve VII (Facial)', description: 'Controls muscles of facial expression. Dysfunction can affect facial movement; barbers should observe without diagnosing and use gentle, appropriate technique.' },
+            { label: 'Cranial Nerve X (Vagus)', description: 'Longest cranial nerve. Extends through the neck to the chest and abdomen and helps regulate several involuntary functions. Avoid forceful deep-neck pressure and stop the service if a client becomes dizzy or faint.' },
           ],
           facts: [
             { text: '📋 The trigeminal nerve (V) has three branches — one serves the forehead, one the cheek, one the jaw. All are relevant to barbering.' },
-            { text: '📋 NEVER apply deep pressure to the carotid artery or vagus nerve area — this can cause clients to faint.' },
+            { text: '📋 Avoid sustained or forceful pressure over the carotid area and other sensitive neck structures. Stop the service and follow appropriate safety procedures if a client becomes dizzy or faint.' },
           ],
         },
       ],
@@ -459,7 +459,7 @@ export const chapter6PremiumContent: ChapterContent = {
           title: 'Glands of the Skin',
           bullets: [
             { label: 'Sudoriferous (Sweat) Glands', description: 'Excrete perspiration to regulate body temperature and eliminate waste. Two types: eccrine (all over) and apocrine (armpits, groin — activated at puberty).' },
-            { label: 'Sebaceous (Oil) Glands', description: 'Secrete sebum (oil) that lubricates skin and hair. Connected to hair follicles. Overactivity causes oily skin and scalp; underactivity causes dryness.' },
+            { label: 'Sebaceous (Oil) Glands', description: 'Secrete sebum (oil) that helps lubricate skin and hair. They are commonly associated with hair follicles, with some follicle-independent glands. Higher or lower sebum production can contribute to oiliness or dryness.' },
             { label: 'Ceruminous Glands', description: 'Located in the ear canal. Secrete cerumen (earwax) that protects the ear from dust and bacteria. Never probe into the ear canal.' },
           ],
           facts: [
@@ -485,7 +485,7 @@ export const chapter6PremiumContent: ChapterContent = {
           title: 'Major Endocrine Glands',
           bullets: [
             { label: 'Pituitary Gland', description: 'Gland at the base of the brain that is often called the "master gland" because its hormones regulate several other endocrine glands as well as growth and other body functions.' },
-            { label: 'Thyroid Gland', description: 'Butterfly-shaped gland in the neck. Regulates metabolism, energy, and body heat. Imbalance causes hair thinning and skin changes.' },
+            { label: 'Thyroid Gland', description: 'Butterfly-shaped gland in the neck. Thyroid hormones help regulate metabolism and body heat. Thyroid disorders can be associated with changes in hair and skin, but barbers should not diagnose the cause.' },
             { label: 'Parathyroid Glands (4)', description: 'Behind the thyroid. Regulate calcium and phosphorus levels. Critical for bone health and nerve function.' },
             { label: 'Adrenal Glands (2)', description: 'On top of kidneys. Produce adrenaline and cortisol. Affect stress response, blood pressure, and inflammation.' },
             { label: 'Pancreas', description: 'Behind the stomach. Produces insulin and glucagon. Regulates blood sugar. Diabetes affects wound healing and skin health.' },
@@ -502,14 +502,14 @@ export const chapter6PremiumContent: ChapterContent = {
           label: 'BARBER IMPACT',
           title: 'How Hormones Affect Your Work',
           bullets: [
-            { label: 'Hair Growth', description: 'Thyroid hormones regulate hair growth cycles. Imbalance causes thinning or excessive shedding. Androgens (testosterone) drive facial and body hair.' },
-            { label: 'Skin Condition', description: 'Estrogen maintains skin elasticity and moisture. Decline during menopause causes dryness. Cortisol (stress hormone) increases oil and inflammation.' },
+            { label: 'Hair Growth', description: 'Thyroid hormones and androgens are among the factors that influence hair-growth cycles and facial/body hair development. Hormonal changes may contribute to thinning or shedding, but individual causes vary.' },
+            { label: 'Skin Condition', description: 'Estrogen and other hormones influence skin structure and moisture. Hormonal changes during menopause may contribute to dryness, while stress hormones can influence oil production and inflammation.' },
             { label: 'Oil Production', description: 'Androgens stimulate sebaceous glands. Teenage boys often have oily skin due to testosterone surge. This affects product recommendations.' },
             { label: 'Pigmentation', description: 'Melanocyte-stimulating hormone affects hair and skin color. Changes can indicate hormonal shifts or health issues.' },
           ],
           facts: [
             { text: '📋 Stress and stress hormones can influence skin and hair, but acne, scalp oiliness, and hair shedding have many possible causes. Barbers should avoid diagnosing a cause and recommend appropriate professional evaluation for persistent or concerning changes.' },
-            { text: '📋 Hormonal changes during pregnancy often make hair thicker and shinier — postpartum, hair may shed excessively. This is normal.' },
+            { text: '📋 Pregnancy and postpartum hormone shifts can change the hair-growth cycle. Some people notice fuller hair during pregnancy and increased shedding after delivery; patterns and severity vary.' },
           ],
         },
       ],
@@ -532,17 +532,17 @@ export const chapter6PremiumContent: ChapterContent = {
         {
           icon: 'Wind',
           title: 'Respiratory System',
-          description: 'Lungs provide oxygen to all cells, including hair follicles. Poor circulation from smoking affects hair quality and growth rate.',
+          description: 'Lungs provide oxygen to all cells, including hair follicles. Smoking can impair circulation and is associated with broader skin and hair health effects.',
         },
         {
           icon: 'Filter',
           title: 'Excretory/Urinary System',
-          description: 'Kidneys filter waste from blood. The kidneys filter wastes from the blood and help regulate fluid and electrolyte balance. Visible skin changes are nonspecific and should not be used by a barber to infer kidney function or diagnose disease.',
+          description: 'Kidneys filter wastes from the blood and help regulate fluid and electrolyte balance. Visible skin changes are nonspecific and should not be used by a barber to infer kidney function or diagnose disease.',
         },
         {
           icon: 'Utensils',
           title: 'Digestive System',
-          description: 'Breaks down food into nutrients. Protein, vitamins, and minerals from diet directly impact hair strength, shine, and growth.',
+          description: 'Breaks down food into nutrients. Adequate protein, vitamins, minerals, and overall nutrition support normal hair growth and structure.',
         },
       ],
     },
@@ -565,7 +565,7 @@ export const chapter6PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'common-mistakes',
       title: '⚠️ COMMON MISTAKES TO AVOID',
-      content: '❌ Confusing arteries and veins — Arteries carry blood AWAY from the heart. Veins RETURN blood to the heart.\n\n❌ Forgetting the 11th system — Students often remember 10 and forget the reproductive system. It counts!\n\n❌ Mixing up cranial nerves — Nerve V (Trigeminal) controls sensation and chewing. Nerve VII (Facial) controls facial expressions. Different functions!\n\n❌ Thinking epidermis has blood vessels — The epidermis has NO blood vessels. Only the dermis does. This is a classic board exam trick question.\n\n❌ Applying pressure to the carotid — Never massage deeply over the carotid artery or vagus nerve area. This can cause dizziness, fainting, or worse.\n\n❌ Confusing muscle types — Striated = voluntary (facial muscles). Smooth = involuntary (blood vessels, arrector pili). Cardiac = only in heart.',
+      content: '❌ Confusing arteries and veins — Arteries carry blood AWAY from the heart. Veins RETURN blood to the heart.\n\n❌ Forgetting the 11th system — Students often remember 10 and forget the reproductive system. It counts!\n\n❌ Mixing up cranial nerves — Nerve V (Trigeminal) controls sensation and chewing. Nerve VII (Facial) controls facial expressions. Different functions!\n\n❌ Thinking the epidermis has blood vessels — The epidermis is avascular. Blood vessels are found in deeper tissues such as the dermis, not within the epidermis itself.\n\n❌ Applying forceful pressure to the neck — Avoid sustained or deep pressure over the carotid area and sensitive neck structures. Stop the service if the client becomes dizzy, faint, or otherwise unwell.\n\n❌ Confusing muscle types — Striated = voluntary (facial muscles). Smooth = involuntary (blood vessels, arrector pili). Cardiac = only in heart.',
       highlight: 'THESE MISTAKES COST POINTS ON THE BOARD EXAM',
     },
 
@@ -576,7 +576,7 @@ export const chapter6PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'remember-this',
       title: '🧠 REMEMBER THIS — KEY MEMORY ANCHORS',
-      content: '🔑 MITOSIS = cell division. All cells reproduce this way.\n\n🔑 4 TISSUE TYPES: Epithelial (covering), Connective (support), Muscular (movement), Nervous (communication)\n\n🔑 11 BODY SYSTEMS: Integumentary, Skeletal, Muscular, Nervous, Endocrine, Cardiovascular, Lymphatic, Respiratory, Digestive, Urinary, Reproductive\n\n🔑 SKULL = 22 bones (8 cranial + 14 facial). Mandible is the ONLY movable facial bone.\n\n🔑 3 MUSCLE TYPES: Striated (voluntary), Smooth (involuntary), Cardiac (heart only)\n\n🔑 NERVOUS SYSTEM: CNS (brain + spinal cord) + PNS (all other nerves)\n\n🔑 CRANIAL NERVE V = Trigeminal (sensation + chewing). CRANIAL NERVE VII = Facial (expressions)\n\n🔑 ARTERIES AWAY, VEINS RETURN — Never compress carotid arteries\n\n🔑 EPIDERMIS = no blood vessels. DERMIS = contains blood vessels, nerves, glands, follicles\n\n🔑 PITUITARY = often called the "master gland" because it regulates several other endocrine glands. ANDROGENS such as testosterone influence facial hair growth.',
+      content: '🔑 MITOSIS = the usual process of somatic cell division used for growth and tissue renewal.\n\n🔑 4 TISSUE TYPES: Epithelial (covering), Connective (support), Muscular (movement), Nervous (communication)\n\n🔑 11 BODY SYSTEMS: Integumentary, Skeletal, Muscular, Nervous, Endocrine, Cardiovascular, Lymphatic, Respiratory, Digestive, Urinary, Reproductive\n\n🔑 SKULL = 22 bones (8 cranial + 14 facial). Mandible is the ONLY movable facial bone.\n\n🔑 3 MUSCLE TYPES: Striated (voluntary), Smooth (involuntary), Cardiac (heart only)\n\n🔑 NERVOUS SYSTEM: CNS (brain + spinal cord) + PNS (all other nerves)\n\n🔑 CRANIAL NERVE V = Trigeminal (sensation + chewing). CRANIAL NERVE VII = Facial (expressions)\n\n🔑 ARTERIES AWAY, VEINS RETURN — Never compress carotid arteries\n\n🔑 EPIDERMIS = no blood vessels. DERMIS = contains blood vessels, nerves, glands, follicles\n\n🔑 PITUITARY = often called the "master gland" because it regulates several other endocrine glands. ANDROGENS such as testosterone influence facial hair growth.',
       highlight: 'HIGH-VALUE REVIEW: MEMORIZE THESE 10 ANCHORS',
     },
 
@@ -592,10 +592,10 @@ export const chapter6PremiumContent: ChapterContent = {
         {
           situation: 'A client complains of dizziness during a hot towel neck massage. They look pale and sweaty.',
           options: [
-            { letter: 'A', text: 'Continue the massage — it is just relaxation', feedback: '❌ Wrong! Dizziness and pallor during neck massage may indicate vagus nerve or carotid stimulation. This can cause fainting.' },
-            { letter: 'B', text: 'Immediately stop, elevate their feet, and ask if they feel nauseous', feedback: '✅ Correct! Stop the service, position the client safely, and assess. Vagus nerve stimulation can cause vasovagal syncope (fainting).' },
+            { letter: 'A', text: 'Continue the massage — it is just relaxation', feedback: '❌ Wrong! Dizziness or pallor is a reason to stop the service and assess the client rather than continuing.' },
+            { letter: 'B', text: 'Immediately stop the service, keep the client safely positioned, and assess how they feel', feedback: '✅ Correct! Stop the service, keep the client safe, assess responsiveness and symptoms, and follow appropriate first-aid or emergency procedures if needed.' },
             { letter: 'C', text: 'Tell them to tough it out — massages sometimes feel intense', feedback: '❌ Never dismiss client discomfort. Dizziness is a physiological warning sign, not a mental weakness.' },
-            { letter: 'D', text: 'Apply more pressure to "work through it"', feedback: '❌ Absolutely dangerous. More pressure on the neck vessels could cause the client to lose consciousness.' },
+            { letter: 'D', text: 'Apply more pressure to "work through it"', feedback: '❌ Unsafe. Do not increase pressure when a client reports or shows concerning symptoms; stop the service and respond appropriately.' },
           ],
           correctAnswer: 'B',
         },
@@ -676,7 +676,7 @@ export const chapter6PremiumContent: ChapterContent = {
     {
       type: 'quote',
       id: 'anatomy-closing-quote',
-      quote: 'The barber who understands the body beneath the hair does not just cut — they heal, they protect, they elevate. Anatomy is not just knowledge for the exam; it is the foundation of every safe, precise, and professional service you will ever provide.',
+      quote: 'The barber who understands the body beneath the hair can work with greater precision, safety, and professional awareness. Anatomy is more than exam knowledge; it supports sound service decisions and appropriate recognition of when to stop or refer.',
     },
   ],
 }
