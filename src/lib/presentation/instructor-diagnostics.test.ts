@@ -191,7 +191,7 @@ describe('summarizeObservation', () => {
     const summary = summarizeObservation(makeEvidence())
     expect(summary).not.toBeNull()
     expect(summary!.stateLabel).toBe('Repeated difficulty')
-    expect(summary!.confidenceLabel).toMatch(/confidence/)
+    expect(summary!.confidenceLabel).toContain('Evidence strength:')
   })
 
   it('routes every Chapter 4 concept family through Chapter 4 detection', () => {
@@ -202,7 +202,7 @@ describe('summarizeObservation', () => {
       }))
       expect(summary).not.toBeNull()
       expect(summary!.stateLabel).toBe('Repeated difficulty')
-      expect(summary!.confidenceLabel).toMatch(/confidence/)
+      expect(summary!.confidenceLabel).toContain('Evidence strength:')
     }
   })
 
@@ -214,7 +214,7 @@ describe('summarizeObservation', () => {
       }))
       expect(summary).not.toBeNull()
       expect(summary!.stateLabel).toBe('Repeated difficulty')
-      expect(summary!.confidenceLabel).toMatch(/confidence/)
+      expect(summary!.confidenceLabel).toContain('Evidence strength:')
     }
   })
 
