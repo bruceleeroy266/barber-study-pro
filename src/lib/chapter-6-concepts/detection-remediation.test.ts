@@ -9,7 +9,8 @@ import {
   chapter6ReassessmentQuestionConceptMappings,
 } from './mappings'
 import { getChapterContentProvider } from '@/lib/remediation/content-provider-registry'
-import { isConceptDetectionSupported, DetectionOrchestratorService, type IDetectionOrchestratorDbClient } from '@/lib/remediation'
+import { DetectionOrchestratorService, type IDetectionOrchestratorDbClient } from '@/lib/remediation'
+import { isConceptDetectionSupported } from '@/lib/remediation/chapter-registry'
 import { createChapter6DetectionProvider } from '@/lib/reassessment/adapters/chapter-6-detection-provider'
 import { createHistoricalExclusionEngine } from '@/lib/reassessment/exclusion-engine'
 import type { QuizAttempt } from '@/types'
