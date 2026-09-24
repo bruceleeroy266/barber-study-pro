@@ -298,7 +298,7 @@ describe('C6-7 final Chapter 6 certification', () => {
     expect(provider).toBeDefined()
 
     for (const familyId of ACTIVE_CHAPTER6_CONCEPT_FAMILY_IDS) {
-      const foreignCardIds = new Set(
+      const foreignCardIds = new Set<string>(
         chapter6FlashcardConceptMappings
           .filter((m) => m.conceptFamilyId !== familyId)
           .map((m) => m.flashcardId),
