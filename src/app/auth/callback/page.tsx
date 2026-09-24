@@ -51,10 +51,10 @@ function CallbackHandler() {
   const isValidFragmentFlow = hasTypeOnly && isSupportedVerificationType(type)
   const shouldCheckAutoSession = hasPkceCode || isValidTokenHashFlow || isValidFragmentFlow
 
-  // SYSTEMIC CORRECTION: Check for auto-established session on page load
-  // Supabase may automatically verify the token when the page loads, establishing
-  // a session before the user clicks Continue. We must detect this and route
-  // appropriately WITHOUT requiring the user to click Continue again.
+  // SYSTEMIC CORRECTION: Establish or detect a session on page load.
+  // Supabase invitation/recovery links can return with access/refresh tokens in
+  // the URL fragment. @supabase/ssr does not guarantee that fragment is consumed
+  // automatically, so explicitly set the session before routing.
   useEffect(() => {
     let cancelled = false
 
@@ -66,18 +66,51 @@ function CallbackHandler() {
       }
 
       try {
-        // Small delay to allow Supabase client to process URL fragment
-        await new Promise(resolve => setTimeout(resolve, 100))
-        
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-        
-        if (cancelled) return
+        let session = null
 
-        if (sessionError || !session) {
-          // No auto-session established - user must click Continue to verify manually
-          setIsCheckingSession(false)
-          return
+        if (typeof window !== 'undefined' && window.location.hash) {
+          const fragment = new URLSearchParams(window.location.hash.replace(/^#/, ''))
+          const accessToken = fragment.get('access_token')
+          const refreshToken = fragment.get('refresh_token')
+
+          if (accessToken && refreshToken) {
+            const { data: sessionData, error: setSessionError } = await supabase.auth.setSession({
+              access_token: accessToken,
+              refresh_token: refreshToken,
+            })
+
+            if (setSessionError) {
+              setError('This invitation link is invalid or expired. Please request a new invitation.')
+              setHasVerificationError(true)
+              setIsCheckingSession(false)
+              return
+            }
+
+            session = sessionData.session
+
+            // Remove tokens from the visible URL once they have been consumed.
+            window.history.replaceState(
+              null,
+              '',
+              `${window.location.pathname}${window.location.search}`
+            )
+          }
         }
+
+        if (!session) {
+          const { data, error: sessionError } = await supabase.auth.getSession()
+
+          if (cancelled) return
+
+          if (sessionError || !data.session) {
+            setIsCheckingSession(false)
+            return
+          }
+
+          session = data.session
+        }
+
+        if (cancelled) return
 
         // Auto-session detected! Route based on flow type
         setAutoSessionDetected(true)
