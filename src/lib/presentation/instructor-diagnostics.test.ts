@@ -20,11 +20,13 @@ import {
   buildTriggerReason,
   buildCoachingRecommendation,
   buildKnowledgeCheckTally,
+  translateStoredDetectionSummary,
 } from './instructor-diagnostics'
 import { ACTIVE_CONCEPT_IDS } from '@/lib/chapter-2-concepts/concepts'
 import { chapter3ConceptFamilies } from '@/lib/chapter-3-concepts/concepts'
 import { chapter4ConceptFamilies } from '@/lib/chapter-4-concepts/concepts'
 import { chapter5ConceptFamilies } from '@/lib/chapter-5-concepts/concepts'
+import { chapter6ConceptFamilies } from '@/lib/chapter-6-concepts/concepts'
 import type { ConceptEvidence } from '@/lib/concept-detection/engine'
 
 function makeEvidence(overrides: Partial<ConceptEvidence> = {}): ConceptEvidence {
@@ -78,6 +80,15 @@ describe('resolveConceptName', () => {
     }
   })
 
+  it('resolves all ten Chapter 6 anatomy/physiology concept families to canonical names', () => {
+    expect(chapter6ConceptFamilies).toHaveLength(10)
+    for (const family of chapter6ConceptFamilies) {
+      expect(resolveConceptName(family.id)).toBe(family.name)
+      expect(resolveConceptName(family.id)).not.toContain('Unknown concept')
+      expect(resolveConceptName(family.id)).not.toContain(family.id)
+    }
+  })
+
   it('marks the retired concept explicitly', () => {
     expect(resolveConceptName('C-2-22')).toContain('retired concept')
   })
@@ -121,9 +132,9 @@ describe('translateDetectionState', () => {
 
 describe('translateConfidence', () => {
   it('translates all three levels exactly', () => {
-    expect(translateConfidence('low')).toBe('low confidence — limited observations')
-    expect(translateConfidence('medium')).toBe('moderate confidence')
-    expect(translateConfidence('high')).toBe('high confidence — consistent pattern')
+    expect(translateConfidence('low')).toBe('Evidence strength: limited — few observations')
+    expect(translateConfidence('medium')).toBe('Evidence strength: moderate')
+    expect(translateConfidence('high')).toBe('Evidence strength: strong — consistent pattern')
   })
 })
 
@@ -203,6 +214,19 @@ describe('summarizeObservation', () => {
     }
   })
 
+  it('routes every Chapter 6 concept family through Chapter 6 detection', () => {
+    for (const family of chapter6ConceptFamilies) {
+      const summary = summarizeObservation(makeEvidence({
+        conceptId: family.id,
+        learningObjectiveId: family.learningObjectiveId,
+      }))
+      expect(summary).not.toBeNull()
+      expect(summary!.stateLabel).toBe('Repeated difficulty')
+      expect(summary!.confidenceLabel).toContain('Evidence strength:')
+      expect(summary!.confidenceLabel).not.toContain('high confidence')
+    }
+  })
+
   it('keeps Chapter 3 diagnostic routing working', () => {
     const family = chapter3ConceptFamilies[0]
     const summary = summarizeObservation(makeEvidence({
@@ -219,6 +243,19 @@ describe('summarizeObservation', () => {
 
   it('returns null for missing evidence', () => {
     expect(summarizeObservation(null)).toBeNull()
+  })
+})
+
+describe('translateStoredDetectionSummary', () => {
+  it('translates persisted engine states without exposing raw identifiers', () => {
+    expect(translateStoredDetectionSummary('repeated_weakness')).toBe('Repeated difficulty')
+    expect(translateStoredDetectionSummary('currently_performing_well')).toBe('Performing well')
+    expect(translateStoredDetectionSummary('emerging_weakness')).toBe('Early signs of difficulty')
+    expect(translateStoredDetectionSummary(null)).toBeNull()
+  })
+
+  it('fails closed to a neutral label for unknown stored states', () => {
+    expect(translateStoredDetectionSummary('future_internal_state')).toBe('Outcome recorded')
   })
 })
 
@@ -244,6 +281,17 @@ describe('buildCoachingRecommendation', () => {
       expect(rec.chapterGuidance).toContain('Chapter 4')
       expect(rec.chapterGuidance).toContain('infection-control')
       expect(rec.chapterGuidance).toContain('Knowledge Check')
+      expect(rec.enrichmentNote).toBeNull()
+    }
+  })
+
+  it('builds concept-specific Chapter 6 coaching for all ten families without diagnostic overreach', () => {
+    for (const family of chapter6ConceptFamilies) {
+      const rec = buildCoachingRecommendation(family.id)
+      expect(rec.confusions).toEqual([{ topic: family.name, clarification: family.description }])
+      expect(rec.chapterGuidance).toContain('Chapter 6')
+      expect(rec.chapterGuidance).toContain('Knowledge Check')
+      expect(rec.chapterGuidance).toContain('without diagnosing')
       expect(rec.enrichmentNote).toBeNull()
     }
   })
