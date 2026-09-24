@@ -683,7 +683,8 @@ export async function inviteUser(formData: InviteUserFormData): Promise<ActionRe
     return { success: false, error: 'School admins cannot create administrator accounts' }
   }
 
-  // Validate school assignment.
+  // Validate school assignment and capture school context for the invitation.
+  let invitationSchoolName = 'ASCYN PRO'
   if (formData.school_id) {
     if (!admin.isPlatformAdmin && formData.school_id !== admin.schoolId) {
       return { success: false, error: 'Cannot assign user to a different school' }
@@ -693,7 +694,7 @@ export async function inviteUser(formData: InviteUserFormData): Promise<ActionRe
     const serviceClientForValidation = createServiceRoleClient()
     const { data: school, error: schoolError } = await serviceClientForValidation
       .from('schools')
-      .select('id, is_active, deleted_at')
+      .select('id, name, is_active, deleted_at')
       .eq('id', formData.school_id)
       .single()
 
@@ -703,6 +704,7 @@ export async function inviteUser(formData: InviteUserFormData): Promise<ActionRe
     if (!school.is_active || school.deleted_at) {
       return { success: false, error: 'School is not active' }
     }
+    invitationSchoolName = school.name || 'Your school'
   }
 
   const serviceClient = createServiceRoleClient()
@@ -796,6 +798,14 @@ export async function inviteUser(formData: InviteUserFormData): Promise<ActionRe
       data: {
         full_name: formData.full_name,
         role: formData.role,
+        app_name: 'ASCYN PRO',
+        school_name: invitationSchoolName,
+        role_label: formData.role === 'instructor' ? 'Instructor' : formData.role === 'student' ? 'Student' : 'ASCYN PRO user',
+        next_step: formData.role === 'instructor'
+          ? 'Create your password, then review your student roster and learning-gap dashboard.'
+          : formData.role === 'student'
+            ? 'Create your password, accept the beta agreement, then complete your onboarding checklist.'
+            : 'Create your password, then continue to your ASCYN PRO portal.',
       },
     }
   )

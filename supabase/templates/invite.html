@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <body style="margin:0;padding:0;background:#0a0a0a;font-family:Arial,Helvetica,sans-serif;color:#ffffff;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#0a0a0a;padding:32px 16px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:600px;background:#171717;border:1px solid #333333;border-radius:16px;padding:32px;">
+            <tr>
+              <td>
+                <p style="margin:0 0 8px;color:#d4af37;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">ASCYN PRO</p>
+                <h1 style="margin:0 0 16px;font-size:26px;line-height:1.25;color:#ffffff;">You’ve been invited to ASCYN PRO</h1>
+                <p style="margin:0 0 16px;color:#d1d5db;line-height:1.6;">Hello {{ .Data.full_name }},</p>
+                <p style="margin:0 0 16px;color:#d1d5db;line-height:1.6;">
+                  {{ .Data.school_name }} has invited you to ASCYN PRO as <strong style="color:#ffffff;">{{ .Data.role_label }}</strong>.
+                </p>
+                <p style="margin:0 0 24px;color:#d1d5db;line-height:1.6;">{{ .Data.next_step }}</p>
+                <p style="margin:0 0 24px;">
+                  <a href="{{ .ConfirmationURL }}" style="display:inline-block;background:#d4af37;color:#000000;text-decoration:none;font-weight:700;padding:12px 20px;border-radius:10px;">Activate ASCYN PRO Account</a>
+                </p>
+                <p style="margin:0;color:#9ca3af;font-size:13px;line-height:1.5;">
+                  If you were not expecting this invitation, you can ignore this email or contact your school administrator.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
