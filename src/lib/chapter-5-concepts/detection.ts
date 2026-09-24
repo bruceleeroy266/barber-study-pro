@@ -9,8 +9,9 @@
 
 import type { Chapter5ConceptFamilyId, Chapter5LearningObjectiveId } from './types'
 import { chapter5ConceptFamilies } from './concepts'
-import { chapter5QuizQuestionConceptMappings } from './mappings'
+import { chapter5QuizQuestionConceptMappings, chapter5ReassessmentQuestionConceptMappings } from './mappings'
 import { chapter5PremiumQuizQuestions } from '../chapter-5-premium-quiz'
+import { chapter5ReassessmentQuestions } from '../chapter-5-reassessment-questions'
 import type { QuizAttempt } from '@/types'
 import * as engine from '../concept-detection/engine'
 
@@ -38,13 +39,13 @@ export type LearningObjectiveDetectionResult =
   >
 
 const chapter5QuestionMappings: readonly engine.DetectionQuestionMapping<Chapter5ConceptFamilyId>[] =
-  chapter5QuizQuestionConceptMappings.map((mapping) => ({
+  [...chapter5QuizQuestionConceptMappings, ...chapter5ReassessmentQuestionConceptMappings].map((mapping) => ({
     questionId: mapping.questionId,
     conceptId: mapping.conceptFamilyId,
   }))
 
 const questionCorrectAnswerMap: ReadonlyMap<string, string> = new Map(
-  chapter5PremiumQuizQuestions.map((question) => [
+  [...chapter5PremiumQuizQuestions, ...chapter5ReassessmentQuestions].map((question) => [
     question.id,
     question.correct_answer,
   ]),
