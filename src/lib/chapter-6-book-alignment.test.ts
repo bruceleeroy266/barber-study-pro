@@ -44,7 +44,7 @@ describe('C6-8 source-book alignment', () => {
       'Greater Occipital Nerve',
       'Greater Auricular Nerve',
       'Submental',
-      'Superior & Inferior Labial',
+      'Inferior & Superior Labial',
       'Supraorbital',
       'Endocrine',
       'Exocrine',
