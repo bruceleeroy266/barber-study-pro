@@ -19,7 +19,8 @@ import type {
 } from '@/lib/reassessment/types'
 import { chapter6PremiumContent } from '@/lib/chapter-6-premium'
 import { chapter6PremiumFlashcards } from '@/lib/chapter-6-premium-flashcards'
-import { getLocalFlashcards } from '@/lib/local-data'
+import { getLocalFlashcards, getLocalQuiz, getLocalQuizQuestions } from '@/lib/local-data'
+import { getChapterContent } from '@/lib/chapter-content'
 import { chapter6PremiumQuizQuestions } from '@/lib/chapter-6-premium-quiz'
 import { chapter6ReassessmentQuestions } from '@/lib/chapter-6-reassessment-questions'
 import {
@@ -253,8 +254,19 @@ describe('C6-7 final Chapter 6 certification', () => {
     }
   })
 
-  it('serves the canonical 105-card deck to the normal student Chapter 6 page', () => {
+  it('serves the certified lesson, 105-card deck, and 50-question quiz through the normal student path', () => {
+    const content = getChapterContent(6)
+    const quiz = getLocalQuiz('ch-6')
+    const questions = quiz ? getLocalQuizQuestions(quiz.id) : []
     const served = getLocalFlashcards('ch-6')
+
+    expect(content).toBe(chapter6PremiumContent)
+    expect(quiz?.id).toBe('quiz-6')
+    expect(quiz?.passing_score).toBe(80)
+    expect(questions).toHaveLength(50)
+    expect(questions.map((question) => question.id)).toEqual(
+      chapter6PremiumQuizQuestions.map((question) => question.id),
+    )
     expect(served).toHaveLength(105)
     expect(served.map((card) => card.id)).toEqual(chapter6PremiumFlashcards.map((card) => card.id))
     expect(served.map((card) => card.front)).toEqual(chapter6PremiumFlashcards.map((card) => card.front))
