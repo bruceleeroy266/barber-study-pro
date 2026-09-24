@@ -72,10 +72,10 @@ describe('C4 30-question Milady + NIC quiz hardening', () => {
     const expectedCounts = {
       'ch4-pathogens-transmission': 8,
       'ch4-disinfection-sterilization': 6,
-      'ch4-cross-contamination': 2,
+      'ch4-cross-contamination': 3,
       'ch4-blood-exposure-ppe': 4,
       'ch4-regulatory-chemical-safety': 4,
-      'ch4-safe-practice-compliance': 6,
+      'ch4-safe-practice-compliance': 5,
     }
     const actual = Object.fromEntries(
       Object.keys(expectedCounts).map((family) => [
@@ -90,6 +90,7 @@ describe('C4 30-question Milady + NIC quiz hardening', () => {
     expect(byId.get('qq-4-013')).toBe('ch4-pathogens-transmission')
     expect(byId.get('qq-4-015')).toBe('ch4-pathogens-transmission')
     expect(byId.get('qq-4-020')).toBe('ch4-safe-practice-compliance')
+    expect(byId.get('qq-4-030')).toBe('ch4-cross-contamination')
   })
 
   it('keeps stems unique and removes previously rejected source-conflict claims', () => {
