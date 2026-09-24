@@ -19,10 +19,10 @@ import { chapter4PremiumContent } from '@/lib/chapter-4-premium'
 import { chapter4ReassessmentQuestions } from '@/lib/chapter-4-reassessment-questions'
 
 const expectedConceptCounts = {
-  'ch4-pathogens-transmission': { flashcards: 17, quiz: 5 },
+  'ch4-pathogens-transmission': { flashcards: 17, quiz: 8 },
   'ch4-disinfection-sterilization': { flashcards: 13, quiz: 6 },
-  'ch4-cross-contamination': { flashcards: 8, quiz: 5 },
-  'ch4-blood-exposure-ppe': { flashcards: 9, quiz: 5 },
+  'ch4-cross-contamination': { flashcards: 8, quiz: 3 },
+  'ch4-blood-exposure-ppe': { flashcards: 9, quiz: 4 },
   'ch4-regulatory-chemical-safety': { flashcards: 9, quiz: 4 },
   'ch4-safe-practice-compliance': { flashcards: 14, quiz: 5 },
 } as const
@@ -109,15 +109,15 @@ describe('Chapter 4 content foundation integrity', () => {
     }
   })
 
-  it('locks initial-assessment difficulty at 12 easy, 12 medium, and 6 hard', () => {
+  it('locks the hardened initial-assessment difficulty distribution', () => {
     const counts = chapter4PremiumQuizQuestions.reduce<Record<string, number>>((acc, question) => {
       acc[question.difficulty] = (acc[question.difficulty] ?? 0) + 1
       return acc
     }, {})
-    expect(counts).toEqual({ easy: 12, medium: 12, hard: 6 })
+    expect(counts).toEqual({ easy: 3, medium: 7, hard: 20 })
   })
 
-  it('maps every quiz question exactly once with no orphans and the locked 5/6/5/5/4/5 distribution', () => {
+  it('maps every quiz question exactly once with no orphans and the book-aligned distribution', () => {
     expect(chapter4QuizQuestionConceptMappings).toHaveLength(30)
     expect(new Set(chapter4QuizQuestionConceptMappings.map((mapping) => mapping.questionId)).size).toBe(30)
 
