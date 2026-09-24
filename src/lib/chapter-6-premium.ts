@@ -234,7 +234,7 @@ export const chapter6PremiumContent: ChapterContent = {
         {
           icon: 'Utensils',
           title: 'Digestive',
-          description: 'Breaks down food for energy. Nutrition directly impacts hair quality and skin health.',
+          description: 'Breaks down food so nutrients can be absorbed and used by the body. Overall nutrition supports normal hair and skin structure and function.',
         },
         {
           icon: 'Filter',
@@ -532,7 +532,7 @@ export const chapter6PremiumContent: ChapterContent = {
         {
           icon: 'Wind',
           title: 'Respiratory System',
-          description: 'Lungs provide oxygen to all cells, including hair follicles. Smoking can impair circulation and is associated with broader skin and hair health effects.',
+          description: 'The respiratory system brings oxygen into the body, and the cardiovascular system transports that oxygen to tissues, including hair follicles. Smoking can impair circulation and is associated with broader skin and hair health effects.',
         },
         {
           icon: 'Filter',
