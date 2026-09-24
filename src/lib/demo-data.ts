@@ -208,7 +208,7 @@ if (batch1Flashcards['ch-5'] && batch1Flashcards['ch-5'].length > 0) {
 
 // Chapter 6: Replace placeholder with orphaned
 // Chapter 6 is served from chapter-6-premium-flashcards via realFlashcards.
-// Do not replace its canonical fc-6-001..105 IDs with legacy fc-6o-* cards.
+// Do not replace its canonical fc-6-001..125 IDs with legacy fc-6o-* cards.
 
 // Chapter 7: Already loaded from real flashcards above (ch-7 premium)
 
