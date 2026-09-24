@@ -518,7 +518,7 @@ function getSiteUrl(): string {
   return configuredSiteUrl || 'http://localhost:3000'
 }
 
-type InviteUserResult = { id: string; recoverySent?: boolean }
+type InviteUserResult = { id: string; recoverySent?: boolean; alreadyInvited?: boolean }
 
 const INVITATION_LIFECYCLE_ROLES = new Set<AppRole>(['school_admin', 'instructor', 'student'])
 
@@ -753,11 +753,10 @@ export async function inviteUser(formData: InviteUserFormData): Promise<ActionRe
       return { success: false, error: 'This account was rejected. Change its approval status before sending a new setup link.' }
     }
 
-    const recoveryResult = await sendAccountRecoveryEmail(serviceClient, normalizedEmail)
-    if (!recoveryResult.success) {
-      return { success: false, error: recoveryResult.error }
-    }
-
+    // A repeated invite submission must be idempotent. Do not send a recovery
+    // email from the invite action; explicit setup-link recovery is handled by
+    // resendUserSetupLink(). This prevents an accidental second submit from
+    // delivering both an invite and a password-reset email.
     const lifecycleResult = await ensurePendingInvitationLifecycle(serviceClient, admin, {
       authUserId: existingAuthUser.id,
       email: normalizedEmail,
@@ -773,13 +772,13 @@ export async function inviteUser(formData: InviteUserFormData): Promise<ActionRe
       admin,
       existingAuthUser.id,
       normalizedEmail,
-      'recover_existing_invitation',
+      'ignore_duplicate_invitation',
       {},
-      { delivery: 'recovery_email', role: existingProfile.role, school_id: existingSchoolId },
+      { delivery: 'none', role: existingProfile.role, school_id: existingSchoolId },
       existingSchoolId
     )
 
-    return { success: true, data: { id: existingAuthUser.id, recoverySent: true } }
+    return { success: true, data: { id: existingAuthUser.id, alreadyInvited: true } }
   }
 
   // Note: we intentionally do not reject here if a profile row with the same
@@ -800,12 +799,24 @@ export async function inviteUser(formData: InviteUserFormData): Promise<ActionRe
         role: formData.role,
         app_name: 'ASCYN PRO',
         school_name: invitationSchoolName,
-        role_label: formData.role === 'instructor' ? 'Instructor' : formData.role === 'student' ? 'Student' : 'ASCYN PRO user',
-        next_step: formData.role === 'instructor'
-          ? 'Create your password, then review your student roster and learning-gap dashboard.'
-          : formData.role === 'student'
-            ? 'Create your password, accept the beta agreement, then complete your onboarding checklist.'
-            : 'Create your password, then continue to your ASCYN PRO portal.',
+        role_label: formData.role === 'school_admin'
+          ? 'School Administrator'
+          : formData.role === 'instructor'
+            ? 'Instructor'
+            : formData.role === 'student'
+              ? 'Student'
+              : formData.role === 'apprentice'
+                ? 'Apprentice'
+                : formData.role === 'admin'
+                  ? 'Platform Administrator'
+                  : 'ASCYN PRO user',
+        next_step: formData.role === 'school_admin'
+          ? 'Create your password, then invite your instructor and students, enroll students, and begin your pilot.'
+          : formData.role === 'instructor'
+            ? 'Create your password, then review your student roster and learning-gap dashboard.'
+            : formData.role === 'student'
+              ? 'Create your password, accept the beta agreement, then complete your onboarding checklist.'
+              : 'Create your password, then continue to your ASCYN PRO portal.',
       },
     }
   )
