@@ -90,7 +90,7 @@ const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jet
 
 ---
 
-## 5. Inline style={{ fontSize: ... }} in React Components
+## 5. Inline style={ { fontSize: ... }} in React Components
 
 **Status:** ✅ COMPLIANT
 
@@ -101,7 +101,7 @@ const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jet
 | `tests/e2e/instructor/responsive-validation.spec.ts` | Test assertion (`fontSize` check) | INTENTIONAL — test code | INFO |
 | `tests/e2e/student/responsive-testing.spec.ts` | Test assertion (`fontSize` check) | INTENTIONAL — test code | INFO |
 
-**No inline `style={{ fontSize: ... }}` found in any React component.** The only occurrences are in PDF generation, design token re-exports, and test assertions — all documented exceptions.
+**No inline `style={ { fontSize: ... }}` found in any React component.** The only occurrences are in PDF generation, design token re-exports, and test assertions — all documented exceptions.
 
 ---
 
