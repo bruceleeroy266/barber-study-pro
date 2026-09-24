@@ -43,41 +43,41 @@ const families: readonly Family[] = [
   {
     name: 'Skeletal System',
     facts: [
-      { cue:'movable facial bone', correct:'The mandible is the movable lower jaw.', distractors:['The maxilla is the movable lower jaw.','The zygomatic bone opens and closes the mouth.','The frontal bone moves during chewing.'] },
-      { cue:'cheekbone landmark', correct:'The zygomatic bone forms the cheek prominence.', distractors:['The occipital bone forms the cheek prominence.','The parietal bone forms the upper jaw.','The nasal bone forms the jaw angle.'] },
-      { cue:'posterior skull landmark', correct:'The occipital bone forms the back of the skull.', distractors:['The frontal bone forms the back of the skull.','The maxilla forms the posterior skull.','The zygomatic bone forms the nape landmark.'] },
+      { cue:'upper-arm bone', correct:'The humerus extends from the shoulder to the elbow.', distractors:['The radius is the upper-arm bone.','The ulna forms the upper arm from shoulder to elbow.','The metacarpals form the upper arm.'] },
+      { cue:'forearm bone orientation', correct:'The radius is on the thumb side and the ulna is on the little-finger side.', distractors:['The ulna is on the thumb side and radius is on the little-finger side.','Both radius and ulna are wrist bones.','The radius and ulna are facial bones.'] },
+      { cue:'wrist-palm-finger sequence', correct:'Carpals form the wrist, metacarpals form the palm, and phalanges form the fingers.', distractors:['Metacarpals form the wrist and carpals form the fingers.','Phalanges form the palm and humerus forms the wrist.','Ulna forms the palm and radius forms the fingers.'] },
+      { cue:'hyoid location', correct:'The hyoid is a U-shaped bone at the base of the tongue.', distractors:['The hyoid is the movable lower jaw.','The hyoid forms the forehead.','The hyoid is one of the wrist bones.'] },
       { cue:'adult spinal-column count convention', correct:'The adult spinal column is described as 26 bones because sacrum and coccyx are fused.', distractors:['Every adult has 33 separate spinal bones.','The adult spinal column contains only 24 bones total.','The cervical region is excluded from the spinal column.'] },
-      { cue:'neck support', correct:'The cervical region is the spinal region most directly involved in neck support.', distractors:['The coccyx is the main neck-support region.','The lumbar region is located in the neck.','The sacrum supports the head directly.'] },
     ],
   },
   {
     name: 'Muscular System',
     facts: [
-      { cue:'jaw clenching', correct:'The masseter is a major jaw-closing muscle.', distractors:['The frontalis is a major jaw-closing muscle.','The orbicularis oculi closes the jaw.','The platysma is the primary chewing muscle.'] },
-      { cue:'head rotation and neck flexion', correct:'The sternocleidomastoid rotates and flexes the head and neck.', distractors:['The buccinator rotates the head.','The orbicularis oris flexes the neck.','The frontalis is the main neck rotator.'] },
-      { cue:'epicranial aponeurosis', correct:'The epicranial aponeurosis is a fibrous tendon connecting frontalis and occipitalis.', distractors:['It is a fourth scalp muscle.','It is a facial bone.','It is a cranial nerve branch.'] },
-      { cue:'goosebumps', correct:'Arrector pili are smooth involuntary muscles.', distractors:['Arrector pili are cardiac muscles.','Arrector pili are voluntary skeletal muscles.','Arrector pili are sensory nerves.'] },
-      { cue:'cardiac muscle', correct:'Cardiac muscle is involuntary striated muscle found in the heart.', distractors:['Cardiac muscle is voluntary muscle attached to bone.','Cardiac muscle is smooth muscle in vessel walls.','Cardiac muscle surrounds hair follicles.'] },
+      { cue:'muscle origin and insertion', correct:'The origin is relatively fixed while the insertion moves during contraction.', distractors:['The insertion is always fixed while the origin moves.','Origin and insertion are names for two muscle types.','The belly is the only attachment point of a muscle.'] },
+      { cue:'biceps and triceps', correct:'Biceps helps flex the elbow while triceps extends the forearm.', distractors:['Biceps extends the forearm and triceps flexes the jaw.','Both biceps and triceps are facial muscles.','Triceps pronates the palm while biceps closes the eyelid.'] },
+      { cue:'pronation and supination', correct:'Pronators turn the palm inward/downward; supinators turn it upward/outward.', distractors:['Pronators raise the eyebrow; supinators close the jaw.','Pronation and supination are types of cardiac contraction.','Supinators turn the palm down while pronators turn it up.'] },
+      { cue:'deltoid function', correct:'The deltoid covers the shoulder joint and helps move the arm outward from the body.', distractors:['The deltoid is the major jaw-closing muscle.','The deltoid surrounds the eye.','The deltoid is a smooth muscle of the digestive tract.'] },
+      { cue:'three muscle types', correct:'Skeletal/striated, smooth/nonstriated, and cardiac are the three major muscle types.', distractors:['Epithelial, connective, and nervous are the three muscle types.','Voluntary, endocrine, and cardiac are the three muscle types.','Facial, cervical, and cardiac are the three muscle types.'] },
     ],
   },
   {
     name: 'Nervous System',
     facts: [
-      { cue:'central nervous system', correct:'The CNS consists of the brain and spinal cord.', distractors:['The CNS consists only of cranial nerves.','The CNS is the heart and blood vessels.','The CNS is the skin and sensory receptors only.'] },
-      { cue:'sensory direction', correct:'Sensory or afferent signals travel toward the CNS.', distractors:['Sensory signals travel only away from the CNS.','Sensory signals go directly to endocrine glands only.','Sensory signals originate in the heart.'] },
       { cue:'facial sensation versus expression', correct:'Trigeminal nerve V is strongly associated with facial sensation; facial nerve VII with facial expression.', distractors:['Facial nerve VII carries all facial sensation and V controls hearing.','V and VII have identical functions.','Neither V nor VII relates to the face.'] },
-      { cue:'dizziness during forceful neck work', correct:'Stop the service, position the client safely, assess, and follow first-aid or emergency procedures as needed.', distractors:['Increase pressure until symptoms resolve.','Diagnose vagus-nerve stimulation.','Continue the service if the client prefers.'] },
-      { cue:'neuron signal direction', correct:'Dendrites generally receive toward the cell body; the axon carries signals away.', distractors:['Axons receive all signals and dendrites send them away.','Dendrites and axons have no signal-direction roles.','Both structures are endocrine glands.'] },
+      { cue:'facial nerve temporal branch', correct:'The temporal branch of the facial nerve serves muscles in the temple and forehead region.', distractors:['The temporal branch is a vein that drains the neck.','The temporal branch is the main sensory nerve of the fingers.','The temporal branch supplies only the lower leg.'] },
+      { cue:'facial nerve buccal branch', correct:'The buccal branch of the facial nerve serves muscles around the mouth and cheek.', distractors:['The buccal branch supplies the posterior scalp.','The buccal branch is a branch of the carotid artery.','The buccal branch controls the shoulder joint.'] },
+      { cue:'greater occipital nerve', correct:'The greater occipital nerve supplies much of the posterior scalp and reaches toward the top of the head.', distractors:['The greater occipital nerve supplies only the lower lip.','The greater occipital nerve is an endocrine gland.','The greater occipital nerve is the main motor nerve of the forearm.'] },
+      { cue:'sensory and motor direction', correct:'Sensory signals travel toward the CNS while motor signals travel outward toward muscles or glands.', distractors:['Sensory and motor signals both travel only toward the heart.','Motor signals travel toward the CNS while sensory signals always travel away.','Both pathways are part of the endocrine system.'] },
     ],
   },
   {
     name: 'Cardiovascular System',
     facts: [
       { cue:'artery versus vein rule', correct:'Arteries carry blood away from the heart; veins return blood toward the heart.', distractors:['Arteries always carry oxygenated blood and veins always carry deoxygenated blood.','Arteries exist only in the head and veins only in the neck.','Veins pump blood while arteries filter it.'] },
-      { cue:'pulmonary exception', correct:'Direction relative to the heart is more reliable than oxygen content because pulmonary vessels are exceptions.', distractors:['Pulmonary vessels follow the same oxygen shortcut without exception.','Oxygen content defines vessel type more reliably than direction.','Pulmonary circulation contains no arteries.'] },
-      { cue:'carotid-area service safety', correct:'Avoid sustained or forceful pressure over the carotid area.', distractors:['Use deep sustained pressure to improve circulation.','Compress both sides of the neck to assess pulse strength.','Massage the area until dizziness stops.'] },
-      { cue:'capillary function', correct:'Capillaries are primary exchange sites between blood and tissues.', distractors:['Capillaries pump blood from the heart.','Capillaries produce sebum.','Capillaries are the largest veins.'] },
-      { cue:'living scalp tissue support', correct:'Circulation delivers oxygen and nutrients to living tissues and carries wastes away.', distractors:['Hair shafts receive oxygen directly from the lungs.','Sebum transports oxygen to follicles.','The epidermis contains large blood vessels.'] },
+      { cue:'blood functions', correct:'Blood transports materials, helps regulate temperature, supports defense, and participates in clotting.', distractors:['Blood only carries oxygen and has no other major functions.','Blood produces sebum and hair pigment.','Blood is part of the skeletal system.'] },
+      { cue:'submental artery territory', correct:'The submental artery supplies the chin and lower-lip region.', distractors:['The submental artery supplies only the forehead.','The submental artery supplies the crown of the scalp.','The submental artery is a jugular vein.'] },
+      { cue:'labial artery territories', correct:'Superior labial supplies the upper lip; inferior labial supplies the lower lip.', distractors:['Superior labial supplies the lower lip while inferior labial supplies the forehead.','Both labial arteries supply only the ear.','Labial arteries are veins that drain the scalp.'] },
+      { cue:'jugular vein distinction', correct:'Internal jugular drains deeper brain/face/neck regions while external jugular drains more superficial head/face/neck regions.', distractors:['Internal and external jugular veins are arteries.','Both jugular veins carry blood away from the heart.','The external jugular drains only the lower leg.'] },
     ],
   },
   {
@@ -103,11 +103,11 @@ const families: readonly Family[] = [
   {
     name: 'Endocrine System',
     facts: [
+      { cue:'endocrine versus exocrine glands', correct:'Endocrine glands are ductless and release hormones into blood; exocrine glands use ducts to deliver products.', distractors:['Endocrine glands use ducts while exocrine glands release hormones into blood.','Both gland types are identical except for size.','Sweat glands are endocrine because they affect skin.'] },
+      { cue:'hormone definition', correct:'Hormones are chemical secretions that influence activity in target tissues or organs.', distractors:['Hormones are bones that support glands.','Hormones are only skin oils.','Hormones are another name for lymph nodes.'] },
       { cue:'pituitary scope', correct:'The pituitary regulates several other endocrine glands but does not control every endocrine gland.', distractors:['The pituitary directly controls every endocrine gland.','The pituitary is a sweat gland.','The pituitary produces sebum.'] },
       { cue:'thyroid and hair changes', correct:'Thyroid disorders can be associated with hair changes, but a barber should not diagnose the cause.', distractors:['Hair thinning proves thyroid disease.','Thyroid hormones never affect hair.','A barber should recommend thyroid medication.'] },
-      { cue:'androgens', correct:'Androgens can influence facial-hair development and sebaceous activity, with individual variation.', distractors:['Androgens guarantee identical beard growth in everyone.','Androgens are produced only by the pituitary.','Androgens have no relationship to hair or skin.'] },
-      { cue:'pancreas hormones', correct:'The pancreas produces insulin and glucagon.', distractors:['The pancreas produces sebum only.','The pancreas produces melanin only.','The pancreas produces testosterone only.'] },
-      { cue:'puberty-related oiliness', correct:'Hormonal changes can increase sebaceous activity, but oiliness varies and should not be diagnosed as a disorder.', distractors:['Poor hygiene is always the cause.','Oiliness proves an endocrine disease.','The lymphatic system produces facial oil.'] },
+      { cue:'exocrine barber examples', correct:'Sweat and sebaceous glands are exocrine because their products travel through ducts.', distractors:['Sweat and sebaceous glands are endocrine because they are in skin.','The pituitary and thyroid are exocrine skin glands.','Only the pancreas is an exocrine gland.'] },
     ],
   },
   {
