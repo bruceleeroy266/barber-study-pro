@@ -19,6 +19,7 @@ import type {
 } from '@/lib/reassessment/types'
 import { chapter6PremiumContent } from '@/lib/chapter-6-premium'
 import { chapter6PremiumFlashcards } from '@/lib/chapter-6-premium-flashcards'
+import { getLocalFlashcards } from '@/lib/local-data'
 import { chapter6PremiumQuizQuestions } from '@/lib/chapter-6-premium-quiz'
 import { chapter6ReassessmentQuestions } from '@/lib/chapter-6-reassessment-questions'
 import {
@@ -237,6 +238,15 @@ describe('C6-7 final Chapter 6 certification', () => {
       expect(initial.every((m) => initialIds.includes(m.questionId))).toBe(true)
       expect(reserve.every((m) => reserveIds.includes(m.questionId))).toBe(true)
     }
+  })
+
+  it('serves the canonical 105-card deck to the normal student Chapter 6 page', () => {
+    const served = getLocalFlashcards('ch-6')
+    expect(served).toHaveLength(105)
+    expect(served.map((card) => card.id)).toEqual(chapter6PremiumFlashcards.map((card) => card.id))
+    expect(served.map((card) => card.front)).toEqual(chapter6PremiumFlashcards.map((card) => card.front))
+    expect(served.every((card) => /^fc-6-\d{3}$/.test(card.id))).toBe(true)
+    expect(served.some((card) => card.id.startsWith('fc-6o-'))).toBe(false)
   })
 
   it('keeps both assessment banks difficult, complete, strategy-guided, and internally unique', () => {
