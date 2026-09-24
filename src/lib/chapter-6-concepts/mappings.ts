@@ -8,13 +8,13 @@ const cb=(ids:string[],conceptFamilyId:Chapter6ConceptFamilyId):Chapter6ContentC
 export const chapter6ContentConceptMappings:readonly Chapter6ContentConceptMapping[]=[
   ...cb(['cells-tissues'],'ch6-cells-tissues'),
   ...cb(['body-systems'],'ch6-body-systems'),
-  ...cb(['skeletal-system'],'ch6-skeletal'),
-  ...cb(['muscular-system'],'ch6-muscular'),
-  ...cb(['nervous-system'],'ch6-nervous'),
-  ...cb(['circulatory-system'],'ch6-cardiovascular'),
+  ...cb(['skeletal-system','skeletal-upper-body'],'ch6-skeletal'),
+  ...cb(['muscular-system','muscular-upper-body'],'ch6-muscular'),
+  ...cb(['nervous-system','nervous-head-neck-branches'],'ch6-nervous'),
+  ...cb(['circulatory-system','cardiovascular-detail'],'ch6-cardiovascular'),
   ...cb(['lymphatic-system'],'ch6-lymphatic'),
   ...cb(['integumentary-system'],'ch6-integumentary'),
-  ...cb(['endocrine-system'],'ch6-endocrine'),
+  ...cb(['endocrine-system','endocrine-exocrine'],'ch6-endocrine'),
   ...cb(['other-systems'],'ch6-other-systems'),
 ]
 
