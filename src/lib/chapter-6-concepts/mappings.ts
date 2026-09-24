@@ -50,6 +50,19 @@ export const chapter6QuizQuestionConceptMappings:readonly Chapter6QuizQuestionCo
   ...qq(range(46,50),'ch6-other-systems'),
 ].sort((a,b)=>a.questionId.localeCompare(b.questionId))
 
+export const chapter6ReassessmentQuestionConceptMappings:readonly Chapter6QuizQuestionConceptMapping[]=[
+  ...qq(range(51,65),'ch6-cells-tissues'),
+  ...qq(range(66,80),'ch6-body-systems'),
+  ...qq(range(81,95),'ch6-skeletal'),
+  ...qq(range(96,110),'ch6-muscular'),
+  ...qq(range(111,125),'ch6-nervous'),
+  ...qq(range(126,140),'ch6-cardiovascular'),
+  ...qq(range(141,155),'ch6-lymphatic'),
+  ...qq(range(156,170),'ch6-integumentary'),
+  ...qq(range(171,185),'ch6-endocrine'),
+  ...qq(range(186,200),'ch6-other-systems'),
+].sort((a,b)=>a.questionId.localeCompare(b.questionId))
+
 export const CHAPTER6_MIN_DIAGNOSTIC_QUESTIONS_PER_CONCEPT=3
 
 export function getChapter6ConceptForFlashcard(id:string):Chapter6ConceptFamilyId|null {
