@@ -188,7 +188,7 @@ describe('InterventionHistoryView', () => {
       conceptId: 'ch6-endocrine',
       chapterId: 'ch-6',
       conceptName: 'Endocrine System',
-      chapterTitle: 'General Anatomy & Physiology (Chapter 6)',
+      chapterTitle: 'General Anatomy and Physiology (Chapter 6)',
       detectionSummary: 'Repeated difficulty',
       evaluationSummary: 'Improving after earlier misses',
     }
