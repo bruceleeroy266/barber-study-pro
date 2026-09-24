@@ -185,7 +185,7 @@ export const demoChapters: Chapter[] = [
 export const demoFlashcards: Record<string, Flashcard[]> = {}
 
 // Load canonical real flashcards for chapters 1, 2, 3, 4, 6, 7, 8, 9
-const realChapters = [1, 2, 3, 4, 6, 7, 8, 9]
+const realChapters = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 for (const i of realChapters) {
   const chId = `ch-${i}`
   if (realFlashcards[chId]) {
@@ -201,10 +201,8 @@ for (const i of realChapters) {
 // BATCH 1: Merge orphaned flashcards for Ch 5, 6
 // Chapter 2: Reset — skip orphaned flashcards
 
-// Chapter 5: Replace placeholder with orphaned
-if (batch1Flashcards['ch-5'] && batch1Flashcards['ch-5'].length > 0) {
-  demoFlashcards['ch-5'] = batch1Flashcards['ch-5']
-}
+// Chapter 5 is served from chapter-5-premium-flashcards via realFlashcards.
+// Do not replace its canonical fc-5-001..090 IDs with legacy batch1 cards.
 
 // Chapter 6: Replace placeholder with orphaned
 // Chapter 6 is served from chapter-6-premium-flashcards via realFlashcards.
