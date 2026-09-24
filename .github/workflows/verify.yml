@@ -97,3 +97,81 @@ jobs:
           echo '~~~' >> $GITHUB_STEP_SUMMARY
           du -sh .next/ >> $GITHUB_STEP_SUMMARY
           echo '~~~' >> $GITHUB_STEP_SUMMARY
+
+  pilot-onboarding-certification:
+    name: Pilot Onboarding Certification
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: 2.109.1
+
+      - name: Start disposable local Supabase
+        shell: bash
+        run: |
+          supabase start
+          supabase status -o env > /tmp/ascyn-supabase.env
+          set -a
+          source /tmp/ascyn-supabase.env
+          set +a
+
+          LOCAL_API_URL="${API_URL:-${SUPABASE_URL:-}}"
+          LOCAL_ANON_KEY="${PUBLISHABLE_KEY:-${ANON_KEY:-}}"
+          LOCAL_SERVICE_KEY="${SECRET_KEY:-${SERVICE_ROLE_KEY:-}}"
+
+          if [[ -z "$LOCAL_API_URL" || -z "$LOCAL_ANON_KEY" || -z "$LOCAL_SERVICE_KEY" ]]; then
+            echo "Could not resolve local Supabase API/auth credentials."
+            exit 1
+          fi
+
+          {
+            echo "ASCYN_TEST_ENVIRONMENT=true"
+            echo "NEXT_PUBLIC_SUPABASE_URL=$LOCAL_API_URL"
+            echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$LOCAL_ANON_KEY"
+            echo "SUPABASE_SERVICE_ROLE_KEY=$LOCAL_SERVICE_KEY"
+            echo "NEXT_PUBLIC_SITE_URL=http://127.0.0.1:3000"
+            echo "PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000"
+            echo "TEST_MAILPIT_URL=http://127.0.0.1:54324"
+            echo "PORT=3000"
+          } >> "$GITHUB_ENV"
+
+      - name: Build against local Supabase
+        run: npm run build
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run true pilot onboarding certification
+        run: npx playwright test tests/e2e/admin/onboarding-journey.spec.ts --project=chromium --workers=1
+
+      - name: Upload onboarding evidence on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pilot-onboarding-certification-${{ github.sha }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Stop local Supabase
+        if: always()
+        run: supabase stop --no-backup
+

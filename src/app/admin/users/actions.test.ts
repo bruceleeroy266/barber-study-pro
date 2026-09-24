@@ -187,7 +187,7 @@ describe('inviteUser', () => {
     expect(mockServiceClient.auth.admin.inviteUserByEmail).toHaveBeenCalledWith(
       'instructor@rise.test',
       expect.objectContaining({
-        redirectTo: 'http://localhost:3000/auth/callback',
+        redirectTo: 'http://localhost:3000/auth/callback?type=invite',
         data: expect.objectContaining({ full_name: 'Tessa Myers', role: 'instructor' }),
       })
     )

@@ -51,7 +51,7 @@ describe('NotFound session-aware navigation', () => {
     ['apprentice', '/dashboard'],
     ['instructor', '/instructor'],
     ['admin', '/admin'],
-    ['school_admin', '/admin'],
+    ['school_admin', '/school'],
   ])('routes an authenticated %s to the correct dashboard', async (role, href) => {
     mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } }, error: null })
     mocks.from.mockReturnValue(profileQuery(role))

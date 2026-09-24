@@ -1,4 +1,4 @@
-﻿-- Migration: Backfill missing profiles for existing auth users
+-- Migration: Backfill missing profiles for existing auth users
 -- One-time repair for users who authenticated before handle_new_user trigger existed
 -- or whose profiles were deleted.
 

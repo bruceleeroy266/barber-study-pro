@@ -206,7 +206,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (!resend) {
+    const isSafeLocalCertification =
+      process.env.ASCYN_TEST_ENVIRONMENT === 'true' &&
+      /^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(?:\/|$)/i.test(
+        process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+      )
+
+    if (!resend && !isSafeLocalCertification) {
       console.error('[Email API] RESEND_API_KEY is not configured.')
       return NextResponse.json(
         { error: 'Email service is not configured. Please try again later.' },
@@ -371,20 +377,24 @@ export async function POST(request: NextRequest) {
 
     const confirmationHtml = emailWrapper(confirmationBodyHtml, confirmationSubject)
 
-    const confirmationResult = await resend.emails.send({
-      from: FROM_EMAIL,
-      to: email,
-      subject: confirmationSubject,
-      html: confirmationHtml,
-      text: confirmationBodyText,
-    })
+    if (resend) {
+      const confirmationResult = await resend.emails.send({
+        from: FROM_EMAIL,
+        to: email,
+        subject: confirmationSubject,
+        html: confirmationHtml,
+        text: confirmationBodyText,
+      })
 
-    if (confirmationResult.error) {
-      console.error('[Email API] Resend error:', confirmationResult.error)
-      return NextResponse.json(
-        { error: 'We could not send your message. Please try again in a moment.' },
-        { status: 502 }
-      )
+      if (confirmationResult.error) {
+        console.error('[Email API] Resend error:', confirmationResult.error)
+        return NextResponse.json(
+          { error: 'We could not send your message. Please try again in a moment.' },
+          { status: 502 }
+        )
+      }
+    } else if (isSafeLocalCertification) {
+      console.info('[Email API] Local certification: external confirmation email skipped.')
     }
 
     return NextResponse.json({ success: true }, { status: 200 })
