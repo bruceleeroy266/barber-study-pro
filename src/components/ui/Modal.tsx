@@ -114,7 +114,6 @@ export default function Modal({
         }
       }}
       role="presentation"
-      aria-hidden="true"
     >
       <div
         ref={panelRef}

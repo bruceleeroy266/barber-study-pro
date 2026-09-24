@@ -498,10 +498,24 @@ export async function createUser(formData: UserFormData): Promise<ActionResult<{
  * manipulation through environment variables.
  */
 function getSiteUrl(): string {
+  const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '')
+  const isSafeLocalCertification =
+    process.env.ASCYN_TEST_ENVIRONMENT === 'true' &&
+    /^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(?:\/|$)/i.test(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+    ) &&
+    !!configuredSiteUrl &&
+    /^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(?:\/|$)/i.test(configuredSiteUrl)
+
+  if (isSafeLocalCertification) {
+    return configuredSiteUrl
+  }
+
   if (process.env.NODE_ENV === 'production') {
     return 'https://ascynpro.com'
   }
-  return process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') || 'http://localhost:3000'
+
+  return configuredSiteUrl || 'http://localhost:3000'
 }
 
 type InviteUserResult = { id: string; recoverySent?: boolean }
@@ -774,7 +788,7 @@ export async function inviteUser(formData: InviteUserFormData): Promise<ActionRe
   // invited auth user and overwrites trigger defaults with validated values.
 
   // Send the invitation email. The user will set their own password.
-  const redirectTo = `${getSiteUrl()}/auth/callback`
+  const redirectTo = `${getSiteUrl()}/auth/callback?type=invite`
   const { data: inviteData, error: inviteError } = await serviceClient.auth.admin.inviteUserByEmail(
     normalizedEmail,
     {
@@ -831,6 +845,17 @@ export async function inviteUser(formData: InviteUserFormData): Promise<ActionRe
     // Do NOT delete the auth user/profile — that would be destructive.
     // Report the error so the admin knows manual intervention may be needed.
     return { success: false, error: domainResult.error }
+  }
+
+  const lifecycleResult = await ensurePendingInvitationLifecycle(serviceClient, admin, {
+    authUserId: inviteData.user.id,
+    email: normalizedEmail,
+    fullName: formData.full_name,
+    role: formData.role,
+    schoolId: formData.school_id,
+  })
+  if (!lifecycleResult.success) {
+    return { success: false, error: lifecycleResult.error }
   }
 
   await logUserManagementAction(
