@@ -438,14 +438,14 @@ margin-bottom: var(--spacing-3);           /* 0.75rem */
 ```tsx
 <LineChart>
   <XAxis 
-    tick={{ 
+    tick={ { 
       fontSize: 'var(--font-size-caption)', 
       fontWeight: 'var(--font-weight-regular)',
       fill: 'var(--color-text-muted)' 
     }} 
   />
   <YAxis 
-    tick={{ 
+    tick={ { 
       fontSize: 'var(--font-size-caption)', 
       fontWeight: 'var(--font-weight-regular)',
       fill: 'var(--color-text-muted)' 
