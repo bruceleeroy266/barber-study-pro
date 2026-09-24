@@ -30,6 +30,8 @@ describe('Chapter 6 lesson content hardening', () => {
       'dramatically affect hair growth',
       'skin reflection',
       'Oxygen delivery to follicles',
+      '600+ muscles, 8 facial muscles',
+      'ENDOCRINE → 7 major glands',
     ]
 
     for (const phrase of forbidden) {
@@ -68,5 +70,7 @@ describe('Chapter 6 lesson content hardening', () => {
     expect(serialized).toContain('Visible skin changes are nonspecific')
     expect(serialized).toContain('Swelling can have multiple causes')
     expect(serialized).toContain('works with circulation to supply tissues')
+    expect(serialized).toContain('600+ muscles, key facial muscles')
+    expect(serialized).toContain('ENDOCRINE → Key endocrine glands')
   })
 })
