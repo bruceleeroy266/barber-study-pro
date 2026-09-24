@@ -143,7 +143,7 @@ describe('C5 final adversarial end-to-end certification', () => {
     }
 
     const initial = new Set(chapter5PremiumQuizQuestions.map((q) => q.id))
-    const razorReserve = new Set(
+    const razorReserve = new Set<string>(
       chapter5ReassessmentQuestionConceptMappings
         .filter((m) => m.conceptFamilyId === conceptId)
         .map((m) => m.questionId),
