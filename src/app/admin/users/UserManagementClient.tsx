@@ -454,9 +454,9 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
       )}
 
       <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead className="bg-[var(--color-background-primary)] border-b border-[var(--color-border-primary)]">
+        <div className="max-h-[calc(100vh-16rem)] min-h-[20rem] overflow-auto overscroll-contain">
+          <table className="w-full min-w-[1100px] text-left">
+            <thead className="sticky top-0 z-10 bg-[var(--color-background-primary)] border-b border-[var(--color-border-primary)]">
               <tr>
                 <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Name</th>
                 <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Email</th>
