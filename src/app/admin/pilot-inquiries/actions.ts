@@ -588,6 +588,10 @@ export async function createSchoolFromInquiry(
               data: {
                 full_name: inquiry.contact_name || inquiry.school_name,
                 role: 'school_admin',
+                app_name: 'ASCYN PRO',
+                school_name: inquiry.school_name,
+                role_label: 'School Administrator',
+                next_step: 'Create your password, then invite your instructor, invite students, enroll students, and begin your pilot.',
               },
             })
 

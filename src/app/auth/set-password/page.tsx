@@ -25,6 +25,11 @@ export default function SetPasswordPage() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
   const [checkingSession, setCheckingSession] = useState(true)
+  const [inviteContext, setInviteContext] = useState<{
+    role: string | null
+    schoolName: string | null
+    nextStep: string
+  } | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -39,7 +44,32 @@ export default function SetPasswordPage() {
         if (cancelled) return
 
         if (sessionError || !session) {
-          setError('This invitation link is invalid or has expired. Please ask your administrator to resend the invitation.')
+          setError('This ASCYN PRO invitation link is invalid or has expired. Please ask your school administrator to resend the invitation.')
+        } else {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role, school_id, schools(name)')
+            .eq('id', session.user.id)
+            .single()
+
+          const role = profile?.role ?? null
+          const schoolRelation = profile?.schools as { name?: string } | { name?: string }[] | null | undefined
+          const schoolName = Array.isArray(schoolRelation)
+            ? schoolRelation[0]?.name ?? null
+            : schoolRelation?.name ?? null
+
+          const nextStep =
+            role === 'school_admin'
+              ? 'Next: invite your instructor, invite students, enroll students, then begin your pilot.'
+              : role === 'instructor'
+                ? 'Next: open your instructor portal, review your student roster, and begin monitoring learning gaps.'
+                : role === 'student' || role === 'apprentice'
+                  ? 'Next: accept the beta agreement, complete your onboarding checklist, and begin learning.'
+                  : 'Next: continue to your ASCYN PRO portal.'
+
+          if (!cancelled) {
+            setInviteContext({ role, schoolName, nextStep })
+          }
         }
       } catch {
         if (!cancelled) {
@@ -128,8 +158,18 @@ export default function SetPasswordPage() {
         <div className="bg-charcoal/80 backdrop-blur-sm border border-graphite rounded-2xl p-8 shadow-2xl">
           <div className="text-center mb-8">
             <div className="text-5xl mb-4">🔒</div>
-            <h1 className="text-2xl font-bold text-white mb-2">Create Your Password</h1>
-            <p className="text-silver">Choose a strong password to activate your account.</p>
+            <p className="text-[var(--color-brand-gold)] text-sm font-semibold tracking-wide uppercase mb-2">ASCYN PRO</p>
+            <h1 className="text-2xl font-bold text-white mb-2">Activate Your Account</h1>
+            <p className="text-silver">
+              {inviteContext?.schoolName
+                ? `You’re joining ${inviteContext.schoolName} on ASCYN PRO${inviteContext.role ? ` as ${inviteContext.role.replace('_', ' ')}` : ''}.`
+                : 'Create a password to activate your ASCYN PRO account.'}
+            </p>
+            {inviteContext?.nextStep && (
+              <div className="mt-4 rounded-lg border border-[var(--color-brand-gold)]/20 bg-[var(--color-brand-gold)]/10 px-4 py-3 text-sm text-light-gray">
+                {inviteContext.nextStep}
+              </div>
+            )}
           </div>
 
           {error && (
@@ -141,7 +181,7 @@ export default function SetPasswordPage() {
           {success ? (
             <div className="space-y-6">
               <div className="bg-gold/10 border border-gold/20 text-gold px-4 py-3 rounded-lg text-sm">
-                Password created. Redirecting you to the platform...
+                Account activated. Taking you to your ASCYN PRO portal...
               </div>
             </div>
           ) : (
