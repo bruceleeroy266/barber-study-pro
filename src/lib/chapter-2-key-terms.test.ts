@@ -27,8 +27,7 @@ import {
 } from './chapter-2-concepts/concepts'
 
 const VALID_PROVENANCE = new Set([
-  'TEXTBOOK_DERIVED',
-  'MILADY_SUPPORTED_EXPANSION',
+  'INDUSTRY_STANDARD_SUBJECT_MATTER',
   'ASCYN_ORIGINAL',
 ])
 
@@ -100,10 +99,10 @@ describe('Chapter 2 Key Terms — provenance', () => {
 
   it('approved named-framework provenance is preserved', () => {
     const byTerm = new Map(chapter2KeyTerms.map((t) => [t.term, t.sourceProvenance]))
-    // MILADY-SUPPORTED ASCYN EXPANSION
-    expect(byTerm.get('SMART Goals')).toBe('MILADY_SUPPORTED_EXPANSION')
-    expect(byTerm.get('Spaced Repetition')).toBe('MILADY_SUPPORTED_EXPANSION')
-    // ASCYN ENRICHMENT — named external frameworks are never DIRECT MILADY
+    // INDUSTRY-STANDARD SUBJECT MATTER
+    expect(byTerm.get('SMART Goals')).toBe('INDUSTRY_STANDARD_SUBJECT_MATTER')
+    expect(byTerm.get('Spaced Repetition')).toBe('INDUSTRY_STANDARD_SUBJECT_MATTER')
+    // ASCYN ENRICHMENT — named external frameworks remain ASCYN-original
     expect(byTerm.get('2-Minute Rule')).toBe('ASCYN_ORIGINAL')
     expect(byTerm.get('Pomodoro Technique')).toBe('ASCYN_ORIGINAL')
     expect(byTerm.get('Service Recovery Paradox')).toBe('ASCYN_ORIGINAL')
@@ -119,13 +118,12 @@ describe('Chapter 2 Key Terms — provenance', () => {
     }
   })
 
-  it('provenance counts match the approved curation (15 DIRECT / 14 EXPANSION / 8 ENRICHMENT)', () => {
-    const counts = { TEXTBOOK_DERIVED: 0, MILADY_SUPPORTED_EXPANSION: 0, ASCYN_ORIGINAL: 0 }
+  it('provenance counts match the neutral curation (29 industry-standard / 8 ASCYN-original)', () => {
+    const counts = { INDUSTRY_STANDARD_SUBJECT_MATTER: 0, ASCYN_ORIGINAL: 0 }
     for (const t of chapter2KeyTerms) {
       counts[t.sourceProvenance as keyof typeof counts] += 1
     }
-    expect(counts.TEXTBOOK_DERIVED).toBe(15)
-    expect(counts.MILADY_SUPPORTED_EXPANSION).toBe(14)
+    expect(counts.INDUSTRY_STANDARD_SUBJECT_MATTER).toBe(29)
     expect(counts.ASCYN_ORIGINAL).toBe(8)
   })
 })
