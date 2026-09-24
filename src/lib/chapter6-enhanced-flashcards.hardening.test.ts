@@ -10,7 +10,7 @@ describe('Chapter 6 C6-4 flashcard hardening', () => {
 
   it('removes easy recall-only cards', () => {
     expect(chapter6AllEnhanced.some((card) => card.difficulty === 'easy')).toBe(false)
-    const applicationCue = /\b(BEST|MOST|Which|Why|How|What should|A client|A barber|A student|A question|During|What is the BEST)\b/
+    const applicationCue = /\b(BEST|MOST|PRIMARY|Which|Why|How|What should|A client|A barber|A student|A question|During|What is the BEST)\b/
     for (const card of chapter6AllEnhanced) expect(card.front).toMatch(applicationCue)
   })
 
