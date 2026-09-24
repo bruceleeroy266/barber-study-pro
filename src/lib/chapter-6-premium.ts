@@ -176,7 +176,7 @@ export const chapter6PremiumContent: ChapterContent = {
           ],
           facts: [
             { text: '📋 In barbering, you work most directly with EPITHELIAL tissue (skin and hair) and MUSCULAR tissue (facial muscles during massage).' },
-            { text: '📋 Connective tissue includes BLOOD — understanding blood supply to the scalp matters for product absorption and hair health.' },
+            { text: '📋 Connective tissue includes blood. Blood vessels in the scalp deliver oxygen and nutrients to living tissues; topical product behavior is a separate skin and hair-care concept.' },
           ],
         },
       ],
@@ -239,7 +239,7 @@ export const chapter6PremiumContent: ChapterContent = {
         {
           icon: 'Filter',
           title: 'Urinary',
-          description: 'Kidneys, bladder, ureters. Removes waste from blood. Skin health reflects kidney function.',
+          description: 'Kidneys, ureters, and bladder help remove wastes and regulate fluid balance. Visible skin changes are nonspecific and should not be used by a barber to judge kidney function.',
         },
         {
           icon: 'Users',
@@ -280,7 +280,7 @@ export const chapter6PremiumContent: ChapterContent = {
         {
           id: 'vertebrae',
           label: 'VERTEBRAE',
-          title: 'The Spinal Column — 26 Vertebrae',
+          title: 'The Adult Spinal Column — 26 Bones',
           bullets: [
             { label: 'Cervical (7)', description: 'Neck vertebrae. The top two (atlas and axis) allow head rotation. You support these during shampooing.' },
             { label: 'Thoracic (12)', description: 'Upper back vertebrae. Connected to ribs. Prolonged poor posture can contribute to upper-back discomfort during barbering.' },
@@ -290,7 +290,7 @@ export const chapter6PremiumContent: ChapterContent = {
           ],
           facts: [
             { text: '📋 The cervical vertebrae are the smallest and most flexible — this is why the neck moves so freely during services.' },
-            { text: '📋 Barbering posture tip: Keep your lumbar spine neutral to prevent lower back pain from standing all day.' },
+            { text: '📋 Barbering posture tip: A neutral, supported posture can help reduce unnecessary lower-back strain during prolonged standing.' },
           ],
         },
       ],
@@ -321,7 +321,7 @@ export const chapter6PremiumContent: ChapterContent = {
           ],
           facts: [
             { text: '📋 BOARD EXAM ALERT: The platysma is the broad muscle covering the neck — critical for neck shaving and understanding skin tension.' },
-            { text: '📋 The masseter is the strongest muscle in the face — it can make jawline fading challenging if the client clenches.' },
+            { text: '📋 The masseter is a powerful jaw-closing muscle and becomes prominent when a client clenches, which can change the contour of the jawline during service.' },
           ],
         },
         {
@@ -410,7 +410,7 @@ export const chapter6PremiumContent: ChapterContent = {
         {
           icon: 'Shield',
           title: 'Lymph Nodes',
-          description: 'Small gland-like structures that filter lymph and produce white blood cells. Swollen nodes signal infection.',
+          description: 'Small lymphatic structures that filter lymph and support immune activity. Swelling can have multiple causes; barbers should observe without diagnosing and recommend evaluation when appropriate.',
         },
         {
           icon: 'Heart',
@@ -450,7 +450,7 @@ export const chapter6PremiumContent: ChapterContent = {
           ],
           facts: [
             { text: '📋 BOARD EXAM ALERT: The epidermis has NO blood vessels — it receives nourishment by diffusion from the dermis below.' },
-            { text: '📋 The dermis contains EVERYTHING that matters to barbers: hair follicles, sebaceous glands, sweat glands, blood vessels, and nerve endings.' },
+            { text: '📋 The dermis contains many structures relevant to barbering, including hair follicles, sebaceous glands, sweat glands, blood vessels, and nerve endings.' },
           ],
         },
         {
@@ -464,7 +464,7 @@ export const chapter6PremiumContent: ChapterContent = {
           ],
           facts: [
             { text: '📋 Sebaceous glands are commonly associated with hair follicles and release sebum that helps lubricate skin and hair. Some sebaceous glands open directly onto the skin rather than into a follicle.' },
-            { text: '📋 Apocrine sweat glands are NOT active until puberty — this is why young children do not have body odor.' },
+            { text: '📋 Apocrine gland activity increases around puberty. Body odor can have multiple sources, so avoid treating it as a single-cause sign.' },
           ],
         },
       ],
@@ -504,8 +504,8 @@ export const chapter6PremiumContent: ChapterContent = {
           bullets: [
             { label: 'Hair Growth', description: 'Thyroid hormones and androgens are among the factors that influence hair-growth cycles and facial/body hair development. Hormonal changes may contribute to thinning or shedding, but individual causes vary.' },
             { label: 'Skin Condition', description: 'Estrogen and other hormones influence skin structure and moisture. Hormonal changes during menopause may contribute to dryness, while stress hormones can influence oil production and inflammation.' },
-            { label: 'Oil Production', description: 'Androgens stimulate sebaceous glands. Teenage boys often have oily skin due to testosterone surge. This affects product recommendations.' },
-            { label: 'Pigmentation', description: 'Melanocyte-stimulating hormone affects hair and skin color. Changes can indicate hormonal shifts or health issues.' },
+            { label: 'Oil Production', description: 'Androgens can increase sebaceous-gland activity, especially around puberty, but oiliness varies by individual. Product recommendations should stay within barber scope and avoid diagnosing a hormonal cause.' },
+            { label: 'Pigmentation', description: 'Melanocyte-stimulating hormone is involved in pigmentation. Changes in hair or skin color can have many causes and should not be diagnosed by a barber.' },
           ],
           facts: [
             { text: '📋 Stress and stress hormones can influence skin and hair, but acne, scalp oiliness, and hair shedding have many possible causes. Barbers should avoid diagnosing a cause and recommend appropriate professional evaluation for persistent or concerning changes.' },
@@ -527,7 +527,7 @@ export const chapter6PremiumContent: ChapterContent = {
         {
           icon: 'Users',
           title: 'Reproductive System',
-          description: 'Hormonal changes during puberty, pregnancy, and menopause dramatically affect hair growth, texture, and skin condition.',
+          description: 'Hormonal changes during puberty, pregnancy, and menopause can influence hair-growth patterns, texture, and skin condition, with substantial individual variation.',
         },
         {
           icon: 'Wind',
@@ -554,7 +554,7 @@ export const chapter6PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'board-exam-summary',
       title: '📋 BOARD EXAM QUICK REFERENCE',
-      content: 'SYSTEM → KEY STRUCTURES → BARBER RELEVANCE\n\nINTEGUMENTARY → Skin, hair, nails, glands → Your PRIMARY workspace\nSKELETAL → 206 bones, 22 skull bones → Head shape, jawline, posture\nMUSCULAR → 600+ muscles, 8 facial muscles → Massage, shaving, expressions\nNERVOUS → CNS, PNS, cranial nerves → Sensation, safety, massage pressure\nCIRCULATORY → Heart, arteries, veins → Blood flow to scalp, safety zones\nLYMPHATIC → Lymph nodes, vessels, spleen → Immunity, infection signs\nENDOCRINE → 7 major glands → Hair growth, skin condition, oil production\nRESPIRATORY → Lungs, airways → Oxygen delivery to follicles\nDIGESTIVE → Stomach, intestines → Nutrient absorption for hair health\nEXCRETORY → Kidneys, bladder → Waste removal, skin reflection\nREPRODUCTIVE → Hormones → Hair patterns, skin changes, life stages',
+      content: 'SYSTEM → KEY STRUCTURES → BARBER RELEVANCE\n\nINTEGUMENTARY → Skin, hair, nails, glands → Your PRIMARY workspace\nSKELETAL → 206 bones, 22 skull bones → Head shape, jawline, posture\nMUSCULAR → 600+ muscles, 8 facial muscles → Massage, shaving, expressions\nNERVOUS → CNS, PNS, cranial nerves → Sensation, safety, massage pressure\nCIRCULATORY → Heart, arteries, veins → Blood flow to scalp, safety zones\nLYMPHATIC → Lymph nodes, vessels, spleen → Immunity, infection signs\nENDOCRINE → 7 major glands → Hair growth, skin condition, oil production\nRESPIRATORY → Lungs, airways → Gas exchange; works with circulation to supply tissues\nDIGESTIVE → Stomach, intestines → Nutrient absorption for hair health\nEXCRETORY → Kidneys, bladder → Waste removal and fluid balance\nREPRODUCTIVE → Hormones → Hair patterns, skin changes, life stages',
       highlight: 'KNOW ALL 11 SYSTEMS • FOCUS ON INTEGUMENTARY, SKELETAL, MUSCULAR, NERVOUS',
     },
 
@@ -612,10 +612,10 @@ export const chapter6PremiumContent: ChapterContent = {
         {
           situation: 'A teenage client asks why their face is so oily and they are getting acne breakouts.',
           options: [
-            { letter: 'A', text: 'Tell them they are not washing enough', feedback: '❌ Over-simplification and potentially shaming. Oily skin during puberty is primarily hormonal, not hygiene-related.' },
-            { letter: 'B', text: 'Explain that androgens (testosterone) increase during puberty, stimulating oil glands. Recommend gentle cleansing and non-comedogenic products.', feedback: '✅ Correct! Educating clients with anatomical knowledge builds trust. Hormonal changes are normal; proper skincare helps manage them.' },
-            { letter: 'C', text: 'Say it is just bad genetics', feedback: '❌ Dismissive and unhelpful. Genetics play a role, but hormones are the primary driver during puberty.' },
-            { letter: 'D', text: 'Recommend they see a dermatologist immediately', feedback: '❌ Over-referral for normal puberty. Start with education and basic skincare recommendations first.' },
+            { letter: 'A', text: 'Tell them they are not washing enough', feedback: '❌ Over-simplification and potentially shaming. Oiliness has multiple influences and should not be reduced to hygiene alone.' },
+            { letter: 'B', text: 'Explain that hormonal changes during puberty can increase oil production, while avoiding a diagnosis. Suggest gentle, appropriate skin-care practices within your scope.', feedback: '✅ Correct! Give general education without diagnosing a cause, keep recommendations within barber scope, and suggest medical evaluation for persistent or concerning symptoms.' },
+            { letter: 'C', text: 'Say it is just bad genetics', feedback: '❌ Dismissive and overly certain. Genetics, hormones, skin-care practices, and other factors can all influence oiliness and breakouts.' },
+            { letter: 'D', text: 'Diagnose the breakouts as a hormone disorder and tell them which treatment they need', feedback: '❌ Barbers should not diagnose endocrine or skin disorders or prescribe treatment. Stay within scope and refer persistent or concerning problems to an appropriate professional.' },
           ],
           correctAnswer: 'B',
         },
