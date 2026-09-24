@@ -19,12 +19,12 @@ import { chapter4PremiumContent } from '@/lib/chapter-4-premium'
 import { chapter4ReassessmentQuestions } from '@/lib/chapter-4-reassessment-questions'
 
 const expectedConceptCounts = {
-  'ch4-pathogens-transmission': { flashcards: 9, quiz: 5 },
-  'ch4-disinfection-sterilization': { flashcards: 10, quiz: 6 },
+  'ch4-pathogens-transmission': { flashcards: 17, quiz: 5 },
+  'ch4-disinfection-sterilization': { flashcards: 13, quiz: 6 },
   'ch4-cross-contamination': { flashcards: 8, quiz: 5 },
   'ch4-blood-exposure-ppe': { flashcards: 9, quiz: 5 },
-  'ch4-regulatory-chemical-safety': { flashcards: 7, quiz: 4 },
-  'ch4-safe-practice-compliance': { flashcards: 7, quiz: 5 },
+  'ch4-regulatory-chemical-safety': { flashcards: 9, quiz: 4 },
+  'ch4-safe-practice-compliance': { flashcards: 14, quiz: 5 },
 } as const
 
 describe('Chapter 4 content foundation integrity', () => {
@@ -62,19 +62,19 @@ describe('Chapter 4 content foundation integrity', () => {
     }
   })
 
-  it('serves exactly 50 active canonical Chapter 4 flashcards with stable IDs', () => {
-    expect(chapter4PremiumFlashcards).toHaveLength(50)
+  it('serves exactly 70 active canonical Chapter 4 flashcards with stable IDs', () => {
+    expect(chapter4PremiumFlashcards).toHaveLength(70)
     expect(chapter4PremiumFlashcards.map((card) => card.id)).toEqual(
-      Array.from({ length: 50 }, (_, index) => `fc-4-${String(index + 1).padStart(3, '0')}`),
+      Array.from({ length: 70 }, (_, index) => `fc-4-${String(index + 1).padStart(3, '0')}`),
     )
     expect(chapter4PremiumFlashcards.every((card) => card.chapter_id === 'ch-4')).toBe(true)
     expect(chapter4PremiumFlashcards.every((card) => card.is_active === true)).toBe(true)
-    expect(new Set(chapter4PremiumFlashcards.map((card) => card.front.trim().toLowerCase())).size).toBe(50)
+    expect(new Set(chapter4PremiumFlashcards.map((card) => card.front.trim().toLowerCase())).size).toBe(70)
   })
 
   it('maps every flashcard exactly once with no orphans and the locked concept distribution', () => {
-    expect(chapter4FlashcardConceptMappings).toHaveLength(50)
-    expect(new Set(chapter4FlashcardConceptMappings.map((mapping) => mapping.flashcardId)).size).toBe(50)
+    expect(chapter4FlashcardConceptMappings).toHaveLength(70)
+    expect(new Set(chapter4FlashcardConceptMappings.map((mapping) => mapping.flashcardId)).size).toBe(70)
 
     const servedIds = new Set(chapter4PremiumFlashcards.map((card) => card.id))
     for (const mapping of chapter4FlashcardConceptMappings) {
