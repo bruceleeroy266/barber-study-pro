@@ -57,8 +57,8 @@ describe('C4 source-book lesson alignment', () => {
     for (const phrase of forbidden) expect(lesson).not.toContain(phrase)
   })
 
-  it('locks the lesson phase without changing cards or assessments yet', () => {
-    expect(chapter4PremiumFlashcards).toHaveLength(50)
+  it('preserves the locked lesson while flashcards expand and assessments remain unchanged', () => {
+    expect(chapter4PremiumFlashcards).toHaveLength(70)
     expect(chapter4PremiumQuizQuestions).toHaveLength(30)
     expect(chapter4ReassessmentQuestions).toHaveLength(90)
   })
