@@ -124,7 +124,7 @@ The COLOR_SYSTEM.md states: "Dark mode is the default" and "Light mode is an alt
 
 **Analysis:** Chapters 18-21 use the brand gold (#D4AF37) as their primary, aligning with the brand system. Chapters 1, 3, 5, 12, 15, and 16 use warm metallic/earth tones that are at least harmonious with the brand's metallic standard. However, chapters 2, 4, 6, 7, 8, 9, 10, 11, 13, 14, and 17 use colors that are **completely outside the brand palette** — electric cyan, teal, purple, red, emerald green, and slate.
 
-These chapter themes are consumed by chapter content components (ActionPrompt, AppearanceChecklist, ChallengeCard, etc.) via `style={{ color: t.primary }}` inline styles, which bypasses the Tailwind/token system entirely.
+These chapter themes are consumed by chapter content components (ActionPrompt, AppearanceChecklist, ChallengeCard, etc.) via `style={ { color: t.primary }}` inline styles, which bypasses the Tailwind/token system entirely.
 
 **Verdict:** VIOLATION — 11 of 21 chapters use non-brand primary colors  
 **Severity:** CRITICAL — This is a parallel color system that directly contradicts COLOR_SYSTEM.md §14.1 (Evidence Traceability) and §13 (Color Decision Filter). The spec states "Every color decision must trace to one or more approved canonical documents." These chapter themes trace to no approved document.
@@ -289,7 +289,7 @@ Additionally, `.border-[#1a2332]/10` references a dark navy that's close to but 
 ## Finding 15: School Branding Custom Color Feature
 
 **File:** `src/components/admin/school-config/BrandingSection.tsx` (line 203)  
-**What was found:** The school configuration admin panel allows schools to set a custom `branding.primaryColor` which is applied via `style={{ backgroundColor: branding.primaryColor }}`. This is a user-configurable feature for white-labeling.
+**What was found:** The school configuration admin panel allows schools to set a custom `branding.primaryColor` which is applied via `style={ { backgroundColor: branding.primaryColor }}`. This is a user-configurable feature for white-labeling.
 
 **Verdict:** INTENTIONAL — user-configurable branding is a product feature  
 **Severity:** INFO — This is a deliberate product feature, not a design system violation. The validation schema (`validation.ts:45`) enforces hex color format.
