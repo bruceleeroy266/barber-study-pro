@@ -143,7 +143,7 @@ describe('pilot invitation recovery', () => {
     vi.restoreAllMocks()
   })
 
-  it('turns a repeat same-school/same-role invitation into a fresh setup link', async () => {
+  it('treats a repeat same-school/same-role invitation as idempotent without sending recovery email', async () => {
     const { resetPasswordForEmail } = makeServiceClient()
     const { inviteUser } = await import('./actions')
 
@@ -156,11 +156,8 @@ describe('pilot invitation recovery', () => {
     })
 
     expect(result.success).toBe(true)
-    expect(result.data).toEqual({ id: USER_ID, recoverySent: true })
-    expect(resetPasswordForEmail).toHaveBeenCalledWith(
-      EMAIL,
-      { redirectTo: 'http://localhost:3000/auth/callback?type=recovery' }
-    )
+    expect(result.data).toEqual({ id: USER_ID, alreadyInvited: true })
+    expect(resetPasswordForEmail).not.toHaveBeenCalled()
   })
 
   it('blocks recovery when the existing email belongs to another school', async () => {
