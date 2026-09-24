@@ -50,6 +50,10 @@ import { detectAllConceptGaps as detectAllChapter5ConceptGaps } from '@/lib/chap
 import { chapter5ConceptFamilies } from '@/lib/chapter-5-concepts/concepts'
 import { chapter5ContentConceptMappings, chapter5FlashcardConceptMappings } from '@/lib/chapter-5-concepts/mappings'
 
+import { detectAllConceptGaps as detectAllChapter6ConceptGaps } from '@/lib/chapter-6-concepts/detection'
+import { chapter6ConceptFamilies } from '@/lib/chapter-6-concepts/concepts'
+import { chapter6ContentConceptMappings, chapter6FlashcardConceptMappings } from '@/lib/chapter-6-concepts/mappings'
+
 // ───────────────────────────────────────────────
 // Provider Contract
 // ───────────────────────────────────────────────
@@ -260,6 +264,44 @@ const chapter5Provider: ChapterDetectionProvider = {
   },
 }
 
+
+// ───────────────────────────────────────────────
+// Chapter 6 Provider (C6-5)
+// ───────────────────────────────────────────────
+
+const chapter6ContentMappingsProjected = chapter6ContentConceptMappings.map((m) => ({
+  contentBlockId: m.contentBlockId,
+  conceptId: m.conceptFamilyId as string,
+}))
+const chapter6FlashcardMappingsProjected = chapter6FlashcardConceptMappings.map((m) => ({
+  flashcardId: m.flashcardId,
+  conceptId: m.conceptFamilyId as string,
+}))
+
+const chapter6Provider: ChapterDetectionProvider = {
+  chapterId: 'ch-6',
+
+  detectAll(attempts) {
+    const out = new Map<ConceptId, ConceptDetectionResult>()
+    for (const [conceptId, result] of detectAllChapter6ConceptGaps(attempts)) {
+      out.set(conceptId, result)
+    }
+    return out
+  },
+
+  getConceptName(conceptId) {
+    return chapter6ConceptFamilies.find((c) => c.id === conceptId)?.name ?? conceptId
+  },
+
+  buildAssignmentsForConcept(conceptId) {
+    return buildAssignments(
+      conceptId,
+      chapter6ContentMappingsProjected,
+      chapter6FlashcardMappingsProjected,
+    )
+  },
+}
+
 // ───────────────────────────────────────────────
 // Registry
 // ───────────────────────────────────────────────
@@ -269,6 +311,7 @@ const providers = new Map<ChapterId, ChapterDetectionProvider>([
   ['ch-3', chapter3Provider],
   ['ch-4', chapter4Provider],
   ['ch-5', chapter5Provider],
+  ['ch-6', chapter6Provider],
 ])
 
 /**
