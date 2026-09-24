@@ -159,7 +159,7 @@ Alert messages with icons and actions.
   title="At-Risk Students"
   description="5 students need attention"
   variant="warning"
-  action={{ label: "View", onClick: () => {} }}
+  action={ { label: "View", onClick: () => {} }}
 />
 ```
 
