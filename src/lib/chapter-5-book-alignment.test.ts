@@ -60,8 +60,8 @@ describe('C5 source-book lesson alignment', () => {
     expect(lesson).not.toContain('Milady')
   })
 
-  it('locks the lesson phase without changing flashcard or initial-quiz counts', () => {
-    expect(chapter5PremiumFlashcards).toHaveLength(70)
+  it('preserves the locked lesson while the flashcard phase expands only the deck', () => {
+    expect(chapter5PremiumFlashcards).toHaveLength(90)
     expect(chapter5PremiumQuizQuestions).toHaveLength(50)
   })
 })
