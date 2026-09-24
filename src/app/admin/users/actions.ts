@@ -472,17 +472,6 @@ export async function createUser(formData: UserFormData): Promise<ActionResult<{
     return { success: false, error: domainResult.error }
   }
 
-  const lifecycleResult = await ensurePendingInvitationLifecycle(serviceClient, admin, {
-    authUserId: inviteData.user.id,
-    email: normalizedEmail,
-    fullName: formData.full_name,
-    role: formData.role,
-    schoolId: formData.school_id,
-  })
-  if (!lifecycleResult.success) {
-    return { success: false, error: lifecycleResult.error }
-  }
-
   await logUserManagementAction(
     admin,
     authData.user.id,
@@ -856,6 +845,17 @@ export async function inviteUser(formData: InviteUserFormData): Promise<ActionRe
     // Do NOT delete the auth user/profile — that would be destructive.
     // Report the error so the admin knows manual intervention may be needed.
     return { success: false, error: domainResult.error }
+  }
+
+  const lifecycleResult = await ensurePendingInvitationLifecycle(serviceClient, admin, {
+    authUserId: inviteData.user.id,
+    email: normalizedEmail,
+    fullName: formData.full_name,
+    role: formData.role,
+    schoolId: formData.school_id,
+  })
+  if (!lifecycleResult.success) {
+    return { success: false, error: lifecycleResult.error }
   }
 
   await logUserManagementAction(
