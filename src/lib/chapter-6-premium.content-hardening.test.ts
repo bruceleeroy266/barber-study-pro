@@ -20,6 +20,16 @@ describe('Chapter 6 lesson content hardening', () => {
       'Never fatigues',
       'Nutrition directly impacts hair quality and skin health',
       'Lungs provide oxygen to all cells',
+      'product absorption and hair health',
+      'Skin health reflects kidney function',
+      'The Spinal Column — 26 Vertebrae',
+      'strongest muscle in the face',
+      'Swollen nodes signal infection',
+      'contains EVERYTHING that matters to barbers',
+      'young children do not have body odor',
+      'dramatically affect hair growth',
+      'skin reflection',
+      'Oxygen delivery to follicles',
     ]
 
     for (const phrase of forbidden) {
@@ -51,5 +61,12 @@ describe('Chapter 6 lesson content hardening', () => {
     expect(serialized).toContain('does not control every endocrine gland')
     expect(serialized).toContain('Epidermal renewal occurs over several weeks and varies')
     expect(serialized).toContain('Some sebaceous glands open directly onto the skin rather than into a follicle')
+  })
+
+  it('locks the final C6-2 anatomy and scope corrections', () => {
+    expect(serialized).toContain('The Adult Spinal Column — 26 Bones')
+    expect(serialized).toContain('Visible skin changes are nonspecific')
+    expect(serialized).toContain('Swelling can have multiple causes')
+    expect(serialized).toContain('works with circulation to supply tissues')
   })
 })
