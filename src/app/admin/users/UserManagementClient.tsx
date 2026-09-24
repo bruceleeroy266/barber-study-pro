@@ -150,9 +150,11 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
     if (result.success) {
       setMessage({
         type: 'success',
-        text: result.data?.recoverySent
-          ? 'Account already existed. A fresh setup link was sent safely.'
-          : 'Invitation sent successfully',
+        text: result.data?.alreadyInvited
+          ? 'Invitation already exists. No duplicate email was sent.'
+          : result.data?.recoverySent
+            ? 'Account already existed. A fresh setup link was sent safely.'
+            : 'Invitation sent successfully',
       })
       setShowInviteForm(false)
       await loadUsers(0)
