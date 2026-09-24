@@ -4,7 +4,13 @@ const flashcardRanges: readonly [start: number, end: number, conceptFamilyId: Ch
   [1,9,'ch4-pathogens-transmission'], [10,19,'ch4-disinfection-sterilization'], [20,27,'ch4-cross-contamination'],
   [28,36,'ch4-blood-exposure-ppe'], [37,43,'ch4-regulatory-chemical-safety'], [44,50,'ch4-safe-practice-compliance'],
 ] as const
-export const chapter4FlashcardConceptMappings: readonly Chapter4FlashcardConceptMapping[] = flashcardRanges.flatMap(([start,end,conceptFamilyId]) => Array.from({length:end-start+1},(_,offset)=>({flashcardId:`fc-4-${String(start+offset).padStart(3,'0')}` as const,conceptFamilyId})))
+export const chapter4FlashcardConceptMappings: readonly Chapter4FlashcardConceptMapping[] = [
+  ...flashcardRanges.flatMap(([start,end,conceptFamilyId]) => Array.from({length:end-start+1},(_,offset)=>({flashcardId:`fc-4-${String(start+offset).padStart(3,'0')}` as const,conceptFamilyId}))),
+  ...[51,52].map((n)=>({flashcardId:`fc-4-${String(n).padStart(3,'0')}` as const,conceptFamilyId:'ch4-regulatory-chemical-safety' as const})),
+  ...Array.from({length:8},(_,i)=>53+i).map((n)=>({flashcardId:`fc-4-${String(n).padStart(3,'0')}` as const,conceptFamilyId:'ch4-pathogens-transmission' as const})),
+  ...[61,62,63].map((n)=>({flashcardId:`fc-4-${String(n).padStart(3,'0')}` as const,conceptFamilyId:'ch4-disinfection-sterilization' as const})),
+  ...Array.from({length:7},(_,i)=>64+i).map((n)=>({flashcardId:`fc-4-${String(n).padStart(3,'0')}` as const,conceptFamilyId:'ch4-safe-practice-compliance' as const})),
+].sort((a,b)=>a.flashcardId.localeCompare(b.flashcardId))
 
 // Locked initial-assessment distribution: 5 / 6 / 5 / 5 / 4 / 5 = 30.
 const quizRanges: readonly [start: number, end: number, conceptFamilyId: Chapter4ConceptFamilyId][] = [
