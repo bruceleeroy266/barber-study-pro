@@ -153,7 +153,7 @@ export const chapter4PremiumContent: ChapterContent = {
           situation: 'SCENARIO: A barber finishes a haircut on Client A who has an undiagnosed staph infection. The barber wipes the clippers with a towel, sprays them with "disinfectant" for 30 seconds, and immediately uses them on Client B. Client B develops a painful boil three days later.',
           options: [
             { letter: 'A', text: 'The barber did nothing wrong — infections happen', feedback: '❌ CRITICAL FAILURE. This is gross negligence. Multiple violations occurred.' },
-            { letter: 'B', text: 'The barber failed to clean before disinfecting, failed to follow contact time, and failed to use proper disinfectant', feedback: '✅ CORRECT. Three major failures: (1) No cleaning step, (2) 30 seconds vs 10 minutes contact time, (3) Unknown if disinfectant was EPA-registered.' },
+            { letter: 'B', text: 'The barber failed to clean before disinfecting, failed to follow contact time, and failed to use proper disinfectant', feedback: '✅ CORRECT. Three major failures: (1) No cleaning step, (2) The full labeled wet contact time was not followed, and (3) The product’s approved use and directions were not verified.' },
             { letter: 'C', text: 'Only the contact time was wrong', feedback: '❌ PARTIAL. Contact time was wrong, but cleaning before disinfecting was also skipped. The towel may have spread contamination.' },
             { letter: 'D', text: 'The disinfectant brand was the problem', feedback: '❌ INCORRECT. The brand is irrelevant if proper procedure is not followed. Even the best disinfectant fails if misused.' },
           ],
@@ -629,8 +629,8 @@ export const chapter4PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'board-exam-critical',
       title: '📋 BOARD EXAM CRITICAL ALERTS',
-      content: 'These concepts appear on EVERY state board exam. Miss them, and you fail.\n\n1. CLEANING must happen BEFORE disinfecting. Disinfectants cannot penetrate dirt and organic matter.\n\n2. CONTACT TIME is non-negotiable. Most disinfectants require 10 minutes of wet contact.\n\n3. BACTERIAL SPORES are killed only by STERILIZATION, not disinfection.\n\n4. OSHA requires: Exposure Control Plan, Hep B vaccine offer, PPE, sharps disposal, annual training.\n\n5. You CANNOT tell by looking who has HIV, Hep B, or Hep C. Treat EVERY client as infectious.\n\n6. EPA registers disinfectants. Only use EPA-registered products.\n\n7. SDS has 16 sections. GHS pictograms identify hazards at a glance.\n\n8. Refuse service for contagious conditions. Document the refusal.\n\n9. Never mix bleach with ammonia or acids — produces deadly gas.\n\n10. GFCI outlets required near water. Max water temperature: 130°F.',
-      highlight: 'MEMORIZE THESE 10 POINTS',
+      content: 'These are high-value Chapter 4 distinctions that commonly matter in infection-control testing and real shop decisions.\n\n1. CLEANING comes before disinfection because visible debris can interfere with disinfectant contact.\n\n2. CONTACT TIME comes from the product label; do not memorize one universal number.\n\n3. DISINFECTION and STERILIZATION are different processes; sterilization destroys spores.\n\n4. OSHA addresses workplace safety and hazard communication; EPA registers disinfectant products and label claims; state agencies control licensing and state practice rules.\n\n5. Standard Precautions do not depend on whether a client appears sick.\n\n6. SDS information uses a standardized 16-section format and GHS pictograms communicate hazard categories.\n\n7. Antiseptics are for living tissue as directed; disinfectants are for appropriate inanimate items and surfaces.\n\n8. Safe work practices include water, electricity, hot tools, chemicals, cords, fire safety, and equipment condition.\n\n9. When an implement is dropped or contaminated, replace it with a properly processed item before continuing.\n\n10. When rules, labels, or workplace instructions differ, verify the current controlling requirement before acting.',
+      highlight: 'UNDERSTAND THE DISTINCTIONS',
     },
 
     // ═══════════════════════════════════════════
@@ -640,7 +640,7 @@ export const chapter4PremiumContent: ChapterContent = {
       type: 'checklist',
       id: 'sanitation-scorecard',
       title: '📊 SANITATION SCORECARD',
-      subtitle: 'Grade your station. 100% = Inspection Ready. Below 80% = Risk of Closure.',
+      subtitle: 'Use this as a self-check for safer workflow; inspection requirements are set by the current jurisdiction.',
       items: [
         { text: '✓ Tools cleaned AND disinfected between EVERY client (10 pts)' },
         { text: '✓ Fresh cape and neck strip for each client (10 pts)' },
@@ -662,16 +662,14 @@ export const chapter4PremiumContent: ChapterContent = {
       type: 'milestoneList',
       id: 'infection-timeline',
       title: '⏱️ INFECTION CONTROL TIMELINE',
-      subtitle: 'What happens when you skip steps — minute by minute',
+      subtitle: 'How correct processing interrupts indirect transmission',
       milestones: [
-        { year: '0 min', title: 'Client leaves chair', description: 'Tools are contaminated with hair, skin cells, oils, and potential pathogens.' },
-        { year: '2 min', title: 'You wipe tools with a towel', description: 'Towel spreads contamination. Pathogens transfer to towel surface. Towel becomes a vector.' },
-        { year: '5 min', title: 'You spray disinfectant for 30 seconds', description: 'Disinfectant needs 10 MINUTES. At 30 seconds, you have killed less than 10% of pathogens.' },
-        { year: '10 min', title: 'Next client sits down', description: 'Contaminated tools touch new client. Pathogens transfer to scalp, face, neck.' },
-        { year: '3 days', title: 'Client develops infection', description: 'Painful boil, rash, or worse. Client visits doctor. Doctor asks: "Where did you get your hair cut?"' },
-        { year: '1 week', title: 'State board investigation', description: 'Inspector visits your shop. Finds violations. Issues citation. License at risk.' },
-        { year: '2 weeks', title: 'Lawsuit filed', description: 'Client sues for negligence. Medical bills, lost wages, pain and suffering. Your insurance may not cover it.' },
-        { year: '1 month', title: 'Shop closes', description: 'Reputation destroyed. License revoked. Career over. All because of one skipped step.' },
+        { year: 'Step 1', title: 'Service ends', description: 'Reusable implements and touched surfaces are treated as potentially contaminated until properly processed.' },
+        { year: 'Step 2', title: 'Remove visible debris', description: 'Cleaning physically removes hair, oils, residue, and other material that can interfere with disinfection.' },
+        { year: 'Step 3', title: 'Prepare the product correctly', description: 'Verify the EPA-registered disinfectant label, required dilution or ready-to-use directions, compatible surface, PPE, and precautions.' },
+        { year: 'Step 4', title: 'Maintain labeled contact', description: 'Keep the item or surface wet for the full product-specific contact time instead of using a memorized universal number.' },
+        { year: 'Step 5', title: 'Protect processed items', description: 'Store properly processed implements so they remain separated from contaminated or used items until the next service.' },
+        { year: 'Failure point', title: 'Skipping a step breaks the process', description: 'Using an inadequately processed implement can create an indirect-transmission pathway between clients.' },
       ],
     },
 
