@@ -15,6 +15,7 @@ import type { DetectionState, DetectionConfidence, ConceptEvidence } from '../co
 import { getChapter2MappingProvider } from './adapters/chapter-2-adapter'
 import { getChapter3MappingProvider } from './adapters/chapter-3-adapter'
 import { getChapter4MappingProvider } from './adapters/chapter-4-adapter'
+import { getChapter6MappingProvider } from './adapters/chapter-6-adapter'
 import {
   Chapter2DetectionProvider,
   createChapter2DetectionProvider,
@@ -35,6 +36,11 @@ import {
   createChapter5DetectionProvider,
   type Chapter5DetectionProviderConfig,
 } from './adapters/chapter-5-detection-provider'
+import {
+  Chapter6DetectionProvider,
+  createChapter6DetectionProvider,
+  type Chapter6DetectionProviderConfig,
+} from './adapters/chapter-6-detection-provider'
 
 // ───────────────────────────────────────────────
 // Concept Detection Provider Interface
@@ -87,6 +93,8 @@ class MappingProviderRegistry {
     this.registerProvider(getChapter3MappingProvider())
     // Register Chapter 4 (C4-3)
     this.registerProvider(getChapter4MappingProvider())
+    // Register Chapter 6 (C6-5)
+    this.registerProvider(getChapter6MappingProvider())
   }
 
   /**
@@ -303,6 +311,15 @@ export function initializeChapter5DetectionProvider(
   return provider
 }
 
+export function initializeChapter6DetectionProvider(
+  config: Chapter6DetectionProviderConfig
+): Chapter6DetectionProvider {
+  const provider = createChapter6DetectionProvider(config)
+  const registry = getDetectionProviderRegistry()
+  registry.registerProvider(provider)
+  return provider
+}
+
 /**
  * Initialize and register the detection provider for a chapter (C3-3).
  *
@@ -326,6 +343,9 @@ export function initializeChapterDetectionProvider(
   }
   if (chapterId === 'ch-5') {
     return initializeChapter5DetectionProvider(config)
+  }
+  if (chapterId === 'ch-6') {
+    return initializeChapter6DetectionProvider(config)
   }
   return undefined
 }

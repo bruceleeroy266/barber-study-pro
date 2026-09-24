@@ -181,11 +181,11 @@ export const demoChapters: Chapter[] = [
   { id: 'ch-21', chapter_number: 21, title: 'The Business of Barbering', description: 'Ownership, planning, record keeping, booth rental, operations, and advertising for barbering success.', content: null, order_index: 21, is_active: true },
 ]
 
-// Use real flashcards for chapters 1, 3, 4, demo for rest
+// Use canonical real flashcards for hardened chapters; placeholders only where no real deck exists
 export const demoFlashcards: Record<string, Flashcard[]> = {}
 
-// Load real flashcards for chapters 1, 2, 3, 4, 7, 8, 9
-const realChapters = [1, 2, 3, 4, 7, 8, 9]
+// Load canonical real flashcards for chapters 1, 2, 3, 4, 6, 7, 8, 9
+const realChapters = [1, 2, 3, 4, 6, 7, 8, 9]
 for (const i of realChapters) {
   const chId = `ch-${i}`
   if (realFlashcards[chId]) {
@@ -207,9 +207,8 @@ if (batch1Flashcards['ch-5'] && batch1Flashcards['ch-5'].length > 0) {
 }
 
 // Chapter 6: Replace placeholder with orphaned
-if (batch1Flashcards['ch-6'] && batch1Flashcards['ch-6'].length > 0) {
-  demoFlashcards['ch-6'] = batch1Flashcards['ch-6']
-}
+// Chapter 6 is served from chapter-6-premium-flashcards via realFlashcards.
+// Do not replace its canonical fc-6-001..105 IDs with legacy fc-6o-* cards.
 
 // Chapter 7: Already loaded from real flashcards above (ch-7 premium)
 

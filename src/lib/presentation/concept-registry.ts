@@ -2,12 +2,14 @@ import { chapter2Concepts, RETIRED_CONCEPT_IDS } from '@/lib/chapter-2-concepts/
 import { chapter3ConceptFamilies } from '@/lib/chapter-3-concepts/concepts'
 import { chapter4ConceptFamilies } from '@/lib/chapter-4-concepts/concepts'
 import { chapter5ConceptFamilies } from '@/lib/chapter-5-concepts/concepts'
+import { chapter6ConceptFamilies } from '@/lib/chapter-6-concepts/concepts'
 
 const conceptNameById = new Map<string, string>([
   ...chapter2Concepts.map((concept) => [concept.id as string, concept.name] as const),
   ...chapter3ConceptFamilies.map((concept) => [concept.id as string, concept.name] as const),
   ...chapter4ConceptFamilies.map((concept) => [concept.id as string, concept.name] as const),
   ...chapter5ConceptFamilies.map((concept) => [concept.id as string, concept.name] as const),
+  ...chapter6ConceptFamilies.map((concept) => [concept.id as string, concept.name] as const),
 ])
 
 const retiredConceptIds = new Set<string>(RETIRED_CONCEPT_IDS as readonly string[])
@@ -30,4 +32,8 @@ export function isChapter4PresentationConcept(conceptId: string): boolean {
 
 export function isChapter5PresentationConcept(conceptId: string): boolean {
   return chapter5ConceptFamilies.some((concept) => concept.id === conceptId)
+}
+
+export function isChapter6PresentationConcept(conceptId: string): boolean {
+  return chapter6ConceptFamilies.some((concept) => concept.id === conceptId)
 }

@@ -18,6 +18,9 @@ import {
 import {
   detectConceptState as detectChapter5ConceptState,
 } from '@/lib/chapter-5-concepts/detection'
+import {
+  detectConceptState as detectChapter6ConceptState,
+} from '@/lib/chapter-6-concepts/detection'
 import type {
   ConceptEvidence,
   DetectionState,
@@ -28,12 +31,14 @@ import { chapter2Concepts } from '@/lib/chapter-2-concepts/concepts'
 import { chapter3ConceptFamilies } from '@/lib/chapter-3-concepts/concepts'
 import { chapter4ConceptFamilies } from '@/lib/chapter-4-concepts/concepts'
 import { chapter5ConceptFamilies } from '@/lib/chapter-5-concepts/concepts'
+import { chapter6ConceptFamilies } from '@/lib/chapter-6-concepts/concepts'
 import { localChapters } from '@/lib/local-data'
 import {
   resolvePresentationConceptName,
   isChapter3PresentationConcept,
   isChapter4PresentationConcept,
   isChapter5PresentationConcept,
+  isChapter6PresentationConcept,
 } from './concept-registry'
 import type { ConceptId } from '@/lib/reassessment/types'
 
@@ -64,9 +69,23 @@ export function translateDetectionState(state: DetectionState): string {
 
 export function translateConfidence(confidence: DetectionConfidence): string {
   switch (confidence) {
-    case 'low': return 'low confidence — limited observations'
-    case 'medium': return 'moderate confidence'
-    case 'high': return 'high confidence — consistent pattern'
+    case 'low': return 'Evidence strength: limited — few observations'
+    case 'medium': return 'Evidence strength: moderate'
+    case 'high': return 'Evidence strength: strong — consistent pattern'
+  }
+}
+
+export function translateStoredDetectionSummary(state: string | null | undefined): string | null {
+  if (!state) return null
+  switch (state) {
+    case 'currently_performing_well':
+    case 'improving':
+    case 'emerging_weakness':
+    case 'repeated_weakness':
+    case 'insufficient_evidence':
+      return translateDetectionState(state)
+    default:
+      return 'Outcome recorded'
   }
 }
 
@@ -108,7 +127,9 @@ export function summarizeObservation(evidence: ConceptEvidence | null | undefine
   if (!evidence) return null
 
   const isChapter2 = chapter2Concepts.some((concept) => concept.id === evidence.conceptId)
-  const result = isChapter5PresentationConcept(evidence.conceptId)
+  const result = isChapter6PresentationConcept(evidence.conceptId)
+    ? detectChapter6ConceptState(evidence as Parameters<typeof detectChapter6ConceptState>[0])
+    : isChapter5PresentationConcept(evidence.conceptId)
     ? detectChapter5ConceptState(evidence as Parameters<typeof detectChapter5ConceptState>[0])
     : isChapter4PresentationConcept(evidence.conceptId)
     ? detectChapter4ConceptState(evidence as Parameters<typeof detectChapter4ConceptState>[0])
@@ -137,6 +158,18 @@ export interface CoachingRecommendation {
 }
 
 export function buildCoachingRecommendation(conceptId: ConceptId): CoachingRecommendation {
+  if (isChapter6PresentationConcept(conceptId)) {
+    const family = chapter6ConceptFamilies.find((concept) => concept.id === conceptId)
+    return {
+      confusions: family
+        ? [{ topic: family.name, clarification: family.description }]
+        : [],
+      chapterGuidance:
+        'Use the student’s persisted Chapter 6 evidence and targeted-review history to coach the specific anatomy or physiology concept. Reinforce accurate terminology, service-safety relevance, and scope boundaries without diagnosing a condition, then have the student complete the assigned Knowledge Check before judging improvement.',
+      enrichmentNote: null,
+    }
+  }
+
   if (isChapter5PresentationConcept(conceptId)) {
     const family = chapter5ConceptFamilies.find((concept) => concept.id === conceptId)
     return {

@@ -1,7 +1,6 @@
 /**
- * CHAPTER 6 ENHANCED FLASHCARDS
- * Deep Educational Review Addition
- * Based on comprehensive textbook analysis
+ * CHAPTER 6 DIAGNOSTIC FLASHCARDS — C6-4 HARDENED
+ * 105 cards aligned to the hardened lesson and 10-family concept architecture.
  */
 
 export interface FlashcardData {
@@ -12,783 +11,164 @@ export interface FlashcardData {
   difficulty: 'easy' | 'medium' | 'hard'
 }
 
-// Enhanced Cell Biology Flashcards (15 new cards)
 export const chapter6CellBiologyEnhanced: FlashcardData[] = [
-  {
-    chapterNumber: 6,
-    front: "What is protoplasm and why is it important for barbers to understand?",
-    back: "Protoplasm is the colorless, jellylike substance inside cells where all life processes occur. Barbers need to understand it because healthy protoplasm means healthy skin and hair cells, which affects the quality of services.",
-    category: "cell-biology",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the main components found in protoplasm?",
-    back: "Proteins, fats, carbohydrates, mineral salts, and water. These elements provide the building blocks for cell growth, repair, and reproduction.",
-    category: "cell-biology",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the function of the nucleus in a cell?",
-    back: "The nucleus is the dense center of the cell that controls reproduction and metabolism. It acts like the cell's command center, directing all cellular activities.",
-    category: "cell-biology",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is cytoplasm and where is it located?",
-    back: "Cytoplasm is the watery fluid that surrounds the nucleus inside the cell membrane. It provides the environment where cellular processes take place and helps with growth and self-repair.",
-    category: "cell-biology",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is histology and why do barbers study it?",
-    back: "Histology is the study of tiny structures found in living tissue (microscopic anatomy). Barbers study it to understand skin conditions, hair growth patterns, and how treatments affect tissues at the cellular level.",
-    category: "cell-biology",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are mitochondria and what is their nickname?",
-    back: "Mitochondria are organelles that produce energy for the cell through cellular respiration. They are called the 'powerhouse of the cell' because they generate ATP, the cell's energy currency.",
-    category: "cell-biology",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the function of ribosomes in cells?",
-    back: "Ribosomes are responsible for protein synthesis - they build proteins by reading genetic instructions from the nucleus. Proteins are essential for hair structure, skin repair, and enzyme production.",
-    category: "cell-biology",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the endoplasmic reticulum and what are its two types?",
-    back: "The endoplasmic reticulum is a network of membranes that transports materials throughout the cell. Rough ER has ribosomes attached and makes proteins; smooth ER lacks ribosomes and makes lipids and detoxifies.",
-    category: "cell-biology",
-    difficulty: "hard"
-  },
-  {
-    chapterNumber: 6,
-    front: "What does the Golgi apparatus do in a cell?",
-    back: "The Golgi apparatus packages, modifies, and ships proteins and lipids to their final destinations. It acts like the cell's post office, ensuring substances get where they need to go.",
-    category: "cell-biology",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are lysosomes and what is their function?",
-    back: "Lysosomes are organelles containing digestive enzymes that break down waste materials, cellular debris, and foreign invaders. They act as the cell's cleanup crew and recycling center.",
-    category: "cell-biology",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the cell membrane and what does it do?",
-    back: "The cell membrane is the protective outer boundary of the cell that controls what enters and exits. It maintains the cell's internal environment while allowing nutrients in and waste out.",
-    category: "cell-biology",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "How does understanding cell biology help barbers provide better services?",
-    back: "Understanding cell biology helps barbers: recognize healthy vs. unhealthy skin/hair, understand how products work at the cellular level, identify when to refer clients to medical professionals, and explain treatment benefits to clients.",
-    category: "cell-biology",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is cell reproduction and why is it important for hair growth?",
-    back: "Cell reproduction (mitosis) is the process where cells divide to create new cells. It's essential for hair growth because hair follicles constantly produce new cells that form the hair shaft.",
-    category: "cell-biology",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are centrioles and when are they active?",
-    back: "Centrioles are organelles that help organize cell division. They are most active during cell reproduction, ensuring that each new cell receives the correct genetic material.",
-    category: "cell-biology",
-    difficulty: "hard"
-  },
-  {
-    chapterNumber: 6,
-    front: "What role do cells play in the body's response to barbering treatments?",
-    back: "Cells respond to treatments like massage (increased circulation brings more nutrients to cells), heat (opens pores and increases cell metabolism), and products (chemicals interact with cell membranes and processes).",
-    category: "cell-biology",
-    difficulty: "medium"
-  }
+  { chapterNumber: 6, front: "Which process BEST explains how ordinary body tissues produce new cells for growth and repair?", back: "Mitosis: somatic cells divide to produce new cells for growth and tissue renewal.", category: "cell-biology", difficulty: "hard" },
+  { chapterNumber: 6, front: "A student confuses anatomy with physiology. Which description BEST fits physiology at the cellular level?", back: "Physiology focuses on function—how cells and tissues carry out life processes.", category: "cell-biology", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which cell structure should you associate MOST directly with DNA and control of reproduction?", back: "The nucleus.", category: "cell-biology", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which cell boundary BEST explains selective movement of substances into and out of a cell?", back: "The cell membrane.", category: "cell-biology", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which description BEST distinguishes cytoplasm from the nucleus?", back: "Cytoplasm is the fluid region around the nucleus where many cellular processes occur.", category: "cell-biology", difficulty: "medium" },
+  { chapterNumber: 6, front: "A question asks which organelle produces ATP. Which choice is BEST?", back: "Mitochondria.", category: "cell-biology", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which organelle is MOST directly responsible for protein synthesis?", back: "Ribosomes.", category: "cell-biology", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which pairing is CORRECT: rough ER or smooth ER?", back: "Rough ER is associated with ribosomes/protein processing; smooth ER is associated with lipids and detoxification.", category: "cell-biology", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which organelle BEST matches packaging and shipping proteins and lipids?", back: "Golgi apparatus.", category: "cell-biology", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which organelle BEST matches digestion of cellular waste and debris?", back: "Lysosomes.", category: "cell-biology", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which tissue type BEST matches the protective covering role of skin?", back: "Epithelial tissue.", category: "cell-biology", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which statement BEST describes connective tissue in this chapter?", back: "It supports, protects, and binds; examples include bone, cartilage, fat, and blood.", category: "cell-biology", difficulty: "medium" },
 ]
 
-// Enhanced Skeletal System Flashcards (20 new cards)
+export const chapter6BodySystemsEnhanced: FlashcardData[] = [
+  { chapterNumber: 6, front: "A barber is working directly with skin, hair, nails, and glands. Which system is PRIMARY?", back: "The integumentary system.", category: "body-systems", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which pair BEST distinguishes anatomy from physiology?", back: "Anatomy = structure; physiology = function.", category: "body-systems", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which concept BEST describes the body maintaining stable internal conditions?", back: "Homeostasis.", category: "body-systems", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which concept BEST describes the body’s life-sustaining chemical reactions?", back: "Metabolism.", category: "body-systems", difficulty: "medium" },
+  { chapterNumber: 6, front: "A service involves skin sensation, facial movement, and blood flow. What is the BEST systems-level conclusion?", back: "Body systems are integrated and can act together during one service.", category: "body-systems", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which system BEST matches body structure and protection through bones?", back: "Skeletal system.", category: "body-systems", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which system BEST matches movement, posture, and heat production?", back: "Muscular system.", category: "body-systems", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which system BEST matches sensation and communication through nerves?", back: "Nervous system.", category: "body-systems", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which system BEST matches hormones and gland signaling?", back: "Endocrine system.", category: "body-systems", difficulty: "medium" },
+  { chapterNumber: 6, front: "Why is body-systems knowledge useful to barbers WITHOUT crossing scope?", back: "It supports safer service decisions and recognition of when to stop or refer—not diagnosis.", category: "body-systems", difficulty: "hard" },
+]
+
 export const chapter6SkeletalEnhanced: FlashcardData[] = [
-  {
-    chapterNumber: 6,
-    front: "What is osteology and why do barbers need to know about it?",
-    back: "Osteology is the study of the anatomy, structure, and function of bones. Barbers need to understand it for facial massage, understanding bone-related skin contours, and proper draping techniques.",
-    category: "skeletal",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the primary functions of the skeletal system?",
-    back: "1) Give shape and support to the body, 2) Protect internal structures and organs, 3) Serve as attachments for muscles and act as levers for movement, 4) Produce blood cells, 5) Store minerals.",
-    category: "skeletal",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is bone composed of?",
-    back: "Bone is composed of about one-third organic matter (cells and blood) and two-thirds minerals (mainly calcium carbonate and calcium phosphate). This combination makes bone both strong and slightly flexible.",
-    category: "skeletal",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the two types of joints and give examples of each?",
-    back: "Movable joints (diarthroses) like elbows, knees, and hips allow free movement. Immovable joints (synarthroses) like those in the skull and pelvis allow little or no movement.",
-    category: "skeletal",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the 14 bones of the face that barbers should know?",
-    back: "Nasal bones (2), lacrimal bones (2), zygomatic bones/cheekbones (2), maxillae (2), and mandible (1). The mandible is the largest and strongest facial bone.",
-    category: "skeletal",
-    difficulty: "hard"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the mandible and why is it important for barbers?",
-    back: "The mandible is the lower jawbone - the largest and strongest bone of the face. Barbers work around it during shaving, facial massage, and beard design. Understanding its shape helps create clean lines.",
-    category: "skeletal",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the zygomatic bones and where are they located?",
-    back: "The zygomatic bones (also called malar bones or cheekbones) form the prominence of the cheeks. There are two zygomatic bones, one on each side of the face.",
-    category: "skeletal",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the maxilla and what does it form?",
-    back: "The maxilla (plural: maxillae) forms the bones of the upper jaw. There are two maxillae that fuse together. They hold the upper teeth and form part of the eye socket.",
-    category: "skeletal",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the nasal bones and what do they form?",
-    back: "The nasal bones are two small bones that form the bridge of the nose. They create the bony structure that supports the upper part of the nose.",
-    category: "skeletal",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the lacrimal bones and where are they located?",
-    back: "The lacrimal bones are two small, thin bones located at the front inner wall of the orbits (eye sockets). They are the smallest bones of the face.",
-    category: "skeletal",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What bones make up the cranium and how many are there?",
-    back: "The cranium consists of 8 bones: 1 occipital, 2 parietal, 1 frontal, 2 temporal, 1 ethmoid, and 1 sphenoid. These bones protect the brain.",
-    category: "skeletal",
-    difficulty: "hard"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the occipital bone and where is it located?",
-    back: "The occipital bone is the hindmost bone of the skull, located below the parietal bones. It forms the back of the skull above the nape and contains the opening for the spinal cord.",
-    category: "skeletal",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the parietal bones and what do they form?",
-    back: "The parietal bones are two bones that form the sides and top of the cranium. They meet at the sagittal suture along the top of the head.",
-    category: "skeletal",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What does the frontal bone form?",
-    back: "The frontal bone forms the forehead and the upper part of the eye sockets. It's the bone that creates the brow ridge and protects the frontal lobe of the brain.",
-    category: "skeletal",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "Where are the temporal bones located?",
-    back: "The temporal bones are two bones that form the sides of the head in the ear region. They house the ear structures and form part of the jaw joint.",
-    category: "skeletal",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the hyoid bone and why is it unique?",
-    back: "The hyoid bone is a U-shaped bone at the base of the tongue that supports the tongue and its muscles. It's unique because it doesn't articulate (connect) with any other bone - it floats in muscle.",
-    category: "skeletal",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the cervical vertebrae and how many are there?",
-    back: "The cervical vertebrae are the seven bones of the top part of the vertebral column located in the neck region. They are labeled C1 through C7 and support the head while allowing neck movement.",
-    category: "skeletal",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What bones form the thorax (chest cage)?",
-    back: "The thorax consists of the sternum (breastbone), clavicle (collarbone), scapula (shoulder blade), and 12 pairs of ribs. This framework protects the heart, lungs, and other delicate internal organs.",
-    category: "skeletal",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "Which cranial bones are NOT affected during barbering services?",
-    back: "The ethmoid and sphenoid bones are not affected when performing services or giving massage. They are located deep within the skull and don't influence external barbering techniques.",
-    category: "skeletal",
-    difficulty: "hard"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the difference between the cranium and the facial skeleton?",
-    back: "The cranium is the braincase composed of 8 bones that protect the brain. The facial skeleton is the framework of the face composed of 14 bones that form facial features and hold sensory organs.",
-    category: "skeletal",
-    difficulty: "medium"
-  }
+  { chapterNumber: 6, front: "A client opens the mouth during beard detailing. Which facial bone is moving?", back: "The mandible.", category: "skeletal", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which landmark BEST matches the cheekbone used in facial design?", back: "Zygomatic bone.", category: "skeletal", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which skull region is MOST relevant as a posterior head landmark?", back: "Occipital bone.", category: "skeletal", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which bone forms the forehead and upper eye-socket region?", back: "Frontal bone.", category: "skeletal", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which paired bones form much of the sides and roof of the cranium?", back: "Parietal bones.", category: "skeletal", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which paired bones are located around the ear region?", back: "Temporal bones.", category: "skeletal", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which bones form the upper jaw?", back: "The paired maxillae.", category: "skeletal", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which bones form the bridge of the nose?", back: "The paired nasal bones.", category: "skeletal", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which statement about the adult skull is BEST?", back: "It has 22 bones: 8 cranial and 14 facial bones.", category: "skeletal", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which structure is UNIQUE because it does not articulate directly with another bone?", back: "The hyoid bone.", category: "skeletal", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which spinal region should receive the MOST direct neck-support awareness during shampooing?", back: "The cervical region, with 7 cervical vertebrae.", category: "skeletal", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which statement BEST matches the adult spinal column wording used in the lesson?", back: "It is described as 26 bones because the sacrum and coccyx are fused in adults.", category: "skeletal", difficulty: "hard" },
 ]
 
-// Enhanced Muscular System Flashcards (25 new cards)
 export const chapter6MuscularEnhanced: FlashcardData[] = [
-  {
-    chapterNumber: 6,
-    front: "What is myology and why is it important for barbers?",
-    back: "Myology is the study of the structure, functioning, and diseases of muscles. It's crucial for barbers because facial massage, scalp treatments, and understanding facial expressions all require knowledge of muscle location and function.",
-    category: "muscular",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the three types of muscular tissue?",
-    back: "1) Striated (striped) or voluntary muscles - controlled by will, attached to bones. 2) Nonstriated (smooth) or involuntary muscles - function automatically, found in internal organs. 3) Cardiac muscle - found only in the heart, involuntary but with striations.",
-    category: "muscular",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the three parts of a muscle?",
-    back: "Origin (attached closest to skeleton, doesn't move), Belly (middle part that contracts), and Insertion (part that moves, farthest from skeleton). Understanding these helps with proper massage direction.",
-    category: "muscular",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the four muscles of the scalp and what is their collective name?",
-    back: "The epicranius (occipitofrontalis) consists of four muscles: occipitalis, frontalis, and the epicranial aponeurosis that connects them. These muscles control scalp movement and eyebrow raising.",
-    category: "muscular",
-    difficulty: "hard"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the epicranius and what does it do?",
-    back: "The epicranius (also called occipitofrontalis) is a broad muscle covering the top of the skull. It raises the eyebrows, draws the scalp forward, and causes wrinkles across the forehead.",
-    category: "muscular",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the occipitalis muscle and what is its function?",
-    back: "The occipitalis is the back (posterior) portion of the epicranius. It draws the scalp backward and is located at the back of the head.",
-    category: "muscular",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the frontalis muscle and what does it control?",
-    back: "The frontalis is the front (anterior) portion of the epicranius. It raises the eyebrows, draws the scalp forward, and causes horizontal wrinkles across the forehead.",
-    category: "muscular",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the epicranial aponeurosis?",
-    back: "The epicranial aponeurosis is a tough, fibrous tendon that connects the occipitalis and frontalis muscles. It covers the top of the skull like a helmet.",
-    category: "muscular",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the muscles of mastication (chewing) and what do they do?",
-    back: "The main chewing muscles are the masseter and temporalis. They coordinate to open and close the mouth and bring the jaw forward or backward, assisted by the pterygoid muscles.",
-    category: "muscular",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the masseter muscle and where is it located?",
-    back: "The masseter is a thick, powerful muscle that covers the side of the jaw. It's one of the main chewing muscles and can be felt when clenching the jaw.",
-    category: "muscular",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the temporalis muscle?",
-    back: "The temporalis is a fan-shaped muscle located on the side of the head above the ear. It assists in chewing by elevating and retracting the mandible (lower jaw).",
-    category: "muscular",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the two major muscles of the neck that barbers should know?",
-    back: "The platysma (broad muscle extending from chest to chin, depresses lower jaw and lip) and the sternocleidomastoid (extends from collar/chest to temporal bone, bends and rotates the head).",
-    category: "muscular",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the platysma muscle and what does it do?",
-    back: "The platysma is a broad, flat muscle extending from the chest and shoulder muscles to the side of the chin. It depresses the lower jaw and lip and creates tension in the neck during shaving.",
-    category: "muscular",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the sternocleidomastoid muscle?",
-    back: "The sternocleidomastoid is a thick muscle extending from the collar and chest bones to the temporal bone at the back of the ear. It bends and rotates the head and is a key landmark for neck shaving.",
-    category: "muscular",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the muscles of the ear and what do they do?",
-    back: "The three ear muscles are: auricularis superior (draws ear upward), auricularis anterior (draws ear forward), and auricularis posterior (draws ear backward). These are vestigial muscles with minimal function in humans.",
-    category: "muscular",
-    difficulty: "hard"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the zygomaticus major and minor muscles?",
-    back: "The zygomaticus major pulls the mouth upward and backward (smiling muscle). The zygomaticus minor pulls the upper lip backward, upward, and outward. Both are important for facial expressions.",
-    category: "muscular",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the orbicularis oculi muscle?",
-    back: "The orbicularis oculi is the ring muscle around the eye socket that enables you to close your eyes. It's important for blinking, squinting, and protecting the eye.",
-    category: "muscular",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the orbicularis oris muscle?",
-    back: "The orbicularis oris is the flat band of muscle around the upper and lower lips that compresses, contracts, puckers, and wrinkles the lips. It's essential for speaking and facial expressions.",
-    category: "muscular",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the buccinator muscle and where is it located?",
-    back: "The buccinator is a thin, flat muscle of the cheek between the upper and lower jaw. It compresses the cheeks and expels air between the lips (used for blowing and sucking).",
-    category: "muscular",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the mentalis muscle and what does it do?",
-    back: "The mentalis muscle elevates the lower lip and raises and wrinkles the skin of the chin. It creates the 'pouting' expression and is active during shaving the chin area.",
-    category: "muscular",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are abductor and adductor muscles?",
-    back: "Abductors draw a body part away from the midline (in the hand, they spread fingers apart). Adductors draw a body part toward the midline (in the hand, they pull fingers together).",
-    category: "muscular",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are flexor and extensor muscles of the forearm?",
-    back: "Flexor muscles bend or flex the wrist and fingers (like making a fist). Extensor muscles straighten the wrist, hand, and fingers to form a straight line. Barbers use both constantly while cutting hair.",
-    category: "muscular",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the pronator and supinator muscles?",
-    back: "The pronator turns the hand inward so the palm faces downward. The supinator rotates the radius outward so the palm faces upward. These movements are essential for barbering tool handling.",
-    category: "muscular",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the trapezius muscle and what does it do?",
-    back: "The trapezius is a large, triangular muscle covering the back of the neck and upper back. It rotates and controls swinging movements of the arm and helps maintain posture.",
-    category: "muscular",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "How can barbers use muscle knowledge to improve their services?",
-    back: "Understanding muscles helps barbers: perform effective facial massage in the direction of muscle fibers, identify tension areas, explain muscle-related skin concerns to clients, and avoid causing muscle strain during services.",
-    category: "muscular",
-    difficulty: "medium"
-  }
+  { chapterNumber: 6, front: "A client clenches the jaw and the jaw angle becomes prominent. Which muscle is MOST responsible?", back: "Masseter.", category: "muscular", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which muscle BEST matches elevation and retraction of the mandible?", back: "Temporalis.", category: "muscular", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which muscle BEST matches head rotation and neck flexion?", back: "Sternocleidomastoid.", category: "muscular", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which broad superficial neck muscle is relevant during neck shaving?", back: "Platysma.", category: "muscular", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which facial muscle closes the eyelid?", back: "Orbicularis oculi.", category: "muscular", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which facial muscle surrounds and moves the lips?", back: "Orbicularis oris.", category: "muscular", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which cheek muscle compresses the cheek?", back: "Buccinator.", category: "muscular", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which forehead muscle raises the eyebrows?", back: "Frontalis.", category: "muscular", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which posterior scalp muscle draws the scalp backward?", back: "Occipitalis.", category: "muscular", difficulty: "medium" },
+  { chapterNumber: 6, front: "What is the epicranial aponeurosis MOST accurately classified as?", back: "A tough fibrous tendon connecting frontalis and occipitalis—not a muscle.", category: "muscular", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which three muscle types should a student distinguish?", back: "Skeletal/striated, smooth/nonstriated, and cardiac.", category: "muscular", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which muscle type BEST explains arrector pili and goosebumps?", back: "Smooth involuntary muscle.", category: "muscular", difficulty: "hard" },
 ]
 
-// Enhanced Nervous System Flashcards (20 new cards)
 export const chapter6NervousEnhanced: FlashcardData[] = [
-  {
-    chapterNumber: 6,
-    front: "What is neurology and why is it important for barbers?",
-    back: "Neurology is the study of the structure, function, and pathology of the nervous system. It's important for barbers because understanding nerves helps them perform safe and effective massage services and recognize nerve-related conditions.",
-    category: "nervous",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the two main divisions of the nervous system?",
-    back: "The central nervous system (CNS) consisting of the brain and spinal cord, and the peripheral nervous system (PNS) consisting of nerves extending from the CNS to all parts of the body.",
-    category: "nervous",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What does the central nervous system (CNS) control?",
-    back: "The CNS controls consciousness, mental activities, the five senses, and voluntary muscle actions including all body movements and facial expressions. It's the command center of the body.",
-    category: "nervous",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the function of the peripheral nervous system (PNS)?",
-    back: "The PNS carries impulses (messages) to and from the central nervous system. It includes sensory nerves that bring information to the brain and motor nerves that carry commands to muscles and glands.",
-    category: "nervous",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the two types of nerves and what do they do?",
-    back: "Sensory (afferent) nerves carry impulses FROM the sense organs TO the brain (touch, pain, temperature). Motor (efferent) nerves carry impulses FROM the brain TO muscles and glands to produce movement.",
-    category: "nervous",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is a neuron and what are its main parts?",
-    back: "A neuron (nerve cell) is the primary structural unit of the nervous system. Its main parts are: cell body (contains nucleus), dendrites (receive messages), and axon (sends messages away).",
-    category: "nervous",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are dendrites and what is their function?",
-    back: "Dendrites are treelike branchings of nerve fibers extending from the nerve cell body. They carry impulses TOWARD the cell body and receive impulses from other neurons.",
-    category: "nervous",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is an axon and what does it do?",
-    back: "An axon is a long fiber extending from the neuron cell body that carries impulses AWAY from the cell to other neurons, glands, or muscles. Axons can be very long - up to several feet.",
-    category: "nervous",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is a reflex and how does it work?",
-    back: "A reflex is an automatic reaction to a stimulus that doesn't require conscious thought. It involves a sensory receptor sending a signal to the spinal cord, which immediately sends a command to a muscle to react (like pulling hand away from something hot).",
-    category: "nervous",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "How many pairs of cranial nerves are there and where do they originate?",
-    back: "There are 12 pairs of cranial nerves that originate in the brain and reach various parts of the head, face, and neck. They emerge through openings in the skull.",
-    category: "nervous",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the fifth cranial nerve and what is it also called?",
-    back: "The fifth cranial nerve is the trigeminal nerve (also called trifacial nerve or trifacial). It's the largest cranial nerve and the chief sensory nerve of the face, serving as the motor nerve for chewing muscles.",
-    category: "nervous",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the three branches of the trigeminal (fifth cranial) nerve?",
-    back: "Ophthalmic branch (forehead, upper eyelid, scalp), Maxillary branch (lower eyelid, side of nose, upper lip), and Mandibular branch (lower lip, chin, muscles of chewing).",
-    category: "nervous",
-    difficulty: "hard"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the seventh cranial nerve and what is its importance to barbers?",
-    back: "The seventh cranial nerve is the facial nerve - the chief motor nerve of the face. Its branches control all muscles of facial expression. It's crucial for barbers to understand because facial massage affects this nerve.",
-    category: "nervous",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the main branches of the facial (seventh cranial) nerve?",
-    back: "Posterior auricular (behind ear), temporal (temple/forehead), zygomatic (cheek), buccal (mouth area), and marginal mandibular (chin/lower lip). These control facial expressions.",
-    category: "nervous",
-    difficulty: "hard"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the eleventh cranial nerve and why is it important for barbers?",
-    back: "The eleventh cranial nerve is the accessory nerve, a motor nerve controlling neck and shoulder muscles. It's important to barbers because it's affected during facials and neck massage.",
-    category: "nervous",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the greater occipital nerve and what does it affect?",
-    back: "The greater occipital nerve is located at the back of the head and affects the scalp as far up as the top of the head. It's important for scalp massage and can be a source of headaches.",
-    category: "nervous",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the greater auricular nerve and where is it located?",
-    back: "The greater auricular nerve is located at the side of the neck and affects the external ears and the areas in front and back of the ears. It's relevant for services around the ear area.",
-    category: "nervous",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the cervical cutaneous nerve?",
-    back: "The cervical cutaneous nerve is located at the side of the neck and affects the front and sides of the neck as far down as the breastbone. It's important for neck shaving and massage.",
-    category: "nervous",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "How does understanding the nervous system help barbers provide better massage?",
-    back: "Understanding nerves helps barbers: know which areas to focus on for relaxation, avoid pressing too hard on sensitive nerve areas, understand why certain techniques feel good, and recognize when clients might have nerve-related conditions that need referral.",
-    category: "nervous",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are sensory nerve endings called and where are they located?",
-    back: "Sensory nerve endings are called receptors. They are located close to the surface of the skin and detect touch, pressure, temperature, and pain. Every square inch of skin contains thousands of these receptors.",
-    category: "nervous",
-    difficulty: "easy"
-  }
+  { chapterNumber: 6, front: "Which structures make up the CENTRAL nervous system?", back: "Brain and spinal cord.", category: "nervous", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which division includes nerves outside the brain and spinal cord?", back: "Peripheral nervous system.", category: "nervous", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which direction BEST describes sensory/afferent nerve signals?", back: "Toward the CNS from sensory receptors.", category: "nervous", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which direction BEST describes motor/efferent nerve signals?", back: "Away from the CNS toward muscles or glands.", category: "nervous", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which neuron part receives signals toward the cell body?", back: "Dendrites.", category: "nervous", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which neuron part carries signals away from the cell body?", back: "Axon.", category: "nervous", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which cranial nerve is MOST associated with facial sensation and chewing?", back: "Trigeminal nerve (V).", category: "nervous", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which three branches belong to the trigeminal nerve?", back: "Ophthalmic, maxillary, and mandibular.", category: "nervous", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which cranial nerve is MOST associated with facial expression?", back: "Facial nerve (VII).", category: "nervous", difficulty: "medium" },
+  { chapterNumber: 6, front: "A client becomes dizzy during forceful neck work. What is the BEST immediate response?", back: "Stop the service, keep the client safely positioned, assess, and follow first-aid/emergency procedures as needed.", category: "nervous", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which statement BEST describes a reflex?", back: "An automatic response to a stimulus that does not require conscious thought.", category: "nervous", difficulty: "medium" },
+  { chapterNumber: 6, front: "What should nerve knowledge help a barber do WITHOUT diagnosing?", back: "Use safer technique, recognize concerning responses, stop when needed, and refer appropriately.", category: "nervous", difficulty: "hard" },
 ]
 
-// Enhanced Circulatory System Flashcards (15 new cards)
 export const chapter6CirculatoryEnhanced: FlashcardData[] = [
-  {
-    chapterNumber: 6,
-    front: "What is the circulatory system also called and what does it do?",
-    back: "The circulatory system is also called the cardiovascular system or vascular system. It controls the steady circulation of blood through the body using the heart and blood vessels to deliver oxygen and nutrients.",
-    category: "circulatory",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the five types of blood vessels and what do they do?",
-    back: "Arteries (carry blood away from heart), arterioles (small arteries to capillaries), capillaries (exchange nutrients/waste), venules (collect blood from capillaries), and veins (return blood to heart).",
-    category: "circulatory",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the difference between pulmonary and systemic circulation?",
-    back: "Pulmonary circulation takes deoxygenated blood to the lungs for oxygen and returns it to the heart. Systemic circulation carries oxygen-rich blood from the heart throughout the body and returns deoxygenated blood.",
-    category: "circulatory",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the aorta and why is it significant?",
-    back: "The aorta is the largest artery in the body. It carries oxygenated blood away from the heart to distribute throughout the body. It arches over the heart and descends through the chest and abdomen.",
-    category: "circulatory",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the common carotid arteries and what do they supply?",
-    back: "The common carotid arteries are the main arteries supplying blood to the head, face, and neck. They are located on both sides of the neck and divide into internal and external branches.",
-    category: "circulatory",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the difference between internal and external carotid arteries?",
-    back: "The internal carotid artery supplies blood to the brain, eyes, eyelids, forehead, nose, and internal ear. The external carotid artery supplies blood to the anterior (front) parts of the scalp, ears, face, neck, and sides of the head.",
-    category: "circulatory",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the facial artery and what areas does it supply?",
-    back: "The facial artery (also called external maxillary artery) supplies blood to the lower region of the face, mouth, and nose. Its branches include the submental, inferior labial, angular, and superior labial arteries.",
-    category: "circulatory",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the superficial temporal artery and what does it supply?",
-    back: "The superficial temporal artery is a continuation of the external carotid artery that supplies blood to the muscles of the front, side, and top of the head. Its branches include the frontal, parietal, and middle temporal arteries.",
-    category: "circulatory",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the occipital artery and what does it supply?",
-    back: "The occipital artery supplies blood to the skin and muscles of the scalp and back of the head up to the crown. The posterior auricular artery supplies the scalp behind and above the ear.",
-    category: "circulatory",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the six chief functions of blood?",
-    back: "1) Carries water, oxygen, and food to cells, 2) Carries away carbon dioxide and waste, 3) Helps equalize body temperature, 4) Works with immune system to fight toxins/bacteria, 5) Seals leaks by forming clots, 6) Maintains proper pH balance.",
-    category: "circulatory",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "How much blood is in the average adult body?",
-    back: "There are approximately 8 to 10 pints (about 5 liters) of blood in the adult human body, which contributes about 1/12th of the body's total weight.",
-    category: "circulatory",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the composition of blood?",
-    back: "Blood is approximately 80% water. It is sticky, salty, with a normal temperature of 98.6°F. It appears bright red in arteries (oxygen-rich) and dark red in veins (oxygen-poor).",
-    category: "circulatory",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the internal jugular veins and what do they do?",
-    back: "The internal jugular veins are located at the side of the neck and collect blood returning from the brain and parts of the face and neck back to the heart.",
-    category: "circulatory",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "How does massage affect the circulatory system?",
-    back: "Massage increases blood circulation to the skin and muscles, bringing more oxygen and nutrients to cells and helping remove waste products. This is why skin often appears flushed after massage.",
-    category: "circulatory",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "Why is understanding facial arteries important for barbers?",
-    back: "Understanding facial arteries helps barbers: know where blood flow is strongest, understand why certain areas bleed more if cut, apply appropriate pressure if bleeding occurs, and explain the benefits of facial massage to clients.",
-    category: "circulatory",
-    difficulty: "medium"
-  }
+  { chapterNumber: 6, front: "Which rule is MOST reliable for distinguishing arteries from veins?", back: "Arteries carry blood away from the heart; veins return blood toward the heart.", category: "circulatory", difficulty: "hard" },
+  { chapterNumber: 6, front: "Why is oxygen content a weaker artery/vein rule than direction?", back: "Pulmonary circulation is an exception; direction relative to the heart is the reliable rule.", category: "circulatory", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which vessels are the smallest exchange sites between arterial and venous circulation?", back: "Capillaries.", category: "circulatory", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which vessel is the body’s largest artery?", back: "Aorta.", category: "circulatory", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which artery region requires avoiding sustained or forceful pressure during neck work?", back: "The carotid area.", category: "circulatory", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which artery BEST matches the temple/front-of-ear landmark?", back: "Superficial temporal artery.", category: "circulatory", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which artery supplies much of the face and crosses the jaw region?", back: "Facial artery.", category: "circulatory", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which vein returns blood from the brain and deep face/neck structures?", back: "Internal jugular vein.", category: "circulatory", difficulty: "medium" },
+  { chapterNumber: 6, front: "What is the heart’s PRIMARY cardiovascular function?", back: "Pump blood through the circulation.", category: "circulatory", difficulty: "medium" },
+  { chapterNumber: 6, front: "Why does circulation matter to living scalp tissues?", back: "It delivers oxygen and nutrients and carries wastes away.", category: "circulatory", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which statement BEST distinguishes pulmonary from systemic circulation?", back: "Pulmonary circulation exchanges gases with the lungs; systemic circulation supplies the body’s tissues.", category: "circulatory", difficulty: "hard" },
+  { chapterNumber: 6, front: "What should vascular knowledge change about barber technique?", back: "It should reinforce safe pressure, awareness of head/neck vessels, and stopping if symptoms occur.", category: "circulatory", difficulty: "hard" },
 ]
 
-// Enhanced Endocrine & Other Systems Flashcards (10 new cards)
+export const chapter6LymphaticEnhanced: FlashcardData[] = [
+  { chapterNumber: 6, front: "Which statement BEST describes lymph nodes?", back: "They filter lymph and support immune activity.", category: "lymphatic", difficulty: "medium" },
+  { chapterNumber: 6, front: "A persistent swollen area may involve a lymph node. What is the BEST barber response?", back: "Avoid manipulation, do not diagnose, and recommend appropriate medical evaluation.", category: "lymphatic", difficulty: "hard" },
+  { chapterNumber: 6, front: "Why is 'swollen node = infection' an unsafe conclusion?", back: "Swelling can have multiple causes; barbers should not diagnose from the sign alone.", category: "lymphatic", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which organ is the largest lymphatic organ?", back: "Spleen.", category: "lymphatic", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which organ supports T-cell development and is most active in childhood?", back: "Thymus.", category: "lymphatic", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which description BEST defines lymph?", back: "A clear fluid that circulates through lymphatic vessels and eventually returns to the bloodstream.", category: "lymphatic", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which function BEST belongs to the lymphatic/immune system?", back: "Fluid return, filtration, and immune defense.", category: "lymphatic", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which service rule should apply to a tender or abnormal lymph-node area?", back: "Do not massage or manipulate the area.", category: "lymphatic", difficulty: "hard" },
+  { chapterNumber: 6, front: "How should a barber discuss a concerning swollen area?", back: "Describe what was observed without naming a disease and suggest appropriate evaluation.", category: "lymphatic", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which system works closely with circulation to return excess tissue fluid?", back: "The lymphatic system.", category: "lymphatic", difficulty: "medium" },
+]
+
+export const chapter6IntegumentaryEnhanced: FlashcardData[] = [
+  { chapterNumber: 6, front: "Which skin layer contains hair follicles, glands, vessels, and nerve endings?", back: "Dermis.", category: "integumentary", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which statement about the epidermis is MOST accurate?", back: "It is avascular and is nourished by diffusion from deeper vascular tissues.", category: "integumentary", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which structure produces sebum?", back: "Sebaceous glands.", category: "integumentary", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which statement BEST avoids the old sebaceous-gland absolute?", back: "Sebaceous glands are commonly associated with hair follicles; some open directly onto the skin.", category: "integumentary", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which glands produce perspiration?", back: "Sudoriferous (sweat) glands.", category: "integumentary", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which glands produce cerumen in the ear canal?", back: "Ceruminous glands.", category: "integumentary", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which protein is a major structural component of hair, nails, and the outer skin layer?", back: "Keratin.", category: "integumentary", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which cells produce melanin?", back: "Melanocytes.", category: "integumentary", difficulty: "medium" },
+  { chapterNumber: 6, front: "How should epidermal renewal be described MOST accurately?", back: "New cells move toward the surface over several weeks, with timing varying by age, site, and individual.", category: "integumentary", difficulty: "hard" },
+  { chapterNumber: 6, front: "Why is the integumentary system the barber’s PRIMARY workspace?", back: "It includes the skin, hair, nails, and glands worked with most directly.", category: "integumentary", difficulty: "medium" },
+]
+
 export const chapter6EndocrineEnhanced: FlashcardData[] = [
-  {
-    chapterNumber: 6,
-    front: "What is the endocrine system and what does it do?",
-    back: "The endocrine system is a group of specialized glands that affect growth, development, sexual functions, and health of the entire body. Glands secrete hormones directly into the bloodstream.",
-    category: "endocrine",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the difference between endocrine and exocrine glands?",
-    back: "Endocrine glands (ductless) release hormones directly into the bloodstream (like thyroid and pituitary). Exocrine glands (duct glands) release substances through ducts to the body's surface (like sweat and oil glands).",
-    category: "endocrine",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are hormones and what do they do?",
-    back: "Hormones are chemical secretions (like insulin, adrenaline, estrogen) that stimulate functional activity in the body. They influence the welfare of the entire body by regulating various processes.",
-    category: "endocrine",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "How do hormones from the reproductive system affect the skin and hair?",
-    back: "Reproductive hormones (estrogen in females, testosterone in males) affect and change the skin in several ways: acne, loss of scalp hair, facial hair growth and color, and darker skin pigmentation can result from changing hormone levels.",
-    category: "endocrine",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the lymphatic/immune system and what are its functions?",
-    back: "The lymphatic system carries waste and impurities away from cells and protects the body from disease by developing immunity. It's made of lymph, lymph nodes, thymus gland, spleen, and lymph vessels.",
-    category: "lymphatic",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are the four primary functions of the lymphatic system?",
-    back: "1) Carry nourishment from blood to body cells, 2) Act as defense against toxins and bacteria, 3) Remove waste material from body cells to blood, 4) Provide suitable fluid environment for cells.",
-    category: "lymphatic",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is lymph and how does it differ from blood?",
-    back: "Lymph is a clear fluid circulating in lymph spaces (lymphatics) of the body. Unlike blood, lymph doesn't have red blood cells. It eventually returns to the blood where it originated.",
-    category: "lymphatic",
-    difficulty: "medium"
-  },
-  {
-    chapterNumber: 6,
-    front: "What are lymph nodes and what do they do?",
-    back: "Lymph nodes are glandlike structures found inside lymphatic vessels. They filter the lymphatic vessels and help fight infection by trapping and destroying harmful substances.",
-    category: "lymphatic",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is the integumentary system and what does it include?",
-    back: "The integumentary system consists of the skin and its accessory organs: oil and sweat glands, sensory receptors, hair, and nails. 'Integument' means 'natural covering' - like a protective overcoat.",
-    category: "integumentary",
-    difficulty: "easy"
-  },
-  {
-    chapterNumber: 6,
-    front: "What is contained in one square centimeter of skin?",
-    back: "One square centimeter of skin contains: 10 hairs, 15 sebaceous glands, 700 sweat glands, 3,000 sensory cells at nerve fiber ends, 4 yards of nerves, 200 nerve endings for pain, 25 pressure apparatus, 12 heat sensors, 2 cold sensors, and 3 million cells!",
-    category: "integumentary",
-    difficulty: "hard"
-  }
+  { chapterNumber: 6, front: "Why is the pituitary often called the 'master gland' WITHOUT using an absolute?", back: "Its hormones regulate several other endocrine glands, but not every endocrine gland.", category: "endocrine", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which gland is butterfly-shaped in the neck and helps regulate metabolism and body heat?", back: "Thyroid gland.", category: "endocrine", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which glands are located behind the thyroid and help regulate calcium/phosphorus balance?", back: "Parathyroid glands.", category: "endocrine", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which glands sit atop the kidneys and produce hormones including adrenaline and cortisol?", back: "Adrenal glands.", category: "endocrine", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which gland produces insulin and glucagon?", back: "Pancreas.", category: "endocrine", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which statement BEST describes androgen effects?", back: "Androgens can influence facial-hair development and sebaceous activity, with individual variation.", category: "endocrine", difficulty: "hard" },
+  { chapterNumber: 6, front: "A client asks whether thinning proves a thyroid disorder. What is the BEST barber response?", back: "Hair changes have many causes; avoid diagnosis and recommend evaluation if persistent or concerning.", category: "endocrine", difficulty: "hard" },
+  { chapterNumber: 6, front: "What is the BEST scope-safe way to discuss puberty-related oiliness?", back: "Hormonal changes can influence sebaceous activity, but oiliness varies and should not be diagnosed as a disorder.", category: "endocrine", difficulty: "hard" },
 ]
 
-// Export all enhanced flashcards
+export const chapter6OtherSystemsEnhanced: FlashcardData[] = [
+  { chapterNumber: 6, front: "Which system brings oxygen into the body and removes carbon dioxide?", back: "Respiratory system.", category: "other-systems", difficulty: "medium" },
+  { chapterNumber: 6, front: "How do respiratory and cardiovascular systems work together for tissue oxygen supply?", back: "Respiration brings oxygen in; circulation transports it to tissues.", category: "other-systems", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which system breaks food down so nutrients can be absorbed?", back: "Digestive system.", category: "other-systems", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which system helps remove wastes and regulate fluid/electrolyte balance?", back: "Urinary system.", category: "other-systems", difficulty: "medium" },
+  { chapterNumber: 6, front: "Why should dry skin NOT be used to infer kidney disease?", back: "Dry skin is nonspecific; barbers should not diagnose kidney function from a visible sign alone.", category: "other-systems", difficulty: "hard" },
+  { chapterNumber: 6, front: "Why is the reproductive system included in this chapter?", back: "Life-stage hormonal changes can influence hair-growth patterns, texture, and skin condition.", category: "other-systems", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which rule BEST applies to hair/skin changes linked to other body systems?", back: "Recognize general relationships, avoid diagnosis, and refer persistent or concerning changes.", category: "other-systems", difficulty: "hard" },
+]
+
 export const chapter6AllEnhanced = [
   ...chapter6CellBiologyEnhanced,
+  ...chapter6BodySystemsEnhanced,
   ...chapter6SkeletalEnhanced,
   ...chapter6MuscularEnhanced,
   ...chapter6NervousEnhanced,
   ...chapter6CirculatoryEnhanced,
-  ...chapter6EndocrineEnhanced
+  ...chapter6LymphaticEnhanced,
+  ...chapter6IntegumentaryEnhanced,
+  ...chapter6EndocrineEnhanced,
+  ...chapter6OtherSystemsEnhanced,
 ]
 
 export const chapter6EnhancedStats = {
-  cellBiology: chapter6CellBiologyEnhanced.length,
+  cell_biology: chapter6CellBiologyEnhanced.length,
+  body_systems: chapter6BodySystemsEnhanced.length,
   skeletal: chapter6SkeletalEnhanced.length,
   muscular: chapter6MuscularEnhanced.length,
   nervous: chapter6NervousEnhanced.length,
   circulatory: chapter6CirculatoryEnhanced.length,
+  lymphatic: chapter6LymphaticEnhanced.length,
+  integumentary: chapter6IntegumentaryEnhanced.length,
   endocrine: chapter6EndocrineEnhanced.length,
+  other_systems: chapter6OtherSystemsEnhanced.length,
   total: chapter6AllEnhanced.length
 }
-
-

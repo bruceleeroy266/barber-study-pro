@@ -171,7 +171,7 @@ export default function InterventionHistoryView({
                     {item.outcome && outcomeBadge(item.outcome)}
                   </div>
                   <p className="text-sm text-silver mt-1">
-                    {item.chapterTitle} &middot; Cycle: {item.cycleId.slice(0, 8)}…
+                    {item.chapterTitle} &middot; Remediation cycle
                   </p>
                 </div>
               </div>

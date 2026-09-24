@@ -8,7 +8,7 @@
  * Does NOT imply that answering one question completes the entire cycle.
  */
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Button, Card, Alert } from '@/components/ui'
 
 interface ReassessmentKnowledgeCheckProps {
@@ -29,6 +29,30 @@ interface ReassessmentKnowledgeCheckProps {
   totalQuestions?: number
 }
 
+function stableRank(seed: string): number {
+  let hash = 2166136261
+  for (let i = 0; i < seed.length; i++) {
+    hash ^= seed.charCodeAt(i)
+    hash = Math.imul(hash, 16777619)
+  }
+  return hash >>> 0
+}
+
+export function buildReassessmentOptions(question: ReassessmentKnowledgeCheckProps['question']) {
+  const labels = ['A', 'B', 'C', 'D']
+  const raw = [
+    { key: 'a', text: question.answer_a },
+    { key: 'b', text: question.answer_b },
+    { key: 'c', text: question.answer_c },
+    { key: 'd', text: question.answer_d },
+  ]
+  return [...raw]
+    .sort((left, right) =>
+      stableRank(`${question.id}:${left.key}`) - stableRank(`${question.id}:${right.key}`)
+    )
+    .map((option, index) => ({ ...option, label: labels[index] }))
+}
+
 export default function ReassessmentKnowledgeCheck({
   question,
   onSubmit,
@@ -39,12 +63,7 @@ export default function ReassessmentKnowledgeCheck({
 }: ReassessmentKnowledgeCheckProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
 
-  const options = [
-    { key: 'a', label: 'A', text: question.answer_a },
-    { key: 'b', label: 'B', text: question.answer_b },
-    { key: 'c', label: 'C', text: question.answer_c },
-    { key: 'd', label: 'D', text: question.answer_d },
-  ]
+  const options = useMemo(() => buildReassessmentOptions(question), [question])
 
   const handleSubmit = () => {
     if (selectedAnswer && !isLoading && !disabled) {
