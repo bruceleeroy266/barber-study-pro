@@ -297,6 +297,14 @@ export const chapter6PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
+    {
+      type: 'contentBlock',
+      id: 'skeletal-upper-body',
+      title: '🦴 UPPER-BODY BONES BARBERS SHOULD RECOGNIZE',
+      content: 'The source chapter extends skeletal study beyond the skull and spine into the neck, chest, shoulder, arm, wrist, hand, and fingers. The hyoid is a U-shaped bone at the base of the tongue. The humerus is the large upper-arm bone. In the forearm, the ulna lies on the little-finger side and the radius lies on the thumb side. The wrist is formed by eight small carpal bones. Five metacarpals form the framework of the palm, and the phalanges form the fingers and thumb. These landmarks matter to barbers because repeated shoulder, arm, wrist, and hand motion is part of daily professional work.',
+      highlight: 'HUMERUS = UPPER ARM • RADIUS = THUMB SIDE • ULNA = LITTLE-FINGER SIDE • CARPALS = WRIST • METACARPALS = PALM • PHALANGES = FINGERS',
+    },
+
     // SECTION 6: MUSCULAR SYSTEM
     // ═══════════════════════════════════════════
     {
@@ -342,6 +350,44 @@ export const chapter6PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
+    {
+      type: 'tabbed',
+      id: 'muscular-upper-body',
+      title: '💪 MUSCLE STRUCTURE & UPPER-EXTREMITY MOVEMENT',
+      subtitle: 'Book-aligned anatomy for the body mechanics barbers use every day',
+      tabs: [
+        {
+          id: 'muscle-structure',
+          label: 'MUSCLE STRUCTURE',
+          title: 'Origin, Belly, and Insertion',
+          bullets: [
+            { label: 'Origin', description: 'The attachment that remains relatively fixed during a movement.' },
+            { label: 'Belly', description: 'The main middle portion of a muscle that contracts and produces force.' },
+            { label: 'Insertion', description: 'The attachment that moves when the muscle contracts.' },
+          ],
+          facts: [
+            { text: '📋 On exam questions, identify which end is relatively fixed versus which attachment moves during contraction.' },
+          ],
+        },
+        {
+          id: 'arm-forearm-muscles',
+          label: 'ARM & FOREARM',
+          title: 'Key Muscles Used in Repetitive Barbering Work',
+          bullets: [
+            { label: 'Deltoid', description: 'Covers the shoulder joint and helps move the arm outward from the body.' },
+            { label: 'Biceps', description: 'Front upper-arm muscle that helps flex the elbow and lift the forearm.' },
+            { label: 'Triceps', description: 'Back upper-arm muscle that extends the forearm.' },
+            { label: 'Flexors & Extensors', description: 'Forearm muscle groups that bend and straighten the wrist and fingers.' },
+            { label: 'Pronator', description: 'Turns the forearm so the palm rotates inward/downward.' },
+            { label: 'Supinator', description: 'Rotates the forearm so the palm turns upward/outward.' },
+          ],
+          facts: [
+            { text: '📋 Barber relevance: clipper, shear, comb, razor, and brush control depend on coordinated shoulder, elbow, forearm, wrist, and hand movement.' },
+          ],
+        },
+      ],
+    },
+
     // SECTION 7: NERVOUS SYSTEM
     // ═══════════════════════════════════════════
     {
@@ -383,6 +429,43 @@ export const chapter6PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
+    {
+      type: 'tabbed',
+      id: 'nervous-head-neck-branches',
+      title: '🧠 HEAD, FACE & NECK NERVE LANDMARKS',
+      subtitle: 'Named branches emphasized in the source chapter',
+      tabs: [
+        {
+          id: 'facial-nerve-branches',
+          label: 'FACIAL NERVE',
+          title: 'Important Branches of Cranial Nerve VII',
+          bullets: [
+            { label: 'Temporal Branch', description: 'Serves muscles in the temple, forehead, eyebrow, eyelid, and upper cheek region.' },
+            { label: 'Zygomatic Branch', description: 'Serves muscles in the upper cheek area.' },
+            { label: 'Buccal Branch', description: 'Serves muscles around the mouth and cheek region.' },
+            { label: 'Marginal Mandibular Branch', description: 'Serves muscles along the lower jaw and lower lip region.' },
+          ],
+          facts: [
+            { text: '📋 These are motor branches involved with facial expression. Do not confuse facial-nerve motor function with the trigeminal nerve’s major sensory role.' },
+          ],
+        },
+        {
+          id: 'cervical-nerves',
+          label: 'CERVICAL NERVES',
+          title: 'Scalp and Neck Sensory Landmarks',
+          bullets: [
+            { label: 'Greater Occipital Nerve', description: 'Supplies sensation to much of the posterior scalp and extends upward toward the top of the head.' },
+            { label: 'Lesser Occipital Nerve', description: 'Serves the lower posterior/lateral scalp near the base of the skull.' },
+            { label: 'Greater Auricular Nerve', description: 'Serves skin around the ear and nearby side-of-neck region.' },
+            { label: 'Cervical Cutaneous Nerve', description: 'Serves skin along the front and sides of the neck.' },
+          ],
+          facts: [
+            { text: '📋 Barber relevance: know these as anatomical landmarks for sensation and safe service awareness—not as targets for diagnosis or treatment.' },
+          ],
+        },
+      ],
+    },
+
     // SECTION 8: CIRCULATORY SYSTEM
     // ═══════════════════════════════════════════
     {
@@ -394,6 +477,58 @@ export const chapter6PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
+    {
+      type: 'tabbed',
+      id: 'cardiovascular-detail',
+      title: '❤️ BLOOD & HEAD/FACE/NECK CIRCULATION',
+      subtitle: 'Expanded from the source chapter into barber-focused exam review',
+      tabs: [
+        {
+          id: 'blood-functions',
+          label: 'BLOOD FUNCTIONS',
+          title: 'What Blood Does',
+          bullets: [
+            { label: 'Transport', description: 'Carries oxygen and nutrients to living tissues and carries carbon dioxide and other wastes away.' },
+            { label: 'Temperature Regulation', description: 'Helps distribute heat and support temperature balance throughout the body.' },
+            { label: 'Defense', description: 'White blood cells and immune components help defend against harmful microorganisms and toxins.' },
+            { label: 'Clotting', description: 'Platelets and clotting factors help seal damaged blood vessels and reduce continued blood loss.' },
+          ],
+          facts: [
+            { text: '📋 Do not reduce blood to “oxygen delivery” only—transport, defense, temperature regulation, and clotting are all testable functions.' },
+          ],
+        },
+        {
+          id: 'head-face-arteries',
+          label: 'ARTERIES',
+          title: 'Named Arteries Emphasized for the Head and Face',
+          bullets: [
+            { label: 'Supraorbital', description: 'Supplies the upper eyelid and forehead region.' },
+            { label: 'Submental', description: 'Supplies the chin and lower-lip region.' },
+            { label: 'Inferior & Superior Labial', description: 'Supply the lower and upper lips respectively.' },
+            { label: 'Frontal & Parietal', description: 'Branches associated with the forehead and side/crown of the scalp.' },
+            { label: 'Transverse Facial', description: 'Supplies portions of the face across the cheek region.' },
+            { label: 'Middle Temporal', description: 'Supplies the temple region.' },
+            { label: 'Anterior & Posterior Auricular', description: 'Supply areas around the front and back of the ear and nearby scalp.' },
+          ],
+          facts: [
+            { text: '📋 Learn location relationships, not just names. The exam may ask which vessel supplies a specific head, face, lip, ear, or scalp region.' },
+          ],
+        },
+        {
+          id: 'head-neck-veins',
+          label: 'VEINS',
+          title: 'Principal Jugular Veins',
+          bullets: [
+            { label: 'Internal Jugular', description: 'Collects venous blood from the brain and deeper regions of the face and neck.' },
+            { label: 'External Jugular', description: 'Returns blood from more superficial regions of the head, face, and neck toward the heart.' },
+          ],
+          facts: [
+            { text: '📋 Safety remains the priority: anatomical knowledge helps you avoid aggressive pressure over major neck vessels; it does not authorize vascular assessment or treatment.' },
+          ],
+        },
+      ],
+    },
+
     // SECTION 9: LYMPHATIC/IMMUNE SYSTEM
     // ═══════════════════════════════════════════
     {
@@ -516,6 +651,14 @@ export const chapter6PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
+    {
+      type: 'contentBlock',
+      id: 'endocrine-exocrine',
+      title: '⚡ ENDOCRINE VS. EXOCRINE GLANDS',
+      content: 'The source chapter distinguishes two gland categories. Endocrine glands are ductless: they release hormones into the bloodstream so those chemical messengers can influence activity elsewhere in the body. Exocrine glands use ducts to carry their products to a surface or specific location; sweat and oil glands of the skin are familiar barbering examples. Hormones such as insulin, adrenaline, estrogen, and testosterone influence body functions, but visible hair or skin changes alone do not identify a specific hormonal condition.',
+      highlight: 'ENDOCRINE = DUCTLESS / HORMONES TO BLOOD • EXOCRINE = DUCTS / PRODUCT TO A SURFACE OR LOCATION',
+    },
+
     // SECTION 12: REPRODUCTIVE, RESPIRATORY, EXCRETORY, DIGESTIVE
     // ═══════════════════════════════════════════
     {

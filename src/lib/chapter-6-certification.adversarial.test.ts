@@ -222,7 +222,7 @@ describe('C6-7 final Chapter 6 certification', () => {
     expect(chapter6LearningObjectives).toHaveLength(10)
     expect(chapter6ConceptFamilies).toHaveLength(10)
     expect(chapter6PremiumContent.sections.length).toBeGreaterThan(10)
-    expect(chapter6PremiumFlashcards).toHaveLength(105)
+    expect(chapter6PremiumFlashcards).toHaveLength(125)
     expect(chapter6PremiumQuizQuestions).toHaveLength(50)
     expect(chapter6ReassessmentQuestions).toHaveLength(150)
 
@@ -231,7 +231,7 @@ describe('C6-7 final Chapter 6 certification', () => {
     const initialIds = chapter6PremiumQuizQuestions.map((question) => question.id)
     const reserveIds = chapter6ReassessmentQuestions.map((question) => question.id)
 
-    expect(new Set(flashcardIds).size).toBe(105)
+    expect(new Set(flashcardIds).size).toBe(125)
     expect(new Set(initialIds).size).toBe(50)
     expect(new Set(reserveIds).size).toBe(150)
     expect(initialIds.some((id) => reserveIds.includes(id))).toBe(false)
@@ -242,8 +242,8 @@ describe('C6-7 final Chapter 6 certification', () => {
       const initial = chapter6QuizQuestionConceptMappings.filter((m) => m.conceptFamilyId === familyId)
       const reserve = chapter6ReassessmentQuestionConceptMappings.filter((m) => m.conceptFamilyId === familyId)
 
-      expect(content).toHaveLength(1)
-      expect(contentIds.has(content[0].contentBlockId)).toBe(true)
+      expect(content.length).toBeGreaterThanOrEqual(1)
+      expect(content.every((mapping) => contentIds.has(mapping.contentBlockId))).toBe(true)
       expect(cards.length).toBeGreaterThanOrEqual(7)
       expect(initial.length).toBeGreaterThanOrEqual(4)
       expect(reserve).toHaveLength(15)
@@ -254,7 +254,7 @@ describe('C6-7 final Chapter 6 certification', () => {
     }
   })
 
-  it('serves the certified lesson, 105-card deck, and 50-question quiz through the normal student path', () => {
+  it('serves the certified lesson, 125-card deck, and 50-question quiz through the normal student path', () => {
     const content = getChapterContent(6)
     const quiz = getLocalQuiz('ch-6')
     const questions = quiz ? getLocalQuizQuestions(quiz.id) : []
@@ -267,7 +267,7 @@ describe('C6-7 final Chapter 6 certification', () => {
     expect(questions.map((question) => question.id)).toEqual(
       chapter6PremiumQuizQuestions.map((question) => question.id),
     )
-    expect(served).toHaveLength(105)
+    expect(served).toHaveLength(125)
     expect(served.map((card) => card.id)).toEqual(chapter6PremiumFlashcards.map((card) => card.id))
     expect(served.map((card) => card.front)).toEqual(chapter6PremiumFlashcards.map((card) => card.front))
     expect(served.every((card) => /^fc-6-\d{3}$/.test(card.id))).toBe(true)
@@ -341,7 +341,7 @@ describe('C6-7 final Chapter 6 certification', () => {
       const bundle = provider!.buildRemediationContentBundle(familyId)
 
       expect(bundle.conceptId).toBe(familyId)
-      expect(bundle.contentBlockCount).toBe(1)
+      expect(bundle.contentBlockCount).toBeGreaterThanOrEqual(1)
       expect(bundle.flashcardCount).toBeGreaterThanOrEqual(7)
       expect(bundle.flashcards.some((card) => foreignCardIds.has(card.id))).toBe(false)
       expect(provider!.getQuizQuestionById(

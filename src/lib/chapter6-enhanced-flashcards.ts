@@ -1,6 +1,7 @@
 /**
  * CHAPTER 6 DIAGNOSTIC FLASHCARDS — C6-4 HARDENED
- * 105 cards aligned to the hardened lesson and 10-family concept architecture.
+ * 125 cards aligned to the hardened lesson and 10-family concept architecture.
+ * Cards 106-125 were added in C6-8 from the Chapter 6 source-book coverage audit.
  */
 
 export interface FlashcardData {
@@ -146,6 +147,34 @@ export const chapter6OtherSystemsEnhanced: FlashcardData[] = [
   { chapterNumber: 6, front: "Which rule BEST applies to hair/skin changes linked to other body systems?", back: "Recognize general relationships, avoid diagnosis, and refer persistent or concerning changes.", category: "other-systems", difficulty: "hard" },
 ]
 
+
+export const chapter6BookAlignmentEnhanced: FlashcardData[] = [
+  { chapterNumber: 6, front: "Which upper-arm bone should a barber associate with the region between the shoulder and elbow?", back: "The humerus.", category: "skeletal", difficulty: "medium" },
+  { chapterNumber: 6, front: "A question asks for the forearm bone on the thumb side. Which answer is BEST?", back: "Radius.", category: "skeletal", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which sequence correctly moves from wrist to palm to fingers?", back: "Carpals → metacarpals → phalanges.", category: "skeletal", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which neck bone is U-shaped and located at the base of the tongue?", back: "The hyoid bone.", category: "skeletal", difficulty: "medium" },
+
+  { chapterNumber: 6, front: "Which part of a muscle remains relatively fixed during a movement?", back: "The origin.", category: "muscular", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which part of a muscle is the main middle portion that contracts to produce force?", back: "The belly.", category: "muscular", difficulty: "medium" },
+  { chapterNumber: 6, front: "Which forearm action turns the palm inward or downward?", back: "Pronation, produced by pronator muscles.", category: "muscular", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which pairing is CORRECT for the upper arm?", back: "Biceps flexes the elbow; triceps extends the forearm.", category: "muscular", difficulty: "hard" },
+
+  { chapterNumber: 6, front: "Which facial-nerve branch is MOST associated with muscles of the temple and forehead region?", back: "The temporal branch of the facial nerve.", category: "nervous", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which facial-nerve branch is MOST associated with muscles around the mouth and cheek?", back: "The buccal branch.", category: "nervous", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which cervical nerve supplies much of the posterior scalp and reaches toward the top of the head?", back: "The greater occipital nerve.", category: "nervous", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which cervical nerve is associated with skin near the ear and side of the neck?", back: "The greater auricular nerve.", category: "nervous", difficulty: "hard" },
+
+  { chapterNumber: 6, front: "Which blood function BEST explains why bleeding can stop after vessel injury?", back: "Clotting helps seal damaged blood vessels and reduce continued blood loss.", category: "circulatory", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which artery supplies the chin and lower-lip region?", back: "The submental artery.", category: "circulatory", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which arteries are paired MOST directly with the upper and lower lips?", back: "Superior labial artery = upper lip; inferior labial artery = lower lip.", category: "circulatory", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which artery supplies the upper eyelid and forehead region?", back: "The supraorbital artery.", category: "circulatory", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which superficial-temporal branches should be associated with the forehead and side/crown of the scalp?", back: "Frontal and parietal arteries.", category: "circulatory", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which pair BEST distinguishes the principal jugular veins?", back: "Internal jugular drains deeper brain/face/neck regions; external jugular returns blood from more superficial head/face/neck regions.", category: "circulatory", difficulty: "hard" },
+
+  { chapterNumber: 6, front: "Which distinction between endocrine and exocrine glands is MOST accurate?", back: "Endocrine glands are ductless and release hormones into blood; exocrine glands use ducts to deliver products to a surface or location.", category: "endocrine", difficulty: "hard" },
+  { chapterNumber: 6, front: "Which examples from barbering BEST fit exocrine glands?", back: "Sweat and sebaceous glands, because their products travel through ducts.", category: "endocrine", difficulty: "hard" },
+]
+
 export const chapter6AllEnhanced = [
   ...chapter6CellBiologyEnhanced,
   ...chapter6BodySystemsEnhanced,
@@ -157,6 +186,7 @@ export const chapter6AllEnhanced = [
   ...chapter6IntegumentaryEnhanced,
   ...chapter6EndocrineEnhanced,
   ...chapter6OtherSystemsEnhanced,
+  ...chapter6BookAlignmentEnhanced,
 ]
 
 export const chapter6EnhancedStats = {

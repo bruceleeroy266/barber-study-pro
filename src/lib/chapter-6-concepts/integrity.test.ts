@@ -24,9 +24,9 @@ describe('Chapter 6 concept architecture integrity',()=>{
     }
   })
 
-  it('maps each canonical lesson target to an existing content block',()=>{
-    expect(chapter6ContentConceptMappings).toHaveLength(10)
-    expect(new Set(chapter6ContentConceptMappings.map(x=>x.contentBlockId)).size).toBe(10)
+  it('maps every book-aligned lesson target to an existing content block',()=>{
+    expect(chapter6ContentConceptMappings.length).toBeGreaterThan(10)
+    expect(new Set(chapter6ContentConceptMappings.map(x=>x.contentBlockId)).size).toBe(chapter6ContentConceptMappings.length)
     const servedIds=new Set(chapter6PremiumContent.sections.map(section=>section.id))
     for(const mapping of chapter6ContentConceptMappings){
       expect(servedIds.has(mapping.contentBlockId)).toBe(true)
@@ -34,10 +34,10 @@ describe('Chapter 6 concept architecture integrity',()=>{
     }
   })
 
-  it('maps all 105 existing enhanced flashcards exactly once',()=>{
-    expect(chapter6AllEnhanced).toHaveLength(105)
-    expect(chapter6FlashcardConceptMappings).toHaveLength(105)
-    expect(new Set(chapter6FlashcardConceptMappings.map(x=>x.flashcardId)).size).toBe(105)
+  it('maps all 125 enhanced flashcards exactly once',()=>{
+    expect(chapter6AllEnhanced).toHaveLength(125)
+    expect(chapter6FlashcardConceptMappings).toHaveLength(125)
+    expect(new Set(chapter6FlashcardConceptMappings.map(x=>x.flashcardId)).size).toBe(125)
     for(let index=0;index<chapter6AllEnhanced.length;index++){
       const id=`fc-6-${String(index+1).padStart(3,'0')}`
       expect(getChapter6ConceptForFlashcard(id)).not.toBeNull()
