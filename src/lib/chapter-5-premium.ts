@@ -696,6 +696,71 @@ export const chapter5PremiumContent: ChapterContent = {
     },
 
     // ==========================================
+    {
+      type: 'tabbed',
+      id: 'razor-procedures-source-detail',
+      title: 'CONVENTIONAL RAZOR CARE & HANDLING PROCEDURES',
+      subtitle: 'Book-aligned holding, honing, stropping, and care',
+      tabs: [
+        {
+          id: 'razor-service-holding-source',
+          label: 'HOLDING',
+          title: 'Holding Changes With the Task',
+          bullets: [
+            { label: 'SHAVING', description: 'Use the taught shaving grip with the thumb and first fingers controlling the shank/tang area while maintaining deliberate blade control.' },
+            { label: 'HONING / STROPPING', description: 'Control the razor from the shank so the blade can lie flat against the hone or strop.' },
+            { label: 'HAIRCUTTING', description: 'Hair-razor positioning differs from skin shaving; use the grip taught for the cutting tool and service.' },
+            { label: 'PALMING WITH COMB', description: 'Keep the blade oriented away from the comb and client while transferring tools.' },
+          ],
+          facts: [
+            { text: 'SOURCE FOCUS: The correct hold depends on whether the tool is shaving, honing/stropping, haircutting, or being palmed.' },
+          ],
+        },
+        {
+          id: 'razor-quality-care-source',
+          label: 'QUALITY & CARE',
+          title: 'Quality Factors, Size, Style, and Care',
+          bullets: [
+            { label: 'QUALITY FACTORS', description: 'The source organizes conventional-razor selection around balance, temper, grind, finish, size, and style.' },
+            { label: 'COMMON WIDTHS', description: 'Traditional razor widths are commonly expressed in fractions such as 5/8 inch and 7/8 inch.' },
+            { label: 'CARE', description: 'Keep the blade clean, maintain the edge through proper stropping/honing, protect it from corrosion as appropriate, and avoid dropping it.' },
+          ],
+          facts: [
+            { text: 'TEST STRATEGY: If a question asks about razor quality, separate blade geometry, finish, dimensions, balance, and edge care instead of treating them as one feature.' },
+          ],
+        },
+        {
+          id: 'honing-procedure-source',
+          label: 'HONING',
+          title: 'Procedure 5-1 — Honing',
+          bullets: [
+            { label: 'FLAT CONTACT', description: 'Lay the razor so the blade is controlled evenly against the hone.' },
+            { label: 'DIAGONAL STROKES', description: 'Use even diagonal strokes rather than concentrating pressure on one small area.' },
+            { label: 'EQUAL SIDES', description: 'Work both sides evenly to maintain a balanced edge.' },
+            { label: 'LIGHTEN PRESSURE', description: 'Gradually reduce pressure as the edge is refined.' },
+            { label: 'EDGE CHECK', description: 'Use the taught edge-check method from the source procedure before returning the razor to service.' },
+          ],
+          facts: [
+            { text: 'HONE = abrasive sharpening step. It removes/refines metal to restore the cutting edge.' },
+          ],
+        },
+        {
+          id: 'stropping-procedure-source',
+          label: 'STROPPING',
+          title: 'Procedure 5-2 — Stropping',
+          bullets: [
+            { label: 'SECURE THE STROP', description: 'Attach and tension the strop so the surface stays controlled during the stroke.' },
+            { label: 'ROLL ON THE BACK', description: 'Reverse direction by rolling the razor on its back rather than turning the cutting edge into the strop.' },
+            { label: 'EVEN DIAGONAL STROKES', description: 'Use consistent diagonal passes so both sides of the edge are refined evenly.' },
+            { label: 'EDGE CHECK', description: 'Finish with the taught edge-check method before shaving.' },
+          ],
+          facts: [
+            { text: 'STROP = smooth/polish/refine step after honing; it is not the same process as grinding a new edge on a hone.' },
+          ],
+        },
+      ],
+    },
+
     // SECTION 8: RAZOR SAFETY PROTOCOL
     // ==========================================
     {
@@ -999,6 +1064,14 @@ export const chapter5PremiumContent: ChapterContent = {
       title: 'THERMAL IRON MANIPULATION — SOURCE PROCEDURE',
       content: 'The source chapter includes a dedicated thermal-iron manipulation procedure. The sequence is to prepare and section the hair, establish a safe working temperature, control the iron with deliberate hand positioning, guide the hair through the barrel or plates without contacting the scalp, and repeat the movement consistently to create the intended result.',
       highlight: 'SECTION - TEST HEAT - CONTROL THE IRON - PROTECT THE SCALP - MOVE CONSISTENTLY',
+    },
+
+    {
+      type: 'contentBlock',
+      id: 'towel-hand-wrap-source',
+      title: 'PROCEDURE 5-3 — TOWEL WRAPPING THE HAND',
+      content: 'The source chapter includes cloth- and paper-towel wrapping methods that protect the barber hand during appropriate services. The key idea is to fold and position the towel so the working hand is covered while the fingers retain enough control for the service. Use a clean towel or fresh disposable paper product, keep the wrap secure, and replace it if it becomes contaminated, wet beyond safe use, or loses its protective position.',
+      highlight: 'CLEAN MATERIAL - COVER THE HAND - KEEP CONTROL - REPLACE IF CONTAMINATED',
     },
 
     // SECTION 12.5: HAIR CLIPPINGS & SERVICE CLEANUP
