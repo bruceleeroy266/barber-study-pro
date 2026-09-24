@@ -18,6 +18,7 @@ import {
   chapter4ContentConceptMappings,
   chapter4FlashcardConceptMappings,
   chapter4ReassessmentQuestionConceptMappings,
+  chapter4QuizQuestionConceptMappings,
 } from '@/lib/chapter-4-concepts/mappings'
 import { chapter4ConceptFamilies } from '@/lib/chapter-4-concepts/concepts'
 import { chapter4PremiumFlashcards } from '@/lib/chapter-4-premium-flashcards'
@@ -147,15 +148,18 @@ describe('Chapter 4 remediation content provider — question lookup', () => {
     expect(provider!.getQuizQuestionById('qq-3-001')).toBeNull()
   })
 
-  it('counts every mapped question per family (initial 5/6/5/5/4/5; reserve 15 each)', () => {
+  it('counts every mapped question per family with the book-aligned initial distribution and 15 reserve each', () => {
     for (const family of chapter4ConceptFamilies) {
       const reserveCount = chapter4ReassessmentQuestionConceptMappings.filter(
         (m) => m.conceptFamilyId === family.id,
       ).length
       expect(reserveCount).toBe(15)
-      // Provider count covers the initial-quiz mappings (5/6/5/5/4/5).
+      // Provider count must equal the canonical initial mapping count for this family.
       const providerCount = provider!.getConceptQuestionCount(family.id)
-      expect([5, 6, 4]).toContain(providerCount)
+      const initialCount = chapter4QuizQuestionConceptMappings.filter(
+        (m) => m.conceptFamilyId === family.id,
+      ).length
+      expect(providerCount).toBe(initialCount)
     }
   })
 })
