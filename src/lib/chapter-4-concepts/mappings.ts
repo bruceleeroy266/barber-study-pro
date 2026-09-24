@@ -44,7 +44,7 @@ const initialQuizFamilyIds: Readonly<Record<string, Chapter4ConceptFamilyId>> = 
   'qq-4-027':'ch4-safe-practice-compliance',
   'qq-4-028':'ch4-safe-practice-compliance',
   'qq-4-029':'ch4-safe-practice-compliance',
-  'qq-4-030':'ch4-safe-practice-compliance',
+  'qq-4-030':'ch4-cross-contamination',
 } as const
 
 export const chapter4QuizQuestionConceptMappings: readonly Chapter4QuizQuestionConceptMapping[] =
