@@ -511,8 +511,12 @@ test.describe('Pilot onboarding certification', () => {
     // 7. Instructor verifies the newly onboarded student is visible
     // -----------------------------------------------------------------------
     await instructorSession.page.goto('/instructor/students')
-    await expect(instructorSession.page.getByText(STUDENT_NAME, { exact: true })).toBeVisible()
-    await expect(instructorSession.page.getByText(STUDENT_EMAIL, { exact: true })).toBeVisible()
+    const instructorStudentRow = instructorSession.page
+      .getByRole('row')
+      .filter({ hasText: STUDENT_EMAIL })
+    await expect(instructorStudentRow).toBeVisible()
+    await expect(instructorStudentRow.getByText(STUDENT_NAME, { exact: true })).toBeVisible()
+    await expect(instructorStudentRow.getByText(STUDENT_EMAIL, { exact: true })).toBeVisible()
 
     // Also prove the instructor stayed tenant-bound to the provisioned school.
     const { data: instructorProfile } = await service
