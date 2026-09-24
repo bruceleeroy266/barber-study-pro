@@ -56,9 +56,10 @@ describe('Chapter 6 concept architecture integrity',()=>{
     for(const question of chapter6PremiumQuizQuestions) expect(getChapter6ConceptForQuizQuestion(question.id)).not.toBeNull()
   })
 
-  it('exposes assessment-strength gaps instead of pretending every concept is diagnostic-ready',()=>{
+  it('keeps every concept diagnostic-ready in the rebuilt assessment bank',()=>{
     const underQuizThreshold=ACTIVE_CHAPTER6_CONCEPT_FAMILY_IDS.filter(id=>getChapter6QuizEvidenceCount(id)<CHAPTER6_MIN_DIAGNOSTIC_QUESTIONS_PER_CONCEPT)
-    expect(underQuizThreshold).toEqual(['ch6-body-systems','ch6-endocrine','ch6-other-systems'])
+    expect(underQuizThreshold).toEqual([])
+    for(const id of ACTIVE_CHAPTER6_CONCEPT_FAMILY_IDS) expect(getChapter6QuizEvidenceCount(id)).toBeGreaterThanOrEqual(4)
     const noFlashcards=ACTIVE_CHAPTER6_CONCEPT_FAMILY_IDS.filter(id=>getChapter6FlashcardEvidenceCount(id)===0)
     expect(noFlashcards).toEqual(['ch6-body-systems','ch6-other-systems'])
   })
