@@ -16,6 +16,7 @@ import InterventionHistoryView from '@/components/instructor/InterventionHistory
 import {
   resolveConceptName,
   resolveChapterTitle,
+  translateStoredDetectionSummary,
 } from '@/lib/presentation/instructor-diagnostics'
 
 export const dynamic = 'force-dynamic'
@@ -70,6 +71,8 @@ export default async function InterventionHistoryPage({ params }: PageProps) {
     ...item,
     conceptName: resolveConceptName(item.conceptId),
     chapterTitle: resolveChapterTitle(item.chapterId),
+    detectionSummary: translateStoredDetectionSummary(item.detectionSummary) ?? 'Outcome recorded',
+    evaluationSummary: translateStoredDetectionSummary(item.evaluationSummary),
   }))
 
   return (
