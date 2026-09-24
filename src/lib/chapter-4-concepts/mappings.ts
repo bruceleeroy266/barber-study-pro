@@ -37,12 +37,15 @@ export function getChapter4ConceptForQuizQuestion(questionId:string):Chapter4Con
  * tests. No section ids are invented.
  */
 export const chapter4ContentConceptMappings: readonly Chapter4ContentConceptMapping[] = [
-  // Pathogens, Infection & Transmission (3)
+  // Pathogens, Infection & Transmission
+  { contentBlockId: 'infection-principles-source-detail', conceptFamilyId: 'ch4-pathogens-transmission' },
   { contentBlockId: 'pathogen-threat-matrix', conceptFamilyId: 'ch4-pathogens-transmission' },
   { contentBlockId: 'disease-recognition', conceptFamilyId: 'ch4-pathogens-transmission' },
   { contentBlockId: 'transmission-sim', conceptFamilyId: 'ch4-pathogens-transmission' },
 
-  // Cleaning, Disinfection & Sterilization (2)
+  // Cleaning, Disinfection & Sterilization
+  { contentBlockId: 'processing-source-detail', conceptFamilyId: 'ch4-disinfection-sterilization' },
+  { contentBlockId: 'disinfectant-antiseptic-source-detail', conceptFamilyId: 'ch4-disinfection-sterilization' },
   { contentBlockId: 'disinfection-protocol', conceptFamilyId: 'ch4-disinfection-sterilization' },
   { contentBlockId: 'protocol-warning', conceptFamilyId: 'ch4-disinfection-sterilization' },
 
@@ -51,15 +54,19 @@ export const chapter4ContentConceptMappings: readonly Chapter4ContentConceptMapp
   { contentBlockId: 'spot-violation-1', conceptFamilyId: 'ch4-cross-contamination' },
   { contentBlockId: 'infection-timeline', conceptFamilyId: 'ch4-cross-contamination' },
 
-  // Blood Exposure, PPE & Standard Precautions (2)
+  // Blood Exposure, PPE & Standard Precautions
+  { contentBlockId: 'standard-precautions-source-detail', conceptFamilyId: 'ch4-blood-exposure-ppe' },
   { contentBlockId: 'blood-spill-response', conceptFamilyId: 'ch4-blood-exposure-ppe' },
   { contentBlockId: 'ppe-mastery', conceptFamilyId: 'ch4-blood-exposure-ppe' },
 
-  // Regulatory & Chemical Safety (2)
+  // Regulatory & Chemical Safety
+  { contentBlockId: 'regulatory-source-detail', conceptFamilyId: 'ch4-regulatory-chemical-safety' },
   { contentBlockId: 'osha-compliance', conceptFamilyId: 'ch4-regulatory-chemical-safety' },
   { contentBlockId: 'sds-mastery', conceptFamilyId: 'ch4-regulatory-chemical-safety' },
 
-  // Safe Barbering Practice & Compliance (6)
+  // Safe Barbering Practice & Compliance
+  { contentBlockId: 'safe-work-practices-source-detail', conceptFamilyId: 'ch4-safe-practice-compliance' },
+  { contentBlockId: 'professional-responsibilities-source-detail', conceptFamilyId: 'ch4-safe-practice-compliance' },
   { contentBlockId: 'safety-command-center', conceptFamilyId: 'ch4-safe-practice-compliance' },
   { contentBlockId: 'real-stakes', conceptFamilyId: 'ch4-safe-practice-compliance' },
   { contentBlockId: 'board-exam-critical', conceptFamilyId: 'ch4-safe-practice-compliance' },
