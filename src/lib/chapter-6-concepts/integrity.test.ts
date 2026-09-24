@@ -61,7 +61,8 @@ describe('Chapter 6 concept architecture integrity',()=>{
     expect(underQuizThreshold).toEqual([])
     for(const id of ACTIVE_CHAPTER6_CONCEPT_FAMILY_IDS) expect(getChapter6QuizEvidenceCount(id)).toBeGreaterThanOrEqual(4)
     const noFlashcards=ACTIVE_CHAPTER6_CONCEPT_FAMILY_IDS.filter(id=>getChapter6FlashcardEvidenceCount(id)===0)
-    expect(noFlashcards).toEqual(['ch6-body-systems','ch6-other-systems'])
+    expect(noFlashcards).toEqual([])
+    for(const id of ACTIVE_CHAPTER6_CONCEPT_FAMILY_IDS) expect(getChapter6FlashcardEvidenceCount(id)).toBeGreaterThanOrEqual(7)
   })
 
   it('fails closed for unknown IDs',()=>{
