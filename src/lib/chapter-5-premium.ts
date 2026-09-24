@@ -215,6 +215,35 @@ export const chapter5PremiumContent: ChapterContent = {
     },
 
     // ==========================================
+    {
+      type: 'tabbed',
+      id: 'comb-brush-source-detail',
+      title: 'COMB & BRUSH SOURCE DETAILS',
+      subtitle: 'Book-aligned distinctions that sharpen tool selection',
+      tabs: [
+        { id: 'comb-materials-source', label: 'COMB MATERIALS', title: 'Material Changes How a Comb Behaves',
+          bullets: [
+            { label: 'HARD RUBBER', description: 'Flexible and durable, but repeated disinfectant exposure can deteriorate the material.' },
+            { label: 'CARBON', description: 'Antistatic and resistant to heat and many chemicals.' },
+            { label: 'GRAPHITE', description: 'Less rigid than many traditional comb materials.' },
+            { label: 'METAL', description: 'Retains heat and may corrode, so material choice matters when heat or moisture is involved.' },
+          ],
+          facts: [{ text: 'SOURCE FOCUS: Material, tooth pattern, and intended service all affect comb selection.' }],
+        },
+        { id: 'comb-brush-types-source', label: 'TYPES & USES', title: 'Match the Tool to the Hair and Service',
+          bullets: [
+            { label: 'FINE/NARROW TEETH', description: 'Bring strands together for precision cutting and detail work.' },
+            { label: 'WIDE/COARSE TEETH', description: 'Handle larger amounts of hair, detangle, and distribute product.' },
+            { label: 'TAIL COMB', description: 'Useful for sectioning, parting, wrapping, and color work.' },
+            { label: 'PICK COMB', description: 'Designed for textured or tightly curled hair.' },
+            { label: 'NATURAL BRISTLE', description: 'Polishes hair and distributes natural oils; commonly selected for fine or delicate hair.' },
+            { label: 'SYNTHETIC / MIXED / PADDLE / ROUND / VENTED / WET', description: 'Each brush design serves a different control, smoothing, detangling, volume, or drying need.' },
+          ],
+          facts: [{ text: 'TEST STRATEGY: Identify the hair condition or service goal first, then eliminate tools whose design does not match that purpose.' }],
+        },
+      ],
+    },
+
     // SECTION 4: SHEAR ANATOMY INTERACTIVE
     // ==========================================
     {
@@ -287,6 +316,33 @@ export const chapter5PremiumContent: ChapterContent = {
     },
 
     // ==========================================
+    {
+      type: 'tabbed',
+      id: 'shear-source-detail',
+      title: 'SHEAR STYLES, PARTS & CONSTRUCTION',
+      subtitle: 'Source-book vocabulary for identifying and selecting shears',
+      tabs: [
+        { id: 'shear-styles-parts-source', label: 'STYLES & PARTS', title: 'Know the Terms Before You Diagnose a Cutting Problem',
+          bullets: [
+            { label: 'FRENCH STYLE', description: 'Includes a finger rest or tang for added balance and control.' },
+            { label: 'GERMAN STYLE', description: 'Traditional style without the finger tang described in the source chapter.' },
+            { label: 'BASIC PARTS', description: 'Moving blade, still blade, points, cutting edges, shanks, finger grip, thumb grip, bumper, tension/pivot screw, and finger rest/tang.' },
+            { label: 'SET', description: 'Refers to the relationship and alignment of the blades.' },
+          ],
+          facts: [{ text: 'SOURCE FOCUS: Accurate part names make manufacturer instructions, maintenance steps, and exam questions easier to interpret.' }],
+        },
+        { id: 'shear-construction-source', label: 'CONSTRUCTION', title: 'Cast, Forged, and Edge Design',
+          bullets: [
+            { label: 'CAST', description: 'The source contrasts cast shears with forged shears as a different manufacturing method.' },
+            { label: 'FORGED', description: 'Formed through compression/hammering; the source associates forging with denser construction and greater durability.' },
+            { label: 'CONVEX EDGE', description: 'Designed for a smooth, very sharp cutting action and lower cutting resistance.' },
+            { label: 'BEVELED EDGE', description: 'More durable edge style that grips hair differently and is not intended for the same slide-cutting feel as a convex edge.' },
+          ],
+          facts: [{ text: 'SELECTION RULE: Construction, edge, fit, handle design, and condition work together.' }],
+        },
+      ],
+    },
+
     // SECTION 4.5: THE HAND DANCE
     // ==========================================
     {
@@ -452,6 +508,34 @@ export const chapter5PremiumContent: ChapterContent = {
     },
 
     // ==========================================
+    {
+      type: 'tabbed',
+      id: 'clipper-source-detail',
+      title: 'CLIPPER, OUTLINER & BLADE SOURCE DETAILS',
+      subtitle: 'Book-aligned anatomy, blade systems, and handling',
+      tabs: [
+        { id: 'clipper-types-parts-source', label: 'TYPES & PARTS', title: 'Adjustable vs. Detachable Clippers',
+          bullets: [
+            { label: 'DETACHABLE-BLADE', description: 'Uses removable blades so cutting length changes by changing the blade system.' },
+            { label: 'ADJUSTABLE-BLADE', description: 'Uses a blade-adjustment lever to open or close the cutting position; attachment combs can extend cutting length.' },
+            { label: 'KEY PARTS', description: 'Still blade, moving blade, heel, on/off switch, blade-adjustment lever, and motor.' },
+            { label: 'MOTOR TYPES', description: 'The source distinguishes rotary, pivot, and magnetic motor designs by operating characteristics.' },
+          ],
+          facts: [{ text: 'OUTLINERS/TRIMMERS use fine blades for precision work. Light pressure helps reduce unnecessary irritation.' }],
+        },
+        { id: 'clipper-blades-guards-source', label: 'BLADES & GUARDS', title: 'Blade Material, Size, and Safe Adjustment',
+          bullets: [
+            { label: 'BLADE MATERIALS', description: 'The source identifies carbon-steel and ceramic blade materials.' },
+            { label: 'BLADE SIZES', description: 'Blade systems include very close-cutting sizes such as 00000; verify the actual manufacturer system being used.' },
+            { label: 'ATTACHMENT COMBS', description: 'Guards extend cutting length beyond a bare blade and are cutting aids, not infection-control substitutes.' },
+            { label: 'HANDLING', description: 'Use a free wrist and controlled hand pressure; outliners require a light touch.' },
+            { label: 'ADJUSTMENT CAUTION', description: 'Do not set outliner blades flush simply to make them cut closer; follow manufacturer guidance.' },
+          ],
+          facts: [{ text: 'TEST STRATEGY: Separate cutting-length selection from sanitation and safety.' }],
+        },
+      ],
+    },
+
     // SECTION 7: STRAIGHT RAZOR MASTERY
     // ==========================================
     {
@@ -484,6 +568,30 @@ export const chapter5PremiumContent: ChapterContent = {
     },
 
     // ==========================================
+    {
+      type: 'tabbed',
+      id: 'razor-anatomy-source-detail',
+      title: 'STRAIGHT RAZOR TYPES, PARTS & HAIR RAZORS',
+      subtitle: 'Source-book terminology for identifying razor systems',
+      tabs: [
+        { id: 'razor-types-parts-source', label: 'TYPES & PARTS', title: 'Changeable-Blade vs. Conventional Straight Razors',
+          bullets: [
+            { label: 'CHANGEABLE-BLADE', description: 'Uses a replaceable blade and is commonly chosen for convenience and infection-control workflow.' },
+            { label: 'CONVENTIONAL', description: 'Permanent-blade straight razor that requires honing and stropping.' },
+            { label: 'COMPLETE PARTS', description: 'Head, back, shoulder, tang, handle, point, cutting edge, blade, heel, shank, and pivot.' },
+          ],
+          facts: [{ text: 'SOURCE FOCUS: Full razor anatomy supports safer handling, care, and procedure recall.' }],
+        },
+        { id: 'razor-shaper-source', label: 'HAIR RAZORS', title: 'Razor Shapers / Hair Razors',
+          bullets: [
+            { label: 'PURPOSE', description: 'Lightweight razor-style cutting tools used for texturizing and shaping hair.' },
+            { label: 'DISTINCTION', description: 'A hair razor is not the same tool or service purpose as a straight razor used for shaving.' },
+          ],
+          facts: [{ text: 'TEST STRATEGY: Decide whether the question is about shaving skin or texturizing hair before choosing the tool.' }],
+        },
+      ],
+    },
+
     // SECTION 7.5: THE RAZOR GRIP LAB
     // ==========================================
     {
@@ -588,6 +696,71 @@ export const chapter5PremiumContent: ChapterContent = {
     },
 
     // ==========================================
+    {
+      type: 'tabbed',
+      id: 'razor-procedures-source-detail',
+      title: 'CONVENTIONAL RAZOR CARE & HANDLING PROCEDURES',
+      subtitle: 'Book-aligned holding, honing, stropping, and care',
+      tabs: [
+        {
+          id: 'razor-service-holding-source',
+          label: 'HOLDING',
+          title: 'Holding Changes With the Task',
+          bullets: [
+            { label: 'SHAVING', description: 'Use the taught shaving grip with the thumb and first fingers controlling the shank/tang area while maintaining deliberate blade control.' },
+            { label: 'HONING / STROPPING', description: 'Control the razor from the shank so the blade can lie flat against the hone or strop.' },
+            { label: 'HAIRCUTTING', description: 'Hair-razor positioning differs from skin shaving; use the grip taught for the cutting tool and service.' },
+            { label: 'PALMING WITH COMB', description: 'Keep the blade oriented away from the comb and client while transferring tools.' },
+          ],
+          facts: [
+            { text: 'SOURCE FOCUS: The correct hold depends on whether the tool is shaving, honing/stropping, haircutting, or being palmed.' },
+          ],
+        },
+        {
+          id: 'razor-quality-care-source',
+          label: 'QUALITY & CARE',
+          title: 'Quality Factors, Size, Style, and Care',
+          bullets: [
+            { label: 'QUALITY FACTORS', description: 'The source organizes conventional-razor selection around balance, temper, grind, finish, size, and style.' },
+            { label: 'COMMON WIDTHS', description: 'Traditional razor widths are commonly expressed in fractions such as 5/8 inch and 7/8 inch.' },
+            { label: 'CARE', description: 'Keep the blade clean, maintain the edge through proper stropping/honing, protect it from corrosion as appropriate, and avoid dropping it.' },
+          ],
+          facts: [
+            { text: 'TEST STRATEGY: If a question asks about razor quality, separate blade geometry, finish, dimensions, balance, and edge care instead of treating them as one feature.' },
+          ],
+        },
+        {
+          id: 'honing-procedure-source',
+          label: 'HONING',
+          title: 'Procedure 5-1 — Honing',
+          bullets: [
+            { label: 'FLAT CONTACT', description: 'Lay the razor so the blade is controlled evenly against the hone.' },
+            { label: 'DIAGONAL STROKES', description: 'Use even diagonal strokes rather than concentrating pressure on one small area.' },
+            { label: 'EQUAL SIDES', description: 'Work both sides evenly to maintain a balanced edge.' },
+            { label: 'LIGHTEN PRESSURE', description: 'Gradually reduce pressure as the edge is refined.' },
+            { label: 'EDGE CHECK', description: 'Use the taught edge-check method from the source procedure before returning the razor to service.' },
+          ],
+          facts: [
+            { text: 'HONE = abrasive sharpening step. It removes/refines metal to restore the cutting edge.' },
+          ],
+        },
+        {
+          id: 'stropping-procedure-source',
+          label: 'STROPPING',
+          title: 'Procedure 5-2 — Stropping',
+          bullets: [
+            { label: 'SECURE THE STROP', description: 'Attach and tension the strop so the surface stays controlled during the stroke.' },
+            { label: 'ROLL ON THE BACK', description: 'Reverse direction by rolling the razor on its back rather than turning the cutting edge into the strop.' },
+            { label: 'EVEN DIAGONAL STROKES', description: 'Use consistent diagonal passes so both sides of the edge are refined evenly.' },
+            { label: 'EDGE CHECK', description: 'Finish with the taught edge-check method before shaving.' },
+          ],
+          facts: [
+            { text: 'STROP = smooth/polish/refine step after honing; it is not the same process as grinding a new edge on a hone.' },
+          ],
+        },
+      ],
+    },
+
     // SECTION 8: RAZOR SAFETY PROTOCOL
     // ==========================================
     {
@@ -788,6 +961,22 @@ export const chapter5PremiumContent: ChapterContent = {
     },
 
     // ==========================================
+    {
+      type: 'featureGrid',
+      id: 'equipment-source-detail',
+      title: 'EQUIPMENT & SUPPLIES — SOURCE-BOOK EXPANSION',
+      subtitle: 'Additional equipment categories included in the Chapter 5 source',
+      features: [
+        { icon: 'Armchair', title: 'BARBER CHAIR', description: 'Reclining hydraulic or motorized chair with a stable base and service-support features such as headrest and footrest.' },
+        { icon: 'Shirt', title: 'CAPES, TOWELS & NECK STRIPS', description: 'Shampoo capes, haircutting capes, towels/linens, disposable paper products, and neck strips each serve different barrier and service roles.' },
+        { icon: 'Droplets', title: 'HOT TOWEL CABINET & LATHERIZER', description: 'Hot-towel equipment supports warm-towel services. Latherizers or lather mugs/brushes prepare shaving lather for service use.' },
+        { icon: 'Wind', title: 'BLOWDRYERS & THERMAL TOOLS', description: 'Dryers, curling/flat/Marcel irons, and pressing combs require heat control, movement, and safe handling away from water and skin.' },
+        { icon: 'Activity', title: 'ELECTRIC MASSAGER', description: 'Vibrating equipment may be used for facial, scalp, or shoulder massage where permitted and taught.' },
+        { icon: 'Zap', title: 'ELECTRO/LIGHT THERAPY EQUIPMENT', description: 'The source introduces high-frequency and galvanic equipment as specialized modalities that require training and compliance with current scope and rules.' },
+        { icon: 'Wrench', title: 'OTHER ACCESSORIES', description: 'The source includes accessories such as comedone extractors and tweezers; use depends on training, service purpose, and current state rules.' },
+      ],
+    },
+
     // SECTION 11: ESSENTIAL SUPPLIES CHECKLIST
     // ==========================================
     {
@@ -869,13 +1058,29 @@ export const chapter5PremiumContent: ChapterContent = {
     },
 
     // ==========================================
+    {
+      type: 'contentBlock',
+      id: 'thermal-iron-manipulation-source',
+      title: 'THERMAL IRON MANIPULATION — SOURCE PROCEDURE',
+      content: 'The source chapter includes a dedicated thermal-iron manipulation procedure. The sequence is to prepare and section the hair, establish a safe working temperature, control the iron with deliberate hand positioning, guide the hair through the barrel or plates without contacting the scalp, and repeat the movement consistently to create the intended result.',
+      highlight: 'SECTION - TEST HEAT - CONTROL THE IRON - PROTECT THE SCALP - MOVE CONSISTENTLY',
+    },
+
+    {
+      type: 'contentBlock',
+      id: 'towel-hand-wrap-source',
+      title: 'PROCEDURE 5-3 — TOWEL WRAPPING THE HAND',
+      content: 'The source chapter includes cloth- and paper-towel wrapping methods that protect the barber hand during appropriate services. The key idea is to fold and position the towel so the working hand is covered while the fingers retain enough control for the service. Use a clean towel or fresh disposable paper product, keep the wrap secure, and replace it if it becomes contaminated, wet beyond safe use, or loses its protective position.',
+      highlight: 'CLEAN MATERIAL - COVER THE HAND - KEEP CONTROL - REPLACE IF CONTAMINATED',
+    },
+
     // SECTION 12.5: HAIR CLIPPINGS & SERVICE CLEANUP
     // ==========================================
     {
       type: 'contentBlock',
       id: 'hair-clippings-cleanup',
       title: 'REMOVING HAIR CLIPPINGS SAFELY',
-      content: 'Loose hair clippings should be removed from the client and service area using clean, appropriate methods that protect client comfort and sanitation. Keep used linens and contaminated items separated from clean supplies, and follow current state rules for cleanup between clients. Do not use implements or linens from a previous client until they have been properly cleaned, disinfected, laundered, or discarded as applicable.',
+      content: 'The source chapter identifies several ways to remove loose hair safely: a clean towel folded around the hand, a disposable paper neck strip used as a barrier or wiping aid, or an appropriate vacuum system that is maintained and cleaned between uses. A traditional neck duster should not be treated as automatically safe simply because it is convenient; if such a tool is permitted, it must be handled according to current cleaning and disinfection rules. Keep used linens and contaminated items separated from clean supplies, and fully reset the station between clients.',
       highlight: 'REMOVE CLIPPINGS - SEPARATE USED ITEMS - RESET THE STATION',
     },
 

@@ -97,8 +97,8 @@ describe('Chapter 3 mapping provider — registry integration', () => {
 
   it('unsupported chapters fail closed', () => {
     resetMappingProviderRegistry()
-    expect(hasCanonicalMappingProvider('ch-5')).toBe(false)
-    expect(() => getCanonicalMappingProvider('ch-5')).toThrow(
+    expect(hasCanonicalMappingProvider('ch-7')).toBe(false)
+    expect(() => getCanonicalMappingProvider('ch-7')).toThrow(
       /No canonical mapping provider registered/,
     )
   })

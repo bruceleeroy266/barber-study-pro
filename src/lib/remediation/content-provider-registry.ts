@@ -61,6 +61,7 @@ import {
   chapter5ContentConceptMappings,
   chapter5FlashcardConceptMappings,
   chapter5QuizQuestionConceptMappings,
+  chapter5ReassessmentQuestionConceptMappings,
 } from '@/lib/chapter-5-concepts/mappings'
 import {
   ACTIVE_CHAPTER5_CONCEPT_FAMILY_IDS,
@@ -68,6 +69,7 @@ import {
 } from '@/lib/chapter-5-concepts/concepts'
 import { chapter5PremiumFlashcards } from '@/lib/chapter-5-premium-flashcards'
 import { chapter5PremiumQuizQuestions } from '@/lib/chapter-5-premium-quiz'
+import { chapter5ReassessmentQuestions } from '@/lib/chapter-5-reassessment-questions'
 
 import {
   chapter6ContentConceptMappings,
@@ -448,7 +450,10 @@ const chapter5FlashcardMappingsProjected = chapter5FlashcardConceptMappings.map(
   flashcardId: m.flashcardId as string,
   conceptId: m.conceptFamilyId as string,
 }))
-const chapter5QuizMappingsProjected = chapter5QuizQuestionConceptMappings.map((m) => ({
+const chapter5QuizMappingsProjected = [
+  ...chapter5QuizQuestionConceptMappings,
+  ...chapter5ReassessmentQuestionConceptMappings,
+].map((m) => ({
   questionId: m.questionId as string,
   conceptId: m.conceptFamilyId as string,
 }))
@@ -501,7 +506,11 @@ const chapter5Provider: ChapterRemediationContentProvider = {
   },
 
   getQuizQuestionById(questionId) {
-    return chapter5PremiumQuizQuestions.find((q) => q.id === questionId) ?? null
+    return (
+      chapter5PremiumQuizQuestions.find((q) => q.id === questionId) ??
+      chapter5ReassessmentQuestions.find((q) => q.id === questionId) ??
+      null
+    )
   },
 
   filterKeyTermsByConcept(conceptId) {

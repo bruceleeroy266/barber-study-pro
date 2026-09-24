@@ -21,10 +21,10 @@ describe('Chapter 5 concept architecture integrity',()=>{
       for(const id of c.learningObjectiveIds) expect(chapter5LearningObjectives.find(x=>x.id===id)?.conceptFamilyIds).toContain(c.id)
     }
   })
-  it('maps all 70 served flashcards exactly once with no orphans',()=>{
-    expect(chapter5PremiumFlashcards).toHaveLength(70)
-    expect(chapter5FlashcardConceptMappings).toHaveLength(70)
-    expect(new Set(chapter5FlashcardConceptMappings.map(x=>x.flashcardId)).size).toBe(70)
+  it('maps all 90 served flashcards exactly once with no orphans',()=>{
+    expect(chapter5PremiumFlashcards).toHaveLength(90)
+    expect(chapter5FlashcardConceptMappings).toHaveLength(90)
+    expect(new Set(chapter5FlashcardConceptMappings.map(x=>x.flashcardId)).size).toBe(90)
     const served=new Set(chapter5PremiumFlashcards.map(x=>x.id))
     for(const m of chapter5FlashcardConceptMappings){expect(served.has(m.flashcardId)).toBe(true);expect(ACTIVE_CHAPTER5_CONCEPT_FAMILY_IDS).toContain(m.conceptFamilyId)}
     for(const c of chapter5PremiumFlashcards) expect(getChapter5ConceptForFlashcard(c.id)).not.toBeNull()

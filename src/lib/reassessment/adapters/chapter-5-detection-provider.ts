@@ -21,6 +21,7 @@
 
 import {
   chapter5QuizQuestionConceptMappings,
+  chapter5ReassessmentQuestionConceptMappings,
 } from '@/lib/chapter-5-concepts/mappings'
 import {
   ACTIVE_CHAPTER5_CONCEPT_FAMILY_IDS,
@@ -93,6 +94,7 @@ export class Chapter5DetectionProvider implements IConceptDetectionProvider {
 
     for (const mapping of [
       ...chapter5QuizQuestionConceptMappings,
+      ...chapter5ReassessmentQuestionConceptMappings,
     ]) {
       const questionId = mapping.questionId as string
       const conceptId = mapping.conceptFamilyId as string

@@ -15,6 +15,7 @@ import type { DetectionState, DetectionConfidence, ConceptEvidence } from '../co
 import { getChapter2MappingProvider } from './adapters/chapter-2-adapter'
 import { getChapter3MappingProvider } from './adapters/chapter-3-adapter'
 import { getChapter4MappingProvider } from './adapters/chapter-4-adapter'
+import { getChapter5MappingProvider } from './adapters/chapter-5-adapter'
 import { getChapter6MappingProvider } from './adapters/chapter-6-adapter'
 import {
   Chapter2DetectionProvider,
@@ -93,6 +94,8 @@ class MappingProviderRegistry {
     this.registerProvider(getChapter3MappingProvider())
     // Register Chapter 4 (C4-3)
     this.registerProvider(getChapter4MappingProvider())
+    // Register Chapter 5 (book-aligned reassessment)
+    this.registerProvider(getChapter5MappingProvider())
     // Register Chapter 6 (C6-5)
     this.registerProvider(getChapter6MappingProvider())
   }

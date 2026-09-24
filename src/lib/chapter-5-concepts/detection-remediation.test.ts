@@ -21,12 +21,12 @@ describe('Chapter 5 detection/remediation integrity (C5-3)', () => {
     }
   })
 
-  it('keeps the canonical 70 flashcards and 50 questions mapped exactly once', () => {
-    expect(chapter5PremiumFlashcards).toHaveLength(70)
+  it('keeps the canonical 90 flashcards and 50 questions mapped exactly once', () => {
+    expect(chapter5PremiumFlashcards).toHaveLength(90)
     expect(chapter5PremiumQuizQuestions).toHaveLength(50)
-    expect(chapter5FlashcardConceptMappings).toHaveLength(70)
+    expect(chapter5FlashcardConceptMappings).toHaveLength(90)
     expect(chapter5QuizQuestionConceptMappings).toHaveLength(50)
-    expect(new Set(chapter5FlashcardConceptMappings.map(m => m.flashcardId)).size).toBe(70)
+    expect(new Set(chapter5FlashcardConceptMappings.map(m => m.flashcardId)).size).toBe(90)
     expect(new Set(chapter5QuizQuestionConceptMappings.map(m => m.questionId)).size).toBe(50)
   })
 
