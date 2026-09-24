@@ -246,7 +246,7 @@ otp_expiry = 3600
 # Branded ASCYN PRO invite template used by local certification and mirrored in hosted Supabase.
 [auth.email.template.invite]
 subject = "You're invited to ASCYN PRO"
-content_path = "./templates/invite.html"
+content_path = "./supabase/templates/invite.html"
 
 # Uncomment to customize notification email template
 # [auth.email.notification.password_changed]
