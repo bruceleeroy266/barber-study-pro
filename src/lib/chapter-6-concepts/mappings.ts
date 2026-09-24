@@ -25,14 +25,16 @@ export const chapter6ContentConceptMappings:readonly Chapter6ContentConceptMappi
  * normalize the deck into premium Flashcard records.
  */
 export const chapter6FlashcardConceptMappings:readonly Chapter6FlashcardConceptMapping[]=[
-  ...fc(range(1,15),'ch6-cells-tissues'),
-  ...fc(range(16,35),'ch6-skeletal'),
-  ...fc(range(36,60),'ch6-muscular'),
-  ...fc(range(61,80),'ch6-nervous'),
-  ...fc(range(81,95),'ch6-cardiovascular'),
-  ...fc(range(96,99),'ch6-endocrine'),
-  ...fc(range(100,103),'ch6-lymphatic'),
-  ...fc(range(104,105),'ch6-integumentary'),
+  ...fc(range(1,12),'ch6-cells-tissues'),
+  ...fc(range(13,22),'ch6-body-systems'),
+  ...fc(range(23,34),'ch6-skeletal'),
+  ...fc(range(35,46),'ch6-muscular'),
+  ...fc(range(47,58),'ch6-nervous'),
+  ...fc(range(59,70),'ch6-cardiovascular'),
+  ...fc(range(71,80),'ch6-lymphatic'),
+  ...fc(range(81,90),'ch6-integumentary'),
+  ...fc(range(91,98),'ch6-endocrine'),
+  ...fc(range(99,105),'ch6-other-systems'),
 ].sort((a,b)=>a.flashcardId.localeCompare(b.flashcardId))
 
 export const chapter6QuizQuestionConceptMappings:readonly Chapter6QuizQuestionConceptMapping[]=[
