@@ -36,16 +36,16 @@ export const chapter6FlashcardConceptMappings:readonly Chapter6FlashcardConceptM
 ].sort((a,b)=>a.flashcardId.localeCompare(b.flashcardId))
 
 export const chapter6QuizQuestionConceptMappings:readonly Chapter6QuizQuestionConceptMapping[]=[
-  ...qq([...range(1,10),16,17],'ch6-cells-tissues'),
-  ...qq([11,50],'ch6-body-systems'),
-  ...qq(range(27,31),'ch6-skeletal'),
-  ...qq(range(32,36),'ch6-muscular'),
-  ...qq(range(37,41),'ch6-nervous'),
-  ...qq([15,42,43,44],'ch6-cardiovascular'),
-  ...qq([18,45,46],'ch6-lymphatic'),
-  ...qq([...range(12,14),...range(19,26)],'ch6-integumentary'),
-  ...qq([47],'ch6-endocrine'),
-  ...qq([48,49],'ch6-other-systems'),
+  ...qq(range(1,6),'ch6-cells-tissues'),
+  ...qq(range(7,10),'ch6-body-systems'),
+  ...qq(range(11,15),'ch6-skeletal'),
+  ...qq(range(16,20),'ch6-muscular'),
+  ...qq(range(21,25),'ch6-nervous'),
+  ...qq(range(26,30),'ch6-cardiovascular'),
+  ...qq(range(31,34),'ch6-lymphatic'),
+  ...qq(range(35,40),'ch6-integumentary'),
+  ...qq(range(41,45),'ch6-endocrine'),
+  ...qq(range(46,50),'ch6-other-systems'),
 ].sort((a,b)=>a.questionId.localeCompare(b.questionId))
 
 export const CHAPTER6_MIN_DIAGNOSTIC_QUESTIONS_PER_CONCEPT=3
