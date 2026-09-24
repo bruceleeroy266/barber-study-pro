@@ -115,6 +115,10 @@ describe('resolveChapterTitle', () => {
     expect(title).not.toBe('Chapter 5')
   })
 
+  it('resolves Chapter 6 to its canonical instructor title', () => {
+    expect(resolveChapterTitle('ch-6')).toBe('General Anatomy and Physiology (Chapter 6)')
+  })
+
   it('falls back to a numbered chapter for unknown IDs', () => {
     expect(resolveChapterTitle('ch-99')).toBe('Chapter 99')
   })
