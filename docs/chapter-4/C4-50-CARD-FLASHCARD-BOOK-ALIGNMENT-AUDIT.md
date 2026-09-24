@@ -133,10 +133,10 @@ The six-family architecture stays intact. New cards map to the concept that owns
 
 - `ch4-pathogens-transmission`: existing 9 + **8 new** = 17
 - `ch4-disinfection-sterilization`: existing 10 + **3 new** = 13
-- `ch4-cross-contamination`: existing 8 + **1 new** = 9
-- `ch4-blood-exposure-ppe`: existing 9 with one rewrite in place + **0 new** = 9
+- `ch4-cross-contamination`: existing 8 + **0 new** = 8
+- `ch4-blood-exposure-ppe`: existing 9 with rewrites in place + **0 new** = 9
 - `ch4-regulatory-chemical-safety`: existing 7 + **2 new** = 9
-- `ch4-safe-practice-compliance`: existing 7 with rewrites in place + **6 new** = 13
+- `ch4-safe-practice-compliance`: existing 7 with rewrites in place + **7 new** = 14
 
 Total final deck: **70 cards**.
 
