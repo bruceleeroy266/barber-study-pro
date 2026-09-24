@@ -56,3 +56,27 @@ The 105-card enhanced source does not contain stable card IDs. C6-1 assigns `fc-
 ## C6-1 disposition
 
 **Architecture complete. Assessment strengthening is intentionally exposed, not hidden.** Content accuracy corrections and evidence rebalancing should occur in the next content/assessment phases before Chapter 6 detection/remediation is enabled.
+
+
+## Chapter 6 assessment-design standard
+
+All Chapter 6 quiz work in C6-3 must use **difficult, exam-style questions** rather than simple definition recall wherever the learning target supports application.
+
+Each question should make the student practice this consistent test-taking sequence:
+
+1. **Read carefully** — understand exactly what the stem is asking.
+2. **Identify the keyword** — locate words such as FIRST, BEST, MOST, LEAST, NOT, EXCEPT, SAFEST, or the key anatomical/procedural clue.
+3. **Eliminate wrong answers** — remove distractors that conflict with anatomy, physiology, scope, safety, or the stated facts.
+4. **Apply safety/procedure logic** — when choices are close, prioritize the action or principle supported by safe professional procedure and the concept being assessed.
+5. **Make the best remaining choice** — select the most complete answer supported by the question, not merely an answer that can sometimes be true.
+
+### Question-writing rules
+
+- Use plausible distractors; avoid giveaway answers.
+- Prefer scenario/application questions when appropriate.
+- Test one primary concept family per question so gap detection remains deterministic.
+- Do not make questions difficult through ambiguity, trivia, trick wording, double negatives, or unsupported absolutes.
+- When using NOT/EXCEPT/LEAST or another reversal keyword, make it visually clear in the stem.
+- Safety/procedure logic must not override factual anatomy/physiology; it is a decision aid when the question actually involves professional action or safety.
+- Explanations should identify the decisive keyword/clue, explain why the correct option is best, and briefly show why the distractors can be eliminated.
+- Preserve the 50-question bank target unless a later approved specification changes it.
