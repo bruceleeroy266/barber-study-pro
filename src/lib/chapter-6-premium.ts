@@ -109,7 +109,7 @@ export const chapter6PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'blueprint-welcome',
       title: '🧬 THE HUMAN BLUEPRINT',
-      content: 'Every client who sits in your chair is a living system of 37 trillion cells, 11 integrated body systems, and countless structures you interact with directly. When you massage a scalp, you manipulate blood vessels and nerve endings. When you shave a neck, you navigate over arteries and lymph nodes. When you recommend a product, you are treating the largest organ of the human body — the skin. This chapter gives you the anatomical knowledge that separates guesswork from expertise.',
+      content: 'Every client who sits in your chair is a living system made of trillions of cells, 11 integrated body systems, and countless structures you interact with directly. When you massage a scalp, you work around blood vessels and nerve endings. When you shave a neck, you work over areas containing arteries and lymph nodes. When you recommend a product, you are working with the largest organ of the human body — the skin. This chapter builds anatomical knowledge for safer, more precise professional services.',
       highlight: 'KNOW THE BODY • WORK WITH PRECISION • BUILD TRUST',
     },
 
@@ -125,7 +125,7 @@ export const chapter6PremiumContent: ChapterContent = {
         {
           icon: 'Shield',
           title: 'CLIENT SAFETY',
-          text: 'Pressing too hard on the carotid artery during a neck massage can cause dizziness or fainting. Shaving over inflamed lymph nodes can spread infection. Anatomical knowledge prevents harm.',
+          text: 'Avoid sustained or forceful pressure over the carotid area during neck work. If a client becomes dizzy or faint, stop the service and follow appropriate safety or emergency procedures. Do not manipulate swollen, tender, or otherwise abnormal areas; stay within barber scope and recommend evaluation when appropriate.',
         },
         {
           icon: 'Award',
@@ -444,7 +444,7 @@ export const chapter6PremiumContent: ChapterContent = {
           label: 'SKIN STRUCTURE',
           title: 'The Two Main Layers',
           bullets: [
-            { label: 'Epidermis (Outer Layer)', description: 'Thin, protective outer layer. No blood vessels. Cells formed at bottom and pushed upward, dying and flattening as they rise. Completely replaces itself every 27-30 days.' },
+            { label: 'Epidermis (Outer Layer)', description: 'Thin, protective outer layer. No blood vessels. New cells form in the deeper epidermis and move toward the surface as they mature. Epidermal renewal occurs over several weeks and varies by age, body site, and individual factors.' },
             { label: 'Dermis (Inner Layer)', description: 'Thick, deeper layer containing blood vessels, nerves, glands, hair follicles, and connective tissue. The "true skin" that provides strength and elasticity.' },
             { label: 'Subcutaneous Layer', description: 'Below the dermis. Fatty tissue that insulates, cushions, and stores energy. Not technically skin but important for understanding facial structure.' },
           ],
@@ -463,7 +463,7 @@ export const chapter6PremiumContent: ChapterContent = {
             { label: 'Ceruminous Glands', description: 'Located in the ear canal. Secrete cerumen (earwax) that protects the ear from dust and bacteria. Never probe into the ear canal.' },
           ],
           facts: [
-            { text: '📋 Sebaceous glands are connected to EVERY hair follicle — this is why hair gets oily and why conditioning matters.' },
+            { text: '📋 Sebaceous glands are commonly associated with hair follicles and release sebum that helps lubricate skin and hair. Some sebaceous glands open directly onto the skin rather than into a follicle.' },
             { text: '📋 Apocrine sweat glands are NOT active until puberty — this is why young children do not have body odor.' },
           ],
         },
@@ -484,17 +484,17 @@ export const chapter6PremiumContent: ChapterContent = {
           label: 'KEY GLANDS',
           title: 'Major Endocrine Glands',
           bullets: [
-            { label: 'Pituitary Gland', description: '"Master gland" at the base of the brain. Regulates growth, thyroid function, and hormone production. Controls overall body development.' },
+            { label: 'Pituitary Gland', description: 'Gland at the base of the brain that is often called the "master gland" because its hormones regulate several other endocrine glands as well as growth and other body functions.' },
             { label: 'Thyroid Gland', description: 'Butterfly-shaped gland in the neck. Regulates metabolism, energy, and body heat. Imbalance causes hair thinning and skin changes.' },
             { label: 'Parathyroid Glands (4)', description: 'Behind the thyroid. Regulate calcium and phosphorus levels. Critical for bone health and nerve function.' },
             { label: 'Adrenal Glands (2)', description: 'On top of kidneys. Produce adrenaline and cortisol. Affect stress response, blood pressure, and inflammation.' },
             { label: 'Pancreas', description: 'Behind the stomach. Produces insulin and glucagon. Regulates blood sugar. Diabetes affects wound healing and skin health.' },
             { label: 'Ovaries (Female)', description: 'Produce estrogen and progesterone. Affect hair texture, skin condition, and oil production throughout the menstrual cycle.' },
-            { label: 'Testes (Male)', description: 'Produce testosterone. Drives facial hair growth, muscle development, and sebum production. Higher testosterone = more facial hair and oil.' },
+            { label: 'Testes (Male)', description: 'Produce testosterone. Androgens such as testosterone influence facial-hair development, muscle development, and sebum production, but individual response varies.' },
           ],
           facts: [
-            { text: '📋 BOARD EXAM ALERT: The pituitary is the "master gland" — it controls all other endocrine glands through hormone signals.' },
-            { text: '📋 Testosterone directly stimulates facial hair growth — this is why men grow beards and women typically do not.' },
+            { text: '📋 REVIEW: The pituitary is often called the "master gland" because it regulates several other endocrine glands through hormone signals; it does not control every endocrine gland.' },
+            { text: '📋 Androgens, including testosterone, influence facial-hair growth. Hair response varies with genetics, hormone levels, receptor sensitivity, age, and other individual factors.' },
           ],
         },
         {
@@ -508,7 +508,7 @@ export const chapter6PremiumContent: ChapterContent = {
             { label: 'Pigmentation', description: 'Melanocyte-stimulating hormone affects hair and skin color. Changes can indicate hormonal shifts or health issues.' },
           ],
           facts: [
-            { text: '📋 Stress increases CORTISOL — this causes acne, oily scalp, and hair shedding. Recommend stress-management to clients with these issues.' },
+            { text: '📋 Stress and stress hormones can influence skin and hair, but acne, scalp oiliness, and hair shedding have many possible causes. Barbers should avoid diagnosing a cause and recommend appropriate professional evaluation for persistent or concerning changes.' },
             { text: '📋 Hormonal changes during pregnancy often make hair thicker and shinier — postpartum, hair may shed excessively. This is normal.' },
           ],
         },
@@ -537,7 +537,7 @@ export const chapter6PremiumContent: ChapterContent = {
         {
           icon: 'Filter',
           title: 'Excretory/Urinary System',
-          description: 'Kidneys filter waste from blood. Skin health often reflects kidney function — dry, itchy skin can signal kidney issues.',
+          description: 'Kidneys filter waste from blood. The kidneys filter wastes from the blood and help regulate fluid and electrolyte balance. Visible skin changes are nonspecific and should not be used by a barber to infer kidney function or diagnose disease.',
         },
         {
           icon: 'Utensils',
@@ -576,8 +576,8 @@ export const chapter6PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'remember-this',
       title: '🧠 REMEMBER THIS — KEY MEMORY ANCHORS',
-      content: '🔑 MITOSIS = cell division. All cells reproduce this way.\n\n🔑 4 TISSUE TYPES: Epithelial (covering), Connective (support), Muscular (movement), Nervous (communication)\n\n🔑 11 BODY SYSTEMS: Integumentary, Skeletal, Muscular, Nervous, Endocrine, Cardiovascular, Lymphatic, Respiratory, Digestive, Urinary, Reproductive\n\n🔑 SKULL = 22 bones (8 cranial + 14 facial). Mandible is the ONLY movable facial bone.\n\n🔑 3 MUSCLE TYPES: Striated (voluntary), Smooth (involuntary), Cardiac (heart only)\n\n🔑 NERVOUS SYSTEM: CNS (brain + spinal cord) + PNS (all other nerves)\n\n🔑 CRANIAL NERVE V = Trigeminal (sensation + chewing). CRANIAL NERVE VII = Facial (expressions)\n\n🔑 ARTERIES AWAY, VEINS RETURN — Never compress carotid arteries\n\n🔑 EPIDERMIS = no blood vessels. DERMIS = contains blood vessels, nerves, glands, follicles\n\n🔑 PITUITARY = "Master Gland". TESTOSTERONE drives facial hair growth.',
-      highlight: 'MEMORIZE THESE 10 ANCHORS — THEY APPEAR ON EVERY EXAM',
+      content: '🔑 MITOSIS = cell division. All cells reproduce this way.\n\n🔑 4 TISSUE TYPES: Epithelial (covering), Connective (support), Muscular (movement), Nervous (communication)\n\n🔑 11 BODY SYSTEMS: Integumentary, Skeletal, Muscular, Nervous, Endocrine, Cardiovascular, Lymphatic, Respiratory, Digestive, Urinary, Reproductive\n\n🔑 SKULL = 22 bones (8 cranial + 14 facial). Mandible is the ONLY movable facial bone.\n\n🔑 3 MUSCLE TYPES: Striated (voluntary), Smooth (involuntary), Cardiac (heart only)\n\n🔑 NERVOUS SYSTEM: CNS (brain + spinal cord) + PNS (all other nerves)\n\n🔑 CRANIAL NERVE V = Trigeminal (sensation + chewing). CRANIAL NERVE VII = Facial (expressions)\n\n🔑 ARTERIES AWAY, VEINS RETURN — Never compress carotid arteries\n\n🔑 EPIDERMIS = no blood vessels. DERMIS = contains blood vessels, nerves, glands, follicles\n\n🔑 PITUITARY = often called the "master gland" because it regulates several other endocrine glands. ANDROGENS such as testosterone influence facial hair growth.',
+      highlight: 'HIGH-VALUE REVIEW: MEMORIZE THESE 10 ANCHORS',
     },
 
     // ═══════════════════════════════════════════
@@ -602,10 +602,10 @@ export const chapter6PremiumContent: ChapterContent = {
         {
           situation: 'You notice a client has a swollen lymph node behind their ear during a haircut. They say it has been there for two weeks.',
           options: [
-            { letter: 'A', text: 'Ignore it — lymph nodes swell all the time', feedback: '❌ While lymph nodes do swell with infection, persistent swelling (>2 weeks) warrants medical attention. Do not dismiss it.' },
-            { letter: 'B', text: 'Politely suggest they see a doctor since it has persisted', feedback: '✅ Correct! Barbers are not diagnosticians, but we are often the first to notice abnormalities. Suggesting medical evaluation is professional and caring.' },
+            { letter: 'A', text: 'Ignore it — lymph nodes swell all the time', feedback: '❌ Do not dismiss persistent or concerning swelling. A barber should observe without diagnosing, avoid manipulating the area, and recommend appropriate medical evaluation.' },
+            { letter: 'B', text: 'Politely suggest they see a doctor since it has persisted', feedback: '✅ Correct! Barbers are not diagnosticians. When swelling has persisted or otherwise seems concerning, avoid manipulating the area and recommend appropriate medical evaluation.' },
             { letter: 'C', text: 'Tell them it is probably cancer', feedback: '❌ Never diagnose or alarm clients. Suggest seeing a professional without causing panic.' },
-            { letter: 'D', text: 'Massage the node to "help it drain"', feedback: '❌ Never manipulate swollen lymph nodes. This can spread infection or cause injury.' },
+            { letter: 'D', text: 'Massage the node to "help it drain"', feedback: '❌ Do not massage or manipulate a swollen or abnormal area. Stay within barber scope and recommend appropriate evaluation rather than attempting treatment.' },
           ],
           correctAnswer: 'B',
         },
