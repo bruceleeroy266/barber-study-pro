@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase-server'
+import Link from 'next/link'
 import { Profile, AttendanceRecord, HourLog, QuizAttempt, StudentProgress, Grade, GradeCategory, Assessment, Notification } from '@/types'
 import {
   demoStudents,
@@ -328,16 +329,38 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
         )}
 
         {students.length === 0 && instructors.length === 0 && queryErrors.length === 0 && (
-          <div className="bg-charcoal border border-graphite rounded-xl p-8 text-center">
-            <h2 className="text-xl font-semibold text-white mb-3">Welcome to your School Dashboard</h2>
-            <p className="text-silver mb-4">Get started by setting up your school:</p>
-            <ol className="text-silver text-sm space-y-2 text-left max-w-md mx-auto list-decimal list-inside">
-              <li>Configure your school profile and programs in <span className="text-[var(--color-brand-gold)]">School Settings</span></li>
-              <li>Invite instructors to join your school</li>
-              <li>Invite or create student accounts</li>
-              <li>Enroll students in programs</li>
-            </ol>
-            <p className="text-silver-gray text-xs mt-4">Once students and instructors are active, this dashboard will show performance metrics, compliance status, and analytics.</p>
+          <div className="bg-charcoal border border-[var(--color-brand-gold)]/30 rounded-xl p-6 lg:p-8">
+            <div className="mb-6">
+              <p className="text-[var(--color-brand-gold)] text-sm font-semibold uppercase tracking-wide mb-2">Pilot Launch</p>
+              <h2 className="text-2xl font-semibold text-white mb-2">Welcome to ASCYN PRO</h2>
+              <p className="text-silver max-w-2xl">
+                Your school is ready. Complete these four steps in order so your instructors and students know exactly what to do next.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+              {[
+                { step: '1', title: 'Invite instructor', body: 'Send your instructor an ASCYN PRO setup invitation.', href: '/admin/users', cta: 'Invite instructor' },
+                { step: '2', title: 'Invite students', body: 'Add the students participating in your pilot.', href: '/admin/users', cta: 'Invite students' },
+                { step: '3', title: 'Enroll students', body: 'Place each student into the Barbering program.', href: '/admin/users', cta: 'Manage enrollment' },
+                { step: '4', title: 'Begin pilot', body: 'Confirm everyone can sign in, then start using ASCYN PRO with your class.', href: '/school', cta: 'Return to dashboard' },
+              ].map((item) => (
+                <div key={item.step} className="rounded-xl border border-graphite bg-black p-5">
+                  <div className="w-8 h-8 rounded-full bg-[var(--color-brand-gold)] text-black font-bold flex items-center justify-center mb-4">
+                    {item.step}
+                  </div>
+                  <h3 className="text-white font-semibold mb-2">{item.title}</h3>
+                  <p className="text-silver text-sm mb-4">{item.body}</p>
+                  <Link href={item.href} className="text-[var(--color-brand-gold)] text-sm font-semibold hover:underline">
+                    {item.cta} →
+                  </Link>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-silver-gray text-xs mt-5">
+              This launch guide is shown while your school has no active instructors or students. Your analytics will populate automatically as the pilot begins.
+            </p>
           </div>
         )}
 
