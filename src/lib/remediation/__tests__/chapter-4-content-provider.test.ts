@@ -27,12 +27,12 @@ import { chapter4ReassessmentQuestions } from '@/lib/chapter-4-reassessment-ques
 const provider = getChapterContentProvider('ch-4')
 
 const EXPECTED_FLASHCARDS_PER_FAMILY: Record<string, number> = {
-  'ch4-pathogens-transmission': 9,
-  'ch4-disinfection-sterilization': 10,
+  'ch4-pathogens-transmission': 17,
+  'ch4-disinfection-sterilization': 13,
   'ch4-cross-contamination': 8,
   'ch4-blood-exposure-ppe': 9,
-  'ch4-regulatory-chemical-safety': 7,
-  'ch4-safe-practice-compliance': 7,
+  'ch4-regulatory-chemical-safety': 9,
+  'ch4-safe-practice-compliance': 14,
 }
 
 describe('Chapter 4 remediation content provider — registration', () => {
@@ -115,11 +115,11 @@ describe('Chapter 4 remediation content provider — targeted content belongs to
 })
 
 describe('Chapter 4 remediation content provider — inactive content never leaks', () => {
-  it('serves only the 50 active canonical flashcards and nothing else', () => {
+  it('serves only the 70 active canonical flashcards and nothing else', () => {
     const allServed = chapter4ConceptFamilies.flatMap((f) =>
       provider!.filterFlashcardsByConcept(f.id),
     )
-    expect(allServed).toHaveLength(50)
+    expect(allServed).toHaveLength(70)
     expect(allServed.every((c) => c.is_active)).toBe(true)
     // Sanity: the canonical bank itself is exactly what was served.
     expect(new Set(allServed.map((c) => c.id))).toEqual(
