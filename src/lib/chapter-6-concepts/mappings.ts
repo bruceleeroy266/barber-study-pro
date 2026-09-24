@@ -35,6 +35,11 @@ export const chapter6FlashcardConceptMappings:readonly Chapter6FlashcardConceptM
   ...fc(range(81,90),'ch6-integumentary'),
   ...fc(range(91,98),'ch6-endocrine'),
   ...fc(range(99,105),'ch6-other-systems'),
+  ...fc(range(106,109),'ch6-skeletal'),
+  ...fc(range(110,113),'ch6-muscular'),
+  ...fc(range(114,117),'ch6-nervous'),
+  ...fc(range(118,123),'ch6-cardiovascular'),
+  ...fc(range(124,125),'ch6-endocrine'),
 ].sort((a,b)=>a.flashcardId.localeCompare(b.flashcardId))
 
 export const chapter6QuizQuestionConceptMappings:readonly Chapter6QuizQuestionConceptMapping[]=[
