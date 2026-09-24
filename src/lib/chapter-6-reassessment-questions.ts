@@ -139,8 +139,12 @@ const questions: QuizQuestion[] = []
 let sequence = 51
 
 for (const family of families) {
-  for (const fact of family.facts) {
-    for (let variant = 0; variant < 3; variant++) {
+  // Cycle-major ordering: each contiguous five-question knowledge check gets
+  // one question from each of the family's five factual targets. The next
+  // cycle revisits those five targets with a different hard stem instead of
+  // repeating one fact three times in the same check.
+  for (let variant = 0; variant < 3; variant++) {
+    for (const fact of family.facts) {
       const { answers, correct } = rotateAnswers(fact.correct, fact.distractors, sequence)
       questions.push({
         id: `qq-6-${String(sequence).padStart(3, '0')}`,
