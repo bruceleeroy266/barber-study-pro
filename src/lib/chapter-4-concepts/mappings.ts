@@ -12,12 +12,46 @@ export const chapter4FlashcardConceptMappings: readonly Chapter4FlashcardConcept
   ...Array.from({length:7},(_,i)=>64+i).map((n)=>({flashcardId:`fc-4-${String(n).padStart(3,'0')}` as const,conceptFamilyId:'ch4-safe-practice-compliance' as const})),
 ].sort((a,b)=>a.flashcardId.localeCompare(b.flashcardId))
 
-// Locked initial-assessment distribution: 5 / 6 / 5 / 5 / 4 / 5 = 30.
-const quizRanges: readonly [start: number, end: number, conceptFamilyId: Chapter4ConceptFamilyId][] = [
-  [1,5,'ch4-pathogens-transmission'], [6,11,'ch4-disinfection-sterilization'], [12,16,'ch4-cross-contamination'],
-  [17,21,'ch4-blood-exposure-ppe'], [22,25,'ch4-regulatory-chemical-safety'], [26,30,'ch4-safe-practice-compliance'],
-] as const
-export const chapter4QuizQuestionConceptMappings: readonly Chapter4QuizQuestionConceptMapping[] = quizRanges.flatMap(([start,end,conceptFamilyId]) => Array.from({length:end-start+1},(_,offset)=>({questionId:`qq-4-${String(start+offset).padStart(3,'0')}` as const,conceptFamilyId})))
+// Book-aligned initial-assessment distribution after the locked 14-question hardening.
+// Rewritten items are mapped to the concept they now diagnose rather than their former numeric range.
+const initialQuizFamilyIds: Readonly<Record<string, Chapter4ConceptFamilyId>> = {
+  'qq-4-001':'ch4-pathogens-transmission',
+  'qq-4-002':'ch4-pathogens-transmission',
+  'qq-4-003':'ch4-pathogens-transmission',
+  'qq-4-004':'ch4-pathogens-transmission',
+  'qq-4-005':'ch4-pathogens-transmission',
+  'qq-4-006':'ch4-disinfection-sterilization',
+  'qq-4-007':'ch4-disinfection-sterilization',
+  'qq-4-008':'ch4-disinfection-sterilization',
+  'qq-4-009':'ch4-disinfection-sterilization',
+  'qq-4-010':'ch4-disinfection-sterilization',
+  'qq-4-011':'ch4-disinfection-sterilization',
+  'qq-4-012':'ch4-pathogens-transmission',
+  'qq-4-013':'ch4-pathogens-transmission',
+  'qq-4-014':'ch4-cross-contamination',
+  'qq-4-015':'ch4-pathogens-transmission',
+  'qq-4-016':'ch4-cross-contamination',
+  'qq-4-017':'ch4-blood-exposure-ppe',
+  'qq-4-018':'ch4-blood-exposure-ppe',
+  'qq-4-019':'ch4-blood-exposure-ppe',
+  'qq-4-020':'ch4-safe-practice-compliance',
+  'qq-4-021':'ch4-blood-exposure-ppe',
+  'qq-4-022':'ch4-regulatory-chemical-safety',
+  'qq-4-023':'ch4-regulatory-chemical-safety',
+  'qq-4-024':'ch4-regulatory-chemical-safety',
+  'qq-4-025':'ch4-regulatory-chemical-safety',
+  'qq-4-026':'ch4-safe-practice-compliance',
+  'qq-4-027':'ch4-safe-practice-compliance',
+  'qq-4-028':'ch4-safe-practice-compliance',
+  'qq-4-029':'ch4-safe-practice-compliance',
+  'qq-4-030':'ch4-safe-practice-compliance',
+} as const
+
+export const chapter4QuizQuestionConceptMappings: readonly Chapter4QuizQuestionConceptMapping[] =
+  Object.entries(initialQuizFamilyIds).map(([questionId, conceptFamilyId]) => ({
+    questionId: questionId as Chapter4QuizQuestionConceptMapping['questionId'],
+    conceptFamilyId,
+  }))
 
 // Locked reassessment-reserve distribution (C4-3): 15 per family = 90.
 // Reserve IDs continue the sequence at qq-4-031; the pool can never
