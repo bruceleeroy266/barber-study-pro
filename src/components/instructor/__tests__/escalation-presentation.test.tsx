@@ -158,8 +158,8 @@ const historyItem: InterventionHistoryItem & { conceptName: string; chapterTitle
   reviewCompletedAt: '2026-09-02T10:00:00Z',
   reassessmentCompletedAt: '2026-09-03T10:00:00Z',
   evaluatedAt: '2026-09-03T10:05:00Z',
-  detectionSummary: 'repeated_weakness',
-  evaluationSummary: 'currently_performing_well',
+  detectionSummary: 'Repeated difficulty',
+  evaluationSummary: 'Performing well',
   escalation: null,
   events: [],
 }
@@ -200,7 +200,7 @@ describe('InterventionHistoryView', () => {
       />,
     )
     expect(screen.getByText('Endocrine System')).toBeInTheDocument()
-    expect(screen.getByText(/General Anatomy & Physiology \(Chapter 6\)/)).toBeInTheDocument()
+    expect(screen.getByText(/General Anatomy and Physiology \(Chapter 6\)/)).toBeInTheDocument()
     expect(screen.getByText('Repeated difficulty')).toBeInTheDocument()
     expect(screen.getByText('Improving after earlier misses')).toBeInTheDocument()
     expect(container.textContent).not.toContain('ch6-endocrine')
