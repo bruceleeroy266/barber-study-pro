@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useCallback, useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
@@ -162,7 +162,7 @@ function CallbackHandler() {
     }
   }, [shouldCheckAutoSession, type, next, router])
 
-  const completeSignIn = useCallback(async () => {
+  const completeSignIn = async () => {
     // Handle PKCE code exchange flow
     if (hasPkceCode) {
       setIsExchanging(true)
@@ -310,7 +310,7 @@ function CallbackHandler() {
     // Neither flow has valid parameters
     setError('This invitation link is invalid or has expired.')
     setHasVerificationError(true)
-  }, [code, token, type, next, router, hasPkceCode, isValidTokenHashFlow])
+  }
 
   // Show loading state while checking for auto-established session
   if (isCheckingSession) {
