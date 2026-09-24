@@ -176,7 +176,8 @@ async function acceptInvitationAndFirstLogin(
   browser: Browser,
   email: string,
   password: string,
-  expectedPath: RegExp
+  expectedPath: RegExp,
+  options: { betaAgreementName?: string } = {}
 ): Promise<{ context: BrowserContext; page: Page }> {
   const inviteUrl = await waitForInviteUrl(email)
 
@@ -190,7 +191,27 @@ async function acceptInvitationAndFirstLogin(
   await passwordInputs.nth(0).fill(password)
   await passwordInputs.nth(1).fill(password)
   await activationPage.locator('button[type="submit"]').click()
-  await activationPage.waitForURL(expectedPath, { timeout: 20_000 })
+
+  if (options.betaAgreementName) {
+    await activationPage.waitForURL(/\/beta-agreement(?:\?|$)/, { timeout: 20_000 })
+    await activationPage.locator('#tester-name').fill(options.betaAgreementName)
+    await activationPage.locator('#tester-email').fill(email)
+    await activationPage.locator('#agree-checkbox').check()
+    await expect(
+      activationPage.getByText('Agreement accepted. You may continue to the checklist.')
+    ).toBeVisible()
+    await activationPage.getByRole('button', { name: 'Continue' }).click()
+    await activationPage.waitForURL(/\/dashboard\/beta-checklist(?:\?|$)/, { timeout: 20_000 })
+    await expect(
+      activationPage.getByRole('heading', { name: 'Beta Tester Checklist' })
+    ).toBeVisible()
+
+    await activationPage.goto('/dashboard')
+    await activationPage.waitForURL(expectedPath, { timeout: 20_000 })
+  } else {
+    await activationPage.waitForURL(expectedPath, { timeout: 20_000 })
+  }
+
   await activationContext.close()
 
   // Prove a fresh credential login works after activation.
@@ -406,7 +427,8 @@ test.describe('Pilot onboarding certification', () => {
       browser,
       STUDENT_EMAIL,
       STUDENT_PASSWORD,
-      /\/dashboard(?:\/|$)/
+      /\/dashboard(?:\/|$)/,
+      { betaAgreementName: STUDENT_NAME }
     )
 
     const { data: acceptedStudentInvite } = await service
