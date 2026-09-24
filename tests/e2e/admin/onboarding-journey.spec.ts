@@ -194,12 +194,26 @@ async function acceptInvitationAndFirstLogin(
 
   if (options.betaAgreementName) {
     await activationPage.waitForURL(/\/beta-agreement(?:\?|$)/, { timeout: 20_000 })
-    await activationPage.locator('#tester-name').fill(options.betaAgreementName)
-    await activationPage.locator('#tester-email').fill(email)
-    await activationPage.locator('#agree-checkbox').check()
+    await expect(
+      activationPage.getByText('Loading agreement status…')
+    ).toBeHidden({ timeout: 10_000 })
+
+    const testerName = activationPage.locator('#tester-name')
+    const testerEmail = activationPage.locator('#tester-email')
+    const agreementCheckbox = activationPage.locator('#agree-checkbox')
+
+    await testerName.fill(options.betaAgreementName)
+    await expect(testerName).toHaveValue(options.betaAgreementName)
+    await testerEmail.fill(email)
+    await expect(testerEmail).toHaveValue(email)
+
+    await agreementCheckbox.scrollIntoViewIfNeeded()
+    await expect(agreementCheckbox).toBeEnabled()
+    await agreementCheckbox.click()
+
     await expect(
       activationPage.getByText('Agreement accepted. You may continue to the checklist.')
-    ).toBeVisible()
+    ).toBeVisible({ timeout: 10_000 })
     await activationPage.getByRole('button', { name: 'Continue' }).click()
     await activationPage.waitForURL(/\/dashboard\/beta-checklist(?:\?|$)/, { timeout: 20_000 })
     await expect(
