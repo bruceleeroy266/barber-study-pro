@@ -18,6 +18,7 @@ import {
   X,
   Shield,
   Target,
+  MessageSquare,
 } from 'lucide-react'
 import { Profile } from '@/types'
 import { isAdmin } from '@/lib/auth-helpers'
@@ -33,6 +34,7 @@ const adminLinks = [
   { href: '/admin/users', label: 'Users', icon: Users },
   { href: '/admin/school/configuration', label: 'School Settings', icon: Settings },
   { href: '/admin/pilot-inquiries', label: 'Pilot Inquiries', icon: Plane },
+  { href: '/admin/beta-feedback', label: 'Beta Feedback', icon: MessageSquare },
   { href: '/admin/audit', label: 'Audit History', icon: History },
   { href: '/admin/health', label: 'System Health', icon: Activity },
   { href: '/admin/maintenance', label: 'Maintenance', icon: Wrench },
