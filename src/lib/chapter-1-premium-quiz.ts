@@ -23,7 +23,7 @@ export const chapter1PremiumQuizQuestions: QuizQuestion[] = [
     answer_c: 'Blade',
     answer_d: 'Style',
     correct_answer: 'a',
-    explanation: '"Barba" means BEARD. The profession is literally named after the facial hair it was originally trusted to maintain and style.',
+    explanation: "\"Barba\" means beard. The profession takes its name from the facial hair barbers historically maintained, shaped, and groomed.",
     difficulty: 'easy',
     order_index: 1,
   },
