@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import AuditHistoryViewer from './AuditHistoryViewer'
 
 describe('AuditHistoryViewer mobile layout', () => {
@@ -33,9 +33,10 @@ describe('AuditHistoryViewer mobile layout', () => {
 
     const mobileCards = screen.getByLabelText('Audit log cards')
     expect(mobileCards).toHaveClass('md:hidden')
-    expect(screen.getByText('failed_login')).toBeInTheDocument()
-    expect(screen.getByText('student@example.com')).toBeInTheDocument()
-    expect(screen.getByText('Invalid credentials')).toBeInTheDocument()
+    const mobile = within(mobileCards)
+    expect(mobile.getByText('failed_login')).toBeInTheDocument()
+    expect(mobile.getByText('student@example.com')).toBeInTheDocument()
+    expect(mobile.getByText('Invalid credentials')).toBeInTheDocument()
 
     const desktopWrapper = container.querySelector('.md\\:block')
     expect(desktopWrapper).not.toBeNull()
