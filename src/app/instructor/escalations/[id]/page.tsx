@@ -18,6 +18,7 @@ import {
   buildCoachingRecommendation,
   buildKnowledgeCheckTally,
 } from '@/lib/presentation/instructor-diagnostics'
+import { calculateConceptMastery } from '@/lib/presentation/mastery-score'
 
 export const dynamic = 'force-dynamic'
 
@@ -64,6 +65,7 @@ export default async function EscalationDetailPage({ params }: PageProps) {
   const conceptHistory = history.filter((h) => h.conceptId === escalation.conceptId)
   const tally = buildKnowledgeCheckTally(conceptHistory)
   const observation = summarizeObservation(escalation.detectionEvidence ?? null)
+  const mastery = calculateConceptMastery(escalation.detectionEvidence ?? null)
 
   const diagnostics = {
     conceptName: resolveConceptName(escalation.conceptId),
@@ -71,6 +73,7 @@ export default async function EscalationDetailPage({ params }: PageProps) {
     detectionStateLabel: observation?.stateLabel ?? null,
     confidenceLabel: observation?.confidenceLabel ?? null,
     evidenceSummary: buildEvidenceSummary(escalation.detectionEvidence ?? null),
+    mastery,
     cycleCount: conceptHistory.length,
     knowledgeChecksTaken: tally.taken,
     knowledgeChecksPassed: tally.passed,
