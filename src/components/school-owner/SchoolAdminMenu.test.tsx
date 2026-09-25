@@ -53,6 +53,20 @@ describe('SchoolAdminMenu', () => {
     expect(screen.queryByText(/Maintenance/i)).not.toBeInTheDocument()
   })
 
+  it('shows a mobile backdrop and closes when it is tapped', () => {
+    render(<SchoolAdminMenu />)
+
+    fireEvent.click(screen.getByRole('button', { name: /School Management/i }))
+    expect(screen.getByRole('menu')).toBeInTheDocument()
+
+    const backdrop = screen.getByRole('button', { name: /Close School Menu/i })
+    expect(backdrop).toHaveClass('sm:hidden')
+    expect(backdrop).toHaveClass('bg-black/60')
+
+    fireEvent.click(backdrop)
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+  })
+
   it('closes on Escape', () => {
     render(<SchoolAdminMenu />)
 

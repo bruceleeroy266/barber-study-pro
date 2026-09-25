@@ -76,7 +76,14 @@ export default function SchoolAdminMenu() {
       </button>
 
       {open && (
-        <div
+        <>
+          <button
+            type="button"
+            aria-label="Close School Menu"
+            onClick={() => setOpen(false)}
+            className="fixed inset-0 z-[55] bg-black/60 backdrop-blur-[1px] sm:hidden"
+          />
+          <div
           role="menu"
           className="fixed left-3 right-3 top-[4.5rem] z-[60] max-h-[calc(100dvh-5.5rem)] overflow-y-auto rounded-xl border border-graphite bg-charcoal shadow-2xl sm:absolute sm:left-auto sm:right-0 sm:top-auto sm:mt-2 sm:w-72 sm:max-h-none"
         >
@@ -109,7 +116,8 @@ export default function SchoolAdminMenu() {
               <span>Logout</span>
             </button>
           </div>
-        </div>
+          </div>
+        </>
       )}
     </div>
   )
