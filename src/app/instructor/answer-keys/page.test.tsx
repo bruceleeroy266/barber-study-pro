@@ -9,7 +9,7 @@ describe('Instructor answer key hub', () => {
     expect(screen.getByRole('heading', { name: 'Chapter Quiz Answer Keys' })).toBeInTheDocument()
     expect(screen.getByText('Instructor Only')).toBeInTheDocument()
     expect(screen.getByText('Chapter 1')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /Chapter 1/i })).toHaveAttribute(
+    expect(screen.getByText('Chapter 1').closest('a')).toHaveAttribute(
       'href',
       '/instructor/answer-keys/1',
     )
