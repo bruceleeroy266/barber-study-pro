@@ -5,6 +5,7 @@ export type OwnerNotificationType =
   | 'student_registration'
   | 'instructor_registration'
   | 'school_approval'
+  | 'beta_feedback'
   | 'email_delivery_failure'
   | 'system_error'
 
@@ -21,6 +22,9 @@ export interface OwnerNotificationPayload {
   state?: string | null
   message?: string | null
   programType?: string | null
+  feedbackCategory?: string | null
+  feedbackSeverity?: string | null
+  checklistItemId?: string | null
   [key: string]: unknown
 }
 

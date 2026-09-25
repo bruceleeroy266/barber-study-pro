@@ -7,6 +7,7 @@ const SUBJECTS: Record<OwnerNotificationType, string> = {
   student_registration: '🎓 New Student Registration',
   instructor_registration: '👨‍🏫 New Instructor Registration',
   school_approval: '🏫 School Approval',
+  beta_feedback: '💬 New ASCYN PRO Beta Tester Feedback',
   email_delivery_failure: '⚠️ Failed Email Delivery',
   system_error: '🚨 System Error',
 }
@@ -39,6 +40,9 @@ function formatRows(payload: OwnerNotificationPayload): { label: string; value: 
     { label: 'Student Count', value: payload.studentCount },
     { label: 'State', value: payload.state },
     { label: 'Program Type', value: payload.programType },
+    { label: 'Feedback Category', value: payload.feedbackCategory },
+    { label: 'Feedback Severity', value: payload.feedbackSeverity },
+    { label: 'Checklist Item', value: payload.checklistItemId },
     { label: 'Message', value: payload.message },
   ].map((row) => ({ label: row.label, value: formatValue(row.value) }))
 }

@@ -2,6 +2,13 @@
 
 import { createClient } from '@/lib/supabase-server'
 import { revalidatePath } from 'next/cache'
+import { Resend } from 'resend'
+import { NotificationService } from '@/lib/notifications/NotificationService'
+import type { OwnerNotificationPayload } from '@/lib/notifications/types'
+
+const resend = process.env.RESEND_API_KEY
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null
 
 export type BetaFeedbackCategory = 'bug' | 'feature' | 'ux' | 'content' | 'other'
 export type BetaFeedbackSeverity = 'low' | 'medium' | 'high' | 'critical'
@@ -43,7 +50,7 @@ export async function submitBetaFeedback(input: BetaFeedbackInput): Promise<Beta
   }
 
   try {
-    const { error } = await supabase
+    const { data: inserted, error } = await supabase
       .from('beta_feedback')
       .insert({
         user_id: user.id,
@@ -52,6 +59,8 @@ export async function submitBetaFeedback(input: BetaFeedbackInput): Promise<Beta
         severity: input.severity,
         message,
       })
+      .select('id')
+      .single()
 
     if (error) {
       // Fail gracefully if the table does not exist yet (migration not applied).
@@ -61,7 +70,36 @@ export async function submitBetaFeedback(input: BetaFeedbackInput): Promise<Beta
       return { success: false, error: error.message }
     }
 
+    try {
+      const notificationService = NotificationService.createDefault(resend)
+      const notificationPayload: OwnerNotificationPayload = {
+        timeSubmitted: new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' }),
+        contactName:
+          (typeof user.user_metadata?.full_name === 'string' && user.user_metadata.full_name.trim())
+            ? user.user_metadata.full_name.trim()
+            : user.email || 'Beta tester',
+        email: user.email || null,
+        feedbackCategory: input.category,
+        feedbackSeverity: input.severity,
+        checklistItemId: input.checklistItemId || null,
+        message,
+      }
+
+      const notificationResult = await notificationService.notifyOwner(
+        'beta_feedback',
+        notificationPayload,
+        { sourceType: 'beta_feedback', sourceId: inserted?.id },
+      )
+
+      if (!notificationResult.success) {
+        console.error('[BetaFeedback] Owner notification failed:', notificationResult.error)
+      }
+    } catch (notificationError) {
+      console.error('[BetaFeedback] Owner notification error:', notificationError)
+    }
+
     revalidatePath('/dashboard/beta-checklist')
+    revalidatePath('/admin/beta-feedback')
     return { success: true }
   } catch (err) {
     return {
