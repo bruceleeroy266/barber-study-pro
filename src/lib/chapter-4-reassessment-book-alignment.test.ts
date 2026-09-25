@@ -87,7 +87,7 @@ describe('C4 reassessment reserve — Milady + NIC hardening certification', () 
   it('contains direct evidence for all eight Chapter 4 learning-objective areas', () => {
     const bank = JSON.stringify(chapter4ReassessmentQuestions).toLowerCase()
     const evidence: Record<string, string[]> = {
-      LO1: ['osha', 'epa', 'safety data sheet', 'ghs', 'state regulatory authority'],
+      LO1: ['osha', 'epa', 'sds', 'ghs', 'state regulatory authority'],
       LO2: ['cocci', 'bacilli', 'spirilla', 'nonpathogenic', 'bacteria'],
       LO3: ['local infection', 'systemic infection', 'immunity', 'indirect transmission', 'bloodborne'],
       LO4: ['cleaning', 'disinfection', 'sterilization', 'spore testing', 'contact time'],
