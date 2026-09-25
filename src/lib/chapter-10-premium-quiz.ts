@@ -915,14 +915,14 @@ export const chapter10PremiumQuizQuestions: QuizQuestion[] = [
   {
     id: 'qq-10-073',
     quiz_id: 'quiz-10',
-    question: 'What is ringed hair?',
+    question: 'During hair analysis, a barber sees alternating gray and pigmented bands along the same strands with no signs of infection or inflammation. Which condition best matches this finding?',
     answer_a: 'Alternating bands of gray and pigmented hair throughout the strand',
     answer_b: 'Hair that grows in a circular pattern at the crown',
     answer_c: 'Hair with split ends that look like rings',
     answer_d: 'Hair that has been permanently waved in a ringlet pattern',
     correct_answer: 'a',
     explanation: 'Ringed hair is a variation of canities characterized by alternating bands of gray and pigmented hair throughout the length of the hair strand. It is purely cosmetic and requires no medical treatment.',
-    difficulty: 'easy',
+    difficulty: 'hard',
     order_index: 73,
   },
   {
