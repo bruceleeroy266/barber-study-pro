@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase-server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
-import { Settings, Activity, History, Flag, Wrench, Archive, Bell, Users, Plane, LayoutDashboard } from 'lucide-react'
+import { Settings, Activity, History, Flag, Wrench, Archive, Bell, Users, Plane, LayoutDashboard, MessageSquare } from 'lucide-react'
 
 export default async function AdminDashboard() {
   const supabase = await createClient()
@@ -153,6 +153,20 @@ export default async function AdminDashboard() {
                 <p className="text-[var(--color-text-muted)] text-sm mb-4">Review and manage pilot program submissions</p>
                 <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] text-sm rounded-lg border border-[var(--color-brand-gold)]/20">
                   View Submissions
+                </span>
+              </Link>
+
+              <Link
+                href="/admin/beta-feedback"
+                className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6 hover:border-[var(--color-brand-gold)]/30 transition-colors group"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="text-lg font-semibold text-white group-hover:text-[var(--color-brand-gold)]">Beta Feedback</h2>
+                  <MessageSquare className="w-5 h-5 text-[var(--color-text-muted)] group-hover:text-[var(--color-brand-gold)]" />
+                </div>
+                <p className="text-[var(--color-text-muted)] text-sm mb-4">Review tester bugs, UX notes, content issues, and feature requests</p>
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] text-sm rounded-lg border border-[var(--color-brand-gold)]/20">
+                  Review Feedback
                 </span>
               </Link>
 
