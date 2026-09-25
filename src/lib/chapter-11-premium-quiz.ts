@@ -528,7 +528,7 @@ export const chapter11PremiumQuizQuestions: QuizQuestion[] = [
     answer_d: 'Tell the client to come back next week',
     correct_answer: 'a',
     explanation: 'If parasites are found, do not begin any service — refer the client to a physician or pharmacist.',
-    difficulty: 'easy',
+    difficulty: 'hard',
     order_index: 39,
   },
   {
@@ -541,7 +541,7 @@ export const chapter11PremiumQuizQuestions: QuizQuestion[] = [
     answer_d: 'Only if the irritation is minor',
     correct_answer: 'a',
     explanation: 'Do not proceed with chemical services if there are signs of irritation or abrasions on the scalp.',
-    difficulty: 'easy',
+    difficulty: 'hard',
     order_index: 40,
   },
   {
@@ -567,7 +567,7 @@ export const chapter11PremiumQuizQuestions: QuizQuestion[] = [
     answer_d: 'Only during the first 24 hours of infection',
     correct_answer: 'a',
     explanation: 'Tinea is highly contagious and spreads through infected skin scales, hair, unclean combs, brushes, and contact with contaminated surfaces.',
-    difficulty: 'easy',
+    difficulty: 'hard',
     order_index: 42,
   },
   {
@@ -580,7 +580,7 @@ export const chapter11PremiumQuizQuestions: QuizQuestion[] = [
     answer_d: 'Shampoo with antifungal soap only',
     correct_answer: 'a',
     explanation: 'Clients with suspected or confirmed tinea should be referred to a physician for medical treatment, and services should not be performed until the condition has cleared.',
-    difficulty: 'easy',
+    difficulty: 'hard',
     order_index: 43,
   },
   {
