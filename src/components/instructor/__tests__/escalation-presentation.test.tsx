@@ -24,7 +24,6 @@ const listItem = {
   conceptName: 'Stress Management & Self-Care',
   chapterTitle: 'Life Skills (Chapter 2)',
   evidenceSummary: '4 misses on 5 observations across 3 questions · Aug 30 – Sep 8',
-  mastery: { score: 42, band: 'Developing', provisional: true, accuracyPercent: 20 },
   status: 'pending',
   unsuccessfulCycleCount: 2,
   createdAt: '2026-09-09T10:00:00Z',
@@ -39,10 +38,6 @@ describe('EscalationList', () => {
     expect(screen.getByText(/Stress Management & Self-Care/)).toBeInTheDocument()
     expect(screen.getByText(/Life Skills \(Chapter 2\)/)).toBeInTheDocument()
     expect(screen.getByText(/4 misses on 5 observations/)).toBeInTheDocument()
-    expect(screen.getByText('42')).toBeInTheDocument()
-    expect(screen.getByText('Developing')).toBeInTheDocument()
-    expect(screen.getByText(/Provisional/)).toBeInTheDocument()
-    expect(screen.getByText(/raw accuracy 20%/)).toBeInTheDocument()
     expect(container.textContent).not.toMatch(/C-2-\d{2}/)
     expect(container.textContent).not.toContain('ch-2')
   })
@@ -81,6 +76,7 @@ const diagnostics = {
   detectionStateLabel: 'Repeated difficulty',
   confidenceLabel: 'high confidence — consistent pattern',
   evidenceSummary: '4 misses on 5 observations across 3 questions · Aug 30 – Sep 8',
+  mastery: { score: 42, band: 'Developing', provisional: true, accuracyPercent: 20 },
   cycleCount: 2,
   knowledgeChecksTaken: 2,
   knowledgeChecksPassed: 1,
@@ -112,6 +108,10 @@ describe('EscalationDetail', () => {
     expect(screen.getByText(/Repeated difficulty/)).toBeInTheDocument()
     expect(screen.getByText(/high confidence — consistent pattern/)).toBeInTheDocument()
     expect(screen.getByText(/4 misses on 5 observations/)).toBeInTheDocument()
+    expect(screen.getByText('42')).toBeInTheDocument()
+    expect(screen.getByText('Developing')).toBeInTheDocument()
+    expect(screen.getByText(/Provisional/)).toBeInTheDocument()
+    expect(screen.getByText(/raw accuracy 20%/)).toBeInTheDocument()
     expect(screen.getByText(/2 taken, 1 passed/)).toBeInTheDocument()
     expect(screen.getByText(/Escalated automatically after 2 unsuccessful remediation cycles/)).toBeInTheDocument()
     expect(screen.getByText(/Burnout vs. tiredness/)).toBeInTheDocument()
