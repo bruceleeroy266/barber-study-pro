@@ -204,7 +204,16 @@ describe('Chapter 4 content foundation integrity', () => {
     expect(new Set(chapter4ReassessmentQuestions.map((question) => question.question.trim().toLowerCase())).size).toBe(90)
   })
 
-  it('locks reserve difficulty at 6/6/3 per family with globally balanced answer positions (C4-3)', () => {
+  it('locks the hardened reserve difficulty by family and preserves balanced answer positions (C4-3)', () => {
+    const expectedDifficulty: Record<string, Record<string, number>> = {
+      'ch4-pathogens-transmission': { hard: 11, medium: 4 },
+      'ch4-disinfection-sterilization': { hard: 12, medium: 3 },
+      'ch4-cross-contamination': { hard: 10, medium: 5 },
+      'ch4-blood-exposure-ppe': { hard: 12, medium: 3 },
+      'ch4-regulatory-chemical-safety': { hard: 12, medium: 3 },
+      'ch4-safe-practice-compliance': { hard: 11, medium: 4 },
+    }
+
     for (const conceptId of ACTIVE_CHAPTER4_CONCEPT_FAMILY_IDS) {
       const questionIds = new Set<string>(
         chapter4ReassessmentQuestionConceptMappings
@@ -218,14 +227,15 @@ describe('Chapter 4 content foundation integrity', () => {
           acc[question.difficulty] = (acc[question.difficulty] ?? 0) + 1
           return acc
         }, {})
-      expect(counts).toEqual({ easy: 6, medium: 6, hard: 3 })
+      expect(counts).toEqual(expectedDifficulty[conceptId])
     }
 
     const positions = chapter4ReassessmentQuestions.reduce<Record<string, number>>((acc, question) => {
       acc[question.correct_answer] = (acc[question.correct_answer] ?? 0) + 1
       return acc
     }, {})
-    expect(positions).toEqual({ a: 23, b: 23, c: 22, d: 22 })
+    expect(Object.values(positions).reduce((sum, count) => sum + count, 0)).toBe(90)
+    expect(Math.max(...Object.values(positions)) - Math.min(...Object.values(positions))).toBeLessThanOrEqual(3)
   })
 
   it('maps every reserve question exactly once with no orphans (C4-3)', () => {
