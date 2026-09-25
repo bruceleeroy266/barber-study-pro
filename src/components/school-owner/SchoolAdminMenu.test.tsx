@@ -43,11 +43,11 @@ describe('SchoolAdminMenu', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /School Management/i }))
 
-    expect(screen.getByRole('link', { name: /School Dashboard/i })).toHaveAttribute('href', '/school')
-    expect(screen.getByRole('link', { name: /Manage Users/i })).toHaveAttribute('href', '/admin/users')
-    expect(screen.getByRole('link', { name: /School Settings/i })).toHaveAttribute('href', '/admin/school/configuration')
-    expect(screen.getByRole('link', { name: /Student & Instructor Performance/i })).toHaveAttribute('href', '/school#performance')
-    expect(screen.getByRole('link', { name: /Reports & Compliance/i })).toHaveAttribute('href', '/school#reports-compliance')
+    expect(screen.getByRole('menuitem', { name: /School Dashboard/i })).toHaveAttribute('href', '/school')
+    expect(screen.getByRole('menuitem', { name: /Manage Users/i })).toHaveAttribute('href', '/admin/users')
+    expect(screen.getByRole('menuitem', { name: /School Settings/i })).toHaveAttribute('href', '/admin/school/configuration')
+    expect(screen.getByRole('menuitem', { name: /Student & Instructor Performance/i })).toHaveAttribute('href', '/school#performance')
+    expect(screen.getByRole('menuitem', { name: /Reports & Compliance/i })).toHaveAttribute('href', '/school#reports-compliance')
     expect(screen.queryByText(/Pilot Inquiries/i)).not.toBeInTheDocument()
     expect(screen.queryByText(/System Health/i)).not.toBeInTheDocument()
     expect(screen.queryByText(/Maintenance/i)).not.toBeInTheDocument()
