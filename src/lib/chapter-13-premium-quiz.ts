@@ -89,7 +89,7 @@ export const chapter13PremiumQuizQuestions: QuizQuestion[] = [
     answer_d: 'On clients with oily skin',
     correct_answer: 'a',
     explanation: 'Do not use hot towels on skin that is chapped, blistered, thin, or sensitive.',
-    difficulty: 'easy',
+    difficulty: 'hard',
     order_index: 6,
   },
   {
@@ -102,7 +102,7 @@ export const chapter13PremiumQuizQuestions: QuizQuestion[] = [
     answer_d: 'It requires different equipment',
     correct_answer: 'a',
     explanation: 'A deep cleansing facial should not be performed immediately after a shave as it may irritate or damage the skin.',
-    difficulty: 'easy',
+    difficulty: 'hard',
     order_index: 7,
   },
   {
@@ -249,7 +249,7 @@ export const chapter13PremiumQuizQuestions: QuizQuestion[] = [
     answer_d: 'The type of razor used',
     correct_answer: 'a',
     explanation: 'The direction of hair growth determines the razor positions and strokes that need to be used to shave with the grain, against the grain, or across the grain.',
-    difficulty: 'easy',
+    difficulty: 'hard',
     order_index: 18,
   },
 
@@ -426,7 +426,7 @@ export const chapter13PremiumQuizQuestions: QuizQuestion[] = [
     answer_d: 'It is only done for client comfort',
     correct_answer: 'a',
     explanation: 'Taut skin allows the beard hair to be cut more easily. Loose skin tends to push out in front of the razor and can result in cuts or nicks.',
-    difficulty: 'easy',
+    difficulty: 'hard',
     order_index: 31,
   },
   {
@@ -480,7 +480,7 @@ export const chapter13PremiumQuizQuestions: QuizQuestion[] = [
     answer_d: 'At 60 degrees for best results',
     correct_answer: 'a',
     explanation: 'The razor should be angled about 30 degrees relative to the skin surface.',
-    difficulty: 'easy',
+    difficulty: 'hard',
     order_index: 35,
   },
   {
