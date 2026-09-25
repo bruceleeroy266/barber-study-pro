@@ -167,7 +167,7 @@ describe('C4 final adversarial end-to-end certification', () => {
     for (const id of selected) {
       expect(initial.has(id), `${id} recycled from initial quiz`).toBe(false)
       expect(reserve.has(id), `${id} is not in the target reserve`).toBe(true)
-      expect(getChapterContentProvider('ch-4')!.getQuizQuestionById(id)).not.toBeNull()
+      expect(getChapterContentProvider('ch-4')!.getQuizQuestionById(id as `qq-4-${string}`)).not.toBeNull()
     }
   })
 
