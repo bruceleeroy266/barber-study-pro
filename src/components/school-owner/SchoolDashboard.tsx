@@ -393,7 +393,7 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
           </div>
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <div id="performance" className="grid grid-cols-1 xl:grid-cols-3 gap-6 scroll-mt-24">
           <div className="xl:col-span-2">
             <StudentPerformancePanel rows={studentRows} />
           </div>
@@ -406,9 +406,10 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
 
         <SchoolAnalyticsCharts snapshot={snapshot} />
 
-        <ComplianceReportingCenter reports={complianceReports} />
-
-        <ReportingCenter reports={reports} />
+        <div id="reports-compliance" className="scroll-mt-24 space-y-8">
+          <ComplianceReportingCenter reports={complianceReports} />
+          <ReportingCenter reports={reports} />
+        </div>
       </div>
     </div>
   )
