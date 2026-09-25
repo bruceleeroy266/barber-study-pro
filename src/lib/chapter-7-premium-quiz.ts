@@ -593,7 +593,7 @@ export const chapter7PremiumQuizQuestions: QuizQuestion[] = [
     answer_d: 'It is only unsafe in large quantities',
     correct_answer: 'a',
     explanation: 'Mixing bleach with ammonia creates toxic CHLORAMINE GAS. This gas causes severe respiratory damage, eye irritation, coughing, and can be fatal. Never mix cleaning chemicals.',
-    difficulty: 'easy',
+    difficulty: 'hard',
     order_index: 44,
   },
   {
@@ -606,7 +606,7 @@ export const chapter7PremiumQuizQuestions: QuizQuestion[] = [
     answer_d: 'A test to measure pH of products',
     correct_answer: 'b',
     explanation: 'A patch test checks for allergic reactions before chemical services. Apply product behind the ear or on inner arm. Wait 24–48 hours. Required before haircolor, relaxers, perms, and depilatories.',
-    difficulty: 'easy',
+    difficulty: 'hard',
     order_index: 45,
   },
   {
@@ -645,7 +645,7 @@ export const chapter7PremiumQuizQuestions: QuizQuestion[] = [
     answer_d: 'Gloves, protective eyewear, apron, and proper ventilation',
     correct_answer: 'd',
     explanation: 'PPE includes gloves (nitrile, not latex for chemicals), protective eyewear when mixing, apron or cape, and proper ventilation. Some services require a mask for strong fumes.',
-    difficulty: 'easy',
+    difficulty: 'hard',
     order_index: 48,
   },
 
