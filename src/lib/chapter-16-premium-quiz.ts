@@ -22,7 +22,7 @@ export const chapter16PremiumQuizQuestions: QuizQuestion[] = [
     answer_d: 'Choose the elevation angle that matches the desired shape',
     correct_answer: 'b',
     explanation: 'A thorough consultation is the foundation of every professional service. It confirms what the client wants, reveals hair history and lifestyle factors, and sets realistic expectations before any cutting begins. Choosing a structure or elevation without consulting the client risks a result that does not match the client\'s goals.',
-    difficulty: 'easy',
+    difficulty: 'hard',
     order_index: 1,
   },
 
@@ -84,14 +84,14 @@ export const chapter16PremiumQuizQuestions: QuizQuestion[] = [
   {
     id: 'qq-16-006',
     quiz_id: 'quiz-16',
-    question: 'How does a graduated cut differ from a blunt cut in terms of weight placement?',
+    question: "A client wants visible weight to build above the perimeter rather than remain concentrated entirely at the bottom. Which distinction between a graduated cut and a blunt cut explains the correct approach?",
     answer_a: 'A blunt cut builds weight gradually, while a graduated cut keeps weight at the perimeter.',
     answer_b: 'A graduated cut removes all weight, while a blunt cut leaves weight throughout.',
     answer_c: 'A blunt cut keeps maximum weight at the perimeter, while a graduated cut builds weight along a design line.',
     answer_d: 'Both cuts keep weight at the perimeter; only the cutting-line direction differs.',
     correct_answer: 'c',
     explanation: 'The defining difference between these two structures is how weight is placed. A blunt cut uses little to no elevation to keep weight at the bottom perimeter. A graduated cut uses controlled elevation to stack weight gradually along a design line, often at the nape or back of the head.',
-    difficulty: 'easy',
+    difficulty: 'hard',
     order_index: 6,
   },
 
