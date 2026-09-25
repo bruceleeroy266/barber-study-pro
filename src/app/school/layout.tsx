@@ -7,6 +7,7 @@ import { isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
 import Link from 'next/link'
 import { Logo } from '@/components/brand'
 import { ArrowLeft } from 'lucide-react'
+import { getRoleBasedRedirect } from '@/lib/auth-access'
 
 export const dynamic = 'force-dynamic'
 
@@ -32,6 +33,8 @@ export default async function SchoolLayout({
     redirect('/dashboard')
   }
 
+  const dashboardHref = getRoleBasedRedirect(profile.role)
+
   return (
     <div className="min-h-screen bg-black">
       {/* Header */}
@@ -39,7 +42,7 @@ export default async function SchoolLayout({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-4">
-              <Link href="/dashboard" className="flex items-center gap-2 text-silver hover:text-white transition-colors">
+              <Link href={dashboardHref} className="flex items-center gap-2 text-silver hover:text-white transition-colors">
                 <ArrowLeft className="w-4 h-4" />
                 <span className="text-sm">Dashboard</span>
               </Link>
