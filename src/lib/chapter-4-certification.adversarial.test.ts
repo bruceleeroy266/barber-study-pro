@@ -157,7 +157,7 @@ describe('C4 final adversarial end-to-end certification', () => {
     }
 
     const initial = new Set(chapter4PremiumQuizQuestions.map((q) => q.id))
-    const reserve = new Set(
+    const reserve = new Set<string>(
       chapter4ReassessmentQuestionConceptMappings
         .filter((m) => m.conceptFamilyId === conceptId)
         .map((m) => m.questionId),
