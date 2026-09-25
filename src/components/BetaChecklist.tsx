@@ -25,7 +25,8 @@ import {
 import { Button, Card, Badge, ProgressBar, Input, Textarea, Select } from '@/components/ui'
 
 const AGREEMENT_VERSION = 'v1.0'
-const LOCAL_STORAGE_KEY = 'ascyn_beta_checklist_v1'
+const CHECKLIST_VERSION = 'v2.0'
+const LOCAL_STORAGE_KEY = 'ascyn_beta_checklist_v2'
 
 export interface ChecklistItem {
   id: string
@@ -35,74 +36,104 @@ export interface ChecklistItem {
 
 const CHECKLIST_ITEMS: ChecklistItem[] = [
   {
-    id: 'signup',
-    label: 'Sign up and verify email',
-    description: 'Create a student account and complete email verification.',
+    id: 'accept-invitation',
+    label: 'Accept ASCYN PRO invitation',
+    description: 'Open the invitation email and launch the ASCYN PRO account setup flow.',
+  },
+  {
+    id: 'set-password',
+    label: 'Create or set password',
+    description: 'Create a password from the invitation or setup link and confirm the password-update flow completes successfully.',
+  },
+  {
+    id: 'pending-approval',
+    label: 'Confirm pending approval behavior',
+    description: 'Before approval, confirm the account is blocked from protected areas and shows the pending-approval message without redirect loops.',
+  },
+  {
+    id: 'approval-enablement',
+    label: 'Confirm account approval and enablement',
+    description: 'After an administrator approves and enables the account, confirm access is granted normally.',
   },
   {
     id: 'login-logout',
     label: 'Log in and log out',
-    description: 'Confirm login works and logout returns you to the login page.',
-  },
-  {
-    id: 'dashboard',
-    label: 'View dashboard',
-    description: 'Dashboard loads and shows your progress overview.',
-  },
-  {
-    id: 'chapter-16',
-    label: 'Open Chapter 16',
-    description: 'Navigate to the chapter list and open Chapter 16.',
-  },
-  {
-    id: 'flashcards',
-    label: 'Complete flashcards',
-    description: 'Work through the Chapter 16 flashcard deck.',
-  },
-  {
-    id: 'flashcard-progress',
-    label: 'Flashcards set progress to 50%',
-    description: 'After completing flashcards, progress should show 50%.',
-  },
-  {
-    id: 'quiz-fail',
-    label: 'Failed quiz does NOT set progress to 100%',
-    description: 'Fail the quiz and confirm progress stays at 50%.',
-  },
-  {
-    id: 'quiz-pass',
-    label: 'Passed quiz DOES set progress to 100%',
-    description: 'Pass the quiz and confirm progress reaches 100%.',
-  },
-  {
-    id: 'progress-persist',
-    label: 'Progress persists after logout/login',
-    description: 'Log out and back in — your progress should still be there.',
-  },
-  {
-    id: 'beta-agreement',
-    label: 'Load Beta Agreement page',
-    description: 'The agreement page loads without errors.',
+    description: 'Confirm login succeeds and logout returns you to a clean login page.',
   },
   {
     id: 'accept-beta-agreement',
     label: 'Accept Beta Agreement',
-    description: 'Enter your name and email, then accept the agreement.',
+    description: 'Review and accept the current ASCYN PRO Beta Tester Agreement.',
   },
   {
-    id: 'beta-checklist',
-    label: 'Load Beta Checklist page',
-    description: 'This checklist page loads correctly.',
+    id: 'dashboard',
+    label: 'Load Student Dashboard',
+    description: 'Confirm the Student Dashboard loads and shows the correct student identity, chapter status, and progress overview.',
+  },
+  {
+    id: 'current-chapter',
+    label: 'Open assigned or current chapter',
+    description: 'Open the chapter assigned to you or the chapter currently shown on the dashboard.',
+  },
+  {
+    id: 'flashcards',
+    label: 'Complete flashcards',
+    description: 'Work through the chapter flashcard deck and confirm completion is recorded.',
+  },
+  {
+    id: 'chapter-assessment',
+    label: 'Complete chapter assessment',
+    description: 'Take the chapter assessment and confirm the result is saved correctly.',
+  },
+  {
+    id: 'missed-questions',
+    label: 'Verify missed-question tracking',
+    description: 'Confirm missed questions appear in Missed Questions and support the expected review/remediation flow.',
+  },
+  {
+    id: 'progress-updates',
+    label: 'Verify progress updates correctly',
+    description: 'Confirm chapter and overall progress update according to the current ASCYN PRO weighting rules.',
+  },
+  {
+    id: 'progress-persist',
+    label: 'Verify progress persists after logout/login',
+    description: 'Log out and back in, then confirm saved chapter progress and assessment results are still present.',
+  },
+  {
+    id: 'my-progress',
+    label: 'Open My Progress',
+    description: 'Open My Progress and confirm the student progress view loads correctly.',
+  },
+  {
+    id: 'grades',
+    label: 'Open Grades',
+    description: 'Open Grades and confirm available scores and results display correctly.',
+  },
+  {
+    id: 'assessments',
+    label: 'Open Assessments',
+    description: 'Open Assessments and confirm assigned or available assessments load correctly.',
+  },
+  {
+    id: 'compliance',
+    label: 'Open Compliance',
+    description: 'Open Compliance and confirm the page loads without errors.',
+  },
+  {
+    id: 'messages',
+    label: 'Open Messages',
+    description: 'Open Messages and confirm the student messaging view loads correctly.',
   },
   {
     id: 'submit-feedback',
-    label: 'Submit feedback',
-    description: 'Use the form below to report a bug, idea, or observation.',
+    label: 'Submit tester feedback',
+    description: 'Use the form below to report a bug, UX issue, content issue, feature request, or observation.',
   },
   {
     id: 'mobile-viewport',
     label: 'Test on mobile viewport',
-    description: 'Open the site on a phone or narrow browser window.',
+    description: 'Open ASCYN PRO on a phone or narrow browser window and confirm the Student experience remains usable.',
   },
 ]
 
@@ -160,7 +191,7 @@ export default function BetaChecklist({ initialFeedback }: BetaChecklistProps) {
     if (!loaded || typeof window === 'undefined') return
     window.localStorage.setItem(
       LOCAL_STORAGE_KEY,
-      JSON.stringify({ completed: Array.from(completed), version: AGREEMENT_VERSION })
+      JSON.stringify({ completed: Array.from(completed), version: CHECKLIST_VERSION })
     )
   }, [completed, loaded])
 
