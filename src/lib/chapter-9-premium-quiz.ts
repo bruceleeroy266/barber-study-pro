@@ -259,7 +259,7 @@ export const chapter9PremiumQuizQuestions: QuizQuestion[] = [
     answer_d: 'Ulcers produce excess oil that clogs razors',
     correct_answer: 'b',
     explanation: 'An ULCER is an open lesion with LOSS OF SKIN DEPTH. BARBER SAFETY: Never shave over ulcers — they indicate compromised skin integrity. Shaving could cause bleeding, infection, and delayed healing. Always refer clients with open ulcers to a physician.',
-    difficulty: 'easy',
+    difficulty: 'hard',
     order_index: 18,
   },
 
@@ -332,7 +332,7 @@ export const chapter9PremiumQuizQuestions: QuizQuestion[] = [
     answer_d: 'It is contagious only during flare-ups with visible scales',
     correct_answer: 'b',
     explanation: 'PSORIASIS is autoimmune-related and NOT contagious. BARBER HANDLING: Clients with scalp psoriasis may have flakes resembling severe dandruff. Handle GENTLY. Avoid irritating the skin with harsh products, hot water, or vigorous brushing. Do not attempt to remove scales.',
-    difficulty: 'easy',
+    difficulty: 'hard',
     order_index: 23,
   },
   {
@@ -345,7 +345,7 @@ export const chapter9PremiumQuizQuestions: QuizQuestion[] = [
     answer_d: 'Herpes lesions bleed excessively when shaved',
     correct_answer: 'b',
     explanation: 'Herpes simplex is HIGHLY CONTAGIOUS during active outbreaks. The virus spreads by contact with fluid from blisters. Shaving over active lesions spreads the virus to other areas of the face and can infect the barber. ALWAYS postpone facial services until lesions are completely healed.',
-    difficulty: 'easy',
+    difficulty: 'hard',
     order_index: 24,
   },
 
