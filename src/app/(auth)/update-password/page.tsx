@@ -48,10 +48,16 @@ export default function UpdatePasswordPage() {
           .eq('id', user.id)
       }
 
+      // End the recovery/first-login session before handing the user back
+      // to the login page. Without this, middleware can see the still-active
+      // session and immediately redirect away from /login.
+      await supabase.auth.signOut()
+
       setSuccess(true)
-      // Redirect to login after 3 seconds
+      // Redirect to a clean login page after 3 seconds.
       setTimeout(() => {
-        router.push('/login')
+        router.replace('/login')
+        router.refresh()
       }, 3000)
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to update password')
