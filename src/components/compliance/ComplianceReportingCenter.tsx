@@ -54,14 +54,14 @@ export default function ComplianceReportingCenter({ reports }: Props) {
         </h2>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 border-b border-graphite">
+      <div className="grid grid-cols-2 gap-px border-b border-graphite bg-graphite sm:grid-cols-3 lg:grid-cols-5">
         {reportMeta.map((meta) => {
           const Icon = meta.icon
           return (
             <button
               key={meta.type}
               onClick={() => setActive(meta.type)}
-              className={`p-3 text-sm font-medium flex flex-col items-center gap-1 transition-colors ${
+              className={`min-w-0 bg-charcoal p-3 text-center text-xs font-medium leading-tight flex flex-col items-center justify-center gap-1 transition-colors sm:text-sm ${
                 active === meta.type
                   ? 'bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border-b-2 border-[var(--color-brand-gold)]'
                   : 'text-silver hover:bg-graphite hover:text-white'
@@ -75,7 +75,7 @@ export default function ComplianceReportingCenter({ reports }: Props) {
       </div>
 
       <div className="p-4">
-        <div className="flex items-center justify-between mb-4">
+        <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h3 className="text-lg font-semibold text-white">{report.title}</h3>
             <p className="text-sm text-silver">{report.summary}</p>
@@ -83,7 +83,7 @@ export default function ComplianceReportingCenter({ reports }: Props) {
           </div>
           <button
             onClick={() => exportCsv(report)}
-            className="inline-flex items-center gap-2 px-3 py-2 bg-[var(--color-brand-gold)] text-black text-sm font-semibold rounded-lg hover:bg-[var(--color-brand-gold-light)] transition-colors"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-brand-gold)] px-3 py-2 text-sm font-semibold text-black transition-colors hover:bg-[var(--color-brand-gold-light)] sm:w-auto sm:shrink-0"
           >
             <Download className="w-4 h-4" />
             Export CSV
@@ -91,7 +91,7 @@ export default function ComplianceReportingCenter({ reports }: Props) {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="min-w-[36rem] w-full text-sm">
             <thead className="bg-black text-left">
               <tr>
                 {report.rows.length > 0 &&
