@@ -27,6 +27,12 @@ interface EscalationDiagnostics {
   detectionStateLabel: string | null
   confidenceLabel: string | null
   evidenceSummary: string | null
+  mastery: {
+    score: number
+    band: string
+    provisional: boolean
+    accuracyPercent: number
+  } | null
   cycleCount: number
   knowledgeChecksTaken: number
   knowledgeChecksPassed: number
@@ -271,6 +277,35 @@ export default function EscalationDetail({ escalation, currentUserId, diagnostic
         )}
         {diagnostics.evidenceSummary && (
           <p className="text-sm text-silver mt-2">{diagnostics.evidenceSummary}</p>
+        )}
+        {diagnostics.mastery && (
+          <div className="mt-4 rounded-lg border border-graphite bg-graphite/40 p-4" aria-label="Concept mastery score">
+            <div className="flex flex-wrap items-end justify-between gap-2">
+              <div>
+                <p className="text-xs uppercase tracking-wide text-silver-gray">Concept mastery</p>
+                <p className="text-3xl font-bold text-white">{diagnostics.mastery.score}<span className="text-base font-normal text-silver">/100</span></p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm font-medium text-white">{diagnostics.mastery.band}</p>
+                <p className="text-xs text-silver-gray">
+                  {diagnostics.mastery.provisional ? 'Provisional — more evidence needed' : 'Evidence-supported'}
+                </p>
+              </div>
+            </div>
+            <div className="mt-3 h-2 overflow-hidden rounded-full bg-charcoal">
+              <div
+                className="h-full rounded-full bg-gold"
+                style={{ width: `${diagnostics.mastery.score}%` }}
+                role="progressbar"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={diagnostics.mastery.score}
+              />
+            </div>
+            <p className="mt-2 text-xs text-silver-gray">
+              Evidence-adjusted score · raw accuracy {diagnostics.mastery.accuracyPercent}%
+            </p>
+          </div>
         )}
         <p className="text-sm text-silver mt-2">
           {diagnostics.cycleCount} remediation cycle{diagnostics.cycleCount !== 1 ? 's' : ''} for this topic
