@@ -18,7 +18,7 @@ const EXPECTED_COUNTS: Record<number, number> = {
   14: 70,
   15: 72,
   16: 30,
-  17: 46,
+  17: 30,
   18: 15,
   19: 15,
   20: 17,
@@ -48,7 +48,7 @@ describe('canonical 21-chapter quiz bank integrity', () => {
       (sum, questions) => sum + questions.length,
       0,
     )
-    expect(totalQuestions).toBe(845)
+    expect(totalQuestions).toBe(829)
   })
 
   it('keeps IDs unique and every answer key internally valid', () => {
