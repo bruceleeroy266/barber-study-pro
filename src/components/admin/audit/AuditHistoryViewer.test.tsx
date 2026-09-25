@@ -21,11 +21,12 @@ describe('AuditHistoryViewer mobile layout', () => {
               reason: 'Invalid credentials',
               ip_address: null,
               user_agent: null,
-              metadata: null,
+              metadata: {},
+              role: null,
+              action: null,
             },
           ],
           count: 1,
-          error: null,
         }}
       />,
     )
@@ -44,7 +45,7 @@ describe('AuditHistoryViewer mobile layout', () => {
   it('makes the filter action full width on phones', () => {
     render(
       <AuditHistoryViewer
-        initialData={{ logs: [], count: 267, error: null }}
+        initialData={{ logs: [], count: 267 }}
       />,
     )
 
