@@ -2,7 +2,8 @@ import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import DashboardNav from '@/components/DashboardNav'
 import { BETA_AGREEMENT_VERSION } from '@/lib/beta'
-import { isInstructorOrAdmin } from '@/lib/auth-helpers'
+import { isInstructorOrAdmin, isLearner } from '@/lib/auth-helpers'
+import { getRoleBasedRedirect } from '@/lib/auth-access'
 import BackButtonPrevention from '@/components/auth/BackButtonPrevention'
 import StudyActivityTracker from '@/components/StudyActivityTracker'
 
@@ -28,6 +29,12 @@ export default async function DashboardLayout({
     .select('*')
     .eq('id', user.id)
     .single()
+
+  // The /dashboard subtree is learner-only. Keep staff roles inside their
+  // canonical portals even when they navigate directly to a nested student route.
+  if (profile?.role && !isLearner(profile.role)) {
+    redirect(getRoleBasedRedirect(profile.role))
+  }
 
   // ── BETA AGREEMENT FALLBACK ENFORCEMENT ──
   // Students and apprentices must accept the current beta agreement before
