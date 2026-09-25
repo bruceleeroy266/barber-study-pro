@@ -140,11 +140,11 @@ export default function AuditHistoryViewer({ initialData }: AuditHistoryViewerPr
             </select>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <button
             type="submit"
             disabled={isPending}
-            className="px-4 py-2 bg-[var(--color-brand-gold)] text-black font-semibold rounded-lg hover:bg-[var(--color-brand-gold-light)] disabled:opacity-50"
+            className="w-full rounded-lg bg-[var(--color-brand-gold)] px-4 py-2 font-semibold text-black hover:bg-[var(--color-brand-gold-light)] disabled:opacity-50 sm:w-auto"
           >
             {isPending ? 'Loading...' : 'Filter'}
           </button>
@@ -158,9 +158,53 @@ export default function AuditHistoryViewer({ initialData }: AuditHistoryViewerPr
         </div>
       )}
 
-      <div className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+      <div className="space-y-3 md:hidden" aria-label="Audit log cards">
+        {logs.map((log) => (
+          <article key={log.id} className="rounded-xl border border-graphite bg-charcoal p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-xs uppercase tracking-wide text-silver">Time</p>
+                <p className="mt-1 text-sm text-light-gray">{new Date(log.created_at).toLocaleString()}</p>
+              </div>
+              <ResultBadge result={log.result} />
+            </div>
+
+            <dl className="mt-4 grid grid-cols-1 gap-3 text-sm">
+              <div>
+                <dt className="text-xs uppercase tracking-wide text-silver">Type</dt>
+                <dd className="mt-1 break-words text-light-gray">{log.type}</dd>
+              </div>
+              <div>
+                <dt className="text-xs uppercase tracking-wide text-silver">User</dt>
+                <dd className="mt-1 break-all text-light-gray">{log.email ?? log.user_id ?? '—'}</dd>
+              </div>
+              <div>
+                <dt className="text-xs uppercase tracking-wide text-silver">School</dt>
+                <dd className="mt-1 break-all text-light-gray">{log.school_id ?? '—'}</dd>
+              </div>
+              <div>
+                <dt className="text-xs uppercase tracking-wide text-silver">Resource</dt>
+                <dd className="mt-1 break-words text-light-gray">
+                  {log.resource ? `${log.resource}${log.resource_id ? ` (${log.resource_id.slice(0, 8)})` : ''}` : '—'}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-xs uppercase tracking-wide text-silver">Reason</dt>
+                <dd className="mt-1 break-words text-silver">{log.reason ?? '—'}</dd>
+              </div>
+            </dl>
+          </article>
+        ))}
+        {logs.length === 0 && !error && (
+          <div className="rounded-xl border border-graphite bg-charcoal p-8 text-center text-silver">
+            No audit log entries found.
+          </div>
+        )}
+      </div>
+
+      <div className="hidden overflow-hidden rounded-xl border border-graphite bg-charcoal md:block">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="min-w-[64rem] w-full text-sm">
             <thead>
               <tr className="text-left text-silver border-b border-graphite">
                 <th className="p-4">Time</th>
