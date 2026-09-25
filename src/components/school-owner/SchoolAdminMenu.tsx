@@ -66,18 +66,19 @@ export default function SchoolAdminMenu() {
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
-        className="inline-flex items-center gap-2 rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 px-3 py-2 text-sm font-medium text-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold)]/15"
+        className="inline-flex max-w-[11rem] items-center gap-2 rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 px-3 py-2 text-sm font-medium leading-tight text-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold)]/15 sm:max-w-none"
         aria-haspopup="menu"
         aria-expanded={open}
       >
-        School Management
+        <span className="sm:hidden">School Menu</span>
+        <span className="hidden sm:inline">School Management</span>
         <ChevronDown className={`h-4 w-4 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
 
       {open && (
         <div
           role="menu"
-          className="absolute right-0 z-[60] mt-2 w-72 overflow-hidden rounded-xl border border-graphite bg-charcoal shadow-2xl"
+          className="fixed left-3 right-3 top-[4.5rem] z-[60] max-h-[calc(100dvh-5.5rem)] overflow-y-auto rounded-xl border border-graphite bg-charcoal shadow-2xl sm:absolute sm:left-auto sm:right-0 sm:top-auto sm:mt-2 sm:w-72 sm:max-h-none"
         >
           <div className="p-2">
             {items.map((item) => {
