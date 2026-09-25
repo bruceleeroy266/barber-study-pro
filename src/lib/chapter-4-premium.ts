@@ -125,17 +125,17 @@ export const chapter4PremiumContent: ChapterContent = {
         {
           icon: 'AlertTriangle',
           title: 'LICENSE GONE',
-          text: 'One confirmed cross-contamination incident can trigger a state board investigation. Result: license suspension or permanent revocation. Years of training — gone in one mistake.',
+          text: 'Serious infection-control failures can trigger state-board investigation and professional discipline. The exact consequence depends on the facts, current law, and the licensing authority.',
         },
         {
           icon: 'Shield',
           title: 'LAWSUIT',
-          text: 'A client contracts MRSA from contaminated clippers. Medical bills: $50,000+. Your liability insurance may not cover negligence. Personal assets at risk. Shop closes.',
+          text: 'Cross-contamination can cause real client harm, complaints, liability, and loss of trust. Professional infection-control procedures reduce preventable exposure and protect both client and barber.',
         },
         {
           icon: 'Heart',
           title: 'LIVES AT RISK',
-          text: 'Hepatitis B survives 7+ days outside the body. One nick with an improperly disinfected blade can transmit a lifelong, potentially fatal disease. This is not hypothetical — it happens.',
+          text: 'Bloodborne pathogens can be transmitted when contaminated blood reaches broken skin or another exposure route. Treat blood and body-fluid exposure seriously and follow Standard Precautions and the required exposure procedure.',
         },
       ],
     },
@@ -153,7 +153,7 @@ export const chapter4PremiumContent: ChapterContent = {
           situation: 'SCENARIO: A barber finishes a haircut on Client A who has an undiagnosed staph infection. The barber wipes the clippers with a towel, sprays them with "disinfectant" for 30 seconds, and immediately uses them on Client B. Client B develops a painful boil three days later.',
           options: [
             { letter: 'A', text: 'The barber did nothing wrong — infections happen', feedback: '❌ CRITICAL FAILURE. This is gross negligence. Multiple violations occurred.' },
-            { letter: 'B', text: 'The barber failed to clean before disinfecting, failed to follow contact time, and failed to use proper disinfectant', feedback: '✅ CORRECT. Three major failures: (1) No cleaning step, (2) 30 seconds vs 10 minutes contact time, (3) Unknown if disinfectant was EPA-registered.' },
+            { letter: 'B', text: 'The barber failed to clean before disinfecting, failed to follow contact time, and failed to use proper disinfectant', feedback: '✅ CORRECT. Three major failures: (1) No cleaning step, (2) The full labeled wet contact time was not followed, and (3) The product’s approved use and directions were not verified.' },
             { letter: 'C', text: 'Only the contact time was wrong', feedback: '❌ PARTIAL. Contact time was wrong, but cleaning before disinfecting was also skipped. The towel may have spread contamination.' },
             { letter: 'D', text: 'The disinfectant brand was the problem', feedback: '❌ INCORRECT. The brand is irrelevant if proper procedure is not followed. Even the best disinfectant fails if misused.' },
           ],
@@ -163,6 +163,37 @@ export const chapter4PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
+    {
+      type: 'tabbed',
+      id: 'regulatory-source-detail',
+      title: 'REGULATORY AGENCIES & RIGHT-TO-KNOW',
+      subtitle: 'Know which authority controls which part of professional safety',
+      tabs: [
+        {
+          id: 'osha-state-source',
+          label: 'OSHA & STATE',
+          title: 'Workplace Safety vs. Licensing Rules',
+          bullets: [
+            { label: 'OSHA', description: 'Addresses workplace safety and employee exposure to hazards, including hazard communication and applicable bloodborne-pathogen protections.' },
+            { label: 'STATE AGENCIES', description: 'Control professional licensing, shop rules, permitted services, inspections, and state-specific sanitation requirements.' },
+            { label: 'BARBER RESPONSIBILITY', description: 'Stay current with the rules that apply to your license and workplace; old school notes do not override current requirements.' },
+          ],
+          facts: [{ text: 'SOURCE FOCUS: Federal and state authorities have different roles. Identify the controlling authority before choosing a compliance answer.' }],
+        },
+        {
+          id: 'epa-sds-source',
+          label: 'EPA / SDS / GHS',
+          title: 'Product Regulation and Chemical Hazard Communication',
+          bullets: [
+            { label: 'EPA', description: 'Registers disinfectant products and the claims/directions printed on their labels.' },
+            { label: 'SDS', description: 'The standardized 16-section Safety Data Sheet communicates product identity, hazards, first aid, handling/storage, PPE, disposal, and other chemical-safety information.' },
+            { label: 'GHS PICTOGRAMS', description: 'Standardized symbols communicate hazard categories, but safe decisions still require the full label and SDS.' },
+          ],
+          facts: [{ text: 'TEST STRATEGY: OSHA = workplace hazards; EPA = disinfectant registration/label claims; state board = license and state practice rules.' }],
+        },
+      ],
+    },
+
     // SECTION 4: OSHA COMPLIANCE DASHBOARD
     // ═══════════════════════════════════════════
     {
@@ -174,7 +205,7 @@ export const chapter4PremiumContent: ChapterContent = {
         {
           icon: 'FileText',
           title: 'EXPOSURE CONTROL PLAN',
-          description: 'Every shop MUST have a written plan. Must include: job classifications with exposure risk, procedures for different tasks, schedule for PPE and training, method of compliance evaluation. OSHA inspectors ask for this FIRST.',
+          description: 'Every shop MUST have a written plan. Must include: job classifications with exposure risk, procedures for different tasks, schedule for PPE and training, method of compliance evaluation. Keep the required plan current and accessible where OSHA bloodborne-pathogen rules apply.',
         },
         {
           icon: 'Syringe',
@@ -189,7 +220,7 @@ export const chapter4PremiumContent: ChapterContent = {
         {
           icon: 'Trash2',
           title: 'SHARPS DISPOSAL',
-          description: 'Puncture-resistant containers must be: easily accessible, upright, not overfilled (replace at 3/4 full), labeled with biohazard symbol, and disposed of per local regulations. Never throw loose blades in trash.',
+          description: 'Puncture-resistant containers must be: easily accessible, upright, replaced before overfilling according to the container and workplace requirements, labeled with biohazard symbol, and disposed of per local regulations. Never throw loose blades in trash.',
         },
       ],
     },
@@ -217,6 +248,40 @@ export const chapter4PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
+    {
+      type: 'tabbed',
+      id: 'infection-principles-source-detail',
+      title: 'INFECTION PRINCIPLES — SOURCE-BOOK FOUNDATION',
+      subtitle: 'Classification, transmission, and why appearance alone is never enough',
+      tabs: [
+        {
+          id: 'bacteria-classification-source',
+          label: 'BACTERIA',
+          title: 'Shape, Growth, and Protective Stages',
+          bullets: [
+            { label: 'COCCI', description: 'Round-shaped bacteria; arrangements such as staphylococci and streptococci help describe important groups.' },
+            { label: 'BACILLI', description: 'Rod-shaped bacteria; some species can form resistant spores.' },
+            { label: 'SPIRILLA', description: 'Spiral or corkscrew-shaped bacteria.' },
+            { label: 'ACTIVE / INACTIVE', description: 'Bacteria may be actively growing/reproducing or enter resistant inactive states under unfavorable conditions.' },
+          ],
+          facts: [{ text: 'SOURCE FOCUS: Classification supports recognition; barbers do not diagnose infections.' }],
+        },
+        {
+          id: 'transmission-immunity-source',
+          label: 'TRANSMISSION',
+          title: 'Direct, Indirect, Local, Systemic, and Immunity',
+          bullets: [
+            { label: 'DIRECT TRANSMISSION', description: 'Organisms pass directly from one person to another.' },
+            { label: 'INDIRECT TRANSMISSION', description: 'A contaminated object or surface becomes the intermediary.' },
+            { label: 'LOCAL vs SYSTEMIC', description: 'A local infection is limited to an area; a systemic infection affects the body more broadly.' },
+            { label: 'ASYMPTOMATIC', description: 'A person may carry an infectious organism without visible signs, so precautions cannot depend on appearance.' },
+            { label: 'IMMUNITY', description: 'The source distinguishes natural and acquired forms of resistance to disease.' },
+          ],
+          facts: [{ text: 'PROFESSIONAL RULE: Infection-control decisions are based on procedure and exposure risk, not on guessing whether a client “looks healthy.”' }],
+        },
+      ],
+    },
+
     // SECTION 6: PATHOGEN THREAT MATRIX
     // ═══════════════════════════════════════════
     {
@@ -230,9 +295,9 @@ export const chapter4PremiumContent: ChapterContent = {
           label: 'BACTERIA',
           title: 'BACTERIA: HIGH THREAT LEVEL',
           bullets: [
-            { label: 'STAPHYLOCOCCI', description: 'MRSA is antibiotic-resistant and can cause life-threatening infections. Survives on surfaces for days. Killed by proper disinfection — but NOT by sanitizing.' },
+            { label: 'STAPHYLOCOCCI', description: 'Staphylococci include disease-causing strains that may infect broken skin. Proper cleaning and the correctly selected disinfectant are central to preventing indirect transmission.' },
             { label: 'STREPTOCOCCI', description: 'Causes strep throat, skin infections, scarlet fever. Spread through direct contact and respiratory droplets. Highly contagious in close-contact environments.' },
-            { label: 'BACILLI', description: 'Includes tetanus (lockjaw) and tuberculosis. Some form spores that survive standard disinfection. Requires sterilization or tuberculocidal disinfectants.' },
+            { label: 'BACILLI', description: 'Bacilli are rod-shaped bacteria. Some bacteria can form protective spores, which are more resistant than ordinary bacterial cells and are destroyed by sterilization processes.' },
           ],
           facts: [
             { text: '⚠️ BOARD EXAM ALERT: Bacteria reproduce by BINARY FISSION (splitting in two). Under ideal conditions, they double every 20 minutes.' },
@@ -244,9 +309,9 @@ export const chapter4PremiumContent: ChapterContent = {
           label: 'VIRUSES',
           title: 'VIRUSES: EXTREME THREAT LEVEL',
           bullets: [
-            { label: 'HEPATITIS B', description: 'SURVIVES 7+ DAYS outside body. 100x more contagious than HIV. Vaccine available — GET IT. Transmitted through blood and bodily fluids. Can cause liver cancer and death.' },
+            { label: 'HEPATITIS B', description: 'Hepatitis B is a bloodborne viral infection relevant to occupational exposure. Vaccination is an important protection for workers with potential exposure, but it never replaces Standard Precautions.' },
             { label: 'HEPATITIS C', description: 'No vaccine. Often asymptomatic for years. Leading cause of liver transplants. Transmitted through blood contact. Can survive on surfaces for days.' },
-            { label: 'HIV', description: 'Less contagious than Hepatitis B but still deadly. Requires blood-to-blood contact. No cure. Proper PPE and disinfection prevent transmission completely.' },
+            { label: 'HIV', description: 'HIV is a bloodborne virus. Infection-control decisions should focus on preventing blood exposure rather than trying to judge risk from a client\'s appearance.' },
           ],
           facts: [
             { text: '⚠️ CRITICAL: You CANNOT tell by looking if someone has HIV, Hep B, or Hep C. Assume EVERY client is infectious.' },
@@ -284,6 +349,68 @@ export const chapter4PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
+    {
+      type: 'tabbed',
+      id: 'processing-source-detail',
+      title: 'CLEANING, DISINFECTION & STERILIZATION',
+      subtitle: 'Three different processes with different purposes',
+      tabs: [
+        {
+          id: 'processing-levels-source',
+          label: 'PROCESS LEVELS',
+          title: 'Do Not Use the Terms Interchangeably',
+          bullets: [
+            { label: 'CLEANING', description: 'Mechanical removal of visible dirt/debris and many germs with soap/detergent and water. Cleaning comes before disinfection.' },
+            { label: 'DISINFECTION', description: 'Chemical process for appropriate nonporous implements and environmental surfaces that destroys most disease-causing microorganisms, but not bacterial spores.' },
+            { label: 'STERILIZATION', description: 'Destroys all microbial life including spores; when used, it requires the correct sterilization equipment and maintenance.' },
+          ],
+          facts: [{ text: 'SOURCE SEQUENCE: CLEAN FIRST → DISINFECT according to the label. Sterilization is a separate higher-level process.' }],
+        },
+        {
+          id: 'autoclave-source',
+          label: 'AUTOCLAVE',
+          title: 'Sterilization Equipment',
+          bullets: [
+            { label: 'HEAT + PRESSURE', description: 'An autoclave uses heat and pressure to sterilize compatible items.' },
+            { label: 'PRE-CLEAN', description: 'Items must be cleaned before sterilization.' },
+            { label: 'PERFORMANCE TESTING', description: 'Sterilizer performance is verified using biological/spore testing according to applicable requirements and manufacturer instructions.' },
+          ],
+          facts: [{ text: 'Do not confuse routine barber-tool disinfection with sterilization; use the level required for the item, service, and jurisdiction.' }],
+        },
+      ],
+    },
+
+    {
+      type: 'tabbed',
+      id: 'disinfectant-antiseptic-source-detail',
+      title: 'DISINFECTANTS & ANTISEPTICS',
+      subtitle: 'Select the product for the surface, organism claim, and intended use',
+      tabs: [
+        {
+          id: 'disinfectant-types-source',
+          label: 'DISINFECTANTS',
+          title: 'Common Professional Disinfectant Categories',
+          bullets: [
+            { label: 'HOSPITAL DISINFECTANT', description: 'EPA-registered product with hospital-level claims for appropriate nonporous surfaces when used as labeled.' },
+            { label: 'TUBERCULOCIDAL CLAIM', description: 'A stronger labeled claim against Mycobacterium tuberculosis; use it when required by rule, service, or contamination type.' },
+            { label: 'QUATS', description: 'Quaternary ammonium compounds are widely used for nonporous surface disinfection when the label permits.' },
+            { label: 'PHENOLICS / BLEACH', description: 'Other disinfectant chemistries may be appropriate for specific uses; compatibility, dilution, ventilation, and label precautions matter.' },
+          ],
+          facts: [{ text: 'THE LABEL CONTROLS: approved surface, dilution, contact time, organisms, PPE, storage, and disposal.' }],
+        },
+        {
+          id: 'antiseptic-source',
+          label: 'ANTISEPTICS',
+          title: 'Living Tissue Is Different From Implements',
+          bullets: [
+            { label: 'ANTISEPTIC', description: 'A product intended for use on living tissue as directed; it is not a substitute for implement disinfection.' },
+            { label: 'ALCOHOL LIMITATION', description: 'Alcohol may be used for certain skin-cleaning/antiseptic purposes but should not be treated as a universal surface/implement disinfectant.' },
+          ],
+          facts: [{ text: 'TEST STRATEGY: First decide whether the question is about living tissue or an inanimate implement/surface.' }],
+        },
+      ],
+    },
+
     // SECTION 7: THE 8-STEP DISINFECTION PROTOCOL
     // ═══════════════════════════════════════════
     {
@@ -297,7 +424,7 @@ export const chapter4PremiumContent: ChapterContent = {
         { text: 'STEP 3: RINSE — Thoroughly rinse away all soap and loosened debris' },
         { text: 'STEP 4: DRY — Completely dry the tool (water dilutes disinfectant)' },
         { text: 'STEP 5: IMMERSE — Fully submerge in EPA-registered disinfectant' },
-        { text: 'STEP 6: WAIT — Follow manufacturer contact time (typically 10 MINUTES)' },
+        { text: 'STEP 6: WAIT — Keep the item wet for the full contact time stated on the product label' },
         { text: 'STEP 7: REMOVE — Use gloves and tongs to remove tools' },
         { text: 'STEP 8: STORE — Place in clean, covered container labeled "DISINFECTED"' },
       ],
@@ -306,11 +433,19 @@ export const chapter4PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'protocol-warning',
       title: '⚠️ PROTOCOL FAILURE POINTS',
-      content: 'The most common failure is rushing Step 6 (contact time). Most barbers remove tools after 2-3 minutes. At 5 minutes, you have killed roughly 50% of pathogens. At 10 minutes, you have killed 99.9%. That 5-minute difference is the difference between safety and an outbreak. Set a timer. Every time.',
+      content: 'The most common failure is rushing Step 6 (contact time). Disinfectants only achieve their labeled claims when the required dilution, surface preparation, and wet contact time are followed. The contact time is product-specific—read the label instead of memorizing one universal number. Use a timer whenever the label requires a timed contact period.',
       highlight: 'SET A TIMER. EVERY TIME.',
     },
 
     // ═══════════════════════════════════════════
+    {
+      type: 'contentBlock',
+      id: 'standard-precautions-source-detail',
+      title: 'STANDARD PRECAUTIONS — EVERY CLIENT, EVERY TIME',
+      content: 'Standard Precautions are based on treating human blood and certain body fluids as potentially infectious. In barbering, that means using proper hand hygiene, appropriate gloves when exposure is anticipated, safe handling and disposal of sharps, and the required exposure-incident procedure without relying on whether a client shows symptoms.',
+      highlight: 'PROCEDURE OVER APPEARANCE',
+    },
+
     // SECTION 8: BLOOD SPILL EMERGENCY RESPONSE
     // ═══════════════════════════════════════════
     {
@@ -473,14 +608,29 @@ export const chapter4PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
+    {
+      type: 'featureGrid',
+      id: 'safe-work-practices-source-detail',
+      title: 'SAFE WORK PRACTICES — SOURCE-BOOK EXPANSION',
+      subtitle: 'Prevent infection, accidents, burns, falls, electrical injury, and chemical exposure',
+      features: [
+        { icon: 'Droplets', title: 'WATER', description: 'Control spray hoses, wipe spills promptly, position the client safely, and test water temperature before exposing the client.' },
+        { icon: 'Zap', title: 'ELECTRICITY', description: 'Keep electrical tools away from water, use protected outlets where required, inspect cords, and remove damaged equipment from service.' },
+        { icon: 'Wrench', title: 'TOOLS & APPLIANCES', description: 'Store tools safely, replace dropped tools with properly processed ones, keep equipment in good condition, and use each tool only for its intended purpose.' },
+        { icon: 'Flame', title: 'HEAT & FIRE', description: 'Place hot appliances and lather equipment where they cannot burn clients or be knocked over, and maintain appropriate fire-safety equipment.' },
+        { icon: 'FlaskConical', title: 'CHEMICALS', description: 'Keep every shop solution properly labeled, follow SDS/label directions, maintain ventilation, and store incompatible or hazardous products safely.' },
+        { icon: 'Cable', title: 'CORDS & WALKWAYS', description: 'Manage cords and workstation layout so clients and staff are not exposed to trip, snag, or equipment hazards.' },
+      ],
+    },
+
     // SECTION 13: BOARD EXAM CRITICAL ALERTS
     // ═══════════════════════════════════════════
     {
       type: 'contentBlock',
       id: 'board-exam-critical',
       title: '📋 BOARD EXAM CRITICAL ALERTS',
-      content: 'These concepts appear on EVERY state board exam. Miss them, and you fail.\n\n1. CLEANING must happen BEFORE disinfecting. Disinfectants cannot penetrate dirt and organic matter.\n\n2. CONTACT TIME is non-negotiable. Most disinfectants require 10 minutes of wet contact.\n\n3. BACTERIAL SPORES are killed only by STERILIZATION, not disinfection.\n\n4. OSHA requires: Exposure Control Plan, Hep B vaccine offer, PPE, sharps disposal, annual training.\n\n5. You CANNOT tell by looking who has HIV, Hep B, or Hep C. Treat EVERY client as infectious.\n\n6. EPA registers disinfectants. Only use EPA-registered products.\n\n7. SDS has 16 sections. GHS pictograms identify hazards at a glance.\n\n8. Refuse service for contagious conditions. Document the refusal.\n\n9. Never mix bleach with ammonia or acids — produces deadly gas.\n\n10. GFCI outlets required near water. Max water temperature: 130°F.',
-      highlight: 'MEMORIZE THESE 10 POINTS',
+      content: 'These are high-value Chapter 4 distinctions that commonly matter in infection-control testing and real shop decisions.\n\n1. CLEANING comes before disinfection because visible debris can interfere with disinfectant contact.\n\n2. CONTACT TIME comes from the product label; do not memorize one universal number.\n\n3. DISINFECTION and STERILIZATION are different processes; sterilization destroys spores.\n\n4. OSHA addresses workplace safety and hazard communication; EPA registers disinfectant products and label claims; state agencies control licensing and state practice rules.\n\n5. Standard Precautions do not depend on whether a client appears sick.\n\n6. SDS information uses a standardized 16-section format and GHS pictograms communicate hazard categories.\n\n7. Antiseptics are for living tissue as directed; disinfectants are for appropriate inanimate items and surfaces.\n\n8. Safe work practices include water, electricity, hot tools, chemicals, cords, fire safety, and equipment condition.\n\n9. When an implement is dropped or contaminated, replace it with a properly processed item before continuing.\n\n10. When rules, labels, or workplace instructions differ, verify the current controlling requirement before acting.',
+      highlight: 'UNDERSTAND THE DISTINCTIONS',
     },
 
     // ═══════════════════════════════════════════
@@ -490,7 +640,7 @@ export const chapter4PremiumContent: ChapterContent = {
       type: 'checklist',
       id: 'sanitation-scorecard',
       title: '📊 SANITATION SCORECARD',
-      subtitle: 'Grade your station. 100% = Inspection Ready. Below 80% = Risk of Closure.',
+      subtitle: 'Use this as a self-check for safer workflow; inspection requirements are set by the current jurisdiction.',
       items: [
         { text: '✓ Tools cleaned AND disinfected between EVERY client (10 pts)' },
         { text: '✓ Fresh cape and neck strip for each client (10 pts)' },
@@ -512,16 +662,14 @@ export const chapter4PremiumContent: ChapterContent = {
       type: 'milestoneList',
       id: 'infection-timeline',
       title: '⏱️ INFECTION CONTROL TIMELINE',
-      subtitle: 'What happens when you skip steps — minute by minute',
+      subtitle: 'How correct processing interrupts indirect transmission',
       milestones: [
-        { year: '0 min', title: 'Client leaves chair', description: 'Tools are contaminated with hair, skin cells, oils, and potential pathogens.' },
-        { year: '2 min', title: 'You wipe tools with a towel', description: 'Towel spreads contamination. Pathogens transfer to towel surface. Towel becomes a vector.' },
-        { year: '5 min', title: 'You spray disinfectant for 30 seconds', description: 'Disinfectant needs 10 MINUTES. At 30 seconds, you have killed less than 10% of pathogens.' },
-        { year: '10 min', title: 'Next client sits down', description: 'Contaminated tools touch new client. Pathogens transfer to scalp, face, neck.' },
-        { year: '3 days', title: 'Client develops infection', description: 'Painful boil, rash, or worse. Client visits doctor. Doctor asks: "Where did you get your hair cut?"' },
-        { year: '1 week', title: 'State board investigation', description: 'Inspector visits your shop. Finds violations. Issues citation. License at risk.' },
-        { year: '2 weeks', title: 'Lawsuit filed', description: 'Client sues for negligence. Medical bills, lost wages, pain and suffering. Your insurance may not cover it.' },
-        { year: '1 month', title: 'Shop closes', description: 'Reputation destroyed. License revoked. Career over. All because of one skipped step.' },
+        { year: 'Step 1', title: 'Service ends', description: 'Reusable implements and touched surfaces are treated as potentially contaminated until properly processed.' },
+        { year: 'Step 2', title: 'Remove visible debris', description: 'Cleaning physically removes hair, oils, residue, and other material that can interfere with disinfection.' },
+        { year: 'Step 3', title: 'Prepare the product correctly', description: 'Verify the EPA-registered disinfectant label, required dilution or ready-to-use directions, compatible surface, PPE, and precautions.' },
+        { year: 'Step 4', title: 'Maintain labeled contact', description: 'Keep the item or surface wet for the full product-specific contact time instead of using a memorized universal number.' },
+        { year: 'Step 5', title: 'Protect processed items', description: 'Store properly processed implements so they remain separated from contaminated or used items until the next service.' },
+        { year: 'Failure point', title: 'Skipping a step breaks the process', description: 'Using an inadequately processed implement can create an indirect-transmission pathway between clients.' },
       ],
     },
 
@@ -568,6 +716,22 @@ export const chapter4PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
+    {
+      type: 'checklist',
+      id: 'professional-responsibilities-source-detail',
+      title: 'PROFESSIONAL RESPONSIBILITIES',
+      subtitle: 'Safety is part of the license, not an optional extra',
+      items: [
+        { text: 'Follow current federal, state, local, workplace, and product-label requirements that apply to the service.' },
+        { text: 'Keep your professional license and required credentials current.' },
+        { text: 'Check for updates to state rules and shop procedures instead of relying on outdated school notes.' },
+        { text: 'Identify and correct hazards before they injure a client or coworker.' },
+        { text: 'Keep emergency contact information for fire, police, medical response, utilities, and facility support accessible and current.' },
+        { text: 'Label shop containers and substances clearly and keep required SDS information available.' },
+        { text: 'Never skip cleaning/disinfection steps to save time or money.' },
+      ],
+    },
+
     // SECTION 17: FINAL SAFETY PLEDGE
     // ═══════════════════════════════════════════
     {

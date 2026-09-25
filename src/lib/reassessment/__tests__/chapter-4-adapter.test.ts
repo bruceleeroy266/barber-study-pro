@@ -4,7 +4,7 @@
  * Proves the Chapter 4 adapter plugs the locked concept taxonomy into the
  * chapter-agnostic exclusion engine correctly:
  *   - question→concept resolution spans initial + reserve banks
- *   - the per-family pool is the union of initial (5/6/5/5/4/5) and reserve (15)
+ *   - the per-family pool is the union of the book-aligned initial distribution and reserve (15)
  *   - every mapping resolves to a real question in one of the two banks
  *   - the registry registers ch-4 and unsupported chapters fail closed
  */
@@ -26,10 +26,10 @@ import { chapter4ReassessmentQuestions } from '@/lib/chapter-4-reassessment-ques
 import { ACTIVE_CHAPTER4_CONCEPT_FAMILY_IDS } from '@/lib/chapter-4-concepts/concepts'
 
 const INITIAL_PER_FAMILY: Record<string, number> = {
-  'ch4-pathogens-transmission': 5,
+  'ch4-pathogens-transmission': 8,
   'ch4-disinfection-sterilization': 6,
-  'ch4-cross-contamination': 5,
-  'ch4-blood-exposure-ppe': 5,
+  'ch4-cross-contamination': 3,
+  'ch4-blood-exposure-ppe': 4,
   'ch4-regulatory-chemical-safety': 4,
   'ch4-safe-practice-compliance': 5,
 }
@@ -56,7 +56,7 @@ describe('Chapter 4 mapping provider — resolution', () => {
     expect(provider.getConceptForQuestion('qq-3-001')).toBeUndefined()
   })
 
-  it('per-family pool is exactly initial (5/6/5/5/4/5) + reserve (15)', () => {
+  it('per-family pool is exactly book-aligned initial + reserve (15)', () => {
     for (const family of ACTIVE_CHAPTER4_CONCEPT_FAMILY_IDS) {
       const pool = provider.getQuestionsForConcept(family)
       expect(pool.length, family).toBe(INITIAL_PER_FAMILY[family] + 15)

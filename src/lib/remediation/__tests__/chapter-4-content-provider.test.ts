@@ -18,6 +18,7 @@ import {
   chapter4ContentConceptMappings,
   chapter4FlashcardConceptMappings,
   chapter4ReassessmentQuestionConceptMappings,
+  chapter4QuizQuestionConceptMappings,
 } from '@/lib/chapter-4-concepts/mappings'
 import { chapter4ConceptFamilies } from '@/lib/chapter-4-concepts/concepts'
 import { chapter4PremiumFlashcards } from '@/lib/chapter-4-premium-flashcards'
@@ -27,12 +28,12 @@ import { chapter4ReassessmentQuestions } from '@/lib/chapter-4-reassessment-ques
 const provider = getChapterContentProvider('ch-4')
 
 const EXPECTED_FLASHCARDS_PER_FAMILY: Record<string, number> = {
-  'ch4-pathogens-transmission': 9,
-  'ch4-disinfection-sterilization': 10,
+  'ch4-pathogens-transmission': 17,
+  'ch4-disinfection-sterilization': 13,
   'ch4-cross-contamination': 8,
   'ch4-blood-exposure-ppe': 9,
-  'ch4-regulatory-chemical-safety': 7,
-  'ch4-safe-practice-compliance': 7,
+  'ch4-regulatory-chemical-safety': 9,
+  'ch4-safe-practice-compliance': 14,
 }
 
 describe('Chapter 4 remediation content provider — registration', () => {
@@ -115,11 +116,11 @@ describe('Chapter 4 remediation content provider — targeted content belongs to
 })
 
 describe('Chapter 4 remediation content provider — inactive content never leaks', () => {
-  it('serves only the 50 active canonical flashcards and nothing else', () => {
+  it('serves only the 70 active canonical flashcards and nothing else', () => {
     const allServed = chapter4ConceptFamilies.flatMap((f) =>
       provider!.filterFlashcardsByConcept(f.id),
     )
-    expect(allServed).toHaveLength(50)
+    expect(allServed).toHaveLength(70)
     expect(allServed.every((c) => c.is_active)).toBe(true)
     // Sanity: the canonical bank itself is exactly what was served.
     expect(new Set(allServed.map((c) => c.id))).toEqual(
@@ -147,15 +148,18 @@ describe('Chapter 4 remediation content provider — question lookup', () => {
     expect(provider!.getQuizQuestionById('qq-3-001')).toBeNull()
   })
 
-  it('counts every mapped question per family (initial 5/6/5/5/4/5; reserve 15 each)', () => {
+  it('counts every mapped question per family with the book-aligned initial distribution and 15 reserve each', () => {
     for (const family of chapter4ConceptFamilies) {
       const reserveCount = chapter4ReassessmentQuestionConceptMappings.filter(
         (m) => m.conceptFamilyId === family.id,
       ).length
       expect(reserveCount).toBe(15)
-      // Provider count covers the initial-quiz mappings (5/6/5/5/4/5).
+      // Provider count must equal the canonical initial mapping count for this family.
       const providerCount = provider!.getConceptQuestionCount(family.id)
-      expect([5, 6, 4]).toContain(providerCount)
+      const initialCount = chapter4QuizQuestionConceptMappings.filter(
+        (m) => m.conceptFamilyId === family.id,
+      ).length
+      expect(providerCount).toBe(initialCount)
     }
   })
 })

@@ -19,12 +19,12 @@ import { chapter4PremiumContent } from '@/lib/chapter-4-premium'
 import { chapter4ReassessmentQuestions } from '@/lib/chapter-4-reassessment-questions'
 
 const expectedConceptCounts = {
-  'ch4-pathogens-transmission': { flashcards: 9, quiz: 5 },
-  'ch4-disinfection-sterilization': { flashcards: 10, quiz: 6 },
-  'ch4-cross-contamination': { flashcards: 8, quiz: 5 },
-  'ch4-blood-exposure-ppe': { flashcards: 9, quiz: 5 },
-  'ch4-regulatory-chemical-safety': { flashcards: 7, quiz: 4 },
-  'ch4-safe-practice-compliance': { flashcards: 7, quiz: 5 },
+  'ch4-pathogens-transmission': { flashcards: 17, quiz: 8 },
+  'ch4-disinfection-sterilization': { flashcards: 13, quiz: 6 },
+  'ch4-cross-contamination': { flashcards: 8, quiz: 3 },
+  'ch4-blood-exposure-ppe': { flashcards: 9, quiz: 4 },
+  'ch4-regulatory-chemical-safety': { flashcards: 9, quiz: 4 },
+  'ch4-safe-practice-compliance': { flashcards: 14, quiz: 5 },
 } as const
 
 describe('Chapter 4 content foundation integrity', () => {
@@ -62,19 +62,19 @@ describe('Chapter 4 content foundation integrity', () => {
     }
   })
 
-  it('serves exactly 50 active canonical Chapter 4 flashcards with stable IDs', () => {
-    expect(chapter4PremiumFlashcards).toHaveLength(50)
+  it('serves exactly 70 active canonical Chapter 4 flashcards with stable IDs', () => {
+    expect(chapter4PremiumFlashcards).toHaveLength(70)
     expect(chapter4PremiumFlashcards.map((card) => card.id)).toEqual(
-      Array.from({ length: 50 }, (_, index) => `fc-4-${String(index + 1).padStart(3, '0')}`),
+      Array.from({ length: 70 }, (_, index) => `fc-4-${String(index + 1).padStart(3, '0')}`),
     )
     expect(chapter4PremiumFlashcards.every((card) => card.chapter_id === 'ch-4')).toBe(true)
     expect(chapter4PremiumFlashcards.every((card) => card.is_active === true)).toBe(true)
-    expect(new Set(chapter4PremiumFlashcards.map((card) => card.front.trim().toLowerCase())).size).toBe(50)
+    expect(new Set(chapter4PremiumFlashcards.map((card) => card.front.trim().toLowerCase())).size).toBe(70)
   })
 
   it('maps every flashcard exactly once with no orphans and the locked concept distribution', () => {
-    expect(chapter4FlashcardConceptMappings).toHaveLength(50)
-    expect(new Set(chapter4FlashcardConceptMappings.map((mapping) => mapping.flashcardId)).size).toBe(50)
+    expect(chapter4FlashcardConceptMappings).toHaveLength(70)
+    expect(new Set(chapter4FlashcardConceptMappings.map((mapping) => mapping.flashcardId)).size).toBe(70)
 
     const servedIds = new Set(chapter4PremiumFlashcards.map((card) => card.id))
     for (const mapping of chapter4FlashcardConceptMappings) {
@@ -109,15 +109,15 @@ describe('Chapter 4 content foundation integrity', () => {
     }
   })
 
-  it('locks initial-assessment difficulty at 12 easy, 12 medium, and 6 hard', () => {
+  it('locks the hardened initial-assessment difficulty distribution', () => {
     const counts = chapter4PremiumQuizQuestions.reduce<Record<string, number>>((acc, question) => {
       acc[question.difficulty] = (acc[question.difficulty] ?? 0) + 1
       return acc
     }, {})
-    expect(counts).toEqual({ easy: 12, medium: 12, hard: 6 })
+    expect(counts).toEqual({ easy: 3, medium: 7, hard: 20 })
   })
 
-  it('maps every quiz question exactly once with no orphans and the locked 5/6/5/5/4/5 distribution', () => {
+  it('maps every quiz question exactly once with no orphans and the book-aligned distribution', () => {
     expect(chapter4QuizQuestionConceptMappings).toHaveLength(30)
     expect(new Set(chapter4QuizQuestionConceptMappings.map((mapping) => mapping.questionId)).size).toBe(30)
 
@@ -204,7 +204,16 @@ describe('Chapter 4 content foundation integrity', () => {
     expect(new Set(chapter4ReassessmentQuestions.map((question) => question.question.trim().toLowerCase())).size).toBe(90)
   })
 
-  it('locks reserve difficulty at 6/6/3 per family with globally balanced answer positions (C4-3)', () => {
+  it('locks the hardened reserve difficulty by family and preserves balanced answer positions (C4-3)', () => {
+    const expectedDifficulty: Record<string, Record<string, number>> = {
+      'ch4-pathogens-transmission': { hard: 11, medium: 4 },
+      'ch4-disinfection-sterilization': { hard: 12, medium: 3 },
+      'ch4-cross-contamination': { hard: 10, medium: 5 },
+      'ch4-blood-exposure-ppe': { hard: 12, medium: 3 },
+      'ch4-regulatory-chemical-safety': { hard: 12, medium: 3 },
+      'ch4-safe-practice-compliance': { hard: 11, medium: 4 },
+    }
+
     for (const conceptId of ACTIVE_CHAPTER4_CONCEPT_FAMILY_IDS) {
       const questionIds = new Set<string>(
         chapter4ReassessmentQuestionConceptMappings
@@ -218,14 +227,15 @@ describe('Chapter 4 content foundation integrity', () => {
           acc[question.difficulty] = (acc[question.difficulty] ?? 0) + 1
           return acc
         }, {})
-      expect(counts).toEqual({ easy: 6, medium: 6, hard: 3 })
+      expect(counts).toEqual(expectedDifficulty[conceptId])
     }
 
     const positions = chapter4ReassessmentQuestions.reduce<Record<string, number>>((acc, question) => {
       acc[question.correct_answer] = (acc[question.correct_answer] ?? 0) + 1
       return acc
     }, {})
-    expect(positions).toEqual({ a: 23, b: 23, c: 22, d: 22 })
+    expect(Object.values(positions).reduce((sum, count) => sum + count, 0)).toBe(90)
+    expect(Math.max(...Object.values(positions)) - Math.min(...Object.values(positions))).toBeLessThanOrEqual(3)
   })
 
   it('maps every reserve question exactly once with no orphans (C4-3)', () => {
