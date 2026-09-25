@@ -129,14 +129,21 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Auth routes: redirect already-logged-in users to their role dashboard.
-  // Exception: /update-password must remain accessible when the user is
-  // required to change their password (requires_password_change = true),
-  // otherwise the protected-route check and this check create a redirect loop.
+  // Auth routes: redirect already-logged-in users to their role dashboard
+  // only when their account is actually allowed into protected areas.
+  //
+  // Pending/rejected/disabled/missing-profile users must remain on auth routes.
+  // Otherwise a pending invited user can loop forever:
+  // /login?error=not_approved -> /dashboard -> /login?error=not_approved.
+  //
+  // /update-password must also remain accessible when a password change is
+  // required so invited/recovery users can finish setup safely.
   if (isAuth && user) {
+    const access = validateLoginAccess(profile)
     const isUpdatePassword = pathname.startsWith('/update-password')
     const needsPasswordChange = profile?.requires_password_change === true
-    if (!isUpdatePassword || !needsPasswordChange) {
+
+    if (access.ok && (!isUpdatePassword || !needsPasswordChange)) {
       const url = request.nextUrl.clone()
       url.pathname = getRoleBasedRedirect(profile?.role)
       return NextResponse.redirect(url)
