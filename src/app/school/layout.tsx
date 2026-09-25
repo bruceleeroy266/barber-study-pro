@@ -41,8 +41,8 @@ export default async function SchoolLayout({
       {/* Header */}
       <header className="sticky top-0 z-50 bg-charcoal/95 backdrop-blur-sm border-b border-graphite">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-4">
+          <div className="flex min-w-0 items-center justify-between gap-2 h-16">
+            <div className="flex min-w-0 items-center gap-2 sm:gap-4">
               {isSchoolAdmin(profile.role) ? (
                 <SchoolAdminMenu />
               ) : (
@@ -51,17 +51,17 @@ export default async function SchoolLayout({
                   <span className="text-sm">Dashboard</span>
                 </Link>
               )}
-              <div className="h-6 w-px bg-graphite" />
-              <Link href="/school" className="flex items-center">
+              <div className="hidden h-6 w-px bg-graphite sm:block" />
+              <Link href="/school" className="flex shrink-0 items-center">
                 <Logo variant="compact" size="md" className="lg:hidden" />
                 <Logo variant="full" size="3xl" className="hidden lg:block" />
               </Link>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex shrink-0 items-center gap-2 sm:gap-3">
               <span className="text-sm text-silver hidden sm:block">
                 {profile.full_name || 'School Admin'}
               </span>
-              <span className="px-2 py-1 bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] text-xs rounded capitalize">
+              <span className="max-w-[7rem] truncate px-2 py-1 bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] text-xs rounded capitalize sm:max-w-none">
                 {profile.role}
               </span>
             </div>
@@ -70,7 +70,7 @@ export default async function SchoolLayout({
       </header>
 
       {/* Main content */}
-      <main className="p-6 md:p-8">
+      <main className="overflow-x-hidden p-3 sm:p-6 md:p-8">
         {children}
       </main>
     </div>

@@ -310,8 +310,8 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
   }
 
   return (
-    <div className="min-h-screen bg-black p-6 lg:p-8">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen min-w-0 bg-black p-0 sm:p-2 lg:p-4">
+      <div className="mx-auto min-w-0 max-w-7xl space-y-6 sm:space-y-8">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">School Dashboard</h1>
           <p className="text-silver">Overview of school performance, students, and instructors</p>
