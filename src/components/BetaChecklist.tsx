@@ -24,7 +24,6 @@ import {
 } from 'lucide-react'
 import { Button, Card, Badge, ProgressBar, Input, Textarea, Select } from '@/components/ui'
 
-const AGREEMENT_VERSION = 'v1.0'
 const CHECKLIST_VERSION = 'v2.0'
 const LOCAL_STORAGE_KEY = 'ascyn_beta_checklist_v2'
 
