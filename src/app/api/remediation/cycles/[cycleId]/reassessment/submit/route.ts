@@ -241,7 +241,7 @@ export async function POST(
       await dbClient.recordCycleEvent(
         cycleId,
         'chapter8_remediation_reassessment_evidence',
-        evidenceEvent,
+        { ...evidenceEvent },
       )
     }
 
