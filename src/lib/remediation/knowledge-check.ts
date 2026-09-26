@@ -37,6 +37,7 @@ const KNOWLEDGE_CHECK_LENGTHS: Readonly<Record<string, number>> = {
   'ch-4': 5,
   'ch-6': 5,
   'ch-7': 5,
+  'ch-8': 5,
 }
 
 export function getKnowledgeCheckLength(chapterId: ChapterId): number {
