@@ -2,6 +2,8 @@
 
 ## Status
 
+**CERTIFIED GREEN — Engineering Verification #687 and exact-head Vercel Preview passed on commit `4a776b53be0ef60ac1c6f3bcadeb91c4ec5a525f`.**
+
 C9-1 establishes the Chapter 9 mastery architecture without changing the Chapter 9 lesson text, flashcard text, quiz text, or student-facing grading behavior.
 
 ## Canonical learning objectives
@@ -98,3 +100,17 @@ C9-1 is complete when:
 - Engineering Verification and exact-head Vercel are GREEN.
 
 No Chapter 9 content hardening begins until these architecture gates are satisfied.
+
+
+## Certification evidence
+
+- Engineering Verification #687: SUCCESS
+- TypeScript: GREEN
+- lint: GREEN
+- unit tests: GREEN
+- production build: GREEN
+- Bundle Size Check: GREEN
+- Pilot Onboarding Certification: GREEN
+- exact-head Vercel preview `dpl_5feiSFhxqGgE8WR6khvxxPkPt7Ks`: READY on `4a776b53be0ef60ac1c6f3bcadeb91c4ec5a525f`
+
+**C9-1 is formally closed. C9-2 may begin.**
