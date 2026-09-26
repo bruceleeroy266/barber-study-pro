@@ -19,8 +19,8 @@
  */
 
 // Matches the `programs.required_hours` schema default
-// (supabase/migrations/20250625010000_create_core_production_tables.sql).
-export const DEFAULT_REQUIRED_HOURS = 1500
+// ASCYN PRO's current barber-program baseline is 1200 hours when no configured program can be resolved.
+export const DEFAULT_REQUIRED_HOURS = 1200
 
 export type ProgramRequirementSource = 'enrollment' | 'school_program' | 'default'
 
