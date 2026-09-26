@@ -12,7 +12,7 @@ describe('C8-6 Chapter 8 micro checks', () => {
     const questions = chapter8MicroChecks.flatMap((check) => check.questions)
     expect(questions).toHaveLength(22)
     expect(new Set(chapter8MicroChecks.map((check) => check.conceptFamilyId)).size).toBe(10)
-    expect(questions.every((question) => question.difficulty !== 'recall')).toBe(true)
+    expect(questions.every((question) => ['understanding', 'application', 'scenario'].includes(question.difficulty))).toBe(true)
   })
 
   it('matches canonical placement definitions', () => {
