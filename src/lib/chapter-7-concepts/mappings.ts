@@ -135,6 +135,20 @@ export const chapter7QuizQuestionConceptMappings: readonly Chapter7QuizQuestionC
   { questionId: qq(50), conceptFamilyId: 'ch7-chemical-safety' },
 ]
 
+export const chapter7ReassessmentQuestionConceptMappings: readonly Chapter7QuizQuestionConceptMapping[] = [
+  ...Array.from({ length: 15 }, (_, i) => ({ questionId: qq(51 + i), conceptFamilyId: 'ch7-organic-inorganic' as const })),
+  ...Array.from({ length: 15 }, (_, i) => ({ questionId: qq(66 + i), conceptFamilyId: 'ch7-matter-structure' as const })),
+  ...Array.from({ length: 15 }, (_, i) => ({ questionId: qq(81 + i), conceptFamilyId: 'ch7-properties-changes' as const })),
+  ...Array.from({ length: 15 }, (_, i) => ({ questionId: qq(96 + i), conceptFamilyId: 'ch7-redox-reactions' as const })),
+  ...Array.from({ length: 15 }, (_, i) => ({ questionId: qq(111 + i), conceptFamilyId: 'ch7-mixtures' as const })),
+  ...Array.from({ length: 15 }, (_, i) => ({ questionId: qq(126 + i), conceptFamilyId: 'ch7-water-ph' as const })),
+  ...Array.from({ length: 15 }, (_, i) => ({ questionId: qq(141 + i), conceptFamilyId: 'ch7-shampoos' as const })),
+  ...Array.from({ length: 15 }, (_, i) => ({ questionId: qq(156 + i), conceptFamilyId: 'ch7-conditioners' as const })),
+  ...Array.from({ length: 15 }, (_, i) => ({ questionId: qq(171 + i), conceptFamilyId: 'ch7-other-preparations' as const })),
+  ...Array.from({ length: 15 }, (_, i) => ({ questionId: qq(186 + i), conceptFamilyId: 'ch7-chemical-safety' as const })),
+]
+
+
 export const chapter7MicroCheckPlacements: readonly Chapter7MicroCheckPlacement[] = [
   {
     id: 'mc-7-01',
@@ -216,6 +230,12 @@ export function getChapter7FlashcardsForConcept(conceptFamilyId: Chapter7Concept
 
 export function getChapter7QuizQuestionsForConcept(conceptFamilyId: Chapter7ConceptFamilyId) {
   return chapter7QuizQuestionConceptMappings
+    .filter((mapping) => mapping.conceptFamilyId === conceptFamilyId)
+    .map((mapping) => mapping.questionId)
+}
+
+export function getChapter7ReassessmentQuestionsForConcept(conceptFamilyId: Chapter7ConceptFamilyId) {
+  return chapter7ReassessmentQuestionConceptMappings
     .filter((mapping) => mapping.conceptFamilyId === conceptFamilyId)
     .map((mapping) => mapping.questionId)
 }
