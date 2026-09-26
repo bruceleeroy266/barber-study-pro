@@ -3,7 +3,7 @@
  *
  * Proves that school-owner analytics/reporting use the applicable configured
  * program required_hours (SchoolAnalyticsInputs.requiredHours) instead of the
- * historical hard-coded REQUIRED_HOURS = 1500, and that missing/invalid
+ * historical hard-coded REQUIRED_HOURS value, and that missing/invalid
  * values preserve the default fallback behavior.
  */
 
@@ -87,11 +87,11 @@ describe('school analytics with configured program required_hours (1000h program
     expect(metrics.remainingHours).toBe(2 * 1000 - 600)
 
     const defaultMetrics = buildSchoolOverviewMetrics({ ...inputs, requiredHours: undefined })
-    expect(defaultMetrics.remainingHours).toBe(2 * 1500 - 600)
+    expect(defaultMetrics.remainingHours).toBe(2 * 1200 - 600)
   })
 
   it('health score hours component uses the program requirement', () => {
-    // 1 student with 500 approved hours: 50% of 1000h, 33% of 1500h.
+    // 1 student with 500 approved hours: 50% of 1000h, 42% of the 1200h fallback.
     const inputs = makeInputs({
       students: [makeStudent('s1')],
       hourLogs: [makeHourLog('s1', 500 * 60, 'approved')],
@@ -101,11 +101,11 @@ describe('school analytics with configured program required_hours (1000h program
     expect(health.componentScores.hoursCompletion).toBe(50)
 
     const defaultHealth = buildSchoolHealthScore({ ...inputs, requiredHours: undefined })
-    expect(defaultHealth.componentScores.hoursCompletion).toBe(33)
+    expect(defaultHealth.componentScores.hoursCompletion).toBe(42)
   })
 
   it('missing-hours alert respects the program pace threshold', () => {
-    // 600 approved hours: on pace for 1000h (>= 50%), behind for 1500h (< 50%).
+    // 600 approved hours: on pace for both 1000h and the 1200h fallback (>= 50%).
     const inputs = makeInputs({
       students: [makeStudent('s1')],
       hourLogs: [makeHourLog('s1', 600 * 60, 'approved')],
@@ -116,8 +116,7 @@ describe('school analytics with configured program required_hours (1000h program
 
     const defaultAlerts = buildSchoolAlerts({ ...inputs, requiredHours: undefined })
     const missing = defaultAlerts.filter((a) => a.type === 'missing_hours')
-    expect(missing).toHaveLength(1)
-    expect(missing[0]?.description).toContain('of 1500 hours')
+    expect(missing).toHaveLength(0)
   })
 
   it('missing-hours alert text cites the program requirement when behind', () => {
@@ -192,9 +191,9 @@ describe('school analytics with per-student hour requirements', () => {
 })
 
 describe('school analytics fallback behavior', () => {
-  it.each([undefined, null, 0, -100, NaN])('falls back to the 1500 schema default for %s', (value) => {
+  it.each([undefined, null, 0, -100, NaN])('falls back to the 1200 schema default for %s', (value) => {
     const inputs = makeInputs({ students: [makeStudent('s1')], requiredHours: value })
     expect(buildStudentPerformanceRows(inputs)[0]?.requiredHours).toBe(DEFAULT_REQUIRED_HOURS)
-    expect(DEFAULT_REQUIRED_HOURS).toBe(1500)
+    expect(DEFAULT_REQUIRED_HOURS).toBe(1200)
   })
 })
