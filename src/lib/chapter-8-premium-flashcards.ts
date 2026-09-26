@@ -493,8 +493,8 @@ export const chapter8PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-8-046',
     chapter_id: 'ch-8',
-    front: 'What is the difference between a fuse and a circuit breaker?',
-    back: 'A fuse opens a circuit by melting and then must be replaced. A circuit breaker trips to interrupt specified fault or overload conditions and can usually be reset after the cause is addressed.',
+    front: 'A station loses power after an overload. How can you tell whether the protective device was a fuse or a circuit breaker?',
+    back: 'A fuse opens by melting and must be replaced with the correct type and rating. A circuit breaker trips and can usually be reset after the cause of the trip is identified and addressed.',
     category: 'Common Confusions',
     difficulty: 'easy',
     order_index: 46,
@@ -546,7 +546,7 @@ export const chapter8PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-8-051',
     chapter_id: 'ch-8',
-    front: 'A client asks for a microcurrent service because they heard it is always painless and safe. What should the barber verify before proceeding?',
+    front: 'A client requests microcurrent after hearing broad claims about comfort and safety. What should the barber verify before proceeding?',
     back: 'Do not rely on a blanket claim that microcurrent is always painless or appropriate. Verify scope of practice, your training, the client\'s history and device-listed contraindications, and the manufacturer\'s operating instructions before deciding whether the service is appropriate.',
     category: 'Electrotherapy',
     difficulty: 'hard',
