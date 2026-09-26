@@ -4,7 +4,10 @@ import {
   appendChapter8ReassessmentEvidence,
   buildChapter8TargetedRemediationPlan,
   CHAPTER8_REMEDIATION_RULES,
+  scoreChapter8ReassessmentCycle,
+  selectChapter8ReassessmentQuestions,
 } from './targeted-remediation'
+import { chapter8ReassessmentReserve } from './reassessment-reserve'
 
 function evidence(
   conceptFamilyId: Chapter8EvidenceRecord['conceptFamilyId'],
@@ -113,6 +116,52 @@ describe('C8-7 targeted remediation planner', () => {
     expect(() => appendChapter8ReassessmentEvidence([], invalid)).toThrow(
       'Reassessment evidence must use Chapter 8 remediation_reassessment / reassessment semantics.',
     )
+  })
+
+  it('selects the same five reserve questions deterministically for the same concept', () => {
+    const first = selectChapter8ReassessmentQuestions('ch8-current-conversion', chapter8ReassessmentReserve)
+    const second = selectChapter8ReassessmentQuestions('ch8-current-conversion', [...chapter8ReassessmentReserve].reverse())
+    expect(first).toEqual(second)
+    expect(first).toHaveLength(5)
+    expect(new Set(first).size).toBe(5)
+  })
+
+  it('scores ordinary 5-question cycles at 80% and safety cycles at 100% without touching original evidence', () => {
+    const original = [evidence('ch8-current-conversion', 'q1', false)]
+    const snapshot = JSON.stringify(original)
+    const selected = selectChapter8ReassessmentQuestions('ch8-current-conversion', chapter8ReassessmentReserve)
+    const ordinary = scoreChapter8ReassessmentCycle({
+      cycleId: 'cycle-current-1',
+      conceptFamilyId: 'ch8-current-conversion',
+      selectedQuestionIds: selected,
+      responses: selected.map((questionId, index) => ({ questionId, correct: index < 4 })),
+      passPercent: 80,
+    })
+    expect(ordinary.percent).toBe(80)
+    expect(ordinary.passed).toBe(true)
+    expect(JSON.stringify(original)).toBe(snapshot)
+
+    const safetySelected = selectChapter8ReassessmentQuestions('ch8-equipment-safety', chapter8ReassessmentReserve)
+    const safety = scoreChapter8ReassessmentCycle({
+      cycleId: 'cycle-safety-1',
+      conceptFamilyId: 'ch8-equipment-safety',
+      selectedQuestionIds: safetySelected,
+      responses: safetySelected.map((questionId, index) => ({ questionId, correct: index < 4 })),
+      passPercent: 100,
+    })
+    expect(safety.percent).toBe(80)
+    expect(safety.passed).toBe(false)
+  })
+
+  it('rejects incomplete or duplicate formal reassessment cycles', () => {
+    const selected = selectChapter8ReassessmentQuestions('ch8-light-modalities', chapter8ReassessmentReserve)
+    expect(() => scoreChapter8ReassessmentCycle({
+      cycleId: 'bad-cycle',
+      conceptFamilyId: 'ch8-light-modalities',
+      selectedQuestionIds: selected.slice(0, 4),
+      responses: selected.slice(0, 4).map((questionId) => ({ questionId, correct: true })),
+      passPercent: 80,
+    })).toThrow('exactly five unique questions')
   })
 
   it('locks ordinary and stricter safety reassessment rules', () => {
