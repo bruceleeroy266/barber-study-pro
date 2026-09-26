@@ -85,7 +85,7 @@ async function requireSchoolStudent(
   if (!student) throw new Error('student-not-found')
 }
 
-function scheduleRedirect(params: Record<string, string>) {
+function scheduleRedirect(params: Record<string, string>): never {
   const search = new URLSearchParams(params)
   redirect(`/instructor/schedules?${search.toString()}`)
 }
@@ -200,7 +200,7 @@ export async function assignTemplateSchedule(formData: FormData) {
   const { error: daysError } = await supabase
     .from('student_schedule_days')
     .insert(
-      templateDays.map((day) => ({
+      (templateDays as DayInput[]).map((day: DayInput) => ({
         schedule_profile_id: profile.id,
         day_of_week: day.day_of_week,
         is_scheduled: day.is_scheduled,
