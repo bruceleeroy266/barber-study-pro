@@ -53,6 +53,25 @@ export default async function StaffHoursManager({
     redirect('/dashboard')
   }
 
+  const { data: school } = await supabase
+    .from('schools')
+    .select('timezone')
+    .eq('id', actor.school_id)
+    .maybeSingle()
+
+  const schoolTimeZone = typeof school?.timezone === 'string' && school.timezone
+    ? school.timezone
+    : 'UTC'
+  const dateParts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: schoolTimeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(new Date())
+  const datePart = (type: Intl.DateTimeFormatPartTypes) =>
+    dateParts.find((part) => part.type === type)?.value ?? ''
+  const today = `${datePart('year')}-${datePart('month')}-${datePart('day')}`
+
   const { data: studentsData } = await supabase
     .from('profiles')
     .select('id, full_name, email, role')
@@ -177,7 +196,7 @@ export default async function StaffHoursManager({
               <input
                 name="date"
                 type="date"
-                defaultValue={new Date().toISOString().slice(0, 10)}
+                defaultValue={today}
                 required
                 className="w-full rounded-lg border border-graphite bg-black px-3 py-3 text-white [color-scheme:dark]"
               />
