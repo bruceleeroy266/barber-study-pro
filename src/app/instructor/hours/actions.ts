@@ -105,9 +105,14 @@ export async function logStudentHours(formData: FormData) {
 export async function reviewStudentHours(formData: FormData) {
   const hourLogId = String(formData.get('hourLogId') || '').trim()
   const decision = String(formData.get('decision') || '').trim()
+  const rejectionReason = String(formData.get('rejectionReason') || '').trim()
 
   if (!hourLogId || !['approved', 'rejected'].includes(decision)) {
     redirect('/school/hours?error=invalid-review')
+  }
+
+  if (decision === 'rejected' && !rejectionReason) {
+    redirect('/school/hours?error=rejection-reason-required')
   }
 
   const supabase = await createClient()
@@ -141,6 +146,7 @@ export async function reviewStudentHours(formData: FormData) {
       status: decision,
       reviewed_by: user.id,
       reviewed_at: new Date().toISOString(),
+      rejection_reason: decision === 'rejected' ? rejectionReason.slice(0, 500) : null,
     })
     .eq('id', hourLogId)
     .eq('school_id', actor.school_id)
