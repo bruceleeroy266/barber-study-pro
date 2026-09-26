@@ -24,71 +24,17 @@ export async function requestQuizAccess(formData: FormData) {
   const chapterId = String(formData.get('chapterId') || '')
   if (!quizId || !chapterId) throw new Error('Missing quiz information')
 
-  const { supabase, user, profile } = await getActor()
+  const { supabase, profile } = await getActor()
   if (!profile.school_id || !['student', 'apprentice'].includes(profile.role)) {
     throw new Error('Student school membership required')
   }
 
-  const { data: settings } = await supabase
-    .from('quiz_approval_settings')
-    .select('require_approval, auto_approve_when_ready')
-    .eq('school_id', profile.school_id)
-    .maybeSingle()
-
-  if (!settings?.require_approval) {
-    revalidatePath('/dashboard')
-    return
-  }
-
-  const { data: progress } = await supabase
-    .from('student_progress')
-    .select('lesson_completed, flashcards_completed, knowledge_checks_completed')
-    .eq('user_id', user.id)
-    .eq('chapter_id', chapterId)
-    .maybeSingle()
-
-  const ready = Boolean(
-    progress?.lesson_completed &&
-    progress?.flashcards_completed &&
-    progress?.knowledge_checks_completed
-  )
-  const autoApproved = Boolean(settings.auto_approve_when_ready && ready)
-  const status = autoApproved ? 'approved' : 'pending'
-  const now = new Date().toISOString()
-
-  const { data: request, error } = await supabase
-    .from('quiz_access_requests')
-    .upsert({
-      school_id: profile.school_id,
-      student_id: user.id,
-      quiz_id: quizId,
-      chapter_id: chapterId,
-      status,
-      readiness_snapshot: {
-        lessonCompleted: Boolean(progress?.lesson_completed),
-        flashcardsCompleted: Boolean(progress?.flashcards_completed),
-        knowledgeChecksCompleted: Boolean(progress?.knowledge_checks_completed),
-        ready,
-      },
-      requested_at: now,
-      reviewed_by: autoApproved ? user.id : null,
-      reviewed_at: autoApproved ? now : null,
-      updated_at: now,
-    }, { onConflict: 'student_id,quiz_id' })
-    .select('id')
-    .single()
-
-  if (error || !request) throw new Error(error?.message || 'Failed to request quiz access')
-
-  await supabase.from('quiz_access_events').insert({
-    request_id: request.id,
-    school_id: profile.school_id,
-    student_id: user.id,
-    quiz_id: quizId,
-    event_type: autoApproved ? 'auto_approved' : 'requested',
-    actor_id: user.id,
-    metadata: { ready },
+  const { error } = await supabase.rpc('request_quiz_access', {
+    p_quiz_id: quizId,
+    p_chapter_id: chapterId,
   })
+
+  if (error) throw new Error(error.message)
 
   revalidatePath(`/dashboard/chapters/${chapterId.replace('ch-', '')}`)
   revalidatePath('/instructor/quiz-approvals')
