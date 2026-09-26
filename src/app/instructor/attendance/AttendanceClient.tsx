@@ -15,6 +15,7 @@ import { RefreshCw, ClipboardCheck, ChevronDown } from 'lucide-react'
 import type { DailyScheduleExpectation } from '@/lib/schedules/daily-expectations'
 import DailyAttendanceTimeEditor from './DailyAttendanceTimeEditor'
 import { calculateAttendedMinutes, isoToLocalTime, zonedLocalTimeToIso } from '@/lib/schedules/attendance-time'
+import { generatePendingHoursFromAttendance } from './hour-generation-actions'
 
 interface AttendanceClientProps {
   initialRecords: AttendanceRecord[]
@@ -269,11 +270,20 @@ export default function AttendanceClient({
     }
 
     const success = await submitDailyAttendance(entries)
-    if (success) {
+    if (!success) return
+
+    try {
+      const generation = await generatePendingHoursFromAttendance(defaultDate)
       setDailySubmitMessage(
-        `Daily attendance submitted for ${entries.length} student${entries.length === 1 ? '' : 's'}. No hour logs were created.`,
+        `Daily attendance submitted for ${entries.length} student${entries.length === 1 ? '' : 's'}. ${generation.created} pending hour entr${generation.created === 1 ? 'y was' : 'ies were'} created for admin approval${generation.skipped > 0 ? `; ${generation.skipped} duplicate-safe entr${generation.skipped === 1 ? 'y was' : 'ies were'} skipped` : ''}.`,
       )
       setExpandedStudentId(null)
+    } catch (generationError) {
+      setDailySubmitMessage(
+        generationError instanceof Error
+          ? `Attendance was saved, but pending hours were not generated: ${generationError.message}`
+          : 'Attendance was saved, but pending hours were not generated.',
+      )
     }
   }
 
@@ -425,7 +435,7 @@ export default function AttendanceClient({
                   </p>
                 )}
                 <p className="mt-1 text-xs text-silver-gray">
-                  Submit Day saves attendance status and attended minutes only. It does not create Student Hours entries.
+                  Submit Day saves attendance first, then creates duplicate-safe pending Student Hours entries for school administrator approval.
                 </p>
               </div>
               <button
