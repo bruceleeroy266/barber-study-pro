@@ -145,17 +145,17 @@ export async function generatePendingHoursFromAttendance(
         continue
       }
 
-      const { error: updateError } = await supabase
+      const { data: refreshed, error: updateError } = await supabase
         .from('hour_logs')
         .update({
           minutes: attendance.minutes_present,
           category,
           notes: 'Updated from resubmitted Daily Attendance & Hours.',
+          submitted_by: user.id,
           updated_at: new Date().toISOString(),
         })
         .eq('id', existing.id)
         .eq('school_id', actor.school_id)
-        .eq('submitted_by', user.id)
         .eq('status', 'pending')
         .is('reviewed_by', null)
         .is('reviewed_at', null)
@@ -169,6 +169,13 @@ export async function generatePendingHoursFromAttendance(
           error: updateError,
         })
         throw new Error('Pending student hours could not be refreshed.')
+      }
+
+      if (!refreshed) {
+        // An administrator may have reviewed the row after our initial read.
+        // Treat that race as a safe skip rather than overwriting the decision.
+        skipped += 1
+        continue
       }
 
       updated += 1
