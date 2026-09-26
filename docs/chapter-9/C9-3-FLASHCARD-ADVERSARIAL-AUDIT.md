@@ -211,3 +211,43 @@ C9-3 should not close until:
 **AUDIT COMPLETE — REMEDIATION LIST LOCKED.**
 
 Flashcard content remains unchanged at this checkpoint.
+
+
+---
+
+# C9-3 Remediation Pass — Applied
+
+The locked remediation plan above has now been executed without changing the bank size.
+
+## Applied changes
+
+- 6/6 REWRITE cards rebuilt: `fc-9-004`, `022`, `034`, `042`, `046`, `048`
+- 29/29 REPAIR cards corrected in the locked priority order
+- 15 KEEP cards left unchanged
+- flashcard bank remains exactly 50 active cards
+- order indices remain 1–50
+- no universal board-exam-frequency claims remain
+- no unsupported 80%/20% skin-cancer prevalence figures remain
+- no 99%/27% melanoma survival-memory target remains
+- no “100% fatal” claim remains
+- no license-suspension certainty remains
+- no 50% blood-supply memory target remains
+- sebaceous cyst and steatoma are now correctly distinguished
+- medical/scope language now separates observation from diagnosis/treatment
+- service-safety guidance is framed around the affected area, sanitation requirements, and appropriate referral
+
+## Certification guardrail
+
+`src/lib/chapter-9-concepts/flashcard-remediation.test.ts` verifies:
+- exactly 50 unique active cards
+- sequential order 1–50
+- exactly 50 unique concept mappings covering the same card IDs
+- high-risk unsupported phrases remain absent
+- all six rewritten-card targets remain present
+- professional scope/referral boundaries remain explicit
+
+## Current status
+
+**REMEDIATION IMPLEMENTED — AWAITING EXACT-HEAD ENGINEERING VERIFICATION + VERCEL PREVIEW.**
+
+C9-4 assessment hardening must not begin until this exact remediated head is GREEN.
