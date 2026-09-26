@@ -19,8 +19,8 @@ describe('D4 reviewed-hour history', () => {
   it('shows reviewer identity and review time for reviewed entries', () => {
     expect(manager).toContain("actorNameMap.get(log.reviewed_by)")
     expect(manager).toContain("log.reviewed_at")
-    expect(manager).toContain("Approved by")
-    expect(manager).toContain("Rejected by")
+    expect(manager).toContain("log.status === 'approved' ? 'Approved' : 'Rejected'")
+    expect(manager).toContain('by {reviewerName}')
   })
 
   it('shows rejection reasons only on rejected records', () => {
