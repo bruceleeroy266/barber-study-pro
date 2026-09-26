@@ -104,10 +104,7 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
   const [chapter7MicroCheckAttempts, setChapter7MicroCheckAttempts] = useState<Chapter7MicroCheckAttemptRow[]>([])
 
   useEffect(() => {
-    if (chapterId !== 'ch-7' || !userId) {
-      setChapter7MicroCheckAttempts([])
-      return
-    }
+    if (chapterId !== 'ch-7' || !userId) return
 
     let cancelled = false
     void loadChapter7MicroCheckAttempts(userId).then((rows) => {
