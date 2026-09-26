@@ -44,9 +44,11 @@ describe('C8-4 Chapter 8 flashcard audit baseline', () => {
     expect(byId.get('fc-8-050')).toBe('REPLACE')
   })
 
-  it('does not silently mark the entire legacy deck as safe to keep', () => {
-    expect(chapter8FlashcardAuditCounts.KEEP).toBeLessThan(20)
-    expect(chapter8FlashcardAuditCounts.REWRITE).toBeGreaterThan(20)
-    expect(chapter8FlashcardAuditCounts.REPLACE).toBeGreaterThanOrEqual(7)
+  it('locks the exact KEEP / REWRITE / REPLACE audit totals', () => {
+    expect(chapter8FlashcardAuditCounts).toEqual({
+      KEEP: 11,
+      REWRITE: 31,
+      REPLACE: 8,
+    })
   })
 })
