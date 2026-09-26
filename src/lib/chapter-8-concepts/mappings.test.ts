@@ -22,16 +22,16 @@ describe('C8-2 Chapter 8 existing-asset mappings', () => {
     expect([...mapped].filter((id) => !sectionIds.includes(id))).toEqual([])
   })
 
-  it('maps all 50 active flashcards exactly once', () => {
+  it('maps all active flashcards exactly once', () => {
     const activeIds = chapter8PremiumFlashcards
       .filter((card) => card.is_active)
       .map((card) => card.id)
 
-    expect(activeIds).toHaveLength(50)
-    expect(chapter8FlashcardConceptMappings).toHaveLength(50)
+    expect(activeIds).toHaveLength(57)
+    expect(chapter8FlashcardConceptMappings).toHaveLength(57)
 
     const mappedIds = chapter8FlashcardConceptMappings.map((mapping) => mapping.flashcardId)
-    expect(new Set(mappedIds).size).toBe(50)
+    expect(new Set(mappedIds).size).toBe(57)
     expect(new Set(mappedIds)).toEqual(new Set(activeIds))
   })
 
