@@ -143,7 +143,7 @@ export const chapter9PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 3: SKIN SAFETY OFFICER CERTIFICATION
+    // SECTION 3: SKIN OBSERVATION & SERVICE SAFETY PATH
     // ═══════════════════════════════════════════
     {
       type: 'levelUp',
@@ -532,7 +532,7 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'lesion-definition',
       title: 'WHAT IS A LESION?',
-      content: 'A LESION is any mark on the skin that indicates injury, damage, or disease. Lesions are the visible signs that something is wrong — or was wrong — with the skin.\n\nPrimary lesions are the ORIGINAL lesions — they appear first, directly from a disease process or injury. They are typically different in color from the surrounding skin and may be raised above the surface.\n\nSecondary lesions EVOLVE from primary lesions through accumulation, infection, or the healing process. A papule that fills with pus becomes a pustule. A vesicle that breaks open and dries becomes a crust.\n\nAs a barber, your job is not to diagnose lesions — it is to RECOGNIZE when a lesion looks abnormal, CONTAGIOUS, or UNFAMILIAR, and REFER the client to a physician or dermatologist before performing services.\n\nSTUDY CHECK: Never perform services on infectious or contagious conditions such as pediculosis (lice), scabies, impetigo, or open herpes lesions.',
+      content: 'A LESION is any mark on the skin that indicates injury, damage, or disease. Lesions are the visible signs that something is wrong — or was wrong — with the skin.\n\nPrimary lesions are the ORIGINAL lesions — they appear first, directly from a disease process or injury. They are typically different in color from the surrounding skin and may be raised above the surface.\n\nSecondary lesions EVOLVE from primary lesions through accumulation, infection, or the healing process. A papule that fills with pus becomes a pustule. A vesicle that breaks open and dries becomes a crust.\n\nAs a barber, your job is not to diagnose lesions — it is to RECOGNIZE when a lesion looks abnormal, CONTAGIOUS, or UNFAMILIAR, and REFER the client to a physician or dermatologist before performing services.\n\nSTUDY CHECK: Do not perform services directly over suspected infectious or contagious conditions such as pediculosis (lice), scabies, impetigo, or active herpes lesions; follow school and state sanitation requirements.',
       highlight: 'RECOGNIZE — DO NOT DIAGNOSE — REFER WHEN IN DOUBT',
     },
 
@@ -557,7 +557,7 @@ export const chapter9PremiumContent: ChapterContent = {
           ],
           facts: [
             { text: 'STUDY CHECK: A bulla is a LARGE blister; a vesicle is a SMALL blister. Size is the distinguishing factor.' },
-            { text: 'Never perform services on skin with pustules or open vesicles — risk of infection spread is high.' },
+            { text: 'Do not perform services directly over open, draining, or potentially infectious lesions; pause and follow sanitation/referral guidance.' },
           ],
         },
         {
@@ -782,10 +782,10 @@ export const chapter9PremiumContent: ChapterContent = {
           bullets: [
             { label: 'TYPE 1', description: 'Cold sores or fever blisters around the mouth. Highly contagious during active outbreaks.' },
             { label: 'TYPE 2', description: 'Genital herpes — not relevant to barbering services but important to know for general health knowledge.' },
-            { label: 'BARBER IMPACT', description: 'NEVER shave over active cold sores. The virus can spread to other areas and to you. Wait until lesions are completely healed.' },
+            { label: 'BARBER IMPACT', description: 'Do not shave directly over active cold sores. Pause the affected facial service and resume only when lesions are healed and the service is appropriate under school and state policy.' },
           ],
           facts: [
-            { text: 'Herpes simplex is contagious even before visible blisters appear. If a client feels tingling (prodrome), postpone facial services.' },
+            { text: 'Herpes simplex can be contagious around an outbreak. If symptoms suggest an active outbreak, pause facial services and recommend medical guidance.' },
             { text: 'The herpes virus remains dormant in nerve cells and reactivates during stress, illness, or sun exposure.' },
           ],
         },
@@ -1238,9 +1238,9 @@ export const chapter9PremiumContent: ChapterContent = {
           situation: 'A regular client sits in your chair. You notice a new dark spot on their scalp that was not there two weeks ago. It is irregular in shape, has multiple colors, and is larger than a pencil eraser. The client says it does not itch or hurt. What do you do?',
           options: [
             { letter: 'A', text: 'Shave around it carefully and continue the service', feedback: '❌ INCORRECT. Shaving near a suspicious lesion could irritate it or mask changes. More importantly, you have identified potential melanoma warning signs — this requires immediate professional attention.' },
-            { letter: 'B', text: 'Politely mention your observation, explain the ABCDE warning signs in plain language, and strongly recommend a dermatologist visit within the week', feedback: '✅ CORRECT. You are not diagnosing — you are observing and referring. Clear communication can support timely medical evaluation. Document the conversation according to school or shop policy.' },
-            { letter: 'C', text: 'Say nothing to avoid making the client uncomfortable', feedback: '❌ INCORRECT. Silence is not professionalism. The ABCDE signs you observed (Asymmetry, Border irregularity, Color variation, Diameter >6mm, Evolution) are melanoma red flags. Speaking up is a professional obligation.' },
-            { letter: 'D', text: 'Tell the client it is definitely melanoma and they need emergency surgery', feedback: '❌ INCORRECT. You are a barber, not a doctor. Never diagnose. Your role is to observe, express concern, and refer to a qualified medical professional.' },
+            { letter: 'B', text: 'Politely describe what you observed, explain that the ABCDE guide identifies changes worth medical attention, and recommend evaluation by a qualified medical professional', feedback: '✅ CORRECT. You are not diagnosing — you are observing and referring. Clear communication can support timely medical evaluation. Document the conversation according to school or shop policy.' },
+            { letter: 'C', text: 'Say nothing to avoid making the client uncomfortable', feedback: '❌ INCORRECT. Concerning ABCDE changes should be communicated without naming a diagnosis. A scope-appropriate referral supports client safety.' },
+            { letter: 'D', text: 'Tell the client it is definitely melanoma and prescribe the next medical step', feedback: '❌ INCORRECT. You are a barber, not a doctor. Never diagnose. Your role is to observe, express concern, and refer to a qualified medical professional.' },
           ],
           correctAnswer: 'B',
         },
@@ -1248,7 +1248,7 @@ export const chapter9PremiumContent: ChapterContent = {
           situation: 'A new client requests a hot towel shave. During the consultation, you notice clusters of small fluid-filled blisters around their mouth and chin. They mention they have been feeling run down lately. What do you do?',
           options: [
             { letter: 'A', text: 'Proceed with the shave but avoid the blistered areas', feedback: '❌ INCORRECT. Herpes simplex (cold sores) is highly contagious, especially during active outbreaks. The virus can spread to other areas of the face and to you. Facial services must be postponed.' },
-            { letter: 'B', text: 'Explain that facial services cannot be performed during an active outbreak and reschedule for at least one week after complete healing', feedback: '✅ CORRECT. Herpes simplex is contagious and shaving over active lesions spreads the virus. Rescheduling protects both the client and you. Suggest they consult a physician about antiviral treatment.' },
+            { letter: 'B', text: 'Explain that the affected facial service should be paused during an active outbreak and rescheduled after the lesions have healed and service is appropriate', feedback: '✅ CORRECT. Active herpes lesions create a cross-contamination risk. Pause the affected service, follow sanitation requirements, and recommend medical guidance as appropriate.' },
             { letter: 'C', text: 'Perform the shave but wear gloves for extra protection', feedback: '❌ INCORRECT. Gloves do not prevent herpes transmission in this context. The virus spreads by contact with fluid from blisters. No facial service should be performed during an active outbreak.' },
             { letter: 'D', text: 'Ask the client to sign a waiver and proceed with the service', feedback: '❌ INCORRECT. A waiver does not make an unsafe service appropriate. Pause the service and follow your school and state sanitation requirements.' },
           ],
@@ -1273,9 +1273,9 @@ export const chapter9PremiumContent: ChapterContent = {
           timeframe: '5 minutes',
         },
         {
-          action: 'Practice the ABCDE Rule',
-          description: 'Review the ABCDE melanoma observation criteria. Look at photos of normal moles vs. suspicious moles online.',
-          benefit: 'Builds confidence in recognizing potential skin cancer',
+          action: 'Practice the ABCDE Observation Guide',
+          description: 'Review the ABCDE observation criteria using instructor-approved or professionally vetted visual examples.',
+          benefit: 'Builds confidence noticing changes that warrant medical evaluation',
           timeframe: '10 minutes',
         },
         {
@@ -1286,7 +1286,7 @@ export const chapter9PremiumContent: ChapterContent = {
         },
         {
           action: 'Know Your Referral Network',
-          description: 'Find 2–3 dermatologists in your area. Keep their contact information at your station for client referrals.',
+          description: 'Know how your school or shop handles medical referrals and where clients can find qualified medical care.',
           benefit: 'Shows professionalism and helps clients get timely care',
           timeframe: '15 minutes',
         },
@@ -1300,7 +1300,7 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'tabbed',
       id: 'practice-questions',
       title: '📝 PRACTICE QUESTIONS — TEST YOUR KNOWLEDGE',
-      subtitle: 'These mirror the style of questions you will see on the state chapter review',
+      subtitle: 'Use these to review Chapter 9 concepts and service-safety decisions',
       tabs: [
         {
           id: 'q1-5',
@@ -1325,7 +1325,7 @@ export const chapter9PremiumContent: ChapterContent = {
             { label: 'Q6: What is the difference between primary and secondary skin lesions?', description: 'ANSWER: Primary lesions are the original lesions that appear first. Secondary lesions evolve from primary lesions through accumulation, infection, or healing.' },
             { label: 'Q7: What causes acne?', description: 'ANSWER: Bacteria (Propionibacterium acnes) multiply in clogged follicles, causing inflammation and infection. Hormonal changes and excess sebum contribute.' },
             { label: 'Q8: What are the ABCDE signs of melanoma?', description: 'ANSWER: Asymmetry, Border irregularity, Color variation, Diameter >6mm, Evolution (changing).' },
-            { label: 'Q9: What should you do if you see a suspicious skin condition on a client?', description: 'ANSWER: Do not perform the service. Refer the client to a physician or dermatologist. Document your observation.' },
+            { label: 'Q9: What should you do if you see a suspicious skin condition on a client?', description: 'ANSWER: Pause any service that would contact the concerning area, describe what you observed without diagnosing, and recommend medical evaluation when appropriate.' },
             { label: 'Q10: What is the most dangerous type of skin cancer?', description: 'ANSWER: Malignant melanoma. Chapter 9 identifies it as the least common but most dangerous of the three discussed; suspicious findings require prompt medical evaluation.' },
           ],
           facts: [
@@ -1341,7 +1341,7 @@ export const chapter9PremiumContent: ChapterContent = {
     {
       type: 'quote',
       id: 'academy-pledge',
-      quote: 'I pledge to respect the skin as the vital organ it is. I will inspect before I serve, recognize before I treat, and refer before I risk. I understand that my chair is a frontline observation post and that my eyes can catch what mirrors miss. A master barber masters skin science.',
+      quote: 'I will respect the skin as a vital organ, observe before I serve, pause when a service may be unsafe, and refer concerning findings without diagnosing. My close view of the scalp, face, and neck is a professional responsibility, and I will use it within barbering scope.',
     },
   ],
 }
