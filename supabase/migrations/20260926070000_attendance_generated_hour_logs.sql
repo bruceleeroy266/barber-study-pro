@@ -27,3 +27,40 @@ comment on column public.hour_logs.source_type is
 
 comment on column public.hour_logs.source_attendance_id is
   'Attendance record that generated this hour entry. Unique when present to prevent duplicate hour creation.';
+
+
+-- Permit instructors to refresh only their own still-pending attendance-generated
+-- hour row when they resubmit corrected attendance. Admin-reviewed rows remain locked.
+drop policy if exists hour_logs_update on public.hour_logs;
+create policy hour_logs_update on public.hour_logs
+for update to authenticated
+using (
+  public.is_school_admin(school_id)
+  or public.is_platform_super_admin()
+  or (
+    public.current_user_role() = 'instructor'
+    and public.current_user_school_id() = school_id
+    and submitted_by = auth.uid()
+    and status = 'pending'
+    and reviewed_by is null
+    and reviewed_at is null
+    and source_type = 'attendance'
+    and source_attendance_id is not null
+    and public.user_school_id(user_id) = school_id
+  )
+)
+with check (
+  public.is_school_admin(school_id)
+  or public.is_platform_super_admin()
+  or (
+    public.current_user_role() = 'instructor'
+    and public.current_user_school_id() = school_id
+    and submitted_by = auth.uid()
+    and status = 'pending'
+    and reviewed_by is null
+    and reviewed_at is null
+    and source_type = 'attendance'
+    and source_attendance_id is not null
+    and public.user_school_id(user_id) = school_id
+  )
+);
