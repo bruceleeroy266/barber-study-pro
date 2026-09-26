@@ -14,9 +14,9 @@ The baseline remains **50 active cards** until all 50 are audited.
 
 | Action | Count |
 |---|---:|
-| KEEP | 10 |
-| REWRITE | 33 |
-| REPLACE | 7 |
+| KEEP | 11 |
+| REWRITE | 31 |
+| REPLACE | 8 |
 | **Total** | **50** |
 
 No card has been deleted.
@@ -113,7 +113,7 @@ Replacement goal:
 
 ## REWRITE themes
 
-The 33 rewrite cards fall into these major repair groups:
+The 31 rewrite cards fall into these major repair groups:
 
 1. Remove “BOARD EXAM ALERT” certainty.
 2. Correct converter versus rectifier language.
