@@ -53,11 +53,17 @@ const questionCorrectAnswerMap: ReadonlyMap<string, string> = new Map([
   ...chapter8ReassessmentReserve.map((question) => [question.id, question.correctAnswer] as const),
 ])
 
+const detectionConcepts = chapter8ConceptFamilies.map((concept) => ({
+  id: concept.id,
+  learningObjectiveId: concept.learningObjectiveIds[0] as Chapter8LearningObjectiveId,
+  status: concept.status,
+}))
+
 const chapter8DetectionInput: engine.ConceptDetectionInput<
   Chapter8ConceptFamilyId,
   Chapter8LearningObjectiveId
 > = {
-  concepts: chapter8ConceptFamilies,
+  concepts: detectionConcepts,
   questionMappings: chapter8QuestionMappings,
   correctAnswers: questionCorrectAnswerMap,
 }
