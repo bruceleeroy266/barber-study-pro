@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabase'
 import type { Chapter7ConceptFamilyId } from './types'
 import { CHAPTER7_CONCEPT_FAMILY_IDS } from './concepts'
-import type { Chapter7EvidenceRecord, Chapter7Confidence } from './grading'
+import type { Chapter7EvidenceRecord, Chapter7Confidence, Chapter7GradeInput } from './grading'
 import { calculateChapter7ConceptMastery } from './grading'
 import type {
   Chapter7MicroCheck,
@@ -175,5 +175,15 @@ export async function loadChapter7MicroCheckDiagnosticsForStudent(
     microCheckPercent: calculatePersistedChapter7MicroCheckPercent(rows),
     evidence: chapter7MicroCheckRowsToEvidence(rows),
     concepts: buildChapter7MicroCheckDiagnostics(rows, referenceTime),
+  }
+}
+
+export function withPersistedChapter7MicroCheckGrade(
+  input: Chapter7GradeInput,
+  rows: readonly Chapter7MicroCheckAttemptRow[],
+): Chapter7GradeInput {
+  return {
+    ...input,
+    microCheckPercent: calculatePersistedChapter7MicroCheckPercent(rows),
   }
 }
