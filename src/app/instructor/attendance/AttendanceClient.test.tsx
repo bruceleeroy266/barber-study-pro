@@ -2,12 +2,21 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import AttendanceClient from './AttendanceClient'
 
-const ensureTodayRecords = vi.fn()
-const updateStatus = vi.fn()
-const bulkUpdateStatus = vi.fn()
-const updateActualTimes = vi.fn()
-const submitDailyAttendance = vi.fn()
-const generatePendingHoursFromAttendance = vi.fn()
+const {
+  ensureTodayRecords,
+  updateStatus,
+  bulkUpdateStatus,
+  updateActualTimes,
+  submitDailyAttendance,
+  generatePendingHoursFromAttendance,
+} = vi.hoisted(() => ({
+  ensureTodayRecords: vi.fn(),
+  updateStatus: vi.fn(),
+  bulkUpdateStatus: vi.fn(),
+  updateActualTimes: vi.fn(),
+  submitDailyAttendance: vi.fn(),
+  generatePendingHoursFromAttendance: vi.fn(),
+}))
 
 vi.mock('./hour-generation-actions', () => ({
   generatePendingHoursFromAttendance,
