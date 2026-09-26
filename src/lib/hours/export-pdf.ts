@@ -110,10 +110,37 @@ export function exportHoursStateBoardPdf(options: HoursPdfOptions): void {
     styles: { fontSize: 8, cellPadding: 2.5, overflow: 'linebreak' },
   })
 
+  const auditBody = logs
+    .filter((log) => log.status !== 'approved')
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .map((log) => {
+      const student = students.find((entry) => entry.id === log.user_id)
+      return [
+        log.date,
+        student?.full_name ?? 'Unknown',
+        log.category,
+        formatHourMinutes(log.minutes),
+        log.status,
+        log.notes ?? '—',
+      ]
+    })
+
+  if (auditBody.length > 0) {
+    const latestTable = (doc as jsPDF & { lastAutoTable?: { finalY: number } }).lastAutoTable
+    autoTable(doc, {
+      startY: (latestTable?.finalY ?? 40) + 10,
+      head: [['Date', 'Student', 'Category', 'Hours', 'Status', 'Notes']],
+      body: auditBody,
+      theme: 'grid',
+      headStyles: { fillColor: [90, 90, 90], textColor: [255, 255, 255], fontStyle: 'bold' },
+      styles: { fontSize: 8, cellPadding: 2.5, overflow: 'linebreak' },
+    })
+  }
+
   doc.setFontSize(8)
   doc.setTextColor(100, 100, 100)
   doc.text(
-    'Only approved hours are included in official accumulated totals. Pending and rejected entries do not count toward completion.',
+    'Only approved hours are included in official accumulated totals. Pending and rejected entries are shown only as an audit trail.',
     14,
     doc.internal.pageSize.getHeight() - 8,
   )
