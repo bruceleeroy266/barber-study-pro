@@ -1,13 +1,13 @@
 // Chapter 9: The Skin — Structure, Disorders, and Diseases
 // PREMIUM IMMERSIVE EXPERIENCE
-// The Skin Safety Academy — Where Observation Saves Lives
+// Skin Science & Service Safety — Observation, Scope, and Referral
 
 import type { ChapterTheme, ChapterContent } from './chapter-content'
 
 // ═══════════════════════════════════════════════
 // SKIN SAFETY ACADEMY THEME
-// Warm clinical coral / Medical teal / Soft cream / Healing sage
-// Feels like: A premium dermatology learning clinic for barbers
+// Warm clinical coral / Clinical teal / Soft cream / Healing sage
+// Feels like: A premium skin-science learning studio for barbers
 // ═══════════════════════════════════════════════
 
 export const chapter9PremiumTheme: ChapterTheme = {
@@ -111,8 +111,8 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'academy-welcome',
       title: '🏥 WELCOME TO THE SKIN SAFETY ACADEMY',
-      content: 'You are not just a barber. You are a frontline health observer. Every client who sits in your chair trusts you with more than their hair — they trust you with their skin, their scalp, their face, their neck.\n\nThe skin is the LARGEST organ of the body. It is the first line of defense against disease, the canvas for every service you perform, and the surface where dangerous conditions first appear. A barber who understands skin science does not just cut hair — they protect health, spot danger, and save lives.\n\nThis chapter transforms you into a Skin Safety Officer. You will learn to read the skin like a medical chart, recognize conditions that require referral, and make split-second decisions that keep clients safe.\n\nYour chair is an observation post. Your eyes are diagnostic tools. Your judgment is a life-saving skill.',
-      highlight: 'YOUR CHAIR IS AN OBSERVATION POST — YOUR EYES SAVE LIVES',
+      content: 'Barbers work close to the skin, scalp, face, and neck, so careful observation matters for service safety. The skin is the body\'s largest organ and an important protective barrier. This chapter builds your ability to recognize normal structures, notice changes that may affect a service, and know when to pause and recommend medical evaluation.\n\nYour role is observation for service safety — not medical diagnosis. A barber may notice areas that a client cannot easily see, especially on the scalp, ears, and neck. Use that close view responsibly: observe, stay within professional scope, and refer when a condition is unfamiliar, suspected to be infectious or contagious, changing, or otherwise concerning.',
+      highlight: 'OBSERVE CAREFULLY — STAY IN SCOPE — PROTECT CLIENT SAFETY',
     },
 
     // ═══════════════════════════════════════════
@@ -131,13 +131,13 @@ export const chapter9PremiumContent: ChapterContent = {
         },
         {
           icon: 'Eye',
-          title: 'EARLY DETECTION',
-          text: 'You must recognize normal skin conditions versus those requiring medical treatment. Barbers are often the first to notice skin and scalp changes — your observation can save lives.',
+          title: 'PROFESSIONAL OBSERVATION',
+          text: 'Learn to recognize normal skin features and notice changes that may warrant medical evaluation. Your role is to observe and communicate what you see — not diagnose.',
         },
         {
           icon: 'Ban',
           title: 'SERVICE PROTECTION',
-          text: 'You must identify abnormal skin conditions that prohibit certain services. Shaving over an infection, applying product to broken skin, or ignoring contagious conditions is professional negligence.',
+          text: 'Shaving over suspected infection or working directly on broken or contagious skin can create service-safety and cross-contamination risks. Pause the affected service and follow school and state sanitation requirements.',
         },
       ],
     },
@@ -148,8 +148,8 @@ export const chapter9PremiumContent: ChapterContent = {
     {
       type: 'levelUp',
       id: 'skin-certification',
-      title: '🏆 SKIN SAFETY OFFICER CERTIFICATION',
-      subtitle: 'Progress from Observer to Master Safety Officer — earn your credentials',
+      title: '🏆 SKIN OBSERVATION & SERVICE SAFETY PATH',
+      subtitle: 'Build professional judgment from observation through safe referral decisions',
       levels: [
         {
           level: 'Level 1',
@@ -165,21 +165,21 @@ export const chapter9PremiumContent: ChapterContent = {
         },
         {
           level: 'Level 3',
-          title: 'Condition Spotter',
-          description: 'You recognize primary and secondary lesions, common skin disorders, and glandular problems. You know the difference between a harmless mole and a potential melanoma.',
-          reward: 'Early Detection Specialist — You protect client health',
+          title: 'Condition Observer',
+          description: 'You recognize primary and secondary lesions, common skin disorders, and glandular problems. You can notice warning signs that may need medical evaluation without naming a diagnosis.',
+          reward: 'Recognition & Referral Skill — You know when to pause and refer',
         },
         {
           level: 'Level 4',
-          title: 'Referral Expert',
-          description: 'You understand when to proceed, when to modify, and when to refer. You can explain skin conditions to clients in plain language and recommend appropriate professional care.',
-          reward: 'Trusted Advisor — Clients seek your guidance',
+          title: 'Referral Decision-Maker',
+          description: 'You understand when to proceed, when to modify a service, and when to refer. You can describe what you observed in plain language without presenting a medical diagnosis.',
+          reward: 'Clear Communication — You explain observations without overstepping scope',
         },
         {
           level: 'Level 5',
-          title: 'Master Safety Officer',
-          description: 'You are the skin expert in your shop. Other barbers consult you. Clients trust your judgment. You have prevented serious conditions from going unnoticed and educated countless people on skin health.',
-          reward: 'Dermatology Authority — Your expertise is recognized and respected',
+          title: 'Safety Lead',
+          description: 'You model careful observation, safe service boundaries, sanitation awareness, and appropriate referral. Other barbers can rely on you for professional service-safety habits.',
+          reward: 'Professional Safety Leadership — Your service judgment is consistent and scope-aware',
         },
       ],
     },
@@ -191,7 +191,7 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'featureGrid',
       id: 'key-definitions',
       title: 'KEY DEFINITIONS — KNOW THE TERMINOLOGY',
-      subtitle: 'Board exam questions often test definitions first',
+      subtitle: 'Use these definitions to build accurate Chapter 9 vocabulary',
       features: [
         {
           icon: 'BookOpen',
@@ -206,7 +206,7 @@ export const chapter9PremiumContent: ChapterContent = {
         {
           icon: 'Scan',
           title: 'LESION',
-          description: 'Any mark on the skin indicating injury, damage, or disease. Barbers must recognize lesions and refer abnormal ones before performing services.',
+          description: 'A visible change or mark on the skin associated with injury, damage, or a skin condition. Barbers should observe lesions for service safety and refer concerning or unfamiliar findings without diagnosing.',
         },
       ],
     },
@@ -238,7 +238,7 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'skin-basics',
       title: 'THE SKIN — YOUR LARGEST ORGAN',
-      content: 'The skin is the LARGEST organ of the body and the body\'s FIRST LINE OF DEFENSE against disease and the environment. It protects internal organs, regulates temperature, and provides sensory information.\n\nHealthy skin is slightly moist, soft, flexible, and has a smooth fine-grained texture. It maintains a SLIGHTLY ACIDIC pH (around 5.5), which creates a protective barrier against microorganisms.\n\nSkin renews itself constantly and varies in thickness across the body. The THINNEST skin is on the eyelids. The THICKEST is on the palms and soles.\n\nBOARD EXAM ALERT: Calluses form from continued pressure and are a natural defense. Do not remove them — they protect underlying tissue.',
+      content: 'The skin is the LARGEST organ of the body and the body\'s FIRST LINE OF DEFENSE against disease and the environment. It protects internal organs, regulates temperature, and provides sensory information.\n\nHealthy skin is slightly moist, soft, flexible, and has a smooth fine-grained texture. It maintains a SLIGHTLY ACIDIC pH (around 5.5), which creates a protective barrier against microorganisms.\n\nSkin renews itself constantly and varies in thickness across the body. The THINNEST skin is on the eyelids. The THICKEST is on the palms and soles.\n\nSTUDY CHECK: Calluses form from continued pressure and are a natural defense. Do not remove them — they protect underlying tissue.',
       highlight: 'LARGEST ORGAN — FIRST LINE OF DEFENSE — CONSTANTLY RENEWS',
     },
 
@@ -256,14 +256,14 @@ export const chapter9PremiumContent: ChapterContent = {
           label: 'EPIDERMIS',
           title: 'THE EPIDERMIS — OUTERMOST PROTECTION',
           bullets: [
-            { label: 'ALSO CALLED', description: 'Cuticle or scarf skin — these are alternate names for the epidermis found in older textbooks and exam questions.' },
+            { label: 'ALSO CALLED', description: 'Cuticle or scarf skin — these are alternate names for the epidermis found in older textbooks and review questions.' },
             { label: 'LOCATION', description: 'Outermost, thinnest protective layer of the skin' },
             { label: 'BLOOD VESSELS', description: 'NONE — the epidermis contains no blood vessels. It receives nutrients by diffusion from the dermis below.' },
             { label: 'RENEWAL', description: 'Cells continually shed from the surface and are replaced from below. Complete renewal takes approximately 28 days.' },
             { label: 'WATERPROOFING', description: 'Sebum from sebaceous glands waterproofs the outer surface, preventing moisture loss and microbial entry.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: The epidermis has NO blood vessels. It relies entirely on the dermis for nourishment.' },
+            { text: 'STUDY CHECK: The epidermis has NO blood vessels. It relies entirely on the dermis for nourishment.' },
             { text: 'The epidermis is your first line of defense. Every cut, scrape, or shave passes through this layer first.' },
           ],
         },
@@ -272,14 +272,14 @@ export const chapter9PremiumContent: ChapterContent = {
           label: 'DERMIS',
           title: 'THE DERMIS — TRUE SKIN',
           bullets: [
-            { label: 'ALSO CALLED', description: 'True skin, corium, or cutis — these alternate names appear on board exams and in textbook references.' },
-            { label: 'LOCATION', description: 'Underlying, thicker layer beneath the epidermis — approximately 25× thicker than the epidermis' },
+            { label: 'ALSO CALLED', description: 'True skin, corium, or cutis — alternate terms used in Chapter 9 vocabulary.' },
+            { label: 'LOCATION', description: 'Underlying, thicker layer beneath the epidermis — the chapter describes it as approximately 25× thicker than the epidermis' },
             { label: 'PAPILLARY LAYER', description: 'Superficial layer containing papillae (conical projections), tactile corpuscles for touch, looped capillaries, and some melanin' },
             { label: 'RETICULAR LAYER', description: 'Deeper layer supplying oxygen and nutrients. Contains fat cells, sweat glands, blood vessels, hair follicles, lymph glands, arrector pili muscles, and oil glands' },
             { label: 'FUNCTION', description: 'Provides strength, elasticity, nourishment, and sensory perception. The dermis is what gives skin its resilience and structure.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: The dermis is 25× thicker than the epidermis and contains all the skin\'s functional structures.' },
+            { text: 'STUDY CHECK: The chapter describes the dermis as approximately 25× thicker than the epidermis and containing many of the skin\'s functional structures.' },
             { text: 'When you feel pain from a cut, you have reached the dermis — the epidermis itself has no nerve endings.' },
           ],
         },
@@ -345,7 +345,7 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'melanin',
       title: 'MELANIN — THE PIGMENT OF PROTECTION',
-      content: 'Melanin is the pigment produced by MELANOCYTES in the basal layer (stratum germinativum) of the epidermis. It gives skin its color — more melanin means darker skin.\n\nBut melanin is not just about color. Its primary function is PROTECTION against UV damage. Melanin absorbs harmful ultraviolet rays before they can damage deeper skin layers and DNA.\n\nWhen skin is exposed to sunlight, melanocytes produce more melanin — this is what creates a tan. The tan is actually the skin\'s defense mechanism kicking into higher gear.\n\nBOARD EXAM ALERT: Melanin is produced by melanocytes in the stratum germinativum. Its primary function is UV protection, not just coloration.',
+      content: 'Melanin is the pigment produced by MELANOCYTES in the basal layer (stratum germinativum) of the epidermis. It gives skin its color — more melanin means darker skin.\n\nBut melanin is not just about color. Its primary function is PROTECTION against UV damage. Melanin absorbs harmful ultraviolet rays before they can damage deeper skin layers and DNA.\n\nWhen skin is exposed to sunlight, melanocytes produce more melanin — this is what creates a tan. The tan is actually the skin\'s defense mechanism kicking into higher gear.\n\nSTUDY CHECK: Melanin is produced by melanocytes in the stratum germinativum. Its primary function is UV protection, not just coloration.',
       highlight: 'MELANIN = UV PROTECTION, NOT JUST COLOR',
     },
 
@@ -356,7 +356,7 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'skin-fluids',
       title: 'BLOOD & LYMPH — THE SKIN\'S NOURISHMENT',
-      content: 'Blood and lymph supply nourishment to the skin, delivering protein, carbohydrates, and fat that cells need to function and regenerate.\n\nApproximately HALF THE BODY\'S BLOOD SUPPLY flows through the skin at any given time. This massive blood flow is why the skin plays such a critical role in temperature regulation — when the body overheats, blood vessels dilate and bring warm blood to the surface where heat can escape. When the body is cold, vessels constrict to preserve core temperature.\n\nLymphatic vessels in the dermis drain waste and excess fluid, supporting immune function and tissue health.\n\nBOARD EXAM ALERT: About half the body\'s blood supply goes to the skin. This fact demonstrates why the skin is considered an organ, not just a covering.',
+      content: 'Blood and lymph supply nourishment to the skin, delivering protein, carbohydrates, and fat that cells need to function and regenerate.\n\nApproximately HALF THE BODY\'S BLOOD SUPPLY flows through the skin at any given time. This massive blood flow is why the skin plays such a critical role in temperature regulation — when the body overheats, blood vessels dilate and bring warm blood to the surface where heat can escape. When the body is cold, vessels constrict to preserve core temperature.\n\nLymphatic vessels in the dermis drain waste and excess fluid, supporting immune function and tissue health.\n\nSTUDY CHECK: About half the body\'s blood supply goes to the skin. This fact demonstrates why the skin is considered an organ, not just a covering.',
       highlight: 'HALF THE BODY\'S BLOOD SUPPLY — THE SKIN IS AN ORGAN',
     },
 
@@ -479,7 +479,7 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'skin-absorption',
       title: 'SKIN ABSORPTION — LIMITED BUT IMPORTANT',
-      content: 'The skin\'s ability to absorb substances is LIMITED beyond the top layer (stratum corneum). This limited absorption is actually a protective feature — the skin blocks most foreign substances from entering the body.\n\nHowever, this same property makes the skin useful for TOPICAL MEDICATIONS and creams. Products applied to the skin can penetrate enough to deliver active ingredients locally without entering the bloodstream in large amounts.\n\nAbsorption depends on two factors: SKIN THICKNESS (thinner skin absorbs more) and PRODUCT CONCENTRATION (higher concentration increases absorption).\n\nBOARD EXAM ALERT: Many drugs are more effective when absorbed through the skin (transdermal delivery). Nicotine patches, pain relief creams, and hormone therapies all use skin absorption. This is why barbers must be cautious about what products they apply — even topical substances can have systemic effects.',
+      content: 'The skin\'s ability to absorb substances is LIMITED beyond the top layer (stratum corneum). This limited absorption is actually a protective feature — the skin blocks most foreign substances from entering the body.\n\nHowever, this same property makes the skin useful for TOPICAL MEDICATIONS and creams. Products applied to the skin can penetrate enough to deliver active ingredients locally without entering the bloodstream in large amounts.\n\nAbsorption depends on two factors: SKIN THICKNESS (thinner skin absorbs more) and PRODUCT CONCENTRATION (higher concentration increases absorption).\n\nSTUDY CHECK: Many drugs are more effective when absorbed through the skin (transdermal delivery). Nicotine patches, pain relief creams, and hormone therapies all use skin absorption. This is why barbers must be cautious about what products they apply — even topical substances can have systemic effects.',
       highlight: 'LIMITED ABSORPTION — PROTECTIVE FEATURE — TOPICAL MEDICATIONS',
     },
 
@@ -532,7 +532,7 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'lesion-definition',
       title: 'WHAT IS A LESION?',
-      content: 'A LESION is any mark on the skin that indicates injury, damage, or disease. Lesions are the visible signs that something is wrong — or was wrong — with the skin.\n\nPrimary lesions are the ORIGINAL lesions — they appear first, directly from a disease process or injury. They are typically different in color from the surrounding skin and may be raised above the surface.\n\nSecondary lesions EVOLVE from primary lesions through accumulation, infection, or the healing process. A papule that fills with pus becomes a pustule. A vesicle that breaks open and dries becomes a crust.\n\nAs a barber, your job is not to diagnose lesions — it is to RECOGNIZE when a lesion looks abnormal, CONTAGIOUS, or UNFAMILIAR, and REFER the client to a physician or dermatologist before performing services.\n\nBOARD EXAM ALERT: Never perform services on infectious or contagious conditions such as pediculosis (lice), scabies, impetigo, or open herpes lesions.',
+      content: 'A LESION is any mark on the skin that indicates injury, damage, or disease. Lesions are the visible signs that something is wrong — or was wrong — with the skin.\n\nPrimary lesions are the ORIGINAL lesions — they appear first, directly from a disease process or injury. They are typically different in color from the surrounding skin and may be raised above the surface.\n\nSecondary lesions EVOLVE from primary lesions through accumulation, infection, or the healing process. A papule that fills with pus becomes a pustule. A vesicle that breaks open and dries becomes a crust.\n\nAs a barber, your job is not to diagnose lesions — it is to RECOGNIZE when a lesion looks abnormal, CONTAGIOUS, or UNFAMILIAR, and REFER the client to a physician or dermatologist before performing services.\n\nSTUDY CHECK: Never perform services on infectious or contagious conditions such as pediculosis (lice), scabies, impetigo, or open herpes lesions.',
       highlight: 'RECOGNIZE — DO NOT DIAGNOSE — REFER WHEN IN DOUBT',
     },
 
@@ -556,7 +556,7 @@ export const chapter9PremiumContent: ChapterContent = {
             { label: 'WHEAL', description: 'Itchy, swollen lesion caused by fluid accumulation. Examples: hives, insect bites, allergic reactions.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: A bulla is a LARGE blister; a vesicle is a SMALL blister. Size is the distinguishing factor.' },
+            { text: 'STUDY CHECK: A bulla is a LARGE blister; a vesicle is a SMALL blister. Size is the distinguishing factor.' },
             { text: 'Never perform services on skin with pustules or open vesicles — risk of infection spread is high.' },
           ],
         },
@@ -644,7 +644,7 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'referral-caution',
       title: '⚠️ WHEN TO REFER — NON-NEGOTIABLE RULES',
-      content: 'As a barber, you are not a medical professional. Your role is to recognize, not to diagnose or treat.\n\nNEVER perform services on infectious or contagious conditions including pediculosis (lice), scabies, impetigo, or open herpes lesions.\n\nALWAYS refer inflamed, irritated, or unknown lesions to a physician or dermatologist before proceeding with services.\n\nWhen in doubt, STOP and REFER. A canceled appointment is better than a lawsuit, an infection, or permanent damage to a client\'s health.\n\nBOARD EXAM ALERT: Performing services on contagious skin conditions is a violation of sanitation standards and can result in license suspension.',
+      content: 'As a barber, you are not a medical professional. Your role is to recognize, not to diagnose or treat.\n\nNEVER perform services on infectious or contagious conditions including pediculosis (lice), scabies, impetigo, or open herpes lesions.\n\nALWAYS refer inflamed, irritated, or unknown lesions to a physician or dermatologist before proceeding with services.\n\nWhen in doubt, STOP and REFER. A canceled appointment is better than a lawsuit, an infection, or permanent damage to a client\'s health.\n\nSTUDY CHECK: Performing services on contagious skin conditions is a violation of sanitation standards and can result in license suspension.',
       highlight: 'WHEN IN DOUBT, STOP AND REFER',
     },
 
@@ -666,7 +666,7 @@ export const chapter9PremiumContent: ChapterContent = {
             { label: 'WHITEHEAD (CLOSED COMEDO)', description: 'Plugged follicle covered by skin. Appears as a small white bump. Can develop into a pustule if inflamed.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Blackheads are NOT caused by dirt. The dark color is oxidation, not poor hygiene.' },
+            { text: 'STUDY CHECK: Blackheads are NOT caused by dirt. The dark color is oxidation, not poor hygiene.' },
             { text: 'Do not squeeze comedones during barbering services. This can cause infection, scarring, and spread bacteria.' },
           ],
         },
@@ -699,7 +699,7 @@ export const chapter9PremiumContent: ChapterContent = {
             { label: 'STEATOMA', description: 'Sebaceous cyst or fatty tumor (wen). May require surgical removal by a physician. Same condition, different name.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Sebaceous cyst and steatoma refer to the same condition — a pocket filled with sebum. Know both terms for the exam.' },
+            { text: 'STUDY CHECK: Sebaceous cyst and steatoma refer to the same condition — a pocket filled with sebum. Know both terms and how Chapter 9 uses them.' },
             { text: 'Rosacea affects approximately 16 million Americans. Many do not know they have it. Gentle handling and avoiding triggers are essential.' },
             { text: 'Seborrheic dermatitis is not contagious. It is manageable with proper products and hygiene.' },
           ],
@@ -916,7 +916,7 @@ export const chapter9PremiumContent: ChapterContent = {
             { label: 'BARBER ROLE', description: 'You may be the first to notice changes on the scalp, ears, or neck. Speak up — it could save a life.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: The ABCDE rule for melanoma detection: Asymmetry, Border irregularity, Color variation, Diameter >6mm, Evolution (changing).' },
+            { text: 'STUDY CHECK: The ABCDE rule for melanoma detection: Asymmetry, Border irregularity, Color variation, Diameter >6mm, Evolution (changing).' },
             { text: 'Melanoma can develop anywhere — including under nails, on the scalp, and in areas with little sun exposure.' },
           ],
         },
@@ -998,7 +998,7 @@ export const chapter9PremiumContent: ChapterContent = {
             { label: 'CONFUSING EPIDERMIS AND DERMIS', description: 'Epidermis = outer, no blood vessels, 5 layers. Dermis = inner, 25× thicker, contains glands/vessels/nerves.' },
             { label: 'THINKING BLACKHEADS ARE DIRT', description: 'Blackheads are oxidized sebum and melanin — NOT dirt. Telling clients to "wash better" is misinformation.' },
             { label: 'IGNORING SKIN CONDITIONS', description: 'Performing services on contagious or infected skin is negligence. Always inspect before starting.' },
-            { label: 'MISSING MELANOMA SIGNS', description: 'The ABCDE rule is exam-critical. Asymmetry, Border, Color, Diameter, Evolution — memorize it.' },
+            { label: 'MISSING MELANOMA SIGNS', description: 'The ABCDE rule is important for chapter mastery. Asymmetry, Border, Color, Diameter, Evolution — memorize it.' },
             { label: 'CONFUSING PRIMARY AND SECONDARY LESIONS', description: 'Primary = original (bullae, papules, pustules). Secondary = evolved (crusts, scales, scars).' },
           ],
           facts: [
@@ -1012,7 +1012,7 @@ export const chapter9PremiumContent: ChapterContent = {
           title: 'MEMORY TRICKS THAT WORK',
           bullets: [
             { label: 'SHAPES', description: 'Sensation, Heat regulation, Absorption, Protection, Excretion, Secretion — the six functions of skin.' },
-            { label: 'ABCDE', description: 'Asymmetry, Border, Color, Diameter, Evolution — melanoma detection. This appears on every board exam.' },
+            { label: 'ABCDE', description: 'Asymmetry, Border, Color, Diameter, Evolution — melanoma detection. This is a core Chapter 9 recognition framework.' },
             { label: 'EPIDERMIS LAYERS (deep to surface)', description: 'Germinativum, Spinosum, Granulosum, Lucidum, Corneum — remember: "Go Somewhere Good, Life Continues."' },
             { label: 'SEBACEOUS vs SUDORIFEROUS', description: 'SEBACEOUS = SEbum (oil). SUDORIFEROUS = SWeat. Both start with S but produce different substances.' },
           ],
@@ -1033,7 +1033,7 @@ export const chapter9PremiumContent: ChapterContent = {
             { label: 'STAY IN YOUR SCOPE', description: 'You are a barber, not a doctor. Recognize, refer, and educate — but never diagnose or treat.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Performing services on contagious skin conditions is a sanitation violation that can result in license suspension.' },
+            { text: 'STUDY CHECK: Performing services on contagious skin conditions is a sanitation violation that can result in license suspension.' },
             { text: 'Your observation skills are a professional asset. The client who sits in your chair trusts you with more than their hair — they trust you with their health.' },
           ],
         },
@@ -1048,8 +1048,8 @@ export const chapter9PremiumContent: ChapterContent = {
     {
       type: 'featureGrid',
       id: 'board-exam-structure',
-      title: '🚨 BOARD EXAM ALERTS — SKIN STRUCTURE',
-      subtitle: 'The facts that show up on every test',
+      title: '🚨 KEY STUDY POINTS — SKIN STRUCTURE',
+      subtitle: 'Core Chapter 9 facts to review',
       features: [
         { icon: 'Shield', title: 'SKIN', description: 'Largest organ. First line of defense. Renews constantly.' },
         { icon: 'Layers', title: 'EPIDERMIS', description: 'Outermost layer. NO blood vessels. 5 layers: germinativum → spinosum → granulosum → lucidum → corneum.' },
@@ -1064,7 +1064,7 @@ export const chapter9PremiumContent: ChapterContent = {
     {
       type: 'featureGrid',
       id: 'board-exam-glands',
-      title: '🚨 BOARD EXAM ALERTS — GLANDS & FUNCTIONS',
+      title: '🚨 KEY STUDY POINTS — GLANDS & FUNCTIONS',
       subtitle: 'Know what each gland does and what it produces',
       features: [
         { icon: 'Droplet', title: 'SEBACEOUS GLANDS', description: 'Produce oil (sebum). Connected to hair follicles. Most active on face and scalp.' },
@@ -1082,7 +1082,7 @@ export const chapter9PremiumContent: ChapterContent = {
     {
       type: 'tabbed',
       id: 'board-exam-lesions',
-      title: '🚨 BOARD EXAM ALERTS — LESIONS & DISORDERS',
+      title: '🚨 KEY STUDY POINTS — LESIONS & DISORDERS',
       subtitle: 'Primary, secondary, and the conditions you will see in the chair',
       tabs: [
         {
@@ -1133,8 +1133,8 @@ export const chapter9PremiumContent: ChapterContent = {
             { label: 'VERRUCA (WART)', description: 'Viral, contagious. Refer for medical treatment.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Blackheads are oxidized sebum — NOT dirt.' },
-            { text: 'BOARD EXAM ALERT: Sebaceous cyst and steatoma are the SAME condition.' },
+            { text: 'STUDY CHECK: Blackheads are oxidized sebum — NOT dirt.' },
+            { text: 'STUDY CHECK: Sebaceous cyst and steatoma are the SAME condition.' },
           ],
         },
       ],
@@ -1144,7 +1144,7 @@ export const chapter9PremiumContent: ChapterContent = {
     {
       type: 'featureGrid',
       id: 'board-exam-cancer',
-      title: '🚨 BOARD EXAM ALERTS — SKIN CANCER',
+      title: '🚨 KEY STUDY POINTS — SKIN CANCER',
       subtitle: 'Three types. One mnemonic. Zero excuses for missing this.',
       features: [
         { icon: 'Circle', title: 'BASAL CELL', description: 'Most common, least severe. Pearly, waxy nodules. Rarely spreads.' },
@@ -1162,7 +1162,7 @@ export const chapter9PremiumContent: ChapterContent = {
     {
       type: 'checklist',
       id: 'board-exam-safety',
-      title: '🚨 BOARD EXAM ALERTS — SERVICE SAFETY RULES',
+      title: '🚨 KEY STUDY POINTS — SERVICE SAFETY RULES',
       subtitle: 'Non-negotiables that protect your license and your client',
       items: [
         { text: 'NEVER treat infectious or contagious conditions — REFER to a physician' },
@@ -1179,15 +1179,15 @@ export const chapter9PremiumContent: ChapterContent = {
     {
       type: 'tabbed',
       id: 'board-exam-traps',
-      title: '🚨 STATE BOARD TRAPS — DO NOT FALL FOR THESE',
-      subtitle: 'The questions designed to trip you up',
+      title: '🚨 COMMON CONFUSIONS — CHECK YOUR REASONING',
+      subtitle: 'Distinctions students can easily confuse',
       tabs: [
         {
           id: 'trap-structure',
           label: 'STRUCTURE TRAPS',
           title: 'STRUCTURE TRAPS',
           bullets: [
-            { label: 'EPIDERMIS HAS NO BLOOD VESSELS', description: 'Exam questions ask what the epidermis contains. Blood vessels are NOT on that list.' },
+            { label: 'EPIDERMIS HAS NO BLOOD VESSELS', description: 'Review questions ask what the epidermis contains. Blood vessels are NOT on that list.' },
             { label: 'DERMIS IS 25× THICKER', description: 'Not 2×. Not 5×. Twenty-five times thicker. Memorize the number.' },
             { label: 'HALF THE BODY\'S BLOOD SUPPLY', description: 'Approximately 50% of blood flows through skin. This demonstrates it is an organ.' },
           ],
@@ -1300,7 +1300,7 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'tabbed',
       id: 'practice-questions',
       title: '📝 PRACTICE QUESTIONS — TEST YOUR KNOWLEDGE',
-      subtitle: 'These mirror the style of questions you will see on the state board exam',
+      subtitle: 'These mirror the style of questions you will see on the state chapter review',
       tabs: [
         {
           id: 'q1-5',
@@ -1314,7 +1314,7 @@ export const chapter9PremiumContent: ChapterContent = {
             { label: 'Q5: What does SHAPES stand for?', description: 'ANSWER: Sensation, Heat regulation, Absorption, Protection, Excretion, Secretion — the six functions of the skin.' },
           ],
           facts: [
-            { text: 'These five questions cover the foundational anatomy and physiology that appear on every board exam.' },
+            { text: 'These five questions review foundational Chapter 9 anatomy and physiology.' },
           ],
         },
         {
