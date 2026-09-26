@@ -11,6 +11,7 @@ export interface QuizApprovalRequestRow {
   chapterId: string
   status: 'pending' | 'approved' | 'denied'
   requestedAt: string
+  programIds: string[]
   readiness: {
     lessonCompleted?: boolean
     flashcardsCompleted?: boolean
@@ -19,14 +20,51 @@ export interface QuizApprovalRequestRow {
   }
 }
 
+interface FilterOption {
+  id: string
+  name: string
+}
+
+interface ChapterFilterOption {
+  id: string
+  number: number
+  title: string
+}
+
 export default function QuizApprovalQueueClient({
   requests,
+  chapters,
+  programs,
+  students,
 }: {
   requests: QuizApprovalRequestRow[]
+  chapters: ChapterFilterOption[]
+  programs: FilterOption[]
+  students: FilterOption[]
 }) {
   const [selected, setSelected] = useState<string[]>([])
+  const [chapterFilter, setChapterFilter] = useState('')
+  const [programFilter, setProgramFilter] = useState('')
+  const [studentFilter, setStudentFilter] = useState('')
   const [isPending, startTransition] = useTransition()
-  const pending = useMemo(() => requests.filter((request) => request.status === 'pending'), [requests])
+
+  const filteredRequests = useMemo(
+    () =>
+      requests.filter((request) => {
+        if (chapterFilter && request.chapterId !== chapterFilter) return false
+        if (programFilter && !request.programIds.includes(programFilter)) return false
+        if (studentFilter && request.studentId !== studentFilter) return false
+        return true
+      }),
+    [requests, chapterFilter, programFilter, studentFilter],
+  )
+
+  const filteredPending = useMemo(
+    () => filteredRequests.filter((request) => request.status === 'pending'),
+    [filteredRequests],
+  )
+
+  const hasActiveFilters = Boolean(chapterFilter || programFilter || studentFilter)
 
   function toggle(id: string) {
     setSelected((current) =>
@@ -49,9 +87,104 @@ export default function QuizApprovalQueueClient({
     })
   }
 
+  function clearFilters() {
+    setChapterFilter('')
+    setProgramFilter('')
+    setStudentFilter('')
+    setSelected([])
+  }
+
   return (
     <div className="space-y-4">
-      {pending.length > 0 && (
+      <div className="rounded-xl border border-graphite bg-charcoal p-5">
+        <div className="flex flex-col gap-1">
+          <h3 className="font-semibold text-white">Filter approvals</h3>
+          <p className="text-sm text-silver">
+            Narrow the queue by chapter, class/program, or individual student before approving.
+          </p>
+        </div>
+
+        <div className="mt-4 grid gap-3 md:grid-cols-3">
+          <label className="text-sm text-silver">
+            <span className="mb-1 block">Chapter</span>
+            <select
+              aria-label="Filter by chapter"
+              value={chapterFilter}
+              onChange={(event) => {
+                setChapterFilter(event.target.value)
+                setSelected([])
+              }}
+              className="w-full rounded-lg border border-graphite bg-black/30 px-3 py-2 text-white"
+            >
+              <option value="">All chapters</option>
+              {chapters.map((chapter) => (
+                <option key={chapter.id} value={chapter.id}>
+                  Chapter {chapter.number} — {chapter.title}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="text-sm text-silver">
+            <span className="mb-1 block">Class / Program</span>
+            <select
+              aria-label="Filter by class or program"
+              value={programFilter}
+              onChange={(event) => {
+                setProgramFilter(event.target.value)
+                setSelected([])
+              }}
+              className="w-full rounded-lg border border-graphite bg-black/30 px-3 py-2 text-white"
+            >
+              <option value="">All classes/programs</option>
+              {programs.map((program) => (
+                <option key={program.id} value={program.id}>
+                  {program.name}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="text-sm text-silver">
+            <span className="mb-1 block">Student</span>
+            <select
+              aria-label="Filter by student"
+              value={studentFilter}
+              onChange={(event) => {
+                setStudentFilter(event.target.value)
+                setSelected([])
+              }}
+              className="w-full rounded-lg border border-graphite bg-black/30 px-3 py-2 text-white"
+            >
+              <option value="">All students</option>
+              {students.map((student) => (
+                <option key={student.id} value={student.id}>
+                  {student.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+
+        <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
+          <span className="text-silver">
+            Showing {filteredRequests.length} request{filteredRequests.length === 1 ? '' : 's'}
+            {' · '}
+            {filteredPending.length} pending
+          </span>
+          {hasActiveFilters && (
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="font-semibold text-gold hover:text-[var(--color-brand-gold-light)]"
+            >
+              Clear filters
+            </button>
+          )}
+        </div>
+      </div>
+
+      {filteredPending.length > 0 && (
         <div className="flex flex-wrap gap-3">
           <button
             type="button"
@@ -64,21 +197,25 @@ export default function QuizApprovalQueueClient({
           <button
             type="button"
             disabled={isPending}
-            onClick={() => approveSelected(pending.map((request) => request.id))}
+            onClick={() => approveSelected(filteredPending.map((request) => request.id))}
             className="rounded-lg border border-[var(--color-brand-gold)]/40 px-4 py-2 text-sm font-semibold text-gold disabled:opacity-40"
           >
-            Approve all pending
+            {hasActiveFilters
+              ? `Approve all filtered pending (${filteredPending.length})`
+              : `Approve all pending (${filteredPending.length})`}
           </button>
         </div>
       )}
 
-      {requests.length === 0 ? (
+      {filteredRequests.length === 0 ? (
         <div className="rounded-xl border border-graphite bg-charcoal p-6 text-silver">
-          No quiz access requests yet.
+          {requests.length === 0
+            ? 'No quiz access requests yet.'
+            : 'No requests match the selected filters.'}
         </div>
       ) : (
         <div className="space-y-3">
-          {requests.map((request) => (
+          {filteredRequests.map((request) => (
             <article key={request.id} className="rounded-xl border border-graphite bg-charcoal p-5">
               <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div className="flex items-start gap-3">
