@@ -164,6 +164,7 @@ export default async function AttendanceManagementPage() {
           schoolName={schoolName}
           defaultDate={defaultDate}
           dailyScheduleExpectations={dailyScheduleExpectations}
+          schoolTimeZone={schoolTimeZone}
         />
       </div>
     </div>
