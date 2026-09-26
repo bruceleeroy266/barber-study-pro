@@ -58,6 +58,23 @@ function hourSourceLabel(sourceType: 'manual' | 'attendance'): string {
   return sourceType === 'attendance' ? 'Attendance-generated' : 'Manual entry'
 }
 
+
+const scheduleDayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
+function formatScheduleTime(value: string | null): string {
+  if (!value) return '—'
+  const [hours, minutes] = value.slice(0, 5).split(':').map(Number)
+  const suffix = hours >= 12 ? 'PM' : 'AM'
+  const displayHour = hours % 12 || 12
+  return `${displayHour}:${String(minutes).padStart(2, '0')} ${suffix}`
+}
+
+function scheduleOverrideLabel(type: 'scheduled' | 'off' | 'makeup'): string {
+  if (type === 'off') return 'Day Off'
+  if (type === 'makeup') return 'Makeup / Extra Session'
+  return 'Changed Schedule'
+}
+
 function attendanceStatusClass(status: AttendanceStatus | null): string {
   switch (status) {
     case 'Present':
@@ -123,6 +140,20 @@ export default async function StudentHoursPage() {
     .order('date', { ascending: false })
     .order('created_at', { ascending: false })
 
+  let scheduleProfilesQuery = supabase
+    .from('student_schedule_profiles')
+    .select('id, name, effective_from, effective_to, source_template_id, is_active')
+    .eq('student_id', user.id)
+    .eq('is_active', true)
+    .order('effective_from', { ascending: false })
+
+  let scheduleOverridesQuery = supabase
+    .from('student_schedule_overrides')
+    .select('id, override_date, override_type, start_time, end_time, break_minutes, reason')
+    .eq('student_id', user.id)
+    .order('override_date', { ascending: false })
+    .limit(20)
+
   let attendanceQuery = supabase
     .from('attendance_records')
     .select('*')
@@ -132,11 +163,20 @@ export default async function StudentHoursPage() {
   if (schoolId) {
     hourQuery = hourQuery.eq('school_id', schoolId)
     attendanceQuery = attendanceQuery.eq('school_id', schoolId)
+    scheduleProfilesQuery = scheduleProfilesQuery.eq('school_id', schoolId)
+    scheduleOverridesQuery = scheduleOverridesQuery.eq('school_id', schoolId)
   }
 
-  const [{ data: hourRows }, { data: attendanceRows }] = await Promise.all([
+  const [
+    { data: hourRows },
+    { data: attendanceRows },
+    { data: scheduleProfileRows },
+    { data: scheduleOverrideRows },
+  ] = await Promise.all([
     hourQuery,
     attendanceQuery,
+    scheduleProfilesQuery,
+    scheduleOverridesQuery,
   ])
 
   const hours = (hourRows ?? []) as Array<{
@@ -151,6 +191,48 @@ export default async function StudentHoursPage() {
     rejection_reason: string | null
     reviewed_at: string | null
     created_at: string | null
+  }>
+
+
+  const scheduleProfiles = (scheduleProfileRows ?? []) as Array<{
+    id: string
+    name: string
+    effective_from: string
+    effective_to: string | null
+    source_template_id: string | null
+    is_active: boolean
+  }>
+
+  const scheduleOverrides = (scheduleOverrideRows ?? []) as Array<{
+    id: string
+    override_date: string
+    override_type: 'scheduled' | 'off' | 'makeup'
+    start_time: string | null
+    end_time: string | null
+    break_minutes: number
+    reason: string | null
+  }>
+
+  const currentScheduleProfile = scheduleProfiles.find(
+    (profile) =>
+      profile.effective_from <= localToday &&
+      (!profile.effective_to || profile.effective_to >= localToday),
+  ) ?? null
+
+  const { data: scheduleDayRows } = currentScheduleProfile
+    ? await supabase
+        .from('student_schedule_days')
+        .select('day_of_week, is_scheduled, start_time, end_time, break_minutes')
+        .eq('schedule_profile_id', currentScheduleProfile.id)
+        .order('day_of_week')
+    : { data: [] }
+
+  const scheduleDays = (scheduleDayRows ?? []) as Array<{
+    day_of_week: number
+    is_scheduled: boolean
+    start_time: string | null
+    end_time: string | null
+    break_minutes: number
   }>
 
   const reportingHours: HoursReportLog[] = hours.map((row) => ({
@@ -353,6 +435,95 @@ export default async function StudentHoursPage() {
 
         <div className="mt-3 text-sm text-silver">
           {formatMinutes(approvedMinutes)} approved of {requirements.requiredHours}h required
+        </div>
+      </section>
+
+      <section className="rounded-xl border border-graphite bg-charcoal p-5 sm:p-6">
+        <div>
+          <h2 className="text-lg font-semibold text-white">My Schedule</h2>
+          <p className="mt-1 text-sm text-silver">
+            Your current expected weekly schedule and one-day exceptions. Schedule changes do not change official hours by themselves.
+          </p>
+        </div>
+
+        {currentScheduleProfile ? (
+          <>
+            <div className="mt-4 rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 p-4">
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <div className="font-semibold text-white">{currentScheduleProfile.name}</div>
+                  <div className="mt-1 text-sm text-silver">
+                    Effective {currentScheduleProfile.effective_from} → {currentScheduleProfile.effective_to ?? 'ongoing'}
+                  </div>
+                </div>
+                <div className="text-xs text-silver">
+                  {currentScheduleProfile.source_template_id ? 'Template-based schedule' : 'Custom schedule'}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-7">
+              {scheduleDayNames.map((dayName, dayOfWeek) => {
+                const day = scheduleDays.find((entry) => entry.day_of_week === dayOfWeek)
+                const isScheduled = Boolean(day?.is_scheduled)
+
+                return (
+                  <div key={dayName} className="rounded-lg border border-graphite bg-black p-4">
+                    <div className="text-sm font-semibold text-white">{dayName}</div>
+                    {isScheduled && day ? (
+                      <>
+                        <div className="mt-2 text-sm text-light-gray">
+                          {formatScheduleTime(day.start_time)}–{formatScheduleTime(day.end_time)}
+                        </div>
+                        <div className="mt-1 text-xs text-silver">{day.break_minutes} min break</div>
+                      </>
+                    ) : (
+                      <div className="mt-2 text-sm text-silver">Not scheduled</div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </>
+        ) : (
+          <div className="mt-4 rounded-lg border border-graphite bg-black p-6 text-center text-silver">
+            No current weekly schedule is assigned.
+          </div>
+        )}
+
+        <div className="mt-6">
+          <h3 className="text-base font-semibold text-white">One-Day Overrides</h3>
+          <p className="mt-1 text-sm text-silver">
+            Days off, changed schedules, and makeup sessions are listed here without changing your recurring weekly schedule.
+          </p>
+
+          {scheduleOverrides.length === 0 ? (
+            <div className="mt-3 rounded-lg border border-graphite bg-black p-4 text-sm text-silver">
+              No one-day overrides recorded.
+            </div>
+          ) : (
+            <div className="mt-3 space-y-3">
+              {scheduleOverrides.map((override) => (
+                <article key={override.id} className="rounded-lg border border-graphite bg-black p-4">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                      <div className="font-semibold text-white">{override.override_date}</div>
+                      <div className="mt-1 text-sm text-light-gray">{scheduleOverrideLabel(override.override_type)}</div>
+                    </div>
+                    {override.override_type !== 'off' && (
+                      <div className="text-sm text-light-gray sm:text-right">
+                        <div>{formatScheduleTime(override.start_time)}–{formatScheduleTime(override.end_time)}</div>
+                        <div className="mt-1 text-xs text-silver">{override.break_minutes} min break</div>
+                      </div>
+                    )}
+                  </div>
+                  {override.reason && (
+                    <div className="mt-3 text-sm text-silver">{override.reason}</div>
+                  )}
+                </article>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
