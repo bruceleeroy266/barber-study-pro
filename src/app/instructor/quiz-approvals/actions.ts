@@ -115,7 +115,12 @@ export async function bulkApproveQuizAccess(requestIds: string[]) {
     .eq('school_id', profile.school_id)
     .in('id', requestIds)
 
-  const safeRequests = requests || []
+  const safeRequests = (requests || []) as Array<{
+    id: string
+    school_id: string
+    student_id: string
+    quiz_id: string
+  }>
   if (safeRequests.length === 0) return
 
   const now = new Date().toISOString()
