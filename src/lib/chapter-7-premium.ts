@@ -291,7 +291,7 @@ export const chapter7PremiumContent: ChapterContent = {
           ],
           facts: [
             { text: 'Acid + Base = Salt + Water. This neutralization reaction is fundamental to understanding pH balancing in hair care.' },
-            { text: 'Barbicide contains quaternary ammonium compounds (quats) — salts that disinfect by disrupting bacterial cell membranes.' },
+            { text: 'Chemical compounds can have very different properties from the elements that make them up; identify the compound and its intended professional use rather than assuming behavior from one ingredient name.' },
           ],
         },
       ],
@@ -318,8 +318,8 @@ export const chapter7PremiumContent: ChapterContent = {
         },
         {
           icon: 'Recycle',
-          title: 'REVERSIBLE?',
-          description: 'Physical changes are reversible (ice → water → ice). Chemical changes are permanent (oxidized hair color cannot un-oxidize).',
+          title: 'WHAT CHANGED?',
+          description: 'Ask whether a new chemical substance formed. A change of state can be physical, while a reaction that changes chemical composition is chemical.',
         },
         {
           icon: 'AlertTriangle',
@@ -673,7 +673,7 @@ export const chapter7PremiumContent: ChapterContent = {
         {
           icon: 'FlaskConical',
           title: 'QUATS (QUATERNARY AMMONIUM COMPOUNDS)',
-          description: 'Antiseptics and preservatives. The active ingredient in Barbicide and many disinfectants. Effective against bacteria and fungi.',
+          description: 'Quaternary ammonium compounds are used in some professional formulations. Their function depends on the specific product, concentration, and label directions.',
         },
       ],
     },
