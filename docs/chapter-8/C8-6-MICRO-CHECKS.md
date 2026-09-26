@@ -38,6 +38,12 @@ The existing database table is chapter-generic and already enforces one immutabl
 
 ## Remaining C8-6 work
 
-- connect critical/elevated safety evidence to Chapter 8 intervention flags;
+- safety evidence now feeds a dedicated Chapter 8 intervention evaluator for the two critical families only: electrical-equipment safety and light-therapy safety;
+- one missed scenario creates a priority instructor-review flag; two distinct misses inside the latest three qualifying hard observations create an urgent flag requiring formal reassessment;
+- equipment-safety and light-therapy flags remain independent and clear only after five consecutive correct application/scenario observations;
+- intervention flags do not alter the shared 20/10/40/15/15 Chapter 8 grade weights.
+
+## Remaining C8-6 work
+
 - add end-to-end UI/persistence regression tests;
 - run Engineering Verification and exact-head Vercel certification for the completed C8-6 slice.
