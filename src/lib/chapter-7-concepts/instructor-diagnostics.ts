@@ -1,4 +1,4 @@
-import type { Chapter7EvidenceRecord, Chapter7Confidence, Chapter7GradeResult } from './grading'
+import type { Chapter7EvidenceRecord, Chapter7Confidence, Chapter7GradeResult, Chapter7Difficulty } from './grading'
 import { calculateChapter7ConceptMastery, calculateChapter7Grade } from './grading'
 import type { Chapter7ConceptFamilyId } from './types'
 import { CHAPTER7_CONCEPT_FAMILY_IDS, getChapter7ConceptFamily } from './concepts'
@@ -58,14 +58,23 @@ export interface Chapter7InstructorDiagnosticSummary {
   evidenceCount: number
 }
 
-const answerKey = new Map(
-  chapter7PremiumQuizQuestions.map((question) => [question.id, question.correct_answer] as const),
+const answerKey = new Map<string, string>(
+  chapter7PremiumQuizQuestions.map((question) => [question.id, question.correct_answer]),
 )
-const questionDifficulty = new Map(
-  chapter7PremiumQuizQuestions.map((question) => [question.id, question.difficulty] as const),
+
+function toMasteryDifficulty(
+  difficulty: 'easy' | 'medium' | 'hard',
+): Chapter7Difficulty {
+  if (difficulty === 'easy') return 'understanding'
+  if (difficulty === 'medium') return 'application'
+  return 'scenario'
+}
+
+const questionDifficulty = new Map<string, Chapter7Difficulty>(
+  chapter7PremiumQuizQuestions.map((question) => [question.id, toMasteryDifficulty(question.difficulty)]),
 )
-const questionConcept = new Map(
-  chapter7QuizQuestionConceptMappings.map((mapping) => [mapping.questionId, mapping.conceptFamilyId] as const),
+const questionConcept = new Map<string, Chapter7ConceptFamilyId>(
+  chapter7QuizQuestionConceptMappings.map((mapping) => [mapping.questionId, mapping.conceptFamilyId]),
 )
 
 function isAnswerLetter(value: unknown): value is 'a' | 'b' | 'c' | 'd' {
