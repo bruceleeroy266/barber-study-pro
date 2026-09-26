@@ -1,8 +1,8 @@
 # C9-0 — Chapter 9 Baseline Audit
 
 **Chapter:** 9 — The Skin: Structure, Disorders, and Diseases  
-**Branch:** `feat/chapter-9-mastery-framework`  
-**Baseline:** `main` at `6300e8cff3fbee7c76c41c71ac4449758c06d4bc`  
+**Branch:** `feat/chapter-9-mastery-post-segment-e`  
+**Baseline:** post-Segment-E production `main` at `b34aa7a93c2f24974e70ac709dfb6360514ae064`  
 **Rule:** No Chapter 9 content, grading, detection, or remediation behavior is changed during C9-0.
 
 ## 1. Current production inventory
