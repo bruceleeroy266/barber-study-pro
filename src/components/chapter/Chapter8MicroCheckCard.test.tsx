@@ -79,7 +79,7 @@ describe('C8-6 Chapter 8 micro-check UI/persistence regression', () => {
     expect(screen.getByRole('heading', { name: 'Circuit Safety Check' })).toBeInTheDocument()
     expect(screen.getByText('0 of 2 first-attempt answers recorded')).toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole('button', { name: /a\. The complete path for current has been interrupted/i }))
+    fireEvent.click(screen.getByRole('button', { name: /a\.The complete path for current has been interrupted/i }))
     fireEvent.click(screen.getAllByRole('button', { name: 'Lock First Attempt' })[0])
 
     await waitFor(() => {
@@ -101,7 +101,7 @@ describe('C8-6 Chapter 8 micro-check UI/persistence regression', () => {
       expect(screen.getByText('✓ Correct')).toBeInTheDocument()
     })
 
-    const savedChoice = screen.getByRole('button', { name: /a\. The complete path for current has been interrupted/i })
+    const savedChoice = screen.getByRole('button', { name: /a\.The complete path for current has been interrupted/i })
     expect(savedChoice).toBeDisabled()
     expect(screen.getAllByRole('button', { name: 'Lock First Attempt' })).toHaveLength(1)
   })
