@@ -228,6 +228,7 @@ export default async function StaffHoursManager({
   const isSchoolAdministrator = actor.role === 'school_admin'
   const isInstructor = actor.role === 'instructor'
   const pendingLogs = logs.filter((log) => log.status === 'pending')
+  const reviewedLogs = logs.filter((log) => log.status === 'approved' || log.status === 'rejected')
   const filteredPendingLogs = pendingLogs.filter((log) => {
     if (queueStudentFilter && log.user_id !== queueStudentFilter) return false
     if (queueDateFilter && log.date !== queueDateFilter) return false
@@ -537,6 +538,96 @@ export default async function StaffHoursManager({
                   {pendingLogs.length === 0
                     ? 'No pending hour submissions.'
                     : 'No pending hour submissions match the selected filters.'}
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
+        {isSchoolAdministrator && (
+          <section className="rounded-xl border border-graphite bg-charcoal p-4 sm:p-6">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h2 className="text-xl font-semibold text-white">Reviewed Hour History</h2>
+                <p className="text-sm text-silver">
+                  Approved and rejected entries stay out of the pending queue but remain visible for audit review.
+                </p>
+              </div>
+              <div className="text-sm font-semibold text-silver">
+                {reviewedLogs.length} reviewed
+              </div>
+            </div>
+
+            <div className="mt-4 space-y-3">
+              {reviewedLogs.slice(0, 25).map((log) => {
+                const student = rows.find((entry) => entry.id === log.user_id)
+                const reviewerName = log.reviewed_by
+                  ? (actorNameMap.get(log.reviewed_by) ?? 'School administrator')
+                  : 'School administrator'
+                return (
+                  <article key={log.id} className="rounded-lg border border-graphite bg-black p-4">
+                    <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+                      <div className="min-w-0">
+                        <div className="font-semibold text-white">{student?.full_name ?? 'Unknown student'}</div>
+                        <div className="mt-1 text-sm text-silver">
+                          {log.date} · {log.category} · {formatHourMinutes(log.minutes)}
+                        </div>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          <HourSourceBadge sourceType={log.source_type} />
+                          {log.resubmission_of_hour_log_id && (
+                            <span className="inline-flex items-center rounded-full border border-warm-bronze/40 bg-warm-bronze/10 px-2.5 py-1 text-xs font-semibold text-warm-bronze">
+                              Corrected resubmission
+                            </span>
+                          )}
+                          <span
+                            className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold ${
+                              log.status === 'approved'
+                                ? 'border-[var(--color-brand-gold)]/40 bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)]'
+                                : 'border-warm-bronze/40 bg-warm-bronze/10 text-warm-bronze'
+                            }`}
+                          >
+                            {log.status === 'approved' ? 'Approved' : 'Rejected'}
+                          </span>
+                        </div>
+                        {log.notes && <div className="mt-2 text-sm text-light-gray">{log.notes}</div>}
+                        {log.status === 'rejected' && log.rejection_reason && (
+                          <div className="mt-2 rounded-lg border border-warm-bronze/30 bg-warm-bronze/10 p-3 text-sm text-warm-bronze">
+                            Rejection reason: {log.rejection_reason}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="shrink-0 text-sm text-silver lg:text-right">
+                        <div>
+                          {log.status === 'approved' ? 'Approved' : 'Rejected'} by {reviewerName}
+                        </div>
+                        <div className="mt-1 text-xs text-silver-gray">
+                          {log.reviewed_at
+                            ? new Date(log.reviewed_at).toLocaleString('en-US', {
+                                timeZone: schoolTimeZone,
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                                hour: 'numeric',
+                                minute: '2-digit',
+                              })
+                            : 'Review time unavailable'}
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                )
+              })}
+
+              {reviewedLogs.length === 0 && (
+                <div className="rounded-lg border border-graphite bg-black p-6 text-center text-silver">
+                  No reviewed hour entries yet.
+                </div>
+              )}
+
+              {reviewedLogs.length > 25 && (
+                <div className="text-center text-xs text-silver-gray">
+                  Showing the 25 most recent reviewed entries.
                 </div>
               )}
             </div>
