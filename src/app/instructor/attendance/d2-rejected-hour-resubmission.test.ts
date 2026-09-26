@@ -13,6 +13,10 @@ const migration = readFileSync(
   join(root, 'supabase/migrations/20260926072000_rejected_attendance_hour_resubmission.sql'),
   'utf-8',
 )
+const staffHoursManager = readFileSync(
+  join(root, 'src/components/hours/StaffHoursManager.tsx'),
+  'utf-8',
+)
 
 describe('D2 rejected attendance-hour correction/resubmission', () => {
   it('preserves rejected history and allows only one active row per attendance source', () => {
@@ -50,6 +54,11 @@ describe('D2 rejected attendance-hour correction/resubmission', () => {
     expect(action).toContain(".eq('status', 'pending')")
     expect(action).toContain(".is('reviewed_by', null)")
     expect(action).toContain(".is('reviewed_at', null)")
+  })
+
+  it('shows corrected resubmissions clearly in the admin and student-hour views', () => {
+    expect(staffHoursManager).toContain('resubmission_of_hour_log_id')
+    expect(staffHoursManager).toContain('Corrected resubmission')
   })
 
   it('prevents rejected history from double-counting official totals', () => {
