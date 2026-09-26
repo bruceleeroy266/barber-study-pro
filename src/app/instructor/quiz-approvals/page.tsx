@@ -33,13 +33,23 @@ export default async function QuizApprovalsPage() {
       .limit(100),
   ])
 
-  const studentIds = Array.from(new Set((requests || []).map((request) => request.student_id)))
+  const requestRecords = (requests || []) as Array<{
+    id: string
+    student_id: string
+    quiz_id: string
+    chapter_id: string
+    status: 'pending' | 'approved' | 'denied'
+    readiness_snapshot: QuizApprovalRequestRow['readiness'] | null
+    requested_at: string
+  }>
+  const studentIds = Array.from(new Set(requestRecords.map((request) => request.student_id)))
   const { data: students } = studentIds.length
     ? await supabase.from('profiles').select('id, full_name').in('id', studentIds)
     : { data: [] as Array<{ id: string; full_name: string }> }
 
-  const nameById = new Map((students || []).map((student) => [student.id, student.full_name]))
-  const rows: QuizApprovalRequestRow[] = (requests || []).map((request) => ({
+  const studentRecords = (students || []) as Array<{ id: string; full_name: string }>
+  const nameById = new Map(studentRecords.map((student) => [student.id, student.full_name]))
+  const rows: QuizApprovalRequestRow[] = requestRecords.map((request) => ({
     id: request.id,
     studentId: request.student_id,
     studentName: nameById.get(request.student_id) || 'Student',
