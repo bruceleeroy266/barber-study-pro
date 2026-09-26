@@ -58,6 +58,8 @@ interface Props {
   saved?: boolean
   error?: string | null
   highlightedStudentId?: string | null
+  reviewedStatus?: string | null
+  alreadyReviewedStatus?: string | null
 }
 
 export default async function StaffHoursManager({
@@ -67,6 +69,8 @@ export default async function StaffHoursManager({
   saved = false,
   error = null,
   highlightedStudentId = null,
+  reviewedStatus = null,
+  alreadyReviewedStatus = null,
 }: Props) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -228,6 +232,16 @@ export default async function StaffHoursManager({
         {saved && (
           <div className="rounded-xl border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 p-4 text-[var(--color-brand-gold)]">
             Hours submitted for school administrator approval.
+          </div>
+        )}
+        {reviewedStatus && ['approved', 'rejected'].includes(reviewedStatus) && (
+          <div className="rounded-xl border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 p-4 text-[var(--color-brand-gold)]">
+            Hour entry {reviewedStatus}. Totals and the approval queue have been refreshed.
+          </div>
+        )}
+        {alreadyReviewedStatus && ['approved', 'rejected'].includes(alreadyReviewedStatus) && (
+          <div className="rounded-xl border border-silver/30 bg-white/5 p-4 text-light-gray">
+            This hour entry was already {alreadyReviewedStatus}. The latest record is shown below.
           </div>
         )}
         {errorMessage && (
