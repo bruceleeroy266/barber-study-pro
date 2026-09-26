@@ -48,6 +48,7 @@ export interface UseAttendanceReturn {
   updateStatus: (id: string, status: AttendanceStatus, reason?: string) => Promise<void>
   bulkUpdateStatus: (ids: string[], status: AttendanceStatus) => Promise<void>
   addNote: (id: string, note: string) => Promise<void>
+  updateActualTimes: (id: string, clockedInAt: string, clockedOutAt: string, minutesPresent: number, status: AttendanceStatus) => Promise<void>
   submitCorrection: (recordId: string, newStatus: AttendanceStatus, reason: string) => Promise<void>
   getCorrections: (recordId: string) => Promise<AttendanceCorrection[]>
   getAuditHistory: (recordId: string) => Promise<AttendanceAuditEntry[]>
@@ -180,6 +181,49 @@ export function useAttendance({
       }
     },
     [records, currentUser, clearSelection, schoolId]
+  )
+
+  const updateActualTimes = useCallback(
+    async (
+      id: string,
+      clockedInAt: string,
+      clockedOutAt: string,
+      minutesPresent: number,
+      status: AttendanceStatus,
+    ) => {
+      const original = records.find((r) => r.id === id)
+      if (!original) return
+
+      try {
+        const updated = await updateAttendanceRecord(id, {
+          clockedInAt,
+          clockedOutAt,
+          minutesPresent,
+          status,
+        })
+
+        await logAuditEntry({
+          schoolId,
+          recordId: id,
+          action: 'update',
+          changedFields: {
+            clockedInAt: { old: original.clockedInAt, new: updated.clockedInAt },
+            clockedOutAt: { old: original.clockedOutAt, new: updated.clockedOutAt },
+            minutesPresent: { old: original.minutesPresent, new: updated.minutesPresent },
+            status: { old: original.status, new: updated.status },
+          },
+          userId: currentUser.id,
+          userName: currentUser.full_name,
+          reason: 'Daily attendance time update',
+        })
+
+        setRecords((prev) => prev.map((r) => (r.id === id ? updated : r)))
+        setError(null)
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'Failed to update attendance times')
+      }
+    },
+    [records, currentUser, schoolId]
   )
 
   const addNote = useCallback(
@@ -338,6 +382,7 @@ export function useAttendance({
     updateStatus,
     bulkUpdateStatus,
     addNote,
+    updateActualTimes,
     submitCorrection: submitCorrectionLocal,
     getCorrections,
     getAuditHistory: getAuditHistoryLocal,
