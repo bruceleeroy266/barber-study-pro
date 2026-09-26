@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
 import { hasPermission } from '@/lib/auth-helpers'
 import { resolveProgramRequirementsForStudents } from '@/lib/programs/requirements'
-import { logStudentHours, reviewStudentHours } from '@/app/instructor/hours/actions'
+import { bulkApproveStudentHours, logStudentHours, reviewStudentHours } from '@/app/instructor/hours/actions'
 import HoursPdfExports from '@/components/hours/HoursPdfExports'
 import StudentHoursDropdown from '@/components/hours/StudentHoursDropdown'
 import { calculateApprovedPeriodTotals, formatHourMinutes } from '@/lib/hours/reporting'
@@ -80,6 +80,7 @@ interface Props {
   highlightedStudentId?: string | null
   reviewedStatus?: string | null
   alreadyReviewedStatus?: string | null
+  bulkApprovedCount?: number | null
   queueStudentFilter?: string
   queueDateFilter?: string
   queueSourceFilter?: string
@@ -95,6 +96,7 @@ export default async function StaffHoursManager({
   highlightedStudentId = null,
   reviewedStatus = null,
   alreadyReviewedStatus = null,
+  bulkApprovedCount = null,
   queueStudentFilter = '',
   queueDateFilter = '',
   queueSourceFilter = '',
@@ -222,6 +224,8 @@ export default async function StaffHoursManager({
     error === 'invalid-review' ? 'That hour entry could not be reviewed.' :
     error === 'review-failed' ? 'The approval decision could not be saved. Please try again.' :
     error === 'rejection-reason-required' ? 'Enter a reason before rejecting an hour entry.' :
+    error === 'no-hours-selected' ? 'No pending hour entries were selected for bulk approval.' :
+    error === 'bulk-review-failed' ? 'The bulk approval could not be saved. Please try again.' :
     null
 
   const schoolName = typeof school?.name === 'string' && school.name ? school.name : 'ASCYN PRO School'
@@ -282,6 +286,11 @@ export default async function StaffHoursManager({
         {alreadyReviewedStatus && ['approved', 'rejected'].includes(alreadyReviewedStatus) && (
           <div className="rounded-xl border border-silver/30 bg-white/5 p-4 text-light-gray">
             This hour entry was already {alreadyReviewedStatus}. The latest record is shown below.
+          </div>
+        )}
+        {bulkApprovedCount !== null && (
+          <div className="rounded-xl border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 p-4 text-[var(--color-brand-gold)]">
+            {bulkApprovedCount} pending hour entr{bulkApprovedCount === 1 ? 'y was' : 'ies were'} approved. Totals and reviewed history have been refreshed.
           </div>
         )}
         {errorMessage && (
@@ -472,6 +481,28 @@ export default async function StaffHoursManager({
                 )}
               </div>
             </form>
+
+            {filteredPendingLogs.length > 0 && (
+              <form action={bulkApproveStudentHours} className="mt-4 rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/5 p-3">
+                {filteredPendingLogs.map((log) => (
+                  <input key={log.id} type="hidden" name="hourLogId" value={log.id} />
+                ))}
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <div className="text-sm font-semibold text-white">Bulk approve filtered entries</div>
+                    <div className="text-xs text-silver">
+                      Approves only the {filteredPendingLogs.length} pending entr{filteredPendingLogs.length === 1 ? 'y' : 'ies'} currently shown. Rejections remain individual.
+                    </div>
+                  </div>
+                  <button
+                    type="submit"
+                    className="min-h-10 rounded-lg bg-[var(--color-brand-gold)] px-4 py-2 text-sm font-semibold text-black"
+                  >
+                    Approve filtered ({filteredPendingLogs.length})
+                  </button>
+                </div>
+              </form>
+            )}
 
             <div className="mt-4 space-y-3">
               {filteredPendingLogs.map((log) => {

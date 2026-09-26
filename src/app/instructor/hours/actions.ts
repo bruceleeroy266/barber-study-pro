@@ -194,3 +194,66 @@ export async function reviewStudentHours(formData: FormData) {
 
   redirect(`/school/hours?reviewed=${decision}&student=${encodeURIComponent(updated.user_id)}`)
 }
+
+
+export async function bulkApproveStudentHours(formData: FormData) {
+  const hourLogIds = Array.from(
+    new Set(
+      formData
+        .getAll('hourLogId')
+        .map((value) => String(value).trim())
+        .filter(Boolean),
+    ),
+  ).slice(0, 500)
+
+  if (hourLogIds.length === 0) {
+    redirect('/school/hours?error=no-hours-selected')
+  }
+
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
+  const { data: actor } = await supabase
+    .from('profiles')
+    .select('id, role, school_id')
+    .eq('id', user.id)
+    .single()
+
+  if (!actor?.school_id || !isSchoolAdmin(actor.role)) {
+    redirect('/dashboard')
+  }
+
+  const reviewedAt = new Date().toISOString()
+  const { data: updated, error } = await supabase
+    .from('hour_logs')
+    .update({
+      status: 'approved',
+      reviewed_by: user.id,
+      reviewed_at: reviewedAt,
+      rejection_reason: null,
+    })
+    .eq('school_id', actor.school_id)
+    .eq('status', 'pending')
+    .in('id', hourLogIds)
+    .select('id, user_id')
+
+  if (error) {
+    console.error('[StaffHours] Failed to bulk approve hours', error)
+    redirect('/school/hours?error=bulk-review-failed')
+  }
+
+  const updatedRows = (updated ?? []) as Array<{ id: string; user_id: string }>
+  const affectedStudentIds = Array.from(
+    new Set(updatedRows.map((row: { id: string; user_id: string }) => row.user_id).filter(Boolean)),
+  )
+
+  revalidatePath('/school')
+  revalidatePath('/school/hours')
+  revalidatePath('/instructor/hours')
+  for (const studentId of affectedStudentIds) {
+    revalidatePath(`/instructor/student/${studentId}`)
+  }
+
+  redirect(`/school/hours?bulkApproved=${updatedRows.length}`)
+}
