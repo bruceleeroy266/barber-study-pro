@@ -3,7 +3,9 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
 import { hasPermission } from '@/lib/auth-helpers'
 import { resolveProgramRequirementsForStudents } from '@/lib/programs/requirements'
-import { logStudentHours } from '@/app/instructor/hours/actions'
+import { logStudentHours, reviewStudentHours } from '@/app/instructor/hours/actions'
+import HoursPdfExports from '@/components/hours/HoursPdfExports'
+import { calculateApprovedPeriodTotals, formatHourMinutes } from '@/lib/hours/reporting'
 import type { HourCategory, HourStatus } from '@/types'
 
 interface HoursRosterStudent {
@@ -11,6 +13,12 @@ interface HoursRosterStudent {
   full_name: string
   email: string
   role: string
+}
+
+interface HoursActorProfile {
+  id: string
+  full_name: string | null
+  email: string | null
 }
 
 interface StaffHourLogRow {
@@ -21,6 +29,10 @@ interface StaffHourLogRow {
   minutes: number
   status: HourStatus
   notes: string | null
+  rejection_reason: string | null
+  submitted_by: string | null
+  reviewed_by: string | null
+  reviewed_at: string | null
   created_at: string | null
 }
 
@@ -73,7 +85,7 @@ export default async function StaffHoursManager({
 
   const { data: school } = await supabase
     .from('schools')
-    .select('timezone')
+    .select('name, timezone')
     .eq('id', actor.school_id)
     .maybeSingle()
 
@@ -103,7 +115,7 @@ export default async function StaffHoursManager({
   const { data: logsData } = studentIds.length
     ? await supabase
         .from('hour_logs')
-        .select('id, user_id, date, category, minutes, status, notes, created_at')
+        .select('id, user_id, date, category, minutes, status, notes, rejection_reason, submitted_by, reviewed_by, reviewed_at, created_at')
         .eq('school_id', actor.school_id)
         .in('user_id', studentIds)
         .order('date', { ascending: false })
@@ -111,6 +123,23 @@ export default async function StaffHoursManager({
     : { data: [] }
 
   const logs = (logsData ?? []) as StaffHourLogRow[]
+  const actorIds = Array.from(new Set(
+    logs.flatMap((log) => [log.submitted_by, log.reviewed_by]).filter(Boolean),
+  )) as string[]
+  const { data: actorsData } = actorIds.length
+    ? await supabase
+        .from('profiles')
+        .select('id, full_name, email')
+        .in('id', actorIds)
+    : { data: [] }
+  const hourActors = (actorsData ?? []) as HoursActorProfile[]
+  const actorNameMap = new Map<string, string>(
+    hourActors.map((profile) => [
+      profile.id,
+      profile.full_name || profile.email || 'Staff member',
+    ]),
+  )
+
   const requirementMap = await resolveProgramRequirementsForStudents(
     supabase,
     actor.school_id,
@@ -141,6 +170,7 @@ export default async function StaffHoursManager({
       requiredHours,
       remainingMinutes,
       percentage,
+      periods: calculateApprovedPeriodTotals(studentLogs, new Date(), schoolTimeZone),
       recentLogs: studentLogs.slice(0, 5),
     }
   })
@@ -155,7 +185,28 @@ export default async function StaffHoursManager({
     error === 'invalid-hours' ? 'Enter more than 0 and no more than 24 hours.' :
     error === 'student-not-found' ? 'That student is not in your school.' :
     error === 'save-failed' ? 'Hours could not be saved. Please try again.' :
+    error === 'instructor-only' ? 'Only instructors submit daily hours. School administrators review and approve them.' :
+    error === 'invalid-review' ? 'That hour entry could not be reviewed.' :
+    error === 'review-failed' ? 'The approval decision could not be saved. Please try again.' :
+    error === 'rejection-reason-required' ? 'Enter a reason before rejecting an hour entry.' :
     null
+
+  const schoolName = typeof school?.name === 'string' && school.name ? school.name : 'ASCYN PRO School'
+  const isSchoolAdministrator = actor.role === 'school_admin'
+  const isInstructor = actor.role === 'instructor'
+  const pendingLogs = logs.filter((log) => log.status === 'pending')
+
+  const exportStudents = rows.map((student) => ({
+    id: student.id,
+    full_name: student.full_name,
+    email: student.email,
+    requiredHours: student.requiredHours,
+  }))
+  const exportLogs = logs.map((log) => ({
+    ...log,
+    submitted_by_name: log.submitted_by ? (actorNameMap.get(log.submitted_by) ?? null) : null,
+    reviewed_by_name: log.reviewed_by ? (actorNameMap.get(log.reviewed_by) ?? null) : null,
+  }))
 
   return (
     <div className="min-h-screen bg-black p-3 sm:p-6 md:p-8">
@@ -167,14 +218,16 @@ export default async function StaffHoursManager({
             </Link>
             <h1 className="mt-2 text-3xl font-bold text-white">{title}</h1>
             <p className="mt-1 text-silver">
-              Log each student&apos;s school hours day by day. Totals are calculated per student.
+              {isInstructor
+                ? 'Submit each student’s daily school hours for administrator approval.'
+                : 'Review instructor submissions, approve official hours, and prepare state-board records.'}
             </p>
           </div>
         </div>
 
         {saved && (
           <div className="rounded-xl border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 p-4 text-[var(--color-brand-gold)]">
-            Hours saved and added to that student&apos;s approved total.
+            Hours submitted for school administrator approval.
           </div>
         )}
         {errorMessage && (
@@ -183,10 +236,11 @@ export default async function StaffHoursManager({
           </div>
         )}
 
+        {isInstructor && (
         <section className="rounded-xl border border-graphite bg-charcoal p-4 sm:p-6">
-          <h2 className="text-xl font-semibold text-white">Add Daily Hours</h2>
+          <h2 className="text-xl font-semibold text-white">Submit Daily Hours</h2>
           <p className="mt-1 text-sm text-silver">
-            Staff-entered hours are approved immediately and count toward the selected student&apos;s requirement.
+            Instructor entries remain pending until a school administrator approves them.
           </p>
 
           <form action={logStudentHours} className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
@@ -271,6 +325,91 @@ export default async function StaffHoursManager({
             </div>
           </form>
         </section>
+        )}
+
+        {isSchoolAdministrator && (
+          <section className="rounded-xl border border-graphite bg-charcoal p-4 sm:p-6">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h2 className="text-xl font-semibold text-white">Hours Approval Queue</h2>
+                <p className="text-sm text-silver">
+                  Pending instructor entries do not count toward official totals until approved.
+                </p>
+              </div>
+              <div className="text-sm font-semibold text-[var(--color-brand-gold)]">
+                {pendingLogs.length} pending
+              </div>
+            </div>
+
+            <div className="mt-4 space-y-3">
+              {pendingLogs.map((log) => {
+                const student = rows.find((entry) => entry.id === log.user_id)
+                return (
+                  <article key={log.id} className="rounded-lg border border-graphite bg-black p-4">
+                    <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                      <div className="min-w-0">
+                        <div className="font-semibold text-white">{student?.full_name ?? 'Unknown student'}</div>
+                        <div className="mt-1 text-sm text-silver">
+                          {log.date} · {log.category} · {formatHourMinutes(log.minutes)}
+                        </div>
+                        <div className="mt-1 text-xs text-silver">
+                          Submitted by {log.submitted_by ? (actorNameMap.get(log.submitted_by) ?? 'Instructor') : 'Instructor'}
+                        </div>
+                        {log.notes && <div className="mt-2 text-sm text-light-gray">{log.notes}</div>}
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 sm:flex">
+                        <form action={reviewStudentHours} className="col-span-2 flex flex-col gap-2 sm:col-span-1 sm:min-w-56">
+                          <input type="hidden" name="hourLogId" value={log.id} />
+                          <input type="hidden" name="decision" value="rejected" />
+                          <input
+                            name="rejectionReason"
+                            type="text"
+                            maxLength={500}
+                            required
+                            placeholder="Reason required to reject"
+                            className="w-full rounded-lg border border-graphite bg-charcoal px-3 py-2 text-sm text-white"
+                          />
+                          <button
+                            type="submit"
+                            className="w-full rounded-lg border border-warm-bronze px-4 py-2 font-semibold text-warm-bronze"
+                          >
+                            Reject
+                          </button>
+                        </form>
+                        <form action={reviewStudentHours}>
+                          <input type="hidden" name="hourLogId" value={log.id} />
+                          <input type="hidden" name="decision" value="approved" />
+                          <button
+                            type="submit"
+                            className="w-full rounded-lg bg-[var(--color-brand-gold)] px-4 py-2 font-semibold text-black"
+                          >
+                            Approve
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                  </article>
+                )
+              })}
+
+              {pendingLogs.length === 0 && (
+                <div className="rounded-lg border border-graphite bg-black p-6 text-center text-silver">
+                  No pending hour submissions.
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
+        {isSchoolAdministrator && (
+          <HoursPdfExports
+            schoolName={schoolName}
+            timeZone={schoolTimeZone}
+            students={exportStudents}
+            logs={exportLogs}
+          />
+        )}
 
         <section>
           <div className="mb-3">
@@ -298,6 +437,23 @@ export default async function StaffHoursManager({
                     <div className="text-xs text-silver">complete</div>
                   </div>
                 </div>
+
+                {isSchoolAdministrator && (
+                  <div className="mt-5 grid grid-cols-3 gap-3">
+                    <div className="rounded-lg border border-graphite bg-black p-3">
+                      <div className="text-xs text-silver">This Week</div>
+                      <div className="mt-1 text-lg font-bold text-white">{formatHourMinutes(student.periods.weekMinutes)}</div>
+                    </div>
+                    <div className="rounded-lg border border-graphite bg-black p-3">
+                      <div className="text-xs text-silver">This Month</div>
+                      <div className="mt-1 text-lg font-bold text-white">{formatHourMinutes(student.periods.monthMinutes)}</div>
+                    </div>
+                    <div className="rounded-lg border border-graphite bg-black p-3">
+                      <div className="text-xs text-silver">This Year</div>
+                      <div className="mt-1 text-lg font-bold text-white">{formatHourMinutes(student.periods.yearMinutes)}</div>
+                    </div>
+                  </div>
+                )}
 
                 <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
                   <div className="rounded-lg bg-black p-3">
@@ -336,6 +492,9 @@ export default async function StaffHoursManager({
                           <div>
                             <div className="text-sm text-white">{log.date} · {log.category}</div>
                             {log.notes && <div className="text-xs text-silver">{log.notes}</div>}
+                            {log.rejection_reason && (
+                              <div className="text-xs text-warm-bronze">Reason: {log.rejection_reason}</div>
+                            )}
                           </div>
                           <div className="text-sm font-semibold text-[var(--color-brand-gold)]">
                             {formatHours(log.minutes)} · {log.status}
