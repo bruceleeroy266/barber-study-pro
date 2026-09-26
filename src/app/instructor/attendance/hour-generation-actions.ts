@@ -7,6 +7,7 @@ import type { HourCategory } from '@/types'
 
 export interface AttendanceHourGenerationResult {
   created: number
+  resubmitted: number
   updated: number
   skipped: number
   attendanceCount: number
@@ -26,6 +27,7 @@ interface ExistingGeneratedHourRow {
   status: 'pending' | 'approved' | 'rejected'
   minutes: number
   category: HourCategory
+  created_at: string | null
 }
 
 interface ScheduleOverrideTypeRow {
@@ -73,7 +75,7 @@ export async function generatePendingHoursFromAttendance(
 
   const attendanceRows = (attendanceData ?? []) as AttendanceHourRow[]
   if (attendanceRows.length === 0) {
-    return { created: 0, updated: 0, skipped: 0, attendanceCount: 0 }
+    return { created: 0, resubmitted: 0, updated: 0, skipped: 0, attendanceCount: 0 }
   }
 
   const attendanceIds = attendanceRows.map((row: AttendanceHourRow) => row.id)
@@ -85,7 +87,7 @@ export async function generatePendingHoursFromAttendance(
     await Promise.all([
       supabase
         .from('hour_logs')
-        .select('id, source_attendance_id, status, minutes, category')
+        .select('id, source_attendance_id, status, minutes, category, created_at')
         .eq('school_id', actor.school_id)
         .in('source_attendance_id', attendanceIds),
       supabase
@@ -107,14 +109,29 @@ export async function generatePendingHoursFromAttendance(
   }
 
   const existingRows = (existingData ?? []) as ExistingGeneratedHourRow[]
-  const existingByAttendanceId = new Map(
-    existingRows
-      .filter(
-        (row: ExistingGeneratedHourRow) =>
-          typeof row.source_attendance_id === 'string' && row.source_attendance_id.length > 0,
-      )
-      .map((row: ExistingGeneratedHourRow) => [row.source_attendance_id as string, row]),
-  )
+  const existingByAttendanceId = new Map<
+    string,
+    { active: ExistingGeneratedHourRow | null; latestRejected: ExistingGeneratedHourRow | null }
+  >()
+
+  for (const row of existingRows) {
+    if (!row.source_attendance_id) continue
+    const current = existingByAttendanceId.get(row.source_attendance_id) ?? {
+      active: null,
+      latestRejected: null,
+    }
+
+    if (row.status === 'pending' || row.status === 'approved') {
+      current.active = row
+    } else if (
+      !current.latestRejected ||
+      (row.created_at ?? '') > (current.latestRejected.created_at ?? '')
+    ) {
+      current.latestRejected = row
+    }
+
+    existingByAttendanceId.set(row.source_attendance_id, current)
+  }
 
   const makeupStudentIds = new Set(
     ((overridesData ?? []) as ScheduleOverrideTypeRow[])
@@ -123,12 +140,14 @@ export async function generatePendingHoursFromAttendance(
   )
 
   let created = 0
+  let resubmitted = 0
   let updated = 0
   let skipped = 0
 
   for (const attendance of attendanceRows) {
-    const existing = existingByAttendanceId.get(attendance.id)
-
+    const existingState = existingByAttendanceId.get(attendance.id)
+    const existing = existingState?.active ?? null
+    const latestRejected = existingState?.latestRejected ?? null
 
     const category: HourCategory = makeupStudentIds.has(attendance.user_id)
       ? 'Makeup Hours'
@@ -182,6 +201,7 @@ export async function generatePendingHoursFromAttendance(
       continue
     }
 
+    const isResubmission = Boolean(latestRejected)
     const { error } = await supabase
       .from('hour_logs')
       .insert({
@@ -191,17 +211,21 @@ export async function generatePendingHoursFromAttendance(
         category,
         minutes: attendance.minutes_present,
         status: 'pending',
-        notes: 'Generated from submitted Daily Attendance & Hours.',
+        notes: isResubmission
+          ? 'Corrected attendance resubmitted after hour rejection.'
+          : 'Generated from submitted Daily Attendance & Hours.',
         submitted_by: user.id,
         reviewed_by: null,
         reviewed_at: null,
         rejection_reason: null,
         source_type: 'attendance',
         source_attendance_id: attendance.id,
+        resubmission_of_hour_log_id: latestRejected?.id ?? null,
       })
 
     if (!error) {
-      created += 1
+      if (isResubmission) resubmitted += 1
+      else created += 1
       continue
     }
 
@@ -228,6 +252,7 @@ export async function generatePendingHoursFromAttendance(
 
   return {
     created,
+    resubmitted,
     updated,
     skipped,
     attendanceCount: attendanceRows.length,
