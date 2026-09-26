@@ -238,7 +238,7 @@ export async function POST(
         answeredAt: new Date().toISOString(),
       })
 
-      await service.recordCycleEvent(
+      await dbClient.recordCycleEvent(
         cycleId,
         'chapter8_remediation_reassessment_evidence',
         evidenceEvent,
