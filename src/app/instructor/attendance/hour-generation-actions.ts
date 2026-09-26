@@ -7,8 +7,30 @@ import type { HourCategory } from '@/types'
 
 export interface AttendanceHourGenerationResult {
   created: number
+  updated: number
   skipped: number
   attendanceCount: number
+}
+
+interface AttendanceHourRow {
+  id: string
+  user_id: string
+  date: string
+  status: string
+  minutes_present: number
+}
+
+interface ExistingGeneratedHourRow {
+  id: string
+  source_attendance_id: string | null
+  status: 'pending' | 'approved' | 'rejected'
+  minutes: number
+  category: HourCategory
+}
+
+interface ScheduleOverrideTypeRow {
+  student_id: string
+  override_type: string
 }
 
 export async function generatePendingHoursFromAttendance(
@@ -49,19 +71,21 @@ export async function generatePendingHoursFromAttendance(
     throw new Error('Attendance records could not be loaded.')
   }
 
-  const attendanceRows = attendanceData ?? []
+  const attendanceRows = (attendanceData ?? []) as AttendanceHourRow[]
   if (attendanceRows.length === 0) {
-    return { created: 0, skipped: 0, attendanceCount: 0 }
+    return { created: 0, updated: 0, skipped: 0, attendanceCount: 0 }
   }
 
-  const attendanceIds = attendanceRows.map((row) => row.id)
-  const studentIds = Array.from(new Set(attendanceRows.map((row) => row.user_id)))
+  const attendanceIds = attendanceRows.map((row: AttendanceHourRow) => row.id)
+  const studentIds = Array.from(
+    new Set(attendanceRows.map((row: AttendanceHourRow) => row.user_id)),
+  )
 
   const [{ data: existingData, error: existingError }, { data: overridesData, error: overridesError }] =
     await Promise.all([
       supabase
         .from('hour_logs')
-        .select('source_attendance_id')
+        .select('id, source_attendance_id, status, minutes, category')
         .eq('school_id', actor.school_id)
         .in('source_attendance_id', attendanceIds),
       supabase
@@ -82,30 +106,74 @@ export async function generatePendingHoursFromAttendance(
     throw new Error('Schedule overrides could not be checked.')
   }
 
-  const existingAttendanceIds = new Set(
-    (existingData ?? [])
-      .map((row) => row.source_attendance_id)
-      .filter((value): value is string => typeof value === 'string' && value.length > 0),
+  const existingRows = (existingData ?? []) as ExistingGeneratedHourRow[]
+  const existingByAttendanceId = new Map(
+    existingRows
+      .filter(
+        (row: ExistingGeneratedHourRow) =>
+          typeof row.source_attendance_id === 'string' && row.source_attendance_id.length > 0,
+      )
+      .map((row: ExistingGeneratedHourRow) => [row.source_attendance_id as string, row]),
   )
 
   const makeupStudentIds = new Set(
-    (overridesData ?? [])
-      .filter((row) => row.override_type === 'makeup')
-      .map((row) => row.student_id),
+    ((overridesData ?? []) as ScheduleOverrideTypeRow[])
+      .filter((row: ScheduleOverrideTypeRow) => row.override_type === 'makeup')
+      .map((row: ScheduleOverrideTypeRow) => row.student_id),
   )
 
   let created = 0
+  let updated = 0
   let skipped = 0
 
   for (const attendance of attendanceRows) {
-    if (existingAttendanceIds.has(attendance.id)) {
-      skipped += 1
-      continue
-    }
+    const existing = existingByAttendanceId.get(attendance.id)
+
 
     const category: HourCategory = makeupStudentIds.has(attendance.user_id)
       ? 'Makeup Hours'
       : 'Other'
+
+    if (existing) {
+      if (existing.status !== 'pending') {
+        skipped += 1
+        continue
+      }
+
+      if (existing.minutes === attendance.minutes_present && existing.category === category) {
+        skipped += 1
+        continue
+      }
+
+      const { error: updateError } = await supabase
+        .from('hour_logs')
+        .update({
+          minutes: attendance.minutes_present,
+          category,
+          notes: 'Updated from resubmitted Daily Attendance & Hours.',
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', existing.id)
+        .eq('school_id', actor.school_id)
+        .eq('submitted_by', user.id)
+        .eq('status', 'pending')
+        .is('reviewed_by', null)
+        .is('reviewed_at', null)
+        .eq('source_type', 'attendance')
+        .select('id')
+        .maybeSingle()
+
+      if (updateError) {
+        console.error('[AttendanceHours] Failed to refresh pending generated hours', {
+          attendanceId: attendance.id,
+          error: updateError,
+        })
+        throw new Error('Pending student hours could not be refreshed.')
+      }
+
+      updated += 1
+      continue
+    }
 
     const { error } = await supabase
       .from('hour_logs')
@@ -153,6 +221,7 @@ export async function generatePendingHoursFromAttendance(
 
   return {
     created,
+    updated,
     skipped,
     attendanceCount: attendanceRows.length,
   }
