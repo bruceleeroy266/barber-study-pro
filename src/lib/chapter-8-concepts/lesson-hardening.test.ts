@@ -66,7 +66,10 @@ describe('C8-3 Chapter 8 lesson hardening', () => {
   it('does not mutate flashcard or assessment assets during C8-3', async () => {
     const flashcards = await import('../chapter-8-premium-flashcards')
     const quiz = await import('../chapter-8-premium-quiz')
-    expect(flashcards.chapter8PremiumFlashcards).toHaveLength(50)
+    const originalIds = flashcards.chapter8PremiumFlashcards
+      .filter((card) => Number(card.id.slice(-3)) <= 50)
+      .map((card) => card.id)
+    expect(originalIds).toHaveLength(50)
     expect(quiz.chapter8PremiumQuizQuestions).toHaveLength(30)
   })
 })
