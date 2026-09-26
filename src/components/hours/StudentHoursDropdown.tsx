@@ -46,7 +46,7 @@ export default function StudentHoursDropdown({ students, selectedStudentId }: Pr
       >
         {students.map((student) => (
           <option key={student.id} value={student.id} className="bg-black text-white">
-            {student.full_name} — {student.email}
+            {student.full_name}
           </option>
         ))}
       </select>
