@@ -15,10 +15,13 @@ export interface HoursReportLog {
   minutes: number
   status: HourStatus
   notes: string | null
+  rejection_reason?: string | null
   submitted_by: string | null
   reviewed_by: string | null
   reviewed_at: string | null
   created_at: string | null
+  submitted_by_name?: string | null
+  reviewed_by_name?: string | null
 }
 
 export interface HoursPeriodTotals {
