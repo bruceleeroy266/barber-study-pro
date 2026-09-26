@@ -25,6 +25,10 @@ export function exportHoursStateBoardPdf(options: HoursPdfOptions): void {
   const studentIds = new Set(students.map((student) => student.id))
   const logs = options.logs.filter((log) => studentIds.has(log.user_id))
   const approved = logs.filter((log) => log.status === 'approved')
+  const reportDates = approved.map((log) => log.date).sort()
+  const reportingPeriod = reportDates.length
+    ? `${reportDates[0]} through ${reportDates[reportDates.length - 1]}`
+    : 'No approved entries in report'
 
   const doc = new jsPDF({ orientation: 'landscape' })
   const pageWidth = doc.internal.pageSize.getWidth()
@@ -38,6 +42,7 @@ export function exportHoursStateBoardPdf(options: HoursPdfOptions): void {
   doc.setTextColor(90, 90, 90)
   doc.text(schoolName, 14, 26)
   doc.text('ASCYN PRO — State Board Hours Record', 14, 33)
+  doc.text(`Reporting period: ${reportingPeriod}`, 14, 39)
 
   const generatedLabel = `Generated ${generated.toLocaleDateString('en-US')}`
   doc.text(generatedLabel, pageWidth - doc.getTextWidth(generatedLabel) - 14, 26)
@@ -55,6 +60,7 @@ export function exportHoursStateBoardPdf(options: HoursPdfOptions): void {
 
     return [
       student.full_name,
+      student.id,
       student.email,
       formatHourMinutes(periods.weekMinutes),
       formatHourMinutes(periods.monthMinutes),
@@ -67,9 +73,10 @@ export function exportHoursStateBoardPdf(options: HoursPdfOptions): void {
   })
 
   autoTable(doc, {
-    startY: 40,
+    startY: 46,
     head: [[
       'Student',
+      'Student ID',
       'Email',
       'Week',
       'Month',
@@ -83,7 +90,7 @@ export function exportHoursStateBoardPdf(options: HoursPdfOptions): void {
     theme: 'grid',
     headStyles: { fillColor: [212, 175, 55], textColor: [31, 41, 55], fontStyle: 'bold' },
     alternateRowStyles: { fillColor: [249, 250, 251] },
-    styles: { fontSize: 8, cellPadding: 2.5, overflow: 'linebreak' },
+    styles: { fontSize: 7, cellPadding: 2.2, overflow: 'linebreak' },
   })
 
   const detailBody = approved
@@ -96,6 +103,8 @@ export function exportHoursStateBoardPdf(options: HoursPdfOptions): void {
         log.category,
         formatHourMinutes(log.minutes),
         log.notes ?? '—',
+        log.submitted_by_name ?? log.submitted_by ?? '—',
+        log.reviewed_by_name ?? log.reviewed_by ?? '—',
         log.reviewed_at ? new Date(log.reviewed_at).toLocaleString('en-US') : '—',
       ]
     })
@@ -103,7 +112,7 @@ export function exportHoursStateBoardPdf(options: HoursPdfOptions): void {
   const lastTable = (doc as jsPDF & { lastAutoTable?: { finalY: number } }).lastAutoTable
   autoTable(doc, {
     startY: (lastTable?.finalY ?? 40) + 10,
-    head: [['Date', 'Student', 'Category', 'Approved Hours', 'Notes', 'Approved At']],
+    head: [['Date', 'Student', 'Category', 'Approved Hours', 'Notes', 'Submitted By', 'Approved By', 'Approved At']],
     body: detailBody,
     theme: 'grid',
     headStyles: { fillColor: [31, 41, 55], textColor: [255, 255, 255], fontStyle: 'bold' },
@@ -122,6 +131,9 @@ export function exportHoursStateBoardPdf(options: HoursPdfOptions): void {
         formatHourMinutes(log.minutes),
         log.status,
         log.notes ?? '—',
+        log.submitted_by_name ?? log.submitted_by ?? '—',
+        log.reviewed_by_name ?? log.reviewed_by ?? '—',
+        log.rejection_reason ?? '—',
       ]
     })
 
@@ -129,7 +141,7 @@ export function exportHoursStateBoardPdf(options: HoursPdfOptions): void {
     const latestTable = (doc as jsPDF & { lastAutoTable?: { finalY: number } }).lastAutoTable
     autoTable(doc, {
       startY: (latestTable?.finalY ?? 40) + 10,
-      head: [['Date', 'Student', 'Category', 'Hours', 'Status', 'Notes']],
+      head: [['Date', 'Student', 'Category', 'Hours', 'Status', 'Notes', 'Submitted By', 'Reviewed By', 'Rejection Reason']],
       body: auditBody,
       theme: 'grid',
       headStyles: { fillColor: [90, 90, 90], textColor: [255, 255, 255], fontStyle: 'bold' },
