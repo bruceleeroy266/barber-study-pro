@@ -32,7 +32,7 @@ describe('C8-5 Chapter 8 assessment audit baseline', () => {
   })
 
   it('forces replacement of the known unsafe legacy items', () => {
-    const byId = new Map(chapter8AssessmentAudit.map((entry) => [entry.questionId, entry.action]))
+    const byId = new Map<string, string>(chapter8AssessmentAudit.map((entry) => [entry.questionId, entry.action]))
     for (const id of [
       'qq-8-006','qq-8-007','qq-8-008','qq-8-010','qq-8-013','qq-8-019',
       'qq-8-020','qq-8-021','qq-8-022','qq-8-024','qq-8-025','qq-8-028','qq-8-030',
