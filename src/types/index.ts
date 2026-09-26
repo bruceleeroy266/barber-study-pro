@@ -94,6 +94,9 @@ export interface QuizAttempt {
   percentage: number
   answers_json: Record<string, string>
   completed_at: string
+  is_reassessment?: boolean | null
+  remediation_cycle_id?: string | null
+  target_concept_id?: string | null
 }
 
 export interface StudentProgress {
