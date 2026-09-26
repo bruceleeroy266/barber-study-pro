@@ -4,8 +4,7 @@
  * RISE Program's production configuration: active Barbering program with
  * programs.required_hours = 1200. This suite proves that student-facing,
  * instructor-facing, and school-owner-facing calculations all agree on that
- * configured value — and that the legacy default (1500) would disagree,
- * proving the configured value is what actually flows.
+ * configured value — and that the shared 1200 fallback now agrees with the configured value.
  */
 
 import { describe, it, expect } from 'vitest'
@@ -26,7 +25,7 @@ import { generateNotificationsFromHours } from '@/lib/messaging/notification-eng
 import { Profile, HourLog, HourStatus } from '@/types'
 
 const RISE_REQUIRED_HOURS = 1200
-const COMPLETED_HOURS = 900 // 75% of 1200 (60% of the legacy 1500 default)
+const COMPLETED_HOURS = 900 // 75% of 1200
 
 function makeStudent(id: string): Profile {
   return {
@@ -147,7 +146,7 @@ describe('RISE 1200-hour program: student / instructor / school-owner agreement'
     expect(notifications.filter((n) => n.title === 'Missing Hours')).toHaveLength(0)
   })
 
-  it('all surfaces report the same hours completion (75%) — and the legacy default would disagree', () => {
+  it('all surfaces and the shared fallback report the same 1200-hour basis', () => {
     const studentView = buildStudentCompliance({ ...complianceInputs, thresholds: riseThresholds })
     const schoolHealth = buildSchoolHealthScore(
       makeInputs({ students: [makeStudent('s1')], hourLogs: hourLogs900, requiredHours: RISE_REQUIRED_HOURS })
@@ -155,11 +154,9 @@ describe('RISE 1200-hour program: student / instructor / school-owner agreement'
     expect(studentView.complianceScore.componentScores.hours).toBe(75)
     expect(schoolHealth.componentScores.hoursCompletion).toBe(75)
 
-    // Contrast: under the legacy 1500 default the same student reads 60%,
-    // and a 600-hour student (50% of 1200) is on pace but flagged under 1500.
-    const legacyView = buildStudentCompliance(complianceInputs)
-    expect(legacyView.complianceScore.componentScores.hours).toBe(60)
-    expect(legacyView.graduationReadiness.requiredHours).toBe(1500)
+    const fallbackView = buildStudentCompliance(complianceInputs)
+    expect(fallbackView.complianceScore.componentScores.hours).toBe(75)
+    expect(fallbackView.graduationReadiness.requiredHours).toBe(1200)
 
     const hourLogs600 = [makeHourLog('s1', 600 * 60, 'approved')]
     expect(
@@ -167,6 +164,6 @@ describe('RISE 1200-hour program: student / instructor / school-owner agreement'
     ).toHaveLength(0)
     expect(
       generateNotificationsFromHours('s1', hourLogs600).filter((n) => n.title === 'Missing Hours')
-    ).toHaveLength(1)
+    ).toHaveLength(0)
   })
 })
