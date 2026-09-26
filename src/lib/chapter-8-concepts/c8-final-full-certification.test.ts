@@ -54,6 +54,7 @@ function quizAttempt(
     score: 0,
     total_questions: Object.keys(answers).length,
     correct_answers: 0,
+    percentage: 0,
     answers_json: answers,
     started_at: completedAt,
     completed_at: completedAt,
