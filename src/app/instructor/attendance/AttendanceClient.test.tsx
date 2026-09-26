@@ -91,6 +91,20 @@ function renderAttendance() {
       schoolId="school-1"
       schoolName="Test School"
       defaultDate="2026-09-22"
+      dailyScheduleExpectations={[
+        {
+          studentId: 'student-1',
+          date: '2026-09-22',
+          isScheduled: true,
+          source: 'recurring',
+          label: 'Full-Time',
+          startTime: '08:30',
+          endTime: '16:00',
+          breakMinutes: 30,
+          plannedMinutes: 420,
+          reason: null,
+        },
+      ]}
     />
   )
 }
@@ -112,10 +126,10 @@ describe('AttendanceClient today controls', () => {
     await waitFor(() => expect(updateStatus).toHaveBeenCalledWith('attendance-1', 'Present'))
   })
 
-  it('allows Mark All Present when today starts with zero records', async () => {
+  it('allows Mark Scheduled Students Present when today starts with zero records', async () => {
     renderAttendance()
 
-    const button = screen.getByRole('button', { name: 'Mark All Present' })
+    const button = screen.getByRole('button', { name: 'Mark Scheduled Students Present' })
     expect(button).toBeEnabled()
     fireEvent.click(button)
 
