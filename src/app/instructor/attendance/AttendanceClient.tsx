@@ -12,6 +12,7 @@ import CorrectionModal from '@/components/attendance/CorrectionModal'
 import AuditLog from '@/components/attendance/AuditLog'
 import ExportButton from '@/components/attendance/ExportButton'
 import { RefreshCw, ClipboardCheck, ChevronDown } from 'lucide-react'
+import type { DailyScheduleExpectation } from '@/lib/schedules/daily-expectations'
 
 interface AttendanceClientProps {
   initialRecords: AttendanceRecord[]
@@ -20,6 +21,7 @@ interface AttendanceClientProps {
   schoolId: string | null
   schoolName: string
   defaultDate: string
+  dailyScheduleExpectations: DailyScheduleExpectation[]
 }
 
 export default function AttendanceClient({
@@ -29,6 +31,7 @@ export default function AttendanceClient({
   schoolId,
   schoolName,
   defaultDate,
+  dailyScheduleExpectations,
 }: AttendanceClientProps) {
   const {
     filters,
@@ -99,6 +102,10 @@ export default function AttendanceClient({
   }, [records, filters, students])
 
   const studentMap = useMemo(() => new Map(students.map((s) => [s.id, s])), [students])
+  const expectationMap = useMemo(
+    () => new Map(dailyScheduleExpectations.map((expectation) => [expectation.studentId, expectation])),
+    [dailyScheduleExpectations],
+  )
 
   const handleRefresh = async () => {
     await refresh(filters)
@@ -133,7 +140,14 @@ export default function AttendanceClient({
     const created = await ensureTodayRecords()
     const recordsByStudent = new Map(todayRecords.map((record) => [record.userId, record]))
     for (const record of created) recordsByStudent.set(record.userId, record)
-    const ids = students.map((student) => recordsByStudent.get(student.id)?.id).filter((id): id is string => Boolean(id))
+
+    const scheduledStudents = students.filter(
+      (student) => expectationMap.get(student.id)?.isScheduled,
+    )
+    const ids = scheduledStudents
+      .map((student) => recordsByStudent.get(student.id)?.id)
+      .filter((id): id is string => Boolean(id))
+
     if (ids.length > 0) await bulkUpdateStatus(ids, 'Present')
   }
 
@@ -146,9 +160,9 @@ export default function AttendanceClient({
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-1">Attendance Management</h1>
+            <h1 className="text-3xl font-bold text-white mb-1">Daily Attendance &amp; Hours</h1>
             <p className="text-silver">
-              {schoolName} — Track, correct, and export student attendance
+              {schoolName} — Review each student&apos;s expected schedule, attendance, and planned hours in one place
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
@@ -171,8 +185,10 @@ export default function AttendanceClient({
         <section className="rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-surface-primary)] p-4 md:p-6">
           <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-white">Take Today&apos;s Attendance</h2>
-              <p className="text-silver mt-1">Tap a student to open attendance options. Changes save immediately.</p>
+              <h2 className="text-2xl font-bold text-white">Today&apos;s Attendance &amp; Hours</h2>
+              <p className="text-silver mt-1">
+                Each student uses their own schedule. Planned hours are shown here; official hour generation starts in Segment C.
+              </p>
             </div>
             <button
               type="button"
@@ -180,13 +196,14 @@ export default function AttendanceClient({
               disabled={loading || students.length === 0}
               className="min-h-11 rounded-lg border border-gold px-4 py-2 font-semibold text-gold hover:bg-gold/10 disabled:opacity-50"
             >
-              Mark All Present
+              Mark Scheduled Students Present
             </button>
           </div>
           <div className="divide-y divide-[var(--color-border-secondary)] overflow-hidden rounded-xl border border-[var(--color-border-secondary)]">
             {students.map((student) => {
               const record = todayRecordByStudent.get(student.id)
               const current = record?.status
+              const expectation = expectationMap.get(student.id)
               const expanded = expandedStudentId === student.id
               return (
                 <div key={student.id} className="bg-black">
@@ -201,11 +218,27 @@ export default function AttendanceClient({
                       <div className={`text-sm ${current ? 'text-gold' : 'text-silver'}`}>
                         {current ? `Attendance: ${current} ✓` : 'Attendance: Not marked'}
                       </div>
+                      <div className="mt-1 text-xs text-silver">
+                        {expectation?.isScheduled
+                          ? `${expectation.label} · ${expectation.startTime?.slice(0, 5)}–${expectation.endTime?.slice(0, 5)} · ${Math.floor(expectation.plannedMinutes / 60)}h ${expectation.plannedMinutes % 60}m planned`
+                          : expectation?.label || 'No schedule assigned'}
+                      </div>
                     </div>
                     <ChevronDown className={`h-5 w-5 shrink-0 text-silver transition-transform ${expanded ? 'rotate-180' : ''}`} />
                   </button>
                   {expanded && (
                     <div className="border-t border-[var(--color-border-secondary)] px-4 pb-4 pt-3">
+                      <div className="mb-3 rounded-lg border border-graphite bg-charcoal p-3">
+                        <div className="text-sm font-semibold text-white">Expected today</div>
+                        <div className="mt-1 text-sm text-silver">
+                          {expectation?.isScheduled
+                            ? `${expectation.startTime?.slice(0, 5)}–${expectation.endTime?.slice(0, 5)} · ${expectation.breakMinutes} min break · ${Math.floor(expectation.plannedMinutes / 60)}h ${expectation.plannedMinutes % 60}m planned`
+                            : expectation?.label || 'No schedule assigned'}
+                        </div>
+                        {expectation?.reason && (
+                          <div className="mt-1 text-xs text-silver-gray">{expectation.reason}</div>
+                        )}
+                      </div>
                       <div className="mb-2 text-sm font-medium text-silver">Attendance</div>
                       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                         {(['Present', 'Tardy', 'Absent', 'Excused'] as AttendanceStatus[]).map((status) => (
