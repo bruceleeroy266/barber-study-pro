@@ -663,6 +663,7 @@ export default async function StudentHoursPage() {
             <div>
               <h2 className="text-lg font-semibold text-white">Hour History</h2>
               <p className="mt-1 text-sm text-silver">Approved, pending, rejected, and corrected hour entries.</p>
+              <p className="sr-only">Your most recent hour entries. Approved entries count toward your official total; pending and rejected entries do not.</p>
             </div>
             <span className="text-xs font-semibold text-[var(--color-brand-gold)]">Show / hide</span>
           </div>
