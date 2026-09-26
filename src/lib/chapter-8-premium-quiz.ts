@@ -331,7 +331,7 @@ export const chapter8PremiumQuizQuestions: QuizQuestion[] = [
     answer_d: 'Only UVC can affect skin or eyes',
     correct_answer: 'a',
     explanation: `The source distinguishes the UV bands by wavelength and associated effects/applications. UV exposure can injure skin and eyes. ${strategy}`,
-    difficulty: 'hard',
+    difficulty: 'medium',
     order_index: 25,
   },
   {
