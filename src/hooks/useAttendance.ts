@@ -49,6 +49,13 @@ export interface UseAttendanceReturn {
   bulkUpdateStatus: (ids: string[], status: AttendanceStatus) => Promise<void>
   addNote: (id: string, note: string) => Promise<void>
   updateActualTimes: (id: string, clockedInAt: string, clockedOutAt: string, minutesPresent: number, status: AttendanceStatus) => Promise<void>
+  submitDailyAttendance: (entries: Array<{
+    studentId: string
+    status: AttendanceStatus
+    clockedInAt: string | null
+    clockedOutAt: string | null
+    minutesPresent: number
+  }>) => Promise<boolean>
   submitCorrection: (recordId: string, newStatus: AttendanceStatus, reason: string) => Promise<void>
   getCorrections: (recordId: string) => Promise<AttendanceCorrection[]>
   getAuditHistory: (recordId: string) => Promise<AttendanceAuditEntry[]>
@@ -226,6 +233,108 @@ export function useAttendance({
     [records, currentUser, schoolId]
   )
 
+  const submitDailyAttendance = useCallback(
+    async (
+      entries: Array<{
+        studentId: string
+        status: AttendanceStatus
+        clockedInAt: string | null
+        clockedOutAt: string | null
+        minutesPresent: number
+      }>,
+    ) => {
+      if (entries.length === 0) return false
+
+      setLoading(true)
+      setError(null)
+
+      try {
+        const changed: AttendanceRecord[] = []
+
+        for (const entry of entries) {
+          const original = getRecordForStudentAndDate(
+            entry.studentId,
+            defaultDate || new Date().toISOString().split('T')[0],
+          )
+
+          if (original) {
+            const updated = await updateAttendanceRecord(original.id, {
+              status: entry.status,
+              clockedInAt: entry.clockedInAt,
+              clockedOutAt: entry.clockedOutAt,
+              minutesPresent: entry.minutesPresent,
+              verifiedBy: currentUser.id,
+            })
+
+            await logAuditEntry({
+              schoolId,
+              recordId: original.id,
+              action: 'update',
+              changedFields: {
+                status: { old: original.status, new: updated.status },
+                clockedInAt: { old: original.clockedInAt, new: updated.clockedInAt },
+                clockedOutAt: { old: original.clockedOutAt, new: updated.clockedOutAt },
+                minutesPresent: { old: original.minutesPresent, new: updated.minutesPresent },
+              },
+              userId: currentUser.id,
+              userName: currentUser.full_name,
+              reason: 'Daily attendance submitted',
+            })
+
+            changed.push(updated)
+            continue
+          }
+
+          const created = await createAttendanceRecord({
+            userId: entry.studentId,
+            schoolId: schoolId ?? null,
+            date: defaultDate || new Date().toISOString().split('T')[0],
+            status: entry.status,
+            clockedInAt: entry.clockedInAt,
+            clockedOutAt: entry.clockedOutAt,
+            minutesPresent: entry.minutesPresent,
+            note: null,
+            verifiedBy: currentUser.id,
+          })
+
+          await logAuditEntry({
+            schoolId,
+            recordId: created.id,
+            action: 'create',
+            changedFields: {
+              status: { old: null, new: created.status },
+              clockedInAt: { old: null, new: created.clockedInAt },
+              clockedOutAt: { old: null, new: created.clockedOutAt },
+              minutesPresent: { old: null, new: created.minutesPresent },
+            },
+            userId: currentUser.id,
+            userName: currentUser.full_name,
+            reason: 'Daily attendance submitted',
+          })
+
+          changed.push(created)
+        }
+
+        setRecords((prev) => {
+          const next = [...prev]
+          for (const record of changed) {
+            const index = next.findIndex((item) => item.id === record.id)
+            if (index >= 0) next[index] = record
+            else next.push(record)
+          }
+          return next
+        })
+        return true
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'Failed to submit daily attendance')
+        return false
+      } finally {
+        setLoading(false)
+      }
+    },
+    [currentUser, defaultDate, getRecordForStudentAndDate, schoolId],
+  )
+
   const addNote = useCallback(
     async (id: string, note: string) => {
       const original = records.find((r) => r.id === id)
@@ -383,6 +492,7 @@ export function useAttendance({
     bulkUpdateStatus,
     addNote,
     updateActualTimes,
+    submitDailyAttendance,
     submitCorrection: submitCorrectionLocal,
     getCorrections,
     getAuditHistory: getAuditHistoryLocal,
