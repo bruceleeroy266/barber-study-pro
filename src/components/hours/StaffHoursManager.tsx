@@ -54,6 +54,22 @@ function formatHours(minutes: number): string {
   return mins === 0 ? `${hours}h` : `${hours}h ${mins}m`
 }
 
+function HourSourceBadge({ sourceType }: { sourceType: StaffHourLogRow['source_type'] }) {
+  const attendanceGenerated = sourceType === 'attendance'
+  return (
+    <span
+      className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold ${
+        attendanceGenerated
+          ? 'border-[var(--color-brand-gold)]/40 bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)]'
+          : 'border-silver/30 bg-white/5 text-light-gray'
+      }`}
+      aria-label={attendanceGenerated ? 'Attendance-generated hour entry' : 'Manual hour entry'}
+    >
+      {attendanceGenerated ? 'Attendance-generated' : 'Manual entry'}
+    </span>
+  )
+}
+
 interface Props {
   returnTo: '/instructor/hours' | '/school/hours'
   backHref: '/instructor' | '/school'
@@ -353,6 +369,10 @@ export default async function StaffHoursManager({
                 <p className="text-sm text-silver">
                   Pending instructor entries do not count toward official totals until approved.
                 </p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <HourSourceBadge sourceType="attendance" />
+                  <HourSourceBadge sourceType="manual" />
+                </div>
               </div>
               <div className="text-sm font-semibold text-[var(--color-brand-gold)]">
                 {pendingLogs.length} pending
@@ -370,9 +390,11 @@ export default async function StaffHoursManager({
                         <div className="mt-1 text-sm text-silver">
                           {log.date} · {log.category} · {formatHourMinutes(log.minutes)}
                         </div>
-                        <div className="mt-1 text-xs text-silver">
+                        <div className="mt-2">
+                          <HourSourceBadge sourceType={log.source_type} />
+                        </div>
+                        <div className="mt-2 text-xs text-silver">
                           Submitted by {log.submitted_by ? (actorNameMap.get(log.submitted_by) ?? 'Instructor') : 'Instructor'}
-                          {log.source_type === 'attendance' ? ' · Attendance-generated' : ' · Manual entry'}
                         </div>
                         {log.notes && <div className="mt-2 text-sm text-light-gray">{log.notes}</div>}
                       </div>
@@ -514,7 +536,13 @@ export default async function StaffHoursManager({
                   </div>
 
                   <div className="mt-5">
-                    <div className="mb-2 text-sm font-medium text-white">Recent hour entries</div>
+                    <div className="mb-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="text-sm font-medium text-white">Recent hour entries</div>
+                      <div className="flex flex-wrap gap-2">
+                        <HourSourceBadge sourceType="attendance" />
+                        <HourSourceBadge sourceType="manual" />
+                      </div>
+                    </div>
                     {selectedStudent.recentLogs.length === 0 ? (
                       <p className="text-sm text-silver">No hours logged yet.</p>
                     ) : (
@@ -524,9 +552,11 @@ export default async function StaffHoursManager({
                             <div>
                               <div className="text-sm text-white">
                                 {log.date} · {log.category}
-                                {log.source_type === 'attendance' ? ' · Attendance-generated' : ''}
                               </div>
-                              {log.notes && <div className="text-xs text-silver">{log.notes}</div>}
+                              <div className="mt-2">
+                                <HourSourceBadge sourceType={log.source_type} />
+                              </div>
+                              {log.notes && <div className="mt-2 text-xs text-silver">{log.notes}</div>}
                               {log.rejection_reason && (
                                 <div className="text-xs text-warm-bronze">Reason: {log.rejection_reason}</div>
                               )}
