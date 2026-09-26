@@ -15,6 +15,14 @@ export interface Chapter8QuizQuestionConceptMapping {
   conceptFamilyId: Chapter8ConceptFamilyId
 }
 
+export interface Chapter8MicroCheckPlacement {
+  id: `mc-8-${string}`
+  afterSectionId: string
+  conceptFamilyId: Chapter8ConceptFamilyId
+  plannedQuestionCount: number
+  purpose: string
+}
+
 export const chapter8ContentConceptMappings: readonly Chapter8ContentConceptMapping[] = [
   { contentBlockId: 'command-center-welcome', conceptFamilyId: 'ch8-equipment-safety' },
   { contentBlockId: 'why-electricity-matters', conceptFamilyId: 'ch8-electricity-circuits' },
@@ -125,6 +133,19 @@ export const chapter8QuizQuestionConceptMappings: readonly Chapter8QuizQuestionC
   ...[24, 25].map((n) => ({ questionId: qq(n), conceptFamilyId: 'ch8-electromagnetic-spectrum' as const })),
   ...[27, 28].map((n) => ({ questionId: qq(n), conceptFamilyId: 'ch8-light-modalities' as const })),
   ...[26, 29, 30].map((n) => ({ questionId: qq(n), conceptFamilyId: 'ch8-light-therapy-safety' as const })),
+]
+
+export const chapter8MicroCheckPlacements: readonly Chapter8MicroCheckPlacement[] = [
+  { id: 'mc-8-01', afterSectionId: 'conductors-insulators', conceptFamilyId: 'ch8-electricity-circuits', plannedQuestionCount: 2, purpose: 'Check circuit/conductor reasoning before current types.' },
+  { id: 'mc-8-02', afterSectionId: 'current-types', conceptFamilyId: 'ch8-current-conversion', plannedQuestionCount: 2, purpose: 'Check DC/AC and conversion reasoning using barber equipment.' },
+  { id: 'mc-8-03', afterSectionId: 'worked-examples', conceptFamilyId: 'ch8-electrical-measurements', plannedQuestionCount: 2, purpose: 'Check volts, amps, watts, and load reasoning without unsafe circuit assumptions.' },
+  { id: 'mc-8-04', afterSectionId: 'safety-rules', conceptFamilyId: 'ch8-equipment-safety', plannedQuestionCount: 3, purpose: 'Check stop-use, grounding, wet-area, and repeated-trip safety decisions.' },
+  { id: 'mc-8-05', afterSectionId: 'polarity', conceptFamilyId: 'ch8-electrotherapy-terminology', plannedQuestionCount: 2, purpose: 'Check polarity/electrode terminology plus scope boundaries.' },
+  { id: 'mc-8-06', afterSectionId: 'galvanic-current', conceptFamilyId: 'ch8-galvanic-current', plannedQuestionCount: 2, purpose: 'Check galvanic source concepts without universal treatment claims.' },
+  { id: 'mc-8-07', afterSectionId: 'other-modalities', conceptFamilyId: 'ch8-microcurrent-high-frequency', plannedQuestionCount: 2, purpose: 'Differentiate modalities and stop-service responses.' },
+  { id: 'mc-8-08', afterSectionId: 'light-types', conceptFamilyId: 'ch8-electromagnetic-spectrum', plannedQuestionCount: 2, purpose: 'Check wavelength/frequency/UV distinctions without penetration shortcuts.' },
+  { id: 'mc-8-09', afterSectionId: 'therapeutic-lamps', conceptFamilyId: 'ch8-light-modalities', plannedQuestionCount: 2, purpose: 'Check device-dependent light modality reasoning and scope.' },
+  { id: 'mc-8-10', afterSectionId: 'light-therapy-safety', conceptFamilyId: 'ch8-light-therapy-safety', plannedQuestionCount: 3, purpose: 'Check photosensitivity, eye protection, supervision, and adverse-response decisions.' },
 ]
 
 export function getChapter8ContentBlocksForConcept(conceptFamilyId: Chapter8ConceptFamilyId) {
