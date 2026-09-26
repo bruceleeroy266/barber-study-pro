@@ -232,33 +232,41 @@ export default function AttendanceClient({
   const handleSubmitDay = async () => {
     if (submitDisabled) return
 
-    const entries = students.flatMap((student) => {
+    const entries: Array<{
+      studentId: string
+      status: AttendanceStatus
+      clockedInAt: string | null
+      clockedOutAt: string | null
+      minutesPresent: number
+    }> = []
+
+    for (const student of students) {
       const draft = dailyDrafts[student.id]
-      if (!draft?.status) return []
+      if (!draft?.status) continue
 
       if (draft.status === 'Present' || draft.status === 'Tardy') {
-        const minutesPresent = calculateAttendedMinutes(
-          draft.arrival,
-          draft.departure,
-          draft.breakMinutes,
-        )
-        return [{
+        entries.push({
           studentId: student.id,
           status: draft.status,
           clockedInAt: zonedLocalTimeToIso(defaultDate, draft.arrival, schoolTimeZone),
           clockedOutAt: zonedLocalTimeToIso(defaultDate, draft.departure, schoolTimeZone),
-          minutesPresent,
-        }]
+          minutesPresent: calculateAttendedMinutes(
+            draft.arrival,
+            draft.departure,
+            draft.breakMinutes,
+          ),
+        })
+        continue
       }
 
-      return [{
+      entries.push({
         studentId: student.id,
         status: draft.status,
         clockedInAt: null,
         clockedOutAt: null,
         minutesPresent: 0,
-      }]
-    })
+      })
+    }
 
     const success = await submitDailyAttendance(entries)
     if (success) {
