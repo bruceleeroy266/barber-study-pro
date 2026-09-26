@@ -2,8 +2,7 @@
  * Program-driven hour-pace notifications (nationwide hardening, 2026-09-08).
  *
  * Proves that generateNotificationsFromHours / generateAllNotifications use
- * the applicable program's configured required_hours instead of the historical
- * hard-coded 1500, and that missing/invalid values preserve the default
+ * the applicable program's configured required_hours instead of the historical hard-coded value, and that missing/invalid values preserve the default
  * fallback behavior.
  */
 
@@ -33,7 +32,7 @@ const missingHoursTitles = <T extends { title: string }>(notifications: T[]): T[
   notifications.filter((n) => n.title === 'Missing Hours')
 
 describe('generateNotificationsFromHours with configured program required_hours', () => {
-  // 600 approved hours: ahead of pace for a 1000h program (>= 50%), behind for 1500h (< 50%).
+  // 600 approved hours: on pace for both a 1000h program and the 1200h fallback (>= 50%).
   const logs = [makeHourLog('u1', 600 * 60, 'approved')]
 
   it('does not flag a 1000h-program student who is on pace', () => {
@@ -41,9 +40,9 @@ describe('generateNotificationsFromHours with configured program required_hours'
     expect(missingHoursTitles(notifications)).toHaveLength(0)
   })
 
-  it('flags the same student under the default 1500h requirement', () => {
+  it('keeps the same student on pace under the default 1200h requirement', () => {
     const notifications = generateNotificationsFromHours('u1', logs)
-    expect(missingHoursTitles(notifications)).toHaveLength(1)
+    expect(missingHoursTitles(notifications)).toHaveLength(0)
   })
 
   it('flags a 1000h-program student who is actually behind pace', () => {
@@ -53,10 +52,10 @@ describe('generateNotificationsFromHours with configured program required_hours'
     expect(missingHoursTitles(notifications)[0]?.body).toContain('400 approved hours')
   })
 
-  it.each([undefined, null, 0, -100, NaN])('falls back to the 1500 schema default for %s', (value) => {
+  it.each([undefined, null, 0, -100, NaN])('falls back to the 1200 schema default for %s', (value) => {
     const notifications = generateNotificationsFromHours('u1', logs, value)
-    expect(missingHoursTitles(notifications)).toHaveLength(1)
-    expect(DEFAULT_REQUIRED_HOURS).toBe(1500)
+    expect(missingHoursTitles(notifications)).toHaveLength(0)
+    expect(DEFAULT_REQUIRED_HOURS).toBe(1200)
   })
 
   it('pending-hours notification is independent of required_hours', () => {
@@ -77,6 +76,6 @@ describe('generateAllNotifications threads requiredHours', () => {
 
   it('preserves the default when input.requiredHours is omitted', () => {
     const notifications = generateAllNotifications({ userId: 'u1', fullName: 'U One', hourLogs: logs })
-    expect(missingHoursTitles(notifications)).toHaveLength(1)
+    expect(missingHoursTitles(notifications)).toHaveLength(0)
   })
 })

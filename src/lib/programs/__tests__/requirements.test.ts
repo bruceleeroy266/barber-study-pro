@@ -2,7 +2,7 @@
  * Program requirements resolver tests (founder directive 2026-09-08).
  *
  * Proves the resolution chain — active enrollment → school's oldest active
- * program → 1500 schema default — and, critically, that active-enrollment
+ * program → 1200 schema default — and, critically, that active-enrollment
  * selection is DETERMINISTIC: with multiple conflicting active enrollments,
  * the most recently created one wins regardless of the order rows come back
  * from the database.
@@ -181,7 +181,7 @@ describe('resolveStudentProgramRequirements — fallback chain', () => {
     expect(result.programId).toBeNull()
     expect(result.programName).toBeNull()
     expect(result.requiredHours).toBe(DEFAULT_REQUIRED_HOURS)
-    expect(result.requiredHours).toBe(1500)
+    expect(result.requiredHours).toBe(1200)
     expect(result.source).toBe('default')
   })
 
