@@ -25,6 +25,12 @@ import { PrintButton } from './PrintButton'
 import ProgressReportModal from './ProgressReportModal'
 import BackButton from '@/components/ui/BackButton'
 import { getInstructorNotes } from './actions'
+import {
+  buildChapter7MicroCheckDiagnostics,
+  calculatePersistedChapter7MicroCheckPercent,
+  type Chapter7MicroCheckAttemptRow,
+} from '@/lib/chapter-7-concepts/micro-check-persistence'
+import { getChapter7ConceptFamily } from '@/lib/chapter-7-concepts/concepts'
 import { mapHourLogsFromDb, mapAttendanceRecordsFromDb, mapAttendanceNotesFromDb } from '@/lib/mappers/operational-data-mappers'
 import { getLastSignInAtMap } from '@/lib/instructor/last-login'
 
@@ -246,6 +252,15 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     .eq('user_id', studentId)
     .order('completed_at', { ascending: false })
 
+  // Chapter 7 micro-check evidence. RLS permits same-school staff to read the
+  // student's immutable first-attempt records.
+  const { data: chapter7MicroCheckRows } = await supabase
+    .from('chapter_micro_check_attempts')
+    .select('id,user_id,chapter_id,check_id,question_id,concept_id,difficulty,selected_answer,is_correct,answered_at,created_at')
+    .eq('user_id', studentId)
+    .eq('chapter_id', 'ch-7')
+    .order('answered_at', { ascending: true })
+
   // Get instructor notes
   const notesResult = await getInstructorNotes(studentId, instructorProfile.school_id)
   let noteRecords: InstructorNote[] = notesResult.success ? notesResult.data : []
@@ -331,6 +346,13 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
   const avgQuizScore = attemptRecords.length > 0
     ? Math.round(attemptRecords.reduce((sum, a) => sum + a.percentage, 0) / attemptRecords.length)
     : 0
+
+  const chapter7MicroCheckAttempts = (chapter7MicroCheckRows ?? []) as Chapter7MicroCheckAttemptRow[]
+  const chapter7MicroCheckPercent = calculatePersistedChapter7MicroCheckPercent(chapter7MicroCheckAttempts)
+  const chapter7MicroCheckDiagnostics = buildChapter7MicroCheckDiagnostics(
+    chapter7MicroCheckAttempts,
+    new Date().toISOString(),
+  )
 
   // Last activity across all progress records
   const lastStudiedDates = progressRecords
@@ -494,6 +516,56 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
             <div className="text-xs text-silver mt-1">{readiness.label}</div>
           </div>
         </div>
+
+        {/* Chapter 7 micro-check diagnostics */}
+        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <div className="p-6 border-b border-graphite">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <div>
+                <h2 className="text-xl font-semibold text-white">Chapter 7 Micro-Check Diagnostics</h2>
+                <p className="text-sm text-silver mt-1">
+                  Immutable first-attempt evidence by chemistry concept.
+                </p>
+              </div>
+              <div className="text-right">
+                <div className="text-2xl font-bold text-[var(--color-brand-gold)]">
+                  {chapter7MicroCheckPercent === null ? '—' : `${chapter7MicroCheckPercent}%`}
+                </div>
+                <div className="text-xs text-silver">Micro-check component</div>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 p-6">
+            {chapter7MicroCheckDiagnostics.map((diagnostic) => {
+              const concept = getChapter7ConceptFamily(diagnostic.conceptFamilyId)
+              return (
+                <div key={diagnostic.conceptFamilyId} className="rounded-lg border border-graphite bg-black p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h3 className="text-sm font-semibold text-white">{concept?.name ?? diagnostic.conceptFamilyId}</h3>
+                      <p className="text-xs text-silver mt-1">
+                        {diagnostic.answered > 0
+                          ? `${diagnostic.correct}/${diagnostic.answered} correct`
+                          : 'No micro-check evidence yet'}
+                      </p>
+                    </div>
+                    <span className="text-sm font-semibold text-[var(--color-brand-gold)]">
+                      {diagnostic.answered > 0 ? `${diagnostic.percent}%` : '—'}
+                    </span>
+                  </div>
+                  <div className="mt-3 text-xs text-silver-gray">
+                    Mastery evidence: {diagnostic.answered > 0 ? `${diagnostic.masteryFromMicroChecks}%` : '—'}
+                    {' • '}
+                    Confidence: {diagnostic.confidenceFromMicroChecks.replaceAll('_', ' ')}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+          <div className="px-6 pb-6 text-xs text-silver-gray">
+            This component contributes 20% of the Chapter 7 grade. The chapter assessment remains the heaviest component at 40%.
+          </div>
+        </section>
 
         {/* Phase 5 — Board Readiness & Analytics */}
         <BoardReadinessCard readiness={boardReadiness} />
