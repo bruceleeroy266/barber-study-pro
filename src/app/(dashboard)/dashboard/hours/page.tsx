@@ -36,6 +36,26 @@ function formatAttendanceTime(value: string | null, timeZone: string): string {
   }).format(parsed)
 }
 
+
+function hourStatusClass(status: 'pending' | 'approved' | 'rejected'): string {
+  switch (status) {
+    case 'approved':
+      return 'border-[var(--color-brand-gold)]/40 bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)]'
+    case 'pending':
+      return 'border-silver/30 bg-white/5 text-light-gray'
+    case 'rejected':
+      return 'border-warm-bronze/40 bg-warm-bronze/10 text-warm-bronze'
+  }
+}
+
+function hourStatusLabel(status: 'pending' | 'approved' | 'rejected'): string {
+  return status.charAt(0).toUpperCase() + status.slice(1)
+}
+
+function hourSourceLabel(sourceType: 'manual' | 'attendance'): string {
+  return sourceType === 'attendance' ? 'Attendance-generated' : 'Manual entry'
+}
+
 function attendanceStatusClass(status: AttendanceStatus | null): string {
   switch (status) {
     case 'Present':
@@ -96,8 +116,10 @@ export default async function StudentHoursPage() {
 
   let hourQuery = supabase
     .from('hour_logs')
-    .select('id, user_id, date, minutes, status')
+    .select('id, user_id, date, category, minutes, status, source_type, resubmission_of_hour_log_id, created_at')
     .eq('user_id', user.id)
+    .order('date', { ascending: false })
+    .order('created_at', { ascending: false })
 
   let attendanceQuery = supabase
     .from('attendance_records')
@@ -119,8 +141,12 @@ export default async function StudentHoursPage() {
     id: string
     user_id: string
     date: string
+    category: string
     minutes: number
     status: 'pending' | 'approved' | 'rejected'
+    source_type: 'manual' | 'attendance'
+    resubmission_of_hour_log_id: string | null
+    created_at: string | null
   }>
 
   const approvedMinutes = hours
@@ -216,7 +242,7 @@ export default async function StudentHoursPage() {
         <div className="mt-3 text-sm text-silver">
           {formatMinutes(approvedMinutes)} approved of {requirements.requiredHours}h required
         </div>
-
+      </section>
 
       <section className="rounded-xl border border-graphite bg-charcoal p-5 sm:p-6">
         <div>
@@ -312,6 +338,89 @@ export default async function StudentHoursPage() {
           </>
         )}
       </section>
+
+      <section className="rounded-xl border border-graphite bg-charcoal p-5 sm:p-6">
+        <div>
+          <h2 className="text-lg font-semibold text-white">Hour History</h2>
+          <p className="mt-1 text-sm text-silver">
+            Your most recent hour entries. Approved entries count toward your official total; pending and rejected entries do not.
+          </p>
+        </div>
+
+        {hours.length === 0 ? (
+          <div className="mt-4 rounded-lg border border-graphite bg-black p-6 text-center text-silver">
+            No hour entries yet.
+          </div>
+        ) : (
+          <>
+            <div className="mt-4 space-y-3 md:hidden">
+              {hours.slice(0, 30).map((entry) => (
+                <article key={entry.id} className="rounded-lg border border-graphite bg-black p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <div className="font-semibold text-white">{entry.date}</div>
+                      <div className="mt-1 text-sm text-silver">{entry.category}</div>
+                    </div>
+                    <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${hourStatusClass(entry.status)}`}>
+                      {hourStatusLabel(entry.status)}
+                    </span>
+                  </div>
+
+                  <div className="mt-4 flex flex-wrap items-center gap-2">
+                    <span className="text-lg font-semibold text-white">{formatMinutes(entry.minutes)}</span>
+                    <span className="inline-flex rounded-full border border-silver/30 bg-white/5 px-2.5 py-1 text-xs font-medium text-light-gray">
+                      {hourSourceLabel(entry.source_type)}
+                    </span>
+                    {entry.resubmission_of_hour_log_id && (
+                      <span className="inline-flex rounded-full border border-warm-bronze/40 bg-warm-bronze/10 px-2.5 py-1 text-xs font-semibold text-warm-bronze">
+                        Corrected resubmission
+                      </span>
+                    )}
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            <div className="mt-4 hidden overflow-x-auto md:block">
+              <table className="w-full min-w-[760px] text-left text-sm">
+                <thead>
+                  <tr className="border-b border-graphite text-silver">
+                    <th className="px-3 py-3 font-medium">Date</th>
+                    <th className="px-3 py-3 font-medium">Category</th>
+                    <th className="px-3 py-3 font-medium">Hours</th>
+                    <th className="px-3 py-3 font-medium">Status</th>
+                    <th className="px-3 py-3 font-medium">Source</th>
+                    <th className="px-3 py-3 font-medium">Correction</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {hours.slice(0, 30).map((entry) => (
+                    <tr key={entry.id} className="border-b border-graphite/70 last:border-0">
+                      <td className="px-3 py-3 font-medium text-white">{entry.date}</td>
+                      <td className="px-3 py-3 text-light-gray">{entry.category}</td>
+                      <td className="px-3 py-3 font-medium text-white">{formatMinutes(entry.minutes)}</td>
+                      <td className="px-3 py-3">
+                        <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${hourStatusClass(entry.status)}`}>
+                          {hourStatusLabel(entry.status)}
+                        </span>
+                      </td>
+                      <td className="px-3 py-3 text-light-gray">{hourSourceLabel(entry.source_type)}</td>
+                      <td className="px-3 py-3 text-light-gray">
+                        {entry.resubmission_of_hour_log_id ? 'Corrected resubmission' : '—'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {hours.length > 30 && (
+              <div className="mt-3 text-center text-xs text-silver">
+                Showing the 30 most recent hour entries.
+              </div>
+            )}
+          </>
+        )}
       </section>
     </div>
   )
