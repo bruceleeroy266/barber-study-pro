@@ -24,7 +24,7 @@ describe('Chapter 7 hardened assessment', () => {
       expect(answers.every((a) => typeof a === 'string' && a.trim().length > 0)).toBe(true)
       expect(new Set(answers).size).toBe(4)
       expect(['a', 'b', 'c', 'd']).toContain(q.correct_answer)
-      expect(q.explanation.trim().length).toBeGreaterThan(0)
+      expect((q.explanation ?? '').trim().length).toBeGreaterThan(0)
     }
   })
 
