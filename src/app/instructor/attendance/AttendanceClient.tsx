@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useEffect, useRef } from 'react'
+import { useState, useMemo } from 'react'
 import { AttendanceRecord, AttendanceStatus, Profile } from '@/types'
 import { useAttendance } from '@/hooks/useAttendance'
 import { useAttendanceFilters } from '@/hooks/useAttendanceFilters'
@@ -14,7 +14,7 @@ import ExportButton from '@/components/attendance/ExportButton'
 import { RefreshCw, ClipboardCheck, ChevronDown } from 'lucide-react'
 import type { DailyScheduleExpectation } from '@/lib/schedules/daily-expectations'
 import DailyAttendanceTimeEditor from './DailyAttendanceTimeEditor'
-import { calculateAttendedMinutes, zonedLocalTimeToIso } from '@/lib/schedules/attendance-time'
+import { calculateAttendedMinutes, isoToLocalTime, zonedLocalTimeToIso } from '@/lib/schedules/attendance-time'
 
 interface AttendanceClientProps {
   initialRecords: AttendanceRecord[]
@@ -25,6 +25,46 @@ interface AttendanceClientProps {
   defaultDate: string
   dailyScheduleExpectations: DailyScheduleExpectation[]
   schoolTimeZone: string
+}
+
+interface DailyDraft {
+  status: AttendanceStatus | null
+  arrival: string
+  departure: string
+  breakMinutes: number
+}
+
+function createInitialDrafts(
+  students: Profile[],
+  records: AttendanceRecord[],
+  expectations: DailyScheduleExpectation[],
+  date: string,
+  schoolTimeZone: string,
+): Record<string, DailyDraft> {
+  const expectationByStudent = new Map(expectations.map((item) => [item.studentId, item]))
+  const recordByStudent = new Map(
+    records.filter((record) => record.date === date).map((record) => [record.userId, record]),
+  )
+
+  return Object.fromEntries(
+    students.map((student) => {
+      const record = recordByStudent.get(student.id)
+      const expectation = expectationByStudent.get(student.id)
+      return [
+        student.id,
+        {
+          status: record?.status ?? null,
+          arrival: record?.clockedInAt
+            ? isoToLocalTime(record.clockedInAt, schoolTimeZone)
+            : expectation?.startTime?.slice(0, 5) || '',
+          departure: record?.clockedOutAt
+            ? isoToLocalTime(record.clockedOutAt, schoolTimeZone)
+            : expectation?.endTime?.slice(0, 5) || '',
+          breakMinutes: expectation?.breakMinutes ?? 0,
+        },
+      ]
+    }),
+  )
 }
 
 export default function AttendanceClient({
@@ -66,7 +106,7 @@ export default function AttendanceClient({
     updateStatus,
     bulkUpdateStatus,
     addNote,
-    updateActualTimes,
+    submitDailyAttendance,
     submitCorrection,
     getAuditHistory,
     refresh,
@@ -83,8 +123,17 @@ export default function AttendanceClient({
 
   const [correctionRecord, setCorrectionRecord] = useState<AttendanceRecord | null>(null)
   const [auditRecord, setAuditRecord] = useState<AttendanceRecord | null>(null)
-  const todayInitialized = useRef(false)
   const [expandedStudentId, setExpandedStudentId] = useState<string | null>(null)
+  const [dailyDrafts, setDailyDrafts] = useState<Record<string, DailyDraft>>(() =>
+    createInitialDrafts(
+      students,
+      initialRecords,
+      dailyScheduleExpectations,
+      defaultDate,
+      schoolTimeZone,
+    ),
+  )
+  const [dailySubmitMessage, setDailySubmitMessage] = useState<string | null>(null)
 
   const filteredRecords = useMemo(() => {
     return records
@@ -116,76 +165,109 @@ export default function AttendanceClient({
     await refresh(filters)
   }
 
-  const handleEnsureToday = async () => {
-    await ensureTodayRecords()
-    await refresh(filters)
-  }
-
-  useEffect(() => {
-    if (todayInitialized.current || loading || records.some((record) => record.date === defaultDate)) return
-    todayInitialized.current = true
-    void handleEnsureToday()
-    // Initialize today's roll once; advanced history remains available below.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, records, defaultDate])
-
   const todayRecords = records.filter((record) => record.date === defaultDate)
   const todayRecordByStudent = new Map(todayRecords.map((record) => [record.userId, record]))
 
-  const markToday = async (studentId: string, status: AttendanceStatus) => {
-    let record = todayRecordByStudent.get(studentId)
-    if (!record) {
-      const created = await ensureTodayRecords()
-      record = created.find((item) => item.userId === studentId && item.date === defaultDate)
-    }
-    if (record) await updateStatus(record.id, status)
+  const updateDraft = (studentId: string, patch: Partial<DailyDraft>) => {
+    setDailySubmitMessage(null)
+    setDailyDrafts((prev) => ({
+      ...prev,
+      [studentId]: {
+        ...(prev[studentId] || {
+          status: null,
+          arrival: '',
+          departure: '',
+          breakMinutes: 0,
+        }),
+        ...patch,
+      },
+    }))
   }
 
-  const markAllPresent = async () => {
-    const created = await ensureTodayRecords()
-    const recordsByStudent = new Map(todayRecords.map((record) => [record.userId, record]))
-    for (const record of created) recordsByStudent.set(record.userId, record)
-
-    const scheduledStudents = students.filter(
-      (student) => expectationMap.get(student.id)?.isScheduled,
-    )
-    const ids = scheduledStudents
-      .map((student) => recordsByStudent.get(student.id)?.id)
-      .filter((id): id is string => Boolean(id))
-
-    if (ids.length > 0) await bulkUpdateStatus(ids, 'Present')
+  const markToday = (studentId: string, status: AttendanceStatus) => {
+    updateDraft(studentId, { status })
   }
 
-  const saveActualTimes = async (
-    studentId: string,
-    arrival: string,
-    departure: string,
-    breakMinutes: number,
-  ) => {
-    let record = todayRecordByStudent.get(studentId)
-    if (!record) {
-      const created = await ensureTodayRecords()
-      record = created.find((item) => item.userId === studentId && item.date === defaultDate)
+  const markAllPresent = () => {
+    setDailySubmitMessage(null)
+    setDailyDrafts((prev) => {
+      const next = { ...prev }
+      for (const student of students) {
+        const expectation = expectationMap.get(student.id)
+        if (!expectation?.isScheduled) continue
+        next[student.id] = {
+          ...(next[student.id] || {
+            arrival: expectation.startTime?.slice(0, 5) || '',
+            departure: expectation.endTime?.slice(0, 5) || '',
+            breakMinutes: expectation.breakMinutes,
+          }),
+          status: 'Present',
+        }
+      }
+      return next
+    })
+  }
+
+  const scheduledStudentIds = students
+    .filter((student) => expectationMap.get(student.id)?.isScheduled)
+    .map((student) => student.id)
+  const unmarkedScheduledCount = scheduledStudentIds.filter(
+    (studentId) => !dailyDrafts[studentId]?.status,
+  ).length
+
+  const invalidTimeStudentIds = students
+    .filter((student) => {
+      const draft = dailyDrafts[student.id]
+      if (!draft || (draft.status !== 'Present' && draft.status !== 'Tardy')) return false
+      return calculateAttendedMinutes(draft.arrival, draft.departure, draft.breakMinutes) <= 0
+    })
+    .map((student) => student.id)
+
+  const markedCount = students.filter((student) => dailyDrafts[student.id]?.status).length
+  const submitDisabled =
+    loading ||
+    markedCount === 0 ||
+    unmarkedScheduledCount > 0 ||
+    invalidTimeStudentIds.length > 0
+
+  const handleSubmitDay = async () => {
+    if (submitDisabled) return
+
+    const entries = students.flatMap((student) => {
+      const draft = dailyDrafts[student.id]
+      if (!draft?.status) return []
+
+      if (draft.status === 'Present' || draft.status === 'Tardy') {
+        const minutesPresent = calculateAttendedMinutes(
+          draft.arrival,
+          draft.departure,
+          draft.breakMinutes,
+        )
+        return [{
+          studentId: student.id,
+          status: draft.status,
+          clockedInAt: zonedLocalTimeToIso(defaultDate, draft.arrival, schoolTimeZone),
+          clockedOutAt: zonedLocalTimeToIso(defaultDate, draft.departure, schoolTimeZone),
+          minutesPresent,
+        }]
+      }
+
+      return [{
+        studentId: student.id,
+        status: draft.status,
+        clockedInAt: null,
+        clockedOutAt: null,
+        minutesPresent: 0,
+      }]
+    })
+
+    const success = await submitDailyAttendance(entries)
+    if (success) {
+      setDailySubmitMessage(
+        `Daily attendance submitted for ${entries.length} student${entries.length === 1 ? '' : 's'}. No hour logs were created.`,
+      )
+      setExpandedStudentId(null)
     }
-    if (!record) throw new Error('Attendance record could not be created.')
-
-    const expectation = expectationMap.get(studentId)
-    const minutesPresent = calculateAttendedMinutes(arrival, departure, breakMinutes)
-    if (minutesPresent <= 0) throw new Error('Departure must be later than arrival.')
-
-    const clockedInAt = zonedLocalTimeToIso(defaultDate, arrival, schoolTimeZone)
-    const clockedOutAt = zonedLocalTimeToIso(defaultDate, departure, schoolTimeZone)
-    const expectedStart = expectation?.startTime?.slice(0, 5) || null
-    const inferredStatus: AttendanceStatus =
-      expectedStart && arrival > expectedStart ? 'Tardy' : 'Present'
-
-    await updateActualTimes(
-      record.id,
-      clockedInAt,
-      clockedOutAt,
-      minutesPresent,
-      inferredStatus,
-    )
   }
 
   const handleExport = (format: 'csv' | 'pdf') => {
@@ -224,7 +306,7 @@ export default function AttendanceClient({
             <div>
               <h2 className="text-2xl font-bold text-white">Today&apos;s Attendance &amp; Hours</h2>
               <p className="text-silver mt-1">
-                Each student uses their own schedule. Planned hours are shown here; official hour generation starts in Segment C.
+                Review the roster, adjust exceptions, then submit the entire day once. Official hour generation starts in Segment C.
               </p>
             </div>
             <button
@@ -239,8 +321,14 @@ export default function AttendanceClient({
           <div className="divide-y divide-[var(--color-border-secondary)] overflow-hidden rounded-xl border border-[var(--color-border-secondary)]">
             {students.map((student) => {
               const record = todayRecordByStudent.get(student.id)
-              const current = record?.status
               const expectation = expectationMap.get(student.id)
+              const draft = dailyDrafts[student.id] || {
+                status: null,
+                arrival: expectation?.startTime?.slice(0, 5) || '',
+                departure: expectation?.endTime?.slice(0, 5) || '',
+                breakMinutes: expectation?.breakMinutes ?? 0,
+              }
+              const current = draft.status
               const expanded = expandedStudentId === student.id
               return (
                 <div key={student.id} className="bg-black">
@@ -276,15 +364,24 @@ export default function AttendanceClient({
                           <div className="mt-1 text-xs text-silver-gray">{expectation.reason}</div>
                         )}
                       </div>
-                      <DailyAttendanceTimeEditor
-                        record={record}
-                        expectation={expectation}
-                        schoolTimeZone={schoolTimeZone}
-                        disabled={loading}
-                        onSave={(arrival, departure, breakMinutes) =>
-                          saveActualTimes(student.id, arrival, departure, breakMinutes)
-                        }
-                      />
+                      {(current === 'Present' || current === 'Tardy' || current === null) && (
+                        <DailyAttendanceTimeEditor
+                          arrival={draft.arrival}
+                          departure={draft.departure}
+                          breakMinutes={draft.breakMinutes}
+                          disabled={loading}
+                          onChange={(next) => {
+                            const expectedStart = expectation?.startTime?.slice(0, 5) || null
+                            const nextStatus =
+                              current === 'Present' || current === 'Tardy'
+                                ? expectedStart && next.arrival > expectedStart
+                                  ? 'Tardy'
+                                  : 'Present'
+                                : current
+                            updateDraft(student.id, { ...next, status: nextStatus })
+                          }}
+                        />
+                      )}
                       <div className="mb-2 mt-4 text-sm font-medium text-silver">Attendance</div>
                       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                         {(['Present', 'Tardy', 'Absent', 'Excused'] as AttendanceStatus[]).map((status) => (
@@ -292,9 +389,8 @@ export default function AttendanceClient({
                             key={status}
                             type="button"
                             disabled={loading}
-                            onClick={async () => {
-                              await markToday(student.id, status)
-                              setExpandedStudentId(null)
+                            onClick={() => {
+                              markToday(student.id, status)
                             }}
                             className={`min-h-12 rounded-lg border px-3 py-2 font-medium transition-colors disabled:opacity-50 ${current === status ? 'border-gold bg-gold/15 text-gold' : 'border-[var(--color-border-secondary)] bg-[var(--color-surface-primary)] text-silver hover:text-white'}`}
                           >
@@ -307,6 +403,38 @@ export default function AttendanceClient({
                 </div>
               )
             })}
+          </div>
+
+          <div className="mt-5 rounded-xl border border-[var(--color-border-secondary)] bg-black p-4">
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <div>
+                <h3 className="font-semibold text-white">Review &amp; Submit Day</h3>
+                <p className="mt-1 text-sm text-silver">
+                  {markedCount} marked · {unmarkedScheduledCount} scheduled student${unmarkedScheduledCount === 1 ? '' : 's'} still unmarked
+                </p>
+                {invalidTimeStudentIds.length > 0 && (
+                  <p className="mt-1 text-sm text-red-300">
+                    {invalidTimeStudentIds.length} present/tardy record${invalidTimeStudentIds.length === 1 ? '' : 's'} need valid arrival and departure times.
+                  </p>
+                )}
+                <p className="mt-1 text-xs text-silver-gray">
+                  Submit Day saves attendance status and attended minutes only. It does not create Student Hours entries.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={handleSubmitDay}
+                disabled={submitDisabled}
+                className="min-h-12 rounded-lg bg-gold px-6 py-3 font-bold text-black disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                {loading ? 'Submitting…' : 'Submit Day'}
+              </button>
+            </div>
+            {dailySubmitMessage && (
+              <div className="mt-3 rounded-lg border border-gold/30 bg-gold/10 p-3 text-sm font-medium text-gold">
+                {dailySubmitMessage}
+              </div>
+            )}
           </div>
         </section>
 
