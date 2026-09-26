@@ -13,6 +13,8 @@ import AuditLog from '@/components/attendance/AuditLog'
 import ExportButton from '@/components/attendance/ExportButton'
 import { RefreshCw, ClipboardCheck, ChevronDown } from 'lucide-react'
 import type { DailyScheduleExpectation } from '@/lib/schedules/daily-expectations'
+import DailyAttendanceTimeEditor from './DailyAttendanceTimeEditor'
+import { calculateAttendedMinutes, zonedLocalTimeToIso } from '@/lib/schedules/attendance-time'
 
 interface AttendanceClientProps {
   initialRecords: AttendanceRecord[]
@@ -22,6 +24,7 @@ interface AttendanceClientProps {
   schoolName: string
   defaultDate: string
   dailyScheduleExpectations: DailyScheduleExpectation[]
+  schoolTimeZone: string
 }
 
 export default function AttendanceClient({
@@ -32,6 +35,7 @@ export default function AttendanceClient({
   schoolName,
   defaultDate,
   dailyScheduleExpectations,
+  schoolTimeZone,
 }: AttendanceClientProps) {
   const {
     filters,
@@ -62,6 +66,7 @@ export default function AttendanceClient({
     updateStatus,
     bulkUpdateStatus,
     addNote,
+    updateActualTimes,
     submitCorrection,
     getAuditHistory,
     refresh,
@@ -149,6 +154,38 @@ export default function AttendanceClient({
       .filter((id): id is string => Boolean(id))
 
     if (ids.length > 0) await bulkUpdateStatus(ids, 'Present')
+  }
+
+  const saveActualTimes = async (
+    studentId: string,
+    arrival: string,
+    departure: string,
+    breakMinutes: number,
+  ) => {
+    let record = todayRecordByStudent.get(studentId)
+    if (!record) {
+      const created = await ensureTodayRecords()
+      record = created.find((item) => item.userId === studentId && item.date === defaultDate)
+    }
+    if (!record) throw new Error('Attendance record could not be created.')
+
+    const expectation = expectationMap.get(studentId)
+    const minutesPresent = calculateAttendedMinutes(arrival, departure, breakMinutes)
+    if (minutesPresent <= 0) throw new Error('Departure must be later than arrival.')
+
+    const clockedInAt = zonedLocalTimeToIso(defaultDate, arrival, schoolTimeZone)
+    const clockedOutAt = zonedLocalTimeToIso(defaultDate, departure, schoolTimeZone)
+    const expectedStart = expectation?.startTime?.slice(0, 5) || null
+    const inferredStatus: AttendanceStatus =
+      expectedStart && arrival > expectedStart ? 'Tardy' : 'Present'
+
+    await updateActualTimes(
+      record.id,
+      clockedInAt,
+      clockedOutAt,
+      minutesPresent,
+      inferredStatus,
+    )
   }
 
   const handleExport = (format: 'csv' | 'pdf') => {
@@ -239,7 +276,16 @@ export default function AttendanceClient({
                           <div className="mt-1 text-xs text-silver-gray">{expectation.reason}</div>
                         )}
                       </div>
-                      <div className="mb-2 text-sm font-medium text-silver">Attendance</div>
+                      <DailyAttendanceTimeEditor
+                        record={record}
+                        expectation={expectation}
+                        schoolTimeZone={schoolTimeZone}
+                        disabled={loading}
+                        onSave={(arrival, departure, breakMinutes) =>
+                          saveActualTimes(student.id, arrival, departure, breakMinutes)
+                        }
+                      />
+                      <div className="mb-2 mt-4 text-sm font-medium text-silver">Attendance</div>
                       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                         {(['Present', 'Tardy', 'Absent', 'Excused'] as AttendanceStatus[]).map((status) => (
                           <button
