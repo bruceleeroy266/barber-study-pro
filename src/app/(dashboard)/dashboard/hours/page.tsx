@@ -279,7 +279,7 @@ export default async function StudentHoursPage() {
   const currentAttendanceStatus = todayStatus ?? attendanceSummary.currentStatus
 
   return (
-    <div className="space-y-8">
+    <div className="mx-auto max-w-7xl space-y-6 px-1 pb-8 sm:space-y-8 sm:px-0">
       <div>
         <h1 className="text-3xl font-bold text-white">Attendance & Hours</h1>
         <p className="mt-1 text-[var(--color-text-muted)]">
@@ -287,8 +287,15 @@ export default async function StudentHoursPage() {
         </p>
       </div>
 
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
-        <div className="rounded-xl border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 p-5">
+      <div className="grid grid-cols-1 gap-2 rounded-xl border border-graphite bg-charcoal p-4 text-sm text-silver sm:grid-cols-3" aria-label="Hour status guide">
+        <div><span className="font-semibold text-[var(--color-brand-gold)]">Approved</span> · counts toward official hours</div>
+        <div><span className="font-semibold text-light-gray">Pending</span> · waiting for administrator review</div>
+        <div><span className="font-semibold text-warm-bronze">Rejected</span> · does not count toward official hours</div>
+      </div>
+
+      <section aria-labelledby="hours-summary-heading" className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5">
+        <h2 id="hours-summary-heading" className="sr-only">Hours summary</h2>
+        <div className="rounded-xl border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 p-4 sm:p-5">
           <div className="text-sm text-silver">Approved Hours</div>
           <div className="mt-2 text-2xl font-bold text-[var(--color-brand-gold)]">
             {formatMinutes(approvedMinutes)}
@@ -296,19 +303,19 @@ export default async function StudentHoursPage() {
           <div className="mt-1 text-xs text-silver">Counts toward your official total</div>
         </div>
 
-        <div className="rounded-xl border border-graphite bg-charcoal p-5">
+        <div className="rounded-xl border border-graphite bg-charcoal p-4 sm:p-5">
           <div className="text-sm text-silver">Pending Hours</div>
           <div className="mt-2 text-2xl font-bold text-white">{formatMinutes(pendingMinutes)}</div>
           <div className="mt-1 text-xs text-silver">Waiting for administrator approval</div>
         </div>
 
-        <div className="rounded-xl border border-graphite bg-charcoal p-5">
+        <div className="rounded-xl border border-graphite bg-charcoal p-4 sm:p-5">
           <div className="text-sm text-silver">Remaining Hours</div>
           <div className="mt-2 text-2xl font-bold text-white">{formatMinutes(remainingMinutes)}</div>
           <div className="mt-1 text-xs text-silver">Based on approved hours only</div>
         </div>
 
-        <div className="rounded-xl border border-graphite bg-charcoal p-5">
+        <div className="rounded-xl border border-graphite bg-charcoal p-4 sm:p-5">
           <div className="text-sm text-silver">Required Hours</div>
           <div className="mt-2 text-2xl font-bold text-white">{requirements.requiredHours}h</div>
           <div className="mt-1 text-xs text-silver">
@@ -316,9 +323,10 @@ export default async function StudentHoursPage() {
           </div>
         </div>
 
-        <div className="rounded-xl border border-graphite bg-charcoal p-5">
+        <div className="rounded-xl border border-graphite bg-charcoal p-4 sm:p-5">
           <div className="text-sm text-silver">Today&apos;s Attendance</div>
           <div
+            aria-label={`Today's attendance status: ${attendanceLabel(todayStatus)}`}
             className={`mt-2 inline-flex rounded-full border px-3 py-1.5 text-sm font-semibold ${attendanceStatusClass(todayStatus)}`}
           >
             {attendanceLabel(todayStatus)}
@@ -327,10 +335,10 @@ export default async function StudentHoursPage() {
         </div>
       </section>
 
-      <section className="rounded-xl border border-graphite bg-charcoal p-5 sm:p-6">
+      <section aria-labelledby="attendance-summary-heading" className="rounded-xl border border-graphite bg-charcoal p-4 sm:p-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-white">Attendance Summary</h2>
+            <h2 id="attendance-summary-heading" className="text-lg font-semibold text-white">Attendance Summary</h2>
             <p className="mt-1 text-sm text-silver">
               Calculated from the same attendance rules used across ASCYN PRO.
             </p>
@@ -426,7 +434,14 @@ export default async function StudentHoursPage() {
           </div>
         </div>
 
-        <div className="mt-4 h-3 overflow-hidden rounded-full bg-black">
+        <div
+          className="mt-4 h-3 overflow-hidden rounded-full bg-black"
+          role="progressbar"
+          aria-label="Official hour progress"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={completionPercentage}
+        >
           <div
             className="h-full rounded-full bg-[var(--color-brand-gold)]"
             style={{ width: `${completionPercentage}%` }}
@@ -438,13 +453,22 @@ export default async function StudentHoursPage() {
         </div>
       </section>
 
-      <section className="rounded-xl border border-graphite bg-charcoal p-5 sm:p-6">
-        <div>
-          <h2 className="text-lg font-semibold text-white">My Schedule</h2>
-          <p className="mt-1 text-sm text-silver">
-            Your current expected weekly schedule and one-day exceptions. Schedule changes do not change official hours by themselves.
+      <details className="rounded-xl border border-graphite bg-charcoal" open>
+        <summary className="cursor-pointer list-none p-4 sm:p-6 [&::-webkit-details-marker]:hidden">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h2 className="text-lg font-semibold text-white">My Schedule</h2>
+              <p className="mt-1 text-sm text-silver">
+                Current weekly schedule and one-day exceptions.
+              </p>
+            </div>
+            <span className="text-xs font-semibold text-[var(--color-brand-gold)]">Show / hide</span>
+          </div>
+        </summary>
+        <div className="px-4 pb-4 sm:px-6 sm:pb-6">
+          <p className="text-sm text-silver">
+            Schedule changes do not change official hours by themselves.
           </p>
-        </div>
 
         {currentScheduleProfile ? (
           <>
@@ -525,11 +549,20 @@ export default async function StudentHoursPage() {
             </div>
           )}
         </div>
-      </section>
+      </details>
 
-      <section className="rounded-xl border border-graphite bg-charcoal p-5 sm:p-6">
-        <div>
-          <h2 className="text-lg font-semibold text-white">Attendance History</h2>
+      <details className="rounded-xl border border-graphite bg-charcoal">
+        <summary className="cursor-pointer list-none p-4 sm:p-6 [&::-webkit-details-marker]:hidden">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h2 className="text-lg font-semibold text-white">Attendance History</h2>
+              <p className="mt-1 text-sm text-silver">Recent attendance records and actual attended time.</p>
+            </div>
+            <span className="text-xs font-semibold text-[var(--color-brand-gold)]">Show / hide</span>
+          </div>
+        </summary>
+        <div className="px-4 pb-4 sm:px-6 sm:pb-6">
+          <div>
           <p className="mt-1 text-sm text-silver">
             Your most recent attendance records, including actual arrival, departure, and attended time.
           </p>
