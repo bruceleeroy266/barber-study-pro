@@ -48,6 +48,8 @@ import { STUDENT_STATE_LABELS, STUDENT_STATE_DESCRIPTIONS } from '@/lib/remediat
 import type { StudentRemediationState } from '@/lib/remediation/student-service'
 import { recordLearningActivity } from '@/lib/learning-activity'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
+import { buildChapter8PersistedReassessmentEvent } from '@/lib/chapter-8-concepts/reassessment-evidence'
+import type { Chapter8ConceptFamilyId } from '@/lib/chapter-8-concepts/types'
 
 export async function POST(
   request: NextRequest,
@@ -176,6 +178,7 @@ export async function POST(
     )
 
     let attemptId: string | null = existingAttemptId
+    const attemptWasReplay = !!existingAttemptId
 
     if (!attemptId) {
       const { data: consumedAttemptId, error: consumeError } = await supabaseAdmin.rpc(
@@ -226,9 +229,25 @@ export async function POST(
       )
     }
 
+    if (cycle.chapterId === 'ch-8' && !attemptWasReplay) {
+      const evidenceEvent = buildChapter8PersistedReassessmentEvent({
+        attemptId,
+        questionId,
+        conceptFamilyId: cycle.conceptId as Chapter8ConceptFamilyId,
+        correct: isCorrect,
+        answeredAt: new Date().toISOString(),
+      })
+
+      await service.recordCycleEvent(
+        cycleId,
+        'chapter8_remediation_reassessment_evidence',
+        evidenceEvent,
+      )
+    }
+
     // Learning-activity tracking: submitting a knowledge-check answer is
-    // meaningful Chapter 2 learning work. Advance last_studied_at via the
-    // shared server-side mechanism (student-scoped client, RLS). Never blocks.
+    // meaningful learning work. Advance last_studied_at via the shared
+    // server-side mechanism (student-scoped client, RLS). Never blocks.
     await recordLearningActivity(supabase, user.id, cycle.chapterId)
 
     // Knowledge-check progress from persisted state (C3-3 stage 5).
