@@ -127,7 +127,7 @@ describe('AttendanceClient today controls', () => {
     bulkUpdateStatus.mockResolvedValue(undefined)
     updateActualTimes.mockResolvedValue(undefined)
     submitDailyAttendance.mockResolvedValue(true)
-    generatePendingHoursFromAttendance.mockResolvedValue({ created: 1, skipped: 0, attendanceCount: 1 })
+    generatePendingHoursFromAttendance.mockResolvedValue({ created: 1, updated: 0, skipped: 0, attendanceCount: 1 })
   })
 
   it('stages an individual status and saves it only when Submit Day is pressed', async () => {
