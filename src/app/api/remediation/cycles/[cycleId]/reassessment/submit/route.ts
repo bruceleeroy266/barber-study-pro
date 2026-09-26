@@ -50,6 +50,7 @@ import { recordLearningActivity } from '@/lib/learning-activity'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { buildChapter8PersistedReassessmentEvent } from '@/lib/chapter-8-concepts/reassessment-evidence'
 import type { Chapter8ConceptFamilyId } from '@/lib/chapter-8-concepts/types'
+import { evaluateChapter8FormalReassessment } from '@/lib/chapter-8-concepts/recovery-outcome'
 
 export async function POST(
   request: NextRequest,
@@ -319,11 +320,41 @@ export async function POST(
     // because the quiz_attempt was created with is_reassessment=true,
     // remediation_cycle_id=cycleId, and target_concept_id=cycle.conceptId
     const evidenceIds = kcProgress.answeredAttemptIds.slice(0, requiredCount)
-    const evaluationResult = await evaluationService.evaluateCycleWithDetection(
-      cycleId,
-      cycle.conceptId,
-      evidenceIds
-    )
+
+    let evaluationResult
+    if (cycle.chapterId === 'ch-8') {
+      const persistedAttempts = await fetchQuizAttempts(evidenceIds)
+      const recoveryOutcome = evaluateChapter8FormalReassessment({
+        conceptFamilyId: cycle.conceptId as Chapter8ConceptFamilyId,
+        correctCount: persistedAttempts.reduce((sum, item) => sum + (item.score > 0 ? 1 : 0), 0),
+        questionCount: persistedAttempts.length,
+      })
+
+      const semanticDetection = await detectionProvider.detectConceptState(
+        cycle.conceptId,
+        evidenceIds,
+      )
+      if (!semanticDetection) {
+        return NextResponse.json(
+          { error: 'Chapter 8 reassessment evidence could not be resolved to the target concept.' },
+          { status: 500 },
+        )
+      }
+
+      evaluationResult = await evaluationService.evaluateCycle({
+        cycleId,
+        detectionState: recoveryOutcome.detectionState,
+        confidence: recoveryOutcome.confidence,
+        conceptEvidence: semanticDetection.evidence,
+        evidenceIds,
+      })
+    } else {
+      evaluationResult = await evaluationService.evaluateCycleWithDetection(
+        cycleId,
+        cycle.conceptId,
+        evidenceIds
+      )
+    }
 
     if (!evaluationResult.success) {
       console.error('[Remediation API] Evaluation failed:', evaluationResult.error)
