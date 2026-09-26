@@ -25,12 +25,12 @@ import { PrintButton } from './PrintButton'
 import ProgressReportModal from './ProgressReportModal'
 import BackButton from '@/components/ui/BackButton'
 import { getInstructorNotes } from './actions'
+import { type Chapter7MicroCheckAttemptRow } from '@/lib/chapter-7-concepts/micro-check-persistence'
 import {
-  buildChapter7MicroCheckDiagnostics,
-  calculatePersistedChapter7MicroCheckPercent,
-  type Chapter7MicroCheckAttemptRow,
-} from '@/lib/chapter-7-concepts/micro-check-persistence'
-import { getChapter7ConceptFamily } from '@/lib/chapter-7-concepts/concepts'
+  buildChapter7InstructorDiagnostics,
+  type Chapter7InstructorQuizAttempt,
+  type Chapter7InstructorRemediationCycle,
+} from '@/lib/chapter-7-concepts/instructor-diagnostics'
 import { mapHourLogsFromDb, mapAttendanceRecordsFromDb, mapAttendanceNotesFromDb } from '@/lib/mappers/operational-data-mappers'
 import { getLastSignInAtMap } from '@/lib/instructor/last-login'
 
@@ -261,6 +261,13 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     .eq('chapter_id', 'ch-7')
     .order('answered_at', { ascending: true })
 
+  const { data: chapter7RemediationCycles } = await supabase
+    .from('remediation_cycles')
+    .select('concept_id,status,outcome,reassessment_completed_at,created_at')
+    .eq('user_id', studentId)
+    .eq('chapter_id', 'ch-7')
+    .order('created_at', { ascending: true })
+
   // Get instructor notes
   const notesResult = await getInstructorNotes(studentId, instructorProfile.school_id)
   let noteRecords: InstructorNote[] = notesResult.success ? notesResult.data : []
@@ -348,11 +355,24 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     : 0
 
   const chapter7MicroCheckAttempts = (chapter7MicroCheckRows ?? []) as Chapter7MicroCheckAttemptRow[]
-  const chapter7MicroCheckPercent = calculatePersistedChapter7MicroCheckPercent(chapter7MicroCheckAttempts)
-  const chapter7MicroCheckDiagnostics = buildChapter7MicroCheckDiagnostics(
-    chapter7MicroCheckAttempts,
-    new Date().toISOString(),
-  )
+  const chapter7Progress = progressRecords.find((record) => record.chapter_id === 'ch-7')
+  const chapter7Diagnostics = buildChapter7InstructorDiagnostics({
+    studentId,
+    completionPercent: chapter7Progress?.progress_percentage ?? 0,
+    microCheckRows: chapter7MicroCheckAttempts,
+    quizAttempts: attemptRecords
+      .filter((attempt) => attempt.quiz_id === 'quiz-7' || attempt.is_reassessment)
+      .map((attempt) => ({
+        quiz_id: attempt.quiz_id,
+        percentage: attempt.percentage,
+        answers_json: (attempt.answers_json ?? null) as Record<string, unknown> | null,
+        completed_at: attempt.completed_at,
+        is_reassessment: attempt.is_reassessment ?? false,
+        target_concept_id: attempt.target_concept_id ?? null,
+      })) as Chapter7InstructorQuizAttempt[],
+    remediationCycles: (chapter7RemediationCycles ?? []) as Chapter7InstructorRemediationCycle[],
+    referenceTime: new Date().toISOString(),
+  })
 
   // Last activity across all progress records
   const lastStudiedDates = progressRecords
@@ -517,53 +537,168 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           </div>
         </div>
 
-        {/* Chapter 7 micro-check diagnostics */}
+        {/* Chapter 7 diagnostic & intervention presentation */}
         <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
           <div className="p-6 border-b border-graphite">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div className="flex flex-col gap-4">
               <div>
-                <h2 className="text-xl font-semibold text-white">Chapter 7 Micro-Check Diagnostics</h2>
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 7 — Basics of Chemistry
+                </p>
+                <h2 className="text-xl font-semibold text-white mt-1">Mastery & Intervention Diagnostics</h2>
                 <p className="text-sm text-silver mt-1">
-                  Immutable first-attempt evidence by chemistry concept.
+                  Completion, grade, mastery, confidence, and intervention signals are shown separately.
                 </p>
               </div>
-              <div className="text-right">
-                <div className="text-2xl font-bold text-[var(--color-brand-gold)]">
-                  {chapter7MicroCheckPercent === null ? '—' : `${chapter7MicroCheckPercent}%`}
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="rounded-lg border border-graphite bg-black p-4">
+                  <div className="text-2xl font-bold text-[var(--color-brand-gold)]">
+                    {chapter7Diagnostics.chapterGrade.finalGrade}%
+                  </div>
+                  <div className="text-xs text-silver mt-1">Chapter Grade</div>
                 </div>
-                <div className="text-xs text-silver">Micro-check component</div>
+                <div className="rounded-lg border border-graphite bg-black p-4">
+                  <div className="text-2xl font-bold text-white">{chapter7Diagnostics.overallMastery}%</div>
+                  <div className="text-xs text-silver mt-1">Overall Mastery</div>
+                </div>
+                <div className="rounded-lg border border-graphite bg-black p-4">
+                  <div className="text-lg font-bold text-white capitalize">
+                    {chapter7Diagnostics.overallConfidence.replaceAll('_', ' ')}
+                  </div>
+                  <div className="text-xs text-silver mt-1">Mastery Confidence</div>
+                </div>
+                <div className="rounded-lg border border-graphite bg-black p-4">
+                  <div className="text-2xl font-bold text-white">
+                    {chapter7Progress?.progress_percentage ?? 0}%
+                  </div>
+                  <div className="text-xs text-silver mt-1">Completion</div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-sm">
+                <div className="rounded-lg border border-graphite p-3">
+                  <p className="text-silver-gray">Micro Checks</p>
+                  <p className="text-white font-semibold mt-1">
+                    {chapter7Diagnostics.microCheckPercent === null ? 'No evidence' : `${chapter7Diagnostics.microCheckPercent}%`}
+                  </p>
+                </div>
+                <div className="rounded-lg border border-graphite p-3">
+                  <p className="text-silver-gray">Chapter Assessment</p>
+                  <p className="text-white font-semibold mt-1">
+                    {chapter7Diagnostics.chapterAssessmentPercent === null ? 'Not attempted' : `${chapter7Diagnostics.chapterAssessmentPercent}%`}
+                  </p>
+                </div>
+                <div className="rounded-lg border border-graphite p-3">
+                  <p className="text-silver-gray">Remediation Status</p>
+                  <p className="text-white font-semibold mt-1">{chapter7Diagnostics.remediationStatus}</p>
+                </div>
+                <div className="rounded-lg border border-graphite p-3">
+                  <p className="text-silver-gray">Latest Reassessment</p>
+                  <p className="text-white font-semibold mt-1">{chapter7Diagnostics.latestReassessment}</p>
+                </div>
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 p-6">
-            {chapter7MicroCheckDiagnostics.map((diagnostic) => {
-              const concept = getChapter7ConceptFamily(diagnostic.conceptFamilyId)
-              return (
-                <div key={diagnostic.conceptFamilyId} className="rounded-lg border border-graphite bg-black p-4">
+
+          {chapter7Diagnostics.interventionFlags.length > 0 && (
+            <div className="p-6 border-b border-graphite">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-white">Active Intervention Signals</h3>
+              <div className="grid gap-3 mt-3">
+                {chapter7Diagnostics.interventionFlags.map((flag) => (
+                  <div
+                    key={flag.key}
+                    className={`rounded-lg border p-4 ${
+                      flag.severity === 'urgent'
+                        ? 'border-red-400/50 bg-red-950/20'
+                        : flag.severity === 'priority'
+                          ? 'border-warm-bronze/50 bg-warm-bronze/10'
+                          : 'border-graphite bg-black'
+                    }`}
+                  >
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-xs font-semibold uppercase tracking-wide text-silver">
+                        {flag.severity}
+                      </span>
+                      {flag.conceptName && (
+                        <span className="text-sm font-semibold text-white">{flag.conceptName}</span>
+                      )}
+                    </div>
+                    <p className="text-sm text-light-gray mt-2">{flag.reason}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 border-b border-graphite">
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-white">Strongest Concepts</h3>
+              <div className="space-y-2 mt-3">
+                {chapter7Diagnostics.strongestConcepts.length > 0 ? chapter7Diagnostics.strongestConcepts.map((concept) => (
+                  <div key={concept.conceptName} className="rounded-lg border border-graphite bg-black p-3 flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-medium text-white">{concept.conceptName}</p>
+                      <p className="text-xs text-silver mt-1 capitalize">
+                        {concept.confidence.replaceAll('_', ' ')} confidence · {concept.observations} observations
+                      </p>
+                    </div>
+                    <span className="text-sm font-semibold text-[var(--color-brand-gold)]">{concept.mastery}%</span>
+                  </div>
+                )) : <p className="text-sm text-silver">Not enough Chapter 7 evidence yet.</p>}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-white">Weakest Concepts</h3>
+              <div className="space-y-2 mt-3">
+                {chapter7Diagnostics.weakestConcepts.length > 0 ? chapter7Diagnostics.weakestConcepts.map((concept) => (
+                  <div key={concept.conceptName} className="rounded-lg border border-graphite bg-black p-3 flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-medium text-white">{concept.conceptName}</p>
+                      <p className="text-xs text-silver mt-1 capitalize">
+                        {concept.confidence.replaceAll('_', ' ')} confidence · {concept.observations} observations
+                      </p>
+                    </div>
+                    <span className="text-sm font-semibold text-warm-bronze">{concept.mastery}%</span>
+                  </div>
+                )) : <p className="text-sm text-silver">Not enough Chapter 7 evidence yet.</p>}
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-white">Concept Evidence</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+              {chapter7Diagnostics.concepts.map((concept) => (
+                <div key={concept.conceptName} className="rounded-lg border border-graphite bg-black p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <h3 className="text-sm font-semibold text-white">{concept?.name ?? diagnostic.conceptFamilyId}</h3>
+                      <h4 className="text-sm font-semibold text-white">{concept.conceptName}</h4>
                       <p className="text-xs text-silver mt-1">
-                        {diagnostic.answered > 0
-                          ? `${diagnostic.correct}/${diagnostic.answered} correct`
-                          : 'No micro-check evidence yet'}
+                        {concept.observations > 0
+                          ? `${concept.observations} observations · ${concept.initialMisses} initial misses`
+                          : 'No graded evidence yet'}
                       </p>
                     </div>
                     <span className="text-sm font-semibold text-[var(--color-brand-gold)]">
-                      {diagnostic.answered > 0 ? `${diagnostic.percent}%` : '—'}
+                      {concept.observations > 0 ? `${concept.mastery}%` : '—'}
                     </span>
                   </div>
-                  <div className="mt-3 text-xs text-silver-gray">
-                    Mastery evidence: {diagnostic.answered > 0 ? `${diagnostic.masteryFromMicroChecks}%` : '—'}
-                    {' • '}
-                    Confidence: {diagnostic.confidenceFromMicroChecks.replaceAll('_', ' ')}
+                  <div className="mt-3 text-xs text-silver-gray capitalize">
+                    Confidence: {concept.confidence.replaceAll('_', ' ')}
+                    {concept.reassessmentCorrect > 0 && ` · ${concept.reassessmentCorrect} reassessment correct`}
+                  </div>
+                  <div className="mt-1 text-xs text-silver-gray">
+                    Latest evidence: {concept.mostRecentEvidenceAt ? formatDate(concept.mostRecentEvidenceAt) : '—'}
                   </div>
                 </div>
-              )
-            })}
+              ))}
+            </div>
           </div>
+
           <div className="px-6 pb-6 text-xs text-silver-gray">
-            This component contributes 20% of the Chapter 7 grade. The chapter assessment remains the heaviest component at 40%.
+            Grade hierarchy remains locked: micro checks 20%, flashcards 10%, chapter assessment 40%, scenario/application 15%, remediation/reassessment recovery 15%. Missing grade components are not replaced by completion activity.
           </div>
         </section>
 
