@@ -69,8 +69,9 @@ export default async function InstructorAnswerKeyChapterPage({
 
           return (
             <article
+              id={question.id}
               key={question.id}
-              className="bg-charcoal border border-graphite rounded-xl p-6"
+              className="bg-charcoal border border-graphite rounded-xl p-6 scroll-mt-24"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
