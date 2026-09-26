@@ -1,9 +1,30 @@
 import Link from 'next/link'
 import { localChapters } from '@/lib/local-data'
 import { allQuizQuestions } from '@/lib/quiz-data'
+import AnswerKeySearch, { type AnswerKeySearchEntry } from './AnswerKeySearch'
 
 export default function InstructorAnswerKeysPage() {
   const chapters = [...localChapters].sort((a, b) => a.chapter_number - b.chapter_number)
+
+  const searchEntries: AnswerKeySearchEntry[] = chapters.flatMap((chapter) => {
+    const questions = allQuizQuestions[`quiz-${chapter.chapter_number}`] ?? []
+
+    return questions.map((question, index) => ({
+      id: question.id,
+      chapterNumber: chapter.chapter_number,
+      chapterTitle: chapter.title,
+      questionNumber: index + 1,
+      question: question.question,
+      answers: {
+        a: question.answer_a,
+        b: question.answer_b,
+        c: question.answer_c,
+        d: question.answer_d,
+      },
+      correctAnswer: question.correct_answer,
+      explanation: question.explanation ?? '',
+    }))
+  })
 
   return (
     <div className="space-y-8">
@@ -28,6 +49,8 @@ export default function InstructorAnswerKeysPage() {
           Keep this view instructor-facing and avoid displaying it while students are actively testing.
         </p>
       </section>
+
+      <AnswerKeySearch entries={searchEntries} />
 
       <section className="grid gap-4 md:grid-cols-2">
         {chapters.map((chapter) => {
