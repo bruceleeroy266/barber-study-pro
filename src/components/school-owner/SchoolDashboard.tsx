@@ -368,6 +368,21 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
 
         <SchoolOverviewMetrics metrics={metrics} />
 
+        <Link
+          href="/school/hours"
+          className="block rounded-xl border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 p-5 transition-colors hover:bg-[var(--color-brand-gold)]/15"
+        >
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-white">Individual Student Hours</h2>
+              <p className="text-sm text-silver">
+                Enter daily school hours and track accumulated and remaining hours for each student separately.
+              </p>
+            </div>
+            <span className="font-semibold text-[var(--color-brand-gold)]">Manage Hours →</span>
+          </div>
+        </Link>
+
         <div className="bg-charcoal border border-graphite rounded-xl p-6">
           <h2 className="text-lg font-semibold text-white mb-4">License Requirements</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
