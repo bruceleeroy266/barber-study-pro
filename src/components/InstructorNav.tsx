@@ -25,6 +25,7 @@ const navItems = [
   { href: '/instructor/rubrics', label: 'Rubrics', icon: GraduationCap },
   { href: '/instructor/chapters', label: 'Teaching Notes', icon: BookOpen },
   { href: '/instructor/answer-keys', label: 'Answer Keys', icon: FileCheck },
+  { href: '/instructor/quiz-approvals', label: 'Quiz Approvals', icon: ClipboardCheck },
   { href: '/instructor/escalations', label: 'Escalations', icon: AlertTriangle, badge: true },
 ]
 

@@ -11,6 +11,7 @@ import { getChapterContent } from '@/lib/chapter-content'
 import { chapterKeyTerms } from '@/lib/chapter-2-key-terms'
 import KeyTermsPanel from '@/components/chapter/KeyTermsPanel'
 import { localChapters, getLocalFlashcards, getLocalQuiz, getLocalQuizQuestions } from '@/lib/local-data'
+import { requestQuizAccess } from '@/app/instructor/quiz-approvals/actions'
 
 interface ChapterPageProps {
   params: Promise<{
@@ -62,6 +63,32 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
     .eq('user_id', user?.id)
     .eq('chapter_id', chapter.id)
     .single()
+
+  const { data: studentProfile } = await supabase
+    .from('profiles')
+    .select('school_id')
+    .eq('id', user.id)
+    .single()
+
+  const { data: quizApprovalSettings } = studentProfile?.school_id
+    ? await supabase
+        .from('quiz_approval_settings')
+        .select('require_approval, auto_approve_when_ready')
+        .eq('school_id', studentProfile.school_id)
+        .maybeSingle()
+    : { data: null }
+
+  const { data: quizAccessRequest } = quiz && quizApprovalSettings?.require_approval
+    ? await supabase
+        .from('quiz_access_requests')
+        .select('id, status, requested_at, reviewed_at')
+        .eq('student_id', user.id)
+        .eq('quiz_id', quiz.id)
+        .maybeSingle()
+    : { data: null }
+
+  const quizApprovalRequired = Boolean(quizApprovalSettings?.require_approval)
+  const quizApproved = !quizApprovalRequired || quizAccessRequest?.status === 'approved'
 
   // Get best quiz attempt
   const { data: bestAttempt } = await supabase
@@ -197,17 +224,41 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
             )}
           </div>
 
-          <QuizClient
-            quiz={quiz}
-            questions={questions}
-            chapterId={chapter.id}
-            chapterNumber={num}
-            nextChapterNumber={nextChapterNumber}
-            userId={user?.id}
-            bestAttempt={bestAttempt}
-            remediation={chapterContent?.remediation || []}
-            competencies={chapterContent?.competencies || []}
-          />
+          {quizApproved ? (
+            <QuizClient
+              quiz={quiz}
+              questions={questions}
+              chapterId={chapter.id}
+              chapterNumber={num}
+              nextChapterNumber={nextChapterNumber}
+              userId={user?.id}
+              bestAttempt={bestAttempt}
+              remediation={chapterContent?.remediation || []}
+              competencies={chapterContent?.competencies || []}
+              quizAccessRequestId={quizAccessRequest?.id ?? null}
+              quizAccessSchoolId={studentProfile?.school_id ?? null}
+            />
+          ) : (
+            <div className="rounded-xl border border-[var(--color-brand-gold)]/30 bg-black/20 p-5">
+              <p className="font-semibold text-white">Instructor approval required</p>
+              <p className="mt-2 text-sm text-silver">
+                {quizAccessRequest?.status === 'pending'
+                  ? 'Your request is pending instructor review.'
+                  : quizAccessRequest?.status === 'denied'
+                    ? 'Your previous request was denied. You can request access again when you are ready.'
+                    : 'Request access when you are ready to take this chapter quiz.'}
+              </p>
+              {quizAccessRequest?.status !== 'pending' && (
+                <form action={requestQuizAccess} className="mt-4">
+                  <input type="hidden" name="quizId" value={quiz.id} />
+                  <input type="hidden" name="chapterId" value={chapter.id} />
+                  <button className="rounded-lg bg-[var(--color-brand-gold)] px-4 py-2 font-semibold text-black">
+                    Request Quiz Access
+                  </button>
+                </form>
+              )}
+            </div>
+          )}
         </div>
       )}
 
