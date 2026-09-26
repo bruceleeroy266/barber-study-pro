@@ -275,7 +275,7 @@ export default function AttendanceClient({
     try {
       const generation = await generatePendingHoursFromAttendance(defaultDate)
       setDailySubmitMessage(
-        `Daily attendance submitted for ${entries.length} student${entries.length === 1 ? '' : 's'}. ${generation.created} pending hour entr${generation.created === 1 ? 'y was' : 'ies were'} created${generation.updated > 0 ? `; ${generation.updated} pending entr${generation.updated === 1 ? 'y was' : 'ies were'} refreshed from corrected attendance` : ''}${generation.skipped > 0 ? `; ${generation.skipped} duplicate-safe/reviewed entr${generation.skipped === 1 ? 'y was' : 'ies were'} left unchanged` : ''} for admin approval.`,
+        `Daily attendance submitted for ${entries.length} student${entries.length === 1 ? '' : 's'}. ${generation.created} pending hour entr${generation.created === 1 ? 'y was' : 'ies were'} created${generation.resubmitted > 0 ? `; ${generation.resubmitted} rejected entr${generation.resubmitted === 1 ? 'y was' : 'ies were'} resubmitted after correction` : ''}${generation.updated > 0 ? `; ${generation.updated} pending entr${generation.updated === 1 ? 'y was' : 'ies were'} refreshed from corrected attendance` : ''}${generation.skipped > 0 ? `; ${generation.skipped} duplicate-safe/reviewed entr${generation.skipped === 1 ? 'y was' : 'ies were'} left unchanged` : ''} for admin approval.`,
       )
       setExpandedStudentId(null)
     } catch (generationError) {
