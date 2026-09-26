@@ -30,6 +30,7 @@ import { createSupabaseStudentRemediationClient } from '@/lib/remediation/supaba
 import { createStudentRemediationService } from '@/lib/remediation/student-service'
 import { createSupabaseEvaluationClient } from '@/lib/evaluation/supabase-client'
 import { createEvaluationService } from '@/lib/evaluation/evaluation-service'
+import { generateIdempotencyKey } from '@/lib/evaluation/outcome-mapper'
 import { createSupabaseExclusionClient } from '@/lib/reassessment/supabase-client'
 import { createReassessmentService } from '@/lib/reassessment/reassessment-service'
 import { getChapterContentProvider } from '@/lib/remediation/content-provider-registry'
@@ -347,6 +348,12 @@ export async function POST(
         confidence: recoveryOutcome.confidence,
         conceptEvidence: semanticDetection.evidence,
         evidenceIds,
+        idempotencyKey: generateIdempotencyKey(
+          cycleId,
+          recoveryOutcome.detectionState,
+          recoveryOutcome.confidence,
+          evidenceIds,
+        ),
       })
     } else {
       evaluationResult = await evaluationService.evaluateCycleWithDetection(
