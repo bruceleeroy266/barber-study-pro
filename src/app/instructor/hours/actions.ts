@@ -136,11 +136,17 @@ export async function reviewStudentHours(formData: FormData) {
     .eq('school_id', actor.school_id)
     .maybeSingle()
 
-  if (!target || target.status !== 'pending') {
+  if (!target) {
     redirect('/school/hours?error=invalid-review')
   }
 
-  const { error } = await supabase
+  if (target.status !== 'pending') {
+    redirect(
+      `/school/hours?alreadyReviewed=${encodeURIComponent(target.status)}&student=${encodeURIComponent(target.user_id)}`,
+    )
+  }
+
+  const { data: updated, error } = await supabase
     .from('hour_logs')
     .update({
       status: decision,
@@ -151,16 +157,40 @@ export async function reviewStudentHours(formData: FormData) {
     .eq('id', hourLogId)
     .eq('school_id', actor.school_id)
     .eq('status', 'pending')
+    .select('id, user_id, status')
+    .maybeSingle()
 
   if (error) {
     console.error('[StaffHours] Failed to review hours', error)
     redirect('/school/hours?error=review-failed')
   }
 
+  if (!updated) {
+    const { data: current, error: refreshError } = await supabase
+      .from('hour_logs')
+      .select('id, user_id, status')
+      .eq('id', hourLogId)
+      .eq('school_id', actor.school_id)
+      .maybeSingle()
+
+    if (refreshError) {
+      console.error('[StaffHours] Failed to refresh hour review state', refreshError)
+      redirect('/school/hours?error=review-failed')
+    }
+
+    if (!current) {
+      redirect('/school/hours?error=invalid-review')
+    }
+
+    redirect(
+      `/school/hours?alreadyReviewed=${encodeURIComponent(current.status)}&student=${encodeURIComponent(current.user_id)}`,
+    )
+  }
+
   revalidatePath('/school')
   revalidatePath('/school/hours')
   revalidatePath('/instructor/hours')
-  revalidatePath(`/instructor/student/${target.user_id}`)
+  revalidatePath(`/instructor/student/${updated.user_id}`)
 
-  redirect(`/school/hours?reviewed=${decision}&student=${encodeURIComponent(target.user_id)}`)
+  redirect(`/school/hours?reviewed=${decision}&student=${encodeURIComponent(updated.user_id)}`)
 }

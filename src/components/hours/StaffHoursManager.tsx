@@ -5,6 +5,7 @@ import { hasPermission } from '@/lib/auth-helpers'
 import { resolveProgramRequirementsForStudents } from '@/lib/programs/requirements'
 import { logStudentHours, reviewStudentHours } from '@/app/instructor/hours/actions'
 import HoursPdfExports from '@/components/hours/HoursPdfExports'
+import StudentHoursDropdown from '@/components/hours/StudentHoursDropdown'
 import { calculateApprovedPeriodTotals, formatHourMinutes } from '@/lib/hours/reporting'
 import type { HourCategory, HourStatus } from '@/types'
 
@@ -58,6 +59,8 @@ interface Props {
   saved?: boolean
   error?: string | null
   highlightedStudentId?: string | null
+  reviewedStatus?: string | null
+  alreadyReviewedStatus?: string | null
 }
 
 export default async function StaffHoursManager({
@@ -67,6 +70,8 @@ export default async function StaffHoursManager({
   saved = false,
   error = null,
   highlightedStudentId = null,
+  reviewedStatus = null,
+  alreadyReviewedStatus = null,
 }: Props) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -178,6 +183,7 @@ export default async function StaffHoursManager({
   const selectedId = highlightedStudentId && rows.some((row) => row.id === highlightedStudentId)
     ? highlightedStudentId
     : rows[0]?.id ?? ''
+  const selectedStudent = rows.find((row) => row.id === selectedId) ?? null
 
   const errorMessage =
     error === 'missing-fields' ? 'Choose a student and date.' :
@@ -228,6 +234,16 @@ export default async function StaffHoursManager({
         {saved && (
           <div className="rounded-xl border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 p-4 text-[var(--color-brand-gold)]">
             Hours submitted for school administrator approval.
+          </div>
+        )}
+        {reviewedStatus && ['approved', 'rejected'].includes(reviewedStatus) && (
+          <div className="rounded-xl border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 p-4 text-[var(--color-brand-gold)]">
+            Hour entry {reviewedStatus}. Totals and the approval queue have been refreshed.
+          </div>
+        )}
+        {alreadyReviewedStatus && ['approved', 'rejected'].includes(alreadyReviewedStatus) && (
+          <div className="rounded-xl border border-silver/30 bg-white/5 p-4 text-light-gray">
+            This hour entry was already {alreadyReviewedStatus}. The latest record is shown below.
           </div>
         )}
         {errorMessage && (
@@ -412,107 +428,119 @@ export default async function StaffHoursManager({
         )}
 
         <section>
-          <div className="mb-3">
+          <div className="mb-4">
             <h2 className="text-xl font-semibold text-white">Individual Student Totals</h2>
-            <p className="text-sm text-silver">Each student is tracked independently.</p>
+            <p className="text-sm text-silver">
+              Select a student to view their hours without loading the full roster on screen.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            {rows.map((student) => (
-              <article
-                key={student.id}
-                className={`rounded-xl border bg-charcoal p-5 ${
-                  student.id === highlightedStudentId
-                    ? 'border-[var(--color-brand-gold)]'
-                    : 'border-graphite'
-                }`}
-              >
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div className="min-w-0">
-                    <h3 className="break-words text-lg font-semibold text-white">{student.full_name}</h3>
-                    <p className="break-all text-sm text-silver">{student.email}</p>
-                  </div>
-                  <div className="shrink-0 rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 px-3 py-2 text-right">
-                    <div className="text-lg font-bold text-[var(--color-brand-gold)]">{student.percentage}%</div>
-                    <div className="text-xs text-silver">complete</div>
-                  </div>
-                </div>
+          {rows.length > 0 ? (
+            <div className="space-y-4">
+              <div className="rounded-xl border border-graphite bg-charcoal p-4">
+                <StudentHoursDropdown
+                  students={rows.map((student) => ({
+                    id: student.id,
+                    full_name: student.full_name,
+                    email: student.email,
+                  }))}
+                  selectedStudentId={selectedId}
+                />
+              </div>
 
-                {isSchoolAdministrator && (
-                  <div className="mt-5 grid grid-cols-3 gap-3">
-                    <div className="rounded-lg border border-graphite bg-black p-3">
-                      <div className="text-xs text-silver">This Week</div>
-                      <div className="mt-1 text-lg font-bold text-white">{formatHourMinutes(student.periods.weekMinutes)}</div>
+              {selectedStudent && (
+                <article
+                  className={`rounded-xl border bg-charcoal p-5 ${
+                    selectedStudent.id === highlightedStudentId
+                      ? 'border-[var(--color-brand-gold)]'
+                      : 'border-graphite'
+                  }`}
+                >
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
+                      <h3 className="break-words text-lg font-semibold text-white">{selectedStudent.full_name}</h3>
+                      <p className="break-all text-sm text-silver">{selectedStudent.email}</p>
                     </div>
-                    <div className="rounded-lg border border-graphite bg-black p-3">
-                      <div className="text-xs text-silver">This Month</div>
-                      <div className="mt-1 text-lg font-bold text-white">{formatHourMinutes(student.periods.monthMinutes)}</div>
-                    </div>
-                    <div className="rounded-lg border border-graphite bg-black p-3">
-                      <div className="text-xs text-silver">This Year</div>
-                      <div className="mt-1 text-lg font-bold text-white">{formatHourMinutes(student.periods.yearMinutes)}</div>
+                    <div className="shrink-0 rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 px-3 py-2 text-right">
+                      <div className="text-lg font-bold text-[var(--color-brand-gold)]">{selectedStudent.percentage}%</div>
+                      <div className="text-xs text-silver">complete</div>
                     </div>
                   </div>
-                )}
 
-                <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                  <div className="rounded-lg bg-black p-3">
-                    <div className="text-xs text-silver">Accumulated</div>
-                    <div className="mt-1 text-xl font-bold text-white">{formatHours(student.approvedMinutes)}</div>
-                  </div>
-                  <div className="rounded-lg bg-black p-3">
-                    <div className="text-xs text-silver">Required</div>
-                    <div className="mt-1 text-xl font-bold text-white">{student.requiredHours}h</div>
-                  </div>
-                  <div className="rounded-lg bg-black p-3">
-                    <div className="text-xs text-silver">Remaining</div>
-                    <div className="mt-1 text-xl font-bold text-warm-bronze">{formatHours(student.remainingMinutes)}</div>
-                  </div>
-                  <div className="rounded-lg bg-black p-3">
-                    <div className="text-xs text-silver">Pending</div>
-                    <div className="mt-1 text-xl font-bold text-silver">{formatHours(student.pendingMinutes)}</div>
-                  </div>
-                </div>
-
-                <div className="mt-4 h-2 overflow-hidden rounded-full bg-black">
-                  <div
-                    className="h-full rounded-full bg-[var(--color-brand-gold)]"
-                    style={{ width: `${student.percentage}%` }}
-                  />
-                </div>
-
-                <div className="mt-5">
-                  <div className="mb-2 text-sm font-medium text-white">Recent hour entries</div>
-                  {student.recentLogs.length === 0 ? (
-                    <p className="text-sm text-silver">No hours logged yet.</p>
-                  ) : (
-                    <div className="space-y-2">
-                      {student.recentLogs.map((log) => (
-                        <div key={log.id} className="flex flex-col gap-1 rounded-lg border border-graphite bg-black p-3 sm:flex-row sm:items-center sm:justify-between">
-                          <div>
-                            <div className="text-sm text-white">{log.date} · {log.category}</div>
-                            {log.notes && <div className="text-xs text-silver">{log.notes}</div>}
-                            {log.rejection_reason && (
-                              <div className="text-xs text-warm-bronze">Reason: {log.rejection_reason}</div>
-                            )}
-                          </div>
-                          <div className="text-sm font-semibold text-[var(--color-brand-gold)]">
-                            {formatHours(log.minutes)} · {log.status}
-                          </div>
-                        </div>
-                      ))}
+                  {isSchoolAdministrator && (
+                    <div className="mt-5 grid grid-cols-3 gap-3">
+                      <div className="rounded-lg border border-graphite bg-black p-3">
+                        <div className="text-xs text-silver">This Week</div>
+                        <div className="mt-1 text-lg font-bold text-white">{formatHourMinutes(selectedStudent.periods.weekMinutes)}</div>
+                      </div>
+                      <div className="rounded-lg border border-graphite bg-black p-3">
+                        <div className="text-xs text-silver">This Month</div>
+                        <div className="mt-1 text-lg font-bold text-white">{formatHourMinutes(selectedStudent.periods.monthMinutes)}</div>
+                      </div>
+                      <div className="rounded-lg border border-graphite bg-black p-3">
+                        <div className="text-xs text-silver">This Year</div>
+                        <div className="mt-1 text-lg font-bold text-white">{formatHourMinutes(selectedStudent.periods.yearMinutes)}</div>
+                      </div>
                     </div>
                   )}
-                </div>
-              </article>
-            ))}
 
-            {rows.length === 0 && (
-              <div className="rounded-xl border border-graphite bg-charcoal p-8 text-center text-silver">
-                No students are assigned to this school yet.
-              </div>
-            )}
-          </div>
+                  <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                    <div className="rounded-lg bg-black p-3">
+                      <div className="text-xs text-silver">Accumulated</div>
+                      <div className="mt-1 text-xl font-bold text-white">{formatHours(selectedStudent.approvedMinutes)}</div>
+                    </div>
+                    <div className="rounded-lg bg-black p-3">
+                      <div className="text-xs text-silver">Required</div>
+                      <div className="mt-1 text-xl font-bold text-white">{selectedStudent.requiredHours}h</div>
+                    </div>
+                    <div className="rounded-lg bg-black p-3">
+                      <div className="text-xs text-silver">Remaining</div>
+                      <div className="mt-1 text-xl font-bold text-warm-bronze">{formatHours(selectedStudent.remainingMinutes)}</div>
+                    </div>
+                    <div className="rounded-lg bg-black p-3">
+                      <div className="text-xs text-silver">Pending</div>
+                      <div className="mt-1 text-xl font-bold text-silver">{formatHours(selectedStudent.pendingMinutes)}</div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 h-2 overflow-hidden rounded-full bg-black">
+                    <div
+                      className="h-full rounded-full bg-[var(--color-brand-gold)]"
+                      style={{ width: `${selectedStudent.percentage}%` }}
+                    />
+                  </div>
+
+                  <div className="mt-5">
+                    <div className="mb-2 text-sm font-medium text-white">Recent hour entries</div>
+                    {selectedStudent.recentLogs.length === 0 ? (
+                      <p className="text-sm text-silver">No hours logged yet.</p>
+                    ) : (
+                      <div className="space-y-2">
+                        {selectedStudent.recentLogs.map((log) => (
+                          <div key={log.id} className="flex flex-col gap-1 rounded-lg border border-graphite bg-black p-3 sm:flex-row sm:items-center sm:justify-between">
+                            <div>
+                              <div className="text-sm text-white">{log.date} · {log.category}</div>
+                              {log.notes && <div className="text-xs text-silver">{log.notes}</div>}
+                              {log.rejection_reason && (
+                                <div className="text-xs text-warm-bronze">Reason: {log.rejection_reason}</div>
+                              )}
+                            </div>
+                            <div className="text-sm font-semibold text-[var(--color-brand-gold)]">
+                              {formatHours(log.minutes)} · {log.status}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </article>
+              )}
+            </div>
+          ) : (
+            <div className="rounded-xl border border-graphite bg-charcoal p-8 text-center text-silver">
+              No students are assigned to this school yet.
+            </div>
+          )}
         </section>
       </div>
     </div>
