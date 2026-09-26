@@ -53,6 +53,10 @@ Automated tests now enforce:
 - no unverified “BOARD EXAM” labels
 - no publisher name in runtime flashcard copy
 
+## Validation note
+
+C7-4 is not considered complete until the current PR head has both Engineering Verification GREEN and a READY Vercel preview deployment.
+
 ## C7-4 exit criteria
 
 C7-4 closes only when:
