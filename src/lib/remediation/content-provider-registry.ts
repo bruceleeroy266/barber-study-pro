@@ -93,6 +93,16 @@ import { chapter7PremiumFlashcards } from '@/lib/chapter-7-premium-flashcards'
 import { chapter7PremiumQuizQuestions } from '@/lib/chapter-7-premium-quiz'
 import { chapter7ReassessmentQuestions } from '@/lib/chapter-7-reassessment-questions'
 
+import {
+  chapter8ContentConceptMappings,
+  chapter8FlashcardConceptMappings,
+  chapter8QuizQuestionConceptMappings,
+} from '@/lib/chapter-8-concepts/mappings'
+import { ACTIVE_CHAPTER8_CONCEPT_FAMILY_IDS, chapter8ConceptFamilies } from '@/lib/chapter-8-concepts/concepts'
+import { chapter8PremiumFlashcards } from '@/lib/chapter-8-premium-flashcards'
+import { chapter8PremiumQuizQuestions } from '@/lib/chapter-8-premium-quiz'
+import { chapter8ReassessmentReserve } from '@/lib/chapter-8-concepts/reassessment-reserve'
+
 import { getChapterContent } from '@/lib/chapter-content'
 
 // ───────────────────────────────────────────────
@@ -678,6 +688,97 @@ const chapter7Provider: ChapterRemediationContentProvider = {
   },
 }
 
+
+// ───────────────────────────────────────────────
+// Chapter 8 Provider (C8-7)
+// ───────────────────────────────────────────────
+
+const chapter8ContentMappingsProjected = chapter8ContentConceptMappings.map((m) => ({
+  contentBlockId: m.contentBlockId,
+  conceptId: m.conceptFamilyId as string,
+}))
+const chapter8FlashcardMappingsProjected = chapter8FlashcardConceptMappings.map((m) => ({
+  flashcardId: m.flashcardId as string,
+  conceptId: m.conceptFamilyId as string,
+}))
+const chapter8QuizMappingsProjected = [
+  ...chapter8QuizQuestionConceptMappings.map((m) => ({
+    questionId: m.questionId as string,
+    conceptId: m.conceptFamilyId as string,
+  })),
+  ...chapter8ReassessmentReserve.map((q) => ({
+    questionId: q.id as string,
+    conceptId: q.conceptFamilyId as string,
+  })),
+]
+
+function isChapter8ConceptFamilyId(conceptId: string): boolean {
+  return (ACTIVE_CHAPTER8_CONCEPT_FAMILY_IDS as readonly string[]).includes(conceptId)
+}
+
+function chapter8ReserveAsQuizQuestion(questionId: string): QuizQuestion | null {
+  const q = chapter8ReassessmentReserve.find((question) => question.id === questionId)
+  if (!q) return null
+  return {
+    id: q.id,
+    quiz_id: 'quiz-8',
+    question: q.question,
+    answer_a: q.answer_a,
+    answer_b: q.answer_b,
+    answer_c: q.answer_c,
+    answer_d: q.answer_d,
+    correct_answer: q.correctAnswer,
+    explanation: q.explanation,
+    difficulty: q.difficulty === 'scenario' ? 'hard' : 'medium',
+    order_index: 1000 + chapter8ReassessmentReserve.findIndex((item) => item.id === q.id),
+  }
+}
+
+const chapter8Provider: ChapterRemediationContentProvider = {
+  chapterId: 'ch-8',
+
+  getConceptName(conceptId) {
+    return chapter8ConceptFamilies.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic'
+  },
+
+  getContentBlockIdsForConcept(conceptId) {
+    return chapter8ContentMappingsProjected.filter((m) => m.conceptId === conceptId).map((m) => m.contentBlockId)
+  },
+
+  getFlashcardIdsForConcept(conceptId) {
+    return chapter8FlashcardMappingsProjected.filter((m) => m.conceptId === conceptId).map((m) => m.flashcardId)
+  },
+
+  filterContentByConcept(conceptId) {
+    return filterSectionsByMappedBlockIds(8, new Set(this.getContentBlockIdsForConcept(conceptId)))
+  },
+
+  filterFlashcardsByConcept(conceptId) {
+    const mappedIds = new Set(this.getFlashcardIdsForConcept(conceptId))
+    return chapter8PremiumFlashcards.filter((card) => card.is_active && mappedIds.has(card.id))
+  },
+
+  buildRemediationContentBundle(conceptId) {
+    return buildBundle(this, conceptId)
+  },
+
+  getQuizQuestionById(questionId) {
+    return (
+      chapter8PremiumQuizQuestions.find((q) => q.id === questionId) ??
+      chapter8ReserveAsQuizQuestion(questionId)
+    )
+  },
+
+  filterKeyTermsByConcept(conceptId) {
+    if (!isChapter8ConceptFamilyId(conceptId)) return []
+    return []
+  },
+
+  getConceptQuestionCount(conceptId) {
+    return chapter8QuizMappingsProjected.filter((m) => m.conceptId === conceptId).length
+  },
+}
+
 // ───────────────────────────────────────────────
 // Registry
 // ───────────────────────────────────────────────
@@ -689,6 +790,7 @@ const contentProviders = new Map<ChapterId, ChapterRemediationContentProvider>([
   ['ch-5', chapter5Provider],
   ['ch-6', chapter6Provider],
   ['ch-7', chapter7Provider],
+  ['ch-8', chapter8Provider],
 ])
 
 /**
