@@ -29,9 +29,10 @@ describe('E4 student hour history', () => {
   })
 
   it('shows approval status, source, and corrected resubmission without exposing internal ids', () => {
-    expect(page).toContain('Approved')
-    expect(page).toContain('Pending')
-    expect(page).toContain('Rejected')
+    expect(page).toContain("case 'approved':")
+    expect(page).toContain("case 'pending':")
+    expect(page).toContain("case 'rejected':")
+    expect(page).toContain('hourStatusLabel(entry.status)')
     expect(page).toContain('Attendance-generated')
     expect(page).toContain('Manual entry')
     expect(page).toContain('Corrected resubmission')
