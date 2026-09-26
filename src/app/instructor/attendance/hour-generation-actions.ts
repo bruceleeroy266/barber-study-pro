@@ -201,6 +201,18 @@ export async function generatePendingHoursFromAttendance(
       continue
     }
 
+    if (
+      latestRejected &&
+      latestRejected.minutes === attendance.minutes_present &&
+      latestRejected.category === category
+    ) {
+      // A rejected generated entry must actually be corrected before it can
+      // re-enter the admin queue. Re-submitting unchanged rejected evidence
+      // would only create review noise.
+      skipped += 1
+      continue
+    }
+
     const isResubmission = Boolean(latestRejected)
     const { error } = await supabase
       .from('hour_logs')
