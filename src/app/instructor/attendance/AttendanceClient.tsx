@@ -110,7 +110,6 @@ export default function AttendanceClient({
     submitCorrection,
     getAuditHistory,
     refresh,
-    ensureTodayRecords,
   } = useAttendance({
     initialRecords,
     students,
@@ -410,11 +409,11 @@ export default function AttendanceClient({
               <div>
                 <h3 className="font-semibold text-white">Review &amp; Submit Day</h3>
                 <p className="mt-1 text-sm text-silver">
-                  {markedCount} marked · {unmarkedScheduledCount} scheduled student${unmarkedScheduledCount === 1 ? '' : 's'} still unmarked
+                  {markedCount} marked · {unmarkedScheduledCount} scheduled {unmarkedScheduledCount === 1 ? 'student' : 'students'} still unmarked
                 </p>
                 {invalidTimeStudentIds.length > 0 && (
                   <p className="mt-1 text-sm text-red-300">
-                    {invalidTimeStudentIds.length} present/tardy record${invalidTimeStudentIds.length === 1 ? '' : 's'} need valid arrival and departure times.
+                    {invalidTimeStudentIds.length} present/tardy {invalidTimeStudentIds.length === 1 ? 'record needs' : 'records need'} valid arrival and departure times.
                   </p>
                 )}
                 <p className="mt-1 text-xs text-silver-gray">
