@@ -5,7 +5,7 @@ import {
   defaultProgramRequirements,
   resolveStudentProgramRequirements,
 } from '@/lib/programs/requirements'
-import { getTodayAttendanceStatus } from '@/lib/attendance'
+import { calculateAttendanceSummary, getTodayAttendanceStatus } from '@/lib/attendance'
 import { mapAttendanceRecordsFromDb } from '@/lib/mappers/operational-data-mappers'
 import { calculateApprovedPeriodTotals } from '@/lib/hours/reporting'
 import type { HoursReportLog } from '@/lib/hours/reporting'
@@ -188,11 +188,13 @@ export default async function StudentHoursPage() {
 
   const attendanceRecords: AttendanceRecord[] =
     mapAttendanceRecordsFromDb(attendanceRows ?? []) ?? []
+  const attendanceSummary = calculateAttendanceSummary(user.id, attendanceRecords)
   const { status: todayStatus } = getTodayAttendanceStatus(
     attendanceRecords,
     user.id,
     localToday,
   )
+  const currentAttendanceStatus = todayStatus ?? attendanceSummary.currentStatus
 
   return (
     <div className="space-y-8">
@@ -240,6 +242,54 @@ export default async function StudentHoursPage() {
             {attendanceLabel(todayStatus)}
           </div>
           <div className="mt-2 text-xs text-silver">{localToday}</div>
+        </div>
+      </section>
+
+      <section className="rounded-xl border border-graphite bg-charcoal p-5 sm:p-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-white">Attendance Summary</h2>
+            <p className="mt-1 text-sm text-silver">
+              Calculated from the same attendance rules used across ASCYN PRO.
+            </p>
+          </div>
+          <div className="text-left sm:text-right">
+            <div className="text-xs text-silver">Current Status</div>
+            <div className={`mt-1 inline-flex rounded-full border px-3 py-1.5 text-sm font-semibold ${attendanceStatusClass(currentAttendanceStatus)}`}>
+              {attendanceLabel(currentAttendanceStatus)}
+            </div>
+            {todayStatus === null && attendanceSummary.lastAttendanceDate && (
+              <div className="mt-1 text-xs text-silver">
+                Latest recorded: {attendanceSummary.lastAttendanceDate}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-5">
+          <div className="col-span-2 rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 p-4 sm:col-span-1">
+            <div className="text-xs text-silver">Attendance</div>
+            <div className="mt-1 text-2xl font-bold text-[var(--color-brand-gold)]">
+              {attendanceSummary.attendancePercentage}%
+            </div>
+            <div className="mt-1 text-xs text-silver">Excused days are excluded from the denominator</div>
+          </div>
+          <div className="rounded-lg border border-graphite bg-black p-4">
+            <div className="text-xs text-silver">Present Days</div>
+            <div className="mt-1 text-xl font-bold text-white">{attendanceSummary.presentDays}</div>
+          </div>
+          <div className="rounded-lg border border-graphite bg-black p-4">
+            <div className="text-xs text-silver">Tardy Days</div>
+            <div className="mt-1 text-xl font-bold text-white">{attendanceSummary.tardyDays}</div>
+          </div>
+          <div className="rounded-lg border border-graphite bg-black p-4">
+            <div className="text-xs text-silver">Absent Days</div>
+            <div className="mt-1 text-xl font-bold text-white">{attendanceSummary.absentDays}</div>
+          </div>
+          <div className="rounded-lg border border-graphite bg-black p-4">
+            <div className="text-xs text-silver">Excused Days</div>
+            <div className="mt-1 text-xl font-bold text-white">{attendanceSummary.excusedDays}</div>
+          </div>
         </div>
       </section>
 
