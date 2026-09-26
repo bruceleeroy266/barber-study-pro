@@ -110,7 +110,7 @@ export const chapter8PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'command-center-welcome',
       title: '⚡ THE POWER GRID COMMAND CENTER',
-      content: 'Welcome to the nerve center of your barbershop. Every light, every clipper, every steamer, every treatment device — they all draw power from the grid you are about to master. Electricity is not visible, but its presence is undeniable. A single mistake can shock a client, start a fire, or destroy your tools. A single mastery can save lives, prevent disasters, and unlock advanced services that set you apart.\n\nThis is not a physics lecture. This is your Electrical Safety Certification. You will learn to read the grid like a pilot reads instruments — knowing what every number means, what every warning signals, and what every protocol protects. By the end of this chapter, you will not just plug in tools. You will command the power behind the chair.',
+      content: 'Electricity powers many tools and devices used in professional barbering. Because electrical energy can create shock, burn, equipment, and fire hazards when equipment is damaged or misused, barbers need a working understanding of electrical flow, measurements, protective devices, and safe equipment handling.\n\nThis chapter is a learning module, not an electrical trade credential. You will practice recognizing electrical terms, reading equipment information, identifying unsafe conditions, and applying client-protection decisions within barber scope of practice. Electrotherapy and light-based services are included only as permitted by applicable licensing rules and the device manufacturer\'s instructions.',
       highlight: 'COMMAND THE GRID — PROTECT THE CHAIR — MASTER THE POWER',
     },
 
@@ -801,7 +801,7 @@ export const chapter8PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'light-therapy-intro',
       title: 'LIGHT THERAPY (PHOTOTHERAPY)',
-      content: 'Light therapy applies specific wavelengths of light to treat skin conditions. Modern barbershops use LED devices and therapeutic lamps to offer these services. Understanding each color\'s effect allows you to customize treatments for acne, aging, inflammation, and hyperpigmentation.\n\nEXAM FOCUS: Light therapy exposure is usually 5 minutes or less. Never leave a client unattended. Always protect eyes with goggles or moistened cotton pads.',
+      content: 'Light therapy, or phototherapy, uses specific wavelengths of light in source-described skin or scalp services. The chapter includes LEDs and therapeutic lamps as examples, but a barber may use a device only when the service is within scope, the client is appropriately screened, and manufacturer instructions support the application.\n\nEXAM FOCUS: Know the purpose and types of light therapy, use the eye protection required by the device and procedure, follow device-specific exposure controls, and never leave a client unattended while a light-based treatment device is operating.',
       highlight: 'MATCH THE COLOR TO THE CONDITION',
     },
 
@@ -946,7 +946,7 @@ export const chapter8PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'lasers',
       title: 'LASERS IN BARBERING',
-      content: 'Medical lasers use electromagnetic radiation for hair removal and skin treatments. They work by SELECTIVE PHOTOTHERMOLYSIS — light energy converts to heat, targeting specific structures without damaging surrounding tissue.\n\nLASER CLASSIFICATION: Classified as Level II or higher medical devices. Usually require physician supervision.\n\nBARBER SCOPE: Most states do NOT permit barbers to operate medical lasers. Know your state\'s scope of practice. If lasers are permitted, specialized training and certification are required.\n\nEXAM FOCUS: Selective photothermolysis = light converts to heat to target specific structures. Lasers are medical devices requiring proper training and often physician supervision.',
+      content: 'The source discusses lasers as medical light devices and introduces selective photothermolysis: using light energy that is converted to heat in a targeted structure.\n\nBARBER SCOPE: Do not assume a barber license authorizes laser operation. Laser services may be regulated separately or fall outside barber scope. Follow the current state law, credentialing requirements, facility rules, and device-specific training requirements.\n\nEXAM FOCUS: Know selective photothermolysis as a light-to-heat targeting concept and recognize that medical laser operation requires authorization beyond ordinary barbering in many jurisdictions.',
       highlight: 'KNOW YOUR STATE\'S SCOPE OF PRACTICE',
     },
 
