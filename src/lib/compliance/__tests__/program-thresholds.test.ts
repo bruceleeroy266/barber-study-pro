@@ -2,7 +2,7 @@
  * Program-driven compliance thresholds (nationwide pilot, 2026-09-08).
  *
  * Verifies that a school-configured programs.required_hours value flows through
- * the compliance stack instead of the historical hard-coded 1500, and that
+ * the compliance stack instead of the historical hard-coded fallback, and that
  * missing values preserve the default fallback.
  */
 
@@ -77,7 +77,7 @@ describe('defaultProgramRequirements', () => {
   it('uses the schema default with no program identity', () => {
     const d = defaultProgramRequirements()
     expect(d.requiredHours).toBe(DEFAULT_REQUIRED_HOURS)
-    expect(d.requiredHours).toBe(1500)
+    expect(d.requiredHours).toBe(1200)
     expect(d.programName).toBeNull()
     expect(d.source).toBe('default')
   })
@@ -93,7 +93,10 @@ describe('per-program requiredHours through the compliance stack', () => {
     expect(hoursReq?.status).toBe('met')
     expect(score.componentScores.hours).toBe(100)
 
-    const defaultScore = calculateComplianceScore(baseInputs)
+    const comparisonInputs = { ...baseInputs, completedHours: 1100 }
+    const configuredScore = calculateComplianceScore(comparisonInputs, programThresholds)
+    expect(configuredScore.requirements.find((r) => r.id === 'hours')?.status).toBe('met')
+    const defaultScore = calculateComplianceScore(comparisonInputs)
     expect(defaultScore.requirements.find((r) => r.id === 'hours')?.status).toBe('partial')
   })
 
@@ -101,7 +104,9 @@ describe('per-program requiredHours through the compliance stack', () => {
     const result = determineBoardEligibility(baseInputs, programThresholds)
     expect(result.status).toBe('eligible')
 
-    const defaultResult = determineBoardEligibility(baseInputs)
+    const comparisonInputs = { ...baseInputs, completedHours: 1100 }
+    expect(determineBoardEligibility(comparisonInputs, programThresholds).status).toBe('eligible')
+    const defaultResult = determineBoardEligibility(comparisonInputs)
     expect(defaultResult.missingRequirements.some((m) => m.startsWith('Hours:'))).toBe(true)
   })
 
@@ -128,12 +133,12 @@ describe('per-program requiredHours through the compliance stack', () => {
     const row1 = report.rows.find((r) => r.Student === 'Student s1')
     const row2 = report.rows.find((r) => r.Student === 'Student s2')
     expect(row1?.Hours).toBe('0/1000')
-    expect(row2?.Hours).toBe('0/1500')
+    expect(row2?.Hours).toBe('0/1200')
   })
 
   it('omitting the thresholds map preserves prior hard-coded behavior', () => {
     const students = [makeStudent('s1')]
     const report = generateComplianceReport('student_compliance', { students, ...emptyReportInputs })
-    expect(report.rows[0]?.Hours).toBe('0/1500')
+    expect(report.rows[0]?.Hours).toBe('0/1200')
   })
 })
