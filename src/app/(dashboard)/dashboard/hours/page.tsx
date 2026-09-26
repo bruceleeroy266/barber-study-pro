@@ -19,6 +19,23 @@ function attendanceLabel(status: AttendanceStatus | null): string {
   return status ?? 'Not recorded'
 }
 
+function formatAttendanceDuration(minutes: number | null): string {
+  if (minutes === null) return '—'
+  if (minutes === 0) return '0m'
+  return formatMinutes(minutes)
+}
+
+function formatAttendanceTime(value: string | null, timeZone: string): string {
+  if (!value) return '—'
+  const parsed = new Date(value)
+  if (Number.isNaN(parsed.getTime())) return '—'
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    hour: 'numeric',
+    minute: '2-digit',
+  }).format(parsed)
+}
+
 function attendanceStatusClass(status: AttendanceStatus | null): string {
   switch (status) {
     case 'Present':
@@ -199,6 +216,102 @@ export default async function StudentHoursPage() {
         <div className="mt-3 text-sm text-silver">
           {formatMinutes(approvedMinutes)} approved of {requirements.requiredHours}h required
         </div>
+
+
+      <section className="rounded-xl border border-graphite bg-charcoal p-5 sm:p-6">
+        <div>
+          <h2 className="text-lg font-semibold text-white">Attendance History</h2>
+          <p className="mt-1 text-sm text-silver">
+            Your most recent attendance records, including actual arrival, departure, and attended time.
+          </p>
+        </div>
+
+        {attendanceRecords.length === 0 ? (
+          <div className="mt-4 rounded-lg border border-graphite bg-black p-6 text-center text-silver">
+            No attendance records yet.
+          </div>
+        ) : (
+          <>
+            <div className="mt-4 space-y-3 md:hidden">
+              {attendanceRecords.slice(0, 30).map((record) => (
+                <article key={record.id} className="rounded-lg border border-graphite bg-black p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <div className="font-semibold text-white">{record.date}</div>
+                      <div className="mt-1 text-xs text-silver">School attendance record</div>
+                    </div>
+                    <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${attendanceStatusClass(record.status)}`}>
+                      {record.status}
+                    </span>
+                  </div>
+
+                  <dl className="mt-4 grid grid-cols-3 gap-3">
+                    <div>
+                      <dt className="text-xs text-silver">Arrival</dt>
+                      <dd className="mt-1 text-sm font-medium text-white">
+                        {formatAttendanceTime(record.clockedInAt, schoolTimeZone)}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs text-silver">Departure</dt>
+                      <dd className="mt-1 text-sm font-medium text-white">
+                        {formatAttendanceTime(record.clockedOutAt, schoolTimeZone)}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs text-silver">Attended</dt>
+                      <dd className="mt-1 text-sm font-medium text-white">
+                        {formatAttendanceDuration(record.minutesPresent)}
+                      </dd>
+                    </div>
+                  </dl>
+                </article>
+              ))}
+            </div>
+
+            <div className="mt-4 hidden overflow-x-auto md:block">
+              <table className="w-full min-w-[720px] text-left text-sm">
+                <thead>
+                  <tr className="border-b border-graphite text-silver">
+                    <th className="px-3 py-3 font-medium">Date</th>
+                    <th className="px-3 py-3 font-medium">Status</th>
+                    <th className="px-3 py-3 font-medium">Arrival</th>
+                    <th className="px-3 py-3 font-medium">Departure</th>
+                    <th className="px-3 py-3 font-medium">Attended</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {attendanceRecords.slice(0, 30).map((record) => (
+                    <tr key={record.id} className="border-b border-graphite/70 last:border-0">
+                      <td className="px-3 py-3 font-medium text-white">{record.date}</td>
+                      <td className="px-3 py-3">
+                        <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${attendanceStatusClass(record.status)}`}>
+                          {record.status}
+                        </span>
+                      </td>
+                      <td className="px-3 py-3 text-light-gray">
+                        {formatAttendanceTime(record.clockedInAt, schoolTimeZone)}
+                      </td>
+                      <td className="px-3 py-3 text-light-gray">
+                        {formatAttendanceTime(record.clockedOutAt, schoolTimeZone)}
+                      </td>
+                      <td className="px-3 py-3 font-medium text-white">
+                        {formatAttendanceDuration(record.minutesPresent)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {attendanceRecords.length > 30 && (
+              <div className="mt-3 text-center text-xs text-silver">
+                Showing the 30 most recent attendance records.
+              </div>
+            )}
+          </>
+        )}
+      </section>
       </section>
     </div>
   )
