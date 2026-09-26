@@ -6,6 +6,7 @@ const ensureTodayRecords = vi.fn()
 const updateStatus = vi.fn()
 const bulkUpdateStatus = vi.fn()
 const updateActualTimes = vi.fn()
+const submitDailyAttendance = vi.fn()
 
 vi.mock('@/hooks/useAttendance', () => ({
   useAttendance: () => ({
@@ -21,6 +22,7 @@ vi.mock('@/hooks/useAttendance', () => ({
     bulkUpdateStatus,
     addNote: vi.fn(),
     updateActualTimes,
+    submitDailyAttendance,
     submitCorrection: vi.fn(),
     getAuditHistory: vi.fn(),
     refresh: vi.fn(),
@@ -119,24 +121,38 @@ describe('AttendanceClient today controls', () => {
     updateStatus.mockResolvedValue(undefined)
     bulkUpdateStatus.mockResolvedValue(undefined)
     updateActualTimes.mockResolvedValue(undefined)
+    submitDailyAttendance.mockResolvedValue(true)
   })
 
-  it('creates a missing record and persists an individual status selection', async () => {
+  it('stages an individual status and saves it only when Submit Day is pressed', async () => {
     renderAttendance()
 
     fireEvent.click(screen.getByRole('button', { name: /test student/i }))
     fireEvent.click(screen.getByRole('button', { name: 'Present' }))
 
-    await waitFor(() => expect(updateStatus).toHaveBeenCalledWith('attendance-1', 'Present'))
+    expect(updateStatus).not.toHaveBeenCalled()
+    fireEvent.click(screen.getByRole('button', { name: 'Submit Day' }))
+
+    await waitFor(() =>
+      expect(submitDailyAttendance).toHaveBeenCalledWith([
+        expect.objectContaining({
+          studentId: 'student-1',
+          status: 'Present',
+          minutesPresent: 420,
+        }),
+      ]),
+    )
   })
 
-  it('allows Mark Scheduled Students Present when today starts with zero records', async () => {
+  it('marks scheduled students in the draft without persisting before Submit Day', async () => {
     renderAttendance()
 
     const button = screen.getByRole('button', { name: 'Mark Scheduled Students Present' })
     expect(button).toBeEnabled()
     fireEvent.click(button)
 
-    await waitFor(() => expect(bulkUpdateStatus).toHaveBeenCalledWith(['attendance-1'], 'Present'))
+    expect(bulkUpdateStatus).not.toHaveBeenCalled()
+    expect(screen.getByText('Attendance: Present ✓')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Submit Day' })).toBeEnabled()
   })
 })
