@@ -2,11 +2,25 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import AttendanceClient from './AttendanceClient'
 
-const ensureTodayRecords = vi.fn()
-const updateStatus = vi.fn()
-const bulkUpdateStatus = vi.fn()
-const updateActualTimes = vi.fn()
-const submitDailyAttendance = vi.fn()
+const {
+  ensureTodayRecords,
+  updateStatus,
+  bulkUpdateStatus,
+  updateActualTimes,
+  submitDailyAttendance,
+  generatePendingHoursFromAttendance,
+} = vi.hoisted(() => ({
+  ensureTodayRecords: vi.fn(),
+  updateStatus: vi.fn(),
+  bulkUpdateStatus: vi.fn(),
+  updateActualTimes: vi.fn(),
+  submitDailyAttendance: vi.fn(),
+  generatePendingHoursFromAttendance: vi.fn(),
+}))
+
+vi.mock('./hour-generation-actions', () => ({
+  generatePendingHoursFromAttendance,
+}))
 
 vi.mock('@/hooks/useAttendance', () => ({
   useAttendance: () => ({
@@ -122,6 +136,7 @@ describe('AttendanceClient today controls', () => {
     bulkUpdateStatus.mockResolvedValue(undefined)
     updateActualTimes.mockResolvedValue(undefined)
     submitDailyAttendance.mockResolvedValue(true)
+    generatePendingHoursFromAttendance.mockResolvedValue({ created: 1, updated: 0, skipped: 0, attendanceCount: 1 })
   })
 
   it('stages an individual status and saves it only when Submit Day is pressed', async () => {
@@ -141,6 +156,9 @@ describe('AttendanceClient today controls', () => {
           minutesPresent: 420,
         }),
       ]),
+    )
+    await waitFor(() =>
+      expect(generatePendingHoursFromAttendance).toHaveBeenCalledWith('2026-09-22'),
     )
   })
 
