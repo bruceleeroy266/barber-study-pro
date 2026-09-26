@@ -34,7 +34,7 @@ describe('C8-4 Chapter 8 flashcard adversarial audit', () => {
     expect(expansion).toHaveLength(7)
     expect(expansion.every((card) => card.difficulty === 'hard')).toBe(true)
 
-    const mapping = new Map(
+    const mapping = new Map<string, string>(
       chapter8FlashcardConceptMappings.map((item) => [item.flashcardId, item.conceptFamilyId]),
     )
     expect(expansion.filter((card) => mapping.get(card.id) === 'ch8-microcurrent-high-frequency')).toHaveLength(3)
