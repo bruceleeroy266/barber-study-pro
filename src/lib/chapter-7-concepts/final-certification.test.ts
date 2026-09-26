@@ -16,15 +16,17 @@ import {
 import { chapter7PremiumQuizQuestions } from '../chapter-7-premium-quiz'
 import { chapter7ReassessmentQuestions } from '../chapter-7-reassessment-questions'
 import { getKnowledgeCheckLength } from '../remediation/knowledge-check'
-import { getCanonicalMappingProvider, hasCanonicalMappingProvider } from '../reassessment/provider-registry'
+import {
+  getCanonicalMappingProvider,
+  hasCanonicalMappingProvider,
+  initializeChapterDetectionProvider,
+} from '../reassessment/provider-registry'
 import { getChapterContentProvider, hasChapterContentProvider } from '../remediation/content-provider-registry'
 import { HistoricalExclusionEngine } from '../reassessment/exclusion-engine'
 import type {
-  ChapterId,
   ConceptId,
   HistoricalQuizAttempt,
   IExclusionDatabaseClient,
-  QuizQuestionId,
   ReassessmentQuestionHistoryRecord,
 } from '../reassessment/types'
 import { buildChapter7InstructorDiagnostics } from './instructor-diagnostics'
@@ -123,6 +125,13 @@ describe('C7-9 final Chapter 7 grading/integrity certification', () => {
     const content = getChapterContentProvider('ch-7')
     expect(mapping.getAllConceptIds()).toHaveLength(10)
     expect(content?.getQuizQuestionById('qq-7-051')?.id).toBe('qq-7-051')
+  })
+
+  it('registers the Chapter 7 detection provider for the shared reassessment evaluation path', () => {
+    const provider = initializeChapterDetectionProvider('ch-7', {
+      fetchQuizAttempts: async () => [],
+    })
+    expect(provider?.chapterId).toBe('ch-7')
   })
 
   it('selects unseen reserve questions after excluding all initial questions and prior reserve history', async () => {
