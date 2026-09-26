@@ -80,6 +80,10 @@ interface Props {
   highlightedStudentId?: string | null
   reviewedStatus?: string | null
   alreadyReviewedStatus?: string | null
+  queueStudentFilter?: string
+  queueDateFilter?: string
+  queueSourceFilter?: string
+  queueCategoryFilter?: string
 }
 
 export default async function StaffHoursManager({
@@ -91,6 +95,10 @@ export default async function StaffHoursManager({
   highlightedStudentId = null,
   reviewedStatus = null,
   alreadyReviewedStatus = null,
+  queueStudentFilter = '',
+  queueDateFilter = '',
+  queueSourceFilter = '',
+  queueCategoryFilter = '',
 }: Props) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -220,6 +228,16 @@ export default async function StaffHoursManager({
   const isSchoolAdministrator = actor.role === 'school_admin'
   const isInstructor = actor.role === 'instructor'
   const pendingLogs = logs.filter((log) => log.status === 'pending')
+  const filteredPendingLogs = pendingLogs.filter((log) => {
+    if (queueStudentFilter && log.user_id !== queueStudentFilter) return false
+    if (queueDateFilter && log.date !== queueDateFilter) return false
+    if (queueSourceFilter && log.source_type !== queueSourceFilter) return false
+    if (queueCategoryFilter && log.category !== queueCategoryFilter) return false
+    return true
+  })
+  const hasQueueFilters = Boolean(
+    queueStudentFilter || queueDateFilter || queueSourceFilter || queueCategoryFilter,
+  )
 
   const exportStudents = rows.map((student) => ({
     id: student.id,
@@ -376,12 +394,86 @@ export default async function StaffHoursManager({
                 </div>
               </div>
               <div className="text-sm font-semibold text-[var(--color-brand-gold)]">
-                {pendingLogs.length} pending
+                {filteredPendingLogs.length}{hasQueueFilters ? ` of ${pendingLogs.length}` : ''} pending
               </div>
             </div>
 
+            <form method="get" className="mt-4 grid grid-cols-1 gap-3 rounded-lg border border-graphite bg-black p-3 sm:grid-cols-2 lg:grid-cols-5">
+              <label className="space-y-1">
+                <span className="text-xs font-medium text-silver">Student</span>
+                <select
+                  name="queueStudent"
+                  defaultValue={queueStudentFilter}
+                  className="w-full rounded-lg border border-graphite bg-charcoal px-3 py-2 text-sm text-white [color-scheme:dark]"
+                >
+                  <option value="">All students</option>
+                  {rows.map((student) => (
+                    <option key={student.id} value={student.id}>
+                      {student.full_name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="space-y-1">
+                <span className="text-xs font-medium text-silver">Date</span>
+                <input
+                  name="queueDate"
+                  type="date"
+                  defaultValue={queueDateFilter}
+                  className="w-full rounded-lg border border-graphite bg-charcoal px-3 py-2 text-sm text-white [color-scheme:dark]"
+                />
+              </label>
+
+              <label className="space-y-1">
+                <span className="text-xs font-medium text-silver">Source</span>
+                <select
+                  name="queueSource"
+                  defaultValue={queueSourceFilter}
+                  className="w-full rounded-lg border border-graphite bg-charcoal px-3 py-2 text-sm text-white [color-scheme:dark]"
+                >
+                  <option value="">All sources</option>
+                  <option value="attendance">Attendance-generated</option>
+                  <option value="manual">Manual entry</option>
+                </select>
+              </label>
+
+              <label className="space-y-1">
+                <span className="text-xs font-medium text-silver">Category</span>
+                <select
+                  name="queueCategory"
+                  defaultValue={queueCategoryFilter}
+                  className="w-full rounded-lg border border-graphite bg-charcoal px-3 py-2 text-sm text-white [color-scheme:dark]"
+                >
+                  <option value="">All categories</option>
+                  {categories.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <div className="flex items-end gap-2">
+                <button
+                  type="submit"
+                  className="min-h-10 flex-1 rounded-lg bg-[var(--color-brand-gold)] px-3 py-2 text-sm font-semibold text-black"
+                >
+                  Apply
+                </button>
+                {hasQueueFilters && (
+                  <Link
+                    href="/school/hours"
+                    className="min-h-10 rounded-lg border border-graphite px-3 py-2 text-sm font-semibold text-silver hover:text-white"
+                  >
+                    Clear
+                  </Link>
+                )}
+              </div>
+            </form>
+
             <div className="mt-4 space-y-3">
-              {pendingLogs.map((log) => {
+              {filteredPendingLogs.map((log) => {
                 const student = rows.find((entry) => entry.id === log.user_id)
                 return (
                   <article key={log.id} className="rounded-lg border border-graphite bg-black p-4">
@@ -440,9 +532,11 @@ export default async function StaffHoursManager({
                 )
               })}
 
-              {pendingLogs.length === 0 && (
+              {filteredPendingLogs.length === 0 && (
                 <div className="rounded-lg border border-graphite bg-black p-6 text-center text-silver">
-                  No pending hour submissions.
+                  {pendingLogs.length === 0
+                    ? 'No pending hour submissions.'
+                    : 'No pending hour submissions match the selected filters.'}
                 </div>
               )}
             </div>
