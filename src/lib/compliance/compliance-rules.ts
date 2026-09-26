@@ -5,6 +5,8 @@
  * Configurable thresholds used by the compliance engine.
  */
 
+import { DEFAULT_REQUIRED_HOURS } from '@/lib/programs/requirements'
+
 export interface ComplianceRuleThresholds {
   requiredHours: number
   minimumAttendancePercentage: number
@@ -17,7 +19,7 @@ export interface ComplianceRuleThresholds {
 }
 
 export const DEFAULT_COMPLIANCE_THRESHOLDS: ComplianceRuleThresholds = {
-  requiredHours: 1500,
+  requiredHours: DEFAULT_REQUIRED_HOURS,
   minimumAttendancePercentage: 80,
   minimumReadinessScore: 70,
   minimumOverallGrade: 70,
