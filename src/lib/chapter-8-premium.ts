@@ -110,7 +110,7 @@ export const chapter8PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'command-center-welcome',
       title: '⚡ THE POWER GRID COMMAND CENTER',
-      content: 'Welcome to the nerve center of your barbershop. Every light, every clipper, every steamer, every treatment device — they all draw power from the grid you are about to master. Electricity is not visible, but its presence is undeniable. A single mistake can shock a client, start a fire, or destroy your tools. A single mastery can save lives, prevent disasters, and unlock advanced services that set you apart.\n\nThis is not a physics lecture. This is your Electrical Safety Certification. You will learn to read the grid like a pilot reads instruments — knowing what every number means, what every warning signals, and what every protocol protects. By the end of this chapter, you will not just plug in tools. You will command the power behind the chair.',
+      content: 'Electricity powers many tools and devices used in professional barbering. Because electrical energy can create shock, burn, equipment, and fire hazards when equipment is damaged or misused, barbers need a working understanding of electrical flow, measurements, protective devices, and safe equipment handling.\n\nThis chapter is a learning module, not an electrical trade credential. You will practice recognizing electrical terms, reading equipment information, identifying unsafe conditions, and applying client-protection decisions within barber scope of practice. Electrotherapy and light-based services are included only as permitted by applicable licensing rules and the device manufacturer\'s instructions.',
       highlight: 'COMMAND THE GRID — PROTECT THE CHAIR — MASTER THE POWER',
     },
 
@@ -121,12 +121,12 @@ export const chapter8PremiumContent: ChapterContent = {
       type: 'infoCards',
       id: 'why-electricity-matters',
       title: 'WHY THE GRID MATTERS',
-      subtitle: 'Three reasons electricity knowledge separates pros from pretenders',
+      subtitle: 'Three reasons electrical knowledge matters behind the chair',
       cards: [
         {
           icon: 'ShieldAlert',
-          title: 'LIFE & DEATH SAFETY',
-          text: 'A wet hand on a faulty clipper. An overloaded outlet behind your station. A missing GFCI near the shampoo bowl. These are not hypotheticals — they are real hazards that injure barbers and clients every year. Understanding electricity prevents accidents before they happen.',
+          title: 'ELECTRICAL SAFETY',
+          text: 'Wet hands, damaged cords, overloaded circuits, and unprotected electrical use near water can create serious shock, burn, and fire hazards. Recognizing unsafe conditions and following equipment instructions helps reduce risk to the barber and client.',
         },
         {
           icon: 'Zap',
@@ -136,7 +136,7 @@ export const chapter8PremiumContent: ChapterContent = {
         {
           icon: 'Sparkles',
           title: 'ADVANCED SERVICES',
-          text: 'Galvanic facials. High-frequency scalp treatments. LED light therapy. Microcurrent toning. These premium services require electrical knowledge to perform safely and effectively. The barbers who offer them charge premium prices.',
+          text: 'Some jurisdictions permit barbers to use electrotherapy or light-based devices for facial or scalp services. These modalities require appropriate training, client screening, manufacturer-directed use, and compliance with the barber\'s actual scope of practice.',
         },
       ],
     },
@@ -147,8 +147,8 @@ export const chapter8PremiumContent: ChapterContent = {
     {
       type: 'levelUp',
       id: 'electrical-certification',
-      title: '⚡ ELECTRICAL SAFETY CERTIFICATION',
-      subtitle: 'Progress from Apprentice to Grid Master — earn your electrical credentials',
+      title: '⚡ ELECTRICAL MASTERY PATH',
+      subtitle: 'Progress from fundamentals to safer professional decision-making',
       levels: [
         {
           level: 'Level 1',
@@ -171,14 +171,14 @@ export const chapter8PremiumContent: ChapterContent = {
         {
           level: 'Level 4',
           title: 'Therapy Specialist',
-          description: 'You master electrotherapy and light therapy. Galvanic current, microcurrent, Tesla high-frequency, LED treatments — you perform them with confidence and precision.',
-          reward: 'Premium Service Provider — Advanced treatments command higher prices',
+          description: 'You can explain source-covered electrotherapy and light-therapy modalities and identify when scope-of-practice, client condition, or device instructions require a different choice.',
+          reward: 'Service-Scope Awareness — Know when a modality is permitted and appropriate',
         },
         {
           level: 'Level 5',
           title: 'Grid Master',
-          description: 'You command the entire electrical system of your shop. You understand wiring, load distribution, code compliance, and equipment selection. Other barbers and shop owners consult you.',
-          reward: 'Electrical Authority — Your expertise is recognized and respected',
+          description: 'You can recognize shop-level electrical risks, read equipment ratings, avoid unsafe loading practices, and know when an electrical condition requires a qualified professional rather than barber repair.',
+          reward: 'Safety Decision-Maker — Use electrical knowledge without exceeding barber scope',
         },
       ],
     },
@@ -190,7 +190,7 @@ export const chapter8PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'what-is-electricity',
       title: 'WHAT IS ELECTRICITY?',
-      content: 'Electricity is NOT matter. It does not occupy space or have mass like a chair or a clipper. It is a FORM OF ENERGY — invisible, powerful, and capable of producing physical, magnetic, chemical, or thermal effects when it moves.\n\nElectricity is created by the FLOW OF ELECTRONS between atoms. Imagine electrons as tiny particles orbiting the nucleus of an atom. When they break free and jump from atom to atom, they create an electric current. This flow powers everything from your phone charger to your high-frequency facial machine.\n\nBOARD EXAM ALERT: Electricity is energy, not matter. It produces effects (physical, magnetic, chemical, thermal) when electrons are in motion.',
+      content: 'Electricity is NOT matter. It does not occupy space or have mass like a chair or a clipper. It is a FORM OF ENERGY — invisible, powerful, and capable of producing physical, magnetic, chemical, or thermal effects when it moves.\n\nElectricity is created by the FLOW OF ELECTRONS between atoms. Imagine electrons as tiny particles orbiting the nucleus of an atom. When they break free and jump from atom to atom, they create an electric current. This flow powers everything from your phone charger to your high-frequency facial machine.\n\nEXAM FOCUS: Electricity is energy rather than matter, and moving electrical energy can produce physical, magnetic, chemical, or thermal effects.',
       highlight: 'ELECTRICITY = ENERGY IN MOTION',
     },
 
@@ -210,11 +210,11 @@ export const chapter8PremiumContent: ChapterContent = {
           bullets: [
             { label: 'DEFINITION', description: 'Substances that EASILY transmit electricity — electrons flow through them with minimal resistance' },
             { label: 'EXAMPLES', description: 'Most metals (copper, aluminum, silver), carbon, the HUMAN BODY, and watery solutions of acids and salts' },
-            { label: 'BARBER REALITY', description: 'Your body is a conductor. Wet skin conducts even better. This is why the rule "water + electricity = death" exists.' },
+            { label: 'BARBER REALITY', description: 'The human body can conduct electricity, and moisture can increase electrical hazard. Keep electrical equipment and cords dry and follow equipment and facility safety requirements around water.' },
             { label: 'WIRE DESIGN', description: 'Electrical wire contains twisted metal threads (conductor) coated with an insulator (plastic, rubber, or silk)' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: The human body is a conductor. Never touch electrical equipment with wet hands or while standing in water.' },
+            { text: 'EXAM FOCUS: The human body can conduct electricity; wet-hand and water exposure increase electrical risk.' },
             { text: 'COPPER is the most common conductor in wiring because it combines excellent conductivity with affordability.' },
           ],
         },
@@ -226,10 +226,10 @@ export const chapter8PremiumContent: ChapterContent = {
             { label: 'DEFINITION', description: 'Substances that do NOT easily transmit electricity — electrons cannot flow through them freely' },
             { label: 'EXAMPLES', description: 'Rubber, silk, dry wood, glass, cement, plastic, and porcelain' },
             { label: 'BARBER REALITY', description: 'Tool handles, cord coatings, and safety equipment use insulators to protect you from shock' },
-            { label: 'DANGER ZONE', description: 'Water turns insulators into conductors. A dry wooden floor is safe. A wet wooden floor conducts electricity.' },
+            { label: 'DANGER ZONE', description: 'Do not treat materials such as dry wood, rubber, or plastic as guaranteed protection. Moisture, damage, contamination, or unsuitable materials can reduce effective insulation and increase risk.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Rubber and plastic are insulators. This is why rubber-soled shoes and plastic tool handles protect against shock.' },
+            { text: 'EXAM FOCUS: Rubber and many plastics resist electrical flow, but safe practice still depends on intact equipment, proper grounding/protection, and dry conditions.' },
             { text: 'DAMAGED INSULATION on cords exposes conductors — replace frayed cords immediately. Tape is not a permanent fix.' },
           ],
         },
@@ -244,8 +244,8 @@ export const chapter8PremiumContent: ChapterContent = {
             { label: 'GROUNDING', description: 'Provides a safe escape path for electricity in case of malfunction — the third prong on modern plugs' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: A complete circuit is required for electricity to flow. Break the circuit, stop the flow.' },
-            { text: 'NEVER remove the grounding pin to fit a two-prong outlet. That third prong exists to save your life.' },
+            { text: 'EXAM FOCUS: A complete circuit provides a path for current; opening the circuit interrupts that path.' },
+            { text: 'Do not defeat a grounding connection to make equipment fit an incompatible outlet. Use equipment and adapters only as permitted by the manufacturer and applicable electrical requirements.' },
           ],
         },
       ],
@@ -273,11 +273,11 @@ export const chapter8PremiumContent: ChapterContent = {
         {
           icon: 'RefreshCcw',
           title: 'CONVERTER / RECTIFIER',
-          description: 'Changes DC to AC or AC to DC. Used in rechargeable cordless tools and battery chargers. Allows battery devices to charge from wall outlets.',
+          description: 'A converter changes DC to AC; a rectifier changes AC to DC. Rechargeable equipment commonly uses a power supply or charger that converts wall-supplied AC into the DC needed by the battery.',
         },
         {
           icon: 'AlertTriangle',
-          title: 'BOARD EXAM ALERT',
+          title: 'EXAM FOCUS',
           description: 'DC = one direction (battery). AC = reverses direction (wall outlet). Most barber tools use AC. Cordless tools use DC with converters for charging.',
         },
       ],
@@ -299,12 +299,12 @@ export const chapter8PremiumContent: ChapterContent = {
           bullets: [
             { label: 'WHAT IT MEASURES', description: 'The PRESSURE that pushes electrons through a conductor. Higher voltage = harder push.' },
             { label: 'WATER ANALOGY', description: 'Like water pressure in a pipe — high pressure pushes more water through; high voltage pushes more electrons through.' },
-            { label: 'BARBER REALITY', description: 'US standard: 110–120V. Some countries: 220–240V. Using a 220V tool on 110V = weak performance. Using 110V on 220V = fire hazard.' },
-            { label: 'SAFETY RULE', description: 'Higher voltage = more dangerous. A 220V shock is more lethal than a 110V shock. Respect voltage ratings.' },
+            { label: 'BARBER REALITY', description: 'Many U.S. receptacles provide about 120 V, while some equipment uses other supply voltages. Match the appliance rating to the available supply and use only manufacturer-approved conversion equipment.' },
+            { label: 'SAFETY RULE', description: 'Shock severity depends on multiple conditions, including voltage, current path, contact time, environment, and body resistance. Treat all energized equipment as potentially hazardous and respect the equipment rating.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Volt = electrical pressure. Standard US voltage is 110–120V.' },
-            { text: 'NEVER use a tool rated for different voltage without a proper transformer. Mismatched voltage destroys tools and creates fire risk.' },
+            { text: 'EXAM FOCUS: Volt = electrical pressure. Standard US voltage is 110–120V.' },
+            { text: 'Do not connect equipment to an incompatible supply. Follow the nameplate and manufacturer instructions for voltage, frequency, and approved conversion devices.' },
           ],
         },
         {
@@ -318,8 +318,8 @@ export const chapter8PremiumContent: ChapterContent = {
             { label: 'BARBER REALITY', description: 'Circuit breakers are rated in amps. A 15-amp breaker trips when current exceeds safe levels. Two high-wattage dryers on one 20-amp circuit will trip it.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Ampere = current strength. Milliampere = 1/1,000 amp, used for facial/scalp treatments.' },
-            { text: 'It takes only 0.1 amps (100 milliamps) passing through the heart to cause fatal fibrillation. Respect every amp.' },
+            { text: 'EXAM FOCUS: Ampere = current strength. Milliampere = 1/1,000 amp, used for facial/scalp treatments.' },
+            { text: 'Current through the body can cause serious injury. Do not use a single current value as a universal danger threshold; prevent contact with energized conductors and follow electrical-safety procedures.' },
           ],
         },
         {
@@ -329,12 +329,12 @@ export const chapter8PremiumContent: ChapterContent = {
           bullets: [
             { label: 'WHAT IT MEASURES', description: 'RESISTANCE to electrical flow. Higher resistance = less current passes through.' },
             { label: 'WATER ANALOGY', description: 'Like a narrow section of pipe that restricts water flow — more ohms = less electricity gets through.' },
-            { label: 'BARBER REALITY', description: 'Damaged cords increase resistance, causing heat buildup. A hot cord is a warning sign — replace it immediately.' },
+            { label: 'BARBER REALITY', description: 'A damaged, unusually warm, loose, or discolored cord or plug is an equipment warning sign. Remove the tool from service and follow manufacturer or qualified-repair guidance rather than diagnosing the fault at the station.' },
             { label: 'RHEOSTAT', description: 'An adjustable resistor for controlling current. Used in light dimmers and some tool speed controls.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Ohm = resistance. Higher ohms = less current. A rheostat is an adjustable resistor.' },
-            { text: 'Heat in cords = increased resistance. If a cord feels warm, it is struggling to carry current safely.' },
+            { text: 'EXAM FOCUS: Ohm = resistance. Higher ohms = less current. A rheostat is an adjustable resistor.' },
+            { text: 'Unexpected cord or plug heating can indicate an unsafe equipment or connection condition. Stop use and have the condition evaluated rather than assuming a single cause.' },
           ],
         },
         {
@@ -345,11 +345,11 @@ export const chapter8PremiumContent: ChapterContent = {
             { label: 'WHAT IT MEASURES', description: 'POWER — the rate of energy used per second. Watts = Amps × Volts.' },
             { label: 'KILOWATT', description: '1,000 watts. Household electricity is billed in kilowatt-hours (kWh).' },
             { label: 'BARBER REALITY', description: 'A 1,800-watt hair dryer at 120V draws 15 amps. Two dryers on one circuit = 30 amps = tripped breaker on a 20-amp circuit.' },
-            { label: 'TOOL SELECTION', description: 'Higher wattage = more power. A 2,000W dryer dries faster than a 1,200W dryer but draws more current.' },
+            { label: 'TOOL SELECTION', description: 'Wattage is electrical power demand. A higher wattage rating does not by itself guarantee better service performance, and it can increase circuit load.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Watt = power (amps × volts). Kilowatt = 1,000 watts.' },
-            { text: 'Calculate total wattage before plugging multiple tools into one outlet. Exceeding capacity = fire hazard.' },
+            { text: 'EXAM FOCUS: Watt = power (amps × volts). Kilowatt = 1,000 watts.' },
+            { text: 'Use equipment ratings to understand load, avoid overloaded receptacles or power strips, and follow the facility\'s electrical design and manufacturer instructions.' },
           ],
         },
       ],
@@ -405,7 +405,7 @@ export const chapter8PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'three-formulas',
       title: 'THE THREE FORMULAS YOU MUST KNOW',
-      content: 'Every circuit calculation uses one of these three formulas. Memorize them. They will appear on your board exam and in your shop every single day.\n\nFORMULA 1 — FIND POWER (WATTS):\nWatts = Volts × Amps\n\nFORMULA 2 — FIND CURRENT (AMPS):\nAmps = Watts ÷ Volts\n\nFORMULA 3 — FIND PRESSURE (VOLTS):\nVolts = Watts ÷ Amps\n\nBOARD EXAM ALERT: Watts = Volts × Amps is the most tested formula. If you know two values, you can always find the third.',
+      content: 'Every circuit calculation uses one of these three formulas. Memorize them. They will appear on your board exam and in your shop every single day.\n\nFORMULA 1 — FIND POWER (WATTS):\nWatts = Volts × Amps\n\nFORMULA 2 — FIND CURRENT (AMPS):\nAmps = Watts ÷ Volts\n\nFORMULA 3 — FIND PRESSURE (VOLTS):\nVolts = Watts ÷ Amps\n\nEXAM FOCUS: Watts = Volts × Amps is the most tested formula. If you know two values, you can always find the third.',
       highlight: 'WATTS = VOLTS × AMPS | AMPS = WATTS ÷ VOLTS | VOLTS = WATTS ÷ AMPS',
     },
 
@@ -473,7 +473,7 @@ export const chapter8PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'barber-safety-meaning',
       title: '🔌 WHY THIS MATTERS IN YOUR SHOP',
-      content: 'These formulas are not just exam trivia — they are survival skills for your station.\n\nOVERLOADED CIRCUITS: Too many high-watt devices on one circuit draw more amps than the breaker allows. The breaker trips to prevent fire. If the breaker fails, the wiring overheats and can ignite.\n\nYOUR TOOLS: Clippers, dryers, steamers, hot towel cabinets, LED lamps, and UV sterilizers all draw power. A single station might have 3,000+ watts running simultaneously. On a 120V circuit, that is 25 amps — enough to trip a 20-amp breaker instantly.\n\nTHE REAL COST: A tripped breaker means a halted service, an unhappy client, and potential equipment damage. A fire means injury, lost income, and legal liability.\n\nTHE SOLUTION: Calculate before you plug in. Spread high-draw tools across multiple circuits. Know your shop\'s electrical layout. Respect the math — it protects your clients, your tools, and your livelihood.',
+      content: 'These formulas help you interpret equipment ratings and recognize when several devices may place a heavy load on the same circuit.\n\nOVERLOADED CIRCUITS: Too many high-watt devices on one circuit draw more amps than the breaker allows. Protective devices are designed to interrupt unsafe conditions. Repeated tripping is a warning to stop and have the load or equipment condition evaluated.\n\nYOUR TOOLS: Clippers, dryers, steamers, hot towel cabinets, and permitted electrical or light-based devices all draw power. A single station might have 3,000+ watts running simultaneously. On a 120V circuit, that is 25 amps — enough to trip a 20-amp breaker instantly.\n\nTHE REAL COST: A tripped breaker interrupts service and may signal an overload or equipment problem. Treat repeated trips, unusual heat, damaged cords, or burning odors as stop-use conditions.\n\nTHE SOLUTION: Calculate before you plug in. Spread high-draw tools across multiple circuits. Know your shop\'s electrical layout. Respect the math — it protects your clients, your tools, and your livelihood.',
       highlight: 'CALCULATE BEFORE YOU PLUG — SPREAD THE LOAD — RESPECT THE MATH',
     },
 
@@ -489,32 +489,32 @@ export const chapter8PremiumContent: ChapterContent = {
         {
           icon: 'Flame',
           title: 'FUSE',
-          description: 'A one-time sacrifice. Melts when too much current passes, breaking the circuit. Must be replaced. Common in older buildings. Think of it as a soldier who gives their life to save the fort.',
+          description: 'A fuse opens a circuit when excessive current causes its element to melt. A blown fuse must be replaced with the correct type and rating by an appropriate person.',
         },
         {
           icon: 'ShieldCheck',
           title: 'CIRCUIT BREAKER',
-          description: 'The reusable guardian. Automatically trips on overload, breaking the circuit. Can be reset with a flip. Common in modern buildings. Your first line of defense against overload.',
+          description: 'A circuit breaker opens a circuit when specified fault or overload conditions occur. Do not repeatedly reset a breaker without addressing the cause of the trip.',
         },
         {
           icon: 'Anchor',
           title: 'GROUNDING',
-          description: 'The escape route. Provides a safe path for electricity in case of short circuit. The third prong on modern plugs. NEVER remove it. It exists to save your life.',
+          description: 'Grounding provides a lower-resistance fault path that supports protective-device operation. Do not defeat a grounding pin or modify a plug to fit an incompatible receptacle.',
         },
         {
           icon: 'Droplets',
           title: 'GFCI',
-          description: 'Ground Fault Circuit Interrupter. Senses electrical imbalances and shuts off power in milliseconds. REQUIRED near sinks and water sources. The fastest responder in an emergency.',
+          description: 'A ground-fault circuit interrupter monitors current imbalance and disconnects power rapidly when a ground-fault condition is detected. Use GFCI protection where required by the facility\'s applicable electrical code, especially in locations with water exposure.',
         },
         {
           icon: 'BadgeCheck',
           title: 'UL MARK',
-          description: 'Underwriters Laboratories symbol. Indicates equipment has been tested and meets safety standards. Look for this mark before buying ANY electrical tool. No mark = no trust.',
+          description: 'A recognized third-party certification/listing mark indicates the product was evaluated to specified safety standards. Verify that equipment is approved/listed as required for the workplace rather than relying on appearance alone.',
         },
         {
           icon: 'AlertTriangle',
-          title: 'BOARD EXAM ALERT',
-          description: 'GFCI = required near water. Grounding = third prong. Fuses melt; breakers trip. UL mark = safety tested. These five devices are exam favorites.',
+          title: 'EXAM FOCUS',
+          description: 'Know the function of fuses, circuit breakers, grounding, ground-fault protection, and recognized equipment certification/listing marks.',
         },
       ],
     },
@@ -558,19 +558,19 @@ export const chapter8PremiumContent: ChapterContent = {
     {
       type: 'checklist',
       id: 'safety-rules',
-      title: '🔒 NON-NEGOTIABLE SAFETY PROTOCOLS',
+      title: '🔒 ELECTRICAL EQUIPMENT SAFETY CHECKLIST',
       items: [
-        { text: 'Study instructions before using ANY electrical equipment' },
+        { text: 'Read manufacturer instructions before using electrical equipment' },
         { text: 'Disconnect tools when not in use — never leave them running unattended' },
-        { text: 'Inspect cords, plugs, and equipment before EVERY use' },
-        { text: 'Do NOT overload outlets or power strips — calculate total wattage first' },
-        { text: 'Protect clients at all times — never let them touch electrical equipment' },
-        { text: 'NEVER touch metal while using electrical equipment on a client' },
+        { text: 'Inspect cords, plugs, and equipment regularly and before use when condition is uncertain' },
+        { text: 'Do not overload receptacles or power strips; use equipment ratings and facility guidance to understand load' },
+        { text: 'Protect the client from unintended contact with energized or metal equipment surfaces during treatment' },
+        { text: 'Avoid simultaneous contact with conductive metal objects when electrical equipment is in use' },
         { text: 'NEVER leave a client unattended with an electrical device running' },
-        { text: 'NEVER use electrical equipment near water or with wet hands' },
-        { text: 'Check for the UL mark before purchasing any electrical tool' },
+        { text: 'Keep hands and electrical equipment dry and use required ground-fault protection around water' },
+        { text: 'Use workplace-appropriate equipment carrying recognized safety certification/listing when required' },
         { text: 'Replace frayed cords immediately — tape is not a permanent fix' },
-        { text: 'Use GFCI-protected outlets near all water sources' },
+        { text: 'Use ground-fault protection in locations where required by applicable electrical code and facility policy' },
         { text: 'Never remove the grounding pin from a three-prong plug' },
       ],
     },
@@ -581,8 +581,8 @@ export const chapter8PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'electrotherapy-intro',
-      title: 'ELECTROTHERAPY — ADVANCED SERVICES',
-      content: 'Electrotherapy uses controlled electric currents for facial and scalp treatments. These services can be valuable add-ons when permitted by state regulations and performed with proper training.\n\nUnderstanding polarity, current types, and treatment effects separates the barber who merely performs services from the barber who customizes treatments for each client\'s needs.\n\nBOARD EXAM ALERT: Electrotherapy modalities vary by state. Know your state\'s regulations before offering these services.',
+      title: 'ELECTROTHERAPY — TERMINOLOGY & SCOPE',
+      content: 'Electrotherapy uses controlled electric currents for facial and scalp treatments. These services can be valuable add-ons when permitted by state regulations and performed with proper training.\n\nUnderstanding polarity, current types, and treatment effects separates the barber who merely performs services from the barber who customizes treatments for each client\'s needs.\n\nEXAM FOCUS: Electrotherapy modalities vary by state. Know your state\'s regulations before offering these services.',
       highlight: 'KNOW YOUR STATE REGULATIONS',
     },
 
@@ -598,22 +598,22 @@ export const chapter8PremiumContent: ChapterContent = {
         {
           icon: 'PlusCircle',
           title: 'ANODE (+) — POSITIVE POLE',
-          description: 'Usually RED. Produces ACIDIC reactions, CLOSES pores, SOOTHES nerves, DECREASES blood supply, and FIRMS tissues. Process: CATAPHORESIS.',
+          description: 'Usually marked red in the source. The positive pole is associated with acidic reactions and source-described cataphoretic effects. Treat these as modality concepts, not universal treatment promises.',
         },
         {
           icon: 'MinusCircle',
           title: 'CATHODE (–) — NEGATIVE POLE',
-          description: 'Usually BLACK. Produces ALKALINE reactions, OPENS pores, STIMULATES nerves, INCREASES blood supply, and SOFTENS tissues. Process: ANAPHORESIS.',
+          description: 'Usually marked black in the source. The negative pole is associated with alkaline reactions and source-described anaphoretic effects. Treat these as modality concepts, not universal treatment promises.',
         },
         {
           icon: 'ArrowLeftRight',
           title: 'POLARITY',
-          description: 'Negative or positive pole of electric current. Understanding polarity is essential for galvanic treatments and customizing electrotherapy services.',
+          description: 'Polarity identifies the positive or negative pole of a current. Correct polarity matters when a permitted device or procedure requires a specific electrode setup.',
         },
         {
           icon: 'AlertTriangle',
-          title: 'BOARD EXAM ALERT',
-          description: 'Anode = positive (+), RED, closes pores, acidic. Cathode = negative (–), BLACK, opens pores, alkaline. Memorize the color coding.',
+          title: 'EXAM FOCUS',
+          description: 'Anode = positive (+) and is commonly marked red; cathode = negative (–) and is commonly marked black. Know the source-described polarity associations without treating color alone as a safety control.',
         },
       ],
     },
@@ -625,21 +625,21 @@ export const chapter8PremiumContent: ChapterContent = {
       type: 'tabbed',
       id: 'galvanic-current',
       title: 'GALVANIC CURRENT — THE CHEMICAL CURRENT',
-      subtitle: 'DC power for deep skin transformation',
+      subtitle: 'Direct-current concepts for permitted skin services',
       tabs: [
         {
           id: 'basics',
           label: 'BASICS',
           title: 'GALVANIC CURRENT FUNDAMENTALS',
           bullets: [
-            { label: 'TYPE', description: 'DC (direct current), low-voltage, safe level for skin treatments' },
-            { label: 'EFFECT', description: 'Produces chemical changes and ionic reactions in the skin' },
+            { label: 'TYPE', description: 'DC (direct current) used at device-controlled levels for permitted skin services; "low voltage" does not remove the need for training, screening, and manufacturer-directed use' },
+            { label: 'EFFECT', description: 'The source describes chemical and ionic effects when galvanic current passes through body tissues and fluids' },
             { label: 'METHOD', description: 'Uses an active electrode (positive or negative) placed on the treatment area' },
             { label: 'STATE REGULATIONS', description: 'Availability varies by state — check local regulations before offering galvanic services' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Galvanic current = DC, low voltage, produces chemical changes. Know anode vs cathode effects.' },
-            { text: 'Never perform polarity tests without instructor supervision. Improper use can cause burns or skin damage.' },
+            { text: 'EXAM FOCUS: Galvanic current = DC, low voltage, produces chemical changes. Know anode vs cathode effects.' },
+            { text: 'Do not improvise polarity tests or electrode procedures. Use the device only within training, scope, and manufacturer directions.' },
           ],
         },
         {
@@ -648,15 +648,15 @@ export const chapter8PremiumContent: ChapterContent = {
           title: 'POSITIVE POLE — CATAPHORESIS',
           bullets: [
             { label: 'REACTION', description: 'Produces ACIDIC reactions in the skin' },
-            { label: 'PORE EFFECT', description: 'CLOSES pores — tightens and refines skin texture' },
-            { label: 'NERVE EFFECT', description: 'SOOTHES nerves — calming, sedative effect' },
-            { label: 'BLOOD EFFECT', description: 'DECREASES blood supply — contracts vessels, reduces redness' },
-            { label: 'TISSUE EFFECT', description: 'HARDENS and FIRMS tissues — toning and tightening' },
+            { label: 'PORE EFFECT', description: 'Source-described cataphoretic effect: closes/contracting action on tissue' },
+            { label: 'NERVE EFFECT', description: 'Source-described effect: soothing action on nerves' },
+            { label: 'BLOOD EFFECT', description: 'Source-described effect: decreased blood supply and vessel contraction' },
+            { label: 'TISSUE EFFECT', description: 'Source-described effect: tissue hardening/firming' },
             { label: 'PROCESS', description: 'CATAPHORESIS — introducing positive ions into the skin' },
           ],
           facts: [
             { text: 'MNEMONIC: POSITIVE = CLOSE (pores), CALM (nerves), CONTRACT (vessels), FIRM (tissue).' },
-            { text: 'Use the positive pole AFTER deep cleansing to calm and tighten skin before finishing a facial.' },
+            { text: 'Do not turn source-described pole effects into a universal service sequence. Follow the specific procedure, product, and device directions.' },
           ],
         },
         {
@@ -665,15 +665,15 @@ export const chapter8PremiumContent: ChapterContent = {
           title: 'NEGATIVE POLE — ANAPHORESIS',
           bullets: [
             { label: 'REACTION', description: 'Produces ALKALINE reactions in the skin' },
-            { label: 'PORE EFFECT', description: 'OPENS pores — prepares skin for deep cleansing' },
-            { label: 'NERVE EFFECT', description: 'STIMULATES and IRRITATES nerves — invigorating effect' },
-            { label: 'BLOOD EFFECT', description: 'INCREASES blood supply — expands vessels, brings nutrients' },
-            { label: 'TISSUE EFFECT', description: 'SOFTENS tissues — relaxes and prepares for treatment' },
+            { label: 'PORE EFFECT', description: 'Source-described anaphoretic effect: opening/softening action' },
+            { label: 'NERVE EFFECT', description: 'Source-described effect: stimulating action on nerves' },
+            { label: 'BLOOD EFFECT', description: 'Source-described effect: increased blood supply and vessel expansion' },
+            { label: 'TISSUE EFFECT', description: 'Source-described effect: tissue softening' },
             { label: 'PROCESS', description: 'ANAPHORESIS — introducing negative ions into the skin' },
           ],
           facts: [
             { text: 'MNEMONIC: NEGATIVE = OPEN (pores), STIMULATE (nerves), EXPAND (vessels), SOFTEN (tissue).' },
-            { text: 'Use the negative pole BEFORE deep cleansing to open pores and increase circulation.' },
+            { text: 'Do not turn source-described pole effects into a universal service sequence. Follow the specific procedure, product, and device directions.' },
           ],
         },
         {
@@ -681,14 +681,14 @@ export const chapter8PremiumContent: ChapterContent = {
           label: 'ADVANCED',
           title: 'DESINCUSTATION & IONTOPHORESIS',
           bullets: [
-            { label: 'DESINCUSTATION', description: 'Uses galvanic current for DEEP PORE CLEANSING. Emulsifies sebum and draws impurities to the surface.' },
-            { label: 'IONTOPHORESIS', description: 'Introduces water-soluble products into the skin. Positive pole for acidic substances. Negative pole for alkaline substances.' },
-            { label: 'CLIENT COMFORT', description: 'Client should feel mild tingling. Burning or stinging = too high intensity. Reduce immediately.' },
-            { label: 'CONTRAINDICATIONS', description: 'Avoid on broken capillaries, high blood pressure, metal implants, or pregnancy. Check client history first.' },
+            { label: 'DESINCUSTATION', description: 'Source-described galvanic cleansing process that creates an alkaline reaction intended to emulsify sebum and debris in pores.' },
+            { label: 'IONTOPHORESIS', description: 'Source-described process for introducing ions from water-soluble products. Electrode/product selection must follow the specific professional procedure and product/device directions.' },
+            { label: 'CLIENT COMFORT', description: 'Unexpected burning, stinging, pain, or excessive discomfort is a stop-service signal. Turn the device off and follow the manufacturer\'s safety procedure.' },
+            { label: 'CONTRAINDICATIONS', description: 'Screen the client for contraindications identified by the device manufacturer, applicable training, and state scope. The source lists vascular conditions, high blood pressure, and metal implants as cautions for negative galvanic use; do not expand that into a universal list without device-specific support.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Desincrustation = deep pore cleansing. Iontophoresis = product penetration.' },
-            { text: 'Always perform a skin sensitivity test before galvanic treatment. Some clients react strongly even to low current.' },
+            { text: 'EXAM FOCUS: Desincrustation = deep pore cleansing. Iontophoresis = product penetration.' },
+            { text: 'Perform only the pre-service checks required by the specific device, product, training, and applicable rules. Do not substitute a generic "sensitivity test" for device-specific screening.' },
           ],
         },
       ],
@@ -701,7 +701,7 @@ export const chapter8PremiumContent: ChapterContent = {
       type: 'featureGrid',
       id: 'other-modalities',
       title: 'MICROCURRENT & TESLA HIGH-FREQUENCY',
-      subtitle: 'Advanced modalities for skin and scalp mastery',
+      subtitle: 'Source-covered modalities for skin and scalp services',
       features: [
         {
           icon: 'Activity',
@@ -711,17 +711,17 @@ export const chapter8PremiumContent: ChapterContent = {
         {
           icon: 'Zap',
           title: 'TESLA HIGH-FREQUENCY',
-          description: 'High rate of oscillation producing heat and a violet ray. No muscular contractions. Used for scalp and facial treatments with germicidal benefits.',
+          description: 'Tesla high-frequency current has a high oscillation rate and is associated in the source with heat/violet-ray effects and no muscular contraction. Use only as allowed by scope and device directions.',
         },
         {
           icon: 'HeartPulse',
           title: 'TESLA BENEFITS',
-          description: 'Stimulates blood circulation and glandular activity. Increases metabolism and waste elimination. Improves germicidal action. Relieves skin congestion. Increases muscle tone and elasticity.',
+          description: 'The source lists circulation, glandular, metabolic, germicidal, and congestion-related effects. Treat these as source-covered modality claims rather than guaranteed outcomes for every device or client.',
         },
         {
           icon: 'AlertTriangle',
           title: 'TESLA CAUTIONS',
-          description: 'Do not use on broken capillaries. Avoid with high blood pressure or metal implants. Never use without proper training. Keep away from eyes and mucous membranes.',
+          description: 'Follow the device\'s contraindications, eye/skin safety requirements, and state scope of practice. Do not perform electrotherapy without appropriate training and client screening.',
         },
       ],
     },
@@ -733,7 +733,7 @@ export const chapter8PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'electromagnetic-spectrum',
       title: 'THE ELECTROMAGNETIC SPECTRUM',
-      content: 'All forms of energy travel as WAVES. The electromagnetic spectrum includes everything from radio waves to gamma rays. For barbers, the most relevant portions are VISIBLE LIGHT and INVISIBLE LIGHT (ultraviolet and infrared).\n\nKEY PRINCIPLE: Long wavelengths penetrate DEEPLY but carry LESS energy. Short wavelengths penetrate LESS but carry MORE energy.\n\nThis explains why UV rays damage skin (high energy, short wavelength) while infrared rays warm tissue deeply (long wavelength, penetrating heat).\n\nBOARD EXAM ALERT: The electromagnetic spectrum includes radio waves, microwaves, infrared, visible light, ultraviolet, X-rays, and gamma rays — in order from longest to shortest wavelength.',
+      content: 'All forms of energy travel as WAVES. The electromagnetic spectrum includes everything from radio waves to gamma rays. For barbers, the most relevant portions are VISIBLE LIGHT and INVISIBLE LIGHT (ultraviolet and infrared).\n\nKEY PRINCIPLE: Long wavelengths penetrate DEEPLY but carry LESS energy. Short wavelengths penetrate LESS but carry MORE energy.\n\nIn the chapter\'s barbering examples, ultraviolet and infrared occupy opposite sides of the visible spectrum and differ in wavelength, frequency, penetration, and typical tissue effects.\n\nEXAM FOCUS: Know the relative order of radio, microwave, infrared, visible, ultraviolet, X-ray, and gamma regions and the relationship among wavelength, frequency, and energy.',
       highlight: 'LONG = DEEP PENETRATION, LESS ENERGY | SHORT = LESS PENETRATION, MORE ENERGY',
     },
 
@@ -744,7 +744,7 @@ export const chapter8PremiumContent: ChapterContent = {
       type: 'tabbed',
       id: 'light-types',
       title: 'VISIBLE LIGHT & INVISIBLE LIGHT',
-      subtitle: '35% visible, 65% invisible — know what each does to skin',
+      subtitle: 'Visible and invisible regions — learn their source-described relationships',
       tabs: [
         {
           id: 'visible',
@@ -754,10 +754,10 @@ export const chapter8PremiumContent: ChapterContent = {
             { label: 'DEFINITION', description: 'The portion of the electromagnetic spectrum that human eyes can see' },
             { label: 'COLORS', description: 'Red, orange, yellow, green, blue, indigo, violet — remembered by ROY G BIV' },
             { label: 'PRODUCTION', description: 'Produced when light passes through a prism — each color bends at a different angle' },
-            { label: 'BARBER RELEVANCE', description: 'Different LED colors produce different skin responses during light therapy treatments' },
+            { label: 'BARBER RELEVANCE', description: 'The source associates different device wavelengths/colors with different treatment purposes; actual indications depend on the device and permitted use' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Visible light = 35% of natural sunlight. Colors: red, orange, yellow, green, blue, indigo, violet.' },
+            { text: 'EXAM FOCUS: Visible light = 35% of natural sunlight. Colors: red, orange, yellow, green, blue, indigo, violet.' },
             { text: 'A prism separates white light into colors because each wavelength bends at a different angle.' },
           ],
         },
@@ -772,8 +772,8 @@ export const chapter8PremiumContent: ChapterContent = {
             { label: 'UVC', description: 'Absorbed by Earth\'s atmosphere. Used in GERMICIDAL lamps for sterilization.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: UVA = aging/tanning. UVB = burning/cancer. UVC = germicidal (absorbed by atmosphere, used in lamps).' },
-            { text: 'UV rays kill microorganisms by damaging their DNA. This is why UV lamps sterilize tools and water.' },
+            { text: 'EXAM FOCUS: Distinguish UVA, UVB, and UVC by their relative wavelength/penetration and the source-described effects.' },
+            { text: 'UVC is used in germicidal irradiation applications. Do not treat a UV cabinet or lamp as a substitute for required barbering cleaning/disinfection procedures unless the applicable rule explicitly recognizes that device.' },
           ],
         },
         {
@@ -782,13 +782,13 @@ export const chapter8PremiumContent: ChapterContent = {
           title: 'INFRARED RAYS — LONG, DEEP HEAT',
           bullets: [
             { label: 'CHARACTERISTICS', description: 'Longer wavelength than visible light. Produces HEAT. Penetrates DEEPLY into tissue.' },
-            { label: 'EFFECT', description: 'Creates a rosy glow on skin. Increases circulation and promotes healing.' },
-            { label: 'BARBER USE', description: 'Infrared lamps warm skin before treatments, increase product absorption, and soothe sore muscles.' },
-            { label: 'APPLICATION', description: 'Applied at approximately 30 inches from the skin. Monitor client comfort closely.' },
+            { label: 'EFFECT', description: 'Produces heat; the source describes warming and circulation-related effects.' },
+            { label: 'BARBER USE', description: 'The source describes infrared lamps as warming devices used in some hair-conditioning, skin, or spa contexts. Use only within scope and device directions.' },
+            { label: 'APPLICATION', description: 'Use the distance specified by the particular lamp manufacturer and training procedure; monitor client comfort continuously.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Infrared = heat rays, deep penetration. Ultraviolet = cold rays, surface damage.' },
-            { text: 'Infrared lamps are used at ~30 inches distance. Too close = burns. Always monitor client comfort.' },
+            { text: 'EXAM FOCUS: Infrared is associated with longer wavelength/heat; ultraviolet with shorter wavelength/higher frequency and chemical effects.' },
+            { text: 'Do not memorize one distance as universal. Follow the specific lamp\'s instructions and stop if the client experiences excessive heat or discomfort.' },
           ],
         },
       ],
@@ -801,7 +801,7 @@ export const chapter8PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'light-therapy-intro',
       title: 'LIGHT THERAPY (PHOTOTHERAPY)',
-      content: 'Light therapy applies specific wavelengths of light to treat skin conditions. Modern barbershops use LED devices and therapeutic lamps to offer these services. Understanding each color\'s effect allows you to customize treatments for acne, aging, inflammation, and hyperpigmentation.\n\nBOARD EXAM ALERT: Light therapy exposure is usually 5 minutes or less. Never leave a client unattended. Always protect eyes with goggles or moistened cotton pads.',
+      content: 'Light therapy, or phototherapy, uses specific wavelengths of light in source-described skin or scalp services. The chapter includes LEDs and therapeutic lamps as examples, but a barber may use a device only when the service is within scope, the client is appropriately screened, and manufacturer instructions support the application.\n\nEXAM FOCUS: Know the purpose and types of light therapy, use the eye protection required by the device and procedure, follow device-specific exposure controls, and never leave a client unattended while a light-based treatment device is operating.',
       highlight: 'MATCH THE COLOR TO THE CONDITION',
     },
 
@@ -812,27 +812,27 @@ export const chapter8PremiumContent: ChapterContent = {
       type: 'featureGrid',
       id: 'led-therapy',
       title: 'LED LIGHT THERAPY',
-      subtitle: 'Different colors, different benefits — match the LED to the need',
+      subtitle: 'Source-described LED color associations — verify the device indication',
       features: [
         {
           icon: 'CircleDot',
           title: 'BLUE LED',
-          description: 'Reduces acne and kills bacteria. Targets P. acnes bacteria on the skin surface. Best for oily, acne-prone skin.',
+          description: 'The source associates blue LED with acne/bacteria-related applications. Do not promise a treatment outcome; verify the device indication, client suitability, and permitted scope.',
         },
         {
           icon: 'CircleDot',
           title: 'RED LED',
-          description: 'Increases circulation, collagen, and elastin. Stimulates wound healing. Best for aging skin, fine lines, and recovery.',
+          description: 'The source associates red LED with circulation and collagen/elastin-related effects. Present these as device-dependent cosmetic claims rather than guaranteed healing outcomes.',
         },
         {
           icon: 'CircleDot',
           title: 'YELLOW LED',
-          description: 'Reduces swelling and inflammation. Improves lymphatic flow. Best for sensitive skin and post-treatment recovery.',
+          description: 'The source associates yellow LED with swelling/inflammation and circulation/lymphatic-related effects. Actual device claims and client suitability must be verified.',
         },
         {
           icon: 'CircleDot',
           title: 'GREEN LED',
-          description: 'Reduces hyperpigmentation and redness. Calms and soothes irritated skin. Best for uneven skin tone and rosacea.',
+          description: 'The source associates green LED with pigmentation/redness and calming effects. Avoid diagnosing or treating medical skin conditions outside barber scope.',
         },
       ],
     },
@@ -844,7 +844,7 @@ export const chapter8PremiumContent: ChapterContent = {
       type: 'tabbed',
       id: 'therapeutic-lamps',
       title: 'THERAPEUTIC LAMPS',
-      subtitle: 'Dome-shaped reflector lamps with colored bulbs',
+      subtitle: 'Source-described therapeutic lamps — follow device-specific instructions',
       tabs: [
         {
           id: 'white',
@@ -853,8 +853,8 @@ export const chapter8PremiumContent: ChapterContent = {
           bullets: [
             { label: 'EFFECT', description: 'Relieves pain, relaxes muscles, provides chemical and germicidal effects' },
             { label: 'USE', description: 'General wellness treatments and muscle relaxation after massage' },
-            { label: 'DISTANCE', description: 'Apply at 30–36 inches from the skin' },
-            { label: 'DURATION', description: 'Usually 5 minutes or less per treatment area' },
+            { label: 'DISTANCE', description: 'Use the distance specified for the particular lamp/device' },
+            { label: 'DURATION', description: 'Use the exposure time specified by the device and training procedure' },
           ],
           facts: [
             { text: 'White light provides broad-spectrum benefits but is less targeted than colored LED therapy.' },
@@ -867,7 +867,7 @@ export const chapter8PremiumContent: ChapterContent = {
           bullets: [
             { label: 'EFFECT', description: 'Tonic effect on bare skin. Stimulates and invigorates tissue.' },
             { label: 'USE', description: 'Oily skin and mild acne treatments' },
-            { label: 'DISTANCE', description: 'Apply at 30–36 inches from the skin' },
+            { label: 'DISTANCE', description: 'Use the distance specified for the particular lamp/device' },
             { label: 'DURATION', description: 'Short exposure times — monitor closely' },
           ],
           facts: [
@@ -881,8 +881,8 @@ export const chapter8PremiumContent: ChapterContent = {
           bullets: [
             { label: 'EFFECT', description: 'Heat rays that stimulate penetration of creams and increase circulation' },
             { label: 'USE', description: 'Dry skin, aging concerns, and product penetration enhancement' },
-            { label: 'DISTANCE', description: 'Apply at 30–36 inches from the skin' },
-            { label: 'DURATION', description: 'Usually 5 minutes or less' },
+            { label: 'DISTANCE', description: 'Use the distance specified for the particular lamp/device' },
+            { label: 'DURATION', description: 'Use the exposure time specified by the device and training procedure' },
           ],
           facts: [
             { text: 'Red light produces warmth. Clients should feel gentle heat, never burning. Adjust distance if too hot.' },
@@ -893,14 +893,14 @@ export const chapter8PremiumContent: ChapterContent = {
           label: 'UV',
           title: 'ULTRAVIOLET LIGHT THERAPY',
           bullets: [
-            { label: 'EFFECT', description: 'Treats acne, seborrhea, and dandruff. Germicidal action kills surface bacteria and fungi.' },
-            { label: 'USE', description: 'Scalp conditions and skin infections under professional supervision' },
-            { label: 'DISTANCE', description: '30–36 inches from the skin' },
+            { label: 'EFFECT', description: 'The source describes ultraviolet therapeutic-lamp use for certain acne, seborrhea, and dandruff applications. Because UV can injure skin and eyes, use only where permitted and only under device-specific professional instructions.' },
+            { label: 'USE', description: 'Source-described skin/scalp applications only where allowed by scope; do not diagnose or treat infection as a barber.' },
+            { label: 'DISTANCE', description: 'Use the distance specified by the particular lamp/device' },
             { label: 'DURATION', description: 'VERY SHORT exposure times — UV can damage skin with overexposure' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: UV light therapy treats acne, seborrhea, and dandruff. Use at 30–36 inches with short exposure.' },
-            { text: 'Overexposure to UV causes burns and increases skin cancer risk. Strictly control duration and distance.' },
+            { text: 'EXAM FOCUS: Know the source-described ultraviolet uses and the need for strict eye, exposure, scope, and device controls.' },
+            { text: 'Ultraviolet exposure can injure skin and eyes. Follow device-specific exposure controls and applicable professional rules.' },
           ],
         },
         {
@@ -910,8 +910,8 @@ export const chapter8PremiumContent: ChapterContent = {
           bullets: [
             { label: 'EFFECT', description: 'Produces heat (rosy glow). Deep penetration warms tissue and increases circulation.' },
             { label: 'USE', description: 'Muscle relaxation, pre-treatment warming, and product absorption' },
-            { label: 'DISTANCE', description: 'Approximately 30 inches from the skin' },
-            { label: 'DURATION', description: 'Usually 5 minutes or less' },
+            { label: 'DISTANCE', description: 'Use the distance specified by the particular lamp/device' },
+            { label: 'DURATION', description: 'Use the exposure time specified by the device and training procedure' },
           ],
           facts: [
             { text: 'Infrared produces visible heat. The client\'s skin should show a rosy glow — not redness or burning.' },
@@ -926,16 +926,16 @@ export const chapter8PremiumContent: ChapterContent = {
     {
       type: 'checklist',
       id: 'light-therapy-safety',
-      title: '💡 LIGHT THERAPY SAFETY PROTOCOLS',
+      title: '💡 LIGHT-THERAPY CLIENT PROTECTION',
       items: [
-        { text: 'NEVER leave a client unattended during light therapy' },
-        { text: 'PROTECT EYES with goggles or moistened cotton pads' },
-        { text: 'CHECK skin products for contraindications before treatment' },
-        { text: 'BREAK the light path frequently by waving your hand between lamp and client' },
-        { text: 'LIMIT exposure time to 5 minutes or less per area' },
-        { text: 'MAINTAIN proper distance (30–36 inches for most lamps)' },
-        { text: 'DISCONTINUE immediately if client reports burning or discomfort' },
-        { text: 'AVOID light therapy on clients with photosensitivity or certain medications' },
+        { text: 'Never leave a client unattended while a light-based treatment device is operating' },
+        { text: 'Use the eye protection required by the device and professional procedure' },
+        { text: 'Check client history, skin condition, medications/photosensitivity risk, products, and device contraindications as required' },
+        { text: 'For source-described therapeutic lamps, monitor heat and client comfort using the professional procedure; do not improvise around modern devices' },
+        { text: 'Use the exposure time specified by the particular device and training procedure' },
+        { text: 'Use the operating distance specified by the particular device manufacturer' },
+        { text: 'Stop the service immediately for burning, pain, excessive heat, unexpected skin reaction, or other adverse symptoms' },
+        { text: 'Screen for photosensitivity and medication/device contraindications before light-based services' },
       ],
     },
 
@@ -946,7 +946,7 @@ export const chapter8PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'lasers',
       title: 'LASERS IN BARBERING',
-      content: 'Medical lasers use electromagnetic radiation for hair removal and skin treatments. They work by SELECTIVE PHOTOTHERMOLYSIS — light energy converts to heat, targeting specific structures without damaging surrounding tissue.\n\nLASER CLASSIFICATION: Classified as Level II or higher medical devices. Usually require physician supervision.\n\nBARBER SCOPE: Most states do NOT permit barbers to operate medical lasers. Know your state\'s scope of practice. If lasers are permitted, specialized training and certification are required.\n\nBOARD EXAM ALERT: Selective photothermolysis = light converts to heat to target specific structures. Lasers are medical devices requiring proper training and often physician supervision.',
+      content: 'The source discusses lasers as medical light devices and introduces selective photothermolysis: using light energy that is converted to heat in a targeted structure.\n\nBARBER SCOPE: Do not assume a barber license authorizes laser operation. Laser services may be regulated separately or fall outside barber scope. Follow the current state law, credentialing requirements, facility rules, and device-specific training requirements.\n\nEXAM FOCUS: Know selective photothermolysis as a light-to-heat targeting concept and recognize that medical laser operation requires authorization beyond ordinary barbering in many jurisdictions.',
       highlight: 'KNOW YOUR STATE\'S SCOPE OF PRACTICE',
     },
 
@@ -965,7 +965,7 @@ export const chapter8PremiumContent: ChapterContent = {
           title: 'MIX-UPS THAT COST POINTS',
           bullets: [
             { label: 'DC vs AC', description: 'DC = battery, ONE direction. AC = wall outlet, REVERSES direction. Do not mix them up.' },
-            { label: 'GFCI Locations', description: 'GFCI is required near WATER sources. Not just sinks — anywhere water is present.' },
+            { label: 'GFCI Locations', description: 'Know the purpose of ground-fault protection and follow applicable electrical code and facility requirements in water-exposure locations.' },
             { label: 'Anode vs Cathode', description: 'Anode = POSITIVE (+), RED, closes pores, acidic. Cathode = NEGATIVE (–), BLACK, opens pores, alkaline.' },
             { label: 'Frayed Cords', description: 'Frayed cords are not cosmetic issues — they are shock and fire hazards. Replace, do not tape.' },
             { label: 'Outlet Overloading', description: 'Two high-wattage dryers on one circuit trip breakers. Calculate total wattage before plugging in.' },
@@ -1007,7 +1007,7 @@ export const chapter8PremiumContent: ChapterContent = {
             { label: 'LOOK FOR UL', description: 'Only use equipment with the UL safety mark. Untested tools are unpredictable.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: OSHA requires safe electrical practices. Violations can result in fines and license suspension.' },
+            { text: 'EXAM FOCUS: OSHA requires safe electrical practices. Violations can result in fines and license suspension.' },
             { text: 'A single electrical accident can end your career. Safety is not a suggestion — it is a professional obligation.' },
           ],
         },
@@ -1021,8 +1021,8 @@ export const chapter8PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'board-exam-alerts',
       title: '🚨 BOARD EXAM CRITICAL ALERTS',
-      content: 'These electricity concepts appear on EVERY state board exam. Miss them, and you fail.\n\n1. ELECTRICITY = form of energy, NOT matter. Produces physical, magnetic, chemical, or thermal effects.\n\n2. CONDUCTOR = transmits electricity easily (metals, human body, watery solutions).\n\n3. INSULATOR = does not transmit electricity (rubber, plastic, dry wood, glass).\n\n4. DC = direct current, one direction, battery-powered.\n\n5. AC = alternating current, reverses direction, wall outlet.\n\n6. VOLT = electrical pressure. Standard US = 110–120V.\n\n7. AMPERE = current strength. Milliampere = 1/1,000 amp.\n\n8. OHM = resistance. Higher ohms = less current.\n\n9. WATT = power (amps × volts). Kilowatt = 1,000 watts.\n\n10. FUSE = melts on overload, must be replaced.\n\n11. CIRCUIT BREAKER = trips on overload, can be reset.\n\n12. GROUNDING = third prong, safe path for electricity.\n\n13. GFCI = required near water, prevents shock.\n\n14. UL MARK = safety tested equipment.\n\n15. ANODE = positive (+), RED, closes pores, acidic, cataphoresis.\n\n16. CATHODE = negative (–), BLACK, opens pores, alkaline, anaphoresis.\n\n17. GALVANIC CURRENT = DC, low voltage, chemical changes.\n\n18. MICROCURRENT = mirrors body\'s natural impulses, sub-sensory.\n\n19. TESLA HIGH-FREQUENCY = heat and violet ray, no muscle contractions.\n\n20. VISIBLE LIGHT = 35% of sunlight, ROY G BIV colors.\n\n21. UVA = aging/tanning. UVB = burning/cancer. UVC = germicidal.\n\n22. INFRARED = heat rays, deep penetration.\n\n23. LED BLUE = acne/bacteria. RED = circulation/collagen. YELLOW = swelling. GREEN = pigmentation.\n\n24. LIGHT THERAPY = 5 minutes max, protect eyes, never leave client unattended.\n\n25. LASERS = selective photothermolysis, medical devices, often require physician supervision.',
-      highlight: 'MEMORIZE THESE 25 POINTS',
+      content: 'These are high-value Chapter 8 review concepts. Actual state-board content and weighting vary by jurisdiction and exam program, so use them as a study checklist rather than a prediction of exact exam questions.\n\n1. ELECTRICITY = form of energy, NOT matter. Produces physical, magnetic, chemical, or thermal effects.\n\n2. CONDUCTOR = transmits electricity easily (metals, human body, watery solutions).\n\n3. INSULATOR = does not transmit electricity (rubber, plastic, dry wood, glass).\n\n4. DC = direct current, one direction, battery-powered.\n\n5. AC = alternating current, reverses direction, wall outlet.\n\n6. VOLT = electrical pressure. Standard US = 110–120V.\n\n7. AMPERE = current strength. Milliampere = 1/1,000 amp.\n\n8. OHM = resistance. Higher ohms = less current.\n\n9. WATT = power (amps × volts). Kilowatt = 1,000 watts.\n\n10. FUSE = melts on overload, must be replaced.\n\n11. CIRCUIT BREAKER = trips on overload, can be reset.\n\n12. GROUNDING = third prong, safe path for electricity.\n\n13. GFCI = ground-fault protection; know its purpose and follow applicable code/facility requirements around water.\n\n14. UL MARK = safety tested equipment.\n\n15. ANODE = positive (+), commonly red; know the source-described acidic/cataphoresis associations.\n\n16. CATHODE = negative (–), commonly black; know the source-described alkaline/anaphoresis associations.\n\n17. GALVANIC CURRENT = DC, low voltage, chemical changes.\n\n18. MICROCURRENT = mirrors body\'s natural impulses, sub-sensory.\n\n19. TESLA HIGH-FREQUENCY = source-described high oscillation, heat/violet-ray effect, and no muscular contraction.\n\n20. VISIBLE LIGHT = 35% of sunlight, ROY G BIV colors.\n\n21. UVA, UVB, UVC = distinguish relative wavelength/penetration and source-described biological/germicidal effects.\n\n22. INFRARED = heat rays, deep penetration.\n\n23. LED COLORS = know the source-described associations, but verify the actual device indication and client suitability.\n\n24. LIGHT THERAPY = protect the client, use required eye protection, follow device-specific time/distance, and never leave the client unattended.\n\n25. LASERS = selective photothermolysis concept; operation may require separate authorization, credentials, or medical oversight depending on jurisdiction.',
+      highlight: 'MASTER THESE HIGH-VALUE CONCEPTS',
     },
 
     // ═══════════════════════════════════════════
@@ -1047,10 +1047,10 @@ export const chapter8PremiumContent: ChapterContent = {
         {
           situation: 'You are about to start a facial treatment using a galvanic machine. The client mentions they have a pacemaker and metal pins in their shoulder from a previous surgery. What do you do?',
           options: [
-            { letter: 'A', text: 'Proceed with the treatment but use lower intensity', feedback: '❌ INCORRECT. Metal implants and pacemakers are absolute contraindications for electrotherapy. Lower intensity does not eliminate the risk.' },
-            { letter: 'B', text: 'Cancel the electrotherapy and suggest alternative non-electrical treatments', feedback: '✅ CORRECT. Pacemakers and metal implants are contraindications for galvanic current. Always check client history before electrotherapy. Offer safe alternatives.' },
-            { letter: 'C', text: 'Use the positive pole only, as it is safer than the negative pole', feedback: '❌ INCORRECT. Both poles carry risk with pacemakers and metal implants. There is no "safer" pole in this situation.' },
-            { letter: 'D', text: 'Ask the client to sign a waiver and proceed with the treatment', feedback: '❌ INCORRECT. A waiver does not protect you from liability when performing a contraindicated treatment. This is professional negligence.' },
+            { letter: 'A', text: 'Proceed with the treatment but use lower intensity', feedback: '❌ INCORRECT. A pacemaker or implanted electronic device is a high-priority screening concern. Do not proceed unless the specific device instructions, professional training, and applicable scope clearly permit the service.' },
+            { letter: 'B', text: 'Cancel the electrotherapy and suggest alternative non-electrical treatments', feedback: '✅ CORRECT. Do not proceed with galvanic service when the client history presents an implanted-device or other contraindication that the equipment instructions identify. Choose a non-electrical alternative when appropriate.' },
+            { letter: 'C', text: 'Use the positive pole only, as it is safer than the negative pole', feedback: '❌ INCORRECT. Changing polarity is not a substitute for contraindication screening or device instructions.' },
+            { letter: 'D', text: 'Ask the client to sign a waiver and proceed with the treatment', feedback: '❌ INCORRECT. A consent or waiver does not replace scope-of-practice limits, contraindication screening, or safe device use.' },
           ],
           correctAnswer: 'B',
         },
@@ -1099,7 +1099,7 @@ export const chapter8PremiumContent: ChapterContent = {
     {
       type: 'quote',
       id: 'power-pledge',
-      quote: 'I pledge to respect the power of electricity. I will inspect my tools, protect my clients, and never compromise on safety. I understand that electricity is a servant when respected and a danger when ignored. A master barber masters the power behind the chair.',
+      quote: 'I will use electrical knowledge to protect clients, inspect equipment, follow manufacturer directions, respect scope-of-practice limits, and stop when a condition is unsafe or outside my training. Professional judgment includes knowing when not to proceed.',
     },
   ],
 }

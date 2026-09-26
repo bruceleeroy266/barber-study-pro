@@ -30,6 +30,7 @@ import { createSupabaseStudentRemediationClient } from '@/lib/remediation/supaba
 import { createStudentRemediationService } from '@/lib/remediation/student-service'
 import { createSupabaseEvaluationClient } from '@/lib/evaluation/supabase-client'
 import { createEvaluationService } from '@/lib/evaluation/evaluation-service'
+import { generateIdempotencyKey } from '@/lib/evaluation/outcome-mapper'
 import { createSupabaseExclusionClient } from '@/lib/reassessment/supabase-client'
 import { createReassessmentService } from '@/lib/reassessment/reassessment-service'
 import { getChapterContentProvider } from '@/lib/remediation/content-provider-registry'
@@ -48,6 +49,9 @@ import { STUDENT_STATE_LABELS, STUDENT_STATE_DESCRIPTIONS } from '@/lib/remediat
 import type { StudentRemediationState } from '@/lib/remediation/student-service'
 import { recordLearningActivity } from '@/lib/learning-activity'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
+import { buildChapter8PersistedReassessmentEvent } from '@/lib/chapter-8-concepts/reassessment-evidence'
+import type { Chapter8ConceptFamilyId } from '@/lib/chapter-8-concepts/types'
+import { evaluateChapter8FormalReassessment } from '@/lib/chapter-8-concepts/recovery-outcome'
 
 export async function POST(
   request: NextRequest,
@@ -176,6 +180,7 @@ export async function POST(
     )
 
     let attemptId: string | null = existingAttemptId
+    const attemptWasReplay = !!existingAttemptId
 
     if (!attemptId) {
       const { data: consumedAttemptId, error: consumeError } = await supabaseAdmin.rpc(
@@ -226,9 +231,25 @@ export async function POST(
       )
     }
 
+    if (cycle.chapterId === 'ch-8' && !attemptWasReplay) {
+      const evidenceEvent = buildChapter8PersistedReassessmentEvent({
+        attemptId,
+        questionId,
+        conceptFamilyId: cycle.conceptId as Chapter8ConceptFamilyId,
+        correct: isCorrect,
+        answeredAt: new Date().toISOString(),
+      })
+
+      await dbClient.recordCycleEvent(
+        cycleId,
+        'chapter8_remediation_reassessment_evidence',
+        { ...evidenceEvent },
+      )
+    }
+
     // Learning-activity tracking: submitting a knowledge-check answer is
-    // meaningful Chapter 2 learning work. Advance last_studied_at via the
-    // shared server-side mechanism (student-scoped client, RLS). Never blocks.
+    // meaningful learning work. Advance last_studied_at via the shared
+    // server-side mechanism (student-scoped client, RLS). Never blocks.
     await recordLearningActivity(supabase, user.id, cycle.chapterId)
 
     // Knowledge-check progress from persisted state (C3-3 stage 5).
@@ -300,11 +321,47 @@ export async function POST(
     // because the quiz_attempt was created with is_reassessment=true,
     // remediation_cycle_id=cycleId, and target_concept_id=cycle.conceptId
     const evidenceIds = kcProgress.answeredAttemptIds.slice(0, requiredCount)
-    const evaluationResult = await evaluationService.evaluateCycleWithDetection(
-      cycleId,
-      cycle.conceptId,
-      evidenceIds
-    )
+
+    let evaluationResult
+    if (cycle.chapterId === 'ch-8') {
+      const persistedAttempts = await fetchQuizAttempts(evidenceIds)
+      const recoveryOutcome = evaluateChapter8FormalReassessment({
+        conceptFamilyId: cycle.conceptId as Chapter8ConceptFamilyId,
+        correctCount: persistedAttempts.reduce((sum, item) => sum + (item.score > 0 ? 1 : 0), 0),
+        questionCount: persistedAttempts.length,
+      })
+
+      const semanticDetection = await detectionProvider.detectConceptState(
+        cycle.conceptId,
+        evidenceIds,
+      )
+      if (!semanticDetection) {
+        return NextResponse.json(
+          { error: 'Chapter 8 reassessment evidence could not be resolved to the target concept.' },
+          { status: 500 },
+        )
+      }
+
+      evaluationResult = await evaluationService.evaluateCycle({
+        cycleId,
+        detectionState: recoveryOutcome.detectionState,
+        confidence: recoveryOutcome.confidence,
+        conceptEvidence: semanticDetection.evidence,
+        evidenceIds,
+        idempotencyKey: generateIdempotencyKey(
+          cycleId,
+          recoveryOutcome.detectionState,
+          recoveryOutcome.confidence,
+          evidenceIds,
+        ),
+      })
+    } else {
+      evaluationResult = await evaluationService.evaluateCycleWithDetection(
+        cycleId,
+        cycle.conceptId,
+        evidenceIds
+      )
+    }
 
     if (!evaluationResult.success) {
       console.error('[Remediation API] Evaluation failed:', evaluationResult.error)
