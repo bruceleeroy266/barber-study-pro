@@ -7,6 +7,10 @@ interface PageProps {
     student?: string
     reviewed?: string
     alreadyReviewed?: string
+    queueStudent?: string
+    queueDate?: string
+    queueSource?: string
+    queueCategory?: string
   }>
 }
 
@@ -23,6 +27,10 @@ export default async function SchoolHoursPage({ searchParams }: PageProps) {
       highlightedStudentId={params.student ?? null}
       reviewedStatus={params.reviewed ?? null}
       alreadyReviewedStatus={params.alreadyReviewed ?? null}
+      queueStudentFilter={params.queueStudent ?? ''}
+      queueDateFilter={params.queueDate ?? ''}
+      queueSourceFilter={params.queueSource ?? ''}
+      queueCategoryFilter={params.queueCategory ?? ''}
     />
   )
 }
