@@ -39,9 +39,9 @@ The original evidence array remains unchanged and the recovery evidence is appen
 
 ## Reassessment reserve — current implementation
 
-The first reserve slice contains 10 fresh questions:
-- 5 Electrical Equipment Safety questions
-- 5 Light-Therapy Safety questions
+The reserve now contains 50 fresh questions total: five for each of the ten canonical Chapter 8 concept families.
+
+The two critical safety families still keep their stricter 100% pass threshold; the remaining eight concept families use the ordinary 80% formal reassessment threshold.
 
 Reserve IDs use the `r8-` namespace so they cannot collide with:
 - initial chapter assessment IDs (`qq-8-`)
@@ -51,10 +51,9 @@ All safety reserve questions are application/scenario level.
 
 ## Remaining C8-7 work
 
-- build five-question reserves for the remaining eight Chapter 8 concept families;
-- add deterministic reserve selection for every targeted ordinary concept;
 - convert completed reserve responses into `remediation_reassessment` evidence;
-- calculate per-cycle score/pass state without altering historical first-attempt evidence;
+- deterministic reserve selection is implemented by concept ID and stable sorted reserve IDs;
+- five-question cycle scoring is implemented with 80% ordinary / 100% urgent-safety pass thresholds;
 - wire targeted remediation and reassessment into the student remediation flow;
 - add persistence and regression coverage;
 - run full Engineering Verification and exact-head Vercel certification.
