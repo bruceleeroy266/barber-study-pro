@@ -5,6 +5,8 @@ interface PageProps {
     saved?: string
     error?: string
     student?: string
+    reviewed?: string
+    alreadyReviewed?: string
   }>
 }
 
@@ -19,6 +21,8 @@ export default async function SchoolHoursPage({ searchParams }: PageProps) {
       saved={params.saved === '1'}
       error={params.error ?? null}
       highlightedStudentId={params.student ?? null}
+      reviewedStatus={params.reviewed ?? null}
+      alreadyReviewedStatus={params.alreadyReviewed ?? null}
     />
   )
 }
