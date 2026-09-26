@@ -1,7 +1,7 @@
 'use client'
 
 import { SchoolOverviewMetrics as Metrics } from '@/types'
-import { Users, UserCheck, GraduationCap, AlertTriangle, CalendarCheck, Target, Calculator, Clock, Hourglass, ClipboardCheck } from 'lucide-react'
+import { Users, UserCheck, GraduationCap, AlertTriangle, CalendarCheck, Target, Calculator, ClipboardCheck } from 'lucide-react'
 
 interface Props {
   metrics: Metrics
@@ -64,18 +64,6 @@ export default function SchoolOverviewMetrics({ metrics }: Props) {
         value={`${metrics.averageGrade}%`}
         icon={Calculator}
         colorClass="text-silver"
-      />
-      <MetricCard
-        label="Completed Hours"
-        value={metrics.completedHours}
-        icon={Clock}
-        colorClass="text-silver"
-      />
-      <MetricCard
-        label="Remaining Hours"
-        value={metrics.remainingHours}
-        icon={Hourglass}
-        colorClass="text-warm-bronze"
       />
       <MetricCard
         label="Assessment Completion"

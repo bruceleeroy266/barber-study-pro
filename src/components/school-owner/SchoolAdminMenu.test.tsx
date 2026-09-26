@@ -47,6 +47,7 @@ describe('SchoolAdminMenu', () => {
     expect(screen.getByRole('menuitem', { name: /Manage Users/i })).toHaveAttribute('href', '/admin/users')
     expect(screen.getByRole('menuitem', { name: /School Settings/i })).toHaveAttribute('href', '/admin/school/configuration')
     expect(screen.getByRole('menuitem', { name: /Student & Instructor Performance/i })).toHaveAttribute('href', '/school#performance')
+    expect(screen.getByRole('menuitem', { name: /Student Hours/i })).toHaveAttribute('href', '/school/hours')
     expect(screen.getByRole('menuitem', { name: /Reports & Compliance/i })).toHaveAttribute('href', '/school#reports-compliance')
     expect(screen.queryByText(/Pilot Inquiries/i)).not.toBeInTheDocument()
     expect(screen.queryByText(/System Health/i)).not.toBeInTheDocument()

@@ -1035,9 +1035,17 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
 
         {/* Hours Pending Approval Queue Placeholder */}
         <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl overflow-hidden">
-          <div className="p-6 border-b border-[var(--color-border-primary)]">
-            <h2 className="text-xl font-semibold text-white">Hours Pending Approval</h2>
-            <p className="text-sm text-[var(--color-text-muted)] mt-1">Approval workflow coming soon</p>
+          <div className="p-6 border-b border-[var(--color-border-primary)] flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-xl font-semibold text-white">Student Hours</h2>
+              <p className="text-sm text-[var(--color-text-muted)] mt-1">Log daily school hours and review each student&apos;s accumulated total.</p>
+            </div>
+            <Link
+              href="/instructor/hours"
+              className="inline-flex items-center justify-center rounded-lg bg-[var(--color-brand-gold)] px-4 py-2 text-sm font-semibold text-black"
+            >
+              Manage Hours
+            </Link>
           </div>
           {Object.keys(pendingByStudent).length > 0 ? (
             <div className="divide-y divide-graphite">

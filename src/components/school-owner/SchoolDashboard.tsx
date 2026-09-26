@@ -23,8 +23,8 @@ import {
   buildSchoolAnalyticsSnapshot,
   generateSchoolReport,
 } from '@/lib/school-owner/school-analytics'
-import { buildStudentCompliance, generateComplianceReport } from '@/lib/compliance'
-import { resolveStudentProgramRequirements } from '@/lib/programs/requirements'
+import { buildStudentCompliance, generateComplianceReport, thresholdsWithRequiredHours, ComplianceRuleThresholds } from '@/lib/compliance'
+import { resolveProgramRequirementsForStudents } from '@/lib/programs/requirements'
 import SchoolOverviewMetrics from './SchoolOverviewMetrics'
 import ComplianceReportingCenter from '@/components/compliance/ComplianceReportingCenter'
 import SchoolHealthScore from './SchoolHealthScore'
@@ -42,11 +42,6 @@ interface SchoolDashboardProps {
 export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps) {
   const supabase = await createClient()
   const queryErrors: string[] = []
-
-  // Resolve the school's configured program requirement (programs.required_hours)
-  // so analytics use the applicable value instead of any hard-coded assumption.
-  // Soft-fails to the schema default when no program is configured.
-  const programRequirements = await resolveStudentProgramRequirements(supabase, schoolId)
 
   const { data: studentsData, error: studentsError } = await supabase
     .from('profiles')
@@ -138,6 +133,26 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
 
   const scopedStudentIds = new Set(students.map((s) => s.id))
 
+  // Resolve required training hours independently for every student. This keeps
+  // mixed-program schools accurate and prevents a class-wide hours requirement.
+  const programRequirementsByStudent = await resolveProgramRequirementsForStudents(
+    supabase,
+    schoolId,
+    students.map((student) => student.id),
+  )
+  const requiredHoursByStudentId = Object.fromEntries(
+    students.map((student) => [
+      student.id,
+      programRequirementsByStudent.get(student.id)?.requiredHours ?? 1500,
+    ]),
+  )
+  const thresholdsByStudentId = new Map<string, ComplianceRuleThresholds>(
+    students.map((student) => [
+      student.id,
+      thresholdsWithRequiredHours(requiredHoursByStudentId[student.id]),
+    ]),
+  )
+
   const attendanceRecords: AttendanceRecord[] =
     mapAttendanceRecordsFromDb(attendanceData || [])?.length > 0
       ? mapAttendanceRecordsFromDb(attendanceData || [])
@@ -205,7 +220,7 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
     gradeCategories,
     assessments,
     notifications,
-    requiredHours: programRequirements.requiredHours,
+    requiredHoursByStudentId,
   }
 
   const metrics = buildSchoolOverviewMetrics(inputs)
@@ -234,6 +249,7 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
       grades,
       gradeCategories,
       assessments,
+      thresholds: thresholdsByStudentId.get(student.id),
     })
   )
 
@@ -246,7 +262,7 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
     grades,
     gradeCategories,
     assessments,
-  })
+  }, thresholdsByStudentId)
 
   const avgComplianceScore =
     studentCompliances.length > 0
@@ -266,7 +282,7 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
       grades,
       gradeCategories,
       assessments,
-    }),
+    }, thresholdsByStudentId),
     graduation_readiness: generateComplianceReport('graduation_readiness', {
       students,
       attendanceRecords,
@@ -276,7 +292,7 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
       grades,
       gradeCategories,
       assessments,
-    }),
+    }, thresholdsByStudentId),
     board_eligibility: generateComplianceReport('board_eligibility', {
       students,
       attendanceRecords,
@@ -286,7 +302,7 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
       grades,
       gradeCategories,
       assessments,
-    }),
+    }, thresholdsByStudentId),
     instructor_compliance: generateComplianceReport('instructor_compliance', {
       students,
       attendanceRecords,
@@ -296,7 +312,7 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
       grades,
       gradeCategories,
       assessments,
-    }),
+    }, thresholdsByStudentId),
     school_compliance: generateComplianceReport('school_compliance', {
       students,
       attendanceRecords,
@@ -306,7 +322,7 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
       grades,
       gradeCategories,
       assessments,
-    }),
+    }, thresholdsByStudentId),
   }
 
   return (
@@ -367,6 +383,21 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
         <SchoolHealthScore health={health} />
 
         <SchoolOverviewMetrics metrics={metrics} />
+
+        <Link
+          href="/school/hours"
+          className="block rounded-xl border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 p-5 transition-colors hover:bg-[var(--color-brand-gold)]/15"
+        >
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-white">Individual Student Hours</h2>
+              <p className="text-sm text-silver">
+                Enter daily school hours and track accumulated and remaining hours for each student separately.
+              </p>
+            </div>
+            <span className="font-semibold text-[var(--color-brand-gold)]">Manage Hours →</span>
+          </div>
+        </Link>
 
         <div className="bg-charcoal border border-graphite rounded-xl p-6">
           <h2 className="text-lg font-semibold text-white mb-4">License Requirements</h2>

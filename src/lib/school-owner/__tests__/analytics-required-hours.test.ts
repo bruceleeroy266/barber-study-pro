@@ -143,6 +143,54 @@ describe('school analytics with configured program required_hours (1000h program
   })
 })
 
+
+describe('school analytics with per-student hour requirements', () => {
+  it('keeps each student on their own program requirement', () => {
+    const inputs = makeInputs({
+      students: [makeStudent('s1'), makeStudent('s2')],
+      hourLogs: [
+        makeHourLog('s1', 300 * 60, 'approved'),
+        makeHourLog('s2', 300 * 60, 'approved'),
+      ],
+      requiredHours: 1500,
+      requiredHoursByStudentId: {
+        s1: 1200,
+        s2: 1000,
+      },
+    })
+
+    const rows = buildStudentPerformanceRows(inputs)
+    expect(rows.find((row) => row.studentId === 's1')?.requiredHours).toBe(1200)
+    expect(rows.find((row) => row.studentId === 's2')?.requiredHours).toBe(1000)
+
+    const report = generateSchoolReport('hours', inputs)
+    expect(report.rows.find((row) => row.Student === 'Student s1')?.Remaining).toBe(900)
+    expect(report.rows.find((row) => row.Student === 'Student s2')?.Remaining).toBe(700)
+
+    const metrics = buildSchoolOverviewMetrics(inputs)
+    expect(metrics.remainingHours).toBe(1600)
+  })
+
+  it('uses each student requirement in missing-hours alerts', () => {
+    const inputs = makeInputs({
+      students: [makeStudent('s1'), makeStudent('s2')],
+      hourLogs: [
+        makeHourLog('s1', 600 * 60, 'approved'),
+        makeHourLog('s2', 600 * 60, 'approved'),
+      ],
+      requiredHoursByStudentId: {
+        s1: 1200,
+        s2: 1500,
+      },
+    })
+
+    const missing = buildSchoolAlerts(inputs).filter((alert) => alert.type === 'missing_hours')
+    expect(missing.some((alert) => alert.studentId === 's1')).toBe(false)
+    expect(missing.some((alert) => alert.studentId === 's2')).toBe(true)
+    expect(missing.find((alert) => alert.studentId === 's2')?.description).toContain('of 1500 hours')
+  })
+})
+
 describe('school analytics fallback behavior', () => {
   it.each([undefined, null, 0, -100, NaN])('falls back to the 1500 schema default for %s', (value) => {
     const inputs = makeInputs({ students: [makeStudent('s1')], requiredHours: value })
