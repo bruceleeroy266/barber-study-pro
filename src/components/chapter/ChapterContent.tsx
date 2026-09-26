@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
 import type { ChapterSection, ChapterTheme } from '@/lib/chapter-content'
 import { defaultTheme } from '@/lib/chapter-content'
 import InfoCard from './InfoCard'
@@ -23,6 +23,12 @@ import AppearanceChecklist from './AppearanceChecklist'
 import ProTip from './ProTip'
 import ReflectionBlock from './ReflectionBlock'
 import HtmlContentBlock from './HtmlContentBlock'
+import Chapter7MicroCheckCard from './Chapter7MicroCheckCard'
+import { chapter7MicroChecks } from '@/lib/chapter-7-concepts/micro-checks'
+import {
+  loadChapter7MicroCheckAttempts,
+  type Chapter7MicroCheckAttemptRow,
+} from '@/lib/chapter-7-concepts/micro-check-persistence'
 import { supabase } from '@/lib/supabase'
 import {
   areKnowledgeCheckSectionsComplete,
@@ -95,6 +101,31 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
   })
   const [knowledgeChecksSaved, setKnowledgeChecksSaved] = useState(knowledgeChecksCompleted)
 
+  const [chapter7MicroCheckAttempts, setChapter7MicroCheckAttempts] = useState<Chapter7MicroCheckAttemptRow[]>([])
+
+  useEffect(() => {
+    if (chapterId !== 'ch-7' || !userId) {
+      setChapter7MicroCheckAttempts([])
+      return
+    }
+
+    let cancelled = false
+    void loadChapter7MicroCheckAttempts(userId).then((rows) => {
+      if (!cancelled) setChapter7MicroCheckAttempts(rows)
+    })
+
+    return () => {
+      cancelled = true
+    }
+  }, [chapterId, userId])
+
+  const handleChapter7MicroCheckPersisted = useCallback((row: Chapter7MicroCheckAttemptRow) => {
+    setChapter7MicroCheckAttempts((previous) => {
+      if (previous.some((attempt) => attempt.question_id === row.question_id)) return previous
+      return [...previous, row]
+    })
+  }, [])
+
   const saveSignal = useCallback(async (signal: 'lesson_completed' | 'knowledge_checks_completed') => {
     if (!userId || !chapterId) return
     const { data: existing } = await supabase
@@ -161,166 +192,187 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
     })
   }, [])
 
+  const renderSection = (section: ChapterSection) => {
+    switch (section.type) {
+      case 'infoCards':
+        return (
+          <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+            <InfoCard cards={section.cards} theme={t} />
+          </SectionWrapper>
+        )
+
+      case 'timeline':
+        return (
+          <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+            <Timeline items={section.items} theme={t} />
+          </SectionWrapper>
+        )
+
+      case 'tabbed':
+        return (
+          <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+            <TabbedContent tabs={section.tabs} theme={t} />
+          </SectionWrapper>
+        )
+
+      case 'toolCards':
+        return (
+          <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+            <ToolCard tools={section.tools} theme={t} />
+          </SectionWrapper>
+        )
+
+      case 'quote':
+        return (
+          <div key={section.id}>
+            <QuoteBlock quote={section.quote} attribution={section.attribution} theme={t} />
+          </div>
+        )
+
+      case 'featureGrid':
+        return (
+          <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+            <FeatureGrid features={section.features} theme={t} />
+          </SectionWrapper>
+        )
+
+      case 'milestoneList':
+        return (
+          <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+            <MilestoneList milestones={section.milestones} theme={t} />
+          </SectionWrapper>
+        )
+
+      case 'checklist':
+        return (
+          <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+            <Checklist items={section.items} theme={t} />
+          </SectionWrapper>
+        )
+
+      case 'contentBlock':
+        return (
+          <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+            <ContentBlock content={section.content} highlight={section.highlight} theme={t} />
+          </SectionWrapper>
+        )
+
+      case 'challengeCard':
+        return (
+          <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+            <ChallengeCard challenges={section.challenges} theme={t} />
+          </SectionWrapper>
+        )
+
+      case 'scenarioBlock':
+        return (
+          <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+            <ScenarioBlock
+              scenarios={section.scenarios}
+              theme={t}
+              onComplete={() => handleKnowledgeCheckSectionComplete(section.id)}
+            />
+          </SectionWrapper>
+        )
+
+      case 'levelUp':
+        return (
+          <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+            <LevelUp levels={section.levels} theme={t} />
+          </SectionWrapper>
+        )
+
+      case 'actionPrompt':
+        return (
+          <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+            <ActionPrompt prompts={section.prompts} theme={t} />
+          </SectionWrapper>
+        )
+
+      case 'proScenario':
+        return (
+          <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+            <ProScenario
+              scenarios={section.scenarios}
+              theme={t}
+              onComplete={() => handleKnowledgeCheckSectionComplete(section.id)}
+            />
+          </SectionWrapper>
+        )
+
+      case 'confidenceBuilder':
+        return (
+          <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+            <ConfidenceBuilder cards={section.cards} theme={t} />
+          </SectionWrapper>
+        )
+
+      case 'proLevelSystem':
+        return (
+          <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+            <ProLevelSystem levels={section.levels} theme={t} />
+          </SectionWrapper>
+        )
+
+      case 'appearanceChecklist':
+        return (
+          <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+            <AppearanceChecklist
+              title={section.title || 'Professional Standards'}
+              subtitle={section.subtitle}
+              categories={section.categories}
+              theme={t}
+            />
+          </SectionWrapper>
+        )
+
+      case 'proTip':
+        return (
+          <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+            <ProTip items={section.items} theme={t} />
+          </SectionWrapper>
+        )
+
+      case 'reflectionBlock':
+        return (
+          <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+            <ReflectionBlock questions={section.questions} theme={t} />
+          </SectionWrapper>
+        )
+
+      case 'htmlContent':
+        return (
+          <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
+            <HtmlContentBlock html={section.html} theme={t} />
+          </SectionWrapper>
+        )
+
+      default:
+        return null
+    }
+  }
+
   return (
     <div className="space-y-10">
       {sections.map((section) => {
-        switch (section.type) {
-          case 'infoCards':
-            return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <InfoCard cards={section.cards} theme={t} />
-              </SectionWrapper>
-            )
+        const microCheck = chapterId === 'ch-7'
+          ? chapter7MicroChecks.find((check) => check.afterSectionId === section.id)
+          : undefined
 
-          case 'timeline':
-            return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <Timeline items={section.items} theme={t} />
-              </SectionWrapper>
-            )
-
-          case 'tabbed':
-            return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <TabbedContent tabs={section.tabs} theme={t} />
-              </SectionWrapper>
-            )
-
-          case 'toolCards':
-            return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <ToolCard tools={section.tools} theme={t} />
-              </SectionWrapper>
-            )
-
-          case 'quote':
-            return (
-              <div key={section.id}>
-                <QuoteBlock quote={section.quote} attribution={section.attribution} theme={t} />
-              </div>
-            )
-
-          case 'featureGrid':
-            return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <FeatureGrid features={section.features} theme={t} />
-              </SectionWrapper>
-            )
-
-          case 'milestoneList':
-            return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <MilestoneList milestones={section.milestones} theme={t} />
-              </SectionWrapper>
-            )
-
-          case 'checklist':
-            return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <Checklist items={section.items} theme={t} />
-              </SectionWrapper>
-            )
-
-          case 'contentBlock':
-            return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <ContentBlock content={section.content} highlight={section.highlight} theme={t} />
-              </SectionWrapper>
-            )
-
-          case 'challengeCard':
-            return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <ChallengeCard challenges={section.challenges} theme={t} />
-              </SectionWrapper>
-            )
-
-          case 'scenarioBlock':
-            return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <ScenarioBlock
-                  scenarios={section.scenarios}
-                  theme={t}
-                  onComplete={() => handleKnowledgeCheckSectionComplete(section.id)}
-                />
-              </SectionWrapper>
-            )
-
-          case 'levelUp':
-            return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <LevelUp levels={section.levels} theme={t} />
-              </SectionWrapper>
-            )
-
-          case 'actionPrompt':
-            return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <ActionPrompt prompts={section.prompts} theme={t} />
-              </SectionWrapper>
-            )
-
-          case 'proScenario':
-            return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <ProScenario
-                  scenarios={section.scenarios}
-                  theme={t}
-                  onComplete={() => handleKnowledgeCheckSectionComplete(section.id)}
-                />
-              </SectionWrapper>
-            )
-
-          case 'confidenceBuilder':
-            return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <ConfidenceBuilder cards={section.cards} theme={t} />
-              </SectionWrapper>
-            )
-
-          case 'proLevelSystem':
-            return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <ProLevelSystem levels={section.levels} theme={t} />
-              </SectionWrapper>
-            )
-
-          case 'appearanceChecklist':
-            return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <AppearanceChecklist
-                  title={section.title || 'Professional Standards'}
-                  subtitle={section.subtitle}
-                  categories={section.categories}
-                  theme={t}
-                />
-              </SectionWrapper>
-            )
-
-          case 'proTip':
-            return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <ProTip items={section.items} theme={t} />
-              </SectionWrapper>
-            )
-
-          case 'reflectionBlock':
-            return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <ReflectionBlock questions={section.questions} theme={t} />
-              </SectionWrapper>
-            )
-
-          case 'htmlContent':
-            return (
-              <SectionWrapper key={section.id} title={section.title} subtitle={section.subtitle} theme={t}>
-                <HtmlContentBlock html={section.html} theme={t} />
-              </SectionWrapper>
-            )
-
-          default:
-            return null
-        }
+        return (
+          <Fragment key={section.id}>
+            {renderSection(section)}
+            {microCheck && userId && (
+              <Chapter7MicroCheckCard
+                check={microCheck}
+                userId={userId}
+                theme={t}
+                attempts={chapter7MicroCheckAttempts.filter((attempt) => attempt.check_id === microCheck.id)}
+                onAttemptPersisted={handleChapter7MicroCheckPersisted}
+              />
+            )}
+          </Fragment>
+        )
       })}
       {userId && chapterId && !lessonCompleted && (
         <button onClick={() => saveSignal('lesson_completed')} className="w-full rounded-lg border border-[var(--color-brand-gold)] px-4 py-3 font-semibold text-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold)]/10">
