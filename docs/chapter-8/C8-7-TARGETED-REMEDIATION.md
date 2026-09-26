@@ -49,12 +49,42 @@ Reserve IDs use the `r8-` namespace so they cannot collide with:
 
 All safety reserve questions are application/scenario level.
 
-## Remaining C8-7 work
+## C8-7 final certification — CLOSED
 
-- convert completed reserve responses into `remediation_reassessment` evidence;
-- deterministic reserve selection is implemented by concept ID and stable sorted reserve IDs;
-- five-question cycle scoring is implemented with 80% ordinary / 100% urgent-safety pass thresholds;
-- wire targeted remediation and reassessment into the student remediation flow;
-- add persistence and regression coverage;
-- run full Engineering Verification and exact-head Vercel certification.
+C8-7 is complete.
+
+Final adversarial certification covers the full chain:
+- detected Chapter 8 concept gap;
+- concept-targeted lesson blocks and flashcards;
+- exactly five fresh reassessment questions drawn only from the locked `r8-` reserve;
+- atomic persisted reassessment attempts plus typed `remediation_reassessment` recovery evidence;
+- preserved first-attempt evidence with no rewriting;
+- 80% recovery threshold for ordinary concept families;
+- 100% recovery threshold for the two critical safety families when a formal safety remediation cycle is required;
+- fail-closed handling for incomplete five-question evidence;
+- cross-concept evidence-contamination rejection;
+- updated Chapter 8 concept mastery after recovery evidence is appended.
+
+Runtime hardening completed during final certification:
+- the Chapter 8 mapping provider resolves historical `qq-8-` questions semantically but exposes only `r8-` reserve questions to formal reassessment selection;
+- the student reassessment submission path applies the Chapter 8 80% / 100% formal recovery policy after exactly five persisted responses;
+- the shared evaluation service remains authoritative for terminal cycle persistence and idempotency;
+- the shared grading formula is unchanged.
+
+Final certified code head before this documentation closure: `84d116c0ccfdde99066e5d8c073b66e56fd62ce1`.
+
+Engineering Verification #644:
+- TypeScript: GREEN
+- changed-file lint: GREEN
+- unit/integrity tests: GREEN
+- production build: GREEN
+- Bundle Size Check: GREEN
+- Pilot Onboarding Certification: GREEN
+- workflow conclusion: SUCCESS
+
+Exact-head Vercel deployment:
+- deployment `dpl_9NB2625sUykXT1UJ44oDmPu9oeh9`
+- state: READY
+
+PR #79 remains intentionally unmerged until Gabriel explicitly authorizes merge.
 
