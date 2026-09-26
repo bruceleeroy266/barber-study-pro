@@ -77,7 +77,6 @@ using (
   or (
     public.current_user_role() = 'instructor'
     and public.current_user_school_id() = school_id
-    and submitted_by = auth.uid()
     and status = 'pending'
     and reviewed_by is null
     and reviewed_at is null
