@@ -15,6 +15,12 @@ interface HoursRosterStudent {
   role: string
 }
 
+interface HoursActorProfile {
+  id: string
+  full_name: string | null
+  email: string | null
+}
+
 interface StaffHourLogRow {
   id: string
   user_id: string
@@ -23,6 +29,7 @@ interface StaffHourLogRow {
   minutes: number
   status: HourStatus
   notes: string | null
+  rejection_reason: string | null
   submitted_by: string | null
   reviewed_by: string | null
   reviewed_at: string | null
@@ -108,7 +115,7 @@ export default async function StaffHoursManager({
   const { data: logsData } = studentIds.length
     ? await supabase
         .from('hour_logs')
-        .select('id, user_id, date, category, minutes, status, notes, submitted_by, reviewed_by, reviewed_at, created_at')
+        .select('id, user_id, date, category, minutes, status, notes, rejection_reason, submitted_by, reviewed_by, reviewed_at, created_at')
         .eq('school_id', actor.school_id)
         .in('user_id', studentIds)
         .order('date', { ascending: false })
@@ -116,17 +123,20 @@ export default async function StaffHoursManager({
     : { data: [] }
 
   const logs = (logsData ?? []) as StaffHourLogRow[]
-  const submitterIds = Array.from(new Set(logs.map((log) => log.submitted_by).filter(Boolean))) as string[]
-  const { data: submittersData } = submitterIds.length
+  const actorIds = Array.from(new Set(
+    logs.flatMap((log) => [log.submitted_by, log.reviewed_by]).filter(Boolean),
+  )) as string[]
+  const { data: actorsData } = actorIds.length
     ? await supabase
         .from('profiles')
         .select('id, full_name, email')
-        .in('id', submitterIds)
+        .in('id', actorIds)
     : { data: [] }
-  const submitterMap = new Map(
-    (submittersData ?? []).map((profile) => [
+  const hourActors = (actorsData ?? []) as HoursActorProfile[]
+  const actorNameMap = new Map<string, string>(
+    hourActors.map((profile) => [
       profile.id,
-      profile.full_name || profile.email || 'Instructor',
+      profile.full_name || profile.email || 'Staff member',
     ]),
   )
 
@@ -178,6 +188,7 @@ export default async function StaffHoursManager({
     error === 'instructor-only' ? 'Only instructors submit daily hours. School administrators review and approve them.' :
     error === 'invalid-review' ? 'That hour entry could not be reviewed.' :
     error === 'review-failed' ? 'The approval decision could not be saved. Please try again.' :
+    error === 'rejection-reason-required' ? 'Enter a reason before rejecting an hour entry.' :
     null
 
   const schoolName = typeof school?.name === 'string' && school.name ? school.name : 'ASCYN PRO School'
@@ -190,6 +201,11 @@ export default async function StaffHoursManager({
     full_name: student.full_name,
     email: student.email,
     requiredHours: student.requiredHours,
+  }))
+  const exportLogs = logs.map((log) => ({
+    ...log,
+    submitted_by_name: log.submitted_by ? (actorNameMap.get(log.submitted_by) ?? null) : null,
+    reviewed_by_name: log.reviewed_by ? (actorNameMap.get(log.reviewed_by) ?? null) : null,
   }))
 
   return (
@@ -337,15 +353,23 @@ export default async function StaffHoursManager({
                           {log.date} · {log.category} · {formatHourMinutes(log.minutes)}
                         </div>
                         <div className="mt-1 text-xs text-silver">
-                          Submitted by {log.submitted_by ? (submitterMap.get(log.submitted_by) ?? 'Instructor') : 'Instructor'}
+                          Submitted by {log.submitted_by ? (actorNameMap.get(log.submitted_by) ?? 'Instructor') : 'Instructor'}
                         </div>
                         {log.notes && <div className="mt-2 text-sm text-light-gray">{log.notes}</div>}
                       </div>
 
                       <div className="grid grid-cols-2 gap-2 sm:flex">
-                        <form action={reviewStudentHours}>
+                        <form action={reviewStudentHours} className="col-span-2 flex flex-col gap-2 sm:col-span-1 sm:min-w-56">
                           <input type="hidden" name="hourLogId" value={log.id} />
                           <input type="hidden" name="decision" value="rejected" />
+                          <input
+                            name="rejectionReason"
+                            type="text"
+                            maxLength={500}
+                            required
+                            placeholder="Reason required to reject"
+                            className="w-full rounded-lg border border-graphite bg-charcoal px-3 py-2 text-sm text-white"
+                          />
                           <button
                             type="submit"
                             className="w-full rounded-lg border border-warm-bronze px-4 py-2 font-semibold text-warm-bronze"
@@ -383,7 +407,7 @@ export default async function StaffHoursManager({
             schoolName={schoolName}
             timeZone={schoolTimeZone}
             students={exportStudents}
-            logs={logs}
+            logs={exportLogs}
           />
         )}
 
@@ -468,6 +492,9 @@ export default async function StaffHoursManager({
                           <div>
                             <div className="text-sm text-white">{log.date} · {log.category}</div>
                             {log.notes && <div className="text-xs text-silver">{log.notes}</div>}
+                            {log.rejection_reason && (
+                              <div className="text-xs text-warm-bronze">Reason: {log.rejection_reason}</div>
+                            )}
                           </div>
                           <div className="text-sm font-semibold text-[var(--color-brand-gold)]">
                             {formatHours(log.minutes)} · {log.status}
