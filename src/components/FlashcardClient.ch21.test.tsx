@@ -127,6 +127,9 @@ describe('FlashcardClient — chapter 21', () => {
     renderFlashcards()
     const flagButton = await screen.findByRole('button', { name: /Flag this flashcard for more practice/i })
 
+    await waitFor(() => {
+      expect(flagButton).not.toBeDisabled()
+    })
     fireEvent.click(flagButton)
 
     await waitFor(() => {
