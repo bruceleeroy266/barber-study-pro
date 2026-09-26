@@ -115,39 +115,17 @@ export const chapter8FlashcardConceptMappings: readonly Chapter8FlashcardConcept
 const qq = (n: number): `qq-8-${string}` => `qq-8-${String(n).padStart(3, '0')}`
 
 export const chapter8QuizQuestionConceptMappings: readonly Chapter8QuizQuestionConceptMapping[] = [
-  { questionId: qq(1), conceptFamilyId: 'ch8-electricity-circuits' },
-  { questionId: qq(2), conceptFamilyId: 'ch8-electricity-circuits' },
-  { questionId: qq(3), conceptFamilyId: 'ch8-electricity-circuits' },
-  { questionId: qq(4), conceptFamilyId: 'ch8-current-conversion' },
-  { questionId: qq(5), conceptFamilyId: 'ch8-electrical-measurements' },
-  { questionId: qq(6), conceptFamilyId: 'ch8-electrical-measurements' },
-  { questionId: qq(7), conceptFamilyId: 'ch8-equipment-safety' },
-  { questionId: qq(8), conceptFamilyId: 'ch8-equipment-safety' },
-  { questionId: qq(9), conceptFamilyId: 'ch8-electromagnetic-spectrum' },
-  { questionId: qq(10), conceptFamilyId: 'ch8-light-therapy-safety' },
+  ...[1, 2, 3].map((n) => ({ questionId: qq(n), conceptFamilyId: 'ch8-electricity-circuits' as const })),
+  ...[4, 5].map((n) => ({ questionId: qq(n), conceptFamilyId: 'ch8-current-conversion' as const })),
+  ...[6, 7, 8, 14].map((n) => ({ questionId: qq(n), conceptFamilyId: 'ch8-electrical-measurements' as const })),
+  ...[9, 10, 11, 12, 13, 15].map((n) => ({ questionId: qq(n), conceptFamilyId: 'ch8-equipment-safety' as const })),
+  ...[16, 17].map((n) => ({ questionId: qq(n), conceptFamilyId: 'ch8-electrotherapy-terminology' as const })),
+  ...[18, 19, 20].map((n) => ({ questionId: qq(n), conceptFamilyId: 'ch8-galvanic-current' as const })),
+  ...[21, 22, 23].map((n) => ({ questionId: qq(n), conceptFamilyId: 'ch8-microcurrent-high-frequency' as const })),
+  ...[24, 25].map((n) => ({ questionId: qq(n), conceptFamilyId: 'ch8-electromagnetic-spectrum' as const })),
+  ...[27, 28].map((n) => ({ questionId: qq(n), conceptFamilyId: 'ch8-light-modalities' as const })),
+  ...[26, 29, 30].map((n) => ({ questionId: qq(n), conceptFamilyId: 'ch8-light-therapy-safety' as const })),
 
-  { questionId: qq(11), conceptFamilyId: 'ch8-electricity-circuits' },
-  { questionId: qq(12), conceptFamilyId: 'ch8-equipment-safety' },
-  { questionId: qq(13), conceptFamilyId: 'ch8-current-conversion' },
-  { questionId: qq(14), conceptFamilyId: 'ch8-electrical-measurements' },
-  { questionId: qq(15), conceptFamilyId: 'ch8-equipment-safety' },
-  { questionId: qq(16), conceptFamilyId: 'ch8-equipment-safety' },
-  { questionId: qq(17), conceptFamilyId: 'ch8-electrotherapy-terminology' },
-  { questionId: qq(18), conceptFamilyId: 'ch8-galvanic-current' },
-  { questionId: qq(19), conceptFamilyId: 'ch8-electromagnetic-spectrum' },
-  { questionId: qq(20), conceptFamilyId: 'ch8-light-modalities' },
-
-  { questionId: qq(21), conceptFamilyId: 'ch8-electrical-measurements' },
-  { questionId: qq(22), conceptFamilyId: 'ch8-current-conversion' },
-  { questionId: qq(23), conceptFamilyId: 'ch8-equipment-safety' },
-  { questionId: qq(24), conceptFamilyId: 'ch8-galvanic-current' },
-  { questionId: qq(25), conceptFamilyId: 'ch8-galvanic-current' },
-  { questionId: qq(26), conceptFamilyId: 'ch8-microcurrent-high-frequency' },
-  { questionId: qq(27), conceptFamilyId: 'ch8-electromagnetic-spectrum' },
-  { questionId: qq(28), conceptFamilyId: 'ch8-galvanic-current' },
-  { questionId: qq(29), conceptFamilyId: 'ch8-light-modalities' },
-  { questionId: qq(30), conceptFamilyId: 'ch8-light-modalities' },
-]
 
 export function getChapter8ContentBlocksForConcept(conceptFamilyId: Chapter8ConceptFamilyId) {
   return chapter8ContentConceptMappings
