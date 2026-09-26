@@ -11,12 +11,21 @@ const staffManager = readFileSync(join(root, 'src/components/hours/StaffHoursMan
 const reviewActions = readFileSync(join(root, 'src/app/instructor/hours/actions.ts'), 'utf-8')
 const generationActions = readFileSync(join(root, 'src/app/instructor/attendance/hour-generation-actions.ts'), 'utf-8')
 const pdfExport = readFileSync(join(root, 'src/lib/hours/export-pdf.ts'), 'utf-8')
+const complianceRules = readFileSync(join(root, 'src/lib/compliance/compliance-rules.ts'), 'utf-8')
+const requiredHoursMigration = readFileSync(join(root, 'supabase/migrations/20260926223803_set_program_required_hours_default_1200.sql'), 'utf-8')
 
 describe('E11 final hours and attendance certification', () => {
   it('uses a 1200-hour fallback consistently when no configured program resolves', () => {
     expect(DEFAULT_REQUIRED_HOURS).toBe(1200)
     expect(defaultProgramRequirements().requiredHours).toBe(1200)
     expect(staffManager).toContain('requirements?.requiredHours ?? 1200')
+  })
+
+  it('uses one 1200-hour fallback source across application, compliance, and database migration', () => {
+    expect(DEFAULT_REQUIRED_HOURS).toBe(1200)
+    expect(complianceRules).toContain("import { DEFAULT_REQUIRED_HOURS } from '@/lib/programs/requirements'")
+    expect(complianceRules).toContain('requiredHours: DEFAULT_REQUIRED_HOURS')
+    expect(requiredHoursMigration).toContain('alter column required_hours set default 1200')
   })
 
   it('keeps student and staff official totals approved-only', () => {
