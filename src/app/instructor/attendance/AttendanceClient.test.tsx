@@ -5,6 +5,7 @@ import AttendanceClient from './AttendanceClient'
 const ensureTodayRecords = vi.fn()
 const updateStatus = vi.fn()
 const bulkUpdateStatus = vi.fn()
+const updateActualTimes = vi.fn()
 
 vi.mock('@/hooks/useAttendance', () => ({
   useAttendance: () => ({
@@ -19,6 +20,7 @@ vi.mock('@/hooks/useAttendance', () => ({
     updateStatus,
     bulkUpdateStatus,
     addNote: vi.fn(),
+    updateActualTimes,
     submitCorrection: vi.fn(),
     getAuditHistory: vi.fn(),
     refresh: vi.fn(),
@@ -91,6 +93,7 @@ function renderAttendance() {
       schoolId="school-1"
       schoolName="Test School"
       defaultDate="2026-09-22"
+      schoolTimeZone="America/Chicago"
       dailyScheduleExpectations={[
         {
           studentId: 'student-1',
@@ -115,6 +118,7 @@ describe('AttendanceClient today controls', () => {
     ensureTodayRecords.mockResolvedValue([createdRecord])
     updateStatus.mockResolvedValue(undefined)
     bulkUpdateStatus.mockResolvedValue(undefined)
+    updateActualTimes.mockResolvedValue(undefined)
   })
 
   it('creates a missing record and persists an individual status selection', async () => {
