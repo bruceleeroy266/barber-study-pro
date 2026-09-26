@@ -136,7 +136,7 @@ export const chapter8PremiumContent: ChapterContent = {
         {
           icon: 'Sparkles',
           title: 'ADVANCED SERVICES',
-          text: 'Some jurisdictions permit barbers to use electrotherapy or light-based devices for facial or scalp services. These modalities require appropriate training, client screening, manufacturer-directed use, and compliance with the barber's actual scope of practice.',
+          text: 'Some jurisdictions permit barbers to use electrotherapy or light-based devices for facial or scalp services. These modalities require appropriate training, client screening, manufacturer-directed use, and compliance with the barber\'s actual scope of practice.',
         },
       ],
     },
@@ -349,7 +349,7 @@ export const chapter8PremiumContent: ChapterContent = {
           ],
           facts: [
             { text: 'EXAM FOCUS: Watt = power (amps × volts). Kilowatt = 1,000 watts.' },
-            { text: 'Use equipment ratings to understand load, avoid overloaded receptacles or power strips, and follow the facility's electrical design and manufacturer instructions.' },
+            { text: 'Use equipment ratings to understand load, avoid overloaded receptacles or power strips, and follow the facility\'s electrical design and manufacturer instructions.' },
           ],
         },
       ],
@@ -504,7 +504,7 @@ export const chapter8PremiumContent: ChapterContent = {
         {
           icon: 'Droplets',
           title: 'GFCI',
-          description: 'A ground-fault circuit interrupter monitors current imbalance and disconnects power rapidly when a ground-fault condition is detected. Use GFCI protection where required by the facility's applicable electrical code, especially in locations with water exposure.',
+          description: 'A ground-fault circuit interrupter monitors current imbalance and disconnects power rapidly when a ground-fault condition is detected. Use GFCI protection where required by the facility\'s applicable electrical code, especially in locations with water exposure.',
         },
         {
           icon: 'BadgeCheck',
@@ -683,7 +683,7 @@ export const chapter8PremiumContent: ChapterContent = {
           bullets: [
             { label: 'DESINCUSTATION', description: 'Source-described galvanic cleansing process that creates an alkaline reaction intended to emulsify sebum and debris in pores.' },
             { label: 'IONTOPHORESIS', description: 'Source-described process for introducing ions from water-soluble products. Electrode/product selection must follow the specific professional procedure and product/device directions.' },
-            { label: 'CLIENT COMFORT', description: 'Unexpected burning, stinging, pain, or excessive discomfort is a stop-service signal. Turn the device off and follow the manufacturer's safety procedure.' },
+            { label: 'CLIENT COMFORT', description: 'Unexpected burning, stinging, pain, or excessive discomfort is a stop-service signal. Turn the device off and follow the manufacturer\'s safety procedure.' },
             { label: 'CONTRAINDICATIONS', description: 'Screen the client for contraindications identified by the device manufacturer, applicable training, and state scope. The source lists vascular conditions, high blood pressure, and metal implants as cautions for negative galvanic use; do not expand that into a universal list without device-specific support.' },
           ],
           facts: [
@@ -721,7 +721,7 @@ export const chapter8PremiumContent: ChapterContent = {
         {
           icon: 'AlertTriangle',
           title: 'TESLA CAUTIONS',
-          description: 'Follow the device's contraindications, eye/skin safety requirements, and state scope of practice. Do not perform electrotherapy without appropriate training and client screening.',
+          description: 'Follow the device\'s contraindications, eye/skin safety requirements, and state scope of practice. Do not perform electrotherapy without appropriate training and client screening.',
         },
       ],
     },
@@ -733,7 +733,7 @@ export const chapter8PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'electromagnetic-spectrum',
       title: 'THE ELECTROMAGNETIC SPECTRUM',
-      content: 'All forms of energy travel as WAVES. The electromagnetic spectrum includes everything from radio waves to gamma rays. For barbers, the most relevant portions are VISIBLE LIGHT and INVISIBLE LIGHT (ultraviolet and infrared).\n\nKEY PRINCIPLE: Long wavelengths penetrate DEEPLY but carry LESS energy. Short wavelengths penetrate LESS but carry MORE energy.\n\nIn the chapter's barbering examples, ultraviolet and infrared occupy opposite sides of the visible spectrum and differ in wavelength, frequency, penetration, and typical tissue effects.\n\nEXAM FOCUS: Know the relative order of radio, microwave, infrared, visible, ultraviolet, X-ray, and gamma regions and the relationship among wavelength, frequency, and energy.',
+      content: 'All forms of energy travel as WAVES. The electromagnetic spectrum includes everything from radio waves to gamma rays. For barbers, the most relevant portions are VISIBLE LIGHT and INVISIBLE LIGHT (ultraviolet and infrared).\n\nKEY PRINCIPLE: Long wavelengths penetrate DEEPLY but carry LESS energy. Short wavelengths penetrate LESS but carry MORE energy.\n\nIn the chapter\'s barbering examples, ultraviolet and infrared occupy opposite sides of the visible spectrum and differ in wavelength, frequency, penetration, and typical tissue effects.\n\nEXAM FOCUS: Know the relative order of radio, microwave, infrared, visible, ultraviolet, X-ray, and gamma regions and the relationship among wavelength, frequency, and energy.',
       highlight: 'LONG = DEEP PENETRATION, LESS ENERGY | SHORT = LESS PENETRATION, MORE ENERGY',
     },
 
@@ -772,7 +772,7 @@ export const chapter8PremiumContent: ChapterContent = {
             { label: 'UVC', description: 'Absorbed by Earth\'s atmosphere. Used in GERMICIDAL lamps for sterilization.' },
           ],
           facts: [
-            { text: 'EXAM FOCUS: EXAM FOCUS: Distinguish UVA, UVB, and UVC by their relative wavelength/penetration and the source-described effects.' },
+            { text: 'EXAM FOCUS: Distinguish UVA, UVB, and UVC by their relative wavelength/penetration and the source-described effects.' },
             { text: 'UVC is used in germicidal irradiation applications. Do not treat a UV cabinet or lamp as a substitute for required barbering cleaning/disinfection procedures unless the applicable rule explicitly recognizes that device.' },
           ],
         },
@@ -787,8 +787,8 @@ export const chapter8PremiumContent: ChapterContent = {
             { label: 'APPLICATION', description: 'Use the distance specified by the particular lamp manufacturer and training procedure; monitor client comfort continuously.' },
           ],
           facts: [
-            { text: 'EXAM FOCUS: EXAM FOCUS: Infrared is associated with longer wavelength/heat; ultraviolet with shorter wavelength/higher frequency and chemical effects.' },
-            { text: 'Do not memorize one distance as universal. Follow the specific lamp's instructions and stop if the client experiences excessive heat or discomfort.' },
+            { text: 'EXAM FOCUS: Infrared is associated with longer wavelength/heat; ultraviolet with shorter wavelength/higher frequency and chemical effects.' },
+            { text: 'Do not memorize one distance as universal. Follow the specific lamp\'s instructions and stop if the client experiences excessive heat or discomfort.' },
           ],
         },
       ],
@@ -965,7 +965,7 @@ export const chapter8PremiumContent: ChapterContent = {
           title: 'MIX-UPS THAT COST POINTS',
           bullets: [
             { label: 'DC vs AC', description: 'DC = battery, ONE direction. AC = wall outlet, REVERSES direction. Do not mix them up.' },
-            { label: 'GFCI Locations', description: 'GFCI is required near WATER sources. Not just sinks — anywhere water is present.' },
+            { label: 'GFCI Locations', description: 'Know the purpose of ground-fault protection and follow applicable electrical code and facility requirements in water-exposure locations.' },
             { label: 'Anode vs Cathode', description: 'Anode = POSITIVE (+), RED, closes pores, acidic. Cathode = NEGATIVE (–), BLACK, opens pores, alkaline.' },
             { label: 'Frayed Cords', description: 'Frayed cords are not cosmetic issues — they are shock and fire hazards. Replace, do not tape.' },
             { label: 'Outlet Overloading', description: 'Two high-wattage dryers on one circuit trip breakers. Calculate total wattage before plugging in.' },
