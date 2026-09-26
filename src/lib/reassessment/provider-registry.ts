@@ -18,6 +18,7 @@ import { getChapter4MappingProvider } from './adapters/chapter-4-adapter'
 import { getChapter5MappingProvider } from './adapters/chapter-5-adapter'
 import { getChapter6MappingProvider } from './adapters/chapter-6-adapter'
 import { getChapter7MappingProvider } from './adapters/chapter-7-adapter'
+import { getChapter8MappingProvider } from './adapters/chapter-8-adapter'
 import {
   Chapter2DetectionProvider,
   createChapter2DetectionProvider,
@@ -48,6 +49,11 @@ import {
   createChapter7DetectionProvider,
   type Chapter7DetectionProviderConfig,
 } from './adapters/chapter-7-detection-provider'
+import {
+  Chapter8DetectionProvider,
+  createChapter8DetectionProvider,
+  type Chapter8DetectionProviderConfig,
+} from './adapters/chapter-8-detection-provider'
 
 // ───────────────────────────────────────────────
 // Concept Detection Provider Interface
@@ -106,6 +112,8 @@ class MappingProviderRegistry {
     this.registerProvider(getChapter6MappingProvider())
     // Register Chapter 7 (C7-9 final certification)
     this.registerProvider(getChapter7MappingProvider())
+    // Register Chapter 8 (C8-7 targeted remediation)
+    this.registerProvider(getChapter8MappingProvider())
   }
 
   /**
@@ -340,6 +348,15 @@ export function initializeChapter7DetectionProvider(
   return provider
 }
 
+export function initializeChapter8DetectionProvider(
+  config: Chapter8DetectionProviderConfig
+): Chapter8DetectionProvider {
+  const provider = createChapter8DetectionProvider(config)
+  const registry = getDetectionProviderRegistry()
+  registry.registerProvider(provider)
+  return provider
+}
+
 /**
  * Initialize and register the detection provider for a chapter (C3-3).
  *
@@ -369,6 +386,9 @@ export function initializeChapterDetectionProvider(
   }
   if (chapterId === 'ch-7') {
     return initializeChapter7DetectionProvider(config)
+  }
+  if (chapterId === 'ch-8') {
+    return initializeChapter8DetectionProvider(config)
   }
   return undefined
 }
