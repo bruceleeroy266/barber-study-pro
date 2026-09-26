@@ -35,6 +35,8 @@ interface StaffHourLogRow {
   reviewed_by: string | null
   reviewed_at: string | null
   created_at: string | null
+  source_type: 'manual' | 'attendance'
+  source_attendance_id: string | null
 }
 
 const categories: HourCategory[] = [
@@ -120,7 +122,7 @@ export default async function StaffHoursManager({
   const { data: logsData } = studentIds.length
     ? await supabase
         .from('hour_logs')
-        .select('id, user_id, date, category, minutes, status, notes, rejection_reason, submitted_by, reviewed_by, reviewed_at, created_at')
+        .select('id, user_id, date, category, minutes, status, notes, rejection_reason, submitted_by, reviewed_by, reviewed_at, created_at, source_type, source_attendance_id')
         .eq('school_id', actor.school_id)
         .in('user_id', studentIds)
         .order('date', { ascending: false })
@@ -370,6 +372,7 @@ export default async function StaffHoursManager({
                         </div>
                         <div className="mt-1 text-xs text-silver">
                           Submitted by {log.submitted_by ? (actorNameMap.get(log.submitted_by) ?? 'Instructor') : 'Instructor'}
+                          {log.source_type === 'attendance' ? ' · Attendance-generated' : ' · Manual entry'}
                         </div>
                         {log.notes && <div className="mt-2 text-sm text-light-gray">{log.notes}</div>}
                       </div>
@@ -519,7 +522,10 @@ export default async function StaffHoursManager({
                         {selectedStudent.recentLogs.map((log) => (
                           <div key={log.id} className="flex flex-col gap-1 rounded-lg border border-graphite bg-black p-3 sm:flex-row sm:items-center sm:justify-between">
                             <div>
-                              <div className="text-sm text-white">{log.date} · {log.category}</div>
+                              <div className="text-sm text-white">
+                                {log.date} · {log.category}
+                                {log.source_type === 'attendance' ? ' · Attendance-generated' : ''}
+                              </div>
                               {log.notes && <div className="text-xs text-silver">{log.notes}</div>}
                               {log.rejection_reason && (
                                 <div className="text-xs text-warm-bronze">Reason: {log.rejection_reason}</div>
