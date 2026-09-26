@@ -116,7 +116,7 @@ export default async function StudentHoursPage() {
 
   let hourQuery = supabase
     .from('hour_logs')
-    .select('id, user_id, date, category, minutes, status, source_type, resubmission_of_hour_log_id, created_at')
+    .select('id, user_id, date, category, minutes, status, source_type, resubmission_of_hour_log_id, rejection_reason, reviewed_at, created_at')
     .eq('user_id', user.id)
     .order('date', { ascending: false })
     .order('created_at', { ascending: false })
@@ -146,6 +146,8 @@ export default async function StudentHoursPage() {
     status: 'pending' | 'approved' | 'rejected'
     source_type: 'manual' | 'attendance'
     resubmission_of_hour_log_id: string | null
+    rejection_reason: string | null
+    reviewed_at: string | null
     created_at: string | null
   }>
 
@@ -377,6 +379,26 @@ export default async function StudentHoursPage() {
                       </span>
                     )}
                   </div>
+
+                  {entry.status === 'rejected' && entry.rejection_reason && (
+                    <div className="mt-4 rounded-lg border border-warm-bronze/30 bg-warm-bronze/10 p-3">
+                      <div className="text-xs font-semibold uppercase tracking-wide text-warm-bronze">Rejection reason</div>
+                      <p className="mt-1 text-sm text-light-gray">{entry.rejection_reason}</p>
+                      <p className="mt-2 text-xs text-silver">
+                        Rejected hours do not count toward your official total. Your instructor or school must correct and resubmit the record.
+                      </p>
+                    </div>
+                  )}
+
+                  {entry.resubmission_of_hour_log_id && (
+                    <div className="mt-3 rounded-lg border border-silver/20 bg-white/5 p-3 text-sm text-light-gray">
+                      {entry.status === 'pending'
+                        ? 'A corrected version of a previously rejected entry has been resubmitted and is waiting for administrator review.'
+                        : entry.status === 'approved'
+                          ? 'This corrected version was approved and now counts toward your official total.'
+                          : 'This is a corrected resubmission linked to a prior rejected entry.'}
+                    </div>
+                  )}
                 </article>
               ))}
             </div>
@@ -390,7 +412,7 @@ export default async function StudentHoursPage() {
                     <th className="px-3 py-3 font-medium">Hours</th>
                     <th className="px-3 py-3 font-medium">Status</th>
                     <th className="px-3 py-3 font-medium">Source</th>
-                    <th className="px-3 py-3 font-medium">Correction</th>
+                    <th className="px-3 py-3 font-medium">Correction / Review</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -406,7 +428,25 @@ export default async function StudentHoursPage() {
                       </td>
                       <td className="px-3 py-3 text-light-gray">{hourSourceLabel(entry.source_type)}</td>
                       <td className="px-3 py-3 text-light-gray">
-                        {entry.resubmission_of_hour_log_id ? 'Corrected resubmission' : '—'}
+                        {entry.status === 'rejected' && entry.rejection_reason ? (
+                          <div className="max-w-sm">
+                            <div className="font-medium text-warm-bronze">Rejected: {entry.rejection_reason}</div>
+                            <div className="mt-1 text-xs text-silver">Does not count toward official hours.</div>
+                          </div>
+                        ) : entry.resubmission_of_hour_log_id ? (
+                          <div className="max-w-sm">
+                            <div className="font-medium text-light-gray">Corrected resubmission</div>
+                            <div className="mt-1 text-xs text-silver">
+                              {entry.status === 'pending'
+                                ? 'Waiting for administrator review.'
+                                : entry.status === 'approved'
+                                  ? 'Approved and included in official hours.'
+                                  : 'Linked to a prior rejected entry.'}
+                            </div>
+                          </div>
+                        ) : (
+                          '—'
+                        )}
                       </td>
                     </tr>
                   ))}
