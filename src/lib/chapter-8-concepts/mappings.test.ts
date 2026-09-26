@@ -79,8 +79,9 @@ describe('C8-2 Chapter 8 existing-asset mappings', () => {
         .map((mapping) => mapping.questionId),
     )
 
-    expect(equipmentSafety.has('qq-8-008')).toBe(true)
-    expect(equipmentSafety.has('qq-8-023')).toBe(true)
-    expect(lightSafety.has('qq-8-010')).toBe(true)
+    expect(equipmentSafety.has('qq-8-011')).toBe(true)
+    expect(equipmentSafety.has('qq-8-012')).toBe(true)
+    expect(lightSafety.has('qq-8-029')).toBe(true)
+    expect(lightSafety.has('qq-8-030')).toBe(true)
   })
 })
