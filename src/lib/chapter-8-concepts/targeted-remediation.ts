@@ -103,3 +103,64 @@ export function appendChapter8ReassessmentEvidence(
 
   return [...originalEvidence, ...reassessmentEvidence]
 }
+
+
+export interface Chapter8ReassessmentCycle {
+  cycleId: string
+  conceptFamilyId: Chapter8ConceptFamilyId
+  questionIds: readonly string[]
+  correctCount: number
+  questionCount: number
+  percent: number
+  passPercent: 80 | 100
+  passed: boolean
+}
+
+export function selectChapter8ReassessmentQuestions(
+  conceptFamilyId: Chapter8ConceptFamilyId,
+  reserve: readonly { id: string; conceptFamilyId: Chapter8ConceptFamilyId }[],
+  count = 5,
+): readonly string[] {
+  const ids = reserve
+    .filter((question) => question.conceptFamilyId === conceptFamilyId)
+    .map((question) => question.id)
+    .sort((a, b) => a.localeCompare(b))
+
+  if (ids.length < count) {
+    throw new Error(`Chapter 8 reassessment reserve for ${conceptFamilyId} requires at least ${count} questions.`)
+  }
+
+  return ids.slice(0, count)
+}
+
+export function scoreChapter8ReassessmentCycle(args: {
+  cycleId: string
+  conceptFamilyId: Chapter8ConceptFamilyId
+  selectedQuestionIds: readonly string[]
+  responses: readonly { questionId: string; correct: boolean }[]
+  passPercent: 80 | 100
+}): Chapter8ReassessmentCycle {
+  const selected = [...args.selectedQuestionIds]
+  if (selected.length !== 5 || new Set(selected).size !== 5) {
+    throw new Error('Chapter 8 formal reassessment cycles require exactly five unique questions.')
+  }
+
+  const responseMap = new Map(args.responses.map((response) => [response.questionId, response.correct]))
+  if (responseMap.size !== 5 || selected.some((id) => !responseMap.has(id))) {
+    throw new Error('Chapter 8 formal reassessment scoring requires one response for each selected question.')
+  }
+
+  const correctCount = selected.filter((id) => responseMap.get(id) === true).length
+  const percent = Math.round((correctCount / 5) * 10000) / 100
+
+  return {
+    cycleId: args.cycleId,
+    conceptFamilyId: args.conceptFamilyId,
+    questionIds: selected,
+    correctCount,
+    questionCount: 5,
+    percent,
+    passPercent: args.passPercent,
+    passed: percent >= args.passPercent,
+  }
+}
