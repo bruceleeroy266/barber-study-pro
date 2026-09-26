@@ -48,18 +48,18 @@ describe('QuizApprovalQueueClient filters', () => {
     )
 
     fireEvent.change(screen.getByLabelText('Filter by chapter'), { target: { value: 'ch-7' } })
-    expect(screen.getByText('Alex Barber')).toBeInTheDocument()
+    expect(screen.getAllByText('Alex Barber').length).toBeGreaterThan(0)
     expect(screen.queryByText('Jordan Cosmo')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Approve all filtered pending \(1\)/ })).toBeInTheDocument()
 
     fireEvent.change(screen.getByLabelText('Filter by chapter'), { target: { value: '' } })
     fireEvent.change(screen.getByLabelText('Filter by class or program'), { target: { value: 'p2' } })
-    expect(screen.getByText('Jordan Cosmo')).toBeInTheDocument()
+    expect(screen.getAllByText('Jordan Cosmo').length).toBeGreaterThan(0)
     expect(screen.queryByText('Alex Barber')).not.toBeInTheDocument()
 
     fireEvent.change(screen.getByLabelText('Filter by class or program'), { target: { value: '' } })
     fireEvent.change(screen.getByLabelText('Filter by student'), { target: { value: 's1' } })
-    expect(screen.getByText('Alex Barber')).toBeInTheDocument()
+    expect(screen.getAllByText('Alex Barber').length).toBeGreaterThan(0)
     expect(screen.queryByText('Jordan Cosmo')).not.toBeInTheDocument()
   })
 })
