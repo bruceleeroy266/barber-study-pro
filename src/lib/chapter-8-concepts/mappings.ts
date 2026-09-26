@@ -125,7 +125,7 @@ export const chapter8QuizQuestionConceptMappings: readonly Chapter8QuizQuestionC
   ...[24, 25].map((n) => ({ questionId: qq(n), conceptFamilyId: 'ch8-electromagnetic-spectrum' as const })),
   ...[27, 28].map((n) => ({ questionId: qq(n), conceptFamilyId: 'ch8-light-modalities' as const })),
   ...[26, 29, 30].map((n) => ({ questionId: qq(n), conceptFamilyId: 'ch8-light-therapy-safety' as const })),
-
+]
 
 export function getChapter8ContentBlocksForConcept(conceptFamilyId: Chapter8ConceptFamilyId) {
   return chapter8ContentConceptMappings
