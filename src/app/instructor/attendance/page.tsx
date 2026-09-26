@@ -110,7 +110,13 @@ export default async function AttendanceManagementPage() {
         .in('student_id', studentIds)
     : { data: [] }
 
-  const scheduleProfiles = scheduleProfilesData || []
+  const scheduleProfiles = (scheduleProfilesData || []) as Array<{
+    id: string
+    student_id: string
+    name: string
+    effective_from: string
+    effective_to: string | null
+  }>
   const scheduleProfileIds = scheduleProfiles.map((row) => row.id)
 
   const [{ data: scheduleDaysData }, { data: scheduleOverridesData }] = await Promise.all([
