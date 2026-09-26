@@ -334,7 +334,7 @@ export default function QuizClient({
     } finally {
       setSaving(false)
     }
-  }, [shuffledQuestions, userId, quiz.id, chapterId, bestAttempt, passingScore])
+  }, [shuffledQuestions, userId, quiz.id, chapterId, bestAttempt, passingScore, quizAccessRequestId, quizAccessSchoolId])
 
   // End-of-quiz feedback: record the answer and advance without revealing
   // correctness. On the final question, submit all answers and show results.
