@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import type { AttendanceRecord, AttendanceStatus } from '@/types'
 import type { DailyScheduleExpectation } from '@/lib/schedules/daily-expectations'
 import { calculateAttendedMinutes, isoToLocalTime } from '@/lib/schedules/attendance-time'
@@ -26,35 +26,20 @@ export default function DailyAttendanceTimeEditor({
   disabled = false,
   onSave,
 }: Props) {
-  const [arrival, setArrival] = useState('')
-  const [departure, setDeparture] = useState('')
-  const [breakMinutes, setBreakMinutes] = useState(0)
+  const [arrival, setArrival] = useState(() =>
+    record?.clockedInAt
+      ? isoToLocalTime(record.clockedInAt, schoolTimeZone)
+      : expectation?.startTime?.slice(0, 5) || '',
+  )
+  const [departure, setDeparture] = useState(() =>
+    record?.clockedOutAt
+      ? isoToLocalTime(record.clockedOutAt, schoolTimeZone)
+      : expectation?.endTime?.slice(0, 5) || '',
+  )
+  const [breakMinutes, setBreakMinutes] = useState(() => expectation?.breakMinutes ?? 0)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [localError, setLocalError] = useState<string | null>(null)
-
-  useEffect(() => {
-    setArrival(
-      record?.clockedInAt
-        ? isoToLocalTime(record.clockedInAt, schoolTimeZone)
-        : expectation?.startTime?.slice(0, 5) || '',
-    )
-    setDeparture(
-      record?.clockedOutAt
-        ? isoToLocalTime(record.clockedOutAt, schoolTimeZone)
-        : expectation?.endTime?.slice(0, 5) || '',
-    )
-    setBreakMinutes(expectation?.breakMinutes ?? 0)
-    setSaved(false)
-    setLocalError(null)
-  }, [
-    record?.clockedInAt,
-    record?.clockedOutAt,
-    expectation?.startTime,
-    expectation?.endTime,
-    expectation?.breakMinutes,
-    schoolTimeZone,
-  ])
 
   const attendedMinutes = useMemo(
     () => calculateAttendedMinutes(arrival, departure, breakMinutes),
