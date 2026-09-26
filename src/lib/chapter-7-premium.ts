@@ -146,7 +146,7 @@ export const chapter7PremiumContent: ChapterContent = {
         {
           icon: 'DollarSign',
           title: 'PROFESSIONAL CREDIBILITY',
-          text: 'A barber who understands product purpose can explain why one cleanser, conditioner, or treatment may fit a client's hair or scalp condition better than another and can stay within the product's labeled directions.',
+          text: "A barber who understands product purpose can explain why one cleanser, conditioner, or treatment may fit a client's hair or scalp condition better than another and can stay within the product's labeled directions.",
         },
       ],
     },
