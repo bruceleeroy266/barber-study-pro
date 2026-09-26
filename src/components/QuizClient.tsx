@@ -24,6 +24,8 @@ interface QuizClientProps {
   bestAttempt: QuizAttempt | null
   remediation?: ChapterRemediationPath[]
   competencies?: ChapterCompetency[]
+  quizAccessRequestId?: string | null
+  quizAccessSchoolId?: string | null
 }
 
 function shuffleArray<T>(array: T[]): T[] {
@@ -69,6 +71,8 @@ export default function QuizClient({
   bestAttempt,
   remediation = [],
   competencies = [],
+  quizAccessRequestId = null,
+  quizAccessSchoolId = null,
 }: QuizClientProps) {
   const [started, setStarted] = useState(false)
   const [currentQuestion, setCurrentQuestion] = useState(0)
@@ -102,6 +106,23 @@ export default function QuizClient({
   const handleSelectAnswer = useCallback((answer: string) => {
     setSelectedAnswer(answer)
   }, [])
+
+  const handleStartQuiz = async () => {
+    if (quizAccessRequestId && quizAccessSchoolId && userId) {
+      const { error } = await supabase.from('quiz_access_events').insert({
+        request_id: quizAccessRequestId,
+        school_id: quizAccessSchoolId,
+        student_id: userId,
+        quiz_id: quiz.id,
+        event_type: 'started',
+        actor_id: userId,
+      })
+      if (error) {
+        console.error('[QuizClient] Failed to record approved quiz start:', error)
+      }
+    }
+    setStarted(true)
+  }
 
   const finishQuiz = useCallback(async (finalAnswers: Record<string, string>) => {
     if (!userId) {
@@ -153,6 +174,27 @@ export default function QuizClient({
       if (!persistedQuizAttemptId) {
         console.error('[QuizClient] No quiz attempt ID returned from insert')
         throw new Error('Failed to obtain quiz attempt ID')
+      }
+
+      if (quizAccessRequestId && quizAccessSchoolId) {
+        const { error: accessEventError } = await supabase.from('quiz_access_events').insert({
+          request_id: quizAccessRequestId,
+          school_id: quizAccessSchoolId,
+          student_id: userId,
+          quiz_id: quiz.id,
+          event_type: 'completed',
+          actor_id: userId,
+          metadata: {
+            quizAttemptId: persistedQuizAttemptId,
+            score: finalScore,
+            totalQuestions: shuffledQuestions.length,
+            percentage,
+            passed: percentage >= passingScore,
+          },
+        })
+        if (accessEventError) {
+          console.error('[QuizClient] Failed to record approved quiz completion:', accessEventError)
+        }
       }
 
       // Preserve existing progress flags and only mark the quiz complete on a PASS.
@@ -414,7 +456,7 @@ export default function QuizClient({
           </p>
         </Alert>
 
-        <Button variant="primary" size="lg" onClick={() => setStarted(true)}>
+        <Button variant="primary" size="lg" onClick={handleStartQuiz}>
           {bestAttempt ? 'Retake Quiz' : 'Start Quiz'}
         </Button>
       </div>
