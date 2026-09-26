@@ -549,6 +549,7 @@ export default async function StudentHoursPage() {
             </div>
           )}
         </div>
+        </div>
       </details>
 
       <details className="rounded-xl border border-graphite bg-charcoal">
@@ -653,15 +654,20 @@ export default async function StudentHoursPage() {
             )}
           </>
         )}
-      </section>
-
-      <section className="rounded-xl border border-graphite bg-charcoal p-5 sm:p-6">
-        <div>
-          <h2 className="text-lg font-semibold text-white">Hour History</h2>
-          <p className="mt-1 text-sm text-silver">
-            Your most recent hour entries. Approved entries count toward your official total; pending and rejected entries do not.
-          </p>
         </div>
+      </details>
+
+      <details className="rounded-xl border border-graphite bg-charcoal">
+        <summary className="cursor-pointer list-none p-4 sm:p-6 [&::-webkit-details-marker]:hidden">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h2 className="text-lg font-semibold text-white">Hour History</h2>
+              <p className="mt-1 text-sm text-silver">Approved, pending, rejected, and corrected hour entries.</p>
+            </div>
+            <span className="text-xs font-semibold text-[var(--color-brand-gold)]">Show / hide</span>
+          </div>
+        </summary>
+        <div className="px-4 pb-4 sm:px-6 sm:pb-6">
 
         {hours.length === 0 ? (
           <div className="mt-4 rounded-lg border border-graphite bg-black p-6 text-center text-silver">
@@ -775,7 +781,8 @@ export default async function StudentHoursPage() {
             )}
           </>
         )}
-      </section>
+        </div>
+      </details>
     </div>
   )
 }
