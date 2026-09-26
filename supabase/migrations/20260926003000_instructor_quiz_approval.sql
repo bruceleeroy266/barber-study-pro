@@ -146,7 +146,7 @@ returns table(request_id uuid, request_status text)
 language plpgsql
 security definer
 set search_path = public
-as $
+as $quiz_approval$
 declare
   v_user_id uuid := auth.uid();
   v_school_id uuid;
@@ -234,7 +234,7 @@ begin
 
   return query select v_request_id, v_status;
 end;
-$;
+$quiz_approval$;
 
 revoke all on function public.request_quiz_access(text, text) from public;
 grant execute on function public.request_quiz_access(text, text) to authenticated;
