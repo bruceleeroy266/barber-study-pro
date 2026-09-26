@@ -103,6 +103,13 @@ export const chapter8FlashcardConceptMappings: readonly Chapter8FlashcardConcept
   { flashcardId: fc(48), conceptFamilyId: 'ch8-equipment-safety' },
   { flashcardId: fc(49), conceptFamilyId: 'ch8-galvanic-current' },
   { flashcardId: fc(50), conceptFamilyId: 'ch8-equipment-safety' },
+  { flashcardId: fc(51), conceptFamilyId: 'ch8-microcurrent-high-frequency' },
+  { flashcardId: fc(52), conceptFamilyId: 'ch8-microcurrent-high-frequency' },
+  { flashcardId: fc(53), conceptFamilyId: 'ch8-microcurrent-high-frequency' },
+  { flashcardId: fc(54), conceptFamilyId: 'ch8-light-therapy-safety' },
+  { flashcardId: fc(55), conceptFamilyId: 'ch8-light-therapy-safety' },
+  { flashcardId: fc(56), conceptFamilyId: 'ch8-light-therapy-safety' },
+  { flashcardId: fc(57), conceptFamilyId: 'ch8-light-therapy-safety' },
 ]
 
 const qq = (n: number): `qq-8-${string}` => `qq-8-${String(n).padStart(3, '0')}`
