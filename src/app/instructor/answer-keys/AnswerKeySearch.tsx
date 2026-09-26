@@ -68,7 +68,7 @@ export default function AnswerKeySearch({ entries }: AnswerKeySearchProps) {
         type="search"
         value={query}
         onChange={(event) => setQuery(event.target.value)}
-        placeholder="Example: head lice, cortex, massage, Chapter 10..."
+        placeholder="Search questions, answers, or topics..."
         className="w-full rounded-xl border border-graphite bg-black/40 px-4 py-3 text-white placeholder:text-silver focus:border-[var(--color-brand-gold)] focus:outline-none focus:ring-1 focus:ring-[var(--color-brand-gold)]"
       />
 
