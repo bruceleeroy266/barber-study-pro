@@ -30,10 +30,10 @@ export default async function HomePage() {
               <Logo variant="compact" size="md" className="lg:hidden" />
               <Logo variant="full" size="4xl" className="hidden lg:block" />
             </Link>
-            <div className="flex items-center gap-3">
-              <SignInButton className="hidden sm:inline-flex text-[var(--color-text-secondary)] hover:text-white transition-colors text-sm font-medium">Pilot Login</SignInButton>
-              <Link href="/demo" className="px-4 py-2 text-sm font-semibold text-white border border-white/20 rounded-lg hover:bg-white/5 transition-colors">View Demo</Link>
-              <Link href="/pilot" className="px-4 py-2 text-sm font-semibold bg-[var(--color-brand-gold)] text-[var(--color-background-primary)] rounded-lg hover:bg-[var(--color-brand-gold-light)] transition-colors">Request Pilot Access</Link>
+            <div className="flex items-center">
+              <SignInButton className="inline-flex px-4 py-2 text-sm font-semibold text-[var(--color-text-secondary)] border border-white/20 rounded-lg hover:bg-white/5 hover:text-white transition-colors">
+                Pilot Login
+              </SignInButton>
             </div>
           </div>
         </div>
