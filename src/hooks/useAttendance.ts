@@ -252,9 +252,9 @@ export function useAttendance({
         const changed: AttendanceRecord[] = []
 
         for (const entry of entries) {
-          const original = getRecordForStudentAndDate(
-            entry.studentId,
-            defaultDate || new Date().toISOString().split('T')[0],
+          const submissionDate = defaultDate || new Date().toISOString().split('T')[0]
+          const original = records.find(
+            (record) => record.userId === entry.studentId && record.date === submissionDate,
           )
 
           if (original) {
@@ -332,7 +332,7 @@ export function useAttendance({
         setLoading(false)
       }
     },
-    [currentUser, defaultDate, getRecordForStudentAndDate, schoolId],
+    [currentUser, defaultDate, records, schoolId],
   )
 
   const addNote = useCallback(
