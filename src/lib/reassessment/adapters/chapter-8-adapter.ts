@@ -8,6 +8,7 @@ export class Chapter8MappingProvider implements ICanonicalMappingProvider {
   readonly chapterId: ChapterId = 'ch-8'
   private readonly questionToConceptMap = new Map<QuizQuestionId, ConceptId>()
   private readonly conceptToQuestionsMap = new Map<ConceptId, QuizQuestionId[]>()
+  private readonly conceptToReserveQuestionsMap = new Map<ConceptId, QuizQuestionId[]>()
 
   constructor() {
     const mappings = [
@@ -28,6 +29,14 @@ export class Chapter8MappingProvider implements ICanonicalMappingProvider {
         [...(this.conceptToQuestionsMap.get(mapping.conceptId) ?? []), mapping.questionId],
       )
     }
+
+    for (const question of chapter8ReassessmentReserve) {
+      const conceptId = question.conceptFamilyId as string
+      this.conceptToReserveQuestionsMap.set(
+        conceptId,
+        [...(this.conceptToReserveQuestionsMap.get(conceptId) ?? []), question.id],
+      )
+    }
   }
 
   getConceptForQuestion(questionId: QuizQuestionId) {
@@ -35,7 +44,11 @@ export class Chapter8MappingProvider implements ICanonicalMappingProvider {
   }
 
   getQuestionsForConcept(conceptId: ConceptId) {
-    return this.conceptToQuestionsMap.get(conceptId) ?? []
+    // C8-7 formal remediation must draw only from the locked unseen reserve.
+    // Initial-assessment questions remain in questionToConceptMap so historical
+    // evidence can still be resolved semantically, but they are never eligible
+    // for reassessment selection.
+    return this.conceptToReserveQuestionsMap.get(conceptId) ?? []
   }
 
   isQuestionMappedToConcept(questionId: QuizQuestionId, conceptId: ConceptId) {
