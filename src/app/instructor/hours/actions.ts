@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
-import { hasPermission } from '@/lib/auth-helpers'
+import { hasPermission, isSchoolAdmin } from '@/lib/auth-helpers'
 import type { HourCategory } from '@/types'
 
 const HOUR_CATEGORIES: HourCategory[] = [
@@ -57,6 +57,10 @@ export async function logStudentHours(formData: FormData) {
     redirect('/dashboard')
   }
 
+  if (actor.role !== 'instructor') {
+    redirect('/school/hours?error=instructor-only')
+  }
+
   const { data: student } = await supabase
     .from('profiles')
     .select('id')
@@ -77,10 +81,10 @@ export async function logStudentHours(formData: FormData) {
       date,
       category,
       minutes,
-      status: 'approved',
+      status: 'pending',
       notes: notes || null,
-      reviewed_by: user.id,
-      reviewed_at: new Date().toISOString(),
+      reviewed_by: null,
+      reviewed_at: null,
     })
 
   if (error) {
@@ -95,4 +99,61 @@ export async function logStudentHours(formData: FormData) {
   revalidatePath(`/instructor/student/${studentId}`)
 
   redirect(`${returnTo}?saved=1&student=${encodeURIComponent(studentId)}`)
+}
+
+export async function reviewStudentHours(formData: FormData) {
+  const hourLogId = String(formData.get('hourLogId') || '').trim()
+  const decision = String(formData.get('decision') || '').trim()
+
+  if (!hourLogId || !['approved', 'rejected'].includes(decision)) {
+    redirect('/school/hours?error=invalid-review')
+  }
+
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
+  const { data: actor } = await supabase
+    .from('profiles')
+    .select('id, role, school_id')
+    .eq('id', user.id)
+    .single()
+
+  if (!actor?.school_id || !isSchoolAdmin(actor.role)) {
+    redirect('/dashboard')
+  }
+
+  const { data: target } = await supabase
+    .from('hour_logs')
+    .select('id, user_id, school_id, status')
+    .eq('id', hourLogId)
+    .eq('school_id', actor.school_id)
+    .maybeSingle()
+
+  if (!target || target.status !== 'pending') {
+    redirect('/school/hours?error=invalid-review')
+  }
+
+  const { error } = await supabase
+    .from('hour_logs')
+    .update({
+      status: decision,
+      reviewed_by: user.id,
+      reviewed_at: new Date().toISOString(),
+    })
+    .eq('id', hourLogId)
+    .eq('school_id', actor.school_id)
+    .eq('status', 'pending')
+
+  if (error) {
+    console.error('[StaffHours] Failed to review hours', error)
+    redirect('/school/hours?error=review-failed')
+  }
+
+  revalidatePath('/school')
+  revalidatePath('/school/hours')
+  revalidatePath('/instructor/hours')
+  revalidatePath(`/instructor/student/${target.user_id}`)
+
+  redirect(`/school/hours?reviewed=${decision}&student=${encodeURIComponent(target.user_id)}`)
 }
