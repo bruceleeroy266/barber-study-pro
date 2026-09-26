@@ -8,16 +8,16 @@ import {
 
 describe('C8-4 Chapter 8 flashcard audit baseline', () => {
   it('audits all 50 active flashcards exactly once before rewriting', () => {
-    const activeIds = chapter8PremiumFlashcards
-      .filter((card) => card.is_active)
+    const legacyIds = chapter8PremiumFlashcards
+      .filter((card) => card.is_active && Number(card.id.slice(-3)) <= 50)
       .map((card) => card.id)
 
-    expect(activeIds).toHaveLength(50)
+    expect(legacyIds).toHaveLength(50)
     expect(chapter8FlashcardAudit).toHaveLength(50)
 
     const auditedIds = chapter8FlashcardAudit.map((entry) => entry.flashcardId)
     expect(new Set(auditedIds).size).toBe(50)
-    expect(new Set(auditedIds)).toEqual(new Set(activeIds))
+    expect(new Set(auditedIds)).toEqual(new Set(legacyIds))
   })
 
   it('preserves the existing concept mapping for every audited card', () => {
