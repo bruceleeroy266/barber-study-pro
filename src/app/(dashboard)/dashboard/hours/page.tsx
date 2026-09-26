@@ -7,7 +7,9 @@ import {
 } from '@/lib/programs/requirements'
 import { getTodayAttendanceStatus } from '@/lib/attendance'
 import { mapAttendanceRecordsFromDb } from '@/lib/mappers/operational-data-mappers'
-import type { AttendanceRecord, AttendanceStatus } from '@/types'
+import { calculateApprovedPeriodTotals } from '@/lib/hours/reporting'
+import type { HoursReportLog } from '@/lib/hours/reporting'
+import type { AttendanceRecord, AttendanceStatus, HourCategory } from '@/types'
 
 function formatMinutes(minutes: number): string {
   const hours = Math.floor(minutes / 60)
@@ -151,12 +153,33 @@ export default async function StudentHoursPage() {
     created_at: string | null
   }>
 
+  const reportingHours: HoursReportLog[] = hours.map((row) => ({
+    id: row.id,
+    user_id: row.user_id,
+    date: row.date,
+    category: row.category as HourCategory,
+    minutes: row.minutes,
+    status: row.status,
+    notes: null,
+    rejection_reason: row.rejection_reason,
+    submitted_by: null,
+    reviewed_by: null,
+    reviewed_at: row.reviewed_at,
+    created_at: row.created_at,
+  }))
+
   const approvedMinutes = hours
     .filter((row) => row.status === 'approved')
     .reduce((sum, row) => sum + row.minutes, 0)
   const pendingMinutes = hours
     .filter((row) => row.status === 'pending')
     .reduce((sum, row) => sum + row.minutes, 0)
+
+  const approvedPeriods = calculateApprovedPeriodTotals(
+    reportingHours,
+    new Date(),
+    schoolTimeZone,
+  )
 
   const requiredMinutes = requirements.requiredHours * 60
   const remainingMinutes = Math.max(0, requiredMinutes - approvedMinutes)
@@ -217,6 +240,43 @@ export default async function StudentHoursPage() {
             {attendanceLabel(todayStatus)}
           </div>
           <div className="mt-2 text-xs text-silver">{localToday}</div>
+        </div>
+      </section>
+
+      <section className="rounded-xl border border-graphite bg-charcoal p-5 sm:p-6">
+        <div>
+          <h2 className="text-lg font-semibold text-white">Approved Hour Totals</h2>
+          <p className="mt-1 text-sm text-silver">
+            These period totals include approved hours only. Pending hours remain separate until administrator approval.
+          </p>
+        </div>
+
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5">
+          <div className="rounded-lg border border-graphite bg-black p-4">
+            <div className="text-xs text-silver">This Week</div>
+            <div className="mt-1 text-xl font-bold text-white">{formatMinutes(approvedPeriods.weekMinutes)}</div>
+            <div className="mt-1 text-xs text-silver">Approved</div>
+          </div>
+          <div className="rounded-lg border border-graphite bg-black p-4">
+            <div className="text-xs text-silver">This Month</div>
+            <div className="mt-1 text-xl font-bold text-white">{formatMinutes(approvedPeriods.monthMinutes)}</div>
+            <div className="mt-1 text-xs text-silver">Approved</div>
+          </div>
+          <div className="rounded-lg border border-graphite bg-black p-4">
+            <div className="text-xs text-silver">This Year</div>
+            <div className="mt-1 text-xl font-bold text-white">{formatMinutes(approvedPeriods.yearMinutes)}</div>
+            <div className="mt-1 text-xs text-silver">Approved</div>
+          </div>
+          <div className="rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 p-4">
+            <div className="text-xs text-silver">Overall</div>
+            <div className="mt-1 text-xl font-bold text-[var(--color-brand-gold)]">{formatMinutes(approvedMinutes)}</div>
+            <div className="mt-1 text-xs text-silver">Official approved total</div>
+          </div>
+          <div className="rounded-lg border border-silver/20 bg-white/5 p-4">
+            <div className="text-xs text-silver">Pending</div>
+            <div className="mt-1 text-xl font-bold text-white">{formatMinutes(pendingMinutes)}</div>
+            <div className="mt-1 text-xs text-silver">Not included above</div>
+          </div>
         </div>
       </section>
 
