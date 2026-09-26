@@ -82,6 +82,17 @@ import { chapter6PremiumFlashcards } from '@/lib/chapter-6-premium-flashcards'
 import { chapter6PremiumQuizQuestions } from '@/lib/chapter-6-premium-quiz'
 import { chapter6ReassessmentQuestions } from '@/lib/chapter-6-reassessment-questions'
 
+import {
+  chapter7ContentConceptMappings,
+  chapter7FlashcardConceptMappings,
+  chapter7QuizQuestionConceptMappings,
+  chapter7ReassessmentQuestionConceptMappings,
+} from '@/lib/chapter-7-concepts/mappings'
+import { ACTIVE_CHAPTER7_CONCEPT_FAMILY_IDS, chapter7ConceptFamilies } from '@/lib/chapter-7-concepts/concepts'
+import { chapter7PremiumFlashcards } from '@/lib/chapter-7-premium-flashcards'
+import { chapter7PremiumQuizQuestions } from '@/lib/chapter-7-premium-quiz'
+import { chapter7ReassessmentQuestions } from '@/lib/chapter-7-reassessment-questions'
+
 import { getChapterContent } from '@/lib/chapter-content'
 
 // ───────────────────────────────────────────────
@@ -598,6 +609,76 @@ const chapter6Provider: ChapterRemediationContentProvider = {
 }
 
 // ───────────────────────────────────────────────
+// Chapter 7 Provider (C7-9)
+// ───────────────────────────────────────────────
+
+const chapter7ContentMappingsProjected = chapter7ContentConceptMappings.map((m) => ({
+  contentBlockId: m.contentBlockId,
+  conceptId: m.conceptFamilyId as string,
+}))
+const chapter7FlashcardMappingsProjected = chapter7FlashcardConceptMappings.map((m) => ({
+  flashcardId: m.flashcardId as string,
+  conceptId: m.conceptFamilyId as string,
+}))
+const chapter7QuizMappingsProjected = [
+  ...chapter7QuizQuestionConceptMappings,
+  ...chapter7ReassessmentQuestionConceptMappings,
+].map((m) => ({
+  questionId: m.questionId as string,
+  conceptId: m.conceptFamilyId as string,
+}))
+
+function isChapter7ConceptFamilyId(conceptId: string): boolean {
+  return (ACTIVE_CHAPTER7_CONCEPT_FAMILY_IDS as readonly string[]).includes(conceptId)
+}
+
+const chapter7Provider: ChapterRemediationContentProvider = {
+  chapterId: 'ch-7',
+
+  getConceptName(conceptId) {
+    return chapter7ConceptFamilies.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic'
+  },
+
+  getContentBlockIdsForConcept(conceptId) {
+    return chapter7ContentMappingsProjected.filter((m) => m.conceptId === conceptId).map((m) => m.contentBlockId)
+  },
+
+  getFlashcardIdsForConcept(conceptId) {
+    return chapter7FlashcardMappingsProjected.filter((m) => m.conceptId === conceptId).map((m) => m.flashcardId)
+  },
+
+  filterContentByConcept(conceptId) {
+    return filterSectionsByMappedBlockIds(7, new Set(this.getContentBlockIdsForConcept(conceptId)))
+  },
+
+  filterFlashcardsByConcept(conceptId) {
+    const mappedIds = new Set(this.getFlashcardIdsForConcept(conceptId))
+    return chapter7PremiumFlashcards.filter((card) => card.is_active && mappedIds.has(card.id))
+  },
+
+  buildRemediationContentBundle(conceptId) {
+    return buildBundle(this, conceptId)
+  },
+
+  getQuizQuestionById(questionId) {
+    return (
+      chapter7PremiumQuizQuestions.find((q) => q.id === questionId) ??
+      chapter7ReassessmentQuestions.find((q) => q.id === questionId) ??
+      null
+    )
+  },
+
+  filterKeyTermsByConcept(conceptId) {
+    if (!isChapter7ConceptFamilyId(conceptId)) return []
+    return []
+  },
+
+  getConceptQuestionCount(conceptId) {
+    return chapter7QuizMappingsProjected.filter((m) => m.conceptId === conceptId).length
+  },
+}
+
+// ───────────────────────────────────────────────
 // Registry
 // ───────────────────────────────────────────────
 
@@ -607,6 +688,7 @@ const contentProviders = new Map<ChapterId, ChapterRemediationContentProvider>([
   ['ch-4', chapter4Provider],
   ['ch-5', chapter5Provider],
   ['ch-6', chapter6Provider],
+  ['ch-7', chapter7Provider],
 ])
 
 /**
