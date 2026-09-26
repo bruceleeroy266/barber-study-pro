@@ -4,7 +4,25 @@ import { createClient } from '@/lib/supabase-server'
 import { hasPermission } from '@/lib/auth-helpers'
 import { resolveProgramRequirementsForStudents } from '@/lib/programs/requirements'
 import { logStudentHours } from '@/app/instructor/hours/actions'
-import type { HourCategory } from '@/types'
+import type { HourCategory, HourStatus } from '@/types'
+
+interface HoursRosterStudent {
+  id: string
+  full_name: string
+  email: string
+  role: string
+}
+
+interface StaffHourLogRow {
+  id: string
+  user_id: string
+  date: string
+  category: HourCategory
+  minutes: number
+  status: HourStatus
+  notes: string | null
+  created_at: string | null
+}
 
 const categories: HourCategory[] = [
   'Theory',
@@ -79,7 +97,7 @@ export default async function StaffHoursManager({
     .in('role', ['student', 'apprentice'])
     .order('full_name')
 
-  const students = studentsData ?? []
+  const students = (studentsData ?? []) as HoursRosterStudent[]
   const studentIds = students.map((student) => student.id)
 
   const { data: logsData } = studentIds.length
@@ -92,7 +110,7 @@ export default async function StaffHoursManager({
         .order('created_at', { ascending: false })
     : { data: [] }
 
-  const logs = logsData ?? []
+  const logs = (logsData ?? []) as StaffHourLogRow[]
   const requirementMap = await resolveProgramRequirementsForStudents(
     supabase,
     actor.school_id,
