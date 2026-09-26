@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase'
 import type { Chapter7ConceptFamilyId } from './types'
+import { CHAPTER7_CONCEPT_FAMILY_IDS } from './concepts'
 import type { Chapter7EvidenceRecord, Chapter7Confidence } from './grading'
 import { calculateChapter7ConceptMastery } from './grading'
 import type {
@@ -130,14 +131,21 @@ export interface Chapter7MicroCheckConceptDiagnostic {
   confidenceFromMicroChecks: Chapter7Confidence
 }
 
+export function calculatePersistedChapter7MicroCheckPercent(
+  rows: readonly Chapter7MicroCheckAttemptRow[],
+): number | null {
+  if (rows.length === 0) return null
+  const correct = rows.filter((row) => row.is_correct).length
+  return Math.round((correct / rows.length) * 10000) / 100
+}
+
 export function buildChapter7MicroCheckDiagnostics(
   rows: readonly Chapter7MicroCheckAttemptRow[],
   referenceTime: string,
 ): Chapter7MicroCheckConceptDiagnostic[] {
-  const conceptIds = [...new Set(rows.map((row) => row.concept_id))]
   const evidence = chapter7MicroCheckRowsToEvidence(rows)
 
-  return conceptIds.map((conceptFamilyId) => {
+  return CHAPTER7_CONCEPT_FAMILY_IDS.map((conceptFamilyId) => {
     const conceptRows = rows.filter((row) => row.concept_id === conceptFamilyId)
     const conceptEvidence = evidence.filter((record) => record.conceptFamilyId === conceptFamilyId)
     const mastery = calculateChapter7ConceptMastery(conceptEvidence, referenceTime)
@@ -152,4 +160,20 @@ export function buildChapter7MicroCheckDiagnostics(
       confidenceFromMicroChecks: mastery.confidence,
     }
   })
+}
+
+export async function loadChapter7MicroCheckDiagnosticsForStudent(
+  studentId: string,
+  referenceTime: string,
+): Promise<{
+  microCheckPercent: number | null
+  evidence: Chapter7EvidenceRecord[]
+  concepts: Chapter7MicroCheckConceptDiagnostic[]
+}> {
+  const rows = await loadChapter7MicroCheckAttempts(studentId)
+  return {
+    microCheckPercent: calculatePersistedChapter7MicroCheckPercent(rows),
+    evidence: chapter7MicroCheckRowsToEvidence(rows),
+    concepts: buildChapter7MicroCheckDiagnostics(rows, referenceTime),
+  }
 }
