@@ -6,6 +6,7 @@ import { demoStudents, demoAttendanceRecords } from '@/lib/demo-data'
 import AttendanceClient from './AttendanceClient'
 import { mapAttendanceRecordsFromDb } from '@/lib/mappers/operational-data-mappers'
 import BackButton from '@/components/ui/BackButton'
+import { resolveDailyScheduleExpectations } from '@/lib/schedules/daily-expectations'
 
 function isDemoFallbackEnabled(): boolean {
   if (process.env.NEXT_PUBLIC_DEMO_MODE === 'true') return true
@@ -29,7 +30,7 @@ export default async function AttendanceManagementPage() {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('id, role, school_id, full_name, email, schools(name)')
+    .select('id, role, school_id, full_name, email, schools(name, timezone)')
     .eq('id', user.id)
     .single()
 
@@ -60,7 +61,9 @@ export default async function AttendanceManagementPage() {
   }
 
   const schoolId = profile.school_id || null
-  const schoolName = (profile.schools as { name?: string } | null)?.name || 'Your School'
+  const schoolRecord = profile.schools as { name?: string; timezone?: string | null } | null
+  const schoolName = schoolRecord?.name || 'Your School'
+  const schoolTimeZone = schoolRecord?.timezone || 'UTC'
 
   const { data: studentsData } = await supabase
     .from('profiles')
@@ -88,7 +91,66 @@ export default async function AttendanceManagementPage() {
     records = demoAttendanceRecords.filter((a) => studentIds.includes(a.userId))
   }
 
-  const defaultDate = new Date().toISOString().split('T')[0]
+  const dateParts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: schoolTimeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(new Date())
+  const datePart = (type: Intl.DateTimeFormatPartTypes) =>
+    dateParts.find((part) => part.type === type)?.value ?? ''
+  const defaultDate = `${datePart('year')}-${datePart('month')}-${datePart('day')}`
+
+  const { data: scheduleProfilesData } = studentIds.length
+    ? await supabase
+        .from('student_schedule_profiles')
+        .select('id, student_id, name, effective_from, effective_to')
+        .eq('school_id', schoolId)
+        .eq('is_active', true)
+        .in('student_id', studentIds)
+    : { data: [] }
+
+  const scheduleProfiles = (scheduleProfilesData || []) as Array<{
+    id: string
+    student_id: string
+    name: string
+    effective_from: string
+    effective_to: string | null
+  }>
+  const scheduleProfileIds = scheduleProfiles.map((row) => row.id)
+
+  const [{ data: scheduleDaysData }, { data: scheduleOverridesData }] = await Promise.all([
+    scheduleProfileIds.length
+      ? supabase
+          .from('student_schedule_days')
+          .select('schedule_profile_id, day_of_week, is_scheduled, start_time, end_time, break_minutes')
+          .in('schedule_profile_id', scheduleProfileIds)
+      : Promise.resolve({ data: [] }),
+    studentIds.length
+      ? supabase
+          .from('student_schedule_overrides')
+          .select('student_id, override_date, override_type, start_time, end_time, break_minutes, reason')
+          .eq('school_id', schoolId)
+          .eq('override_date', defaultDate)
+          .in('student_id', studentIds)
+      : Promise.resolve({ data: [] }),
+  ])
+
+  const dailyScheduleExpectations = resolveDailyScheduleExpectations({
+    studentIds,
+    date: defaultDate,
+    profiles: scheduleProfiles,
+    days: scheduleDaysData || [],
+    overrides: (scheduleOverridesData || []) as Array<{
+      student_id: string
+      override_date: string
+      override_type: 'scheduled' | 'off' | 'makeup'
+      start_time: string | null
+      end_time: string | null
+      break_minutes: number
+      reason: string | null
+    }>,
+  })
 
   return (
     <div className="min-h-screen bg-[var(--color-background-primary)] p-6 md:p-8">
@@ -101,6 +163,8 @@ export default async function AttendanceManagementPage() {
           schoolId={schoolId}
           schoolName={schoolName}
           defaultDate={defaultDate}
+          dailyScheduleExpectations={dailyScheduleExpectations}
+          schoolTimeZone={schoolTimeZone}
         />
       </div>
     </div>

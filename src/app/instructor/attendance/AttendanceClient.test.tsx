@@ -5,6 +5,8 @@ import AttendanceClient from './AttendanceClient'
 const ensureTodayRecords = vi.fn()
 const updateStatus = vi.fn()
 const bulkUpdateStatus = vi.fn()
+const updateActualTimes = vi.fn()
+const submitDailyAttendance = vi.fn()
 
 vi.mock('@/hooks/useAttendance', () => ({
   useAttendance: () => ({
@@ -19,6 +21,8 @@ vi.mock('@/hooks/useAttendance', () => ({
     updateStatus,
     bulkUpdateStatus,
     addNote: vi.fn(),
+    updateActualTimes,
+    submitDailyAttendance,
     submitCorrection: vi.fn(),
     getAuditHistory: vi.fn(),
     refresh: vi.fn(),
@@ -91,6 +95,21 @@ function renderAttendance() {
       schoolId="school-1"
       schoolName="Test School"
       defaultDate="2026-09-22"
+      schoolTimeZone="America/Chicago"
+      dailyScheduleExpectations={[
+        {
+          studentId: 'student-1',
+          date: '2026-09-22',
+          isScheduled: true,
+          source: 'recurring',
+          label: 'Full-Time',
+          startTime: '08:30',
+          endTime: '16:00',
+          breakMinutes: 30,
+          plannedMinutes: 420,
+          reason: null,
+        },
+      ]}
     />
   )
 }
@@ -101,24 +120,39 @@ describe('AttendanceClient today controls', () => {
     ensureTodayRecords.mockResolvedValue([createdRecord])
     updateStatus.mockResolvedValue(undefined)
     bulkUpdateStatus.mockResolvedValue(undefined)
+    updateActualTimes.mockResolvedValue(undefined)
+    submitDailyAttendance.mockResolvedValue(true)
   })
 
-  it('creates a missing record and persists an individual status selection', async () => {
+  it('stages an individual status and saves it only when Submit Day is pressed', async () => {
     renderAttendance()
 
     fireEvent.click(screen.getByRole('button', { name: /test student/i }))
     fireEvent.click(screen.getByRole('button', { name: 'Present' }))
 
-    await waitFor(() => expect(updateStatus).toHaveBeenCalledWith('attendance-1', 'Present'))
+    expect(updateStatus).not.toHaveBeenCalled()
+    fireEvent.click(screen.getByRole('button', { name: 'Submit Day' }))
+
+    await waitFor(() =>
+      expect(submitDailyAttendance).toHaveBeenCalledWith([
+        expect.objectContaining({
+          studentId: 'student-1',
+          status: 'Present',
+          minutesPresent: 420,
+        }),
+      ]),
+    )
   })
 
-  it('allows Mark All Present when today starts with zero records', async () => {
+  it('marks scheduled students in the draft without persisting before Submit Day', async () => {
     renderAttendance()
 
-    const button = screen.getByRole('button', { name: 'Mark All Present' })
+    const button = screen.getByRole('button', { name: 'Mark Scheduled Students Present' })
     expect(button).toBeEnabled()
     fireEvent.click(button)
 
-    await waitFor(() => expect(bulkUpdateStatus).toHaveBeenCalledWith(['attendance-1'], 'Present'))
+    expect(bulkUpdateStatus).not.toHaveBeenCalled()
+    expect(screen.getByText('Attendance: Present ✓')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Submit Day' })).toBeEnabled()
   })
 })
