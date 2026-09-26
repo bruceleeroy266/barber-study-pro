@@ -535,7 +535,7 @@ export const chapter8PremiumFlashcards: Flashcard[] = [
     chapter_id: 'ch-8',
     front: 'What are the highest-value Chapter 8 concepts to connect when reasoning through an exam-style scenario?',
     back: 'Connect electricity and circuits; DC versus AC; volts, amps, ohms, and watts; fuse/breaker/grounding/GFCI purpose; equipment inspection and dry-hand safety; electrotherapy polarity and scope; galvanic, microcurrent, and high-frequency terminology; electromagnetic-spectrum relationships; and light-therapy client protection. Use these as study priorities, not as a prediction of exact exam questions.',
-    category: 'Board Exam Alert',
+    category: 'Chapter 8 Synthesis',
     difficulty: 'hard',
     order_index: 50,
     is_active: true,
