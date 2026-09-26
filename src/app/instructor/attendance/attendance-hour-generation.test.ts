@@ -32,8 +32,31 @@ describe('Segment C attendance-generated hours', () => {
     expect(action).toContain("reviewed_at: null")
   })
 
+  it('reconciles still-pending generated hours but never overwrites reviewed rows', () => {
+    expect(action).toContain("if (existing.status !== 'pending')")
+    expect(action).toContain("notes: 'Updated from resubmitted Daily Attendance & Hours.'")
+    expect(action).toContain(".eq('status', 'pending')")
+    expect(action).toContain(".is('reviewed_by', null)")
+    expect(action).toContain(".is('reviewed_at', null)")
+    expect(action).toContain('if (!refreshed)')
+  })
+
   it('handles races by treating unique violations as duplicate-safe skips', () => {
     expect(action).toContain("error.code === '23505'")
     expect(action).toContain('skipped += 1')
+  })
+
+  it('keeps manual submissions supported while binding generated rows to attendance evidence', () => {
+    expect(migration).toContain("(source_type = 'manual' and source_attendance_id is null)")
+    expect(migration).toContain("source_type = 'attendance'")
+    expect(migration).toContain('ar.minutes_present = minutes')
+    expect(migration).toContain("ar.status in ('Present', 'Tardy')")
+  })
+
+  it('preserves school-admin approval access while limiting instructor updates to pending generated rows', () => {
+    expect(migration).toContain('public.is_school_admin(school_id)')
+    expect(migration).toContain("public.current_user_role() = 'instructor'")
+    expect(migration).toContain("status = 'pending'")
+    expect(migration).toContain('submitted_by = auth.uid()')
   })
 })
