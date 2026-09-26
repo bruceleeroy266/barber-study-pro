@@ -243,9 +243,9 @@ export async function bulkApproveStudentHours(formData: FormData) {
     redirect('/school/hours?error=bulk-review-failed')
   }
 
-  const updatedRows = updated ?? []
+  const updatedRows = (updated ?? []) as Array<{ id: string; user_id: string }>
   const affectedStudentIds = Array.from(
-    new Set(updatedRows.map((row) => row.user_id).filter(Boolean)),
+    new Set(updatedRows.map((row: { id: string; user_id: string }) => row.user_id).filter(Boolean)),
   )
 
   revalidatePath('/school')
