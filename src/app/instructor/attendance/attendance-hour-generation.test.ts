@@ -11,6 +11,10 @@ const action = readFileSync(
   join(root, 'src/app/instructor/attendance/hour-generation-actions.ts'),
   'utf-8',
 )
+const adminApprovalAction = readFileSync(
+  join(root, 'src/app/instructor/hours/actions.ts'),
+  'utf-8',
+)
 
 describe('Segment C attendance-generated hours', () => {
   it('enforces one hour log per attendance record at the database layer', () => {
@@ -58,5 +62,13 @@ describe('Segment C attendance-generated hours', () => {
     expect(migration).toContain("public.current_user_role() = 'instructor'")
     expect(migration).toContain("status = 'pending'")
     expect(migration).toContain('submitted_by = auth.uid()')
+  })
+
+  it('keeps generated pending rows inside the existing idempotent admin approval workflow', () => {
+    expect(adminApprovalAction).toContain("if (target.status !== 'pending')")
+    expect(adminApprovalAction).toContain(".eq('status', 'pending')")
+    expect(adminApprovalAction).toContain('reviewed_by: user.id')
+    expect(adminApprovalAction).toContain('reviewed_at: new Date().toISOString()')
+    expect(adminApprovalAction).toContain('alreadyReviewed=')
   })
 })
