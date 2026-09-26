@@ -15,6 +15,10 @@ const adminApprovalAction = readFileSync(
   join(root, 'src/app/instructor/hours/actions.ts'),
   'utf-8',
 )
+const policyHotfix = readFileSync(
+  join(root, 'supabase/migrations/20260926071000_fix_attendance_hour_policy_qualification.sql'),
+  'utf-8',
+)
 
 describe('Segment C attendance-generated hours', () => {
   it('enforces one hour log per attendance record at the database layer', () => {
@@ -70,5 +74,15 @@ describe('Segment C attendance-generated hours', () => {
     expect(adminApprovalAction).toContain('reviewed_by: user.id')
     expect(adminApprovalAction).toContain('reviewed_at: new Date().toISOString()')
     expect(adminApprovalAction).toContain('alreadyReviewed=')
+  })
+
+  it('fully qualifies outer hour-log columns inside attendance RLS subqueries', () => {
+    expect(policyHotfix).toContain('ar.school_id = hour_logs.school_id')
+    expect(policyHotfix).toContain('ar.user_id = hour_logs.user_id')
+    expect(policyHotfix).toContain('ar.date = hour_logs.date')
+    expect(policyHotfix).toContain('ar.minutes_present = hour_logs.minutes')
+    expect(policyHotfix).not.toContain('ar.school_id = ar.school_id')
+    expect(policyHotfix).not.toContain('ar.user_id = ar.user_id')
+    expect(policyHotfix).not.toContain('ar.date = ar.date')
   })
 })
