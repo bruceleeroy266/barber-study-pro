@@ -37,6 +37,7 @@ interface StaffHourLogRow {
   created_at: string | null
   source_type: 'manual' | 'attendance'
   source_attendance_id: string | null
+  resubmission_of_hour_log_id: string | null
 }
 
 const categories: HourCategory[] = [
@@ -138,7 +139,7 @@ export default async function StaffHoursManager({
   const { data: logsData } = studentIds.length
     ? await supabase
         .from('hour_logs')
-        .select('id, user_id, date, category, minutes, status, notes, rejection_reason, submitted_by, reviewed_by, reviewed_at, created_at, source_type, source_attendance_id')
+        .select('id, user_id, date, category, minutes, status, notes, rejection_reason, submitted_by, reviewed_by, reviewed_at, created_at, source_type, source_attendance_id, resubmission_of_hour_log_id')
         .eq('school_id', actor.school_id)
         .in('user_id', studentIds)
         .order('date', { ascending: false })
@@ -390,8 +391,13 @@ export default async function StaffHoursManager({
                         <div className="mt-1 text-sm text-silver">
                           {log.date} · {log.category} · {formatHourMinutes(log.minutes)}
                         </div>
-                        <div className="mt-2">
+                        <div className="mt-2 flex flex-wrap gap-2">
                           <HourSourceBadge sourceType={log.source_type} />
+                          {log.resubmission_of_hour_log_id && (
+                            <span className="inline-flex items-center rounded-full border border-warm-bronze/40 bg-warm-bronze/10 px-2.5 py-1 text-xs font-semibold text-warm-bronze">
+                              Corrected resubmission
+                            </span>
+                          )}
                         </div>
                         <div className="mt-2 text-xs text-silver">
                           Submitted by {log.submitted_by ? (actorNameMap.get(log.submitted_by) ?? 'Instructor') : 'Instructor'}
@@ -553,8 +559,13 @@ export default async function StaffHoursManager({
                               <div className="text-sm text-white">
                                 {log.date} · {log.category}
                               </div>
-                              <div className="mt-2">
+                              <div className="mt-2 flex flex-wrap gap-2">
                                 <HourSourceBadge sourceType={log.source_type} />
+                                {log.resubmission_of_hour_log_id && (
+                                  <span className="inline-flex items-center rounded-full border border-warm-bronze/40 bg-warm-bronze/10 px-2.5 py-1 text-xs font-semibold text-warm-bronze">
+                                    Corrected resubmission
+                                  </span>
+                                )}
                               </div>
                               {log.notes && <div className="mt-2 text-xs text-silver">{log.notes}</div>}
                               {log.rejection_reason && (
