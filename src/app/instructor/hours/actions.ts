@@ -83,6 +83,7 @@ export async function logStudentHours(formData: FormData) {
       minutes,
       status: 'pending',
       notes: notes || null,
+      submitted_by: user.id,
       reviewed_by: null,
       reviewed_at: null,
     })
