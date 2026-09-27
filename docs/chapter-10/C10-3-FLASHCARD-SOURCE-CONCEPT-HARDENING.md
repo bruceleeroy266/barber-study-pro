@@ -109,3 +109,5 @@ As in C10-2, this pass is grounded in the repository Chapter 10 source-image set
 ## Status
 
 **C10-3 implementation complete. Exact-head Engineering Verification, Vercel Preview, and final adversarial flashcard check are still required before certification.**
+
+Verification trigger: PR #116 is tested against `main`; no merge authorization is implied.
