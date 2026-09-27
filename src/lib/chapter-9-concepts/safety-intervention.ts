@@ -77,6 +77,48 @@ export const chapter9SafetyTaggedItems: readonly Chapter9SafetyTaggedItem[] = [
     hazard: 'scope_diagnosis_boundary',
     rationale: 'Barbers may describe observable findings and service implications but must not assign a medical diagnosis.',
   },
+  {
+    itemId: 'q9-015',
+    conceptFamilyId: 'ch9-primary-lesions',
+    hazard: 'active_infectious_lesion',
+    rationale: 'A pus-filled lesion in the shave path requires avoiding direct service when open, draining, or potentially infectious without diagnosing a disease.',
+  },
+  {
+    itemId: 'q9-018',
+    conceptFamilyId: 'ch9-secondary-lesions',
+    hazard: 'open_compromised_skin',
+    rationale: 'An open lesion with loss of skin depth in the shave path requires pausing direct service and appropriate referral.',
+  },
+  {
+    itemId: 'q9-022',
+    conceptFamilyId: 'ch9-sebaceous-sudoriferous-disorders',
+    hazard: 'heat_regulation_danger',
+    rationale: 'Inability to sweat with overheating is a heat-regulation danger requiring immediate stop-heat service logic.',
+  },
+  {
+    itemId: 'q9-024',
+    conceptFamilyId: 'ch9-inflammatory-infectious-conditions',
+    hazard: 'active_infectious_lesion',
+    rationale: 'An active contagious lesion in the facial service area requires pausing the affected service and sanitation/referral action.',
+  },
+  {
+    itemId: 'q9-026',
+    conceptFamilyId: 'ch9-pigmentation-hypertrophies',
+    hazard: 'active_infectious_lesion',
+    rationale: 'An infectious growth in the razor path should not be traumatized or directly serviced and does not authorize diagnosis or removal.',
+  },
+  {
+    itemId: 'q9-029',
+    conceptFamilyId: 'ch9-skin-cancer-recognition',
+    hazard: 'suspicious_changing_lesion',
+    rationale: 'ABCDE evolution is an observation warning sign that supports referral, not a diagnosis.',
+  },
+  {
+    itemId: 'q9-030',
+    conceptFamilyId: 'ch9-service-safety-referral',
+    hazard: 'scope_diagnosis_boundary',
+    rationale: 'An unfamiliar changing lesion must be described without diagnosis; unsafe direct service is paused and qualified evaluation is recommended.',
+  },
 ] as const
 
 const studentMessageForHazard = (hazard: Chapter9SafetyHazard): string => {
