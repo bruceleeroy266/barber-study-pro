@@ -9,6 +9,7 @@ import {
 } from '../provider-registry'
 import { getChapterContentProvider } from '@/lib/remediation/content-provider-registry'
 import { getKnowledgeCheckLength } from '@/lib/remediation/knowledge-check'
+import { getChapterDetectionProvider, isConceptDetectionSupported } from '@/lib/remediation/chapter-registry'
 import type { QuizAttempt } from '@/types'
 
 describe('G3 Chapter 9 shared runtime registration', () => {
@@ -36,6 +37,14 @@ describe('G3 Chapter 9 shared runtime registration', () => {
     expect(provider?.getConceptName('ch9-primary-lesions')).toBe('Primary Skin Lesions')
     expect(provider?.filterFlashcardsByConcept('ch9-primary-lesions').length).toBeGreaterThan(0)
     expect(provider?.getQuizQuestionById('r9-primary-001')?.correct_answer).toBe('a')
+  })
+
+  it('enables Chapter 9 initial-quiz detection/remediation handoff', () => {
+    expect(isConceptDetectionSupported('ch-9')).toBe(true)
+    const provider = getChapterDetectionProvider('ch-9')
+    expect(provider).toBeDefined()
+    expect(provider?.getConceptName('ch9-primary-lesions')).toBe('Primary Skin Lesions')
+    expect(provider?.buildAssignmentsForConcept('ch9-primary-lesions').length).toBeGreaterThan(0)
   })
 
   it('uses the shared five-question reassessment sequence for Chapter 9', () => {
