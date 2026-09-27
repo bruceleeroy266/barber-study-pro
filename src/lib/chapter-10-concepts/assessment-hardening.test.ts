@@ -100,7 +100,7 @@ describe('C10-4 assessment source and adversarial hardening', () => {
       '2–10 years',
       '3–6 months',
       'less than 10%',
-      '0.5 inch',
+      '½ inch',
       'alopecia totalis',
       'alopecia universalis',
       'pityriasis',
