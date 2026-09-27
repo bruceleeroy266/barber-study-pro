@@ -31,6 +31,11 @@ import {
   type Chapter7InstructorQuizAttempt,
   type Chapter7InstructorRemediationCycle,
 } from '@/lib/chapter-7-concepts/instructor-diagnostics'
+import { type Chapter8MicroCheckAttemptRow } from '@/lib/chapter-8-concepts/micro-check-persistence'
+import {
+  buildChapter8InstructorDiagnostics,
+  type Chapter8InstructorQuizAttempt,
+} from '@/lib/chapter-8-concepts/instructor-diagnostics'
 import { type Chapter9MicroCheckAttemptRow } from '@/lib/chapter-9-concepts/micro-check-persistence'
 import {
   buildChapter9InstructorDiagnostics,
@@ -273,6 +278,15 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     .eq('chapter_id', 'ch-7')
     .order('created_at', { ascending: true })
 
+  // Chapter 8 immutable first-attempt evidence. Same-school staff can read it
+  // through the existing RLS policy used for instructor diagnostics.
+  const { data: chapter8MicroCheckRows } = await supabase
+    .from('chapter_micro_check_attempts')
+    .select('id,user_id,chapter_id,check_id,question_id,concept_id,difficulty,selected_answer,is_correct,answered_at,created_at')
+    .eq('user_id', studentId)
+    .eq('chapter_id', 'ch-8')
+    .order('answered_at', { ascending: true })
+
   // Chapter 9 immutable first-attempt evidence. Same-school staff can read it
   // through the existing RLS policy used for instructor diagnostics.
   const { data: chapter9MicroCheckRows } = await supabase
@@ -385,6 +399,30 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
         target_concept_id: attempt.target_concept_id ?? null,
       })) as Chapter7InstructorQuizAttempt[],
     remediationCycles: (chapter7RemediationCycles ?? []) as Chapter7InstructorRemediationCycle[],
+    referenceTime: new Date().toISOString(),
+  })
+
+  const chapter8MicroCheckAttempts = (chapter8MicroCheckRows ?? []) as Chapter8MicroCheckAttemptRow[]
+  const chapter8Progress = progressRecords.find((record) => record.chapter_id === 'ch-8')
+  const chapter8Diagnostics = buildChapter8InstructorDiagnostics({
+    studentId,
+    completionPercent: chapter8Progress?.progress_percentage ?? 0,
+    microCheckRows: chapter8MicroCheckAttempts,
+    quizAttempts: attemptRecords
+      .filter(
+        (attempt) =>
+          attempt.quiz_id === 'quiz-8' ||
+          (attempt.is_reassessment && attempt.target_concept_id?.startsWith('ch8-')),
+      )
+      .map((attempt) => ({
+        quiz_id: attempt.quiz_id,
+        percentage: attempt.percentage,
+        answers_json: (attempt.answers_json ?? null) as Record<string, unknown> | null,
+        completed_at: attempt.completed_at,
+        is_reassessment: attempt.is_reassessment ?? false,
+        target_concept_id: attempt.target_concept_id ?? null,
+        remediation_cycle_id: attempt.remediation_cycle_id ?? null,
+      })) as Chapter8InstructorQuizAttempt[],
     referenceTime: new Date().toISOString(),
   })
 
