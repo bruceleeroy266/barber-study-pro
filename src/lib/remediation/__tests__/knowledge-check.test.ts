@@ -335,7 +335,7 @@ describe('exclusion engine — the five Knowledge Check questions are legitimate
     )
     expect(exhausted.success).toBe(false)
     expect(exhausted.poolExhaustion?.isExhausted).toBe(true)
-    expect(exhausted.poolExhaustion?.totalQuestionsInPool).toBe(23) // 8 initial + 15 reserve
+    expect(exhausted.poolExhaustion?.totalQuestionsInPool).toBe(15) // formal reassessment pool is reserve-only
     expect(db.exhaustionRecords).toHaveLength(1)
     expect(db.exhaustionRecords[0].conceptId).toBe('ch3-ergonomics')
   })
