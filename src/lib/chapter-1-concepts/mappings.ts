@@ -7,7 +7,7 @@ const cb=(ids:string[],conceptFamilyId:Chapter1ConceptFamilyId):Chapter1ContentC
 export const chapter1ContentConceptMappings:readonly Chapter1ContentConceptMapping[]=[
  ...cb(['why-study','why-study-quote','ancient-origins','shaving-beard-culture'],'ch1-origins-culture'),
  ...cb(['bloodletting','medical-services','barber-pole-guild'],'ch1-barber-surgeons-symbols'),
- ...cb(['tool-evolution'],'ch1-tools-technology'),
+ ...cb(['shaving-beard-culture','tool-evolution'],'ch1-tools-technology'),
  ...cb(['why-licensing','historical-milestones'],'ch1-licensing-organizations'),
  ...cb(['modern-requirements','modern-standards','legacy-quote'],'ch1-modern-profession'),
 ]
@@ -24,8 +24,8 @@ export const chapter1QuizQuestionConceptMappings:readonly Chapter1QuizQuestionCo
  ...qq([1,2,7,10,11,13,16,17,20,23,27,28],'ch1-origins-culture'),
  ...qq([4,9,12,21,22,25,26,29],'ch1-barber-surgeons-symbols'),
  ...qq([3,6,14,19],'ch1-tools-technology'),
- ...qq([5,8,15,24],'ch1-licensing-organizations'),
- ...qq([18,30],'ch1-modern-profession'),
+ ...qq([5,8,24],'ch1-licensing-organizations'),
+ ...qq([15,18,30],'ch1-modern-profession'),
 ].sort((a,b)=>a.questionId.localeCompare(b.questionId))
 
 export const chapter1ReassessmentQuestionConceptMappings:readonly Chapter1QuizQuestionConceptMapping[]=[
