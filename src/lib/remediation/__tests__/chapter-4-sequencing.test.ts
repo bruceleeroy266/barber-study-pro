@@ -329,7 +329,7 @@ describe('exclusion engine — the Chapter 4 five Knowledge Check questions are 
     )
     expect(exhausted.success).toBe(false)
     expect(exhausted.poolExhaustion?.isExhausted).toBe(true)
-    expect(exhausted.poolExhaustion?.totalQuestionsInPool).toBe(21) // 6 initial + 15 reserve
+    expect(exhausted.poolExhaustion?.totalQuestionsInPool).toBe(15) // formal reassessment pool is reserve-only
     expect(db.exhaustionRecords).toHaveLength(1)
     expect(db.exhaustionRecords[0].conceptId).toBe('ch4-disinfection-sterilization')
   })
