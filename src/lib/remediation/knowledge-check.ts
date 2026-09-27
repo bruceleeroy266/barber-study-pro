@@ -32,7 +32,7 @@ import type { ChapterId } from '@/lib/reassessment/types'
  * the mapping/content/detection provider registries (fail-closed).
  */
 const KNOWLEDGE_CHECK_LENGTHS: Readonly<Record<string, number>> = {
-  'ch-2': 1,
+  'ch-2': 5,
   'ch-3': 5,
   'ch-4': 5,
   'ch-6': 5,
