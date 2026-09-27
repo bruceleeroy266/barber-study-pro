@@ -966,18 +966,15 @@ export const chapter9PremiumContent: ChapterContent = {
     {
       type: 'checklist',
       id: 'skin-health',
-      title: 'MAINTAINING HEALTHY SKIN — CLIENT EDUCATION',
+      title: 'SKIN HEALTH — CHAPTER REVIEW',
       items: [
-        { text: 'Balanced diet with adequate fats, carbohydrates, and proteins' },
-        { text: 'Vitamins A, C, D, and E support skin healing and health (consult physician before supplements)' },
-        { text: 'Adequate water intake maintains cell health and toxin elimination' },
-        { text: 'Sunscreen SPF 30+ on exposed skin daily' },
-        { text: 'Regular moisturizers appropriate for skin type' },
-        { text: 'Avoid excessive sun exposure, alcohol, and tobacco' },
-        { text: 'Regular self-exams for new or changing moles and growths' },
-        { text: 'Annual professional skin checkups, especially for high-risk clients' },
-        { text: 'AMERICAN CANCER SOCIETY RECOMMENDATION: Regular self-exams and professional checkups for skin cancer detection' },
-        { text: 'Many drugs are more effective when absorbed through the skin — be cautious about products you apply to clients' },
+        { text: 'Healthy skin supports protection, sensation, heat regulation, absorption, excretion, and secretion.' },
+        { text: 'Skin condition can be influenced by internal and external factors; Chapter 9 emphasizes observation rather than medical diagnosis.' },
+        { text: 'Protect the skin from avoidable service trauma and follow sanitation requirements during barbering services.' },
+        { text: 'Notice new, changing, open, inflamed, or potentially infectious findings before beginning direct service over the area.' },
+        { text: 'Use the ABCDE observation guide to recognize changes that may warrant qualified medical evaluation.' },
+        { text: 'Do not diagnose, prescribe medication, or medically treat skin conditions within barbering services.' },
+        { text: 'When a condition is unfamiliar, potentially contagious, changing, or outside barber scope, pause affected service and refer appropriately.' },
       ],
     },
 
@@ -993,17 +990,17 @@ export const chapter9PremiumContent: ChapterContent = {
         {
           id: 'mistakes',
           label: 'MISTAKES',
-          title: 'MISTAKES THAT COST POINTS ON THE EXAM',
+          title: 'COMMON CHAPTER 9 CONFUSIONS',
           bullets: [
             { label: 'CONFUSING EPIDERMIS AND DERMIS', description: 'Epidermis = outer, no blood vessels, 5 layers. Dermis = inner, 25× thicker, contains glands/vessels/nerves.' },
-            { label: 'THINKING BLACKHEADS ARE DIRT', description: 'Blackheads are oxidized sebum and melanin — NOT dirt. Telling clients to "wash better" is misinformation.' },
-            { label: 'IGNORING SKIN CONDITIONS', description: 'Performing services on contagious or infected skin is negligence. Always inspect before starting.' },
+            { label: 'THINKING BLACKHEADS ARE DIRT', description: 'The dark appearance is associated with exposed sebum that oxidizes at the surface; it is not simply dirt.' },
+            { label: 'IGNORING SERVICE-SAFETY SIGNS', description: 'Observe the planned service area before starting and avoid direct service over open, active contagious, or otherwise unsafe areas.' },
             { label: 'MISSING MELANOMA SIGNS', description: 'The ABCDE rule is important for chapter mastery. Asymmetry, Border, Color, Diameter, Evolution — memorize it.' },
             { label: 'CONFUSING PRIMARY AND SECONDARY LESIONS', description: 'Primary = original (bullae, papules, pustules). Secondary = evolved (crusts, scales, scars).' },
           ],
           facts: [
-            { text: 'REMEMBER: When in doubt, refer out. Your license and your client\'s health are more important than one appointment.' },
-            { text: 'REMEMBER: The skin is slightly acidic. This acidity inhibits bacterial growth — do not strip it with harsh alkaline products.' },
+            { text: 'REMEMBER: When a finding is unfamiliar or outside barber scope, protect the service area and recommend qualified evaluation.' },
+            { text: 'REMEMBER: Healthy skin is slightly acidic; Chapter 9 uses that as a protective-barrier concept rather than a product-prescription rule.' },
           ],
         },
         {
@@ -1018,7 +1015,7 @@ export const chapter9PremiumContent: ChapterContent = {
           ],
           facts: [
             { text: 'MNEMONIC: "The epidermis has NO blood — it is dead at the top and alive at the bottom, fed from below."' },
-            { text: 'MNEMONIC: "Basal cell = Best outcome (most common, least severe). Melanoma = Most deadly (least common, most dangerous)."' },
+            { text: 'MNEMONIC: Basal cell is the most common and least severe of the three discussed; melanoma is the least common and most dangerous.' },
           ],
         },
         {
