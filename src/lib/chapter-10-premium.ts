@@ -572,7 +572,7 @@ export const chapter10PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'alopecia-intro',
       title: 'UNDERSTANDING HAIR LOSS (ALOPECIA)',
-      content: 'Hair loss can be an emotionally sensitive client concern. Chapter 10 introduces patterns of abnormal hair loss so the barber can recognize terminology, communicate respectfully, and understand when referral is appropriate.\n\nThe barber's role is not to diagnose or treat medical hair loss. Focus on observable patterns, service implications, and professional referral boundaries.\n\nKEY STUDY POINT: Androgenic alopecia is presented as a common form of pattern hair loss associated with heredity, age, and hormonal factors.',
+      content: 'Hair loss can be an emotionally sensitive client concern. Chapter 10 introduces patterns of abnormal hair loss so the barber can recognize terminology, communicate respectfully, and understand when referral is appropriate.\n\nThe barber\'s role is not to diagnose or treat medical hair loss. Focus on observable patterns, service implications, and professional referral boundaries.\n\nKEY STUDY POINT: Androgenic alopecia is presented as a common form of pattern hair loss associated with heredity, age, and hormonal factors.',
       highlight: 'RECOGNIZE — EMPATHIZE — REFER',
     },
 
