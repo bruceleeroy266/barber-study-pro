@@ -828,7 +828,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
               <h3 className="text-sm font-semibold uppercase tracking-wide text-white">Strongest Concepts</h3>
               <div className="space-y-2 mt-3">
                 {chapter3Diagnostics.strongestConcepts.length > 0 ? chapter3Diagnostics.strongestConcepts.map((concept) => (
-                  <div key={concept.conceptId} className="rounded-lg border border-graphite bg-black p-3 flex items-center justify-between gap-3">
+                  <div key={concept.conceptFamilyId} className="rounded-lg border border-graphite bg-black p-3 flex items-center justify-between gap-3">
                     <div>
                       <p className="text-sm font-medium text-white">{concept.conceptName}</p>
                       <p className="text-xs text-silver mt-1 capitalize">{concept.confidence.replaceAll('_', ' ')} · {concept.observations} observations</p>
@@ -842,7 +842,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
               <h3 className="text-sm font-semibold uppercase tracking-wide text-white">Weakest Concepts</h3>
               <div className="space-y-2 mt-3">
                 {chapter3Diagnostics.weakestConcepts.length > 0 ? chapter3Diagnostics.weakestConcepts.map((concept) => (
-                  <div key={concept.conceptId} className="rounded-lg border border-graphite bg-black p-3 flex items-center justify-between gap-3">
+                  <div key={concept.conceptFamilyId} className="rounded-lg border border-graphite bg-black p-3 flex items-center justify-between gap-3">
                     <div>
                       <p className="text-sm font-medium text-white">{concept.conceptName}</p>
                       <p className="text-xs text-silver mt-1 capitalize">{concept.confidence.replaceAll('_', ' ')} · {concept.observations} observations · {concept.initialMisses} initial misses</p>
