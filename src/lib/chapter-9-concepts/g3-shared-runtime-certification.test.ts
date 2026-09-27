@@ -272,22 +272,25 @@ describe('G3-2 Chapter 9 end-to-end shared runtime certification', () => {
     )
     expect(reserve).toHaveLength(5)
 
-    const reassessmentAttempt = {
+    // The live shared submission route persists one quiz_attempt row per
+    // reassessment question. Diagnostics must aggregate all five rows from the
+    // same remediation cycle rather than treating the latest 1/1 row as the
+    // whole formal reassessment.
+    const reassessmentAttempts = reserve.map((question, index) => ({
       quiz_id: 'quiz-9',
       percentage: 100,
-      answers_json: Object.fromEntries(
-        reserve.map((question) => [question.id, question.correctAnswer]),
-      ),
-      completed_at: '2026-09-27T12:30:00.000Z',
+      answers_json: { [question.id]: question.correctAnswer },
+      completed_at: `2026-09-27T12:3${index}:00.000Z`,
       is_reassessment: true,
       target_concept_id: target,
-    }
+      remediation_cycle_id: 'cycle-ch9-primary-1',
+    }))
 
     const after = buildChapter9InstructorDiagnostics({
       studentId: 'student-ch9',
       completionPercent: 75,
       microCheckRows: [],
-      quizAttempts: [initialAttempt, reassessmentAttempt],
+      quizAttempts: [initialAttempt, ...reassessmentAttempts],
       referenceTime: '2026-09-27T13:00:00.000Z',
     })
 
