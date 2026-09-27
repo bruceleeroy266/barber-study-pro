@@ -15,6 +15,14 @@ export interface Chapter10QuizQuestionConceptMapping {
   conceptFamilyId: Chapter10ConceptFamilyId
 }
 
+export interface Chapter10MicroCheckPlacement {
+  id: `mc-10-${string}`
+  afterSectionId: string
+  conceptFamilyId: Chapter10ConceptFamilyId
+  plannedQuestionCount: number
+  purpose: string
+}
+
 export const chapter10ContentConceptMappings: readonly Chapter10ContentConceptMapping[] = [
   ...['hair-lab-welcome','why-trichology-matters','trichology-certification','decision-framework','scalp-analysis-rules','memory-aids','confusions','mnemonics','safety','board-exam-alerts','diagnostic-scenarios','action-prompts','hair-lab-pledge'].map((contentBlockId) => ({ contentBlockId, conceptFamilyId: 'ch10-service-safety-referral' as const })),
   ...['hair-structure-intro','root-structures','follicle','bulb','papilla','arrector','sebaceous','shaft-layers','cuticle','cortex','medulla'].map((contentBlockId) => ({ contentBlockId, conceptFamilyId: 'ch10-hair-anatomy-structure' as const })),
@@ -53,6 +61,18 @@ export const chapter10QuizQuestionConceptMappings: readonly Chapter10QuizQuestio
   ...[37,38,41,42,43,44,45,46,47,48,63,73].map((n) => ({ questionId: q(n), conceptFamilyId: 'ch10-hair-shaft-disorders' as const })),
   ...[4,5,31,32,33,36,39,70,75].map((n) => ({ questionId: q(n), conceptFamilyId: 'ch10-infectious-parasitic-scalp' as const })),
   ...[34,35,40,66,67].map((n) => ({ questionId: q(n), conceptFamilyId: 'ch10-service-safety-referral' as const })),
+]
+
+export const chapter10MicroCheckPlacements: readonly Chapter10MicroCheckPlacement[] = [
+  { id: 'mc-10-01', afterSectionId: 'medulla', conceptFamilyId: 'ch10-hair-anatomy-structure', plannedQuestionCount: 2, purpose: 'Check root/shaft structure discrimination before chemistry and service behavior.' },
+  { id: 'mc-10-02', afterSectionId: 'keratinization-cohns', conceptFamilyId: 'ch10-hair-chemistry-bonds', plannedQuestionCount: 2, purpose: 'Check peptide/side-bond reasoning and service-relevant bond behavior.' },
+  { id: 'mc-10-03', afterSectionId: 'growth-patterns', conceptFamilyId: 'ch10-pigment-wave-growth-patterns', plannedQuestionCount: 2, purpose: 'Check pigment, cross-section, and directional-growth pattern reasoning.' },
+  { id: 'mc-10-04', afterSectionId: 'growth-cycle', conceptFamilyId: 'ch10-growth-cycle-hair-types', plannedQuestionCount: 2, purpose: 'Check growth-cycle sequence, duration, and normal shedding distinctions.' },
+  { id: 'mc-10-05', afterSectionId: 'elasticity', conceptFamilyId: 'ch10-analysis-properties', plannedQuestionCount: 2, purpose: 'Check texture, density, porosity, elasticity, and pre-service analysis application.' },
+  { id: 'mc-10-06', afterSectionId: 'other', conceptFamilyId: 'ch10-alopecia-hair-loss', plannedQuestionCount: 2, purpose: 'Check source-supported alopecia terminology without diagnosis or treatment overreach.' },
+  { id: 'mc-10-07', afterSectionId: 'non-contagious-disorders', conceptFamilyId: 'ch10-hair-shaft-disorders', plannedQuestionCount: 2, purpose: 'Check hair-shaft disorder recognition from observable features.' },
+  { id: 'mc-10-08', afterSectionId: 'contagious-disorders', conceptFamilyId: 'ch10-infectious-parasitic-scalp', plannedQuestionCount: 2, purpose: 'Check contagious/parasitic recognition and sanitation-aware service decisions.' },
+  { id: 'mc-10-09', afterSectionId: 'scalp-analysis-rules', conceptFamilyId: 'ch10-service-safety-referral', plannedQuestionCount: 3, purpose: 'Check observation, service pause, sanitation, referral, and no-diagnosis boundaries.' },
 ]
 
 export function getChapter10ContentBlocksForConcept(conceptFamilyId: Chapter10ConceptFamilyId) {
