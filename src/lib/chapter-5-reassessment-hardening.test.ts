@@ -43,11 +43,15 @@ describe('C5 unseen remediation/reassessment reserve', () => {
     )
   })
 
-  it('registers a canonical Chapter 5 pool containing initial + reserve mappings', () => {
+  it('resolves all 140 Chapter 5 questions but exposes a reserve-only formal reassessment pool', () => {
     const provider = getCanonicalMappingProvider('ch-5')
     expect(provider.getAllQuestionIds()).toHaveLength(140)
-    expect(provider.getQuestionsForConcept('ch5-combs-brushes')).toContain('qq-5-051')
+    const formalPool = provider.getQuestionsForConcept('ch5-combs-brushes')
+    expect(formalPool).toHaveLength(15)
+    expect(formalPool).toContain('qq-5-051')
+    expect(formalPool).not.toContain('qq-5-001')
     expect(provider.isQuestionMappedToConcept('qq-5-051','ch5-combs-brushes')).toBe(true)
+    expect(provider.isQuestionMappedToConcept('qq-5-001','ch5-combs-brushes')).toBe(true)
   })
 
   it('selects a fresh reserve question after the initial quiz questions for that concept are historically excluded', async () => {
