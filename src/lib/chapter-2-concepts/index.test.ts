@@ -471,8 +471,8 @@ describe('Chapter 2 Concept Runtime Architecture', () => {
       // Flashcards: 65 total (64 active + 1 inactive)
       expect(chapter2FlashcardMappings.length).toBe(65)
 
-      // Quiz questions: 73 total (48 locked initial + 25 reassessment reserve)
-      expect(chapter2QuizQuestionMappings.length).toBe(73)
+      // Quiz questions: 173 total (48 locked initial + 125 reassessment reserve)
+      expect(chapter2QuizQuestionMappings.length).toBe(173)
     })
 
     it('reports correct concept counts', () => {
