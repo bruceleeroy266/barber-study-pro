@@ -218,7 +218,7 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'checklist',
       id: 'learning-objectives',
       title: '🎯 CHAPTER 9 LEARNING OBJECTIVES',
-      subtitle: 'What the state board expects you to know',
+      subtitle: 'What you should understand after completing Chapter 9',
       items: [
         { text: 'LO1: Describe the structure and divisions of the skin' },
         { text: 'LO2: List the functions of the skin' },
@@ -345,7 +345,7 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'melanin',
       title: 'MELANIN — THE PIGMENT OF PROTECTION',
-      content: 'Melanin is the pigment produced by MELANOCYTES in the basal layer (stratum germinativum) of the epidermis. It gives skin its color — more melanin means darker skin.\n\nBut melanin is not just about color. Its primary function is PROTECTION against UV damage. Melanin absorbs harmful ultraviolet rays before they can damage deeper skin layers and DNA.\n\nWhen skin is exposed to sunlight, melanocytes produce more melanin — this is what creates a tan. The tan is actually the skin\'s defense mechanism kicking into higher gear.\n\nSTUDY CHECK: Melanin is produced by melanocytes in the stratum germinativum. Its primary function is UV protection, not just coloration.',
+      content: 'Melanin is the pigment produced by MELANOCYTES in the basal layer (stratum germinativum) of the epidermis. It gives skin its color — more melanin means darker skin.\n\nBut melanin is not just about color. Its primary function is PROTECTION against UV damage. Melanin helps screen and protect the skin from ultraviolet rays.\n\nWhen skin is exposed to sunlight, melanocytes produce more melanin — this is what creates a tan. The tan is actually the skin\'s defense mechanism kicking into higher gear.\n\nSTUDY CHECK: Melanin is produced by melanocytes in the stratum germinativum. Its primary function is UV protection, not just coloration.',
       highlight: 'MELANIN = UV PROTECTION, NOT JUST COLOR',
     },
 
@@ -1041,7 +1041,7 @@ export const chapter9PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 29: BOARD EXAM CRITICAL ALERTS
+    // SECTION 29: KEY STUDY POINTS & COMMON CONFUSIONS
     // ═══════════════════════════════════════════
 
     // ─── 29A: Skin Structure Must-Knows ───
@@ -1068,12 +1068,12 @@ export const chapter9PremiumContent: ChapterContent = {
       subtitle: 'Know what each gland does and what it produces',
       features: [
         { icon: 'Droplet', title: 'SEBACEOUS GLANDS', description: 'Produce oil (sebum). Connected to hair follicles. Most active on face and scalp.' },
-        { icon: 'Wind', title: 'SUDORIFEROUS GLANDS', description: 'Produce sweat. Regulate body temperature. 2–4 million in the body.' },
+        { icon: 'Wind', title: 'SUDORIFEROUS GLANDS', description: 'Produce sweat and support heat regulation.' },
         { icon: 'Hand', title: 'S — SENSATION', description: 'Skin detects touch, pressure, pain, heat, and cold.' },
-        { icon: 'Thermometer', title: 'H — HEAT REGULATION', description: 'Maintains ~98.6°F through blood flow and sweat evaporation.' },
+        { icon: 'Thermometer', title: 'H — HEAT REGULATION', description: 'Helps regulate body temperature through blood flow and sweat evaporation.' },
         { icon: 'Droplets', title: 'A — ABSORPTION', description: 'Limited beyond stratum corneum. Depends on thickness and concentration.' },
         { icon: 'Shield', title: 'P — PROTECTION', description: 'Barrier against pathogens, injury, and chemicals. Sebum waterproofs the surface.' },
-        { icon: 'ArrowUp', title: 'E — EXCRETION', description: 'Perspiration removes salts, urea, and toxins.' },
+        { icon: 'ArrowUp', title: 'E — EXCRETION', description: 'Perspiration carries small amounts of water, salts, and waste to the surface.' },
         { icon: 'Sparkles', title: 'S — SECRETION', description: 'Sebum lubricates skin and hair, maintaining moisture balance.' },
       ],
     },
@@ -1123,7 +1123,7 @@ export const chapter9PremiumContent: ChapterContent = {
         {
           id: 'disorders',
           label: 'DISORDERS',
-          title: 'COMMON DISORDERS ON THE EXAM',
+          title: 'COMMON DISORDERS — RECOGNITION REVIEW',
           bullets: [
             { label: 'ACNE', description: 'Grades I–IV. Caused by Propionibacterium acnes in clogged follicles.' },
             { label: 'ROSACEA', description: 'Chronic flushing, redness. Triggers: sun, spicy food, alcohol, stress.' },
@@ -1134,7 +1134,7 @@ export const chapter9PremiumContent: ChapterContent = {
           ],
           facts: [
             { text: 'STUDY CHECK: Blackheads are oxidized sebum — NOT dirt.' },
-            { text: 'STUDY CHECK: Sebaceous cyst and steatoma are the SAME condition.' },
+            { text: 'STUDY CHECK: A sebaceous cyst is sebum-related; a steatoma is a subcutaneous fatty tumor. Do not treat the terms as interchangeable.' },
           ],
         },
       ],
@@ -1175,7 +1175,7 @@ export const chapter9PremiumContent: ChapterContent = {
       ],
     },
 
-    // ─── 29F: State Board Traps ───
+    // ─── 29F: Common Confusions ───
     {
       type: 'tabbed',
       id: 'board-exam-traps',
@@ -1189,7 +1189,7 @@ export const chapter9PremiumContent: ChapterContent = {
           bullets: [
             { label: 'EPIDERMIS HAS NO BLOOD VESSELS', description: 'Review questions ask what the epidermis contains. Blood vessels are NOT on that list.' },
             { label: 'DERMIS IS 25× THICKER', description: 'Not 2×. Not 5×. Twenty-five times thicker. Memorize the number.' },
-            { label: 'HALF THE BODY\'S BLOOD SUPPLY', description: 'Approximately 50% of blood flows through skin. This demonstrates it is an organ.' },
+            { label: 'BLOOD & LYMPH SUPPORT', description: 'Blood and lymph support nourishment, transport, growth, and repair in deeper skin tissues. Do not reduce this concept to an unsupported percentage-memory target.' },
           ],
           facts: [
             { text: 'Trap: "The epidermis receives nutrients directly from blood vessels." FALSE. It gets nutrients by diffusion from the dermis.' },
@@ -1201,7 +1201,7 @@ export const chapter9PremiumContent: ChapterContent = {
           title: 'LESION TRAPS',
           bullets: [
             { label: 'PRIMARY vs SECONDARY', description: 'Primary = original. Secondary = evolved. Do not confuse them.' },
-            { label: 'BULLA vs VESICLE', description: 'Bulla = LARGE blister. Vesicle = SMALL blister. Size is the only difference.' },
+            { label: 'BULLA vs VESICLE', description: 'Both are fluid-filled primary lesions; a bulla is larger, while a vesicle is smaller.' },
             { label: 'MACULE = FLAT', description: 'If you can feel it, it is not a macule. Macules are non-palpable discolorations.' },
           ],
           facts: [
@@ -1213,9 +1213,9 @@ export const chapter9PremiumContent: ChapterContent = {
           label: 'SAFETY TRAPS',
           title: 'SAFETY TRAPS',
           bullets: [
-            { label: 'BLACKHEADS ARE NOT DIRT', description: 'The dark color is oxidized sebum and melanin. Hygiene is not the issue.' },
-            { label: 'CALLUSES ARE PROTECTIVE', description: 'Removing calluses exposes underlying tissue to injury. Do not remove them.' },
-            { label: 'HERPES IS CONTAGIOUS', description: 'Even before blisters appear (prodrome), the virus can spread. Postpone facial services.' },
+            { label: 'BLACKHEADS ARE NOT DIRT', description: 'The dark appearance is associated with exposed sebum that oxidizes at the surface; it is not simply dirt.' },
+            { label: 'CALLUSES ARE PROTECTIVE', description: 'Calluses form from repeated pressure or friction and tend to return if the cause continues.' },
+            { label: 'HERPES IS CONTAGIOUS', description: 'Active herpes lesions are contagious; avoid direct service over the affected area and follow sanitation and referral guidance.' },
           ],
           facts: [
             { text: 'Trap: "A waiver protects you from liability for shaving over a contagious condition." FALSE. Waivers do not override sanitation standards.' },
@@ -1237,7 +1237,7 @@ export const chapter9PremiumContent: ChapterContent = {
         {
           situation: 'A regular client sits in your chair. You notice a new dark spot on their scalp that was not there two weeks ago. It is irregular in shape, has multiple colors, and is larger than a pencil eraser. The client says it does not itch or hurt. What do you do?',
           options: [
-            { letter: 'A', text: 'Shave around it carefully and continue the service', feedback: '❌ INCORRECT. Shaving near a suspicious lesion could irritate it or mask changes. More importantly, you have identified potential melanoma warning signs — this requires immediate professional attention.' },
+            { letter: 'A', text: 'Shave around it carefully and continue the service', feedback: '❌ INCORRECT. A changing lesion with multiple ABCDE warning signs should not be treated as a normal service area. Avoid unsafe direct service and recommend qualified medical evaluation without diagnosing.' },
             { letter: 'B', text: 'Politely describe what you observed, explain that the ABCDE guide identifies changes worth medical attention, and recommend evaluation by a qualified medical professional', feedback: '✅ CORRECT. You are not diagnosing — you are observing and referring. Clear communication can support timely medical evaluation. Document the conversation according to school or shop policy.' },
             { letter: 'C', text: 'Say nothing to avoid making the client uncomfortable', feedback: '❌ INCORRECT. Concerning ABCDE changes should be communicated without naming a diagnosis. A scope-appropriate referral supports client safety.' },
             { letter: 'D', text: 'Tell the client it is definitely melanoma and prescribe the next medical step', feedback: '❌ INCORRECT. You are a barber, not a doctor. Never diagnose. Your role is to observe, express concern, and refer to a qualified medical professional.' },
@@ -1247,9 +1247,9 @@ export const chapter9PremiumContent: ChapterContent = {
         {
           situation: 'A new client requests a hot towel shave. During the consultation, you notice clusters of small fluid-filled blisters around their mouth and chin. They mention they have been feeling run down lately. What do you do?',
           options: [
-            { letter: 'A', text: 'Proceed with the shave but avoid the blistered areas', feedback: '❌ INCORRECT. Herpes simplex (cold sores) is highly contagious, especially during active outbreaks. The virus can spread to other areas of the face and to you. Facial services must be postponed.' },
+            { letter: 'A', text: 'Proceed with the shave but avoid the blistered areas', feedback: '❌ INCORRECT. Active herpes lesions are contagious. Avoid direct service over the affected area, follow sanitation requirements, and recommend medical guidance as appropriate.' },
             { letter: 'B', text: 'Explain that the affected facial service should be paused during an active outbreak and rescheduled after the lesions have healed and service is appropriate', feedback: '✅ CORRECT. Active herpes lesions create a cross-contamination risk. Pause the affected service, follow sanitation requirements, and recommend medical guidance as appropriate.' },
-            { letter: 'C', text: 'Perform the shave but wear gloves for extra protection', feedback: '❌ INCORRECT. Gloves do not prevent herpes transmission in this context. The virus spreads by contact with fluid from blisters. No facial service should be performed during an active outbreak.' },
+            { letter: 'C', text: 'Perform the shave but wear gloves for extra protection', feedback: '❌ INCORRECT. Gloves do not make direct service over an active contagious lesion appropriate. Pause the affected service and follow sanitation guidance.' },
             { letter: 'D', text: 'Ask the client to sign a waiver and proceed with the service', feedback: '❌ INCORRECT. A waiver does not make an unsafe service appropriate. Pause the service and follow your school and state sanitation requirements.' },
           ],
           correctAnswer: 'B',
