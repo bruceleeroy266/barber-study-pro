@@ -37,7 +37,7 @@ export async function loadChapter5MicroCheckAttempts(
     .order('answered_at', { ascending: true })
 
   if (error) {
-    console.error('[C4 micro-check] Failed to load attempts:', error.message)
+    console.error('[C5 micro-check] Failed to load attempts:', error.message)
     return []
   }
 
