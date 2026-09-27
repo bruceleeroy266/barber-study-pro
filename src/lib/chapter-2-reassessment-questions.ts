@@ -1,9 +1,9 @@
 // Chapter 2 Reassessment Reserve Questions
-// Life Skills — 25 reserve questions (one per active concept)
+// Life Skills — 125 reserve questions (five per active concept after G5-2)
 //
 // POST-LOCK ADDITIVE (founder-approved Option A, 2026-09-09):
-//   48 locked initial questions + 25 reserve = 73 combined capacity.
-//   These questions are the reassessment reserve. They are NEVER served by
+//   48 locked initial questions + 125 reserve = 173 combined capacity.
+//   The original 25-question reserve is preserved; G5-2 adds 100 source-audited items.\n//   These questions are the reassessment reserve. They are NEVER served by
 //   the initial chapter quiz (which reads chapter-2-premium-quiz only).
 //   They become available to a student ONLY through the 6C reassessment path,
 //   after the historical-exclusion engine has ruled out previously seen items.
@@ -18,8 +18,9 @@
 //   paraphrase of any locked question.
 
 import { QuizQuestion } from '@/types'
+import { chapter2G5ReassessmentQuestions } from './chapter-2-reassessment-g5'
 
-export const chapter2ReassessmentQuestions: QuizQuestion[] = [
+const chapter2LegacyReassessmentQuestions: QuizQuestion[] = [
   // ═══════════════════════════════════════════════════════════
   // RESERVE — formerly single-item concepts (first priority)
   // ═══════════════════════════════════════════════════════════
@@ -351,4 +352,9 @@ export const chapter2ReassessmentQuestions: QuizQuestion[] = [
     difficulty: 'medium',
     order_index: 75,
   },
+]
+
+export const chapter2ReassessmentQuestions: QuizQuestion[] = [
+  ...chapter2LegacyReassessmentQuestions,
+  ...chapter2G5ReassessmentQuestions,
 ]

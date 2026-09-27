@@ -25,6 +25,10 @@ import type { QuizAttempt } from '@/types'
 import type { ChapterId, ConceptId } from '@/lib/reassessment/types'
 import type { ConceptDetectionResult } from '@/lib/concept-detection/engine'
 
+import { detectAllConceptGaps as detectAllChapter1ConceptGaps } from '@/lib/chapter-1-concepts/detection'
+import { chapter1ConceptFamilies } from '@/lib/chapter-1-concepts/concepts'
+import { chapter1ContentConceptMappings, chapter1FlashcardConceptMappings } from '@/lib/chapter-1-concepts/mappings'
+
 import { detectAllConceptGaps as detectAllChapter2ConceptGaps } from '@/lib/chapter-2-concepts/detection'
 import { chapter2Concepts } from '@/lib/chapter-2-concepts/concepts'
 import {
@@ -54,9 +58,17 @@ import { detectAllConceptGaps as detectAllChapter6ConceptGaps } from '@/lib/chap
 import { chapter6ConceptFamilies } from '@/lib/chapter-6-concepts/concepts'
 import { chapter6ContentConceptMappings, chapter6FlashcardConceptMappings } from '@/lib/chapter-6-concepts/mappings'
 
+import { detectAllConceptGaps as detectAllChapter7ConceptGaps } from '@/lib/chapter-7-concepts/detection'
+import { chapter7ConceptFamilies } from '@/lib/chapter-7-concepts/concepts'
+import { chapter7ContentConceptMappings, chapter7FlashcardConceptMappings } from '@/lib/chapter-7-concepts/mappings'
+
 import { detectAllConceptGaps as detectAllChapter8ConceptGaps } from '@/lib/chapter-8-concepts/detection'
 import { chapter8ConceptFamilies } from '@/lib/chapter-8-concepts/concepts'
 import { chapter8ContentConceptMappings, chapter8FlashcardConceptMappings } from '@/lib/chapter-8-concepts/mappings'
+
+import { detectAllConceptGaps as detectAllChapter9ConceptGaps } from '@/lib/chapter-9-concepts/detection'
+import { chapter9ConceptFamilies } from '@/lib/chapter-9-concepts/concepts'
+import { chapter9ContentConceptMappings, chapter9FlashcardConceptMappings } from '@/lib/chapter-9-concepts/mappings'
 
 // ───────────────────────────────────────────────
 // Provider Contract
@@ -127,6 +139,34 @@ function buildAssignments(
   }
 
   return assignments
+}
+
+// ───────────────────────────────────────────────
+// Chapter 1 Provider (G6)
+// ───────────────────────────────────────────────
+
+const chapter1ContentMappingsProjected = chapter1ContentConceptMappings.map((m) => ({
+  contentBlockId: m.contentBlockId,
+  conceptId: m.conceptFamilyId as string,
+}))
+const chapter1FlashcardMappingsProjected = chapter1FlashcardConceptMappings.map((m) => ({
+  flashcardId: m.flashcardId as string,
+  conceptId: m.conceptFamilyId as string,
+}))
+
+const chapter1Provider: ChapterDetectionProvider = {
+  chapterId: 'ch-1',
+  detectAll(attempts) {
+    const out = new Map<ConceptId, ConceptDetectionResult>()
+    for (const [conceptId, result] of detectAllChapter1ConceptGaps(attempts)) out.set(conceptId, result)
+    return out
+  },
+  getConceptName(conceptId) {
+    return chapter1ConceptFamilies.find((c) => c.id === conceptId)?.name ?? conceptId
+  },
+  buildAssignmentsForConcept(conceptId) {
+    return buildAssignments(conceptId, chapter1ContentMappingsProjected, chapter1FlashcardMappingsProjected)
+  },
 }
 
 // ───────────────────────────────────────────────
@@ -308,6 +348,34 @@ const chapter6Provider: ChapterDetectionProvider = {
 
 
 // ───────────────────────────────────────────────
+// Chapter 7 Provider (G6 registration repair)
+// ───────────────────────────────────────────────
+
+const chapter7ContentMappingsProjected = chapter7ContentConceptMappings.map((m) => ({
+  contentBlockId: m.contentBlockId,
+  conceptId: m.conceptFamilyId as string,
+}))
+const chapter7FlashcardMappingsProjected = chapter7FlashcardConceptMappings.map((m) => ({
+  flashcardId: m.flashcardId as string,
+  conceptId: m.conceptFamilyId as string,
+}))
+
+const chapter7Provider: ChapterDetectionProvider = {
+  chapterId: 'ch-7',
+  detectAll(attempts) {
+    const out = new Map<ConceptId, ConceptDetectionResult>()
+    for (const [conceptId, result] of detectAllChapter7ConceptGaps(attempts)) out.set(conceptId, result)
+    return out
+  },
+  getConceptName(conceptId) {
+    return chapter7ConceptFamilies.find((c) => c.id === conceptId)?.name ?? conceptId
+  },
+  buildAssignmentsForConcept(conceptId) {
+    return buildAssignments(conceptId, chapter7ContentMappingsProjected, chapter7FlashcardMappingsProjected)
+  },
+}
+
+// ───────────────────────────────────────────────
 // Chapter 8 Provider (C8-7)
 // ───────────────────────────────────────────────
 
@@ -344,17 +412,59 @@ const chapter8Provider: ChapterDetectionProvider = {
   },
 }
 
+
+
+// ───────────────────────────────────────────────
+// Chapter 9 Provider (G3)
+// ───────────────────────────────────────────────
+
+const chapter9ContentMappingsProjected = chapter9ContentConceptMappings.map((m) => ({
+  contentBlockId: m.contentBlockId,
+  conceptId: m.conceptFamilyId as string,
+}))
+const chapter9FlashcardMappingsProjected = chapter9FlashcardConceptMappings.map((m) => ({
+  flashcardId: m.flashcardId,
+  conceptId: m.conceptFamilyId as string,
+}))
+
+const chapter9Provider: ChapterDetectionProvider = {
+  chapterId: 'ch-9',
+
+  detectAll(attempts) {
+    const out = new Map<ConceptId, ConceptDetectionResult>()
+    for (const [conceptId, result] of detectAllChapter9ConceptGaps(attempts)) {
+      out.set(conceptId, result)
+    }
+    return out
+  },
+
+  getConceptName(conceptId) {
+    return chapter9ConceptFamilies.find((c) => c.id === conceptId)?.name ?? conceptId
+  },
+
+  buildAssignmentsForConcept(conceptId) {
+    return buildAssignments(
+      conceptId,
+      chapter9ContentMappingsProjected,
+      chapter9FlashcardMappingsProjected,
+    )
+  },
+}
+
 // ───────────────────────────────────────────────
 // Registry
 // ───────────────────────────────────────────────
 
 const providers = new Map<ChapterId, ChapterDetectionProvider>([
+  ['ch-1', chapter1Provider],
   ['ch-2', chapter2Provider],
   ['ch-3', chapter3Provider],
   ['ch-4', chapter4Provider],
   ['ch-5', chapter5Provider],
   ['ch-6', chapter6Provider],
+  ['ch-7', chapter7Provider],
   ['ch-8', chapter8Provider],
+  ['ch-9', chapter9Provider],
 ])
 
 /**

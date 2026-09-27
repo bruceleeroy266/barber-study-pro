@@ -23,9 +23,45 @@ import AppearanceChecklist from './AppearanceChecklist'
 import ProTip from './ProTip'
 import ReflectionBlock from './ReflectionBlock'
 import HtmlContentBlock from './HtmlContentBlock'
+import Chapter1MicroCheckCard from './Chapter1MicroCheckCard'
+import Chapter2MicroCheckCard from './Chapter2MicroCheckCard'
+import Chapter3MicroCheckCard from './Chapter3MicroCheckCard'
+import Chapter4MicroCheckCard from './Chapter4MicroCheckCard'
+import Chapter5MicroCheckCard from './Chapter5MicroCheckCard'
+import Chapter6MicroCheckCard from './Chapter6MicroCheckCard'
 import Chapter7MicroCheckCard from './Chapter7MicroCheckCard'
 import Chapter8MicroCheckCard from './Chapter8MicroCheckCard'
 import Chapter9MicroCheckCard from './Chapter9MicroCheckCard'
+import { chapter1MicroChecks } from '@/lib/chapter-1-concepts/micro-checks'
+import {
+  loadChapter1MicroCheckAttempts,
+  type Chapter1MicroCheckAttemptRow,
+} from '@/lib/chapter-1-concepts/micro-check-persistence'
+import { chapter2MicroChecks } from '@/lib/chapter-2-concepts/micro-checks'
+import { chapter3MicroChecks } from '@/lib/chapter-3-concepts/micro-checks'
+import { chapter4MicroChecks } from '@/lib/chapter-4-concepts/micro-checks'
+import { chapter5MicroChecks } from '@/lib/chapter-5-concepts/micro-checks'
+import { chapter6MicroChecks } from '@/lib/chapter-6-concepts/micro-checks'
+import {
+  loadChapter6MicroCheckAttempts,
+  type Chapter6MicroCheckAttemptRow,
+} from '@/lib/chapter-6-concepts/micro-check-persistence'
+import {
+  loadChapter5MicroCheckAttempts,
+  type Chapter5MicroCheckAttemptRow,
+} from '@/lib/chapter-5-concepts/micro-check-persistence'
+import {
+  loadChapter4MicroCheckAttempts,
+  type Chapter4MicroCheckAttemptRow,
+} from '@/lib/chapter-4-concepts/micro-check-persistence'
+import {
+  loadChapter3MicroCheckAttempts,
+  type Chapter3MicroCheckAttemptRow,
+} from '@/lib/chapter-3-concepts/micro-check-persistence'
+import {
+  loadChapter2MicroCheckAttempts,
+  type Chapter2MicroCheckAttemptRow,
+} from '@/lib/chapter-2-concepts/micro-check-persistence'
 import { chapter7MicroChecks } from '@/lib/chapter-7-concepts/micro-checks'
 import {
   loadChapter7MicroCheckAttempts,
@@ -113,9 +149,115 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
   })
   const [knowledgeChecksSaved, setKnowledgeChecksSaved] = useState(knowledgeChecksCompleted)
 
+  const [chapter1MicroCheckAttempts, setChapter1MicroCheckAttempts] = useState<Chapter1MicroCheckAttemptRow[]>([])
+  const [chapter2MicroCheckAttempts, setChapter2MicroCheckAttempts] = useState<Chapter2MicroCheckAttemptRow[]>([])
+  const [chapter3MicroCheckAttempts, setChapter3MicroCheckAttempts] = useState<Chapter3MicroCheckAttemptRow[]>([])
+  const [chapter4MicroCheckAttempts, setChapter4MicroCheckAttempts] = useState<Chapter4MicroCheckAttemptRow[]>([])
+  const [chapter5MicroCheckAttempts, setChapter5MicroCheckAttempts] = useState<Chapter5MicroCheckAttemptRow[]>([])
+  const [chapter6MicroCheckAttempts, setChapter6MicroCheckAttempts] = useState<Chapter6MicroCheckAttemptRow[]>([])
   const [chapter7MicroCheckAttempts, setChapter7MicroCheckAttempts] = useState<Chapter7MicroCheckAttemptRow[]>([])
   const [chapter8MicroCheckAttempts, setChapter8MicroCheckAttempts] = useState<Chapter8MicroCheckAttemptRow[]>([])
   const [chapter9MicroCheckAttempts, setChapter9MicroCheckAttempts] = useState<Chapter9MicroCheckAttemptRow[]>([])
+
+  useEffect(() => {
+    if (chapterId !== 'ch-1' || !userId) return
+    let cancelled = false
+    void loadChapter1MicroCheckAttempts(userId).then((rows) => {
+      if (!cancelled) setChapter1MicroCheckAttempts(rows)
+    })
+    return () => { cancelled = true }
+  }, [chapterId, userId])
+
+  const handleChapter1MicroCheckPersisted = useCallback((row: Chapter1MicroCheckAttemptRow) => {
+    setChapter1MicroCheckAttempts((previous) => {
+      if (previous.some((attempt) => attempt.question_id === row.question_id)) return previous
+      return [...previous, row]
+    })
+  }, [])
+
+  useEffect(() => {
+    if (chapterId !== 'ch-2' || !userId) return
+
+    let cancelled = false
+    void loadChapter2MicroCheckAttempts(userId).then((rows) => {
+      if (!cancelled) setChapter2MicroCheckAttempts(rows)
+    })
+
+    return () => {
+      cancelled = true
+    }
+  }, [chapterId, userId])
+
+  const handleChapter2MicroCheckPersisted = useCallback((row: Chapter2MicroCheckAttemptRow) => {
+    setChapter2MicroCheckAttempts((previous) => {
+      if (previous.some((attempt) => attempt.question_id === row.question_id)) return previous
+      return [...previous, row]
+    })
+  }, [])
+
+  useEffect(() => {
+    if (chapterId !== 'ch-3' || !userId) return
+    let cancelled = false
+    void loadChapter3MicroCheckAttempts(userId).then((rows) => {
+      if (!cancelled) setChapter3MicroCheckAttempts(rows)
+    })
+    return () => { cancelled = true }
+  }, [chapterId, userId])
+
+  const handleChapter3MicroCheckPersisted = useCallback((row: Chapter3MicroCheckAttemptRow) => {
+    setChapter3MicroCheckAttempts((previous) => {
+      if (previous.some((attempt) => attempt.question_id === row.question_id)) return previous
+      return [...previous, row]
+    })
+  }, [])
+
+  useEffect(() => {
+    if (chapterId !== 'ch-4' || !userId) return
+    let cancelled = false
+    void loadChapter4MicroCheckAttempts(userId).then((rows) => {
+      if (!cancelled) setChapter4MicroCheckAttempts(rows)
+    })
+    return () => { cancelled = true }
+  }, [chapterId, userId])
+
+  const handleChapter4MicroCheckPersisted = useCallback((row: Chapter4MicroCheckAttemptRow) => {
+    setChapter4MicroCheckAttempts((previous) => {
+      if (previous.some((attempt) => attempt.question_id === row.question_id)) return previous
+      return [...previous, row]
+    })
+  }, [])
+
+  useEffect(() => {
+    if (chapterId !== 'ch-5' || !userId) return
+    let cancelled = false
+    void loadChapter5MicroCheckAttempts(userId).then((rows) => {
+      if (!cancelled) setChapter5MicroCheckAttempts(rows)
+    })
+    return () => { cancelled = true }
+  }, [chapterId, userId])
+
+  const handleChapter5MicroCheckPersisted = useCallback((row: Chapter5MicroCheckAttemptRow) => {
+    setChapter5MicroCheckAttempts((previous) => {
+      if (previous.some((attempt) => attempt.question_id === row.question_id)) return previous
+      return [...previous, row]
+    })
+  }, [])
+
+  useEffect(() => {
+    if (chapterId !== 'ch-6' || !userId) return
+    let cancelled = false
+    void loadChapter6MicroCheckAttempts(userId).then((rows) => {
+      if (!cancelled) setChapter6MicroCheckAttempts(rows)
+    })
+    return () => { cancelled = true }
+  }, [chapterId, userId])
+
+  const handleChapter6MicroCheckPersisted = useCallback((row: Chapter6MicroCheckAttemptRow) => {
+    setChapter6MicroCheckAttempts((previous) => {
+      if (previous.some((attempt) => attempt.question_id === row.question_id)) return previous
+      return [...previous, row]
+    })
+  }, [])
 
   useEffect(() => {
     if (chapterId !== 'ch-7' || !userId) return
@@ -406,6 +548,24 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
   return (
     <div className="space-y-10">
       {sections.map((section) => {
+        const chapter1MicroCheck = chapterId === 'ch-1'
+          ? chapter1MicroChecks.find((check) => check.afterSectionId === section.id)
+          : undefined
+        const chapter2MicroCheck = chapterId === 'ch-2'
+          ? chapter2MicroChecks.find((check) => check.afterSectionId === section.id)
+          : undefined
+        const chapter3MicroCheck = chapterId === 'ch-3'
+          ? chapter3MicroChecks.find((check) => check.afterSectionId === section.id)
+          : undefined
+        const chapter4MicroCheck = chapterId === 'ch-4'
+          ? chapter4MicroChecks.find((check) => check.afterSectionId === section.id)
+          : undefined
+        const chapter5MicroCheck = chapterId === 'ch-5'
+          ? chapter5MicroChecks.find((check) => check.afterSectionId === section.id)
+          : undefined
+        const chapter6MicroCheck = chapterId === 'ch-6'
+          ? chapter6MicroChecks.find((check) => check.afterSectionId === section.id)
+          : undefined
         const chapter7MicroCheck = chapterId === 'ch-7'
           ? chapter7MicroChecks.find((check) => check.afterSectionId === section.id)
           : undefined
@@ -419,6 +579,60 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
         return (
           <Fragment key={section.id}>
             {renderSection(section)}
+            {chapter1MicroCheck && userId && (
+              <Chapter1MicroCheckCard
+                check={chapter1MicroCheck}
+                userId={userId}
+                theme={t}
+                attempts={chapter1MicroCheckAttempts.filter((attempt) => attempt.check_id === chapter1MicroCheck.id)}
+                onAttemptPersisted={handleChapter1MicroCheckPersisted}
+              />
+            )}
+            {chapter2MicroCheck && userId && (
+              <Chapter2MicroCheckCard
+                check={chapter2MicroCheck}
+                userId={userId}
+                theme={t}
+                attempts={chapter2MicroCheckAttempts.filter((attempt) => attempt.check_id === chapter2MicroCheck.id)}
+                onAttemptPersisted={handleChapter2MicroCheckPersisted}
+              />
+            )}
+            {chapter3MicroCheck && userId && (
+              <Chapter3MicroCheckCard
+                check={chapter3MicroCheck}
+                userId={userId}
+                theme={t}
+                attempts={chapter3MicroCheckAttempts.filter((attempt) => attempt.check_id === chapter3MicroCheck.id)}
+                onAttemptPersisted={handleChapter3MicroCheckPersisted}
+              />
+            )}
+            {chapter4MicroCheck && userId && (
+              <Chapter4MicroCheckCard
+                check={chapter4MicroCheck}
+                userId={userId}
+                theme={t}
+                attempts={chapter4MicroCheckAttempts.filter((attempt) => attempt.check_id === chapter4MicroCheck.id)}
+                onAttemptPersisted={handleChapter4MicroCheckPersisted}
+              />
+            )}
+            {chapter5MicroCheck && userId && (
+              <Chapter5MicroCheckCard
+                check={chapter5MicroCheck}
+                userId={userId}
+                theme={t}
+                attempts={chapter5MicroCheckAttempts.filter((attempt) => attempt.check_id === chapter5MicroCheck.id)}
+                onAttemptPersisted={handleChapter5MicroCheckPersisted}
+              />
+            )}
+            {chapter6MicroCheck && userId && (
+              <Chapter6MicroCheckCard
+                check={chapter6MicroCheck}
+                userId={userId}
+                theme={t}
+                attempts={chapter6MicroCheckAttempts.filter((attempt) => attempt.check_id === chapter6MicroCheck.id)}
+                onAttemptPersisted={handleChapter6MicroCheckPersisted}
+              />
+            )}
             {chapter7MicroCheck && userId && (
               <Chapter7MicroCheckCard
                 check={chapter7MicroCheck}

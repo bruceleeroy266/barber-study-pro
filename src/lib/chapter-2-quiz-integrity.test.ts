@@ -32,8 +32,8 @@ const fileSource = readFileSync(
 )
 
 // Initial-bank scope: the locked 48. Mapping resolution additionally unions
-// the 25-question reassessment reserve (post-lock Option A) so every mapping
-// in the combined 73-entry table resolves to a real question.
+// the 125-question reassessment reserve (post-lock Option A) so every mapping
+// in the combined 173-entry table resolves to a real question.
 const byId = new Map(
   [...questions, ...chapter2ReassessmentQuestions].map((q) => [q.id, q]),
 )
@@ -123,7 +123,7 @@ describe('Chapter 2 quiz — canonical mapping integrity', () => {
       expect(conceptId, `${q.id} unmapped`).toBeDefined()
       expect(ACTIVE_CONCEPT_IDS).toContain(conceptId)
     }
-    expect(chapter2QuizQuestionMappings).toHaveLength(73)
+    expect(chapter2QuizQuestionMappings).toHaveLength(173)
     for (const m of chapter2QuizQuestionMappings) {
       expect(byId.has(m.questionId)).toBe(true)
     }

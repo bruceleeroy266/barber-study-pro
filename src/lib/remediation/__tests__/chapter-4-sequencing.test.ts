@@ -81,9 +81,9 @@ class MockKnowledgeCheckDb implements IKnowledgeCheckDbClient {
 // ───────────────────────────────────────────────
 
 describe('Chapter 4 knowledge-check length', () => {
-  it('ch-4 uses the five-question Knowledge Check; unsupported chapters fall back to 1', () => {
+  it('ch-4 and ch-5 use five-question Knowledge Checks', () => {
     expect(getKnowledgeCheckLength('ch-4')).toBe(5)
-    expect(getKnowledgeCheckLength('ch-5')).toBe(1)
+    expect(getKnowledgeCheckLength('ch-5')).toBe(5)
   })
 })
 
@@ -329,7 +329,7 @@ describe('exclusion engine — the Chapter 4 five Knowledge Check questions are 
     )
     expect(exhausted.success).toBe(false)
     expect(exhausted.poolExhaustion?.isExhausted).toBe(true)
-    expect(exhausted.poolExhaustion?.totalQuestionsInPool).toBe(21) // 6 initial + 15 reserve
+    expect(exhausted.poolExhaustion?.totalQuestionsInPool).toBe(15) // formal reassessment pool is reserve-only
     expect(db.exhaustionRecords).toHaveLength(1)
     expect(db.exhaustionRecords[0].conceptId).toBe('ch4-disinfection-sterilization')
   })

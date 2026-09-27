@@ -60,8 +60,8 @@ describe('Chapter 2 student-serving integration', () => {
     }
   })
 
-  it('keeps all 25 reassessment reserve questions resolvable through the live remediation lookup', () => {
-    expect(chapter2ReassessmentQuestions).toHaveLength(25)
+  it('keeps all 125 reassessment reserve questions resolvable through the live remediation lookup', () => {
+    expect(chapter2ReassessmentQuestions).toHaveLength(125)
 
     for (const reserveQuestion of chapter2ReassessmentQuestions) {
       const resolved = getQuizQuestionById(reserveQuestion.id)

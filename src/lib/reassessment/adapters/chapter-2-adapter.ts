@@ -9,6 +9,7 @@
  */
 
 import { chapter2QuizQuestionMappings } from '@/lib/chapter-2-concepts/mappings'
+import { chapter2ReassessmentQuestions } from '@/lib/chapter-2-reassessment-questions'
 import type { ConceptId, QuizQuestionId, ChapterId, ICanonicalMappingProvider } from '@/lib/reassessment/types'
 
 // ───────────────────────────────────────────────
@@ -21,10 +22,12 @@ export class Chapter2MappingProvider implements ICanonicalMappingProvider {
   // Build lookup maps for efficient resolution
   private readonly questionToConceptMap: Map<QuizQuestionId, ConceptId>
   private readonly conceptToQuestionsMap: Map<ConceptId, QuizQuestionId[]>
+  private readonly conceptToReserveQuestionsMap: Map<ConceptId, QuizQuestionId[]>
 
   constructor() {
     this.questionToConceptMap = new Map()
     this.conceptToQuestionsMap = new Map()
+    this.conceptToReserveQuestionsMap = new Map()
 
     // Build bidirectional mappings from canonical source
     for (const mapping of chapter2QuizQuestionMappings) {
@@ -37,6 +40,13 @@ export class Chapter2MappingProvider implements ICanonicalMappingProvider {
       const existing = this.conceptToQuestionsMap.get(conceptId) ?? []
       this.conceptToQuestionsMap.set(conceptId, [...existing, questionId])
     }
+
+    const reserveIds = new Set(chapter2ReassessmentQuestions.map((question) => question.id))
+    for (const mapping of chapter2QuizQuestionMappings) {
+      if (!reserveIds.has(mapping.questionId)) continue
+      const existing = this.conceptToReserveQuestionsMap.get(mapping.conceptId) ?? []
+      this.conceptToReserveQuestionsMap.set(mapping.conceptId, [...existing, mapping.questionId])
+    }
   }
 
   getConceptForQuestion(questionId: QuizQuestionId): ConceptId | undefined {
@@ -44,7 +54,8 @@ export class Chapter2MappingProvider implements ICanonicalMappingProvider {
   }
 
   getQuestionsForConcept(conceptId: ConceptId): readonly QuizQuestionId[] {
-    return this.conceptToQuestionsMap.get(conceptId) ?? []
+    // Formal remediation must use only the dedicated fresh reserve.
+    return this.conceptToReserveQuestionsMap.get(conceptId) ?? []
   }
 
   isQuestionMappedToConcept(questionId: QuizQuestionId, conceptId: ConceptId): boolean {

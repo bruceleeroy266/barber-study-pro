@@ -683,10 +683,14 @@ describe('Phase 6C-2b Historical Exclusion Engine', () => {
       expect(provider.getConceptForQuestion('qq-2-002')).toBe('C-2-06')
       expect(provider.getConceptForQuestion('qq-2-042')).toBe('C-2-25')
 
-      // Test concept → questions resolution
+      // Formal reassessment exposes only the dedicated five-question reserve.
       const c201Questions = provider.getQuestionsForConcept('C-2-01')
-      expect(c201Questions).toContain('qq-2-001')
-      expect(c201Questions).toContain('qq-2-021')
+      expect(c201Questions).toHaveLength(5)
+      expect(c201Questions).toContain('qq-2-060')
+      expect(c201Questions).toContain('qq-2-076')
+      expect(c201Questions).toContain('qq-2-079')
+      expect(c201Questions).not.toContain('qq-2-001')
+      expect(c201Questions).not.toContain('qq-2-021')
     })
 
     it('Chapter 2 adapter handles unmapped questions', () => {
