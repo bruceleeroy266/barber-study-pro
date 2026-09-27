@@ -2,7 +2,7 @@
  * Knowledge Check Sequencing Tests (C3-3 Stages 5–7)
  *
  * Proves the five-question Knowledge Check contract from persisted state only:
- *   - per-chapter sequence lengths (ch-2 and ch-3 use 5, unknown falls back)
+ *   - per-chapter sequence lengths (ch-2 through ch-5 use 5, unknown falls back)
  *   - progress derivation: answered counts, completion, open-reservation
  *     detection (placeholder IDs), and correct handling of consumed WRONG answers
  *   - questions 1–4 cannot complete (and therefore cannot terminally evaluate)
@@ -80,11 +80,11 @@ class MockKnowledgeCheckDb implements IKnowledgeCheckDbClient {
 // ───────────────────────────────────────────────
 
 describe('knowledge-check sequence lengths', () => {
-  it('ch-2, ch-3, and ch-4 use five-question checks, unknown falls back to 1', () => {
+  it('ch-2 through ch-5 use five-question checks, unknown falls back to 1', () => {
     expect(getKnowledgeCheckLength('ch-2')).toBe(5)
     expect(getKnowledgeCheckLength('ch-3')).toBe(5)
     expect(getKnowledgeCheckLength('ch-4')).toBe(5)
-    expect(getKnowledgeCheckLength('ch-5')).toBe(1)
+    expect(getKnowledgeCheckLength('ch-5')).toBe(5)
   })
 })
 
