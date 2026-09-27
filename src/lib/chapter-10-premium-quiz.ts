@@ -681,7 +681,7 @@ export const chapter10PremiumQuizQuestions: QuizQuestion[] = [
     answer_c: 'About 1/2 inch per month',
     answer_d: 'About 2 inches per month',
     correct_answer: 'c',
-    explanation: 'The average rate of hair growth on the scalp is about 1/2 (0.5) inch per month. Growth is most rapid between ages 15 and 30, and declines sharply between ages 50 and 60.',
+    explanation: 'The Chapter 10 source record gives average scalp-hair growth as about 1/2 (0.5) inch per month.',
     difficulty: 'easy',
     order_index: 51,
   },
