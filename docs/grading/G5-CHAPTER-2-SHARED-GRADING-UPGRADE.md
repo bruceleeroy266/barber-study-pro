@@ -1,38 +1,37 @@
 # G5 — Chapter 2 Shared Grading Upgrade
 
-Status: PARTIAL — shared grading / micro-check / instructor visibility implemented; five-question reassessment reserve expansion still required.
+Status: IN CERTIFICATION — five-question reassessment expansion implemented.
 
-## Completed in this slice
+## Completed
 
 - Chapter 2 bound to the canonical shared grading and mastery engine.
 - 10 embedded micro-checks / 20 first-attempt questions added to the Chapter 2 lesson runtime.
-- First-attempt micro-check evidence persists immutably in chapter_micro_check_attempts.
+- First-attempt micro-check evidence persists immutably in `chapter_micro_check_attempts`.
 - Instructor diagnostics consume Chapter 2 micro-check, initial assessment, and reassessment evidence.
 - All 25 active Chapter 2 concepts appear in instructor mastery diagnostics.
 - Original misses remain preserved after later reassessment evidence.
-- Formal recovery is blocked until five unique reassessment questions exist and are completed for the target concept.
+- 100 additional reassessment questions were authored, giving exactly five reserve questions for each of the 25 active concepts.
+- Every new reassessment item is source-audited to canonical Chapter 2 lesson blocks.
+- Formal reassessment now requires five persisted questions before recovery can be applied.
+- Chapter 2's mapping provider now exposes only dedicated reserve questions to the formal reassessment selector; unseen initial-quiz questions cannot silently substitute.
+- The original 48-question initial assessment remains unchanged.
 
-## Important existing-bank gap
+## Source-grounding rule
 
-Chapter 2 currently has 25 reassessment reserve questions total: exactly one reserve question per active concept.
+The 100-question G5 expansion is grounded in ASCYN PRO's canonical Chapter 2 lesson blocks and approved concept architecture. The source-audit metadata records the concept, supporting lesson block IDs, and the source basis for every new question.
 
-The G2 canonical standard requires five fresh reassessment questions per remediated concept. Therefore Chapter 2 requires 100 additional source-grounded reserve questions before the shared five-question remediation sequence can be enabled.
+Questions use original ASCYN PRO wording and do not introduce publisher reproduction or direct board-exam certainty.
 
-Until that expansion is complete:
+## Certification gates
 
-- do not change ch-2 knowledge-check length to 5;
-- do not mark Chapter 2 G5 GREEN;
-- do not grant formal reassessment grade recovery from a one-question legacy cycle.
+Chapter 2 becomes GREEN only after the exact final head passes:
 
-The diagnostics intentionally show a legacy single-question reassessment as `1/5 in progress` and do not apply recovery.
+1. TypeScript
+2. changed-file lint
+3. full unit/regression suite
+4. production build
+5. Pilot Onboarding Certification
+6. exact-head Vercel preview READY
+7. five-question runtime regression: selection → persistence → completion gate → grade recovery → instructor visibility
 
-## Remaining G5 Chapter 2 work
-
-1. Author + source-audit 4 additional reserve questions for each of 25 active concepts.
-2. Extend canonical question-to-concept mappings.
-3. Set Chapter 2 shared knowledge-check length to 5.
-4. Run historical-exclusion / pool-exhaustion tests.
-5. Run five-question persistence + evaluation + instructor recovery certification.
-6. Run exact-head Engineering Verification and Vercel preview.
-
-Only then can Chapter 2 be certified under G2.
+No merge is authorized by this document.
