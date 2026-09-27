@@ -1,13 +1,13 @@
 // Chapter 9: The Skin — Structure, Disorders, and Diseases
 // PREMIUM IMMERSIVE EXPERIENCE
-// The Skin Safety Academy — Where Observation Saves Lives
+// Skin Science & Service Safety — Observation, Scope, and Referral
 
 import type { ChapterTheme, ChapterContent } from './chapter-content'
 
 // ═══════════════════════════════════════════════
 // SKIN SAFETY ACADEMY THEME
-// Warm clinical coral / Medical teal / Soft cream / Healing sage
-// Feels like: A premium dermatology learning clinic for barbers
+// Warm clinical coral / Clinical teal / Soft cream / Healing sage
+// Feels like: A premium skin-science learning studio for barbers
 // ═══════════════════════════════════════════════
 
 export const chapter9PremiumTheme: ChapterTheme = {
@@ -111,8 +111,8 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'academy-welcome',
       title: '🏥 WELCOME TO THE SKIN SAFETY ACADEMY',
-      content: 'You are not just a barber. You are a frontline health observer. Every client who sits in your chair trusts you with more than their hair — they trust you with their skin, their scalp, their face, their neck.\n\nThe skin is the LARGEST organ of the body. It is the first line of defense against disease, the canvas for every service you perform, and the surface where dangerous conditions first appear. A barber who understands skin science does not just cut hair — they protect health, spot danger, and save lives.\n\nThis chapter transforms you into a Skin Safety Officer. You will learn to read the skin like a medical chart, recognize conditions that require referral, and make split-second decisions that keep clients safe.\n\nYour chair is an observation post. Your eyes are diagnostic tools. Your judgment is a life-saving skill.',
-      highlight: 'YOUR CHAIR IS AN OBSERVATION POST — YOUR EYES SAVE LIVES',
+      content: 'Barbers work close to the skin, scalp, face, and neck, so careful observation matters for service safety. The skin is the body\'s largest organ and an important protective barrier. This chapter builds your ability to recognize normal structures, notice changes that may affect a service, and know when to pause and recommend medical evaluation.\n\nYour role is observation for service safety — not medical diagnosis. A barber may notice areas that a client cannot easily see, especially on the scalp, ears, and neck. Use that close view responsibly: observe, stay within professional scope, and refer when a condition is unfamiliar, suspected to be infectious or contagious, changing, or otherwise concerning.',
+      highlight: 'OBSERVE CAREFULLY — STAY IN SCOPE — PROTECT CLIENT SAFETY',
     },
 
     // ═══════════════════════════════════════════
@@ -131,25 +131,25 @@ export const chapter9PremiumContent: ChapterContent = {
         },
         {
           icon: 'Eye',
-          title: 'EARLY DETECTION',
-          text: 'You must recognize normal skin conditions versus those requiring medical treatment. Barbers are often the first to notice skin and scalp changes — your observation can save lives.',
+          title: 'PROFESSIONAL OBSERVATION',
+          text: 'Learn to recognize normal skin features and notice changes that may warrant medical evaluation. Your role is to observe and communicate what you see — not diagnose.',
         },
         {
           icon: 'Ban',
           title: 'SERVICE PROTECTION',
-          text: 'You must identify abnormal skin conditions that prohibit certain services. Shaving over an infection, applying product to broken skin, or ignoring contagious conditions is professional negligence.',
+          text: 'Shaving over suspected infection or working directly on broken or contagious skin can create service-safety and cross-contamination risks. Pause the affected service and follow school and state sanitation requirements.',
         },
       ],
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 3: SKIN SAFETY OFFICER CERTIFICATION
+    // SECTION 3: SKIN OBSERVATION & SERVICE SAFETY PATH
     // ═══════════════════════════════════════════
     {
       type: 'levelUp',
       id: 'skin-certification',
-      title: '🏆 SKIN SAFETY OFFICER CERTIFICATION',
-      subtitle: 'Progress from Observer to Master Safety Officer — earn your credentials',
+      title: '🏆 SKIN OBSERVATION & SERVICE SAFETY PATH',
+      subtitle: 'Build professional judgment from observation through safe referral decisions',
       levels: [
         {
           level: 'Level 1',
@@ -165,21 +165,21 @@ export const chapter9PremiumContent: ChapterContent = {
         },
         {
           level: 'Level 3',
-          title: 'Condition Spotter',
-          description: 'You recognize primary and secondary lesions, common skin disorders, and glandular problems. You know the difference between a harmless mole and a potential melanoma.',
-          reward: 'Early Detection Specialist — You protect client health',
+          title: 'Condition Observer',
+          description: 'You recognize primary and secondary lesions, common skin disorders, and glandular problems. You can notice warning signs that may need medical evaluation without naming a diagnosis.',
+          reward: 'Recognition & Referral Skill — You know when to pause and refer',
         },
         {
           level: 'Level 4',
-          title: 'Referral Expert',
-          description: 'You understand when to proceed, when to modify, and when to refer. You can explain skin conditions to clients in plain language and recommend appropriate professional care.',
-          reward: 'Trusted Advisor — Clients seek your guidance',
+          title: 'Referral Decision-Maker',
+          description: 'You understand when to proceed, when to modify a service, and when to refer. You can describe what you observed in plain language without presenting a medical diagnosis.',
+          reward: 'Clear Communication — You explain observations without overstepping scope',
         },
         {
           level: 'Level 5',
-          title: 'Master Safety Officer',
-          description: 'You are the skin expert in your shop. Other barbers consult you. Clients trust your judgment. You have prevented serious conditions from going unnoticed and educated countless people on skin health.',
-          reward: 'Dermatology Authority — Your expertise is recognized and respected',
+          title: 'Safety Lead',
+          description: 'You model careful observation, safe service boundaries, sanitation awareness, and appropriate referral. Other barbers can rely on you for professional service-safety habits.',
+          reward: 'Professional Safety Leadership — Your service judgment is consistent and scope-aware',
         },
       ],
     },
@@ -191,7 +191,7 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'featureGrid',
       id: 'key-definitions',
       title: 'KEY DEFINITIONS — KNOW THE TERMINOLOGY',
-      subtitle: 'Board exam questions often test definitions first',
+      subtitle: 'Use these definitions to build accurate Chapter 9 vocabulary',
       features: [
         {
           icon: 'BookOpen',
@@ -206,7 +206,7 @@ export const chapter9PremiumContent: ChapterContent = {
         {
           icon: 'Scan',
           title: 'LESION',
-          description: 'Any mark on the skin indicating injury, damage, or disease. Barbers must recognize lesions and refer abnormal ones before performing services.',
+          description: 'A visible change or mark on the skin associated with injury, damage, or a skin condition. Barbers should observe lesions for service safety and refer concerning or unfamiliar findings without diagnosing.',
         },
       ],
     },
@@ -218,7 +218,7 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'checklist',
       id: 'learning-objectives',
       title: '🎯 CHAPTER 9 LEARNING OBJECTIVES',
-      subtitle: 'What the state board expects you to know',
+      subtitle: 'What you should understand after completing Chapter 9',
       items: [
         { text: 'LO1: Describe the structure and divisions of the skin' },
         { text: 'LO2: List the functions of the skin' },
@@ -238,7 +238,7 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'skin-basics',
       title: 'THE SKIN — YOUR LARGEST ORGAN',
-      content: 'The skin is the LARGEST organ of the body and the body\'s FIRST LINE OF DEFENSE against disease and the environment. It protects internal organs, regulates temperature, and provides sensory information.\n\nHealthy skin is slightly moist, soft, flexible, and has a smooth fine-grained texture. It maintains a SLIGHTLY ACIDIC pH (around 5.5), which creates a protective barrier against microorganisms.\n\nSkin renews itself constantly and varies in thickness across the body. The THINNEST skin is on the eyelids. The THICKEST is on the palms and soles.\n\nBOARD EXAM ALERT: Calluses form from continued pressure and are a natural defense. Do not remove them — they protect underlying tissue.',
+      content: 'The skin is the LARGEST organ of the body and the body\'s FIRST LINE OF DEFENSE against disease and the environment. It protects internal organs, regulates temperature, and provides sensory information.\n\nHealthy skin is slightly moist, soft, flexible, and has a smooth fine-grained texture. It maintains a SLIGHTLY ACIDIC pH, which creates a protective barrier against microorganisms.\n\nSkin renews itself constantly and varies in thickness across the body. The THINNEST skin is on the eyelids. The THICKEST is on the palms and soles.\n\nSTUDY CHECK: Calluses form from continued pressure and are a natural defense. Do not remove them — they protect underlying tissue.',
       highlight: 'LARGEST ORGAN — FIRST LINE OF DEFENSE — CONSTANTLY RENEWS',
     },
 
@@ -256,14 +256,14 @@ export const chapter9PremiumContent: ChapterContent = {
           label: 'EPIDERMIS',
           title: 'THE EPIDERMIS — OUTERMOST PROTECTION',
           bullets: [
-            { label: 'ALSO CALLED', description: 'Cuticle or scarf skin — these are alternate names for the epidermis found in older textbooks and exam questions.' },
+            { label: 'ALSO CALLED', description: 'Cuticle or scarf skin — these are alternate names for the epidermis found in older textbooks and review questions.' },
             { label: 'LOCATION', description: 'Outermost, thinnest protective layer of the skin' },
             { label: 'BLOOD VESSELS', description: 'NONE — the epidermis contains no blood vessels. It receives nutrients by diffusion from the dermis below.' },
-            { label: 'RENEWAL', description: 'Cells continually shed from the surface and are replaced from below. Complete renewal takes approximately 28 days.' },
+            { label: 'RENEWAL', description: 'Cells continually shed from the surface and are replaced from below as the epidermis renews itself.' },
             { label: 'WATERPROOFING', description: 'Sebum from sebaceous glands waterproofs the outer surface, preventing moisture loss and microbial entry.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: The epidermis has NO blood vessels. It relies entirely on the dermis for nourishment.' },
+            { text: 'STUDY CHECK: The epidermis has NO blood vessels. It relies entirely on the dermis for nourishment.' },
             { text: 'The epidermis is your first line of defense. Every cut, scrape, or shave passes through this layer first.' },
           ],
         },
@@ -272,14 +272,14 @@ export const chapter9PremiumContent: ChapterContent = {
           label: 'DERMIS',
           title: 'THE DERMIS — TRUE SKIN',
           bullets: [
-            { label: 'ALSO CALLED', description: 'True skin, corium, or cutis — these alternate names appear on board exams and in textbook references.' },
-            { label: 'LOCATION', description: 'Underlying, thicker layer beneath the epidermis — approximately 25× thicker than the epidermis' },
+            { label: 'ALSO CALLED', description: 'True skin, corium, or cutis — alternate terms used in Chapter 9 vocabulary.' },
+            { label: 'LOCATION', description: 'Underlying, thicker layer beneath the epidermis — the chapter describes it as approximately 25× thicker than the epidermis' },
             { label: 'PAPILLARY LAYER', description: 'Superficial layer containing papillae (conical projections), tactile corpuscles for touch, looped capillaries, and some melanin' },
             { label: 'RETICULAR LAYER', description: 'Deeper layer supplying oxygen and nutrients. Contains fat cells, sweat glands, blood vessels, hair follicles, lymph glands, arrector pili muscles, and oil glands' },
             { label: 'FUNCTION', description: 'Provides strength, elasticity, nourishment, and sensory perception. The dermis is what gives skin its resilience and structure.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: The dermis is 25× thicker than the epidermis and contains all the skin\'s functional structures.' },
+            { text: 'STUDY CHECK: The chapter describes the dermis as approximately 25× thicker than the epidermis and containing many of the skin\'s functional structures.' },
             { text: 'When you feel pain from a cut, you have reached the dermis — the epidermis itself has no nerve endings.' },
           ],
         },
@@ -345,7 +345,7 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'melanin',
       title: 'MELANIN — THE PIGMENT OF PROTECTION',
-      content: 'Melanin is the pigment produced by MELANOCYTES in the basal layer (stratum germinativum) of the epidermis. It gives skin its color — more melanin means darker skin.\n\nBut melanin is not just about color. Its primary function is PROTECTION against UV damage. Melanin absorbs harmful ultraviolet rays before they can damage deeper skin layers and DNA.\n\nWhen skin is exposed to sunlight, melanocytes produce more melanin — this is what creates a tan. The tan is actually the skin\'s defense mechanism kicking into higher gear.\n\nBOARD EXAM ALERT: Melanin is produced by melanocytes in the stratum germinativum. Its primary function is UV protection, not just coloration.',
+      content: 'Melanin is the pigment produced by MELANOCYTES in the basal layer (stratum germinativum) of the epidermis. It gives skin its color — more melanin means darker skin.\n\nBut melanin is not just about color. Its primary function is PROTECTION against UV damage. Melanin helps screen and protect the skin from ultraviolet rays.\n\nWhen skin is exposed to sunlight, melanocytes produce more melanin — this is what creates a tan. The tan is actually the skin\'s defense mechanism kicking into higher gear.\n\nSTUDY CHECK: Melanin is produced by melanocytes in the stratum germinativum. Its primary function is UV protection, not just coloration.',
       highlight: 'MELANIN = UV PROTECTION, NOT JUST COLOR',
     },
 
@@ -356,8 +356,8 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'skin-fluids',
       title: 'BLOOD & LYMPH — THE SKIN\'S NOURISHMENT',
-      content: 'Blood and lymph supply nourishment to the skin, delivering protein, carbohydrates, and fat that cells need to function and regenerate.\n\nApproximately HALF THE BODY\'S BLOOD SUPPLY flows through the skin at any given time. This massive blood flow is why the skin plays such a critical role in temperature regulation — when the body overheats, blood vessels dilate and bring warm blood to the surface where heat can escape. When the body is cold, vessels constrict to preserve core temperature.\n\nLymphatic vessels in the dermis drain waste and excess fluid, supporting immune function and tissue health.\n\nBOARD EXAM ALERT: About half the body\'s blood supply goes to the skin. This fact demonstrates why the skin is considered an organ, not just a covering.',
-      highlight: 'HALF THE BODY\'S BLOOD SUPPLY — THE SKIN IS AN ORGAN',
+      content: 'Blood and lymph circulate through the skin and support tissue nourishment, growth, repair, and waste movement. Blood vessels in the dermis also help with temperature regulation by dilating or constricting as the body manages heat.\n\nLymphatic vessels help move excess fluid and waste from tissues.\n\nSTUDY CHECK: Blood and lymph support nourishment, repair, waste movement, and temperature regulation in the skin.',
+      highlight: 'BLOOD & LYMPH SUPPORT NOURISHMENT, REPAIR, AND TEMPERATURE REGULATION',
     },
 
     // ═══════════════════════════════════════════
@@ -479,7 +479,7 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'skin-absorption',
       title: 'SKIN ABSORPTION — LIMITED BUT IMPORTANT',
-      content: 'The skin\'s ability to absorb substances is LIMITED beyond the top layer (stratum corneum). This limited absorption is actually a protective feature — the skin blocks most foreign substances from entering the body.\n\nHowever, this same property makes the skin useful for TOPICAL MEDICATIONS and creams. Products applied to the skin can penetrate enough to deliver active ingredients locally without entering the bloodstream in large amounts.\n\nAbsorption depends on two factors: SKIN THICKNESS (thinner skin absorbs more) and PRODUCT CONCENTRATION (higher concentration increases absorption).\n\nBOARD EXAM ALERT: Many drugs are more effective when absorbed through the skin (transdermal delivery). Nicotine patches, pain relief creams, and hormone therapies all use skin absorption. This is why barbers must be cautious about what products they apply — even topical substances can have systemic effects.',
+      content: 'The skin\'s ability to absorb substances is LIMITED beyond the top layer (stratum corneum). This limited absorption is actually a protective feature — the skin blocks most foreign substances from entering the body.\n\nHowever, this same property makes the skin useful for TOPICAL MEDICATIONS and creams. Products applied to the skin can penetrate enough to deliver active ingredients locally without entering the bloodstream in large amounts.\n\nAbsorption depends on two factors: SKIN THICKNESS (thinner skin absorbs more) and PRODUCT CONCENTRATION (higher concentration increases absorption).\n\nSTUDY CHECK: Many drugs are more effective when absorbed through the skin (transdermal delivery). Nicotine patches, pain relief creams, and hormone therapies all use skin absorption. This is why barbers must be cautious about what products they apply — even topical substances can have systemic effects.',
       highlight: 'LIMITED ABSORPTION — PROTECTIVE FEATURE — TOPICAL MEDICATIONS',
     },
 
@@ -532,7 +532,7 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'lesion-definition',
       title: 'WHAT IS A LESION?',
-      content: 'A LESION is any mark on the skin that indicates injury, damage, or disease. Lesions are the visible signs that something is wrong — or was wrong — with the skin.\n\nPrimary lesions are the ORIGINAL lesions — they appear first, directly from a disease process or injury. They are typically different in color from the surrounding skin and may be raised above the surface.\n\nSecondary lesions EVOLVE from primary lesions through accumulation, infection, or the healing process. A papule that fills with pus becomes a pustule. A vesicle that breaks open and dries becomes a crust.\n\nAs a barber, your job is not to diagnose lesions — it is to RECOGNIZE when a lesion looks abnormal, CONTAGIOUS, or UNFAMILIAR, and REFER the client to a physician or dermatologist before performing services.\n\nBOARD EXAM ALERT: Never perform services on infectious or contagious conditions such as pediculosis (lice), scabies, impetigo, or open herpes lesions.',
+      content: 'A LESION is any mark on the skin that indicates injury, damage, or disease. Lesions are the visible signs that something is wrong — or was wrong — with the skin.\n\nPrimary lesions are the ORIGINAL lesions — they appear first, directly from a disease process or injury. They are typically different in color from the surrounding skin and may be raised above the surface.\n\nSecondary lesions EVOLVE from primary lesions through accumulation, infection, or the healing process. A papule that fills with pus becomes a pustule. A vesicle that breaks open and dries becomes a crust.\n\nAs a barber, your job is not to diagnose lesions — it is to RECOGNIZE when a lesion looks abnormal, CONTAGIOUS, or UNFAMILIAR, and REFER the client to a physician or dermatologist before performing services.\n\nSTUDY CHECK: Do not perform services directly over suspected infectious or contagious conditions such as pediculosis (lice), scabies, impetigo, or active herpes lesions; follow school and state sanitation requirements.',
       highlight: 'RECOGNIZE — DO NOT DIAGNOSE — REFER WHEN IN DOUBT',
     },
 
@@ -556,8 +556,8 @@ export const chapter9PremiumContent: ChapterContent = {
             { label: 'WHEAL', description: 'Itchy, swollen lesion caused by fluid accumulation. Examples: hives, insect bites, allergic reactions.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: A bulla is a LARGE blister; a vesicle is a SMALL blister. Size is the distinguishing factor.' },
-            { text: 'Never perform services on skin with pustules or open vesicles — risk of infection spread is high.' },
+            { text: 'STUDY CHECK: A bulla is a LARGE blister; a vesicle is a SMALL blister. Size is the distinguishing factor.' },
+            { text: 'Do not perform services directly over open, draining, or potentially infectious lesions; pause and follow sanitation/referral guidance.' },
           ],
         },
         {
@@ -644,7 +644,7 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'referral-caution',
       title: '⚠️ WHEN TO REFER — NON-NEGOTIABLE RULES',
-      content: 'As a barber, you are not a medical professional. Your role is to recognize, not to diagnose or treat.\n\nNEVER perform services on infectious or contagious conditions including pediculosis (lice), scabies, impetigo, or open herpes lesions.\n\nALWAYS refer inflamed, irritated, or unknown lesions to a physician or dermatologist before proceeding with services.\n\nWhen in doubt, STOP and REFER. A canceled appointment is better than a lawsuit, an infection, or permanent damage to a client\'s health.\n\nBOARD EXAM ALERT: Performing services on contagious skin conditions is a violation of sanitation standards and can result in license suspension.',
+      content: 'As a barber, you are not a medical professional. Your role is to observe for service safety, recognize signs that may warrant caution, and refer — not diagnose or treat.\n\nDo not perform a service directly over suspected contagious or infectious lesions, open sores, or other conditions that make the service unsafe. Pause the affected service and follow school and state sanitation requirements.\n\nFor unfamiliar, changing, worsening, or otherwise concerning lesions, explain what you observed without naming a diagnosis and recommend medical evaluation by a physician or dermatologist.\n\nWhen you are unsure whether a service is safe, pause the affected service and get qualified guidance.\n\nSTUDY CHECK: Sanitation and scope requirements vary by jurisdiction; follow your school and state rules.',
       highlight: 'WHEN IN DOUBT, STOP AND REFER',
     },
 
@@ -666,7 +666,7 @@ export const chapter9PremiumContent: ChapterContent = {
             { label: 'WHITEHEAD (CLOSED COMEDO)', description: 'Plugged follicle covered by skin. Appears as a small white bump. Can develop into a pustule if inflamed.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Blackheads are NOT caused by dirt. The dark color is oxidation, not poor hygiene.' },
+            { text: 'STUDY CHECK: Blackheads are NOT caused by dirt. The dark color is oxidation, not poor hygiene.' },
             { text: 'Do not squeeze comedones during barbering services. This can cause infection, scarring, and spread bacteria.' },
           ],
         },
@@ -699,8 +699,8 @@ export const chapter9PremiumContent: ChapterContent = {
             { label: 'STEATOMA', description: 'Sebaceous cyst or fatty tumor (wen). May require surgical removal by a physician. Same condition, different name.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Sebaceous cyst and steatoma refer to the same condition — a pocket filled with sebum. Know both terms for the exam.' },
-            { text: 'Rosacea affects approximately 16 million Americans. Many do not know they have it. Gentle handling and avoiding triggers are essential.' },
+            { text: 'STUDY CHECK: Sebaceous cyst and steatoma refer to the same condition — a pocket filled with sebum. Know both terms and how Chapter 9 uses them.' },
+            { text: 'Rosacea is a chronic inflammatory condition. If the skin is irritated, use careful service judgment and avoid presenting a diagnosis.' },
             { text: 'Seborrheic dermatitis is not contagious. It is manageable with proper products and hygiene.' },
           ],
         },
@@ -782,10 +782,10 @@ export const chapter9PremiumContent: ChapterContent = {
           bullets: [
             { label: 'TYPE 1', description: 'Cold sores or fever blisters around the mouth. Highly contagious during active outbreaks.' },
             { label: 'TYPE 2', description: 'Genital herpes — not relevant to barbering services but important to know for general health knowledge.' },
-            { label: 'BARBER IMPACT', description: 'NEVER shave over active cold sores. The virus can spread to other areas and to you. Wait until lesions are completely healed.' },
+            { label: 'BARBER IMPACT', description: 'Do not shave directly over active cold sores. Pause the affected facial service and resume only when lesions are healed and the service is appropriate under school and state policy.' },
           ],
           facts: [
-            { text: 'Herpes simplex is contagious even before visible blisters appear. If a client feels tingling (prodrome), postpone facial services.' },
+            { text: 'Herpes simplex can be contagious around an outbreak. If symptoms suggest an active outbreak, pause facial services and recommend medical guidance.' },
             { text: 'The herpes virus remains dormant in nerve cells and reactivates during stress, illness, or sun exposure.' },
           ],
         },
@@ -872,8 +872,8 @@ export const chapter9PremiumContent: ChapterContent = {
     {
       type: 'tabbed',
       id: 'skin-cancer',
-      title: 'SKIN CANCER — THE LIFE-SAVING SECTION',
-      subtitle: 'Three types every barber must recognize',
+      title: 'SKIN CANCER — RECOGNITION & REFERRAL',
+      subtitle: 'Three types discussed in Chapter 9 and the warning signs that warrant medical evaluation',
       tabs: [
         {
           id: 'basal',
@@ -886,8 +886,8 @@ export const chapter9PremiumContent: ChapterContent = {
             { label: 'BARBER ROLE', description: 'Notice pearly bumps or non-healing sores on the scalp, face, or neck. Gently suggest a dermatologist visit.' },
           ],
           facts: [
-            { text: 'Basal cell carcinoma accounts for approximately 80% of all skin cancers. It grows slowly but can cause significant local damage if untreated.' },
-            { text: 'Men with thinning hair are at higher risk for scalp basal cell carcinoma because the scalp receives more sun exposure.' },
+            { text: 'Chapter 9 identifies basal cell carcinoma as the most common and least severe of the three types discussed, but it still requires medical diagnosis and treatment.' },
+            { text: 'Sun-exposed areas such as the scalp, face, ears, neck, and hands are useful areas to observe during routine barber services.' },
           ],
         },
         {
@@ -898,11 +898,11 @@ export const chapter9PremiumContent: ChapterContent = {
             { label: 'APPEARANCE', description: 'Scaly red papules, open sores, or crusted areas that do not heal. May be tender or bleed easily.' },
             { label: 'SEVERITY', description: 'More serious than basal cell. Can metastasize if untreated. Survival depends on stage at diagnosis.' },
             { label: 'LOCATION', description: 'Sun-exposed areas: face, ears, lips, back of hands, scalp.' },
-            { label: 'BARBER ROLE', description: 'Watch for persistent scaly patches or non-healing sores. Early detection saves lives.' },
+            { label: 'BARBER ROLE', description: 'Notice persistent scaly patches or non-healing sores and recommend medical evaluation without diagnosing.' },
           ],
           facts: [
-            { text: 'Squamous cell carcinoma is the second most common skin cancer, accounting for about 20% of cases.' },
-            { text: 'Chronic sun exposure, fair skin, and a history of precancerous lesions increase risk significantly.' },
+            { text: 'Chapter 9 describes squamous cell carcinoma as more serious than basal cell carcinoma and notes that it can spread to other parts of the body.' },
+            { text: 'Persistent or changing lesions on sun-exposed skin are findings to communicate and refer for medical evaluation.' },
           ],
         },
         {
@@ -911,12 +911,12 @@ export const chapter9PremiumContent: ChapterContent = {
           title: 'MALIGNANT MELANOMA — MOST DANGEROUS',
           bullets: [
             { label: 'APPEARANCE', description: 'Black, brown, or multicolored patches with irregular borders. May be flat or raised, and can develop from existing moles.' },
-            { label: 'SEVERITY', description: 'Least common but MOST DANGEROUS. 100% fatal if untreated. Spreads quickly to lymph nodes and organs.' },
-            { label: 'EARLY DETECTION', description: 'Critical for survival. The 5-year survival rate is 99% when detected early but drops to 27% once it spreads.' },
-            { label: 'BARBER ROLE', description: 'You may be the first to notice changes on the scalp, ears, or neck. Speak up — it could save a life.' },
+            { label: 'SEVERITY', description: 'Chapter 9 identifies malignant melanoma as the least common but most dangerous of the three types discussed. It can spread to other tissues and requires medical diagnosis and treatment.' },
+            { label: 'EARLY DETECTION', description: 'Earlier medical diagnosis and treatment are associated with better outcomes; prognosis worsens after the cancer spreads.' },
+            { label: 'BARBER ROLE', description: 'You may notice changes on the scalp, ears, or neck that a client cannot easily see. Describe the observation and recommend medical evaluation without diagnosing.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: The ABCDE rule for melanoma detection: Asymmetry, Border irregularity, Color variation, Diameter >6mm, Evolution (changing).' },
+            { text: 'STUDY CHECK: The ABCDE rule for melanoma observation: Asymmetry, Border irregularity, Color variation, Diameter >6mm, Evolution (changing).' },
             { text: 'Melanoma can develop anywhere — including under nails, on the scalp, and in areas with little sun exposure.' },
           ],
         },
@@ -929,8 +929,8 @@ export const chapter9PremiumContent: ChapterContent = {
     {
       type: 'featureGrid',
       id: 'abcde-melanoma',
-      title: 'THE ABCDE OF MELANOMA DETECTION',
-      subtitle: 'Memorize this — it could save a client\'s life',
+      title: 'THE ABCDE MELANOMA OBSERVATION GUIDE',
+      subtitle: 'Use this framework to notice changes that warrant medical evaluation',
       features: [
         {
           icon: 'Asterisk',
@@ -966,18 +966,15 @@ export const chapter9PremiumContent: ChapterContent = {
     {
       type: 'checklist',
       id: 'skin-health',
-      title: 'MAINTAINING HEALTHY SKIN — CLIENT EDUCATION',
+      title: 'SKIN HEALTH — CHAPTER REVIEW',
       items: [
-        { text: 'Balanced diet with adequate fats, carbohydrates, and proteins' },
-        { text: 'Vitamins A, C, D, and E support skin healing and health (consult physician before supplements)' },
-        { text: 'Adequate water intake maintains cell health and toxin elimination' },
-        { text: 'Sunscreen SPF 30+ on exposed skin daily' },
-        { text: 'Regular moisturizers appropriate for skin type' },
-        { text: 'Avoid excessive sun exposure, alcohol, and tobacco' },
-        { text: 'Regular self-exams for new or changing moles and growths' },
-        { text: 'Annual professional skin checkups, especially for high-risk clients' },
-        { text: 'AMERICAN CANCER SOCIETY RECOMMENDATION: Regular self-exams and professional checkups for skin cancer detection' },
-        { text: 'Many drugs are more effective when absorbed through the skin — be cautious about products you apply to clients' },
+        { text: 'Healthy skin supports protection, sensation, heat regulation, absorption, excretion, and secretion.' },
+        { text: 'Skin condition can be influenced by internal and external factors; Chapter 9 emphasizes observation rather than medical diagnosis.' },
+        { text: 'Protect the skin from avoidable service trauma and follow sanitation requirements during barbering services.' },
+        { text: 'Notice new, changing, open, inflamed, or potentially infectious findings before beginning direct service over the area.' },
+        { text: 'Use the ABCDE observation guide to recognize changes that may warrant qualified medical evaluation.' },
+        { text: 'Do not diagnose, prescribe medication, or medically treat skin conditions within barbering services.' },
+        { text: 'When a condition is unfamiliar, potentially contagious, changing, or outside barber scope, pause affected service and refer appropriately.' },
       ],
     },
 
@@ -993,17 +990,17 @@ export const chapter9PremiumContent: ChapterContent = {
         {
           id: 'mistakes',
           label: 'MISTAKES',
-          title: 'MISTAKES THAT COST POINTS ON THE EXAM',
+          title: 'COMMON CHAPTER 9 CONFUSIONS',
           bullets: [
             { label: 'CONFUSING EPIDERMIS AND DERMIS', description: 'Epidermis = outer, no blood vessels, 5 layers. Dermis = inner, 25× thicker, contains glands/vessels/nerves.' },
-            { label: 'THINKING BLACKHEADS ARE DIRT', description: 'Blackheads are oxidized sebum and melanin — NOT dirt. Telling clients to "wash better" is misinformation.' },
-            { label: 'IGNORING SKIN CONDITIONS', description: 'Performing services on contagious or infected skin is negligence. Always inspect before starting.' },
-            { label: 'MISSING MELANOMA SIGNS', description: 'The ABCDE rule is exam-critical. Asymmetry, Border, Color, Diameter, Evolution — memorize it.' },
+            { label: 'THINKING BLACKHEADS ARE DIRT', description: 'The dark appearance is associated with exposed sebum that oxidizes at the surface; it is not simply dirt.' },
+            { label: 'IGNORING SERVICE-SAFETY SIGNS', description: 'Observe the planned service area before starting and avoid direct service over open, active contagious, or otherwise unsafe areas.' },
+            { label: 'MISSING MELANOMA SIGNS', description: 'The ABCDE rule is important for chapter mastery. Asymmetry, Border, Color, Diameter, Evolution — memorize it.' },
             { label: 'CONFUSING PRIMARY AND SECONDARY LESIONS', description: 'Primary = original (bullae, papules, pustules). Secondary = evolved (crusts, scales, scars).' },
           ],
           facts: [
-            { text: 'REMEMBER: When in doubt, refer out. Your license and your client\'s health are more important than one appointment.' },
-            { text: 'REMEMBER: The skin is slightly acidic (pH ~5.5). This acidity inhibits bacterial growth — do not strip it with harsh alkaline products.' },
+            { text: 'REMEMBER: When a finding is unfamiliar or outside barber scope, protect the service area and recommend qualified evaluation.' },
+            { text: 'REMEMBER: Healthy skin is slightly acidic; Chapter 9 uses that as a protective-barrier concept rather than a product-prescription rule.' },
           ],
         },
         {
@@ -1012,13 +1009,13 @@ export const chapter9PremiumContent: ChapterContent = {
           title: 'MEMORY TRICKS THAT WORK',
           bullets: [
             { label: 'SHAPES', description: 'Sensation, Heat regulation, Absorption, Protection, Excretion, Secretion — the six functions of skin.' },
-            { label: 'ABCDE', description: 'Asymmetry, Border, Color, Diameter, Evolution — melanoma detection. This appears on every board exam.' },
+            { label: 'ABCDE', description: 'Asymmetry, Border, Color, Diameter, Evolution — melanoma observation. This is a core Chapter 9 recognition framework.' },
             { label: 'EPIDERMIS LAYERS (deep to surface)', description: 'Germinativum, Spinosum, Granulosum, Lucidum, Corneum — remember: "Go Somewhere Good, Life Continues."' },
             { label: 'SEBACEOUS vs SUDORIFEROUS', description: 'SEBACEOUS = SEbum (oil). SUDORIFEROUS = SWeat. Both start with S but produce different substances.' },
           ],
           facts: [
             { text: 'MNEMONIC: "The epidermis has NO blood — it is dead at the top and alive at the bottom, fed from below."' },
-            { text: 'MNEMONIC: "Basal cell = Best outcome (most common, least severe). Melanoma = Most deadly (least common, most dangerous)."' },
+            { text: 'MNEMONIC: Basal cell is the most common and least severe of the three discussed; melanoma is the least common and most dangerous.' },
           ],
         },
         {
@@ -1027,13 +1024,13 @@ export const chapter9PremiumContent: ChapterContent = {
           title: 'NON-NEGOTIABLE SAFETY RULES',
           bullets: [
             { label: 'INSPECT BEFORE EVERY SERVICE', description: 'Check scalp, face, and neck for lesions, infections, or abnormalities before starting any service.' },
-            { label: 'NEVER TREAT CONTAGIOUS CONDITIONS', description: 'Lice, scabies, impetigo, active herpes — these require medical treatment, not barbering services.' },
+            { label: 'DO NOT SERVICE SUSPECTED CONTAGIOUS CONDITIONS', description: 'Suspected lice, scabies, impetigo, or active herpes lesions are outside barber treatment scope. Pause the affected service and recommend appropriate medical evaluation.' },
             { label: 'REFER UNKNOWN LESIONS', description: 'If you do not know what it is, do not touch it. Suggest a dermatologist visit.' },
             { label: 'DOCUMENT CONCERNS', description: 'If you notice a suspicious mole or growth, document it and mention it to the client professionally.' },
             { label: 'STAY IN YOUR SCOPE', description: 'You are a barber, not a doctor. Recognize, refer, and educate — but never diagnose or treat.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Performing services on contagious skin conditions is a sanitation violation that can result in license suspension.' },
+            { text: 'STUDY CHECK: Do not perform services directly over suspected contagious or infectious conditions; follow your school and state sanitation requirements.' },
             { text: 'Your observation skills are a professional asset. The client who sits in your chair trusts you with more than their hair — they trust you with their health.' },
           ],
         },
@@ -1041,22 +1038,22 @@ export const chapter9PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 29: BOARD EXAM CRITICAL ALERTS
+    // SECTION 29: KEY STUDY POINTS & COMMON CONFUSIONS
     // ═══════════════════════════════════════════
 
     // ─── 29A: Skin Structure Must-Knows ───
     {
       type: 'featureGrid',
       id: 'board-exam-structure',
-      title: '🚨 BOARD EXAM ALERTS — SKIN STRUCTURE',
-      subtitle: 'The facts that show up on every test',
+      title: '🚨 KEY STUDY POINTS — SKIN STRUCTURE',
+      subtitle: 'Core Chapter 9 facts to review',
       features: [
         { icon: 'Shield', title: 'SKIN', description: 'Largest organ. First line of defense. Renews constantly.' },
         { icon: 'Layers', title: 'EPIDERMIS', description: 'Outermost layer. NO blood vessels. 5 layers: germinativum → spinosum → granulosum → lucidum → corneum.' },
         { icon: 'Activity', title: 'DERMIS', description: '25× thicker than epidermis. Contains glands, vessels, follicles, nerves.' },
         { icon: 'Sun', title: 'MELANIN', description: 'Produced by melanocytes in basal layer. Protects against UV damage.' },
         { icon: 'Droplets', title: 'COLLAGEN & ELASTIN', description: 'Collagen = strength and support. Elastin = elasticity and bounce-back.' },
-        { icon: 'Thermometer', title: 'SKIN pH', description: 'Slightly acidic (~5.5). Protects against microorganisms.' },
+        { icon: 'Thermometer', title: 'SKIN pH', description: 'Slightly acidic. Helps support the skin\'s protective barrier.' },
       ],
     },
 
@@ -1064,16 +1061,16 @@ export const chapter9PremiumContent: ChapterContent = {
     {
       type: 'featureGrid',
       id: 'board-exam-glands',
-      title: '🚨 BOARD EXAM ALERTS — GLANDS & FUNCTIONS',
+      title: '🚨 KEY STUDY POINTS — GLANDS & FUNCTIONS',
       subtitle: 'Know what each gland does and what it produces',
       features: [
         { icon: 'Droplet', title: 'SEBACEOUS GLANDS', description: 'Produce oil (sebum). Connected to hair follicles. Most active on face and scalp.' },
-        { icon: 'Wind', title: 'SUDORIFEROUS GLANDS', description: 'Produce sweat. Regulate body temperature. 2–4 million in the body.' },
+        { icon: 'Wind', title: 'SUDORIFEROUS GLANDS', description: 'Produce sweat and support heat regulation.' },
         { icon: 'Hand', title: 'S — SENSATION', description: 'Skin detects touch, pressure, pain, heat, and cold.' },
-        { icon: 'Thermometer', title: 'H — HEAT REGULATION', description: 'Maintains ~98.6°F through blood flow and sweat evaporation.' },
+        { icon: 'Thermometer', title: 'H — HEAT REGULATION', description: 'Helps regulate body temperature through blood flow and sweat evaporation.' },
         { icon: 'Droplets', title: 'A — ABSORPTION', description: 'Limited beyond stratum corneum. Depends on thickness and concentration.' },
         { icon: 'Shield', title: 'P — PROTECTION', description: 'Barrier against pathogens, injury, and chemicals. Sebum waterproofs the surface.' },
-        { icon: 'ArrowUp', title: 'E — EXCRETION', description: 'Perspiration removes salts, urea, and toxins.' },
+        { icon: 'ArrowUp', title: 'E — EXCRETION', description: 'Perspiration carries small amounts of water, salts, and waste to the surface.' },
         { icon: 'Sparkles', title: 'S — SECRETION', description: 'Sebum lubricates skin and hair, maintaining moisture balance.' },
       ],
     },
@@ -1082,7 +1079,7 @@ export const chapter9PremiumContent: ChapterContent = {
     {
       type: 'tabbed',
       id: 'board-exam-lesions',
-      title: '🚨 BOARD EXAM ALERTS — LESIONS & DISORDERS',
+      title: '🚨 KEY STUDY POINTS — LESIONS & DISORDERS',
       subtitle: 'Primary, secondary, and the conditions you will see in the chair',
       tabs: [
         {
@@ -1123,7 +1120,7 @@ export const chapter9PremiumContent: ChapterContent = {
         {
           id: 'disorders',
           label: 'DISORDERS',
-          title: 'COMMON DISORDERS ON THE EXAM',
+          title: 'COMMON DISORDERS — RECOGNITION REVIEW',
           bullets: [
             { label: 'ACNE', description: 'Grades I–IV. Caused by Propionibacterium acnes in clogged follicles.' },
             { label: 'ROSACEA', description: 'Chronic flushing, redness. Triggers: sun, spicy food, alcohol, stress.' },
@@ -1133,8 +1130,8 @@ export const chapter9PremiumContent: ChapterContent = {
             { label: 'VERRUCA (WART)', description: 'Viral, contagious. Refer for medical treatment.' },
           ],
           facts: [
-            { text: 'BOARD EXAM ALERT: Blackheads are oxidized sebum — NOT dirt.' },
-            { text: 'BOARD EXAM ALERT: Sebaceous cyst and steatoma are the SAME condition.' },
+            { text: 'STUDY CHECK: Blackheads are oxidized sebum — NOT dirt.' },
+            { text: 'STUDY CHECK: A sebaceous cyst is sebum-related; a steatoma is a subcutaneous fatty tumor. Do not treat the terms as interchangeable.' },
           ],
         },
       ],
@@ -1144,12 +1141,12 @@ export const chapter9PremiumContent: ChapterContent = {
     {
       type: 'featureGrid',
       id: 'board-exam-cancer',
-      title: '🚨 BOARD EXAM ALERTS — SKIN CANCER',
-      subtitle: 'Three types. One mnemonic. Zero excuses for missing this.',
+      title: '🚨 KEY STUDY POINTS — SKIN CANCER',
+      subtitle: 'Three types discussed in Chapter 9 plus an observation framework for concerning changes.',
       features: [
         { icon: 'Circle', title: 'BASAL CELL', description: 'Most common, least severe. Pearly, waxy nodules. Rarely spreads.' },
         { icon: 'Triangle', title: 'SQUAMOUS CELL', description: 'More serious. Scaly red papules or non-healing sores. Can metastasize.' },
-        { icon: 'AlertOctagon', title: 'MELANOMA', description: 'Most dangerous. 100% fatal if untreated. Early detection = 99% survival.' },
+        { icon: 'AlertOctagon', title: 'MELANOMA', description: 'Most dangerous of the three discussed; suspicious changes require prompt medical evaluation.' },
         { icon: 'Asterisk', title: 'A — ASYMMETRY', description: 'One half does not match the other.' },
         { icon: 'Square', title: 'B — BORDER', description: 'Irregular, notched, or blurred edges.' },
         { icon: 'Palette', title: 'C — COLOR', description: 'Multiple colors or uneven distribution.' },
@@ -1162,10 +1159,10 @@ export const chapter9PremiumContent: ChapterContent = {
     {
       type: 'checklist',
       id: 'board-exam-safety',
-      title: '🚨 BOARD EXAM ALERTS — SERVICE SAFETY RULES',
-      subtitle: 'Non-negotiables that protect your license and your client',
+      title: '🚨 KEY STUDY POINTS — SERVICE SAFETY RULES',
+      subtitle: 'Service-safety boundaries that protect clients and keep barbering within scope',
       items: [
-        { text: 'NEVER treat infectious or contagious conditions — REFER to a physician' },
+        { text: 'Do not perform services directly over suspected infectious or contagious conditions — pause and refer appropriately' },
         { text: 'NEVER shave over active herpes lesions, warts, or open ulcers' },
         { text: 'CALLUSES are natural defense — do NOT remove' },
         { text: 'BLACKHEADS = oxidized sebum, NOT dirt' },
@@ -1175,21 +1172,21 @@ export const chapter9PremiumContent: ChapterContent = {
       ],
     },
 
-    // ─── 29F: State Board Traps ───
+    // ─── 29F: Common Confusions ───
     {
       type: 'tabbed',
       id: 'board-exam-traps',
-      title: '🚨 STATE BOARD TRAPS — DO NOT FALL FOR THESE',
-      subtitle: 'The questions designed to trip you up',
+      title: '🚨 COMMON CONFUSIONS — CHECK YOUR REASONING',
+      subtitle: 'Distinctions students can easily confuse',
       tabs: [
         {
           id: 'trap-structure',
           label: 'STRUCTURE TRAPS',
           title: 'STRUCTURE TRAPS',
           bullets: [
-            { label: 'EPIDERMIS HAS NO BLOOD VESSELS', description: 'Exam questions ask what the epidermis contains. Blood vessels are NOT on that list.' },
+            { label: 'EPIDERMIS HAS NO BLOOD VESSELS', description: 'Review questions ask what the epidermis contains. Blood vessels are NOT on that list.' },
             { label: 'DERMIS IS 25× THICKER', description: 'Not 2×. Not 5×. Twenty-five times thicker. Memorize the number.' },
-            { label: 'HALF THE BODY\'S BLOOD SUPPLY', description: 'Approximately 50% of blood flows through skin. This demonstrates it is an organ.' },
+            { label: 'BLOOD & LYMPH SUPPORT', description: 'Blood and lymph support nourishment, transport, growth, and repair in deeper skin tissues. Do not reduce this concept to an unsupported percentage-memory target.' },
           ],
           facts: [
             { text: 'Trap: "The epidermis receives nutrients directly from blood vessels." FALSE. It gets nutrients by diffusion from the dermis.' },
@@ -1201,7 +1198,7 @@ export const chapter9PremiumContent: ChapterContent = {
           title: 'LESION TRAPS',
           bullets: [
             { label: 'PRIMARY vs SECONDARY', description: 'Primary = original. Secondary = evolved. Do not confuse them.' },
-            { label: 'BULLA vs VESICLE', description: 'Bulla = LARGE blister. Vesicle = SMALL blister. Size is the only difference.' },
+            { label: 'BULLA vs VESICLE', description: 'Both are fluid-filled primary lesions; a bulla is larger, while a vesicle is smaller.' },
             { label: 'MACULE = FLAT', description: 'If you can feel it, it is not a macule. Macules are non-palpable discolorations.' },
           ],
           facts: [
@@ -1213,9 +1210,9 @@ export const chapter9PremiumContent: ChapterContent = {
           label: 'SAFETY TRAPS',
           title: 'SAFETY TRAPS',
           bullets: [
-            { label: 'BLACKHEADS ARE NOT DIRT', description: 'The dark color is oxidized sebum and melanin. Hygiene is not the issue.' },
-            { label: 'CALLUSES ARE PROTECTIVE', description: 'Removing calluses exposes underlying tissue to injury. Do not remove them.' },
-            { label: 'HERPES IS CONTAGIOUS', description: 'Even before blisters appear (prodrome), the virus can spread. Postpone facial services.' },
+            { label: 'BLACKHEADS ARE NOT DIRT', description: 'The dark appearance is associated with exposed sebum that oxidizes at the surface; it is not simply dirt.' },
+            { label: 'CALLUSES ARE PROTECTIVE', description: 'Calluses form from repeated pressure or friction and tend to return if the cause continues.' },
+            { label: 'HERPES IS CONTAGIOUS', description: 'Active herpes lesions are contagious; avoid direct service over the affected area and follow sanitation and referral guidance.' },
           ],
           facts: [
             { text: 'Trap: "A waiver protects you from liability for shaving over a contagious condition." FALSE. Waivers do not override sanitation standards.' },
@@ -1237,20 +1234,20 @@ export const chapter9PremiumContent: ChapterContent = {
         {
           situation: 'A regular client sits in your chair. You notice a new dark spot on their scalp that was not there two weeks ago. It is irregular in shape, has multiple colors, and is larger than a pencil eraser. The client says it does not itch or hurt. What do you do?',
           options: [
-            { letter: 'A', text: 'Shave around it carefully and continue the service', feedback: '❌ INCORRECT. Shaving near a suspicious lesion could irritate it or mask changes. More importantly, you have identified potential melanoma warning signs — this requires immediate professional attention.' },
-            { letter: 'B', text: 'Politely mention your observation, explain the ABCDE warning signs in plain language, and strongly recommend a dermatologist visit within the week', feedback: '✅ CORRECT. You are not diagnosing — you are observing and referring. Your professional observation could save this client\'s life. Document the conversation and follow up at their next visit.' },
-            { letter: 'C', text: 'Say nothing to avoid making the client uncomfortable', feedback: '❌ INCORRECT. Silence is not professionalism. The ABCDE signs you observed (Asymmetry, Border irregularity, Color variation, Diameter >6mm, Evolution) are melanoma red flags. Speaking up is a professional obligation.' },
-            { letter: 'D', text: 'Tell the client it is definitely melanoma and they need emergency surgery', feedback: '❌ INCORRECT. You are a barber, not a doctor. Never diagnose. Your role is to observe, express concern, and refer to a qualified medical professional.' },
+            { letter: 'A', text: 'Shave around it carefully and continue the service', feedback: '❌ INCORRECT. A changing lesion with multiple ABCDE warning signs should not be treated as a normal service area. Avoid unsafe direct service and recommend qualified medical evaluation without diagnosing.' },
+            { letter: 'B', text: 'Politely describe what you observed, explain that the ABCDE guide identifies changes worth medical attention, and recommend evaluation by a qualified medical professional', feedback: '✅ CORRECT. You are not diagnosing — you are observing and referring. Clear communication can support timely medical evaluation. Document the conversation according to school or shop policy.' },
+            { letter: 'C', text: 'Say nothing to avoid making the client uncomfortable', feedback: '❌ INCORRECT. Concerning ABCDE changes should be communicated without naming a diagnosis. A scope-appropriate referral supports client safety.' },
+            { letter: 'D', text: 'Tell the client it is definitely melanoma and prescribe the next medical step', feedback: '❌ INCORRECT. You are a barber, not a doctor. Never diagnose. Your role is to observe, express concern, and refer to a qualified medical professional.' },
           ],
           correctAnswer: 'B',
         },
         {
           situation: 'A new client requests a hot towel shave. During the consultation, you notice clusters of small fluid-filled blisters around their mouth and chin. They mention they have been feeling run down lately. What do you do?',
           options: [
-            { letter: 'A', text: 'Proceed with the shave but avoid the blistered areas', feedback: '❌ INCORRECT. Herpes simplex (cold sores) is highly contagious, especially during active outbreaks. The virus can spread to other areas of the face and to you. Facial services must be postponed.' },
-            { letter: 'B', text: 'Explain that facial services cannot be performed during an active outbreak and reschedule for at least one week after complete healing', feedback: '✅ CORRECT. Herpes simplex is contagious and shaving over active lesions spreads the virus. Rescheduling protects both the client and you. Suggest they consult a physician about antiviral treatment.' },
-            { letter: 'C', text: 'Perform the shave but wear gloves for extra protection', feedback: '❌ INCORRECT. Gloves do not prevent herpes transmission in this context. The virus spreads by contact with fluid from blisters. No facial service should be performed during an active outbreak.' },
-            { letter: 'D', text: 'Ask the client to sign a waiver and proceed with the service', feedback: '❌ INCORRECT. A waiver does not protect you from liability for performing services on contagious conditions. This is a sanitation violation that could result in license suspension.' },
+            { letter: 'A', text: 'Proceed with the shave but avoid the blistered areas', feedback: '❌ INCORRECT. Active herpes lesions are contagious. Avoid direct service over the affected area, follow sanitation requirements, and recommend medical guidance as appropriate.' },
+            { letter: 'B', text: 'Explain that the affected facial service should be paused during an active outbreak and rescheduled after the lesions have healed and service is appropriate', feedback: '✅ CORRECT. Active herpes lesions create a cross-contamination risk. Pause the affected service, follow sanitation requirements, and recommend medical guidance as appropriate.' },
+            { letter: 'C', text: 'Perform the shave but wear gloves for extra protection', feedback: '❌ INCORRECT. Gloves do not make direct service over an active contagious lesion appropriate. Pause the affected service and follow sanitation guidance.' },
+            { letter: 'D', text: 'Ask the client to sign a waiver and proceed with the service', feedback: '❌ INCORRECT. A waiver does not make an unsafe service appropriate. Pause the service and follow your school and state sanitation requirements.' },
           ],
           correctAnswer: 'B',
         },
@@ -1263,8 +1260,8 @@ export const chapter9PremiumContent: ChapterContent = {
     {
       type: 'actionPrompt',
       id: 'action-prompts',
-      title: '🏥 CLINIC ACTION ITEMS',
-      subtitle: 'Do these today to level up your skin science knowledge',
+      title: '🧭 PROFESSIONAL PRACTICE ACTIONS',
+      subtitle: 'Practice observation, sanitation, communication, and referral habits',
       prompts: [
         {
           action: 'Inspect Your Tools',
@@ -1273,9 +1270,9 @@ export const chapter9PremiumContent: ChapterContent = {
           timeframe: '5 minutes',
         },
         {
-          action: 'Practice the ABCDE Rule',
-          description: 'Review the ABCDE melanoma detection criteria. Look at photos of normal moles vs. suspicious moles online.',
-          benefit: 'Builds confidence in recognizing potential skin cancer',
+          action: 'Practice the ABCDE Observation Guide',
+          description: 'Review the ABCDE observation criteria using instructor-approved or professionally vetted visual examples.',
+          benefit: 'Builds confidence noticing changes that warrant medical evaluation',
           timeframe: '10 minutes',
         },
         {
@@ -1286,7 +1283,7 @@ export const chapter9PremiumContent: ChapterContent = {
         },
         {
           action: 'Know Your Referral Network',
-          description: 'Find 2–3 dermatologists in your area. Keep their contact information at your station for client referrals.',
+          description: 'Know how your school or shop handles medical referrals and where clients can find qualified medical care.',
           benefit: 'Shows professionalism and helps clients get timely care',
           timeframe: '15 minutes',
         },
@@ -1300,7 +1297,7 @@ export const chapter9PremiumContent: ChapterContent = {
       type: 'tabbed',
       id: 'practice-questions',
       title: '📝 PRACTICE QUESTIONS — TEST YOUR KNOWLEDGE',
-      subtitle: 'These mirror the style of questions you will see on the state board exam',
+      subtitle: 'Use these to review Chapter 9 concepts and service-safety decisions',
       tabs: [
         {
           id: 'q1-5',
@@ -1314,7 +1311,7 @@ export const chapter9PremiumContent: ChapterContent = {
             { label: 'Q5: What does SHAPES stand for?', description: 'ANSWER: Sensation, Heat regulation, Absorption, Protection, Excretion, Secretion — the six functions of the skin.' },
           ],
           facts: [
-            { text: 'These five questions cover the foundational anatomy and physiology that appear on every board exam.' },
+            { text: 'These five questions review foundational Chapter 9 anatomy and physiology.' },
           ],
         },
         {
@@ -1325,11 +1322,11 @@ export const chapter9PremiumContent: ChapterContent = {
             { label: 'Q6: What is the difference between primary and secondary skin lesions?', description: 'ANSWER: Primary lesions are the original lesions that appear first. Secondary lesions evolve from primary lesions through accumulation, infection, or healing.' },
             { label: 'Q7: What causes acne?', description: 'ANSWER: Bacteria (Propionibacterium acnes) multiply in clogged follicles, causing inflammation and infection. Hormonal changes and excess sebum contribute.' },
             { label: 'Q8: What are the ABCDE signs of melanoma?', description: 'ANSWER: Asymmetry, Border irregularity, Color variation, Diameter >6mm, Evolution (changing).' },
-            { label: 'Q9: What should you do if you see a suspicious skin condition on a client?', description: 'ANSWER: Do not perform the service. Refer the client to a physician or dermatologist. Document your observation.' },
-            { label: 'Q10: What is the most dangerous type of skin cancer?', description: 'ANSWER: Malignant melanoma. It is the least common but most dangerous form, with 100% fatality if untreated.' },
+            { label: 'Q9: What should you do if you see a suspicious skin condition on a client?', description: 'ANSWER: Pause any service that would contact the concerning area, describe what you observed without diagnosing, and recommend medical evaluation when appropriate.' },
+            { label: 'Q10: What is the most dangerous type of skin cancer?', description: 'ANSWER: Malignant melanoma. Chapter 9 identifies it as the least common but most dangerous of the three discussed; suspicious findings require prompt medical evaluation.' },
           ],
           facts: [
-            { text: 'Questions 6–10 test lesion identification, disorder knowledge, melanoma detection, and professional judgment.' },
+            { text: 'Questions 6–10 test lesion identification, disorder knowledge, melanoma observation, and professional judgment.' },
           ],
         },
       ],
@@ -1341,7 +1338,7 @@ export const chapter9PremiumContent: ChapterContent = {
     {
       type: 'quote',
       id: 'academy-pledge',
-      quote: 'I pledge to respect the skin as the vital organ it is. I will inspect before I serve, recognize before I treat, and refer before I risk. I understand that my chair is a frontline observation post and that my eyes can catch what mirrors miss. A master barber masters skin science.',
+      quote: 'I will respect the skin as a vital organ, observe before I serve, pause when a service may be unsafe, and refer concerning findings without diagnosing. My close view of the scalp, face, and neck is a professional responsibility, and I will use it within barbering scope.',
     },
   ],
 }
