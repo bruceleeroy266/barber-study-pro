@@ -4,7 +4,7 @@
  * Turns the atomic single-question reservation/submission transaction into a
  * controlled per-chapter question sequence:
  *
- *   Chapter 2: 5 questions (G5 unified grading standard)
+ *   Chapters 1–2: 5 questions (unified grading standard)
  *   Chapters 3–6: 5 questions (unified grading standard)
  *
  * All sequencing state is derived from PERSISTED data only:
@@ -32,6 +32,7 @@ import type { ChapterId } from '@/lib/reassessment/types'
  * the mapping/content/detection provider registries (fail-closed).
  */
 const KNOWLEDGE_CHECK_LENGTHS: Readonly<Record<string, number>> = {
+  'ch-1': 5,
   'ch-2': 5,
   'ch-3': 5,
   'ch-4': 5,
