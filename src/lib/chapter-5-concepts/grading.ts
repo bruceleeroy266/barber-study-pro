@@ -32,7 +32,7 @@ export interface Chapter5EvidenceRecord {
 export type Chapter5GradeInput = SharedGradeInput
 export type Chapter5GradeResult = SharedGradeResult
 export type Chapter5ConceptMasteryResult = SharedConceptMasteryResult
-export const CHAPTER4_GRADE_WEIGHTS = SHARED_GRADE_WEIGHTS
+export const CHAPTER5_GRADE_WEIGHTS = SHARED_GRADE_WEIGHTS
 
 export const calculateChapter5Grade = (input: Chapter5GradeInput): Chapter5GradeResult =>
   calculateSharedGrade(input)
