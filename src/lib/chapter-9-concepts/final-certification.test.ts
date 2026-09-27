@@ -84,7 +84,7 @@ describe('Final full Chapter 9 certification', () => {
       expect(contentIds.has(mapping.contentBlockId)).toBe(true)
     }
 
-    expect(validateChapter9MicroCheckPlacements()).toEqual([])
+    expect(validateChapter9MicroCheckPlacements()).toBe(true)
     expect(chapter9MicroCheckPlacements).toHaveLength(chapter9MicroChecks.length)
   })
 
@@ -123,12 +123,16 @@ describe('Final full Chapter 9 certification', () => {
     const check = chapter9MicroChecks.find((item) => item.id === 'mc-9-04')!
     const question = check.questions[0]
 
-    const evidence = buildChapter9MicroCheckEvidence({
-      studentId: 'student-c9-final',
-      question,
-      selectedAnswer: question.correctAnswer === 'a' ? 'b' : 'a',
-      timestamp: '2026-09-27T02:01:00.000Z',
-    })
+    const records = buildChapter9MicroCheckEvidence(
+      'student-c9-final',
+      [{
+        questionId: question.id,
+        selectedAnswer: question.correctAnswer === 'a' ? 'b' : 'a',
+      }],
+      '2026-09-27T02:01:00.000Z',
+    )
+    expect(records).toHaveLength(1)
+    const evidence = records[0]
 
     expect(evidence.source).toBe('micro_check')
     expect(evidence.attemptPhase).toBe('initial')
