@@ -23,9 +23,23 @@ describe('C10-1 canonical concept architecture', () => {
     expect(chapter10ConceptFamilies.every((c) => c.examRelevance === 'INDIRECT_REFERENCE_ONLY')).toBe(true)
   })
 
-  it('maps every current lesson section exactly once', () => {
-    const runtimeIds = chapter10PremiumContent.sections.map((section) => section.id).sort()
+  it('maps every current lesson content block exactly once', () => {
+    const collectIds = (value: unknown): string[] => {
+      if (Array.isArray(value)) return value.flatMap(collectIds)
+      if (!value || typeof value !== 'object') return []
+      const record = value as Record<string, unknown>
+      const ownId = typeof record.id === 'string' ? [record.id] : []
+      return [
+        ...ownId,
+        ...Object.entries(record)
+          .filter(([key]) => key !== 'id')
+          .flatMap(([, child]) => collectIds(child)),
+      ]
+    }
+
+    const runtimeIds = collectIds(chapter10PremiumContent.sections).sort()
     const mappedIds = chapter10ContentConceptMappings.map((m) => m.contentBlockId).sort()
+    expect(runtimeIds).toHaveLength(47)
     expect(mappedIds).toEqual(runtimeIds)
     expect(new Set(mappedIds).size).toBe(mappedIds.length)
   })
