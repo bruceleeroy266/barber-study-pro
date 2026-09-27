@@ -295,7 +295,7 @@ describe('Chapter 2 reassessment reserve — 5-per-concept unseen capacity (real
     )
     expect(result.success).toBe(false)
     expect(result.poolExhaustion?.isExhausted).toBe(true)
-    expect(result.poolExhaustion?.totalQuestionsInPool).toBe(10) // 5 initial + 5 reserve
+    expect(result.poolExhaustion?.totalQuestionsInPool).toBe(5) // formal reassessment pool is reserve-only
     expect(result.poolExhaustion?.availableQuestionIds).toHaveLength(0)
     expect(db.exhaustionCalls).toHaveLength(1)
   })
