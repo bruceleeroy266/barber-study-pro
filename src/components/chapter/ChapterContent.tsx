@@ -23,9 +23,15 @@ import AppearanceChecklist from './AppearanceChecklist'
 import ProTip from './ProTip'
 import ReflectionBlock from './ReflectionBlock'
 import HtmlContentBlock from './HtmlContentBlock'
+import Chapter2MicroCheckCard from './Chapter2MicroCheckCard'
 import Chapter7MicroCheckCard from './Chapter7MicroCheckCard'
 import Chapter8MicroCheckCard from './Chapter8MicroCheckCard'
 import Chapter9MicroCheckCard from './Chapter9MicroCheckCard'
+import { chapter2MicroChecks } from '@/lib/chapter-2-concepts/micro-checks'
+import {
+  loadChapter2MicroCheckAttempts,
+  type Chapter2MicroCheckAttemptRow,
+} from '@/lib/chapter-2-concepts/micro-check-persistence'
 import { chapter7MicroChecks } from '@/lib/chapter-7-concepts/micro-checks'
 import {
   loadChapter7MicroCheckAttempts,
@@ -113,9 +119,30 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
   })
   const [knowledgeChecksSaved, setKnowledgeChecksSaved] = useState(knowledgeChecksCompleted)
 
+  const [chapter2MicroCheckAttempts, setChapter2MicroCheckAttempts] = useState<Chapter2MicroCheckAttemptRow[]>([])
   const [chapter7MicroCheckAttempts, setChapter7MicroCheckAttempts] = useState<Chapter7MicroCheckAttemptRow[]>([])
   const [chapter8MicroCheckAttempts, setChapter8MicroCheckAttempts] = useState<Chapter8MicroCheckAttemptRow[]>([])
   const [chapter9MicroCheckAttempts, setChapter9MicroCheckAttempts] = useState<Chapter9MicroCheckAttemptRow[]>([])
+
+  useEffect(() => {
+    if (chapterId !== 'ch-2' || !userId) return
+
+    let cancelled = false
+    void loadChapter2MicroCheckAttempts(userId).then((rows) => {
+      if (!cancelled) setChapter2MicroCheckAttempts(rows)
+    })
+
+    return () => {
+      cancelled = true
+    }
+  }, [chapterId, userId])
+
+  const handleChapter2MicroCheckPersisted = useCallback((row: Chapter2MicroCheckAttemptRow) => {
+    setChapter2MicroCheckAttempts((previous) => {
+      if (previous.some((attempt) => attempt.question_id === row.question_id)) return previous
+      return [...previous, row]
+    })
+  }, [])
 
   useEffect(() => {
     if (chapterId !== 'ch-7' || !userId) return
@@ -406,6 +433,9 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
   return (
     <div className="space-y-10">
       {sections.map((section) => {
+        const chapter2MicroCheck = chapterId === 'ch-2'
+          ? chapter2MicroChecks.find((check) => check.afterSectionId === section.id)
+          : undefined
         const chapter7MicroCheck = chapterId === 'ch-7'
           ? chapter7MicroChecks.find((check) => check.afterSectionId === section.id)
           : undefined
@@ -419,6 +449,15 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
         return (
           <Fragment key={section.id}>
             {renderSection(section)}
+            {chapter2MicroCheck && userId && (
+              <Chapter2MicroCheckCard
+                check={chapter2MicroCheck}
+                userId={userId}
+                theme={t}
+                attempts={chapter2MicroCheckAttempts.filter((attempt) => attempt.check_id === chapter2MicroCheck.id)}
+                onAttemptPersisted={handleChapter2MicroCheckPersisted}
+              />
+            )}
             {chapter7MicroCheck && userId && (
               <Chapter7MicroCheckCard
                 check={chapter7MicroCheck}
