@@ -11,10 +11,8 @@
  * (chapter-3-concepts/mappings.ts) remains the single source of truth —
  * entries are projected, never duplicated or restated.
  *
- * Historical exclusion is what keeps initial-quiz questions out of an active
- * cycle's eligible pool: a cycle is only ever created after a persisted
- * initial-quiz attempt, so every initial question already sits in the
- * student's answers_json exclusion evidence.
+ * Formal selection is reserve-only. Initial questions remain resolvable for
+ * detection/evidence, but cannot be selected as remediation questions.
  */
 
 import {
@@ -38,10 +36,12 @@ export class Chapter3MappingProvider implements ICanonicalMappingProvider {
   // Build lookup maps for efficient resolution
   private readonly questionToConceptMap: Map<QuizQuestionId, ConceptId>
   private readonly conceptToQuestionsMap: Map<ConceptId, QuizQuestionId[]>
+  private readonly conceptToReserveQuestionsMap: Map<ConceptId, QuizQuestionId[]>
 
   constructor() {
     this.questionToConceptMap = new Map()
     this.conceptToQuestionsMap = new Map()
+    this.conceptToReserveQuestionsMap = new Map()
 
     // Build bidirectional mappings from the canonical source (initial + reserve)
     for (const mapping of [
@@ -58,6 +58,13 @@ export class Chapter3MappingProvider implements ICanonicalMappingProvider {
       const existing = this.conceptToQuestionsMap.get(conceptId) ?? []
       this.conceptToQuestionsMap.set(conceptId, [...existing, questionId])
     }
+
+    for (const mapping of chapter3ReassessmentQuestionConceptMappings) {
+      const questionId = mapping.questionId as string
+      const conceptId = mapping.conceptFamilyId as string
+      const existing = this.conceptToReserveQuestionsMap.get(conceptId) ?? []
+      this.conceptToReserveQuestionsMap.set(conceptId, [...existing, questionId])
+    }
   }
 
   getConceptForQuestion(questionId: QuizQuestionId): ConceptId | undefined {
@@ -65,7 +72,8 @@ export class Chapter3MappingProvider implements ICanonicalMappingProvider {
   }
 
   getQuestionsForConcept(conceptId: ConceptId): readonly QuizQuestionId[] {
-    return this.conceptToQuestionsMap.get(conceptId) ?? []
+    // Formal remediation is reserve-only; initial assessment items never substitute.
+    return this.conceptToReserveQuestionsMap.get(conceptId) ?? []
   }
 
   isQuestionMappedToConcept(questionId: QuizQuestionId, conceptId: ConceptId): boolean {
