@@ -140,3 +140,6 @@ As with C10-2 and C10-3, this phase is grounded in the repository Chapter 10 sou
 ## Status
 
 **C10-4 implementation complete. Exact-head Engineering Verification, Vercel Preview, and final 75-question adversarial certification are still required before GREEN status.**
+
+
+Verification trigger: PR #117 is tested against `main`; no merge authorization is implied.
