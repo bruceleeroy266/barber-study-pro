@@ -59,7 +59,10 @@ const chapter7DetectionInput: engine.ConceptDetectionInput<
   Chapter7ConceptFamilyId,
   Chapter7LearningObjectiveId
 > = {
-  concepts: chapter7ConceptFamilies,
+  concepts: chapter7ConceptFamilies.map((family) => ({
+    ...family,
+    learningObjectiveId: family.learningObjectiveIds[0],
+  })),
   questionMappings: chapter7QuestionMappings,
   correctAnswers: questionCorrectAnswerMap,
 }
