@@ -6,7 +6,7 @@ import {
   validateChapter10MicroCheckPlacements,
 } from './micro-checks'
 import { calculateChapter10ConceptMastery, type Chapter10EvidenceRecord } from './grading'
-import { chapter10MicroCheckPlacements } from './mappings'
+import { chapter10ContentConceptMappings, chapter10MicroCheckPlacements } from './mappings'
 import { CHAPTER10_CONCEPT_FAMILY_IDS } from './concepts'
 
 const ts = '2026-09-27T23:30:00.000Z'
@@ -28,6 +28,11 @@ describe('C10-5 Chapter 10 micro-check first-attempt evidence', () => {
         ['understanding', 'application', 'scenario'].includes(question.difficulty),
       ),
     ).toBe(true)
+  })
+
+  it('places every check after a current lesson content block', () => {
+    const contentIds = new Set(chapter10ContentConceptMappings.map((mapping) => mapping.contentBlockId))
+    expect(chapter10MicroCheckPlacements.every((placement) => contentIds.has(placement.afterSectionId))).toBe(true)
   })
 
   it('captures only the first response for a question and binds it to one canonical concept', () => {
