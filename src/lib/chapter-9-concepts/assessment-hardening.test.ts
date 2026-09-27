@@ -56,7 +56,7 @@ describe('C9-4 hardened Chapter 9 assessment', () => {
   it('certifies the corrected high-risk concepts', () => {
     const byId = new Map(chapter9PremiumQuizQuestions.map((q) => [q.id, q]))
 
-    expect(byId.get('q9-003')?.explanation).toContain('Blood flow supports nourishment')
+    expect(byId.get('q9-003')?.explanation).toContain('Dermal blood flow supports nourishment')
     expect(byId.get('q9-015')?.explanation).toContain('does not by itself prove a specific diagnosis')
     expect(byId.get('q9-020')?.explanation).toContain('different conditions')
     expect(byId.get('q9-028')?.explanation).toContain('least common but most dangerous')
