@@ -1,9 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { chapterContentData } from '../chapter-content'
 import { chapter2G5ReassessmentQuestions, chapter2G5ReassessmentMappings, chapter2G5ReassessmentSourceAudit } from '../chapter-2-reassessment-g5'
 import { chapter2ReassessmentQuestions } from '../chapter-2-reassessment-questions'
 import { chapter2PremiumQuizQuestions } from '../chapter-2-premium-quiz'
-import { chapter2QuizQuestionMappings } from './mappings'
+import { chapter2QuizQuestionMappings, chapter2ContentMappings } from './mappings'
 import { ACTIVE_CONCEPT_IDS } from './concepts'
 import { getChapter2MappingProvider, resetChapter2MappingProvider } from '../reassessment/adapters/chapter-2-adapter'
 import { getKnowledgeCheckLength, getKnowledgeCheckProgress, type IKnowledgeCheckDbClient, type ReassessmentAttemptRow, type ReassessmentReservationRow } from '../remediation/knowledge-check'
@@ -18,7 +17,7 @@ describe('G5-2 Chapter 2 five-question reassessment expansion', () => {
   })
 
   it('source-audits every new question to canonical Chapter 2 lesson blocks and the same concept mapping', () => {
-    const validSectionIds = new Set(chapterContentData['ch-2'].sections.map((section) => section.id))
+    const validSectionIds = new Set(chapter2ContentMappings.map((mapping) => mapping.contentBlockId))
     expect(chapter2G5ReassessmentSourceAudit).toHaveLength(100)
     expect(chapter2G5ReassessmentMappings).toHaveLength(100)
 
