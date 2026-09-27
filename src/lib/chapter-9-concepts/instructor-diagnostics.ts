@@ -67,7 +67,7 @@ const quizConcept = new Map<string, Chapter9ConceptFamilyId>(
   chapter9QuizQuestionConceptMappings.map((mapping) => [mapping.questionId, mapping.conceptFamilyId]),
 )
 
-const reassessmentById = new Map(
+const reassessmentById = new Map<string, (typeof chapter9ReassessmentReserve)[number]>(
   chapter9ReassessmentReserve.map((question) => [question.id, question]),
 )
 
