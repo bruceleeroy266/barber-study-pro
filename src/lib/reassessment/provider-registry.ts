@@ -12,6 +12,7 @@
 
 import type { ChapterId, ICanonicalMappingProvider, ConceptId } from './types'
 import type { DetectionState, DetectionConfidence, ConceptEvidence } from '../concept-detection/engine'
+import { getChapter1MappingProvider } from './adapters/chapter-1-adapter'
 import { getChapter2MappingProvider } from './adapters/chapter-2-adapter'
 import { getChapter3MappingProvider } from './adapters/chapter-3-adapter'
 import { getChapter4MappingProvider } from './adapters/chapter-4-adapter'
@@ -20,6 +21,11 @@ import { getChapter6MappingProvider } from './adapters/chapter-6-adapter'
 import { getChapter7MappingProvider } from './adapters/chapter-7-adapter'
 import { getChapter8MappingProvider } from './adapters/chapter-8-adapter'
 import { getChapter9MappingProvider } from './adapters/chapter-9-adapter'
+import {
+  Chapter1DetectionProvider,
+  createChapter1DetectionProvider,
+  type Chapter1DetectionProviderConfig,
+} from './adapters/chapter-1-detection-provider'
 import {
   Chapter2DetectionProvider,
   createChapter2DetectionProvider,
@@ -106,6 +112,7 @@ class MappingProviderRegistry {
   private readonly providers: Map<ChapterId, ICanonicalMappingProvider> = new Map()
 
   constructor() {
+    this.registerProvider(getChapter1MappingProvider())
     // Register Chapter 2 as the reference implementation
     this.registerProvider(getChapter2MappingProvider())
     // Register Chapter 3 (C3-3)
@@ -275,6 +282,15 @@ export function hasConceptDetectionProvider(chapterId: ChapterId): boolean {
   return registry.hasProvider(chapterId)
 }
 
+export function initializeChapter1DetectionProvider(
+  config: Chapter1DetectionProviderConfig
+): Chapter1DetectionProvider {
+  const provider = createChapter1DetectionProvider(config)
+  const registry = getDetectionProviderRegistry()
+  registry.registerProvider(provider)
+  return provider
+}
+
 /**
  * Initialize and register the Chapter 2 detection provider.
  *
@@ -386,6 +402,9 @@ export function initializeChapterDetectionProvider(
   chapterId: ChapterId,
   config: Chapter2DetectionProviderConfig
 ): IConceptDetectionProvider | undefined {
+  if (chapterId === 'ch-1') {
+    return initializeChapter1DetectionProvider(config)
+  }
   if (chapterId === 'ch-2') {
     return initializeChapter2DetectionProvider(config)
   }
