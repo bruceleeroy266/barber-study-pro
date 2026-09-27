@@ -23,7 +23,7 @@ describe('C9-5 Chapter 9 micro-check first-attempt evidence', () => {
     expect(questions).toHaveLength(21)
     expect(new Set(questions.map((question) => question.id)).size).toBe(21)
     expect(new Set(chapter9MicroChecks.map((check) => check.conceptFamilyId)).size).toBe(10)
-    expect(questions.some((question) => question.difficulty === 'recall')).toBe(false)
+    expect(questions.every((question) => ['understanding', 'application', 'scenario'].includes(question.difficulty))).toBe(true)
   })
 
   it('captures only the first response for a micro-check question and attributes the miss to its canonical concept', () => {
