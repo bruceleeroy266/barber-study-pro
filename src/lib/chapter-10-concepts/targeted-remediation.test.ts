@@ -43,7 +43,7 @@ describe('C10-7 reassessment reserve', () => {
       const questions = getChapter10ReassessmentReserve(conceptFamilyId)
       expect(questions).toHaveLength(5)
       expect(questions.every((question) => question.conceptFamilyId === conceptFamilyId)).toBe(true)
-      expect(questions.every((question) => question.difficulty !== 'recall')).toBe(true)
+      expect(questions.every((question) => ['understanding', 'application', 'scenario'].includes(question.difficulty))).toBe(true)
     }
   })
 
