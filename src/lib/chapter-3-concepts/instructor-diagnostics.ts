@@ -48,8 +48,8 @@ const familySet=new Set<string>(CHAPTER3_CONCEPT_FAMILY_IDS)
 const familyName=new Map(chapter3ConceptFamilies.map(f=>[f.id,f.name]))
 const initialById=new Map(chapter3PremiumQuizQuestions.map(q=>[q.id,q]))
 const reserveById=new Map(chapter3ReassessmentQuestions.map(q=>[q.id,q]))
-const initialMap=new Map(chapter3QuizQuestionConceptMappings.map(m=>[m.questionId,m.conceptFamilyId]))
-const reserveMap=new Map(chapter3ReassessmentQuestionConceptMappings.map(m=>[m.questionId,m.conceptFamilyId]))
+const initialMap=new Map<string, Chapter3ConceptFamilyId>(chapter3QuizQuestionConceptMappings.map(m=>[m.questionId,m.conceptFamilyId]))
+const reserveMap=new Map<string, Chapter3ConceptFamilyId>(chapter3ReassessmentQuestionConceptMappings.map(m=>[m.questionId,m.conceptFamilyId]))
 
 function isFamily(value:string|null|undefined):value is Chapter3ConceptFamilyId{return !!value&&familySet.has(value)}
 function isAnswer(value:unknown):value is 'a'|'b'|'c'|'d'{return value==='a'||value==='b'||value==='c'||value==='d'}
