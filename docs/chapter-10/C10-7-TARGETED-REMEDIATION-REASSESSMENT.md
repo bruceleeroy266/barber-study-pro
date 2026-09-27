@@ -80,3 +80,6 @@ Recovery uses the existing Chapter 10 wrapper over the shared mastery engine.
 ## Status
 
 **Implementation complete. Exact-head Engineering Verification, Vercel Preview, and final end-to-end recovery adversarial certification are required before C10-7 can be certified GREEN.**
+
+
+Verification trigger: PR #120 is tested against `main`; no merge authorization is implied.
