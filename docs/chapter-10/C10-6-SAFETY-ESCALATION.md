@@ -80,3 +80,6 @@ Chapter 10 micro-check misses that are tagged as high-risk now display a **Safet
 ## Status
 
 **Implementation complete. Exact-head Engineering Verification, Vercel Preview, and final safety adversarial certification are required before C10-6 can be certified GREEN.**
+
+
+Verification trigger: PR #119 is tested against `main`; no merge authorization is implied.
