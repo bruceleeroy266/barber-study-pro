@@ -100,7 +100,7 @@ export const chapter10PremiumTheme: ChapterTheme = {
 export const chapter10PremiumContent: ChapterContent = {
   chapterNumber: 10,
   title: 'PROPERTIES AND DISORDERS OF THE HAIR AND SCALP',
-  subtitle: 'Enter the Hair Lab — Master Trichology, Diagnosis & Every Client Who Sits in Your Chair',
+  subtitle: 'Enter the Hair Lab — Master Hair Science, Analysis & Client Care',
   theme: chapter10PremiumTheme,
   sections: [
     // ═══════════════════════════════════════════
@@ -190,7 +190,7 @@ export const chapter10PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'hair-structure-intro',
       title: 'THE ANATOMY OF HAIR',
-      content: 'Hair is a KERATINIZED appendage of the skin — meaning it is made of dead protein cells pushed upward from living roots. Every strand has two main parts: the ROOT (below the skin surface) and the SHAFT (the visible portion).\n\nUnderstanding hair structure is not academic trivia — it is the foundation of every service you perform. Chemical services target specific layers. Cutting techniques interact with the cuticle. Product absorption depends on porosity, which is determined by cuticle condition.\n\nKEY REVIEW: Hair is approximately 90% keratin protein. The cortex is the target of all chemical services.',
+      content: 'Hair is a KERATINIZED appendage of the skin — meaning it is made of dead protein cells pushed upward from living roots. Every strand has two main parts: the ROOT (below the skin surface) and the SHAFT (the visible portion).\n\nUnderstanding hair structure is not academic trivia — it is the foundation of every service you perform. Chemical services target specific layers. Cutting techniques interact with the cuticle. Product absorption depends on porosity, which is determined by cuticle condition.\n\nKEY STUDY POINT: Hair is made primarily of keratin protein. The cortex contains pigment and side bonds that are directly involved in many chemical-service effects.',
       highlight: 'ROOT = LIVING GROWTH | SHAFT = VISIBLE DEAD PROTEIN',
     },
 
@@ -269,7 +269,7 @@ export const chapter10PremiumContent: ChapterContent = {
             { label: 'BARBER RELEVANCE', description: 'Sebum production affects hair condition. Overproduction = oily scalp and hair. Underproduction = dryness and brittleness. Proper cleansing and conditioning balance sebum levels.' },
           ],
           facts: [
-            { text: 'KEY REVIEW: Sebaceous glands are attached to EVERY hair follicle. They secrete sebum through the same duct the hair emerges from.' },
+            { text: 'KEY STUDY POINT: Sebaceous glands are associated with hair follicles and secrete sebum that lubricates the hair and skin.' },
             { text: 'Hormonal changes (especially during puberty) can cause sebaceous glands to become overactive, leading to oily scalp and acne.' },
           ],
         },
@@ -305,11 +305,11 @@ export const chapter10PremiumContent: ChapterContent = {
           title: 'CORTEX — THE HEART OF THE HAIR (~90%)',
           bullets: [
             { label: 'STRUCTURE', description: 'The middle and main layer; contains melanin granules, cortical cells, and side bonds' },
-            { label: 'FUNCTION', description: 'Provides strength, elasticity, and color. The target of ALL chemical services.' },
+            { label: 'FUNCTION', description: 'Provides strength, elasticity, and color; it contains pigment and side bonds affected by chemical services.' },
             { label: 'BARBER RELEVANCE', description: 'Color, perms, and relaxers all work on the cortex. Damage here is permanent and cumulative.' },
           ],
           facts: [
-            { text: 'KEY REVIEW: The cortex is approximately 90% of hair weight and the target of all chemical services.' },
+            { text: 'KEY STUDY POINT: The cortex is approximately 90% of hair weight and contains pigment and side bonds central to chemical-service changes.' },
             { text: 'The cortex contains three types of side bonds: hydrogen, salt, and disulfide. These determine how hair responds to styling and chemicals.' },
           ],
         },
@@ -467,17 +467,17 @@ export const chapter10PremiumContent: ChapterContent = {
         {
           icon: 'Sprout',
           title: 'ANAGEN — GROWTH PHASE',
-          description: '3–5+ years. 90% of scalp hair is in this phase. Active cell division in the bulb pushes the strand upward. This is when hair grows approximately ½ inch per month.',
+          description: 'About 2–10 years. Roughly 90% of scalp hair is in this growth phase. Active cell division in the bulb pushes the strand upward, and average growth is about ½ inch per month.',
         },
         {
           icon: 'ArrowRightLeft',
           title: 'CATAGEN — TRANSITION PHASE',
-          description: '~2 weeks. The follicle shrinks and detaches from the dermal papilla. Growth stops. Only 1–2% of hair is in this phase at any time.',
+          description: 'The transition phase. The follicle shrinks, the bulb changes, and active growth stops before the resting phase.',
         },
         {
           icon: 'Moon',
           title: 'TELOGEN — RESTING PHASE',
-          description: '3–6 months. The hair sheds naturally. 10% of scalp hair is in this phase. Normal shedding is 75–100 hairs per day. New anagen growth pushes the old hair out.',
+          description: 'About 3–6 months. Less than 10% of scalp hair is in this resting/shedding phase. Normal shedding is about 75–100 hairs per day.',
         },
         {
           icon: 'TrendingUp',
@@ -618,13 +618,13 @@ export const chapter10PremiumContent: ChapterContent = {
           label: 'OTHER TYPES',
           title: 'OTHER TYPES OF HAIR LOSS',
           bullets: [
-            { label: 'TRACTION ALOPECIA', description: 'Caused by prolonged tension from tight styles, braids, or extensions. Preventable.' },
-            { label: 'TELOGEN EFFLUVIUM', description: 'Stress, illness, or medication pushes hair prematurely into telogen. Diffuse shedding 2–3 months after trigger.' },
-            { label: 'SCARRING (CICATRICIAL)', description: 'Permanent destruction of follicles. Requires immediate medical attention. Barber cannot help.' },
+            { label: 'ALOPECIA TOTALIS', description: 'Complete loss of scalp hair. This is a medical hair-loss condition and is outside barbering treatment scope.' },
+            { label: 'ALOPECIA UNIVERSALIS', description: 'Complete loss of body hair. This is a medical hair-loss condition and is outside barbering treatment scope.' },
+            { label: 'ABNORMAL HAIR LOSS', description: 'When hair loss appears abnormal or outside ordinary shedding patterns, focus on observation, respectful communication, and appropriate referral rather than diagnosis.' },
           ],
           facts: [
-            { text: 'Traction alopecia is preventable — educate clients about protective styling.' },
-            { text: 'Scarring alopecia is permanent. Early medical intervention is critical.' },
+            { text: 'KEY STUDY POINT: Alopecia totalis affects the scalp; alopecia universalis affects the body.' },
+            { text: 'Barbers should recognize hair-loss terminology and keep diagnosis and treatment decisions outside barbering scope.' },
           ],
         },
       ],
@@ -647,7 +647,7 @@ export const chapter10PremiumContent: ChapterContent = {
         {
           icon: 'RotateCw',
           title: 'WHORL',
-          description: 'Hair that grows in a circular or swirl pattern. Most commonly seen at the crown of the head. Every client has at least one whorl — know where it is before you cut.',
+          description: 'Hair that grows in a circular or swirl pattern. It is commonly seen at the crown and should be considered when planning a haircut.',
         },
         {
           icon: 'ArrowUp',
@@ -841,15 +841,15 @@ export const chapter10PremiumContent: ChapterContent = {
           title: 'SERVICE-SAFETY REMINDERS',
           bullets: [
             { label: 'ANALYZE FIRST', description: 'Analyze the scalp and hair before chemical services and consider any irritation, abrasions, parasites, porosity, and elasticity findings.' },
-            { label: 'DO NOT ANALYZE', description: 'Stay within barbering scope: observe, communicate, make service-safety decisions, and refer without diagnosing.' },
+            { label: 'DO NOT DIAGNOSE', description: 'Stay within barbering scope: observe, communicate, make service-safety decisions, and refer without diagnosing.' },
             { label: 'STOP FOR CONTAGION', description: 'For suspected contagious conditions, avoid unsafe service, follow sanitation requirements, and refer when appropriate.' },
             { label: 'TEST ELASTICITY', description: 'Low elasticity indicates breakage risk and should affect chemical-service planning.' },
-            { label: 'CHECK POROSITY', description: 'Over-porous hair needs conditioning before chemicals. Adjust your approach.' },
-            { label: 'PROTECT YOURSELF', description: 'Wear gloves when examining unknown scalp conditions. Wash hands thoroughly.' },
+            { label: 'CHECK POROSITY', description: 'Overly porous hair has a compromised cuticle and should influence chemical-service planning.' },
+            { label: 'INFECTION CONTROL', description: 'Follow required cleaning, disinfection, and exposure-control procedures when scalp conditions raise sanitation concerns.' },
           ],
           facts: [
             { text: 'KEY STUDY POINT: Follow current sanitation and licensing requirements when a contagious condition is suspected; penalties vary by jurisdiction.' },
-            { text: 'A single mistake with chemical services on compromised hair can destroy a client\'s hair and your reputation.' },
+            { text: 'Compromised hair can have a greater risk of breakage during chemical services, so porosity and elasticity findings should inform the service decision.' },
           ],
         },
       ],
