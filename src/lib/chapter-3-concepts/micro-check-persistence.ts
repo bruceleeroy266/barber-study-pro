@@ -37,7 +37,7 @@ export async function loadChapter3MicroCheckAttempts(
     .order('answered_at', { ascending: true })
 
   if (error) {
-    console.error('[C2 micro-check] Failed to load attempts:', error.message)
+    console.error('[C3 micro-check] Failed to load attempts:', error.message)
     return []
   }
 
@@ -54,7 +54,7 @@ export async function persistChapter3MicroCheckAttempt(
   alreadyRecorded: boolean
   error: string | null
 }> {
-  if (check.conceptId !== question.conceptId) {
+  if (check.conceptFamilyId !== question.conceptFamilyId) {
     return { row: null, alreadyRecorded: false, error: 'Concept mapping mismatch.' }
   }
 
@@ -147,7 +147,7 @@ export function buildChapter3MicroCheckDiagnostics(
 ): Chapter3MicroCheckConceptDiagnostic[] {
   const evidence = chapter3MicroCheckRowsToEvidence(rows)
 
-  return conceptIds.map((conceptId) => {
+  return conceptIds.map((conceptFamilyId) => {
     const conceptRows = rows.filter((row) => row.concept_id === conceptFamilyId)
     const mastery = calculateChapter3ConceptMastery(
       evidence.filter((record) => record.conceptFamilyId === conceptFamilyId),
