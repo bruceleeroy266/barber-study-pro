@@ -2,7 +2,7 @@
  * Knowledge Check Sequencing Tests (C3-3 Stages 5–7)
  *
  * Proves the five-question Knowledge Check contract from persisted state only:
- *   - per-chapter sequence lengths (ch-2 stays 1, ch-3 is 5, unknown falls back)
+ *   - per-chapter sequence lengths (ch-2 and ch-3 use 5, unknown falls back)
  *   - progress derivation: answered counts, completion, open-reservation
  *     detection (placeholder IDs), and correct handling of consumed WRONG answers
  *   - questions 1–4 cannot complete (and therefore cannot terminally evaluate)
@@ -80,8 +80,8 @@ class MockKnowledgeCheckDb implements IKnowledgeCheckDbClient {
 // ───────────────────────────────────────────────
 
 describe('knowledge-check sequence lengths', () => {
-  it('ch-2 stays at 1 (established behavior), ch-3 and ch-4 are 5, unknown falls back to 1', () => {
-    expect(getKnowledgeCheckLength('ch-2')).toBe(1)
+  it('ch-2, ch-3, and ch-4 use five-question checks, unknown falls back to 1', () => {
+    expect(getKnowledgeCheckLength('ch-2')).toBe(5)
     expect(getKnowledgeCheckLength('ch-3')).toBe(5)
     expect(getKnowledgeCheckLength('ch-4')).toBe(5)
     expect(getKnowledgeCheckLength('ch-5')).toBe(1)
@@ -367,17 +367,17 @@ describe('exclusion engine — the five Knowledge Check questions are legitimate
 // Chapter 2 zero-regression spot checks + 80% policy
 // ───────────────────────────────────────────────
 
-describe('chapter 2 preservation + ch3 initial policy', () => {
-  it('ch-2 sequence stays single-question: one attempt completes the check', async () => {
+describe('chapter 2 G5 sequence + ch3 initial policy', () => {
+  it('ch-2 requires five persisted attempts before the check completes', async () => {
     const db = new MockKnowledgeCheckDb()
-    db.reserveOpen('res-1', 'qq-2-051', 'placeholder-1')
-    db.consume('res-1', 'attempt-1', true)
-
+    for (let i = 1; i <= 5; i++) {
+      db.reserveOpen(`res-${i}`, `qq-2-${String(75 + i).padStart(3, '0')}`, `placeholder-${i}`)
+      db.consume(`res-${i}`, `attempt-${i}`, true)
+      const progress = await getKnowledgeCheckProgress(db, 'cycle-1', 'user-1', getKnowledgeCheckLength('ch-2'))
+      expect(progress.isComplete).toBe(i === 5)
+    }
     const progress = await getKnowledgeCheckProgress(db, 'cycle-1', 'user-1', getKnowledgeCheckLength('ch-2'))
-    expect(progress.isComplete).toBe(true)
-    expect(progress.answeredAttemptIds).toEqual(['attempt-1'])
-    // Evaluation for ch-2 uses exactly the single persisted attempt ID.
-    expect(progress.answeredAttemptIds.slice(0, 1)).toEqual(['attempt-1'])
+    expect(progress.answeredAttemptIds).toHaveLength(5)
   })
 
   it('the 80% Chapter 3 initial-quiz policy is untouched', async () => {
