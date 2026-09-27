@@ -314,7 +314,7 @@ describe('Chapter 2 Concept Runtime Architecture', () => {
   describe('Quiz Question Mappings', () => {
     it('all 173 production quiz questions (48 initial + 125 reserve) are accounted for in mappings', () => {
       const mappedIds = new Set(chapter2QuizQuestionMappings.map((m) => m.questionId))
-      expect(mappedIds.size).toBe(73)
+      expect(mappedIds.size).toBe(173)
       for (const id of productionQuizIds) {
         expect(mappedIds.has(id as `qq-2-${string}`), `Quiz question '${id}' not mapped`).toBe(true)
       }
@@ -391,8 +391,8 @@ describe('Chapter 2 Concept Runtime Architecture', () => {
 
     it('C-2-16 has 6 quiz questions (1 initial + 5 reassessment reserve)', () => {
       const mappings = chapter2QuizQuestionMappings.filter((m) => m.conceptId === 'C-2-16')
-      expect(mappings).toHaveLength(2)
-      expect(mappings.map((m) => m.questionId).sort()).toEqual(['qq-2-037', 'qq-2-054'])
+      expect(mappings).toHaveLength(6)
+      expect(mappings.map((m) => m.questionId).sort()).toEqual(['qq-2-037', 'qq-2-054', 'qq-2-136', 'qq-2-137', 'qq-2-138', 'qq-2-139'])
     })
 
     it('fc-2-045 is mapped to C-2-05 but is inactive', () => {
