@@ -5,9 +5,9 @@ import type { ChapterTheme } from '@/lib/chapter-content'
 import type {
   Chapter3MicroCheck,
   Chapter3MicroCheckAnswer,
-} from '@/lib/chapter-2-concepts/micro-checks'
-import type { Chapter3MicroCheckAttemptRow } from '@/lib/chapter-2-concepts/micro-check-persistence'
-import { persistChapter3MicroCheckAttempt } from '@/lib/chapter-2-concepts/micro-check-persistence'
+} from '@/lib/chapter-3-concepts/micro-checks'
+import type { Chapter3MicroCheckAttemptRow } from '@/lib/chapter-3-concepts/micro-check-persistence'
+import { persistChapter3MicroCheckAttempt } from '@/lib/chapter-3-concepts/micro-check-persistence'
 
 interface Props {
   check: Chapter3MicroCheck
