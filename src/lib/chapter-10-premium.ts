@@ -706,7 +706,7 @@ export const chapter10PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'hypertrophies',
       title: 'HYPERTROPHIES — ABNORMAL SKIN GROWTHS',
-      content: 'Hypertrophies are abnormal growths on the skin such as moles, warts, or skin tags. They can appear anywhere on the scalp and are usually harmless — but barbers play a critical role in early detection of skin cancer.\n\nWHY IT MATTERS: When combing through hair, you must use extreme care to avoid catching the comb on these growths. Painful, bleeding, or visibly changing growths warrant cautious service decisions and appropriate medical referral.\n\nRED FLAGS: If a client\'s mole or growth has changed color, size, shape, or texture since their last visit, gently suggest they see a physician. You are not diagnosing — you are observing. If a visible change is concerning or outside scope, recommend appropriate medical evaluation.\n\nKEY STUDY POINT: Use gentle scalp-analysis techniques while parting the hair to observe hypertrophies, abrasions, and parasites without scraping or irritating the scalp.',
+      content: 'Hypertrophies are abnormal growths on the skin such as moles, warts, or skin tags. When they are present on the scalp, the barber should observe them carefully and avoid catching or injuring raised areas during service. Determining whether a growth is benign or malignant is outside barbering scope.\n\nWHY IT MATTERS: When combing through hair, you must use extreme care to avoid catching the comb on these growths. Painful, bleeding, or visibly changing growths warrant cautious service decisions and appropriate medical referral.\n\nRED FLAGS: If a client\'s mole or growth has changed color, size, shape, or texture since their last visit, gently suggest they see a physician. You are not diagnosing — you are observing. If a visible change is concerning or outside scope, recommend appropriate medical evaluation.\n\nKEY STUDY POINT: Use gentle scalp-analysis techniques while parting the hair to observe hypertrophies, abrasions, and parasites without scraping or irritating the scalp.',
       highlight: 'OBSERVE — PROTECT — REFER WHEN CHANGES APPEAR',
     },
 
@@ -716,8 +716,8 @@ export const chapter10PremiumContent: ChapterContent = {
     {
       type: 'checklist',
       id: 'contagious-disorders',
-      title: '🚫 CONTAGIOUS SCALP DISORDERS — NO SERVICE',
-      subtitle: 'Recognize these conditions and STOP immediately. Refer to a physician.',
+      title: '🚫 CONTAGIOUS SCALP CONDITIONS — SERVICE SAFETY',
+      subtitle: 'Recognize source-covered contagious conditions, avoid unsafe service over affected areas, follow sanitation requirements, and refer for appropriate medical evaluation.',
       items: [
         { text: 'TINEA CAPITIS (ringworm of scalp) — Fungal infection. Circular patches with scaling and broken hairs. Highly contagious.' },
         { text: 'TINEA BARBAE (ringworm of beard) — Fungal infection of beard area. Red, scaly patches with pustules. Highly contagious.' },
