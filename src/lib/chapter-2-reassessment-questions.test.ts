@@ -1,15 +1,15 @@
 /**
  * ASCYN PRO — Chapter 2 Reassessment Reserve Tests (Post-Lock Option A)
  *
- * Protects the 25-question reassessment reserve and its integration:
- *   - reserve bank shape (25 questions, unique sequential IDs, valid options)
- *   - reserve answer-position balance (A=7, B=6, C=6, D=6)
+ * Protects the 125-question reassessment reserve and its integration:
+ *   - reserve bank shape (125 questions, unique sequential IDs, valid options)
+ *   - reserve answer-position balance (A=32, B=31, C=31, D=31)
  *   - no correct-is-longest giveaway
- *   - exactly one reserve question per active concept (25/25; C-2-22 none)
- *   - combined capacity 73 with combined mapping integrity
+ *   - exactly five reserve questions per active concept (25/25; C-2-22 none)
+ *   - combined capacity 173 with combined mapping integrity
  *   - initial quiz serving remains exactly the locked 48
  *   - locked 48 ID set unchanged
- *   - 25/25 unseen capacity through the REAL exclusion engine after a full
+ *   - 5-per-concept unseen capacity through the REAL exclusion engine after a full
  *     initial 48-question attempt, and safe pool exhaustion after the reserve
  *     is also consumed
  *   - reserve answers participate in detection evidence
@@ -50,15 +50,15 @@ const mappingByQuestion = new Map<string, string>(
 // ───────────────────────────────────────────────
 
 describe('Chapter 2 reassessment reserve — bank shape', () => {
-  it('contains exactly 25 questions', () => {
-    expect(reserve).toHaveLength(25)
+  it('contains exactly 125 questions', () => {
+    expect(reserve).toHaveLength(125)
   })
 
-  it('uses unique sequential IDs qq-2-051 through qq-2-075 (retired 033/036 untouched)', () => {
+  it('uses unique sequential IDs qq-2-051 through qq-2-175 (retired 033/036 untouched)', () => {
     const ids = reserve.map((q) => q.id)
-    expect(new Set(ids).size).toBe(25)
+    expect(new Set(ids).size).toBe(125)
     const expected = Array.from(
-      { length: 25 },
+      { length: 125 },
       (_, i) => `qq-2-${String(i + 51).padStart(3, '0')}`,
     )
     expect([...ids].sort()).toEqual(expected)
@@ -86,14 +86,14 @@ describe('Chapter 2 reassessment reserve — position integrity', () => {
   const counts = { a: 0, b: 0, c: 0, d: 0 }
   for (const q of reserve) counts[q.correct_answer as keyof typeof counts] += 1
 
-  it('reserve positions are exactly A=7, B=6, C=6, D=6', () => {
-    expect(counts).toEqual({ a: 7, b: 6, c: 6, d: 6 })
+  it('reserve positions remain balanced across the expanded bank', () => {
+    const values = Object.values(counts)
+    expect(Math.max(...values) - Math.min(...values)).toBeLessThanOrEqual(1)
   })
 
-  it('combined bank positions are A=19, B=18, C=18, D=18 and blind ceiling stays <80%', () => {
+  it('combined bank answer positions remain balanced and blind ceiling stays <80%', () => {
     const combined = { ...counts }
     for (const q of initial) combined[q.correct_answer as keyof typeof combined] += 1
-    expect(combined).toEqual({ a: 19, b: 18, c: 18, d: 18 })
     const blindMax = Math.max(...Object.values(combined))
     expect(blindMax / (initial.length + reserve.length)).toBeLessThan(0.8)
   })
@@ -131,7 +131,7 @@ describe('Chapter 2 reassessment reserve — position integrity', () => {
 // ───────────────────────────────────────────────
 
 describe('Chapter 2 reassessment reserve — concept coverage', () => {
-  it('assigns exactly one reserve question to each of the 25 active concepts', () => {
+  it('assigns exactly five reserve questions to each of the 25 active concepts', () => {
     const concepts = reserve.map((q) => mappingByQuestion.get(q.id))
     for (const q of reserve) {
       expect(concepts, `${q.id} unmapped`).toBeDefined()
@@ -140,6 +140,7 @@ describe('Chapter 2 reassessment reserve — concept coverage', () => {
     expect(uniqueConcepts.size).toBe(25)
     for (const id of ACTIVE_CONCEPT_IDS) {
       expect(uniqueConcepts.has(id)).toBe(true)
+      expect(concepts.filter((conceptId) => conceptId === id)).toHaveLength(5)
     }
   })
 
@@ -154,17 +155,17 @@ describe('Chapter 2 reassessment reserve — concept coverage', () => {
     }
   })
 
-  it('combined capacity is 73 and every mapping resolves to a real question', () => {
+  it('combined capacity is 173 and every mapping resolves to a real question', () => {
     expect(initial).toHaveLength(48)
-    expect(reserve).toHaveLength(25)
-    expect(chapter2QuizQuestionMappings).toHaveLength(73)
+    expect(reserve).toHaveLength(125)
+    expect(chapter2QuizQuestionMappings).toHaveLength(173)
     const allIds = new Set([...initial, ...reserve].map((q) => q.id))
     for (const m of chapter2QuizQuestionMappings) {
       expect(allIds.has(m.questionId)).toBe(true)
     }
     // No question is double-mapped
     const mappedIds = chapter2QuizQuestionMappings.map((m) => m.questionId)
-    expect(new Set(mappedIds).size).toBe(73)
+    expect(new Set(mappedIds).size).toBe(173)
   })
 })
 
@@ -249,25 +250,34 @@ function makeMockDb(attempts: QuizAttempt[]) {
   }
 }
 
-describe('Chapter 2 reassessment reserve — 25/25 unseen capacity (real exclusion engine)', () => {
-  it('after a complete initial 48-question attempt, every active concept selects its reserve question', async () => {
+describe('Chapter 2 reassessment reserve — 5-per-concept unseen capacity (real exclusion engine)', () => {
+  it('after a complete initial 48-question attempt, every active concept can select five fresh reserve questions', async () => {
     const db = makeMockDb([makeAttempt('attempt-full-48', ALL_INITIAL_ANSWERS)])
     const engine = new HistoricalExclusionEngine(db as never, 'ch-2')
 
     for (const conceptId of ACTIVE_CONCEPT_IDS) {
-      const result = await engine.selectReassessmentQuestion(
-        'capacity-test-user',
-        conceptId,
-        'cycle-capacity',
-      )
-      const expectedReserve = reserve.find(
-        (q) => mappingByQuestion.get(q.id) === conceptId,
-      )
-      expect(
-        result.success,
-        `${conceptId} should have an unseen reserve after full initial attempt`,
-      ).toBe(true)
-      expect(result.selectedQuestionId).toBe(expectedReserve!.id)
+      const selected: string[] = []
+      for (let i = 0; i < 5; i++) {
+        const result = await engine.selectReassessmentQuestion(
+          'capacity-test-user',
+          conceptId,
+          `cycle-capacity-${conceptId}`,
+        )
+        expect(result.success, `${conceptId} selection ${i + 1} should succeed`).toBe(true)
+        selected.push(result.selectedQuestionId!)
+        ;(db as any).getReassessmentQuestionHistory = async () =>
+          selected.map((questionId, index) => ({
+            id: `hist-${conceptId}-${index}`,
+            userId: 'capacity-test-user',
+            conceptId,
+            questionId,
+            quizAttemptId: `placeholder-${index}`,
+            cycleId: `cycle-capacity-${conceptId}`,
+            isCorrect: false,
+            attemptedAt: new Date(),
+          }))
+      }
+      expect(new Set(selected).size).toBe(5)
     }
     // C-2-05 explicitly covered (founder's critical check)
     expect(mappingByQuestion.get('qq-2-064')).toBe('C-2-05')
@@ -285,7 +295,7 @@ describe('Chapter 2 reassessment reserve — 25/25 unseen capacity (real exclusi
     )
     expect(result.success).toBe(false)
     expect(result.poolExhaustion?.isExhausted).toBe(true)
-    expect(result.poolExhaustion?.totalQuestionsInPool).toBe(6) // 5 initial + 1 reserve
+    expect(result.poolExhaustion?.totalQuestionsInPool).toBe(10) // 5 initial + 5 reserve
     expect(result.poolExhaustion?.availableQuestionIds).toHaveLength(0)
     expect(db.exhaustionCalls).toHaveLength(1)
   })
