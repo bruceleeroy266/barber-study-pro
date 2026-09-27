@@ -69,32 +69,35 @@ describe('G5 Chapter 2 shared grading baseline', () => {
     expect(result.chapterAssessmentPercent).toBe(50)
   })
 
-  it('does not grant formal recovery from the legacy one-question reserve', () => {
-    const reserve = chapter2ReassessmentQuestions.find((q) => q.id === 'qq-2-060')!
-    const attempt: Chapter2InstructorQuizAttempt = {
+  it('aggregates five persisted reassessment rows before granting recovery', () => {
+    const reserves = chapter2ReassessmentQuestions.filter((question) => {
+      const mapping = chapter2QuizQuestionMappings.find((item) => item.questionId === question.id)
+      return mapping?.conceptId === 'C-2-01'
+    })
+    expect(reserves).toHaveLength(5)
+    const attempts: Chapter2InstructorQuizAttempt[] = reserves.map((reserve, index) => ({
       quiz_id: 'quiz-2',
       percentage: 100,
       answers_json: { [reserve.id]: reserve.correct_answer },
-      completed_at: '2026-09-27T16:00:00.000Z',
+      completed_at: `2026-09-27T16:0${index}:00.000Z`,
       is_reassessment: true,
       target_concept_id: 'C-2-01',
       remediation_cycle_id: 'cycle-c2-1',
-    }
+    }))
 
     const result = buildChapter2InstructorDiagnostics({
       studentId: 'student-2',
       completionPercent: 50,
       microCheckRows: [],
-      quizAttempts: [attempt],
+      quizAttempts: attempts,
       referenceTime: '2026-09-27T17:00:00.000Z',
     })
 
-    expect(result.remediationReassessmentPercent).toBeNull()
-    expect(result.latestReassessment).toContain('1/5 in progress')
-    expect(result.chapterGrade.recoveryApplied).toBe(false)
+    expect(result.remediationReassessmentPercent).toBe(100)
+    expect(result.latestReassessment).toContain('100%')
   })
 
-  it('documents the remaining five-question reserve gap for every active concept', () => {
+  it('has exactly five reserve questions for every active concept', () => {
     const counts = new Map<string, number>()
     for (const question of chapter2ReassessmentQuestions) {
       const mapping = chapter2QuizQuestionMappings.find((item) => item.questionId === question.id)
@@ -102,6 +105,6 @@ describe('G5 Chapter 2 shared grading baseline', () => {
       counts.set(mapping.conceptId, (counts.get(mapping.conceptId) ?? 0) + 1)
     }
 
-    expect(ACTIVE_CONCEPT_IDS.every((conceptId) => counts.get(conceptId) === 1)).toBe(true)
+    expect(ACTIVE_CONCEPT_IDS.every((conceptId) => counts.get(conceptId) === 5)).toBe(true)
   })
 })
