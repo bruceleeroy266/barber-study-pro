@@ -407,6 +407,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
         completed_at: attempt.completed_at,
         is_reassessment: attempt.is_reassessment ?? false,
         target_concept_id: attempt.target_concept_id ?? null,
+        remediation_cycle_id: attempt.remediation_cycle_id ?? null,
       })) as Chapter9InstructorQuizAttempt[],
     referenceTime: new Date().toISOString(),
   })
