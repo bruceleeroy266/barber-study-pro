@@ -135,7 +135,7 @@ export const chapter10PremiumContent: ChapterContent = {
         },
         {
           icon: 'Award',
-          title: 'PROFESSIONAL AUTHORITY',
+          title: 'PROFESSIONAL COMMUNICATION',
           text: 'When you can explain hair structure and behavior, analyze service-relevant properties, and recognize concerns that may require referral, you can communicate more clearly and make more informed service decisions.',
         },
       ],
@@ -214,7 +214,7 @@ export const chapter10PremiumContent: ChapterContent = {
           ],
           facts: [
             { text: 'KEY REVIEW: The follicle is the living portion of hair. The shaft is dead keratin.' },
-            { text: 'Folliculitis = inflammation of follicles. Never shave over active folliculitis.' },
+            { text: 'Folliculitis refers to inflammation of hair follicles. Avoid working directly over inflamed or compromised areas and keep the service decision within barbering scope.' },
           ],
         },
         {
@@ -592,10 +592,10 @@ export const chapter10PremiumContent: ChapterContent = {
           bullets: [
             { label: 'CAUSE', description: 'Genetic + hormonal (dihydrotestosterone/DHT). Causes follicle miniaturization over time.' },
             { label: 'PATTERN', description: 'Men: receding hairline and crown thinning. Women: diffuse thinning over the crown.' },
-            { label: 'TREATMENT', description: 'Minoxidil (topical, men and women), Finasteride (oral, men only). Early treatment is most effective.' },
+            { label: 'SOURCE CONTEXT', description: 'Chapter 10 discusses medical hair-loss treatments such as minoxidil and finasteride. Treatment selection belongs to qualified medical professionals and is not a barbering service decision.' },
           ],
           facts: [
-            { text: 'KEY REVIEW: Androgenic alopecia is the most common type of hair loss.' },
+            { text: 'KEY STUDY POINT: Androgenic alopecia is a pattern of hair loss associated in this chapter with heredity, age, and hormonal factors.' },
             { text: 'This is a medical condition — barbers should recognize it, empathize, and refer to a physician or dermatologist.' },
           ],
         },
@@ -706,7 +706,7 @@ export const chapter10PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'hypertrophies',
       title: 'HYPERTROPHIES — ABNORMAL SKIN GROWTHS',
-      content: 'Hypertrophies are abnormal growths on the skin such as moles, warts, or skin tags. They can appear anywhere on the scalp and are usually harmless — but barbers play a critical role in early detection of skin cancer.\n\nWHY IT MATTERS: When combing through hair, you must use extreme care to avoid catching the comb on these growths. Painful or bleeding growths should never be ignored.\n\nRED FLAGS: If a client\'s mole or growth has changed color, size, shape, or texture since their last visit, gently suggest they see a physician. You are not diagnosing — you are observing. If a visible change is concerning or outside scope, recommend appropriate medical evaluation.\n\nKEY REVIEW: Barbers should never scrape the scalp during analysis. Always comb gently while parting hair to check for hypertrophies, abrasions, and parasites.',
+      content: 'Hypertrophies are abnormal growths on the skin such as moles, warts, or skin tags. They can appear anywhere on the scalp and are usually harmless — but barbers play a critical role in early detection of skin cancer.\n\nWHY IT MATTERS: When combing through hair, you must use extreme care to avoid catching the comb on these growths. Painful, bleeding, or visibly changing growths warrant cautious service decisions and appropriate medical referral.\n\nRED FLAGS: If a client\'s mole or growth has changed color, size, shape, or texture since their last visit, gently suggest they see a physician. You are not diagnosing — you are observing. If a visible change is concerning or outside scope, recommend appropriate medical evaluation.\n\nKEY STUDY POINT: Use gentle scalp-analysis techniques while parting the hair to observe hypertrophies, abrasions, and parasites without scraping or irritating the scalp.',
       highlight: 'OBSERVE — PROTECT — REFER WHEN CHANGES APPEAR',
     },
 
