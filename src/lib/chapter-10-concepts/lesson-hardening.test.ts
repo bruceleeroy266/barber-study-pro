@@ -29,6 +29,16 @@ describe('C10-2 source-grounded Chapter 10 lesson hardening', () => {
       'early detection of skin cancer',
       'Documentation protects you professionally',
       'No exceptions.',
+      'Every client has at least one whorl',
+      '3–5+ years',
+      '~2 weeks',
+      '10% of scalp hair is in this phase',
+      'approximately 90% keratin protein',
+      'target of ALL chemical services',
+      'traction alopecia',
+      'telogen effluvium',
+      'cicatricial',
+      'DO NOT ANALYZE',
     ]
 
     for (const phrase of banned) {
@@ -41,6 +51,7 @@ describe('C10-2 source-grounded Chapter 10 lesson hardening', () => {
     expect(lesson).toContain('outside barbering scope')
     expect(lesson).toContain('without diagnosing or prescribing treatment')
     expect(lesson).toContain('follow sanitation requirements')
+    expect(lesson).toContain('DO NOT DIAGNOSE')
   })
 
   it('preserves the source-covered Chapter 10 core lesson domains', () => {
@@ -53,8 +64,10 @@ describe('C10-2 source-grounded Chapter 10 lesson hardening', () => {
       'SALT BOND',
       'DISULFIDE BOND',
       'ANAGEN',
+      '2–10 years',
       'CATAGEN',
       'TELOGEN',
+      'Less than 10% of scalp hair',
       'POROSITY',
       'ELASTICITY',
       'ALOPECIA',
