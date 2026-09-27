@@ -121,3 +121,6 @@ C10-5 does not add:
 ## Status
 
 **Implementation complete. Exact-head Engineering Verification and Vercel Preview are required before C10-5 can be certified GREEN.**
+
+
+Verification trigger: PR #118 is tested against `main`; no merge authorization is implied.
