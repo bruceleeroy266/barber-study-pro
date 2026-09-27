@@ -15,6 +15,14 @@ export interface Chapter9QuizQuestionConceptMapping {
   conceptFamilyId: Chapter9ConceptFamilyId
 }
 
+export interface Chapter9MicroCheckPlacement {
+  id: `mc-9-${string}`
+  afterSectionId: string
+  conceptFamilyId: Chapter9ConceptFamilyId
+  plannedQuestionCount: number
+  purpose: string
+}
+
 export const chapter9ContentConceptMappings: readonly Chapter9ContentConceptMapping[] = [
   { contentBlockId: 'academy-welcome', conceptFamilyId: 'ch9-service-safety-referral' },
   { contentBlockId: 'why-study-skin', conceptFamilyId: 'ch9-service-safety-referral' },
@@ -152,6 +160,19 @@ export const chapter9QuizQuestionConceptMappings: readonly Chapter9QuizQuestionC
     conceptFamilyId: 'ch9-skin-cancer-recognition' as const,
   })),
   { questionId: q(30), conceptFamilyId: 'ch9-service-safety-referral' },
+]
+
+export const chapter9MicroCheckPlacements: readonly Chapter9MicroCheckPlacement[] = [
+  { id: 'mc-9-01', afterSectionId: 'epidermis-layers', conceptFamilyId: 'ch9-epidermis-skin-barrier', plannedQuestionCount: 2, purpose: 'Check epidermal structure and barrier reasoning before deeper skin anatomy.' },
+  { id: 'mc-9-02', afterSectionId: 'skin-characteristics', conceptFamilyId: 'ch9-dermis-subcutaneous-support', plannedQuestionCount: 2, purpose: 'Check dermal support, blood/lymph, nerves, collagen, and elastin reasoning.' },
+  { id: 'mc-9-03', afterSectionId: 'skin-functions', conceptFamilyId: 'ch9-skin-functions-glands', plannedQuestionCount: 2, purpose: 'Check gland/function discrimination using barber-facing observations.' },
+  { id: 'mc-9-04', afterSectionId: 'primary-lesions', conceptFamilyId: 'ch9-primary-lesions', plannedQuestionCount: 2, purpose: 'Check primary-lesion identification from distinguishing features rather than memorized labels.' },
+  { id: 'mc-9-05', afterSectionId: 'secondary-lesions', conceptFamilyId: 'ch9-secondary-lesions', plannedQuestionCount: 2, purpose: 'Check secondary-lesion evolution and compromised-skin reasoning.' },
+  { id: 'mc-9-06', afterSectionId: 'sudoriferous-disorders', conceptFamilyId: 'ch9-sebaceous-sudoriferous-disorders', plannedQuestionCount: 2, purpose: 'Check oil/sweat-gland disorder discrimination and heat-regulation implications.' },
+  { id: 'mc-9-07', afterSectionId: 'inflammations', conceptFamilyId: 'ch9-inflammatory-infectious-conditions', plannedQuestionCount: 2, purpose: 'Check contagious-versus-noncontagious recognition without diagnosis overreach.' },
+  { id: 'mc-9-08', afterSectionId: 'hypertrophies', conceptFamilyId: 'ch9-pigmentation-hypertrophies', plannedQuestionCount: 2, purpose: 'Check pigmentation and hypertrophy distinctions using observable features.' },
+  { id: 'mc-9-09', afterSectionId: 'abcde-melanoma', conceptFamilyId: 'ch9-skin-cancer-recognition', plannedQuestionCount: 2, purpose: 'Check skin-cancer recognition and ABCDE warning-sign reasoning without diagnosing.' },
+  { id: 'mc-9-10', afterSectionId: 'skin-health', conceptFamilyId: 'ch9-service-safety-referral', plannedQuestionCount: 3, purpose: 'Check service pause, sanitation, observation boundaries, and referral decisions.' },
 ]
 
 export function getChapter9ContentBlocksForConcept(conceptFamilyId: Chapter9ConceptFamilyId) {
