@@ -136,7 +136,7 @@ export const chapter10PremiumContent: ChapterContent = {
         {
           icon: 'Award',
           title: 'PROFESSIONAL AUTHORITY',
-          text: 'When you can explain why a client\'s hair behaves a certain way, recommend products with scientific reasoning, and spot conditions early, you become the trusted expert — not just the person who cuts hair.',
+          text: 'When you can explain hair structure and behavior, analyze service-relevant properties, and recognize concerns that may require referral, you can communicate more clearly and make more informed service decisions.',
         },
       ],
     },
@@ -494,7 +494,7 @@ export const chapter10PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'hair-analysis-protocol',
       title: '🔍 THE HAIR ANALYSIS PROTOCOL',
-      content: 'Before every service — EVERY service — you must analyze the hair and scalp. This is not optional. It is the professional standard that separates safe barbers from dangerous ones.\n\nUse ALL your senses:\n\nSIGHT: Look for dry or oily scalp, lesions, parasites, inflammation, broken hairs, or unusual patterns.\n\nTOUCH: Feel texture (coarse, medium, fine), density (thick, average, thin), porosity (how quickly hair absorbs moisture), and elasticity (how well it stretches and returns).\n\nSMELL & HEARING: Unusual odors can indicate infection or product buildup. Listen to the client\'s history — medications, recent illnesses, chemical services, and concerns.\n\nKEY REVIEW: Always perform scalp analysis before chemical services. Never proceed on irritated skin, parasites, or unknown lesions.',
+      content: 'A pre-service hair and scalp analysis helps identify the properties and conditions that matter to the planned service. Chapter 10 emphasizes checking the scalp before the hair, especially before chemical services.\n\nSIGHT: Observe whether the scalp appears dry or oily and note visible irritation, abrasions, parasites, broken hairs, or unusual patterns.\n\nTOUCH: Evaluate texture, density, porosity, and elasticity using the chapter\'s analysis methods.\n\nHEARING AND SMELL: Listen to the client\'s concerns and service history, and note relevant observations without using them to diagnose a medical condition.\n\nKEY STUDY POINT: Do not begin a service when parasites are present, and do not proceed with a chemical service when irritation or abrasions make the service unsafe.',
       highlight: 'ANALYZE BEFORE YOU ACT — MATCH THE ANALYSIS TO THE SERVICE',
     },
 
@@ -766,7 +766,7 @@ export const chapter10PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'decision-framework',
       title: '⚖️ THE BARBER\'S DECISION FRAMEWORK',
-      content: 'When you spot something abnormal on a client\'s scalp or hair, you have a professional obligation to act. Here is your decision tree:\n\nSTEP 1 — ASSESS: Is this normal variation or a potential problem? When in doubt, assume it needs attention.\n\nSTEP 2 — CLASSIFY: Is this contagious or non-contagious? If contagious, STOP SERVICE IMMEDIATELY.\n\nSTEP 3 — ACT: For contagious conditions — politely explain, do not embarrass, sanitize your tools and station, and refer to a physician. For non-contagious conditions — proceed with caution, adjust technique, and suggest appropriate products or referrals.\n\nSTEP 4 — DOCUMENT: Note what you observed and what you recommended. Documentation protects you professionally.\n\nSTEP 5 — FOLLOW UP: On the client\'s next visit, ask about the condition. Show you care. Build trust.\n\nKEY REVIEW: Performing services on contagious scalp conditions is a sanitation violation that can result in license suspension.',
+      content: 'When an observation raises a service-safety concern, keep the decision within barbering scope:\n\nSTEP 1 — OBSERVE: Describe what you can see or feel without assigning a medical diagnosis.\n\nSTEP 2 — CHECK SERVICE SAFETY: Determine whether the planned service can proceed safely under the chapter guidance and your school, workplace, product, and state requirements.\n\nSTEP 3 — PAUSE WHEN NEEDED: Do not begin a service when parasites are present. For suspected contagious conditions or other concerns outside barbering scope, avoid working over the affected area and refer the client for appropriate medical evaluation.\n\nSTEP 4 — SANITATION: Follow required cleaning, disinfection, and exposure-control procedures for tools and the workstation.\n\nSTEP 5 — COMMUNICATE: Explain the service decision discreetly and professionally without diagnosing or prescribing treatment.\n\nKEY STUDY POINT: Chapter 10 supports observation, service-safety decisions, sanitation, and referral; licensing penalties and jurisdiction-specific enforcement must be verified from current state rules.',
       highlight: 'OBSERVE — PROTECT — REFER WHEN OUTSIDE SCOPE',
     },
 
@@ -785,9 +785,9 @@ export const chapter10PremiumContent: ChapterContent = {
         { text: 'DO: Follow school, workplace, or state documentation requirements when they apply' },
         { text: 'DO: Recommend medical evaluation when a condition is outside barbering scope or makes the planned service unsafe' },
         { text: 'DON\'T: Scrape the scalp during analysis — this can cause irritation and spread infection' },
-        { text: 'DON\'T: Begin any service if parasites are present — stop and refer immediately' },
+        { text: 'DON\'T: Begin the service when parasites are present; follow sanitation requirements and referral guidance' },
         { text: 'DON\'T: Proceed with chemical services if signs of irritation, abrasions, or inflammation exist' },
-        { text: 'DON\'T: Diagnose — recognize, refer, but never claim medical authority' },
+        { text: 'DON\'T: Diagnose or prescribe treatment; describe observable signs and make service-safety/referral decisions' },
         { text: 'DON\'T: Embarrass the client — explain discreetly and professionally' },
       ],
     },
@@ -848,7 +848,7 @@ export const chapter10PremiumContent: ChapterContent = {
             { label: 'PROTECT YOURSELF', description: 'Wear gloves when examining unknown scalp conditions. Wash hands thoroughly.' },
           ],
           facts: [
-            { text: 'KEY REVIEW: Performing services on contagious conditions is a sanitation violation with license suspension consequences.' },
+            { text: 'KEY STUDY POINT: Follow current sanitation and licensing requirements when a contagious condition is suspected; penalties vary by jurisdiction.' },
             { text: 'A single mistake with chemical services on compromised hair can destroy a client\'s hair and your reputation.' },
           ],
         },
@@ -922,7 +922,7 @@ export const chapter10PremiumContent: ChapterContent = {
     {
       type: 'quote',
       id: 'hair-lab-pledge',
-      quote: 'I pledge to see every client\'s hair as a unique diagnostic case. I will analyze before I act, recognize what I cannot treat, and refer when safety demands it. I understand that the trust placed in my chair is built on knowledge, honesty, and care. A master barber does not just cut hair - they protect the health of every scalp they touch.',
+      quote: 'I will analyze hair and scalp characteristics before I act, describe what I observe without diagnosing, and refer concerns that are outside barbering scope. I will use Chapter 10 knowledge to support safe, respectful service decisions and clear client communication.',
     },
   ],
 }
