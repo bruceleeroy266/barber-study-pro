@@ -23,6 +23,7 @@ import AppearanceChecklist from './AppearanceChecklist'
 import ProTip from './ProTip'
 import ReflectionBlock from './ReflectionBlock'
 import HtmlContentBlock from './HtmlContentBlock'
+import Chapter1MicroCheckCard from './Chapter1MicroCheckCard'
 import Chapter2MicroCheckCard from './Chapter2MicroCheckCard'
 import Chapter3MicroCheckCard from './Chapter3MicroCheckCard'
 import Chapter4MicroCheckCard from './Chapter4MicroCheckCard'
@@ -31,6 +32,11 @@ import Chapter6MicroCheckCard from './Chapter6MicroCheckCard'
 import Chapter7MicroCheckCard from './Chapter7MicroCheckCard'
 import Chapter8MicroCheckCard from './Chapter8MicroCheckCard'
 import Chapter9MicroCheckCard from './Chapter9MicroCheckCard'
+import { chapter1MicroChecks } from '@/lib/chapter-1-concepts/micro-checks'
+import {
+  loadChapter1MicroCheckAttempts,
+  type Chapter1MicroCheckAttemptRow,
+} from '@/lib/chapter-1-concepts/micro-check-persistence'
 import { chapter2MicroChecks } from '@/lib/chapter-2-concepts/micro-checks'
 import { chapter3MicroChecks } from '@/lib/chapter-3-concepts/micro-checks'
 import { chapter4MicroChecks } from '@/lib/chapter-4-concepts/micro-checks'
@@ -143,6 +149,7 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
   })
   const [knowledgeChecksSaved, setKnowledgeChecksSaved] = useState(knowledgeChecksCompleted)
 
+  const [chapter1MicroCheckAttempts, setChapter1MicroCheckAttempts] = useState<Chapter1MicroCheckAttemptRow[]>([])
   const [chapter2MicroCheckAttempts, setChapter2MicroCheckAttempts] = useState<Chapter2MicroCheckAttemptRow[]>([])
   const [chapter3MicroCheckAttempts, setChapter3MicroCheckAttempts] = useState<Chapter3MicroCheckAttemptRow[]>([])
   const [chapter4MicroCheckAttempts, setChapter4MicroCheckAttempts] = useState<Chapter4MicroCheckAttemptRow[]>([])
@@ -151,6 +158,22 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
   const [chapter7MicroCheckAttempts, setChapter7MicroCheckAttempts] = useState<Chapter7MicroCheckAttemptRow[]>([])
   const [chapter8MicroCheckAttempts, setChapter8MicroCheckAttempts] = useState<Chapter8MicroCheckAttemptRow[]>([])
   const [chapter9MicroCheckAttempts, setChapter9MicroCheckAttempts] = useState<Chapter9MicroCheckAttemptRow[]>([])
+
+  useEffect(() => {
+    if (chapterId !== 'ch-1' || !userId) return
+    let cancelled = false
+    void loadChapter1MicroCheckAttempts(userId).then((rows) => {
+      if (!cancelled) setChapter1MicroCheckAttempts(rows)
+    })
+    return () => { cancelled = true }
+  }, [chapterId, userId])
+
+  const handleChapter1MicroCheckPersisted = useCallback((row: Chapter1MicroCheckAttemptRow) => {
+    setChapter1MicroCheckAttempts((previous) => {
+      if (previous.some((attempt) => attempt.question_id === row.question_id)) return previous
+      return [...previous, row]
+    })
+  }, [])
 
   useEffect(() => {
     if (chapterId !== 'ch-2' || !userId) return
@@ -525,6 +548,9 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
   return (
     <div className="space-y-10">
       {sections.map((section) => {
+        const chapter1MicroCheck = chapterId === 'ch-1'
+          ? chapter1MicroChecks.find((check) => check.afterSectionId === section.id)
+          : undefined
         const chapter2MicroCheck = chapterId === 'ch-2'
           ? chapter2MicroChecks.find((check) => check.afterSectionId === section.id)
           : undefined
@@ -553,6 +579,15 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
         return (
           <Fragment key={section.id}>
             {renderSection(section)}
+            {chapter1MicroCheck && userId && (
+              <Chapter1MicroCheckCard
+                check={chapter1MicroCheck}
+                userId={userId}
+                theme={t}
+                attempts={chapter1MicroCheckAttempts.filter((attempt) => attempt.check_id === chapter1MicroCheck.id)}
+                onAttemptPersisted={handleChapter1MicroCheckPersisted}
+              />
+            )}
             {chapter2MicroCheck && userId && (
               <Chapter2MicroCheckCard
                 check={chapter2MicroCheck}
