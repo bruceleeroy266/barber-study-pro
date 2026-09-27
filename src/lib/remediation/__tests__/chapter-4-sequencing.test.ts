@@ -81,9 +81,9 @@ class MockKnowledgeCheckDb implements IKnowledgeCheckDbClient {
 // ───────────────────────────────────────────────
 
 describe('Chapter 4 knowledge-check length', () => {
-  it('ch-4 uses the five-question Knowledge Check; unsupported chapters fall back to 1', () => {
+  it('ch-4 and ch-5 use five-question Knowledge Checks', () => {
     expect(getKnowledgeCheckLength('ch-4')).toBe(5)
-    expect(getKnowledgeCheckLength('ch-5')).toBe(1)
+    expect(getKnowledgeCheckLength('ch-5')).toBe(5)
   })
 })
 
