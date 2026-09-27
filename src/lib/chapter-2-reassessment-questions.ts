@@ -18,8 +18,9 @@
 //   paraphrase of any locked question.
 
 import { QuizQuestion } from '@/types'
+import { chapter2G5ReassessmentQuestions } from './chapter-2-reassessment-g5'
 
-export const chapter2ReassessmentQuestions: QuizQuestion[] = [
+const chapter2LegacyReassessmentQuestions: QuizQuestion[] = [
   // ═══════════════════════════════════════════════════════════
   // RESERVE — formerly single-item concepts (first priority)
   // ═══════════════════════════════════════════════════════════
@@ -351,4 +352,9 @@ export const chapter2ReassessmentQuestions: QuizQuestion[] = [
     difficulty: 'medium',
     order_index: 75,
   },
+]
+
+export const chapter2ReassessmentQuestions: QuizQuestion[] = [
+  ...chapter2LegacyReassessmentQuestions,
+  ...chapter2G5ReassessmentQuestions,
 ]
