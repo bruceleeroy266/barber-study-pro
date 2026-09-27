@@ -8,6 +8,7 @@ export class Chapter6MappingProvider implements ICanonicalMappingProvider {
   readonly chapterId: ChapterId = 'ch-6'
   private readonly questionToConceptMap = new Map<QuizQuestionId, ConceptId>()
   private readonly conceptToQuestionsMap = new Map<ConceptId, QuizQuestionId[]>()
+  private readonly conceptToReserveQuestionsMap = new Map<ConceptId, QuizQuestionId[]>()
 
   constructor() {
     for (const mapping of [...chapter6QuizQuestionConceptMappings, ...chapter6ReassessmentQuestionConceptMappings]) {
@@ -16,9 +17,14 @@ export class Chapter6MappingProvider implements ICanonicalMappingProvider {
       this.questionToConceptMap.set(q, c)
       this.conceptToQuestionsMap.set(c, [...(this.conceptToQuestionsMap.get(c) ?? []), q])
     }
+    for (const mapping of chapter6ReassessmentQuestionConceptMappings) {
+      const q = mapping.questionId as string
+      const c = mapping.conceptFamilyId as string
+      this.conceptToReserveQuestionsMap.set(c, [...(this.conceptToReserveQuestionsMap.get(c) ?? []), q])
+    }
   }
   getConceptForQuestion(questionId: QuizQuestionId){ return this.questionToConceptMap.get(questionId) }
-  getQuestionsForConcept(conceptId: ConceptId){ return this.conceptToQuestionsMap.get(conceptId) ?? [] }
+  getQuestionsForConcept(conceptId: ConceptId){ return this.conceptToReserveQuestionsMap.get(conceptId) ?? [] }
   isQuestionMappedToConcept(questionId: QuizQuestionId, conceptId: ConceptId){ return this.questionToConceptMap.get(questionId) === conceptId }
   getAllConceptIds(){ return Array.from(this.conceptToQuestionsMap.keys()) }
   getAllQuestionIds(){ return Array.from(this.questionToConceptMap.keys()) }
