@@ -4,7 +4,7 @@
  * Proves the Chapter 3 adapter plugs the locked concept taxonomy into the
  * chapter-agnostic exclusion engine correctly:
  *   - question→concept resolution spans initial + reserve banks
- *   - the per-family pool is the union of initial (8/7/8/7) and reserve (15)
+ *   - formal reassessment pool is reserve-only: exactly 15 fresh questions per family
  *   - every mapping resolves to a real question in one of the two banks
  *   - the registry registers ch-3 and unsupported chapters fail closed
  */
@@ -24,13 +24,6 @@ import {
 import { chapter3PremiumQuizQuestions } from '@/lib/chapter-3-premium-quiz'
 import { chapter3ReassessmentQuestions } from '@/lib/chapter-3-reassessment-questions'
 import { CHAPTER3_CONCEPT_FAMILY_IDS } from '@/lib/chapter-3-concepts/concepts'
-
-const INITIAL_PER_FAMILY: Record<string, number> = {
-  'ch3-healthful-habits': 8,
-  'ch3-professional-image': 7,
-  'ch3-ergonomics': 8,
-  'ch3-human-relations': 7,
-}
 
 describe('Chapter 3 mapping provider — resolution', () => {
   const provider = new Chapter3MappingProvider()
@@ -54,12 +47,13 @@ describe('Chapter 3 mapping provider — resolution', () => {
     expect(provider.getConceptForQuestion('qq-2-001')).toBeUndefined()
   })
 
-  it('per-family pool is exactly initial (8/7/8/7) + reserve (15)', () => {
+  it('formal per-family reassessment pool is reserve-only with 15 fresh questions', () => {
+    const initialIds = new Set(chapter3PremiumQuizQuestions.map((question) => question.id))
     for (const family of CHAPTER3_CONCEPT_FAMILY_IDS) {
       const pool = provider.getQuestionsForConcept(family)
-      expect(pool.length, family).toBe(INITIAL_PER_FAMILY[family] + 15)
-      // No duplicates within a family pool.
+      expect(pool.length, family).toBe(15)
       expect(new Set(pool).size, family).toBe(pool.length)
+      expect(pool.every((id) => !initialIds.has(id)), family).toBe(true)
     }
   })
 
