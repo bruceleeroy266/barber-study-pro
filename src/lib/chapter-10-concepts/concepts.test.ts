@@ -63,6 +63,6 @@ describe('C10-1 canonical concept architecture', () => {
       scenarioApplicationPercent: 100,
       remediationReassessmentPercent: 100,
     })
-    expect(result.grade).toBe(100)
+    expect(result.finalGrade).toBe(100)
   })
 })
