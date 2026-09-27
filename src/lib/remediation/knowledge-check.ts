@@ -5,7 +5,7 @@
  * controlled per-chapter question sequence:
  *
  *   Chapter 2: 5 questions (G5 unified grading standard)
- *   Chapters 3–5: 5 questions (unified grading standard)
+ *   Chapters 3–6: 5 questions (unified grading standard)
  *
  * All sequencing state is derived from PERSISTED data only:
  *   - answered evidence = quiz_attempts rows with remediation_cycle_id set
@@ -26,9 +26,9 @@ import type { ChapterId } from '@/lib/reassessment/types'
 // ───────────────────────────────────────────────
 
 /**
- * Knowledge-check length per chapter. Chapter 2 stays at 1 (established
- * behavior); Chapter 3 uses the C3-3 five-question Knowledge Check.
- * Unsupported chapters fall back to 1; chapter support itself is gated by
+ * Knowledge-check length per chapter. Chapters on the unified grading path
+ * use five-question remediation checks. Unsupported chapters fall back to 1;
+ * chapter support itself is gated by
  * the mapping/content/detection provider registries (fail-closed).
  */
 const KNOWLEDGE_CHECK_LENGTHS: Readonly<Record<string, number>> = {
