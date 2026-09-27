@@ -15,6 +15,7 @@ import type {
   FlashcardConceptMapping,
   QuizQuestionConceptMapping,
 } from './types'
+import { chapter2G5ReassessmentMappings } from '../chapter-2-reassessment-g5'
 
 // ───────────────────────────────────────────────
 // Content Block → Concept Mappings (81 blocks)
@@ -236,7 +237,7 @@ export const chapter2FlashcardMappings: readonly FlashcardConceptMapping[] = [
 // Quiz Question → Concept Mappings (48 questions)
 // ───────────────────────────────────────────────
 
-export const chapter2QuizQuestionMappings: readonly QuizQuestionConceptMapping[] = [
+const chapter2BaseQuizQuestionMappings: readonly QuizQuestionConceptMapping[] = [
   // Easy Questions (qq-2-001 to qq-2-010)
   { questionId: 'qq-2-001', conceptId: 'C-2-01' },
   { questionId: 'qq-2-002', conceptId: 'C-2-06', subconceptId: 'SC-2-06-a' },
@@ -342,3 +343,9 @@ export const chapter2QuizQuestionMappings: readonly QuizQuestionConceptMapping[]
   { questionId: 'qq-2-074', conceptId: 'C-2-24' },
   { questionId: 'qq-2-075', conceptId: 'C-2-21', subconceptId: 'SC-2-21-a' },
 ] as const
+
+export const chapter2QuizQuestionMappings: readonly QuizQuestionConceptMapping[] = [
+  ...chapter2BaseQuizQuestionMappings,
+  ...chapter2G5ReassessmentMappings,
+]
+
