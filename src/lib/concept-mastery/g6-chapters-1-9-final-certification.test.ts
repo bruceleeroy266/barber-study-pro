@@ -80,7 +80,7 @@ describe('G6 Chapters 1–9 final unified grading certification', () => {
       CHAPTER7_GRADE_WEIGHTS, CHAPTER8_GRADE_WEIGHTS, CHAPTER9_GRADE_WEIGHTS,
     ]) {
       expect(weights).toEqual(SHARED_GRADE_WEIGHTS)
-      expect(Object.values(weights).reduce((sum, value) => sum + value, 0)).toBeCloseTo(1)
+      expect((Object.values(weights) as number[]).reduce((sum, value) => sum + value, 0)).toBeCloseTo(1)
     }
   })
 
