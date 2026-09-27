@@ -117,6 +117,11 @@ describe('Final full Chapter 9 certification', () => {
     expect(lesson).not.toContain('Maintains ~98.6°F')
     expect(lesson).not.toContain('before they can damage deeper skin layers and DNA')
     expect(lesson).not.toContain('COMMON DISORDERS ON THE EXAM')
+    expect(lesson).not.toContain('MISTAKES THAT COST POINTS ON THE EXAM')
+    expect(lesson).not.toContain('Sunscreen SPF 30+ on exposed skin daily')
+    expect(lesson).not.toContain('AMERICAN CANCER SOCIETY RECOMMENDATION')
+    expect(lesson).not.toContain('Annual professional skin checkups')
+    expect(lesson).not.toContain('toxin elimination')
   })
 
   it('preserves initial micro-check evidence as first-attempt evidence', () => {
