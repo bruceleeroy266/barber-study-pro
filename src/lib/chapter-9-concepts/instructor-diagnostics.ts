@@ -20,6 +20,7 @@ export interface Chapter9InstructorQuizAttempt {
   completed_at: string
   is_reassessment?: boolean | null
   target_concept_id?: string | null
+  remediation_cycle_id?: string | null
 }
 
 export interface Chapter9InstructorConceptDiagnostic {
@@ -171,11 +172,45 @@ function overallConfidence(concepts: readonly Chapter9InstructorConceptDiagnosti
   return labels[Math.max(0, Math.min(4, Math.floor(averageRank)))]
 }
 
-function latestReassessmentPercent(attempts: readonly Chapter9InstructorQuizAttempt[]): number | null {
-  const latest = attempts
+interface Chapter9LatestFormalReassessment {
+  percent: number | null
+  answeredCount: number
+  conceptFamilyId: Chapter9ConceptFamilyId | null
+  completedAt: string | null
+}
+
+function latestFormalReassessment(
+  studentId: string,
+  attempts: readonly Chapter9InstructorQuizAttempt[],
+): Chapter9LatestFormalReassessment {
+  const eligible = attempts
     .filter((attempt) => attempt.is_reassessment && isChapter9ConceptFamilyId(attempt.target_concept_id))
-    .sort((a, b) => new Date(b.completed_at).getTime() - new Date(a.completed_at).getTime())[0]
-  return latest?.percentage ?? null
+    .sort((a, b) => new Date(b.completed_at).getTime() - new Date(a.completed_at).getTime())
+
+  const latest = eligible[0]
+  if (!latest || !isChapter9ConceptFamilyId(latest.target_concept_id)) {
+    return { percent: null, answeredCount: 0, conceptFamilyId: null, completedAt: null }
+  }
+
+  const grouped = latest.remediation_cycle_id
+    ? eligible.filter(
+        (attempt) =>
+          attempt.remediation_cycle_id === latest.remediation_cycle_id &&
+          attempt.target_concept_id === latest.target_concept_id,
+      )
+    : [latest]
+
+  const evidence = chapter9ReassessmentAttemptsToEvidence(studentId, grouped)
+  const unique = new Map(evidence.map((record) => [record.itemId, record]))
+  const answeredCount = unique.size
+  const correctCount = [...unique.values()].filter((record) => record.correct).length
+
+  return {
+    percent: answeredCount === 5 ? Math.round((correctCount / 5) * 10000) / 100 : null,
+    answeredCount,
+    conceptFamilyId: latest.target_concept_id,
+    completedAt: latest.completed_at,
+  }
 }
 
 export function buildChapter9InstructorDiagnostics(input: {
@@ -213,7 +248,8 @@ export function buildChapter9InstructorDiagnostics(input: {
   const assessmentAttempt = latestInitialChapter9Attempt(input.quizAttempts)
   const microCheckPercent = calculatePersistedChapter9MicroCheckPercent(input.microCheckRows)
   const chapterAssessmentPercent = assessmentAttempt?.percentage ?? null
-  const remediationReassessmentPercent = latestReassessmentPercent(input.quizAttempts)
+  const latestFormal = latestFormalReassessment(input.studentId, input.quizAttempts)
+  const remediationReassessmentPercent = latestFormal.percent
   const chapterGrade = calculateChapter9Grade({
     microCheckPercent,
     chapterAssessmentPercent,
@@ -223,10 +259,6 @@ export function buildChapter9InstructorDiagnostics(input: {
   const safetyIntervention = evaluateChapter9SafetyIntervention(evidence)
   const remediationPlan = buildChapter9TargetedRemediationPlan(evidence, input.referenceTime)
   const sorted = [...supportedConcepts].sort((a, b) => a.mastery - b.mastery)
-  const latestReassessment = input.quizAttempts
-    .filter((attempt) => attempt.is_reassessment && isChapter9ConceptFamilyId(attempt.target_concept_id))
-    .sort((a, b) => new Date(b.completed_at).getTime() - new Date(a.completed_at).getTime())[0]
-
   const urgentTargets = remediationPlan.targets.filter((target) => target.priority === 'urgent')
   const priorityTargets = remediationPlan.targets.filter((target) => target.priority === 'priority')
 
@@ -248,8 +280,10 @@ export function buildChapter9InstructorDiagnostics(input: {
         : remediationPlan.targets.length > 0
           ? `Targeted review — ${remediationPlan.targets[0].conceptName}`
           : 'No active remediation',
-    latestReassessment: latestReassessment && isChapter9ConceptFamilyId(latestReassessment.target_concept_id)
-      ? `${latestReassessment.percentage}% — ${getChapter9ConceptFamily(latestReassessment.target_concept_id).name}`
+    latestReassessment: latestFormal.conceptFamilyId
+      ? latestFormal.percent != null
+        ? `${latestFormal.percent}% — ${getChapter9ConceptFamily(latestFormal.conceptFamilyId).name}`
+        : `${latestFormal.answeredCount}/5 in progress — ${getChapter9ConceptFamily(latestFormal.conceptFamilyId).name}`
       : 'No reassessment recorded',
     evidenceCount: evidence.length,
   }
