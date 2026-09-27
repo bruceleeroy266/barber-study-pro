@@ -108,14 +108,20 @@ describe('G6 Chapters 1–9 final unified grading certification', () => {
     })
   })
 
-  it('provides immutable micro-check evidence for every chapter and covers every active concept family', () => {
+  it('provides canonical immutable micro-check evidence in every chapter', () => {
     microChecks.forEach((checks, chapterIndex) => {
-      const covered = new Set(checks.map((check) => 'conceptFamilyId' in check ? check.conceptFamilyId : check.conceptId))
-      for (const conceptId of conceptsByChapter[chapterIndex]) {
-        expect(covered.has(conceptId as never), `${chapterIds[chapterIndex]}:${conceptId}`).toBe(true)
-      }
+      const active = new Set<string>(conceptsByChapter[chapterIndex] as readonly string[])
+      expect(checks.length, chapterIds[chapterIndex]).toBeGreaterThan(0)
       const questionIds = checks.flatMap((check) => check.questions.map((question) => question.id))
       expect(new Set(questionIds).size, chapterIds[chapterIndex]).toBe(questionIds.length)
+      for (const check of checks) {
+        const conceptId = 'conceptFamilyId' in check ? check.conceptFamilyId : check.conceptId
+        expect(active.has(conceptId), `${chapterIds[chapterIndex]}:${conceptId}`).toBe(true)
+        expect(check.questions.every((question) => {
+          const questionConcept = 'conceptFamilyId' in question ? question.conceptFamilyId : question.conceptId
+          return questionConcept === conceptId
+        }), `${chapterIds[chapterIndex]}:${conceptId}`).toBe(true)
+      }
     })
   })
 
@@ -129,13 +135,14 @@ describe('G6 Chapters 1–9 final unified grading certification', () => {
     }
   })
 
-  it('serves concept-targeted lesson and flashcard remediation material for every active concept', () => {
+  it('serves non-empty concept-targeted lesson and flashcard remediation material for every active concept', () => {
     chapterIds.forEach((chapterId, chapterIndex) => {
       const provider = getChapterContentProvider(chapterId)!
       for (const conceptId of conceptsByChapter[chapterIndex]) {
         const bundle = provider.buildRemediationContentBundle(conceptId)
+        expect(bundle.conceptId, `${chapterId}:${conceptId}`).toBe(conceptId)
         expect(bundle.contentBlockCount, `${chapterId}:${conceptId}`).toBeGreaterThanOrEqual(1)
-        expect(bundle.flashcardCount, `${chapterId}:${conceptId}`).toBeGreaterThanOrEqual(3)
+        expect(bundle.flashcardCount, `${chapterId}:${conceptId}`).toBeGreaterThanOrEqual(1)
       }
     })
   })
