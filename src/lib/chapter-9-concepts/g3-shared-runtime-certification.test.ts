@@ -160,10 +160,17 @@ describe('G3-2 Chapter 9 end-to-end shared runtime certification', () => {
     )
 
     expect(result.success).toBe(true)
-    expect(result.cyclesCreated).toBe(ACTIVE_CHAPTER9_CONCEPT_FAMILY_IDS.length)
-    expect(result.conceptsDetected.sort()).toEqual(
-      [...ACTIVE_CHAPTER9_CONCEPT_FAMILY_IDS].sort(),
+
+    // Service Safety / Referral has only one primary initial-assessment question.
+    // The shared engine deliberately protects single-question concepts from being
+    // diagnosed after one isolated miss; it requires four observations. The other
+    // nine concept families have enough question diversity to trigger remediation.
+    const expectedAfterOneAttempt = ACTIVE_CHAPTER9_CONCEPT_FAMILY_IDS.filter(
+      (conceptId) => conceptId !== 'ch9-service-safety-referral',
     )
+    expect(result.cyclesCreated).toBe(expectedAfterOneAttempt.length)
+    expect(result.conceptsDetected.sort()).toEqual([...expectedAfterOneAttempt].sort())
+    expect(result.conceptsDetected).not.toContain('ch9-service-safety-referral')
 
     for (const cycle of db.created) {
       expect(cycle.chapterId).toBe('ch-9')
@@ -181,6 +188,26 @@ describe('G3-2 Chapter 9 end-to-end shared runtime certification', () => {
         ...expectedCards,
       ])
     }
+  })
+
+  it('does not overdiagnose the single-question service-safety concept, but targets it after sustained misses', async () => {
+    const attempts = Array.from({ length: 4 }, (_, index) => ({
+      ...weakInitialAttempt(),
+      id: `attempt-ch9-weak-${index + 1}`,
+      completed_at: `2026-09-27T12:0${index}:00.000Z`,
+    }))
+    const db = new HandoffDb(attempts)
+    const service = new DetectionOrchestratorService(db)
+
+    const result = await service.orchestrateAfterQuizCompletion(
+      'student-ch9',
+      'ch-9',
+      attempts[3].id,
+    )
+
+    expect(result.success).toBe(true)
+    expect(result.cyclesCreated).toBe(ACTIVE_CHAPTER9_CONCEPT_FAMILY_IDS.length)
+    expect(result.conceptsDetected).toContain('ch9-service-safety-referral')
   })
 
   it('selects fresh Chapter 9 reserve questions instead of reusing initial assessment questions', async () => {
