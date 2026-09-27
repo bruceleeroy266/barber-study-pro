@@ -19,6 +19,7 @@ import { getChapter5MappingProvider } from './adapters/chapter-5-adapter'
 import { getChapter6MappingProvider } from './adapters/chapter-6-adapter'
 import { getChapter7MappingProvider } from './adapters/chapter-7-adapter'
 import { getChapter8MappingProvider } from './adapters/chapter-8-adapter'
+import { getChapter9MappingProvider } from './adapters/chapter-9-adapter'
 import {
   Chapter2DetectionProvider,
   createChapter2DetectionProvider,
@@ -54,6 +55,11 @@ import {
   createChapter8DetectionProvider,
   type Chapter8DetectionProviderConfig,
 } from './adapters/chapter-8-detection-provider'
+import {
+  Chapter9DetectionProvider,
+  createChapter9DetectionProvider,
+  type Chapter9DetectionProviderConfig,
+} from './adapters/chapter-9-detection-provider'
 
 // ───────────────────────────────────────────────
 // Concept Detection Provider Interface
@@ -114,6 +120,8 @@ class MappingProviderRegistry {
     this.registerProvider(getChapter7MappingProvider())
     // Register Chapter 8 (C8-7 targeted remediation)
     this.registerProvider(getChapter8MappingProvider())
+    // Register Chapter 9 (G3 unified remediation runtime)
+    this.registerProvider(getChapter9MappingProvider())
   }
 
   /**
@@ -357,6 +365,15 @@ export function initializeChapter8DetectionProvider(
   return provider
 }
 
+export function initializeChapter9DetectionProvider(
+  config: Chapter9DetectionProviderConfig
+): Chapter9DetectionProvider {
+  const provider = createChapter9DetectionProvider(config)
+  const registry = getDetectionProviderRegistry()
+  registry.registerProvider(provider)
+  return provider
+}
+
 /**
  * Initialize and register the detection provider for a chapter (C3-3).
  *
@@ -389,6 +406,9 @@ export function initializeChapterDetectionProvider(
   }
   if (chapterId === 'ch-8') {
     return initializeChapter8DetectionProvider(config)
+  }
+  if (chapterId === 'ch-9') {
+    return initializeChapter9DetectionProvider(config)
   }
   return undefined
 }
