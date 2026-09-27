@@ -4,7 +4,7 @@
  * Turns the atomic single-question reservation/submission transaction into a
  * controlled per-chapter question sequence:
  *
- *   Chapter 2: 1 question  (preserves the established production flow exactly)
+ *   Chapter 2: 5 questions (G5 unified grading standard)
  *   Chapter 3: 5 questions (the C3-3 Knowledge Check)
  *
  * All sequencing state is derived from PERSISTED data only:
