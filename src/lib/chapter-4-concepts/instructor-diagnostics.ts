@@ -3,8 +3,8 @@ import { calculateChapter4ConceptMastery, calculateChapter4Grade } from './gradi
 import type { Chapter4ConceptFamilyId } from './types'
 import { CHAPTER4_CONCEPT_FAMILY_IDS, chapter4ConceptFamilies } from './concepts'
 import { chapter4QuizQuestionConceptMappings, chapter4ReassessmentQuestionConceptMappings } from './mappings'
-import { chapter4PremiumQuizQuestions } from '../chapter-3-premium-quiz'
-import { chapter4ReassessmentQuestions } from '../chapter-3-reassessment-questions'
+import { chapter4PremiumQuizQuestions } from '../chapter-4-premium-quiz'
+import { chapter4ReassessmentQuestions } from '../chapter-4-reassessment-questions'
 import type { Chapter4MicroCheckAttemptRow } from './micro-check-persistence'
 import { calculatePersistedChapter4MicroCheckPercent, chapter4MicroCheckRowsToEvidence } from './micro-check-persistence'
 
