@@ -55,7 +55,7 @@ describe('C10-5 persisted micro-check evidence adapter', () => {
       chapterAssessmentPercent: 80,
       microCheckPercent: 50,
     })
-    expect(CHAPTER10_GRADE_WEIGHTS.microChecks).toBe(0.2)
+    expect(CHAPTER10_GRADE_WEIGHTS.micro_check).toBe(0.2)
   })
 
   it('derives per-concept diagnostics from the same shared mastery engine', () => {
