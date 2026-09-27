@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { Chapter10EvidenceRecord } from './grading'
 import { chapter10MicroChecks } from './micro-checks'
+import { chapter10PremiumQuizQuestions } from '../chapter-10-premium-quiz'
 import {
   CHAPTER10_SAFETY_RULES,
   chapter10SafetyTaggedItems,
@@ -42,6 +43,15 @@ describe('C10-6 Chapter 10 safety escalation', () => {
     expect(getChapter10SafetyTag('mcq-10-018')?.hazard).toBe('chemical_service_compromised_scalp')
     expect(getChapter10SafetyTag('mcq-10-019')?.hazard).toBe('scope_diagnosis_treatment_boundary')
     expect(getChapter10SafetyTag('qq-10-040')?.hazard).toBe('contagious_condition_referral')
+  })
+
+  it('keeps safety-critical assessment answer keys bound to the safe response', () => {
+    const byId = new Map(chapter10PremiumQuizQuestions.map((item) => [item.id, item]))
+    const lice = byId.get('qq-10-034')!
+    const tinea = byId.get('qq-10-040')!
+
+    expect(lice[`answer_${lice.correct_answer}`]).toContain('Do not begin the service')
+    expect(tinea[`answer_${tinea.correct_answer}`]).toContain('Do not provide the affected service')
   })
 
   it('turns one tagged micro-check miss into immediate targeted review without mutating the evidence record', () => {
