@@ -24,6 +24,7 @@ import { getChapter9MappingProvider } from './adapters/chapter-9-adapter'
 import { getChapter10MappingProvider } from './adapters/chapter-10-adapter'
 import { getChapter11MappingProvider } from './adapters/chapter-11-adapter'
 import { getChapter12MappingProvider } from './adapters/chapter-12-adapter'
+import { getChapter13MappingProvider } from './adapters/chapter-13-adapter'
 import {
   Chapter1DetectionProvider,
   createChapter1DetectionProvider,
@@ -84,6 +85,11 @@ import {
   createChapter12DetectionProvider,
   type Chapter12DetectionProviderConfig,
 } from './adapters/chapter-12-detection-provider'
+import {
+  Chapter13DetectionProvider,
+  createChapter13DetectionProvider,
+  type Chapter13DetectionProviderConfig,
+} from './adapters/chapter-13-detection-provider'
 
 // ───────────────────────────────────────────────
 // Concept Detection Provider Interface
@@ -153,6 +159,8 @@ class MappingProviderRegistry {
     this.registerProvider(getChapter11MappingProvider())
     // Register Chapter 12 (C12-7 targeted remediation/reassessment)
     this.registerProvider(getChapter12MappingProvider())
+    // Register Chapter 13 (C13-7 targeted remediation/reassessment)
+    this.registerProvider(getChapter13MappingProvider())
   }
 
   /**
@@ -442,6 +450,15 @@ export function initializeChapter12DetectionProvider(
   return provider
 }
 
+export function initializeChapter13DetectionProvider(
+  config: Chapter13DetectionProviderConfig
+): Chapter13DetectionProvider {
+  const provider = createChapter13DetectionProvider(config)
+  const registry = getDetectionProviderRegistry()
+  registry.registerProvider(provider)
+  return provider
+}
+
 /**
  * Initialize and register the detection provider for a chapter (C3-3).
  *
@@ -489,6 +506,9 @@ export function initializeChapterDetectionProvider(
   }
   if (chapterId === 'ch-12') {
     return initializeChapter12DetectionProvider(config)
+  }
+  if (chapterId === 'ch-13') {
+    return initializeChapter13DetectionProvider(config)
   }
   return undefined
 }

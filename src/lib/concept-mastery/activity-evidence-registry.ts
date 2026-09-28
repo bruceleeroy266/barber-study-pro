@@ -12,6 +12,7 @@ import { chapter9ContentConceptMappings, chapter9FlashcardConceptMappings } from
 import { chapter10ContentConceptMappings, chapter10FlashcardConceptMappings } from '../chapter-10-concepts/mappings'
 import { chapter11ContentConceptMappings, chapter11FlashcardConceptMappings } from '../chapter-11-concepts/mappings'
 import { chapter12ContentConceptMappings, chapter12FlashcardConceptMappings } from '../chapter-12-concepts/mappings'
+import { chapter13ContentConceptMappings, chapter13FlashcardConceptMappings } from '../chapter-13-concepts/mappings'
 import { chapter14ContentConceptMappings, chapter14FlashcardConceptMappings } from '../chapter-14-concepts/mappings'
 
 type GenericMapping = {
@@ -55,6 +56,7 @@ const flashcardMappings: Record<string, readonly GenericMapping[]> = {
   'ch-10': chapter10FlashcardConceptMappings,
   'ch-11': chapter11FlashcardConceptMappings,
   'ch-12': chapter12FlashcardConceptMappings,
+  'ch-13': chapter13FlashcardConceptMappings,
   'ch-14': chapter14FlashcardConceptMappings,
 }
 
@@ -71,6 +73,7 @@ const contentMappings: Record<string, readonly GenericMapping[]> = {
   'ch-10': chapter10ContentConceptMappings,
   'ch-11': chapter11ContentConceptMappings,
   'ch-12': chapter12ContentConceptMappings,
+  'ch-13': chapter13ContentConceptMappings,
   'ch-14': chapter14ContentConceptMappings,
 }
 
@@ -96,6 +99,12 @@ const scenarioItemConceptOverrides: Readonly<Record<string, readonly string[]>> 
     'ch10-infectious-parasitic-scalp',
     'ch10-service-safety-referral',
   ],
+  'ch-13:shaving-application-scenarios': [
+    'ch13-hair-growth-ingrown-prevention',
+    'ch13-razor-handling-stretching-technique',
+    'ch13-infection-control-service-safety',
+    'ch13-client-care-professional-practice',
+  ],
 }
 
 export function getScenarioEvidenceConcept(
@@ -118,8 +127,9 @@ export function getFlashcardEvidenceInventory(chapterId: string): readonly strin
 }
 
 export function getScenarioEvidenceInventory(chapterId: string): readonly string[] {
+  if (!isUnifiedActivityEvidenceChapter(chapterId)) return []
   const number = Number(chapterId.replace('ch-', ''))
-  if (!Number.isInteger(number) || number < 1 || !contentMappings[chapterId]) return []
+  if (!Number.isInteger(number) || number < 1) return []
   const content = getChapterContent(number)
   if (!content) return []
 
@@ -133,6 +143,5 @@ export function isUnifiedActivityEvidenceChapter(chapterId: string): boolean {
   return Boolean(flashcardMappings[chapterId] && contentMappings[chapterId])
 }
 
-// Backward-compatible alias for older call sites/tests while additional
-// chapters join the same durable activity-evidence architecture.
+// Backward-compatible alias retained for existing G7-era call sites.
 export const isG7EvidenceChapter = isUnifiedActivityEvidenceChapter
