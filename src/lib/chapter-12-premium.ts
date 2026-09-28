@@ -194,7 +194,7 @@ export const chapter12PremiumContent: ChapterContent = {
     {
       type: 'tabbed',
       id: 'massage-movements',
-      title: 'MASSAGE MOVEMENTS — THE THERAPIST\'S TOOLKIT',
+      title: 'MASSAGE MOVEMENTS — THE BARBER\'S TOOLKIT',
       subtitle: 'Master these six fundamental techniques',
       tabs: [
         {
@@ -219,11 +219,11 @@ export const chapter12PremiumContent: ChapterContent = {
           bullets: [
             { label: 'MOVEMENT', description: 'Kneading and lifting movements using the fingertips' },
             { label: 'PRESSURE', description: 'Medium to firm — works deeper into muscle tissue' },
-            { label: 'PURPOSE', description: 'Stimulating circulation, relieving muscle tension, jawline work' },
+            { label: 'PURPOSE', description: 'Controlled kneading and lifting within a comfortable cosmetic massage sequence' },
             { label: 'WHEN TO USE', description: 'After effleurage, when the skin is warmed up and ready for deeper stimulation' },
           ],
           facts: [
-            { text: 'Petrissage is especially effective on the jawline where men carry tension from chewing and stress.' },
+            { text: 'Use petrissage only where the planned cosmetic service and client comfort support a deeper kneading movement.' },
             { text: 'Use caution around the eye area — petrissage is too intense for delicate orbital skin.' },
           ],
         },
@@ -234,11 +234,11 @@ export const chapter12PremiumContent: ChapterContent = {
           bullets: [
             { label: 'MOVEMENT', description: 'Light, rhythmic tapping or percussion movements using fingertips' },
             { label: 'PRESSURE', description: 'Light and brisk — invigorating and stimulating' },
-            { label: 'PURPOSE', description: 'Stimulating tired skin, improving tone, finishing touches' },
+            { label: 'PURPOSE', description: 'Light rhythmic percussion used as part of the source-covered massage sequence' },
             { label: 'WHEN TO USE', description: 'Toward the end of massage to energize the skin and signal completion' },
           ],
           facts: [
-            { text: 'Tapotement increases blood flow to the surface, creating a healthy, flushed appearance.' },
+            { text: 'Tapotement is a light percussion movement; use it only when the skin condition and client comfort make the movement appropriate.' },
             { text: 'Never use tapotement on inflamed or irritated skin — it can worsen inflammation.' },
           ],
         },
@@ -249,7 +249,7 @@ export const chapter12PremiumContent: ChapterContent = {
           bullets: [
             { label: 'MOVEMENT', description: 'Small, circular movements using the pads of the fingers' },
             { label: 'PRESSURE', description: 'Firm and focused — concentrated on specific areas' },
-            { label: 'PURPOSE', description: 'Breaking down tension, working on specific problem areas' },
+            { label: 'PURPOSE', description: 'Focused rubbing movement used with controlled pressure on appropriate areas' },
             { label: 'WHEN TO USE', description: 'On areas of tension such as temples, forehead, and between the eyebrows' },
           ],
           facts: [
@@ -264,12 +264,12 @@ export const chapter12PremiumContent: ChapterContent = {
           bullets: [
             { label: 'MOVEMENT', description: 'Rapid, trembling movements that create a vibrating sensation' },
             { label: 'PRESSURE', description: 'Very light — requires steady hands and controlled movement' },
-            { label: 'PURPOSE', description: 'Nerve stimulation, sinus relief, energizing the skin' },
-            { label: 'WHEN TO USE', description: 'Briefly on the forehead and cheeks to stimulate nerve endings' },
+            { label: 'PURPOSE', description: 'Rapid trembling movement used briefly within the massage sequence' },
+            { label: 'WHEN TO USE', description: 'Briefly and only when the client is comfortable and no contraindication is present' },
           ],
           facts: [
             { text: 'Vibration is advanced technique — practice on your own face before performing on clients.' },
-            { text: 'This movement is particularly effective for clients with sinus congestion.' },
+            { text: 'Do not present vibration as treatment for sinus congestion or another medical condition.' },
           ],
         },
         {
@@ -279,12 +279,12 @@ export const chapter12PremiumContent: ChapterContent = {
           bullets: [
             { label: 'MOVEMENT', description: 'Ultra-light, barely-there strokes using just the fingertips' },
             { label: 'PRESSURE', description: 'Feather-light — the gentlest of all movements' },
-            { label: 'PURPOSE', description: 'Sensitive skin, ending the massage, calming the nervous system' },
+            { label: 'PURPOSE', description: 'A very light finishing movement used when appropriate for the client and service' },
             { label: 'WHEN TO USE', description: 'As the final movement to signal completion and leave the client in a relaxed state' },
           ],
           facts: [
-            { text: 'Feathering is the signature of a master therapist — it leaves clients feeling pampered and valued.' },
-            { text: 'Always end every facial massage with feathering strokes, regardless of skin type.' },
+            { text: 'Feathering is an ultra-light finishing movement that should remain comfortable and controlled.' },
+            { text: 'Use the finishing movement that matches the source sequence, skin condition, and client comfort rather than applying one rule regardless of the client.' },
           ],
         },
       ],
@@ -335,27 +335,27 @@ export const chapter12PremiumContent: ChapterContent = {
       type: 'featureGrid',
       id: 'facial-treatments-masks',
       title: 'FACIAL TREATMENTS & MASKS',
-      subtitle: 'Four essential treatments every barber must master',
+      subtitle: 'Select cosmetic products from the client analysis and product directions',
       features: [
         {
           icon: 'Mountain',
-          title: 'CLAY MASKS',
-          description: 'Masks are cosmetic products selected according to observable skin needs and manufacturer directions. Avoid detoxification or medical-treatment claims unless the product labeling specifically supports them.',
+          title: 'MASK SELECTION',
+          description: 'Choose a cosmetic mask according to observable skin needs, the planned service, and manufacturer directions. Avoid detoxification, healing, or disease-treatment claims.',
         },
         {
           icon: 'FileText',
-          title: 'SHEET MASKS',
-          description: 'Pre-soaked fabric masks deliver concentrated serums. Hyaluronic acid for deep hydration, vitamin C for brightening, peptides for anti-aging. Ideal for dry and aging skin.',
+          title: 'PRODUCT DIRECTIONS',
+          description: 'Use the amount, application method, contact time, removal method, and warnings supplied for the specific cosmetic product rather than a universal rule.',
         },
         {
           icon: 'Recycle',
-          title: 'EXFOLIATING TREATMENTS',
-          description: 'Remove dead skin cells to reveal fresh skin. Physical scrubs with fine particles, chemical AHA/BHA acids, enzymatic natural fruit enzymes. Essential for preventing ingrown hairs.',
+          title: 'EXFOLIATION',
+          description: 'Exfoliation is a cosmetic service step when appropriate. Follow the product label and avoid irritated, injured, or otherwise unsuitable skin.',
         },
         {
           icon: 'Flame',
-          title: 'HOT TOWEL TREATMENT',
-          description: 'Hot towels are a traditional barbering service step. Use a comfortably warm towel, follow shop and manufacturer safety guidance, protect the airway, and monitor client comfort continuously. Do not rely on a universal temperature or timing rule.',
+          title: 'WARM-TOWEL SERVICE',
+          description: 'Use comfortable warmth, clean towels, unobstructed breathing, and continuous client-comfort checks. Follow applicable equipment and shop guidance rather than a fixed universal temperature.',
         },
       ],
     },
@@ -367,51 +367,48 @@ export const chapter12PremiumContent: ChapterContent = {
       type: 'tabbed',
       id: 'cleansers-toners-astringents',
       title: 'CLEANSERS, TONERS & ASTRINGENTS',
-      subtitle: 'Know your products — the backbone of every facial service',
+      subtitle: 'Use product categories within cosmetic scope and follow the label',
       tabs: [
         {
           id: 'cleansers',
           label: 'CLEANSERS',
-          title: 'CLEANSERS — THE FIRST STEP',
+          title: 'CLEANSERS — SERVICE PREPARATION',
           bullets: [
-            { label: 'OIL-BASED CLEANSERS', description: 'Dissolve oil-based impurities like sunscreen, makeup residue, and excess sebum. Essential for the first step of double cleansing.' },
-            { label: 'WATER-BASED CLEANSERS', description: 'Remove water-soluble debris like sweat and dirt. Gel cleansers for oily skin, cream cleansers for dry skin.' },
-            { label: 'FOAMING CLEANSERS', description: 'Create lather that lifts oil and debris. Best for oily and combination skin types. Can be drying for sensitive skin.' },
-            { label: 'MICELLAR WATER', description: 'Gentle, no-rinse cleanser with tiny oil molecules suspended in water. Ideal for sensitive skin and quick cleanses.' },
+            { label: 'SELECTION', description: 'Choose a cleanser according to observable skin needs, client sensitivities, and manufacturer directions.' },
+            { label: 'APPLICATION', description: 'Use the product as labeled and remove it with comfortable water temperature and clean technique.' },
+            { label: 'BOUNDARY', description: 'Do not claim that a cleanser treats acne, changes pore size, or corrects a medical skin condition.' },
           ],
           facts: [
-            { text: 'The double cleanse method — oil first, then water-based — is the gold standard for professional facial preparation.' },
-            { text: 'Always match cleanser pH to skin type. Harsh alkaline cleansers strip the acid mantle and cause irritation.' },
+            { text: 'Chapter 12 requires product selection to follow skin analysis and safe service planning.' },
+            { text: 'Manufacturer directions control product-specific use, warnings, and contact time.' },
           ],
         },
         {
           id: 'toners',
           label: 'TONERS',
-          title: 'TONERS — THE BALANCING ACT',
+          title: 'TONERS — COSMETIC FINISHING PRODUCT',
           bullets: [
-            { label: 'HYDRATING TONERS', description: 'Contain humectants like glycerin and hyaluronic acid. Restore moisture after cleansing. Ideal for dry and sensitive skin.' },
-            { label: 'EXFOLIATING TONERS', description: 'Some cosmetic toners contain exfoliating ingredients. Follow the product label, avoid irritated or compromised skin, and do not make medical treatment claims.' },
-            { label: 'BALANCING TONERS', description: 'Use a toner only when it fits the client\'s cosmetic service plan and the product directions. Avoid promising deeper absorption or a universal pH effect.' },
-            { label: 'SOOTHING TONERS', description: 'Contain botanicals like chamomile, aloe, and green tea. Calm redness and reduce inflammation after shaving or exfoliation.' },
+            { label: 'SELECTION', description: 'Use a toner only when it fits the client analysis and the planned cosmetic service.' },
+            { label: 'APPLICATION', description: 'Follow the specific product label rather than promising a universal pH, absorption, or treatment effect.' },
+            { label: 'SENSITIVITY', description: 'Avoid or modify products when the client reports sensitivity or the skin is irritated or compromised.' },
           ],
           facts: [
-            { text: 'Modern toners are not the harsh, alcohol-heavy astringents of the past. They are treatment products, not just "extra cleansing."' },
-            { text: 'Apply toner immediately after cleansing while skin is still slightly damp for maximum absorption.' },
+            { text: 'Product categories vary by formulation, so the label is more reliable than a one-size-fits-all ingredient rule.' },
+            { text: 'Keep recommendations cosmetic and avoid disease-treatment or therapeutic claims.' },
           ],
         },
         {
           id: 'astringents',
           label: 'ASTRINGENTS',
-          title: 'ASTRINGENTS — THE OIL CONTROLLERS',
+          title: 'ASTRINGENTS — PRODUCT-SPECIFIC USE',
           bullets: [
-            { label: 'ALCOHOL-BASED ASTRINGENTS', description: 'Some astringent products use alcohol and may feel drying or irritating. Select products according to the client analysis and label directions rather than claiming that pores tighten or close.' },
-            { label: 'WITCH HAZEL', description: 'Natural astringent from the witch hazel plant. Gentler than alcohol-based options. Reduces inflammation and controls oil.' },
-            { label: 'SALICYLIC ACID ASTRINGENTS', description: 'Some cosmetic astringent products contain salicylic acid. Use only as directed by the product label and keep recommendations within cosmetic-service scope.' },
-            { label: 'WHEN TO USE', description: 'After cleansing and before moisturizing. Use only on oily areas if combination skin. Avoid eye area completely.' },
+            { label: 'SELECTION', description: 'Use an astringent only when appropriate for the client analysis and the product directions.' },
+            { label: 'APPLICATION', description: 'Avoid the eye area and follow the label for frequency, amount, and warnings.' },
+            { label: 'BOUNDARY', description: 'Do not describe pores as opening or closing and do not present a cosmetic astringent as medical acne treatment.' },
           ],
           facts: [
-            { text: 'Astringents are stronger than toners. They are designed specifically for oil control and pore tightening, not hydration.' },
-            { text: 'Overuse of astringents can strip the skin\'s protective barrier, causing rebound oil production and irritation.' },
+            { text: 'Some formulations can feel drying or irritating; client response matters during service.' },
+            { text: 'When a product causes burning, significant irritation, or another unsafe response, stop using it and follow the applicable response procedure.' },
           ],
         },
       ],
@@ -424,66 +421,54 @@ export const chapter12PremiumContent: ChapterContent = {
       type: 'tabbed',
       id: 'product-selection-skin-type',
       title: 'PRODUCT SELECTION BY SKIN TYPE',
-      subtitle: 'Match the product to the skin — precision treatment starts here',
+      subtitle: 'Match cosmetic product choice to observation, consultation, and label directions',
       tabs: [
         {
           id: 'normal-skin',
           label: 'NORMAL',
-          title: 'NORMAL SKIN — BALANCED CARE',
+          title: 'NORMAL SKIN — MAINTENANCE',
           bullets: [
-            { label: 'CLEANSER', description: 'Gel or cream-based cleansers with balanced pH' },
-            { label: 'MASSAGE MEDIUM', description: 'Light facial oils or water-based lotions' },
-            { label: 'MASK', description: 'Hydrating or brightening sheet masks' },
-            { label: 'MOISTURIZER', description: 'Lightweight, balanced hydration' },
+            { label: 'OBSERVE', description: 'Confirm the client presents the balanced characteristics used in the Chapter 12 analysis framework.' },
+            { label: 'SELECT', description: 'Choose cosmetic products that fit the service and manufacturer directions without over-treating the skin.' },
           ],
           facts: [
-            { text: 'Normal skin is the easiest to treat but still requires consistent care to maintain balance.' },
-            { text: 'Avoid heavy products that could tip the balance toward oiliness or dryness.' },
+            { text: 'A skin-type label guides cosmetic product selection; it is not a medical diagnosis.' },
           ],
         },
         {
           id: 'oily-skin',
           label: 'OILY',
-          title: 'OILY SKIN — OIL CONTROL',
+          title: 'OILY SKIN — COSMETIC OIL MANAGEMENT',
           bullets: [
-            { label: 'CLEANSER', description: 'Foaming cleansers with salicylic acid' },
-            { label: 'MASSAGE MEDIUM', description: 'Oil-free gels or mattifying lotions' },
-            { label: 'MASK', description: 'Clay masks with charcoal or bentonite' },
-            { label: 'MOISTURIZER', description: 'Lightweight, oil-free, non-comedogenic' },
+            { label: 'OBSERVE', description: 'Note visible oiliness and other relevant service observations.' },
+            { label: 'SELECT', description: 'Choose cosmetic products labeled for the intended use and avoid promises to cure acne or permanently change oil production.' },
           ],
           facts: [
-            { text: 'Oily skin still needs moisture — skipping moisturizer can cause skin to produce even more oil.' },
-            { text: 'For ingredient-specific products, follow the label and avoid claims that go beyond the product directions or barbering scope.' },
+            { text: 'Use the client analysis and product label together rather than relying on one ingredient as a universal solution.' },
           ],
         },
         {
           id: 'dry-skin',
           label: 'DRY',
-          title: 'DRY SKIN — DEEP HYDRATION',
+          title: 'DRY SKIN — COSMETIC MOISTURE SUPPORT',
           bullets: [
-            { label: 'CLEANSER', description: 'Cream or oil-based cleansers, avoid foaming' },
-            { label: 'MASSAGE MEDIUM', description: 'Rich facial oils: jojoba, argan, rosehip' },
-            { label: 'MASK', description: 'Hydrating sheet masks with hyaluronic acid' },
-            { label: 'MOISTURIZER', description: 'Rich, emollient creams with ceramides' },
+            { label: 'OBSERVE', description: 'Note dryness, flaking, sensitivity, and other service-relevant findings without diagnosing a skin disorder.' },
+            { label: 'SELECT', description: 'Choose gentle cosmetic products and massage media according to the product directions and client comfort.' },
           ],
           facts: [
-            { text: 'Dry skin lacks oil; dehydrated skin lacks water. Treat accordingly.' },
-            { text: 'Avoid alcohol-based products and harsh exfoliants on dry skin.' },
+            { text: 'If the skin is irritated, injured, or otherwise unsuitable for the planned service, modify or defer the service.' },
           ],
         },
         {
           id: 'sensitive-skin',
           label: 'SENSITIVE',
-          title: 'SENSITIVE SKIN — GENTLE CARE',
+          title: 'SENSITIVE SKIN — CONSERVATIVE PRODUCT CHOICE',
           bullets: [
-            { label: 'CLEANSER', description: 'Fragrance-free, hypoallergenic cleansers' },
-            { label: 'MASSAGE MEDIUM', description: 'Gentle oils: squalane, chamomile-based' },
-            { label: 'MASK', description: 'Aloe vera or oatmeal-based soothing masks' },
-            { label: 'MOISTURIZER', description: 'Minimal ingredient lists, soothing botanicals' },
+            { label: 'OBSERVE', description: 'Use consultation and client-reported sensitivity to guide a conservative service plan.' },
+            { label: 'SELECT', description: 'Use products according to their warnings and directions; avoid unnecessary fragrance, heat, or vigorous manipulation when those would increase discomfort.' },
           ],
           facts: [
-            { text: 'Always perform patch tests with new products on sensitive skin clients.' },
-            { text: 'Avoid essential oils, fragrances, and harsh active ingredients on sensitive skin.' },
+            { text: 'Do not perform informal medical allergy testing. Follow the product label and applicable professional guidance for any required compatibility check.' },
           ],
         },
       ],
@@ -510,7 +495,7 @@ export const chapter12PremiumContent: ChapterContent = {
       subtitle: 'Know when to treat and when to refer',
       scenarios: [
         {
-          situation: 'A client arrives for a facial massage. During consultation, you notice active cold sores (herpes simplex) around their mouth. The client says they are "just about healed" and insists on proceeding with the service.',
+          situation: 'A client arrives for a facial massage and reports an active cold sore around the mouth. The client says it is "just about healed" and insists on proceeding with the service.',
           options: [
             { letter: 'A', text: 'Proceed with the service but avoid the mouth area', feedback: '❌ An active or potentially contagious facial condition is a service-safety concern; working around one area does not resolve the broader contact risk.' },
             { letter: 'B', text: 'Explain that the visible active condition makes the facial service inappropriate today and defer the service', feedback: '✅ Correct. Defer a facial service when an active or potentially contagious condition makes contact unsafe, without diagnosing or prescribing.' },
