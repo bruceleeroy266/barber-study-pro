@@ -71,6 +71,11 @@ import {
   buildChapter9InstructorDiagnostics,
   type Chapter9InstructorQuizAttempt,
 } from '@/lib/chapter-9-concepts/instructor-diagnostics'
+import { type Chapter10MicroCheckAttemptRow } from '@/lib/chapter-10-concepts/micro-check-persistence'
+import {
+  buildChapter10InstructorDiagnostics,
+  type Chapter10InstructorQuizAttempt,
+} from '@/lib/chapter-10-concepts/instructor-diagnostics'
 import { mapHourLogsFromDb, mapAttendanceRecordsFromDb, mapAttendanceNotesFromDb } from '@/lib/mappers/operational-data-mappers'
 import { getLastSignInAtMap } from '@/lib/instructor/last-login'
 
@@ -374,6 +379,15 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     .eq('chapter_id', 'ch-9')
     .order('answered_at', { ascending: true })
 
+  // Chapter 10 immutable first-attempt evidence. Same-school staff can read it
+  // through the existing RLS policy used for instructor diagnostics.
+  const { data: chapter10MicroCheckRows } = await supabase
+    .from('chapter_micro_check_attempts')
+    .select('id,user_id,chapter_id,check_id,question_id,concept_id,difficulty,selected_answer,is_correct,answered_at,created_at')
+    .eq('user_id', studentId)
+    .eq('chapter_id', 'ch-10')
+    .order('answered_at', { ascending: true })
+
   // Get instructor notes
   const notesResult = await getInstructorNotes(studentId, instructorProfile.school_id)
   let noteRecords: InstructorNote[] = notesResult.success ? notesResult.data : []
@@ -669,6 +683,30 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
         target_concept_id: attempt.target_concept_id ?? null,
         remediation_cycle_id: attempt.remediation_cycle_id ?? null,
       })) as Chapter9InstructorQuizAttempt[],
+    referenceTime: new Date().toISOString(),
+  })
+
+  const chapter10MicroCheckAttempts = (chapter10MicroCheckRows ?? []) as Chapter10MicroCheckAttemptRow[]
+  const chapter10Progress = progressRecords.find((record) => record.chapter_id === 'ch-10')
+  const chapter10Diagnostics = buildChapter10InstructorDiagnostics({
+    studentId,
+    completionPercent: chapter10Progress?.progress_percentage ?? 0,
+    microCheckRows: chapter10MicroCheckAttempts,
+    quizAttempts: attemptRecords
+      .filter(
+        (attempt) =>
+          attempt.quiz_id === 'quiz-10' ||
+          (attempt.is_reassessment && attempt.target_concept_id?.startsWith('ch10-')),
+      )
+      .map((attempt) => ({
+        quiz_id: attempt.quiz_id,
+        percentage: attempt.percentage,
+        answers_json: (attempt.answers_json ?? null) as Record<string, unknown> | null,
+        completed_at: attempt.completed_at,
+        is_reassessment: attempt.is_reassessment ?? false,
+        target_concept_id: attempt.target_concept_id ?? null,
+        remediation_cycle_id: attempt.remediation_cycle_id ?? null,
+      })) as Chapter10InstructorQuizAttempt[],
     referenceTime: new Date().toISOString(),
   })
 
@@ -1842,6 +1880,165 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
 
           <div className="px-6 pb-6 text-xs text-silver-gray">
             Initial misses remain historical evidence after recovery. Chapter 9 uses the shared mastery hierarchy: micro checks 20%, flashcards 10%, chapter assessment 40%, scenario/application 15%, and remediation/reassessment recovery 15%.
+          </div>
+        </section>
+
+        {/* Chapter 10 mastery, safety, remediation & instructor visibility */}
+        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <div className="p-6 border-b border-graphite">
+            <div className="flex flex-col gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 10 — Properties and Disorders of the Hair and Scalp
+                </p>
+                <h2 className="text-xl font-semibold text-white mt-1">Mastery & Intervention Diagnostics</h2>
+                <p className="text-sm text-silver mt-1">
+                  First-attempt evidence, learning gaps, safety escalation, remediation, and reassessment recovery are shown without exposing internal IDs.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="rounded-lg border border-graphite bg-black p-4">
+                  <div className="text-2xl font-bold text-[var(--color-brand-gold)]">
+                    {chapter10Diagnostics.chapterGrade.finalGrade}%
+                  </div>
+                  <div className="text-xs text-silver mt-1">Chapter Grade</div>
+                </div>
+                <div className="rounded-lg border border-graphite bg-black p-4">
+                  <div className="text-2xl font-bold text-white">{chapter10Diagnostics.overallMastery}%</div>
+                  <div className="text-xs text-silver mt-1">Overall Mastery</div>
+                </div>
+                <div className="rounded-lg border border-graphite bg-black p-4">
+                  <div className="text-lg font-bold text-white capitalize">
+                    {chapter10Diagnostics.overallConfidence.replaceAll('_', ' ')}
+                  </div>
+                  <div className="text-xs text-silver mt-1">Mastery Confidence</div>
+                </div>
+                <div className="rounded-lg border border-graphite bg-black p-4">
+                  <div className="text-2xl font-bold text-white">
+                    {chapter10Progress?.progress_percentage ?? 0}%
+                  </div>
+                  <div className="text-xs text-silver mt-1">Completion</div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-sm">
+                <div className="rounded-lg border border-graphite p-3">
+                  <p className="text-silver-gray">Micro Checks</p>
+                  <p className="text-white font-semibold mt-1">
+                    {chapter10Diagnostics.microCheckPercent === null ? 'No evidence' : `${chapter10Diagnostics.microCheckPercent}%`}
+                  </p>
+                </div>
+                <div className="rounded-lg border border-graphite p-3">
+                  <p className="text-silver-gray">Chapter Assessment</p>
+                  <p className="text-white font-semibold mt-1">
+                    {chapter10Diagnostics.chapterAssessmentPercent === null ? 'Not attempted' : `${chapter10Diagnostics.chapterAssessmentPercent}%`}
+                  </p>
+                </div>
+                <div className="rounded-lg border border-graphite p-3">
+                  <p className="text-silver-gray">Remediation Status</p>
+                  <p className="text-white font-semibold mt-1">{chapter10Diagnostics.remediationStatus}</p>
+                </div>
+                <div className="rounded-lg border border-graphite p-3">
+                  <p className="text-silver-gray">Latest Reassessment</p>
+                  <p className="text-white font-semibold mt-1">{chapter10Diagnostics.latestReassessment}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {chapter10Diagnostics.safetyIntervention.requiresInstructorReview && (
+            <div className="p-6 border-b border-graphite">
+              <div className={`rounded-lg border p-4 ${
+                chapter10Diagnostics.safetyIntervention.level === 'urgent'
+                  ? 'border-red-400/50 bg-red-950/20'
+                  : 'border-warm-bronze/50 bg-warm-bronze/10'
+              }`}>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-silver">
+                    {chapter10Diagnostics.safetyIntervention.level} safety / scope intervention
+                  </span>
+                  {chapter10Diagnostics.safetyIntervention.requiresFormalSafetyReassessment && (
+                    <span className="text-xs font-semibold text-white">
+                      5-question reassessment · 100% required
+                    </span>
+                  )}
+                </div>
+                <p className="text-sm text-light-gray mt-2">
+                  {chapter10Diagnostics.safetyIntervention.instructorReason}
+                </p>
+              </div>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 border-b border-graphite">
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-white">Strongest Concepts</h3>
+              <div className="space-y-2 mt-3">
+                {chapter10Diagnostics.strongestConcepts.length > 0 ? chapter10Diagnostics.strongestConcepts.map((concept) => (
+                  <div key={concept.conceptName} className="rounded-lg border border-graphite bg-black p-3 flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-medium text-white">{concept.conceptName}</p>
+                      <p className="text-xs text-silver mt-1 capitalize">
+                        {concept.confidence.replaceAll('_', ' ')} confidence · {concept.observations} observations
+                      </p>
+                    </div>
+                    <span className="text-sm font-semibold text-[var(--color-brand-gold)]">{concept.mastery}%</span>
+                  </div>
+                )) : <p className="text-sm text-silver">Not enough Chapter 10 evidence yet.</p>}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-white">Weakest Concepts</h3>
+              <div className="space-y-2 mt-3">
+                {chapter10Diagnostics.weakestConcepts.length > 0 ? chapter10Diagnostics.weakestConcepts.map((concept) => (
+                  <div key={concept.conceptName} className="rounded-lg border border-graphite bg-black p-3 flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-medium text-white">{concept.conceptName}</p>
+                      <p className="text-xs text-silver mt-1 capitalize">
+                        {concept.confidence.replaceAll('_', ' ')} confidence · {concept.observations} observations
+                      </p>
+                    </div>
+                    <span className="text-sm font-semibold text-warm-bronze">{concept.mastery}%</span>
+                  </div>
+                )) : <p className="text-sm text-silver">Not enough Chapter 10 evidence yet.</p>}
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-white">Concept Evidence</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+              {chapter10Diagnostics.concepts.map((concept) => (
+                <div key={concept.conceptName} className="rounded-lg border border-graphite bg-black p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h4 className="text-sm font-semibold text-white">{concept.conceptName}</h4>
+                      <p className="text-xs text-silver mt-1">
+                        {concept.observations > 0
+                          ? `${concept.observations} observations · ${concept.initialMisses} initial misses`
+                          : 'No graded evidence yet'}
+                      </p>
+                    </div>
+                    <span className="text-sm font-semibold text-[var(--color-brand-gold)]">
+                      {concept.observations > 0 ? `${concept.mastery}%` : '—'}
+                    </span>
+                  </div>
+                  <div className="mt-3 text-xs text-silver-gray capitalize">
+                    Confidence: {concept.confidence.replaceAll('_', ' ')}
+                    {concept.reassessmentCorrect > 0 && ` · ${concept.reassessmentCorrect} reassessment correct`}
+                  </div>
+                  <div className="mt-1 text-xs text-silver-gray">
+                    Latest evidence: {concept.mostRecentEvidenceAt ? formatDate(concept.mostRecentEvidenceAt) : '—'}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="px-6 pb-6 text-xs text-silver-gray">
+            Initial misses remain historical evidence after recovery. Chapter 10 uses the shared mastery hierarchy: micro checks 20%, flashcards 10%, chapter assessment 40%, scenario/application 15%, and remediation/reassessment recovery 15%.
           </div>
         </section>
 
