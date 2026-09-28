@@ -49,7 +49,8 @@ describe('C11-4 assessment source & adversarial hardening', () => {
       const correct = q[`answer_${q.correct_answer}` as 'answer_a' | 'answer_b' | 'answer_c' | 'answer_d']
       expect(typeof correct).toBe('string')
       expect(correct.trim().length).toBeGreaterThan(0)
-      expect(q.explanation.trim().length).toBeGreaterThanOrEqual(30)
+      expect(q.explanation).not.toBeNull()
+      expect((q.explanation ?? '').trim().length).toBeGreaterThanOrEqual(30)
     }
   })
 
