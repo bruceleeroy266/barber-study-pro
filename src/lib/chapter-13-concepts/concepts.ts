@@ -5,7 +5,7 @@ import type {
 } from './types'
 
 const sourceBasis =
-  'Current ASCYN PRO Chapter 13 runtime lesson, 90 active flashcards, and 45-question assessment on the G7-aligned main baseline. C13-1 defines architecture and mappings only; it does not independently certify Milady pages, medical/safety claims, state-rule claims, assessment answer positions, or licensing-exam certainty.'
+  'Milady Standard Barbering Chapter 13 source pages 338–354 supplied in the connected Drive, plus the current ASCYN PRO Chapter 13 runtime. C13-2 directly hardens the lesson against those pages while preserving original ASCYN PRO wording; flashcards and assessment remain pending their own C13-3/C13-4 certification.'
 
 export const chapter13LearningObjectives: readonly Chapter13LearningObjective[] = [
   {
