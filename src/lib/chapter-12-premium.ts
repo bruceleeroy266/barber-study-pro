@@ -110,7 +110,7 @@ export const chapter12PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'gentlemans-atelier-welcome',
       title: '🎩 WELCOME TO THE GENTLEMAN\'S ATELIER',
-      content: 'Facial massage is not just a luxury — it is an essential service that sets professional barbers apart. In today\'s grooming landscape, clients expect more than just a haircut; they want a complete experience that leaves them looking and feeling refreshed.\n\nFor men, facial massage addresses unique concerns: thicker skin, coarser hair, and often neglected skincare routines. A proper facial treatment can transform a client\'s appearance, reduce signs of aging, and provide much-needed stress relief.\n\nMen\'s skin is approximately 25% thicker than women\'s and produces more sebum. This means facial massage techniques must be adapted for deeper pressure and oil control. Mastering these skills elevates you from a barber to a grooming specialist.\n\nTHE SCIENCE OF TOUCH: Massage movements stimulate blood circulation, which brings oxygen and nutrients to skin cells. Lymphatic drainage reduces puffiness and removes toxins. Muscle tension release smooths expression lines and relieves jaw clenching. These are not just feel-good effects — they are measurable physiological changes.\n\nBOARD EXAM ALERT: Facial massage movements, contraindications, and skin type analysis appear on every state board exam. Know them cold.',
+      content: 'Facial massage and facial treatments are professional grooming services that require consultation, client comfort, controlled technique, sanitation, and clear scope boundaries.\n\nSkin and hair characteristics vary from client to client. Use observation and consultation rather than assumptions about sex, age, or a single skin characteristic when selecting cosmetic products or pressure.\n\nCHAPTER FOCUS: Know the source-covered massage manipulations, facial anatomy relevant to service, skin analysis, sanitation, contraindications, equipment safety, treatment sequence, and referral boundaries. Massage is a cosmetic service; do not present it as medical treatment or promise physiological or therapeutic outcomes.',
       highlight: 'MASSAGE WITH PURPOSE — TREAT WITH SCIENCE — ELEVATE THE EXPERIENCE',
     },
 
@@ -126,17 +126,17 @@ export const chapter12PremiumContent: ChapterContent = {
         {
           icon: 'Heart',
           title: 'PHYSICAL BENEFITS',
-          text: 'Increased blood circulation, lymphatic drainage, muscle tension release, improved skin elasticity, and reduced puffiness. The physical touch of massage creates measurable improvements in skin health.',
+          text: 'Use controlled, comfortable massage movements as part of a cosmetic facial service. Technique, pressure, rhythm, and client response guide the service; avoid promising medical or physiological outcomes.',
         },
         {
           icon: 'Leaf',
           title: 'SKIN HEALTH',
-          text: 'Enhanced product absorption, exfoliation of dead skin cells, unclogged pores, reduced acne breakouts, and brighter complexion. Massage helps products penetrate deeper where they can actually work.',
+          text: 'Select and apply cosmetic products according to observable skin needs, product directions, and the planned service. Do not claim that massage opens pores, treats acne, or drives products deeper into the skin.',
         },
         {
           icon: 'Brain',
           title: 'MENTAL WELLNESS',
-          text: 'Stress reduction, improved relaxation, better sleep quality, reduced anxiety, and enhanced mood. In a world of constant pressure, 15 minutes of facial massage is therapy your clients will pay for.',
+          text: 'A calm environment and comfortable touch can support a relaxing grooming experience. Keep the service framed as cosmetic care rather than therapy or treatment of anxiety, sleep problems, or other health conditions.',
         },
         {
           icon: 'DollarSign',
@@ -209,7 +209,7 @@ export const chapter12PremiumContent: ChapterContent = {
           ],
           facts: [
             { text: 'Effleurage is the foundation of all facial massage — it sets the tone for the entire service.' },
-            { text: 'BOARD EXAM ALERT: Effleurage is often tested as the primary opening and closing movement.' },
+            { text: 'STUDY FOCUS: Know the source-covered role of effleurage in the massage sequence and how it differs from the other manipulations.' },
           ],
         },
         {
@@ -253,7 +253,7 @@ export const chapter12PremiumContent: ChapterContent = {
             { label: 'WHEN TO USE', description: 'On areas of tension such as temples, forehead, and between the eyebrows' },
           ],
           facts: [
-            { text: 'Friction generates heat through rapid movement, which opens pores and enhances product absorption.' },
+            { text: 'Friction is a focused rubbing movement. Use controlled pressure and client comfort; do not describe the skin as literally opening pores or guarantee deeper product absorption.' },
             { text: 'Use friction sparingly on sensitive skin — the heat can cause redness.' },
           ],
         },
@@ -300,9 +300,9 @@ export const chapter12PremiumContent: ChapterContent = {
       subtitle: 'Follow this sequence for every professional facial treatment',
       items: [
         { text: 'STEP 1 — PREPARATION: Assess skin type and condition. Discuss allergies or sensitivities. Identify contraindications. Explain the procedure. Sanitize all tools and surfaces. Prepare warm towels. Arrange products within reach. Ensure proper lighting.' },
-        { text: 'STEP 2 — CLEANSING: Use the double cleanse method. First cleanse with oil-based cleanser to remove sunscreen, excess oil, and environmental pollutants. Second cleanse with water-based cleanser to deep clean pores. Use warm — not hot — water to avoid stripping natural oils.' },
-        { text: 'STEP 3 — MASSAGE: Apply appropriate massage medium based on skin type. Begin with effleurage at the neck, work up to the forehead. Use petrissage on jawline, friction on temples, tapotement on cheeks. Continue for 10-15 minutes maintaining consistent pressure and rhythm. Work upward and outward to support lymphatic drainage.' },
-        { text: 'STEP 4 — FINISHING: Remove excess product with warm towel. Apply cool toner to close pores. Use feathering strokes to finish. Apply moisturizer appropriate to skin type. Recommend SPF for daytime. Provide home care advice.' },
+        { text: 'STEP 2 — CLEANSING: Cleanse the skin with a cosmetic product appropriate to the client and the planned service. Follow the product label and use comfortable water temperature.' },
+        { text: 'STEP 3 — MASSAGE: Apply an appropriate massage medium and use the source-covered manipulations with controlled pressure, steady rhythm, and continuous client-comfort checks. Follow the chapter sequence and adapt the service when a contraindication or safety concern is present.' },
+        { text: 'STEP 4 — FINISHING: Remove excess product safely, complete the finishing steps appropriate to the service, and apply cosmetic products according to the client analysis and manufacturer directions. Provide home-care guidance within barbering scope.' },
       ],
     },
 
@@ -313,7 +313,7 @@ export const chapter12PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'sanitation-infection-control',
       title: 'SANITATION & INFECTION CONTROL',
-      content: 'Infection control is the foundation of every facial service. Without proper sanitation, even the most skilled massage becomes a health hazard.\n\nBEFORE EVERY SERVICE:\n• Wash hands thoroughly with antibacterial soap for at least 20 seconds\n• Sanitize all tools: brushes, combs, tweezers, and extraction tools\n• Disinfect the work surface with EPA-registered hospital-grade disinfectant\n• Use clean, fresh linens and towels for each client\n• Set up a clean barrier on the headrest and armrests\n\nDURING THE SERVICE:\n• Never double-dip into product jars — use a clean spatula or pump dispenser\n• If skin breaks during extraction, stop and apply antiseptic immediately\n• Keep your hands clean — avoid touching your face, phone, or non-sanitized surfaces\n• Use disposable gloves when dealing with acne, open skin, or any bodily fluids\n\nAFTER THE SERVICE:\n• Remove and dispose of all single-use items properly\n• Sanitize all reusable tools and place them in a clean, covered container\n• Wipe down all surfaces, including the chair, headrest, and product bottles\n• Wash hands again before greeting your next client\n\nBOARD EXAM ALERT: Sanitation violations are the fastest way to fail a state board practical exam. Know your disinfectants, contact times, and proper tool handling procedures.',
+      content: 'Infection control is the foundation of every facial service. Follow current applicable rules, product labels, and shop procedures for hand hygiene, cleaning, disinfection, linens, single-use items, and contaminated materials.\n\nBEFORE EVERY SERVICE:\n• Perform hand hygiene and prepare a clean service area\n• Clean and disinfect reusable tools and surfaces as required by the applicable product label and rules\n• Use clean linens and protect clean supplies from contamination\n\nDURING THE SERVICE:\n• Prevent product contamination by using clean dispensing methods\n• If blood or other body-fluid exposure occurs, stop the service and follow the applicable exposure-control procedure\n• Avoid touching non-service surfaces and then returning to the client without re-establishing clean technique\n• Use appropriate protective equipment when exposure risk or applicable rules require it\n\nAFTER THE SERVICE:\n• Discard single-use items appropriately\n• Clean and disinfect reusable items and service surfaces before the next client\n• Store clean items so they are protected from recontamination\n\nSTUDY FOCUS: Know cleaning-versus-disinfection sequence, label directions, contamination prevention, and safe tool handling.',
       highlight: 'SANITATION IS NOT OPTIONAL — IT IS THE FOUNDATION OF PROFESSIONAL TRUST',
     },
 
@@ -324,7 +324,7 @@ export const chapter12PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'client-consultation',
       title: 'THE CLIENT CONSULTATION',
-      content: 'Every professional facial service begins with a thorough consultation. This is your opportunity to build trust, gather critical information, and set realistic expectations.\n\nTHE CONSULTATION CHECKLIST:\n• Ask about skin concerns: acne, dryness, sensitivity, aging, or oiliness\n• Inquire about allergies to common ingredients: fragrances, nuts, essential oils\n• Review current skincare routine and products used\n• Ask about medications: Accutane, Retin-A, blood thinners, or antibiotics\n• Check for recent procedures: chemical peels, laser treatments, or facial surgery\n• Identify lifestyle factors: sun exposure, smoking, stress levels, hydration habits\n• Discuss desired outcomes and set realistic expectations\n• Explain the procedure, products, and aftercare before beginning\n\nRED FLAGS DURING CONSULTATION:\n• Active cold sores or skin infections — reschedule\n• Severe sunburn or windburn — wait for healing\n• Undiagnosed lumps or changing moles — refer to dermatologist\n• Client on Accutane — modify treatment significantly or refer\n• Recent facial surgery — require doctor clearance\n\nDOCUMENTATION: Keep written records of client consultations, skin assessments, products used, and any reactions. This protects both you and the client.',
+      content: 'Every professional facial service begins with consultation and observation. Gather information needed to decide whether the planned cosmetic service is appropriate and comfortable without diagnosing medical conditions.\n\nTHE CONSULTATION CHECKLIST:\n• Ask about the client\'s cosmetic skin concerns, sensitivities, allergies, and current products\n• Ask whether a health condition, medication, recent procedure, or provider instruction may affect service safety\n• Discuss the desired cosmetic outcome and explain the planned procedure and products\n• Check client comfort with pressure, temperature, fragrance, and positioning\n\nSERVICE-SAFETY RED FLAGS:\n• Active or potentially contagious conditions, open wounds, significant irritation, or other findings that make the service unsafe\n• A recent procedure or medical concern for which the barber cannot determine safe service within scope\n• Any client response that makes continued service uncomfortable or unsafe\n\nWhen safety is uncertain, defer the service and recommend appropriate professional evaluation rather than diagnosing or prescribing. Document consultation findings, products used, service decisions, and client reactions according to shop policy.',
       highlight: 'A THOROUGH CONSULTATION PREVENTS PROBLEMS BEFORE THEY START',
     },
 
@@ -340,7 +340,7 @@ export const chapter12PremiumContent: ChapterContent = {
         {
           icon: 'Mountain',
           title: 'CLAY MASKS',
-          description: 'Absorb excess oil and draw out impurities. Kaolin for sensitive skin, bentonite for powerful detox, rhassoul for mineral-rich treatment. Perfect for oily and combination skin.',
+          description: 'Masks are cosmetic products selected according to observable skin needs and manufacturer directions. Avoid detoxification or medical-treatment claims unless the product labeling specifically supports them.',
         },
         {
           icon: 'FileText',
@@ -355,7 +355,7 @@ export const chapter12PremiumContent: ChapterContent = {
         {
           icon: 'Flame',
           title: 'HOT TOWEL TREATMENT',
-          description: 'Classic barber tradition. Steaming towels open pores, soften beard hair, and prepare skin for shaving. Heat to 120-140°F, apply essential oils optionally, wrap face for 3-5 minutes.',
+          description: 'Hot towels are a traditional barbering service step. Use a comfortably warm towel, follow shop and manufacturer safety guidance, protect the airway, and monitor client comfort continuously. Do not rely on a universal temperature or timing rule.',
         },
       ],
     },
@@ -390,8 +390,8 @@ export const chapter12PremiumContent: ChapterContent = {
           title: 'TONERS — THE BALANCING ACT',
           bullets: [
             { label: 'HYDRATING TONERS', description: 'Contain humectants like glycerin and hyaluronic acid. Restore moisture after cleansing. Ideal for dry and sensitive skin.' },
-            { label: 'EXFOLIATING TONERS', description: 'Contain AHAs or BHAs to gently dissolve dead skin cells. Improve texture and prevent clogged pores. Use with caution on sensitive skin.' },
-            { label: 'BALANCING TONERS', description: 'Restore skin\'s natural pH after cleansing. Prepare skin to absorb serums and moisturizers more effectively.' },
+            { label: 'EXFOLIATING TONERS', description: 'Some cosmetic toners contain exfoliating ingredients. Follow the product label, avoid irritated or compromised skin, and do not make medical treatment claims.' },
+            { label: 'BALANCING TONERS', description: 'Use a toner only when it fits the client\'s cosmetic service plan and the product directions. Avoid promising deeper absorption or a universal pH effect.' },
             { label: 'SOOTHING TONERS', description: 'Contain botanicals like chamomile, aloe, and green tea. Calm redness and reduce inflammation after shaving or exfoliation.' },
           ],
           facts: [
@@ -404,9 +404,9 @@ export const chapter12PremiumContent: ChapterContent = {
           label: 'ASTRINGENTS',
           title: 'ASTRINGENTS — THE OIL CONTROLLERS',
           bullets: [
-            { label: 'ALCOHOL-BASED ASTRINGENTS', description: 'High alcohol content tightens pores and removes oil. Effective for very oily skin but can over-dry and irritate sensitive skin.' },
+            { label: 'ALCOHOL-BASED ASTRINGENTS', description: 'Some astringent products use alcohol and may feel drying or irritating. Select products according to the client analysis and label directions rather than claiming that pores tighten or close.' },
             { label: 'WITCH HAZEL', description: 'Natural astringent from the witch hazel plant. Gentler than alcohol-based options. Reduces inflammation and controls oil.' },
-            { label: 'SALICYLIC ACID ASTRINGENTS', description: 'Beta-hydroxy acid penetrates oil to clean pores from within. Excellent for acne-prone and oily skin types.' },
+            { label: 'SALICYLIC ACID ASTRINGENTS', description: 'Some cosmetic astringent products contain salicylic acid. Use only as directed by the product label and keep recommendations within cosmetic-service scope.' },
             { label: 'WHEN TO USE', description: 'After cleansing and before moisturizing. Use only on oily areas if combination skin. Avoid eye area completely.' },
           ],
           facts: [
@@ -453,7 +453,7 @@ export const chapter12PremiumContent: ChapterContent = {
           ],
           facts: [
             { text: 'Oily skin still needs moisture — skipping moisturizer can cause skin to produce even more oil.' },
-            { text: 'Salicylic acid penetrates oil to clean pores from within.' },
+            { text: 'For ingredient-specific products, follow the label and avoid claims that go beyond the product directions or barbering scope.' },
           ],
         },
         {
