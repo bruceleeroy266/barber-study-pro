@@ -1,5 +1,7 @@
 # C13-6 — Safety Escalation
 
+**Phase state:** implementation complete; exact-head certification required before GREEN.
+
 ## Goal
 
 C13-6 adds a **safety escalation layer** to the existing Chapter 13 evidence/mastery system.
