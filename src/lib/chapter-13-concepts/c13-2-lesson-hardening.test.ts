@@ -38,9 +38,9 @@ const SOURCE_PROXIMATE_PHRASES = [
 describe('C13-2 source-grounded lesson hardening', () => {
   it('preserves the C13-1 lesson identity and canonical mapping coverage', () => {
     const authoredIds = collectIds(chapter13PremiumContent.sections)
-    expect(authoredIds).toHaveLength(41)
-    expect(new Set(authoredIds).size).toBe(41)
-    expect(chapter13ContentConceptMappings).toHaveLength(41)
+    expect(authoredIds).toHaveLength(42)
+    expect(new Set(authoredIds).size).toBe(42)
+    expect(chapter13ContentConceptMappings).toHaveLength(42)
     expect(new Set(chapter13ContentConceptMappings.map((mapping) => mapping.contentBlockId))).toEqual(
       new Set(authoredIds),
     )
