@@ -145,8 +145,8 @@ import { chapter11PremiumQuizQuestions } from '@/lib/chapter-11-premium-quiz'
 import { chapter11ReassessmentReserve } from '@/lib/chapter-11-concepts/reassessment-reserve'
 
 import {
-  chapter12ContentConceptMappings,
   chapter12FlashcardConceptMappings,
+  chapter12RemediationContentConceptMappings,
   chapter12QuizQuestionConceptMappings,
 } from '@/lib/chapter-12-concepts/mappings'
 import { ACTIVE_CHAPTER12_CONCEPT_FAMILY_IDS, chapter12ConceptFamilies } from '@/lib/chapter-12-concepts/concepts'
@@ -1148,7 +1148,7 @@ const chapter11Provider: ChapterRemediationContentProvider = {
 }
 
 
-const chapter12ContentMappingsProjected = chapter12ContentConceptMappings.map((m) => ({
+const chapter12ContentMappingsProjected = chapter12RemediationContentConceptMappings.map((m) => ({
   contentBlockId: m.contentBlockId,
   conceptId: m.conceptFamilyId as string,
 }))
