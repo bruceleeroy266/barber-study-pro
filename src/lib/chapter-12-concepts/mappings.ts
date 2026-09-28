@@ -83,6 +83,8 @@ export const chapter12MicroCheckPlacements: readonly Chapter12MicroCheckPlacemen
 ]
 
 export const chapter12ContentConceptMappings: readonly Chapter12ContentConceptMapping[] = [
+  { contentBlockId: 'board-exam-alerts', conceptFamilyId: 'ch12-facial-anatomy-neurovascular' },
+  { contentBlockId: 'board-exam-alerts', conceptFamilyId: 'ch12-equipment-electrotherapy' },
   { contentBlockId: 'gentlemans-atelier-welcome', conceptFamilyId: 'ch12-client-care-professional-practice' },
   { contentBlockId: 'why-facial-massage-matters', conceptFamilyId: 'ch12-massage-principles-manipulations' },
   { contentBlockId: 'massage-certification', conceptFamilyId: 'ch12-client-care-professional-practice' },
