@@ -30,7 +30,8 @@ describe('C13-3 90-flashcard source + concept hardening', () => {
 
   it('adds application and safety difficulty without inflating the bank', () => {
     const difficulty = chapter13PremiumFlashcards.reduce<Record<string, number>>((acc, card) => {
-      acc[card.difficulty] = (acc[card.difficulty] ?? 0) + 1
+      const key = card.difficulty ?? 'unknown'
+      acc[key] = (acc[key] ?? 0) + 1
       return acc
     }, {})
     expect(difficulty).toEqual({ easy: 52, medium: 30, hard: 8 })
