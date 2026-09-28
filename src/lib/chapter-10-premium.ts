@@ -877,6 +877,36 @@ export const chapter10PremiumContent: ChapterContent = {
       title: 'APPLICATION SCENARIOS',
       subtitle: 'Shop situations that test Chapter 10 analysis and service-safety reasoning',
       scenarios: [
+        {
+          situation: 'During analysis, a client\'s hair feels rough and absorbs moisture quickly. What should the barber do with that observation?',
+          options: [
+            { letter: 'A', text: 'Treat the observation as a diagnosis of a medical hair disorder.', feedback: 'Incorrect. Hair analysis findings support service decisions but do not authorize medical diagnosis.' },
+            { letter: 'B', text: 'Use the porosity finding when selecting and adjusting an appropriate cosmetic service.', feedback: 'Correct. Chapter 10 uses porosity as a service-relevant hair-analysis property.' },
+            { letter: 'C', text: 'Ignore porosity because it has no relationship to service planning.', feedback: 'Incorrect. Porosity is one of the chapter\'s core analysis factors.' },
+            { letter: 'D', text: 'Assume every client with porous hair needs the same chemical procedure.', feedback: 'Incorrect. Service decisions should use the full analysis and product directions rather than one universal response.' },
+          ],
+          correctAnswer: 'B',
+        },
+        {
+          situation: 'A barber observes signs that could indicate a contagious scalp condition before beginning service. What is the safest Chapter 10 response?',
+          options: [
+            { letter: 'A', text: 'Continue the service and avoid discussing the observation.', feedback: 'Incorrect. A suspected contagious condition requires a safety-first service decision.' },
+            { letter: 'B', text: 'Attempt to identify the exact disease and prescribe treatment.', feedback: 'Incorrect. Diagnosis and treatment are outside barbering scope.' },
+            { letter: 'C', text: 'Pause the service, avoid unsafe contact or tool use, and recommend appropriate professional evaluation within scope and local requirements.', feedback: 'Correct. This preserves client safety, scope boundaries, and referral principles.' },
+            { letter: 'D', text: 'Cover the area and proceed as long as the client agrees.', feedback: 'Incorrect. Client permission does not remove safety and infection-control responsibilities.' },
+          ],
+          correctAnswer: 'C',
+        },
+        {
+          situation: 'A client asks the barber to tell them exactly what scalp disorder they have after the barber notices an unusual area. What should the barber do?',
+          options: [
+            { letter: 'A', text: 'Describe the observation without diagnosing and recommend evaluation when the concern is outside barbering scope.', feedback: 'Correct. Chapter 10 separates professional observation from medical diagnosis or treatment.' },
+            { letter: 'B', text: 'Name the most likely condition so the client can buy medication.', feedback: 'Incorrect. A barber should not diagnose or direct medical treatment.' },
+            { letter: 'C', text: 'Guarantee that the condition is harmless if there is no pain.', feedback: 'Incorrect. Lack of pain does not justify a medical conclusion.' },
+            { letter: 'D', text: 'Perform a chemical service first and discuss the concern afterward.', feedback: 'Incorrect. Service safety should be evaluated before proceeding.' },
+          ],
+          correctAnswer: 'A',
+        },
       ],
     },
 
