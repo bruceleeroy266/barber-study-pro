@@ -72,7 +72,25 @@ export function getFlashcardEvidenceConcept(chapterId: string, flashcardId: stri
   return normalizeFlashcards(flashcardMappings[chapterId] ?? []).find((row) => row.itemId === flashcardId)?.conceptId ?? null
 }
 
-export function getScenarioEvidenceConcept(chapterId: string, sectionId: string): string | null {
+const scenarioItemConceptOverrides: Readonly<Record<string, readonly string[]>> = {
+  // Chapter 6's cross-system scenario block intentionally applies three
+  // different concept families; keep the evidence at item granularity.
+  'ch-6:real-shop-scenarios': [
+    'ch6-cardiovascular',
+    'ch6-lymphatic',
+    'ch6-endocrine',
+  ],
+}
+
+export function getScenarioEvidenceConcept(
+  chapterId: string,
+  sectionId: string,
+  scenarioIndex?: number,
+): string | null {
+  if (scenarioIndex != null) {
+    const override = scenarioItemConceptOverrides[`${chapterId}:${sectionId}`]?.[scenarioIndex]
+    if (override) return override
+  }
   return normalizeContent(contentMappings[chapterId] ?? []).find((row) => row.sectionId === sectionId)?.conceptId ?? null
 }
 
