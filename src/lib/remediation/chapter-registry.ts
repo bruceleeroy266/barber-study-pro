@@ -74,6 +74,10 @@ import { detectAllConceptGaps as detectAllChapter10ConceptGaps } from '@/lib/cha
 import { chapter10ConceptFamilies } from '@/lib/chapter-10-concepts/concepts'
 import { chapter10ContentConceptMappings, chapter10FlashcardConceptMappings } from '@/lib/chapter-10-concepts/mappings'
 
+import { detectAllConceptGaps as detectAllChapter11ConceptGaps } from '@/lib/chapter-11-concepts/detection'
+import { chapter11ConceptFamilies } from '@/lib/chapter-11-concepts/concepts'
+import { chapter11ContentConceptMappings, chapter11FlashcardConceptMappings } from '@/lib/chapter-11-concepts/mappings'
+
 // ───────────────────────────────────────────────
 // Provider Contract
 // ───────────────────────────────────────────────
@@ -480,9 +484,30 @@ const chapter10Provider: ChapterDetectionProvider = {
   },
 }
 
-// ───────────────────────────────────────────────
-// Chapter 10 Provider (C10-8)
-// ───────────────────────────────────────────────
+
+const chapter11ContentMappingsProjected = chapter11ContentConceptMappings.map((m) => ({
+  contentBlockId: m.contentBlockId,
+  conceptId: m.conceptFamilyId as string,
+}))
+const chapter11FlashcardMappingsProjected = chapter11FlashcardConceptMappings.map((m) => ({
+  flashcardId: m.flashcardId as string,
+  conceptId: m.conceptFamilyId as string,
+}))
+
+const chapter11Provider: ChapterDetectionProvider = {
+  chapterId: 'ch-11',
+  detectAll(attempts) {
+    const out = new Map<ConceptId, ConceptDetectionResult>()
+    for (const [conceptId, result] of detectAllChapter11ConceptGaps(attempts)) out.set(conceptId, result)
+    return out
+  },
+  getConceptName(conceptId) {
+    return chapter11ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? conceptId
+  },
+  buildAssignmentsForConcept(conceptId) {
+    return buildAssignments(conceptId, chapter11ContentMappingsProjected, chapter11FlashcardMappingsProjected)
+  },
+}
 
 // ───────────────────────────────────────────────
 // Registry
@@ -499,6 +524,7 @@ const providers = new Map<ChapterId, ChapterDetectionProvider>([
   ['ch-8', chapter8Provider],
   ['ch-9', chapter9Provider],
   ['ch-10', chapter10Provider],
+  ['ch-11', chapter11Provider],
 ])
 
 /**
