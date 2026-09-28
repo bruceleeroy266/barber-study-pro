@@ -1,8 +1,9 @@
 import { Flashcard } from '@/types'
 
 // Chapter 13: Shaving and Facial-Hair Design
-// Created strictly from Chapter 13 textbook images
-// All content sourced from: textbook-images/chapter-13/
+// C13-3 source-hardened against Milady Standard Barbering Chapter 13, pp. 338–354.
+// Concepts/terminology are source-grounded; student-facing wording remains original ASCYN PRO language.
+// See docs/chapter-13/C13-3-FLASHCARD-SOURCE-AUDIT.md for the item-level source manifest.
 
 export const chapter13PremiumFlashcards: Flashcard[] = [
   // === INTRODUCTION ===
