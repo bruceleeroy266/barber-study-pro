@@ -35,6 +35,7 @@ import Chapter9MicroCheckCard from './Chapter9MicroCheckCard'
 import Chapter10MicroCheckCard from './Chapter10MicroCheckCard'
 import Chapter11MicroCheckCard from './Chapter11MicroCheckCard'
 import Chapter12MicroCheckCard from './Chapter12MicroCheckCard'
+import Chapter14MicroCheckCard from './Chapter14MicroCheckCard'
 import { chapter1MicroChecks } from '@/lib/chapter-1-concepts/micro-checks'
 import {
   loadChapter1MicroCheckAttempts,
@@ -95,6 +96,11 @@ import {
   loadChapter12MicroCheckAttempts,
   type Chapter12MicroCheckAttemptRow,
 } from '@/lib/chapter-12-concepts/micro-check-persistence'
+import { chapter14MicroChecks } from '@/lib/chapter-14-concepts/micro-checks'
+import {
+  loadChapter14MicroCheckAttempts,
+  type Chapter14MicroCheckAttemptRow,
+} from '@/lib/chapter-14-concepts/micro-check-persistence'
 import { supabase } from '@/lib/supabase'
 import {
   areKnowledgeCheckSectionsComplete,
@@ -179,6 +185,7 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
   const [chapter10MicroCheckAttempts, setChapter10MicroCheckAttempts] = useState<Chapter10MicroCheckAttemptRow[]>([])
   const [chapter11MicroCheckAttempts, setChapter11MicroCheckAttempts] = useState<Chapter11MicroCheckAttemptRow[]>([])
   const [chapter12MicroCheckAttempts, setChapter12MicroCheckAttempts] = useState<Chapter12MicroCheckAttemptRow[]>([])
+  const [chapter14MicroCheckAttempts, setChapter14MicroCheckAttempts] = useState<Chapter14MicroCheckAttemptRow[]>([])
 
   useEffect(() => {
     if (chapterId !== 'ch-1' || !userId) return
@@ -396,6 +403,26 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
 
   const handleChapter12MicroCheckPersisted = useCallback((row: Chapter12MicroCheckAttemptRow) => {
     setChapter12MicroCheckAttempts((previous) => {
+      if (previous.some((attempt) => attempt.question_id === row.question_id)) return previous
+      return [...previous, row]
+    })
+  }, [])
+
+  useEffect(() => {
+    if (chapterId !== 'ch-14' || !userId) return
+
+    let cancelled = false
+    void loadChapter14MicroCheckAttempts(userId).then((rows) => {
+      if (!cancelled) setChapter14MicroCheckAttempts(rows)
+    })
+
+    return () => {
+      cancelled = true
+    }
+  }, [chapterId, userId])
+
+  const handleChapter14MicroCheckPersisted = useCallback((row: Chapter14MicroCheckAttemptRow) => {
+    setChapter14MicroCheckAttempts((previous) => {
       if (previous.some((attempt) => attempt.question_id === row.question_id)) return previous
       return [...previous, row]
     })
@@ -672,6 +699,9 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
         const chapter12MicroCheck = chapterId === 'ch-12'
           ? chapter12MicroChecks.find((check) => check.afterSectionId === section.id)
           : undefined
+        const chapter14MicroCheck = chapterId === 'ch-14'
+          ? chapter14MicroChecks.find((check) => check.afterSectionId === section.id)
+          : undefined
 
         return (
           <Fragment key={section.id}>
@@ -782,6 +812,15 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
                 theme={t}
                 attempts={chapter12MicroCheckAttempts.filter((attempt) => attempt.check_id === chapter12MicroCheck.id)}
                 onAttemptPersisted={handleChapter12MicroCheckPersisted}
+              />
+            )}
+            {chapter14MicroCheck && userId && (
+              <Chapter14MicroCheckCard
+                check={chapter14MicroCheck}
+                userId={userId}
+                theme={t}
+                attempts={chapter14MicroCheckAttempts.filter((attempt) => attempt.check_id === chapter14MicroCheck.id)}
+                onAttemptPersisted={handleChapter14MicroCheckPersisted}
               />
             )}
           </Fragment>
