@@ -8,6 +8,7 @@ import type {
 } from '@/lib/chapter-11-concepts/micro-checks'
 import type { Chapter11MicroCheckAttemptRow } from '@/lib/chapter-11-concepts/micro-check-persistence'
 import { persistChapter11MicroCheckAttempt } from '@/lib/chapter-11-concepts/micro-check-persistence'
+import { classifyChapter11MicroCheckSafetyMiss } from '@/lib/chapter-11-concepts/safety-intervention'
 
 interface Props {
   check: Chapter11MicroCheck
@@ -72,6 +73,9 @@ export default function Chapter11MicroCheckCard({
       {check.questions.map((question, index) => {
         const attempt = attemptMap.get(question.id)
         const chosen = selected[question.id]
+        const safetyIntervention = attempt
+          ? classifyChapter11MicroCheckSafetyMiss(question, attempt.is_correct)
+          : null
 
         return (
           <div key={question.id} className="rounded-xl border p-4 space-y-3" style={{ borderColor: theme.border }}>
@@ -119,9 +123,24 @@ export default function Chapter11MicroCheckCard({
             {attempt && (
               <div className="rounded-lg border px-3 py-3 text-sm" style={{ borderColor: theme.border, color: theme.textMuted }}>
                 <p className="font-semibold" style={{ color: attempt.is_correct ? theme.primary : theme.text }}>
-                  {attempt.is_correct ? '✓ Correct' : 'Review this concept'}
+                  {attempt.is_correct
+                    ? '✓ Correct'
+                    : safetyIntervention?.level === 'review'
+                      ? '⚠ Safety review required'
+                      : 'Review this concept'}
                 </p>
                 <p className="mt-1">{question.explanation}</p>
+                {safetyIntervention?.requiresTargetedSafetyReview && (
+                  <div
+                    className="mt-3 rounded-lg border px-3 py-3"
+                    style={{ borderColor: theme.primaryDark, background: theme.background }}
+                  >
+                    <p className="font-semibold" style={{ color: theme.primary }}>
+                      Safety / Scope Intervention
+                    </p>
+                    <p className="mt-1">{safetyIntervention.studentMessage}</p>
+                  </div>
+                )}
               </div>
             )}
           </div>
