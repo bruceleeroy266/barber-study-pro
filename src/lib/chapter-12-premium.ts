@@ -131,7 +131,7 @@ export const chapter12PremiumContent: ChapterContent = {
         {
           icon: 'Leaf',
           title: 'SKIN HEALTH',
-          text: 'Select and apply cosmetic products according to observable skin needs, product directions, and the planned service. Do not claim that massage opens pores, treats acne, or drives products deeper into the skin.',
+          text: 'Select and apply cosmetic products according to observable skin needs, product directions, and the planned service. Do not claim that massage changes pore size, treats acne, or drives products deeper into the skin.',
         },
         {
           icon: 'Brain',
@@ -269,7 +269,7 @@ export const chapter12PremiumContent: ChapterContent = {
           ],
           facts: [
             { text: 'Vibration is advanced technique — practice on your own face before performing on clients.' },
-            { text: 'Do not present vibration as treatment for sinus congestion or another medical condition.' },
+            { text: 'Do not present vibration as treatment for a medical condition.' },
           ],
         },
         {
@@ -578,7 +578,7 @@ export const chapter12PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'board-exam-alerts',
       title: 'CORE CHAPTER 12 REVIEW',
-      content: "Use this section as a chapter review, not as a prediction of any specific licensing exam. Exam content varies by jurisdiction and provider.\n\n1. Identify facial muscles, nerves, arteries, and veins relevant to service\n2. Differentiate effleurage, petrissage, friction, tapotement, vibration, and feathering\n3. Apply controlled pressure, rhythm, direction, and client-comfort checks\n4. Use consultation and observation before selecting a cosmetic facial service\n5. Match cosmetic products to observable skin needs and manufacturer directions\n6. Keep sanitation and contamination prevention active throughout the service\n7. Recognize findings that make a service unsafe or require modification\n8. Stop or defer service when a contraindication is present\n9. Keep diagnosis, prescribing, and medical treatment outside barbering scope\n10. Follow device and product instructions instead of assuming universal settings\n11. Use steam, heat, towels, electrical devices, and other modalities only within safe operating guidance\n12. Document relevant consultation findings, products, service decisions, and reactions\n13. Maintain client comfort, communication, and professional boundaries\n14. Distinguish cosmetic maintenance from medical care\n15. Refer appropriately when a concern is outside routine cosmetic service\n\nThe Chapter 12 repository source supports these subject areas. C12-2 does not claim that every item appears on every state board exam or independently verify a current licensing blueprint.",
+      content: "Use this section as a chapter review, not as a prediction of any specific licensing exam. Exam content varies by jurisdiction and provider.\n\n1. Identify facial muscles, nerves, arteries, and veins relevant to service\n2. Differentiate effleurage, petrissage, friction, tapotement, vibration, and feathering\n3. Apply controlled pressure, rhythm, direction, and client-comfort checks\n4. Use consultation and observation before selecting a cosmetic facial service\n5. Match cosmetic products to observable skin needs and manufacturer directions\n6. Keep sanitation and contamination prevention active throughout the service\n7. Recognize findings that make a service unsafe or require modification\n8. Stop or defer service when a contraindication is present\n9. Keep diagnosis, prescribing, and medical treatment outside barbering scope\n10. Follow device and product instructions instead of assuming universal settings\n11. Use steam, heat, towels, electrical devices, and other modalities only within safe operating guidance\n12. Document relevant consultation findings, products, service decisions, and reactions\n13. Maintain client comfort, communication, and professional boundaries\n14. Distinguish cosmetic maintenance from medical care\n15. Refer appropriately when a concern is outside routine cosmetic service\n\nThe Chapter 12 repository source supports these subject areas. C12-2 does not claim universal licensing-exam coverage and does not independently verify a current licensing blueprint.",
       highlight: "SOURCE-COVERED CONCEPTS — NO UNIVERSAL EXAM CLAIMS",
     },
 
