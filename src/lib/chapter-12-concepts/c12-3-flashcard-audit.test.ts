@@ -81,7 +81,16 @@ describe('C12-3 flashcard audit and concept-mapping hardening', () => {
     expect(map.get('fc-ch12-106')).toBe('ch12-skin-analysis-product-selection')
     expect(map.get('fc-ch12-107')).toBe('ch12-contraindications-service-safety')
 
-    for (const id of ['fc-ch12-050','fc-ch12-054','fc-ch12-056','fc-ch12-066','fc-ch12-079','fc-ch12-081']) {
+    const safetyIds = [
+      'fc-ch12-050',
+      'fc-ch12-054',
+      'fc-ch12-056',
+      'fc-ch12-066',
+      'fc-ch12-079',
+      'fc-ch12-081',
+    ] as const
+
+    for (const id of safetyIds) {
       expect(map.get(id), id).toBe('ch12-contraindications-service-safety')
     }
   })
