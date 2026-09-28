@@ -51,7 +51,7 @@ const ev = (
 
 describe('C13-8 final Chapter 13 end-to-end certification', () => {
   it('locks inventory and all eight concept families', () => {
-    expect(chapter13PremiumContent.sections).toHaveLength(33)
+    expect(chapter13PremiumContent.sections).toHaveLength(34)
     expect(chapter13PremiumFlashcards).toHaveLength(90)
     expect(chapter13PremiumQuizQuestions).toHaveLength(45)
     expect(chapter13MicroChecks.flatMap((check) => check.questions)).toHaveLength(16)
