@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import type { Chapter14EvidenceRecord } from './grading'
 import { CHAPTER14_CONCEPT_FAMILY_IDS } from './concepts'
+import { getChapterDetectionProvider, isConceptDetectionSupported } from '@/lib/remediation/chapter-registry'
+import { getChapterContentProvider, hasChapterContentProvider } from '@/lib/remediation/content-provider-registry'
+import { getCanonicalMappingProvider, hasCanonicalMappingProvider } from '@/lib/reassessment/provider-registry'
 import {
   chapter14ReassessmentReserve,
   getChapter14ReassessmentReserve,
@@ -191,5 +194,78 @@ describe('C14-7 targeted remediation and recovery', () => {
     expect(CHAPTER14_REMEDIATION_RULES.ordinaryReassessmentPassPercent).toBe(80)
     expect(CHAPTER14_REMEDIATION_RULES.safetyReassessmentQuestionCount).toBe(5)
     expect(CHAPTER14_REMEDIATION_RULES.safetyReassessmentPassPercent).toBe(100)
+  })
+})
+
+
+describe('C14-7 live remediation/reassessment provider wiring', () => {
+  it('registers Chapter 14 for detected-gap targeted remediation assignments', () => {
+    expect(isConceptDetectionSupported('ch-14')).toBe(true)
+    const provider = getChapterDetectionProvider('ch-14')
+    expect(provider).toBeDefined()
+
+    for (const conceptId of CHAPTER14_CONCEPT_FAMILY_IDS) {
+      const assignments = provider!.buildAssignmentsForConcept(conceptId)
+      expect(assignments.some((item) => item.assignmentType === 'content_block'), conceptId).toBe(true)
+      expect(assignments.some((item) => item.assignmentType === 'flashcard'), conceptId).toBe(true)
+    }
+  })
+
+  it('registers Chapter 14 content serving and resolves all five fresh questions for every concept', () => {
+    expect(hasChapterContentProvider('ch-14')).toBe(true)
+    const provider = getChapterContentProvider('ch-14')!
+
+    for (const conceptId of CHAPTER14_CONCEPT_FAMILY_IDS) {
+      expect(provider.getContentBlockIdsForConcept(conceptId).length, conceptId).toBeGreaterThan(0)
+      expect(provider.getFlashcardIdsForConcept(conceptId).length, conceptId).toBeGreaterThan(0)
+
+      const fresh = getChapter14ReassessmentReserve(conceptId)
+      expect(fresh, conceptId).toHaveLength(5)
+
+      for (const question of fresh) {
+        const served = provider.getQuizQuestionById(question.id)
+        expect(served, question.id).toBeTruthy()
+        expect(served!.id).toBe(question.id)
+        expect(served!.correct_answer).toBe(question.correctAnswer)
+      }
+    }
+  })
+
+  it('registers canonical reassessment mapping with exactly five fresh r14 items per concept', () => {
+    expect(hasCanonicalMappingProvider('ch-14')).toBe(true)
+    const provider = getCanonicalMappingProvider('ch-14')
+    expect(provider.getAllConceptIds()).toEqual(expect.arrayContaining([...CHAPTER14_CONCEPT_FAMILY_IDS]))
+
+    for (const conceptId of CHAPTER14_CONCEPT_FAMILY_IDS) {
+      const ids = provider.getQuestionsForConcept(conceptId)
+      expect(ids, conceptId).toHaveLength(5)
+      expect(ids.every((id) => id.startsWith('r14-')), conceptId).toBe(true)
+      expect(new Set(ids).size, conceptId).toBe(5)
+
+      for (const id of ids) {
+        expect(provider.getConceptForQuestion(id), id).toBe(conceptId)
+        expect(provider.isQuestionMappedToConcept(id, conceptId), id).toBe(true)
+      }
+    }
+  })
+
+  it('proves the live weak-concept chain serves targeted material plus the correct five-question pool', () => {
+    const detection = getChapterDetectionProvider('ch-14')!
+    const content = getChapterContentProvider('ch-14')!
+    const reassessment = getCanonicalMappingProvider('ch-14')
+
+    for (const conceptId of CHAPTER14_CONCEPT_FAMILY_IDS) {
+      const assignments = detection.buildAssignmentsForConcept(conceptId)
+      const questionIds = reassessment.getQuestionsForConcept(conceptId)
+
+      expect(assignments.length, conceptId).toBeGreaterThan(0)
+      expect(assignments.some((item) => item.assignmentType === 'content_block'), conceptId).toBe(true)
+      expect(assignments.some((item) => item.assignmentType === 'flashcard'), conceptId).toBe(true)
+      expect(questionIds, conceptId).toHaveLength(5)
+      expect(
+        questionIds.every((questionId) => content.getQuizQuestionById(questionId)?.id === questionId),
+        conceptId,
+      ).toBe(true)
+    }
   })
 })
