@@ -783,7 +783,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
       .filter(
         (attempt) =>
           attempt.quiz_id === 'quiz-14' ||
-          (attempt.is_reassessment && attempt.target_concept_id?.startsWith('ch13-')),
+          (attempt.is_reassessment && attempt.target_concept_id?.startsWith('ch14-')),
       )
       .map((attempt) => ({
         quiz_id: attempt.quiz_id,
