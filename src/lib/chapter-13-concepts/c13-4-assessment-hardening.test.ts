@@ -86,7 +86,7 @@ describe('C13-4 45-question assessment audit + repair', () => {
 
   it('keeps barbering scope and client-specific safety reasoning explicit', () => {
     expect(serialized).toContain('outside barbering scope')
-    expect(serialized).toContain('standard precautions')
+    expect(serialized).toContain('blood-exposure procedure')
     expect(serialized).toContain('client\'s actual grain')
     expect(serialized).toContain('ingrown-hair risk')
     expect(serialized).toContain('local rules')
