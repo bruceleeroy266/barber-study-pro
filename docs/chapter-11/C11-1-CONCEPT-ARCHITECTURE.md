@@ -26,9 +26,9 @@ C11-1 maps the current runtime exactly once:
 - 25/25 authored lesson IDs;
 - 80/80 flashcards;
 - 50/50 assessment questions;
-- all 8 concepts have lesson, flashcard, assessment, and planned micro-check coverage.
+- all 8 concepts have flashcard, assessment, and planned micro-check coverage; the current lesson has two explicit concept-level gaps that C11-2 must repair: `ch11-shampoo-draping-service` and `ch11-treatment-equipment`.
 
-The mapping is architectural. It does not certify the correctness of the current wording. C11-2 through C11-4 must still repair unsupported, overbroad, or weak content.
+The mapping is architectural. It does not certify the correctness of the current wording. C11-2 must add or restructure source-supported lesson coverage for shampoo/draping service and treatment equipment, and C11-2 through C11-4 must still repair unsupported, overbroad, or weak content.
 
 ## Shared grading
 
