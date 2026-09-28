@@ -128,12 +128,12 @@ describe('C13-1 canonical concept architecture + shared grading/evidence binding
     expect(isConceptDetectionSupported('ch-13')).toBe(true)
   })
 
-  it('does not alter the known C13-0 assessment answer-position defect in this architecture-only phase', () => {
+  it('allows later certified assessment hardening while preserving all C13-1 IDs and mappings', () => {
     const counts = chapter13PremiumQuizQuestions.reduce<Record<string, number>>((acc, question) => {
       acc[question.correct_answer] = (acc[question.correct_answer] ?? 0) + 1
       return acc
     }, {})
 
-    expect(counts).toEqual({ a: 45 })
+    expect(counts).toEqual({ a: 12, b: 11, c: 11, d: 11 })
   })
 })
