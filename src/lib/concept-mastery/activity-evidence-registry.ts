@@ -73,6 +73,11 @@ export function getFlashcardEvidenceConcept(chapterId: string, flashcardId: stri
 }
 
 const scenarioItemConceptOverrides: Readonly<Record<string, readonly string[]>> = {
+  'ch-1:chapter-1-application-scenarios': [
+    'ch1-barber-surgeons-symbols',
+    'ch1-tools-technology',
+    'ch1-modern-profession',
+  ],
   // Chapter 6's cross-system scenario block intentionally applies three
   // different concept families; keep the evidence at item granularity.
   'ch-6:real-shop-scenarios': [
