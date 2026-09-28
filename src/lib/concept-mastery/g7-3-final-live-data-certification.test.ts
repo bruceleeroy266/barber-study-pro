@@ -140,7 +140,7 @@ describe('G7-3 Chapters 1-11 final live data and percentage certification', () =
     expect(canAccessRoute('school_admin', '/instructor/student/student-g7')).toBe(true)
     expect(canAccessRoute('student', '/instructor/student/student-g7')).toBe(false)
 
-    expect(page.match(/\\.from\\('chapter_activity_evidence'\\)/g)).toHaveLength(1)
+    expect(page.match(/\.from\('chapter_activity_evidence'\)/g)).toHaveLength(1)
     expect(page).toContain(".in('chapter_id', ['ch-1','ch-2','ch-3','ch-4','ch-5','ch-6','ch-7','ch-8','ch-9','ch-10','ch-11'])")
     expect(schoolPanel).toContain('href={`/instructor/student/${row.studentId}`}')
     expect(schoolPanel).toContain('View the same mastery diagnostics used by instructors')
