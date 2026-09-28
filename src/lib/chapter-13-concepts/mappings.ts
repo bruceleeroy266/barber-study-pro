@@ -72,6 +72,7 @@ export const chapter13ContentConceptMappings: readonly Chapter13ContentConceptMa
   { contentBlockId: 'shaving-quote', conceptFamilyId: 'ch13-client-care-professional-practice' },
   { contentBlockId: 'customer-satisfaction', conceptFamilyId: 'ch13-client-care-professional-practice' },
   { contentBlockId: 'satisfaction-factors', conceptFamilyId: 'ch13-client-care-professional-practice' },
+  { contentBlockId: 'shaving-application-scenarios', conceptFamilyId: 'ch13-client-care-professional-practice' },
 ]
 
 const fc = (n: number): `fc-ch13-${string}` => `fc-ch13-${String(n).padStart(3, '0')}`
