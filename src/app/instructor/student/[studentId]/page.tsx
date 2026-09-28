@@ -743,6 +743,8 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     referenceTime: new Date().toISOString(),
   })
 
+  const chapter13MicroCheckAttempts = (chapter13MicroCheckRows ?? []) as Chapter13MicroCheckAttemptRow[]
+  const chapter13Progress = progressRecords.find((record) => record.chapter_id === 'ch-13')
   const chapter13Diagnostics = buildChapter13InstructorDiagnostics({
     studentId,
     completionPercent: chapter13Progress?.progress_percentage ?? 0,
