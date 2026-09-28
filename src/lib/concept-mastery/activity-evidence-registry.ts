@@ -12,7 +12,12 @@ import { chapter9ContentConceptMappings, chapter9FlashcardConceptMappings } from
 import { chapter10ContentConceptMappings, chapter10FlashcardConceptMappings } from '../chapter-10-concepts/mappings'
 import { chapter11ContentConceptMappings, chapter11FlashcardConceptMappings } from '../chapter-11-concepts/mappings'
 
-type GenericMapping = Record<string, unknown>
+type GenericMapping = {
+  flashcardId?: string
+  contentBlockId?: string
+  conceptFamilyId?: string
+  conceptId?: string
+}
 
 function conceptId(mapping: GenericMapping): string | null {
   const value = mapping.conceptFamilyId ?? mapping.conceptId
@@ -36,31 +41,31 @@ function normalizeContent(rows: readonly GenericMapping[]) {
 }
 
 const flashcardMappings: Record<string, readonly GenericMapping[]> = {
-  'ch-1': chapter1FlashcardConceptMappings as readonly GenericMapping[],
-  'ch-2': chapter2FlashcardMappings as readonly GenericMapping[],
-  'ch-3': chapter3FlashcardConceptMappings as readonly GenericMapping[],
-  'ch-4': chapter4FlashcardConceptMappings as readonly GenericMapping[],
-  'ch-5': chapter5FlashcardConceptMappings as readonly GenericMapping[],
-  'ch-6': chapter6FlashcardConceptMappings as readonly GenericMapping[],
-  'ch-7': chapter7FlashcardConceptMappings as readonly GenericMapping[],
-  'ch-8': chapter8FlashcardConceptMappings as readonly GenericMapping[],
-  'ch-9': chapter9FlashcardConceptMappings as readonly GenericMapping[],
-  'ch-10': chapter10FlashcardConceptMappings as readonly GenericMapping[],
-  'ch-11': chapter11FlashcardConceptMappings as readonly GenericMapping[],
+  'ch-1': chapter1FlashcardConceptMappings,
+  'ch-2': chapter2FlashcardMappings,
+  'ch-3': chapter3FlashcardConceptMappings,
+  'ch-4': chapter4FlashcardConceptMappings,
+  'ch-5': chapter5FlashcardConceptMappings,
+  'ch-6': chapter6FlashcardConceptMappings,
+  'ch-7': chapter7FlashcardConceptMappings,
+  'ch-8': chapter8FlashcardConceptMappings,
+  'ch-9': chapter9FlashcardConceptMappings,
+  'ch-10': chapter10FlashcardConceptMappings,
+  'ch-11': chapter11FlashcardConceptMappings,
 }
 
 const contentMappings: Record<string, readonly GenericMapping[]> = {
-  'ch-1': chapter1ContentConceptMappings as readonly GenericMapping[],
-  'ch-2': chapter2ContentMappings as readonly GenericMapping[],
-  'ch-3': chapter3ContentConceptMappings as readonly GenericMapping[],
-  'ch-4': chapter4ContentConceptMappings as readonly GenericMapping[],
-  'ch-5': chapter5ContentConceptMappings as readonly GenericMapping[],
-  'ch-6': chapter6ContentConceptMappings as readonly GenericMapping[],
-  'ch-7': chapter7ContentConceptMappings as readonly GenericMapping[],
-  'ch-8': chapter8ContentConceptMappings as readonly GenericMapping[],
-  'ch-9': chapter9ContentConceptMappings as readonly GenericMapping[],
-  'ch-10': chapter10ContentConceptMappings as readonly GenericMapping[],
-  'ch-11': chapter11ContentConceptMappings as readonly GenericMapping[],
+  'ch-1': chapter1ContentConceptMappings,
+  'ch-2': chapter2ContentMappings,
+  'ch-3': chapter3ContentConceptMappings,
+  'ch-4': chapter4ContentConceptMappings,
+  'ch-5': chapter5ContentConceptMappings,
+  'ch-6': chapter6ContentConceptMappings,
+  'ch-7': chapter7ContentConceptMappings,
+  'ch-8': chapter8ContentConceptMappings,
+  'ch-9': chapter9ContentConceptMappings,
+  'ch-10': chapter10ContentConceptMappings,
+  'ch-11': chapter11ContentConceptMappings,
 }
 
 export function getFlashcardEvidenceConcept(chapterId: string, flashcardId: string): string | null {
