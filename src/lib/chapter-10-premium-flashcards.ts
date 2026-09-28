@@ -1214,7 +1214,7 @@ export const chapter10PremiumFlashcards: Flashcard[] = [
     is_active: true,
   },
 
-  // ── HYPERTROPHIES & SKIN CANCER DETECTION ──
+  // ── SCALP SERVICE-SAFETY OBSERVATION ──
   {
     id: 'fc-10-101',
     chapter_id: 'ch-10',
@@ -1231,7 +1231,7 @@ export const chapter10PremiumFlashcards: Flashcard[] = [
     id: 'fc-10-102',
     chapter_id: 'ch-10',
     front: 'What should you do and NOT do during a scalp analysis?',
-    back: 'DO: Comb through hair gently while parting to check for hypertrophies, abrasions, and parasites. DO NOT scrape the scalp during analysis. DO NOT begin service if parasites are present. DO NOT proceed with chemical services if signs of irritation or abrasions exist.',
+    back: 'Check the scalp first for parasites, irritation, abrasions, and other service-relevant findings. Do not begin service if parasites are present, and do not proceed with chemical services when irritation or abrasions are present.',
     category: 'Practical Application',
     difficulty: 'easy',
     order_index: 102,
