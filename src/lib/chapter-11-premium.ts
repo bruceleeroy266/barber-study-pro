@@ -103,519 +103,290 @@ export const chapter11PremiumContent: ChapterContent = {
   subtitle: 'Enter the Treatment Sanctuary — Master Healing, Restoration & Client Wellness',
   theme: chapter11PremiumTheme,
   sections: [
-    // ═══════════════════════════════════════════
-    // SECTION 1: WELCOME TO THE TREATMENT SANCTUARY
-    // ═══════════════════════════════════════════
     {
       type: 'contentBlock',
       id: 'treatment-sanctuary-welcome',
-      title: '🌿 WELCOME TO THE TREATMENT SANCTUARY',
-      content: 'Every client who sits in your chair carries more than hair — they carry stress, dryness, damage, and the daily wear of life. The Treatment Sanctuary is where science meets soul. Where therapeutic touch transforms not just hair, but how clients feel about themselves.\n\nThis chapter transforms you into a Healing Practitioner. You will learn to diagnose scalp conditions with precision, select treatments with scientific reasoning, perform therapeutic massage with skill, and guide clients toward lasting hair health. The client who trusts you with their scalp is trusting you with their comfort, their confidence, and their self-care ritual.\n\nBOARD EXAM ALERT: Treatment knowledge appears on every state board exam. Understanding when to treat, when to refer, and how to perform services safely separates licensed professionals from amateurs.',
-      highlight: 'DIAGNOSE WITH PRECISION — TREAT WITH SCIENCE — HEAL WITH TOUCH',
+      title: 'CHAPTER 11 — TREATMENT OF THE HAIR AND SCALP',
+      content: 'Chapter 11 focuses on safe shampooing, draping, hair and scalp analysis, scalp massage, treatment procedures, treatment equipment, and professional service boundaries. The barber observes service-relevant hair and scalp conditions, selects appropriate products and procedures, and refers conditions that are outside barbering scope rather than diagnosing or medically treating them.',
+      highlight: 'ANALYZE — SELECT — PERFORM SAFELY — REFER WHEN NEEDED',
     },
-
-    // ═══════════════════════════════════════════
-    // SECTION 2: WHY TREATMENT MATTERS
-    // ═══════════════════════════════════════════
     {
       type: 'infoCards',
       id: 'why-treatment-matters',
-      title: 'WHY THE TREATMENT SANCTUARY MATTERS',
-      subtitle: 'Four reasons treatment mastery separates healers from haircutters',
+      title: 'WHY HAIR & SCALP TREATMENT SKILLS MATTER',
+      subtitle: 'Use Chapter 11 procedures to support safe, appropriate client care',
       cards: [
-        {
-          icon: 'Heart',
-          title: 'CLIENT HEALTH & COMFORT',
-          text: 'Healthy hair begins at the scalp. When clients experience itching, flaking, or irritation, it affects their daily comfort and confidence. As a barber, you provide relief and improve quality of life through proper treatment.',
-        },
-        {
-          icon: 'Sparkles',
-          title: 'HAIR APPEARANCE & MANAGEABILITY',
-          text: 'Treated hair looks better, feels softer, and styles more easily. Scalp treatments remove buildup that weighs hair down, allowing natural movement and shine to come through.',
-        },
-        {
-          icon: 'DollarSign',
-          title: 'PROFESSIONAL REVENUE',
-          text: 'Treatment services represent additional income streams. Clients who understand scalp health become repeat customers for maintenance treatments and retail product purchases.',
-        },
-        {
-          icon: 'Search',
-          title: 'EARLY PROBLEM DETECTION',
-          text: 'Regular scalp examination helps identify conditions before they worsen. Barbers often spot issues clients have not noticed, enabling early intervention and referrals when needed.',
-        },
+        { icon: 'Search', title: 'ANALYSIS FIRST', text: 'Consultation and hair/scalp analysis guide product and treatment selection before the service begins.' },
+        { icon: 'Shield', title: 'SAFE SERVICE', text: 'Draping, water-temperature checks, scalp observation, and contraindication awareness protect the client during service.' },
+        { icon: 'Hand', title: 'PROPER TECHNIQUE', text: 'Shampooing, massage, steam, hot towels, and treatment procedures should follow the source-supported sequence and pressure guidelines.' },
+        { icon: 'BookOpen', title: 'PROFESSIONAL BOUNDARIES', text: 'Barbers provide cosmetic hair/scalp services within scope and refer parasitic, staphylococcal, or other medical concerns appropriately.' },
       ],
     },
-
-    // ═══════════════════════════════════════════
-    // SECTION 3: TREATMENT PRACTITIONER LEVELS
-    // ═══════════════════════════════════════════
     {
       type: 'levelUp',
       id: 'treatment-certification',
-      title: '🌿 TREATMENT PRACTITIONER CERTIFICATION',
-      subtitle: 'Progress from Observer to Master Healer — earn your therapeutic credentials',
+      title: 'CHAPTER 11 SKILLS PROGRESSION',
+      subtitle: 'Build from observation to safe, independent service decisions',
       levels: [
-        {
-          level: 'Level 1',
-          title: 'Treatment Observer',
-          description: 'You know the basics: types of scalp treatments, when to use them, and basic massage techniques. You can perform a standard conditioning treatment.',
-          reward: 'Safe Service Badge — Clients trust your careful pre-service checks',
-        },
-        {
-          level: 'Level 2',
-          title: 'Scalp Analyst',
-          description: 'You can identify dry, oily, and normal scalp conditions. You understand product ingredients and match treatments to client needs. You perform basic scalp massage with confidence.',
-          reward: 'Product Matchmaker — Your treatment recommendations are consistently effective',
-        },
-        {
-          level: 'Level 3',
-          title: 'Therapeutic Specialist',
-          description: 'You recognize scalp disorders that require treatment vs. those requiring referral. You perform advanced massage techniques and understand contraindications.',
-          reward: 'Healing Hands — Clients seek you out for therapeutic relief',
-        },
-        {
-          level: 'Level 4',
-          title: 'Wellness Counselor',
-          description: 'You guide clients through complete hair wellness programs. You understand the connection between lifestyle, nutrition, and scalp health. You retail products with authority.',
-          reward: 'Trusted Advisor — Clients follow your home care recommendations religiously',
-        },
-        {
-          level: 'Level 5',
-          title: 'Master Healer',
-          description: 'You command complete knowledge of therapeutic treatments, scalp health, and client wellness. Other barbers consult you. You elevate the entire profession through healing.',
-          reward: 'Sanctuary Master — Your treatment expertise is recognized and respected',
-        },
+        { level: 'Level 1', title: 'Service Preparation', description: 'Identify proper draping, setup, client positioning, and water-temperature checks.', reward: 'Preparation Check' },
+        { level: 'Level 2', title: 'Hair & Scalp Analysis', description: 'Observe condition, texture, density, porosity, elasticity, and contraindications before product selection.', reward: 'Analysis Check' },
+        { level: 'Level 3', title: 'Massage & Treatment Procedure', description: 'Apply the Chapter 11 massage manipulations and treatment sequence using controlled pressure and continuous movements.', reward: 'Technique Check' },
+        { level: 'Level 4', title: 'Equipment & Adjuncts', description: 'Use scalp steam, hot towels, and electric massage devices according to the source-supported procedure.', reward: 'Equipment Check' },
+        { level: 'Level 5', title: 'Safe Professional Judgment', description: 'Recognize when a service is appropriate, when it should stop, and when referral is required.', reward: 'Safety Check' },
       ],
     },
-
-    // ═══════════════════════════════════════════
-    // SECTION 4: TYPES OF SCALP TREATMENTS
-    // ═══════════════════════════════════════════
+    {
+      type: 'contentBlock',
+      id: 'draping-shampoo-service',
+      title: 'DRAPING & SHAMPOO SERVICE',
+      content: 'Chapter 11 describes waterproof shampoo capes and nylon or synthetic haircutting capes, with draping methods selected for wet services, chemical services, haircutting, and mustache or beard trimming. Draping protects the client\'s skin and clothing from water and service products.\n\nSHAMPOO METHODS: The reclined method is the most common and uses a shampoo bowl with a reclining or hydraulic chair. The inclined method positions the client forward over the bowl. For wheelchair-bound or disabled clients, ask how they can be positioned safely and comfortably.\n\nSUPERIOR SHAMPOO SERVICE: Give individual attention, choose appropriate products, use proper technique, test water temperature, massage the scalp appropriately, and avoid common faults such as extreme water temperature, wetting the face, scraping the scalp, insufficient massage, or improper blotting.\n\nBARBER POSITIONING: Use balanced posture with parallel feet and stable body position while performing the service.',
+      highlight: 'DRAPE CORRECTLY — TEST WATER — PROTECT THE CLIENT',
+    },
     {
       type: 'tabbed',
       id: 'scalp-treatment-types',
-      title: 'SCALP TREATMENT TYPES — THE HEALING ARSENAL',
-      subtitle: 'Match the treatment to the condition — precision healing starts here',
+      title: 'SCALP TREATMENT NEEDS',
+      subtitle: 'Match cosmetic treatment decisions to the observed hair and scalp condition',
       tabs: [
         {
           id: 'moisturizing',
-          label: 'MOISTURIZING',
-          title: 'MOISTURIZING TREATMENTS — RESTORE HYDRATION',
+          label: 'DRY',
+          title: 'DRY HAIR & SCALP',
           bullets: [
-            { label: 'PURPOSE', description: 'Restore hydration balance to parched scalp tissue and relieve tightness or itching caused by dryness' },
-            { label: 'KEY INGREDIENTS', description: 'Aloe vera, glycerin, hyaluronic acid, natural oils (jojoba, coconut, argan), shea butter' },
-            { label: 'APPLICATION', description: 'Apply to clean scalp, massage gently, leave for 10-15 minutes under warm towel or steamer. Rinse thoroughly.' },
-            { label: 'CLIENT TYPE', description: 'Clients with dry, tight, or flaky scalps; those in cold climates; frequent heat tool users' },
+            { label: 'SOURCE FOCUS', description: 'Chapter 11 identifies dry hair/scalp as a common treatment concern.' },
+            { label: 'PRODUCT DIRECTION', description: 'Use gentle cleansing and moisturizing products appropriate to the client\'s hair and scalp needs.' },
+            { label: 'SERVICE DECISION', description: 'Base the service on consultation and observable hair/scalp analysis rather than medical diagnosis.' },
           ],
-          facts: [
-            { text: 'BOARD EXAM ALERT: Moisturizing treatments add moisture; conditioning treatments restore pH balance. Know the difference.' },
-            { text: 'Dry scalp lacks moisture. Dandruff is caused by fungus. Treating dandruff with moisturizer alone will not solve the problem.' },
-          ],
+          facts: [{ text: 'The material summary associates dry scalp with reduced oil-gland activity and emphasizes cleanliness plus stimulation as core treatment principles.' }],
         },
         {
           id: 'clarifying',
-          label: 'CLARIFYING',
-          title: 'CLARIFYING TREATMENTS — REMOVE BUILDUP',
+          label: 'OILY',
+          title: 'OILY HAIR & SCALP',
           bullets: [
-            { label: 'PURPOSE', description: 'Remove accumulated product residue, excess oil, hard water minerals, and environmental pollutants from the scalp' },
-            { label: 'KEY INGREDIENTS', description: 'Apple cider vinegar, salicylic acid, tea tree oil, citrus extracts, activated charcoal' },
-            { label: 'APPLICATION', description: 'Use BEFORE other treatments to ensure maximum penetration. Massage into scalp, leave 3-5 minutes, rinse with warm water.' },
-            { label: 'CLIENT TYPE', description: 'Clients with oily scalps, heavy product users, swimmers, those in hard water areas' },
+            { label: 'SOURCE FOCUS', description: 'Chapter 11 identifies oily hair/scalp as a common treatment concern.' },
+            { label: 'PRODUCT DIRECTION', description: 'Choose cleansing products that match the observed hair/scalp condition and follow manufacturer directions.' },
+            { label: 'SERVICE DECISION', description: 'Regular shampooing may be part of cosmetic maintenance when appropriate for the client.' },
           ],
-          facts: [
-            { text: 'Always follow clarifying treatments with conditioner on HAIR ONLY — not scalp. The scalp is now clean; adding conditioner there creates new buildup.' },
-            { text: 'Over-clarifying strips natural oils. Recommend clarifying no more than once every 1-2 weeks for most clients.' },
-          ],
+          facts: [{ text: 'The material summary associates oily scalp with overactive sebaceous glands.' }],
         },
         {
           id: 'stimulating',
-          label: 'STIMULATING',
-          title: 'STIMULATING TREATMENTS — AWAKEN FOLLICLES',
+          label: 'STIMULATION',
+          title: 'SCALP STIMULATION',
           bullets: [
-            { label: 'PURPOSE', description: 'Increase blood flow to hair follicles, encouraging healthy growth and awakening dormant follicles' },
-            { label: 'KEY INGREDIENTS', description: 'Peppermint oil, rosemary extract, biotin, caffeine, niacin (vitamin B3), eucalyptus' },
-            { label: 'APPLICATION', description: 'Apply to scalp using fingertips or applicator brush. Massage vigorously for 5-10 minutes to generate heat and tingling.' },
-            { label: 'CLIENT TYPE', description: 'Clients with thinning hair, slow growth, or those seeking to maintain healthy growth patterns' },
+            { label: 'SOURCE FOCUS', description: 'Chapter 11 describes stimulation as one of the essential principles of scalp treatment.' },
+            { label: 'METHOD', description: 'Use the source-supported massage manipulations with controlled pressure and rhythmic movement.' },
+            { label: 'BOUNDARY', description: 'Do not promise regrowth or describe massage as awakening dormant follicles.' },
           ],
-          facts: [
-            { text: 'The tingling sensation from stimulating treatments is increased blood circulation — a good sign the treatment is working.' },
-            { text: 'BOARD EXAM ALERT: Scalp massage during stimulating treatments enhances effectiveness by 40% through increased circulation.' },
-          ],
+          facts: [{ text: 'The source describes increased blood and lymph flow, soothed nerves, stimulated muscles and glands, and greater scalp flexibility as massage effects.' }],
         },
         {
           id: 'dandruff',
-          label: 'DANDRUFF CONTROL',
-          title: 'DANDRUFF CONTROL TREATMENTS — BALANCE THE SCALP',
+          label: 'DANDRUFF',
+          title: 'DANDRUFF / PITYRIASIS',
           bullets: [
-            { label: 'PURPOSE', description: 'Control Malassezia yeast overgrowth, reduce inflammation, and normalize skin cell turnover rate' },
-            { label: 'KEY INGREDIENTS', description: 'Pyrithione zinc, ketoconazole, selenium sulfide, coal tar, salicylic acid, sulfur' },
-            { label: 'APPLICATION', description: 'Apply to affected areas, massage gently, leave for 3-5 minutes (or as directed). Use 2-3 times weekly until controlled.' },
-            { label: 'CLIENT TYPE', description: 'Clients with visible flaking, itching, redness, or diagnosed dandruff/seborrheic dermatitis' },
+            { label: 'SOURCE FOCUS', description: 'Chapter 11 identifies dandruff as a common scalp concern and associates it with Malassezia.' },
+            { label: 'SERVICE APPROACH', description: 'Use source-supported dandruff-control products and procedures within barbering scope.' },
+            { label: 'BOUNDARY', description: 'If the observed condition is outside cosmetic-service scope or suggests an infectious/medical concern, stop or modify service and refer appropriately.' },
           ],
-          facts: [
-            { text: 'BOARD EXAM ALERT: Dandruff is caused by Malassezia fungus — NOT dry scalp. Moisturizers alone will not treat dandruff.' },
-            { text: 'After dandruff is controlled, clients should continue weekly maintenance treatments to prevent recurrence.' },
-          ],
+          facts: [{ text: 'Do not convert visual observation into a medical diagnosis.' }],
         },
       ],
     },
-
-    // ═══════════════════════════════════════════
-    // SECTION 5: TYPES OF HAIR TREATMENTS
-    // ═══════════════════════════════════════════
     {
       type: 'featureGrid',
       id: 'hair-treatment-types',
-      title: 'HAIR TREATMENT TYPES — RESTORE & PROTECT',
-      subtitle: 'Six essential treatments every barber must master',
+      title: 'HAIR TREATMENT SELECTION',
+      subtitle: 'Use the Chapter 11 product-matching table and analysis findings',
       features: [
-        {
-          icon: 'Droplets',
-          title: 'DEEP CONDITIONING',
-          description: 'Intensive moisture treatment that penetrates the hair shaft to repair damage, improve elasticity, and restore softness. Ideal for dry, brittle, or chemically treated hair.',
-        },
-        {
-          icon: 'Shield',
-          title: 'PROTEIN RECONSTRUCTION',
-          description: 'Strengthens hair by depositing hydrolyzed proteins that fill gaps in the cuticle layer. Essential for severely damaged, over-processed, or breaking hair. Use sparingly to avoid protein overload.',
-        },
-        {
-          icon: 'Flame',
-          title: 'HOT OIL TREATMENTS',
-          description: 'Warm oil penetrates the cuticle to lubricate, seal in moisture, and add shine. Excellent for natural hair, protective styles, and preventing breakage. Oils include coconut, olive, and argan.',
-        },
-        {
-          icon: 'Link',
-          title: 'BOND BUILDERS',
-          description: 'Advanced treatments that repair disulfide bonds broken during chemical services. Can be added to color or lightening formulas or used as standalone treatments to prevent and reverse damage.',
-        },
-        {
-          icon: 'Wind',
-          title: 'KERATIN SMOOTHING',
-          description: 'Semi-permanent treatment that coats the hair with keratin protein to reduce frizz, increase manageability, and create a smooth, shiny finish. Results last 2-4 months with proper care.',
-        },
-        {
-          icon: 'Sun',
-          title: 'COLOR-PROTECTING TREATMENTS',
-          description: 'Specially formulated to seal the cuticle after color services, lock in pigment molecules, and prevent fading. Often contain UV filters and antioxidants to maintain vibrancy.',
-        },
+        { icon: 'Droplets', title: 'FINE HAIR', description: 'The Chapter 11 table pairs fine hair with volumizing shampoo, detangling conditioner, and protein treatments.' },
+        { icon: 'Shield', title: 'MEDIUM HAIR', description: 'The Chapter 11 table pairs medium hair with pH-balanced products.' },
+        { icon: 'Flame', title: 'COARSE HAIR', description: 'The Chapter 11 table pairs coarse hair with moisturizing products and leave-in conditioners.' },
+        { icon: 'Link', title: 'WAVY / CURLY HAIR', description: 'The Chapter 11 table pairs wavy or curly hair with light leave-in products and protein treatments.' },
+        { icon: 'Sparkles', title: 'DRY / DAMAGED HAIR', description: 'The Chapter 11 table pairs dry or damaged hair with gentle cleansing and deep moisturizing plus protein/moisturizing repair treatments.' },
       ],
     },
-
-    // ═══════════════════════════════════════════
-    // SECTION 6: PRODUCT SELECTION SYSTEM
-    // ═══════════════════════════════════════════
     {
       type: 'contentBlock',
       id: 'product-selection-system',
-      title: 'THE ANALYSIS-TO-TREATMENT SYSTEM',
-      content: 'Before every treatment, you must become a detective. The client\'s hair and scalp tell a story — of genetics, habits, environment, and history. Your job is to read that story and prescribe the right solution.\n\nTHE FOUR-STEP ANALYSIS:\n1. VISUAL EXAM — Look for shine, damage, breakage patterns, scalp color, and flaking\n2. TOUCH TEST — Feel texture, thickness, elasticity, and porosity\n3. WET ASSESSMENT — Observe how hair behaves when wet: curl pattern, stretch, and strength\n4. SCALP CHECK — Identify oiliness, dryness, lesions, or conditions\n\nBOARD EXAM ALERT: Always perform scalp analysis BEFORE any treatment service. Contagious conditions, open lesions, or severe inflammation are contraindications — refer to a physician.',
-      highlight: 'ANALYZE FIRST — TREAT SECOND — ALWAYS PROTECT THE CLIENT',
+      title: 'CONSULTATION, ANALYSIS & PRODUCT SELECTION',
+      content: 'Begin with consultation and hair/scalp analysis. Chapter 11 directs the barber to consider hair/scalp condition, texture, density, porosity, elasticity, and the presence of abrasions or disorders before selecting products or beginning a service.\n\nUse the Chapter 11 product-matching guidance and follow product labels and manufacturer directions. Observable findings guide cosmetic service decisions; they do not authorize medical diagnosis.',
+      highlight: 'CONSULT — ANALYZE — MATCH — FOLLOW DIRECTIONS',
     },
-
-    // ═══════════════════════════════════════════
-    // SECTION 7: TREATMENT MATCHING SCENARIOS
-    // ═══════════════════════════════════════════
     {
       type: 'scenarioBlock',
       id: 'treatment-matching-scenarios',
-      title: 'TREATMENT MATCHING CHALLENGES',
-      subtitle: 'Real shop situations that test your diagnostic instincts',
+      title: 'TREATMENT-MATCHING PRACTICE',
+      subtitle: 'Apply Chapter 11 analysis and scope boundaries',
       scenarios: [
         {
-          situation: 'A client sits down and you notice their scalp is visibly flaky with white scales. They mention it has been itchy for weeks. They use a cheap drugstore shampoo daily. This is a common scenario. The client likely has dandruff (pityriasis) caused by Malassezia fungus overgrowth.',
+          situation: 'A client has dry, damaged hair. Which Chapter 11 product direction best matches the source table?',
           options: [
-            { letter: 'A', text: 'Recommend a moisturizing treatment and tell them to shampoo less often', feedback: '❌ Moisturizing alone will not treat fungal dandruff. Shampooing less could make it worse by allowing oil buildup that feeds the fungus.' },
-            { letter: 'B', text: 'Recommend an anti-dandruff treatment with pyrithione zinc or ketoconazole, explain the fungal cause, and suggest 2-3x weekly use', feedback: '✅ Correct! Dandruff is fungal — it requires antifungal ingredients. Education about the cause builds client trust and compliance.' },
-            { letter: 'C', text: 'Tell them it is just dry scalp and recommend hot oil treatments', feedback: '❌ Dry scalp and dandruff are different conditions. Misdiagnosis leads to ineffective treatment and frustrated clients.' },
-            { letter: 'D', text: 'Perform the service without mentioning it to avoid embarrassment', feedback: '❌ Ignoring a scalp condition is unprofessional and potentially harmful. Clients appreciate honest, caring guidance.' },
+            { letter: 'A', text: 'Use only strong clarifying products', feedback: '❌ The source does not pair dry/damaged hair with strong clarifying-only care.' },
+            { letter: 'B', text: 'Use gentle cleansing with deep moisturizing and protein/moisturizing repair options', feedback: '✅ This matches the Chapter 11 product table.' },
+            { letter: 'C', text: 'Skip analysis and use the same shampoo for every client', feedback: '❌ Chapter 11 requires consultation and analysis before selection.' },
+            { letter: 'D', text: 'Diagnose a medical cause before choosing products', feedback: '❌ Medical diagnosis is outside the barber\'s role.' },
           ],
           correctAnswer: 'B',
         },
         {
-          situation: 'A client with color-treated hair complains their color fades within two weeks. Their hair feels rough and looks dull. They shampoo daily with hot water. Color fading is often caused by cuticle damage and improper home care. The rough, dull texture confirms cuticle compromise.',
+          situation: 'During scalp analysis you observe a condition that appears outside routine cosmetic maintenance. What is the safest Chapter 11 response?',
           options: [
-            { letter: 'A', text: 'Recommend they color their hair less often', feedback: '❌ While coloring less helps, it does not address the immediate problem of cuticle damage and fading.' },
-            { letter: 'B', text: 'Recommend a color-protecting treatment, sulfate-free shampoo, cool water rinses, and UV protection spray', feedback: '✅ Correct! A complete system approach addresses all causes: cuticle sealing, gentle cleansing, temperature, and sun protection.' },
-            { letter: 'C', text: 'Tell them fading is normal and unavoidable with color-treated hair', feedback: '❌ While some fading is normal, dramatic fading in two weeks indicates preventable damage. Professionals offer solutions, not excuses.' },
-            { letter: 'D', text: 'Sell them the most expensive products without explanation', feedback: '❌ Selling without educating feels pushy. Clients who understand WHY products work become loyal customers.' },
+            { letter: 'A', text: 'Continue the service and treat the condition medically', feedback: '❌ Medical treatment is outside barbering scope.' },
+            { letter: 'B', text: 'Use professional judgment to pause or avoid the service and refer appropriately', feedback: '✅ This preserves Chapter 11 service-safety and referral boundaries.' },
+            { letter: 'C', text: 'Ignore the finding if the client requests service', feedback: '❌ Client preference does not remove service-safety responsibilities.' },
+            { letter: 'D', text: 'Promise the condition will improve after massage', feedback: '❌ Chapter 11 does not support medical outcome promises.' },
           ],
           correctAnswer: 'B',
         },
       ],
     },
-
-    // ═══════════════════════════════════════════
-    // SECTION 8: TREATMENT PROCEDURE
-    // ═══════════════════════════════════════════
     {
       type: 'checklist',
       id: 'treatment-procedure',
-      title: 'THE FIVE-STEP TREATMENT PROTOCOL',
-      subtitle: 'Follow this sequence for every therapeutic service',
+      title: 'SOURCE-GROUNDED TREATMENT PROCEDURE',
+      subtitle: 'Use the Chapter 11 sequence and manufacturer directions',
       items: [
-        { text: 'STEP 1 — CONSULTATION & ANALYSIS: Begin with thorough hair and scalp analysis. Ask about allergies, sensitivities, previous chemical services, and current home care routine. Document findings.' },
-        { text: 'STEP 2 — SHAMPOO & PREP: Shampoo with appropriate cleanser for scalp condition. Use clarifying shampoo for buildup, moisturizing for dryness. Rinse thoroughly with warm water. Towel dry before treatment application.' },
-        { text: 'STEP 3 — APPLICATION: Section hair into 4-6 parts. Apply treatment product directly to scalp (scalp treatments) or from roots to ends (hair treatments). Use applicator brush or fingertips for even distribution.' },
-        { text: 'STEP 4 — PROCESSING: Cover with plastic cap and warm towel, or place under hood dryer/steamer for 10-20 minutes depending on product instructions. Heat opens cuticle and enhances penetration. Monitor for adverse reactions.' },
-        { text: 'STEP 5 — RINSE & STYLE: Rinse thoroughly with cool to lukewarm water. Cool water seals the cuticle. Apply conditioner if needed (avoid scalp for oily conditions). Towel dry, detangle gently, and proceed with styling.' },
+        { text: 'STEP 1 — CONSULTATION & ANALYSIS: Evaluate the observable hair/scalp condition, texture, density, porosity, elasticity, and contraindications.' },
+        { text: 'STEP 2 — CLEANSE: Use a suitable shampoo for the client\'s hair and scalp condition.' },
+        { text: 'STEP 3 — TREATMENT: Apply the appropriate cosmetic hair/scalp treatment according to product directions and the planned service.' },
+        { text: 'STEP 4 — ADJUNCTS AS APPROPRIATE: Chapter 11 permits scalp steam, massage by hand or electrical appliance, and other source-listed treatment equipment when appropriate.' },
+        { text: 'STEP 5 — COMPLETE SERVICE: Finish the treatment safely, then comb or style as appropriate to the procedure.' },
       ],
     },
-
-    // ═══════════════════════════════════════════
-    // SECTION 9: MASSAGE TECHNIQUES
-    // ═══════════════════════════════════════════
     {
       type: 'tabbed',
       id: 'massage-techniques',
-      title: 'MASSAGE TECHNIQUES — THE HEALING TOUCH',
-      subtitle: 'Four essential movements every therapeutic barber must master',
+      title: 'SCALP MASSAGE MANIPULATIONS',
+      subtitle: 'Chapter 11 identifies three primary manipulation patterns',
       tabs: [
         {
           id: 'effleurage',
-          label: 'EFFLEURAGE',
-          title: 'EFFLEURAGE — THE WARM-UP STROKE',
+          label: 'SLIDING',
+          title: 'SLIDING MOVEMENTS',
           bullets: [
-            { label: 'MOVEMENT', description: 'Long, smooth, gliding movements using palms and fingertips' },
-            { label: 'PURPOSE', description: 'To relax the client, spread product evenly, and prepare the scalp for deeper work' },
-            { label: 'PRESSURE', description: 'Light to medium — soothing and rhythmic' },
-            { label: 'WHEN TO USE', description: 'Always begin with effleurage to warm up the scalp and relax the client' },
+            { label: 'MOVEMENT', description: 'Thumbs and fingertips move in gliding strokes.' },
+            { label: 'GUIDELINE', description: 'Use slow, rhythmic, continuous motion with even pressure.' },
+            { label: 'APPLICATION', description: 'Chapter 11 uses sliding movements in multiple scalp areas, including sides-to-top and forehead-to-crown.' },
           ],
-          facts: [
-            { text: 'Effleurage increases blood flow gradually without shocking the tissue.' },
-            { text: 'This is the "hello" of scalp massage — it sets the tone for the entire service.' },
-          ],
+          facts: [{ text: 'Keep the hands under the hair and avoid pulling.' }],
         },
         {
           id: 'petrissage',
-          label: 'PETRISSAGE',
-          title: 'PETRISSAGE — THE DEEP WORK',
+          label: 'ROTARY',
+          title: 'ROTARY MOVEMENTS',
           bullets: [
-            { label: 'MOVEMENT', description: 'Circular pressure and lifting motions with fingertips and thumb pads' },
-            { label: 'PURPOSE', description: 'To stimulate circulation deeply, loosen tension, and enhance product penetration' },
-            { label: 'PRESSURE', description: 'Medium to firm — kneading and rhythmic' },
-            { label: 'WHEN TO USE', description: 'After effleurage, when the scalp is warmed up and ready for deeper stimulation' },
+            { label: 'MOVEMENT', description: 'Thumbs and fingertips use overlapping circular movements.' },
+            { label: 'GUIDELINE', description: 'Firm upward pressure and rotary movement help loosen scalp tissues.' },
+            { label: 'APPLICATION', description: 'Chapter 11 uses rotary movement behind the ears to crown and along the front hairline.' },
           ],
-          facts: [
-            { text: 'Petrissage is the most effective technique for increasing blood flow to follicles.' },
-            { text: 'BOARD EXAM ALERT: Petrissage is often tested as the primary stimulating massage movement.' },
-          ],
+          facts: [{ text: 'Begin at the hairline and maintain synchronized, controlled movement.' }],
         },
         {
           id: 'friction',
-          label: 'FRICTION',
-          title: 'FRICTION — THE HEAT GENERATOR',
+          label: 'BACK & FORTH',
+          title: 'BACK-AND-FORTH MOVEMENTS',
           bullets: [
-            { label: 'MOVEMENT', description: 'Small circular movements using fingertips or pads of fingers' },
-            { label: 'PURPOSE', description: 'To create heat, stimulate nerve endings, and awaken dormant follicles' },
-            { label: 'PRESSURE', description: 'Firm and focused — concentrated on specific areas' },
-            { label: 'WHEN TO USE', description: 'On areas needing extra stimulation, such as thinning spots or tension points' },
+            { label: 'MOVEMENT', description: 'Thumbs and fingertips use brisk back-and-forth movement.' },
+            { label: 'PRESSURE', description: 'Use moderate to firm pressure without pulling the hair.' },
+            { label: 'APPLICATION', description: 'This is one of the three Chapter 11 massage manipulations.' },
           ],
-          facts: [
-            { text: 'Friction generates heat through rapid movement, which opens pores and enhances absorption.' },
-            { text: 'Use caution on sensitive scalps — friction can irritate if too vigorous.' },
-          ],
+          facts: [{ text: 'Pressure and rhythm should remain controlled and comfortable.' }],
         },
         {
           id: 'tapotement',
-          label: 'TAPOTEMENT',
-          title: 'TAPOTEMENT — THE AWAKENING',
+          label: 'SEQUENCE',
+          title: 'MASSAGE SEQUENCE & CONTROL',
           bullets: [
-            { label: 'MOVEMENT', description: 'Light, rapid tapping with fingertips or cupped hands' },
-            { label: 'PURPOSE', description: 'To invigorate the scalp, awaken nerve endings, and create a refreshing finish' },
-            { label: 'PRESSURE', description: 'Light and rhythmic — percussive but gentle' },
-            { label: 'WHEN TO USE', description: 'At the end of massage to energize the client and signal completion' },
+            { label: 'START', description: 'Begin at the hairline.' },
+            { label: 'CONTROL', description: 'Use even pressure with continuous, synchronized movements.' },
+            { label: 'SAFETY', description: 'Avoid pulling the hair and adapt the service to the client\'s comfort and observed scalp condition.' },
           ],
-          facts: [
-            { text: 'Tapotement is the "good morning" stroke — it leaves clients feeling alert and refreshed.' },
-            { text: 'Never use tapotement on inflamed or irritated scalps. It can worsen inflammation.' },
-          ],
+          facts: [{ text: 'Chapter 11 distinguishes rotary, sliding, and back-and-forth manipulations; it does not require the unrelated four-stroke massage framework.' }],
         },
       ],
     },
-
-    // ═══════════════════════════════════════════
-    // SECTION 10: MASSAGE BENEFITS
-    // ═══════════════════════════════════════════
     {
       type: 'featureGrid',
       id: 'massage-benefits',
-      title: 'BENEFITS OF SCALP MASSAGE',
-      subtitle: 'Why therapeutic touch transforms both hair and client experience',
+      title: 'SOURCE-SUPPORTED EFFECTS OF SCALP MASSAGE',
+      subtitle: 'Keep claims within the Chapter 11 source record',
       features: [
-        {
-          icon: 'Heart',
-          title: 'INCREASES CIRCULATION',
-          description: 'Blood flow to hair follicles increases by up to 40% during proper scalp massage. More blood means more oxygen, more nutrients, and healthier growth.',
-        },
-        {
-          icon: 'Droplets',
-          title: 'DISTRIBUTES NATURAL OILS',
-          description: 'Massage spreads sebum from the scalp down the hair shaft, providing natural conditioning and protection. This is especially important for dry or curly hair types.',
-        },
-        {
-          icon: 'Zap',
-          title: 'ENHANCES PRODUCT PENETRATION',
-          description: 'The warmth and increased circulation from massage open the cuticle and allow treatment products to penetrate deeper into the cortex where they can actually repair damage.',
-        },
-        {
-          icon: 'Smile',
-          title: 'RELIEVES TENSION & STRESS',
-          description: 'Scalp massage triggers the release of endorphins and serotonin — natural mood boosters. Clients leave feeling not just looking better, but feeling better too.',
-        },
-        {
-          icon: 'Recycle',
-          title: 'EXFOLIATES THE SCALP',
-          description: 'Gentle massage loosens dead skin cells and buildup, preventing clogged follicles and creating a healthier environment for hair growth.',
-        },
-        {
-          icon: 'Crown',
-          title: 'CREATES LUXURY EXPERIENCE',
-          description: 'In a world of rushed services, a therapeutic scalp massage sets you apart. Clients remember how you made them feel — and they come back for it.',
-        },
+        { icon: 'Heart', title: 'CIRCULATION', description: 'Chapter 11 states that scalp massage increases blood and lymph flow.' },
+        { icon: 'Smile', title: 'NERVES', description: 'The source describes massage as soothing nerves.' },
+        { icon: 'Zap', title: 'MUSCLES & GLANDS', description: 'The source states that massage stimulates muscles and glands.' },
+        { icon: 'Recycle', title: 'SCALP FLEXIBILITY', description: 'The source identifies increased scalp flexibility as an effect of massage.' },
       ],
     },
-
-    // ═══════════════════════════════════════════
-    // SECTION 11: HOME CARE RECOMMENDATIONS
-    // ═══════════════════════════════════════════
+    {
+      type: 'contentBlock',
+      id: 'treatment-equipment-steam-hot-towels',
+      title: 'STEAM, HOT TOWELS & ELECTRIC MASSAGE',
+      content: 'SCALP STEAM: Chapter 11 describes steam as preparation for massage and treatment. It softens the scalp and hair, relaxes pores, and increases circulation. Follow equipment directions: fill the container with water, fit the hood over the client\'s head, and operate the unit as designed. Some hood models have side openings that allow scalp massage during steam.\n\nHOT TOWELS: Hot towels may substitute for a scalp steamer. Prepare them in a hot-towel cabinet or hot water and use one towel or a series of applications as appropriate.\n\nELECTRIC MASSAGER: A vibrator/hand massager can provide stimulating scalp massage using the same general movement patterns as hand massage. Adjust it on the back of the hand so the thumb and fingers remain free. Regulate intensity and duration and avoid excessive pressure.\n\nTREATMENT SERIES: Chapter 11 describes scalp treatments as a series, commonly once a week for several weeks, with more frequent schedules only under dermatologist direction.',
+      highlight: 'CONTROL INTENSITY — AVOID EXCESSIVE PRESSURE — FOLLOW EQUIPMENT DIRECTIONS',
+    },
     {
       type: 'contentBlock',
       id: 'home-care-system',
-      title: 'THE HOME CARE SYSTEM',
-      content: 'Professional treatments deliver immediate results, but home maintenance determines long-term success. Your role as a Healing Practitioner extends beyond the chair — you must educate clients on how to care for their hair between visits.\n\nTHE FOUR PILLARS OF HOME CARE:\n\nCLEANSING ROUTINE: Shampoo frequency based on scalp type. Use lukewarm water, not hot. Focus shampoo on scalp, not ends. Rinse thoroughly to prevent buildup.\n\nCONDITIONING HABITS: Condition after every shampoo. Apply from mid-lengths to ends. Leave in 2-3 minutes minimum. Use deep conditioner weekly for dry or damaged hair.\n\nPROTECTION PRACTICES: Use heat protectant before styling. Wear a hat in direct sun. Rinse hair after swimming. Sleep on silk or satin pillowcase to reduce friction.\n\nMAINTENANCE SCHEDULE: Daily — gentle brushing and scalp massage. Weekly — deep conditioning or clarifying treatment. Monthly — protein treatment and trim. Quarterly — professional salon treatment and product review.\n\nBOARD EXAM ALERT: Client education is part of the barber\'s professional responsibility. Recommending appropriate home care demonstrates competence and builds client trust.',
-      highlight: 'EDUCATE — EMPOWER — BUILD LASTING RESULTS',
+      title: 'CLIENT HOME-CARE GUIDANCE',
+      content: 'Keep home-care guidance tied to the client\'s analyzed hair/scalp condition and to product labels or manufacturer directions. Explain the selected shampoo, conditioner, or treatment in clear language and avoid making medical promises. When the client\'s condition is outside routine cosmetic maintenance, referral is more appropriate than a home-treatment recommendation.',
+      highlight: 'EDUCATE WITHIN SCOPE',
     },
-
-    // ═══════════════════════════════════════════
-    // SECTION 12: RETAIL PRODUCT SALES
-    // ═══════════════════════════════════════════
     {
       type: 'infoCards',
       id: 'retail-sales-mastery',
-      title: 'RETAIL SALES — THE CONSULTATION CONNECTION',
-      subtitle: 'Every service is a sales opportunity when done with integrity',
+      title: 'PROFESSIONAL PRODUCT RECOMMENDATIONS',
+      subtitle: 'Connect recommendations to analysis rather than sales pressure',
       cards: [
-        {
-          icon: 'BookOpen',
-          title: 'EDUCATE, DO NOT PUSH',
-          text: 'Explain why the product helps their specific concern. Knowledge builds confidence in the purchase. When clients understand the science, they buy with conviction.',
-        },
-        {
-          icon: 'Hand',
-          title: 'LET THEM EXPERIENCE IT',
-          text: 'Use products during service. When clients feel and smell the difference, they want to take it home. Experience sells better than explanation.',
-        },
-        {
-          icon: 'Target',
-          title: 'MAKE SPECIFIC RECOMMENDATIONS',
-          text: 'Do not ask "Do you want shampoo?" Say "I am using our moisturizing line on you today — it is perfect for your dry scalp." Specificity shows expertise.',
-        },
-        {
-          icon: 'Package',
-          title: 'CREATE SYSTEMS, NOT SINGLE SALES',
-          text: 'Recommend complete systems (shampoo + conditioner + treatment) rather than single items. Systems create better results and higher ticket averages.',
-        },
+        { icon: 'BookOpen', title: 'EXPLAIN THE MATCH', text: 'Connect the recommendation to the client\'s observed hair/scalp characteristics and Chapter 11 product-matching guidance.' },
+        { icon: 'Hand', title: 'FOLLOW LABELS', text: 'Use product labels and manufacturer directions when explaining use.' },
+        { icon: 'Target', title: 'STAY SPECIFIC', text: 'Recommend only what fits the client\'s analyzed cosmetic needs.' },
+        { icon: 'Shield', title: 'STAY WITHIN SCOPE', text: 'Do not sell a cosmetic product as a substitute for medical evaluation when referral is indicated.' },
       ],
     },
-
-    // ═══════════════════════════════════════════
-    // SECTION 13: COMMON CONFUSIONS
-    // ═══════════════════════════════════════════
     {
       type: 'contentBlock',
       id: 'common-confusions',
-      title: 'COMMON TREATMENT CONFUSIONS',
-      content: 'Even experienced barbers confuse these concepts. Master the distinctions to avoid misdiagnosis and ineffective treatments.\n\nDRY SCALP vs. DANDRUFF: Dry scalp is caused by lack of moisture — flakes are small, white, and dry. Dandruff is caused by Malassezia fungus — flakes are larger, yellowish, and oily. Treat dry scalp with moisturizers; treat dandruff with antifungal ingredients.\n\nMOISTURIZING vs. CONDITIONING: Moisturizing treatments ADD moisture to dry hair and scalp. Conditioning treatments RESTORE pH balance and smooth the cuticle after chemical services. They work together but serve different purposes.\n\nPROTEIN vs. MOISTURE: Protein strengthens hair by filling gaps in the cuticle. Moisture softens hair by hydrating the cortex. Too much protein makes hair stiff and brittle (protein overload). Too much moisture makes hair limp and weak (hygral fatigue). Balance is key.\n\nCLARIFYING vs. REGULAR SHAMPOO: Clarifying shampoo removes buildup, minerals, and residue. Regular shampoo cleanses surface oil and dirt. Clarifying is too strong for daily use — it strips natural oils. Use it only when buildup is present.\n\nBOARD EXAM ALERT: These distinctions appear on nearly every state board exam. Know them cold.',
-      highlight: 'DIAGNOSE CORRECTLY — TREAT APPROPRIATELY — NEVER GUESS',
+      title: 'COMMON CHAPTER 11 DISTINCTIONS',
+      content: 'DRY vs. OILY: Chapter 11 treats dry and oily hair/scalp as different cosmetic concerns requiring different product choices.\n\nDANDRUFF vs. ROUTINE DRYNESS: The source associates dandruff with Malassezia; use observation and source-supported cosmetic care without making a medical diagnosis.\n\nSHAMPOO vs. TREATMENT: Shampoo cleanses; treatment selection follows consultation, analysis, and the client\'s hair/scalp needs.\n\nHAND MASSAGE vs. ELECTRIC MASSAGE: Chapter 11 permits both; electric massage requires control of intensity, duration, and pressure.\n\nCOSMETIC CARE vs. MEDICAL CARE: Barbers provide cosmetic maintenance within scope and refer parasitic, staphylococcal, or other medical conditions appropriately.',
+      highlight: 'OBSERVE — DIFFERENTIATE — STAY WITHIN SCOPE',
     },
-
-    // ═══════════════════════════════════════════
-    // SECTION 14: MEMORY REINFORCEMENT
-    // ═══════════════════════════════════════════
     {
       type: 'featureGrid',
       id: 'memory-tricks',
-      title: 'MEMORY REINFORCEMENT — NEVER FORGET',
-      subtitle: 'Quick mental hooks for board exam success',
+      title: 'MEMORY REINFORCEMENT',
+      subtitle: 'Quick Chapter 11 retrieval cues',
       features: [
-        {
-          icon: 'Brain',
-          title: 'EFFLEURAGE = EASE IN',
-          description: 'Think: "Effleurage EASES you in." It is the gentle, gliding warm-up stroke. Always start with effleurage to relax the client before deeper work.',
-        },
-        {
-          icon: 'Brain',
-          title: 'PETRISSAGE = PRESS DEEP',
-          description: 'Think: "Petrissage PRESSES deep." It is the kneading, circular pressure stroke. The "P" in both words reminds you it is the primary stimulating technique.',
-        },
-        {
-          icon: 'Brain',
-          title: 'FRICTION = FIRE UP',
-          description: 'Think: "Friction creates FIRE." The rapid circular movement generates heat. Use it to "fire up" circulation in problem areas.',
-        },
-        {
-          icon: 'Brain',
-          title: 'TAPOTEMENT = TAP OUT',
-          description: 'Think: "Tapotement TAPS it out." The light tapping finishes the massage and wakes up the client. It is the "tap out" signal that the service is complete.',
-        },
+        { icon: 'Brain', title: 'ANALYSIS BEFORE SELECTION', description: 'Condition, texture, density, porosity, elasticity, and contraindications guide the service.' },
+        { icon: 'Brain', title: 'THREE MASSAGE PATTERNS', description: 'Rotary, sliding, and back-and-forth.' },
+        { icon: 'Brain', title: 'STEAM OR HOT TOWEL', description: 'Hot towels can substitute for a scalp steamer.' },
+        { icon: 'Brain', title: 'REFER OUT-OF-SCOPE CONDITIONS', description: 'Do not treat parasitic or staphylococcal scalp disorders.' },
       ],
     },
-
-    // ═══════════════════════════════════════════
-    // SECTION 15: BOARD EXAM CRITICAL ALERTS
-    // ═══════════════════════════════════════════
     {
       type: 'contentBlock',
       id: 'board-exam-alerts',
-      title: 'BOARD EXAM CRITICAL ALERTS',
-      content: 'These treatment concepts appear on EVERY state board exam. Miss them, and you fail.\n\n1. Always perform scalp analysis BEFORE treatment services\n2. Contagious conditions are contraindications — refer to physician\n3. Dandruff is fungal (Malassezia), not dry scalp\n4. Moisturizing adds moisture; conditioning restores pH\n5. Protein strengthens; moisture softens — balance both\n6. Clarifying removes buildup; regular shampoo cleanses surface\n7. Cool water seals the cuticle; hot water opens it\n8. Scalp massage increases circulation by up to 40%\n9. Petrissage is the primary stimulating massage movement\n10. Client education is part of professional responsibility\n11. Never diagnose — recognize, treat within scope, refer when needed\n12. Document all treatments and recommendations\n13. Patch test new products 24-48 hours before full application\n14. Heat enhances product penetration during processing\n15. Retail recommendations should be specific, not generic',
-      highlight: 'MEMORIZE THESE 15 POINTS',
+      title: 'CHAPTER 11 SAFETY & SERVICE CHECKPOINTS',
+      content: '1. Consult and analyze before product or treatment selection.\n2. Use the drape appropriate to the service.\n3. Test water temperature before shampooing.\n4. Use proper client and barber positioning.\n5. Match products to hair/scalp characteristics and follow manufacturer directions.\n6. Use rotary, sliding, and back-and-forth scalp massage movements as described in Chapter 11.\n7. Control pressure, intensity, and duration during massage.\n8. Scalp steam and hot towels can support treatment preparation.\n9. Electric massage requires controlled intensity and pressure.\n10. Do not perform cosmetic treatment on conditions that Chapter 11 identifies as outside barbering scope; refer appropriately.\n11. Do not diagnose medical conditions or promise medical outcomes.',
+      highlight: 'SAFE SERVICE DECISIONS MATTER MORE THAN MEMORIZING UNSUPPORTED CLAIMS',
     },
-
-    // ═══════════════════════════════════════════
-    // SECTION 16: ACTION PROMPTS
-    // ═══════════════════════════════════════════
     {
       type: 'actionPrompt',
       id: 'treatment-action-items',
-      title: 'TREATMENT SANCTUARY ACTION ITEMS',
-      subtitle: 'Do these today to level up your therapeutic skills',
+      title: 'CHAPTER 11 PRACTICE',
+      subtitle: 'Build source-supported service skill',
       prompts: [
-        {
-          action: 'Practice the Four Massage Strokes',
-          description: 'Perform effleurage, petrissage, friction, and tapotement on a practice mannequin or willing client. Focus on rhythm, pressure, and smooth transitions.',
-          benefit: 'Builds muscle memory for therapeutic touch',
-          timeframe: '15 minutes',
-        },
-        {
-          action: 'Analyze Five Scalps',
-          description: 'Examine 5 clients\' scalps before their next service. Note oiliness, dryness, flaking, or conditions. Practice your diagnostic vocabulary.',
-          benefit: 'Develops diagnostic precision',
-          timeframe: 'During your next 5 haircuts',
-        },
-        {
-          action: 'Study Product Ingredients',
-          description: 'Read the labels on 3 products in your shop. Identify the active ingredients and what conditions they treat.',
-          benefit: 'Builds product knowledge for confident recommendations',
-          timeframe: '10 minutes',
-        },
-        {
-          action: 'Role-Play a Retail Recommendation',
-          description: 'Practice explaining WHY a product helps a specific client concern. Use the "education, not push" approach with a coworker.',
-          benefit: 'Builds confidence in ethical retail sales',
-          timeframe: '5 minutes',
-        },
+        { action: 'Practice Draping', description: 'Practice selecting and applying the appropriate drape for wet, chemical, haircut, and facial-hair services.', benefit: 'Builds safe service preparation', timeframe: '10 minutes' },
+        { action: 'Practice the Three Massage Manipulations', description: 'Practice rotary, sliding, and back-and-forth movements with controlled pressure and rhythm.', benefit: 'Builds Chapter 11 technique recall', timeframe: '15 minutes' },
+        { action: 'Run a Product-Matching Drill', description: 'Match fine, medium, coarse, wavy/curly, and dry/damaged hair to the Chapter 11 product table.', benefit: 'Builds analysis-to-selection reasoning', timeframe: '10 minutes' },
+        { action: 'Practice Service-Stop Decisions', description: 'Review when a scalp finding calls for a routine cosmetic service, a modified service, or referral.', benefit: 'Builds scope and safety judgment', timeframe: '10 minutes' },
       ],
     },
-
-    // ═══════════════════════════════════════════
-    // SECTION 17: FINAL TREATMENT SANCTUARY PLEDGE
-    // ═══════════════════════════════════════════
     {
       type: 'quote',
       id: 'treatment-sanctuary-pledge',
-      quote: 'I pledge to see every client\'s scalp as a unique healing opportunity. I will analyze before I treat, educate before I sell, and touch with intention and skill. I understand that the trust placed in my chair is built on knowledge, care, and results. A master barber does not just cut hair — they heal scalps, restore confidence, and transform how clients feel about themselves.',
+      quote: 'I will analyze before I select products, protect the client through proper preparation and technique, stay within barbering scope, and refer conditions that require medical care.',
     },
   ],
 }
