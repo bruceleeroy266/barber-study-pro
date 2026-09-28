@@ -78,3 +78,6 @@ C10-8 does not redefine or modify the shared grading formula.
 ## Status
 
 **Implementation/audit repair is in progress. Exact-head Engineering Verification, Vercel Preview, and final adversarial certification are required before Chapter 10 may be declared complete.**
+
+
+Verification trigger: PR #121 is tested against `main`; no merge authorization is implied.
