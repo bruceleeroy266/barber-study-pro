@@ -91,10 +91,12 @@ describe('G7-1 durable activity evidence', () => {
       expect(content, chapterId).not.toBeNull()
       for (const section of content?.sections ?? []) {
         if (section.type !== 'scenarioBlock' && section.type !== 'proScenario') continue
-        expect(
-          getScenarioEvidenceConcept(chapterId, section.id),
-          `${chapterId}:${section.id}`,
-        ).not.toBeNull()
+        section.scenarios.forEach((_, scenarioIndex) => {
+          expect(
+            getScenarioEvidenceConcept(chapterId, section.id, scenarioIndex),
+            `${chapterId}:${section.id}:${scenarioIndex}`,
+          ).not.toBeNull()
+        })
       }
     }
   })
