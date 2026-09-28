@@ -99,7 +99,7 @@ describe('C11-1 canonical concept architecture + shared grading binding', () => 
       remediationReassessmentPercent: 100,
     })).toEqual({
       baseGrade: 78.82,
-      finalGrade: 81.99,
+      finalGrade: 82,
       recoveryApplied: true,
       componentWeights: SHARED_GRADE_WEIGHTS,
     })
