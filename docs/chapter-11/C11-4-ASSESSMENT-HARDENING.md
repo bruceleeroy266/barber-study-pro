@@ -113,3 +113,6 @@ The 50-question bank now tests:
 ## Next phase
 
 **C11-5 — Micro-Checks + Immutable Evidence Binding.**
+
+
+Verification trigger: PR #128 is tested against `main`; no merge authorization is implied.
