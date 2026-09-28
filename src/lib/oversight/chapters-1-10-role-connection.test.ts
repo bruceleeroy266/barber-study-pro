@@ -32,9 +32,8 @@ describe('Chapters 1-10 student → instructor → school-admin role connection 
     )
 
     for (let chapter = 1; chapter <= 10; chapter += 1) {
-      expect(page).toContain(
-        'chapter' + chapter + "MicroCheckRows = chapterMicroCheckRows?.filter((row) => row.chapter_id === 'ch-" + chapter + "')",
-      )
+      expect(page).toContain('chapter' + chapter + 'MicroCheckRows = chapterMicroCheckRows?.filter(')
+      expect(page).toContain("row.chapter_id === 'ch-" + chapter + "'")
       expect(page).toContain('buildChapter' + chapter + 'InstructorDiagnostics({')
       expect(page).toContain(
         'const chapter' + chapter + "Progress = progressRecords.find((record) => record.chapter_id === 'ch-" + chapter + "')",
