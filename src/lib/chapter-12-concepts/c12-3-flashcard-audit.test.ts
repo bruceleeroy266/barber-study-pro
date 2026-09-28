@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { chapter12PremiumFlashcards } from '../chapter-12-premium-flashcards'
 import {
@@ -84,9 +86,11 @@ describe('C12-3 flashcard audit and concept-mapping hardening', () => {
     }
   })
 
-  it('keeps the flashcard bank source limitation explicit', async () => {
-    const source = await import('../chapter-12-premium-flashcards?raw')
-    const text = String(source.default ?? source)
+  it('keeps the flashcard bank source limitation explicit', () => {
+    const text = readFileSync(
+      join(process.cwd(), 'src/lib/chapter-12-premium-flashcards.ts'),
+      'utf8',
+    )
     expect(text).toContain('not a fresh page-by-page textbook verification')
     expect(text).not.toContain('Created strictly from Chapter 12 textbook images')
   })
