@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import Link from 'next/link'
 import { StudentPerformanceRow } from '@/types'
 import { ArrowUpDown, Search, AlertTriangle, Trophy } from 'lucide-react'
 
@@ -123,7 +124,13 @@ export default function StudentPerformancePanel({ rows }: Props) {
             {filtered.map((row) => (
               <tr key={row.studentId} className="hover:bg-graphite/30">
                 <td className="px-4 py-3">
-                  <div className="font-medium text-white">{row.fullName}</div>
+                  <Link
+                    href={`/instructor/student/${row.studentId}`}
+                    className="font-medium text-white hover:text-[var(--color-brand-gold)] hover:underline"
+                  >
+                    {row.fullName}
+                  </Link>
+                  <div className="text-xs text-silver-gray mt-0.5">View the same mastery diagnostics used by instructors</div>
                   {row.riskReasons.length > 0 && (
                     <div className="text-xs text-silver-gray mt-0.5">{row.riskReasons.join(', ')}</div>
                   )}

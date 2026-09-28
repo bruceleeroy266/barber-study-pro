@@ -1,12 +1,12 @@
 // Chapter 10: Properties and Disorders of the Hair and Scalp — PREMIUM IMMERSIVE EXPERIENCE
-// THE HAIR LAB — Master Trichology, Diagnosis & Client Care
+// THE HAIR LAB — Hair Science, Analysis & Client Care
 
 import type { ChapterTheme, ChapterContent } from './chapter-content'
 
 // ═══════════════════════════════════════════════
 // HAIR LAB THEME — Scientific Precision
-// Deep amethyst / Clinical teal / Diagnostic gold / Clean white
-// Feels like: A modern trichology diagnostic lab behind the barbershop
+// Deep amethyst / Clinical teal / Study gold / Clean white
+// Feels like: A modern hair-and-scalp analysis lab behind the barbershop
 // ═══════════════════════════════════════════════
 
 export const chapter10PremiumTheme: ChapterTheme = {
@@ -100,7 +100,7 @@ export const chapter10PremiumTheme: ChapterTheme = {
 export const chapter10PremiumContent: ChapterContent = {
   chapterNumber: 10,
   title: 'PROPERTIES AND DISORDERS OF THE HAIR AND SCALP',
-  subtitle: 'Enter the Hair Lab — Master Trichology, Diagnosis & Every Client Who Sits in Your Chair',
+  subtitle: 'Enter the Hair Lab — Master Hair Science, Analysis & Client Care',
   theme: chapter10PremiumTheme,
   sections: [
     // ═══════════════════════════════════════════
@@ -110,8 +110,8 @@ export const chapter10PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'hair-lab-welcome',
       title: '🔬 WELCOME TO THE HAIR LAB',
-      content: 'Every client who sits in your chair is a living case study. Their hair tells a story — of genetics, health, habits, and history. The scientific study of hair, its disorders, and care is called TRICHOLOGY. As a barber, you are part scientist, part detective, and part artist.\n\nThis chapter transforms you into a Hair Lab Technician. You will learn to read hair like a diagnostic instrument — understanding its structure, predicting its behavior, recognizing danger signs, and knowing when to treat and when to refer. The client who trusts you with their hair is trusting you with their identity. Earn that trust through knowledge.',
-      highlight: 'READ THE HAIR — DIAGNOSE THE SCALP — PROTECT THE CLIENT',
+      content: 'Every client brings different hair and scalp characteristics to the chair. The scientific study of hair, its disorders, and care is called TRICHOLOGY. For a barber, the practical goal is to understand hair structure, observe hair and scalp condition, choose services carefully, and recognize when a concern is outside barbering scope.\n\nThis chapter builds hair-analysis skills: understanding structure, anticipating how hair may respond to services, recognizing observable warning signs, and knowing when a service should be modified, paused, or referred. The client who trusts you with their hair deserves careful observation and sound professional boundaries.',
+      highlight: 'READ THE HAIR — ANALYZE THE SCALP — PROTECT THE CLIENT',
     },
 
     // ═══════════════════════════════════════════
@@ -121,34 +121,34 @@ export const chapter10PremiumContent: ChapterContent = {
       type: 'infoCards',
       id: 'why-trichology-matters',
       title: 'WHY THE HAIR LAB MATTERS',
-      subtitle: 'Three reasons trichology separates pros from pretenders',
+      subtitle: 'Three reasons hair-and-scalp knowledge improves service decisions',
       cards: [
         {
           icon: 'Microscope',
-          title: 'DIAGNOSTIC PRECISION',
-          text: 'Before every cut, color, or chemical service, you must assess what you are working with. Porosity, elasticity, texture, and scalp condition determine product selection, technique, and safety. Skip the analysis, risk the disaster.',
+          title: 'ANALYSIS PRECISION',
+          text: 'Hair and scalp analysis supports safer service decisions. Texture, density, porosity, elasticity, and scalp condition can affect technique and chemical-service planning.',
         },
         {
           icon: 'ShieldAlert',
           title: 'CLIENT SAFETY',
-          text: 'A contagious scalp condition. An allergic reaction waiting to happen. Over-processed hair ready to break. These are not rare emergencies — they are daily realities. Trichology knowledge prevents harm before it happens.',
+          text: 'Observable scalp conditions, parasites, irritation, or compromised hair can change whether and how a service should proceed. Hair-and-scalp knowledge helps the barber identify service-safety concerns without making a medical diagnosis.',
         },
         {
           icon: 'Award',
-          title: 'PROFESSIONAL AUTHORITY',
-          text: 'When you can explain why a client\'s hair behaves a certain way, recommend products with scientific reasoning, and spot conditions early, you become the trusted expert — not just the person who cuts hair.',
+          title: 'PROFESSIONAL COMMUNICATION',
+          text: 'When you can explain hair structure and behavior, analyze service-relevant properties, and recognize concerns that may require referral, you can communicate more clearly and make more informed service decisions.',
         },
       ],
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 3: TRICHOLOGY CERTIFICATION LEVELS
+    // SECTION 3: TRICHOLOGY SKILL PROGRESSION
     // ═══════════════════════════════════════════
     {
       type: 'levelUp',
       id: 'trichology-certification',
-      title: '🔬 TRICHOLOGY CERTIFICATION',
-      subtitle: 'Progress from Observer to Master Trichologist — earn your diagnostic credentials',
+      title: '🔬 TRICHOLOGY SKILL PROGRESSION',
+      subtitle: 'Progress from foundational observation to stronger hair-and-scalp analysis',
       levels: [
         {
           level: 'Level 1',
@@ -171,14 +171,14 @@ export const chapter10PremiumContent: ChapterContent = {
         {
           level: 'Level 4',
           title: 'Growth Specialist',
-          description: 'You understand hair loss patterns, growth phases, and treatment options. You can counsel clients experiencing thinning or shedding with empathy and accuracy.',
+          description: 'You understand hair-loss patterns and growth phases and can discuss observable changes with empathy while keeping medical treatment decisions outside barbering scope.',
           reward: 'Trusted Advisor — Clients confide in you about sensitive hair concerns',
         },
         {
           level: 'Level 5',
-          title: 'Master Trichologist',
-          description: 'You command complete knowledge of hair science, scalp health, and diagnostic protocols. Other barbers consult you. You elevate the entire profession.',
-          reward: 'Trichology Authority — Your expertise is recognized and respected',
+          title: 'Hair & Scalp Analysis Leader',
+          description: 'You connect hair structure, growth, analysis, disorders, and service-safety concepts and can explain the professional boundary between observation and medical diagnosis.',
+          reward: 'Analysis Leader — You apply Chapter 10 concepts consistently and within scope',
         },
       ],
     },
@@ -190,7 +190,7 @@ export const chapter10PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'hair-structure-intro',
       title: 'THE ANATOMY OF HAIR',
-      content: 'Hair is a KERATINIZED appendage of the skin — meaning it is made of dead protein cells pushed upward from living roots. Every strand has two main parts: the ROOT (below the skin surface) and the SHAFT (the visible portion).\n\nUnderstanding hair structure is not academic trivia — it is the foundation of every service you perform. Chemical services target specific layers. Cutting techniques interact with the cuticle. Product absorption depends on porosity, which is determined by cuticle condition.\n\nKEY REVIEW: Hair is approximately 90% keratin protein. The cortex is the target of all chemical services.',
+      content: 'Hair is a KERATINIZED appendage of the skin — meaning it is made of dead protein cells pushed upward from living roots. Every strand has two main parts: the ROOT (below the skin surface) and the SHAFT (the visible portion).\n\nUnderstanding hair structure is not academic trivia — it is the foundation of every service you perform. Chemical services target specific layers. Cutting techniques interact with the cuticle. Product absorption depends on porosity, which is determined by cuticle condition.\n\nKEY STUDY POINT: Hair is made primarily of keratin protein. The cortex contains pigment and side bonds that are directly involved in many chemical-service effects.',
       highlight: 'ROOT = LIVING GROWTH | SHAFT = VISIBLE DEAD PROTEIN',
     },
 
@@ -214,7 +214,7 @@ export const chapter10PremiumContent: ChapterContent = {
           ],
           facts: [
             { text: 'KEY REVIEW: The follicle is the living portion of hair. The shaft is dead keratin.' },
-            { text: 'Folliculitis = inflammation of follicles. Never shave over active folliculitis.' },
+            { text: 'Folliculitis refers to inflammation of hair follicles. Avoid working directly over inflamed or compromised areas and keep the service decision within barbering scope.' },
           ],
         },
         {
@@ -264,12 +264,12 @@ export const chapter10PremiumContent: ChapterContent = {
           label: 'SEBACEOUS GLAND',
           title: 'SEBACEOUS GLAND — THE NATURAL OIL FACTORY',
           bullets: [
-            { label: 'DEFINITION', description: 'A small oil-producing gland connected to each hair follicle' },
+            { label: 'DEFINITION', description: 'An oil-producing gland associated with the hair follicle' },
             { label: 'FUNCTION', description: 'Produces sebum — a natural oil that lubricates the hair and skin, keeping both soft and pliable' },
             { label: 'BARBER RELEVANCE', description: 'Sebum production affects hair condition. Overproduction = oily scalp and hair. Underproduction = dryness and brittleness. Proper cleansing and conditioning balance sebum levels.' },
           ],
           facts: [
-            { text: 'KEY REVIEW: Sebaceous glands are attached to EVERY hair follicle. They secrete sebum through the same duct the hair emerges from.' },
+            { text: 'KEY STUDY POINT: Sebaceous glands are associated with hair follicles and secrete sebum that lubricates the hair and skin.' },
             { text: 'Hormonal changes (especially during puberty) can cause sebaceous glands to become overactive, leading to oily scalp and acne.' },
           ],
         },
@@ -305,11 +305,11 @@ export const chapter10PremiumContent: ChapterContent = {
           title: 'CORTEX — THE HEART OF THE HAIR (~90%)',
           bullets: [
             { label: 'STRUCTURE', description: 'The middle and main layer; contains melanin granules, cortical cells, and side bonds' },
-            { label: 'FUNCTION', description: 'Provides strength, elasticity, and color. The target of ALL chemical services.' },
+            { label: 'FUNCTION', description: 'Provides strength, elasticity, and color; it contains pigment and side bonds affected by chemical services.' },
             { label: 'BARBER RELEVANCE', description: 'Color, perms, and relaxers all work on the cortex. Damage here is permanent and cumulative.' },
           ],
           facts: [
-            { text: 'KEY REVIEW: The cortex is approximately 90% of hair weight and the target of all chemical services.' },
+            { text: 'KEY STUDY POINT: The cortex is approximately 90% of hair weight and contains pigment and side bonds central to chemical-service changes.' },
             { text: 'The cortex contains three types of side bonds: hydrogen, salt, and disulfide. These determine how hair responds to styling and chemicals.' },
           ],
         },
@@ -467,17 +467,17 @@ export const chapter10PremiumContent: ChapterContent = {
         {
           icon: 'Sprout',
           title: 'ANAGEN — GROWTH PHASE',
-          description: '3–5+ years. 90% of scalp hair is in this phase. Active cell division in the bulb pushes the strand upward. This is when hair grows approximately ½ inch per month.',
+          description: 'About 2–10 years. Roughly 90% of scalp hair is in this growth phase. Active cell division in the bulb pushes the strand upward, and average growth is about ½ inch per month.',
         },
         {
           icon: 'ArrowRightLeft',
           title: 'CATAGEN — TRANSITION PHASE',
-          description: '~2 weeks. The follicle shrinks and detaches from the dermal papilla. Growth stops. Only 1–2% of hair is in this phase at any time.',
+          description: 'The transition phase. The follicle shrinks, the bulb changes, and active growth stops before the resting phase.',
         },
         {
           icon: 'Moon',
           title: 'TELOGEN — RESTING PHASE',
-          description: '3–6 months. The hair sheds naturally. 10% of scalp hair is in this phase. Normal shedding is 75–100 hairs per day. New anagen growth pushes the old hair out.',
+          description: 'About 3–6 months. Less than 10% of scalp hair is in this resting/shedding phase. Normal shedding is about 75–100 hairs per day.',
         },
         {
           icon: 'TrendingUp',
@@ -494,8 +494,8 @@ export const chapter10PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'hair-analysis-protocol',
       title: '🔍 THE HAIR ANALYSIS PROTOCOL',
-      content: 'Before every service — EVERY service — you must analyze the hair and scalp. This is not optional. It is the professional standard that separates safe barbers from dangerous ones.\n\nUse ALL your senses:\n\nSIGHT: Look for dry or oily scalp, lesions, parasites, inflammation, broken hairs, or unusual patterns.\n\nTOUCH: Feel texture (coarse, medium, fine), density (thick, average, thin), porosity (how quickly hair absorbs moisture), and elasticity (how well it stretches and returns).\n\nSMELL & HEARING: Unusual odors can indicate infection or product buildup. Listen to the client\'s history — medications, recent illnesses, chemical services, and concerns.\n\nKEY REVIEW: Always perform scalp analysis before chemical services. Never proceed on irritated skin, parasites, or unknown lesions.',
-      highlight: 'ANALYZE BEFORE YOU ACT — EVERY TIME, EVERY CLIENT',
+      content: 'A pre-service hair and scalp analysis helps identify the properties and conditions that matter to the planned service. Chapter 10 emphasizes checking the scalp before the hair, especially before chemical services.\n\nSIGHT: Observe whether the scalp appears dry or oily and note visible irritation, abrasions, parasites, broken hairs, or unusual patterns.\n\nTOUCH: Evaluate texture, density, porosity, and elasticity using the chapter\'s analysis methods.\n\nHEARING AND SMELL: Listen to the client\'s concerns and service history, and note relevant observations without using them to diagnose a medical condition.\n\nKEY STUDY POINT: Do not begin a service when parasites are present, and do not proceed with a chemical service when irritation or abrasions make the service unsafe.',
+      highlight: 'ANALYZE BEFORE YOU ACT — MATCH THE ANALYSIS TO THE SERVICE',
     },
 
     // ═══════════════════════════════════════════
@@ -546,7 +546,7 @@ export const chapter10PremiumContent: ChapterContent = {
           ],
           facts: [
             { text: 'TEST: Slide fingers down a dry strand. Smooth = resistant. Rough = porous.' },
-            { text: 'Over-porous hair is damaged hair. Do not perform chemical services without conditioning treatments first.' },
+            { text: 'Overly porous hair has a compromised cuticle and absorbs moisture quickly. That condition should be considered when planning a chemical service.' },
           ],
         },
         {
@@ -559,7 +559,7 @@ export const chapter10PremiumContent: ChapterContent = {
           ],
           facts: [
             { text: 'TEST: Gently tug a wet strand. Healthy hair stretches and returns. Damaged hair snaps.' },
-            { text: 'Low elasticity = compromised cortex. Chemical services will cause further breakage.' },
+            { text: 'Low elasticity signals a greater risk of breakage and should be considered before a chemical service.' },
           ],
         },
       ],
@@ -572,7 +572,7 @@ export const chapter10PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'alopecia-intro',
       title: 'UNDERSTANDING HAIR LOSS (ALOPECIA)',
-      content: 'Hair loss is one of the most emotionally charged concerns clients bring to your chair. Understanding the types, causes, and treatments allows you to respond with empathy, accuracy, and appropriate referrals.\n\nHair loss affects millions of men and women. It can be temporary (stress, illness, medication) or permanent (genetic, scarring). Your role is not to treat medical hair loss — your role is to recognize it, support the client, and refer to appropriate professionals.\n\nKEY REVIEW: Androgenic alopecia is the most common type of hair loss — genetic and hormonal. Early detection and medical referral are important.',
+      content: 'Hair loss can be an emotionally sensitive client concern. Chapter 10 introduces patterns of abnormal hair loss so the barber can recognize terminology, communicate respectfully, and understand when referral is appropriate.\n\nThe barber\'s role is not to diagnose or treat medical hair loss. Focus on observable patterns, service implications, and professional referral boundaries.\n\nKEY STUDY POINT: Androgenic alopecia is presented as a common form of pattern hair loss associated with heredity, age, and hormonal factors.',
       highlight: 'RECOGNIZE — EMPATHIZE — REFER',
     },
 
@@ -592,10 +592,10 @@ export const chapter10PremiumContent: ChapterContent = {
           bullets: [
             { label: 'CAUSE', description: 'Genetic + hormonal (dihydrotestosterone/DHT). Causes follicle miniaturization over time.' },
             { label: 'PATTERN', description: 'Men: receding hairline and crown thinning. Women: diffuse thinning over the crown.' },
-            { label: 'TREATMENT', description: 'Minoxidil (topical, men and women), Finasteride (oral, men only). Early treatment is most effective.' },
+            { label: 'SOURCE CONTEXT', description: 'Chapter 10 discusses medical hair-loss treatments such as minoxidil and finasteride. Treatment selection belongs to qualified medical professionals and is not a barbering service decision.' },
           ],
           facts: [
-            { text: 'KEY REVIEW: Androgenic alopecia is the most common type of hair loss.' },
+            { text: 'KEY STUDY POINT: Androgenic alopecia is a pattern of hair loss associated in this chapter with heredity, age, and hormonal factors.' },
             { text: 'This is a medical condition — barbers should recognize it, empathize, and refer to a physician or dermatologist.' },
           ],
         },
@@ -618,13 +618,13 @@ export const chapter10PremiumContent: ChapterContent = {
           label: 'OTHER TYPES',
           title: 'OTHER TYPES OF HAIR LOSS',
           bullets: [
-            { label: 'TRACTION ALOPECIA', description: 'Caused by prolonged tension from tight styles, braids, or extensions. Preventable.' },
-            { label: 'TELOGEN EFFLUVIUM', description: 'Stress, illness, or medication pushes hair prematurely into telogen. Diffuse shedding 2–3 months after trigger.' },
-            { label: 'SCARRING (CICATRICIAL)', description: 'Permanent destruction of follicles. Requires immediate medical attention. Barber cannot help.' },
+            { label: 'ALOPECIA TOTALIS', description: 'Complete loss of scalp hair. This is a medical hair-loss condition and is outside barbering treatment scope.' },
+            { label: 'ALOPECIA UNIVERSALIS', description: 'Complete loss of body hair. This is a medical hair-loss condition and is outside barbering treatment scope.' },
+            { label: 'ABNORMAL HAIR LOSS', description: 'When hair loss appears abnormal or outside ordinary shedding patterns, focus on observation, respectful communication, and appropriate referral rather than diagnosis.' },
           ],
           facts: [
-            { text: 'Traction alopecia is preventable — educate clients about protective styling.' },
-            { text: 'Scarring alopecia is permanent. Early medical intervention is critical.' },
+            { text: 'KEY STUDY POINT: Alopecia totalis affects the scalp; alopecia universalis affects the body.' },
+            { text: 'Barbers should recognize hair-loss terminology and keep diagnosis and treatment decisions outside barbering scope.' },
           ],
         },
       ],
@@ -647,7 +647,7 @@ export const chapter10PremiumContent: ChapterContent = {
         {
           icon: 'RotateCw',
           title: 'WHORL',
-          description: 'Hair that grows in a circular or swirl pattern. Most commonly seen at the crown of the head. Every client has at least one whorl — know where it is before you cut.',
+          description: 'Hair that grows in a circular or swirl pattern. It is commonly seen at the crown and should be considered when planning a haircut.',
         },
         {
           icon: 'ArrowUp',
@@ -684,12 +684,12 @@ export const chapter10PremiumContent: ChapterContent = {
         {
           icon: 'Scissors',
           title: 'TRICHOPTILOSIS',
-          description: 'Split ends. The cuticle is damaged and the cortex separates at the end of the strand. Preventable with regular trims and conditioning. Not treatable — must be cut off.',
+          description: 'Split ends. Chapter 10 identifies trichoptilosis as split ends of the hair shaft.',
         },
         {
           icon: 'Link',
           title: 'MONILETHRIX',
-          description: 'Beaded hair — alternating thick and thin segments along the strand. Genetic. Fragile and breaks easily. Be extremely gentle. No chemical services.',
+          description: 'Beaded hair with fragile sections that break easily.',
         },
         {
           icon: 'CircleDot',
@@ -700,14 +700,14 @@ export const chapter10PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 14B: HYPERTROPHIES — ABNORMAL GROWTHS
+    // SECTION 14B: SERVICE-SAFETY OBSERVATION
     // ═══════════════════════════════════════════
     {
       type: 'contentBlock',
-      id: 'hypertrophies',
-      title: 'HYPERTROPHIES — ABNORMAL SKIN GROWTHS',
-      content: 'Hypertrophies are abnormal growths on the skin such as moles, warts, or skin tags. They can appear anywhere on the scalp and are usually harmless — but barbers play a critical role in early detection of skin cancer.\n\nWHY IT MATTERS: When combing through hair, you must use extreme care to avoid catching the comb on these growths. Painful or bleeding growths should never be ignored.\n\nRED FLAGS: If a client\'s mole or growth has changed color, size, shape, or texture since their last visit, gently suggest they see a physician. You are not diagnosing — you are observing. That observation could save a life.\n\nKEY REVIEW: Barbers should never scrape the scalp during analysis. Always comb gently while parting hair to check for hypertrophies, abrasions, and parasites.',
-      highlight: 'OBSERVE — PROTECT — REFER WHEN CHANGES APPEAR',
+      id: 'service-boundary-observation',
+      title: 'OBSERVABLE SCALP CONDITIONS — SERVICE BOUNDARIES',
+      content: 'Pre-service scalp analysis supports safe service decisions without turning observation into medical diagnosis. Check the scalp first and note service-relevant findings such as parasites, irritation, and abrasions.\n\nSERVICE DECISIONS: Do not begin a service when parasites are present. Do not proceed with chemical services when irritation or abrasions are present. When a condition is outside barbering scope or makes the planned service unsafe, use appropriate referral guidance rather than diagnosing or treating the condition.\n\nKEY STUDY POINT: Observe the scalp carefully, make the appropriate service-safety decision, follow sanitation requirements, and refer when needed.',
+      highlight: 'OBSERVE — PROTECT — REFER WITHIN SCOPE',
     },
 
     // ═══════════════════════════════════════════
@@ -716,8 +716,8 @@ export const chapter10PremiumContent: ChapterContent = {
     {
       type: 'checklist',
       id: 'contagious-disorders',
-      title: '🚫 CONTAGIOUS SCALP DISORDERS — NO SERVICE',
-      subtitle: 'Recognize these conditions and STOP immediately. Refer to a physician.',
+      title: '🚫 CONTAGIOUS SCALP CONDITIONS — SERVICE SAFETY',
+      subtitle: 'Recognize source-covered contagious conditions, avoid unsafe service over affected areas, follow sanitation requirements, and refer for appropriate medical evaluation.',
       items: [
         { text: 'TINEA CAPITIS (ringworm of scalp) — Fungal infection. Circular patches with scaling and broken hairs. Highly contagious.' },
         { text: 'TINEA BARBAE (ringworm of beard) — Fungal infection of beard area. Red, scaly patches with pustules. Highly contagious.' },
@@ -750,11 +750,11 @@ export const chapter10PremiumContent: ChapterContent = {
         {
           icon: 'Thermometer',
           title: 'FURUNCLES & CARBUNCLES',
-          description: 'Boils (single) or clusters of boils (carbuncles) from bacterial infection. Painful, raised, pus-filled. Do not shave over. Refer to physician. May be contagious if draining.' },
+          description: 'A furuncle is an acute deep bacterial boil; a carbuncle is a cluster of connected boils. Chapter 10 directs referral for a carbuncle.' },
         {
           icon: 'ShieldCheck',
-          title: 'SEBORRHEIC DERMATITIS',
-          description: 'Oily, red, scaly patches. Dandruff-like but more severe. Not contagious. Manageable with medicated products. Handle gently during services.',
+          title: 'PITYRIASIS / DANDRUFF',
+          description: 'Chapter 10 describes pityriasis as flaky scalp skin and distinguishes capitis simplex from the greasy or waxy steatoides form. Malassezia overgrowth is associated with dandruff.',
         },
       ],
     },
@@ -766,8 +766,8 @@ export const chapter10PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'decision-framework',
       title: '⚖️ THE BARBER\'S DECISION FRAMEWORK',
-      content: 'When you spot something abnormal on a client\'s scalp or hair, you have a professional obligation to act. Here is your decision tree:\n\nSTEP 1 — ASSESS: Is this normal variation or a potential problem? When in doubt, assume it needs attention.\n\nSTEP 2 — CLASSIFY: Is this contagious or non-contagious? If contagious, STOP SERVICE IMMEDIATELY.\n\nSTEP 3 — ACT: For contagious conditions — politely explain, do not embarrass, sanitize your tools and station, and refer to a physician. For non-contagious conditions — proceed with caution, adjust technique, and suggest appropriate products or referrals.\n\nSTEP 4 — DOCUMENT: Note what you observed and what you recommended. Documentation protects you professionally.\n\nSTEP 5 — FOLLOW UP: On the client\'s next visit, ask about the condition. Show you care. Build trust.\n\nKEY REVIEW: Performing services on contagious scalp conditions is a sanitation violation that can result in license suspension.',
-      highlight: 'WHEN IN DOUBT, STOP AND REFER',
+      content: 'When an observation raises a service-safety concern, keep the decision within barbering scope:\n\nSTEP 1 — OBSERVE: Describe what you can see or feel without assigning a medical diagnosis.\n\nSTEP 2 — CHECK SERVICE SAFETY: Determine whether the planned service can proceed safely under the chapter guidance and your school, workplace, product, and state requirements.\n\nSTEP 3 — PAUSE WHEN NEEDED: Do not begin a service when parasites are present. For suspected contagious conditions or other concerns outside barbering scope, avoid working over the affected area and refer the client for appropriate medical evaluation.\n\nSTEP 4 — SANITATION: Follow required cleaning, disinfection, and exposure-control procedures for tools and the workstation.\n\nSTEP 5 — COMMUNICATE: Explain the service decision discreetly and professionally without diagnosing or prescribing treatment.\n\nKEY STUDY POINT: Chapter 10 supports observation, service-safety decisions, sanitation, and referral; licensing penalties and jurisdiction-specific enforcement must be verified from current state rules.',
+      highlight: 'OBSERVE — PROTECT — REFER WHEN OUTSIDE SCOPE',
     },
 
     // ═══════════════════════════════════════════
@@ -777,17 +777,17 @@ export const chapter10PremiumContent: ChapterContent = {
       type: 'checklist',
       id: 'scalp-analysis-rules',
       title: 'SCALP ANALYSIS — DO\'S AND DON\'TS',
-      subtitle: 'Professional protocol for every pre-service examination',
+      subtitle: 'Source-aligned pre-service analysis reminders',
       items: [
-        { text: 'DO: Comb through hair gently while parting to check for hypertrophies, abrasions, and parasites' },
+        { text: 'DO: Check the scalp first for parasites, irritation, abrasions, and other service-relevant findings' },
         { text: 'DO: Check the SCALP first before analyzing the hair — scalp disorders can prohibit any service' },
-        { text: 'DO: Use all four senses: sight, hearing, smell, and touch (touch is most important)' },
-        { text: 'DO: Document what you observe and what you recommended' },
-        { text: 'DO: Refer to a physician when contagious conditions, unknown lesions, or severe irritation is present' },
+        { text: 'DO: Use sight, hearing, smell, and touch as part of hair-and-scalp analysis' },
+        { text: 'DO: Follow school, workplace, or state documentation requirements when they apply' },
+        { text: 'DO: Recommend medical evaluation when a condition is outside barbering scope or makes the planned service unsafe' },
         { text: 'DON\'T: Scrape the scalp during analysis — this can cause irritation and spread infection' },
-        { text: 'DON\'T: Begin any service if parasites are present — stop and refer immediately' },
+        { text: 'DON\'T: Begin the service when parasites are present; follow sanitation requirements and referral guidance' },
         { text: 'DON\'T: Proceed with chemical services if signs of irritation, abrasions, or inflammation exist' },
-        { text: 'DON\'T: Diagnose — recognize, refer, but never claim medical authority' },
+        { text: 'DON\'T: Diagnose or prescribe treatment; describe observable signs and make service-safety/referral decisions' },
         { text: 'DON\'T: Embarrass the client — explain discreetly and professionally' },
       ],
     },
@@ -838,44 +838,44 @@ export const chapter10PremiumContent: ChapterContent = {
         {
           id: 'safety',
           label: 'SAFETY',
-          title: 'NON-NEGOTIABLE SAFETY RULES',
+          title: 'SERVICE-SAFETY REMINDERS',
           bullets: [
-            { label: 'ANALYZE FIRST', description: 'Always perform scalp and hair analysis before chemical services. No exceptions.' },
-            { label: 'DO NOT DIAGNOSE', description: 'You are a barber, not a doctor. Recognize, refer, but never diagnose.' },
-            { label: 'STOP FOR CONTAGION', description: 'Contagious conditions = immediate service stop. Sanitize. Refer. Document.' },
-            { label: 'TEST ELASTICITY', description: 'Low elasticity = no chemical services. The hair will break. Explain to the client why.' },
-            { label: 'CHECK POROSITY', description: 'Over-porous hair needs conditioning before chemicals. Adjust your approach.' },
-            { label: 'PROTECT YOURSELF', description: 'Wear gloves when examining unknown scalp conditions. Wash hands thoroughly.' },
+            { label: 'ANALYZE FIRST', description: 'Analyze the scalp and hair before chemical services and consider any irritation, abrasions, parasites, porosity, and elasticity findings.' },
+            { label: 'DO NOT DIAGNOSE', description: 'Stay within barbering scope: observe, communicate, make service-safety decisions, and refer without diagnosing.' },
+            { label: 'STOP FOR CONTAGION', description: 'For suspected contagious conditions, avoid unsafe service, follow sanitation requirements, and refer when appropriate.' },
+            { label: 'TEST ELASTICITY', description: 'Low elasticity indicates breakage risk and should affect chemical-service planning.' },
+            { label: 'CHECK POROSITY', description: 'Overly porous hair has a compromised cuticle and should influence chemical-service planning.' },
+            { label: 'INFECTION CONTROL', description: 'Follow required cleaning, disinfection, and exposure-control procedures when scalp conditions raise sanitation concerns.' },
           ],
           facts: [
-            { text: 'KEY REVIEW: Performing services on contagious conditions is a sanitation violation with license suspension consequences.' },
-            { text: 'A single mistake with chemical services on compromised hair can destroy a client\'s hair and your reputation.' },
+            { text: 'KEY STUDY POINT: Follow current sanitation and licensing requirements when a contagious condition is suspected; penalties vary by jurisdiction.' },
+            { text: 'Compromised hair can have a greater risk of breakage during chemical services, so porosity and elasticity findings should inform the service decision.' },
           ],
         },
       ],
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 19: BOARD EXAM CRITICAL ALERTS
+    // SECTION 19: KEY CHAPTER 10 STUDY POINTS
     // ═══════════════════════════════════════════
-    // SECTION 19: BOARD EXAM CRITICAL ALERTS
+    // SECTION 19: KEY CHAPTER 10 STUDY POINTS
     // -------------------------------------------
     {
       type: 'contentBlock',
       id: 'board-exam-alerts',
-      title: 'BOARD EXAM CRITICAL ALERTS',
-      content: 'These trichology concepts appear on EVERY state board exam. Miss them, and you fail.',
-      highlight: 'MEMORIZE THESE 25 POINTS',
+      title: 'KEY CHAPTER 10 STUDY POINTS',
+      content: 'These are high-value Chapter 10 distinctions from the available source material. Study the concepts and service-safety relationships rather than relying on unverified exam-frequency claims.',
+      highlight: 'UNDERSTAND THE CORE DISTINCTIONS',
     },
 
     // -------------------------------------------
-    // SECTION 20: DIAGNOSTIC SCENARIOS
+    // SECTION 20: APPLICATION SCENARIOS
     // -------------------------------------------
     {
       type: 'scenarioBlock',
       id: 'diagnostic-scenarios',
-      title: 'DIAGNOSTIC SCENARIOS',
-      subtitle: 'Real shop situations that test your trichology instincts',
+      title: 'APPLICATION SCENARIOS',
+      subtitle: 'Shop situations that test Chapter 10 analysis and service-safety reasoning',
       scenarios: [
       ],
     },
@@ -887,12 +887,12 @@ export const chapter10PremiumContent: ChapterContent = {
       type: 'actionPrompt',
       id: 'action-prompts',
       title: 'HAIR LAB ACTION ITEMS',
-      subtitle: 'Do these today to level up your diagnostic skills',
+      subtitle: 'Practice source-covered analysis skills',
       prompts: [
         {
           action: 'Practice the Porosity Test',
           description: 'Slide your fingers down dry hair strands on 3-5 clients. Note which feel smooth (resistant) vs. rough (porous).',
-          benefit: 'Builds tactile diagnostic skill you will use every day',
+          benefit: 'Builds tactile hair-analysis skill',
           timeframe: 'During your next 5 haircuts',
         },
         {
@@ -910,7 +910,7 @@ export const chapter10PremiumContent: ChapterContent = {
         {
           action: 'Study Scalp Conditions',
           description: 'Review photos of ringworm, lice, scabies, and dandruff. Being able to recognize them quickly is critical.',
-          benefit: 'Speeds up your diagnostic confidence',
+          benefit: 'Builds recognition confidence while preserving referral boundaries',
           timeframe: '10 minutes',
         },
       ],
@@ -922,7 +922,7 @@ export const chapter10PremiumContent: ChapterContent = {
     {
       type: 'quote',
       id: 'hair-lab-pledge',
-      quote: 'I pledge to see every client\'s hair as a unique diagnostic case. I will analyze before I act, recognize what I cannot treat, and refer when safety demands it. I understand that the trust placed in my chair is built on knowledge, honesty, and care. A master barber does not just cut hair - they protect the health of every scalp they touch.',
+      quote: 'I will analyze hair and scalp characteristics before I act, describe what I observe without diagnosing, and refer concerns that are outside barbering scope. I will use Chapter 10 knowledge to support safe, respectful service decisions and clear client communication.',
     },
   ],
 }
