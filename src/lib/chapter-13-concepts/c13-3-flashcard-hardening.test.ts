@@ -68,11 +68,11 @@ describe('C13-3 90-flashcard source + concept hardening', () => {
     expect(serialized).toContain('standard precautions')
   })
 
-  it('does not alter the 45-question assessment during the flashcard-only phase', () => {
+  it('preserves the 45-question assessment inventory after later C13-4 hardening', () => {
     expect(chapter13PremiumQuizQuestions).toHaveLength(45)
     expect(chapter13PremiumQuizQuestions.reduce<Record<string, number>>((acc, question) => {
       acc[question.correct_answer] = (acc[question.correct_answer] ?? 0) + 1
       return acc
-    }, {})).toEqual({ a: 45 })
+    }, {})).toEqual({ a: 12, b: 11, c: 11, d: 11 })
   })
 })
