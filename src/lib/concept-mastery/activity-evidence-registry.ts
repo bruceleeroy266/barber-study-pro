@@ -85,6 +85,11 @@ const scenarioItemConceptOverrides: Readonly<Record<string, readonly string[]>> 
     'ch6-lymphatic',
     'ch6-endocrine',
   ],
+  'ch-10:diagnostic-scenarios': [
+    'ch10-analysis-properties',
+    'ch10-infectious-parasitic-scalp',
+    'ch10-service-safety-referral',
+  ],
 }
 
 export function getScenarioEvidenceConcept(
