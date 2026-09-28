@@ -1,11 +1,11 @@
 // Chapter 11: Treatment of the Hair and Scalp — PREMIUM IMMERSIVE EXPERIENCE
-// THE TREATMENT SANCTUARY — Master Therapeutic Care, Scalp Healing & Client Wellness
+// THE TREATMENT SANCTUARY — Professional Hair & Scalp Care
 
 import type { ChapterTheme, ChapterContent } from './chapter-content'
 
 // ═══════════════════════════════════════════════
-// TREATMENT SANCTUARY THEME — Healing & Restoration
-// Deep emerald / Warm amber / Healing sage / Soft cream
+// TREATMENT SANCTUARY THEME — Care & Restoration
+// Deep emerald / Warm amber / Sage / Soft cream
 // Feels like: A premium spa sanctuary where science meets soul
 // ═══════════════════════════════════════════════
 
@@ -100,7 +100,7 @@ export const chapter11PremiumTheme: ChapterTheme = {
 export const chapter11PremiumContent: ChapterContent = {
   chapterNumber: 11,
   title: 'TREATMENT OF THE HAIR AND SCALP',
-  subtitle: 'Enter the Treatment Sanctuary — Master Healing, Restoration & Client Wellness',
+  subtitle: 'Enter the Treatment Sanctuary — Master Professional Hair & Scalp Care',
   theme: chapter11PremiumTheme,
   sections: [
     {
