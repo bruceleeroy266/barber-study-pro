@@ -904,24 +904,18 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
             </p>
             <h2 className="text-xl font-semibold text-white mt-1">Mastery & Learning-Gap Diagnostics</h2>
             <p className="text-sm text-silver mt-1">
-              Shared grading combines first-attempt micro-checks, the chapter assessment, and formal remediation evidence without erasing original misses.
+              Shared grading keeps completion separate and combines micro-check, flashcard/study, chapter assessment, scenario/application, and formal remediation evidence without erasing original misses.
             </p>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
               <div className="rounded-lg border border-graphite bg-black p-4">
                 <div className="text-2xl font-bold text-[var(--color-brand-gold)]">{chapter1LiveGrade.grade.finalGrade}%</div>
                 <div className="text-xs text-silver mt-1">Chapter Grade</div>
-                <div className="text-[10px] text-silver-gray mt-1">Live 20/10/40/15/15 evidence</div>
-                <div className="text-[10px] text-silver-gray mt-1">Live 20/10/40/15/15 evidence</div>
-                <div className="text-[10px] text-silver-gray mt-1">Live 20/10/40/15/15 evidence</div>
-                <div className="text-[10px] text-silver-gray mt-1">Live 20/10/40/15/15 evidence</div>
-                <div className="text-[10px] text-silver-gray mt-1">Live 20/10/40/15/15 evidence</div>
-                <div className="text-[10px] text-silver-gray mt-1">Live 20/10/40/15/15 evidence</div>
-                <div className="text-[10px] text-silver-gray mt-1">Live 20/10/40/15/15 evidence</div>
-                <div className="text-[10px] text-silver-gray mt-1">Live 20/10/40/15/15 evidence</div>
-                <div className="text-[10px] text-silver-gray mt-1">Live 20/10/40/15/15 evidence</div>
-                <div className="text-[10px] text-silver-gray mt-1">Live 20/10/40/15/15 evidence</div>
-                <div className="text-[10px] text-silver-gray mt-1">Live 20/10/40/15/15 evidence</div>
+                <div className="text-[10px] text-silver-gray mt-1">
+                  {chapter1LiveGrade.evidenceComplete
+                    ? 'Final live 20/10/40/15/15 evidence'
+                    : 'Provisional — required evidence still incomplete'}
+                </div>
               </div>
               <div className="rounded-lg border border-graphite bg-black p-4">
                 <div className="text-2xl font-bold text-white">{chapter1Diagnostics.overallMastery}%</div>
@@ -1001,13 +995,18 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
             </p>
             <h2 className="text-xl font-semibold text-white mt-1">Mastery & Learning-Gap Diagnostics</h2>
             <p className="text-sm text-silver mt-1">
-              Shared grading combines first-attempt micro-checks, the chapter assessment, and formal remediation evidence without erasing original misses.
+              Shared grading keeps completion separate and combines micro-check, flashcard/study, chapter assessment, scenario/application, and formal remediation evidence without erasing original misses.
             </p>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
               <div className="rounded-lg border border-graphite bg-black p-4">
                 <div className="text-2xl font-bold text-[var(--color-brand-gold)]">{chapter2LiveGrade.grade.finalGrade}%</div>
                 <div className="text-xs text-silver mt-1">Chapter Grade</div>
+                <div className="text-[10px] text-silver-gray mt-1">
+                  {chapter2LiveGrade.evidenceComplete
+                    ? 'Final live 20/10/40/15/15 evidence'
+                    : 'Provisional — required evidence still incomplete'}
+                </div>
               </div>
               <div className="rounded-lg border border-graphite bg-black p-4">
                 <div className="text-2xl font-bold text-white">{chapter2Diagnostics.overallMastery}%</div>
@@ -1087,13 +1086,18 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
             </p>
             <h2 className="text-xl font-semibold text-white mt-1">Mastery & Learning-Gap Diagnostics</h2>
             <p className="text-sm text-silver mt-1">
-              Shared grading combines first-attempt micro-checks, the chapter assessment, and formal remediation evidence without erasing original misses.
+              Shared grading keeps completion separate and combines micro-check, flashcard/study, chapter assessment, scenario/application, and formal remediation evidence without erasing original misses.
             </p>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
               <div className="rounded-lg border border-graphite bg-black p-4">
                 <div className="text-2xl font-bold text-[var(--color-brand-gold)]">{chapter3LiveGrade.grade.finalGrade}%</div>
                 <div className="text-xs text-silver mt-1">Chapter Grade</div>
+                <div className="text-[10px] text-silver-gray mt-1">
+                  {chapter3LiveGrade.evidenceComplete
+                    ? 'Final live 20/10/40/15/15 evidence'
+                    : 'Provisional — required evidence still incomplete'}
+                </div>
               </div>
               <div className="rounded-lg border border-graphite bg-black p-4">
                 <div className="text-2xl font-bold text-white">{chapter3Diagnostics.overallMastery}%</div>
@@ -1173,13 +1177,18 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
             </p>
             <h2 className="text-xl font-semibold text-white mt-1">Mastery & Learning-Gap Diagnostics</h2>
             <p className="text-sm text-silver mt-1">
-              Shared grading combines first-attempt micro-checks, the chapter assessment, and formal remediation evidence without erasing original misses.
+              Shared grading keeps completion separate and combines micro-check, flashcard/study, chapter assessment, scenario/application, and formal remediation evidence without erasing original misses.
             </p>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
               <div className="rounded-lg border border-graphite bg-black p-4">
                 <div className="text-2xl font-bold text-[var(--color-brand-gold)]">{chapter4LiveGrade.grade.finalGrade}%</div>
                 <div className="text-xs text-silver mt-1">Chapter Grade</div>
+                <div className="text-[10px] text-silver-gray mt-1">
+                  {chapter4LiveGrade.evidenceComplete
+                    ? 'Final live 20/10/40/15/15 evidence'
+                    : 'Provisional — required evidence still incomplete'}
+                </div>
               </div>
               <div className="rounded-lg border border-graphite bg-black p-4">
                 <div className="text-2xl font-bold text-white">{chapter4Diagnostics.overallMastery}%</div>
@@ -1259,13 +1268,18 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
             </p>
             <h2 className="text-xl font-semibold text-white mt-1">Mastery & Learning-Gap Diagnostics</h2>
             <p className="text-sm text-silver mt-1">
-              Shared grading combines first-attempt micro-checks, the chapter assessment, and formal remediation evidence without erasing original misses.
+              Shared grading keeps completion separate and combines micro-check, flashcard/study, chapter assessment, scenario/application, and formal remediation evidence without erasing original misses.
             </p>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
               <div className="rounded-lg border border-graphite bg-black p-4">
                 <div className="text-2xl font-bold text-[var(--color-brand-gold)]">{chapter5LiveGrade.grade.finalGrade}%</div>
                 <div className="text-xs text-silver mt-1">Chapter Grade</div>
+                <div className="text-[10px] text-silver-gray mt-1">
+                  {chapter5LiveGrade.evidenceComplete
+                    ? 'Final live 20/10/40/15/15 evidence'
+                    : 'Provisional — required evidence still incomplete'}
+                </div>
               </div>
               <div className="rounded-lg border border-graphite bg-black p-4">
                 <div className="text-2xl font-bold text-white">{chapter5Diagnostics.overallMastery}%</div>
@@ -1345,13 +1359,18 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
             </p>
             <h2 className="text-xl font-semibold text-white mt-1">Mastery & Learning-Gap Diagnostics</h2>
             <p className="text-sm text-silver mt-1">
-              Shared grading combines first-attempt micro-checks, the chapter assessment, and formal remediation evidence without erasing original misses.
+              Shared grading keeps completion separate and combines micro-check, flashcard/study, chapter assessment, scenario/application, and formal remediation evidence without erasing original misses.
             </p>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
               <div className="rounded-lg border border-graphite bg-black p-4">
                 <div className="text-2xl font-bold text-[var(--color-brand-gold)]">{chapter6LiveGrade.grade.finalGrade}%</div>
                 <div className="text-xs text-silver mt-1">Chapter Grade</div>
+                <div className="text-[10px] text-silver-gray mt-1">
+                  {chapter6LiveGrade.evidenceComplete
+                    ? 'Final live 20/10/40/15/15 evidence'
+                    : 'Provisional — required evidence still incomplete'}
+                </div>
               </div>
               <div className="rounded-lg border border-graphite bg-black p-4">
                 <div className="text-2xl font-bold text-white">{chapter6Diagnostics.overallMastery}%</div>
@@ -1443,6 +1462,11 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                     {chapter7LiveGrade.grade.finalGrade}%
                   </div>
                   <div className="text-xs text-silver mt-1">Chapter Grade</div>
+                <div className="text-[10px] text-silver-gray mt-1">
+                  {chapter7LiveGrade.evidenceComplete
+                    ? 'Final live 20/10/40/15/15 evidence'
+                    : 'Provisional — required evidence still incomplete'}
+                </div>
                 </div>
                 <div className="rounded-lg border border-graphite bg-black p-4">
                   <div className="text-2xl font-bold text-white">{chapter7Diagnostics.overallMastery}%</div>
@@ -1608,6 +1632,11 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                     {chapter8LiveGrade.grade.finalGrade}%
                   </div>
                   <div className="text-xs text-silver mt-1">Chapter Grade</div>
+                <div className="text-[10px] text-silver-gray mt-1">
+                  {chapter8LiveGrade.evidenceComplete
+                    ? 'Final live 20/10/40/15/15 evidence'
+                    : 'Provisional — required evidence still incomplete'}
+                </div>
                 </div>
                 <div className="rounded-lg border border-graphite bg-black p-4">
                   <div className="text-2xl font-bold text-white">{chapter8Diagnostics.overallMastery}%</div>
@@ -1778,6 +1807,11 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                     {chapter9LiveGrade.grade.finalGrade}%
                   </div>
                   <div className="text-xs text-silver mt-1">Chapter Grade</div>
+                <div className="text-[10px] text-silver-gray mt-1">
+                  {chapter9LiveGrade.evidenceComplete
+                    ? 'Final live 20/10/40/15/15 evidence'
+                    : 'Provisional — required evidence still incomplete'}
+                </div>
                 </div>
                 <div className="rounded-lg border border-graphite bg-black p-4">
                   <div className="text-2xl font-bold text-white">{chapter9Diagnostics.overallMastery}%</div>
@@ -1937,6 +1971,11 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                     {chapter10LiveGrade.grade.finalGrade}%
                   </div>
                   <div className="text-xs text-silver mt-1">Chapter Grade</div>
+                <div className="text-[10px] text-silver-gray mt-1">
+                  {chapter10LiveGrade.evidenceComplete
+                    ? 'Final live 20/10/40/15/15 evidence'
+                    : 'Provisional — required evidence still incomplete'}
+                </div>
                 </div>
                 <div className="rounded-lg border border-graphite bg-black p-4">
                   <div className="text-2xl font-bold text-white">{chapter10Diagnostics.overallMastery}%</div>
@@ -2096,6 +2135,11 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                     {chapter11LiveGrade.grade.finalGrade}%
                   </div>
                   <div className="text-xs text-silver mt-1">Chapter Grade</div>
+                <div className="text-[10px] text-silver-gray mt-1">
+                  {chapter11LiveGrade.evidenceComplete
+                    ? 'Final live 20/10/40/15/15 evidence'
+                    : 'Provisional — required evidence still incomplete'}
+                </div>
                 </div>
                 <div className="rounded-lg border border-graphite bg-black p-4">
                   <div className="text-2xl font-bold text-white">{chapter11Diagnostics.overallMastery}%</div>
