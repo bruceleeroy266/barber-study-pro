@@ -105,3 +105,6 @@ No role-specific grading or mastery branch is introduced.
 ## Status
 
 Implementation and audit repairs are complete. Exact-head Engineering Verification and Vercel Preview must be GREEN before this role-connection certification can be closed.
+
+
+Verification trigger: PR #122 is tested against `main`; no merge authorization is implied.
