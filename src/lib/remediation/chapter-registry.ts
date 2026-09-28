@@ -80,7 +80,7 @@ import { chapter11ContentConceptMappings, chapter11FlashcardConceptMappings } fr
 
 import { detectAllConceptGaps as detectAllChapter12ConceptGaps } from '@/lib/chapter-12-concepts/detection'
 import { chapter12ConceptFamilies } from '@/lib/chapter-12-concepts/concepts'
-import { chapter12ContentConceptMappings, chapter12FlashcardConceptMappings } from '@/lib/chapter-12-concepts/mappings'
+import { chapter12FlashcardConceptMappings, chapter12RemediationContentConceptMappings } from '@/lib/chapter-12-concepts/mappings'
 
 // ───────────────────────────────────────────────
 // Provider Contract
@@ -514,7 +514,7 @@ const chapter11Provider: ChapterDetectionProvider = {
 }
 
 
-const chapter12ContentMappingsProjected = chapter12ContentConceptMappings.map((m) => ({
+const chapter12ContentMappingsProjected = chapter12RemediationContentConceptMappings.map((m) => ({
   contentBlockId: m.contentBlockId,
   conceptId: m.conceptFamilyId as string,
 }))
