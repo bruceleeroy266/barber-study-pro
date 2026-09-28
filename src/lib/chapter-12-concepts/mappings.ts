@@ -83,8 +83,6 @@ export const chapter12MicroCheckPlacements: readonly Chapter12MicroCheckPlacemen
 ]
 
 export const chapter12ContentConceptMappings: readonly Chapter12ContentConceptMapping[] = [
-  { contentBlockId: 'board-exam-alerts', conceptFamilyId: 'ch12-facial-anatomy-neurovascular' },
-  { contentBlockId: 'board-exam-alerts', conceptFamilyId: 'ch12-equipment-electrotherapy' },
   { contentBlockId: 'gentlemans-atelier-welcome', conceptFamilyId: 'ch12-client-care-professional-practice' },
   { contentBlockId: 'why-facial-massage-matters', conceptFamilyId: 'ch12-massage-principles-manipulations' },
   { contentBlockId: 'massage-certification', conceptFamilyId: 'ch12-client-care-professional-practice' },
@@ -103,6 +101,18 @@ export const chapter12ContentConceptMappings: readonly Chapter12ContentConceptMa
   { contentBlockId: 'board-exam-alerts', conceptFamilyId: 'ch12-contraindications-service-safety' },
   { contentBlockId: 'facial-action-items', conceptFamilyId: 'ch12-client-care-professional-practice' },
   { contentBlockId: 'gentlemans-atelier-pledge', conceptFamilyId: 'ch12-client-care-professional-practice' },
+]
+
+/**
+ * Remediation-only supplements. These deliberately do not alter the canonical
+ * one-section/one-concept lesson map above. The hardened CORE CHAPTER 12 REVIEW
+ * is broad enough to support targeted review for concepts that otherwise have
+ * no dedicated top-level lesson block.
+ */
+export const chapter12RemediationContentConceptMappings: readonly Chapter12ContentConceptMapping[] = [
+  ...chapter12ContentConceptMappings,
+  { contentBlockId: 'board-exam-alerts', conceptFamilyId: 'ch12-facial-anatomy-neurovascular' },
+  { contentBlockId: 'board-exam-alerts', conceptFamilyId: 'ch12-equipment-electrotherapy' },
 ]
 
 const fc = (n: number): `fc-ch12-${string}` => `fc-ch12-${String(n).padStart(3, '0')}`
@@ -132,7 +142,7 @@ export const chapter12QuizQuestionConceptMappings: readonly Chapter12QuizQuestio
 ]
 
 export function getChapter12ContentBlocksForConcept(conceptFamilyId: Chapter12ConceptFamilyId) {
-  return chapter12ContentConceptMappings
+  return chapter12RemediationContentConceptMappings
     .filter((mapping) => mapping.conceptFamilyId === conceptFamilyId)
     .map((mapping) => mapping.contentBlockId)
 }
