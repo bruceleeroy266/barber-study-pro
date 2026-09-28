@@ -881,7 +881,7 @@ export const chapter14PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'locks',
       title: 'Locks (Dreadlocks) — Consultation Essentials',
-      content: 'Locks form when natural-textured hair intertwines into a single network. The process takes 6 months to 1 year to fully complete. Once hair locks, removal requires cutting them off entirely — emphasize this permanence during consultation. Cultivated locks are intentionally guided through techniques like double twisting, coiling, palm rolling, braiding, or wrapping with cord. Maintenance requires regular shop visits for cleaning, conditioning, and rerolling. Use only non-petroleum-based oils; heavy oils cause buildup and attract debris.',
+      content: 'Locks form as textured hair intertwines and mats over time. Development varies by hair characteristics, technique, maintenance, and time, so avoid promising a universal completion timeline. Cultivated locks are intentionally guided through methods such as twisting, coiling, palm rolling, braiding, or wrapping. Maintenance should focus on clean hair and scalp, appropriate conditioning, and product choices that minimize buildup while following product directions and the client\'s needs.',
       highlight: 'Lock formation and maintenance vary by hair, method, and product routine',
     },
 
@@ -1199,7 +1199,7 @@ export const chapter14PremiumContent: ChapterContent = {
     {
       type: 'levelUp',
       id: 'board-exam-checkpoint',
-      title: 'Board Exam Checkpoint: Chapter 14 Mastery',
+      title: 'Chapter 14 Knowledge Checkpoint',
       levels: [
         { level: '1', title: 'Consultation', description: 'Can conduct a thorough client consultation and clarify vague requests', reward: 'Client trust and repeat business' },
         { level: '2', title: 'Facial Analysis', description: 'Can identify all seven facial shapes and four profile types', reward: 'Customized style recommendations' },
@@ -1207,7 +1207,7 @@ export const chapter14PremiumContent: ChapterContent = {
         { level: '4', title: 'Reference Points', description: 'Can locate parietal ridge, occipital bone, apex, and four corners', reward: 'Precision sectioning and balanced cuts' },
         { level: '5', title: 'Elevation', description: 'Can explain 0°, 45°, 90°, and 180° elevations and their effects', reward: 'Correct weight distribution every time' },
         { level: '6', title: 'Techniques', description: 'Can perform clipper-over-comb, shear-over-comb, and razor techniques', reward: 'Versatile, professional cutting skills' },
-        { level: '7', title: 'State Board', description: 'Knows guards are NOT acceptable for practical exams', reward: 'Exam confidence and first-attempt pass' },
+        { level: '7', title: 'Tool Selection', description: 'Can distinguish detachable blades, guards, and freehand clipper technique', reward: 'More deliberate tool choices and technique control' },
       ],
     },
 
@@ -1241,10 +1241,10 @@ export const chapter14PremiumContent: ChapterContent = {
         { text: '✓ Building volume: lift with brush, bend section, direct heat at base' },
         { text: '✓ Head shave requires steamed towels and careful stretching of skin' },
         { text: '✓ Cornrow braiding involves picking up hair with each strand cross' },
-        { text: '✓ Locks take 6–12 months to form and are permanent' },
+        { text: '✓ Lock development and maintenance vary by hair, method, time, and product routine' },
         { text: '✓ Always follow proper clean-up and disinfection procedures' },
         { text: '✓ Dispose of blades in sharps container only' },
-        { text: '✓ Guards are NOT acceptable for state board practical exams' },
+        { text: '✓ Distinguish guards, detachable blades, and freehand clipper technique; verify current exam rules separately' },
       ],
     },
   ],
