@@ -15,6 +15,73 @@ export interface Chapter12QuizQuestionConceptMapping {
   conceptFamilyId: Chapter12ConceptFamilyId
 }
 
+export interface Chapter12MicroCheckPlacement {
+  id: `mc-12-${string}`
+  afterSectionId: string
+  conceptFamilyId: Chapter12ConceptFamilyId
+  plannedQuestionCount: number
+  purpose: string
+}
+
+export const chapter12MicroCheckPlacements: readonly Chapter12MicroCheckPlacement[] = [
+  {
+    id: 'mc-12-01',
+    afterSectionId: 'memory-tricks',
+    conceptFamilyId: 'ch12-facial-anatomy-neurovascular',
+    plannedQuestionCount: 2,
+    purpose: 'Check application of facial anatomy and neurovascular structures.',
+  },
+  {
+    id: 'mc-12-02',
+    afterSectionId: 'massage-movements',
+    conceptFamilyId: 'ch12-massage-principles-manipulations',
+    plannedQuestionCount: 2,
+    purpose: 'Check manipulation recognition and safe massage decisions.',
+  },
+  {
+    id: 'mc-12-03',
+    afterSectionId: 'hot-towel-safety',
+    conceptFamilyId: 'ch12-equipment-electrotherapy',
+    plannedQuestionCount: 2,
+    purpose: 'Check equipment settings, contraindications, and deferral decisions.',
+  },
+  {
+    id: 'mc-12-04',
+    afterSectionId: 'product-selection-skin-type',
+    conceptFamilyId: 'ch12-skin-analysis-product-selection',
+    plannedQuestionCount: 2,
+    purpose: 'Check cosmetic analysis and product-selection decisions.',
+  },
+  {
+    id: 'mc-12-05',
+    afterSectionId: 'facial-treatments-masks',
+    conceptFamilyId: 'ch12-facial-treatment-procedures',
+    plannedQuestionCount: 2,
+    purpose: 'Check treatment sequence and cosmetic service boundaries.',
+  },
+  {
+    id: 'mc-12-06',
+    afterSectionId: 'sanitation-infection-control',
+    conceptFamilyId: 'ch12-sanitation-infection-control',
+    plannedQuestionCount: 2,
+    purpose: 'Check contamination prevention and exposure-control decisions.',
+  },
+  {
+    id: 'mc-12-07',
+    afterSectionId: 'absolute-contraindications',
+    conceptFamilyId: 'ch12-contraindications-service-safety',
+    plannedQuestionCount: 2,
+    purpose: 'Check service-stop, deferral, and scope-boundary decisions.',
+  },
+  {
+    id: 'mc-12-08',
+    afterSectionId: 'client-consultation',
+    conceptFamilyId: 'ch12-client-care-professional-practice',
+    plannedQuestionCount: 2,
+    purpose: 'Check consultation and professional-practice decisions.',
+  },
+]
+
 export const chapter12ContentConceptMappings: readonly Chapter12ContentConceptMapping[] = [
   { contentBlockId: 'gentlemans-atelier-welcome', conceptFamilyId: 'ch12-client-care-professional-practice' },
   { contentBlockId: 'why-facial-massage-matters', conceptFamilyId: 'ch12-massage-principles-manipulations' },
