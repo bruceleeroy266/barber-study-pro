@@ -82,3 +82,5 @@ The Chapter 11 content basis remains `CHAPTER-11-MATERIAL-SUMMARY.md`, a reposit
 
 
 Verification trigger: PR #130 is tested against `main`; no merge authorization is implied.
+
+Retry note: prior Pilot Onboarding job stalled during disposable Supabase startup; this commit retriggers exact-head verification without changing C11-6 behavior.
