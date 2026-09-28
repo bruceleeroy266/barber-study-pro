@@ -779,7 +779,7 @@ export const chapter10PremiumContent: ChapterContent = {
       title: 'SCALP ANALYSIS — DO\'S AND DON\'TS',
       subtitle: 'Source-aligned pre-service analysis reminders',
       items: [
-        { text: 'DO: Comb through hair gently while parting to check for hypertrophies, abrasions, and parasites' },
+        { text: 'DO: Check the scalp first for parasites, irritation, abrasions, and other service-relevant findings' },
         { text: 'DO: Check the SCALP first before analyzing the hair — scalp disorders can prohibit any service' },
         { text: 'DO: Use all four senses: sight, hearing, smell, and touch (touch is most important)' },
         { text: 'DO: Follow school, workplace, or state documentation requirements when they apply' },
