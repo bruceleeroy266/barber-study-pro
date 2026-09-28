@@ -70,3 +70,6 @@ This phase does not claim fresh independent page-by-page Milady verification.
 ## Next phase
 
 **C11-8 — Final Chapter 11 End-to-End Certification.**
+
+
+Verification trigger: PR #131 is tested against `main`; no merge authorization is implied.
