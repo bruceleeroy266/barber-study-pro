@@ -496,8 +496,8 @@ export const chapter12PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'beard-mustache-treatments',
       title: 'BEARD & MUSTACHE TREATMENTS',
-      content: 'Beard care is a cornerstone of modern barbering. The beard facial treatment follows a specific protocol:\n\n1. CLEANSE beard with specialized beard wash — regular shampoo strips natural oils\n2. APPLY hot towel to soften hair and open pores beneath the beard\n3. MASSAGE beard oil into the skin beneath — this prevents beardruff and itchiness\n4. COMB through to distribute product evenly from roots to tips\n5. STYLE and shape with balm or wax for hold and definition\n\nMUSTACHE GROOMING requires precision: trim with small sharp scissors when dry, apply warmed wax for hold, and condition regularly with oil to prevent skin irritation underneath.\n\nCOMMON BEARD ISSUES:\n• Beard Dandruff (Beardruff): Caused by dry skin underneath. Solution: Regular exfoliation and moisturizing with beard oil.\n• Ingrown Hairs: Hairs growing back into skin. Solution: Proper exfoliation and growth direction awareness.\n• Itchy Beard: Common in early growth stages. Solution: Keep clean, moisturize, resist scratching.\n• Patchy Growth: Uneven hair density. Solution: Proper nutrition, patience, strategic trimming to blend.\n\nBOARD EXAM ALERT: Beard care product knowledge and common issue identification appear on state board exams.',
-      highlight: 'A WELL-GROOMED BEARD IS A REFLECTION OF THE BARBER WHO MAINTAINS IT',
+      content: "Beard and mustache grooming can include cleansing, comfortable warm-towel service, application of cosmetic beard products, combing, trimming, and styling. Select products according to the client's skin and hair observations and the manufacturer directions.\n\nDo not present beard products as treatments for medical skin conditions or guarantee prevention of ingrown hairs, irritation, or other disorders. If the skin beneath the beard shows a condition that makes service unsafe or appears outside cosmetic-service scope, defer that part of the service and recommend appropriate evaluation.\n\nSTUDY FOCUS: Know safe product handling, client consultation, grooming sequence, and the difference between cosmetic maintenance and medical treatment.",
+      highlight: "COSMETIC GROOMING — CLIENT COMFORT — SAFE PRODUCT USE",
     },
 
     // ═══════════════════════════════════════════
@@ -512,22 +512,22 @@ export const chapter12PremiumContent: ChapterContent = {
         {
           situation: 'A client arrives for a facial massage. During consultation, you notice active cold sores (herpes simplex) around their mouth. The client says they are "just about healed" and insists on proceeding with the service.',
           options: [
-            { letter: 'A', text: 'Proceed with the service but avoid the mouth area', feedback: '❌ Herpes simplex is highly contagious even in healing stages. Performing facial massage can spread the virus to other areas of the face and to you.' },
-            { letter: 'B', text: 'Explain that active cold sores are a contraindication and reschedule when fully healed', feedback: '✅ Correct! Active infections including herpes simplex are absolute contraindications. Professional explanation protects both client and barber.' },
-            { letter: 'C', text: 'Perform the service but wear gloves', feedback: '❌ Gloves do not prevent transmission of the herpes virus through airborne particles or contact with other facial areas.' },
-            { letter: 'D', text: 'Treat the rest of the face and use extra disinfectant after', feedback: '❌ Extra disinfectant does not eliminate the risk of spreading active viral infections during the service.' },
+            { letter: 'A', text: 'Proceed with the service but avoid the mouth area', feedback: '❌ An active or potentially contagious facial condition is a service-safety concern; working around one area does not resolve the broader contact risk.' },
+            { letter: 'B', text: 'Explain that the visible active condition makes the facial service inappropriate today and defer the service', feedback: '✅ Correct. Defer a facial service when an active or potentially contagious condition makes contact unsafe, without diagnosing or prescribing.' },
+            { letter: 'C', text: 'Perform the service but wear gloves', feedback: '❌ Protective equipment does not make an otherwise inappropriate facial service automatically safe.' },
+            { letter: 'D', text: 'Treat the rest of the face and use extra disinfectant after', feedback: '❌ Cleaning and disinfection after service do not replace the decision to avoid an unsafe service in the first place.' },
           ],
           correctAnswer: 'B',
         },
         {
-          situation: 'A client with diabetes requests a facial massage. They mention their doctor said massage is fine. During the service, you notice their skin seems thin and bruises easily with light pressure.',
+          situation: 'During consultation, a client reports a health condition and recent medication change that may affect skin sensitivity. The barber cannot determine from the consultation whether the planned facial service is appropriate.',
           options: [
-            { letter: 'A', text: 'Continue with normal pressure — the doctor said it was fine', feedback: '❌ Doctors may not understand the specific pressure used in facial massage. Diabetic skin often has reduced healing and increased fragility.' },
-            { letter: 'B', text: 'Use extremely light pressure, avoid vigorous movements, and monitor for reactions', feedback: '✅ Correct! Diabetes is a relative contraindication. Use gentle pressure, avoid vigorous massage, and watch for adverse skin reactions.' },
-            { letter: 'C', text: 'Stop the service immediately and refuse all future services', feedback: '❌ Diabetes does not prohibit all facial services — it requires modification and caution, not complete refusal.' },
-            { letter: 'D', text: 'Use deeper pressure to stimulate circulation since diabetics have poor blood flow', feedback: '❌ Deeper pressure on fragile diabetic skin can cause bruising, tissue damage, and delayed healing.' },
+            { letter: 'A', text: 'Proceed normally because the client requested the service', feedback: '❌ Client preference does not remove the barber\'s responsibility to make a safe service decision within scope.' },
+            { letter: 'B', text: 'Diagnose the condition and choose a treatment based on the diagnosis', feedback: '❌ Medical diagnosis and treatment selection are outside barbering scope.' },
+            { letter: 'C', text: 'Defer or modify the service only when safe guidance is clear, and recommend appropriate professional evaluation when safety is uncertain', feedback: '✅ Correct. The barber should stay within cosmetic-service scope, use available product/device guidance, and defer when safety cannot be established.' },
+            { letter: 'D', text: 'Use deeper pressure to test how the skin responds', feedback: '❌ Testing a questionable condition with more aggressive service increases risk and is not an appropriate safety strategy.' },
           ],
-          correctAnswer: 'B',
+          correctAnswer: 'C',
         },
       ],
     },
@@ -538,9 +538,9 @@ export const chapter12PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'absolute-contraindications',
-      title: 'ABSOLUTE CONTRAINDICATIONS — DO NOT TREAT',
-      content: 'These conditions prohibit facial massage and treatment services. When in doubt, refer to a dermatologist or healthcare provider.\n\nACTIVE INFECTIONS:\n• Impetigo — highly contagious bacterial skin infection\n• Herpes simplex (cold sores) — viral, spreads through contact\n• Fungal infections (ringworm/tinea) — contagious, requires medical treatment\n• Active acne with open lesions — risk of spreading bacteria\n• Conjunctivitis (pink eye) — highly contagious, avoid entire face\n\nSKIN CONDITIONS:\n• Severe eczema or psoriasis flare-ups — skin barrier compromised\n• Sunburn or windburn — damaged skin cannot tolerate massage\n• Open wounds or cuts — risk of infection and delayed healing\n• Severe rosacea — massage can worsen inflammation\n• Dermatitis with weeping or oozing — barrier compromised\n\nMEDICAL CONDITIONS & MEDICATIONS:\n• Contagious diseases (flu, COVID-19) — protect other clients and staff\n• Undiagnosed lumps or moles — require medical evaluation first\n• Recent facial surgery — healing tissue is fragile\n• Accutane (isotretinoin) — skin is extremely thin and sensitive\n• Recent chemical peels — skin is healing and vulnerable\n• Blood thinners — increased bruising risk\n• Cancer treatment (chemotherapy/radiation) — skin is fragile and immunocompromised\n• Uncontrolled high blood pressure — massage can elevate it further\n\nRELATIVE CONTRAINDICATIONS — PROCEED WITH CAUTION:\n• Pregnancy — avoid certain essential oils and deep pressure\n• Diabetes — use gentle pressure, monitor for skin reactions\n• Epilepsy — avoid strobe lighting and strong fragrances\n• Asthma — avoid strong scents and aerosol products\n• Allergies — perform patch test before full treatment\n\nBOARD EXAM ALERT: Contraindications appear on every state board exam. Know the difference between absolute (do not treat) and relative (proceed with caution) contraindications.',
-      highlight: 'WHEN IN DOUBT, REFER OUT — PROTECT THE CLIENT, PROTECT YOUR LICENSE',
+      title: 'SERVICE CONTRAINDICATIONS & REFERRAL BOUNDARIES',
+      content: "Contraindications are conditions or findings that can make a planned facial service inappropriate, require modification, or require the barber to defer service. The Chapter 12 repository source emphasizes consultation, active or contagious conditions, open wounds or abrasions, recent procedures, client discomfort, equipment safety, and referral boundaries.\n\nDO NOT DIAGNOSE: A barber may describe observable findings and make a cosmetic service-safety decision, but should not diagnose disease, prescribe treatment, or interpret a medication or medical condition.\n\nDEFER OR MODIFY THE SERVICE WHEN:\n• The skin has an active or potentially contagious condition, open wound, significant irritation, or other finding that makes contact unsafe\n• A recent procedure, health condition, medication, or provider instruction creates uncertainty about whether the planned service is appropriate\n• A product or device label lists a contraindication that applies to the client\n• The client reports pain, burning, dizziness, discomfort, or asks to stop\n\nWhen a concern is outside routine cosmetic service or the barber cannot determine safe service within scope, defer and recommend appropriate professional evaluation. Follow manufacturer directions and applicable state/local rules rather than memorizing a universal medical-condition list.\n\nSTUDY FOCUS: Know the difference between observing a contraindication, modifying or stopping a cosmetic service, and making a medical diagnosis.",
+      highlight: "OBSERVE — STOP OR MODIFY WHEN UNSAFE — REFER WITHOUT DIAGNOSING",
     },
 
     // ═══════════════════════════════════════════
@@ -550,8 +550,8 @@ export const chapter12PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'hot-towel-safety',
       title: 'HOT TOWEL SAFETY PROTOCOLS',
-      content: 'Hot towels are a signature of professional barbering, but improper use can cause serious burns and liability issues. Follow these safety protocols every time.\n\nTEMPERATURE CONTROL:\n• Ideal temperature: 120-140°F (49-60°C)\n• Always test on your own wrist before applying to client\n• Use a thermometer — never guess by touch alone\n• Towels should feel hot but not scalding\n\nAPPLICATION TECHNIQUE:\n• Wring out excess water — dripping towels cause burns and mess\n• Fold towels neatly for even heat distribution\n• Apply to face gently — do not press hard\n• Check client comfort every 30 seconds\n• Remove immediately if client shows discomfort\n\nSAFETY WARNINGS:\n• Never leave a client unattended with hot towels applied\n• Do not use on clients with sensitive skin, rosacea, or sunburn\n• Avoid covering nose and mouth completely\n• Have cool water ready in case of overheating\n• Replace towels that have cooled below body temperature\n\nSANITATION:\n• Use clean, freshly laundered towels for each client\n• Do not reuse towels between clients without washing and sanitizing\n• Store clean towels in a covered, sanitized container\n\nBOARD EXAM ALERT: Hot towel safety is tested on practical exams. Know proper temperature ranges and burn prevention protocols.',
-      highlight: 'A BURNED CLIENT IS A LOST CLIENT — TEMPERATURE CONTROL IS NON-NEGOTIABLE',
+      content: "Hot towels are a traditional barbering service step, but excessive heat can injure a client. Use clean towels, follow applicable shop/equipment guidance, and verify comfort before and during application.\n\nTEMPERATURE & APPLICATION:\n• Use a comfortably warm towel rather than relying on a universal temperature number\n• Check the towel safely before facial application and never apply a towel that feels scalding\n• Keep the nose and mouth unobstructed\n• Use light placement rather than pressure\n• Monitor the client continuously and remove the towel immediately if discomfort occurs\n\nSERVICE SAFETY:\n• Do not use heat on skin that is irritated, injured, or otherwise unsuitable for the planned service\n• Do not leave the client unattended while heat is applied\n• Follow manufacturer directions and applicable rules for towel-heating equipment\n\nSANITATION:\n• Use clean towels for each client\n• Handle used linens separately from clean supplies\n• Launder and store towels according to shop procedures and applicable rules\n\nSTUDY FOCUS: Heat safety depends on client comfort, clean handling, manufacturer directions, and stopping immediately when the service becomes unsafe.",
+      highlight: "COMFORTABLE WARMTH — CLEAR AIRWAY — CONTINUOUS MONITORING",
     },
 
     // ═══════════════════════════════════════════
@@ -561,7 +561,7 @@ export const chapter12PremiumContent: ChapterContent = {
       type: 'featureGrid',
       id: 'memory-tricks',
       title: 'MEMORY REINFORCEMENT — NEVER FORGET',
-      subtitle: 'Quick mental hooks for board exam success',
+      subtitle: 'Quick mental hooks for Chapter 12 review',
       features: [
         {
           icon: 'Brain',
@@ -592,9 +592,9 @@ export const chapter12PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'board-exam-alerts',
-      title: 'BOARD EXAM CRITICAL ALERTS',
-      content: "These facial massage concepts appear on EVERY state board exam. Miss them, and you fail.\n\n1. Men's skin is approximately 25% thicker than women's\n2. Men produce more sebum than women\n3. Effleurage is the foundation stroke — begin and end with it\n4. Petrissage is kneading; use on jawline, avoid eye area\n5. Tapotement is tapping; invigorates but avoid inflamed skin\n6. Friction generates heat; opens pores and enhances absorption\n7. Feathering is the gentlest stroke; always end with it\n8. Double cleanse: oil-based first, water-based second\n9. Hot towels should be 120-140°F for facial treatments\n10. Clay masks absorb oil; sheet masks deliver hydration\n11. Kaolin clay is gentlest; bentonite is strongest detox\n12. Always perform patch test for sensitive skin clients\n13. Active infections are absolute contraindications — refer out\n14. Diabetes requires gentle pressure and monitoring\n15. Accutane users have extremely sensitive skin — modify treatment\n16. Know your scope — barbers do not diagnose or treat medical conditions\n17. Sanitize all tools between clients without exception\n18. Facial massage duration: 10-15 minutes for standard treatment\n19. Work from neck upward toward forehead for lymphatic drainage\n20. Beard oil goes on the SKIN beneath the beard, not just the hair\n21. Contraindications: absolute = do not treat; relative = modify and proceed with caution\n22. pH-balanced cleansers maintain the skin's acid mantle at 4.5-5.5\n23. Astringents control oil; toners balance and hydrate — know the difference\n24. Micellar water is a gentle no-rinse cleanser ideal for sensitive skin\n25. Exfoliation removes dead skin cells and prevents ingrown hairs\n26. Hyaluronic acid holds 1000x its weight in water — ultimate hydrator\n27. Salicylic acid is oil-soluble and penetrates pores for deep cleaning\n28. Vitamin C brightens skin and protects against environmental damage\n29. Ceramides restore the skin barrier and lock in moisture\n30. SPF is essential daily — UV damage is the primary cause of premature aging",
-      highlight: 'MEMORIZE THESE 30 POINTS',
+      title: 'CORE CHAPTER 12 REVIEW',
+      content: "Use this section as a chapter review, not as a prediction of any specific licensing exam. Exam content varies by jurisdiction and provider.\n\n1. Identify facial muscles, nerves, arteries, and veins relevant to service\n2. Differentiate effleurage, petrissage, friction, tapotement, vibration, and feathering\n3. Apply controlled pressure, rhythm, direction, and client-comfort checks\n4. Use consultation and observation before selecting a cosmetic facial service\n5. Match cosmetic products to observable skin needs and manufacturer directions\n6. Keep sanitation and contamination prevention active throughout the service\n7. Recognize findings that make a service unsafe or require modification\n8. Stop or defer service when a contraindication is present\n9. Keep diagnosis, prescribing, and medical treatment outside barbering scope\n10. Follow device and product instructions instead of assuming universal settings\n11. Use steam, heat, towels, electrical devices, and other modalities only within safe operating guidance\n12. Document relevant consultation findings, products, service decisions, and reactions\n13. Maintain client comfort, communication, and professional boundaries\n14. Distinguish cosmetic maintenance from medical care\n15. Refer appropriately when a concern is outside routine cosmetic service\n\nThe Chapter 12 repository source supports these subject areas. C12-2 does not claim that every item appears on every state board exam or independently verify a current licensing blueprint.",
+      highlight: "SOURCE-COVERED CONCEPTS — NO UNIVERSAL EXAM CLAIMS",
     },
 
     // ═══════════════════════════════════════════
@@ -609,12 +609,12 @@ export const chapter12PremiumContent: ChapterContent = {
         {
           action: 'Practice the Six Massage Movements',
           description: 'Perform effleurage, petrissage, tapotement, friction, vibration, and feathering on a practice mannequin or willing client. Focus on rhythm, pressure, and smooth transitions.',
-          benefit: 'Builds muscle memory for therapeutic touch',
+          benefit: 'Builds consistency in cosmetic massage technique',
           timeframe: '15 minutes',
         },
         {
           action: 'Analyze Five Clients\' Skin Types',
-          description: 'Examine 5 clients\' skin before their next service. Note oiliness, dryness, sensitivity, or combination patterns. Practice your diagnostic vocabulary.',
+          description: 'Observe 5 clients\' skin before their next service. Note cosmetic patterns such as oiliness, dryness, sensitivity, or combination areas. Practice clear observation vocabulary without diagnosing.',
           benefit: 'Develops skin analysis precision',
           timeframe: 'During your next 5 services',
         },
@@ -639,7 +639,7 @@ export const chapter12PremiumContent: ChapterContent = {
     {
       type: 'quote',
       id: 'gentlemans-atelier-pledge',
-      quote: 'I pledge to see every client\'s face as a canvas for transformation. I will analyze before I treat, respect contraindications without exception, and touch with intention and skill. I understand that the trust placed in my chair is built on knowledge, care, and results. A master barber does not just cut hair — they rejuvenate skin, restore confidence, and elevate the grooming ritual into an art form.',
+      quote: 'I will approach every facial service with careful observation, client communication, sanitation, controlled technique, and respect for contraindications. I will keep cosmetic service separate from medical diagnosis or treatment and will defer or refer when a concern is outside my scope. Professional trust is built through safe decisions, clear boundaries, and consistent care.',
     },
   ],
 }
