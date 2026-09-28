@@ -376,7 +376,7 @@ export const chapter11PremiumQuizQuestions: QuizQuestion[] = [
     answer_a: 'Malassezia',
     answer_b: 'Staphylococcus',
     answer_c: 'A parasitic mite',
-    answer_d: 'A dermatophyte identified as tinea',
+    answer_d: 'A bacterial condition unrelated to dandruff',
     correct_answer: 'a',
     explanation: 'The repository Chapter 11 source summary associates dandruff with Malassezia.',
     difficulty: 'easy',
