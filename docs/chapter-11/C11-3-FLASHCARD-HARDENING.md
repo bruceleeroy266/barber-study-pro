@@ -73,3 +73,6 @@ The hardened 80-card deck now covers:
 ## Next phase
 
 **C11-4 — Assessment Source & Adversarial Hardening.**
+
+
+Verification trigger: PR #127 is tested against `main`; no merge authorization is implied.
