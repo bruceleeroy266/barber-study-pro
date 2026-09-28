@@ -25,6 +25,7 @@ import { getChapter10MappingProvider } from './adapters/chapter-10-adapter'
 import { getChapter11MappingProvider } from './adapters/chapter-11-adapter'
 import { getChapter12MappingProvider } from './adapters/chapter-12-adapter'
 import { getChapter13MappingProvider } from './adapters/chapter-13-adapter'
+import { getChapter14MappingProvider } from './adapters/chapter-14-adapter'
 import {
   Chapter1DetectionProvider,
   createChapter1DetectionProvider,
@@ -90,6 +91,11 @@ import {
   createChapter13DetectionProvider,
   type Chapter13DetectionProviderConfig,
 } from './adapters/chapter-13-detection-provider'
+import {
+  Chapter14DetectionProvider,
+  createChapter14DetectionProvider,
+  type Chapter14DetectionProviderConfig,
+} from './adapters/chapter-14-detection-provider'
 
 // ───────────────────────────────────────────────
 // Concept Detection Provider Interface
@@ -161,6 +167,8 @@ class MappingProviderRegistry {
     this.registerProvider(getChapter12MappingProvider())
     // Register Chapter 13 (C13-7 targeted remediation/reassessment)
     this.registerProvider(getChapter13MappingProvider())
+    // Register Chapter 14 (C14-7 targeted remediation/reassessment)
+    this.registerProvider(getChapter14MappingProvider())
   }
 
   /**
@@ -459,6 +467,15 @@ export function initializeChapter13DetectionProvider(
   return provider
 }
 
+export function initializeChapter14DetectionProvider(
+  config: Chapter14DetectionProviderConfig
+): Chapter14DetectionProvider {
+  const provider = createChapter14DetectionProvider(config)
+  const registry = getDetectionProviderRegistry()
+  registry.registerProvider(provider)
+  return provider
+}
+
 /**
  * Initialize and register the detection provider for a chapter (C3-3).
  *
@@ -509,6 +526,9 @@ export function initializeChapterDetectionProvider(
   }
   if (chapterId === 'ch-13') {
     return initializeChapter13DetectionProvider(config)
+  }
+  if (chapterId === 'ch-14') {
+    return initializeChapter14DetectionProvider(config)
   }
   return undefined
 }
