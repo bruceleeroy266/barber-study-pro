@@ -14,6 +14,9 @@ import {
   getChapter13ReassessmentReserve,
 } from './reassessment-reserve'
 import { CHAPTER13_CONCEPT_FAMILY_IDS } from './concepts'
+import { getChapterDetectionProvider, isConceptDetectionSupported } from '@/lib/remediation/chapter-registry'
+import { getChapterContentProvider, hasChapterContentProvider } from '@/lib/remediation/content-provider-registry'
+import { getCanonicalMappingProvider, hasCanonicalMappingProvider } from '@/lib/reassessment/provider-registry'
 
 const evidence = (
   conceptFamilyId: Chapter13EvidenceRecord['conceptFamilyId'],
@@ -162,5 +165,75 @@ describe('C13-7 targeted remediation and recovery', () => {
     expect(CHAPTER13_REMEDIATION_RULES.ordinaryReassessmentPassPercent).toBe(80)
     expect(CHAPTER13_REMEDIATION_RULES.safetyReassessmentQuestionCount).toBe(5)
     expect(CHAPTER13_REMEDIATION_RULES.safetyReassessmentPassPercent).toBe(100)
+  })
+})
+
+
+describe('C13-7 live remediation/reassessment provider wiring', () => {
+  it('registers Chapter 13 for detected-gap targeted remediation assignments', () => {
+    expect(isConceptDetectionSupported('ch-13')).toBe(true)
+    const provider = getChapterDetectionProvider('ch-13')
+    expect(provider).toBeDefined()
+
+    for (const conceptId of CHAPTER13_CONCEPT_FAMILY_IDS) {
+      const assignments = provider!.buildAssignmentsForConcept(conceptId)
+      expect(assignments.some((item) => item.assignmentType === 'content_block'), conceptId).toBe(true)
+      expect(assignments.some((item) => item.assignmentType === 'flashcard'), conceptId).toBe(true)
+    }
+  })
+
+  it('registers Chapter 13 content serving and can resolve every fresh reassessment question', () => {
+    expect(hasChapterContentProvider('ch-13')).toBe(true)
+    const provider = getChapterContentProvider('ch-13')!
+
+    for (const conceptId of CHAPTER13_CONCEPT_FAMILY_IDS) {
+      expect(provider.getContentBlockIdsForConcept(conceptId).length, conceptId).toBeGreaterThan(0)
+      expect(provider.getFlashcardIdsForConcept(conceptId).length, conceptId).toBeGreaterThan(0)
+
+      const fresh = getChapter13ReassessmentReserve(conceptId)
+      expect(fresh).toHaveLength(5)
+      for (const question of fresh) {
+        const served = provider.getQuizQuestionById(question.id)
+        expect(served, question.id).toBeTruthy()
+        expect(served!.id).toBe(question.id)
+        expect(served!.correct_answer).toBe(question.correctAnswer)
+      }
+    }
+  })
+
+  it('registers Chapter 13 canonical reassessment mapping with exactly five fresh items per concept', () => {
+    expect(hasCanonicalMappingProvider('ch-13')).toBe(true)
+    const provider = getCanonicalMappingProvider('ch-13')
+    expect(provider.getAllConceptIds()).toEqual(expect.arrayContaining([...CHAPTER13_CONCEPT_FAMILY_IDS]))
+
+    for (const conceptId of CHAPTER13_CONCEPT_FAMILY_IDS) {
+      const ids = provider.getQuestionsForConcept(conceptId)
+      expect(ids, conceptId).toHaveLength(5)
+      expect(ids.every((id) => id.startsWith('r13-')), conceptId).toBe(true)
+      expect(new Set(ids).size, conceptId).toBe(5)
+
+      for (const id of ids) {
+        expect(provider.getConceptForQuestion(id), id).toBe(conceptId)
+        expect(provider.isQuestionMappedToConcept(id, conceptId), id).toBe(true)
+      }
+    }
+  })
+
+  it('proves the live weak-concept chain resolves targeted material plus the correct five-question pool', () => {
+    const detection = getChapterDetectionProvider('ch-13')!
+    const content = getChapterContentProvider('ch-13')!
+    const reassessment = getCanonicalMappingProvider('ch-13')
+
+    for (const conceptId of CHAPTER13_CONCEPT_FAMILY_IDS) {
+      const assignments = detection.buildAssignmentsForConcept(conceptId)
+      const questionIds = reassessment.getQuestionsForConcept(conceptId)
+
+      expect(assignments.length, conceptId).toBeGreaterThan(0)
+      expect(questionIds, conceptId).toHaveLength(5)
+      expect(
+        questionIds.every((questionId) => content.getQuizQuestionById(questionId)?.id === questionId),
+        conceptId,
+      ).toBe(true)
+    }
   })
 })
