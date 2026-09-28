@@ -121,3 +121,6 @@ The Chapter 11 content basis remains the repository `CHAPTER-11-MATERIAL-SUMMARY
 ## Next phase
 
 **C11-6 — Safety Escalation.**
+
+
+Verification trigger: PR #129 is tested against `main`; no merge authorization is implied.
