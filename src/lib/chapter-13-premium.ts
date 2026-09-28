@@ -527,6 +527,56 @@ export const chapter13PremiumContent: ChapterContent = {
       ],
     },
 
+    // Applied decision practice — durable scenario/application evidence
+    {
+      type: 'scenarioBlock',
+      id: 'shaving-application-scenarios',
+      title: 'SHAVING APPLICATION PRACTICE',
+      subtitle: 'Apply Chapter 13 technique, safety, scope, and client-care decisions',
+      scenarios: [
+        {
+          situation: 'Halfway through a mapped shaving area, the client\'s beard changes direction. What should guide the next razor stroke?',
+          options: [
+            { letter: 'A', text: 'Continue the printed map direction even when the grain changes', feedback: '❌ The area map organizes the service, but the client\'s actual growth pattern controls the stroke.' },
+            { letter: 'B', text: 'Re-check the local grain and adjust the stroke direction', feedback: '✅ Correct. Grain changes require the barber to adapt the stroke to the client\'s actual growth.' },
+            { letter: 'C', text: 'Increase pressure so the razor crosses the grain change', feedback: '❌ Extra pressure increases risk and does not solve a direction mismatch.' },
+            { letter: 'D', text: 'Switch automatically to an against-grain close shave', feedback: '❌ Against-grain work is not an automatic response to a grain change.' },
+          ],
+          correctAnswer: 'B',
+        },
+        {
+          situation: 'During a razor stroke, the skin begins to bunch in front of the blade. What should the barber correct before continuing?',
+          options: [
+            { letter: 'A', text: 'Increase blade pressure', feedback: '❌ More pressure increases risk.' },
+            { letter: 'B', text: 'Lengthen the stroke across the next area', feedback: '❌ Longer strokes move farther from the controlled support point.' },
+            { letter: 'C', text: 'Restore controlled skin support and tension, then continue with a short controlled stroke', feedback: '✅ Correct. Stable skin support and controlled tension improve razor control.' },
+            { letter: 'D', text: 'Flatten the blade completely against the skin', feedback: '❌ The razor still requires a controlled working angle.' },
+          ],
+          correctAnswer: 'C',
+        },
+        {
+          situation: 'A razor nick produces visible blood during the shave. What is the correct immediate response?',
+          options: [
+            { letter: 'A', text: 'Finish the area before stopping', feedback: '❌ Visible blood requires an immediate response.' },
+            { letter: 'B', text: 'Cover the area with lather and continue', feedback: '❌ Lather does not replace exposure-control procedure.' },
+            { letter: 'C', text: 'Stop the service and follow standard precautions and the applicable exposure procedure', feedback: '✅ Correct. Blood exposure requires an immediate pause and the applicable exposure-control process.' },
+            { letter: 'D', text: 'Use a shared product applicator directly on the nick', feedback: '❌ Shared direct-contact application can create cross-contamination risk.' },
+          ],
+          correctAnswer: 'C',
+        },
+        {
+          situation: 'A client requests a shaving method that conflicts with safe technique or current local requirements. What should the barber do?',
+          options: [
+            { letter: 'A', text: 'Perform it because the client requested it', feedback: '❌ Client preference does not override safety or legal scope.' },
+            { letter: 'B', text: 'Explain the boundary and offer a safe, permitted alternative', feedback: '✅ Correct. Professional practice includes communicating limits and adapting the service appropriately.' },
+            { letter: 'C', text: 'Proceed if the client signs a waiver', feedback: '❌ A waiver does not override applicable safety or legal requirements.' },
+            { letter: 'D', text: 'Ask the client to choose the razor type without guidance', feedback: '❌ The barber remains responsible for safe, permitted service decisions.' },
+          ],
+          correctAnswer: 'B',
+        },
+      ],
+    },
+
     // Section 14: Infection Control and Safety
     {
       type: 'contentBlock',
