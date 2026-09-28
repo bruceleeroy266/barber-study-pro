@@ -8,6 +8,8 @@ import { isTypingTarget } from '@/lib/keyboard-shortcuts'
 import { Flag } from 'lucide-react'
 import { Flashcard } from '@/types'
 import { Button, Card, Badge, ProgressBar, EmptyState, Alert } from '@/components/ui'
+import { getFlashcardEvidenceConcept, isG7EvidenceChapter } from '@/lib/concept-mastery/activity-evidence-registry'
+import { loadChapterActivityEvidence, persistChapterActivityEvidence } from '@/lib/concept-mastery/activity-evidence'
 
 interface FlashcardClientProps {
   flashcards: Flashcard[]
@@ -85,6 +87,20 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
     const validIds = [...masteredIds].filter((id) => flashcards.some((card) => card.id === id))
     localStorage.setItem(getMasteryStorageKey(chapterId, userId), JSON.stringify(validIds))
   }, [masteredIds, flashcards, chapterId, userId])
+
+  useEffect(() => {
+    if (!userId || !isG7EvidenceChapter(chapterId)) return
+    let cancelled = false
+    void loadChapterActivityEvidence(userId, chapterId).then((rows) => {
+      if (cancelled) return
+      const durableMastered = rows
+        .filter((row) => row.source === 'flashcard' && row.is_correct)
+        .map((row) => row.item_id)
+      if (!durableMastered.length) return
+      setMasteredIds((previous) => new Set([...previous, ...durableMastered]))
+    })
+    return () => { cancelled = true }
+  }, [userId, chapterId])
 
   // Resolve the effective deck based on study mode.
   const effectiveFlashcards = useMemo(() => {
@@ -210,7 +226,7 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
     }
   }
 
-  const markCurrentCardMastered = () => {
+  const markCurrentCardMastered = async () => {
     if (!currentCard) return
     setMasteredIds((previous) => {
       if (previous.has(currentCard.id)) return previous
@@ -218,6 +234,21 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
       next.add(currentCard.id)
       return next
     })
+
+    if (userId && isG7EvidenceChapter(chapterId)) {
+      const conceptId = getFlashcardEvidenceConcept(chapterId, currentCard.id)
+      if (conceptId) {
+        await persistChapterActivityEvidence({
+          userId,
+          chapterId,
+          conceptId,
+          source: 'flashcard',
+          itemId: currentCard.id,
+          selectedAnswer: 'got_it',
+          isCorrect: true,
+        })
+      }
+    }
   }
 
   const toggleFlag = async () => {
@@ -229,6 +260,21 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
 
     const cardId = currentCard.id
     const willBeFlagged = !flaggedIds.has(cardId)
+
+    if (willBeFlagged && isG7EvidenceChapter(chapterId)) {
+      const conceptId = getFlashcardEvidenceConcept(chapterId, cardId)
+      if (conceptId) {
+        void persistChapterActivityEvidence({
+          userId,
+          chapterId,
+          conceptId,
+          source: 'flashcard',
+          itemId: cardId,
+          selectedAnswer: 'needs_practice',
+          isCorrect: false,
+        })
+      }
+    }
 
     // Optimistically update local state.
     setFlaggedIds((prev) => {
