@@ -56,7 +56,8 @@ describe('C12-4 45-question assessment audit and repair', () => {
       expect(new Set(options.map((option) => option.trim().toLowerCase())).size, question.id).toBe(4)
       expect(['a', 'b', 'c', 'd'], question.id).toContain(question.correct_answer)
       expect(optionFor(question, question.correct_answer)?.trim().length, question.id).toBeGreaterThan(0)
-      expect(question.explanation.trim().length, question.id).toBeGreaterThan(35)
+      expect(question.explanation, question.id).toBeTruthy()
+      expect(question.explanation?.trim().length ?? 0, question.id).toBeGreaterThan(35)
     }
   })
 
