@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 import { MessageSquare, CheckCircle, XCircle, Award, ChevronRight } from 'lucide-react'
 import type { ChapterTheme } from '@/lib/chapter-content'
 import { defaultTheme } from '@/lib/chapter-content'
-import { getScenarioEvidenceConcept, isG7EvidenceChapter } from '@/lib/concept-mastery/activity-evidence-registry'
+import { getScenarioEvidenceConcept, isUnifiedActivityEvidenceChapter } from '@/lib/concept-mastery/activity-evidence-registry'
 import { persistChapterActivityEvidence } from '@/lib/concept-mastery/activity-evidence'
 import { orderInteractiveAnswers } from '@/lib/presentation/stable-answer-order'
 
@@ -59,7 +59,7 @@ export default function ProScenario({ scenarios, theme, onComplete, chapterId, u
     // Keep completion tied to an actual student response even if this
     // handler is invoked outside the normal disabled-button UI path.
     if (revealed.has(scenarioIdx) || selectedAnswers[scenarioIdx] === undefined) return
-    if (chapterId && userId && sectionId && isG7EvidenceChapter(chapterId)) {
+    if (chapterId && userId && sectionId && isUnifiedActivityEvidenceChapter(chapterId)) {
       const conceptId = getScenarioEvidenceConcept(chapterId, sectionId, scenarioIdx)
       const selected = selectedAnswers[scenarioIdx]
       if (conceptId && selected !== undefined) {

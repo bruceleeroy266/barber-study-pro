@@ -8,7 +8,7 @@ import { isTypingTarget } from '@/lib/keyboard-shortcuts'
 import { Flag } from 'lucide-react'
 import { Flashcard } from '@/types'
 import { Button, Card, Badge, ProgressBar, EmptyState, Alert } from '@/components/ui'
-import { getFlashcardEvidenceConcept, isG7EvidenceChapter } from '@/lib/concept-mastery/activity-evidence-registry'
+import { getFlashcardEvidenceConcept, isUnifiedActivityEvidenceChapter } from '@/lib/concept-mastery/activity-evidence-registry'
 import { loadChapterActivityEvidence, persistChapterActivityEvidence } from '@/lib/concept-mastery/activity-evidence'
 
 interface FlashcardClientProps {
@@ -89,7 +89,7 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
   }, [masteredIds, flashcards, chapterId, userId])
 
   useEffect(() => {
-    if (!userId || !isG7EvidenceChapter(chapterId)) return
+    if (!userId || !isUnifiedActivityEvidenceChapter(chapterId)) return
     let cancelled = false
     void loadChapterActivityEvidence(userId, chapterId).then((rows) => {
       if (cancelled) return
@@ -235,7 +235,7 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
       return next
     })
 
-    if (userId && isG7EvidenceChapter(chapterId)) {
+    if (userId && isUnifiedActivityEvidenceChapter(chapterId)) {
       const conceptId = getFlashcardEvidenceConcept(chapterId, currentCard.id)
       if (conceptId) {
         await persistChapterActivityEvidence({
@@ -261,7 +261,7 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
     const cardId = currentCard.id
     const willBeFlagged = !flaggedIds.has(cardId)
 
-    if (willBeFlagged && isG7EvidenceChapter(chapterId)) {
+    if (willBeFlagged && isUnifiedActivityEvidenceChapter(chapterId)) {
       const conceptId = getFlashcardEvidenceConcept(chapterId, cardId)
       if (conceptId) {
         void persistChapterActivityEvidence({

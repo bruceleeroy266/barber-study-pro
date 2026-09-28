@@ -78,6 +78,10 @@ import { detectAllConceptGaps as detectAllChapter11ConceptGaps } from '@/lib/cha
 import { chapter11ConceptFamilies } from '@/lib/chapter-11-concepts/concepts'
 import { chapter11ContentConceptMappings, chapter11FlashcardConceptMappings } from '@/lib/chapter-11-concepts/mappings'
 
+import { detectAllConceptGaps as detectAllChapter12ConceptGaps } from '@/lib/chapter-12-concepts/detection'
+import { chapter12ConceptFamilies } from '@/lib/chapter-12-concepts/concepts'
+import { chapter12FlashcardConceptMappings, chapter12RemediationContentConceptMappings } from '@/lib/chapter-12-concepts/mappings'
+
 // ───────────────────────────────────────────────
 // Provider Contract
 // ───────────────────────────────────────────────
@@ -509,6 +513,31 @@ const chapter11Provider: ChapterDetectionProvider = {
   },
 }
 
+
+const chapter12ContentMappingsProjected = chapter12RemediationContentConceptMappings.map((m) => ({
+  contentBlockId: m.contentBlockId,
+  conceptId: m.conceptFamilyId as string,
+}))
+const chapter12FlashcardMappingsProjected = chapter12FlashcardConceptMappings.map((m) => ({
+  flashcardId: m.flashcardId as string,
+  conceptId: m.conceptFamilyId as string,
+}))
+
+const chapter12Provider: ChapterDetectionProvider = {
+  chapterId: 'ch-12',
+  detectAll(attempts) {
+    const out = new Map<ConceptId, ConceptDetectionResult>()
+    for (const [conceptId, result] of detectAllChapter12ConceptGaps(attempts)) out.set(conceptId, result)
+    return out
+  },
+  getConceptName(conceptId) {
+    return chapter12ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? conceptId
+  },
+  buildAssignmentsForConcept(conceptId) {
+    return buildAssignments(conceptId, chapter12ContentMappingsProjected, chapter12FlashcardMappingsProjected)
+  },
+}
+
 // ───────────────────────────────────────────────
 // Registry
 // ───────────────────────────────────────────────
@@ -525,6 +554,7 @@ const providers = new Map<ChapterId, ChapterDetectionProvider>([
   ['ch-9', chapter9Provider],
   ['ch-10', chapter10Provider],
   ['ch-11', chapter11Provider],
+  ['ch-12', chapter12Provider],
 ])
 
 /**
