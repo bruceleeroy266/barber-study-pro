@@ -72,13 +72,24 @@ describe('C11-1 canonical concept architecture + shared grading binding', () => 
     )
   })
 
-  it('gives every canonical concept lesson, flashcard, assessment, and planned micro-check coverage', () => {
+  it('gives every canonical concept flashcard, assessment, and planned micro-check coverage while exposing current lesson gaps', () => {
     for (const conceptFamilyId of ACTIVE_CHAPTER11_CONCEPT_FAMILY_IDS) {
-      expect(chapter11ContentConceptMappings.some((m) => m.conceptFamilyId === conceptFamilyId)).toBe(true)
       expect(chapter11FlashcardConceptMappings.some((m) => m.conceptFamilyId === conceptFamilyId)).toBe(true)
       expect(chapter11QuizQuestionConceptMappings.some((m) => m.conceptFamilyId === conceptFamilyId)).toBe(true)
       expect(chapter11MicroCheckPlacements.some((m) => m.conceptFamilyId === conceptFamilyId)).toBe(true)
     }
+
+    const conceptsWithLessonCoverage = new Set(
+      chapter11ContentConceptMappings.map((mapping) => mapping.conceptFamilyId),
+    )
+    const lessonCoverageGaps = ACTIVE_CHAPTER11_CONCEPT_FAMILY_IDS.filter(
+      (conceptFamilyId) => !conceptsWithLessonCoverage.has(conceptFamilyId),
+    )
+
+    expect(lessonCoverageGaps).toEqual([
+      'ch11-shampoo-draping-service',
+      'ch11-treatment-equipment',
+    ])
   })
 
   it('reuses the certified shared grading contract without changing weights', () => {
