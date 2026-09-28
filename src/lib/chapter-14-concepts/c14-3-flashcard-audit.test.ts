@@ -65,7 +65,9 @@ describe('C14-3 flashcard audit and concept mapping', () => {
 
   it('adds a real higher-complexity tier without making every card hard', () => {
     const counts = chapter14PremiumFlashcards.reduce<Record<string, number>>((acc, card) => {
-      acc[card.difficulty] = (acc[card.difficulty] ?? 0) + 1
+      expect(card.difficulty).not.toBeNull()
+      const difficulty = card.difficulty ?? 'missing'
+      acc[difficulty] = (acc[difficulty] ?? 0) + 1
       return acc
     }, {})
 
