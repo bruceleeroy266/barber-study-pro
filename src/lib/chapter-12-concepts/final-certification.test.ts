@@ -319,7 +319,7 @@ describe('C12-8 final Chapter 12 end-to-end certification', () => {
     expect(page).toContain("attempt.quiz_id === 'quiz-12'")
     expect(page).toContain("attempt.target_concept_id?.startsWith('ch12-')")
     expect(page).toContain('chapter12Diagnostics.safetyIntervention')
-    expect(page).toContain("Chapter 12 — Men's Facial Massage and Treatments")
+    expect(page).toContain('Chapter 12 — Men&apos;s Facial Massage and Treatments')
     expect(schoolPanel).toContain('href={`/instructor/student/${row.studentId}`}')
     expect(schoolPanel).toContain('View the same mastery diagnostics used by instructors')
   })
