@@ -42,11 +42,11 @@ export const chapter12FlashcardConceptMappings: readonly Chapter12FlashcardConce
   ...[1,2,111,112,115].map((n) => ({ flashcardId: fc(n), conceptFamilyId: 'ch12-client-care-professional-practice' as const })),
   ...Array.from({ length: 33 }, (_, i) => i + 3).map((n) => ({ flashcardId: fc(n), conceptFamilyId: 'ch12-facial-anatomy-neurovascular' as const })),
   ...Array.from({ length: 14 }, (_, i) => i + 36).map((n) => ({ flashcardId: fc(n), conceptFamilyId: 'ch12-massage-principles-manipulations' as const })),
-  ...[52,53,55,57,58,59,60,61,62,63,64,65,67,68,69,70,71,72,73,74,75,76,77,78,109,110].map((n) => ({ flashcardId: fc(n), conceptFamilyId: 'ch12-equipment-electrotherapy' as const })),
-  ...Array.from({ length: 19 }, (_, i) => i + 82).map((n) => ({ flashcardId: fc(n), conceptFamilyId: 'ch12-skin-analysis-product-selection' as const })),
-  ...[51,101,102,103,104,105,106,107,108].map((n) => ({ flashcardId: fc(n), conceptFamilyId: 'ch12-facial-treatment-procedures' as const })),
+  ...[52,53,55,57,58,59,60,61,62,63,64,65,67,68,69,70,71,72,73,74,75,76,77,78,103,104,109,110].map((n) => ({ flashcardId: fc(n), conceptFamilyId: 'ch12-equipment-electrotherapy' as const })),
+  ...[...Array.from({ length: 19 }, (_, i) => i + 82),105,106].map((n) => ({ flashcardId: fc(n), conceptFamilyId: 'ch12-skin-analysis-product-selection' as const })),
+  ...[51,101,102,108].map((n) => ({ flashcardId: fc(n), conceptFamilyId: 'ch12-facial-treatment-procedures' as const })),
   ...[113,114].map((n) => ({ flashcardId: fc(n), conceptFamilyId: 'ch12-sanitation-infection-control' as const })),
-  ...[50,54,56,66,79,80,81].map((n) => ({ flashcardId: fc(n), conceptFamilyId: 'ch12-contraindications-service-safety' as const })),
+  ...[50,54,56,66,79,80,81,107].map((n) => ({ flashcardId: fc(n), conceptFamilyId: 'ch12-contraindications-service-safety' as const })),
 ]
 
 const q = (n: number): `qq-12-${string}` => `qq-12-${String(n).padStart(3, '0')}`
