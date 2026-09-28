@@ -4,6 +4,8 @@ import { useMemo, useState } from 'react'
 import { MessageSquare, CheckCircle, XCircle, Award, ChevronRight } from 'lucide-react'
 import type { ChapterTheme } from '@/lib/chapter-content'
 import { defaultTheme } from '@/lib/chapter-content'
+import { getScenarioEvidenceConcept, isG7EvidenceChapter } from '@/lib/concept-mastery/activity-evidence-registry'
+import { persistChapterActivityEvidence } from '@/lib/concept-mastery/activity-evidence'
 import { orderInteractiveAnswers } from '@/lib/presentation/stable-answer-order'
 
 interface ProScenarioOption {
@@ -25,9 +27,12 @@ interface ProScenarioProps {
   scenarios: ProScenarioItem[]
   theme?: ChapterTheme
   onComplete?: () => void
+  chapterId?: string
+  userId?: string
+  sectionId?: string
 }
 
-export default function ProScenario({ scenarios, theme, onComplete }: ProScenarioProps) {
+export default function ProScenario({ scenarios, theme, onComplete, chapterId, userId, sectionId }: ProScenarioProps) {
   const t = theme || defaultTheme
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({})
   const [revealed, setRevealed] = useState<Set<number>>(new Set())
@@ -54,6 +59,22 @@ export default function ProScenario({ scenarios, theme, onComplete }: ProScenari
     // Keep completion tied to an actual student response even if this
     // handler is invoked outside the normal disabled-button UI path.
     if (revealed.has(scenarioIdx) || selectedAnswers[scenarioIdx] === undefined) return
+    if (chapterId && userId && sectionId && isG7EvidenceChapter(chapterId)) {
+      const conceptId = getScenarioEvidenceConcept(chapterId, sectionId, scenarioIdx)
+      const selected = selectedAnswers[scenarioIdx]
+      if (conceptId && selected !== undefined) {
+        void persistChapterActivityEvidence({
+          userId,
+          chapterId,
+          conceptId,
+          source: 'scenario_application',
+          itemId: `${sectionId}:${scenarioIdx}`,
+          selectedAnswer: selected,
+          isCorrect: selected === scenarios[scenarioIdx]?.correctAnswer,
+        })
+      }
+    }
+
     const next = new Set(revealed).add(scenarioIdx)
     setRevealed(next)
     if (next.size === scenarios.length) onComplete?.()

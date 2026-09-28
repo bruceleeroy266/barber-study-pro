@@ -27,6 +27,7 @@ export interface Chapter7InstructorQuizAttempt {
   completed_at: string
   is_reassessment?: boolean | null
   target_concept_id?: string | null
+  remediation_cycle_id?: string | null
 }
 
 export interface Chapter7InstructorRemediationCycle {
@@ -53,6 +54,7 @@ export interface Chapter7InstructorDiagnosticSummary {
   overallConfidence: Chapter7Confidence
   chapterAssessmentPercent: number | null
   microCheckPercent: number | null
+  remediationReassessmentPercent: number | null
   strongestConcepts: Chapter7InstructorConceptDiagnostic[]
   weakestConcepts: Chapter7InstructorConceptDiagnostic[]
   concepts: Chapter7InstructorConceptDiagnostic[]
@@ -248,6 +250,46 @@ function overallConfidence(concepts: readonly Chapter7InstructorConceptDiagnosti
   return labels[Math.max(0, Math.min(4, Math.floor(averageRank)))]
 }
 
+interface Chapter7LatestFormalReassessment {
+  percent: number | null
+  answeredCount: number
+  conceptFamilyId: Chapter7ConceptFamilyId | null
+}
+
+function latestFormalReassessment(
+  studentId: string,
+  attempts: readonly Chapter7InstructorQuizAttempt[],
+): Chapter7LatestFormalReassessment {
+  const eligible = attempts
+    .filter((attempt) => attempt.is_reassessment && isChapter7ConceptFamilyId(attempt.target_concept_id))
+    .sort((a, b) => new Date(b.completed_at).getTime() - new Date(a.completed_at).getTime())
+
+  const latest = eligible[0]
+  if (!latest || !isChapter7ConceptFamilyId(latest.target_concept_id)) {
+    return { percent: null, answeredCount: 0, conceptFamilyId: null }
+  }
+
+  const targetConceptId = latest.target_concept_id
+  const grouped = latest.remediation_cycle_id
+    ? eligible.filter(
+        (attempt) =>
+          attempt.remediation_cycle_id === latest.remediation_cycle_id &&
+          attempt.target_concept_id === targetConceptId,
+      )
+    : [latest]
+
+  const evidence = chapter7ReassessmentAttemptsToEvidence(studentId, grouped)
+  const unique = new Map(evidence.map((record) => [record.itemId, record]))
+  const answeredCount = unique.size
+  const correctCount = [...unique.values()].filter((record) => record.correct).length
+
+  return {
+    percent: answeredCount === 5 ? Math.round((correctCount / 5) * 10000) / 100 : null,
+    answeredCount,
+    conceptFamilyId: targetConceptId,
+  }
+}
+
 export function buildChapter7InstructorDiagnostics(input: {
   studentId: string
   completionPercent: number
@@ -284,9 +326,12 @@ export function buildChapter7InstructorDiagnostics(input: {
   const assessmentAttempt = latestInitialChapter7Attempt(input.quizAttempts)
   const microCheckPercent = calculatePersistedChapter7MicroCheckPercent(input.microCheckRows)
   const chapterAssessmentPercent = assessmentAttempt?.percentage ?? null
+  const latestFormal = latestFormalReassessment(input.studentId, input.quizAttempts)
+  const remediationReassessmentPercent = latestFormal.percent
   const chapterGrade = calculateChapter7Grade({
     microCheckPercent,
     chapterAssessmentPercent,
+    remediationReassessmentPercent,
   })
 
   const flags = evaluateChapter7InterventionFlags({
@@ -299,10 +344,6 @@ export function buildChapter7InstructorDiagnostics(input: {
   })
 
   const sorted = [...supportedConcepts].sort((a, b) => a.mastery - b.mastery)
-  const latestReassessment = input.quizAttempts
-    .filter((attempt) => attempt.is_reassessment && isChapter7ConceptFamilyId(attempt.target_concept_id))
-    .sort((a, b) => new Date(b.completed_at).getTime() - new Date(a.completed_at).getTime())[0]
-
   const activeCycle = input.remediationCycles
     .filter((cycle) => cycle.status && !['completed', 'resolved', 'closed'].includes(cycle.status))
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0]
@@ -313,6 +354,7 @@ export function buildChapter7InstructorDiagnostics(input: {
     overallConfidence: overallConfidence(concepts),
     chapterAssessmentPercent,
     microCheckPercent,
+    remediationReassessmentPercent,
     strongestConcepts: [...sorted].reverse().slice(0, 3),
     weakestConcepts: sorted.slice(0, 3),
     concepts,
@@ -322,8 +364,10 @@ export function buildChapter7InstructorDiagnostics(input: {
       : input.remediationCycles.some((cycle) => cycle.reassessment_completed_at)
         ? 'Latest remediation cycle completed'
         : 'No active remediation',
-    latestReassessment: latestReassessment
-      ? `${latestReassessment.percentage}% — ${getChapter7ConceptFamily(latestReassessment.target_concept_id as Chapter7ConceptFamilyId).name}`
+    latestReassessment: latestFormal.conceptFamilyId
+      ? latestFormal.percent != null
+        ? `${latestFormal.percent}% — ${getChapter7ConceptFamily(latestFormal.conceptFamilyId).name}`
+        : `${latestFormal.answeredCount}/5 in progress — ${getChapter7ConceptFamily(latestFormal.conceptFamilyId).name}`
       : 'No reassessment recorded',
     evidenceCount: evidence.length,
   }
