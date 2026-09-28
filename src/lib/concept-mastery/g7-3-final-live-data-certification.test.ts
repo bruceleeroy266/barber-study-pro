@@ -159,7 +159,7 @@ describe('G7-3 Chapters 1-11 final live data and percentage certification', () =
       expect(page).toContain(`buildLiveGrade('ch-${chapter}', chapter${chapter}Diagnostics)`)
     }
 
-    expect(page.match(/Final live 20\\/10\\/40\\/15\\/15 evidence/g)).toHaveLength(11)
+    expect(page.match(/Final live 20\/10\/40\/15\/15 evidence/g)).toHaveLength(11)
     expect(page.match(/Provisional — required evidence still incomplete/g)).toHaveLength(11)
     expect(page).toContain('keeps completion separate')
   })
