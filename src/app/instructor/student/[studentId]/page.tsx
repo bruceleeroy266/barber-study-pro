@@ -297,62 +297,26 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     .eq('user_id', studentId)
     .order('completed_at', { ascending: false })
 
-  // Chapter 1 immutable first-attempt evidence.
-  const { data: chapter1MicroCheckRows } = await supabase
+  // Chapters 1–10 share one immutable micro-check evidence read for this student.
+  // The same rows feed the same diagnostics whether the authorized viewer is an
+  // instructor or school admin; role changes authorization, never calculations.
+  const { data: chapterMicroCheckRows } = await supabase
     .from('chapter_micro_check_attempts')
     .select('id,user_id,chapter_id,check_id,question_id,concept_id,difficulty,selected_answer,is_correct,answered_at,created_at')
     .eq('user_id', studentId)
-    .eq('chapter_id', 'ch-1')
+    .in('chapter_id', ['ch-1','ch-2','ch-3','ch-4','ch-5','ch-6','ch-7','ch-8','ch-9','ch-10'])
     .order('answered_at', { ascending: true })
 
-  // Chapter 2 immutable first-attempt evidence.
-  const { data: chapter2MicroCheckRows } = await supabase
-    .from('chapter_micro_check_attempts')
-    .select('id,user_id,chapter_id,check_id,question_id,concept_id,difficulty,selected_answer,is_correct,answered_at,created_at')
-    .eq('user_id', studentId)
-    .eq('chapter_id', 'ch-2')
-    .order('answered_at', { ascending: true })
-
-  // Chapter 3 immutable first-attempt evidence.
-  const { data: chapter3MicroCheckRows } = await supabase
-    .from('chapter_micro_check_attempts')
-    .select('id,user_id,chapter_id,check_id,question_id,concept_id,difficulty,selected_answer,is_correct,answered_at,created_at')
-    .eq('user_id', studentId)
-    .eq('chapter_id', 'ch-3')
-    .order('answered_at', { ascending: true })
-
-  // Chapter 4 immutable first-attempt evidence.
-  const { data: chapter4MicroCheckRows } = await supabase
-    .from('chapter_micro_check_attempts')
-    .select('id,user_id,chapter_id,check_id,question_id,concept_id,difficulty,selected_answer,is_correct,answered_at,created_at')
-    .eq('user_id', studentId)
-    .eq('chapter_id', 'ch-4')
-    .order('answered_at', { ascending: true })
-
-  // Chapter 5 immutable first-attempt evidence.
-  const { data: chapter5MicroCheckRows } = await supabase
-    .from('chapter_micro_check_attempts')
-    .select('id,user_id,chapter_id,check_id,question_id,concept_id,difficulty,selected_answer,is_correct,answered_at,created_at')
-    .eq('user_id', studentId)
-    .eq('chapter_id', 'ch-5')
-    .order('answered_at', { ascending: true })
-
-  // Chapter 6 immutable first-attempt evidence.
-  const { data: chapter6MicroCheckRows } = await supabase
-    .from('chapter_micro_check_attempts')
-    .select('id,user_id,chapter_id,check_id,question_id,concept_id,difficulty,selected_answer,is_correct,answered_at,created_at')
-    .eq('user_id', studentId)
-    .eq('chapter_id', 'ch-6')
-    .order('answered_at', { ascending: true })
-
-  // Chapter 7 micro-check evidence. RLS permits same-school staff to read the
-  // student's immutable first-attempt records.
-  const { data: chapter7MicroCheckRows } = await supabase
-    .from('chapter_micro_check_attempts')
-    .select('id,user_id,chapter_id,check_id,question_id,concept_id,difficulty,selected_answer,is_correct,answered_at,created_at')
-    .eq('user_id', studentId)
-    .eq('chapter_id', 'ch-7')
-    .order('answered_at', { ascending: true })
+  const chapter1MicroCheckRows = chapterMicroCheckRows?.filter((row) => row.chapter_id === 'ch-1')
+  const chapter2MicroCheckRows = chapterMicroCheckRows?.filter((row) => row.chapter_id === 'ch-2')
+  const chapter3MicroCheckRows = chapterMicroCheckRows?.filter((row) => row.chapter_id === 'ch-3')
+  const chapter4MicroCheckRows = chapterMicroCheckRows?.filter((row) => row.chapter_id === 'ch-4')
+  const chapter5MicroCheckRows = chapterMicroCheckRows?.filter((row) => row.chapter_id === 'ch-5')
+  const chapter6MicroCheckRows = chapterMicroCheckRows?.filter((row) => row.chapter_id === 'ch-6')
+  const chapter7MicroCheckRows = chapterMicroCheckRows?.filter((row) => row.chapter_id === 'ch-7')
+  const chapter8MicroCheckRows = chapterMicroCheckRows?.filter((row) => row.chapter_id === 'ch-8')
+  const chapter9MicroCheckRows = chapterMicroCheckRows?.filter((row) => row.chapter_id === 'ch-9')
+  const chapter10MicroCheckRows = chapterMicroCheckRows?.filter((row) => row.chapter_id === 'ch-10')
 
   const { data: chapter7RemediationCycles } = await supabase
     .from('remediation_cycles')
@@ -360,33 +324,6 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     .eq('user_id', studentId)
     .eq('chapter_id', 'ch-7')
     .order('created_at', { ascending: true })
-
-  // Chapter 8 immutable first-attempt evidence. Same-school staff can read it
-  // through the existing RLS policy used for instructor diagnostics.
-  const { data: chapter8MicroCheckRows } = await supabase
-    .from('chapter_micro_check_attempts')
-    .select('id,user_id,chapter_id,check_id,question_id,concept_id,difficulty,selected_answer,is_correct,answered_at,created_at')
-    .eq('user_id', studentId)
-    .eq('chapter_id', 'ch-8')
-    .order('answered_at', { ascending: true })
-
-  // Chapter 9 immutable first-attempt evidence. Same-school staff can read it
-  // through the existing RLS policy used for instructor diagnostics.
-  const { data: chapter9MicroCheckRows } = await supabase
-    .from('chapter_micro_check_attempts')
-    .select('id,user_id,chapter_id,check_id,question_id,concept_id,difficulty,selected_answer,is_correct,answered_at,created_at')
-    .eq('user_id', studentId)
-    .eq('chapter_id', 'ch-9')
-    .order('answered_at', { ascending: true })
-
-  // Chapter 10 immutable first-attempt evidence. Same-school staff can read it
-  // through the existing RLS policy used for instructor diagnostics.
-  const { data: chapter10MicroCheckRows } = await supabase
-    .from('chapter_micro_check_attempts')
-    .select('id,user_id,chapter_id,check_id,question_id,concept_id,difficulty,selected_answer,is_correct,answered_at,created_at')
-    .eq('user_id', studentId)
-    .eq('chapter_id', 'ch-10')
-    .order('answered_at', { ascending: true })
 
   // Get instructor notes
   const notesResult = await getInstructorNotes(studentId, instructorProfile.school_id)
@@ -625,7 +562,11 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     completionPercent: chapter7Progress?.progress_percentage ?? 0,
     microCheckRows: chapter7MicroCheckAttempts,
     quizAttempts: attemptRecords
-      .filter((attempt) => attempt.quiz_id === 'quiz-7' || attempt.is_reassessment)
+      .filter(
+        (attempt) =>
+          attempt.quiz_id === 'quiz-7' ||
+          (attempt.is_reassessment && attempt.target_concept_id?.startsWith('ch7-')),
+      )
       .map((attempt) => ({
         quiz_id: attempt.quiz_id,
         percentage: attempt.percentage,
