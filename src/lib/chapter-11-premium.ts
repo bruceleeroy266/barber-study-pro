@@ -177,7 +177,7 @@ export const chapter11PremiumContent: ChapterContent = {
           bullets: [
             { label: 'SOURCE FOCUS', description: 'Chapter 11 describes stimulation as one of the essential principles of scalp treatment.' },
             { label: 'METHOD', description: 'Use the source-supported massage manipulations with controlled pressure and rhythmic movement.' },
-            { label: 'BOUNDARY', description: 'Do not promise regrowth or describe massage as awakening dormant follicles.' },
+            { label: 'BOUNDARY', description: 'Do not promise hair regrowth or other medical outcomes from massage.' },
           ],
           facts: [{ text: 'The source describes increased blood and lymph flow, soothed nerves, stimulated muscles and glands, and greater scalp flexibility as massage effects.' }],
         },
