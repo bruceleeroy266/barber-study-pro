@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { MessageSquare, CheckCircle, XCircle, Lightbulb, Timer, AlertTriangle } from 'lucide-react'
 import type { ChapterTheme } from '@/lib/chapter-content'
 import { defaultTheme } from '@/lib/chapter-content'
+import { getScenarioEvidenceConcept, isG7EvidenceChapter } from '@/lib/concept-mastery/activity-evidence-registry'
+import { persistChapterActivityEvidence } from '@/lib/concept-mastery/activity-evidence'
 
 interface ScenarioOption {
   letter: string
@@ -22,9 +24,12 @@ interface ScenarioBlockProps {
   scenarios: Scenario[]
   theme?: ChapterTheme
   onComplete?: () => void
+  chapterId?: string
+  userId?: string
+  sectionId?: string
 }
 
-export default function ScenarioBlock({ scenarios, theme, onComplete }: ScenarioBlockProps) {
+export default function ScenarioBlock({ scenarios, theme, onComplete, chapterId, userId, sectionId }: ScenarioBlockProps) {
   const t = theme || defaultTheme
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({})
   const [revealed, setRevealed] = useState<Set<number>>(new Set())
@@ -83,6 +88,22 @@ export default function ScenarioBlock({ scenarios, theme, onComplete }: Scenario
     // disabled in the UI until an option is selected, but keep this guard
     // here so programmatic calls cannot bypass the progress requirement.
     if (selectedAnswers[scenarioIdx] === undefined || revealed.has(scenarioIdx)) return
+
+    if (chapterId && userId && sectionId && isG7EvidenceChapter(chapterId)) {
+      const conceptId = getScenarioEvidenceConcept(chapterId, sectionId)
+      const selected = selectedAnswers[scenarioIdx]
+      if (conceptId && selected !== undefined) {
+        void persistChapterActivityEvidence({
+          userId,
+          chapterId,
+          conceptId,
+          source: 'scenario_application',
+          itemId: `${sectionId}:${scenarioIdx}`,
+          selectedAnswer: selected,
+          isCorrect: selected === scenarios[scenarioIdx]?.correctAnswer,
+        })
+      }
+    }
 
     // Stop timer if running
     if (intervalRefs.current[scenarioIdx]) {
