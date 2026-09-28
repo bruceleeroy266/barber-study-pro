@@ -2,7 +2,7 @@ import type { Chapter13EvidenceRecord, Chapter13Confidence, Chapter13GradeResult
 import { calculateChapter13ConceptMastery, calculateChapter13Grade } from './grading'
 import type { Chapter13ConceptFamilyId } from './types'
 import { CHAPTER13_CONCEPT_FAMILY_IDS, getChapter13ConceptFamily } from './concepts'
-import { chapter13PremiumQuizQuestions } from '../chapter-12-premium-quiz'
+import { chapter13PremiumQuizQuestions } from '../chapter-13-premium-quiz'
 import { chapter13ReassessmentReserve } from './reassessment-reserve'
 import { chapter13QuizQuestionConceptMappings } from './mappings'
 import type { Chapter13MicroCheckAttemptRow } from './micro-check-persistence'
