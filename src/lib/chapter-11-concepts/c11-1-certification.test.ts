@@ -46,11 +46,11 @@ describe('C11-1 canonical concept architecture + shared grading binding', () => 
 
   it('maps every current lesson ID exactly once', () => {
     const authoredIds = collectContentIds(chapter11PremiumContent.sections)
-    expect(authoredIds).toHaveLength(25)
-    expect(new Set(authoredIds).size).toBe(25)
+    expect(authoredIds).toHaveLength(27)
+    expect(new Set(authoredIds).size).toBe(27)
 
-    expect(chapter11ContentConceptMappings).toHaveLength(25)
-    expect(new Set(chapter11ContentConceptMappings.map((mapping) => mapping.contentBlockId)).size).toBe(25)
+    expect(chapter11ContentConceptMappings).toHaveLength(27)
+    expect(new Set(chapter11ContentConceptMappings.map((mapping) => mapping.contentBlockId)).size).toBe(27)
     expect(new Set(chapter11ContentConceptMappings.map((mapping) => mapping.contentBlockId))).toEqual(new Set(authoredIds))
   })
 
@@ -72,24 +72,13 @@ describe('C11-1 canonical concept architecture + shared grading binding', () => 
     )
   })
 
-  it('gives every canonical concept flashcard, assessment, and planned micro-check coverage while exposing current lesson gaps', () => {
+  it('gives every canonical concept lesson, flashcard, assessment, and planned micro-check coverage after C11-2', () => {
     for (const conceptFamilyId of ACTIVE_CHAPTER11_CONCEPT_FAMILY_IDS) {
+      expect(chapter11ContentConceptMappings.some((m) => m.conceptFamilyId === conceptFamilyId)).toBe(true)
       expect(chapter11FlashcardConceptMappings.some((m) => m.conceptFamilyId === conceptFamilyId)).toBe(true)
       expect(chapter11QuizQuestionConceptMappings.some((m) => m.conceptFamilyId === conceptFamilyId)).toBe(true)
       expect(chapter11MicroCheckPlacements.some((m) => m.conceptFamilyId === conceptFamilyId)).toBe(true)
     }
-
-    const conceptsWithLessonCoverage = new Set(
-      chapter11ContentConceptMappings.map((mapping) => mapping.conceptFamilyId),
-    )
-    const lessonCoverageGaps = ACTIVE_CHAPTER11_CONCEPT_FAMILY_IDS.filter(
-      (conceptFamilyId) => !conceptsWithLessonCoverage.has(conceptFamilyId),
-    )
-
-    expect(lessonCoverageGaps).toEqual([
-      'ch11-shampoo-draping-service',
-      'ch11-treatment-equipment',
-    ])
   })
 
   it('reuses the certified shared grading contract without changing weights', () => {
