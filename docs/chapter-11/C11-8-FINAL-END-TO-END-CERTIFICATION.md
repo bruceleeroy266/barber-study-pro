@@ -95,3 +95,6 @@ Chapter 11 is merge-ready only if:
 5. instructor and school-admin oversight remain on the same authorized evidence route.
 
 No merge is authorized by this certification alone.
+
+
+Verification trigger: PR #132 is tested against `main`; no merge authorization is implied.
