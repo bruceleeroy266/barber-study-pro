@@ -44,7 +44,7 @@ describe('C12-2 source-grounded lesson hardening', () => {
   it('uses manufacturer directions and client comfort instead of universal heat/product rules', () => {
     expect(lesson).toContain('manufacturer directions')
     expect(lesson).toContain('comfortable warmth')
-    expect(lesson).toContain('monitor the client continuously')
+    expect(lesson).toMatch(/monitor the client continuously/i)
     expect(lesson).toContain('Do not rely on a universal temperature or timing rule')
   })
 
