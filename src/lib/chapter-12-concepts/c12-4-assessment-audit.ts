@@ -42,7 +42,7 @@ export const chapter12AssessmentAudit: readonly Chapter12AssessmentAuditEntry[] 
   { questionId: 'qq-12-026', conceptFamilyId: 'ch12-equipment-electrotherapy', difficulty: 'medium', sourceRefs: ['fc-ch12-062'], verdict: 'REWRITE' },
   { questionId: 'qq-12-027', conceptFamilyId: 'ch12-equipment-electrotherapy', difficulty: 'medium', sourceRefs: ['fc-ch12-068'], verdict: 'REWRITE' },
   { questionId: 'qq-12-028', conceptFamilyId: 'ch12-equipment-electrotherapy', difficulty: 'medium', sourceRefs: ['fc-ch12-073'], verdict: 'REWRITE' },
-  { questionId: 'qq-12-029', conceptFamilyId: 'ch12-equipment-electrotherapy', difficulty: 'hard', sourceRefs: ['lesson:core-chapter-12-review', 'fc-ch12-064', 'fc-ch12-077', 'fc-ch12-078'], verdict: 'REWRITE' },
+  { questionId: 'qq-12-029', conceptFamilyId: 'ch12-equipment-electrotherapy', difficulty: 'hard', sourceRefs: ['lesson:board-exam-alerts', 'fc-ch12-064', 'fc-ch12-077', 'fc-ch12-078'], verdict: 'REWRITE' },
 
   { questionId: 'qq-12-030', conceptFamilyId: 'ch12-skin-analysis-product-selection', difficulty: 'easy', sourceRefs: ['fc-ch12-082'], verdict: 'REWRITE' },
   { questionId: 'qq-12-031', conceptFamilyId: 'ch12-skin-analysis-product-selection', difficulty: 'hard', sourceRefs: ['fc-ch12-086', 'fc-ch12-087'], verdict: 'REWRITE' },
