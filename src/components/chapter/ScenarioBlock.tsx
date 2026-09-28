@@ -90,7 +90,7 @@ export default function ScenarioBlock({ scenarios, theme, onComplete, chapterId,
     if (selectedAnswers[scenarioIdx] === undefined || revealed.has(scenarioIdx)) return
 
     if (chapterId && userId && sectionId && isG7EvidenceChapter(chapterId)) {
-      const conceptId = getScenarioEvidenceConcept(chapterId, sectionId)
+      const conceptId = getScenarioEvidenceConcept(chapterId, sectionId, scenarioIdx)
       const selected = selectedAnswers[scenarioIdx]
       if (conceptId && selected !== undefined) {
         void persistChapterActivityEvidence({
