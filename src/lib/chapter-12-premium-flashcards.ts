@@ -1,16 +1,17 @@
 import { Flashcard } from '@/types'
 
 // Chapter 12: Men's Facial Massage and Treatments
-// Created strictly from Chapter 12 textbook images
-// All content sourced from: textbook-images/chapter-12/
+// Repository legacy source note referenced textbook-images/chapter-12/.
+// C12-3 audits this bank against the retained Chapter 12 repository analysis
+// and hardened lesson boundaries; it is not a fresh page-by-page textbook verification.
 
 export const chapter12PremiumFlashcards: Flashcard[] = [
   // === LEARNING OBJECTIVES & INTRODUCTION ===
   {
     id: 'fc-ch12-001',
     chapter_id: 'ch-12',
-    front: 'Why should barbers study men\'s facial massage and treatments?',
-    back: 'Barbers need to be competent in all licensed services. Men increasingly want facial massage benefits. Regular facials improve skin tone, texture, and appearance, leading to repeat clients and referrals. Facials are also finishing steps after a shave.',
+    front: "Why should barbers study facial massage and facial treatments?",
+    back: "Chapter 12 treats facial massage and facial treatments as professional cosmetic grooming services. Barbers should understand the services that are within their applicable scope, including consultation, sanitation, safe technique, contraindications, product selection, client comfort, and referral boundaries.",
     category: 'Introduction',
     difficulty: 'easy',
     order_index: 1,
@@ -19,8 +20,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-002',
     chapter_id: 'ch-12',
-    front: 'What percentage of skin care clientele in spas and salons are male?',
-    back: 'About 20 percent, and this percentage is expected to grow.',
+    front: "What client-demand point does Chapter 12 make about facial services?",
+    back: "The retained Chapter 12 material presents facial services as an area of client interest and professional grooming opportunity. C12-3 does not retain the legacy percentage-growth claim because the current repository source does not independently establish that market statistic.",
     category: 'Introduction',
     difficulty: 'easy',
     order_index: 2,
@@ -369,8 +370,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-036',
     chapter_id: 'ch-12',
-    front: 'What are the beneficial results of proper massage?',
-    back: 'Nourishes skin structures, stimulates and strengthens muscle fiber, soothes and rests nerves, reduces fat cells, increases blood circulation, stimulates gland activity, softens skin, and sometimes relieves pain.',
+    front: "What determines whether a facial massage technique is appropriate and effective as a cosmetic service?",
+    back: "Use the source-covered movement, pressure, direction, rhythm, and duration with continuous attention to client comfort and contraindications. Keep expected outcomes within cosmetic-service scope rather than promising medical, pain-relief, fat-reduction, or other therapeutic effects.",
     category: 'Massage Theory',
     difficulty: 'medium',
     order_index: 36,
@@ -399,8 +400,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-039',
     chapter_id: 'ch-12',
-    front: 'What is a trigger point?',
-    back: 'A tender area in a muscle caused by a localized knot or spasm in the muscle fiber that can radiate pain to other locations. It is hypersensitive to electrical stimulation and pressure.',
+    front: "How should a barber treat the Chapter 12 term “trigger point” within scope?",
+    back: "Chapter 12 uses the term for a tender localized area in muscle. A barber may recognize the source term for study purposes, but should not diagnose the cause of pain or present facial massage as medical treatment.",
     category: 'Massage Theory',
     difficulty: 'medium',
     order_index: 39,
@@ -441,8 +442,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-043',
     chapter_id: 'ch-12',
-    front: 'What is percussion (tapotement)?',
-    back: 'Short, quick tapping, slapping, or hacking movements used to stimulate nerves, tone muscles, and impart a healthy glow. The most stimulating form of massage.',
+    front: "What is percussion (tapotement)?",
+    back: "Short, quick tapping, slapping, or hacking movements. In facial-service use, apply only the source-appropriate light form with controlled pressure and client comfort; do not promise nerve, muscle-toning, or medical effects.",
     category: 'Massage Movements',
     difficulty: 'easy',
     order_index: 43,
@@ -471,8 +472,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-046',
     chapter_id: 'ch-12',
-    front: 'How long should vibration be used on any one area?',
-    back: 'Not more than a few seconds to avoid overstimulation.',
+    front: "How should duration be handled when using vibration on one area?",
+    back: "Keep vibration brief and controlled, monitor client comfort, and follow the applicable device or service guidance. Do not treat one legacy time statement as a universal device setting.",
     category: 'Massage Movements',
     difficulty: 'easy',
     order_index: 46,
@@ -511,8 +512,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-050',
     chapter_id: 'ch-12',
-    front: 'What conditions contraindicate massage?',
-    back: 'Acute inflammation of the skin, severe skin lesions, pus-containing pimples, high blood pressure, and skin infections.',
+    front: "What is the safe rule for massage contraindications?",
+    back: "Do not massage skin that is actively inflamed, open, potentially contagious, or otherwise unsuitable for the planned service. If a health condition, medication, recent procedure, or client response makes safety uncertain, modify or defer the service and recommend appropriate evaluation without diagnosing.",
     category: 'Massage Guidelines',
     difficulty: 'easy',
     order_index: 50,
@@ -543,8 +544,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-053',
     chapter_id: 'ch-12',
-    front: 'What are the effects of an electric massager?',
-    back: 'Invigorates muscle tissue, increases blood supply, soothes nerves, increases glandular activity, and stimulates skin and scalp.',
+    front: "How should an electric massager be used in a facial or scalp service?",
+    back: "Use it only for the cosmetic service purpose described by the device instructions, with controlled contact and client comfort. Do not promise physiological, glandular, circulatory, or therapeutic outcomes beyond supported product or device directions.",
     category: 'Equipment',
     difficulty: 'medium',
     order_index: 53,
@@ -553,8 +554,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-054',
     chapter_id: 'ch-12',
-    front: 'When should an electric massager NOT be used?',
-    back: 'When the client has a known weakness of the heart, fever, abscesses, or skin inflammations.',
+    front: "When should an electric massager not be used?",
+    back: "Do not use it when the device label, client consultation, observable condition, or applicable rules indicate a contraindication, or when safe use cannot be established. Defer the service rather than interpreting a medical condition.",
     category: 'Equipment',
     difficulty: 'easy',
     order_index: 54,
@@ -573,8 +574,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-056',
     chapter_id: 'ch-12',
-    front: 'When should brushing NOT be performed?',
-    back: 'On skin that has been treated with Retin-A or other drugs that thin or exfoliate the skin.',
+    front: "When should mechanical brushing be avoided or deferred?",
+    back: "Avoid brushing irritated, injured, recently exfoliated, or otherwise unsuitable skin. If medication or a recent procedure may affect service safety, rely on product/device guidance and appropriate professional evaluation rather than making a medical determination.",
     category: 'Equipment',
     difficulty: 'medium',
     order_index: 56,
@@ -583,8 +584,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-057',
     chapter_id: 'ch-12',
-    front: 'What is a facial steamer?',
-    back: 'An electrical appliance that produces and projects moist, uniform steam to soften and cleanse the skin. Warms skin, stimulates circulation, induces sebum and sweat flow, and has an antiseptic effect.',
+    front: "What is a facial steamer?",
+    back: "An electrical appliance that produces moist steam for a cosmetic facial service. Use it according to manufacturer directions, maintain comfortable exposure, and avoid unsupported claims that steam disinfects, treats disease, or produces guaranteed physiological effects.",
     category: 'Equipment',
     difficulty: 'easy',
     order_index: 57,
@@ -635,8 +636,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-062',
     chapter_id: 'ch-12',
-    front: 'What is high-frequency current (tesla current)?',
-    back: 'A current characterized by a high rate of oscillation used for scalp and facial treatments. Primary actions are thermal and antiseptic.',
+    front: "What is high-frequency current (tesla current) in Chapter 12?",
+    back: "A high-rate oscillating electrical modality described in the Chapter 12 source for facial and scalp service. Use only within device instructions, training, applicable scope, and client-safety guidance; do not generalize legacy therapeutic claims.",
     category: 'Electrotherapy',
     difficulty: 'medium',
     order_index: 62,
@@ -645,8 +646,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-063',
     chapter_id: 'ch-12',
-    front: 'What are the benefits of high-frequency current on the skin?',
-    back: 'Stimulates blood circulation, helps oxygenate skin, increases glandular activity, aids elimination and absorption, increases cell metabolism, promotes antiseptic action, and generates warmth.',
+    front: "What should a barber know about claimed high-frequency effects?",
+    back: "The legacy material lists several physiological and antiseptic effects, but C12-3 does not present those as guaranteed outcomes. For service decisions, follow the specific device labeling, training, contraindications, and cosmetic scope.",
     category: 'Electrotherapy',
     difficulty: 'medium',
     order_index: 63,
@@ -655,8 +656,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-064',
     chapter_id: 'ch-12',
-    front: 'How long should a general high-frequency facial or scalp treatment last?',
-    back: 'No more than 5 minutes.',
+    front: "How should high-frequency treatment time be determined?",
+    back: "Follow the specific device manufacturer’s directions and applicable training or rules. Do not use a single legacy minute value as a universal setting for every high-frequency device or service.",
     category: 'Electrotherapy',
     difficulty: 'easy',
     order_index: 64,
@@ -665,8 +666,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-065',
     chapter_id: 'ch-12',
-    front: 'What are the two primary methods of high-frequency application?',
-    back: 'Direct surface application (most common in barbershops, calming and germicidal) and indirect application (client holds electrode, toning and stimulating).',
+    front: "What are the two source-presented high-frequency application methods?",
+    back: "Direct application places the electrode at the service area; indirect application uses the client as part of the circuit as described by the device method. Use either method only when the specific device instructions and training support it, without making germicidal or medical-treatment promises.",
     category: 'Electrotherapy',
     difficulty: 'medium',
     order_index: 65,
@@ -675,8 +676,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-066',
     chapter_id: 'ch-12',
-    front: 'What are the contraindications for high-frequency current?',
-    back: 'Pregnancy, seizures/epilepsy, asthma, high blood pressure, acne, sinus blockage, pacemaker, and metal implants.',
+    front: "How should high-frequency contraindications be handled?",
+    back: "Use the device manufacturer’s contraindications, client consultation, applicable rules, and training. When a health condition, implanted device, medication, pregnancy, skin finding, or other factor makes safety uncertain, defer rather than independently deciding medical suitability.",
     category: 'Electrotherapy',
     difficulty: 'medium',
     order_index: 66,
@@ -685,8 +686,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-067',
     chapter_id: 'ch-12',
-    front: 'How should high-frequency electrodes be cleaned?',
-    back: 'Wipe glass with soap and water (do not immerse). Place only the end in disinfectant for 20 minutes. Rinse with cool water without wetting metal parts. Dry and store in a clean, covered container.',
+    front: "How should high-frequency electrodes be cleaned and disinfected?",
+    back: "Follow the electrode and disinfectant manufacturer directions and applicable infection-control rules. Protect electrical components from improper immersion and store processed electrodes so they remain clean; do not rely on one universal contact-time recipe.",
     category: 'Electrotherapy',
     difficulty: 'medium',
     order_index: 67,
@@ -695,8 +696,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-068',
     chapter_id: 'ch-12',
-    front: 'What does a galvanic machine do?',
-    back: 'Converts alternating current from an outlet into direct current. Produces chemical (desincrustation) and ionic (iontophoresis) reactions in the skin. Beneficial for oily skin and acne.',
+    front: "What does a galvanic machine do?",
+    back: "It converts alternating current to direct current for source-presented galvanic facial-service methods such as desincrustation or ion-based product application. Use only within device instructions and cosmetic scope; do not present it as acne treatment.",
     category: 'Electrotherapy',
     difficulty: 'medium',
     order_index: 68,
@@ -705,8 +706,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-069',
     chapter_id: 'ch-12',
-    front: 'What is desincrustation?',
-    back: 'A galvanic treatment to facilitate deep pore cleansing. An acid-based solution is applied; a chemical reaction emulsifies sebum and waste for easy extraction.',
+    front: "What is desincrustation in the Chapter 12 source?",
+    back: "A galvanic-service method described for loosening or emulsifying surface oil and debris to support cosmetic cleansing. Follow the specific product and device directions rather than claiming “deep pore” cleansing or medical treatment.",
     category: 'Electrotherapy',
     difficulty: 'medium',
     order_index: 69,
@@ -715,8 +716,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-070',
     chapter_id: 'ch-12',
-    front: 'What is iontophoresis?',
-    back: 'Using galvanic current to enable ion-containing water-soluble solutions to penetrate the skin. Negative current allows negative ions to penetrate; positive current allows positive ions to penetrate.',
+    front: "What is iontophoresis in the Chapter 12 source?",
+    back: "A galvanic method using ion-containing, water-soluble products with electrical current. Use the technique only as directed by the specific device and product; avoid broad claims that any product will penetrate to a guaranteed depth.",
     category: 'Electrotherapy',
     difficulty: 'hard',
     order_index: 70,
@@ -725,8 +726,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-071',
     chapter_id: 'ch-12',
-    front: 'What is cataphoresis?',
-    back: 'Use of the positive pole (anode) to introduce acid-pH products into the skin. May also close follicles, decrease redness, prevent inflammation, soothe nerves, and harden tissues.',
+    front: "What is cataphoresis in the Chapter 12 source?",
+    back: "The source term for use of the positive pole (anode) with compatible products in a galvanic service. Follow the product and device instructions and avoid promising follicle-closing, anti-inflammatory, nerve-soothing, or tissue-hardening medical effects.",
     category: 'Electrotherapy',
     difficulty: 'hard',
     order_index: 71,
@@ -735,8 +736,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-072',
     chapter_id: 'ch-12',
-    front: 'What is anaphoresis?',
-    back: 'Use of the negative pole (cathode) to force alkaline-pH products into the skin. May stimulate circulation, stimulate nerves, and soften tissues.',
+    front: "What is anaphoresis in the Chapter 12 source?",
+    back: "The source term for use of the negative pole (cathode) with compatible products in a galvanic service. Follow the product and device instructions and avoid promising circulatory, neurologic, or tissue-changing outcomes.",
     category: 'Electrotherapy',
     difficulty: 'hard',
     order_index: 72,
@@ -745,8 +746,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-073',
     chapter_id: 'ch-12',
-    front: 'What is microcurrent?',
-    back: 'A type of galvanic treatment using very low-level electrical current. Best known for toning skin and producing a lifting effect on aging skin lacking elasticity.',
+    front: "What is microcurrent?",
+    back: "A low-level electrical modality included in the Chapter 12 equipment coverage. Use it only within training, manufacturer directions, client-safety guidance, and applicable scope; do not guarantee lifting, anti-aging, or medical outcomes.",
     category: 'Electrotherapy',
     difficulty: 'medium',
     order_index: 73,
@@ -765,8 +766,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-075',
     chapter_id: 'ch-12',
-    front: 'What is light therapy?',
-    back: 'Using light exposure to treat skin and scalp conditions. Includes ultraviolet rays, infrared rays, and LEDs.',
+    front: "What is light therapy in the Chapter 12 equipment section?",
+    back: "The source groups ultraviolet, infrared, and LED/light modalities under light-based equipment. Device type, purpose, exposure, contraindications, eye protection, and scope depend on the specific device and applicable guidance.",
     category: 'Electrotherapy',
     difficulty: 'easy',
     order_index: 75,
@@ -775,8 +776,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-076',
     chapter_id: 'ch-12',
-    front: 'What are the three types of ultraviolet rays and their effects?',
-    back: 'UVA = tonic rays, UVB = therapeutic rays, UVC = germicidal rays.',
+    front: "How should the source terms UVA, UVB, and UVC be studied?",
+    back: "Recognize them as different ultraviolet bands identified in the legacy Chapter 12 material. Do not convert historical labels such as “therapeutic” or “germicidal” into a promise that a barbering service treats disease or sterilizes skin.",
     category: 'Electrotherapy',
     difficulty: 'medium',
     order_index: 76,
@@ -785,8 +786,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-077',
     chapter_id: 'ch-12',
-    front: 'What distance should ultraviolet and infrared lamps be positioned from the skin?',
-    back: 'Ultraviolet: 30 to 36 inches. Infrared: 30 inches.',
+    front: "How should lamp distance be determined for ultraviolet or infrared equipment?",
+    back: "Use the specific device manufacturer’s operating distance and safety instructions. C12-3 does not retain one universal distance because equipment and instructions can vary.",
     category: 'Electrotherapy',
     difficulty: 'medium',
     order_index: 77,
@@ -795,8 +796,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-078',
     chapter_id: 'ch-12',
-    front: 'What is the maximum exposure time for infrared rays?',
-    back: 'Total exposure should not exceed 5 minutes. Move your hand back and forth to break constant exposure.',
+    front: "How should infrared exposure time be determined?",
+    back: "Use the specific device manufacturer’s exposure limits and safety instructions, monitor client comfort, and stop if the service becomes unsafe. Do not treat one legacy minute value as universal.",
     category: 'Electrotherapy',
     difficulty: 'easy',
     order_index: 78,
@@ -805,8 +806,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-079',
     chapter_id: 'ch-12',
-    front: 'What are the general contraindications for electrotherapy?',
-    back: 'Seizures/epilepsy, heart conditions, nerve disorders, fever or infection, asthma, pregnancy, high blood pressure, open or broken skin, sinus blockages, pacemakers, and metal implants.',
+    front: "How should general electrotherapy contraindications be handled?",
+    back: "Follow the specific device contraindications, manufacturer directions, client consultation, applicable rules, and training. If a health condition, implanted device, medication, pregnancy, skin finding, or other factor creates uncertainty, defer the service rather than make a medical suitability decision.",
     category: 'Electrotherapy',
     difficulty: 'medium',
     order_index: 79,
@@ -827,8 +828,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-081',
     chapter_id: 'ch-12',
-    front: 'Why should you not use alcohol-based lotion before high-frequency treatment?',
-    back: 'Alcohol can cause adverse reactions with the electrical current.',
+    front: "What is the safe rule for products used before electrical facial equipment?",
+    back: "Use only products that the specific device and product instructions identify as compatible. Avoid flammable or otherwise incompatible preparations and follow all manufacturer safety directions.",
     category: 'Safety',
     difficulty: 'medium',
     order_index: 81,
@@ -849,8 +850,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-083',
     chapter_id: 'ch-12',
-    front: 'What characterizes dry (alipidic) skin?',
-    back: 'Does not produce enough sebum, leaving skin dehydrated. May appear flaky with small fine lines and wrinkles. Goal is to stimulate oil production.',
+    front: "What characterizes dry (alipidic) skin in the Chapter 12 analysis framework?",
+    back: "It is described by reduced surface oil and may show dryness or flaking. Use this as a cosmetic observation for product selection, not as a medical diagnosis or a reason to promise stimulation of oil production.",
     category: 'Skin Types',
     difficulty: 'easy',
     order_index: 83,
@@ -869,8 +870,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-085',
     chapter_id: 'ch-12',
-    front: 'What characterizes oily skin?',
-    back: 'Excess sebum production, shiny or greasy appearance, larger follicles with more oil. Requires more cleansing and exfoliation.',
+    front: "What characterizes oily skin in the Chapter 12 analysis framework?",
+    back: "It is described by visible surface oil and may have more noticeable follicle openings. Use the observation to choose appropriate cosmetic products and service steps rather than assuming one universal cleansing or exfoliation prescription.",
     category: 'Skin Types',
     difficulty: 'easy',
     order_index: 85,
@@ -889,8 +890,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-087',
     chapter_id: 'ch-12',
-    front: 'What is the T-zone?',
-    back: 'The section of the face incorporating the forehead, nose, and chin area. These areas tend to have more sebaceous glands and larger pores.',
+    front: "What is the T-zone?",
+    back: "The forehead, nose, and chin area. In the Chapter 12 skin-analysis framework, these areas may show different oiliness or visible follicle-opening patterns than the cheeks.",
     category: 'Skin Types',
     difficulty: 'easy',
     order_index: 87,
@@ -899,8 +900,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-088',
     chapter_id: 'ch-12',
-    front: 'What causes wrinkles?',
-    back: 'Repetitious muscle action moving in the same direction, loosening of elastic fibers, shrinking skin tissue from aging, excessive dryness, and improper facial care.',
+    front: "How should a barber discuss visible lines and wrinkles during skin analysis?",
+    back: "Describe observable lines and texture without assigning a medical cause. The legacy material lists aging, dryness, repeated movement, and skin changes, but cosmetic consultation should focus on observation and appropriate product/service selection.",
     category: 'Skin Types',
     difficulty: 'easy',
     order_index: 88,
@@ -953,8 +954,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-093',
     chapter_id: 'ch-12',
-    front: 'What are the three types of skin tonics and their alcohol content?',
-    back: 'Fresheners (0-4% alcohol, for dry/mature/sensitive skin), toners (4-15% alcohol, for normal/combination skin), and astringents (up to 35% alcohol, for oily/acne-prone skin).',
+    front: "How does Chapter 12 distinguish fresheners, toners, and astringents?",
+    back: "They are different cosmetic product categories/formulations used after cleansing or as part of a service plan. Because formulations vary, use the actual label and client analysis rather than memorizing one universal alcohol-percentage range.",
     category: 'Products',
     difficulty: 'medium',
     order_index: 93,
@@ -993,8 +994,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-097',
     chapter_id: 'ch-12',
-    front: 'On which skin types should rolling cream NOT be used?',
-    back: 'Not recommended on dry, acne-prone, sensitive, or thin-textured skin. Only for normal, oily, or thick skin.',
+    front: "When should rolling cream be avoided?",
+    back: "Avoid it when the skin is irritated, injured, very sensitive, recently exfoliated, or otherwise unsuitable, and follow the product label. Do not treat a skin-type list as a universal contraindication for every formulation.",
     category: 'Products',
     difficulty: 'medium',
     order_index: 97,
@@ -1003,8 +1004,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-098',
     chapter_id: 'ch-12',
-    front: 'What are chemical exfoliants?',
-    back: 'Products such as alpha hydroxy acids or enzyme peels that loosen or dissolve dead-cell buildup. Require advanced training and sometimes certification.',
+    front: "What are chemical exfoliants?",
+    back: "Cosmetic exfoliating products that may use acids or enzymes to loosen surface dead-cell buildup. Use only within product directions, training, applicable scope, and any jurisdiction-specific requirements.",
     category: 'Products',
     difficulty: 'medium',
     order_index: 98,
@@ -1035,8 +1036,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-101',
     chapter_id: 'ch-12',
-    front: 'What is the difference between preservative and corrective facial treatments?',
-    back: 'Preservative treatments maintain skin health through cleansing, toning, and massage. Corrective treatments correct conditions such as dryness, oiliness, blackheads, aging lines, and minor acne.',
+    front: "How should preservative and corrective facial-service terms be understood?",
+    back: "The legacy source uses “preservative” for maintenance-oriented cosmetic care and “corrective” for services aimed at visible cosmetic concerns. Keep both within cosmetic scope; do not present a facial service as treatment for acne, disease, or another medical condition.",
     category: 'Treatments',
     difficulty: 'easy',
     order_index: 101,
@@ -1075,8 +1076,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-105',
     chapter_id: 'ch-12',
-    front: 'What is the objective of a facial for dry skin?',
-    back: 'To help moisturize it. Can be supplemented with infrared rays, galvanic current, or high-frequency current to stimulate sebum production.',
+    front: "What is the cosmetic objective of a facial for dry skin?",
+    back: "Select gentle cleansing, massage medium, mask, and moisturizer steps appropriate to the client’s observable dryness and product directions. Do not promise that electrical modalities will restore sebum production or treat a medical condition.",
     category: 'Treatments',
     difficulty: 'easy',
     order_index: 105,
@@ -1095,8 +1096,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-107',
     chapter_id: 'ch-12',
-    front: 'What massage movement should be used on acne-prone skin?',
-    back: 'Only effleurage movements to apply gentle massage or products, to avoid spreading infectious matter.',
+    front: "How should massage be handled when skin is acne-prone or inflamed?",
+    back: "Use consultation and observation to decide whether massage is appropriate. Avoid vigorous manipulation on inflamed, open, or otherwise unsuitable skin, and defer when safety is uncertain rather than treating acne as an infectious condition.",
     category: 'Treatments',
     difficulty: 'medium',
     order_index: 107,
@@ -1117,8 +1118,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-109',
     chapter_id: 'ch-12',
-    front: 'What modalities can affect muscle action during facial treatments?',
-    back: 'Massage (hand and electric), electric currents (high frequency, galvanic, microcurrent), light rays (infrared, ultraviolet, LLLT, LED), heat, moist heat, nerve impulses, and chemicals.',
+    front: "What service modalities does Chapter 12 group with facial treatment equipment and technique?",
+    back: "The source discusses hand/electric massage, electrical currents, light-based equipment, heat/moist heat, and cosmetic products. Each modality must be used according to its own directions, training, contraindications, and barbering scope.",
     category: 'Modalities',
     difficulty: 'medium',
     order_index: 109,
@@ -1127,8 +1128,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-110',
     chapter_id: 'ch-12',
-    front: 'What effect does heat have on nerves?',
-    back: 'Heat and moist heat cause relaxation; cold causes contraction.',
+    front: "How should heat and cold be used in a facial service?",
+    back: "Use temperature only as a controlled cosmetic-service factor, following product/device guidance and client comfort. Do not promise a specific neurologic or therapeutic effect from heat or cold.",
     category: 'Modalities',
     difficulty: 'easy',
     order_index: 110,
@@ -1139,8 +1140,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-111',
     chapter_id: 'ch-12',
-    front: 'What product characteristics appeal to male clients?',
-    back: 'Simple, non-fragranced, absorbent creams with a matte finish. Men prefer simpler routines and multipurpose products (e.g., a skin tonic that also serves as aftershave).',
+    front: "How should product preferences be discussed with male clients?",
+    back: "Ask the individual client about fragrance, texture, finish, routine, and product preferences. The legacy material mentions simple routines and matte/non-fragranced products, but do not assume those preferences apply to every man.",
     category: 'Men\'s Products',
     difficulty: 'easy',
     order_index: 111,
@@ -1149,8 +1150,8 @@ export const chapter12PremiumFlashcards: Flashcard[] = [
   {
     id: 'fc-ch12-112',
     chapter_id: 'ch-12',
-    front: 'What packaging do men typically prefer for skin care products?',
-    back: 'Tube packaging over jars. Smaller sizes for travel, larger for home use.',
+    front: "How should packaging preferences be handled when recommending skin-care products?",
+    back: "Ask the client what packaging and size work for their routine, hygiene needs, travel, and storage. Do not assume a universal preference based on gender.",
     category: 'Men\'s Products',
     difficulty: 'easy',
     order_index: 112,

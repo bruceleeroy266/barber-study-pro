@@ -321,7 +321,7 @@ describe('C11-8 final Chapter 11 end-to-end certification', () => {
     expect(canAccessRoute('school_admin', '/instructor/student/student-c11-final')).toBe(true)
 
     expect(page.match(/\.from\('chapter_micro_check_attempts'\)/g)).toHaveLength(1)
-    expect(page).toContain(".in('chapter_id', ['ch-1','ch-2','ch-3','ch-4','ch-5','ch-6','ch-7','ch-8','ch-9','ch-10','ch-11'])")
+    expect(page).toContain(".in('chapter_id', ['ch-1','ch-2','ch-3','ch-4','ch-5','ch-6','ch-7','ch-8','ch-9','ch-10','ch-11','ch-12'])")
     expect(page).toContain("row.chapter_id === 'ch-11'")
     expect(page).toContain('buildChapter11InstructorDiagnostics({')
     expect(page).toContain("attempt.quiz_id === 'quiz-11'")

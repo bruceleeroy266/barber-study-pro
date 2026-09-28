@@ -2,7 +2,7 @@ import { calculateSharedGrade, type SharedGradeResult } from './shared-grading'
 import {
   getFlashcardEvidenceInventory,
   getScenarioEvidenceInventory,
-  isG7EvidenceChapter,
+  isUnifiedActivityEvidenceChapter,
 } from './activity-evidence-registry'
 
 export interface LiveInstructorActivityEvidenceRow {
@@ -62,7 +62,7 @@ export function buildLiveInstructorChapterGrade(input: {
   remediationReassessmentPercent: number | null
   activityRows: readonly LiveInstructorActivityEvidenceRow[]
 }): LiveInstructorChapterGrade {
-  const flashcardPercent = isG7EvidenceChapter(input.chapterId)
+  const flashcardPercent = isUnifiedActivityEvidenceChapter(input.chapterId)
     ? scoreInventory(
         input.activityRows,
         input.chapterId,
@@ -71,7 +71,7 @@ export function buildLiveInstructorChapterGrade(input: {
       )
     : null
 
-  const scenarioApplicationPercent = isG7EvidenceChapter(input.chapterId)
+  const scenarioApplicationPercent = isUnifiedActivityEvidenceChapter(input.chapterId)
     ? scoreInventory(
         input.activityRows,
         input.chapterId,

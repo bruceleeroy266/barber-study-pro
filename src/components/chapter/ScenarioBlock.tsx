@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { MessageSquare, CheckCircle, XCircle, Lightbulb, Timer, AlertTriangle } from 'lucide-react'
 import type { ChapterTheme } from '@/lib/chapter-content'
 import { defaultTheme } from '@/lib/chapter-content'
-import { getScenarioEvidenceConcept, isG7EvidenceChapter } from '@/lib/concept-mastery/activity-evidence-registry'
+import { getScenarioEvidenceConcept, isUnifiedActivityEvidenceChapter } from '@/lib/concept-mastery/activity-evidence-registry'
 import { persistChapterActivityEvidence } from '@/lib/concept-mastery/activity-evidence'
 
 interface ScenarioOption {
@@ -89,7 +89,7 @@ export default function ScenarioBlock({ scenarios, theme, onComplete, chapterId,
     // here so programmatic calls cannot bypass the progress requirement.
     if (selectedAnswers[scenarioIdx] === undefined || revealed.has(scenarioIdx)) return
 
-    if (chapterId && userId && sectionId && isG7EvidenceChapter(chapterId)) {
+    if (chapterId && userId && sectionId && isUnifiedActivityEvidenceChapter(chapterId)) {
       const conceptId = getScenarioEvidenceConcept(chapterId, sectionId, scenarioIdx)
       const selected = selectedAnswers[scenarioIdx]
       if (conceptId && selected !== undefined) {
