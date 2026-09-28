@@ -67,13 +67,14 @@ export const chapter11FlashcardConceptMappings: readonly Chapter11FlashcardConce
 const q = (n: number): `qq-11-${string}` => `qq-11-${String(n).padStart(3, '0')}`
 
 export const chapter11QuizQuestionConceptMappings: readonly Chapter11QuizQuestionConceptMapping[] = [
-  ...[1,2,3,4,5,6,7,8,9,10,11,12].map((n) => ({ questionId: q(n), conceptFamilyId: 'ch11-shampoo-draping-service' as const })),
+  ...[1,2,3,4,5,6,7,8,9,10,11].map((n) => ({ questionId: q(n), conceptFamilyId: 'ch11-shampoo-draping-service' as const })),
   ...[13,14,15,16,17,45,46,47,48,49].map((n) => ({ questionId: q(n), conceptFamilyId: 'ch11-analysis-product-selection' as const })),
   ...[18,19,20,21,22,23,24].map((n) => ({ questionId: q(n), conceptFamilyId: 'ch11-scalp-massage' as const })),
   ...[25,26,32,37].map((n) => ({ questionId: q(n), conceptFamilyId: 'ch11-scalp-hair-treatments' as const })),
   ...[33,34,35,36].map((n) => ({ questionId: q(n), conceptFamilyId: 'ch11-treatment-equipment' as const })),
   ...[27,28,29,30,31,41].map((n) => ({ questionId: q(n), conceptFamilyId: 'ch11-scalp-condition-recognition' as const })),
   ...[38,39,40,42,43,44,50].map((n) => ({ questionId: q(n), conceptFamilyId: 'ch11-service-safety-referral' as const })),
+  { questionId: q(12), conceptFamilyId: 'ch11-client-care-professional-practice' },
 ]
 
 export const chapter11MicroCheckPlacements: readonly Chapter11MicroCheckPlacement[] = [
