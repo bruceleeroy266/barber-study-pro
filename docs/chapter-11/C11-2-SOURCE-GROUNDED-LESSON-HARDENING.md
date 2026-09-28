@@ -87,3 +87,6 @@ C11-2 does not modify:
 ## Next phase
 
 **C11-3 — Flashcard Source & Concept Hardening.**
+
+
+Verification trigger: PR #125 is tested against `main`; no merge authorization is implied.
