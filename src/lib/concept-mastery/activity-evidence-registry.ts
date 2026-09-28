@@ -1,4 +1,5 @@
 import { getChapterContent } from '../chapter-content'
+import { chapterFlashcards } from '../flashcards-data'
 import { chapter1ContentConceptMappings, chapter1FlashcardConceptMappings } from '../chapter-1-concepts/mappings'
 import { chapter2ContentMappings, chapter2FlashcardMappings } from '../chapter-2-concepts/mappings'
 import { chapter3ContentConceptMappings, chapter3FlashcardConceptMappings } from '../chapter-3-concepts/mappings'
@@ -71,7 +72,10 @@ export function getScenarioEvidenceConcept(chapterId: string, sectionId: string)
 }
 
 export function getFlashcardEvidenceInventory(chapterId: string): readonly string[] {
-  return normalizeFlashcards(flashcardMappings[chapterId] ?? []).map((row) => row.itemId)
+  const mapped = new Set(normalizeFlashcards(flashcardMappings[chapterId] ?? []).map((row) => row.itemId))
+  return (chapterFlashcards[chapterId] ?? [])
+    .filter((card) => card.is_active && mapped.has(card.id))
+    .map((card) => card.id)
 }
 
 export function getScenarioEvidenceInventory(chapterId: string): readonly string[] {
