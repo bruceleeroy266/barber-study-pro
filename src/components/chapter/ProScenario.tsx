@@ -60,7 +60,7 @@ export default function ProScenario({ scenarios, theme, onComplete, chapterId, u
     // handler is invoked outside the normal disabled-button UI path.
     if (revealed.has(scenarioIdx) || selectedAnswers[scenarioIdx] === undefined) return
     if (chapterId && userId && sectionId && isG7EvidenceChapter(chapterId)) {
-      const conceptId = getScenarioEvidenceConcept(chapterId, sectionId)
+      const conceptId = getScenarioEvidenceConcept(chapterId, sectionId, scenarioIdx)
       const selected = selectedAnswers[scenarioIdx]
       if (conceptId && selected !== undefined) {
         void persistChapterActivityEvidence({
