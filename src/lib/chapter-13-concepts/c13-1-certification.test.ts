@@ -120,8 +120,8 @@ describe('C13-1 canonical concept architecture + shared grading/evidence binding
       expect(getFlashcardEvidenceConcept('ch-13', mapping.flashcardId)).toBe(mapping.conceptFamilyId)
     }
 
-    // Chapter 12 remains fail-closed on this branch until its independent PR lands.
-    expect(isUnifiedActivityEvidenceChapter('ch-12')).toBe(false)
+    // Chapter 12 is already part of the certified unified activity-evidence registry on current main.
+    expect(isUnifiedActivityEvidenceChapter('ch-12')).toBe(true)
   })
 
   it('registers Chapter 13 for the shared initial-quiz concept-detection handoff', () => {
