@@ -2317,7 +2317,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
             <div className="flex flex-col gap-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
-                  Chapter 12 — Men's Facial Massage and Treatments
+                  Chapter 12 — Men&apos;s Facial Massage and Treatments
                 </p>
                 <h2 className="text-xl font-semibold text-white mt-1">Mastery & Intervention Diagnostics</h2>
                 <p className="text-sm text-silver mt-1">
