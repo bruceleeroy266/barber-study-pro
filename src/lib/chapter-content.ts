@@ -1032,6 +1032,44 @@ export const chapterContentData: Record<string, ChapterContent> = {
         ],
       },
       {
+        type: 'scenarioBlock',
+        id: 'chapter-1-application-scenarios',
+        title: 'Apply the History',
+        subtitle: 'Use Chapter 1 history to make accurate professional connections',
+        scenarios: [
+          {
+            situation: 'A client notices the barber pole and asks what the traditional colors are connected to historically.',
+            options: [
+              { letter: 'A', text: 'They are only modern decoration with no historical meaning.', feedback: 'Not supported by Chapter 1. The pole is presented as a historical symbol connected to the barber-surgeon era.' },
+              { letter: 'B', text: 'They developed from the barber-surgeon era and are traditionally associated with blood, bandages, and veins.', feedback: 'Correct. Chapter 1 connects the barber pole to the barber-surgeon era and those traditional associations.' },
+              { letter: 'C', text: 'They were created to identify electric clipper repair shops.', feedback: 'Incorrect. Electric clipper history is separate from the barber-pole tradition.' },
+              { letter: 'D', text: 'They originated as a symbol for beard fashion cycles.', feedback: 'Incorrect. Beard fashions are part of the chapter, but they are not the origin given for the barber pole.' },
+            ],
+            correctAnswer: 'B',
+          },
+          {
+            situation: 'A student is comparing early barbering tools with modern equipment. Which observation best shows technological evolution?',
+            options: [
+              { letter: 'A', text: 'Barbering tools never changed after the ancient period.', feedback: 'Incorrect. Chapter 1 traces substantial changes in shears, clippers, and razors.' },
+              { letter: 'B', text: 'Modern tools replaced every earlier barbering technique at the same time.', feedback: 'Incorrect. The chapter presents gradual development across different tools and eras.' },
+              { letter: 'C', text: 'Cutting tools progressed from early stone or metal implements toward steel, mechanical, electric, and modern precision equipment.', feedback: 'Correct. That progression reflects the tool-development timeline presented in Chapter 1.' },
+              { letter: 'D', text: 'Tool development is unrelated to barbering history.', feedback: 'Incorrect. Tool evolution is one of the chapter\'s core historical themes.' },
+            ],
+            correctAnswer: 'C',
+          },
+          {
+            situation: 'A classmate says barbering history has no connection to present-day professional practice. What is the best response based on Chapter 1?',
+            options: [
+              { letter: 'A', text: 'History helps explain how professional identity, regulation, organizations, tools, and standards developed over time.', feedback: 'Correct. Chapter 1 uses historical development to give context for the modern profession.' },
+              { letter: 'B', text: 'History replaces the need to learn current safety and licensing requirements.', feedback: 'Incorrect. Historical context does not replace current professional requirements.' },
+              { letter: 'C', text: 'History matters only when reproducing ancient hairstyles.', feedback: 'Incorrect. The chapter connects history to broader professional development.' },
+              { letter: 'D', text: 'History is useful only for memorizing dates.', feedback: 'Incorrect. The chapter also connects historical change to tools, regulation, symbols, and professional identity.' },
+            ],
+            correctAnswer: 'A',
+          },
+        ],
+      },
+      {
         type: 'quote',
         id: 'legacy-quote',
         quote: 'From prehistoric flint blades to precision electric clippers, from bloodletting to hot towel shaves, the barber\'s role has evolved dramatically. Yet the core remains unchanged: transforming how people look and feel.',
