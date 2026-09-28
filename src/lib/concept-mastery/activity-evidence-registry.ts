@@ -96,6 +96,12 @@ const scenarioItemConceptOverrides: Readonly<Record<string, readonly string[]>> 
     'ch10-infectious-parasitic-scalp',
     'ch10-service-safety-referral',
   ],
+  'ch-13:shaving-application-scenarios': [
+    'ch13-hair-growth-ingrown-prevention',
+    'ch13-razor-handling-stretching-technique',
+    'ch13-infection-control-service-safety',
+    'ch13-client-care-professional-practice',
+  ],
 }
 
 export function getScenarioEvidenceConcept(
