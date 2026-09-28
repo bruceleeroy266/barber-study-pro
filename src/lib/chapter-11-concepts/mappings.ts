@@ -25,6 +25,7 @@ export interface Chapter11MicroCheckPlacement {
 
 export const chapter11ContentConceptMappings: readonly Chapter11ContentConceptMapping[] = [
   { contentBlockId: 'treatment-sanctuary-welcome', conceptFamilyId: 'ch11-client-care-professional-practice' },
+  { contentBlockId: 'draping-shampoo-service', conceptFamilyId: 'ch11-shampoo-draping-service' },
   { contentBlockId: 'why-treatment-matters', conceptFamilyId: 'ch11-scalp-hair-treatments' },
   { contentBlockId: 'treatment-certification', conceptFamilyId: 'ch11-client-care-professional-practice' },
   { contentBlockId: 'scalp-treatment-types', conceptFamilyId: 'ch11-scalp-hair-treatments' },
@@ -42,6 +43,7 @@ export const chapter11ContentConceptMappings: readonly Chapter11ContentConceptMa
   { contentBlockId: 'friction', conceptFamilyId: 'ch11-scalp-massage' },
   { contentBlockId: 'tapotement', conceptFamilyId: 'ch11-scalp-massage' },
   { contentBlockId: 'massage-benefits', conceptFamilyId: 'ch11-scalp-massage' },
+  { contentBlockId: 'treatment-equipment-steam-hot-towels', conceptFamilyId: 'ch11-treatment-equipment' },
   { contentBlockId: 'home-care-system', conceptFamilyId: 'ch11-client-care-professional-practice' },
   { contentBlockId: 'retail-sales-mastery', conceptFamilyId: 'ch11-client-care-professional-practice' },
   { contentBlockId: 'common-confusions', conceptFamilyId: 'ch11-service-safety-referral' },
@@ -78,11 +80,11 @@ export const chapter11QuizQuestionConceptMappings: readonly Chapter11QuizQuestio
 ]
 
 export const chapter11MicroCheckPlacements: readonly Chapter11MicroCheckPlacement[] = [
-  { id: 'mc-11-01', afterSectionId: 'scalp-treatment-types', conceptFamilyId: 'ch11-shampoo-draping-service', plannedQuestionCount: 2, purpose: 'Check safe shampoo/draping service decisions and preparation sequence.' },
+  { id: 'mc-11-01', afterSectionId: 'draping-shampoo-service', conceptFamilyId: 'ch11-shampoo-draping-service', plannedQuestionCount: 2, purpose: 'Check safe shampoo/draping service decisions and preparation sequence.' },
   { id: 'mc-11-02', afterSectionId: 'product-selection-system', conceptFamilyId: 'ch11-analysis-product-selection', plannedQuestionCount: 2, purpose: 'Check analysis-to-product matching from observable hair/scalp characteristics.' },
   { id: 'mc-11-03', afterSectionId: 'massage-techniques', conceptFamilyId: 'ch11-scalp-massage', plannedQuestionCount: 2, purpose: 'Check manipulation selection, sequence, pressure, and service-specific massage reasoning.' },
   { id: 'mc-11-04', afterSectionId: 'treatment-procedure', conceptFamilyId: 'ch11-scalp-hair-treatments', plannedQuestionCount: 2, purpose: 'Check treatment purpose, order, and non-medical service application.' },
-  { id: 'mc-11-05', afterSectionId: 'massage-benefits', conceptFamilyId: 'ch11-treatment-equipment', plannedQuestionCount: 2, purpose: 'Check safe use of steam, hot towels, and electric massage equipment.' },
+  { id: 'mc-11-05', afterSectionId: 'treatment-equipment-steam-hot-towels', conceptFamilyId: 'ch11-treatment-equipment', plannedQuestionCount: 2, purpose: 'Check safe use of steam, hot towels, and electric massage equipment.' },
   { id: 'mc-11-06', afterSectionId: 'dandruff', conceptFamilyId: 'ch11-scalp-condition-recognition', plannedQuestionCount: 2, purpose: 'Check source-covered condition recognition used for service selection.' },
   { id: 'mc-11-07', afterSectionId: 'board-exam-alerts', conceptFamilyId: 'ch11-service-safety-referral', plannedQuestionCount: 3, purpose: 'Check contraindication, service-stop, sanitation, scope, and referral decisions.' },
   { id: 'mc-11-08', afterSectionId: 'home-care-system', conceptFamilyId: 'ch11-client-care-professional-practice', plannedQuestionCount: 2, purpose: 'Check client-care, communication, accommodation, and home-care decisions.' },
