@@ -49,3 +49,6 @@ This phase is grounded in the repository Chapter 11 material summary plus curren
 ## Next phase
 
 C11-2 — Source-Grounded Lesson Hardening.
+
+
+Verification trigger: PR #124 is tested against `main`; no merge authorization is implied.
