@@ -31,7 +31,7 @@ export const chapter10ContentConceptMappings: readonly Chapter10ContentConceptMa
   { contentBlockId: 'growth-cycle', conceptFamilyId: 'ch10-growth-cycle-hair-types' },
   ...['hair-analysis-protocol','analysis-factors','texture','density','porosity','elasticity'].map((contentBlockId) => ({ contentBlockId, conceptFamilyId: 'ch10-analysis-properties' as const })),
   ...['alopecia-intro','alopecia-types','androgenic','areata','other'].map((contentBlockId) => ({ contentBlockId, conceptFamilyId: 'ch10-alopecia-hair-loss' as const })),
-  ...['hair-disorders','hypertrophies','non-contagious-disorders'].map((contentBlockId) => ({ contentBlockId, conceptFamilyId: 'ch10-hair-shaft-disorders' as const })),
+  ...['hair-disorders','service-boundary-observation','non-contagious-disorders'].map((contentBlockId) => ({ contentBlockId, conceptFamilyId: 'ch10-hair-shaft-disorders' as const })),
   { contentBlockId: 'contagious-disorders', conceptFamilyId: 'ch10-infectious-parasitic-scalp' },
 ]
 
