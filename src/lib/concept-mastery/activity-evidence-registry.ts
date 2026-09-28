@@ -11,6 +11,7 @@ import { chapter8ContentConceptMappings, chapter8FlashcardConceptMappings } from
 import { chapter9ContentConceptMappings, chapter9FlashcardConceptMappings } from '../chapter-9-concepts/mappings'
 import { chapter10ContentConceptMappings, chapter10FlashcardConceptMappings } from '../chapter-10-concepts/mappings'
 import { chapter11ContentConceptMappings, chapter11FlashcardConceptMappings } from '../chapter-11-concepts/mappings'
+import { chapter12ContentConceptMappings, chapter12FlashcardConceptMappings } from '../chapter-12-concepts/mappings'
 
 type GenericMapping = {
   flashcardId?: string
@@ -52,6 +53,7 @@ const flashcardMappings: Record<string, readonly GenericMapping[]> = {
   'ch-9': chapter9FlashcardConceptMappings,
   'ch-10': chapter10FlashcardConceptMappings,
   'ch-11': chapter11FlashcardConceptMappings,
+  'ch-12': chapter12FlashcardConceptMappings,
 }
 
 const contentMappings: Record<string, readonly GenericMapping[]> = {
@@ -66,6 +68,7 @@ const contentMappings: Record<string, readonly GenericMapping[]> = {
   'ch-9': chapter9ContentConceptMappings,
   'ch-10': chapter10ContentConceptMappings,
   'ch-11': chapter11ContentConceptMappings,
+  'ch-12': chapter12ContentConceptMappings,
 }
 
 export function getFlashcardEvidenceConcept(chapterId: string, flashcardId: string): string | null {
@@ -113,7 +116,7 @@ export function getFlashcardEvidenceInventory(chapterId: string): readonly strin
 
 export function getScenarioEvidenceInventory(chapterId: string): readonly string[] {
   const number = Number(chapterId.replace('ch-', ''))
-  if (!Number.isInteger(number) || number < 1 || number > 11) return []
+  if (!Number.isInteger(number) || number < 1 || number > 12) return []
   const content = getChapterContent(number)
   if (!content) return []
 
@@ -123,7 +126,11 @@ export function getScenarioEvidenceInventory(chapterId: string): readonly string
   })
 }
 
-export function isG7EvidenceChapter(chapterId: string): boolean {
+export function isUnifiedActivityEvidenceChapter(chapterId: string): boolean {
   const number = Number(chapterId.replace('ch-', ''))
-  return Number.isInteger(number) && number >= 1 && number <= 11
+  return Number.isInteger(number) && number >= 1 && number <= 12
 }
+
+// Backward-compatible alias for older call sites/tests while Chapter 12
+// joins the same durable activity-evidence architecture.
+export const isG7EvidenceChapter = isUnifiedActivityEvidenceChapter
