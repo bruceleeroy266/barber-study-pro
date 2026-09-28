@@ -52,11 +52,11 @@ describe('C13-1 canonical concept architecture + shared grading/evidence binding
 
   it('maps every current lesson ID exactly once without rewriting lesson content', () => {
     const authoredIds = collectContentIds(chapter13PremiumContent.sections)
-    expect(authoredIds).toHaveLength(41)
-    expect(new Set(authoredIds).size).toBe(41)
+    expect(authoredIds).toHaveLength(42)
+    expect(new Set(authoredIds).size).toBe(42)
 
-    expect(chapter13ContentConceptMappings).toHaveLength(41)
-    expect(new Set(chapter13ContentConceptMappings.map((mapping) => mapping.contentBlockId)).size).toBe(41)
+    expect(chapter13ContentConceptMappings).toHaveLength(42)
+    expect(new Set(chapter13ContentConceptMappings.map((mapping) => mapping.contentBlockId)).size).toBe(42)
     expect(new Set(chapter13ContentConceptMappings.map((mapping) => mapping.contentBlockId))).toEqual(new Set(authoredIds))
   })
 
