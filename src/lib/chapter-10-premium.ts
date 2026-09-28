@@ -264,7 +264,7 @@ export const chapter10PremiumContent: ChapterContent = {
           label: 'SEBACEOUS GLAND',
           title: 'SEBACEOUS GLAND — THE NATURAL OIL FACTORY',
           bullets: [
-            { label: 'DEFINITION', description: 'A small oil-producing gland connected to each hair follicle' },
+            { label: 'DEFINITION', description: 'An oil-producing gland associated with the hair follicle' },
             { label: 'FUNCTION', description: 'Produces sebum — a natural oil that lubricates the hair and skin, keeping both soft and pliable' },
             { label: 'BARBER RELEVANCE', description: 'Sebum production affects hair condition. Overproduction = oily scalp and hair. Underproduction = dryness and brittleness. Proper cleansing and conditioning balance sebum levels.' },
           ],
@@ -684,12 +684,12 @@ export const chapter10PremiumContent: ChapterContent = {
         {
           icon: 'Scissors',
           title: 'TRICHOPTILOSIS',
-          description: 'Split ends. The cuticle is damaged and the cortex separates at the end of the strand. Preventable with regular trims and conditioning. Not treatable — must be cut off.',
+          description: 'Split ends. Chapter 10 identifies trichoptilosis as split ends of the hair shaft.',
         },
         {
           icon: 'Link',
           title: 'MONILETHRIX',
-          description: 'Beaded hair — alternating thick and thin segments along the strand. Genetic. Fragile and breaks easily. Be extremely gentle. No chemical services.',
+          description: 'Beaded hair with fragile sections that break easily.',
         },
         {
           icon: 'CircleDot',
@@ -700,14 +700,14 @@ export const chapter10PremiumContent: ChapterContent = {
     },
 
     // ═══════════════════════════════════════════
-    // SECTION 14B: HYPERTROPHIES — ABNORMAL GROWTHS
+    // SECTION 14B: SERVICE-SAFETY OBSERVATION
     // ═══════════════════════════════════════════
     {
       type: 'contentBlock',
-      id: 'hypertrophies',
-      title: 'HYPERTROPHIES — ABNORMAL SKIN GROWTHS',
-      content: 'Hypertrophies are abnormal growths on the skin such as moles, warts, or skin tags. When they are present on the scalp, the barber should observe them carefully and avoid catching or injuring raised areas during service. Determining whether a growth is benign or malignant is outside barbering scope.\n\nWHY IT MATTERS: When combing through hair, you must use extreme care to avoid catching the comb on these growths. Painful, bleeding, or visibly changing growths warrant cautious service decisions and appropriate medical referral.\n\nRED FLAGS: If a client\'s mole or growth has changed color, size, shape, or texture since their last visit, gently suggest they see a physician. You are not diagnosing — you are observing. If a visible change is concerning or outside scope, recommend appropriate medical evaluation.\n\nKEY STUDY POINT: Use gentle scalp-analysis techniques while parting the hair to observe hypertrophies, abrasions, and parasites without scraping or irritating the scalp.',
-      highlight: 'OBSERVE — PROTECT — REFER WHEN CHANGES APPEAR',
+      id: 'service-boundary-observation',
+      title: 'OBSERVABLE SCALP CONDITIONS — SERVICE BOUNDARIES',
+      content: 'Pre-service scalp analysis supports safe service decisions without turning observation into medical diagnosis. Check the scalp first and note service-relevant findings such as parasites, irritation, and abrasions.\n\nSERVICE DECISIONS: Do not begin a service when parasites are present. Do not proceed with chemical services when irritation or abrasions are present. When a condition is outside barbering scope or makes the planned service unsafe, use appropriate referral guidance rather than diagnosing or treating the condition.\n\nKEY STUDY POINT: Observe the scalp carefully, make the appropriate service-safety decision, follow sanitation requirements, and refer when needed.',
+      highlight: 'OBSERVE — PROTECT — REFER WITHIN SCOPE',
     },
 
     // ═══════════════════════════════════════════
@@ -750,11 +750,11 @@ export const chapter10PremiumContent: ChapterContent = {
         {
           icon: 'Thermometer',
           title: 'FURUNCLES & CARBUNCLES',
-          description: 'Boils (single) or clusters of boils (carbuncles) from bacterial infection. Painful, raised, pus-filled. Do not shave over. Refer to physician. May be contagious if draining.' },
+          description: 'A furuncle is an acute deep bacterial boil; a carbuncle is a cluster of connected boils. Chapter 10 directs referral for a carbuncle.' },
         {
           icon: 'ShieldCheck',
-          title: 'SEBORRHEIC DERMATITIS',
-          description: 'Oily, red, scaly patches. Dandruff-like but more severe. Not contagious. Manageable with medicated products. Handle gently during services.',
+          title: 'PITYRIASIS / DANDRUFF',
+          description: 'Chapter 10 describes pityriasis as flaky scalp skin and distinguishes capitis simplex from the greasy or waxy steatoides form. Malassezia overgrowth is associated with dandruff.',
         },
       ],
     },
@@ -781,7 +781,7 @@ export const chapter10PremiumContent: ChapterContent = {
       items: [
         { text: 'DO: Check the scalp first for parasites, irritation, abrasions, and other service-relevant findings' },
         { text: 'DO: Check the SCALP first before analyzing the hair — scalp disorders can prohibit any service' },
-        { text: 'DO: Use all four senses: sight, hearing, smell, and touch (touch is most important)' },
+        { text: 'DO: Use sight, hearing, smell, and touch as part of hair-and-scalp analysis' },
         { text: 'DO: Follow school, workplace, or state documentation requirements when they apply' },
         { text: 'DO: Recommend medical evaluation when a condition is outside barbering scope or makes the planned service unsafe' },
         { text: 'DON\'T: Scrape the scalp during analysis — this can cause irritation and spread infection' },
