@@ -52,12 +52,14 @@ export const chapter12FlashcardConceptMappings: readonly Chapter12FlashcardConce
 const q = (n: number): `qq-12-${string}` => `qq-12-${String(n).padStart(3, '0')}`
 
 export const chapter12QuizQuestionConceptMappings: readonly Chapter12QuizQuestionConceptMapping[] = [
-  ...[1,2,3].map((n) => ({ questionId: q(n), conceptFamilyId: 'ch12-client-care-professional-practice' as const })),
-  ...Array.from({ length: 20 }, (_, i) => i + 4).map((n) => ({ questionId: q(n), conceptFamilyId: 'ch12-facial-anatomy-neurovascular' as const })),
-  ...Array.from({ length: 11 }, (_, i) => i + 24).map((n) => ({ questionId: q(n), conceptFamilyId: 'ch12-massage-principles-manipulations' as const })),
-  { questionId: q(35), conceptFamilyId: 'ch12-contraindications-service-safety' },
-  ...Array.from({ length: 8 }, (_, i) => i + 36).map((n) => ({ questionId: q(n), conceptFamilyId: 'ch12-equipment-electrotherapy' as const })),
-  ...[44,45].map((n) => ({ questionId: q(n), conceptFamilyId: 'ch12-skin-analysis-product-selection' as const })),
+  ...Array.from({ length: 4 }, (_, i) => i + 1).map((n) => ({ questionId: q(n), conceptFamilyId: 'ch12-client-care-professional-practice' as const })),
+  ...Array.from({ length: 10 }, (_, i) => i + 5).map((n) => ({ questionId: q(n), conceptFamilyId: 'ch12-facial-anatomy-neurovascular' as const })),
+  ...Array.from({ length: 8 }, (_, i) => i + 15).map((n) => ({ questionId: q(n), conceptFamilyId: 'ch12-massage-principles-manipulations' as const })),
+  ...Array.from({ length: 7 }, (_, i) => i + 23).map((n) => ({ questionId: q(n), conceptFamilyId: 'ch12-equipment-electrotherapy' as const })),
+  ...Array.from({ length: 6 }, (_, i) => i + 30).map((n) => ({ questionId: q(n), conceptFamilyId: 'ch12-skin-analysis-product-selection' as const })),
+  ...Array.from({ length: 4 }, (_, i) => i + 36).map((n) => ({ questionId: q(n), conceptFamilyId: 'ch12-facial-treatment-procedures' as const })),
+  ...Array.from({ length: 3 }, (_, i) => i + 40).map((n) => ({ questionId: q(n), conceptFamilyId: 'ch12-sanitation-infection-control' as const })),
+  ...Array.from({ length: 3 }, (_, i) => i + 43).map((n) => ({ questionId: q(n), conceptFamilyId: 'ch12-contraindications-service-safety' as const })),
 ]
 
 export function getChapter12ContentBlocksForConcept(conceptFamilyId: Chapter12ConceptFamilyId) {
