@@ -83,6 +83,7 @@ import {
 } from '@/lib/chapter-11-concepts/instructor-diagnostics'
 import { mapHourLogsFromDb, mapAttendanceRecordsFromDb, mapAttendanceNotesFromDb } from '@/lib/mappers/operational-data-mappers'
 import { getLastSignInAtMap } from '@/lib/instructor/last-login'
+import { buildLiveInstructorChapterGrade, type LiveInstructorActivityEvidenceRow } from '@/lib/concept-mastery/live-instructor-grade'
 
 interface StudentDetailPageProps {
   params: Promise<{
@@ -325,6 +326,15 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     answered_at: string
     created_at: string
   }
+
+  const { data: chapterActivityEvidenceRows } = await supabase
+    .from('chapter_activity_evidence')
+    .select('chapter_id,source,item_id,is_correct')
+    .eq('user_id', studentId)
+    .in('chapter_id', ['ch-1','ch-2','ch-3','ch-4','ch-5','ch-6','ch-7','ch-8','ch-9','ch-10','ch-11'])
+    .order('answered_at', { ascending: true })
+
+  const liveActivityRows = (chapterActivityEvidenceRows ?? []) as LiveInstructorActivityEvidenceRow[]
 
   const sharedChapterMicroCheckRows = (chapterMicroCheckRows ?? []) as SharedChapterMicroCheckRow[]
   const chapter1MicroCheckRows = sharedChapterMicroCheckRows.filter((row) => row.chapter_id === 'ch-1') as Chapter1MicroCheckAttemptRow[]
@@ -696,6 +706,33 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     referenceTime: new Date().toISOString(),
   })
 
+  const buildLiveGrade = (
+    chapterId: string,
+    diagnostics: {
+      microCheckPercent: number | null
+      chapterAssessmentPercent: number | null
+      remediationReassessmentPercent: number | null
+    },
+  ) => buildLiveInstructorChapterGrade({
+    chapterId,
+    microCheckPercent: diagnostics.microCheckPercent,
+    chapterAssessmentPercent: diagnostics.chapterAssessmentPercent,
+    remediationReassessmentPercent: diagnostics.remediationReassessmentPercent,
+    activityRows: liveActivityRows,
+  })
+
+  const chapter1LiveGrade = buildLiveGrade('ch-1', chapter1Diagnostics)
+  const chapter2LiveGrade = buildLiveGrade('ch-2', chapter2Diagnostics)
+  const chapter3LiveGrade = buildLiveGrade('ch-3', chapter3Diagnostics)
+  const chapter4LiveGrade = buildLiveGrade('ch-4', chapter4Diagnostics)
+  const chapter5LiveGrade = buildLiveGrade('ch-5', chapter5Diagnostics)
+  const chapter6LiveGrade = buildLiveGrade('ch-6', chapter6Diagnostics)
+  const chapter7LiveGrade = buildLiveGrade('ch-7', chapter7Diagnostics)
+  const chapter8LiveGrade = buildLiveGrade('ch-8', chapter8Diagnostics)
+  const chapter9LiveGrade = buildLiveGrade('ch-9', chapter9Diagnostics)
+  const chapter10LiveGrade = buildLiveGrade('ch-10', chapter10Diagnostics)
+  const chapter11LiveGrade = buildLiveGrade('ch-11', chapter11Diagnostics)
+
   // Last activity across all progress records
   const lastStudiedDates = progressRecords
     .map((p) => p.last_studied_at)
@@ -872,8 +909,19 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
               <div className="rounded-lg border border-graphite bg-black p-4">
-                <div className="text-2xl font-bold text-[var(--color-brand-gold)]">{chapter1Diagnostics.chapterGrade.finalGrade}%</div>
+                <div className="text-2xl font-bold text-[var(--color-brand-gold)]">{chapter1LiveGrade.grade.finalGrade}%</div>
                 <div className="text-xs text-silver mt-1">Chapter Grade</div>
+                <div className="text-[10px] text-silver-gray mt-1">Live 20/10/40/15/15 evidence</div>
+                <div className="text-[10px] text-silver-gray mt-1">Live 20/10/40/15/15 evidence</div>
+                <div className="text-[10px] text-silver-gray mt-1">Live 20/10/40/15/15 evidence</div>
+                <div className="text-[10px] text-silver-gray mt-1">Live 20/10/40/15/15 evidence</div>
+                <div className="text-[10px] text-silver-gray mt-1">Live 20/10/40/15/15 evidence</div>
+                <div className="text-[10px] text-silver-gray mt-1">Live 20/10/40/15/15 evidence</div>
+                <div className="text-[10px] text-silver-gray mt-1">Live 20/10/40/15/15 evidence</div>
+                <div className="text-[10px] text-silver-gray mt-1">Live 20/10/40/15/15 evidence</div>
+                <div className="text-[10px] text-silver-gray mt-1">Live 20/10/40/15/15 evidence</div>
+                <div className="text-[10px] text-silver-gray mt-1">Live 20/10/40/15/15 evidence</div>
+                <div className="text-[10px] text-silver-gray mt-1">Live 20/10/40/15/15 evidence</div>
               </div>
               <div className="rounded-lg border border-graphite bg-black p-4">
                 <div className="text-2xl font-bold text-white">{chapter1Diagnostics.overallMastery}%</div>
@@ -958,7 +1006,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
               <div className="rounded-lg border border-graphite bg-black p-4">
-                <div className="text-2xl font-bold text-[var(--color-brand-gold)]">{chapter2Diagnostics.chapterGrade.finalGrade}%</div>
+                <div className="text-2xl font-bold text-[var(--color-brand-gold)]">{chapter2LiveGrade.grade.finalGrade}%</div>
                 <div className="text-xs text-silver mt-1">Chapter Grade</div>
               </div>
               <div className="rounded-lg border border-graphite bg-black p-4">
@@ -1044,7 +1092,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
               <div className="rounded-lg border border-graphite bg-black p-4">
-                <div className="text-2xl font-bold text-[var(--color-brand-gold)]">{chapter3Diagnostics.chapterGrade.finalGrade}%</div>
+                <div className="text-2xl font-bold text-[var(--color-brand-gold)]">{chapter3LiveGrade.grade.finalGrade}%</div>
                 <div className="text-xs text-silver mt-1">Chapter Grade</div>
               </div>
               <div className="rounded-lg border border-graphite bg-black p-4">
@@ -1130,7 +1178,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
               <div className="rounded-lg border border-graphite bg-black p-4">
-                <div className="text-2xl font-bold text-[var(--color-brand-gold)]">{chapter4Diagnostics.chapterGrade.finalGrade}%</div>
+                <div className="text-2xl font-bold text-[var(--color-brand-gold)]">{chapter4LiveGrade.grade.finalGrade}%</div>
                 <div className="text-xs text-silver mt-1">Chapter Grade</div>
               </div>
               <div className="rounded-lg border border-graphite bg-black p-4">
@@ -1216,7 +1264,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
               <div className="rounded-lg border border-graphite bg-black p-4">
-                <div className="text-2xl font-bold text-[var(--color-brand-gold)]">{chapter5Diagnostics.chapterGrade.finalGrade}%</div>
+                <div className="text-2xl font-bold text-[var(--color-brand-gold)]">{chapter5LiveGrade.grade.finalGrade}%</div>
                 <div className="text-xs text-silver mt-1">Chapter Grade</div>
               </div>
               <div className="rounded-lg border border-graphite bg-black p-4">
@@ -1302,7 +1350,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
               <div className="rounded-lg border border-graphite bg-black p-4">
-                <div className="text-2xl font-bold text-[var(--color-brand-gold)]">{chapter6Diagnostics.chapterGrade.finalGrade}%</div>
+                <div className="text-2xl font-bold text-[var(--color-brand-gold)]">{chapter6LiveGrade.grade.finalGrade}%</div>
                 <div className="text-xs text-silver mt-1">Chapter Grade</div>
               </div>
               <div className="rounded-lg border border-graphite bg-black p-4">
@@ -1392,7 +1440,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <div className="rounded-lg border border-graphite bg-black p-4">
                   <div className="text-2xl font-bold text-[var(--color-brand-gold)]">
-                    {chapter7Diagnostics.chapterGrade.finalGrade}%
+                    {chapter7LiveGrade.grade.finalGrade}%
                   </div>
                   <div className="text-xs text-silver mt-1">Chapter Grade</div>
                 </div>
@@ -1557,7 +1605,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <div className="rounded-lg border border-graphite bg-black p-4">
                   <div className="text-2xl font-bold text-[var(--color-brand-gold)]">
-                    {chapter8Diagnostics.chapterGrade.finalGrade}%
+                    {chapter8LiveGrade.grade.finalGrade}%
                   </div>
                   <div className="text-xs text-silver mt-1">Chapter Grade</div>
                 </div>
@@ -1727,7 +1775,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <div className="rounded-lg border border-graphite bg-black p-4">
                   <div className="text-2xl font-bold text-[var(--color-brand-gold)]">
-                    {chapter9Diagnostics.chapterGrade.finalGrade}%
+                    {chapter9LiveGrade.grade.finalGrade}%
                   </div>
                   <div className="text-xs text-silver mt-1">Chapter Grade</div>
                 </div>
@@ -1886,7 +1934,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <div className="rounded-lg border border-graphite bg-black p-4">
                   <div className="text-2xl font-bold text-[var(--color-brand-gold)]">
-                    {chapter10Diagnostics.chapterGrade.finalGrade}%
+                    {chapter10LiveGrade.grade.finalGrade}%
                   </div>
                   <div className="text-xs text-silver mt-1">Chapter Grade</div>
                 </div>
@@ -2045,7 +2093,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <div className="rounded-lg border border-graphite bg-black p-4">
                   <div className="text-2xl font-bold text-[var(--color-brand-gold)]">
-                    {chapter11Diagnostics.chapterGrade.finalGrade}%
+                    {chapter11LiveGrade.grade.finalGrade}%
                   </div>
                   <div className="text-xs text-silver mt-1">Chapter Grade</div>
                 </div>
