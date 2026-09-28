@@ -307,16 +307,31 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     .in('chapter_id', ['ch-1','ch-2','ch-3','ch-4','ch-5','ch-6','ch-7','ch-8','ch-9','ch-10'])
     .order('answered_at', { ascending: true })
 
-  const chapter1MicroCheckRows = chapterMicroCheckRows?.filter((row: Chapter1MicroCheckAttemptRow) => row.chapter_id === 'ch-1')
-  const chapter2MicroCheckRows = chapterMicroCheckRows?.filter((row: Chapter1MicroCheckAttemptRow) => row.chapter_id === 'ch-2')
-  const chapter3MicroCheckRows = chapterMicroCheckRows?.filter((row: Chapter1MicroCheckAttemptRow) => row.chapter_id === 'ch-3')
-  const chapter4MicroCheckRows = chapterMicroCheckRows?.filter((row: Chapter1MicroCheckAttemptRow) => row.chapter_id === 'ch-4')
-  const chapter5MicroCheckRows = chapterMicroCheckRows?.filter((row: Chapter1MicroCheckAttemptRow) => row.chapter_id === 'ch-5')
-  const chapter6MicroCheckRows = chapterMicroCheckRows?.filter((row: Chapter1MicroCheckAttemptRow) => row.chapter_id === 'ch-6')
-  const chapter7MicroCheckRows = chapterMicroCheckRows?.filter((row: Chapter1MicroCheckAttemptRow) => row.chapter_id === 'ch-7')
-  const chapter8MicroCheckRows = chapterMicroCheckRows?.filter((row: Chapter1MicroCheckAttemptRow) => row.chapter_id === 'ch-8')
-  const chapter9MicroCheckRows = chapterMicroCheckRows?.filter((row: Chapter1MicroCheckAttemptRow) => row.chapter_id === 'ch-9')
-  const chapter10MicroCheckRows = chapterMicroCheckRows?.filter((row: Chapter1MicroCheckAttemptRow) => row.chapter_id === 'ch-10')
+  type SharedChapterMicroCheckRow = {
+    id: string
+    user_id: string
+    chapter_id: string
+    check_id: string
+    question_id: string
+    concept_id: string
+    difficulty: 'understanding' | 'application' | 'scenario'
+    selected_answer: 'a' | 'b' | 'c' | 'd'
+    is_correct: boolean
+    answered_at: string
+    created_at: string
+  }
+
+  const sharedChapterMicroCheckRows = (chapterMicroCheckRows ?? []) as SharedChapterMicroCheckRow[]
+  const chapter1MicroCheckRows = sharedChapterMicroCheckRows.filter((row) => row.chapter_id === 'ch-1') as Chapter1MicroCheckAttemptRow[]
+  const chapter2MicroCheckRows = sharedChapterMicroCheckRows.filter((row) => row.chapter_id === 'ch-2') as Chapter2MicroCheckAttemptRow[]
+  const chapter3MicroCheckRows = sharedChapterMicroCheckRows.filter((row) => row.chapter_id === 'ch-3') as Chapter3MicroCheckAttemptRow[]
+  const chapter4MicroCheckRows = sharedChapterMicroCheckRows.filter((row) => row.chapter_id === 'ch-4') as Chapter4MicroCheckAttemptRow[]
+  const chapter5MicroCheckRows = sharedChapterMicroCheckRows.filter((row) => row.chapter_id === 'ch-5') as Chapter5MicroCheckAttemptRow[]
+  const chapter6MicroCheckRows = sharedChapterMicroCheckRows.filter((row) => row.chapter_id === 'ch-6') as Chapter6MicroCheckAttemptRow[]
+  const chapter7MicroCheckRows = sharedChapterMicroCheckRows.filter((row) => row.chapter_id === 'ch-7') as Chapter7MicroCheckAttemptRow[]
+  const chapter8MicroCheckRows = sharedChapterMicroCheckRows.filter((row) => row.chapter_id === 'ch-8') as Chapter8MicroCheckAttemptRow[]
+  const chapter9MicroCheckRows = sharedChapterMicroCheckRows.filter((row) => row.chapter_id === 'ch-9') as Chapter9MicroCheckAttemptRow[]
+  const chapter10MicroCheckRows = sharedChapterMicroCheckRows.filter((row) => row.chapter_id === 'ch-10') as Chapter10MicroCheckAttemptRow[]
 
   const { data: chapter7RemediationCycles } = await supabase
     .from('remediation_cycles')
