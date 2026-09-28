@@ -517,6 +517,9 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
             <ScenarioBlock
               scenarios={section.scenarios}
               theme={t}
+              chapterId={chapterId}
+              userId={userId}
+              sectionId={section.id}
               onComplete={() => handleKnowledgeCheckSectionComplete(section.id)}
             />
           </SectionWrapper>
@@ -542,6 +545,9 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
             <ProScenario
               scenarios={section.scenarios}
               theme={t}
+              chapterId={chapterId}
+              userId={userId}
+              sectionId={section.id}
               onComplete={() => handleKnowledgeCheckSectionComplete(section.id)}
             />
           </SectionWrapper>
