@@ -2,7 +2,7 @@ import { supabase } from '@/lib/supabase'
 import {
   getFlashcardEvidenceInventory,
   getScenarioEvidenceInventory,
-  isG7EvidenceChapter,
+  isUnifiedActivityEvidenceChapter,
 } from './activity-evidence-registry'
 
 export type ChapterActivityEvidenceSource = 'flashcard' | 'scenario_application'
@@ -87,7 +87,7 @@ export async function loadChapterActivityEvidence(
   userId: string,
   chapterId: string,
 ): Promise<ChapterActivityEvidenceRow[]> {
-  if (!isG7EvidenceChapter(chapterId)) return []
+  if (!isUnifiedActivityEvidenceChapter(chapterId)) return []
 
   const { data, error } = await supabase
     .from('chapter_activity_evidence')
@@ -109,7 +109,7 @@ export async function loadChapterActivityEvidence(
 export async function persistChapterActivityEvidence(
   input: ChapterActivityEvidenceInsert,
 ): Promise<ChapterActivityEvidenceRow | null> {
-  if (!isG7EvidenceChapter(input.chapterId)) return null
+  if (!isUnifiedActivityEvidenceChapter(input.chapterId)) return null
 
   const payload = {
     user_id: input.userId,
