@@ -136,12 +136,12 @@ export const chapter16PremiumContent: ChapterContent = {
         {
           icon: 'Scale',
           title: 'BALANCE & WEARABILITY',
-          text: 'A successful cut must look good in the chair and behave well at home. Balance and wearability come from planning, not guessing.',
+          text: 'A successful cut should look balanced in the chair and support the client's at-home styling goals. Balance and wearability improve with deliberate planning rather than guesswork.',
         },
         {
           icon: 'MessageCircle',
           title: 'CONSULTATION',
-          text: "Never assume a client wants a men's-style service. A thorough consultation ensures the final design matches the client's goals and lifestyle.",
+          text: "Do not assume a client wants a particular style category. A thorough consultation helps align the final design with the client's goals, hair characteristics, maintenance preferences, and lifestyle.",
         },
       ],
     },
@@ -339,8 +339,8 @@ export const chapter16PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'blunt-cut-board-alerts',
-      title: '🚨 BOARD ALERT: BLUNT CUT ESSENTIALS',
-      content: "Expect licensing exams to test these ideas: blunt cuts require low or no elevation; natural fall determines the final line; head position changes the finished perimeter; and cross-checking is required for precision. If you can explain why each of these matters, you understand the core of the blunt cut.",
+      title: 'CORE CONCEPTS: BLUNT CUT',
+      content: "Focus on these core relationships: blunt cutting commonly uses low or no elevation to preserve perimeter weight; natural fall and head position affect the finished line; and cross-checking helps verify balance. Understanding why each relationship matters is more useful than memorizing an exam prediction.",
       highlight: 'LOW ELEVATION • NATURAL FALL • HEAD POSITION • CROSS-CHECKING',
     },
     {
@@ -548,8 +548,8 @@ export const chapter16PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'graduated-cut-board-alerts',
-      title: '🚨 BOARD ALERT: GRADUATED CUT ESSENTIALS',
-      content: "Licensing exams frequently test the relationship between graduation and weight. Remember: graduation builds weight; consistent elevation creates consistent results; a traveling guide carries the angle forward while a stationary guide stays fixed; and finger angle directly affects the finished shape. If you can explain these relationships, you understand graduation better than most test-takers.",
+      title: 'CORE CONCEPTS: GRADUATED CUT',
+      content: "Focus on the relationship between graduation and weight: graduation builds weight; consistent elevation supports consistent results; a traveling guide moves with the haircut while a stationary guide stays fixed; and finger angle affects the finished shape. Be able to explain the relationships rather than relying on exam-frequency claims.",
       highlight: 'GRADUATION BUILDS WEIGHT • CONSISTENT ELEVATION • GUIDE CONTROL • FINGER ANGLE',
     },
     {
@@ -754,8 +754,8 @@ export const chapter16PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'uniform-layer-board-alerts',
-      title: '🚨 BOARD ALERT: UNIFORM LAYERED CUT ESSENTIALS',
-      content: "Expect licensing exams to focus on the relationship between elevation and layer length. Remember: uniform layers distribute weight evenly; consistent elevation is essential; changing the elevation changes the haircut; and the guide must be maintained through every section. These four ideas separate a uniform layer from a graduated or long-layered cut.",
+      title: 'CORE CONCEPTS: UNIFORM LAYERED CUT',
+      content: "Focus on the relationship between elevation, guide control, and layer length. Uniform layering is built around consistent elevation and controlled guide use; changing elevation changes the resulting shape and weight distribution. These relationships help distinguish uniform layering from graduated and long-layered structures.",
       highlight: 'EVEN WEIGHT • CONSISTENT ELEVATION • ELEVATION CHANGES THE CUT • GUIDE CONTROL',
     },
     {
@@ -959,8 +959,8 @@ export const chapter16PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'long-layer-board-alerts',
-      title: '🚨 BOARD ALERT: LONG LAYERED CUT ESSENTIALS',
-      content: "Licensing exams often test the difference between haircut structures. Remember: higher elevation creates longer layers; the perimeter must be preserved while interior weight is reduced; consistent elevation produces predictable results; and guide control is essential from section to section. These ideas separate a long layered cut from a uniform layer or blunt cut.",
+      title: 'CORE CONCEPTS: LONG LAYERED CUT',
+      content: "Focus on how long-layer design preserves perimeter length while reducing interior weight and creating movement. Consistent elevation and guide control support a predictable shape. Compare those relationships with blunt and uniform-layered structures instead of relying on exam-frequency predictions.",
       highlight: 'HIGH ELEVATION • PERIMETER PRESERVATION • CONSISTENT ELEVATION • GUIDE CONTROL',
     },
     {
@@ -991,7 +991,7 @@ export const chapter16PremiumContent: ChapterContent = {
       items: [
         { category: 'Show the Elevation Difference', tips: ['Demonstrate 90-degree and 180-degree elevation side by side. Students need to feel the difference in their bodies, not just see it.'] },
         { category: 'Compare Uniform and Long Layers', tips: ['Show a uniform layer and a long layer next to each other. The difference in perimeter length becomes immediately clear.'] },
-        { category: 'Evaluate After Blow Drying', tips: ['Always blow-dry before final judgment. Wet long hair can hide uneven interior layers.'] },
+        { category: 'Evaluate After Blow Drying', tips: ['Evaluate the haircut in its intended finished state before final judgment. Drying and styling can reveal balance, movement, and uneven interior layers that may be less visible while the hair is wet.'] },
         { category: 'Reinforce the Guide', tips: ['Have students name the traveling guide before each subsection. Consistency depends on knowing the reference point.'] },
       ],
     },
@@ -1087,7 +1087,7 @@ export const chapter16PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'curly-hair-fundamentals',
       title: 'CURLY HAIR FUNDAMENTALS',
-      content: "Curly hair has a natural wave pattern that creates movement, expansion, and shrinkage. Wet curls may appear much longer than dry curls because the curl springs up as it dries. Curly hair also expands outward, so the silhouette can change dramatically after styling. Curls should never be treated like straight hair. Forcing a curl into a technique designed for straight hair removes the curl's memory and produces an uneven shape. Always observe the natural fall and curl pattern before choosing where and how much to cut.",
+      content: "Curly hair can change in apparent length, volume, and silhouette as it dries because curl pattern and shrinkage vary by client. Techniques developed on straight hair may need to be adapted rather than copied directly. Observe natural fall, curl pattern, density, and the client's usual styling routine before deciding where and how much to cut.",
       highlight: 'CURLY HAIR HAS A MEMORY — RESPECT THE PATTERN',
     },
     {
@@ -1107,14 +1107,14 @@ export const chapter16PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'texture-curly-figures',
       title: 'FIGURE CALLOUTS: WAVE, CURL, AND TEXTURE',
-      content: "The textbook figures for this topic show wave formation, curl pattern, and texture comparison. The wave-formation image teaches that curls have a repeating structure with crests and troughs. The curl-pattern image shows how different curl types expand and shrink after drying. The texture-comparison image illustrates the difference between fine, medium, and coarse strand diameters. Together these figures teach that hair analysis is visual as well as tactile. Future ASCYN PRO illustrations will replace the textbook artwork while preserving these educational concepts.",
+      content: "Use the lesson's visual callouts to compare wave or curl pattern, shrinkage behavior, and strand diameter. The instructional goal is to reinforce that hair analysis uses both visual observation and tactile assessment. ASCYN PRO visuals should teach the concept without reproducing textbook artwork.",
       highlight: 'FIGURES TEACH VISUAL AND TACTILE ANALYSIS',
     },
     {
       type: 'contentBlock',
       id: 'texture-curly-board-alerts',
-      title: '🚨 BOARD ALERT: HAIR ANALYSIS ESSENTIALS',
-      content: "Licensing exams consistently test hair analysis and curl behavior. Remember: always perform a hair analysis before cutting; curly hair shrinks after drying; texture and density determine technique selection; and no single haircut fits every client. These principles protect both the client and your professional reputation.",
+      title: 'CORE CONCEPTS: HAIR ANALYSIS',
+      content: "Hair analysis should guide haircut planning. Assess texture, density, growth pattern, curl behavior, and likely shrinkage before selecting sectioning, tension, elevation, or finishing choices. No single haircutting approach fits every client, so adapt the design to the person in the chair.",
       highlight: 'ANALYZE FIRST • CURLS SHRINK • TEXTURE GUIDES TECHNIQUE • ONE SIZE DOES NOT FIT ALL',
     },
     {
@@ -1143,7 +1143,7 @@ export const chapter16PremiumContent: ChapterContent = {
       subtitle: 'Teaching texture, density, and curl analysis',
       items: [
         { category: 'Compare Samples', tips: ['Show fine, medium, and coarse hair samples side by side. Students retain the difference when they can feel and see it.'] },
-        { category: 'Demonstrate Shrinkage', tips: ['Cut a small curly section wet and let it dry. Measure before and after to prove shrinkage is real.'] },
+        { category: 'Demonstrate Shrinkage', tips: ['When appropriate for instruction, compare a controlled wet and dry sample to demonstrate how shrinkage can vary. Avoid using a client service as an experiment without clear educational purpose and permission.'] },
         { category: 'Require Analysis First', tips: ['Have students perform a complete hair analysis before every practice haircut. Build the habit early.'] },
         { category: 'Discuss Adaptation', tips: ['Ask students how they would adjust a blunt cut for fine, thin hair versus coarse, thick hair. Conversation reinforces planning.'] },
       ],
@@ -1173,7 +1173,7 @@ export const chapter16PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'advanced-techniques-introduction',
       title: 'ADVANCED TECHNIQUES: CUSTOMIZING THE CUT',
-      content: "Advanced haircutting techniques allow the barber to customize shape, movement, weight distribution, and texture. These techniques should only be used after mastering the four foundational haircut structures. They do not replace structure; they refine it. Razor cutting, overdirection, and texturizing help personalize haircuts while maintaining balance and supporting the client's hair type, lifestyle, and desired result.",
+      content: "Advanced haircutting techniques can customize shape, movement, weight distribution, and texture. They are most useful when the underlying haircut structure and design goal are already clear. Razor cutting, overdirection, and texturizing can refine a haircut when selected for the client's hair characteristics, lifestyle, and desired result.",
       highlight: 'ADVANCED TECHNIQUES REFINE — NOT REPLACE — STRUCTURE',
     },
     {
@@ -1194,7 +1194,7 @@ export const chapter16PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'razor-cutting-explained',
       title: 'RAZOR CUTTING',
-      content: "Razor cutting uses a razor to remove hair at an angle. Unlike shears, which cut a clean, defined line, a razor softens the ends and creates movement. It is ideal for clients who want a lighter, more textured edge and for hair that is healthy and strong enough to handle the blade. Razor cutting is not appropriate for every texture. Fine, fragile, or highly porous hair can fray or weaken. A sharp razor, controlled pressure, and correct body position are essential for safety and consistency.",
+      content: "Razor cutting removes hair with a blade to create a softer, more textured edge than a blunt shear line. Suitability depends on the desired finish, hair condition, texture, density, and the practitioner's technique. Fine, fragile, or highly porous hair may be more vulnerable to roughness or fraying, so assess the hair first and use a sharp, appropriate blade with controlled pressure and safe body positioning.",
       highlight: 'RAZOR SOFTENS; SHEARS DEFINE',
     },
     {
@@ -1242,7 +1242,7 @@ export const chapter16PremiumContent: ChapterContent = {
           title: 'Slithering',
           bullets: [
             { label: 'Purpose', description: 'Slides partially open shears along a section to remove a small amount of bulk.' },
-            { label: 'When to use', description: 'Best for dense hair that needs subtle weight reduction while preserving length.' },
+            { label: 'When to use', description: 'Useful when controlled bulk reduction is appropriate and the design goal is to preserve most of the visible length.' },
             { label: 'Effect', description: 'Softens the interior without creating visible layers or gaps.' },
             { label: 'Precautions', description: 'Avoid on fine or thin hair; it can remove too much mass quickly.' },
           ],
@@ -1275,14 +1275,14 @@ export const chapter16PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'advanced-techniques-figures',
       title: 'FIGURE CALLOUTS: OVERDIRECTION, RAZOR, AND TEXTURIZING',
-      content: "The textbook figures show overdirection, razor cutting, point cutting, notching, slithering, slicing, and carving. The overdirection figure teaches how pulling hair away from natural fall shifts length and weight. The razor-cutting figure shows the angled blade position that creates softness. The texturizing figures demonstrate how different techniques remove bulk or soften edges in different patterns. Future ASCYN PRO illustrations will replace the textbook artwork while preserving these educational ideas.",
+      content: "Use the lesson's visual callouts to compare overdirection, razor cutting, point cutting, notching, slithering, slicing, and carving. The educational goal is to show how direction, tool choice, and technique change length, weight, bulk, or edge softness. ASCYN PRO visuals should teach these relationships without reproducing textbook artwork.",
       highlight: 'EACH TECHNIQUE HAS A DISTINCT PURPOSE AND RESULT',
     },
     {
       type: 'contentBlock',
       id: 'advanced-techniques-board-alerts',
-      title: '🚨 BOARD ALERT: ADVANCED TECHNIQUE ESSENTIALS',
-      content: "Licensing exams expect you to understand when and why advanced techniques are used. Remember: overdirection changes where length and weight remain; razor cutting is not appropriate for every hair texture; texturizing removes bulk without dramatically changing overall length; and you must always evaluate hair texture before selecting advanced techniques. Safety and judgment are part of the test.",
+      title: 'CORE CONCEPTS: ADVANCED TECHNIQUES',
+      content: "Understand when and why advanced techniques are used. Overdirection changes where length and weight remain; razor suitability depends on the hair and design goal; and texturizing can remove bulk or soften an edge without necessarily changing the overall silhouette dramatically. Evaluate hair characteristics before selecting the technique.",
       highlight: 'OVERDIRECTION CHANGES WEIGHT • RAZOR IS NOT UNIVERSAL • TEXTURIZE WITH INTENTION',
     },
     {
@@ -1299,10 +1299,10 @@ export const chapter16PremiumContent: ChapterContent = {
       items: [
         { text: 'Excessive overdirection — shifts too much weight and destroys balance' },
         { text: 'Removing too much weight — leaves the haircut limp or uneven' },
-        { text: 'Using a razor on unsuitable hair — frays fine, fragile, or porous strands' },
+        { text: 'Using a razor without considering hair condition, texture, and desired finish — may create unwanted roughness or fraying' },
         { text: 'Over-texturizing — creates gaps, holes, or weak ends' },
         { text: 'Working without a clear design plan — advanced techniques must serve the structure' },
-        { text: 'Using dull tools — damages hair and produces uneven results' },
+        { text: 'Using dull or poorly maintained tools — can produce rough, inconsistent, or difficult-to-control results' },
         { text: 'Forgetting that advanced techniques support — not replace — the haircut structure' },
       ],
     },
@@ -1329,7 +1329,7 @@ export const chapter16PremiumContent: ChapterContent = {
             { letter: 'A', text: 'Cut several inches off the perimeter to remove the bulk', feedback: '❌ Removing perimeter length sacrifices the design. Bulk is an interior problem, not always a length problem.' },
             { letter: 'B', text: 'Use overdirection to shift weight and texturizing to reduce bulk in dense areas', feedback: '✅ Correct. Overdirection can redistribute weight where it is wanted, and controlled texturizing can release bulk without shortening the overall shape.' },
             { letter: 'C', text: 'Apply heavy product and blow-dry the bulk flat', feedback: '❌ Product and styling cannot fix a structural bulk problem. The cut itself needs adjustment.' },
-            { letter: 'D', text: 'Shave the underside of the hair with clippers', feedback: '❌ Shaving the underside is an extreme approach that is rarely appropriate and can create visible lines or damage.' },
+            { letter: 'D', text: 'Shave the underside of the hair with clippers', feedback: '❌ Shaving the underside creates an undercut and can introduce a visible transition that may not match the intended design.' },
           ],
           correctAnswer: 'B',
         },
@@ -1371,14 +1371,14 @@ export const chapter16PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'blow-dry-styling',
       title: 'BLOW-DRY STYLING',
-      content: "Blow-drying shapes hair with airflow, heat, and brushes. Brush selection matters: round brushes add volume and curve, paddle brushes smooth and straighten, and vent brushes speed drying with less tension. Airflow should follow the direction you want the hair to lie. Heat must be controlled to avoid damage. Volume is created at the roots by lifting with the brush and directing airflow upward. Smoothing is achieved by directing airflow downward along the cuticle. Finishing with a cool shot sets the style and closes the cuticle for shine.",
+      content: "Blow-drying shapes hair with airflow, heat, and brush control. Brush selection changes tension and finish: round brushes can add curve or volume, paddle brushes can support smoothing, and vent brushes can increase airflow with less tension. Direct airflow according to the styling goal and keep heat exposure controlled. Root lift can support volume, while airflow directed from roots toward ends can support a smoother surface. A cool-shot setting can help the finished shape set and reduce residual heat.",
       highlight: 'AIRFLOW DIRECTION CONTROLS SHAPE AND SMOOTHNESS',
     },
     {
       type: 'contentBlock',
       id: 'thermal-styling',
       title: 'THERMAL STYLING',
-      content: "Thermal styling uses heat tools such as curling irons and flat irons to reshape or smooth the hair. Always apply a heat protectant before using thermal tools. Choose an appropriate temperature for the hair's condition: fine or damaged hair needs lower heat; healthy, coarse hair can tolerate more. Keep tools moving to avoid scorching, and never apply heat to damp hair unless the tool is specifically designed for wet styling. Protect the client's skin and ears from hot surfaces, and always place tools on a heat-safe mat when not in use.",
+      content: "Thermal styling uses heated tools such as curling irons and flat irons to reshape or smooth the hair. Follow the tool and product manufacturers' directions, use heat protection when appropriate, and select the lowest effective temperature for the hair's condition and the service goal. Avoid prolonged heat concentration in one area. Use heated tools on dry hair unless the specific tool is designed and labeled for damp or wet use. Protect the client's skin and ears from hot surfaces and rest hot tools on a suitable heat-resistant surface.",
       highlight: 'CONTROL THE HEAT, PROTECT THE HAIR',
     },
     {
@@ -1399,14 +1399,14 @@ export const chapter16PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'styling-figures',
       title: 'FIGURE CALLOUTS: STYLING AND FINISHING',
-      content: "The textbook figures for this topic show wrapping, blow-drying, thermal styling, and finishing techniques. The wrapping figure teaches how hair is directed around the head to create smoothness. The blow-drying figure shows brush position and airflow direction. The thermal-styling figure demonstrates safe tool angle and heat application. The finishing figure reinforces professional cleanup and client review. Future ASCYN PRO illustrations will replace the textbook artwork while preserving these educational concepts.",
+      content: "Use the lesson's visual callouts to compare wrapping, blow-drying, thermal styling, and finishing techniques. Focus on direction, brush or tool position, heat control, client protection, cleanup, and review of the finished result. ASCYN PRO visuals should teach these concepts without reproducing textbook artwork.",
       highlight: 'FIGURES SHOW TECHNIQUE, SAFETY, AND PROFESSIONAL FINISH',
     },
     {
       type: 'contentBlock',
       id: 'styling-board-alerts',
-      title: '🚨 BOARD ALERT: STYLING AND SAFETY ESSENTIALS',
-      content: "Licensing exams expect professionalism from cut to cleanup. Remember: styling reveals the true haircut; always use heat safely; protect the client during thermal services; finish every service professionally; and sanitation continues after the haircut is complete. These standards protect the client, the barber, and the shop's reputation.",
+      title: 'CORE CONCEPTS: STYLING & SAFETY',
+      content: "Carry professional practice through the end of the service. Styling helps reveal balance and movement; thermal work requires controlled heat and client protection; and reusable tools and the workstation still require appropriate cleaning and disinfection after the haircut is complete.",
       highlight: 'STYLING REVEALS • HEAT SAFETY • CLIENT PROTECTION • PROFESSIONAL FINISH • SANITATION',
     },
     {
@@ -1435,7 +1435,7 @@ export const chapter16PremiumContent: ChapterContent = {
       title: '💎 INSTRUCTOR TIPS',
       subtitle: 'Teaching finishing with purpose',
       items: [
-        { category: 'Blow-Dryer Movement', tips: ['Demonstrate continuous motion. A stationary nozzle concentrates heat and can scorch the hair.'] },
+        { category: 'Blow-Dryer Movement', tips: ['Demonstrate controlled dryer movement and distance. Holding concentrated heat in one area too long can overheat or dry the hair excessively.'] },
         { category: 'Airflow Direction', tips: ['Show correct and incorrect airflow side by side. Students quickly see how direction affects smoothness and volume.'] },
         { category: 'Reveal Mistakes', tips: ['Explain that styling can reveal uneven layers or heavy spots. The cut may need refinement after drying.'] },
         { category: 'Evaluate Every Angle', tips: ['Have students view the finished style from the front, sides, and back before dismissing the client.'] },
@@ -1466,7 +1466,7 @@ export const chapter16PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'chapter-16-wrap-up',
       title: '📝 CHAPTER 16 WRAP-UP',
-      content: "This chapter covered the full arc of women's haircutting and styling. You learned the four foundational haircut structures: the blunt cut, the graduated cut, the uniform layered cut, and the long layered cut. You learned that hair analysis — texture, density, curl pattern, growth patterns, and lifestyle — must happen before any cutting begins. You explored advanced techniques including overdirection, razor cutting, and texturizing, and you saw how finishing and styling complete the service. Throughout it all, consultation, safety, and sanitation remained the foundation of professional work.",
+      content: "This chapter covered the full arc of women's haircutting and styling. You learned the four foundational haircut structures: the blunt cut, the graduated cut, the uniform layered cut, and the long layered cut. You learned how hair analysis — texture, density, curl pattern, growth patterns, and lifestyle — informs cutting decisions. You explored advanced techniques including overdirection, razor cutting, and texturizing, and you saw how finishing and styling complete the service. Throughout it all, consultation, safety, and sanitation remained foundations of professional work.",
       highlight: 'STRUCTURE • ANALYSIS • TECHNIQUE • STYLING • CONSULTATION • SAFETY',
     },
     {
