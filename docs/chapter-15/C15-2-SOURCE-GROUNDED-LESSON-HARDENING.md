@@ -24,6 +24,14 @@ No textbook prose was copied into the lesson.
 - made chemical-service guidance depend on fiber, base, prior processing, and manufacturer approval
 - removed broad claims that specific points are guaranteed or frequent state-board questions
 - renamed the Board Exam Alert/Checkpoint lesson framing into professional/knowledge-checkpoint framing
+- removed unsupported FDA/device-mechanism and lifetime-outcome language for light therapy and transplantation
+- changed custom-system "perfect fit" wording to client-specific, individualized fit language
+- changed swimmer/full-bonding guidance from universal waterproof claims to product-rated water-exposure guidance
+- removed the unsupported rule that every client needs at least two systems; reframed backup/rotation systems as client-specific planning
+- preserved the source-derived one-week / three-to-four-week cleaning interval as a study baseline while making actual timing manufacturer- and wear-dependent
+- removed the unsupported claim that combination bases are the industry standard
+- replaced universal storage, comb, heat, and styling-product absolutes with system/fiber/manufacturer-specific care guidance
+- narrowed client-photo and model-release language to documented permission under applicable privacy, advertising, and recordkeeping requirements
 
 ## Preserved architecture
 
