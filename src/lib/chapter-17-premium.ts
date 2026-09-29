@@ -223,7 +223,7 @@ export const chapter17PremiumContent: ChapterContent = {
           label: 'Scalp & Skin',
           title: 'Scalp & Skin Condition',
           bullets: [
-            { label: 'Healthy', description: 'No signs of irritation, abrasion, or disease.' },
+            { label: 'Service-ready appearance', description: 'No visible irritation, abrasion, open lesions, or other scalp condition that would require postponing the chemical service or referral.' },
             { label: 'Postpone / refer when appropriate', description: 'Do not perform a chemical service over irritated, abraded, or visibly compromised scalp tissue; follow product warnings and refer medical concerns appropriately.' },
           ],
         },
@@ -389,7 +389,7 @@ export const chapter17PremiumContent: ChapterContent = {
         {
           id: 'strand-tests',
           label: 'Strand Tests',
-          title: 'Three Strand Tests Before Relaxing',
+          title: 'Pre-Service Hair Assessments Before Relaxing',
           bullets: [
             { label: 'Porosity assessment', description: 'Helps evaluate how readily the hair may accept product and whether the fiber appears overly porous or compromised.' },
             { label: 'Elasticity assessment', description: 'Helps evaluate fiber condition and whether the hair shows signs of weakness before chemical processing.' },
@@ -903,7 +903,7 @@ export const chapter17PremiumContent: ChapterContent = {
       vocabularyIds: ['curl-reformation'],
       learningQuestionIds: [],
       boardQuestionIds: ['qq-17-025', 'qq-17-026'],
-      instructorNote: 'Stress the two-process risk. Require the student to explain why hair must be healthy enough for reformation.',
+      instructorNote: 'Stress the multi-step chemical risk. Require the student to explain how fiber condition, previous chemical history, and product compatibility determine whether reformation should proceed.'
       retakeCount: 3,
     },
     {
