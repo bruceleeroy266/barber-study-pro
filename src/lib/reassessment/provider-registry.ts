@@ -27,6 +27,7 @@ import { getChapter12MappingProvider } from './adapters/chapter-12-adapter'
 import { getChapter13MappingProvider } from './adapters/chapter-13-adapter'
 import { getChapter14MappingProvider } from './adapters/chapter-14-adapter'
 import { getChapter15MappingProvider } from './adapters/chapter-15-adapter'
+import { getChapter16MappingProvider } from './adapters/chapter-16-adapter'
 import {
   Chapter1DetectionProvider,
   createChapter1DetectionProvider,
@@ -177,6 +178,8 @@ class MappingProviderRegistry {
     this.registerProvider(getChapter14MappingProvider())
     // Register Chapter 15 (C15-7 targeted remediation/reassessment)
     this.registerProvider(getChapter15MappingProvider())
+    // Register Chapter 16 (C16-8 reassessment/recovery)
+    this.registerProvider(getChapter16MappingProvider())
   }
 
   /**
