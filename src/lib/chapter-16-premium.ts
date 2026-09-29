@@ -136,7 +136,7 @@ export const chapter16PremiumContent: ChapterContent = {
         {
           icon: 'Scale',
           title: 'BALANCE & WEARABILITY',
-          text: 'A successful cut should look balanced in the chair and support the client's at-home styling goals. Balance and wearability improve with deliberate planning rather than guesswork.',
+          text: "A successful cut should look balanced in the chair and support the client\'s at-home styling goals. Balance and wearability improve with deliberate planning rather than guesswork.",
         },
         {
           icon: 'MessageCircle',
