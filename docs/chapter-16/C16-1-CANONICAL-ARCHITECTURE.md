@@ -59,3 +59,5 @@ C16-1 intentionally does not:
 - change existing content or answer keys.
 
 Those remain later C16 phases.
+
+Verification trigger: PR #140 now targets `main` at the merged Chapter 15 production baseline; no merge authorization is implied.
