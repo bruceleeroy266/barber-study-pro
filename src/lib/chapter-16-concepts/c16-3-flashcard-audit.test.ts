@@ -41,7 +41,7 @@ describe('C16-3 flashcard source audit and hardening', () => {
   })
 
   it('anchors thermal styling to manufacturer directions and lowest effective heat', () => {
-    expect(source).toContain("Follow the manufacturer's directions")
+    expect(source).toContain("Follow the manufacturer\\'s directions")
     expect(source).toContain('Choose the lowest effective temperature for the hair condition and service goal')
     expect(source).toContain('unless the specific tool is designed and labeled for damp or wet use')
   })
