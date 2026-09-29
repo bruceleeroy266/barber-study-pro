@@ -120,8 +120,8 @@ export const chapter15PremiumContent: ChapterContent = {
       cards: [
         {
           icon: 'TrendingUp',
-          title: 'Fastest-Growing Market',
-          text: 'The thinning-hair market is the second fastest-growing category in barbering, trailing only haircoloring. Specialists command premium pricing and loyal clientele.',
+          title: 'Specialized Service Opportunity',
+          text: 'Hair replacement is a specialized barbering service that can support recurring maintenance relationships and advanced client-care skills.',
         },
         {
           icon: 'Heart',
@@ -163,7 +163,7 @@ export const chapter15PremiumContent: ChapterContent = {
             { label: 'Origin', description: '18th-century term for the foretop section that blended natural hair with a wig' },
             { label: 'Evolution', description: 'Became synonymous with small wigs covering the crown or top of the head' },
             { label: 'Modern Connotation', description: 'Carries stigma; clients may react negatively to this term' },
-            { label: 'Exam Note', description: 'Know the historical definition for state board written exams' },
+            { label: 'Study Note', description: 'Know the historical meaning so you can distinguish older terminology from modern professional language' },
           ],
         },
         {
@@ -328,7 +328,7 @@ export const chapter15PremiumContent: ChapterContent = {
         { text: 'Explain exactly how the photo will be used' },
         { text: 'Confirm the client is comfortable showing their face' },
         { text: 'Never post photos without explicit written permission' },
-        { text: 'Keep release forms on file for at least three years' },
+        { text: 'Retain signed release forms according to your business policy and applicable privacy/recordkeeping requirements' },
       ],
     },
     {
@@ -362,8 +362,8 @@ export const chapter15PremiumContent: ChapterContent = {
           title: 'Nonsurgical Alternatives',
           bullets: [
             { label: 'Cover-Up Hair Fibers', description: 'Temporary fibers shaken onto hair and held with hairspray. Washes out daily. Quick, inexpensive, but not a true solution.' },
-            { label: 'Minoxidil (Rogaine)', description: 'Topical FDA-approved medication. 2% regular strength for men and women; 5% extra-strength for men only. Moderately effective for about 50% of men after 4 months.' },
-            { label: 'Finasteride', description: 'Oral prescription medication for men only. More effective and convenient than Minoxidil. Potential side effects include weight gain and loss of sexual function.' },
+            { label: 'Minoxidil', description: 'A topical medication used for certain forms of hair loss. Product strength, directions, benefits, risks, and suitability are medical questions; refer the client to product labeling and an appropriate licensed healthcare professional.' },
+            { label: 'Finasteride', description: 'A prescription medication used for certain forms of hair loss. Benefits, risks, contraindications, and suitability for a particular client belong with an appropriate licensed healthcare professional.' },
             { label: 'Low-Light Laser Therapy', description: 'FDA-approved cold-beam red-light laser. Stimulates blood circulation and cell regeneration in follicles. Can be offered in barbershops with proper equipment.' },
           ],
         },
@@ -383,9 +383,9 @@ export const chapter15PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'scope-of-practice',
-      title: 'Board Exam Alert: Scope of Practice Boundaries',
-      content: 'State boards love to test where the barber\'s role ends and the physician\'s role begins. You can measure, fit, cut, style, clean, and maintain hair replacement systems. You can discuss general information about Minoxidil and Finasteride. You CANNOT prescribe medication, diagnose medical conditions, or recommend specific dosages. When in doubt, refer to a physician. This boundary protects your license and your client\'s health.',
-      highlight: 'You CANNOT prescribe, diagnose, or recommend dosages — always refer to a physician',
+      title: 'Professional Scope Boundary',
+      content: 'Hair-replacement services can overlap with medical questions, so keep cosmetic service work separate from diagnosis, prescribing, and individualized medication advice. Barbering scope varies by jurisdiction; follow the law and licensing rules where you practice, and refer medical questions to an appropriately licensed healthcare professional.',
+      highlight: 'Do not diagnose, prescribe, or give individualized medication directions; verify your jurisdiction\'s scope and refer medical questions appropriately',
     },
     {
       type: 'scenarioBlock',
@@ -395,10 +395,10 @@ export const chapter15PremiumContent: ChapterContent = {
         {
           situation: 'A client asks, "Should I use the 2% or 5% Minoxidil? And how many times a day?" How do you respond professionally?',
           options: [
-            { letter: 'A', text: 'Recommend the 5% strength twice daily for best results', feedback: 'You just prescribed medication. That is outside your scope of practice and puts your license at risk.' },
-            { letter: 'B', text: 'Explain that both strengths exist and that a physician can determine the right option', feedback: 'Correct. You provided factual information and directed the client to the appropriate medical professional.' },
+            { letter: 'A', text: 'Recommend the 5% strength twice daily for best results', feedback: 'That gives individualized medication directions. Keep the barbering conversation general and refer the client to an appropriately licensed healthcare professional.' },
+            { letter: 'B', text: 'Explain that formulations differ and refer the client to product labeling and an appropriate licensed healthcare professional for individualized guidance', feedback: 'Correct. You stayed within a general educational role and referred individualized medication questions appropriately.' },
             { letter: 'C', text: 'Tell him to read the box and decide for himself', feedback: 'Dismissive and unprofessional. The client came to you for guidance. Provide what you can and refer the rest.' },
-            { letter: 'D', text: 'Say you are not allowed to discuss medication at all', feedback: 'Too restrictive. You CAN discuss general information. You just cannot prescribe or diagnose.' },
+            { letter: 'D', text: 'Say you are not allowed to discuss medication at all', feedback: 'Too restrictive. You can discuss general educational information, but individualized medication guidance belongs with an appropriate licensed healthcare professional.' },
           ],
           correctAnswer: 'B',
         },
@@ -422,7 +422,7 @@ export const chapter15PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'hair-materials-intro',
       title: 'Understanding Hair Materials',
-      content: 'The hair in a replacement system determines how natural it looks, how long it lasts, and how much maintenance it requires. Human hair offers the most realistic appearance and can be chemically processed, but it reacts to climate, fades in light, and needs regular styling. Synthetic hair holds its shape, costs less, and resists oxidation, but it can look overly glossy and is difficult to blend with natural hair. Mixed hair combines human, synthetic, and sometimes animal fibers for specialized applications. Know each type cold — the board exam will test this.',
+      content: 'The hair in a replacement system determines how natural it looks, how long it lasts, and how much maintenance it requires. Human hair offers the most realistic appearance and can be chemically processed, but it reacts to climate, fades in light, and needs regular styling. Synthetic hair holds its shape, costs less, and resists oxidation, but it can look overly glossy and is difficult to blend with natural hair. Mixed hair combines human, synthetic, and sometimes animal fibers for specialized applications. Know how the material types differ so you can explain their practical tradeoffs accurately.',
       highlight: 'Human hair looks most natural. Synthetic holds style. Mixed serves specialized needs.',
     },
     {
@@ -508,7 +508,7 @@ export const chapter15PremiumContent: ChapterContent = {
           bullets: [
             { label: 'Characteristics', description: 'Sheer, delicate material that disappears at the hairline' },
             { label: 'Advantages', description: 'Virtually undetectable front hairline; allows off-the-face styling' },
-            { label: 'Critical Rule', description: 'NEVER apply tape directly to lace — it will tear the delicate material' },
+            { label: 'Lace Handling', description: 'Delicate lace can be damaged by aggressive tape application or removal. Follow the system and adhesive manufacturer instructions for lace-front attachment.' },
             { label: 'Best For', description: 'Clients who wear their hair brushed back or styled off the face' },
           ],
         },
@@ -686,7 +686,7 @@ export const chapter15PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'attachment-intro',
       title: 'Attachment Methods — Making It Stay',
-      content: 'How a system attaches determines how it feels, how secure it is, and what the client can do while wearing it. Full head bonding uses adhesive copolymers across the entire scalp — secure, waterproof, and ideal for active clients. Tape attachment uses double-sided tape at the perimeter — easier to remove and reattach, good for clients who take their system off daily. Lace-front systems require special care: never apply tape directly to the lace, as it will tear the delicate material. Facial hair pieces — mustaches, beards, sideburns — attach with spirit gum. Full wigs use stretch caps with elastic bands. Match the attachment method to the client\'s lifestyle, not just the system type.',
+      content: 'How a system attaches determines how it feels, how secure it is, and what the client can do while wearing it. Full head bonding uses adhesive across the intended scalp contact area and can provide a secure attachment when the product is used as directed. Tape attachment uses double-sided tape at selected attachment areas and can be easier to remove and reattach. Lace-front systems require delicate handling; use only attachment and removal methods approved for that specific system and adhesive. Facial hair pieces — mustaches, beards, sideburns — attach with spirit gum. Full wigs use stretch caps with elastic bands. Match the attachment method to the client\'s lifestyle, not just the system type.',
       highlight: 'Match the attachment method to the client\'s lifestyle, not just the system type',
     },
     {
@@ -702,7 +702,7 @@ export const chapter15PremiumContent: ChapterContent = {
           bullets: [
             { label: 'Method', description: 'Adhesive bonding agent (copolymer) applied across the entire scalp contact area' },
             { label: 'Advantages', description: 'Most secure attachment; waterproof; allows swimming and exercise; feels most natural' },
-            { label: 'Cure Time', description: 'After bonding, the client must wait 24 to 48 hours before shampooing to allow full adhesion' },
+            { label: 'Cure Time', description: 'After bonding, follow the adhesive manufacturer\'s cure and water-exposure instructions before shampooing or wetting the attachment area' },
             { label: 'Removal', description: 'Requires manufacturer-recommended adhesive remover; never pull or force' },
           ],
         },
@@ -723,7 +723,7 @@ export const chapter15PremiumContent: ChapterContent = {
           title: 'Lace-Front Systems — The Natural Hairline',
           bullets: [
             { label: 'Purpose', description: 'Allows off-the-face styling with an undetectable front hairline' },
-            { label: 'Critical Rule', description: 'NEVER apply tape directly to lace — it will tear the delicate material' },
+            { label: 'Lace Handling', description: 'Delicate lace can be damaged by aggressive tape application or removal. Follow the system and adhesive manufacturer instructions for lace-front attachment.' },
             { label: 'Attachment', description: 'Bonding agent applied to the skin at the hairline, not to the lace itself' },
             { label: 'Best For', description: 'Clients who brush hair back, wear pompadours, or prefer styles that expose the forehead' },
           ],
@@ -755,9 +755,9 @@ export const chapter15PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'bonding-cure-time',
-      title: 'Board Exam Alert: The 24-48 Hour Cure Time',
-      content: 'After a full head bonded system is applied and cut, the client must wait 24 to 48 hours before shampooing. This allows the adhesive to fully cure. State boards frequently test this timeline. If a question asks when a bonded client can wash his hair, the answer is never "immediately" or "the same day." It is always 24 to 48 hours. Write this on your mental flashcard now.',
-      highlight: '24 to 48 hours before shampooing after full head bonding — memorize this',
+      title: 'Bonding Cure-Time Guidance',
+      content: 'After a bonded system is applied, the attachment must be allowed to cure according to the adhesive manufacturer\'s instructions before shampooing, swimming, heavy sweating, or other water exposure. Some source material presents a 24–48 hour window, but cure time depends on the adhesive system and manufacturer directions rather than one universal rule.',
+      highlight: 'Follow the adhesive manufacturer\'s cure-time and water-exposure instructions before shampooing',
     },
     {
       type: 'scenarioBlock',
@@ -841,7 +841,7 @@ export const chapter15PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'perm-color-systems',
       title: 'Permanent Waving and Coloring Systems',
-      content: 'Human hair systems can be permed and colored, but the techniques differ from natural hair. When perming a system, the rods must not rest directly on the base — the weight creates indentations and damage. Use the floating technique: insert roller picks at both ends of each perm rod so the rod hovers above the base, supported like a bridge. The picks are held in place by the rod\'s rubber band. For coloring, use temporary color rinses rather than permanent dye. Lightening and cold-waving are never performed on systems — they destroy the base material. If coloring is necessary, proceed with extreme care and manufacturer-approved products only.',
+      content: 'Chemical-service limits depend on the system\'s hair fiber, base construction, prior processing, and manufacturer instructions. For systems specifically approved for permanent waving, the source material presents a floating technique that keeps rods from resting directly on the base by supporting them with roller picks. For color work, use only products and methods approved for the specific system. Do not assume a human-hair system can be lightened, permanently colored, or waved like natural hair; when the manufacturer does not explicitly support the service, do not perform it.',
       highlight: 'Floating rods hover above the base — never let perm rods rest directly on it',
     },
     {
@@ -881,7 +881,7 @@ export const chapter15PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'slide-cutting',
       title: 'Slide Cutting — The Invisible Blend',
-      content: 'Slide cutting is the technique that makes the magic happen. Instead of cutting straight across — which creates a visible line — the shear slides through the hair at an angle, removing length gradually. This creates a feathered, tapered edge that disappears into the client\'s natural hair. Practice slide cutting on mannequins until the motion feels automatic. The board exam may not test slide cutting directly, but the ability to create undetectable blends separates students from professionals.',
+      content: 'Slide cutting is the technique that makes the magic happen. Instead of cutting straight across — which creates a visible line — the shear slides through the hair at an angle, removing length gradually. This creates a feathered, tapered edge that disappears into the client\'s natural hair. Practice slide cutting on mannequins until the motion feels automatic. Slide cutting is one technique used to create a softer transition when it is appropriate for the system and desired finish.',
       highlight: 'Slide cutting creates a feathered edge that disappears into natural hair',
     },
     {
@@ -907,7 +907,7 @@ export const chapter15PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'common-mistakes',
       title: 'Common Mistakes — Learn from Others\' Errors',
-      content: 'Every experienced hair replacement barber has stories of mistakes made and lessons learned. Here are the most common errors — and how to avoid them. Cutting too much during the initial customization is the number one regret. Being too aggressive with thinning shears creates visible gaps. Using hot water on synthetic systems causes irreversible shrinkage. Applying tape directly to lace destroys the front hairline. Promising unrealistic results damages credibility. Skipping the 24-48 hour cure time after bonding leads to system failure. Failing to take color samples results in mismatched systems that look artificial.',
+      content: 'Every experienced hair replacement barber has stories of mistakes made and lessons learned. Here are the most common errors — and how to avoid them. Cutting too much during the initial customization is the number one regret. Being too aggressive with thinning shears creates visible gaps. Using hot water on synthetic systems causes irreversible shrinkage. Using an attachment or removal method that is not approved for delicate lace can damage the front hairline. Promising unrealistic results damages credibility. Exposing a bonded system to water or heavy activity before the adhesive has cured can weaken the attachment. Failing to take color samples results in mismatched systems that look artificial.',
       highlight: 'The number one regret is cutting too much during initial customization',
     },
     {
@@ -915,7 +915,7 @@ export const chapter15PremiumContent: ChapterContent = {
       id: 'exam-traps',
       title: 'Board Exam Traps — Do Not Fall For These',
       items: [
-        { text: 'Trap: "A barber can prescribe Minoxidil." — FALSE. Only physicians prescribe. Barbers discuss and refer.' },
+        { text: 'Trap: "A barber should tell a client which Minoxidil formulation and dosing schedule to use." — FALSE. Individualized medication guidance belongs with an appropriate licensed healthcare professional.' },
         { text: 'Trap: "Synthetic hair can be permed with standard solution." — FALSE. Synthetic fiber has limited chemical tolerance.' },
         { text: 'Trap: "Hot water cleans synthetic systems better." — FALSE. Hot water causes shrinkage and matting. Lukewarm only.' },
         { text: 'Trap: "Tape can be applied directly to lace fronts." — FALSE. Tape tears lace. Always apply adhesive to skin, not lace.' },
@@ -930,7 +930,7 @@ export const chapter15PremiumContent: ChapterContent = {
     {
       type: 'levelUp',
       id: 'board-exam-checkpoint',
-      title: 'Board Exam Checkpoint: Chapter 15 Mastery',
+      title: 'Chapter 15 Knowledge Checkpoint',
       levels: [
         { level: '1', title: 'Terminology', description: 'Can define toupee, hairpiece, hair replacement system, and hair solution with historical context', reward: 'Written exam confidence' },
         { level: '2', title: 'Consultation', description: 'Can conduct a private, ethical consultation using the LAB MED framework', reward: 'Client trust and realistic expectations' },
@@ -957,14 +957,14 @@ export const chapter15PremiumContent: ChapterContent = {
       title: 'Restoration Studio Blueprint: Chapter 15 Complete Checklist',
       items: [
         { text: '✓ Terminology evolved: toupee -> hairpiece -> hair replacement system -> hair solution' },
-        { text: '✓ Hair replacement is the second fastest-growing market in barbering' },
+        { text: '✓ Hair replacement is a specialized service built around consultation, fitting, maintenance, and client trust' },
         { text: '✓ Consultations must be private, personal, and ethical' },
         { text: '✓ Use the LAB MED framework: Lifestyle, Age, Budget, Medical, Expectations, Daily maintenance' },
         { text: '✓ Never promise unrealistic results — credibility depends on honesty' },
         { text: '✓ Marketing works best through social media, in-shop displays, referrals, and personal experience' },
         { text: '✓ Always obtain signed model releases before using client photos' },
-        { text: '✓ Know all alternatives: cover-up fibers, Minoxidil, Finasteride, laser therapy, transplantation, scalp reduction, flap surgery' },
-        { text: '✓ Barbers inform and refer — never prescribe, diagnose, or perform surgery' },
+        { text: '✓ Recognize that cosmetic, medication, device-based, and surgical hair-loss options exist, and refer medical decisions appropriately' },
+        { text: '✓ Provide general education within your licensed scope and refer diagnosis, prescribing, surgery, and individualized medical decisions appropriately' },
         { text: '✓ Human hair: most natural, processable, high maintenance' },
         { text: '✓ Synthetic hair: holds style, lower cost, limited chemical processing' },
         { text: '✓ Mixed hair: human + synthetic/animal fibers for specialized applications' },
@@ -976,7 +976,7 @@ export const chapter15PremiumContent: ChapterContent = {
         { text: '✓ Measure in inches: length by width (e.g., 6x4 means 6" front-to-back, 4" side-to-side)' },
         { text: '✓ Take color samples from crown, temple, side, and back — especially for gray blending' },
         { text: '✓ Full head bonding: most secure, waterproof, 24-48 hour cure time before shampooing' },
-        { text: '✓ Never apply tape directly to lace — it will tear' },
+        { text: '✓ Treat lace as delicate and follow the system/adhesive manufacturer\'s approved attachment and removal method' },
         { text: '✓ Facial hair attaches with spirit gum on clean, dry skin' },
         { text: '✓ Clean synthetic systems with solvent and lukewarm water only — hot water causes shrinkage' },
         { text: '✓ Clean human hair systems with manufacturer-formulated shampoo and conditioner' },
@@ -985,8 +985,8 @@ export const chapter15PremiumContent: ChapterContent = {
         { text: '✓ Never fold systems — store flat on a block' },
         { text: '✓ Top section cut at 90° elevation; sides tapered with slide cutting; back blended with thinning shears' },
         { text: '✓ Floating perm rods above the base using roller picks — never let rods rest on the base' },
-        { text: '✓ Use temporary color rinses only — never lighten or cold-wave a system' },
-        { text: '✓ Scope of practice: barbers measure, fit, cut, style, clean, and maintain — physicians prescribe and perform surgery' },
+        { text: '✓ Chemical services depend on fiber, base, prior processing, and manufacturer approval; do not assume natural-hair procedures are safe for a system' },
+        { text: '✓ Keep cosmetic hair-replacement services separate from diagnosis, prescribing, surgery, and individualized medical advice; verify local scope rules' },
       ],
     },
   ],
