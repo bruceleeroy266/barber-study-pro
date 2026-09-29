@@ -94,6 +94,10 @@ import { detectAllConceptGaps as detectAllChapter15ConceptGaps } from '@/lib/cha
 import { chapter15ConceptFamilies } from '@/lib/chapter-15-concepts/concepts'
 import { chapter15ContentConceptMappings, chapter15FlashcardConceptMappings } from '@/lib/chapter-15-concepts/mappings'
 
+import { detectAllConceptGaps as detectAllChapter16ConceptGaps } from '@/lib/chapter-16-concepts/detection'
+import { chapter16ConceptFamilies } from '@/lib/chapter-16-concepts/concepts'
+import { chapter16ContentConceptMappings, chapter16FlashcardConceptMappings } from '@/lib/chapter-16-concepts/mappings'
+
 // ───────────────────────────────────────────────
 // Provider Contract
 // ───────────────────────────────────────────────
@@ -623,6 +627,31 @@ const chapter15Provider: ChapterDetectionProvider = {
   },
 }
 
+
+const chapter16ContentMappingsProjected = chapter16ContentConceptMappings.map((mapping) => ({
+  contentBlockId: mapping.contentBlockId,
+  conceptId: mapping.conceptFamilyId as string,
+}))
+const chapter16FlashcardMappingsProjected = chapter16FlashcardConceptMappings.map((mapping) => ({
+  flashcardId: mapping.flashcardId as string,
+  conceptId: mapping.conceptFamilyId as string,
+}))
+
+const chapter16Provider: ChapterDetectionProvider = {
+  chapterId: 'ch-16',
+  detectAll(attempts) {
+    const out = new Map<ConceptId, ConceptDetectionResult>()
+    for (const [conceptId, result] of detectAllChapter16ConceptGaps(attempts)) out.set(conceptId, result)
+    return out
+  },
+  getConceptName(conceptId) {
+    return chapter16ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? conceptId
+  },
+  buildAssignmentsForConcept(conceptId) {
+    return buildAssignments(conceptId, chapter16ContentMappingsProjected, chapter16FlashcardMappingsProjected)
+  },
+}
+
 // ───────────────────────────────────────────────
 // Registry
 // ───────────────────────────────────────────────
@@ -643,6 +672,7 @@ const providers = new Map<ChapterId, ChapterDetectionProvider>([
   ['ch-13', chapter13Provider],
   ['ch-14', chapter14Provider],
   ['ch-15', chapter15Provider],
+  ['ch-16', chapter16Provider],
 ])
 
 /**
