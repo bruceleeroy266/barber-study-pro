@@ -531,7 +531,7 @@ export const chapter15PremiumContent: ChapterContent = {
             { label: 'Characteristics', description: 'Strategic use of multiple materials in different base zones' },
             { label: 'Example', description: 'Lace front for natural hairline, polyurethane perimeter for bonding, mesh center for breathability' },
             { label: 'Advantages', description: 'Optimizes comfort, durability, and appearance in one system' },
-            { label: 'Best For', description: 'Most clients — combination bases are the industry standard for quality systems' },
+            { label: 'Best For', description: 'Clients who need a balance of characteristics that a single base material may not provide' },
           ],
         },
       ],
@@ -797,9 +797,9 @@ export const chapter15PremiumContent: ChapterContent = {
           title: 'Cleaning Synthetic Systems',
           bullets: [
             { label: 'Solvent', description: 'Always use manufacturer-recommended solvent — never substitute household cleaners' },
-            { label: 'Water Temperature', description: 'Lukewarm water only — hot water causes shrinkage, matting, and tangling' },
+            { label: 'Water Temperature', description: 'Use the temperature range recommended for the specific fiber and system; the source material cautions against hot water on synthetic systems' },
             { label: 'Process', description: 'Attach system to foam block with T-pins; immerse in solvent solution; swish gently; rinse with clean lukewarm water' },
-            { label: 'Drying', description: 'Dry naturally on the block overnight; if rushed, use cool air only — never hot' },
+            { label: 'Drying', description: 'Use the drying method and heat limits recommended for the specific system; avoid unverified high-heat shortcuts' },
             { label: 'Dry Cleaning', description: 'Some systems may be dry-cleaned; follow manufacturer instructions exactly' },
           ],
         },
@@ -822,12 +822,12 @@ export const chapter15PremiumContent: ChapterContent = {
       title: 'Basic Care Guidelines — The COOL Rules',
       items: [
         { text: 'C — Clean with recommended solvent or shampoo only' },
-        { text: 'O — Only lukewarm water — never hot' },
+        { text: 'O — Observe the system\'s approved water-temperature guidance; synthetic systems generally require avoiding hot water' },
         { text: 'O — Overnight drying on a block is preferred' },
         { text: 'L — Let the system dry naturally; cool air if rushed' },
-        { text: 'N — Never fold the system — store flat on a block' },
-        { text: 'O — Only light styling products, applied sparingly' },
-        { text: 'H — Handle with care; use wide-tooth combs only' },
+        { text: 'N — Nurture the system\'s shape during storage using the support method recommended for that system' },
+        { text: 'O — Opt for styling products that are compatible with the system and use them sparingly' },
+        { text: 'H — Handle with care and use tools appropriate for the fiber, base, and manufacturer guidance' },
       ],
     },
     {
@@ -907,7 +907,7 @@ export const chapter15PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'common-mistakes',
       title: 'Common Mistakes — Learn from Others\' Errors',
-      content: 'Every experienced hair replacement barber has stories of mistakes made and lessons learned. Here are the most common errors — and how to avoid them. Cutting too much during initial customization is a common and difficult-to-reverse mistake. Being too aggressive with thinning shears creates visible gaps. Using hot water on synthetic systems causes irreversible shrinkage. Using an attachment or removal method that is not approved for delicate lace can damage the front hairline. Promising unrealistic results damages credibility. Exposing a bonded system to water or heavy activity before the adhesive has cured can weaken the attachment. Failing to take color samples results in mismatched systems that look artificial.',
+      content: 'Every experienced hair replacement barber has stories of mistakes made and lessons learned. Here are the most common errors — and how to avoid them. Cutting too much during initial customization is a common and difficult-to-reverse mistake. Being too aggressive with thinning shears creates visible gaps. Using water that is too hot for a synthetic system can contribute to fiber or base damage. Using an attachment or removal method that is not approved for delicate lace can damage the front hairline. Promising unrealistic results damages credibility. Exposing a bonded system to water or heavy activity before the adhesive has cured can weaken the attachment. Failing to take color samples results in mismatched systems that look artificial.',
       highlight: 'A common irreversible mistake is removing too much hair during initial customization',
     },
     {
@@ -917,7 +917,7 @@ export const chapter15PremiumContent: ChapterContent = {
       items: [
         { text: 'Trap: "A barber should tell a client which Minoxidil formulation and dosing schedule to use." — FALSE. Individualized medication guidance belongs with an appropriate licensed healthcare professional.' },
         { text: 'Trap: "Synthetic hair can be permed with standard solution." — FALSE. Synthetic fiber has limited chemical tolerance.' },
-        { text: 'Trap: "Hot water cleans synthetic systems better." — FALSE. Hot water causes shrinkage and matting. Lukewarm only.' },
+        { text: 'Trap: "Hotter water always cleans synthetic systems better." — FALSE. Follow the system\'s approved temperature guidance; the source material cautions against hot water on synthetic systems.' },
         { text: 'Trap: "Every lace-front system uses the same tape placement." — FALSE. Lace is delicate; use the attachment method approved for that specific system and adhesive.' },
         { text: 'Trap: "Every bonded system can be shampooed immediately." — FALSE. Follow the adhesive manufacturer\'s cure and water-exposure instructions.' },
         { text: 'Trap: "Barbers can perform hair transplantation." — FALSE. Surgical procedures are medical only.' },
@@ -926,7 +926,7 @@ export const chapter15PremiumContent: ChapterContent = {
       ],
     },
 
-    // Section 13: Board Exam Checkpoint
+    // Section 13: Knowledge Checkpoint
     {
       type: 'levelUp',
       id: 'board-exam-checkpoint',
@@ -978,7 +978,7 @@ export const chapter15PremiumContent: ChapterContent = {
         { text: '✓ Bonded attachments require product-specific preparation, cure, water-exposure, removal, and maintenance instructions' },
         { text: '✓ Treat lace as delicate and follow the system/adhesive manufacturer\'s approved attachment and removal method' },
         { text: '✓ Facial hair attaches with spirit gum on clean, dry skin' },
-        { text: '✓ Clean synthetic systems with solvent and lukewarm water only — hot water causes shrinkage' },
+        { text: '✓ Follow the synthetic system\'s approved cleaner and water-temperature guidance; the source material cautions against hot water' },
         { text: '✓ Clean human hair systems with manufacturer-formulated shampoo and conditioner' },
         { text: '✓ Study baseline: initial cleaning around one week and then about every 3–4 weeks, adjusted to manufacturer guidance and client wear conditions' },
         { text: '✓ A backup or rotation system may be useful when it supports the client\'s maintenance plan' },
