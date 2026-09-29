@@ -655,7 +655,7 @@ export const chapter15PremiumFlashcards: Flashcard[] = [
     is_active: true,
   },
 
-  // === BOARD EXAM TRAPS ===
+  // === KNOWLEDGE TRAPS ===
   {
     id: 'fc-ch15-063',
     chapter_id: 'ch-15',
@@ -794,7 +794,7 @@ export const chapter15PremiumFlashcards: Flashcard[] = [
     id: 'fc-ch15-076',
     chapter_id: 'ch-15',
     front: 'Compare human hair vs synthetic hair for replacement systems.',
-    back: 'Human: most natural, can be chemically processed, reacts to climate, fades in light, high maintenance. Synthetic: holds style, lower cost, resists oxidation, limited chemical options, can look glossy.',
+    back: 'Human: natural-looking texture and movement, with care needs affected by processing and environment. Synthetic: manufactured fiber with product-specific styling, heat, and chemical-care limits.',
     category: 'Comparisons',
     difficulty: 'easy',
     order_index: 76,
