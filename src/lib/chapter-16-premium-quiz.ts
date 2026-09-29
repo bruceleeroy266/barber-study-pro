@@ -416,7 +416,7 @@ export const chapter16PremiumQuizQuestions: QuizQuestion[] = [
     answer_c: 'The chance to perform the final sanitation steps',
     answer_d: 'The chance to take a before-and-after photo',
     correct_answer: 'b',
-    explanation: 'Styling the haircut in its intended finished state helps reveal balance, movement, weight distribution, and areas that may need refinement. It also helps the client see the finished result. Cleanup and sanitation remain separate professional responsibilities and should still be completed appropriately.'
+    explanation: 'Styling the haircut in its intended finished state helps reveal balance, movement, weight distribution, and areas that may need refinement. It also helps the client see the finished result. Cleanup and sanitation remain separate professional responsibilities and should still be completed appropriately.',
     difficulty: 'medium',
     order_index: 30,
   },
