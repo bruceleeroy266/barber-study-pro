@@ -1,10 +1,10 @@
 import { Flashcard } from '@/types'
 
 // Chapter 17: Chemical Texture Services
-// 60 premium flashcards — 38 Board Essential + 22 Professional Essential
+// 60 premium flashcards — 38 Core Knowledge + 22 Professional Essential
 
 export const chapter17PremiumFlashcards: Flashcard[] = [
-  // === BOARD ESSENTIAL (cards 1–38) ===
+  // === CORE KNOWLEDGE (cards 1–38) ===
   {
     id: 'fc-ch17-001',
     standardId: 'CH17-F001',
