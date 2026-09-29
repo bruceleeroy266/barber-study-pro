@@ -689,7 +689,7 @@ export const chapter16PremiumFlashcards: Flashcard[] = [
     id: 'fc-ch16-068',
     chapter_id: 'ch-16',
     front: 'How do you select a blow-dry brush?',
-    back: 'Round brushes can support curve or volume, paddle brushes can support smoothing, and vent brushes can increase airflow with less tension. Select the brush based on the hair, desired finish, and level of control needed.'
+    back: 'Round brushes can support curve or volume, paddle brushes can support smoothing, and vent brushes can increase airflow with less tension. Select the brush based on the hair, desired finish, and level of control needed.',
     category: 'Professional Essential',
     difficulty: 'easy',
     order_index: 68,
