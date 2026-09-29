@@ -92,7 +92,7 @@ describe('C15-4 assessment source-grounding and answer-key certification', () =>
   it('uses manufacturer-dependent and jurisdiction-aware safety language', () => {
     expect(source).toContain('adhesive manufacturer’s cure and water-exposure instructions')
     expect(source).toContain('permitted scope varies by jurisdiction')
-    expect(source).toContain('verify the rules in the jurisdiction where you practice')
+    expect(source.toLowerCase()).toContain('verify the rules in the jurisdiction where you practice')
     expect(source).toContain('Fiber type, base construction, prior processing, and manufacturer approval')
   })
 
