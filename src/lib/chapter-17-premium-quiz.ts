@@ -1,11 +1,11 @@
 import { QuizQuestion } from '@/types'
 
 // Chapter 17: Chemical Texture Services — PREMIUM MCQ QUIZ
-// 30 board-style questions + 16 learning questions
+// 30 chapter-assessment questions + 16 learning questions
 // Original content; no textbook or exam questions copied.
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// BOARD-STYLE QUESTION BANK (30 questions)
+// CHAPTER-ASSESSMENT QUESTION BANK (30 questions)
 // Cognitive distribution: 14 Recall / 11 Application / 5 Analysis
 // ═══════════════════════════════════════════════════════════════════════════════
 export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
@@ -234,7 +234,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     answer_c: 'Overly tight curls',
     answer_d: 'Scalp burns',
     correct_answer: 'b',
-    explanation: 'Underprocessing means the disulfide bonds were not broken and rebuilt enough to create a firm curl, leaving the wave weak.',
+    explanation: 'Inadequate processing for the selected hair/product system can produce a weak or poorly formed result. Timing and readiness should follow the hair analysis, representative test curls, and product directions.',
     difficulty: 'medium',
     competency_id: 'CH17-C03',
     order_index: 15,
@@ -249,7 +249,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     answer_c: 'Hair that remains completely straight',
     answer_d: 'A darker hair color',
     correct_answer: 'b',
-    explanation: 'Overprocessing breaks too many bonds for too long, leaving the cortex fragile and the cuticle lifted, which causes frizz and breakage.',
+    explanation: 'Excessive processing for the selected hair/product system can weaken the fiber and increase frizz, breakage, or an unwanted result.',
     difficulty: 'medium',
     competency_id: 'CH17-C03',
     order_index: 16,
@@ -320,13 +320,13 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     id: 'qq-17-021',
     standardId: 'CH17-Q021',
     quiz_id: 'quiz-17',
-    question: 'Which strand test checks whether hair can withstand chemical processing?',
-    answer_a: 'Porosity test',
-    answer_b: 'Elasticity test',
-    answer_c: 'Texture test',
-    answer_d: 'Density test',
+    question: 'Which pre-service assessment helps evaluate whether the hair shows weakness before chemical processing?',
+    answer_a: 'Porosity assessment',
+    answer_b: 'Elasticity assessment',
+    answer_c: 'Texture/diameter assessment',
+    answer_d: 'Density assessment',
     correct_answer: 'b',
-    explanation: 'The elasticity test measures whether hair stretches and returns to its length. Poor elasticity means the hair may be too weak to process.',
+    explanation: 'Elasticity assessment helps evaluate fiber condition and whether the hair stretches and returns appropriately. It is one part of the complete pre-service analysis.',
     difficulty: 'hard',
     competency_id: 'CH17-C04',
     order_index: 21,
@@ -465,7 +465,7 @@ export const chapter17PremiumQuizQuestions: QuizQuestion[] = [
     answer_c: 'Skipping the strand test on regular clients',
     answer_d: 'Applying relaxer directly to the scalp without base',
     correct_answer: 'a',
-    explanation: 'Gloves protect the stylist\'s skin from alkaline, acidic, or reducing solutions that can cause irritation or burns.',
+    explanation: 'Gloves reduce direct skin exposure to chemical products and should be used as required by product directions and professional safety procedures.',
     difficulty: 'hard',
     competency_id: 'CH17-C06',
     order_index: 30,
