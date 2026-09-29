@@ -74,7 +74,7 @@ describe('C16-3 flashcard audit and hardening', () => {
   it('uses individualized and manufacturer-aware safety wording where C16-2 requires it', () => {
     expect(flashcardSource).toContain('The amount varies by client and curl pattern')
     expect(flashcardSource).toContain('Suitability depends on hair condition, texture, density, desired finish')
-    expect(flashcardSource).toContain("follow the manufacturer's directions")
+    expect(chapter16PremiumFlashcards.map((card) => card.back).join('\n')).toContain("follow the manufacturer's directions")
     expect(flashcardSource).toContain('lowest effective temperature')
     expect(flashcardSource).toContain('designed and labeled for damp or wet use')
     expect(flashcardSource).toContain('applicable rules, product directions, and school or shop procedures')
