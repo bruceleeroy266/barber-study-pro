@@ -164,6 +164,16 @@ import { chapter13PremiumFlashcards } from '@/lib/chapter-13-premium-flashcards'
 import { chapter13PremiumQuizQuestions } from '@/lib/chapter-13-premium-quiz'
 import { chapter13ReassessmentReserve } from '@/lib/chapter-13-concepts/reassessment-reserve'
 
+import {
+  chapter14ContentConceptMappings,
+  chapter14FlashcardConceptMappings,
+  chapter14QuizQuestionConceptMappings,
+} from '@/lib/chapter-14-concepts/mappings'
+import { ACTIVE_CHAPTER14_CONCEPT_FAMILY_IDS, chapter14ConceptFamilies } from '@/lib/chapter-14-concepts/concepts'
+import { chapter14PremiumFlashcards } from '@/lib/chapter-14-premium-flashcards'
+import { chapter14PremiumQuizQuestions } from '@/lib/chapter-14-premium-quiz'
+import { chapter14ReassessmentReserve } from '@/lib/chapter-14-concepts/reassessment-reserve'
+
 import { getChapterContent } from '@/lib/chapter-content'
 
 // ───────────────────────────────────────────────
@@ -1314,6 +1324,84 @@ const chapter13Provider: ChapterRemediationContentProvider = {
   },
 }
 
+const chapter14ContentMappingsProjected = chapter14ContentConceptMappings.map((mapping) => ({
+  contentBlockId: mapping.contentBlockId,
+  conceptId: mapping.conceptFamilyId as string,
+}))
+const chapter14FlashcardMappingsProjected = chapter14FlashcardConceptMappings.map((mapping) => ({
+  flashcardId: mapping.flashcardId as string,
+  conceptId: mapping.conceptFamilyId as string,
+}))
+const chapter14QuizMappingsProjected = [
+  ...chapter14QuizQuestionConceptMappings.map((mapping) => ({
+    questionId: mapping.questionId as string,
+    conceptId: mapping.conceptFamilyId as string,
+  })),
+  ...chapter14ReassessmentReserve.map((question) => ({
+    questionId: question.id as string,
+    conceptId: question.conceptFamilyId as string,
+  })),
+]
+
+function isChapter14ConceptFamilyId(conceptId: string): boolean {
+  return (ACTIVE_CHAPTER14_CONCEPT_FAMILY_IDS as readonly string[]).includes(conceptId)
+}
+
+function chapter14ReserveAsQuizQuestion(questionId: string): QuizQuestion | null {
+  const question = chapter14ReassessmentReserve.find((item) => item.id === questionId)
+  if (!question) return null
+  return {
+    id: question.id,
+    quiz_id: 'quiz-14',
+    question: question.question,
+    answer_a: question.answer_a,
+    answer_b: question.answer_b,
+    answer_c: question.answer_c,
+    answer_d: question.answer_d,
+    correct_answer: question.correctAnswer,
+    explanation: question.explanation,
+    difficulty: question.difficulty === 'scenario' ? 'hard' : 'medium',
+    order_index: 1000 + chapter14ReassessmentReserve.findIndex((item) => item.id === question.id),
+  }
+}
+
+const chapter14Provider: ChapterRemediationContentProvider = {
+  chapterId: 'ch-14',
+
+  getConceptName(conceptId) {
+    return chapter14ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic'
+  },
+  getContentBlockIdsForConcept(conceptId) {
+    return chapter14ContentMappingsProjected.filter((mapping) => mapping.conceptId === conceptId).map((mapping) => mapping.contentBlockId)
+  },
+  getFlashcardIdsForConcept(conceptId) {
+    return chapter14FlashcardMappingsProjected.filter((mapping) => mapping.conceptId === conceptId).map((mapping) => mapping.flashcardId)
+  },
+  filterContentByConcept(conceptId) {
+    return filterSectionsByMappedBlockIds(14, new Set(this.getContentBlockIdsForConcept(conceptId)))
+  },
+  filterFlashcardsByConcept(conceptId) {
+    const mappedIds = new Set(this.getFlashcardIdsForConcept(conceptId))
+    return chapter14PremiumFlashcards.filter((card) => card.is_active && mappedIds.has(card.id))
+  },
+  buildRemediationContentBundle(conceptId) {
+    return buildBundle(this, conceptId)
+  },
+  getQuizQuestionById(questionId) {
+    return (
+      chapter14PremiumQuizQuestions.find((question) => question.id === questionId) ??
+      chapter14ReserveAsQuizQuestion(questionId)
+    )
+  },
+  filterKeyTermsByConcept(conceptId) {
+    if (!isChapter14ConceptFamilyId(conceptId)) return []
+    return []
+  },
+  getConceptQuestionCount(conceptId) {
+    return chapter14QuizMappingsProjected.filter((mapping) => mapping.conceptId === conceptId).length
+  },
+}
+
 // ───────────────────────────────────────────────
 // Registry
 // ───────────────────────────────────────────────
@@ -1332,6 +1420,7 @@ const contentProviders = new Map<ChapterId, ChapterRemediationContentProvider>([
   ['ch-11', chapter11Provider],
   ['ch-12', chapter12Provider],
   ['ch-13', chapter13Provider],
+  ['ch-14', chapter14Provider],
 ])
 
 /**

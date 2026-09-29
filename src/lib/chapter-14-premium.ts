@@ -101,7 +101,7 @@ export const chapter14PremiumTheme: ChapterTheme = {
 export const chapter14PremiumContent: ChapterContent = {
   chapterNumber: 14,
   title: "Men's Haircutting and Styling",
-  subtitle: 'The Design Studio — Blueprint your way to board-exam mastery',
+  subtitle: 'The Design Studio — Blueprint your way to haircutting mastery',
   theme: chapter14PremiumTheme,
   sections: [
     // Section 0: Design Studio Welcome
@@ -411,7 +411,7 @@ export const chapter14PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'neck-ear-sideburns',
       title: 'Neck Length, Ear Placement, and Sideburn Design',
-      content: 'Neck length, ear size, and sideburn design are critical finishing details. For long necks, leave hair fuller at the nape and never cut above the natural hairline. For short necks, taper at the natural hairline to create the illusion of length. Sideburn length is relative to facial features — what looks short on a large face may look long on a small face. Sideburns should appear even from the front, but may need slight asymmetry to account for natural facial differences.',
+      content: 'Neck length, ear size, and sideburn design can influence visual balance. For a longer-looking neck, leaving more fullness at the nape and respecting the natural hairline can help avoid exaggerating length. For a shorter-looking neck, tapering near the natural hairline can create a lengthening effect. Sideburn length is relative to facial features, and slight side-to-side adjustment may be needed for visual balance.',
       highlight: 'Sideburn length is relative to the client\'s individual features',
     },
     {
@@ -464,8 +464,8 @@ export const chapter14PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'razor-techniques',
       title: 'Razor Cutting Techniques',
-      content: 'Razor cutting produces tapered, soft ends rather than the blunt ends created by shears. Hair must be kept uniformly damp throughout the process — dry cutting causes discomfort and frizz. Three main techniques exist: razor-over-comb (similar to shear-over-comb, rolling the comb out to project hair), razor rotation (a two-part counter-rotation movement for blending and tapering), and fingers-and-razor (holding hair taut between fingers while cutting). Razor cutting is considered the best method for blending and tapering because the blade creates a smoother transition than shears or clippers.',
-      highlight: 'Razor cutting creates tapered, soft ends — ideal for blending and tapering',
+      content: 'Razor cutting can create tapered, softer-looking ends rather than the blunt ends associated with straight shear cutting. When following a wet-razor haircutting procedure, keep the hair evenly damp and use the tool according to manufacturer and instructor guidance. The current lesson presents three methods: razor-over-comb, razor rotation, and fingers-and-razor. Razor cutting can be useful for blending and tapering when the client\'s hair, service plan, and tool choice make the technique appropriate.',
+      highlight: 'Razor cutting can create tapered, softer-looking ends for selected blending and tapering work',
     },
     {
       type: 'tabbed',
@@ -515,9 +515,9 @@ export const chapter14PremiumContent: ChapterContent = {
     {
       type: 'contentBlock',
       id: 'guards-vs-blades',
-      title: 'Guards vs. Detachable Blades — State Board Critical',
-      content: 'Detachable blades and clipper guards are not the same. Detachable blades are metal blades that attach directly to the clipper and determine cutting length. Guards (attachment combs) are plastic combs placed on top of the blade that allow more hair length to remain. Guards are NOT considered freehand clipper cutting and are typically NOT acceptable for state board practical examinations. Students must demonstrate true freehand clipper control without guard attachments for licensing exams.',
-      highlight: 'Guards are NOT acceptable for state board practical exams',
+      title: 'Guards vs. Detachable Blades — Tool Selection',
+      content: 'Detachable blades and clipper guards are not the same. Detachable blades are metal blades that attach directly to compatible clippers and influence cutting length. Guards (attachment combs) are plastic or hard-rubber comb attachments fitted over clipper blades to reduce the amount of hair removed. Freehand clipper cutting and guard-assisted cutting are different techniques. Practical-exam rules vary by jurisdiction and testing provider, so students should follow the current candidate bulletin and instructor guidance rather than assume one universal guard rule.',
+      highlight: 'Know the difference between detachable blades, guards, and freehand clipper technique',
     },
 
     // Section 4b: Design Elements and Lines
@@ -881,8 +881,8 @@ export const chapter14PremiumContent: ChapterContent = {
       type: 'contentBlock',
       id: 'locks',
       title: 'Locks (Dreadlocks) — Consultation Essentials',
-      content: 'Locks form when natural-textured hair intertwines into a single network. The process takes 6 months to 1 year to fully complete. Once hair locks, removal requires cutting them off entirely — emphasize this permanence during consultation. Cultivated locks are intentionally guided through techniques like double twisting, coiling, palm rolling, braiding, or wrapping with cord. Maintenance requires regular shop visits for cleaning, conditioning, and rerolling. Use only non-petroleum-based oils; heavy oils cause buildup and attract debris.',
-      highlight: 'Locks are permanent — removal requires cutting them off',
+      content: 'Locks form as textured hair intertwines and mats over time. Development varies by hair characteristics, technique, maintenance, and time, so avoid promising a universal completion timeline. Cultivated locks are intentionally guided through methods such as twisting, coiling, palm rolling, braiding, or wrapping. Maintenance should focus on clean hair and scalp, appropriate conditioning, and product choices that minimize buildup while following product directions and the client\'s needs.',
+      highlight: 'Lock formation and maintenance vary by hair, method, and product routine',
     },
 
     // Section 5b: Building Volume
@@ -1199,7 +1199,7 @@ export const chapter14PremiumContent: ChapterContent = {
     {
       type: 'levelUp',
       id: 'board-exam-checkpoint',
-      title: 'Board Exam Checkpoint: Chapter 14 Mastery',
+      title: 'Chapter 14 Knowledge Checkpoint',
       levels: [
         { level: '1', title: 'Consultation', description: 'Can conduct a thorough client consultation and clarify vague requests', reward: 'Client trust and repeat business' },
         { level: '2', title: 'Facial Analysis', description: 'Can identify all seven facial shapes and four profile types', reward: 'Customized style recommendations' },
@@ -1207,7 +1207,7 @@ export const chapter14PremiumContent: ChapterContent = {
         { level: '4', title: 'Reference Points', description: 'Can locate parietal ridge, occipital bone, apex, and four corners', reward: 'Precision sectioning and balanced cuts' },
         { level: '5', title: 'Elevation', description: 'Can explain 0°, 45°, 90°, and 180° elevations and their effects', reward: 'Correct weight distribution every time' },
         { level: '6', title: 'Techniques', description: 'Can perform clipper-over-comb, shear-over-comb, and razor techniques', reward: 'Versatile, professional cutting skills' },
-        { level: '7', title: 'State Board', description: 'Knows guards are NOT acceptable for practical exams', reward: 'Exam confidence and first-attempt pass' },
+        { level: '7', title: 'Tool Selection', description: 'Can distinguish detachable blades, guards, and freehand clipper technique', reward: 'More deliberate tool choices and technique control' },
       ],
     },
 
@@ -1241,10 +1241,10 @@ export const chapter14PremiumContent: ChapterContent = {
         { text: '✓ Building volume: lift with brush, bend section, direct heat at base' },
         { text: '✓ Head shave requires steamed towels and careful stretching of skin' },
         { text: '✓ Cornrow braiding involves picking up hair with each strand cross' },
-        { text: '✓ Locks take 6–12 months to form and are permanent' },
+        { text: '✓ Lock development and maintenance vary by hair, method, time, and product routine' },
         { text: '✓ Always follow proper clean-up and disinfection procedures' },
         { text: '✓ Dispose of blades in sharps container only' },
-        { text: '✓ Guards are NOT acceptable for state board practical exams' },
+        { text: '✓ Distinguish guards, detachable blades, and freehand clipper technique; verify current exam rules separately' },
       ],
     },
   ],
