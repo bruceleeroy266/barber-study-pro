@@ -75,7 +75,7 @@ describe('C17-4 assessment source-grounding and answer-key certification', () =>
     expect(assessmentSource).not.toContain('Chemical texture services break and rebuild them')
     expect(assessmentSource).not.toContain('straighten hair by breaking disulfide bonds')
     expect(assessmentSource).toContain('hydroxide relaxers, which use different chemistry')
-    expect(assessmentSource).toContain('hydroxide relaxers use a different post-service finishing process')
+    expect(assessmentSource.toLowerCase()).toContain('hydroxide relaxers require a different post-service finishing process')
     expect(assessmentSource).toContain('straighten through highly alkaline chemistry and lanthionization')
   })
 
@@ -84,7 +84,10 @@ describe('C17-4 assessment source-grounding and answer-key certification', () =>
     expect(assessmentSource).not.toContain('usually require heat')
     expect(assessmentSource).not.toContain('at least three areas')
     expect(assessmentSource).not.toContain('choose a milder acid formula')
-    expect(assessmentSource).not.toContain('Double the processing time')
+    const highlightedHairQuestion = chapter17PremiumQuizQuestions.find((question) => question.id === 'qq-17-002')!
+    expect(highlightedHairQuestion.correct_answer).toBe('b')
+    expect(highlightedHairQuestion.answer_b).toContain('manufacturer directions support')
+    expect(highlightedHairQuestion.explanation).toContain('not a generic milder-formula prescription')
     expect(assessmentSource).toContain('heat use and timing depend on the specific product directions')
     expect(assessmentSource).toContain('intervals and locations directed by the product instructions and service plan')
     expect(assessmentSource).toContain('manufacturer directions rather than porosity alone')
