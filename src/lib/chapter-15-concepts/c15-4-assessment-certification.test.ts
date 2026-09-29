@@ -50,7 +50,7 @@ describe('C15-4 assessment source-grounding and answer-key certification', () =>
       expect(Object.values(choices).every((choice) => choice.trim().length > 0), question.id).toBe(true)
       expect(new Set(Object.values(choices)).size, question.id).toBe(4)
       expect(choices[question.correct_answer as keyof typeof choices].trim().length, question.id).toBeGreaterThan(0)
-      expect(question.explanation.trim().length, question.id).toBeGreaterThan(0)
+      expect((question.explanation ?? '').trim().length, question.id).toBeGreaterThan(0)
     }
   })
 
