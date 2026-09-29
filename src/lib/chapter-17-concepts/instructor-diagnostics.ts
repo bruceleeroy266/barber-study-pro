@@ -226,42 +226,46 @@ export function buildChapter17InstructorDiagnostics(input: {
   const microEvidence = chapter17MicroCheckRowsToEvidence(input.microCheckRows)
   const assessmentEvidence = chapter17QuizAttemptsToEvidence(input.studentId, input.quizAttempts)
   const reassessmentEvidence = chapter17ReassessmentAttemptsToEvidence(input.studentId, input.quizAttempts)
-  const activityEvidence: Chapter17EvidenceRecord[] = (input.activityRows ?? []).flatMap((row) => {
-    if (row.chapter_id !== 'ch-17') return []
+  const activityEvidence = (input.activityRows ?? []).reduce<Chapter17EvidenceRecord[]>((records, row) => {
+    if (row.chapter_id !== 'ch-17') return records
+
     if (row.source === 'flashcard') {
       const conceptFamilyId = getFlashcardEvidenceConcept('ch-17', row.item_id)
-      if (!conceptFamilyId || !(CHAPTER17_CONCEPT_FAMILY_IDS as readonly string[]).includes(conceptFamilyId)) return []
-      return [{
+      if (!conceptFamilyId || !(CHAPTER17_CONCEPT_FAMILY_IDS as readonly string[]).includes(conceptFamilyId)) return records
+      records.push({
         studentId: input.studentId,
-        chapterId: 'ch-17' as const,
+        chapterId: 'ch-17',
         conceptFamilyId: conceptFamilyId as Chapter17ConceptFamilyId,
-        source: 'flashcard' as const,
+        source: 'flashcard',
         itemId: row.item_id,
-        difficulty: 'understanding' as const,
+        difficulty: 'understanding',
         correct: row.is_correct,
-        attemptPhase: 'initial' as const,
+        attemptPhase: 'initial',
         timestamp: input.referenceTime,
-      }]
+      })
+      return records
     }
+
     if (row.source === 'scenario_application') {
       const [sectionId, indexText] = row.item_id.split(':')
       const index = Number(indexText)
       const conceptFamilyId = getScenarioEvidenceConcept('ch-17', sectionId, Number.isInteger(index) ? index : undefined)
-      if (!conceptFamilyId || !(CHAPTER17_CONCEPT_FAMILY_IDS as readonly string[]).includes(conceptFamilyId)) return []
-      return [{
+      if (!conceptFamilyId || !(CHAPTER17_CONCEPT_FAMILY_IDS as readonly string[]).includes(conceptFamilyId)) return records
+      records.push({
         studentId: input.studentId,
-        chapterId: 'ch-17' as const,
+        chapterId: 'ch-17',
         conceptFamilyId: conceptFamilyId as Chapter17ConceptFamilyId,
-        source: 'scenario_application' as const,
+        source: 'scenario_application',
         itemId: row.item_id,
-        difficulty: 'scenario' as const,
+        difficulty: 'scenario',
         correct: row.is_correct,
-        attemptPhase: 'initial' as const,
+        attemptPhase: 'initial',
         timestamp: input.referenceTime,
-      }]
+      })
     }
-    return []
-  })
+
+    return records
+  }, [])
   const evidence = [...microEvidence, ...assessmentEvidence, ...activityEvidence, ...reassessmentEvidence]
 
   const concepts = CHAPTER17_CONCEPT_FAMILY_IDS.map((conceptFamilyId) => {
