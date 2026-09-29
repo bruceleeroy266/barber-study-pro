@@ -27,7 +27,8 @@ describe('C16-3 flashcard audit and hardening', () => {
 
   it('preserves the 43 Board Essential / 25 Professional Essential inventory split', () => {
     const counts = chapter16PremiumFlashcards.reduce<Record<string, number>>((acc, card) => {
-      acc[card.category] = (acc[card.category] ?? 0) + 1
+      const category = card.category ?? 'missing'
+      acc[category] = (acc[category] ?? 0) + 1
       return acc
     }, {})
 
