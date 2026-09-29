@@ -37,7 +37,17 @@ describe('C15-2 source-grounded lesson hardening', () => {
     expect(lesson).not.toContain('It is always 24 to 48 hours')
     expect(lesson).not.toContain('State boards frequently test this timeline')
     expect(lesson).toContain('Follow the system and adhesive manufacturer instructions for lace-front attachment')
-    expect(lesson).toContain("follow the adhesive manufacturer's instructions")
+    expect(lesson).toMatch(/adhesive manufacturer\\?'s instructions/)
+  })
+
+  it('removes unsupported device, durability, fit, and maintenance absolutes', () => {
+    expect(lesson).not.toContain('FDA-approved cold-beam red-light laser')
+    expect(lesson).not.toContain('Results can last a lifetime when performed properly')
+    expect(lesson).not.toContain('Clients need at least two systems for rotation')
+    expect(lesson).not.toContain('industry standard for quality systems')
+    expect(lesson).not.toContain('Perfect match to the client')
+    expect(lesson).toContain('A backup or rotation system can be useful for some clients')
+    expect(lesson).toContain('device, applicable rules, and professional scope')
   })
 
   it('repairs the contradictory chemical-service guidance', () => {
@@ -52,6 +62,8 @@ describe('C15-2 source-grounded lesson hardening', () => {
     expect(lesson).not.toContain("title: 'Board Exam Alert:")
     expect(lesson).not.toContain("title: 'Board Exam Checkpoint:")
     expect(lesson).not.toContain('the board exam will test this')
+    expect(lesson).not.toContain("title: 'Board Exam Traps")
+    expect(lesson).not.toContain('// Section 13: Board Exam Checkpoint')
     expect(lesson).toContain("title: 'Chapter 15 Knowledge Checkpoint'")
   })
 
