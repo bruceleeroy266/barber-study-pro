@@ -418,49 +418,32 @@ export async function POST(
         )
       }
 
-      // Chapters 9-18 share the certified five-question recovery contract.
-      // A live urgent-safety flag is represented by an existing remediation
-      // cycle whose canonical target requires a perfect reassessment. Until
-      // that persisted cycle metadata is normalized across every chapter,
-      // never infer urgency from answer performance; generic evaluation stays
-      // authoritative for the safety classification.
-      const genericResult = await evaluationService.evaluateCycleWithDetection(
-        cycleId,
-        cycle.conceptId,
-        evidenceIds,
+      // Chapters 9-18 use the persisted cycle safety snapshot as the sole
+      // authority for the terminal recovery threshold. The generic detector
+      // must never terminally pass an urgent cycle at 4/5.
+      const safetySnapshot = getPersistedModernSafetyCycleSnapshot(
+        cycle.chapterId as ModernRecoveryChapterId,
+        cycle.detectionEvidence,
       )
-      evaluationResult = genericResult
+      const recovered = hasRecoveredModernConcept({
+        correctCount,
+        questionCount: persistedAttempts.length,
+        urgentSafety: safetySnapshot.urgentSafety,
+      })
 
-      // Ordinary recovery is explicitly 80% for the modern chapters. This
-      // closes the prior mismatch where 4/5 could remain merely "improving"
-      // under the generic detector. Urgent-safety terminal enforcement remains
-      // fail-closed in each chapter's certified safety/remediation contract.
-      if (
-        genericResult.success &&
-        genericResult.outcome !== 'successful' &&
-        hasRecoveredModernConcept({
-          correctCount,
-          questionCount: persistedAttempts.length,
-          urgentSafety: getPersistedModernSafetyCycleSnapshot(
-            cycle.chapterId as ModernRecoveryChapterId,
-            cycle.detectionEvidence,
-          ).urgentSafety,
-        })
-      ) {
-        evaluationResult = await evaluationService.evaluateCycle({
+      evaluationResult = await evaluationService.evaluateCycle({
+        cycleId,
+        detectionState: recovered ? 'currently_performing_well' : 'repeated_weakness',
+        confidence: persistedAttempts.length >= requiredCount ? 'high' : 'low',
+        conceptEvidence: semanticDetection.evidence,
+        evidenceIds,
+        idempotencyKey: generateIdempotencyKey(
           cycleId,
-          detectionState: 'currently_performing_well',
-          confidence: 'high',
-          conceptEvidence: semanticDetection.evidence,
+          recovered ? 'currently_performing_well' : 'repeated_weakness',
+          persistedAttempts.length >= requiredCount ? 'high' : 'low',
           evidenceIds,
-          idempotencyKey: generateIdempotencyKey(
-            cycleId,
-            'currently_performing_well',
-            'high',
-            evidenceIds,
-          ),
-        })
-      }
+        ),
+      })
     }
 
     if (!evaluationResult.success) {
