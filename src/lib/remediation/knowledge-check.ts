@@ -5,7 +5,7 @@
  * controlled per-chapter question sequence:
  *
  *   Chapters 1–2: 5 questions (unified grading standard)
- *   Chapters 3–6: 5 questions (unified grading standard)
+ *   Chapters 3–18: 5 questions (unified grading standard)
  *
  * All sequencing state is derived from PERSISTED data only:
  *   - answered evidence = quiz_attempts rows with remediation_cycle_id set
@@ -41,6 +41,15 @@ const KNOWLEDGE_CHECK_LENGTHS: Readonly<Record<string, number>> = {
   'ch-7': 5,
   'ch-8': 5,
   'ch-9': 5,
+  'ch-10': 5,
+  'ch-11': 5,
+  'ch-12': 5,
+  'ch-13': 5,
+  'ch-14': 5,
+  'ch-15': 5,
+  'ch-16': 5,
+  'ch-17': 5,
+  'ch-18': 5,
 }
 
 export function getKnowledgeCheckLength(chapterId: ChapterId): number {
