@@ -166,6 +166,24 @@ export async function getInstructorNotes(
     }
   }
 
+  // Do not trust the caller-supplied schoolId alone. Bind the target student to
+  // the authenticated staff member's authoritative school before reading notes.
+  const { data: student } = await supabase
+    .from('profiles')
+    .select('school_id')
+    .eq('id', studentId)
+    .in('role', ['student', 'apprentice'])
+    .single()
+
+  if (!student || student.school_id !== profile.school_id) {
+    return {
+      success: false,
+      data: [],
+      message: 'You can only view notes for students in your school.',
+      code: 'unauthorized',
+    }
+  }
+
   try {
     const { data, error } = await supabase
       .from('instructor_notes')
