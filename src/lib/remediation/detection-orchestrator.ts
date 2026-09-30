@@ -35,6 +35,7 @@ import {
   getChapterDetectionProvider,
   type ChapterRemediationAssignment,
 } from './chapter-registry'
+import { requiredLegacyRecoveryPercent, type LegacyChapterId } from '@/lib/reassessment/legacy-safety-recovery'
 
 // ───────────────────────────────────────────────
 // Types
@@ -232,7 +233,20 @@ export class DetectionOrchestratorService {
           cycleNumber,
           detectionState: concept.detectionState,
           detectionConfidence: concept.detectionConfidence,
-          detectionEvidence: concept.evidence,
+          detectionEvidence: {
+            ...concept.evidence,
+            // HA-3 persists the recovery requirement at cycle creation so the
+            // submit API never has to infer safety urgency from reassessment
+            // answers. Chapters 1-7 have an explicit concept safety policy.
+            // Modern chapters default ordinary here until their chapter safety
+            // evaluator supplies an urgent snapshot in the next HA-3 bridge.
+            ha3UrgentSafety: /^ch-[1-7]$/.test(chapterId)
+              ? requiredLegacyRecoveryPercent(chapterId as LegacyChapterId, concept.conceptId) === 100
+              : false,
+            ha3RequiredRecoveryPercent: /^ch-[1-7]$/.test(chapterId)
+              ? requiredLegacyRecoveryPercent(chapterId as LegacyChapterId, concept.conceptId)
+              : 80,
+          },
           status: 'targeted',
           assignments,
         })
