@@ -73,6 +73,7 @@ export async function reviewQuizAccess(requestId: string, decision: 'approved' |
     .from('quiz_access_requests')
     .select('id, school_id, student_id, quiz_id')
     .eq('id', requestId)
+    .eq('status', 'pending')
     .single()
 
   if (!request || request.school_id !== profile.school_id) throw new Error('Request not found')
@@ -87,6 +88,8 @@ export async function reviewQuizAccess(requestId: string, decision: 'approved' |
       updated_at: now,
     })
     .eq('id', requestId)
+    .eq('school_id', profile.school_id)
+    .eq('status', 'pending')
 
   if (error) throw new Error(error.message)
 
@@ -113,6 +116,7 @@ export async function bulkApproveQuizAccess(requestIds: string[]) {
     .from('quiz_access_requests')
     .select('id, school_id, student_id, quiz_id')
     .eq('school_id', profile.school_id)
+    .eq('status', 'pending')
     .in('id', requestIds)
 
   const safeRequests = (requests || []) as Array<{
@@ -135,6 +139,8 @@ export async function bulkApproveQuizAccess(requestIds: string[]) {
       updated_at: now,
     })
     .in('id', safeIds)
+    .eq('school_id', profile.school_id)
+    .eq('status', 'pending')
 
   if (error) throw new Error(error.message)
 
