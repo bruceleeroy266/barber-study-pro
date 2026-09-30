@@ -67,6 +67,36 @@ describe('HA-5 Chapters 1-18 authorization and tenant boundaries', () => {
     expect(oversight).toContain('current_user_school_id() = user_school_id(user_id)')
   })
 
+  it('blocks forged reassessment/exhaustion and direct escalation lifecycle writes', () => {
+    expect(migration).toContain('drop policy if exists concept_question_pool_exhaustion_insert')
+    expect(migration).toContain('revoke insert, update, delete on public.concept_question_pool_exhaustion from authenticated')
+    expect(migration).toContain('drop policy if exists instructor_escalations_instructor_update')
+    expect(migration).toContain('revoke insert, update, delete on public.instructor_escalations from authenticated')
+    expect(migration).toContain('revoke insert, update, delete on public.instructor_escalation_events from authenticated')
+  })
+
+  it('binds instructor-note creation to actor, target student, and one school', () => {
+    expect(migration).toContain('drop policy if exists instructor_notes_all')
+    expect(migration).toContain('create policy instructor_notes_insert')
+    expect(migration).toContain('public.current_user_school_id() = school_id')
+    expect(migration).toContain('public.user_school_id(student_id) = school_id')
+    expect(migration).toContain('instructor_id = auth.uid()')
+    expect(migration).toContain('revoke update, delete on public.instructor_notes from authenticated')
+  })
+
+  it('gives the canonical platform admin read-only cross-school diagnostics', () => {
+    const expected = [
+      'Remediation cycles: platform admin read all',
+      'Reassessment history: platform admin read all',
+      'Remediation evaluations: platform admin read all',
+      'Instructor escalations: platform admin read all',
+      'Sustained performance: platform admin read all',
+      'Follow-up evidence: platform admin read all',
+    ]
+    for (const policy of expected) expect(migration).toContain(policy)
+    expect(migration).toContain('for select to authenticated using (public.is_platform_admin())')
+  })
+
   it('retains explicit platform-super-admin policy instead of widening school staff scope', () => {
     const foundation = readFileSync(
       join(process.cwd(), 'supabase/migrations/20260818000000_phase_6c2a_remediation_foundation.sql'),
