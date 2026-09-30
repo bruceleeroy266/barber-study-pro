@@ -36,7 +36,8 @@ The final test requires:
 - micro-check questions = 14 unique `mcq-17-*` IDs
 - reassessment reserve = 35 unique `r17-*` IDs
 - canonical concept families = 7
-- every concept has lesson, flashcard, assessment, learning-question, micro-check, and five-question reassessment coverage
+- all 16 learning questions remain uniquely mapped to valid Chapter 17 concept families; the certified learning bank is not required to place at least one learning question in every concept
+- every concept has lesson, flashcard, assessment, micro-check, and five-question reassessment coverage
 - reassessment IDs never overlap the assessment, learning-question, or micro-check namespaces
 
 ## Shared evidence + grading
