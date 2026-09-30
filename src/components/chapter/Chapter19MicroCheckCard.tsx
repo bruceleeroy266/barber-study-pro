@@ -8,6 +8,7 @@ import type {
 } from '@/lib/chapter-19-concepts/micro-checks'
 import type { Chapter19MicroCheckAttemptRow } from '@/lib/chapter-19-concepts/micro-check-persistence'
 import { persistChapter19MicroCheckAttempt } from '@/lib/chapter-19-concepts/micro-check-persistence'
+import { classifyChapter19MicroCheckMiss } from '@/lib/chapter-19-concepts/escalation'
 
 interface Props {
   check: Chapter19MicroCheck
@@ -92,6 +93,9 @@ export default function Chapter19MicroCheckCard({
       {check.questions.map((question, index) => {
         const attempt = attemptMap.get(question.id)
         const chosen = selected[question.id]
+        const intervention = attempt
+          ? classifyChapter19MicroCheckMiss(question, attempt.is_correct)
+          : null
 
         return (
           <div
@@ -166,9 +170,43 @@ export default function Chapter19MicroCheckCard({
                     color: attempt.is_correct ? theme.primary : theme.text,
                   }}
                 >
-                  {attempt.is_correct ? '✓ Correct' : 'Review this concept'}
+                  {attempt.is_correct
+                    ? '✓ Correct'
+                    : intervention?.safety.level === 'review'
+                      ? '⚠ Safety review required'
+                      : intervention?.compliance.level === 'review'
+                        ? '⚠ Compliance review required'
+                        : 'Review this concept'}
                 </p>
                 <p className="mt-1">{question.explanation}</p>
+                {intervention?.safety.requiresTargetedSafetyReview && (
+                  <div
+                    className="mt-3 rounded-lg border px-3 py-3"
+                    style={{
+                      borderColor: theme.primaryDark,
+                      background: theme.background,
+                    }}
+                  >
+                    <p className="font-semibold" style={{ color: theme.primary }}>
+                      Targeted Safety Review
+                    </p>
+                    <p className="mt-1">{intervention.safety.studentMessage}</p>
+                  </div>
+                )}
+                {intervention?.compliance.requiresTargetedComplianceReview && (
+                  <div
+                    className="mt-3 rounded-lg border px-3 py-3"
+                    style={{
+                      borderColor: theme.border,
+                      background: theme.background,
+                    }}
+                  >
+                    <p className="font-semibold" style={{ color: theme.primary }}>
+                      Targeted Compliance Review
+                    </p>
+                    <p className="mt-1">{intervention.compliance.studentMessage}</p>
+                  </div>
+                )}
               </div>
             )}
           </div>
