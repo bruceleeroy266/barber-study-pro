@@ -97,3 +97,22 @@ create trigger enforce_remediation_detection_snapshot_immutability
 
 comment on function public.prevent_remediation_detection_snapshot_mutation() is
   'HA-4: preserves the initial miss/detection snapshot while allowing lifecycle timestamps and outcomes to advance.';
+
+
+-- Reassessment history is server-authoritative. The reservation/consumption RPCs
+-- run as service_role; authenticated clients only need read access to their
+-- history. This closes the forged-history insert path left by the legacy policy.
+drop policy if exists reassessment_question_history_insert
+  on public.reassessment_question_history;
+
+-- Evaluation/history ledgers are append-only historical evidence. Existing
+-- database triggers already reject UPDATE/DELETE; explicitly remove direct
+-- authenticated write grants/policies so only trusted server RPCs can append.
+revoke insert, update, delete on public.reassessment_question_history from authenticated;
+revoke insert, update, delete on public.remediation_cycle_events from authenticated;
+revoke insert, update, delete on public.remediation_cycle_evaluations from authenticated;
+revoke insert, update, delete on public.follow_up_evidence from authenticated;
+revoke insert, update, delete on public.sustained_performance_resets from authenticated;
+
+comment on table public.reassessment_question_history is
+  'HA-4: server-authoritative append/consume reassessment history; authenticated clients may read authorized rows but cannot forge or erase evidence.';
