@@ -89,21 +89,29 @@ export async function loadChapterActivityEvidence(
 ): Promise<ChapterActivityEvidenceRow[]> {
   if (!isUnifiedActivityEvidenceChapter(chapterId)) return []
 
-  const { data, error } = await supabase
-    .from('chapter_activity_evidence')
-    .select('*')
-    .eq('user_id', userId)
-    .eq('chapter_id', chapterId)
-    .order('answered_at', { ascending: true })
+  try {
+    const { data, error } = await supabase
+      .from('chapter_activity_evidence')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('chapter_id', chapterId)
+      .order('answered_at', { ascending: true })
 
-  if (error) {
-    if (error.code !== 'PGRST116') {
-      console.error('[activity-evidence] load failed:', error.message)
+    if (error) {
+      if (error.code !== 'PGRST116') {
+        console.error('[activity-evidence] load failed:', error.message)
+      }
+      return []
     }
+
+    return (data ?? []) as ChapterActivityEvidenceRow[]
+  } catch (error) {
+    console.error(
+      '[activity-evidence] load failed:',
+      error instanceof Error ? error.message : String(error),
+    )
     return []
   }
-
-  return (data ?? []) as ChapterActivityEvidenceRow[]
 }
 
 export async function persistChapterActivityEvidence(
