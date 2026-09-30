@@ -1,5 +1,7 @@
 name: Engineering Verification
 
+# HA-3 exact-head verification trigger; no verification gates changed.
+
 on:
   pull_request:
     branches: [main]
@@ -174,4 +176,3 @@ jobs:
       - name: Stop local Supabase
         if: always()
         run: supabase stop --no-backup
-
