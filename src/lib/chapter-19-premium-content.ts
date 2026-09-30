@@ -64,14 +64,14 @@ export const chapter19PremiumContent: ChapterContent = {
 
 <section>
 <h2>1. Know Your Licensing Path</h2>
-<p>Before scheduling an examination or beginning paid professional work, identify the requirements that apply in your jurisdiction. A student should know which license they are pursuing, the education or training requirement, the required examination component or components, the application process, the fees, and any identification or documentation requirements.</p>
+<p>Before applying for or scheduling a licensing examination—and before performing any service that the jurisdiction requires a license to perform—identify the current requirements that apply to the specific license and location. Requirements can differ by jurisdiction and can change. Verify education or training eligibility, required examination component or components, application steps, fees, identification, and documentation through the applicable official licensing agency and authorized examination provider.</p>
 <h3>Build a licensing checklist</h3>
 <ul>
 <li>Confirm the official licensing agency and the exact license type.</li>
-<li>Use the current candidate information bulletin or official exam guide when one is available.</li>
+<li>Use the current official candidate bulletin, exam guide, or provider instructions when the applicable agency or authorized provider publishes them.</li>
 <li>Confirm eligibility requirements before paying for an examination.</li>
 <li>Verify required identification, supplies, arrival rules, and testing-site policies.</li>
-<li>Check whether accommodations require advance documentation or approval.</li>
+<li>If testing accommodations are needed, verify the current request process, documentation rules, and deadlines with the authorized provider or licensing agency.</li>
 <li>Keep copies of confirmations, receipts, and required documents.</li>
 </ul>
 <p>Do not rely on an old handout, social-media post, or another student’s experience when an official source is available.</p>
@@ -96,9 +96,9 @@ export const chapter19PremiumContent: ChapterContent = {
 
 <section>
 <h2>3. Prepare for Any Practical or Skills Component</h2>
-<p>If the jurisdiction requires a practical or skills examination, use the official candidate guide as the source of truth. Practice the required procedures in the required order and treat sanitation, client protection, tool handling, and safety as part of the performance—not as separate details.</p>
+<p>If the jurisdiction requires a practical or skills examination, follow the current instructions published by the applicable licensing agency and authorized examination provider. Do not assume that another jurisdiction’s procedure list, timing, kit, scoring, or sequence applies. When infection-control, client-protection, tool-handling, or other safety steps are required, treat them as part of the procedure rather than optional details.</p>
 <ul>
-<li>Practice with the same type of kit or supplies allowed by the testing provider.</li>
+<li>Verify the permitted or required kit, supplies, labeling, and setup rules before practicing a simulated exam.</li>
 <li>Use a timed rehearsal after technique is consistent.</li>
 <li>Ask an instructor to observe for missed safety steps.</li>
 <li>Correct process errors before trying to increase speed.</li>
@@ -108,11 +108,11 @@ export const chapter19PremiumContent: ChapterContent = {
 
 <section>
 <h2>4. Turn School Experience into Employment Evidence</h2>
-<p>Employment readiness begins before graduation. Students should be able to explain what they can do, show evidence of professional growth, and describe how previous work experience transfers into a barbering environment.</p>
+<p>Employment readiness can begin before graduation. Students should be able to describe their current skills accurately, identify areas still developing, show appropriate evidence of professional growth, and explain how relevant experience from school or prior work may transfer into a barbering environment.</p>
 <h3>Résumé</h3>
 <ul>
 <li>Use accurate contact information and a professional email address.</li>
-<li>List relevant education, licenses or credentials, and work experience honestly.</li>
+<li>List relevant education, current licenses or credentials only when actually earned, and work experience honestly.</li>
 <li>Describe accomplishments and responsibilities with clear action language.</li>
 <li>Include transferable skills such as customer service, scheduling, sales, teamwork, cash handling, or conflict resolution when they are relevant.</li>
 <li>Proofread for spelling, dates, and consistency.</li>
@@ -123,12 +123,12 @@ export const chapter19PremiumContent: ChapterContent = {
 
 <section>
 <h2>5. Research the Shop Before You Apply</h2>
-<p>A first job should be evaluated for fit, not selected only because an opening exists. Research the shop’s services, clientele, culture, schedule expectations, compensation model, professional standards, and opportunities to learn.</p>
+<p>Evaluate a potential position using more than the existence of an opening. Research the shop’s services, public-facing culture, schedule expectations, compensation structure as described by the employer, professional standards, and opportunities to learn. Confirm important terms directly rather than assuming that public information is complete.</p>
 <ul>
 <li>Visit or observe the business when appropriate.</li>
 <li>Review its public-facing information and service menu.</li>
 <li>Ask how new barbers are supported and how expectations are communicated.</li>
-<li>Understand whether the position is employee-based, commission-based, booth rental, or another lawful arrangement in that jurisdiction.</li>
+<li>Ask how the working relationship and compensation arrangement are structured; labels such as employee, commission, or booth rental do not by themselves resolve tax, wage, benefit, or worker-classification questions.</li>
 <li>Do not make assumptions about taxes, benefits, or worker classification; those issues can depend on law and the actual working relationship.</li>
 </ul>
 </section>
@@ -145,12 +145,12 @@ export const chapter19PremiumContent: ChapterContent = {
 <li>Prepare thoughtful questions about expectations, schedule, compensation, clientele, education, and growth.</li>
 <li>Follow up professionally after the interview.</li>
 </ul>
-<div class="key-point"><strong>Legal awareness:</strong> Hiring laws vary. Questions about protected characteristics may be restricted or inappropriate. If a question concerns you, stay professional and seek guidance from a qualified instructor, workforce professional, or legal resource rather than guessing about the law.</div>
+<div class="key-point"><strong>Legal awareness:</strong> Interview-question rules and protected categories can vary by jurisdiction and situation. Do not treat a generic list of “legal” or “illegal” questions as universal law. If a question raises concern, stay professional, document what occurred when appropriate, and verify the applicable rule through a qualified workforce or legal resource.</div>
 </section>
 
 <section>
 <h2>7. Read Before You Agree</h2>
-<p>Employment agreements, booth-rental agreements, non-solicitation provisions, compensation plans, and other documents can create real obligations. Read the entire document, ask questions about anything unclear, and keep a copy. When legal consequences are significant, seek qualified legal advice before signing.</p>
+<p>Employment agreements, booth-rental agreements, compensation plans, confidentiality or non-solicitation terms, and other documents can create obligations whose meaning and enforceability depend on the wording and applicable law. Read the entire document, ask questions about anything unclear, keep a copy, and do not assume that a provision is valid or invalid everywhere. When the consequences matter, seek qualified legal advice before agreeing.</p>
 </section>
 
 <section>
@@ -158,7 +158,7 @@ export const chapter19PremiumContent: ChapterContent = {
 <ol>
 <li>Verify the current licensing requirements from official sources.</li>
 <li>Build a study plan around demonstrated weak areas.</li>
-<li>Complete realistic practice for every required exam component.</li>
+<li>Practice the components that current official instructions require, using those instructions to define the format and boundaries.</li>
 <li>Prepare a clean résumé and evidence-based portfolio.</li>
 <li>Research shops before applying.</li>
 <li>Practice interviews and prepare your own questions.</li>
@@ -181,7 +181,7 @@ export const chapter19PremiumContent: ChapterContent = {
 
 <section>
 <h2>Source and Independence Note</h2>
-<p>ASCYN PRO is an independent supplemental learning platform. This lesson is written in original ASCYN PRO language and is intended to be used alongside a school’s approved curriculum. For licensing or examination requirements, students and instructors should verify current information with the applicable state licensing agency and authorized exam provider.</p>
+<p>ASCYN PRO is an independent supplemental learning platform. This lesson is written in original ASCYN PRO language and is intended to be used alongside a school’s approved curriculum. It does not establish licensing requirements, examination rules, worker classification, contract enforceability, or employment-law rights for any jurisdiction. Verify current licensing and examination information with the applicable official agency and authorized exam provider, and verify legal or employment questions through an appropriate official or qualified professional source.</p>
 </section>
 </div>`,
     },
