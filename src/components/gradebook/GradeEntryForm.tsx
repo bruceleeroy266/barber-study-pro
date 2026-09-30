@@ -11,6 +11,7 @@ interface GradeEntryFormProps {
   categories: GradeCategory[]
   onSave: (grade: Grade) => void
   onClose: () => void
+  pending?: boolean
 }
 
 export default function GradeEntryForm({
@@ -19,6 +20,7 @@ export default function GradeEntryForm({
   categories,
   onSave,
   onClose,
+  pending = false,
 }: GradeEntryFormProps) {
   const [score, setScore] = useState<number>(grade?.score ?? 0)
   const [maxScore, setMaxScore] = useState<number>(grade?.maxScore ?? 100)
@@ -31,7 +33,7 @@ export default function GradeEntryForm({
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!selectedCategory) return
+    if (pending || !selectedCategory) return
 
     onSave({
       id: grade?.id || `grade-${Date.now()}`,
@@ -60,7 +62,7 @@ export default function GradeEntryForm({
           <h2 className="text-lg font-semibold text-white">
             {grade?.id ? 'Edit Grade' : 'Add Grade'}
           </h2>
-          <button onClick={onClose} className="text-silver hover:text-white">
+          <button type="button" onClick={onClose} disabled={pending} aria-label="Close grade editor" className="min-h-11 min-w-11 text-silver hover:text-white disabled:opacity-40">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -140,6 +142,7 @@ export default function GradeEntryForm({
               type="button"
               variant="secondary"
               onClick={onClose}
+              disabled={pending}
               fullWidth
             >
               Cancel
@@ -147,9 +150,10 @@ export default function GradeEntryForm({
             <Button
               type="submit"
               variant="primary"
+              disabled={pending}
               fullWidth
             >
-              Save Grade
+              ${pending ? 'Saving...' : 'Save Grade'}
             </Button>
           </div>
         </form>
