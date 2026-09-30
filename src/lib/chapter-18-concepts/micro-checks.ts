@@ -64,9 +64,9 @@ export const chapter18MicroChecks: readonly Chapter18MicroCheck[] = [
     title: 'Color Theory & Neutralization Check',
     questions: [
       q('mcq-18-003','ch18-color-theory','application',
-        'A client has unwanted orange warmth at a level where blue is the appropriate complementary relationship. Which tonal direction is used to reduce it?',
-        'Gold','Blue','Red-orange','Yellow',
-        'b','Blue is complementary to orange in traditional haircolor theory. The final formula still depends on level, underlying pigment, target tone, and the color system.'),
+        'A pre-lightened section shows unwanted yellow warmth and the target is a cooler result. Which color-wheel relationship should guide the tonal adjustment?',
+        'Use violet as the complementary direction to yellow','Add more yellow to cancel the warmth','Use orange because it is adjacent to yellow','Choose developer volume instead of considering tone',
+        'a','Violet is complementary to yellow in traditional haircolor theory. The exact toner or formula still depends on level, condition, target tone, and the product system.'),
       q('mcq-18-004','ch18-color-theory','understanding',
         'What does “level” describe in professional haircolor?',
         'Only whether a tone is warm or cool','The relative lightness or darkness of the color','The developer volume','The amount of gray coverage promised',
