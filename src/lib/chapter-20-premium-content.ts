@@ -247,7 +247,7 @@ export const chapter20PremiumContent: ChapterContent = {
 </ul>
 <p>Some commission arrangements take a fee "off the top" for the shop before applying your percentage. Always make sure you understand the math before accepting a position.</p>
 <h3>Tips</h3>
-<p>Tips are additional income and must be tracked and reported on your tax return. Reporting tips accurately helps when applying for loans, increases your Social Security retirement benefits, and keeps you on the right side of tax law.</p>
+<p>Tips and other taxable income must be tracked and reported according to current tax rules. Keep a daily tip record and supporting records rather than relying on memory. Verify current requirements with the IRS and applicable state or local guidance, or with a qualified tax professional, because reporting duties can vary by work arrangement and can change.</p>
 <h3>Employment Classification Overview</h3>
 <table>
 <caption>How employment status affects control, taxes, and daily responsibilities</caption>
@@ -255,14 +255,12 @@ export const chapter20PremiumContent: ChapterContent = {
 <tr><th scope="col">Factor</th><th scope="col">Employee</th><th scope="col">Independent Contractor</th><th scope="col">Booth Renter</th></tr>
 </thead>
 <tbody>
-<tr><th scope="row">Who decides how work is done</th><td>The shop provides instruction and evaluates performance</td><td>The worker decides how to perform services</td><td>The worker has full control over methods and services</td></tr>
-<tr><th scope="row">Schedule</th><td>Hours set or scheduled by business</td><td>Sets own hours with agreement</td><td>Sets own hours and schedule</td></tr>
-<tr><th scope="row">Appointments</th><td>Scheduled by business</td><td>May schedule own appointments</td><td>Schedules own appointments</td></tr>
-<tr><th scope="row">Revenue collection</th><td>Collected at front desk</td><td>May be collected at front desk</td><td>Collected by booth renter</td></tr>
-<tr><th scope="row">Equipment / facilities</th><td>Provided by shop</td><td>May pay for certain equipment</td><td>Certain equipment included in lease</td></tr>
-<tr><th scope="row">Benefits</th><td>May be provided</td><td>No benefits</td><td>No benefits</td></tr>
-<tr><th scope="row">Tax responsibility</th><td>Employer withholds taxes</td><td>Responsible for all taxes, licenses, insurance</td><td>Responsible for all taxes, licenses, insurance, advertising</td></tr>
-<tr><th scope="row">Forms</th><td>Employer provides W-2</td><td>Owner provides 1099; written contract required</td><td>Lease required; 1099 for rent paid</td></tr>
+<tr><th scope="row">Control of work</th><td>The business may retain significant direction or control</td><td>Greater business independence may be present</td><td>Responsibilities depend on the actual rental agreement and working relationship</td></tr>
+<tr><th scope="row">Schedule / pricing / clients</th><td>Terms depend on the employment relationship and shop policy</td><td>Terms depend on the actual relationship and agreement</td><td>Terms must be verified from the agreement and applicable rules</td></tr>
+<tr><th scope="row">Equipment / facilities</th><td>May be supplied by the business</td><td>May be supplied by either party depending on the facts</td><td>Lease terms should specify what is included</td></tr>
+<tr><th scope="row">Benefits</th><td>May be available depending on the employment arrangement</td><td>Do not assume benefits from the contractor label</td><td>Do not assume benefits from the booth-rental label</td></tr>
+<tr><th scope="row">Tax / reporting</th><td>Payroll and reporting duties follow current rules for the actual relationship</td><td>Verify current tax, information-return, licensing, insurance, and recordkeeping duties</td><td>Verify current tax, lease, licensing, insurance, and recordkeeping duties</td></tr>
+<tr><th scope="row">Status verification</th><td colspan="3">No single label, payment method, schedule term, or form determines status by itself; evaluate the full working relationship and current applicable rules.</td></tr>
 </tbody>
 </table>
 <div class="key-point"><strong>Key Point:</strong> State laws vary. Some states restrict or prohibit booth rental arrangements. Always check your current state board rules and consult a licensed attorney or tax professional before signing any agreement.</div>
@@ -303,8 +301,8 @@ export const chapter20PremiumContent: ChapterContent = {
 <h2>LO4 — Manage Your Money</h2>
 <p>Barbering offers freedom and creativity, but it also requires financial discipline. Unlike corporate employees who have taxes, insurance, and retirement contributions handled automatically, most barbers must plan these items themselves.</p>
 <h3>Reporting Your Income</h3>
-<p>Report all cash tips and additional income, even if it does not appear on your paycheck. Income from outside jobs such as weddings, parties, or private residences must also be reported. Failing to report income can lead to fines, legal action, reduced borrowing power, and lower Social Security benefits.</p>
-<p>The best practice is to keep a daily tip log. Total your tips weekly, then monthly, and keep a year-end summary on the first page of your log. This makes tax preparation simple and accurate.</p>
+<p>Tips and other taxable income must be tracked and reported according to current tax rules. Income from side work can also create reporting obligations depending on the facts and the worker's actual arrangement. Verify current requirements with the IRS and applicable state or local guidance, or with a qualified tax professional.</p>
+<p>The best practice is to keep a daily tip record and supporting records, then summarize income regularly so reporting is based on reliable documentation rather than memory.</p>
 <div class="key-point" id="ch20-apply-04" data-concept-family="ch20-financial-responsibility-income-reporting"><strong>Apply It:</strong> A barber earns wages, tips, and occasional side income. Build a simple recordkeeping plan that captures income consistently and identifies which current tax rules or professional guidance must be verified.</div>
 <h3>Personal Budget</h3>
 <p>A personal budget is not restrictive; it is a tool for freedom. A simple monthly worksheet includes expenses such as rent, car payment, insurance, utilities, groceries, health insurance, entertainment, student loans, retirement savings, and an emergency fund. Compare total expenses to total income, including take-home pay and tips. If the balance is negative, identify expenses you can reduce or income you can increase.</p>
@@ -315,8 +313,8 @@ export const chapter20PremiumContent: ChapterContent = {
 <ul>
 <li><strong>Spend less:</strong> Reduce unnecessary spending and redirect the savings.</li>
 <li><strong>Work more hours:</strong> Choose busy shifts, come in early, stay late, and maximize Saturdays.</li>
-<li><strong>Increase service prices:</strong> Once you have mastered your services and built loyalty, raise prices by a reasonable amount based on market research.</li>
-<li><strong>Retail more:</strong> Recommend products you believe in; most shops pay commission on retail sales.</li>
+<li><strong>Increase service prices:</strong> Consider skill level, costs, demand, client communication, market conditions, and shop policy before changing prices; there is no universal timing formula.</li>
+<li><strong>Retail more:</strong> Recommend products ethically based on client needs. Retail sales may increase earnings when the actual compensation plan includes a commission or incentive.</li>
 </ul>
 <h3>Seek Professional Advice</h3>
 <p>Financial planners, accountants, and bankers can help with debt reduction, investments, and retirement options. Be an informed consumer: consider whether advice makes sense for your situation before acting on it.</p>
@@ -537,9 +535,9 @@ export const chapter20PremiumContent: ChapterContent = {
           id: `ch20-scenario-005`,
           situation:
             `At the end of a busy week, you have $200 in cash tips. What is the best practice for tax reporting?`,
-          options: [            { letter: `A`, text: `Keep the cash and do not report it because there is no paper trail.`, feedback: `Incorrect. All tips are taxable income. Failing to report them can lead to fines and reduces your Social Security benefits and borrowing power.` },
-            { letter: `B`, text: `Record the tips in a daily log and include them in your total income.`, feedback: `Correct. Accurate tip tracking protects you legally and financially. Keep a daily log with weekly and year-end totals.` },
-            { letter: `C`, text: `Report only the tips that appear on your paycheck.`, feedback: `Incorrect. Cash tips must also be reported if they total $20 or more in a month. Relying only on paycheck records underreports your income.` },
+          options: [            { letter: `A`, text: `Keep the cash and ignore it because cash never creates a reporting obligation.`, feedback: `Incorrect. Cash payment does not by itself remove a reporting obligation. Taxable tips and other taxable income should be tracked under current rules.` },
+            { letter: `B`, text: `Record the tips consistently, keep supporting records, and include taxable amounts as current rules require.`, feedback: `Correct. Reliable records support accurate reporting. Verify current requirements for the actual work arrangement with the IRS and applicable state or local guidance.` },
+            { letter: `C`, text: `Use an old fixed dollar threshold without checking whether the rule still applies.`, feedback: `Incorrect. Forms, thresholds, and reporting duties can change and can depend on the work arrangement, so current official guidance should be verified.` },
           ],
           correctAnswer: `B`,
         },
@@ -973,7 +971,7 @@ export const chapter20PremiumContent: ChapterContent = {
       description: 'Describe employer expectations and the behavioral changes required when moving from barbering school to professional employment.',
       importance: 'critical',
       difficulty: 'medium',
-      learningObjectives: ['CH20-LO01'],
+      learningObjectives: ['LO-20-01'],
       flashcardIds: ['fc-ch20-001', 'fc-ch20-002', 'fc-ch20-003', 'fc-ch20-004', 'fc-ch20-005', 'fc-ch20-006', 'fc-ch20-007', 'fc-ch20-008', 'fc-ch20-009', 'fc-ch20-010'],
       quizQuestionIds: ['qq-20-01', 'qq-20-02', 'qq-20-03'],
     },
@@ -984,7 +982,7 @@ export const chapter20PremiumContent: ChapterContent = {
       description: 'Demonstrate the teamwork principles, communication habits, and conflict-resolution skills that create a productive barbershop environment.',
       importance: 'critical',
       difficulty: 'easy',
-      learningObjectives: ['CH20-LO02'],
+      learningObjectives: ['LO-20-02'],
       flashcardIds: ['fc-ch20-011', 'fc-ch20-012', 'fc-ch20-013', 'fc-ch20-014', 'fc-ch20-015', 'fc-ch20-016', 'fc-ch20-017', 'fc-ch20-018', 'fc-ch20-019', 'fc-ch20-020'],
       quizQuestionIds: ['qq-20-04', 'qq-20-05', 'qq-20-06'],
     },
@@ -995,7 +993,7 @@ export const chapter20PremiumContent: ChapterContent = {
       description: 'Compare employee, independent contractor, and booth renter status along with common wage structures and tax responsibilities.',
       importance: 'critical',
       difficulty: 'hard',
-      learningObjectives: ['CH20-LO03'],
+      learningObjectives: ['LO-20-03'],
       flashcardIds: ['fc-ch20-021', 'fc-ch20-022', 'fc-ch20-023', 'fc-ch20-024', 'fc-ch20-025', 'fc-ch20-026', 'fc-ch20-027', 'fc-ch20-028', 'fc-ch20-029', 'fc-ch20-030'],
       quizQuestionIds: ['qq-20-07', 'qq-20-08', 'qq-20-09'],
     },
@@ -1006,7 +1004,7 @@ export const chapter20PremiumContent: ChapterContent = {
       description: 'Record tips and income accurately, build a personal budget, manage debt, and identify ways to increase net income.',
       importance: 'critical',
       difficulty: 'medium',
-      learningObjectives: ['CH20-LO04'],
+      learningObjectives: ['LO-20-04'],
       flashcardIds: ['fc-ch20-031', 'fc-ch20-032', 'fc-ch20-033', 'fc-ch20-034', 'fc-ch20-035', 'fc-ch20-036', 'fc-ch20-037', 'fc-ch20-038', 'fc-ch20-039', 'fc-ch20-040'],
       quizQuestionIds: ['qq-20-10', 'qq-20-11', 'qq-20-12'],
     },
@@ -1017,7 +1015,7 @@ export const chapter20PremiumContent: ChapterContent = {
       description: 'Apply the principles of selling to recommend services and products ethically while overcoming objections without pressure.',
       importance: 'critical',
       difficulty: 'medium',
-      learningObjectives: ['CH20-LO05'],
+      learningObjectives: ['LO-20-05'],
       flashcardIds: ['fc-ch20-041', 'fc-ch20-042', 'fc-ch20-043', 'fc-ch20-044', 'fc-ch20-045', 'fc-ch20-046', 'fc-ch20-047', 'fc-ch20-048', 'fc-ch20-049', 'fc-ch20-050'],
       quizQuestionIds: ['qq-20-13', 'qq-20-14'],
     },
@@ -1028,14 +1026,14 @@ export const chapter20PremiumContent: ChapterContent = {
       description: 'Use marketing, rebooking, social media, and referral strategies to attract new clients and keep current clients returning.',
       importance: 'critical',
       difficulty: 'easy',
-      learningObjectives: ['CH20-LO06'],
+      learningObjectives: ['LO-20-06'],
       flashcardIds: ['fc-ch20-051', 'fc-ch20-052', 'fc-ch20-053', 'fc-ch20-054', 'fc-ch20-055', 'fc-ch20-056', 'fc-ch20-057', 'fc-ch20-058', 'fc-ch20-059', 'fc-ch20-060'],
       quizQuestionIds: ['qq-20-15', 'qq-20-16', 'qq-20-17'],
     },
   ],
   learningObjectives: [
     {
-      id: 'CH20-LO01',
+      id: 'LO-20-01',
       standardId: 'CH20-LO01',
       description: 'Describe what is expected of a new employee and what this means in terms of everyday behavior.',
       competencyIds: ['CH20-C01'],
@@ -1044,7 +1042,7 @@ export const chapter20PremiumContent: ChapterContent = {
       quizQuestionIds: ['qq-20-01', 'qq-20-02', 'qq-20-03'],
     },
     {
-      id: 'CH20-LO02',
+      id: 'LO-20-02',
       standardId: 'CH20-LO02',
       description: 'List the habits of a good barbershop team player.',
       competencyIds: ['CH20-C02'],
@@ -1053,7 +1051,7 @@ export const chapter20PremiumContent: ChapterContent = {
       quizQuestionIds: ['qq-20-04', 'qq-20-05', 'qq-20-06'],
     },
     {
-      id: 'CH20-LO03',
+      id: 'LO-20-03',
       standardId: 'CH20-LO03',
       description: 'Describe three different ways in which barbers are compensated.',
       competencyIds: ['CH20-C03'],
@@ -1062,7 +1060,7 @@ export const chapter20PremiumContent: ChapterContent = {
       quizQuestionIds: ['qq-20-07', 'qq-20-08', 'qq-20-09'],
     },
     {
-      id: 'CH20-LO04',
+      id: 'LO-20-04',
       standardId: 'CH20-LO04',
       description: 'Determine the best way to record tips and make additional income.',
       competencyIds: ['CH20-C04'],
@@ -1071,7 +1069,7 @@ export const chapter20PremiumContent: ChapterContent = {
       quizQuestionIds: ['qq-20-10', 'qq-20-11', 'qq-20-12'],
     },
     {
-      id: 'CH20-LO05',
+      id: 'LO-20-05',
       standardId: 'CH20-LO05',
       description: 'Explain the principles of selling products and services in the barbershop.',
       competencyIds: ['CH20-C05'],
@@ -1080,7 +1078,7 @@ export const chapter20PremiumContent: ChapterContent = {
       quizQuestionIds: ['qq-20-13', 'qq-20-14'],
     },
     {
-      id: 'CH20-LO06',
+      id: 'LO-20-06',
       standardId: 'CH20-LO06',
       description: 'List the most effective ways to build a client base.',
       competencyIds: ['CH20-C06'],
