@@ -6,7 +6,7 @@ import { chapter18PremiumFlashcards } from '../chapter-18-premium-flashcards'
 import { chapter18PremiumQuizQuestions } from '../chapter-18-premium-quiz'
 import { ACTIVE_CHAPTER18_CONCEPT_FAMILY_IDS } from './concepts'
 import {
-  chapter18ContentConceptMappings,
+  chapter18LessonSectionConceptMappings,
   chapter18FlashcardConceptMappings,
   chapter18QuizQuestionConceptMappings,
 } from './mappings'
@@ -95,7 +95,7 @@ describe('C18-9 final Chapter 18 end-to-end certification', () => {
   it('gives all seven canonical concepts coverage across lesson, flashcards, assessment, micro-checks, and reassessment', () => {
     expect(ACTIVE_CHAPTER18_CONCEPT_FAMILY_IDS).toHaveLength(7)
     for (const conceptFamilyId of ACTIVE_CHAPTER18_CONCEPT_FAMILY_IDS) {
-      expect(chapter18ContentConceptMappings.some((mapping) => mapping.conceptFamilyId === conceptFamilyId), conceptFamilyId).toBe(true)
+      expect(chapter18LessonSectionConceptMappings.some((mapping) => mapping.conceptFamilyId === conceptFamilyId), conceptFamilyId).toBe(true)
       expect(chapter18FlashcardConceptMappings.some((mapping) => mapping.conceptFamilyId === conceptFamilyId), conceptFamilyId).toBe(true)
       expect(chapter18QuizQuestionConceptMappings.some((mapping) => mapping.conceptFamilyId === conceptFamilyId), conceptFamilyId).toBe(true)
       const micro = chapter18MicroChecks.find((check) => check.conceptFamilyId === conceptFamilyId)
