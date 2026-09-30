@@ -86,8 +86,8 @@ export const chapter18PremiumContent: ChapterContent = {
         <section class="section">
             <h2>🎯 Why Study Haircoloring?</h2>
             <ul>
-                <li>Builds a reliable, profitable clientele in the barbershop</li>
-                <li>More clients now want beard and mustache coloring</li>
+                <li>Haircoloring can expand the range of services a barber is prepared to discuss and perform within license scope.</li>
+                <li>Barbers may encounter both scalp-hair and facial-hair color requests, which require product-specific consultation and safety checks.</li>
                 <li>Requires knowledge of hair structure, color laws, and safe chemical use</li>
                 <li>Done wrong, chemicals can damage hair, irritate skin, or harm the barber</li>
             </ul>
@@ -124,7 +124,7 @@ export const chapter18PremiumContent: ChapterContent = {
             <ul>
                 <li><strong>Eumelanin</strong> = black and brown pigment</li>
                 <li><strong>Pheomelanin</strong> = blond, yellow, and red pigment</li>
-                <li><strong>Gray hair</strong> makes less melanin; <strong>white hair</strong> has none</li>
+                <li>Gray and white appearance reflects reduced or absent visible natural pigment in the hair fiber.</li>
             </ul>
             <h3>Contributing Pigment (Undertone)</h3>
             <ul>
@@ -140,7 +140,7 @@ export const chapter18PremiumContent: ChapterContent = {
             <h3>Primary Colors</h3>
             <ul>
                 <li><strong>Red, yellow, blue</strong> — cannot be made by mixing others</li>
-                <li>Blue is the strongest and only cool primary; yellow is the weakest</li>
+                <li>Primary-color relationships are used as a foundation for mixing and neutralization; warm/cool naming can vary with the professional color system.</li>
             </ul>
             <h3>Secondary & Tertiary Colors</h3>
             <ul>
@@ -163,7 +163,7 @@ export const chapter18PremiumContent: ChapterContent = {
                 <li>The main tone of a haircolor product</li>
                 <li><strong>Violet base</strong> reduces yellow; <strong>blue base</strong> reduces orange</li>
             </ul>
-            <div class="key-point">Judge natural level with <strong>color swatches</strong> in good lighting. Fluorescent light can mislead your color match.</div>
+            <div class="key-point">Judge level and tone under consistent lighting and use the specific color line's swatches or technical chart rather than relying on memory alone.</div>
         </section>
 
         <section class="section">
@@ -297,7 +297,7 @@ export const chapter18PremiumContent: ChapterContent = {
             <div class="key-point">
                 <ul style="margin-left: 1rem;">
                     <li>Analyze <strong>elasticity, texture, density, porosity, natural color, and contributing pigment</strong> before coloring</li>
-                    <li>Primary colors are <strong>red, yellow, blue</strong>; complementary colors <strong>neutralize</strong> each other</li>
+                    <li>Use <strong>red, yellow, and blue</strong> color-theory relationships plus complementary colors to reason about tonal neutralization.</li>
                     <li>Products range from <strong>temporary → semipermanent → demipermanent → permanent</strong></li>
                     <li><strong>Developers</strong> control lift; <strong>lighteners</strong> remove pigment; <strong>toners</strong> refine pre-lightened hair</li>
                     <li><strong>Allergy-alert testing</strong> follows the product label; <strong>strand testing</strong> helps evaluate uncertain hair response and results.</li>
