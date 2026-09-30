@@ -94,6 +94,10 @@ import { detectAllConceptGaps as detectAllChapter15ConceptGaps } from '@/lib/cha
 import { chapter15ConceptFamilies } from '@/lib/chapter-15-concepts/concepts'
 import { chapter15ContentConceptMappings, chapter15FlashcardConceptMappings } from '@/lib/chapter-15-concepts/mappings'
 
+import { detectAllConceptGaps as detectAllChapter16ConceptGaps } from '@/lib/chapter-16-concepts/detection'
+import { chapter16ConceptFamilies } from '@/lib/chapter-16-concepts/concepts'
+import { chapter16ContentConceptMappings, chapter16FlashcardConceptMappings } from '@/lib/chapter-16-concepts/mappings'
+
 import { detectAllConceptGaps as detectAllChapter17ConceptGaps } from '@/lib/chapter-17-concepts/detection'
 import { chapter17ConceptFamilies } from '@/lib/chapter-17-concepts/concepts'
 import { chapter17ContentConceptMappings, chapter17FlashcardConceptMappings } from '@/lib/chapter-17-concepts/mappings'
@@ -648,6 +652,31 @@ const chapter17Provider: ChapterDetectionProvider = {
   },
   buildAssignmentsForConcept(conceptId) {
     return buildAssignments(conceptId, chapter17ContentMappingsProjected, chapter17FlashcardMappingsProjected)
+  },
+}
+
+
+const chapter16ContentMappingsProjected = chapter16ContentConceptMappings.map((mapping) => ({
+  contentBlockId: mapping.contentBlockId,
+  conceptId: mapping.conceptFamilyId as string,
+}))
+const chapter16FlashcardMappingsProjected = chapter16FlashcardConceptMappings.map((mapping) => ({
+  flashcardId: mapping.flashcardId as string,
+  conceptId: mapping.conceptFamilyId as string,
+}))
+
+const chapter16Provider: ChapterDetectionProvider = {
+  chapterId: 'ch-16',
+  detectAll(attempts) {
+    const out = new Map<ConceptId, ConceptDetectionResult>()
+    for (const [conceptId, result] of detectAllChapter16ConceptGaps(attempts)) out.set(conceptId, result)
+    return out
+  },
+  getConceptName(conceptId) {
+    return chapter16ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? conceptId
+  },
+  buildAssignmentsForConcept(conceptId) {
+    return buildAssignments(conceptId, chapter16ContentMappingsProjected, chapter16FlashcardMappingsProjected)
   },
 }
 
