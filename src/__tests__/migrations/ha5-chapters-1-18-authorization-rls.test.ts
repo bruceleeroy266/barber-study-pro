@@ -52,6 +52,21 @@ describe('HA-5 Chapters 1-18 authorization and tenant boundaries', () => {
     expect(rpcSecurity).toContain('consume_reservation_and_create_attempt')
   })
 
+  it('keeps chapter assessment and micro-check evidence inside the same school tenant', () => {
+    const quizRls = readFileSync(
+      join(process.cwd(), 'supabase/migrations/20260714010000_fix_quiz_progress_missed_rls.sql'),
+      'utf8',
+    )
+    const oversight = readFileSync(
+      join(process.cwd(), 'src/lib/oversight/chapters-1-10-role-connection.test.ts'),
+      'utf8',
+    )
+    expect(quizRls).toContain('quiz_attempts_staff_select')
+    expect(quizRls).toContain('public.current_user_school_id() = public.user_school_id(user_id)')
+    expect(oversight).toContain('chapter_micro_check_attempts_staff_select')
+    expect(oversight).toContain('current_user_school_id() = user_school_id(user_id)')
+  })
+
   it('retains explicit platform-super-admin policy instead of widening school staff scope', () => {
     const foundation = readFileSync(
       join(process.cwd(), 'supabase/migrations/20260818000000_phase_6c2a_remediation_foundation.sql'),
