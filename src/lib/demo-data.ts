@@ -358,7 +358,7 @@ export const demoQuizzes: Record<string, Quiz> = {
   'ch-18': { id: 'quiz-18', chapter_id: 'ch-18', title: 'Haircoloring and Lightening — Premium Quiz', description: '15 board-exam style questions. Passing score: 80%.', is_active: true, passing_score: 80 },
   // Chapter 19: Premium flashcard-driven quiz (15 questions)
   'ch-19': { id: 'quiz-19', chapter_id: 'ch-19', title: 'Preparing for Licensure and Employment — Premium Quiz', description: '15 board-exam style questions on licensure, job search, résumé/portfolio, interviews, and contracts. Passing score: 80%.', is_active: true, passing_score: 80 },
-  // Chapter 20: Premium flashcard-driven quiz (15 questions)
+  // Chapter 20: Premium flashcard-driven quiz (17 questions)
   'ch-20': { id: 'quiz-20', chapter_id: 'ch-20', title: 'Working Behind the Chair — Premium Quiz', description: '17 board-exam style questions on professional expectations, teamwork, compensation, money management, selling, and client retention. Passing score: 80%.', is_active: true, passing_score: 80 },
   // Chapter 21: Premium flashcard-driven quiz (17 questions)
   'ch-21': { id: 'quiz-21', chapter_id: 'ch-21', title: 'The Business of Barbering — Premium Quiz', description: '17 board-exam style questions on ownership, business plans, record keeping, booth rental, operations, and advertising. Passing score: 80%.', is_active: true, passing_score: 80 },
