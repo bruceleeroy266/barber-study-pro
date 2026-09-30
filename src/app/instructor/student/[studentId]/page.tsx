@@ -121,6 +121,11 @@ import {
   buildChapter19InstructorDiagnostics,
   type Chapter19InstructorQuizAttempt,
 } from '@/lib/chapter-19-concepts/instructor-diagnostics'
+import { type Chapter20MicroCheckAttemptRow } from '@/lib/chapter-20-concepts/micro-check-persistence'
+import {
+  buildChapter20InstructorDiagnostics,
+  type Chapter20InstructorQuizAttempt,
+} from '@/lib/chapter-20-concepts/instructor-diagnostics'
 import { mapHourLogsFromDb, mapAttendanceRecordsFromDb, mapAttendanceNotesFromDb } from '@/lib/mappers/operational-data-mappers'
 import { getLastSignInAtMap } from '@/lib/instructor/last-login'
 import { buildLiveInstructorChapterGrade, type LiveInstructorActivityEvidenceRow } from '@/lib/concept-mastery/live-instructor-grade'
@@ -350,7 +355,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     .from('chapter_micro_check_attempts')
     .select('id,user_id,chapter_id,check_id,question_id,concept_id,difficulty,selected_answer,is_correct,answered_at,created_at')
     .eq('user_id', studentId)
-    .in('chapter_id', ['ch-1','ch-2','ch-3','ch-4','ch-5','ch-6','ch-7','ch-8','ch-9','ch-10','ch-11','ch-12','ch-13','ch-14','ch-15','ch-16','ch-17','ch-18','ch-19'])
+    .in('chapter_id', ['ch-1','ch-2','ch-3','ch-4','ch-5','ch-6','ch-7','ch-8','ch-9','ch-10','ch-11','ch-12','ch-13','ch-14','ch-15','ch-16','ch-17','ch-18','ch-19','ch-20'])
     .order('answered_at', { ascending: true })
 
   type SharedChapterMicroCheckRow = {
@@ -371,7 +376,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     .from('chapter_activity_evidence')
     .select('chapter_id,source,item_id,is_correct,answered_at')
     .eq('user_id', studentId)
-    .in('chapter_id', ['ch-1','ch-2','ch-3','ch-4','ch-5','ch-6','ch-7','ch-8','ch-9','ch-10','ch-11','ch-12','ch-13','ch-14','ch-15','ch-16','ch-17','ch-18','ch-19'])
+    .in('chapter_id', ['ch-1','ch-2','ch-3','ch-4','ch-5','ch-6','ch-7','ch-8','ch-9','ch-10','ch-11','ch-12','ch-13','ch-14','ch-15','ch-16','ch-17','ch-18','ch-19','ch-20'])
     .order('answered_at', { ascending: true })
 
   const liveActivityRows = (chapterActivityEvidenceRows ?? []) as LiveInstructorActivityEvidenceRow[]
@@ -396,6 +401,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
   const chapter17MicroCheckRows = sharedChapterMicroCheckRows.filter((row) => row.chapter_id === 'ch-17') as Chapter17MicroCheckAttemptRow[]
   const chapter18MicroCheckRows = sharedChapterMicroCheckRows.filter((row) => row.chapter_id === 'ch-18') as Chapter18MicroCheckAttemptRow[]
   const chapter19MicroCheckRows = sharedChapterMicroCheckRows.filter((row) => row.chapter_id === 'ch-19') as Chapter19MicroCheckAttemptRow[]
+  const chapter20MicroCheckRows = sharedChapterMicroCheckRows.filter((row) => row.chapter_id === 'ch-20') as Chapter20MicroCheckAttemptRow[]
 
   const { data: chapter7RemediationCycles } = await supabase
     .from('remediation_cycles')
@@ -983,6 +989,32 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     referenceTime: new Date().toISOString(),
   })
   const chapter19LiveGrade = buildLiveGrade('ch-19', chapter19Diagnostics)
+
+  const chapter20MicroCheckAttempts = (chapter20MicroCheckRows ?? []) as Chapter20MicroCheckAttemptRow[]
+  const chapter20Progress = progressRecords.find((record) => record.chapter_id === 'ch-20')
+  const chapter20Diagnostics = buildChapter20InstructorDiagnostics({
+    studentId,
+    completionPercent: chapter20Progress?.progress_percentage ?? 0,
+    microCheckRows: chapter20MicroCheckAttempts,
+    quizAttempts: attemptRecords
+      .filter(
+        (attempt) =>
+          attempt.quiz_id === 'quiz-20' ||
+          (attempt.is_reassessment && attempt.target_concept_id?.startsWith('ch20-')),
+      )
+      .map((attempt) => ({
+        quiz_id: attempt.quiz_id,
+        percentage: attempt.percentage,
+        answers_json: (attempt.answers_json ?? null) as Record<string, unknown> | null,
+        completed_at: attempt.completed_at,
+        is_reassessment: attempt.is_reassessment ?? false,
+        target_concept_id: attempt.target_concept_id ?? null,
+        remediation_cycle_id: attempt.remediation_cycle_id ?? null,
+      })) as Chapter20InstructorQuizAttempt[],
+    activityRows: liveActivityRows.filter((row) => row.chapter_id === 'ch-20'),
+    referenceTime: new Date().toISOString(),
+  })
+  const chapter20LiveGrade = buildLiveGrade('ch-20', chapter20Diagnostics)
 
   // Last activity across all progress records
   const lastStudiedDates = progressRecords
