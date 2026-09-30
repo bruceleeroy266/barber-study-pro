@@ -36,6 +36,8 @@ import {
   type ChapterRemediationAssignment,
 } from './chapter-registry'
 import { requiredLegacyRecoveryPercent, type LegacyChapterId } from '@/lib/reassessment/legacy-safety-recovery'
+import { deriveModernCycleRecoveryRequirement } from '@/lib/reassessment/modern-safety-registry'
+import type { ModernRecoveryChapterId } from '@/lib/reassessment/modern-recovery-policy'
 
 // ───────────────────────────────────────────────
 // Types
@@ -225,7 +227,24 @@ export class DetectionOrchestratorService {
         // Generate assignments from canonical mappings (via provider)
         const assignments = provider.buildAssignmentsForConcept(concept.conceptId)
 
-        // Create new remediation cycle with assignments atomically
+        const legacy = /^ch-[1-7]$/.test(chapterId)
+        const modern = /^ch-(?:9|1[0-8])$/.test(chapterId)
+        const recoveryRequirement = legacy
+          ? {
+              urgentSafety: requiredLegacyRecoveryPercent(chapterId as LegacyChapterId, concept.conceptId) === 100,
+              requiredPassPercent: requiredLegacyRecoveryPercent(chapterId as LegacyChapterId, concept.conceptId),
+            }
+          : modern
+            ? await deriveModernCycleRecoveryRequirement({
+                chapterId: chapterId as ModernRecoveryChapterId,
+                conceptId: concept.conceptId,
+                detectionEvidence: concept.evidence,
+              })
+            : { urgentSafety: false, requiredPassPercent: 80 as const }
+
+        // Create new remediation cycle with assignments atomically. HA-3
+        // snapshots the server-derived recovery requirement into immutable
+        // detection evidence; reassessment answers cannot downgrade it.
         const cycleId = await this.dbClient.createRemediationCycleWithAssignments({
           userId,
           conceptId: concept.conceptId,
@@ -235,17 +254,8 @@ export class DetectionOrchestratorService {
           detectionConfidence: concept.detectionConfidence,
           detectionEvidence: {
             ...concept.evidence,
-            // HA-3 persists the recovery requirement at cycle creation so the
-            // submit API never has to infer safety urgency from reassessment
-            // answers. Chapters 1-7 have an explicit concept safety policy.
-            // Modern chapters default ordinary here until their chapter safety
-            // evaluator supplies an urgent snapshot in the next HA-3 bridge.
-            ha3UrgentSafety: /^ch-[1-7]$/.test(chapterId)
-              ? requiredLegacyRecoveryPercent(chapterId as LegacyChapterId, concept.conceptId) === 100
-              : false,
-            ha3RequiredRecoveryPercent: /^ch-[1-7]$/.test(chapterId)
-              ? requiredLegacyRecoveryPercent(chapterId as LegacyChapterId, concept.conceptId)
-              : 80,
+            ha3UrgentSafety: recoveryRequirement.urgentSafety,
+            ha3RequiredRecoveryPercent: recoveryRequirement.requiredPassPercent,
           },
           status: 'targeted',
           assignments,
