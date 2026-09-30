@@ -111,9 +111,9 @@ export async function persistChapterActivityEvidence(
 ): Promise<ChapterActivityEvidenceRow | null> {
   if (!isUnifiedActivityEvidenceChapter(input.chapterId)) return null
 
-  if (input.chapterId === 'ch-19') {
+  if (input.chapterId === 'ch-19' || input.chapterId === 'ch-20') {
     try {
-      const response = await fetch('/api/chapter-19/activity-evidence', {
+      const response = await fetch(`/api/${input.chapterId === 'ch-19' ? 'chapter-19' : 'chapter-20'}/activity-evidence`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -129,7 +129,7 @@ export async function persistChapterActivityEvidence(
 
       if (!response.ok) {
         console.error(
-          '[activity-evidence] Chapter 19 authoritative persist failed:',
+          '[activity-evidence] authoritative persist failed:',
           body.error ?? response.statusText,
         )
         return null
@@ -138,7 +138,7 @@ export async function persistChapterActivityEvidence(
       return body.row ?? null
     } catch (error) {
       console.error(
-        '[activity-evidence] Chapter 19 authoritative persist failed:',
+        '[activity-evidence] authoritative persist failed:',
         error instanceof Error ? error.message : String(error),
       )
       return null
