@@ -325,7 +325,7 @@ describe('C16-9 final Chapter 16 end-to-end certification', () => {
     expect(page).toContain("row.chapter_id === 'ch-16'")
     expect(page).toContain("attempt.quiz_id === 'quiz-16'")
     expect(page).toContain("buildLiveGrade('ch-16', chapter16Diagnostics)")
-    expect(page).toContain("Chapter 16 — Women's Haircutting & Styling")
+    expect(page).toContain("Chapter 16 — Women&apos;s Haircutting & Styling")
     expect(page).toContain('chapter16Diagnostics.weakestConcepts')
     expect(page).toContain('chapter16Diagnostics.remediationStatus')
     expect(page).toContain('chapter16Diagnostics.latestReassessment')
