@@ -62,6 +62,7 @@ const flashcardMappings: Record<string, readonly GenericMapping[]> = {
   'ch-13': chapter13FlashcardConceptMappings,
   'ch-14': chapter14FlashcardConceptMappings,
   'ch-15': chapter15FlashcardConceptMappings,
+  'ch-16': chapter16FlashcardConceptMappings,
   'ch-17': chapter17FlashcardConceptMappings,
 }
 
@@ -81,6 +82,7 @@ const contentMappings: Record<string, readonly GenericMapping[]> = {
   'ch-13': chapter13ContentConceptMappings,
   'ch-14': chapter14ContentConceptMappings,
   'ch-15': chapter15ContentConceptMappings,
+  'ch-16': chapter16ContentConceptMappings,
   'ch-17': chapter17ContentConceptMappings,
 }
 
