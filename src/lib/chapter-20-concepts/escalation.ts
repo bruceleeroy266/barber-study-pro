@@ -50,13 +50,13 @@ export const CHAPTER20_COMPLIANCE_RULES = {
   clearConsecutiveCorrectComplianceObservations: 3,
 } as const
 
-const domainByConcept = {
+const domainByConcept: Partial<
+  Record<Chapter20ConceptFamilyId, Chapter20ComplianceDomain>
+> = {
   'ch20-employment-classification-compensation': 'worker_classification_compensation',
   'ch20-financial-responsibility-income-reporting': 'tax_income_reporting',
   'ch20-client-retention-marketing-consent': 'privacy_client_consent',
-} as const satisfies Partial<
-  Record<Chapter20ConceptFamilyId, Chapter20ComplianceDomain>
->
+}
 
 function conceptForItem(itemId: string): Chapter20ConceptFamilyId | null {
   const quiz = chapter20QuizQuestionConceptMappings.find(
