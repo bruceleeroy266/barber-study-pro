@@ -200,7 +200,7 @@ describe('G7-3 Chapters 1-19 final live data and percentage certification', () =
     }
 
     expect(page.match(/Final live 20\/10\/40\/15\/15 evidence/g)).toHaveLength(19)
-    expect(page.match(/Provisional — required evidence still incomplete/g)).toHaveLength(18)
+    expect(page.match(/Provisional — required evidence still incomplete/g)).toHaveLength(19)
     expect(page).toContain('keeps completion separate')
   })
 
