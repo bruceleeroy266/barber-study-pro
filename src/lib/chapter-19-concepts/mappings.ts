@@ -175,6 +175,21 @@ export const chapter19QuizQuestionConceptMappings: readonly Chapter19QuizQuestio
   })
 
 
+
+export const chapter19RemediationContentConceptMappings: readonly Chapter19ContentConceptMapping[] =
+  [
+    'ch19-licensing-requirements-verification',
+    'ch19-exam-preparation-test-reasoning',
+    'ch19-practical-exam-safety-readiness',
+    'ch19-employment-readiness-professionalism',
+    'ch19-resume-portfolio-application-materials',
+    'ch19-job-search-shop-research-interview',
+    'ch19-employment-law-contracts-compliance',
+  ].map((conceptFamilyId) => ({
+    contentBlockId: 'chapter-19-lesson',
+    conceptFamilyId,
+  })) as readonly Chapter19ContentConceptMapping[]
+
 export const chapter19MicroCheckPlacements: readonly Chapter19MicroCheckPlacement[] = [
   {
     id: 'mc-19-01',
@@ -226,6 +241,14 @@ export const chapter19MicroCheckPlacements: readonly Chapter19MicroCheckPlacemen
     purpose: 'Check legal/compliance caution, interview-law boundaries, and agreement review without misclassifying them as bodily safety.',
   },
 ] as const
+
+export function getChapter19RemediationContentBlocksForConcept(
+  conceptFamilyId: Chapter19ConceptFamilyId,
+) {
+  return chapter19RemediationContentConceptMappings
+    .filter((mapping) => mapping.conceptFamilyId === conceptFamilyId)
+    .map((mapping) => mapping.contentBlockId)
+}
 
 export function getChapter19FlashcardsForConcept(conceptFamilyId: Chapter19ConceptFamilyId) {
   return chapter19FlashcardConceptMappings
