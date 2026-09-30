@@ -186,8 +186,10 @@ export function createSupabaseExclusionClient(): SupabaseExclusionDatabaseClient
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-  if (!url || !anonKey) {
-    throw new Error('Missing Supabase configuration: NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are required')
+  if (!url || !anonKey || !serviceRoleKey) {
+    throw new Error(
+      'Missing Supabase server configuration: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, and SUPABASE_SERVICE_ROLE_KEY are required',
+    )
   }
 
   return new SupabaseExclusionDatabaseClient({
