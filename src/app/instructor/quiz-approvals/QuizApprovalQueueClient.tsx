@@ -47,6 +47,7 @@ export default function QuizApprovalQueueClient({
   const [programFilter, setProgramFilter] = useState('')
   const [studentFilter, setStudentFilter] = useState('')
   const [isPending, startTransition] = useTransition()
+  const [actionMessage, setActionMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
   const filteredRequests = useMemo(
     () =>
@@ -73,17 +74,30 @@ export default function QuizApprovalQueueClient({
   }
 
   function runReview(id: string, decision: 'approved' | 'denied') {
+    if (isPending) return
+    setActionMessage(null)
     startTransition(async () => {
-      await reviewQuizAccess(id, decision)
-      setSelected((current) => current.filter((value) => value !== id))
+      try {
+        await reviewQuizAccess(id, decision)
+        setSelected((current) => current.filter((value) => value !== id))
+        setActionMessage({ type: 'success', text: `Request ${decision} successfully.` })
+      } catch (error) {
+        setActionMessage({ type: 'error', text: error instanceof Error ? error.message : 'Unable to review this request.' })
+      }
     })
   }
 
   function approveSelected(ids: string[]) {
-    if (ids.length === 0) return
+    if (ids.length === 0 || isPending) return
+    setActionMessage(null)
     startTransition(async () => {
-      await bulkApproveQuizAccess(ids)
-      setSelected([])
+      try {
+        await bulkApproveQuizAccess(ids)
+        setSelected([])
+        setActionMessage({ type: 'success', text: `${ids.length} pending request${ids.length === 1 ? '' : 's'} approved successfully.` })
+      } catch (error) {
+        setActionMessage({ type: 'error', text: error instanceof Error ? error.message : 'Unable to approve the selected requests.' })
+      }
     })
   }
 
@@ -96,6 +110,11 @@ export default function QuizApprovalQueueClient({
 
   return (
     <div className="space-y-4">
+      {actionMessage && (
+        <div role="status" aria-live="polite" className={`rounded-lg border px-4 py-3 text-sm ${actionMessage.type === 'success' ? 'border-gold/40 text-gold' : 'border-red-400/50 text-red-300'}`}>
+          {actionMessage.text}
+        </div>
+      )}
       <div className="rounded-xl border border-graphite bg-charcoal p-5">
         <div className="flex flex-col gap-1">
           <h3 className="font-semibold text-white">Filter approvals</h3>
