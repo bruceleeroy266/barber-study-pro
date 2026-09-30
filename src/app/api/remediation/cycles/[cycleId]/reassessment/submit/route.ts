@@ -56,6 +56,7 @@ import {
   hasRecoveredLegacyConcept,
   type LegacyChapterId,
 } from '@/lib/reassessment/legacy-safety-recovery'
+import { hasRecoveredModernConcept } from '@/lib/reassessment/modern-recovery-policy'
 
 export async function POST(
   request: NextRequest,
@@ -400,11 +401,62 @@ export async function POST(
         ),
       })
     } else {
-      evaluationResult = await evaluationService.evaluateCycleWithDetection(
+      const persistedAttempts = await fetchQuizAttempts(evidenceIds)
+      const correctCount = persistedAttempts.reduce(
+        (sum, item) => sum + (item.score > 0 ? 1 : 0),
+        0,
+      )
+      const semanticDetection = await detectionProvider.detectConceptState(
+        cycle.conceptId,
+        evidenceIds,
+      )
+      if (!semanticDetection) {
+        return NextResponse.json(
+          { error: 'Reassessment evidence could not be resolved to the target concept.' },
+          { status: 500 },
+        )
+      }
+
+      // Chapters 9-18 share the certified five-question recovery contract.
+      // A live urgent-safety flag is represented by an existing remediation
+      // cycle whose canonical target requires a perfect reassessment. Until
+      // that persisted cycle metadata is normalized across every chapter,
+      // never infer urgency from answer performance; generic evaluation stays
+      // authoritative for the safety classification.
+      const genericResult = await evaluationService.evaluateCycleWithDetection(
         cycleId,
         cycle.conceptId,
-        evidenceIds
+        evidenceIds,
       )
+      evaluationResult = genericResult
+
+      // Ordinary recovery is explicitly 80% for the modern chapters. This
+      // closes the prior mismatch where 4/5 could remain merely "improving"
+      // under the generic detector. Urgent-safety terminal enforcement remains
+      // fail-closed in each chapter's certified safety/remediation contract.
+      if (
+        genericResult.success &&
+        genericResult.outcome !== 'successful' &&
+        hasRecoveredModernConcept({
+          correctCount,
+          questionCount: persistedAttempts.length,
+          urgentSafety: false,
+        })
+      ) {
+        evaluationResult = await evaluationService.evaluateCycle({
+          cycleId,
+          detectionState: 'currently_performing_well',
+          confidence: 'high',
+          conceptEvidence: semanticDetection.evidence,
+          evidenceIds,
+          idempotencyKey: generateIdempotencyKey(
+            cycleId,
+            'currently_performing_well',
+            'high',
+            evidenceIds,
+          ),
+        })
+      }
     }
 
     if (!evaluationResult.success) {
