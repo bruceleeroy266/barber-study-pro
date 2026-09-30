@@ -2,9 +2,12 @@
  * ASCYN PRO — Chapter 19 Premium Remediation
  * Preparing for Licensure and Employment — original ASCYN PRO remediation content
  *
- * This module exports a strongly typed remediation bank that links missed quiz
- * questions (qq-19-01 through qq-19-15) and learning objectives (LO-1 through LO-3)
- * to targeted flashcards (fc-ch19-001 through fc-ch19-060) and lesson sections.
+ * This module is the legacy Chapter 19 remediation bank.
+ *
+ * C19-4 removed the inherited direct qq-19-XX associations because their
+ * question meanings had drifted from the active assessment. Canonical assessment
+ * routing now comes from chapter-19-concepts/mappings.ts. C19-6 will replace this
+ * legacy bank with canonical concept-targeted remediation.
  */
 
 export interface RemediationReviewStep {
@@ -189,7 +192,6 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     sourceSection: 'Prepare for Licensure',
     sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-1',
-    quizQuestionId: 'qq-19-01',
     flashcardIds: ['fc-ch19-001', 'fc-ch19-004', 'fc-ch19-005'],
     recommendedReviewPath: [
       {
@@ -215,7 +217,6 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     sourceSection: 'Prepare for Licensure',
     sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-1',
-    quizQuestionId: 'qq-19-02',
     flashcardIds: ['fc-ch19-006'],
     recommendedReviewPath: [
       {
@@ -241,7 +242,6 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     sourceSection: 'Prepare for Licensure',
     sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-1',
-    quizQuestionId: 'qq-19-03',
     flashcardIds: ['fc-ch19-007', 'fc-ch19-008'],
     recommendedReviewPath: [
       {
@@ -271,7 +271,6 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     sourceSection: 'Prepare for Licensure',
     sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-1',
-    quizQuestionId: 'qq-19-04',
     flashcardIds: ['fc-ch19-011', 'fc-ch19-018'],
     recommendedReviewPath: [
       {
@@ -301,7 +300,6 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     sourceSection: 'Prepare for Licensure',
     sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-1',
-    quizQuestionId: 'qq-19-05',
     flashcardIds: ['fc-ch19-012', 'fc-ch19-013'],
     recommendedReviewPath: [
       {
@@ -331,7 +329,6 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     sourceSection: 'Prepare for Licensure',
     sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-1',
-    quizQuestionId: 'qq-19-06',
     flashcardIds: ['fc-ch19-014'],
     recommendedReviewPath: [
       {
@@ -361,7 +358,6 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     sourceSection: 'Prepare for Licensure',
     sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-1',
-    quizQuestionId: 'qq-19-07',
     flashcardIds: ['fc-ch19-022', 'fc-ch19-023', 'fc-ch19-025'],
     recommendedReviewPath: [
       {
@@ -391,7 +387,6 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     sourceSection: 'Prepare for Employment',
     sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-2',
-    quizQuestionId: 'qq-19-08',
     flashcardIds: ['fc-ch19-026', 'fc-ch19-028'],
     recommendedReviewPath: [
       {
@@ -421,7 +416,6 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     sourceSection: 'Prepare for Employment',
     sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-2',
-    quizQuestionId: 'qq-19-09',
     flashcardIds: ['fc-ch19-031', 'fc-ch19-035'],
     recommendedReviewPath: [
       {
@@ -451,7 +445,6 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     sourceSection: 'Prepare for Employment',
     sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-2',
-    quizQuestionId: 'qq-19-10',
     flashcardIds: ['fc-ch19-032', 'fc-ch19-033', 'fc-ch19-036'],
     recommendedReviewPath: [
       {
@@ -480,7 +473,6 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     sourceSection: 'Prepare for Employment',
     sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-2',
-    quizQuestionId: 'qq-19-11',
     flashcardIds: ['fc-ch19-034'],
     recommendedReviewPath: [
       {
@@ -510,7 +502,6 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     sourceSection: 'Prepare for Employment',
     sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-2',
-    quizQuestionId: 'qq-19-12',
     flashcardIds: ['fc-ch19-037', 'fc-ch19-038', 'fc-ch19-039'],
     recommendedReviewPath: [
       {
@@ -540,7 +531,6 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     sourceSection: 'Arrange for a Job Interview',
     sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-3',
-    quizQuestionId: 'qq-19-13',
     flashcardIds: ['fc-ch19-041', 'fc-ch19-042', 'fc-ch19-043'],
     recommendedReviewPath: [
       {
@@ -570,7 +560,6 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     sourceSection: 'Arrange for a Job Interview',
     sourcePages: 'ASCYN PRO Chapter 19: Interviews and Agreements',
     learningObjective: 'LO-3',
-    quizQuestionId: 'qq-19-14',
     flashcardIds: ['fc-ch19-045', 'fc-ch19-051', 'fc-ch19-052', 'fc-ch19-054'],
     recommendedReviewPath: [
       {
@@ -604,7 +593,6 @@ export const chapter19PremiumRemediation: RemediationItem[] = [
     sourceSection: 'Arrange for a Job Interview',
     sourcePages: 'ASCYN PRO Chapter 19',
     learningObjective: 'LO-3',
-    quizQuestionId: 'qq-19-15',
     flashcardIds: ['fc-ch19-056', 'fc-ch19-057', 'fc-ch19-060'],
     recommendedReviewPath: [
       {
