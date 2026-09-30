@@ -164,3 +164,35 @@ export const chapter20MicroCheckPlacements: readonly Chapter20MicroCheckPlacemen
     purpose: 'Check retention, rebooking, referral/marketing choices, privacy, and client-consent reasoning.',
   },
 ] as const
+
+
+export interface Chapter20RemediationContentConceptMapping {
+  contentBlockId: string
+  conceptFamilyId: Chapter20ConceptFamilyId
+}
+
+export const chapter20RemediationContentConceptMappings: readonly Chapter20RemediationContentConceptMapping[] = [
+  { contentBlockId: 'ch20-lo1', conceptFamilyId: 'ch20-professional-transition-workplace-expectations' },
+  { contentBlockId: 'ch20-lo2', conceptFamilyId: 'ch20-teamwork-workplace-relationships' },
+  { contentBlockId: 'ch20-lo3', conceptFamilyId: 'ch20-employment-classification-compensation' },
+  { contentBlockId: 'ch20-lo4', conceptFamilyId: 'ch20-financial-responsibility-income-reporting' },
+  { contentBlockId: 'ch20-lo5', conceptFamilyId: 'ch20-ethical-selling-retailing' },
+  { contentBlockId: 'ch20-lo6', conceptFamilyId: 'ch20-client-retention-marketing-consent' },
+] as const
+
+export const chapter20ContentConceptMappings: readonly Chapter20RemediationContentConceptMapping[] = [
+  ...chapter20RemediationContentConceptMappings,
+  { contentBlockId: 'ch20-kc1', conceptFamilyId: 'ch20-professional-transition-workplace-expectations' },
+  { contentBlockId: 'ch20-kc3', conceptFamilyId: 'ch20-employment-classification-compensation' },
+  { contentBlockId: 'ch20-kc4', conceptFamilyId: 'ch20-financial-responsibility-income-reporting' },
+  { contentBlockId: 'ch20-kc5', conceptFamilyId: 'ch20-ethical-selling-retailing' },
+  { contentBlockId: 'ch20-real-shop-scenarios', conceptFamilyId: 'ch20-teamwork-workplace-relationships' },
+] as const
+
+export function getChapter20RemediationContentBlocksForConcept(
+  conceptFamilyId: Chapter20ConceptFamilyId,
+): readonly string[] {
+  return chapter20RemediationContentConceptMappings
+    .filter((mapping) => mapping.conceptFamilyId === conceptFamilyId)
+    .map((mapping) => mapping.contentBlockId)
+}
