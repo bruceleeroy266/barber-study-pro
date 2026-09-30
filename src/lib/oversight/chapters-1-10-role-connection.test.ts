@@ -5,9 +5,9 @@ import { canAccessRoute, isInstructorOrAdmin } from '@/lib/security/permissions'
 
 const root = process.cwd()
 const read = (path: string) => readFileSync(join(root, path), 'utf8')
-const certifiedOversightChapters = Array.from({ length: 17 }, (_, index) => index + 1) as readonly number[]
+const certifiedOversightChapters = Array.from({ length: 18 }, (_, index) => index + 1) as readonly number[]
 
-describe('Chapters 1-17 student → instructor → school-admin role connection certification', () => {
+describe('Chapters 1-18 student → instructor → school-admin role connection certification', () => {
   it('authorizes instructor and school-admin oversight while rejecting learner access', () => {
     expect(isInstructorOrAdmin('instructor')).toBe(true)
     expect(isInstructorOrAdmin('school_admin')).toBe(true)
@@ -29,7 +29,7 @@ describe('Chapters 1-17 student → instructor → school-admin role connection 
     expect(page.match(/\.from\('student_progress'\)/g)).toHaveLength(1)
 
     expect(page).toContain(
-      ".in('chapter_id', ['ch-1','ch-2','ch-3','ch-4','ch-5','ch-6','ch-7','ch-8','ch-9','ch-10','ch-11','ch-12','ch-13','ch-14','ch-15','ch-16','ch-17'])",
+      ".in('chapter_id', ['ch-1','ch-2','ch-3','ch-4','ch-5','ch-6','ch-7','ch-8','ch-9','ch-10','ch-11','ch-12','ch-13','ch-14','ch-15','ch-16','ch-17','ch-18'])",
     )
 
     for (const chapter of certifiedOversightChapters) {
@@ -41,7 +41,7 @@ describe('Chapters 1-17 student → instructor → school-admin role connection 
       )
     }
 
-    expect(page.match(/quizAttempts: attemptRecords/g)?.length).toBeGreaterThanOrEqual(17)
+    expect(page.match(/quizAttempts: attemptRecords/g)?.length).toBeGreaterThanOrEqual(18)
   })
 
   it('keeps Chapter 7 reassessment evidence chapter-scoped instead of accepting every reassessment', () => {
