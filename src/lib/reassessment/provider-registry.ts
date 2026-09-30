@@ -29,6 +29,7 @@ import { getChapter14MappingProvider } from './adapters/chapter-14-adapter'
 import { getChapter15MappingProvider } from './adapters/chapter-15-adapter'
 import { getChapter16MappingProvider } from './adapters/chapter-16-adapter'
 import { getChapter17MappingProvider } from './adapters/chapter-17-adapter'
+import { getChapter18MappingProvider } from './adapters/chapter-18-adapter'
 import {
   Chapter1DetectionProvider,
   createChapter1DetectionProvider,
@@ -109,6 +110,11 @@ import {
   createChapter17DetectionProvider,
   type Chapter17DetectionProviderConfig,
 } from './adapters/chapter-17-detection-provider'
+import {
+  Chapter18DetectionProvider,
+  createChapter18DetectionProvider,
+  type Chapter18DetectionProviderConfig,
+} from './adapters/chapter-18-detection-provider'
 
 // ───────────────────────────────────────────────
 // Concept Detection Provider Interface
@@ -188,6 +194,8 @@ class MappingProviderRegistry {
     this.registerProvider(getChapter16MappingProvider())
     // Register Chapter 17 (C17-7 targeted remediation/reassessment)
     this.registerProvider(getChapter17MappingProvider())
+    // Register Chapter 18 (C18-7 targeted remediation/reassessment)
+    this.registerProvider(getChapter18MappingProvider())
   }
 
   /**
@@ -513,6 +521,16 @@ export function initializeChapter17DetectionProvider(
   return provider
 }
 
+
+export function initializeChapter18DetectionProvider(
+  config: Chapter18DetectionProviderConfig
+): Chapter18DetectionProvider {
+  const provider = createChapter18DetectionProvider(config)
+  const registry = getDetectionProviderRegistry()
+  registry.registerProvider(provider)
+  return provider
+}
+
 /**
  * Initialize and register the detection provider for a chapter (C3-3).
  *
@@ -572,6 +590,9 @@ export function initializeChapterDetectionProvider(
   }
   if (chapterId === 'ch-17') {
     return initializeChapter17DetectionProvider(config)
+  }
+  if (chapterId === 'ch-18') {
+    return initializeChapter18DetectionProvider(config)
   }
   return undefined
 }
