@@ -102,7 +102,7 @@ describe('C18-4 assessment source-grounding and answer-key certification', () =>
       const choices = [question.answer_a, question.answer_b, question.answer_c, question.answer_d]
       expect(choices.every((choice) => choice.trim().length > 0), question.id).toBe(true)
       expect(new Set(choices).size, question.id).toBe(4)
-      expect(question.explanation.trim().length, question.id).toBeGreaterThan(40)
+      expect(question.explanation?.trim().length ?? 0, question.id).toBeGreaterThan(40)
     }
   })
 
