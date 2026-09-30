@@ -197,6 +197,19 @@ describe('Instructor Escalation API', () => {
       expect(data.escalations).toHaveLength(0)
     })
 
+    it('allows school_admin role but keeps it bound to its own school', async () => {
+      const { mockClient } = await setupMocks({
+        authenticatedUser: INSTRUCTOR_ID,
+        profile: { ...MOCK_INSTRUCTOR_PROFILE, role: 'school_admin' },
+      })
+
+      const { GET } = await import('../escalations/route')
+      const response = await GET(new NextRequest('http://localhost/api/instructor/escalations'))
+
+      expect(response.status).toBe(200)
+      expect(mockClient.listEscalationsForSchool).toHaveBeenCalledWith(SCHOOL_ID)
+    })
+
     it('allows admin role to access escalations', async () => {
       await setupMocks({
         authenticatedUser: INSTRUCTOR_ID,
