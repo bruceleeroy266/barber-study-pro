@@ -189,7 +189,7 @@ export function detectAllChapter20CombinedConceptGaps(
     .filter((row) =>
       row.source === 'flashcard'
         ? validFlashcardIds.has(row.item_id as never)
-        : validScenarioIds.has(row.item_id),
+        : validScenarioIds.has(row.item_id as never),
     )
     .map((row, index) =>
       syntheticEvidenceAttempt(
