@@ -11,6 +11,7 @@ import {
   type Chapter18SafetyInterventionLevel,
 } from './safety-intervention'
 import type { Chapter18ConceptFamilyId } from './types'
+import type { Chapter18ReassessmentQuestion } from './reassessment-reserve'
 
 export interface Chapter18RemediationTarget {
   conceptFamilyId: Chapter18ConceptFamilyId
@@ -161,5 +162,149 @@ export function buildChapter18RemediationPathForConcept(
     flashcardIds: getChapter18FlashcardsForConcept(conceptFamilyId),
     plannedReassessmentQuestionCount: CHAPTER18_REMEDIATION_RULES.ordinaryReassessmentQuestionCount,
     plannedReassessmentPassPercent: CHAPTER18_REMEDIATION_RULES.ordinaryReassessmentPassPercent,
+  }
+}
+
+
+export interface Chapter18ReassessmentCycle {
+  cycleId: string
+  conceptFamilyId: Chapter18ConceptFamilyId
+  questionIds: readonly string[]
+  correctCount: number
+  questionCount: 5
+  percent: number
+  passPercent: 80 | 100
+  passed: boolean
+}
+
+export function selectChapter18ReassessmentQuestions(
+  conceptFamilyId: Chapter18ConceptFamilyId,
+  reserve: readonly Pick<Chapter18ReassessmentQuestion, 'id' | 'conceptFamilyId'>[],
+  count = 5,
+): readonly string[] {
+  const ids = reserve
+    .filter((question) => question.conceptFamilyId === conceptFamilyId)
+    .map((question) => question.id)
+    .sort((a, b) => a.localeCompare(b))
+
+  if (ids.length < count) {
+    throw new Error('Chapter 18 reassessment reserve for ' + conceptFamilyId + ' requires at least ' + count + ' questions.')
+  }
+  return ids.slice(0, count)
+}
+
+export function scoreChapter18ReassessmentCycle(args: {
+  cycleId: string
+  conceptFamilyId: Chapter18ConceptFamilyId
+  selectedQuestionIds: readonly string[]
+  responses: readonly { questionId: string; correct: boolean }[]
+  passPercent: 80 | 100
+}): Chapter18ReassessmentCycle {
+  const selected = [...args.selectedQuestionIds]
+  if (selected.length !== 5 || new Set(selected).size !== 5) {
+    throw new Error('Chapter 18 formal reassessment cycles require exactly five unique questions.')
+  }
+
+  const responseMap = new Map(args.responses.map((response) => [response.questionId, response.correct]))
+  if (responseMap.size !== 5 || selected.some((id) => !responseMap.has(id))) {
+    throw new Error('Chapter 18 formal reassessment scoring requires one response for each selected question.')
+  }
+
+  const correctCount = selected.filter((id) => responseMap.get(id) === true).length
+  const percent = Math.round((correctCount / 5) * 10000) / 100
+
+  return {
+    cycleId: args.cycleId,
+    conceptFamilyId: args.conceptFamilyId,
+    questionIds: selected,
+    correctCount,
+    questionCount: 5,
+    percent,
+    passPercent: args.passPercent,
+    passed: percent >= args.passPercent,
+  }
+}
+
+export function buildChapter18ReassessmentEvidence(args: {
+  studentId: string
+  conceptFamilyId: Chapter18ConceptFamilyId
+  selectedQuestions: readonly Chapter18ReassessmentQuestion[]
+  responses: readonly { questionId: string; correct: boolean }[]
+  timestamp: string
+}): Chapter18EvidenceRecord[] {
+  if (args.selectedQuestions.length !== 5 || new Set(args.selectedQuestions.map((q) => q.id)).size !== 5) {
+    throw new Error('Chapter 18 reassessment evidence requires exactly five unique selected questions.')
+  }
+  if (args.selectedQuestions.some((question) => question.conceptFamilyId !== args.conceptFamilyId)) {
+    throw new Error('Chapter 18 reassessment questions must all match the target concept family.')
+  }
+
+  const responseMap = new Map(args.responses.map((response) => [response.questionId, response.correct]))
+  if (responseMap.size !== 5 || args.selectedQuestions.some((question) => !responseMap.has(question.id))) {
+    throw new Error('Chapter 18 reassessment evidence requires one response for each selected question.')
+  }
+
+  return args.selectedQuestions.map((question) => ({
+    studentId: args.studentId,
+    chapterId: 'ch-18',
+    conceptFamilyId: args.conceptFamilyId,
+    source: 'remediation_reassessment',
+    itemId: question.id,
+    difficulty: question.difficulty,
+    correct: responseMap.get(question.id) === true,
+    attemptPhase: 'reassessment',
+    timestamp: args.timestamp,
+  }))
+}
+
+export function appendChapter18ReassessmentEvidence(
+  originalEvidence: readonly Chapter18EvidenceRecord[],
+  reassessmentEvidence: readonly Chapter18EvidenceRecord[],
+): Chapter18EvidenceRecord[] {
+  if (reassessmentEvidence.some(
+    (record) =>
+      record.chapterId !== 'ch-18' ||
+      record.source !== 'remediation_reassessment' ||
+      record.attemptPhase !== 'reassessment',
+  )) {
+    throw new Error('Reassessment evidence must use Chapter 18 remediation_reassessment / reassessment semantics.')
+  }
+
+  const existingKeys = new Set(originalEvidence.map((record) =>
+    [record.studentId, record.chapterId, record.source, record.attemptPhase, record.itemId].join('|'),
+  ))
+
+  const additions = reassessmentEvidence.filter((record) => {
+    const key = [record.studentId, record.chapterId, record.source, record.attemptPhase, record.itemId].join('|')
+    if (existingKeys.has(key)) return false
+    existingKeys.add(key)
+    return true
+  })
+
+  return [...originalEvidence, ...additions]
+}
+
+export function calculateChapter18RecoveredMastery(
+  originalEvidence: readonly Chapter18EvidenceRecord[],
+  reassessmentEvidence: readonly Chapter18EvidenceRecord[],
+  conceptFamilyId: Chapter18ConceptFamilyId,
+  referenceTime: string,
+) {
+  const before = calculateChapter18ConceptMastery(
+    originalEvidence.filter((record) => record.conceptFamilyId === conceptFamilyId),
+    referenceTime,
+  )
+  const combined = appendChapter18ReassessmentEvidence(originalEvidence, reassessmentEvidence)
+  const after = calculateChapter18ConceptMastery(
+    combined.filter((record) => record.conceptFamilyId === conceptFamilyId),
+    referenceTime,
+  )
+
+  return {
+    before,
+    after,
+    combinedEvidence: combined,
+    originalEvidencePreserved:
+      JSON.stringify(combined.slice(0, originalEvidence.length)) === JSON.stringify(originalEvidence),
   }
 }
