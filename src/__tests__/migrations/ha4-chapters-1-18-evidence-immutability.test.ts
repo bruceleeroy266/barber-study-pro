@@ -22,6 +22,14 @@ describe('HA-4 Chapters 1-18 persistence and immutable evidence', () => {
     expect(migration).toContain("coalesce(old.is_reassessment, false)")
   })
 
+  it('freezes the original remediation detection snapshot while lifecycle state can advance', () => {
+    expect(migration).toContain('prevent_remediation_detection_snapshot_mutation')
+    expect(migration).toContain('new.detection_evidence is distinct from old.detection_evidence')
+    expect(migration).toContain('new.detection_state is distinct from old.detection_state')
+    expect(migration).toContain('new.targeted_at is distinct from old.targeted_at')
+    expect(migration).toContain('before update on public.remediation_cycles')
+  })
+
   it('preserves append-only recovery rather than erasing initial evidence', () => {
     expect(migration).not.toContain('delete from public.quiz_attempts')
     expect(migration).not.toContain('update public.quiz_attempts')
