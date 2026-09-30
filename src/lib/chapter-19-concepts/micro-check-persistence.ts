@@ -49,7 +49,7 @@ export async function loadChapter19MicroCheckAttempts(
 }
 
 export async function persistChapter19MicroCheckAttempt(
-  userId: string,
+  _userId: string,
   check: Chapter19MicroCheck,
   question: Chapter19MicroCheckQuestion,
   selectedAnswer: Chapter19MicroCheckAnswer,
@@ -69,52 +69,43 @@ export async function persistChapter19MicroCheckAttempt(
     }
   }
 
-  const payload = {
-    user_id: userId,
-    chapter_id: 'ch-19',
-    check_id: check.id,
-    question_id: question.id,
-    concept_id: question.conceptFamilyId,
-    difficulty: question.difficulty,
-    selected_answer: selectedAnswer,
-    is_correct: selectedAnswer === question.correctAnswer,
-    answered_at: new Date().toISOString(),
-  }
+  try {
+    const response = await fetch('/api/chapter-19/micro-check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        questionId: question.id,
+        selectedAnswer,
+      }),
+    })
+    const body = (await response.json().catch(() => ({}))) as {
+      row?: Chapter19MicroCheckAttemptRow | null
+      alreadyRecorded?: boolean
+      error?: string
+    }
 
-  const { data, error } = await supabase
-    .from('chapter_micro_check_attempts')
-    .insert(payload)
-    .select(columns)
-    .single()
+    if (!response.ok) {
+      return {
+        row: null,
+        alreadyRecorded: false,
+        error: body.error ?? 'Unable to save micro-check answer.',
+      }
+    }
 
-  if (!error && data) {
     return {
-      row: data as Chapter19MicroCheckAttemptRow,
+      row: body.row ?? null,
+      alreadyRecorded: body.alreadyRecorded ?? false,
+      error: body.row ? null : body.error ?? 'Unable to save micro-check answer.',
+    }
+  } catch (error) {
+    return {
+      row: null,
       alreadyRecorded: false,
-      error: null,
+      error:
+        error instanceof Error
+          ? error.message
+          : 'Unable to save micro-check answer.',
     }
-  }
-
-  if (error?.code === '23505') {
-    const { data: existing, error: existingError } = await supabase
-      .from('chapter_micro_check_attempts')
-      .select(columns)
-      .eq('user_id', userId)
-      .eq('chapter_id', 'ch-19')
-      .eq('question_id', question.id)
-      .maybeSingle()
-
-    return {
-      row: (existing ?? null) as Chapter19MicroCheckAttemptRow | null,
-      alreadyRecorded: true,
-      error: existingError?.message ?? null,
-    }
-  }
-
-  return {
-    row: null,
-    alreadyRecorded: false,
-    error: error?.message ?? 'Unable to save micro-check answer.',
   }
 }
 

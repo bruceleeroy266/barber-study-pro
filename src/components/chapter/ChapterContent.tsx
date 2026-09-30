@@ -186,6 +186,7 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
     [sections]
   )
   const hasKnowledgeChecks = knowledgeCheckSectionIds.length > 0
+  const hasChapter19MicroChecks = chapterId === 'ch-19' && chapter19MicroChecks.length > 0
   const knowledgeCheckStorageKey = useMemo(
     () => userId && chapterId ? `knowledge-check-sections-${userId}-${chapterId}` : null,
     [userId, chapterId]
@@ -581,6 +582,42 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
     }
     return true
   }, [userId, chapterId])
+
+  useEffect(() => {
+    if (
+      chapterId !== 'ch-19' ||
+      knowledgeChecksSaved ||
+      chapter19MicroCheckAttempts.length === 0
+    ) {
+      return
+    }
+
+    const requiredQuestionIds = chapter19MicroChecks.flatMap((check) =>
+      check.questions.map((question) => question.id),
+    )
+    const recordedQuestionIds = new Set(
+      chapter19MicroCheckAttempts.map((attempt) => attempt.question_id),
+    )
+    if (!requiredQuestionIds.every((questionId) => recordedQuestionIds.has(questionId))) {
+      return
+    }
+
+    let cancelled = false
+    void saveSignal('knowledge_checks_completed').then((saved) => {
+      if (!cancelled && saved) {
+        setKnowledgeChecksSaved(true)
+      }
+    })
+
+    return () => {
+      cancelled = true
+    }
+  }, [
+    chapterId,
+    chapter19MicroCheckAttempts,
+    knowledgeChecksSaved,
+    saveSignal,
+  ])
 
   useEffect(() => {
     if (!knowledgeCheckStorageKey || typeof window === 'undefined' || knowledgeChecksSaved) return
@@ -1040,7 +1077,7 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
         </button>
       )}
       {lessonCompleted && <p className="text-sm text-[var(--color-brand-gold)]">✓ Lesson completed</p>}
-      {hasKnowledgeChecks && knowledgeChecksSaved && <p className="text-sm text-[var(--color-brand-gold)]">✓ Knowledge checks completed</p>}
+      {(hasKnowledgeChecks || hasChapter19MicroChecks) && knowledgeChecksSaved && <p className="text-sm text-[var(--color-brand-gold)]">✓ Knowledge checks completed</p>}
     </div>
   )
 }

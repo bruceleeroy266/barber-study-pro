@@ -352,7 +352,7 @@ export function buildChapter19InstructorDiagnostics(input: {
         difficulty: 'understanding',
         correct: row.is_correct,
         attemptPhase: 'initial',
-        timestamp: input.referenceTime,
+        timestamp: row.answered_at ?? input.referenceTime,
       })
       return records
     }
@@ -382,7 +382,7 @@ export function buildChapter19InstructorDiagnostics(input: {
         difficulty: 'scenario',
         correct: row.is_correct,
         attemptPhase: 'initial',
-        timestamp: input.referenceTime,
+        timestamp: row.answered_at ?? input.referenceTime,
       })
     }
 
