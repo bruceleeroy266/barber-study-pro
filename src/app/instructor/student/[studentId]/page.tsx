@@ -369,7 +369,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
 
   const { data: chapterActivityEvidenceRows } = await supabase
     .from('chapter_activity_evidence')
-    .select('chapter_id,source,item_id,is_correct')
+    .select('chapter_id,source,item_id,is_correct,answered_at')
     .eq('user_id', studentId)
     .in('chapter_id', ['ch-1','ch-2','ch-3','ch-4','ch-5','ch-6','ch-7','ch-8','ch-9','ch-10','ch-11','ch-12','ch-13','ch-14','ch-15','ch-16','ch-17','ch-18','ch-19'])
     .order('answered_at', { ascending: true })
