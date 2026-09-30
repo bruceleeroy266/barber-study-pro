@@ -33,6 +33,7 @@ export default function InstructorGradebookPage() {
   const [editingGrade, setEditingGrade] = useState<Grade | null>(null)
   const [historyGrade, setHistoryGrade] = useState<Grade | null>(null)
   const [saveError, setSaveError] = useState<string | null>(null)
+  const [gradeSavePending, setGradeSavePending] = useState(false)
 
   useEffect(() => {
     async function init() {
@@ -223,6 +224,7 @@ export default function InstructorGradebookPage() {
           grade={editingGrade}
           student={selectedStudent}
           categories={categories}
+          pending={gradeSavePending}
           onSave={handleSaveGrade}
           onClose={() => setEditingGrade(null)}
         />
