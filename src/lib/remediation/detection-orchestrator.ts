@@ -270,6 +270,24 @@ export class DetectionOrchestratorService {
 
         const legacy = /^ch-[1-7]$/.test(chapterId)
         const modern = /^ch-(?:9|1[0-8])$/.test(chapterId)
+        // Modern safety is chapter-wide: two recent high-risk misses may span
+        // different concept families. Build an immutable chapter evidence
+        // snapshot from every detected concept before deriving the threshold
+        // for this cycle. Reassessment answers never participate here.
+        const chapterDetectionEvidence = modern
+          ? {
+              results: Array.from(detectionResults.values())
+                .flatMap((result) => result.evidence.results ?? [])
+                .filter(
+                  (result, index, all) =>
+                    all.findIndex(
+                      (candidate) =>
+                        candidate.attemptId === result.attemptId &&
+                        candidate.questionId === result.questionId,
+                    ) === index,
+                ),
+            }
+          : null
         const recoveryRequirement = legacy
           ? {
               urgentSafety: requiredLegacyRecoveryPercent(chapterId as LegacyChapterId, concept.conceptId) === 100,
@@ -279,7 +297,7 @@ export class DetectionOrchestratorService {
             ? await deriveModernCycleRecoveryRequirement({
                 chapterId: chapterId as ModernRecoveryChapterId,
                 conceptId: concept.conceptId,
-                detectionEvidence: concept.evidence,
+                detectionEvidence: chapterDetectionEvidence,
               })
             : { urgentSafety: false, requiredPassPercent: 80 as const }
 
