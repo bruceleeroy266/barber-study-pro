@@ -64,8 +64,8 @@ describe('C20-7 fresh reassessment reserve and mastery recovery', () => {
 
   it('uses non-recall questions and canonical learning objectives throughout the reserve', () => {
     expect(
-      chapter20ReassessmentReserve.every(
-        (question) => question.difficulty !== 'recall',
+      chapter20ReassessmentReserve.every((question) =>
+        ['understanding', 'application', 'scenario'].includes(question.difficulty),
       ),
     ).toBe(true)
     expect(
