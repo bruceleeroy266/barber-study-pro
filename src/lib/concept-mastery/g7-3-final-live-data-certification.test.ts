@@ -15,7 +15,7 @@ import { canAccessRoute, isInstructorOrAdmin } from '../security/permissions'
 
 const root = process.cwd()
 const read = (path: string) => readFileSync(join(root, path), 'utf8')
-const certifiedLiveChapters = Array.from({ length: 19 }, (_, index) => index + 1) as readonly number[]
+const certifiedLiveChapters = Array.from({ length: 20 }, (_, index) => index + 1) as readonly number[]
 
 function allCorrectActivityRows(chapterId: string): LiveInstructorActivityEvidenceRow[] {
   return [
@@ -34,7 +34,7 @@ function allCorrectActivityRows(chapterId: string): LiveInstructorActivityEviden
   ]
 }
 
-describe('G7-3 Chapters 1-19 final live data and percentage certification', () => {
+describe('G7-3 Chapters 1-20 final live data and percentage certification', () => {
   it('locks the canonical five-component grading contract', () => {
     expect(SHARED_GRADE_WEIGHTS).toEqual({
       micro_check: 0.20,
@@ -181,7 +181,7 @@ describe('G7-3 Chapters 1-19 final live data and percentage certification', () =
     expect(canAccessRoute('student', '/instructor/student/student-g7')).toBe(false)
 
     expect(page.match(/\.from\('chapter_activity_evidence'\)/g)).toHaveLength(1)
-    expect(page).toContain(".in('chapter_id', ['ch-1','ch-2','ch-3','ch-4','ch-5','ch-6','ch-7','ch-8','ch-9','ch-10','ch-11','ch-12','ch-13','ch-14','ch-15','ch-16','ch-17','ch-18','ch-19'])")
+    expect(page).toContain(".in('chapter_id', ['ch-1','ch-2','ch-3','ch-4','ch-5','ch-6','ch-7','ch-8','ch-9','ch-10','ch-11','ch-12','ch-13','ch-14','ch-15','ch-16','ch-17','ch-18','ch-19','ch-20'])")
     expect(schoolPanel).toContain('href={`/instructor/student/${row.studentId}`}')
     expect(schoolPanel).toContain('View the same mastery diagnostics used by instructors')
 
@@ -199,7 +199,7 @@ describe('G7-3 Chapters 1-19 final live data and percentage certification', () =
       expect(page).toContain(`buildLiveGrade('ch-${chapter}', chapter${chapter}Diagnostics)`)
     }
 
-    expect(page.match(/Final live 20\/10\/40\/15\/15 evidence/g)).toHaveLength(19)
+    expect(page.match(/Final live 20\/10\/40\/15\/15 evidence/g)).toHaveLength(20)
     expect(page.match(/Provisional — required evidence still incomplete/g)).toHaveLength(19)
     expect(page).toContain('keeps completion separate')
   })
