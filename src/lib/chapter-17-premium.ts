@@ -117,17 +117,17 @@ export const chapter17PremiumContent: ChapterContent = {
         {
           icon: 'TrendingUp',
           title: 'Increase Income',
-          text: 'Chemical texture services are premium appointments that command higher prices and regular maintenance visits.',
+          text: 'Chemical texture services can broaden a barber’s service menu, but pricing and maintenance frequency depend on the service, product system, client needs, and business model.',
         },
         {
           icon: 'HeartHandshake',
           title: 'Build Loyalty',
-          text: 'When you transform texture safely and predictably, clients trust you with their ongoing hair health.',
+          text: 'Careful consultation, realistic expectations, and safe technique can support long-term client trust.',
         },
         {
           icon: 'ShieldCheck',
           title: 'Prevent Damage',
-          text: 'Strong analysis and precise technique protect hair integrity and prevent costly mistakes.',
+          text: 'Strong analysis, product-specific directions, and controlled technique help reduce avoidable hair and scalp damage.',
         },
       ],
     },
@@ -138,8 +138,8 @@ export const chapter17PremiumContent: ChapterContent = {
       competencyIds: ['CH17-C02'],
       title: 'What Chemical Texture Services Do',
       content:
-        'Chemical texture services permanently change the natural wave pattern of hair. They do this by breaking the disulfide bonds inside the cortex, reshaping the hair, and then rebuilding those bonds in the new shape. The three main service categories are permanent waves (add curl), chemical relaxers (remove curl), and curl reformation (loosen and reset curl pattern).',
-      highlight: 'All chemical texture services work on the same bond type — the disulfide bond in the cortex.',
+        'Chemical texture services alter the wave pattern of treated hair through chemical changes within the cortex. Thio-based waving and relaxing services reduce disulfide bonds and later use oxidation to reform bonds in the new shape. Hydroxide relaxers act differently through lanthionization rather than the same reduction-and-oxidation cycle. Common service categories include permanent waving, chemical relaxing, and curl reformation.',
+      highlight: 'Chemical texture services affect sulfur-containing bonds in the cortex, but thio and hydroxide product families do not use identical chemistry.'
     },
     {
       type: 'featureGrid',
@@ -147,7 +147,7 @@ export const chapter17PremiumContent: ChapterContent = {
       standardId: 'CH17-L03',
       competencyIds: ['CH17-C02', 'CH17-C03', 'CH17-C04'],
       title: 'Key Terms, Pronunciation & Memory Hooks',
-      subtitle: 'Lock in the language the board expects',
+      subtitle: 'Lock in the core professional vocabulary',
       features: [
         {
           icon: 'BookOpen',
@@ -167,7 +167,7 @@ export const chapter17PremiumContent: ChapterContent = {
         {
           icon: 'BookOpen',
           title: 'Neutralization',
-          description: 'Memory hook: "Neutral = normal again" — it rebuilds bonds so hair holds its new shape.',
+          description: 'Memory hook: "Neutral = stop and stabilize" — in thio/permanent-wave systems, oxidizing neutralizer helps reform disulfide bonds in the new shape.',
         },
       ],
     },
@@ -184,15 +184,15 @@ export const chapter17PremiumContent: ChapterContent = {
           label: 'Texture',
           title: 'Texture (Diameter)',
           bullets: [
-            { label: 'Fine', description: 'Fragile; processes quickly and is easily overprocessed.' },
+            { label: 'Fine', description: 'May process more quickly and can be more vulnerable to overprocessing; confirm with hair analysis and product directions.' },
             { label: 'Medium', description: 'Normal strength; generally predictable processing.' },
-            { label: 'Coarse', description: 'Strong and resistant; often needs longer processing or stronger solution.' },
+            { label: 'Coarse', description: 'May be more resistant, but processing time and product strength must come from the hair analysis and manufacturer directions rather than diameter alone.' },
           ],
         },
         {
           id: 'porosity',
           label: 'Porosity',
-          title: 'Porosity — The #1 Processing Factor',
+          title: 'Porosity — An Important Processing Factor',
           bullets: [
             { label: 'Resistant', description: 'Tight cuticle; solution takes longer to penetrate.' },
             { label: 'Normal', description: 'Processes according to manufacturer guidelines.' },
@@ -223,8 +223,8 @@ export const chapter17PremiumContent: ChapterContent = {
           label: 'Scalp & Skin',
           title: 'Scalp & Skin Condition',
           bullets: [
-            { label: 'Healthy', description: 'No signs of irritation, abrasion, or disease.' },
-            { label: 'Contraindicated', description: 'Abrasions, infections, or disorders require postponing service.' },
+            { label: 'Service-ready appearance', description: 'No visible irritation, abrasion, open lesions, or other scalp condition that would require postponing the chemical service or referral.' },
+            { label: 'Postpone / refer when appropriate', description: 'Do not perform a chemical service over irritated, abraded, or visibly compromised scalp tissue; follow product warnings and refer medical concerns appropriately.' },
           ],
         },
         {
@@ -232,8 +232,8 @@ export const chapter17PremiumContent: ChapterContent = {
           label: 'History',
           title: 'Service History',
           bullets: [
-            { label: 'Previous chemical services', description: 'Hydroxide and thio products are not compatible.' },
-            { label: 'Medications', description: 'Some drugs affect hair strength and reaction.' },
+            { label: 'Previous chemical services', description: 'Identify prior relaxers, waving products, lighteners, color, or other chemical services because product families can be incompatible or increase breakage risk.' },
+            { label: 'Health / medication concerns', description: 'Ask about relevant health or medication concerns listed in product warnings or disclosed by the client; do not diagnose medication effects, and refer medical questions appropriately.' },
             { label: 'Home care', description: 'Color, bleach, or heat damage changes processing.' },
           ],
         },
@@ -250,25 +250,25 @@ export const chapter17PremiumContent: ChapterContent = {
           icon: 'Unlink',
           title: 'Reduction Phase',
           description:
-            'An alkaline or thio-based solution swells the cuticle and breaks disulfide bonds, turning cystine into cysteine.',
+            'In thio-based waving or relaxing systems, the reducing agent breaks disulfide bonds so the hair can be reshaped. Hydroxide relaxers use a different reaction and should not be taught as the same reduction step.',
         },
         {
           icon: 'Move',
           title: 'Rearrangement Phase',
           description:
-            'Hair is wrapped around rods or combed straight, positioning it in the desired new shape.',
+            'Hair is physically positioned in the intended shape while the selected product system is used according to its directions.'
         },
         {
           icon: 'Link',
           title: 'Oxidation Phase',
           description:
-            'Neutralizer rebuilds the disulfide bonds in the new shape, locking in the curl or straight pattern.',
+            'For thio/permanent-wave systems, an oxidizing neutralizer helps reform disulfide bonds in the new shape. Hydroxide relaxers instead require thorough removal and the product’s specified post-service neutralizing/pH-restoring steps.'
         },
         {
           icon: 'AlertTriangle',
           title: 'Why This Matters',
           description:
-            'If bonds are broken too long or not rebuilt correctly, hair becomes weak, frizzy, or loses its new shape.',
+            'Excess processing, incompatible chemistry, incomplete rinsing, or incorrect finishing can weaken the fiber, increase breakage risk, or compromise the intended result.'
         },
       ],
     },
@@ -279,7 +279,7 @@ export const chapter17PremiumContent: ChapterContent = {
       competencyIds: ['CH17-C06'],
       title: 'Tools & Materials for Chemical Texture Services',
       content:
-        'Every texture service depends on having the right supplies ready before you start: protective gloves, cape and neck strip, sectioning clips, tail comb, perm rods in several sizes, end papers, waving or relaxing solution, neutralizer, timer, spray bottle, towels, and a basin for rinsing. For relaxers you also need a protective base cream (if using a base relaxer), applicator brush, and plastic cap. For curl reformation you need both relaxer and perm rods. Missing one item mid-service can lead to rushed timing, uneven saturation, or client injury.',
+        'Set up the supplies required by the specific service and manufacturer before application begins. Depending on the service, this may include gloves, draping supplies, sectioning tools, rods and end papers, the selected waving or relaxing product, the manufacturer-specified neutralizing or post-service products, timer, towels, and rinsing access. Base cream or other protective products are used only when required by the selected relaxer system and directions.',
       highlight: 'Set up your station completely before the client sits down.',
     },
 
@@ -295,7 +295,7 @@ export const chapter17PremiumContent: ChapterContent = {
           label: 'Rods',
           title: 'Perm Rod Types',
           bullets: [
-            { label: 'Concave', description: 'Most common; tighter curl in the center.' },
+            { label: 'Concave', description: 'Produces a curl pattern influenced by its narrower center and larger ends.' },
             { label: 'Straight', description: 'Creates a more uniform curl from base to end.' },
             { label: 'Diameter', description: 'Smaller rods produce tighter curls; larger rods produce looser waves.' },
           ],
@@ -315,9 +315,9 @@ export const chapter17PremiumContent: ChapterContent = {
           label: 'Placement',
           title: 'Rod Placement',
           bullets: [
-            { label: 'On-base', description: 'Hair is stretched 135° from base; creates tight curl and fullness.' },
-            { label: 'Half off-base', description: 'Hair is stretched 90°; creates moderate lift and curl.' },
-            { label: 'Off-base', description: 'Hair is wrapped with little tension; creates natural curl with less volume.' },
+            { label: 'On-base', description: 'Uses elevated placement over the base area and can create more base lift; exact tension and placement should follow the wrapping method being taught.' },
+            { label: 'Half off-base', description: 'Uses approximately perpendicular elevation with the rod positioned partly off the base, producing moderate base control.' },
+            { label: 'Off-base', description: 'Positions the rod away from the base area to reduce base lift compared with on-base placement.' },
           ],
         },
         {
@@ -325,9 +325,9 @@ export const chapter17PremiumContent: ChapterContent = {
           label: 'Solutions',
           title: 'Permanent Wave Solutions',
           bullets: [
-            { label: 'Alkaline (cold)', description: 'pH 9.0–9.6; strong, fast action at room temperature.' },
-            { label: 'True acid', description: 'pH 4.5–7.0; gentler curl, usually requires heat.' },
-            { label: 'Exothermic', description: 'Generates its own heat when mixed for stronger activation.' },
+            { label: 'Alkaline waves', description: 'Generally operate at a higher pH than acid-balanced systems and are commonly activated without added heat; use the specific product directions for timing and suitability.' },
+            { label: 'Acid / acid-balanced waves', description: 'Operate at a lower pH than alkaline waves; whether added heat is used depends on the specific product system and manufacturer directions.' },
+            { label: 'Exothermic', description: 'Generates heat through the product reaction after mixing; follow the product directions for activation, timing, and client suitability.' },
           ],
         },
       ],
@@ -340,13 +340,13 @@ export const chapter17PremiumContent: ChapterContent = {
       title: 'Permanent Wave Procedure Sequence',
       milestones: [
         { year: 'Step 1', title: 'Consult and analyze', description: 'Assess texture, porosity, elasticity, density, scalp condition, and service history.' },
-        { year: 'Step 2', title: 'Perform strand tests', description: 'Test a hidden section with the planned solution and timing.' },
+        { year: 'Step 2', title: 'Perform required tests', description: 'Complete the strand or preliminary tests required by the selected product and the hair analysis before full application.' },
         { year: 'Step 3', title: 'Shampoo and section', description: 'Use a clarifying or pre-perm shampoo if directed. Section hair for controlled wrapping.' },
         { year: 'Step 4', title: 'Wrap with end papers', description: 'Choose rod size and wrapping technique based on the desired curl.' },
         { year: 'Step 5', title: 'Apply waving solution', description: 'Saturate every rod evenly and start the timer according to manufacturer directions and hair analysis.' },
-        { year: 'Step 6', title: 'Check test curls', description: 'Unwind one rod from at least three areas to evaluate curl formation before rinsing.' },
+        { year: 'Step 6', title: 'Check test curls', description: 'Evaluate representative test curls at the intervals and locations directed by the product instructions and service plan before rinsing.' },
         { year: 'Step 7', title: 'Rinse thoroughly', description: 'Remove all waving solution before applying neutralizer.' },
-        { year: 'Step 8', title: 'Apply neutralizer', description: 'Saturate rods and process for the full recommended time to rebuild bonds.' },
+        { year: 'Step 8', title: 'Apply neutralizer', description: 'Apply and process the neutralizer exactly as directed for the selected waving system so oxidation can stabilize the new bond arrangement.' },
         { year: 'Step 9', title: 'Rinse, remove rods, and condition', description: 'Rinse gently, remove rods carefully, and apply conditioner or aftercare treatment.' },
         { year: 'Step 10', title: 'Style and educate', description: 'Style as desired and give written or verbal aftercare instructions.' },
       ],
@@ -358,8 +358,8 @@ export const chapter17PremiumContent: ChapterContent = {
       competencyIds: ['CH17-C03', 'CH17-C06'],
       title: 'Permanent Wave Service Check',
       content:
-        'Before processing, perform strand tests on representative sections. Process according to manufacturer timing. Check a test curl in at least three areas before rinsing. Underprocessing leaves hair limp; overprocessing causes frizz and breakage. Always rinse thoroughly before applying neutralizer.',
-      highlight: 'Neutralization is just as important as the waving solution. Skipping or rushing it causes curl relaxation and damage.',
+        'Complete any strand or preliminary tests required by the selected waving system. Process and check representative test curls according to the manufacturer’s timing and directions. Inadequate processing can produce a weak result, while excessive processing increases damage risk. Rinse the waving solution thoroughly as directed before applying the system’s neutralizer.',
+      highlight: 'For permanent-wave systems, correct rinsing and neutralization are essential parts of stabilizing the new curl pattern; follow the product-specific sequence and timing.'
     },
     {
       type: 'tabbed',
@@ -373,8 +373,8 @@ export const chapter17PremiumContent: ChapterContent = {
           label: 'Types',
           title: 'Two Main Relaxer Types',
           bullets: [
-            { label: 'Hydroxide relaxers', description: 'Lye or no-lye formulas with a high pH; very effective straighteners.' },
-            { label: 'Thio relaxers', description: 'Ammonium thioglycolate-based; milder and easier to follow with a thio perm.' },
+            { label: 'Hydroxide relaxers', description: 'Include lye and no-lye hydroxide systems. They straighten through highly alkaline chemistry and lanthionization; follow the specific product directions and compatibility warnings.' },
+            { label: 'Thio relaxers', description: 'Use thioglycolate-based reducing chemistry and require the compatible neutralization sequence specified by the product. Do not assume that prior or future chemical services are compatible.' },
           ],
         },
         {
@@ -382,18 +382,18 @@ export const chapter17PremiumContent: ChapterContent = {
           label: 'Base vs No-Base',
           title: 'Base and No-Base Relaxers',
           bullets: [
-            { label: 'Base relaxer', description: 'Requires a protective base cream applied to the scalp before the relaxer.' },
-            { label: 'No-base relaxer', description: 'Contains protective ingredients; applied directly to the hair, not the scalp.' },
+            { label: 'Base relaxer', description: 'Uses a protective base/barrier as directed by that product system before relaxer application.' },
+            { label: 'No-base relaxer', description: 'Does not require the same full scalp-base application, but it still does not mean relaxer should be intentionally placed on the scalp; follow the product directions and protect sensitive areas as directed.' },
           ],
         },
         {
           id: 'strand-tests',
           label: 'Strand Tests',
-          title: 'Three Strand Tests Before Relaxing',
+          title: 'Pre-Service Hair Assessments Before Relaxing',
           bullets: [
-            { label: 'Porosity test', description: 'Confirms how quickly hair will absorb the product.' },
-            { label: 'Elasticity test', description: 'Checks if hair can withstand chemical processing.' },
-            { label: 'Texture test', description: 'Determines appropriate relaxer strength.' },
+            { label: 'Porosity assessment', description: 'Helps evaluate how readily the hair may accept product and whether the fiber appears overly porous or compromised.' },
+            { label: 'Elasticity assessment', description: 'Helps evaluate fiber condition and whether the hair shows signs of weakness before chemical processing.' },
+            { label: 'Texture / diameter assessment', description: 'Contributes to product and service planning, but product strength and timing must follow the complete hair analysis and manufacturer directions.' },
           ],
         },
       ],
@@ -406,13 +406,13 @@ export const chapter17PremiumContent: ChapterContent = {
       title: 'Chemical Relaxer Procedure Sequence',
       milestones: [
         { year: 'Step 1', title: 'Consult and analyze', description: 'Assess all six hair/scalp characteristics and record service history.' },
-        { year: 'Step 2', title: 'Perform strand tests', description: 'Test porosity, elasticity, and texture to choose strength and timing.' },
-        { year: 'Step 3', title: 'Protect the client', description: 'Apply cape, neck strip, and petroleum base cream if required.' },
+        { year: 'Step 2', title: 'Perform required tests', description: 'Assess porosity, elasticity, texture/diameter, and complete any preliminary tests required by the selected relaxer system before full application.' },
+        { year: 'Step 3', title: 'Protect the client', description: 'Use appropriate draping, gloves, and any barrier/base product required by the selected relaxer system.' },
         { year: 'Step 4', title: 'Section the hair', description: 'Use clean, manageable subsections based on density.' },
-        { year: 'Step 5', title: 'Apply relaxer', description: 'Begin at the back or most resistant area. Keep product off the skin and scalp unless the product is designed for scalp application.' },
-        { year: 'Step 6', title: 'Process and monitor', description: 'Watch the clock and the hair. Do not rely on the client to tell you when it burns.' },
-        { year: 'Step 7', title: 'Rinse thoroughly', description: 'Remove all relaxer before conditioning or neutralizing as directed.' },
-        { year: 'Step 8', title: 'Condition and detangle', description: 'Use a neutralizing or conditioning shampoo according to manufacturer instructions.' },
+        { year: 'Step 5', title: 'Apply relaxer', description: 'Follow the manufacturer’s application order and subsection guidance. Avoid unnecessary contact with skin and scalp and apply only where the product directions permit.' },
+        { year: 'Step 6', title: 'Process and monitor', description: 'Monitor timing, hair response, and client comfort continuously. Stop and remove product according to safety directions if burning, pain, or other concerning reactions occur.' },
+        { year: 'Step 7', title: 'Rinse thoroughly', description: 'Remove the relaxer thoroughly according to product directions before the specified post-service neutralizing, cleansing, or conditioning steps.' },
+        { year: 'Step 8', title: 'Complete post-service steps', description: 'Use the manufacturer-specified neutralizing/pH-restoring shampoo, oxidizing neutralizer, conditioner, or other finishing products required for that relaxer chemistry.' },
         { year: 'Step 9', title: 'Style and educate', description: 'Blow-dry or style and provide home-care instructions.' },
       ],
     },
@@ -423,8 +423,8 @@ export const chapter17PremiumContent: ChapterContent = {
       competencyIds: ['CH17-C02', 'CH17-C04', 'CH17-C06'],
       title: 'Relaxer Compatibility Warning',
       content:
-        'Hydroxide relaxers are not compatible with thio-based perms or relaxers. Hair treated with hydroxide has been restructured with a different chemistry, and applying a thio product afterward can cause severe damage. Always ask about previous services during consultation.',
-      highlight: 'When in doubt, perform a compatibility test on a small strand before full application.',
+        'Hydroxide and thioglycolate product families are chemically incompatible on the same previously treated hair and can create severe breakage risk. Treat prior chemical-service history as a required consultation step and follow the selected manufacturer’s compatibility warnings before any new texture service.',
+      highlight: 'A strand test can reveal condition or compatibility concerns, but it does not override a known product-family incompatibility or manufacturer prohibition.'
     },
     {
       type: 'contentBlock',
@@ -433,8 +433,8 @@ export const chapter17PremiumContent: ChapterContent = {
       competencyIds: ['CH17-C05'],
       title: 'Chemical Curl Reformation',
       content:
-        'Curl reformation loosens tight curl patterns and resets them into a larger, more manageable curl. The three basic steps are: (1) straighten the hair with a thio-based relaxer, (2) wrap the hair on large rods in the desired new curl pattern, and (3) neutralize to lock the new shape. Because the hair is processed twice, precise timing and strand testing are essential.',
-      highlight: 'Curl reformation is a two-step chemical service — the hair must be healthy enough to handle both processes.',
+        'Curl reformation uses a compatible thio-based system to reduce or relax the existing curl pattern, reshape the hair on rods, and then oxidatively neutralize it in the new pattern. Because the hair undergoes multiple chemical and physical steps, product-specific compatibility, preliminary testing, timing, and fiber condition are especially important.',
+      highlight: 'Do not perform curl reformation unless the hair analysis and the selected product system indicate that the service is appropriate for the hair’s condition and prior chemical history.'
     },
     {
       type: 'contentBlock',
@@ -443,8 +443,8 @@ export const chapter17PremiumContent: ChapterContent = {
       competencyIds: ['CH17-C07'],
       title: 'Texturizers & Chemical Blowouts',
       content:
-        'Texturizers use a mild relaxer formula to loosen curl rather than fully straighten. They create softer, more manageable curl patterns with less volume. Chemical blowouts relax curl enough to allow easier blow-drying and styling. Both services require the same consultation, strand testing, and safety steps as full relaxers.',
-      highlight: 'The line between texturizing and relaxing is the processing time and desired outcome, not the product alone.',
+        'Texturizing services are intended to reduce or loosen curl without necessarily producing full straightening. Products marketed for texturizing or chemical blowout effects can differ in chemistry and directions, so the expected result, processing plan, preliminary testing, and safety steps must be based on the specific product system and the client’s hair history.',
+      highlight: 'Do not define a texturizer only by shorter processing time; identify the actual product chemistry, intended result, and manufacturer directions.'
     },
     {
       type: 'contentBlock',
@@ -453,8 +453,8 @@ export const chapter17PremiumContent: ChapterContent = {
       competencyIds: ['CH17-C02'],
       title: 'How the Three Services Are Alike — and Different',
       content:
-        'Permanent waves, chemical relaxers, and curl reformation all rely on the same three-stage chemistry: reduce disulfide bonds, reshape the hair, then oxidize to lock the new pattern. The difference is the desired outcome and the tools used. A perm adds curl by wrapping hair on rods. A relaxer removes curl by combing hair straight. Curl reformation combines both: it first relaxes tight curl, then wraps the hair in a new pattern and neutralizes. Perms usually use alkaline or acid solutions; relaxers use hydroxide or thio formulas; curl reformation uses a thio relaxer followed by a perm wrap. Understanding these similarities and differences is what lets you choose the right service and explain it to a client.',
-      highlight: 'Same bond. Different shape. Different product family.',
+        'Permanent waving and thio-based relaxing use reducing chemistry that breaks disulfide bonds so the hair can be reshaped, followed by compatible oxidation/neutralization. Hydroxide relaxers also alter sulfur-containing bonds, but they do so through lanthionization and are not completed with the same oxidizing neutralizer cycle. Curl reformation uses a compatible thio-based sequence to relax and then reshape the curl pattern. Product family, prior chemical history, and manufacturer compatibility instructions determine whether a service is appropriate.',
+      highlight: 'Related target structure, different chemistry: thio reduction/oxidation and hydroxide lanthionization must not be treated as interchangeable systems.'
     },
     {
       type: 'checklist',
@@ -465,13 +465,13 @@ export const chapter17PremiumContent: ChapterContent = {
       items: [
         { text: 'Complete a full consultation and service history.' },
         { text: 'Analyze hair texture, porosity, elasticity, density, scalp condition, and history.' },
-        { text: 'Perform required strand and elasticity tests.' },
+        { text: 'Perform the preliminary tests required by the selected product and the hair analysis.' },
         { text: 'Choose product strength, rod size, and wrapping method based on analysis.' },
         { text: 'Apply protective base cream when required.' },
-        { text: 'Wear gloves and follow manufacturer mixing and timing directions exactly.' },
-        { text: 'Process with clean, even saturation and check test curls.' },
-        { text: 'Rinse thoroughly before neutralizing.' },
-        { text: 'Neutralize for the full recommended time.' },
+        { text: 'Wear gloves and follow the manufacturer’s mixing, application, timing, rinsing, and safety directions.' },
+        { text: 'Use even application and perform test-curl or processing checks when required by the selected service.' },
+        { text: 'Rinse or remove the processing product in the sequence required by that specific system.' },
+        { text: 'Complete the correct neutralizing or pH-restoring step for the product family and required time.' },
         { text: 'Condition and advise the client on home care and maintenance.' },
       ],
     },
@@ -487,9 +487,9 @@ export const chapter17PremiumContent: ChapterContent = {
           situation: 'A client says, "Will this perm burn my scalp?"',
           question: 'Which response is most professional?',
           responses: [
-            { text: '"It might tingle a little, but burning means we rinse immediately."', isProfessional: true, feedback: 'Correct. You validate the concern, set realistic expectations, and state a clear safety action.' },
-            { text: `"Don't worry, it never burns."`, isProfessional: false, feedback: 'Incorrect. Dismissing the concern is unprofessional and untrue; any chemical can irritate if misused.' },
-            { text: `"If it burns, that means it's working."`, isProfessional: false, feedback: 'Incorrect. Burning is never a sign that a service is working; it signals potential injury.' },
+            { text: '"You should not ignore burning or pain. If you feel either, tell me immediately so I can stop and follow the product-removal and safety directions."', isProfessional: true, feedback: 'Correct. The response validates the concern and gives a clear safety action without promising that irritation cannot occur.' },
+            { text: `"Don't worry, it never burns."`, isProfessional: false, feedback: 'Incorrect. A chemical-service professional should not promise that irritation or a reaction cannot occur.' },
+            { text: `"If it burns, that means it's working."`, isProfessional: false, feedback: 'Incorrect. Burning or pain is a warning sign to stop and follow product-removal and safety directions.' },
           ],
           insight: 'Professional answers are honest, brief, and include what you will do if something feels wrong.',
         },
@@ -513,13 +513,13 @@ export const chapter17PremiumContent: ChapterContent = {
             },
             {
               letter: 'B',
-              text: 'Recommend a milder acid perm, perform strand tests, and use a weaker solution with shorter processing.',
-              feedback: 'Correct. The service must be adjusted to the hair condition to avoid breakage.',
+              text: 'Pause the full service, complete the required compatibility/strand testing, and choose only a waving system and processing plan that the manufacturer directions and hair analysis support for previously highlighted, porous hair.',
+              feedback: 'Correct. Previously lightened, porous hair requires a compatibility and condition check before any waving system or timing plan is selected.'
             },
             {
               letter: 'C',
-              text: 'Tell the client a perm is impossible and refuse all texture services.',
-              feedback: 'Incorrect. A perm may still be possible with the right product and caution; analysis guides the decision.',
+              text: 'Guarantee that no perm can ever be performed on highlighted hair without checking the hair or product system.',
+              feedback: 'Incorrect. Do not make a universal guarantee either way; compatibility, fiber condition, and the selected product directions determine whether the service should proceed.'
             },
           ],
           correctAnswer: 'B',
@@ -541,7 +541,7 @@ export const chapter17PremiumContent: ChapterContent = {
           difficulty: 'easy',
         },
         {
-          badge: 'Board Ready',
+          badge: 'Sequence Drill',
           title: 'Map the Service Flow',
           description: 'Write the correct order of a permanent wave service from consultation to neutralization.',
           action: 'Time yourself to recall it in under 60 seconds.',
@@ -563,8 +563,8 @@ export const chapter17PremiumContent: ChapterContent = {
       competencyIds: ['CH17-C06'],
       title: 'Common Mistakes to Avoid',
       content:
-        'Skipping the strand test, ignoring previous chemical services, applying relaxer to damaged scalp, using rods that are too large or too small for the desired curl, and rinsing before neutralizing properly are the most common reasons texture services fail. Always treat timing as a range based on hair condition, not a fixed number.',
-      highlight: 'One rushed step in a texture service can turn a loyal client into a corrective color appointment — or worse, a trip to the doctor.',
+        'Common preventable problems include skipping required preliminary testing, ignoring previous chemical services, applying chemical products over irritated or compromised scalp tissue, choosing tools that do not match the intended result, and failing to follow the correct rinsing or neutralizing sequence. Timing must come from the selected product directions and the ongoing hair analysis rather than a memorized universal number.',
+      highlight: 'Chemical texture services require controlled timing, compatibility checks, and immediate attention to client discomfort because errors can cause hair breakage or scalp injury.'
     },
     {
       type: 'contentBlock',
@@ -573,8 +573,8 @@ export const chapter17PremiumContent: ChapterContent = {
       competencyIds: ['CH17-C02', 'CH17-C03', 'CH17-C04'],
       title: 'Memory Tricks',
       content:
-        'Remember the texture service cycle with R-R-O: **Reduce** the bonds, **Reshape** the hair, **Oxidize** to lock. For rod placement, think “ON the head = ON the base” (most tension, fullest curl). For relaxers, “Base = Barrier” (you add a protective base cream).',
-      highlight: 'R-R-O: Reduce → Reshape → Oxidize.',
+        'For thio/permanent-wave chemistry, remember R-R-O: **Reduce** disulfide bonds, **Reshape** the hair, **Oxidize** to stabilize the new pattern. Do not apply that mnemonic to hydroxide relaxers, which use lanthionization rather than the same oxidation cycle. For base relaxer systems, “Base = Barrier” can help you remember the protective barrier step when that product requires it.',
+      highlight: 'R-R-O applies to thio/permanent-wave chemistry; hydroxide relaxers follow a different chemical pathway.'
     },
     {
       type: 'proTip',
@@ -584,11 +584,11 @@ export const chapter17PremiumContent: ChapterContent = {
       title: '💎 Instructor Notes & Remediation',
       subtitle: 'Teaching chemical texture services with confidence',
       items: [
-        { category: 'Teaching Priorities', tips: ['Start with the disulfide bond. If students do not understand reduction and oxidation, every service becomes memorization instead of reasoning.', 'Emphasize that porosity controls timing, not just texture.', 'Make consultation and service history non-negotiable habits.'] },
-        { category: 'Common Student Misunderstandings', tips: ['Students often think "acid perm" means dangerous acid. Clarify that it is gentler and pH-balanced.', 'Many confuse rod placement with wrapping technique. Use mannequin demos for both.', 'Some believe neutralizer is optional. Stress that it rebuilds bonds and locks the shape.'] },
-        { category: 'Discussion Prompts', tips: ['What would you do if a client wants a perm on hair that was relaxed six months ago?', 'How does porosity change your timing plan?', 'Why is the same neutralization step essential for perms and relaxers?'] },
-        { category: 'Remediation Steps', tips: ['For struggling students: return to the R-R-O cycle and have them label each step on a diagram.', 'For quiz gaps: use the flashcard deck and re-test with only the missed competency.', 'For practical gaps: require a supervised strand test and rod-placement drill before full service practice.'] },
-        { category: 'Quick Checks for Understanding', tips: ['Ask: "Name the six analysis characteristics in order."', 'Ask: "What is the difference between a base and no-base relaxer?"', 'Ask: "Why do we rinse before neutralizing?"'] },
+        { category: 'Teaching Priorities', tips: ['Start with the disulfide bond, then distinguish thio reduction/oxidation from hydroxide lanthionization.', 'Teach students to combine porosity, texture/diameter, elasticity, previous services, and manufacturer directions when planning processing.', 'Make consultation and chemical-service history non-negotiable habits.'] },
+        { category: 'Common Student Misunderstandings', tips: ['Students may treat all permanent-wave products as chemically identical; compare product families and directions instead of relying on one pH rule.', 'Many confuse rod placement with wrapping technique. Use mannequin demos for both.', 'Students may incorrectly apply oxidizing-neutralizer logic to hydroxide relaxers; distinguish the required finishing step for each chemistry.'] },
+        { category: 'Discussion Prompts', tips: ['What compatibility questions must you resolve if a client wants a perm after a previous relaxer?', 'How should porosity influence your testing and product-direction review?', 'How do thio neutralization and hydroxide post-service pH-restoring steps differ?'] },
+        { category: 'Remediation Steps', tips: ['For struggling students: diagram the thio R-R-O cycle beside the hydroxide lanthionization pathway so they do not merge the two chemistries.', 'For quiz gaps: use the flashcard deck and re-test with only the missed competency.', 'For practical gaps: require supervised preliminary testing and rod-placement practice before full-service work.'] },
+        { category: 'Quick Checks for Understanding', tips: ['Ask: "Which hair/scalp and service-history factors must you analyze before choosing a chemical texture service?"', 'Ask: "What is the difference between a base and no-base relaxer?"', 'Ask: "Why must thio and hydroxide finishing steps be taught separately?"'] },
         { category: 'Instructor Pro Tips', tips: ['Demonstrate overprocessing on a swatch so students see the difference between healthy and damaged hair.', 'Keep a "chemistry corner" with pH strips so students can see alkaline vs. acid solutions.', 'Use a timer in class so students learn to respect manufacturer processing windows.'] },
       ],
     },
@@ -617,27 +617,27 @@ export const chapter17PremiumContent: ChapterContent = {
       id: 'board-alerts',
       standardId: 'CH17-L24',
       competencyIds: ['CH17-C02', 'CH17-C03', 'CH17-C04', 'CH17-C06'],
-      title: 'Board Alerts',
+      title: 'Safety & Chemistry Checkpoints',
       features: [
         {
           icon: 'AlertCircle',
-          title: 'Porosity First',
-          description: 'Porosity is the primary factor that controls processing time and product penetration.',
+          title: 'Analyze Before Processing',
+          description: 'Porosity is one important factor in product penetration and processing decisions; use the complete hair analysis and manufacturer directions.'
         },
         {
           icon: 'AlertCircle',
-          title: 'Disulfide Bonds',
-          description: 'All texture services permanently alter disulfide bonds in the cortex.',
+          title: 'Know the Chemistry',
+          description: 'Thio services use reduction and oxidation of disulfide bonds, while hydroxide relaxers alter sulfur-containing bonds through lanthionization.'
         },
         {
           icon: 'AlertCircle',
-          title: 'Neutralization Is Critical',
-          description: 'Incomplete neutralization leaves bonds unstable and causes curl drop or damage.',
+          title: 'Finish the Correct System',
+          description: 'Use the correct neutralizing or pH-restoring sequence for the selected product family; do not treat thio and hydroxide finishing steps as interchangeable.'
         },
         {
           icon: 'AlertCircle',
           title: 'Hydroxide ≠ Thio',
-          description: 'Never apply a thio product over hair previously treated with hydroxide relaxer.',
+          description: 'Treat hydroxide- and thioglycolate-treated hair as chemically incompatible unless verified product-system guidance explicitly supports the planned service.'
         },
       ],
     },
@@ -903,7 +903,7 @@ export const chapter17PremiumContent: ChapterContent = {
       vocabularyIds: ['curl-reformation'],
       learningQuestionIds: [],
       boardQuestionIds: ['qq-17-025', 'qq-17-026'],
-      instructorNote: 'Stress the two-process risk. Require the student to explain why hair must be healthy enough for reformation.',
+      instructorNote: 'Stress the multi-step chemical risk. Require the student to explain how fiber condition, previous chemical history, and product compatibility determine whether reformation should proceed.',
       retakeCount: 3,
     },
     {
