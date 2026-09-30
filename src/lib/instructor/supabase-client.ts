@@ -167,6 +167,7 @@ export class SupabaseInstructorDatabaseClient implements IInstructorDatabaseClie
       .from('remediation_cycles')
       .select('*')
       .eq('user_id', studentId)
+      .eq('school_id', schoolId)
       .order('targeted_at', { ascending: false })
 
     if (cyclesError || !cycles) return []
