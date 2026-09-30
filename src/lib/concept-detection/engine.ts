@@ -66,7 +66,7 @@ export interface ConceptEvidence<
   firstAttemptAt: string | null
   lastAttemptAt: string | null
   /** Immutable item-level snapshot used by server-authoritative safety policy. */
-  results: readonly {
+  results?: readonly {
     questionId: string
     isCorrect: boolean
     attemptId: string
