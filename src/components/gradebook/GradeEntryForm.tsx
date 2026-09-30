@@ -153,7 +153,7 @@ export default function GradeEntryForm({
               disabled={pending}
               fullWidth
             >
-              ${pending ? 'Saving...' : 'Save Grade'}
+              {pending ? 'Saving...' : 'Save Grade'}
             </Button>
           </div>
         </form>
