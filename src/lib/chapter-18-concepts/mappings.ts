@@ -32,6 +32,14 @@ export interface Chapter18QuizQuestionConceptMapping {
   conceptFamilyId: Chapter18ConceptFamilyId
 }
 
+export interface Chapter18MicroCheckPlacement {
+  id: `mc-18-${string}`
+  afterSectionId: 'chapter-18-lesson'
+  conceptFamilyId: Chapter18ConceptFamilyId
+  plannedQuestionCount: number
+  purpose: string
+}
+
 export const chapter18LessonSectionConceptMappings: readonly Chapter18LessonSectionConceptMapping[] = [
   { lessonSectionKey: 'why-study', conceptFamilyIds: ['ch18-analysis-structure', 'ch18-service-safety-chemical-handling'] },
   { lessonSectionKey: 'hair-analysis', conceptFamilyIds: ['ch18-analysis-structure', 'ch18-correction-gray-porosity'] },
@@ -115,6 +123,59 @@ export const chapter18QuizQuestionConceptMappings: readonly Chapter18QuizQuestio
       conceptFamilyId,
     }
   })
+
+
+export const chapter18MicroCheckPlacements: readonly Chapter18MicroCheckPlacement[] = [
+  {
+    id: 'mc-18-01',
+    afterSectionId: 'chapter-18-lesson',
+    conceptFamilyId: 'ch18-analysis-structure',
+    plannedQuestionCount: 2,
+    purpose: 'Check hair integrity, elasticity, porosity, and analysis decisions before color or lightening.',
+  },
+  {
+    id: 'mc-18-02',
+    afterSectionId: 'chapter-18-lesson',
+    conceptFamilyId: 'ch18-color-theory',
+    plannedQuestionCount: 2,
+    purpose: 'Check level, tone, complementary relationships, and neutralization reasoning.',
+  },
+  {
+    id: 'mc-18-03',
+    afterSectionId: 'chapter-18-lesson',
+    conceptFamilyId: 'ch18-color-products',
+    plannedQuestionCount: 2,
+    purpose: 'Check distinctions among temporary, semipermanent, demipermanent, permanent, oxidative, and direct-dye systems.',
+  },
+  {
+    id: 'mc-18-04',
+    afterSectionId: 'chapter-18-lesson',
+    conceptFamilyId: 'ch18-developers-lighteners-toners',
+    plannedQuestionCount: 2,
+    purpose: 'Check product-specific developer, lightener, toner, lift, scalp-use, and processing decisions.',
+  },
+  {
+    id: 'mc-18-05',
+    afterSectionId: 'chapter-18-lesson',
+    conceptFamilyId: 'ch18-application-consultation-procedures',
+    plannedQuestionCount: 2,
+    purpose: 'Check consultation, service history, strand testing, retouch placement, and application planning.',
+  },
+  {
+    id: 'mc-18-06',
+    afterSectionId: 'chapter-18-lesson',
+    conceptFamilyId: 'ch18-correction-gray-porosity',
+    plannedQuestionCount: 2,
+    purpose: 'Check tint-back, filler/equalization, gray-coverage, and porosity-sensitive formulation decisions.',
+  },
+  {
+    id: 'mc-18-07',
+    afterSectionId: 'chapter-18-lesson',
+    conceptFamilyId: 'ch18-service-safety-chemical-handling',
+    plannedQuestionCount: 2,
+    purpose: 'Check scalp contraindications, allergy-alert/product-use boundaries, facial-hair restrictions, and chemical-service safety.',
+  },
+] as const
 
 export function getChapter18FlashcardsForConcept(conceptFamilyId: Chapter18ConceptFamilyId) {
   return chapter18FlashcardConceptMappings.filter((mapping) => mapping.conceptFamilyId === conceptFamilyId).map((mapping) => mapping.flashcardId)
