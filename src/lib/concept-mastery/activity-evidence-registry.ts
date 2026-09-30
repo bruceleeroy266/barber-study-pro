@@ -16,6 +16,7 @@ import { chapter13ContentConceptMappings, chapter13FlashcardConceptMappings } fr
 import { chapter14ContentConceptMappings, chapter14FlashcardConceptMappings } from '../chapter-14-concepts/mappings'
 import { chapter15ContentConceptMappings, chapter15FlashcardConceptMappings } from '../chapter-15-concepts/mappings'
 import { chapter17ContentConceptMappings, chapter17FlashcardConceptMappings } from '../chapter-17-concepts/mappings'
+import { chapter18ContentConceptMappings, chapter18FlashcardConceptMappings } from '../chapter-18-concepts/mappings'
 
 type GenericMapping = {
   flashcardId?: string
@@ -62,6 +63,7 @@ const flashcardMappings: Record<string, readonly GenericMapping[]> = {
   'ch-14': chapter14FlashcardConceptMappings,
   'ch-15': chapter15FlashcardConceptMappings,
   'ch-17': chapter17FlashcardConceptMappings,
+  'ch-18': chapter18FlashcardConceptMappings,
 }
 
 const contentMappings: Record<string, readonly GenericMapping[]> = {
@@ -81,6 +83,7 @@ const contentMappings: Record<string, readonly GenericMapping[]> = {
   'ch-14': chapter14ContentConceptMappings,
   'ch-15': chapter15ContentConceptMappings,
   'ch-17': chapter17ContentConceptMappings,
+  'ch-18': chapter18ContentConceptMappings,
 }
 
 export function getFlashcardEvidenceConcept(chapterId: string, flashcardId: string): string | null {
