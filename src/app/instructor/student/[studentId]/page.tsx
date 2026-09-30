@@ -1352,6 +1352,18 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
             </div>
           </div>
 
+          {chapter3Diagnostics.safetyIntervention.requiresInstructorReview && (
+            <div className="p-6 border-b border-graphite">
+              <div className="rounded-lg border border-red-400/50 bg-red-950/20 p-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-red-300">urgent safety intervention</span>
+                  {chapter3Diagnostics.safetyIntervention.requiresFormalSafetyReassessment && <span className="text-xs text-silver">100% recovery required</span>}
+                </div>
+                <p className="text-sm text-light-gray mt-2">{chapter3Diagnostics.safetyIntervention.instructorReason}</p>
+              </div>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 border-b border-graphite">
             <div>
               <h3 className="text-sm font-semibold uppercase tracking-wide text-white">Strongest Concepts</h3>
@@ -1443,6 +1455,18 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
             </div>
           </div>
 
+          {chapter4Diagnostics.safetyIntervention.requiresInstructorReview && (
+            <div className="p-6 border-b border-graphite">
+              <div className="rounded-lg border border-red-400/50 bg-red-950/20 p-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-red-300">urgent safety intervention</span>
+                  {chapter4Diagnostics.safetyIntervention.requiresFormalSafetyReassessment && <span className="text-xs text-silver">100% recovery required</span>}
+                </div>
+                <p className="text-sm text-light-gray mt-2">{chapter4Diagnostics.safetyIntervention.instructorReason}</p>
+              </div>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 border-b border-graphite">
             <div>
               <h3 className="text-sm font-semibold uppercase tracking-wide text-white">Strongest Concepts</h3>
@@ -1533,6 +1557,18 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
               </div>
             </div>
           </div>
+
+          {chapter5Diagnostics.safetyIntervention.requiresInstructorReview && (
+            <div className="p-6 border-b border-graphite">
+              <div className="rounded-lg border border-red-400/50 bg-red-950/20 p-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-red-300">urgent safety intervention</span>
+                  {chapter5Diagnostics.safetyIntervention.requiresFormalSafetyReassessment && <span className="text-xs text-silver">100% recovery required</span>}
+                </div>
+                <p className="text-sm text-light-gray mt-2">{chapter5Diagnostics.safetyIntervention.instructorReason}</p>
+              </div>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 border-b border-graphite">
             <div>
