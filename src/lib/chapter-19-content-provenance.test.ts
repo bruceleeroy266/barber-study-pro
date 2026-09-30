@@ -5,6 +5,11 @@ import { resolve } from 'path'
 const activeChapter19Files = [
   'src/lib/chapter-19-premium-content.ts',
   'src/lib/chapter-19-premium-remediation.ts',
+  'src/lib/chapter-19-premium-flashcards.ts',
+]
+
+const chapter19FlashcardFiles = [
+  'src/lib/chapter-19-premium-flashcards.ts',
 ]
 
 describe('Chapter 19 content provenance firewall', () => {
@@ -19,6 +24,14 @@ describe('Chapter 19 content provenance firewall', () => {
     for (const file of activeChapter19Files) {
       const source = readFileSync(resolve(process.cwd(), file), 'utf-8')
       expect(source, file).not.toMatch(/Textbook Pages|\bpp\.\s*\d+|sourcePages:\s*['"]\d+/i)
+    }
+  })
+
+  it('removes textbook page-number citations from active Chapter 19 flashcards', () => {
+    for (const file of chapter19FlashcardFiles) {
+      const source = readFileSync(resolve(process.cwd(), file), 'utf-8')
+      expect(source, file).not.toMatch(/\(p{1,2}\.\s*\d+/i)
+      expect(source, file).not.toMatch(/Textbook Pages|sourcePages:\s*['"]\d+/i)
     }
   })
 
