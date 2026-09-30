@@ -37,7 +37,7 @@ describe('C19-H1 production integrity hardening', () => {
       "void saveSignal('knowledge_checks_completed').then((saved) =>",
     )
     expect(source).toContain(
-      "(hasKnowledgeChecks || hasChapter19MicroChecks) && knowledgeChecksSaved",
+      "(hasKnowledgeChecks || hasChapter19MicroChecks || hasChapter20MicroChecks) && knowledgeChecksSaved",
     )
   })
 
@@ -75,7 +75,10 @@ describe('C19-H1 production integrity hardening', () => {
       "fetch('/api/chapter-19/micro-check'",
     )
     expect(activityClient).toContain(
-      "fetch('/api/chapter-19/activity-evidence'",
+      "input.chapterId === 'ch-19' || input.chapterId === 'ch-20'",
+    )
+    expect(activityClient).toContain(
+      "input.chapterId === 'ch-19' ? 'chapter-19' : 'chapter-20'",
     )
   })
 
