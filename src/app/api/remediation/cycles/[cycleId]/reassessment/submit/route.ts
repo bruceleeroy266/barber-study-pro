@@ -56,7 +56,8 @@ import {
   hasRecoveredLegacyConcept,
   type LegacyChapterId,
 } from '@/lib/reassessment/legacy-safety-recovery'
-import { hasRecoveredModernConcept } from '@/lib/reassessment/modern-recovery-policy'
+import { hasRecoveredModernConcept, type ModernRecoveryChapterId } from '@/lib/reassessment/modern-recovery-policy'
+import { getPersistedModernSafetyCycleSnapshot } from '@/lib/reassessment/modern-safety-cycle'
 
 export async function POST(
   request: NextRequest,
@@ -440,7 +441,10 @@ export async function POST(
         hasRecoveredModernConcept({
           correctCount,
           questionCount: persistedAttempts.length,
-          urgentSafety: false,
+          urgentSafety: getPersistedModernSafetyCycleSnapshot(
+            cycle.chapterId as ModernRecoveryChapterId,
+            cycle.detectionEvidence,
+          ).urgentSafety,
         })
       ) {
         evaluationResult = await evaluationService.evaluateCycle({
