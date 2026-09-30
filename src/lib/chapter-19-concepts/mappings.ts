@@ -30,6 +30,14 @@ export interface Chapter19QuizQuestionConceptMapping {
   conceptFamilyId: Chapter19ConceptFamilyId
 }
 
+export interface Chapter19MicroCheckPlacement {
+  id: `mc-19-${string}`
+  afterSectionId: 'chapter-19-lesson'
+  conceptFamilyId: Chapter19ConceptFamilyId
+  plannedQuestionCount: number
+  purpose: string
+}
+
 export const chapter19LessonSectionConceptMappings: readonly Chapter19LessonSectionConceptMapping[] = [
   { lessonSectionKey: 'licensing-path', conceptFamilyIds: ['ch19-licensing-requirements-verification'] },
   { lessonSectionKey: 'written-theory-exam', conceptFamilyIds: ['ch19-exam-preparation-test-reasoning'] },
@@ -165,6 +173,59 @@ export const chapter19QuizQuestionConceptMappings: readonly Chapter19QuizQuestio
     if (!conceptFamilyId) throw new Error(`Unknown Chapter 19 assessment mapping: ${question.id}`)
     return { questionId: question.id as `qq-19-${string}`, conceptFamilyId }
   })
+
+
+export const chapter19MicroCheckPlacements: readonly Chapter19MicroCheckPlacement[] = [
+  {
+    id: 'mc-19-01',
+    afterSectionId: 'chapter-19-lesson',
+    conceptFamilyId: 'ch19-licensing-requirements-verification',
+    plannedQuestionCount: 2,
+    purpose: 'Check jurisdiction-specific licensing verification and official-source reasoning.',
+  },
+  {
+    id: 'mc-19-02',
+    afterSectionId: 'chapter-19-lesson',
+    conceptFamilyId: 'ch19-exam-preparation-test-reasoning',
+    plannedQuestionCount: 2,
+    purpose: 'Check test reasoning, question interpretation, and study-strategy application.',
+  },
+  {
+    id: 'mc-19-03',
+    afterSectionId: 'chapter-19-lesson',
+    conceptFamilyId: 'ch19-practical-exam-safety-readiness',
+    plannedQuestionCount: 2,
+    purpose: 'Check practical-exam procedure verification, infection control, and service-safety readiness.',
+  },
+  {
+    id: 'mc-19-04',
+    afterSectionId: 'chapter-19-lesson',
+    conceptFamilyId: 'ch19-employment-readiness-professionalism',
+    plannedQuestionCount: 2,
+    purpose: 'Check integrity, work ethic, self-assessment, and professional behavior.',
+  },
+  {
+    id: 'mc-19-05',
+    afterSectionId: 'chapter-19-lesson',
+    conceptFamilyId: 'ch19-resume-portfolio-application-materials',
+    plannedQuestionCount: 2,
+    purpose: 'Check accurate résumé, portfolio, cover-letter, and application decisions.',
+  },
+  {
+    id: 'mc-19-06',
+    afterSectionId: 'chapter-19-lesson',
+    conceptFamilyId: 'ch19-job-search-shop-research-interview',
+    plannedQuestionCount: 2,
+    purpose: 'Check employer research, interview preparation, professional presentation, and follow-up.',
+  },
+  {
+    id: 'mc-19-07',
+    afterSectionId: 'chapter-19-lesson',
+    conceptFamilyId: 'ch19-employment-law-contracts-compliance',
+    plannedQuestionCount: 2,
+    purpose: 'Check legal/compliance caution, interview-law boundaries, and agreement review without misclassifying them as bodily safety.',
+  },
+] as const
 
 export function getChapter19FlashcardsForConcept(conceptFamilyId: Chapter19ConceptFamilyId) {
   return chapter19FlashcardConceptMappings
