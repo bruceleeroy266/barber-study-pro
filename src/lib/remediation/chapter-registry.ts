@@ -700,6 +700,7 @@ const providers = new Map<ChapterId, ChapterDetectionProvider>([
   ['ch-13', chapter13Provider],
   ['ch-14', chapter14Provider],
   ['ch-15', chapter15Provider],
+  ['ch-16', chapter16Provider],
   ['ch-17', chapter17Provider],
 ])
 
