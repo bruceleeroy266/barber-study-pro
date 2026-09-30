@@ -39,6 +39,35 @@ describe('HA-4 Chapters 1-18 persistence and immutable evidence', () => {
     expect(migration).toContain('revoke insert, update, delete on public.sustained_performance_resets from authenticated')
   })
 
+  it('keeps persisted timestamps and evaluation evidence as authoritative history', () => {
+    const foundation = readFileSync(
+      join(process.cwd(), 'supabase/migrations/20260818000000_phase_6c2a_remediation_foundation.sql'),
+      'utf8',
+    )
+    const evaluation = readFileSync(
+      join(process.cwd(), 'supabase/migrations/20260819000002_phase_6c2d_reassessment_evaluation.sql'),
+      'utf8',
+    )
+    expect(foundation).toContain('targeted_at timestamptz not null default now()')
+    expect(foundation).toContain('reassessment_completed_at timestamptz')
+    expect(foundation).toContain('evaluated_at timestamptz')
+    expect(evaluation).toContain('evaluation_evidence_ids uuid[] not null')
+    expect(evaluation).toContain('before update or delete on public.remediation_cycle_evaluations')
+  })
+
+  it('proves Chapters 8-18 diagnostics append reassessment evidence without replacing initial evidence', () => {
+    for (let chapter = 8; chapter <= 18; chapter += 1) {
+      const source = readFileSync(
+        join(process.cwd(), `src/lib/chapter-${chapter}-concepts/instructor-diagnostics.ts`),
+        'utf8',
+      )
+      expect(source, `Chapter ${chapter}`).toContain('attemptPhase: \'initial\'')
+      expect(source, `Chapter ${chapter}`).toContain('attemptPhase: \'reassessment\'')
+      expect(source, `Chapter ${chapter}`).toContain('initialMisses:')
+      expect(source, `Chapter ${chapter}`).toContain('reassessmentCorrect:')
+    }
+  })
+
   it('preserves append-only recovery rather than erasing initial evidence', () => {
     expect(migration).not.toContain('delete from public.quiz_attempts')
     expect(migration).not.toContain('update public.quiz_attempts')
