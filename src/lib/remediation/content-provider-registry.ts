@@ -239,6 +239,7 @@ import {
 } from '@/lib/chapter-20-concepts/concepts'
 import { chapter20PremiumFlashcards } from '@/lib/chapter-20-premium-flashcards'
 import { chapter20PremiumQuizQuestions } from '@/lib/chapter-20-premium-quiz'
+import { chapter20ReassessmentReserve } from '@/lib/chapter-20-concepts/reassessment-reserve'
 
 import { getChapterContent } from '@/lib/chapter-content'
 
@@ -1811,13 +1812,42 @@ const chapter20FlashcardMappingsProjected = chapter20FlashcardConceptMappings.ma
   flashcardId: mapping.flashcardId as string,
   conceptId: mapping.conceptFamilyId as string,
 }))
-const chapter20QuizMappingsProjected = chapter20QuizQuestionConceptMappings.map((mapping) => ({
-  questionId: mapping.questionId as string,
-  conceptId: mapping.conceptFamilyId as string,
-}))
+const chapter20QuizMappingsProjected = [
+  ...chapter20QuizQuestionConceptMappings.map((mapping) => ({
+    questionId: mapping.questionId as string,
+    conceptId: mapping.conceptFamilyId as string,
+  })),
+  ...chapter20ReassessmentReserve.map((question) => ({
+    questionId: question.id as string,
+    conceptId: question.conceptFamilyId as string,
+  })),
+]
 
 function isChapter20ConceptFamilyId(conceptId: string): boolean {
   return (ACTIVE_CHAPTER20_CONCEPT_FAMILY_IDS as readonly string[]).includes(conceptId)
+}
+
+function chapter20ReserveAsQuizQuestion(questionId: string): QuizQuestion | null {
+  const question = chapter20ReassessmentReserve.find((item) => item.id === questionId)
+  if (!question) return null
+  return {
+    id: question.id,
+    quiz_id: 'quiz-20',
+    question: question.question,
+    answer_a: question.answer_a,
+    answer_b: question.answer_b,
+    answer_c: question.answer_c,
+    answer_d: question.answer_d,
+    correct_answer: question.correctAnswer,
+    explanation: question.explanation,
+    difficulty: question.difficulty === 'scenario' ? 'hard' : 'medium',
+    learningObjective: question.learningObjectiveId,
+    order_index:
+      1000 +
+      chapter20ReassessmentReserve.findIndex(
+        (item) => item.id === question.id,
+      ),
+  }
 }
 
 const chapter20Provider: ChapterRemediationContentProvider = {
@@ -1851,9 +1881,11 @@ const chapter20Provider: ChapterRemediationContentProvider = {
     return buildBundle(this, conceptId)
   },
   getQuizQuestionById(questionId) {
-    return chapter20PremiumQuizQuestions.find(
-      (question) => question.id === questionId,
-    ) ?? null
+    return (
+      chapter20PremiumQuizQuestions.find(
+        (question) => question.id === questionId,
+      ) ?? chapter20ReserveAsQuizQuestion(questionId)
+    )
   },
   filterKeyTermsByConcept(conceptId) {
     if (!isChapter20ConceptFamilyId(conceptId)) return []
