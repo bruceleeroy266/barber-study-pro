@@ -1192,7 +1192,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                   <div key={concept.conceptFamilyId} className="rounded-lg border border-graphite bg-black p-3 flex items-center justify-between gap-3">
                     <div>
                       <p className="text-sm font-medium text-white">{concept.conceptName}</p>
-                      <p className="text-xs text-silver mt-1 capitalize">{concept.confidence.replaceAll('_', ' ')} · {concept.observations} observations · {concept.initialMisses} initial misses</p>
+                      <p className="text-xs text-silver mt-1 capitalize">{concept.confidence.replaceAll('_', ' ')} · {concept.observations} observations · {concept.initialMisses} initial misses{concept.reassessmentCorrect > 0 ? ` · ${concept.reassessmentCorrect} reassessment correct` : ''}</p>
                     </div>
                     <span className="text-sm font-semibold text-warm-bronze">{concept.mastery}%</span>
                   </div>
@@ -1283,7 +1283,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                   <div key={concept.conceptId} className="rounded-lg border border-graphite bg-black p-3 flex items-center justify-between gap-3">
                     <div>
                       <p className="text-sm font-medium text-white">{concept.conceptName}</p>
-                      <p className="text-xs text-silver mt-1 capitalize">{concept.confidence.replaceAll('_', ' ')} · {concept.observations} observations · {concept.initialMisses} initial misses</p>
+                      <p className="text-xs text-silver mt-1 capitalize">{concept.confidence.replaceAll('_', ' ')} · {concept.observations} observations · {concept.initialMisses} initial misses{concept.reassessmentCorrect > 0 ? ` · ${concept.reassessmentCorrect} reassessment correct` : ''}</p>
                     </div>
                     <span className="text-sm font-semibold text-warm-bronze">{concept.mastery}%</span>
                   </div>
@@ -1374,7 +1374,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                   <div key={concept.conceptFamilyId} className="rounded-lg border border-graphite bg-black p-3 flex items-center justify-between gap-3">
                     <div>
                       <p className="text-sm font-medium text-white">{concept.conceptName}</p>
-                      <p className="text-xs text-silver mt-1 capitalize">{concept.confidence.replaceAll('_', ' ')} · {concept.observations} observations · {concept.initialMisses} initial misses</p>
+                      <p className="text-xs text-silver mt-1 capitalize">{concept.confidence.replaceAll('_', ' ')} · {concept.observations} observations · {concept.initialMisses} initial misses{concept.reassessmentCorrect > 0 ? ` · ${concept.reassessmentCorrect} reassessment correct` : ''}</p>
                     </div>
                     <span className="text-sm font-semibold text-warm-bronze">{concept.mastery}%</span>
                   </div>
@@ -1465,7 +1465,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                   <div key={concept.conceptFamilyId} className="rounded-lg border border-graphite bg-black p-3 flex items-center justify-between gap-3">
                     <div>
                       <p className="text-sm font-medium text-white">{concept.conceptName}</p>
-                      <p className="text-xs text-silver mt-1 capitalize">{concept.confidence.replaceAll('_', ' ')} · {concept.observations} observations · {concept.initialMisses} initial misses</p>
+                      <p className="text-xs text-silver mt-1 capitalize">{concept.confidence.replaceAll('_', ' ')} · {concept.observations} observations · {concept.initialMisses} initial misses{concept.reassessmentCorrect > 0 ? ` · ${concept.reassessmentCorrect} reassessment correct` : ''}</p>
                     </div>
                     <span className="text-sm font-semibold text-warm-bronze">{concept.mastery}%</span>
                   </div>
@@ -1556,7 +1556,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                   <div key={concept.conceptFamilyId} className="rounded-lg border border-graphite bg-black p-3 flex items-center justify-between gap-3">
                     <div>
                       <p className="text-sm font-medium text-white">{concept.conceptName}</p>
-                      <p className="text-xs text-silver mt-1 capitalize">{concept.confidence.replaceAll('_', ' ')} · {concept.observations} observations · {concept.initialMisses} initial misses</p>
+                      <p className="text-xs text-silver mt-1 capitalize">{concept.confidence.replaceAll('_', ' ')} · {concept.observations} observations · {concept.initialMisses} initial misses{concept.reassessmentCorrect > 0 ? ` · ${concept.reassessmentCorrect} reassessment correct` : ''}</p>
                     </div>
                     <span className="text-sm font-semibold text-warm-bronze">{concept.mastery}%</span>
                   </div>
@@ -1647,7 +1647,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                   <div key={concept.conceptFamilyId} className="rounded-lg border border-graphite bg-black p-3 flex items-center justify-between gap-3">
                     <div>
                       <p className="text-sm font-medium text-white">{concept.conceptName}</p>
-                      <p className="text-xs text-silver mt-1 capitalize">{concept.confidence.replaceAll('_', ' ')} · {concept.observations} observations · {concept.initialMisses} initial misses</p>
+                      <p className="text-xs text-silver mt-1 capitalize">{concept.confidence.replaceAll('_', ' ')} · {concept.observations} observations · {concept.initialMisses} initial misses{concept.reassessmentCorrect > 0 ? ` · ${concept.reassessmentCorrect} reassessment correct` : ''}</p>
                     </div>
                     <span className="text-sm font-semibold text-warm-bronze">{concept.mastery}%</span>
                   </div>
