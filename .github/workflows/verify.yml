@@ -1,6 +1,7 @@
 name: Engineering Verification
 
 # HA-3 exact-head verification trigger; no verification gates changed.
+# HA-4 exact-head certification trigger; verification gates unchanged.
 
 on:
   pull_request:
