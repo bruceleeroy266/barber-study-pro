@@ -99,7 +99,10 @@ export interface IDetectionOrchestratorDbClient {
     cycleNumber: number
     detectionState: DetectionState
     detectionConfidence: DetectionConfidence
-    detectionEvidence: ConceptEvidence
+    detectionEvidence: ConceptEvidence & {
+      ha3UrgentSafety?: boolean
+      ha3RequiredRecoveryPercent?: 80 | 100
+    }
     status: 'targeted'
     assignments: Array<{
       assignmentType: 'content_block' | 'flashcard'
