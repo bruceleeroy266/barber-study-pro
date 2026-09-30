@@ -112,7 +112,7 @@ export const chapter18MicroChecks: readonly Chapter18MicroCheck[] = [
     title: 'Consultation & Application Procedures Check',
     questions: [
       q('mcq-18-009','ch18-application-consultation-procedures','application',
-        'During a lightener retouch, what is the safest general placement principle?',
+        'A client returns for a lightener retouch with previously lightened mids and ends. Where should fresh lightener generally be placed?',
         'Apply from scalp to ends every time','Target new growth and avoid unapproved overlap onto previously lightened or sensitized hair','Pull through all lengths during the final minutes','Apply only to the ends',
         'b','Retouches generally target new growth while avoiding unnecessary or unapproved overlap onto previously lightened or sensitized hair.'),
       q('mcq-18-010','ch18-application-consultation-procedures','scenario',
