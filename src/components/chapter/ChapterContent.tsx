@@ -539,6 +539,9 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
     })
   }, [])
 
+  const [lessonSaveInFlight, setLessonSaveInFlight] = useState(false)
+  const [lessonSaveError, setLessonSaveError] = useState<string | null>(null)
+
   const saveSignal = useCallback(async (signal: 'lesson_completed' | 'knowledge_checks_completed') => {
     if (!userId || !chapterId) return
     const { data: existing } = await supabase
@@ -999,9 +1002,23 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
         )
       })}
       {userId && chapterId && !lessonCompleted && (
-        <button onClick={() => saveSignal('lesson_completed')} className="w-full rounded-lg border border-[var(--color-brand-gold)] px-4 py-3 font-semibold text-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold)]/10">
-          ✓ Mark Lesson Complete
-        </button>
+        <div className="space-y-2">
+          <button
+            type="button"
+            disabled={lessonSaveInFlight}
+            onClick={async () => {
+              setLessonSaveInFlight(true)
+              setLessonSaveError(null)
+              const saved = await saveSignal('lesson_completed')
+              if (!saved) setLessonSaveError('We could not save lesson completion. Please try again.')
+              setLessonSaveInFlight(false)
+            }}
+            className="w-full min-h-11 rounded-lg border border-[var(--color-brand-gold)] px-4 py-3 font-semibold text-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold)]/10 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {lessonSaveInFlight ? 'Saving…' : '✓ Mark Lesson Complete'}
+          </button>
+          {lessonSaveError && <p className="text-sm text-warm-bronze" role="alert">{lessonSaveError}</p>}
+        </div>
       )}
       {lessonCompleted && <p className="text-sm text-[var(--color-brand-gold)]">✓ Lesson completed</p>}
       {hasKnowledgeChecks && knowledgeChecksSaved && <p className="text-sm text-[var(--color-brand-gold)]">✓ Knowledge checks completed</p>}
