@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest'
 import { deriveModernSafetySnapshot } from '../modern-safety-snapshot'
 import { hasRecoveredModernConcept } from '../modern-recovery-policy'
 import { getPersistedModernSafetyCycleSnapshot } from '../modern-safety-cycle'
