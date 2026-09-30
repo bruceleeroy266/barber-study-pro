@@ -625,6 +625,15 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
     if (!requiredQuestionIds.every((questionId) => recordedQuestionIds.has(questionId))) {
       return
     }
+    if (
+      hasKnowledgeChecks &&
+      !areKnowledgeCheckSectionsComplete(
+        knowledgeCheckSectionIds,
+        completedKnowledgeCheckSections,
+      )
+    ) {
+      return
+    }
 
     let cancelled = false
     void saveSignal('knowledge_checks_completed').then((saved) => {
@@ -671,6 +680,9 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
   }, [
     chapterId,
     chapter20MicroCheckAttempts,
+    completedKnowledgeCheckSections,
+    hasKnowledgeChecks,
+    knowledgeCheckSectionIds,
     knowledgeChecksSaved,
     saveSignal,
   ])
@@ -691,6 +703,18 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
       return
     }
 
+    if (chapterId === 'ch-20') {
+      const requiredQuestionIds = chapter20MicroChecks.flatMap((check) =>
+        check.questions.map((question) => question.id),
+      )
+      const recordedQuestionIds = new Set(
+        chapter20MicroCheckAttempts.map((attempt) => attempt.question_id),
+      )
+      if (!requiredQuestionIds.every((questionId) => recordedQuestionIds.has(questionId))) {
+        return
+      }
+    }
+
     let cancelled = false
     void saveSignal('knowledge_checks_completed').then((saved) => {
       if (!cancelled && saved) {
@@ -705,6 +729,8 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
       cancelled = true
     }
   }, [
+    chapter20MicroCheckAttempts,
+    chapterId,
     completedKnowledgeCheckSections,
     knowledgeCheckSectionIds,
     knowledgeChecksSaved,
