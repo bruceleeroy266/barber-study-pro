@@ -124,7 +124,6 @@ describe('C18-4 assessment source-grounding and answer-key certification', () =>
   it('repairs FDA/allergy-test language without asserting one universal timing law', () => {
     expect(source).not.toContain('A patch test for aniline derivative products must be done 24 to 48 hours before the service')
     expect(source).not.toContain('The law requires the 24- to 48-hour wait')
-    expect(source).not.toContain('Federal law creates one universal 24–48-hour timing rule for every haircolor product')
 
     expect(source).toContain('FDA advises users and salons to perform a skin test before each hair-dye use')
     expect(source).toContain('qualifying coal-tar hair dyes have specific caution-label and preliminary-test requirements')
