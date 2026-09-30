@@ -57,16 +57,23 @@ describe('G7-3 Chapters 1-18 final live data and percentage certification', () =
     expect(result.finalGrade).toBeGreaterThanOrEqual(result.baseGrade)
   })
 
-  it('requires every certified live chapter grade to have durable flashcard and scenario inventories', () => {
+  it('requires durable flashcard evidence for all certified chapters and real scenario inventories only where runtime scenarios exist', () => {
     for (const chapter of certifiedLiveChapters) {
       const chapterId = `ch-${chapter}`
       expect(getFlashcardEvidenceInventory(chapterId).length, `${chapterId} flashcards`).toBeGreaterThan(0)
+
+      if (chapter === 18) {
+        expect(getFlashcardEvidenceInventory(chapterId), `${chapterId} flashcards`).toHaveLength(50)
+        expect(getScenarioEvidenceInventory(chapterId), `${chapterId} scenarios`).toEqual([])
+        continue
+      }
+
       expect(getScenarioEvidenceInventory(chapterId).length, `${chapterId} scenarios`).toBeGreaterThan(0)
     }
   })
 
-  it('can produce a complete 100% five-component ordinary grade in every certified live chapter without remediation credit', () => {
-    for (const chapter of certifiedLiveChapters) {
+  it('can produce a complete 100% ordinary grade where all runtime evidence components exist and keeps Chapter 18 provisional without fabricated scenarios', () => {
+    for (const chapter of certifiedLiveChapters.filter((chapter) => chapter !== 18)) {
       const chapterId = `ch-${chapter}`
       const result = buildLiveInstructorChapterGrade({
         chapterId,
@@ -85,6 +92,22 @@ describe('G7-3 Chapters 1-18 final live data and percentage certification', () =
       expect(result.grade.finalGrade, chapterId).toBe(100)
       expect(result.grade.recoveryApplied, chapterId).toBe(false)
     }
+
+    const chapter18 = buildLiveInstructorChapterGrade({
+      chapterId: 'ch-18',
+      microCheckPercent: 100,
+      chapterAssessmentPercent: 100,
+      remediationReassessmentPercent: null,
+      activityRows: allCorrectActivityRows('ch-18'),
+    })
+
+    expect(chapter18.components.microCheckPercent).toBe(100)
+    expect(chapter18.components.flashcardPercent).toBe(100)
+    expect(chapter18.components.chapterAssessmentPercent).toBe(100)
+    expect(chapter18.components.scenarioApplicationPercent).toBeNull()
+    expect(chapter18.components.remediationReassessmentPercent).toBeNull()
+    expect(chapter18.evidenceComplete).toBe(false)
+    expect(chapter18.grade.recoveryApplied).toBe(false)
   })
 
   it('keeps completion percentage separate from mastery/grade percentage', () => {
