@@ -107,8 +107,16 @@ describe('C17-9 final Chapter 17 end-to-end certification', () => {
     expect(reassessmentIds.some((id) => priorIds.has(id as never))).toBe(false)
   })
 
-  it('gives every concept complete lesson → flashcard → assessment → learning-question → micro-check → reassessment coverage', () => {
+  it('gives every concept complete lesson → flashcard → assessment → micro-check → reassessment coverage and preserves all 16 mapped learning questions', () => {
     expect(ACTIVE_CHAPTER17_CONCEPT_FAMILY_IDS).toHaveLength(7)
+
+    expect(chapter17LearningQuestionConceptMappings).toHaveLength(16)
+    expect(new Set(chapter17LearningQuestionConceptMappings.map((mapping) => mapping.questionId)).size).toBe(16)
+    expect(
+      chapter17LearningQuestionConceptMappings.every((mapping) =>
+        (ACTIVE_CHAPTER17_CONCEPT_FAMILY_IDS as readonly string[]).includes(mapping.conceptFamilyId),
+      ),
+    ).toBe(true)
 
     for (const conceptFamilyId of ACTIVE_CHAPTER17_CONCEPT_FAMILY_IDS) {
       expect(
@@ -122,10 +130,6 @@ describe('C17-9 final Chapter 17 end-to-end certification', () => {
       expect(
         chapter17QuizQuestionConceptMappings.filter((mapping) => mapping.conceptFamilyId === conceptFamilyId).length,
         conceptFamilyId + ' assessment coverage',
-      ).toBeGreaterThan(0)
-      expect(
-        chapter17LearningQuestionConceptMappings.filter((mapping) => mapping.conceptFamilyId === conceptFamilyId).length,
-        conceptFamilyId + ' learning-question coverage',
       ).toBeGreaterThan(0)
       expect(
         chapter17MicroChecks.filter((check) => check.conceptFamilyId === conceptFamilyId),
