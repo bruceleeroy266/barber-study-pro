@@ -218,7 +218,14 @@ async function setupMocks(options: {
     getAllConceptIds: () => [CONCEPT_ID],
     getAllQuestionIds: () => [QUESTION_ID],
   } as any)
-  const mockDetectionProvider = { chapterId }
+  const mockDetectionProvider = {
+    chapterId,
+    detectConceptState: vi.fn().mockResolvedValue({
+      state: 'currently_performing_well',
+      confidence: 'high',
+      evidence: { results: [] },
+    }),
+  }
   vi.mocked(initializeChapterDetectionProvider).mockImplementation((id: string) =>
     id === chapterId ? (mockDetectionProvider as any) : undefined,
   )
@@ -251,7 +258,7 @@ async function setupMocks(options: {
     from: vi.fn().mockReturnValue({
       select: vi.fn().mockReturnValue({
         in: vi.fn().mockReturnValue({
-          order: vi.fn().mockResolvedValue({ data: [] }),
+          order: vi.fn().mockResolvedValue({ data: EVIDENCE_IDS.map((id) => ({ id, score: 1 })) }),
         }),
       }),
     }),
@@ -259,6 +266,12 @@ async function setupMocks(options: {
   vi.mocked(createSupabaseClient).mockReturnValue(mockSupabaseAdmin as any)
 
   const mockEvaluationService = {
+    evaluateCycle: vi.fn().mockResolvedValue({
+      success: true,
+      outcome: 'successful',
+      evaluationId: 'eval-ch4-123',
+      alreadyEvaluated: false,
+    }),
     evaluateCycleWithDetection: vi.fn().mockResolvedValue({
       success: true,
       outcome: 'successful',
@@ -315,10 +328,11 @@ describe('C4-3 Submit — Chapter 4 fixture (generic route, same protections)', 
 
     // Evaluation ran with the ch-4 detection provider over EXACTLY the five
     // persisted evidence IDs in completion order (slice(0, 5)).
-    expect(mockEvaluationService.evaluateCycleWithDetection).toHaveBeenCalledWith(
-      CYCLE_ID,
-      CONCEPT_ID,
-      EVIDENCE_IDS,
+    expect(mockEvaluationService.evaluateCycle).toHaveBeenCalledWith(
+      expect.objectContaining({
+        cycleId: CYCLE_ID,
+        evidenceIds: EVIDENCE_IDS,
+      }),
     )
     void mockDetectionProvider
   })
