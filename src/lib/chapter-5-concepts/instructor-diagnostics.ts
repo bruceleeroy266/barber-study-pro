@@ -7,6 +7,7 @@ import { chapter5PremiumQuizQuestions } from '../chapter-5-premium-quiz'
 import { chapter5ReassessmentQuestions } from '../chapter-5-reassessment-questions'
 import type { Chapter5MicroCheckAttemptRow } from './micro-check-persistence'
 import { calculatePersistedChapter5MicroCheckPercent, chapter5MicroCheckRowsToEvidence } from './micro-check-persistence'
+import { isLegacyUrgentSafetyConcept, requiredLegacyRecoveryPercent } from '@/lib/reassessment/legacy-safety-recovery'
 
 export interface Chapter5InstructorQuizAttempt {
   quiz_id: string
@@ -41,6 +42,12 @@ export interface Chapter5InstructorDiagnosticSummary {
   concepts: Chapter5InstructorConceptDiagnostic[]
   remediationStatus: string
   latestReassessment: string
+  safetyIntervention: {
+    level: 'none' | 'urgent'
+    requiresInstructorReview: boolean
+    requiresFormalSafetyReassessment: boolean
+    instructorReason: string
+  }
   evidenceCount: number
 }
 
@@ -138,12 +145,23 @@ export function buildChapter5InstructorDiagnostics(input:{
   const chapterGrade=calculateChapter5Grade({microCheckPercent,chapterAssessmentPercent,remediationReassessmentPercent:formal.percent})
   const sorted=[...supported].sort((a,b)=>a.mastery-b.mastery)
   const weak=sorted.filter(c=>c.mastery<=70||c.initialMisses>=2)
+  const urgentSafety = concepts.filter((concept) =>
+    isLegacyUrgentSafetyConcept('ch-5', concept.conceptFamilyId) && concept.initialMisses > 0
+  )
+  const latestSafetyRecovery = formal.conceptFamilyId && isLegacyUrgentSafetyConcept('ch-5', formal.conceptFamilyId)
+    ? formal
+    : null
+  const safetyRecovered = !!latestSafetyRecovery?.percent && latestSafetyRecovery.percent >= requiredLegacyRecoveryPercent('ch-5', latestSafetyRecovery.conceptFamilyId!)
+  const safetyIntervention = urgentSafety.length > 0 && !safetyRecovered
+    ? { level: 'urgent' as const, requiresInstructorReview: true, requiresFormalSafetyReassessment: true, instructorReason: `Urgent safety recovery requires 100% on five fresh reassessment questions. Preserved initial safety misses: ${urgentSafety.reduce((sum, concept) => sum + concept.initialMisses, 0)}.` }
+    : { level: 'none' as const, requiresInstructorReview: false, requiresFormalSafetyReassessment: false, instructorReason: safetyRecovered ? 'Urgent safety reassessment recovered at 100%; original misses remain preserved.' : 'No urgent safety miss detected.' }
 
   return {
     chapterGrade,overallMastery,overallConfidence:aggregateConfidence(concepts),chapterAssessmentPercent,microCheckPercent,remediationReassessmentPercent:formal.percent,
     strongestConcepts:[...sorted].reverse().slice(0,3),weakestConcepts:sorted.slice(0,3),concepts,
     remediationStatus:weak.length?`Targeted review — ${weak[0].conceptName}`:'No active mastery gap detected',
     latestReassessment:formal.conceptFamilyId?(formal.percent!=null?`${formal.percent}% — ${familyName.get(formal.conceptFamilyId)??formal.conceptFamilyId}`:`${formal.answeredCount}/5 in progress — ${familyName.get(formal.conceptFamilyId)??formal.conceptFamilyId}`):'No reassessment recorded',
+    safetyIntervention,
     evidenceCount:evidence.length,
   }
 }
