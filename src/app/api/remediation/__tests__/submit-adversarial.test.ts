@@ -245,7 +245,14 @@ async function setupMocks(options: {
     getAllConceptIds: () => [CONCEPT_ID],
     getAllQuestionIds: () => [QUESTION_ID, WRONG_CONCEPT_QUESTION_ID],
   } as any)
-  vi.mocked(initializeChapterDetectionProvider).mockReturnValue({ chapterId: 'ch-2' } as any)
+  vi.mocked(initializeChapterDetectionProvider).mockReturnValue({
+    chapterId: 'ch-2',
+    detectConceptState: vi.fn().mockResolvedValue({
+      state: 'currently_performing_well',
+      confidence: 'high',
+      evidence: { results: [] },
+    }),
+  } as any)
 
   // Content provider mock — same question data as before, served through the
   // chapter-aware registry seam.
@@ -284,7 +291,7 @@ async function setupMocks(options: {
     from: vi.fn().mockReturnValue({
       select: vi.fn().mockReturnValue({
         in: vi.fn().mockReturnValue({
-          order: vi.fn().mockResolvedValue({ data: [] }),
+          order: vi.fn().mockResolvedValue({ data: [{ id: REAL_ATTEMPT_ID, score: 1 }] }),
         }),
       }),
     }),
@@ -292,15 +299,15 @@ async function setupMocks(options: {
   vi.mocked(createSupabaseClient).mockReturnValue(mockSupabaseAdmin as any)
 
   // Evaluation mocks
+  const evaluationResult = options.evaluationResult ?? {
+    success: true,
+    outcome: 'pending',
+    evaluationId: 'eval-123',
+    alreadyEvaluated: false,
+  }
   const mockEvaluationService = {
-    evaluateCycleWithDetection: vi.fn().mockResolvedValue(
-      options.evaluationResult ?? {
-        success: true,
-        outcome: 'pending',
-        evaluationId: 'eval-123',
-        alreadyEvaluated: false,
-      }
-    ),
+    evaluateCycle: vi.fn().mockResolvedValue(evaluationResult),
+    evaluateCycleWithDetection: vi.fn().mockResolvedValue(evaluationResult),
   }
   vi.mocked(createEvaluationService).mockReturnValue(mockEvaluationService as any)
   vi.mocked(createSupabaseEvaluationClient).mockReturnValue({} as any)
@@ -773,10 +780,11 @@ describe('Phase 6C-3 Submit — Adversarial Integrity Tests', () => {
       )
 
       // The evaluation service should receive the server-generated attempt ID
-      expect(mockEvaluationService.evaluateCycleWithDetection).toHaveBeenCalledWith(
-        CYCLE_ID,
-        CONCEPT_ID,
-        [REAL_ATTEMPT_ID]
+      expect(mockEvaluationService.evaluateCycle).toHaveBeenCalledWith(
+        expect.objectContaining({
+          cycleId: CYCLE_ID,
+          evidenceIds: [REAL_ATTEMPT_ID],
+        })
       )
     })
 
