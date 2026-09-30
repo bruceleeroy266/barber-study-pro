@@ -52,6 +52,10 @@ import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { buildChapter8PersistedReassessmentEvent } from '@/lib/chapter-8-concepts/reassessment-evidence'
 import type { Chapter8ConceptFamilyId } from '@/lib/chapter-8-concepts/types'
 import { evaluateChapter8FormalReassessment } from '@/lib/chapter-8-concepts/recovery-outcome'
+import {
+  hasRecoveredLegacyConcept,
+  type LegacyChapterId,
+} from '@/lib/reassessment/legacy-safety-recovery'
 
 export async function POST(
   request: NextRequest,
@@ -323,7 +327,47 @@ export async function POST(
     const evidenceIds = kcProgress.answeredAttemptIds.slice(0, requiredCount)
 
     let evaluationResult
-    if (cycle.chapterId === 'ch-8') {
+    if (/^ch-[1-7]$/.test(cycle.chapterId)) {
+      const persistedAttempts = await fetchQuizAttempts(evidenceIds)
+      const correctCount = persistedAttempts.reduce(
+        (sum, item) => sum + (item.score > 0 ? 1 : 0),
+        0,
+      )
+      const reassessmentPercent =
+        persistedAttempts.length > 0
+          ? (correctCount / persistedAttempts.length) * 100
+          : 0
+      const recovered = hasRecoveredLegacyConcept({
+        chapterId: cycle.chapterId as LegacyChapterId,
+        conceptId: cycle.conceptId,
+        reassessmentPercent,
+      })
+
+      const semanticDetection = await detectionProvider.detectConceptState(
+        cycle.conceptId,
+        evidenceIds,
+      )
+      if (!semanticDetection) {
+        return NextResponse.json(
+          { error: 'Legacy reassessment evidence could not be resolved to the target concept.' },
+          { status: 500 },
+        )
+      }
+
+      evaluationResult = await evaluationService.evaluateCycle({
+        cycleId,
+        detectionState: recovered ? 'currently_performing_well' : 'repeated_weakness',
+        confidence: persistedAttempts.length >= requiredCount ? 'high' : 'low',
+        conceptEvidence: semanticDetection.evidence,
+        evidenceIds,
+        idempotencyKey: generateIdempotencyKey(
+          cycleId,
+          recovered ? 'currently_performing_well' : 'repeated_weakness',
+          persistedAttempts.length >= requiredCount ? 'high' : 'low',
+          evidenceIds,
+        ),
+      })
+    } else if (cycle.chapterId === 'ch-8') {
       const persistedAttempts = await fetchQuizAttempts(evidenceIds)
       const recoveryOutcome = evaluateChapter8FormalReassessment({
         conceptFamilyId: cycle.conceptId as Chapter8ConceptFamilyId,
