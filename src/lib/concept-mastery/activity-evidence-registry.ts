@@ -15,6 +15,7 @@ import { chapter12ContentConceptMappings, chapter12FlashcardConceptMappings } fr
 import { chapter13ContentConceptMappings, chapter13FlashcardConceptMappings } from '../chapter-13-concepts/mappings'
 import { chapter14ContentConceptMappings, chapter14FlashcardConceptMappings } from '../chapter-14-concepts/mappings'
 import { chapter15ContentConceptMappings, chapter15FlashcardConceptMappings } from '../chapter-15-concepts/mappings'
+import { chapter16ContentConceptMappings, chapter16FlashcardConceptMappings } from '../chapter-16-concepts/mappings'
 import { chapter17ContentConceptMappings, chapter17FlashcardConceptMappings } from '../chapter-17-concepts/mappings'
 
 type GenericMapping = {
