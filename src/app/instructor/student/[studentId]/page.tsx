@@ -3099,7 +3099,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
             <div className="flex flex-col gap-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
-                  Chapter 16 — Women's Haircutting & Styling
+                  Chapter 16 — Women&apos;s Haircutting & Styling
                 </p>
                 <h2 className="text-xl font-semibold text-white mt-1">Mastery & Intervention Diagnostics</h2>
                 <p className="text-sm text-silver mt-1">
