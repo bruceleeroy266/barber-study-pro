@@ -10,6 +10,7 @@ export interface LiveInstructorActivityEvidenceRow {
   source: 'flashcard' | 'scenario_application'
   item_id: string
   is_correct: boolean
+  answered_at?: string
 }
 
 export interface LiveInstructorChapterGradeComponents {
