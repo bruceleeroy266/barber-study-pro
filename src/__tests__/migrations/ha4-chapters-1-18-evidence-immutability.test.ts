@@ -30,6 +30,15 @@ describe('HA-4 Chapters 1-18 persistence and immutable evidence', () => {
     expect(migration).toContain('before update on public.remediation_cycles')
   })
 
+  it('makes reassessment/evaluation/history evidence server-authoritative', () => {
+    expect(migration).toContain('drop policy if exists reassessment_question_history_insert')
+    expect(migration).toContain('revoke insert, update, delete on public.reassessment_question_history from authenticated')
+    expect(migration).toContain('revoke insert, update, delete on public.remediation_cycle_events from authenticated')
+    expect(migration).toContain('revoke insert, update, delete on public.remediation_cycle_evaluations from authenticated')
+    expect(migration).toContain('revoke insert, update, delete on public.follow_up_evidence from authenticated')
+    expect(migration).toContain('revoke insert, update, delete on public.sustained_performance_resets from authenticated')
+  })
+
   it('preserves append-only recovery rather than erasing initial evidence', () => {
     expect(migration).not.toContain('delete from public.quiz_attempts')
     expect(migration).not.toContain('update public.quiz_attempts')
