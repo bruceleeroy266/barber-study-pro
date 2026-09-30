@@ -97,6 +97,16 @@ describe('HA-5 Chapters 1-18 authorization and tenant boundaries', () => {
     expect(migration).toContain('for select to authenticated using (public.is_platform_admin())')
   })
 
+  it('binds instructor note read actions to the target student tenant', () => {
+    const actions = readFileSync(
+      join(process.cwd(), 'src/app/instructor/student/[studentId]/actions.ts'),
+      'utf8',
+    )
+    expect(actions).toContain(".eq('id', studentId)")
+    expect(actions).toContain(".in('role', ['student', 'apprentice'])")
+    expect(actions).toContain('student.school_id !== profile.school_id')
+  })
+
   it('retains explicit platform-super-admin policy instead of widening school staff scope', () => {
     const foundation = readFileSync(
       join(process.cwd(), 'supabase/migrations/20260818000000_phase_6c2a_remediation_foundation.sql'),
