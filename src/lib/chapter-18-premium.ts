@@ -86,8 +86,8 @@ export const chapter18PremiumContent: ChapterContent = {
         <section class="section">
             <h2>🎯 Why Study Haircoloring?</h2>
             <ul>
-                <li>Builds a reliable, profitable clientele in the barbershop</li>
-                <li>More clients now want beard and mustache coloring</li>
+                <li>Haircoloring can expand the range of services a barber is prepared to discuss and perform within license scope.</li>
+                <li>Barbers may encounter both scalp-hair and facial-hair color requests, which require product-specific consultation and safety checks.</li>
                 <li>Requires knowledge of hair structure, color laws, and safe chemical use</li>
                 <li>Done wrong, chemicals can damage hair, irritate skin, or harm the barber</li>
             </ul>
@@ -100,31 +100,31 @@ export const chapter18PremiumContent: ChapterContent = {
             <h3>Elasticity</h3>
             <ul>
                 <li>Measures cortex strength</li>
-                <li><strong>Normal:</strong> wet hair stretches up to 50% and returns</li>
-                <li><strong>Low elasticity:</strong> hair does not spring back — signs of damage</li>
+                <li>Elasticity describes how well hair stretches and returns without breaking.</li>
+                <li>Reduced elasticity can indicate compromised hair and should change how cautiously a chemical service is planned.</li>
             </ul>
             <h3>Texture</h3>
             <ul>
                 <li>Diameter of a single strand: <strong>fine, medium, or coarse</strong></li>
-                <li>Fine hair takes color faster and may look darker</li>
-                <li>Coarse hair has larger diameter and may process slower</li>
+                <li>Texture can affect product saturation and processing behavior.</li>
+                <li>Do not choose developer strength or processing time from texture alone; use the product instructions and a strand test when appropriate.</li>
             </ul>
             <h3>Density</h3>
             <ul>
-                <li>Number of hairs per square inch</li>
-                <li>Thick hair needs smaller subsections (as thin as ⅛ inch) for full coverage</li>
+                <li>Density describes how much hair is present in a given area.</li>
+                <li>Use subsection size that allows complete, even saturation; the exact section size depends on the technique and product instructions.</li>
             </ul>
             <h3>Porosity</h3>
             <ul>
                 <li>Hair's ability to absorb moisture and product</li>
-                <li><strong>High porosity:</strong> absorbs fast, fades fast, feels rough or dry</li>
-                <li><strong>Low porosity:</strong> tight cuticle resists color, needs more time or stronger developer</li>
+                <li><strong>High porosity:</strong> can take up color unevenly and may lose color faster.</li>
+                <li><strong>Low porosity:</strong> can resist product penetration; do not automatically compensate with stronger developer—follow the color system and use strand testing.</li>
             </ul>
             <h3>Natural Hair Color</h3>
             <ul>
                 <li><strong>Eumelanin</strong> = black and brown pigment</li>
                 <li><strong>Pheomelanin</strong> = blond, yellow, and red pigment</li>
-                <li><strong>Gray hair</strong> makes less melanin; <strong>white hair</strong> has none</li>
+                <li>Gray and white appearance reflects reduced or absent visible natural pigment in the hair fiber.</li>
             </ul>
             <h3>Contributing Pigment (Undertone)</h3>
             <ul>
@@ -132,7 +132,7 @@ export const chapter18PremiumContent: ChapterContent = {
                 <li>Revealed when hair is lightened</li>
                 <li>Darker natural levels have stronger contributing pigment</li>
             </ul>
-            <div class="key-point">Hair with <strong>low elasticity</strong> or <strong>high porosity</strong> is more easily damaged. Analyze before every service.</div>
+            <div class="key-point">Hair with reduced elasticity, high porosity, or other signs of damage may be more vulnerable during chemical services. Analyze the hair and scalp before the service and use the product manufacturer's precautions.</div>
         </section>
 
         <section class="section">
@@ -140,7 +140,7 @@ export const chapter18PremiumContent: ChapterContent = {
             <h3>Primary Colors</h3>
             <ul>
                 <li><strong>Red, yellow, blue</strong> — cannot be made by mixing others</li>
-                <li>Blue is the strongest and only cool primary; yellow is the weakest</li>
+                <li>Primary-color relationships are used as a foundation for mixing and neutralization; warm/cool naming can vary with the professional color system.</li>
             </ul>
             <h3>Secondary & Tertiary Colors</h3>
             <ul>
@@ -154,7 +154,7 @@ export const chapter18PremiumContent: ChapterContent = {
             </ul>
             <h3>Level, Tone & Saturation</h3>
             <ul>
-                <li><strong>Level:</strong> lightness/darkness on a 1–10 scale (1 = black, 10 = lightest blond)</li>
+                <li><strong>Level:</strong> a system for describing lightness and darkness. Many professional lines use a numbered scale, but exact numbering and shade names can vary by manufacturer.</li>
                 <li><strong>Tone:</strong> warmth or coolness of a color</li>
                 <li><strong>Saturation:</strong> strength or concentration of pigment</li>
             </ul>
@@ -163,7 +163,7 @@ export const chapter18PremiumContent: ChapterContent = {
                 <li>The main tone of a haircolor product</li>
                 <li><strong>Violet base</strong> reduces yellow; <strong>blue base</strong> reduces orange</li>
             </ul>
-            <div class="key-point">Judge natural level with <strong>color swatches</strong> in good lighting. Fluorescent light can mislead your color match.</div>
+            <div class="key-point">Judge level and tone under consistent lighting and use the specific color line's swatches or technical chart rather than relying on memory alone.</div>
         </section>
 
         <section class="section">
@@ -171,28 +171,28 @@ export const chapter18PremiumContent: ChapterContent = {
             <h3>Temporary Color</h3>
             <ul>
                 <li>Large molecules coat the cuticle</li>
-                <li>Washes out with one shampoo</li>
+                <li>Designed for short-term color effects; how quickly it shampoos out varies by formula, hair condition, and use.</li>
                 <li>Rinses, color shampoos, sprays, mousses, crayons</li>
             </ul>
             <h3>Semipermanent Color</h3>
             <ul>
                 <li><strong>No-lift, deposit-only</strong>; stains cuticle and slightly penetrates cortex</li>
-                <li>Lasts about 6–8 shampoos</li>
-                <li>Good for blending up to 25% gray or enhancing tone</li>
+                <li>Fades gradually with shampooing; expected longevity varies by product and hair condition.</li>
+                <li>Can enhance or shift tone; gray-blending claims vary by product line, so use the manufacturer's coverage guidance.</li>
             </ul>
             <h3>Demipermanent Color</h3>
             <ul>
-                <li><strong>Deposit-only</strong> oxidation color</li>
-                <li>Mixed with low-volume developer; lasts longer than semipermanent</li>
-                <li>Blends gray, refreshes faded color, tones pre-lightened hair</li>
+                <li>Often uses oxidative dye chemistry with a dedicated low-strength developer or activator.</li>
+                <li>Usually provides longer-lasting deposit than a semipermanent formula, but product systems differ.</li>
+                <li>May be used for tone refresh, blending, or toning when the manufacturer lists those uses.</li>
             </ul>
             <h3>Permanent Color (Tint)</h3>
             <ul>
-                <li>Mixed with developer; lifts and deposits color</li>
-                <li>Stays until hair grows out; requires retouch</li>
-                <li>Best for covering gray and dramatic color changes</li>
+                <li>Oxidative permanent color is mixed with its specified developer and can provide lift, deposit, or both depending on the formula.</li>
+                <li>Its artificial pigment is intended to be durable; new growth creates a visible retouch area over time.</li>
+                <li>Gray-coverage and lift capabilities are product-specific and should be taken from the manufacturer's technical guidance.</li>
             </ul>
-            <div class="key-point"><strong>Aniline derivative</strong> is found in most oxidative colors. The FDA requires a <strong>patch test 24–48 hours</strong> before each application.</div>
+            <div class="key-point"><strong>Allergy-alert testing:</strong> Follow the exact label and manufacturer instructions for the product being used. FDA guidance tells consumers and salons to perform the skin test before each use of hair dye; coal-tar hair dyes have specific federal caution-label and preliminary-test requirements.</div>
         </section>
 
         <section class="section">
@@ -200,94 +200,93 @@ export const chapter18PremiumContent: ChapterContent = {
             <h3>Hydrogen Peroxide Developers</h3>
             <ul>
                 <li><strong>Developer</strong> supplies oxygen to develop oxidative color</li>
-                <li>Volume measures strength: lower volume = less lift; higher volume = more lift</li>
-                <li><strong>10-volume:</strong> deposit color, minimal lift</li>
-                <li><strong>20-volume:</strong> standard for permanent color, covers gray, 1–2 levels lift</li>
-                <li><strong>30-volume:</strong> up to 3 levels lift</li>
-                <li><strong>40-volume:</strong> up to 4 levels lift</li>
+                <li>Developer strength is commonly expressed as volume or hydrogen-peroxide percentage.</li>
+                <li>Higher-volume developer can provide greater lightening potential in compatible systems, but lift is not determined by volume alone.</li>
+                <li>Exact lift, gray-coverage use, mixing ratio, on-scalp limits, and processing time depend on the specific color or lightener system.</li>
+                <li>Use only the developer types and strengths allowed by the product manufacturer.</li>
             </ul>
             <h3>Lighteners</h3>
             <ul>
-                <li>Remove or decolorize melanin using bleach + hydrogen peroxide</li>
-                <li><strong>Cream:</strong> most popular on-the-scalp; conditioning and controllable</li>
-                <li><strong>Powder:</strong> stronger, usually off-the-scalp</li>
-                <li><strong>Oil:</strong> mildest; used for 1–2 levels of lift</li>
+                <li>Lighteners reduce natural or artificial pigment through an oxidizing lightening system.</li>
+                <li>Lighteners come in different formats, including creams, powders, clays, and other manufacturer-specific systems.</li>
+                <li>Do not assume a format is automatically safe for on-scalp use or that one format is always stronger than another.</li>
+                <li>Follow the manufacturer's allowed developer, mixing ratio, application area, processing time, heat, and overlap instructions.</li>
             </ul>
             <h3>Toners</h3>
             <ul>
-                <li>Permanent color applied to <strong>pre-lightened</strong> hair</li>
-                <li>Deposit-only on lightened hair; neutralize unwanted undertones</li>
-                <li>Used in <strong>double-process</strong> coloring</li>
+                <li>Toners are color products used to refine or adjust tone, often after lightening.</li>
+                <li>They can help neutralize unwanted warmth or create a desired tonal result when selected by level and color relationship.</li>
+                <li>Toner chemistry varies by product; some systems are oxidative and others are not, so follow that product's directions.</li>
             </ul>
-            <div class="key-point"><strong>Do not overlap</strong> lightener on previously lightened hair — it causes breakage and damage. Warn clients that lightening dark hair to pale blond can be very damaging.</div>
+            <div class="key-point"><strong>Avoid unapproved overlap.</strong> Reapplying lightener onto previously lightened or sensitized hair can increase damage and breakage risk. Follow the specific lightener's overlap, hair-integrity, scalp, developer, and processing restrictions.</div>
         </section>
 
         <section class="section">
             <h2>📝 Application Terms</h2>
             <ul>
-                <li><strong>Patch test:</strong> allergy test for aniline derivative; required 24–48 hours before service</li>
-                <li><strong>Strand test:</strong> predicts reaction, processing time, and final color</li>
+                <li><strong>Allergy-alert / skin test:</strong> perform exactly as required by the product label and manufacturer before use; FDA safety guidance recommends a skin test before each use of hair dye.</li>
+                <li><strong>Strand test:</strong> checks how a small section of hair responds before committing to the full service; use it when directed or when hair history/integrity makes the result uncertain.</li>
                 <li><strong>Virgin application:</strong> first-time color on unchemically treated hair</li>
                 <li><strong>Retouch:</strong> applying color only to new growth to blend the line of demarcation</li>
                 <li><strong>Single-process:</strong> lightens or deposits in one application</li>
                 <li><strong>Double-process:</strong> lightens first, then deposits toner/tint</li>
-                <li><strong>Pre-softening:</strong> opens resistant gray hair so color can penetrate</li>
-                <li><strong>Soap cap:</strong> equal parts tint, developer, and shampoo</li>
+                <li><strong>Pre-softening:</strong> a technique used in some color systems for resistant gray; only use it when the product manufacturer supports the method.</li>
+                <li><strong>Color-wash / soap-cap terminology:</strong> formulas and permitted uses vary by product system; do not create an improvised mixture outside manufacturer directions.</li>
                 <li><strong>Highlighting/lowlighting:</strong> lightening or darkening selected strands</li>
             </ul>
-            <div class="key-point">A positive patch test means <strong>do not perform the service</strong>. A release statement does not remove liability.</div>
+            <div class="key-point">If the product's allergy-alert or skin test shows a reaction, <strong>do not use that haircolor product</strong>. A waiver is not a substitute for following product warnings, state scope-of-practice rules, or safety instructions.</div>
         </section>
 
         <section class="section">
             <h2>⚠️ Safety & Special Problems</h2>
             <h3>Gray Hair</h3>
             <ul>
-                <li>Has little melanin; may be resistant or yellowish</li>
-                <li>Violet-based products reduce yellow cast</li>
-                <li>Lighter shades often flatter clients with 80–100% gray</li>
+                <li>Gray or white hair has reduced natural pigment and can vary in texture, porosity, and resistance.</li>
+                <li>Violet can neutralize yellow according to complementary-color theory when the level and product are appropriate.</li>
+                <li>Coverage strategy and shade selection should be based on the client's goal, hair analysis, and the product line's gray-coverage guidance—not a fixed percentage rule.</li>
             </ul>
             <h3>Damaged Hair</h3>
             <ul>
-                <li>Signs: overporous, brittle, little elasticity, rough feel</li>
-                <li>Recondition with protein or lanolin treatments before coloring</li>
+                <li>Warning signs include excessive porosity, brittleness, reduced elasticity, or other evidence of sensitized hair.</li>
+                <li>Do not assume a conditioning treatment makes damaged hair suitable for color or lightener. Reassess hair integrity and follow the chemical product's contraindications and strand-test guidance.</li>
             </ul>
             <h3>Metallic & Compound Dyes</h3>
             <ul>
-                <li>Not professional products; advertised as "progressive colors"</li>
-                <li>Can coat hair, cause dullness, and react dangerously with peroxide</li>
-                <li>Always test for metallic salts before professional chemical services</li>
+                <li>Some progressive or metallic-salt color products can create compatibility concerns with later oxidative chemical services.</li>
+                <li>Obtain the client's chemical/color history and follow the planned product's compatibility warnings before proceeding.</li>
+                <li>If compatibility is uncertain, do not guess; use the manufacturer's prescribed test or decline/postpone the chemical service.</li>
             </ul>
             <h3>General Safety</h3>
             <ul>
-                <li>Read manufacturer's directions before every service</li>
-                <li>Wear gloves; use clean plastic or glass tools</li>
-                <li>Do not apply color to abraded or irritated scalps</li>
-                <li>Keep caps tightly closed to maintain developer strength</li>
-                <li>Discard bulging hydrogen peroxide bottles</li>
+                <li>Read and follow the complete manufacturer instructions, warnings, mixing ratios, and processing limits for every chemical service.</li>
+                <li>Wear suitable gloves and use only tools/containers permitted by the product instructions.</li>
+                <li>Do not perform haircolor on an irritated, sunburned, or damaged scalp; FDA specifically warns against coloring in those conditions.</li>
+                <li>Store developer and color products as directed, keep containers secured, and do not use damaged or compromised packaging.</li>
+                <li>Do not mix different hair-dye products unless the manufacturer specifically directs that combination.</li>
             </ul>
-            <div class="key-point"><strong>Never apply hydrogen peroxide over metallic dyes.</strong> The hair can break or completely disintegrate.</div>
+            <div class="key-point"><strong>Chemical compatibility matters.</strong> Do not combine an oxidative color/lightener service with an unknown or incompatible prior color system. Confirm the client's history and follow the product manufacturer's compatibility instructions before proceeding.</div>
         </section>
 
         <section class="section">
             <h2>🧔 Facial Hair Coloring</h2>
             <ul>
-                <li><strong>Never use aniline derivative tints</strong> on mustaches or beards — serious irritation risk</li>
-                <li><strong>Never use metallic or progressive dyes</strong> on facial hair — severe allergic reactions</li>
-                <li>Safe options: color crayons, pomades, or liquid tints made for facial hair</li>
-                <li>Apply petroleum jelly around the facial hairline to protect skin</li>
-                <li>Keep product off skin as much as possible</li>
+                <li>Use a color product on mustaches or beards only when its label or professional instructions specifically allow facial-hair use.</li>
+                <li>Do not transfer scalp-hair directions to facial hair by assumption; facial-hair products can have different warnings and application steps.</li>
+                <li>Follow the product's allergy-alert testing, skin-protection, timing, and rinsing directions.</li>
+                <li>Keep color away from the eyes and other areas prohibited by the label.</li>
+                <li>Document the exact facial-hair product and formula used.</li>
             </ul>
-            <div class="key-point"><strong>Facial hair rule:</strong> only products specifically formulated for mustaches and beards. Avoid aniline derivative and metallic dyes completely.</div>
+            <div class="key-point"><strong>Facial-hair rule:</strong> use only a product whose manufacturer expressly permits the intended beard or mustache application, and follow that product's warnings exactly. Do not infer safety from the ingredient class alone.</div>
         </section>
 
         <section class="section">
             <h2>💡 Consultation & Record Keeping</h2>
             <ul>
                 <li>Drape the client and have them complete a <strong>client record card</strong></li>
-                <li>Perform hair and scalp analysis in good natural or incandescent light</li>
-                <li>Ask leading questions about desired color, product type, and maintenance</li>
-                <li>Show color examples and discuss cost and upkeep</li>
-                <li>Perform required patch test 24–48 hours before service</li>
+                <li>Perform hair and scalp analysis under lighting that allows an accurate view of level, tone, condition, and scalp integrity.</li>
+                <li>Ask clear consultation questions about desired color, prior chemical services, allergies/reactions, home color, maintenance, and expectations.</li>
+                <li>Use the color system's swatches or technical chart to discuss achievable results, maintenance, and cost.</li>
+                <li>Complete the product-specific allergy-alert or skin test when required by the label/manufacturer and follow its timing exactly.</li>
                 <li>Record formula, processing time, and results for future visits</li>
             </ul>
             <div class="key-point">A complete <strong>client record card</strong> is your roadmap for consistent, safe color results every visit.</div>
@@ -298,12 +297,12 @@ export const chapter18PremiumContent: ChapterContent = {
             <div class="key-point">
                 <ul style="margin-left: 1rem;">
                     <li>Analyze <strong>elasticity, texture, density, porosity, natural color, and contributing pigment</strong> before coloring</li>
-                    <li>Primary colors are <strong>red, yellow, blue</strong>; complementary colors <strong>neutralize</strong> each other</li>
+                    <li>Use <strong>red, yellow, and blue</strong> color-theory relationships plus complementary colors to reason about tonal neutralization.</li>
                     <li>Products range from <strong>temporary → semipermanent → demipermanent → permanent</strong></li>
                     <li><strong>Developers</strong> control lift; <strong>lighteners</strong> remove pigment; <strong>toners</strong> refine pre-lightened hair</li>
-                    <li><strong>Patch tests</strong> are required for aniline derivative products; <strong>strand tests</strong> predict results</li>
-                    <li><strong>Never</strong> use aniline derivative or metallic dyes on facial hair</li>
-                    <li>Keep detailed <strong>client records</strong> and always follow manufacturer directions</li>
+                    <li><strong>Allergy-alert testing</strong> follows the product label; <strong>strand testing</strong> helps evaluate uncertain hair response and results.</li>
+                    <li>Use facial-hair color only when the manufacturer specifically permits that beard or mustache application.</li>
+                    <li>Keep detailed <strong>client records</strong> and treat manufacturer directions, warnings, and compatibility limits as service requirements.</li>
                 </ul>
             </div>
         </section>
