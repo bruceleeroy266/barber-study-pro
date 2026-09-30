@@ -5,6 +5,7 @@ import type { ChapterTheme } from '@/lib/chapter-content'
 import type { Chapter20MicroCheck, Chapter20MicroCheckAnswer } from '@/lib/chapter-20-concepts/micro-checks'
 import type { Chapter20MicroCheckAttemptRow } from '@/lib/chapter-20-concepts/micro-check-persistence'
 import { persistChapter20MicroCheckAttempt } from '@/lib/chapter-20-concepts/micro-check-persistence'
+import { classifyChapter20MicroCheckMiss } from '@/lib/chapter-20-concepts/escalation'
 
 interface Props {
   check: Chapter20MicroCheck
@@ -47,6 +48,9 @@ export default function Chapter20MicroCheckCard({ check, userId, theme, attempts
       {check.questions.map((question, index) => {
         const attempt = attemptMap.get(question.id)
         const chosen = selected[question.id]
+        const compliance = attempt
+          ? classifyChapter20MicroCheckMiss(question, attempt.is_correct)
+          : null
         return (
           <div key={question.id} className="rounded-xl border p-4 space-y-3" style={{ borderColor: theme.border }}>
             <p className="font-medium" style={{ color: theme.text }}>{index + 1}. {question.question}</p>
@@ -74,9 +78,19 @@ export default function Chapter20MicroCheckCard({ check, userId, theme, attempts
             {attempt && (
               <div className="rounded-lg border px-3 py-3 text-sm" style={{ borderColor: theme.border, color: theme.textMuted }}>
                 <p className="font-semibold" style={{ color: attempt.is_correct ? theme.primary : theme.text }}>
-                  {attempt.is_correct ? '✓ Correct' : 'Review this concept'}
+                  {attempt.is_correct
+                    ? '✓ Correct'
+                    : compliance?.requiresTargetedComplianceReview
+                      ? '⚠ Compliance review required'
+                      : 'Review this concept'}
                 </p>
                 <p className="mt-1">{question.explanation}</p>
+                {compliance?.requiresTargetedComplianceReview && (
+                  <div className="mt-3 rounded-lg border px-3 py-3" style={{ borderColor: theme.border, background: theme.background }}>
+                    <p className="font-semibold" style={{ color: theme.primary }}>Targeted Compliance Review</p>
+                    <p className="mt-1">{compliance.studentMessage}</p>
+                  </div>
+                )}
               </div>
             )}
           </div>
