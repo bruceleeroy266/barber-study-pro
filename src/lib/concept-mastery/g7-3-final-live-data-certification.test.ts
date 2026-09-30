@@ -15,7 +15,7 @@ import { canAccessRoute, isInstructorOrAdmin } from '../security/permissions'
 
 const root = process.cwd()
 const read = (path: string) => readFileSync(join(root, path), 'utf8')
-const certifiedLiveChapters = Array.from({ length: 18 }, (_, index) => index + 1) as readonly number[]
+const certifiedLiveChapters = Array.from({ length: 19 }, (_, index) => index + 1) as readonly number[]
 
 function allCorrectActivityRows(chapterId: string): LiveInstructorActivityEvidenceRow[] {
   return [
@@ -34,7 +34,7 @@ function allCorrectActivityRows(chapterId: string): LiveInstructorActivityEviden
   ]
 }
 
-describe('G7-3 Chapters 1-18 final live data and percentage certification', () => {
+describe('G7-3 Chapters 1-19 final live data and percentage certification', () => {
   it('locks the canonical five-component grading contract', () => {
     expect(SHARED_GRADE_WEIGHTS).toEqual({
       micro_check: 0.20,
@@ -62,8 +62,8 @@ describe('G7-3 Chapters 1-18 final live data and percentage certification', () =
       const chapterId = `ch-${chapter}`
       expect(getFlashcardEvidenceInventory(chapterId).length, `${chapterId} flashcards`).toBeGreaterThan(0)
 
-      if (chapter === 18) {
-        expect(getFlashcardEvidenceInventory(chapterId), `${chapterId} flashcards`).toHaveLength(50)
+      if (chapter === 18 || chapter === 19) {
+        expect(getFlashcardEvidenceInventory(chapterId), `${chapterId} flashcards`).toHaveLength(chapter === 18 ? 50 : 60)
         expect(getScenarioEvidenceInventory(chapterId), `${chapterId} scenarios`).toEqual([])
         continue
       }
@@ -72,8 +72,8 @@ describe('G7-3 Chapters 1-18 final live data and percentage certification', () =
     }
   })
 
-  it('can produce a complete 100% ordinary grade where all runtime evidence components exist and keeps Chapter 18 provisional without fabricated scenarios', () => {
-    for (const chapter of certifiedLiveChapters.filter((chapter) => chapter !== 18)) {
+  it('can produce a complete 100% ordinary grade where all runtime evidence components exist and keeps Chapters 18-19 provisional without fabricated scenarios', () => {
+    for (const chapter of certifiedLiveChapters.filter((chapter) => chapter !== 18 && chapter !== 19)) {
       const chapterId = `ch-${chapter}`
       const result = buildLiveInstructorChapterGrade({
         chapterId,
@@ -108,6 +108,22 @@ describe('G7-3 Chapters 1-18 final live data and percentage certification', () =
     expect(chapter18.components.remediationReassessmentPercent).toBeNull()
     expect(chapter18.evidenceComplete).toBe(false)
     expect(chapter18.grade.recoveryApplied).toBe(false)
+
+    const chapter19 = buildLiveInstructorChapterGrade({
+      chapterId: 'ch-19',
+      microCheckPercent: 100,
+      chapterAssessmentPercent: 100,
+      remediationReassessmentPercent: null,
+      activityRows: allCorrectActivityRows('ch-19'),
+    })
+
+    expect(chapter19.components.microCheckPercent).toBe(100)
+    expect(chapter19.components.flashcardPercent).toBe(100)
+    expect(chapter19.components.chapterAssessmentPercent).toBe(100)
+    expect(chapter19.components.scenarioApplicationPercent).toBeNull()
+    expect(chapter19.components.remediationReassessmentPercent).toBeNull()
+    expect(chapter19.evidenceComplete).toBe(false)
+    expect(chapter19.grade.recoveryApplied).toBe(false)
   })
 
   it('keeps completion percentage separate from mastery/grade percentage', () => {
@@ -165,7 +181,7 @@ describe('G7-3 Chapters 1-18 final live data and percentage certification', () =
     expect(canAccessRoute('student', '/instructor/student/student-g7')).toBe(false)
 
     expect(page.match(/\.from\('chapter_activity_evidence'\)/g)).toHaveLength(1)
-    expect(page).toContain(".in('chapter_id', ['ch-1','ch-2','ch-3','ch-4','ch-5','ch-6','ch-7','ch-8','ch-9','ch-10','ch-11','ch-12','ch-13','ch-14','ch-15','ch-16','ch-17','ch-18'])")
+    expect(page).toContain(".in('chapter_id', ['ch-1','ch-2','ch-3','ch-4','ch-5','ch-6','ch-7','ch-8','ch-9','ch-10','ch-11','ch-12','ch-13','ch-14','ch-15','ch-16','ch-17','ch-18','ch-19'])")
     expect(schoolPanel).toContain('href={`/instructor/student/${row.studentId}`}')
     expect(schoolPanel).toContain('View the same mastery diagnostics used by instructors')
 
@@ -183,7 +199,7 @@ describe('G7-3 Chapters 1-18 final live data and percentage certification', () =
       expect(page).toContain(`buildLiveGrade('ch-${chapter}', chapter${chapter}Diagnostics)`)
     }
 
-    expect(page.match(/Final live 20\/10\/40\/15\/15 evidence/g)).toHaveLength(18)
+    expect(page.match(/Final live 20\/10\/40\/15\/15 evidence/g)).toHaveLength(19)
     expect(page.match(/Provisional — required evidence still incomplete/g)).toHaveLength(18)
     expect(page).toContain('keeps completion separate')
   })
