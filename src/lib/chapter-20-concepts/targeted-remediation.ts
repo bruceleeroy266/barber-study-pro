@@ -17,6 +17,7 @@ import {
   type Chapter20ComplianceInterventionLevel,
 } from './escalation'
 import type { Chapter20ConceptFamilyId } from './types'
+import type { Chapter20ReassessmentQuestion } from './reassessment-reserve'
 
 export type Chapter20RemediationPriority = 'standard' | 'compliance'
 
@@ -194,5 +195,209 @@ export function buildChapter20RemediationPathForConcept(
     flashcardIds: getChapter20FlashcardsForConcept(conceptFamilyId),
     plannedReassessmentQuestionCount: 5 as const,
     plannedReassessmentPassPercent: 80 as const,
+  }
+}
+
+
+export interface Chapter20ReassessmentCycle {
+  cycleId: string
+  conceptFamilyId: Chapter20ConceptFamilyId
+  questionIds: readonly string[]
+  correctCount: number
+  questionCount: 5
+  percent: number
+  passPercent: 80
+  passed: boolean
+}
+
+export function selectChapter20ReassessmentQuestions(
+  conceptFamilyId: Chapter20ConceptFamilyId,
+  reserve: readonly Pick<Chapter20ReassessmentQuestion, 'id' | 'conceptFamilyId'>[],
+  count = 5,
+  excludedQuestionIds: ReadonlySet<string> = new Set(),
+): readonly string[] {
+  const ids = reserve
+    .filter(
+      (question) =>
+        question.conceptFamilyId === conceptFamilyId &&
+        !excludedQuestionIds.has(question.id),
+    )
+    .map((question) => question.id)
+    .sort((a, b) => a.localeCompare(b))
+
+  if (ids.length < count) {
+    throw new Error(
+      'Chapter 20 reassessment reserve for ' +
+        conceptFamilyId +
+        ' requires at least ' +
+        count +
+        ' fresh non-excluded questions.',
+    )
+  }
+  return ids.slice(0, count)
+}
+
+export function scoreChapter20ReassessmentCycle(args: {
+  cycleId: string
+  conceptFamilyId: Chapter20ConceptFamilyId
+  selectedQuestionIds: readonly string[]
+  responses: readonly { questionId: string; correct: boolean }[]
+}): Chapter20ReassessmentCycle {
+  const selected = [...args.selectedQuestionIds]
+  if (selected.length !== 5 || new Set(selected).size !== 5) {
+    throw new Error(
+      'Chapter 20 formal reassessment cycles require exactly five unique questions.',
+    )
+  }
+
+  const responseMap = new Map(
+    args.responses.map((response) => [response.questionId, response.correct]),
+  )
+  if (responseMap.size !== 5 || selected.some((id) => !responseMap.has(id))) {
+    throw new Error(
+      'Chapter 20 formal reassessment scoring requires one response for each selected question.',
+    )
+  }
+
+  const correctCount = selected.filter((id) => responseMap.get(id) === true).length
+  const percent = Math.round((correctCount / 5) * 10000) / 100
+
+  return {
+    cycleId: args.cycleId,
+    conceptFamilyId: args.conceptFamilyId,
+    questionIds: selected,
+    correctCount,
+    questionCount: 5,
+    percent,
+    passPercent: 80,
+    passed: percent >= 80,
+  }
+}
+
+export function buildChapter20ReassessmentEvidence(args: {
+  studentId: string
+  conceptFamilyId: Chapter20ConceptFamilyId
+  selectedQuestions: readonly Chapter20ReassessmentQuestion[]
+  responses: readonly { questionId: string; correct: boolean }[]
+  timestamp: string
+}): Chapter20EvidenceRecord[] {
+  if (
+    args.selectedQuestions.length !== 5 ||
+    new Set(args.selectedQuestions.map((question) => question.id)).size !== 5
+  ) {
+    throw new Error(
+      'Chapter 20 reassessment evidence requires exactly five unique selected questions.',
+    )
+  }
+  if (
+    args.selectedQuestions.some(
+      (question) => question.conceptFamilyId !== args.conceptFamilyId,
+    )
+  ) {
+    throw new Error(
+      'Chapter 20 reassessment questions must all match the target concept family.',
+    )
+  }
+
+  const responseMap = new Map(
+    args.responses.map((response) => [response.questionId, response.correct]),
+  )
+  if (
+    responseMap.size !== 5 ||
+    args.selectedQuestions.some((question) => !responseMap.has(question.id))
+  ) {
+    throw new Error(
+      'Chapter 20 reassessment evidence requires one response for each selected question.',
+    )
+  }
+
+  return args.selectedQuestions.map((question) => ({
+    studentId: args.studentId,
+    chapterId: 'ch-20',
+    conceptFamilyId: args.conceptFamilyId,
+    source: 'remediation_reassessment',
+    itemId: question.id,
+    difficulty: question.difficulty,
+    correct: responseMap.get(question.id) === true,
+    attemptPhase: 'reassessment',
+    timestamp: args.timestamp,
+  }))
+}
+
+export function appendChapter20ReassessmentEvidence(
+  originalEvidence: readonly Chapter20EvidenceRecord[],
+  reassessmentEvidence: readonly Chapter20EvidenceRecord[],
+): Chapter20EvidenceRecord[] {
+  if (
+    reassessmentEvidence.some(
+      (record) =>
+        record.chapterId !== 'ch-20' ||
+        record.source !== 'remediation_reassessment' ||
+        record.attemptPhase !== 'reassessment',
+    )
+  ) {
+    throw new Error(
+      'Reassessment evidence must use Chapter 20 remediation_reassessment / reassessment semantics.',
+    )
+  }
+
+  const existingKeys = new Set(
+    originalEvidence.map((record) =>
+      [
+        record.studentId,
+        record.chapterId,
+        record.source,
+        record.attemptPhase,
+        record.itemId,
+      ].join('|'),
+    ),
+  )
+
+  const additions = reassessmentEvidence.filter((record) => {
+    const key = [
+      record.studentId,
+      record.chapterId,
+      record.source,
+      record.attemptPhase,
+      record.itemId,
+    ].join('|')
+    if (existingKeys.has(key)) return false
+    existingKeys.add(key)
+    return true
+  })
+
+  return [...originalEvidence, ...additions]
+}
+
+export function calculateChapter20RecoveredMastery(
+  originalEvidence: readonly Chapter20EvidenceRecord[],
+  reassessmentEvidence: readonly Chapter20EvidenceRecord[],
+  conceptFamilyId: Chapter20ConceptFamilyId,
+  referenceTime: string,
+) {
+  const before = calculateChapter20ConceptMastery(
+    originalEvidence.filter(
+      (record) => record.conceptFamilyId === conceptFamilyId,
+    ),
+    referenceTime,
+  )
+  const combined = appendChapter20ReassessmentEvidence(
+    originalEvidence,
+    reassessmentEvidence,
+  )
+  const after = calculateChapter20ConceptMastery(
+    combined.filter(
+      (record) => record.conceptFamilyId === conceptFamilyId,
+    ),
+    referenceTime,
+  )
+
+  return {
+    before,
+    after,
+    combinedEvidence: combined,
+    originalEvidencePreserved:
+      JSON.stringify(combined.slice(0, originalEvidence.length)) ===
+      JSON.stringify(originalEvidence),
   }
 }
