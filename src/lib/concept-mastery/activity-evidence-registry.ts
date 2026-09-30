@@ -19,6 +19,7 @@ import { chapter16ContentConceptMappings, chapter16FlashcardConceptMappings } fr
 import { chapter17ContentConceptMappings, chapter17FlashcardConceptMappings } from '../chapter-17-concepts/mappings'
 import { chapter18ContentConceptMappings, chapter18FlashcardConceptMappings } from '../chapter-18-concepts/mappings'
 import { chapter19ContentConceptMappings, chapter19FlashcardConceptMappings } from '../chapter-19-concepts/mappings'
+import { chapter20ContentConceptMappings, chapter20FlashcardConceptMappings } from '../chapter-20-concepts/mappings'
 
 type GenericMapping = {
   flashcardId?: string
@@ -68,6 +69,7 @@ const flashcardMappings: Record<string, readonly GenericMapping[]> = {
   'ch-17': chapter17FlashcardConceptMappings,
   'ch-18': chapter18FlashcardConceptMappings,
   'ch-19': chapter19FlashcardConceptMappings,
+  'ch-20': chapter20FlashcardConceptMappings,
 }
 
 const contentMappings: Record<string, readonly GenericMapping[]> = {
@@ -90,6 +92,7 @@ const contentMappings: Record<string, readonly GenericMapping[]> = {
   'ch-17': chapter17ContentConceptMappings,
   'ch-18': chapter18ContentConceptMappings,
   'ch-19': chapter19ContentConceptMappings,
+  'ch-20': chapter20ContentConceptMappings,
 }
 
 export function getFlashcardEvidenceConcept(chapterId: string, flashcardId: string): string | null {
@@ -119,6 +122,13 @@ const scenarioItemConceptOverrides: Readonly<Record<string, readonly string[]>> 
     'ch13-razor-handling-stretching-technique',
     'ch13-infection-control-service-safety',
     'ch13-client-care-professional-practice',
+  ],
+  'ch-20:ch20-real-shop-scenarios': [
+    'ch20-teamwork-workplace-relationships',
+    'ch20-ethical-selling-retailing',
+    'ch20-financial-responsibility-income-reporting',
+    'ch20-ethical-selling-retailing',
+    'ch20-employment-classification-compensation',
   ],
 }
 
