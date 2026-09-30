@@ -61,6 +61,21 @@ export const chapter18ContentConceptMappings: readonly Chapter18ContentConceptMa
   { contentBlockId: 'chapter-18-lesson', conceptFamilyId: 'ch18-application-consultation-procedures' },
 ] as const
 
+
+export const chapter18RemediationContentConceptMappings: readonly Chapter18ContentConceptMapping[] =
+  [
+    'ch18-analysis-structure',
+    'ch18-color-theory',
+    'ch18-color-products',
+    'ch18-developers-lighteners-toners',
+    'ch18-application-consultation-procedures',
+    'ch18-correction-gray-porosity',
+    'ch18-service-safety-chemical-handling',
+  ].map((conceptFamilyId) => ({
+    contentBlockId: 'chapter-18-lesson',
+    conceptFamilyId,
+  })) as readonly Chapter18ContentConceptMapping[]
+
 const safetyFlashcardIds = new Set([
   'fc-ch18-019',
   'fc-ch18-020',
@@ -189,4 +204,10 @@ export function getChapter18LessonSectionsForConcept(conceptFamilyId: Chapter18C
   return chapter18LessonSectionConceptMappings
     .filter((mapping) => mapping.conceptFamilyIds.includes(conceptFamilyId))
     .map((mapping) => mapping.lessonSectionKey)
+}
+
+export function getChapter18RemediationContentBlocksForConcept(conceptFamilyId: Chapter18ConceptFamilyId) {
+  return chapter18RemediationContentConceptMappings
+    .filter((mapping) => mapping.conceptFamilyId === conceptFamilyId)
+    .map((mapping) => mapping.contentBlockId)
 }
