@@ -44,7 +44,13 @@ import {
 } from '../concept-mastery/live-instructor-grade'
 import { getChapterDetectionProvider, isConceptDetectionSupported } from '../remediation/chapter-registry'
 import { getChapterContentProvider, hasChapterContentProvider } from '../remediation/content-provider-registry'
-import { getCanonicalMappingProvider, hasCanonicalMappingProvider } from '../reassessment/provider-registry'
+import {
+  getCanonicalMappingProvider,
+  getConceptDetectionProvider,
+  hasCanonicalMappingProvider,
+  initializeChapterDetectionProvider,
+  resetDetectionProviderRegistry,
+} from '../reassessment/provider-registry'
 import { SHARED_GRADE_WEIGHTS } from '../concept-mastery/shared-grading'
 import { canAccessRoute, isInstructorOrAdmin } from '../security/permissions'
 
@@ -171,6 +177,17 @@ describe('C16-9 final Chapter 16 end-to-end certification', () => {
       expect(ids.every((id) => id.startsWith('r16-')), conceptFamilyId).toBe(true)
       expect(ids.every((id) => content.getQuizQuestionById(id)?.id === id), conceptFamilyId).toBe(true)
     }
+  })
+
+  it('initializes Chapter 16 through the shared reassessment detection path', () => {
+    resetDetectionProviderRegistry()
+    const provider = initializeChapterDetectionProvider('ch-16', {
+      fetchQuizAttempts: async () => [],
+    })
+
+    expect(provider).toBeDefined()
+    expect(provider!.chapterId).toBe('ch-16')
+    expect(getConceptDetectionProvider('ch-16')).toBe(provider)
   })
 
   it('proves ordinary targeted remediation and 80-percent recovery without erasing original misses', () => {

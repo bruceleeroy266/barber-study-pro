@@ -106,6 +106,11 @@ import {
   type Chapter15DetectionProviderConfig,
 } from './adapters/chapter-15-detection-provider'
 import {
+  Chapter16DetectionProvider,
+  createChapter16DetectionProvider,
+  type Chapter16DetectionProviderConfig,
+} from './adapters/chapter-16-detection-provider'
+import {
   Chapter17DetectionProvider,
   createChapter17DetectionProvider,
   type Chapter17DetectionProviderConfig,
@@ -512,6 +517,15 @@ export function initializeChapter15DetectionProvider(
   return provider
 }
 
+export function initializeChapter16DetectionProvider(
+  config: Chapter16DetectionProviderConfig
+): Chapter16DetectionProvider {
+  const provider = createChapter16DetectionProvider(config)
+  const registry = getDetectionProviderRegistry()
+  registry.registerProvider(provider)
+  return provider
+}
+
 export function initializeChapter17DetectionProvider(
   config: Chapter17DetectionProviderConfig
 ): Chapter17DetectionProvider {
@@ -587,6 +601,9 @@ export function initializeChapterDetectionProvider(
   }
   if (chapterId === 'ch-15') {
     return initializeChapter15DetectionProvider(config)
+  }
+  if (chapterId === 'ch-16') {
+    return initializeChapter16DetectionProvider(config)
   }
   if (chapterId === 'ch-17') {
     return initializeChapter17DetectionProvider(config)
