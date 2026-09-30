@@ -24,6 +24,20 @@ export interface Chapter20QuizQuestionConceptMapping {
   conceptFamilyId: Chapter20ConceptFamilyId
 }
 
+export interface Chapter20MicroCheckPlacement {
+  id: `mc-20-${string}`
+  afterSectionId:
+    | 'ch20-lo1'
+    | 'ch20-lo2'
+    | 'ch20-lo3'
+    | 'ch20-lo4'
+    | 'ch20-lo5'
+    | 'ch20-lo6'
+  conceptFamilyId: Chapter20ConceptFamilyId
+  plannedQuestionCount: number
+  purpose: string
+}
+
 export const chapter20LessonSectionConceptMappings: readonly Chapter20LessonSectionConceptMapping[] = [
   {
     lessonSectionId: 'ch20-introduction',
@@ -104,3 +118,49 @@ export function getChapter20LessonSectionsForConcept(conceptFamilyId: Chapter20C
     .filter((mapping) => mapping.conceptFamilyIds.includes(conceptFamilyId))
     .map((mapping) => mapping.lessonSectionId)
 }
+
+
+export const chapter20MicroCheckPlacements: readonly Chapter20MicroCheckPlacement[] = [
+  {
+    id: 'mc-20-01',
+    afterSectionId: 'ch20-lo1',
+    conceptFamilyId: 'ch20-professional-transition-workplace-expectations',
+    plannedQuestionCount: 2,
+    purpose: 'Check application of reliability, job expectations, accountability, and professional transition decisions.',
+  },
+  {
+    id: 'mc-20-02',
+    afterSectionId: 'ch20-lo2',
+    conceptFamilyId: 'ch20-teamwork-workplace-relationships',
+    plannedQuestionCount: 2,
+    purpose: 'Check teamwork, direct conflict resolution, constructive communication, and workplace relationship decisions.',
+  },
+  {
+    id: 'mc-20-03',
+    afterSectionId: 'ch20-lo3',
+    conceptFamilyId: 'ch20-employment-classification-compensation',
+    plannedQuestionCount: 2,
+    purpose: 'Check facts-and-circumstances reasoning for worker classification, compensation, and role-specific business responsibilities.',
+  },
+  {
+    id: 'mc-20-04',
+    afterSectionId: 'ch20-lo4',
+    conceptFamilyId: 'ch20-financial-responsibility-income-reporting',
+    plannedQuestionCount: 2,
+    purpose: 'Check income tracking, reporting, budgeting, and verification of current tax or financial requirements.',
+  },
+  {
+    id: 'mc-20-05',
+    afterSectionId: 'ch20-lo5',
+    conceptFamilyId: 'ch20-ethical-selling-retailing',
+    plannedQuestionCount: 2,
+    purpose: 'Check client-centered recommendations, objection handling, informed choice, and non-pressure selling.',
+  },
+  {
+    id: 'mc-20-06',
+    afterSectionId: 'ch20-lo6',
+    conceptFamilyId: 'ch20-client-retention-marketing-consent',
+    plannedQuestionCount: 2,
+    purpose: 'Check retention, rebooking, referral/marketing choices, privacy, and client-consent reasoning.',
+  },
+] as const
