@@ -50,6 +50,19 @@ export const CHAPTER20_COMPLIANCE_RULES = {
   clearConsecutiveCorrectComplianceObservations: 3,
 } as const
 
+type Chapter20ComplianceConceptFamilyId =
+  Chapter20ComplianceTaggedItem['conceptFamilyId']
+
+function isChapter20ComplianceConceptFamilyId(
+  value: Chapter20ConceptFamilyId,
+): value is Chapter20ComplianceConceptFamilyId {
+  return (
+    value === 'ch20-employment-classification-compensation' ||
+    value === 'ch20-financial-responsibility-income-reporting' ||
+    value === 'ch20-client-retention-marketing-consent'
+  )
+}
+
 const domainByConcept: Partial<
   Record<Chapter20ConceptFamilyId, Chapter20ComplianceDomain>
 > = {
@@ -87,7 +100,9 @@ export function getChapter20ComplianceTag(
   const conceptFamilyId = conceptForItem(itemId)
   if (!conceptFamilyId) return null
   const domain = domainByConcept[conceptFamilyId]
-  if (!domain) return null
+  if (!domain || !isChapter20ComplianceConceptFamilyId(conceptFamilyId)) {
+    return null
+  }
 
   return {
     itemId,
