@@ -2,9 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
-import { logLogout } from '@/app/(auth)/actions'
+import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard,
   Users,
@@ -43,20 +41,6 @@ const adminLinks = [
 export default function AdminNav({ user }: AdminNavProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const pathname = usePathname()
-  const router = useRouter()
-
-  const handleLogout = async () => {
-    try {
-      const { data: { user: currentUser } } = await supabase.auth.getUser()
-      await logLogout(currentUser?.id ?? 'unknown', currentUser?.email)
-    } catch {
-      // Ignore logging failures; still sign the user out.
-    }
-    await supabase.auth.signOut()
-    router.push('/login')
-    router.refresh()
-  }
-
   const navLinks = isAdmin(user?.role ?? '')
     ? adminLinks
     : [
@@ -111,14 +95,13 @@ export default function AdminNav({ user }: AdminNavProps) {
                 </Link>
               )
             })}
-            <button
-              type="button"
-              onClick={handleLogout}
+            <a
+              href="/auth/logout"
               className="w-full flex items-center gap-3 px-4 py-3 text-silver hover:bg-silver/10 rounded-lg transition-colors"
             >
               <LogOut className="w-5 h-5" />
               <span className="font-medium">Logout</span>
-            </button>
+            </a>
           </nav>
         </div>
       )}
@@ -162,14 +145,13 @@ export default function AdminNav({ user }: AdminNavProps) {
         </div>
 
         <div className="mt-auto p-6 border-t border-graphite">
-          <button
-            type="button"
-            onClick={handleLogout}
+          <a
+            href="/auth/logout"
             className="w-full flex items-center gap-3 px-4 py-3 text-silver hover:bg-silver/10 rounded-lg transition-colors"
           >
             <LogOut className="w-5 h-5" />
             <span className="font-medium">Logout</span>
-          </button>
+          </a>
         </div>
       </aside>
 
