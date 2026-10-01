@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import {
   calculateApprovedPeriodTotals,
+  calculateOfficialApprovedMinutes,
   formatHourMinutes,
+  getOfficialMinutes,
   getCurrentReportingWindows,
   type HoursReportLog,
 } from './reporting'
@@ -47,6 +49,37 @@ describe('student hours reporting windows', () => {
     expect(totals.weekMinutes).toBe(120)
     expect(totals.monthMinutes).toBe(300)
     expect(totals.yearMinutes).toBe(540)
+  })
+
+  it('uses canonical effective minutes for adjusted approved rows', () => {
+    const adjusted = {
+      ...log('adjusted', '2026-09-25', 450, 'approved'),
+      effective_minutes: 420,
+      integrity_status: 'valid_adjusted' as const,
+    }
+
+    expect(getOfficialMinutes(adjusted)).toBe(420)
+    expect(calculateOfficialApprovedMinutes([adjusted])).toBe(420)
+
+    const totals = calculateApprovedPeriodTotals(
+      [adjusted],
+      new Date('2026-09-25T20:00:00-05:00'),
+      'America/Chicago',
+    )
+    expect(totals.weekMinutes).toBe(420)
+    expect(totals.monthMinutes).toBe(420)
+    expect(totals.yearMinutes).toBe(420)
+  })
+
+  it('fails closed when the canonical read model marks an approved chain invalid', () => {
+    const invalid = {
+      ...log('invalid', '2026-09-25', 450, 'approved'),
+      effective_minutes: null,
+      integrity_status: 'invalid' as const,
+    }
+
+    expect(() => getOfficialMinutes(invalid)).toThrow('invalid adjustment chain')
+    expect(() => calculateOfficialApprovedMinutes([invalid])).toThrow('invalid adjustment chain')
   })
 
   it('uses a Monday-based current week', () => {
