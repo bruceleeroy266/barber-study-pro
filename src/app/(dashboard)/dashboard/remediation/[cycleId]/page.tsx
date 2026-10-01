@@ -154,8 +154,8 @@ export default async function RemediationPage({ params }: RemediationPageProps) 
       </div>
 
       {/* Remediation Header */}
-      <div className="bg-charcoal border border-graphite rounded-2xl p-8">
-        <div className="flex items-start justify-between">
+      <div className="bg-charcoal border border-graphite rounded-2xl p-5 sm:p-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold text-white">
               Focus Area: {contentBundle.conceptName}
