@@ -28,10 +28,13 @@ describe('E11 final hours and attendance certification', () => {
     expect(requiredHoursMigration).toContain('alter column required_hours set default 1200')
   })
 
-  it('keeps student and staff official totals approved-only', () => {
-    expect(studentPage).toContain(".filter((row) => row.status === 'approved')")
-    expect(staffManager).toContain(".filter((log) => log.status === 'approved')")
-    expect(pdfExport).toContain("logs.filter((log) => log.status === 'approved')")
+  it('routes official totals through the canonical effective-hours contract', () => {
+    expect(studentPage).toContain(".from('effective_hour_logs')")
+    expect(studentPage).toContain('calculateOfficialApprovedMinutes(reportingHours)')
+    expect(staffManager).toContain(".from('effective_hour_logs')")
+    expect(staffManager).toContain('calculateOfficialApprovedMinutes(studentLogs)')
+    expect(pdfExport).toContain('calculateOfficialApprovedMinutes(studentLogs)')
+    expect(pdfExport).toContain('getOfficialMinutes(log)')
   })
 
   it('keeps pending hours separate from official totals', () => {
