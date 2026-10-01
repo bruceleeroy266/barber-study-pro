@@ -58,6 +58,17 @@ describe('generateNotificationsFromHours with configured program required_hours'
     expect(DEFAULT_REQUIRED_HOURS).toBe(1200)
   })
 
+  it('uses adjusted effective minutes instead of the original approved evidence', () => {
+    const adjusted = [{
+      ...makeHourLog('u1', 600 * 60, 'approved'),
+      effective_minutes: 400 * 60,
+      integrity_status: 'valid_adjusted' as const,
+    }]
+    const notifications = generateNotificationsFromHours('u1', adjusted, 1000)
+    expect(missingHoursTitles(notifications)).toHaveLength(1)
+    expect(missingHoursTitles(notifications)[0]?.body).toContain('400 approved hours')
+  })
+
   it('pending-hours notification is independent of required_hours', () => {
     const withPending = [makeHourLog('u1', 600 * 60, 'approved'), makeHourLog('u1', 5 * 60, 'pending')]
     const notifications = generateNotificationsFromHours('u1', withPending, 1000)
