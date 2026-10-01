@@ -692,7 +692,7 @@ export default async function StudentHoursPage() {
                   </div>
 
                   <div className="mt-4 flex flex-wrap items-center gap-2">
-                    <span className="text-lg font-semibold text-white">{formatMinutes(entry.minutes)}</span>
+                    <span className="text-lg font-semibold text-white">{formatMinutes(entry.status === 'approved' ? (entry.effective_minutes ?? entry.minutes) : entry.minutes)}</span>
                     <span className="inline-flex rounded-full border border-silver/30 bg-white/5 px-2.5 py-1 text-xs font-medium text-light-gray">
                       {hourSourceLabel(entry.source_type)}
                     </span>
@@ -743,7 +743,7 @@ export default async function StudentHoursPage() {
                     <tr key={entry.id} className="border-b border-graphite/70 last:border-0">
                       <td className="px-3 py-3 font-medium text-white">{entry.date}</td>
                       <td className="px-3 py-3 text-light-gray">{entry.category}</td>
-                      <td className="px-3 py-3 font-medium text-white">{formatMinutes(entry.minutes)}</td>
+                      <td className="px-3 py-3 font-medium text-white">{formatMinutes(entry.status === 'approved' ? (entry.effective_minutes ?? entry.minutes) : entry.minutes)}</td>
                       <td className="px-3 py-3">
                         <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${hourStatusClass(entry.status)}`}>
                           {hourStatusLabel(entry.status)}
