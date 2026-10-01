@@ -698,12 +698,14 @@ export default async function StaffHoursManager({
                                     step="0.01"
                                     required
                                     defaultValue={(
-                                      log.source_type === 'attendance' &&
-                                      log.attendance_provenance_status === 'needs_adjustment' &&
-                                      log.attendance_minutes_present !== null
-                                        ? log.attendance_minutes_present
-                                        : getOfficialMinutes(log)
-                                    / 60).toFixed(2)}
+                                      (
+                                        log.source_type === 'attendance' &&
+                                        log.attendance_provenance_status === 'needs_adjustment' &&
+                                        log.attendance_minutes_present !== null
+                                          ? log.attendance_minutes_present
+                                          : getOfficialMinutes(log)
+                                      ) / 60
+                                    ).toFixed(2)}
                                     className="w-full rounded-lg border border-graphite bg-black px-3 py-2 text-white"
                                   />
                                 </label>
