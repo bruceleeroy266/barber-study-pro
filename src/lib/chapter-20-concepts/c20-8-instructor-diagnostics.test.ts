@@ -274,7 +274,7 @@ describe('C20-8 instructor and school-admin diagnostics', () => {
 
   it('includes Chapter 20 in both shared durable-evidence reads', () => {
     const page = read('src/app/instructor/student/[studentId]/page.tsx')
-    expect(page).toContain("'ch-19','ch-20']")
+    expect(page).toContain("'ch-19','ch-20','ch-21']")
     const ch20Occurrences = page.match(/'ch-20'/g) ?? []
     expect(ch20Occurrences.length).toBeGreaterThanOrEqual(6)
   })
