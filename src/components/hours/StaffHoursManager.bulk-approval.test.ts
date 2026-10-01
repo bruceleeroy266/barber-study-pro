@@ -61,6 +61,6 @@ describe('D5 filtered bulk hour approval', () => {
     expect(schoolHoursPage).toContain('bulkApproved?: string')
     expect(schoolHoursPage).toContain('bulkApprovedCount=')
     expect(manager).toContain('Totals and reviewed history have been refreshed.')
-    expect(manager).toContain("const approvedMinutes = studentLogs")
+    expect(manager).toContain('const approvedMinutes = calculateOfficialApprovedMinutes(studentLogs)')
   })
 })
