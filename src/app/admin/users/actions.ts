@@ -864,15 +864,24 @@ export async function inviteUser(formData: InviteUserFormData): Promise<ActionRe
       { onConflict: 'id' }
     )
 
-  if (profileError) {
-    // Best-effort cleanup: delete the invited auth user if profile upsert failed.
-    await serviceClient.auth.admin.deleteUser(inviteData.user.id)
-    return { success: false, error: profileError.message }
+  const rollbackInvitedUser = async (reason: string): Promise<ActionResult<InviteUserResult>> => {
+    const { error: rollbackError } = await serviceClient.auth.admin.deleteUser(inviteData.user.id)
+    if (rollbackError) {
+      return {
+        success: false,
+        error: `${reason}. Automatic rollback also failed: ${rollbackError.message}. The account may require administrator cleanup.`,
+      }
+    }
+    return { success: false, error: reason }
   }
 
-  // Create domain record (student/instructor) if applicable.
-  // This occurs AFTER profile upsert succeeds. If domain record creation fails,
-  // the profile is preserved (partial success) and the error is reported.
+  if (profileError) {
+    return rollbackInvitedUser(`Failed to finalize invited user profile: ${profileError.message}`)
+  }
+
+  // Create domain record (student/instructor) if applicable. A downstream
+  // failure is compensated by deleting the newly invited auth user so the
+  // admin never receives a failure while a half-created account remains.
   const domainResult = await createDomainRecord(
     serviceClient,
     inviteData.user.id,
@@ -881,10 +890,7 @@ export async function inviteUser(formData: InviteUserFormData): Promise<ActionRe
   )
 
   if (!domainResult.success) {
-    // Partial success: auth user and profile exist, but domain record failed.
-    // Do NOT delete the auth user/profile — that would be destructive.
-    // Report the error so the admin knows manual intervention may be needed.
-    return { success: false, error: domainResult.error }
+    return rollbackInvitedUser(domainResult.error || `Failed to create ${formData.role} record`)
   }
 
   const lifecycleResult = await ensurePendingInvitationLifecycle(serviceClient, admin, {
@@ -895,7 +901,7 @@ export async function inviteUser(formData: InviteUserFormData): Promise<ActionRe
     schoolId: formData.school_id,
   })
   if (!lifecycleResult.success) {
-    return { success: false, error: lifecycleResult.error }
+    return rollbackInvitedUser(lifecycleResult.error || 'Failed to finalize invitation lifecycle')
   }
 
   await logUserManagementAction(
@@ -1013,19 +1019,38 @@ export async function changeUserRole(id: string, role: AppRole): Promise<ActionR
   const oldValues = { role: userResult.user.role }
   const newValues = { role }
 
-  const { error: profileError } = await serviceClient
-    .from('profiles')
-    .update({ role })
-    .eq('id', id)
+  const { error: reconcileError } = await serviceClient.rpc('reconcile_user_management_identity', {
+    p_user_id: id,
+    p_role: role,
+    p_school_id: userResult.user.school_id,
+  })
 
-  if (profileError) {
-    return { success: false, error: profileError.message }
+  if (reconcileError) {
+    return { success: false, error: reconcileError.message }
   }
 
-  // Keep auth user metadata in sync.
-  await serviceClient.auth.admin.updateUserById(id, {
+  // Keep auth metadata synchronized. If this external Auth write fails, restore
+  // the database identity so profile/domain state does not remain ahead of Auth.
+  const { error: authMetadataError } = await serviceClient.auth.admin.updateUserById(id, {
     user_metadata: { role },
   })
+
+  if (authMetadataError) {
+    const { error: rollbackError } = await serviceClient.rpc('reconcile_user_management_identity', {
+      p_user_id: id,
+      p_role: userResult.user.role,
+      p_school_id: userResult.user.school_id,
+    })
+
+    if (rollbackError) {
+      return {
+        success: false,
+        error: `Failed to synchronize Auth metadata: ${authMetadataError.message}. Database rollback also failed: ${rollbackError.message}. Administrator cleanup is required.`,
+      }
+    }
+
+    return { success: false, error: `Failed to synchronize Auth metadata: ${authMetadataError.message}` }
+  }
 
   await logUserManagementAction(admin, id, userResult.user.email, 'change_role', oldValues, newValues, userResult.user.school_id)
 
@@ -1054,10 +1079,11 @@ export async function assignUserSchool(id: string, schoolId: string | null): Pro
   const oldValues = { school_id: userResult.user.school_id }
   const newValues = { school_id: schoolId }
 
-  const { error } = await serviceClient
-    .from('profiles')
-    .update({ school_id: schoolId })
-    .eq('id', id)
+  const { error } = await serviceClient.rpc('reconcile_user_management_identity', {
+    p_user_id: id,
+    p_role: userResult.user.role,
+    p_school_id: schoolId,
+  })
 
   if (error) {
     return { success: false, error: error.message }
@@ -1164,17 +1190,37 @@ export async function resetUserPassword(id: string, newPassword: string): Promis
     return { success: false, error: 'Password must be between 8 and 72 characters' }
   }
 
-  const { error } = await serviceClient.auth.admin.updateUserById(id, {
+  // Lock the required-change flag first. If this database write cannot be
+  // persisted, do not mutate the Auth password.
+  const { error: flagError } = await serviceClient
+    .from('profiles')
+    .update({ requires_password_change: true })
+    .eq('id', id)
+
+  if (flagError) {
+    return { success: false, error: `Failed to require password change: ${flagError.message}` }
+  }
+
+  const { error: passwordError } = await serviceClient.auth.admin.updateUserById(id, {
     password: newPassword,
     email_confirm: true,
   })
 
-  if (error) {
-    return { success: false, error: error.message }
-  }
+  if (passwordError) {
+    const { error: rollbackFlagError } = await serviceClient
+      .from('profiles')
+      .update({ requires_password_change: userResult.user.requires_password_change })
+      .eq('id', id)
 
-  // Force password change on next login.
-  await serviceClient.from('profiles').update({ requires_password_change: true }).eq('id', id)
+    if (rollbackFlagError) {
+      return {
+        success: false,
+        error: `Password reset failed: ${passwordError.message}. Password-change flag rollback also failed: ${rollbackFlagError.message}.`,
+      }
+    }
+
+    return { success: false, error: passwordError.message }
+  }
 
   await logUserManagementAction(
     admin,
