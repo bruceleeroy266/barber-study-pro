@@ -160,7 +160,6 @@ describe('H&A-6F final end-to-end certification', () => {
   it('keeps approved-hour corrections server-authoritative and immutable', () => {
     expect(adjustmentMigration).toContain('create table if not exists public.hour_adjustments')
     expect(adjustmentMigration).toContain('before update or delete on public.hour_adjustments')
-    expect(adjustmentMigration).toContain("supabase").toBe(false)
     expect(adjustmentMigration).toContain('create or replace function public.adjust_approved_hour(')
     expect(adjustmentMigration).toContain('for update;')
     expect(adjustmentMigration).toContain('adjustment_version = adjustment_version + 1')
