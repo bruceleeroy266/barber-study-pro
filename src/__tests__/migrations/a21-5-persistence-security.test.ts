@@ -15,7 +15,8 @@ describe('A21-5 Chapters 1-21 persistence and security certification', () => {
     expect(ha5).toContain('revoke insert, update, delete on public.remediation_cycles from authenticated')
     expect(ha5).toContain('revoke insert, update, delete on public.remediation_cycle_events from authenticated')
     expect(ha5).toContain('revoke insert, update, delete on public.remediation_assignments from authenticated')
-    expect(ha5).toContain('to service_role')
+    const rpc = read('supabase/migrations/20260930200000_c19_h2_remediation_rpc_security.sql')
+    expect(rpc).toContain('to service_role')
   })
 
   it('keeps reassessment history append-only and collision-safe', () => {
