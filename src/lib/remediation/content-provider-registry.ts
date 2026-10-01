@@ -252,6 +252,7 @@ import {
 } from '@/lib/chapter-21-concepts/concepts'
 import { chapter21PremiumFlashcards } from '@/lib/chapter-21-premium-flashcards'
 import { chapter21PremiumQuizQuestions } from '@/lib/chapter-21-premium-quiz'
+import { chapter21ReassessmentReserve } from '@/lib/chapter-21-concepts/reassessment-reserve'
 
 import { getChapterContent } from '@/lib/chapter-content'
 
@@ -1919,10 +1920,43 @@ const chapter21FlashcardMappingsProjected = chapter21FlashcardConceptMappings.ma
   flashcardId: mapping.flashcardId as string,
   conceptId: mapping.conceptFamilyId as string,
 }))
-const chapter21QuizMappingsProjected = chapter21QuizQuestionConceptMappings.map((mapping) => ({
-  questionId: mapping.questionId as string,
-  conceptId: mapping.conceptFamilyId as string,
-}))
+const chapter21QuizMappingsProjected = [
+  ...chapter21QuizQuestionConceptMappings.map((mapping) => ({
+    questionId: mapping.questionId as string,
+    conceptId: mapping.conceptFamilyId as string,
+  })),
+  ...chapter21ReassessmentReserve.map((question) => ({
+    questionId: question.id as string,
+    conceptId: question.conceptFamilyId as string,
+  })),
+]
+
+function chapter21ReserveAsQuizQuestion(questionId: string): QuizQuestion | null {
+  const question = chapter21ReassessmentReserve.find(
+    (item) => item.id === questionId,
+  )
+  if (!question) return null
+
+  return {
+    id: question.id,
+    quiz_id: 'quiz-21',
+    question: question.question,
+    answer_a: question.answer_a,
+    answer_b: question.answer_b,
+    answer_c: question.answer_c,
+    answer_d: question.answer_d,
+    correct_answer: question.correctAnswer,
+    explanation: question.explanation,
+    difficulty:
+      question.difficulty === 'scenario' ? 'hard' : 'medium',
+    learningObjective: question.learningObjectiveId,
+    order_index:
+      1000 +
+      chapter21ReassessmentReserve.findIndex(
+        (item) => item.id === question.id,
+      ),
+  }
+}
 
 function isChapter21ConceptFamilyId(conceptId: string): boolean {
   return (ACTIVE_CHAPTER21_CONCEPT_FAMILY_IDS as readonly string[]).includes(conceptId)
@@ -1962,7 +1996,7 @@ const chapter21Provider: ChapterRemediationContentProvider = {
     return (
       chapter21PremiumQuizQuestions.find(
         (question) => question.id === questionId,
-      ) ?? null
+      ) ?? chapter21ReserveAsQuizQuestion(questionId)
     )
   },
   filterKeyTermsByConcept(conceptId) {
