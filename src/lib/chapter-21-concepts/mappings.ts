@@ -26,6 +26,19 @@ export interface Chapter21QuizQuestionConceptMapping {
   conceptFamilyId: Chapter21ConceptFamilyId
 }
 
+export interface Chapter21RemediationContentConceptMapping {
+  contentBlockId:
+    | 'ch21-lo1'
+    | 'ch21-lo2'
+    | 'ch21-lo3'
+    | 'ch21-lo4'
+    | 'ch21-lo5'
+    | 'ch21-lo6'
+    | 'ch21-lo7'
+    | 'ch21-lo8'
+  conceptFamilyId: Chapter21ConceptFamilyId
+}
+
 export interface Chapter21MicroCheckPlacement {
   id: `mc-21-${string}`
   afterSectionId:
@@ -206,3 +219,26 @@ export const chapter21MicroCheckPlacements: readonly Chapter21MicroCheckPlacemen
     purpose: 'Check ethical advertising, truthful marketing, client consent, privacy, referrals, partnerships, and rebooking decisions.',
   },
 ] as const
+
+
+export const chapter21RemediationContentConceptMappings: readonly Chapter21RemediationContentConceptMapping[] = [
+  { contentBlockId: 'ch21-lo1', conceptFamilyId: 'ch21-business-entry-paths' },
+  { contentBlockId: 'ch21-lo2', conceptFamilyId: 'ch21-shop-opening-planning' },
+  { contentBlockId: 'ch21-lo3', conceptFamilyId: 'ch21-ownership-legal-structures' },
+  { contentBlockId: 'ch21-lo4', conceptFamilyId: 'ch21-business-plan-financial-planning' },
+  { contentBlockId: 'ch21-lo5', conceptFamilyId: 'ch21-recordkeeping-financial-compliance' },
+  { contentBlockId: 'ch21-lo6', conceptFamilyId: 'ch21-booth-rental-independent-business-responsibilities' },
+  { contentBlockId: 'ch21-lo7', conceptFamilyId: 'ch21-shop-operations-management' },
+  { contentBlockId: 'ch21-lo8', conceptFamilyId: 'ch21-advertising-marketing-client-consent' },
+] as const
+
+export const chapter21ContentConceptMappings =
+  chapter21RemediationContentConceptMappings
+
+export function getChapter21RemediationContentBlocksForConcept(
+  conceptFamilyId: Chapter21ConceptFamilyId,
+) {
+  return chapter21RemediationContentConceptMappings
+    .filter((mapping) => mapping.conceptFamilyId === conceptFamilyId)
+    .map((mapping) => mapping.contentBlockId)
+}
