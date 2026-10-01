@@ -29,6 +29,7 @@ interface StaffHourLogRow {
   category: HourCategory
   minutes: number
   effective_minutes: number | null
+  original_minutes: number
   integrity_status: 'not_approved' | 'valid_unadjusted' | 'valid_adjusted' | 'invalid'
   adjustment_version: number
   status: HourStatus
@@ -154,7 +155,7 @@ export default async function StaffHoursManager({
   const { data: logsData } = studentIds.length
     ? await supabase
         .from('effective_hour_logs')
-        .select('id, user_id, date, category, minutes, effective_minutes, integrity_status, adjustment_version, status, notes, rejection_reason, submitted_by, reviewed_by, reviewed_at, created_at, source_type, source_attendance_id, resubmission_of_hour_log_id')
+        .select('id, user_id, date, category, minutes, effective_minutes, original_minutes, integrity_status, adjustment_version, status, notes, rejection_reason, submitted_by, reviewed_by, reviewed_at, created_at, source_type, source_attendance_id, resubmission_of_hour_log_id')
         .eq('school_id', actor.school_id)
         .in('user_id', studentIds)
         .order('date', { ascending: false })
@@ -661,7 +662,7 @@ export default async function StaffHoursManager({
                                   </div>
                                   {log.adjustment_version > 0 && (
                                     <div className="mt-1 text-xs text-silver-gray">
-                                      Previously adjusted · version {log.adjustment_version}
+                                      Adjusted from {formatHourMinutes(log.original_minutes)} · version {log.adjustment_version}
                                     </div>
                                   )}
                                 </div>
