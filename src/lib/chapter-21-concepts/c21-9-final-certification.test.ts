@@ -43,7 +43,7 @@ describe('C21-9 final end-to-end certification', () => {
   })
 
   it('certifies complete concept coverage across lesson, flashcards, assessment, micro-checks, remediation, and reassessment', () => {
-    const expectedFlashcardCounts = new Map([
+    const expectedFlashcardCounts = new Map<string, number>([
       ['ch21-business-entry-paths', 5],
       ['ch21-shop-opening-planning', 5],
       ['ch21-ownership-legal-structures', 10],
@@ -59,7 +59,7 @@ describe('C21-9 final end-to-end certification', () => {
         chapter21FlashcardConceptMappings.filter(
           (mapping) => mapping.conceptFamilyId === conceptFamilyId,
         ),
-      ).toHaveLength(expectedFlashcardCounts.get(conceptFamilyId))
+      ).toHaveLength(expectedFlashcardCounts.get(conceptFamilyId)!)
 
       expect(
         chapter21QuizQuestionConceptMappings.some(
@@ -116,7 +116,7 @@ describe('C21-9 final end-to-end certification', () => {
   })
 
   it('locks targeted remediation to one canonical LO block plus the real mapped flashcard subset', () => {
-    const expectedFlashcardCounts = new Map([
+    const expectedFlashcardCounts = new Map<string, number>([
       ['ch21-business-entry-paths', 5],
       ['ch21-shop-opening-planning', 5],
       ['ch21-ownership-legal-structures', 10],
@@ -130,7 +130,7 @@ describe('C21-9 final end-to-end certification', () => {
     for (const conceptFamilyId of CHAPTER21_CONCEPT_FAMILY_IDS) {
       const path = buildChapter21RemediationPathForConcept(conceptFamilyId)
       expect(path.contentBlockIds).toHaveLength(1)
-      expect(path.flashcardIds).toHaveLength(expectedFlashcardCounts.get(conceptFamilyId))
+      expect(path.flashcardIds).toHaveLength(expectedFlashcardCounts.get(conceptFamilyId)!)
       expect(path.plannedReassessmentQuestionCount).toBe(5)
       expect(path.plannedReassessmentPassPercent).toBe(80)
     }
