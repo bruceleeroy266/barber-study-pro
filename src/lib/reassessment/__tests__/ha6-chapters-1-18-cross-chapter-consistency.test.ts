@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { getMappingProviderRegistry } from '../provider-registry'
 import { getChapterContentProvider } from '@/lib/remediation/content-provider-registry'
-import { isConceptDetectionSupported } from '@/lib/remediation/chapter-registry'
+import { getChapterRemediationProvider, isConceptDetectionSupported } from '@/lib/remediation/chapter-registry'
+import { SHARED_GRADE_WEIGHTS } from '@/lib/concept-mastery/shared-grading'
 
 const CHAPTERS = Array.from({ length: 18 }, (_, index) => index + 1)
 const chapterId = (chapter: number) => `ch-${chapter}` as const
@@ -60,6 +61,40 @@ describe('HA-6 Chapters 1-18 cross-chapter consistency', () => {
         for (const questionId of reserve) {
           expect(allIds.has(questionId), `Chapter ${chapter} reserve ID ${questionId} absent from canonical map`).toBe(true)
           expect(provider.getConceptForQuestion(questionId), `Chapter ${chapter} reserve mapping`).toBe(conceptId)
+        }
+      }
+    }
+  })
+
+  it('locks the shared 20/10/40/15/15 grading identifiers', () => {
+    expect(SHARED_GRADE_WEIGHTS).toEqual({
+      micro_check: 0.20,
+      flashcard: 0.10,
+      chapter_assessment: 0.40,
+      scenario_application: 0.15,
+      remediation_reassessment: 0.15,
+    })
+    expect(Object.values(SHARED_GRADE_WEIGHTS).reduce((sum, weight) => sum + weight, 0)).toBe(1)
+  })
+
+  it('builds remediation assignments only from the owning chapter canonical assets', () => {
+    const registry = getMappingProviderRegistry()
+    for (const chapter of CHAPTERS) {
+      const id = chapterId(chapter)
+      const mapping = registry.getProvider(id)!
+      const content = getChapterContentProvider(id)!
+      const remediation = getChapterRemediationProvider(id)
+      expect(remediation, `Chapter ${chapter} remediation provider`).toBeDefined()
+
+      for (const conceptId of mapping.getAllConceptIds()) {
+        const assignments = remediation!.buildAssignments(conceptId)
+        expect(assignments.length, `Chapter ${chapter} concept ${conceptId} assignments`).toBeGreaterThan(0)
+        for (const assignment of assignments) {
+          if (assignment.assignmentType === 'content_block') {
+            expect(content.getContentBlockIdsForConcept(conceptId)).toContain(assignment.assetId)
+          } else {
+            expect(content.getFlashcardIdsForConcept(conceptId)).toContain(assignment.assetId)
+          }
         }
       }
     }
