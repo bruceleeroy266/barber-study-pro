@@ -1,43 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { describe, expect, it } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/react'
 import SchoolAdminMenu from './SchoolAdminMenu'
 
-const mocks = vi.hoisted(() => ({
-  push: vi.fn(),
-  refresh: vi.fn(),
-  signOut: vi.fn().mockResolvedValue({ error: null }),
-  getUser: vi.fn().mockResolvedValue({
-    data: { user: { id: 'school-admin-1', email: 'school-admin@test.com' } },
-    error: null,
-  }),
-  logLogout: vi.fn().mockResolvedValue(undefined),
-}))
-
-vi.mock('next/navigation', () => ({
-  useRouter: () => ({
-    push: mocks.push,
-    refresh: mocks.refresh,
-  }),
-}))
-
-vi.mock('@/lib/supabase', () => ({
-  supabase: {
-    auth: {
-      getUser: mocks.getUser,
-      signOut: mocks.signOut,
-    },
-  },
-}))
-
-vi.mock('@/app/(auth)/actions', () => ({
-  logLogout: mocks.logLogout,
-}))
-
 describe('SchoolAdminMenu', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
-
   it('opens a school-scoped management menu', () => {
     render(<SchoolAdminMenu />)
 
@@ -78,17 +43,11 @@ describe('SchoolAdminMenu', () => {
     expect(screen.queryByRole('menu')).not.toBeInTheDocument()
   })
 
-  it('logs out safely', async () => {
+  it('uses the server-backed logout route', () => {
     render(<SchoolAdminMenu />)
 
     fireEvent.click(screen.getByRole('button', { name: /School Management/i }))
-    fireEvent.click(screen.getByRole('menuitem', { name: /Logout/i }))
 
-    await waitFor(() => {
-      expect(mocks.logLogout).toHaveBeenCalledWith('school-admin-1', 'school-admin@test.com')
-      expect(mocks.signOut).toHaveBeenCalled()
-      expect(mocks.push).toHaveBeenCalledWith('/login')
-      expect(mocks.refresh).toHaveBeenCalled()
-    })
+    expect(screen.getByRole('menuitem', { name: /Logout/i })).toHaveAttribute('href', '/auth/logout')
   })
 })
