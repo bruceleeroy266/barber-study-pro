@@ -28,6 +28,8 @@ interface StaffHourLogRow {
   date: string
   category: HourCategory
   minutes: number
+  effective_minutes: number | null
+  integrity_status: 'not_approved' | 'valid_unadjusted' | 'valid_adjusted' | 'invalid'
   status: HourStatus
   notes: string | null
   rejection_reason: string | null
@@ -787,7 +789,7 @@ export default async function StaffHoursManager({
                               )}
                             </div>
                             <div className="text-sm font-semibold text-[var(--color-brand-gold)]">
-                              {formatHours(log.minutes)} · {log.status}
+                              {formatHours(log.status === 'approved' ? getOfficialMinutes(log) : log.minutes)} · {log.status}
                             </div>
                           </div>
                         ))}
