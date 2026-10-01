@@ -230,7 +230,9 @@ describe('C20-6 gap detection, compliance escalation, and targeted remediation',
     expect(route).not.toContain('body.userId')
     expect(route).not.toContain('body.conceptId')
     expect(route).not.toContain('body.isCorrect')
-    expect(client).toContain("input.chapterId === 'ch-19' || input.chapterId === 'ch-20'")
+    expect(client).toContain("input.chapterId === 'ch-19'")
+    expect(client).toContain("input.chapterId === 'ch-20'")
+    expect(client).toContain("input.chapterId === 'ch-21'")
   })
 
   it('feeds Chapter 20 durable combined evidence into the real remediation orchestrator', () => {
