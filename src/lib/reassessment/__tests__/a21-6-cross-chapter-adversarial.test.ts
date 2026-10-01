@@ -3,6 +3,7 @@ import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { getMappingProviderRegistry } from '@/lib/reassessment/provider-registry'
 import { getChapterContentProvider } from '@/lib/remediation/content-provider-registry'
+import { getFlashcardEvidenceConcept, isUnifiedActivityEvidenceChapter } from '@/lib/concept-mastery/activity-evidence-registry'
 import { chapter1MicroChecks } from '@/lib/chapter-1-concepts/micro-checks'
 import { chapter2MicroChecks } from '@/lib/chapter-2-concepts/micro-checks'
 import { chapter3MicroChecks } from '@/lib/chapter-3-concepts/micro-checks'
@@ -65,6 +66,18 @@ describe('A21-6 Chapters 1-21 cross-chapter adversarial certification', () => {
     }
   })
 
+  it('registers activity evidence for all 21 chapters and refuses foreign flashcard routing', () => {
+    const registry = getMappingProviderRegistry()
+    for (const owner of chapters) {
+      expect(isUnifiedActivityEvidenceChapter(cid(owner))).toBe(true)
+      const target = owner === 21 ? 1 : owner + 1
+      const foreignProvider = getChapterContentProvider(cid(target))!
+      const foreignConcept = registry.getProvider(cid(target))!.getAllConceptIds()[0]!
+      const foreignCard = foreignProvider.filterFlashcardsByConcept(foreignConcept)[0]
+      if (foreignCard) expect(getFlashcardEvidenceConcept(cid(owner), foreignCard.id)).toBeNull()
+    }
+  })
+
   it('database uniqueness makes duplicate first-attempt evidence non-overwriting', () => {
     const mc = read('supabase/migrations/20260926044500_create_chapter_micro_check_attempts.sql')
     const activity = read('supabase/migrations/20260928043000_create_chapter_activity_evidence.sql')
@@ -72,6 +85,19 @@ describe('A21-6 Chapters 1-21 cross-chapter adversarial certification', () => {
     expect(activity).toContain('unique (user_id, chapter_id, source, item_id)')
     expect(mc).toContain('grant select, insert on table public.chapter_micro_check_attempts to authenticated')
     expect(activity).toContain('grant select, insert on table public.chapter_activity_evidence to authenticated')
+  })
+
+  it('stale and duplicate reassessment submissions fail closed or replay persisted evidence', () => {
+    const start = read('src/app/api/remediation/cycles/[cycleId]/reassessment/route.ts')
+    const submit = read('src/app/api/remediation/cycles/[cycleId]/reassessment/submit/route.ts')
+    expect(start).toContain('if (kcProgress.isComplete)')
+    expect(start).toContain('status: 409')
+    expect(start).toContain('if (kcProgress.openReservation)')
+    expect(start).toContain('replayed: true')
+    expect(submit).toContain('getConsumedAttemptId')
+    expect(submit).toContain('attemptWasReplay')
+    expect(submit).toContain('getCanonicalMappingProvider(cycle.chapterId)')
+    expect(submit).toContain('isQuestionMappedToConcept(questionId, cycle.conceptId)')
   })
 
   it('atomic reassessment submission binds user, cycle, concept and exact reserved question', () => {
