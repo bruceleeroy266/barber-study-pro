@@ -416,13 +416,19 @@ export async function createUser(formData: UserFormData): Promise<ActionResult<{
 
   const serviceClient = createServiceRoleClient()
 
-  // Prevent duplicate email accounts.
-  const { data: existingUsers } = await serviceClient.auth.admin.listUsers()
+  // Prevent duplicate email accounts. Treat an auth-list failure as a hard stop:
+  // continuing would make duplicate detection unreliable.
+  const { data: existingUsers, error: listUsersError } = await serviceClient.auth.admin.listUsers()
+  if (listUsersError) {
+    return { success: false, error: `Failed to verify existing accounts: ${listUsersError.message}` }
+  }
   if (existingUsers.users.some((u) => u.email?.toLowerCase() === formData.email.toLowerCase())) {
     return { success: false, error: 'An account with this email already exists' }
   }
 
-  // Create auth user with service role.
+  // Create auth user with service role. The handle_new_user database trigger also
+  // creates the initial profile row, so every subsequent profile write must be
+  // idempotent against that trigger-created row.
   const { data: authData, error: authError } = await serviceClient.auth.admin.createUser({
     email: formData.email,
     password: formData.password,
@@ -437,27 +443,43 @@ export async function createUser(formData: UserFormData): Promise<ActionResult<{
     return { success: false, error: authError?.message || 'Failed to create user' }
   }
 
-  // Create profile row.
-  const { error: profileError } = await serviceClient.from('profiles').insert({
-    id: authData.user.id,
-    email: formData.email,
-    full_name: formData.full_name,
-    role: formData.role,
-    school_id: formData.school_id,
-    approval_status: formData.approval_status,
-    is_disabled: false,
-    requires_password_change: true,
-  })
+  const rollbackCreatedAuthUser = async (reason: string): Promise<ActionResult<{ id: string }>> => {
+    const { error: rollbackError } = await serviceClient.auth.admin.deleteUser(authData.user.id)
+    if (rollbackError) {
+      return {
+        success: false,
+        error: `${reason}. Automatic rollback also failed: ${rollbackError.message}. The account may require administrator cleanup.`,
+      }
+    }
 
-  if (profileError) {
-    // Best-effort cleanup: delete the auth user if profile insert failed.
-    await serviceClient.auth.admin.deleteUser(authData.user.id)
-    return { success: false, error: profileError.message }
+    return { success: false, error: reason }
   }
 
-  // Create domain record (student/instructor) if applicable.
-  // This occurs AFTER profile creation succeeds. If domain record creation fails,
-  // the profile is preserved (partial success) and the error is reported.
+  // Reconcile the trigger-created profile with the administrator's validated
+  // values. Upsert is required here because handle_new_user() runs during
+  // auth.admin.createUser() and may already have inserted this profile.
+  const { error: profileError } = await serviceClient.from('profiles').upsert(
+    {
+      id: authData.user.id,
+      email: formData.email,
+      full_name: formData.full_name,
+      role: formData.role,
+      school_id: formData.school_id,
+      approval_status: formData.approval_status,
+      is_disabled: false,
+      requires_password_change: true,
+    },
+    { onConflict: 'id' }
+  )
+
+  if (profileError) {
+    return rollbackCreatedAuthUser(`Failed to finalize user profile: ${profileError.message}`)
+  }
+
+  // Create the role-specific domain record only after auth + profile are valid.
+  // If this final step fails, compensate by deleting the newly-created auth user;
+  // the profile is removed by the auth/profile lifecycle rather than leaving a
+  // misleading half-created account that appears to exist in the admin UI.
   const domainResult = await createDomainRecord(
     serviceClient,
     authData.user.id,
@@ -466,10 +488,7 @@ export async function createUser(formData: UserFormData): Promise<ActionResult<{
   )
 
   if (!domainResult.success) {
-    // Partial success: auth user and profile exist, but domain record failed.
-    // Do NOT delete the auth user/profile — that would be destructive.
-    // Report the error so the admin knows manual intervention may be needed.
-    return { success: false, error: domainResult.error }
+    return rollbackCreatedAuthUser(domainResult.error || `Failed to create ${formData.role} record`)
   }
 
   await logUserManagementAction(
