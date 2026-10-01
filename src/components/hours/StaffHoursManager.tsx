@@ -242,6 +242,7 @@ export default async function StaffHoursManager({
     error === 'rejection-reason-required' ? 'Enter a reason before rejecting an hour entry.' :
     error === 'no-hours-selected' ? 'No pending hour entries were selected for bulk approval.' :
     error === 'bulk-review-failed' ? 'The bulk approval could not be saved. Please try again.' :
+    error === 'daily-hour-cap' ? 'Approved hours cannot exceed 24 total hours for the same student on the same date.' :
     error === 'invalid-adjustment-hours' ? 'Enter corrected hours between 0 and 24.' :
     error === 'adjustment-reason-required' ? 'Enter a clear reason between 10 and 500 characters.' :
     error === 'stale-adjustment' ? 'This hour record changed since you opened it. Review the latest value and try again.' :
