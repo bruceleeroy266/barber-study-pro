@@ -21,14 +21,17 @@ import { chapter15MicroChecks } from '@/lib/chapter-15-concepts/micro-checks'
 import { chapter16MicroChecks } from '@/lib/chapter-16-concepts/micro-checks'
 import { chapter17MicroChecks } from '@/lib/chapter-17-concepts/micro-checks'
 import { chapter18MicroChecks } from '@/lib/chapter-18-concepts/micro-checks'
+import { chapter19MicroChecks } from '@/lib/chapter-19-concepts/micro-checks'
+import { chapter20MicroChecks } from '@/lib/chapter-20-concepts/micro-checks'
+import { chapter21MicroChecks } from '@/lib/chapter-21-concepts/micro-checks'
 
 
-const CHAPTERS = Array.from({ length: 18 }, (_, index) => index + 1)
+const CHAPTERS = Array.from({ length: 21 }, (_, index) => index + 1)
 const chapterId = (chapter: number) => `ch-${chapter}` as const
-const MICRO_CHECKS = [chapter1MicroChecks, chapter2MicroChecks, chapter3MicroChecks, chapter4MicroChecks, chapter5MicroChecks, chapter6MicroChecks, chapter7MicroChecks, chapter8MicroChecks, chapter9MicroChecks, chapter10MicroChecks, chapter11MicroChecks, chapter12MicroChecks, chapter13MicroChecks, chapter14MicroChecks, chapter15MicroChecks, chapter16MicroChecks, chapter17MicroChecks, chapter18MicroChecks] as const
+const MICRO_CHECKS = [chapter1MicroChecks, chapter2MicroChecks, chapter3MicroChecks, chapter4MicroChecks, chapter5MicroChecks, chapter6MicroChecks, chapter7MicroChecks, chapter8MicroChecks, chapter9MicroChecks, chapter10MicroChecks, chapter11MicroChecks, chapter12MicroChecks, chapter13MicroChecks, chapter14MicroChecks, chapter15MicroChecks, chapter16MicroChecks, chapter17MicroChecks, chapter18MicroChecks, chapter19MicroChecks, chapter20MicroChecks, chapter21MicroChecks] as const
 
 
-describe('HA-6 Chapters 1-18 cross-chapter consistency', () => {
+describe('A21-1B Chapters 1-21 cross-chapter consistency', () => {
   it('registers every chapter exactly once in the canonical mapping registry', () => {
     const registry = getMappingProviderRegistry()
     const registered = registry.getRegisteredChapterIds()
@@ -59,7 +62,7 @@ describe('HA-6 Chapters 1-18 cross-chapter consistency', () => {
     }
   })
 
-  it('keeps all canonical question IDs globally unique across Chapters 1-18', () => {
+  it('keeps all canonical question IDs globally unique across Chapters 1-21', () => {
     const registry = getMappingProviderRegistry()
     const seen = new Map<string, number>()
     for (const chapter of CHAPTERS) {
