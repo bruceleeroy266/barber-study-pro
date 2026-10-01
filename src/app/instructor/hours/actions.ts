@@ -162,7 +162,12 @@ export async function reviewStudentHours(formData: FormData) {
 
   if (error) {
     console.error('[StaffHours] Failed to review hours', error)
-    redirect('/school/hours?error=review-failed')
+    const message = error.message.toLowerCase()
+    redirect(
+      message.includes('daily approved hours cannot exceed 1440')
+        ? '/school/hours?error=daily-hour-cap'
+        : '/school/hours?error=review-failed',
+    )
   }
 
   if (!updated) {
@@ -240,7 +245,12 @@ export async function bulkApproveStudentHours(formData: FormData) {
 
   if (error) {
     console.error('[StaffHours] Failed to bulk approve hours', error)
-    redirect('/school/hours?error=bulk-review-failed')
+    const message = error.message.toLowerCase()
+    redirect(
+      message.includes('daily approved hours cannot exceed 1440')
+        ? '/school/hours?error=daily-hour-cap'
+        : '/school/hours?error=bulk-review-failed',
+    )
   }
 
   const updatedRows = (updated ?? []) as Array<{ id: string; user_id: string }>
@@ -325,11 +335,13 @@ export async function adjustApprovedStudentHours(formData: FormData) {
     const code =
       message.includes('changed since') || message.includes('changed during')
         ? 'stale-adjustment'
-        : message.includes('attendance must match')
-          ? 'attendance-adjustment-mismatch'
-          : message.includes('must differ')
-            ? 'no-op-adjustment'
-            : 'adjustment-failed'
+        : message.includes('daily approved hours cannot exceed 1440')
+          ? 'daily-hour-cap'
+          : message.includes('attendance must match')
+            ? 'attendance-adjustment-mismatch'
+            : message.includes('must differ')
+              ? 'no-op-adjustment'
+              : 'adjustment-failed'
 
     redirect(
       `/school/hours?error=${code}&student=${encodeURIComponent(target.user_id)}`,
