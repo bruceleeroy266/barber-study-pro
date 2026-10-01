@@ -93,16 +93,16 @@ describe('COM-1C.2 message and read-receipt authorization', () => {
     expect(sql.toLowerCase()).not.toMatch(/grant\s+delete/)
     expect(sql.toLowerCase()).not.toMatch(/grant\s+truncate/)
     expect(sql).not.toMatch(
-      /create policy[^;]+on public\.communication_messages[^;]+for update/is
+      /create policy[^;]+on public\.communication_messages[^;]+for update/i
     )
     expect(sql).not.toMatch(
-      /create policy[^;]+on public\.communication_messages[^;]+for delete/is
+      /create policy[^;]+on public\.communication_messages[^;]+for delete/i
     )
     expect(sql).not.toMatch(
-      /create policy[^;]+on public\.communication_message_reads[^;]+for update/is
+      /create policy[^;]+on public\.communication_message_reads[^;]+for update/i
     )
     expect(sql).not.toMatch(
-      /create policy[^;]+on public\.communication_message_reads[^;]+for delete/is
+      /create policy[^;]+on public\.communication_message_reads[^;]+for delete/i
     )
   })
 
