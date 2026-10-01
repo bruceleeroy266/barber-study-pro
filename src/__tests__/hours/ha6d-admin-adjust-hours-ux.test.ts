@@ -60,7 +60,7 @@ describe('H&A-6D admin Adjust Hours UX', () => {
   })
 
   it('explains attendance mismatch simply and requires attendance correction first', () => {
-    expect(manager).toContain('Attendance-generated hours must match the corrected attendance record')
+    expect(manager).toContain('Attendance has changed since these hours became official.')
     expect(actions).toContain("'attendance-adjustment-mismatch'")
     expect(manager).toContain('Attendance must be corrected first')
   })
