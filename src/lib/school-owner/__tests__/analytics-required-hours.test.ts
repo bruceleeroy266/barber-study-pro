@@ -90,6 +90,23 @@ describe('school analytics with configured program required_hours (1000h program
     expect(defaultMetrics.remainingHours).toBe(2 * 1200 - 600)
   })
 
+  it('uses adjusted effective minutes in school metrics', () => {
+    const adjusted = {
+      ...makeHourLog('s1', 600 * 60, 'approved'),
+      effective_minutes: 450 * 60,
+      integrity_status: 'valid_adjusted' as const,
+    }
+    const inputs = makeInputs({
+      students: [makeStudent('s1')],
+      hourLogs: [adjusted],
+      requiredHours: 1000,
+    })
+
+    const rows = buildStudentPerformanceRows(inputs)
+    expect(rows[0]?.completedHours).toBe(450)
+    expect(buildSchoolOverviewMetrics(inputs).remainingHours).toBe(550)
+  })
+
   it('health score hours component uses the program requirement', () => {
     // 1 student with 500 approved hours: 50% of 1000h, 42% of the 1200h fallback.
     const inputs = makeInputs({
