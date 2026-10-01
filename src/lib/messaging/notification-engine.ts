@@ -1,5 +1,6 @@
 import { Notification, NotificationPriority, AttendanceSummary, BoardReadiness, HourLog, StudentProgress, Grade, Assessment } from '@/types'
 import { DEFAULT_REQUIRED_HOURS } from '@/lib/programs/requirements'
+import { getOfficialMinutes } from '@/lib/hours/reporting'
 
 export interface NotificationInput {
   userId: string
@@ -142,9 +143,10 @@ export function generateNotificationsFromHours(
   requiredHours?: number | null
 ): Notification[] {
   const notifications: Notification[] = []
-  const approvedMinutes = hourLogs
-    .filter((h) => h.status === 'approved')
-    .reduce((sum, h) => sum + h.minutes, 0)
+  const approvedMinutes = hourLogs.reduce(
+    (sum, h) => sum + getOfficialMinutes(h),
+    0,
+  )
   const pendingMinutes = hourLogs
     .filter((h) => h.status === 'pending')
     .reduce((sum, h) => sum + h.minutes, 0)

@@ -22,12 +22,36 @@ export interface HoursReportLog {
   created_at: string | null
   submitted_by_name?: string | null
   reviewed_by_name?: string | null
+  effective_minutes?: number | null
+  integrity_status?: 'not_approved' | 'valid_unadjusted' | 'valid_adjusted' | 'invalid'
 }
 
 export interface HoursPeriodTotals {
   weekMinutes: number
   monthMinutes: number
   yearMinutes: number
+}
+
+/**
+ * Canonical official-minutes read contract for downstream surfaces.
+ * Production callers should supply rows from effective_hour_logs. Legacy/demo
+ * rows that predate H&A have no effective fields and safely retain their
+ * original approved value.
+ */
+export function getOfficialMinutes(
+  log: Pick<HoursReportLog, 'id' | 'status' | 'minutes' | 'effective_minutes' | 'integrity_status'>,
+): number {
+  if (log.status !== 'approved') return 0
+
+  if (log.integrity_status === 'invalid' || log.effective_minutes === null) {
+    throw new Error(`Official hour value unavailable for ${log.id}: invalid adjustment chain`)
+  }
+
+  return log.effective_minutes ?? log.minutes
+}
+
+export function calculateOfficialApprovedMinutes(logs: HoursReportLog[]): number {
+  return logs.reduce((sum, log) => sum + getOfficialMinutes(log), 0)
 }
 
 function toDateKey(date: Date, timeZone: string): string {
@@ -70,7 +94,7 @@ export function calculateApprovedPeriodTotals(
   const sumFrom = (start: string) =>
     approved
       .filter((log) => log.date >= start && log.date <= windows.today)
-      .reduce((sum, log) => sum + log.minutes, 0)
+      .reduce((sum, log) => sum + getOfficialMinutes(log), 0)
 
   return {
     weekMinutes: sumFrom(windows.weekStart),

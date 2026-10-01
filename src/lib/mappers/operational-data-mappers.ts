@@ -533,6 +533,13 @@ export interface HourLogDbRow {
   reviewed_at: string | null
   created_at: string
   updated_at: string
+  effective_minutes?: number | null
+  original_minutes?: number | null
+  adjustment_version?: number | null
+  adjustment_count?: number | null
+  integrity_status?: string | null
+  is_adjusted?: boolean | null
+  effective_delta_minutes?: number | null
 }
 
 export function mapHourLogFromDb(row: unknown): HourLog {
@@ -547,6 +554,29 @@ export function mapHourLogFromDb(row: unknown): HourLog {
     notes: toOptionalString(r.notes),
     created_at: toIsoString(r.created_at),
     updated_at: toIsoString(r.updated_at),
+    effective_minutes:
+      r.effective_minutes === undefined ? undefined : toOptionalNumber(r.effective_minutes),
+    original_minutes:
+      r.original_minutes === undefined || r.original_minutes === null
+        ? undefined
+        : toNumber(r.original_minutes),
+    adjustment_version:
+      r.adjustment_version === undefined || r.adjustment_version === null
+        ? undefined
+        : toNumber(r.adjustment_version),
+    adjustment_count:
+      r.adjustment_count === undefined || r.adjustment_count === null
+        ? undefined
+        : toNumber(r.adjustment_count),
+    integrity_status:
+      r.integrity_status === undefined || r.integrity_status === null
+        ? undefined
+        : (toString(r.integrity_status) as HourLog['integrity_status']),
+    is_adjusted: r.is_adjusted === undefined || r.is_adjusted === null ? undefined : Boolean(r.is_adjusted),
+    effective_delta_minutes:
+      r.effective_delta_minutes === undefined
+        ? undefined
+        : toOptionalNumber(r.effective_delta_minutes),
   }
 }
 

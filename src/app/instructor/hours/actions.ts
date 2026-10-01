@@ -257,3 +257,94 @@ export async function bulkApproveStudentHours(formData: FormData) {
 
   redirect(`/school/hours?bulkApproved=${updatedRows.length}`)
 }
+
+
+export async function adjustApprovedStudentHours(formData: FormData) {
+  const hourLogId = String(formData.get('hourLogId') || '').trim()
+  const correctedHours = Number(formData.get('correctedHours'))
+  const reason = String(formData.get('reason') || '').trim()
+  const expectedVersion = Number(formData.get('expectedAdjustmentVersion'))
+
+  if (
+    !hourLogId ||
+    !Number.isFinite(correctedHours) ||
+    correctedHours < 0 ||
+    correctedHours > 24
+  ) {
+    redirect('/school/hours?error=invalid-adjustment-hours')
+  }
+
+  const correctedMinutes = Math.round(correctedHours * 60)
+  if (correctedMinutes < 0 || correctedMinutes > 1440) {
+    redirect('/school/hours?error=invalid-adjustment-hours')
+  }
+
+  if (reason.length < 10 || reason.length > 500) {
+    redirect('/school/hours?error=adjustment-reason-required')
+  }
+
+  if (!Number.isInteger(expectedVersion) || expectedVersion < 0) {
+    redirect('/school/hours?error=stale-adjustment')
+  }
+
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
+  const { data: actor } = await supabase
+    .from('profiles')
+    .select('id, role, school_id')
+    .eq('id', user.id)
+    .single()
+
+  if (!actor?.school_id || !isSchoolAdmin(actor.role)) {
+    redirect('/dashboard')
+  }
+
+  const { data: target } = await supabase
+    .from('effective_hour_logs')
+    .select('id, user_id, school_id, status, adjustment_version')
+    .eq('id', hourLogId)
+    .eq('school_id', actor.school_id)
+    .maybeSingle()
+
+  if (!target || target.status !== 'approved') {
+    redirect('/school/hours?error=invalid-adjustment')
+  }
+
+  const { error } = await supabase.rpc('adjust_approved_hour', {
+    p_hour_log_id: hourLogId,
+    p_new_effective_minutes: correctedMinutes,
+    p_reason: reason,
+    p_expected_adjustment_version: expectedVersion,
+  })
+
+  if (error) {
+    console.error('[StaffHours] Failed to adjust approved hours', error)
+    const message = error.message.toLowerCase()
+    const code =
+      message.includes('changed since') || message.includes('changed during')
+        ? 'stale-adjustment'
+        : message.includes('attendance must match')
+          ? 'attendance-adjustment-mismatch'
+          : message.includes('must differ')
+            ? 'no-op-adjustment'
+            : 'adjustment-failed'
+
+    redirect(
+      `/school/hours?error=${code}&student=${encodeURIComponent(target.user_id)}`,
+    )
+  }
+
+  revalidatePath('/school')
+  revalidatePath('/school/hours')
+  revalidatePath('/instructor/hours')
+  revalidatePath('/dashboard/hours')
+  revalidatePath('/dashboard/compliance')
+  revalidatePath('/instructor/compliance')
+  revalidatePath(`/instructor/student/${target.user_id}`)
+
+  redirect(
+    `/school/hours?adjusted=1&student=${encodeURIComponent(target.user_id)}`,
+  )
+}

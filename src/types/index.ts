@@ -133,6 +133,8 @@ export interface InstructorNote {
 export type HourCategory = 'Theory' | 'Practical' | 'Clinic' | 'Sanitation' | 'Makeup Hours' | 'Other'
 export type HourStatus = 'pending' | 'approved' | 'rejected'
 
+export type HourIntegrityStatus = 'not_approved' | 'valid_unadjusted' | 'valid_adjusted' | 'invalid'
+
 export interface HourLog {
   id: string
   user_id: string
@@ -143,6 +145,14 @@ export interface HourLog {
   notes: string | null
   created_at: string
   updated_at: string
+  /** Present when read from the canonical effective_hour_logs view. */
+  effective_minutes?: number | null
+  original_minutes?: number
+  adjustment_version?: number
+  adjustment_count?: number
+  integrity_status?: HourIntegrityStatus
+  is_adjusted?: boolean
+  effective_delta_minutes?: number | null
 }
 
 // ============================================================================

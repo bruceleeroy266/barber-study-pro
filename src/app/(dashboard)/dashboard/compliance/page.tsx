@@ -47,7 +47,7 @@ export default async function StudentComplianceDashboard() {
   const [attendanceRes, hoursRes, attemptsRes, progressRes, gradesRes, categoriesRes, assessmentsRes] =
     await Promise.all([
       supabase.from('attendance_records').select('*').eq('school_id', profile?.school_id ?? '__none__').eq('user_id', student.id),
-      supabase.from('hour_logs').select('*').eq('school_id', profile?.school_id ?? '__none__').eq('user_id', student.id),
+      supabase.from('effective_hour_logs').select('*').eq('school_id', profile?.school_id ?? '__none__').eq('user_id', student.id),
       supabase.from('quiz_attempts').select('*').eq('user_id', student.id),
       supabase.from('student_progress').select('*').eq('user_id', student.id),
       supabase.from('grades').select('*').eq('school_id', profile?.school_id ?? '__none__').eq('student_id', student.id),

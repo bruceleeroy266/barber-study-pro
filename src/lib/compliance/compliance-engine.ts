@@ -15,6 +15,7 @@ import { calculateComplianceScore, ComplianceScoreInputs } from './compliance-sc
 import { determineBoardEligibility } from './board-eligibility'
 import { calculateGraduationReadiness } from './graduation-readiness'
 import { ComplianceRuleThresholds, DEFAULT_COMPLIANCE_THRESHOLDS } from './compliance-rules'
+import { getOfficialMinutes } from '@/lib/hours/reporting'
 
 export interface StudentComplianceInputs {
   student: Profile
@@ -43,8 +44,8 @@ export function buildStudentCompliance(inputs: StudentComplianceInputs) {
   )
 
   const approvedMinutes = hourLogs
-    .filter((h) => h.user_id === student.id && h.status === 'approved')
-    .reduce((sum, h) => sum + h.minutes, 0)
+    .filter((h) => h.user_id === student.id)
+    .reduce((sum, h) => sum + getOfficialMinutes(h), 0)
   const completedHours = approvedMinutes / 60
 
   const attempts = quizAttempts.filter((a) => a.user_id === student.id)
@@ -131,8 +132,8 @@ export function buildComplianceAlerts(inputs: StudentComplianceInputs): Complian
   }
 
   const approvedMinutes = hourLogs
-    .filter((h) => h.user_id === student.id && h.status === 'approved')
-    .reduce((sum, h) => sum + h.minutes, 0)
+    .filter((h) => h.user_id === student.id)
+    .reduce((sum, h) => sum + getOfficialMinutes(h), 0)
   const completedHours = approvedMinutes / 60
 
   if (completedHours < thresholds.requiredHours * 0.5) {

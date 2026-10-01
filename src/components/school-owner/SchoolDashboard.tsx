@@ -71,7 +71,7 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
   if (attendanceError) queryErrors.push('Failed to load attendance records')
 
   const { data: hoursData, error: hoursError } = await supabase
-    .from('hour_logs')
+    .from('effective_hour_logs')
     .select('*')
     .eq('school_id', schoolId)
     .in('user_id', schoolUserIds)
