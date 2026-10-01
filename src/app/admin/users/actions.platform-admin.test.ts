@@ -37,6 +37,7 @@ interface EqCall {
  */
 function buildSessionClient(profile: { role: string; school_id: string | null }, eqLog: EqCall[]) {
   return {
+    rpc: vi.fn().mockResolvedValue({ data: null, error: null }),
     auth: {
       getUser: vi.fn().mockResolvedValue({
         data: { user: { id: CALLER_ID, email: CALLER_EMAIL } },
