@@ -43,6 +43,7 @@ import Chapter17MicroCheckCard from './Chapter17MicroCheckCard'
 import Chapter18MicroCheckCard from './Chapter18MicroCheckCard'
 import Chapter19MicroCheckCard from './Chapter19MicroCheckCard'
 import Chapter20MicroCheckCard from './Chapter20MicroCheckCard'
+import Chapter21MicroCheckCard from './Chapter21MicroCheckCard'
 import { chapter1MicroChecks } from '@/lib/chapter-1-concepts/micro-checks'
 import {
   loadChapter1MicroCheckAttempts,
@@ -143,6 +144,11 @@ import {
   loadChapter20MicroCheckAttempts,
   type Chapter20MicroCheckAttemptRow,
 } from '@/lib/chapter-20-concepts/micro-check-persistence'
+import { chapter21MicroChecks } from '@/lib/chapter-21-concepts/micro-checks'
+import {
+  loadChapter21MicroCheckAttempts,
+  type Chapter21MicroCheckAttemptRow,
+} from '@/lib/chapter-21-concepts/micro-check-persistence'
 import { supabase } from '@/lib/supabase'
 import {
   areKnowledgeCheckSectionsComplete,
@@ -194,6 +200,7 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
   const hasKnowledgeChecks = knowledgeCheckSectionIds.length > 0
   const hasChapter19MicroChecks = chapterId === 'ch-19' && chapter19MicroChecks.length > 0
   const hasChapter20MicroChecks = chapterId === 'ch-20' && chapter20MicroChecks.length > 0
+  const hasChapter21MicroChecks = chapterId === 'ch-21' && chapter21MicroChecks.length > 0
   const knowledgeCheckStorageKey = useMemo(
     () => userId && chapterId ? `knowledge-check-sections-${userId}-${chapterId}` : null,
     [userId, chapterId]
@@ -237,6 +244,7 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
   const [chapter18MicroCheckAttempts, setChapter18MicroCheckAttempts] = useState<Chapter18MicroCheckAttemptRow[]>([])
   const [chapter19MicroCheckAttempts, setChapter19MicroCheckAttempts] = useState<Chapter19MicroCheckAttemptRow[]>([])
   const [chapter20MicroCheckAttempts, setChapter20MicroCheckAttempts] = useState<Chapter20MicroCheckAttemptRow[]>([])
+  const [chapter21MicroCheckAttempts, setChapter21MicroCheckAttempts] = useState<Chapter21MicroCheckAttemptRow[]>([])
 
   useEffect(() => {
     if (chapterId !== 'ch-1' || !userId) return
@@ -587,6 +595,22 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
     })
   }, [])
 
+  useEffect(() => {
+    if (chapterId !== 'ch-21' || !userId) return
+    let cancelled = false
+    void loadChapter21MicroCheckAttempts(userId).then((rows) => {
+      if (!cancelled) setChapter21MicroCheckAttempts(rows)
+    })
+    return () => { cancelled = true }
+  }, [chapterId, userId])
+
+  const handleChapter21MicroCheckPersisted = useCallback((row: Chapter21MicroCheckAttemptRow) => {
+    setChapter21MicroCheckAttempts((previous) => {
+      if (previous.some((attempt) => attempt.question_id === row.question_id)) return previous
+      return [...previous, row]
+    })
+  }, [])
+
   const saveSignal = useCallback(async (signal: 'lesson_completed' | 'knowledge_checks_completed') => {
     if (!userId || !chapterId) return
     const { data: existing } = await supabase
@@ -688,6 +712,50 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
   ])
 
   useEffect(() => {
+    if (
+      chapterId !== 'ch-21' ||
+      knowledgeChecksSaved ||
+      chapter21MicroCheckAttempts.length === 0
+    ) {
+      return
+    }
+
+    const requiredQuestionIds = chapter21MicroChecks.flatMap((check) =>
+      check.questions.map((question) => question.id),
+    )
+    const recordedQuestionIds = new Set(
+      chapter21MicroCheckAttempts.map((attempt) => attempt.question_id),
+    )
+    if (!requiredQuestionIds.every((questionId) => recordedQuestionIds.has(questionId))) {
+      return
+    }
+    if (
+      hasKnowledgeChecks &&
+      !areKnowledgeCheckSectionsComplete(
+        knowledgeCheckSectionIds,
+        completedKnowledgeCheckSections,
+      )
+    ) {
+      return
+    }
+
+    let cancelled = false
+    void saveSignal('knowledge_checks_completed').then((saved) => {
+      if (!cancelled && saved) setKnowledgeChecksSaved(true)
+    })
+
+    return () => { cancelled = true }
+  }, [
+    chapterId,
+    chapter21MicroCheckAttempts,
+    completedKnowledgeCheckSections,
+    hasKnowledgeChecks,
+    knowledgeCheckSectionIds,
+    knowledgeChecksSaved,
+    saveSignal,
+  ])
+
+  useEffect(() => {
     if (!knowledgeCheckStorageKey || typeof window === 'undefined' || knowledgeChecksSaved) return
     localStorage.setItem(knowledgeCheckStorageKey, JSON.stringify([...completedKnowledgeCheckSections]))
   }, [completedKnowledgeCheckSections, knowledgeCheckStorageKey, knowledgeChecksSaved])
@@ -715,6 +783,18 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
       }
     }
 
+    if (chapterId === 'ch-21') {
+      const requiredQuestionIds = chapter21MicroChecks.flatMap((check) =>
+        check.questions.map((question) => question.id),
+      )
+      const recordedQuestionIds = new Set(
+        chapter21MicroCheckAttempts.map((attempt) => attempt.question_id),
+      )
+      if (!requiredQuestionIds.every((questionId) => recordedQuestionIds.has(questionId))) {
+        return
+      }
+    }
+
     let cancelled = false
     void saveSignal('knowledge_checks_completed').then((saved) => {
       if (!cancelled && saved) {
@@ -730,6 +810,7 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
     }
   }, [
     chapter20MicroCheckAttempts,
+    chapter21MicroCheckAttempts,
     chapterId,
     completedKnowledgeCheckSections,
     knowledgeCheckSectionIds,
@@ -976,6 +1057,9 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
         const chapter20MicroChecksForSection = chapterId === 'ch-20'
           ? chapter20MicroChecks.filter((check) => check.afterSectionId === section.id)
           : []
+        const chapter21MicroChecksForSection = chapterId === 'ch-21'
+          ? chapter21MicroChecks.filter((check) => check.afterSectionId === section.id)
+          : []
 
         return (
           <Fragment key={section.id}>
@@ -1163,6 +1247,16 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
                 onAttemptPersisted={handleChapter20MicroCheckPersisted}
               />
             ))}
+            {userId && chapter21MicroChecksForSection.map((check) => (
+              <Chapter21MicroCheckCard
+                key={check.id}
+                check={check}
+                userId={userId}
+                theme={t}
+                attempts={chapter21MicroCheckAttempts.filter((attempt) => attempt.check_id === check.id)}
+                onAttemptPersisted={handleChapter21MicroCheckPersisted}
+              />
+            ))}
           </Fragment>
         )
       })}
@@ -1172,7 +1266,7 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
         </button>
       )}
       {lessonCompleted && <p className="text-sm text-[var(--color-brand-gold)]">✓ Lesson completed</p>}
-      {(hasKnowledgeChecks || hasChapter19MicroChecks || hasChapter20MicroChecks) && knowledgeChecksSaved && <p className="text-sm text-[var(--color-brand-gold)]">✓ Knowledge checks completed</p>}
+      {(hasKnowledgeChecks || hasChapter19MicroChecks || hasChapter20MicroChecks || hasChapter21MicroChecks) && knowledgeChecksSaved && <p className="text-sm text-[var(--color-brand-gold)]">✓ Knowledge checks completed</p>}
     </div>
   )
 }
