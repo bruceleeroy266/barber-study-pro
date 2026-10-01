@@ -8,7 +8,7 @@
  */
 export type ModernRecoveryChapterId =
   | 'ch-8' | 'ch-9' | 'ch-10' | 'ch-11' | 'ch-12' | 'ch-13'
-  | 'ch-14' | 'ch-15' | 'ch-16' | 'ch-17' | 'ch-18'
+  | 'ch-14' | 'ch-15' | 'ch-16' | 'ch-17' | 'ch-18' | 'ch-19' | 'ch-20' | 'ch-21'
 
 export function requiredModernRecoveryPercent(urgentSafety: boolean): 80 | 100 {
   return urgentSafety ? 100 : 80
