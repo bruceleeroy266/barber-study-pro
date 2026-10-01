@@ -719,8 +719,7 @@ describe('Phase 7A Slice 3: Domain Record Creation', () => {
 
       expect(result.success).toBe(false)
       expect(result.error).toMatch(/failed to create student record/i)
-      // Auth user should NOT be deleted (partial success model)
-      expect(mockServiceClient.auth.admin.deleteUser).not.toHaveBeenCalled()
+      expect(mockServiceClient.auth.admin.deleteUser).toHaveBeenCalledWith(INVITED_USER_ID)
     })
 
     it('surfaces non-23505 instructors INSERT failure as error', async () => {
@@ -747,8 +746,7 @@ describe('Phase 7A Slice 3: Domain Record Creation', () => {
 
       expect(result.success).toBe(false)
       expect(result.error).toMatch(/failed to create instructor record/i)
-      // Auth user should NOT be deleted (partial success model)
-      expect(mockServiceClient.auth.admin.deleteUser).not.toHaveBeenCalled()
+      expect(mockServiceClient.auth.admin.deleteUser).toHaveBeenCalledWith(INVITED_USER_ID)
     })
 
     it('uses the correct profile_id from the invited auth user', async () => {
@@ -826,6 +824,140 @@ describe('Phase 7A Slice 3: Domain Record Creation', () => {
         profile_id: INVITED_USER_ID,
         school_id: customSchoolId,
       })
+    })
+  })
+
+  describe('createUser() consistency hardening', () => {
+    it('upserts the trigger-created profile instead of inserting a duplicate profile', async () => {
+      const profileUpsertSpy = vi.fn().mockResolvedValue({ data: null, error: null })
+      const profileInsertSpy = vi.fn().mockResolvedValue({ data: null, error: null })
+      const mockServiceClient = setupMocks({
+        from: {
+          profiles: {
+            insert: profileInsertSpy,
+            upsert: profileUpsertSpy,
+          },
+        },
+      })
+      const { createUser: createUserAction } = await import('./actions')
+
+      const result = await createUserAction({
+        full_name: 'Patty Pineda',
+        email: 'student@rise.test',
+        password: 'temporary-password-123',
+        role: 'student',
+        school_id: RISE_SCHOOL_ID,
+        approval_status: 'approved',
+      })
+
+      expect(result.success).toBe(true)
+      expect(profileInsertSpy).not.toHaveBeenCalled()
+      expect(profileUpsertSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: INVITED_USER_ID,
+          email: 'student@rise.test',
+          full_name: 'Patty Pineda',
+          role: 'student',
+          school_id: RISE_SCHOOL_ID,
+          approval_status: 'approved',
+          is_disabled: false,
+          requires_password_change: true,
+        }),
+        { onConflict: 'id' }
+      )
+      expect(mockServiceClient.auth.admin.deleteUser).not.toHaveBeenCalled()
+    })
+
+    it('rolls back the auth user when profile reconciliation fails', async () => {
+      const mockServiceClient = setupMocks({
+        from: {
+          profiles: {
+            upsert: vi.fn().mockResolvedValue({
+              data: null,
+              error: { message: 'duplicate profile reconciliation failure' },
+            }),
+          },
+        },
+      })
+      const { createUser: createUserAction } = await import('./actions')
+
+      const result = await createUserAction({
+        full_name: 'Patty Pineda',
+        email: 'student@rise.test',
+        password: 'temporary-password-123',
+        role: 'student',
+        school_id: RISE_SCHOOL_ID,
+        approval_status: 'approved',
+      })
+
+      expect(result.success).toBe(false)
+      expect(result.error).toMatch(/failed to finalize user profile/i)
+      expect(mockServiceClient.auth.admin.deleteUser).toHaveBeenCalledWith(INVITED_USER_ID)
+    })
+
+    it('reports a cleanup warning when compensating rollback fails', async () => {
+      const mockServiceClient = setupMocks({
+        auth: {
+          admin: {
+            deleteUser: vi.fn().mockResolvedValue({
+              data: null,
+              error: { message: 'rollback delete failed' },
+            }),
+          },
+        },
+        from: {
+          profiles: {
+            upsert: vi.fn().mockResolvedValue({
+              data: null,
+              error: { message: 'profile write failed' },
+            }),
+          },
+        },
+      })
+      const { createUser: createUserAction } = await import('./actions')
+
+      const result = await createUserAction({
+        full_name: 'Patty Pineda',
+        email: 'student@rise.test',
+        password: 'temporary-password-123',
+        role: 'student',
+        school_id: RISE_SCHOOL_ID,
+        approval_status: 'approved',
+      })
+
+      expect(result.success).toBe(false)
+      expect(result.error).toMatch(/automatic rollback also failed/i)
+      expect(result.error).toMatch(/may require administrator cleanup/i)
+      expect(mockServiceClient.auth.admin.deleteUser).toHaveBeenCalledWith(INVITED_USER_ID)
+    })
+
+    it('stops before creation when duplicate-account verification fails', async () => {
+      const createUserSpy = vi.fn()
+      setupMocks({
+        auth: {
+          admin: {
+            listUsers: vi.fn().mockResolvedValue({
+              data: { users: [] },
+              error: { message: 'auth listing unavailable' },
+            }),
+            createUser: createUserSpy,
+          },
+        },
+      })
+      const { createUser: createUserAction } = await import('./actions')
+
+      const result = await createUserAction({
+        full_name: 'Patty Pineda',
+        email: 'student@rise.test',
+        password: 'temporary-password-123',
+        role: 'student',
+        school_id: RISE_SCHOOL_ID,
+        approval_status: 'approved',
+      })
+
+      expect(result.success).toBe(false)
+      expect(result.error).toMatch(/failed to verify existing accounts/i)
+      expect(createUserSpy).not.toHaveBeenCalled()
     })
   })
 
