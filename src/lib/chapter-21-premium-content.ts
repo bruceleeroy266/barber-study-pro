@@ -645,7 +645,7 @@ export const chapter21PremiumContent: ChapterContent = {
           situation:
             `A booth renter accepts $400 in cash tips over a month and plans not to report them because the shop owner does not track them. What is wrong with this plan?`,
           options: [
-            { letter: 'A', text: `Nothing; the shop owner is responsible for all taxes in a rental arrangement.`, feedback: `Incorrect. Booth renters are independent and responsible for reporting their own income, including tips.` },
+            { letter: 'A', text: `Nothing; the shop owner is responsible for all taxes in a rental arrangement.`, feedback: `Incorrect. The booth-renter label does not determine tax status. Cash tips should be tracked accurately and reporting obligations should be verified for the actual work arrangement under current rules.` },
             { letter: 'B', text: `Track the cash tips accurately and follow current reporting requirements for the actual work arrangement.`, feedback: `Correct. Cash does not become exempt from reporting merely because the shop owner does not track it; current federal, state, and local requirements should be verified.` },
             { letter: 'C', text: `She should return the tips to clients to avoid the issue.`, feedback: `Incorrect. Clients expect her to keep tips. The correct action is reporting them, not refusing them.` },
           ],
@@ -656,7 +656,7 @@ export const chapter21PremiumContent: ChapterContent = {
           situation:
             `A booth renter's rental agreement says she must carry her own liability insurance and provide her own tools and sanitation supplies. Which responsibility is this describing?`,
           options: [
-            { letter: 'A', text: `Employee benefits provided by the shop owner`, feedback: `Incorrect. Employees receive benefits from the employer; booth renters typically provide their own insurance and supplies.` },
+            { letter: 'A', text: `Employee benefits provided by the shop owner`, feedback: `Incorrect. Insurance and supply responsibilities must be determined from the actual agreement, working relationship, and applicable requirements rather than assumed from the booth-renter label.` },
             { letter: 'B', text: `Contractual operating responsibilities that must be verified from the actual rental agreement and applicable rules`, feedback: `Correct. Insurance, tools, supplies, utilities, and other expenses should be confirmed from the written agreement rather than assumed from the booth-renter label.` },
             { letter: 'C', text: `Optional extras she can ignore if money is tight`, feedback: `Incorrect. These are contractual obligations, not optional luxuries. Ignoring them can lead to eviction or liability exposure.` },
           ],
