@@ -6,7 +6,7 @@ import { resolveProgramRequirementsForStudents } from '@/lib/programs/requiremen
 import { bulkApproveStudentHours, logStudentHours, reviewStudentHours } from '@/app/instructor/hours/actions'
 import HoursPdfExports from '@/components/hours/HoursPdfExports'
 import StudentHoursDropdown from '@/components/hours/StudentHoursDropdown'
-import { calculateApprovedPeriodTotals, formatHourMinutes } from '@/lib/hours/reporting'
+import { calculateApprovedPeriodTotals, calculateOfficialApprovedMinutes, formatHourMinutes, getOfficialMinutes } from '@/lib/hours/reporting'
 import type { HourCategory, HourStatus } from '@/types'
 
 interface HoursRosterStudent {
@@ -148,8 +148,8 @@ export default async function StaffHoursManager({
 
   const { data: logsData } = studentIds.length
     ? await supabase
-        .from('hour_logs')
-        .select('id, user_id, date, category, minutes, status, notes, rejection_reason, submitted_by, reviewed_by, reviewed_at, created_at, source_type, source_attendance_id, resubmission_of_hour_log_id')
+        .from('effective_hour_logs')
+        .select('id, user_id, date, category, minutes, effective_minutes, integrity_status, status, notes, rejection_reason, submitted_by, reviewed_by, reviewed_at, created_at, source_type, source_attendance_id, resubmission_of_hour_log_id')
         .eq('school_id', actor.school_id)
         .in('user_id', studentIds)
         .order('date', { ascending: false })
@@ -182,9 +182,7 @@ export default async function StaffHoursManager({
 
   const rows = students.map((student) => {
     const studentLogs = logs.filter((log) => log.user_id === student.id)
-    const approvedMinutes = studentLogs
-      .filter((log) => log.status === 'approved')
-      .reduce((sum, log) => sum + log.minutes, 0)
+    const approvedMinutes = calculateOfficialApprovedMinutes(studentLogs)
     const pendingMinutes = studentLogs
       .filter((log) => log.status === 'pending')
       .reduce((sum, log) => sum + log.minutes, 0)
@@ -513,7 +511,7 @@ export default async function StaffHoursManager({
                       <div className="min-w-0">
                         <div className="font-semibold text-white">{student?.full_name ?? 'Unknown student'}</div>
                         <div className="mt-1 text-sm text-silver">
-                          {log.date} · {log.category} · {formatHourMinutes(log.minutes)}
+                          {log.date} · {log.category} · {formatHourMinutes(log.status === 'approved' ? getOfficialMinutes(log) : log.minutes)}
                         </div>
                         <div className="mt-2 flex flex-wrap gap-2">
                           <HourSourceBadge sourceType={log.source_type} />
@@ -601,7 +599,7 @@ export default async function StaffHoursManager({
                       <div className="min-w-0">
                         <div className="font-semibold text-white">{student?.full_name ?? 'Unknown student'}</div>
                         <div className="mt-1 text-sm text-silver">
-                          {log.date} · {log.category} · {formatHourMinutes(log.minutes)}
+                          {log.date} · {log.category} · {formatHourMinutes(log.status === 'approved' ? getOfficialMinutes(log) : log.minutes)}
                         </div>
                         <div className="mt-2 flex flex-wrap gap-2">
                           <HourSourceBadge sourceType={log.source_type} />
