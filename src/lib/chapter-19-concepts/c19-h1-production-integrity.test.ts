@@ -37,7 +37,7 @@ describe('C19-H1 production integrity hardening', () => {
       "void saveSignal('knowledge_checks_completed').then((saved) =>",
     )
     expect(source).toContain(
-      "(hasKnowledgeChecks || hasChapter19MicroChecks || hasChapter20MicroChecks) && knowledgeChecksSaved",
+      "(hasKnowledgeChecks || hasChapter19MicroChecks || hasChapter20MicroChecks || hasChapter21MicroChecks) && knowledgeChecksSaved",
     )
   })
 
@@ -74,12 +74,12 @@ describe('C19-H1 production integrity hardening', () => {
     expect(microClient).toContain(
       "fetch('/api/chapter-19/micro-check'",
     )
-    expect(activityClient).toContain(
-      "input.chapterId === 'ch-19' || input.chapterId === 'ch-20'",
-    )
-    expect(activityClient).toContain(
-      "input.chapterId === 'ch-19' ? 'chapter-19' : 'chapter-20'",
-    )
+    expect(activityClient).toContain("input.chapterId === 'ch-19'")
+    expect(activityClient).toContain("input.chapterId === 'ch-20'")
+    expect(activityClient).toContain("input.chapterId === 'ch-21'")
+    expect(activityClient).toContain("'chapter-19'")
+    expect(activityClient).toContain("'chapter-20'")
+    expect(activityClient).toContain("'chapter-21'")
   })
 
   it('denies direct Chapter 19 evidence inserts and student mutation of quiz-19 attempts', () => {
