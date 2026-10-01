@@ -71,7 +71,7 @@ export default async function InstructorComplianceDashboard() {
   const [attendanceRes, hoursRes, attemptsRes, progressRes, gradesRes, categoriesRes, assessmentsRes] =
     await Promise.all([
       supabase.from('attendance_records').select('*').eq('school_id', schoolId).in('user_id', studentIdFilter),
-      supabase.from('hour_logs').select('*').eq('school_id', schoolId).in('user_id', studentIdFilter),
+      supabase.from('effective_hour_logs').select('*').eq('school_id', schoolId).in('user_id', studentIdFilter),
       supabase.from('quiz_attempts').select('*').in('user_id', studentIdFilter),
       supabase.from('student_progress').select('*').in('user_id', studentIdFilter),
       supabase.from('grades').select('*').eq('school_id', schoolId).in('student_id', studentIdFilter),
