@@ -28,7 +28,8 @@ const resubmissionMigration = readFileSync(
 
 describe('E10 student data integrity audit', () => {
   it('keeps official student totals approved-only and pending isolated', () => {
-    expect(studentPage).toContain(".filter((row) => row.status === 'approved')")
+    expect(studentPage).toContain(".from('effective_hour_logs')")
+    expect(studentPage).toContain('calculateOfficialApprovedMinutes(reportingHours)')
     expect(studentPage).toContain(".filter((row) => row.status === 'pending')")
     expect(studentPage).toContain('Based on approved hours only')
     expect(studentPage).toContain('Pending hours remain separate until administrator approval.')
