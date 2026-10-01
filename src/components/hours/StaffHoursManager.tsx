@@ -84,6 +84,7 @@ interface Props {
   reviewedStatus?: string | null
   alreadyReviewedStatus?: string | null
   bulkApprovedCount?: number | null
+  adjusted?: boolean
   queueStudentFilter?: string
   queueDateFilter?: string
   queueSourceFilter?: string
@@ -100,6 +101,7 @@ export default async function StaffHoursManager({
   reviewedStatus = null,
   alreadyReviewedStatus = null,
   bulkApprovedCount = null,
+  adjusted = false,
   queueStudentFilter = '',
   queueDateFilter = '',
   queueSourceFilter = '',
@@ -301,8 +303,10 @@ export default async function StaffHoursManager({
             {bulkApprovedCount} pending hour entr{bulkApprovedCount === 1 ? 'y was' : 'ies were'} approved. Totals and reviewed history have been refreshed.
           </div>
         )}
-        {highlightedStudentId && !error && (
-          <div className="sr-only" aria-live="polite">Selected student hours loaded.</div>
+        {adjusted && (
+          <div className="rounded-xl border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 p-4 text-[var(--color-brand-gold)]" role="status">
+            Hours adjusted. Official totals and reports now use the corrected value; the original approval remains in the audit history.
+          </div>
         )}
         {errorMessage && (
           <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-red-200">
