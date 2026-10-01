@@ -31,6 +31,7 @@ import { calculateBoardReadiness } from '@/lib/readiness'
 import { calculateOverallGrade, getLetterGrade } from '@/lib/gradebook'
 import { localChapters } from '@/lib/local-data'
 import { DEFAULT_REQUIRED_HOURS } from '@/lib/programs/requirements'
+import { getOfficialMinutes } from '@/lib/hours/reporting'
 
 /**
  * Resolve the applicable program's required hours for school analytics.
@@ -136,8 +137,7 @@ export function buildSchoolOverviewMetrics(inputs: SchoolAnalyticsInputs): Schoo
     gradeSum += overall
 
     const approvedMinutes = studentHourLogs(student.id, hourLogs)
-      .filter((h) => h.status === 'approved')
-      .reduce((sum, h) => sum + h.minutes, 0)
+      .reduce((sum, h) => sum + getOfficialMinutes(h), 0)
     completedHoursSum += approvedMinutes / 60
 
     const sAssessments = studentAssessments(student.id, assessments)
@@ -192,8 +192,7 @@ export function buildStudentPerformanceRows(inputs: SchoolAnalyticsInputs): Stud
     const overall = calculateOverallGrade(sGrades, gradeCategories)
     const sAssessments = studentAssessments(student.id, assessments)
     const approvedMinutes = studentHourLogs(student.id, hourLogs)
-      .filter((h) => h.status === 'approved')
-      .reduce((sum, h) => sum + h.minutes, 0)
+      .reduce((sum, h) => sum + getOfficialMinutes(h), 0)
     const completedHours = approvedMinutes / 60
 
     const passed = sAssessments.filter((a) => a.isPassed).length
@@ -385,8 +384,7 @@ export function buildSchoolAlerts(inputs: SchoolAnalyticsInputs): SchoolOwnerAle
     }
 
     const approvedMinutes = studentHourLogs(student.id, inputs.hourLogs)
-      .filter((h) => h.status === 'approved')
-      .reduce((sum, h) => sum + h.minutes, 0)
+      .reduce((sum, h) => sum + getOfficialMinutes(h), 0)
     const completedHours = approvedMinutes / 60
     const requiredHours = requiredHoursForStudent(inputs, student.id)
     if (completedHours < requiredHours * 0.5) {
