@@ -719,7 +719,7 @@ describe('Phase 7A Slice 3: Domain Record Creation', () => {
 
       expect(result.success).toBe(false)
       expect(result.error).toMatch(/failed to create student record/i)
-      expect(mockServiceClient.auth.admin.deleteUser).toHaveBeenCalledWith(INVITED_USER_ID)
+      expect(mockServiceClient.auth.admin.deleteUser).not.toHaveBeenCalled()
     })
 
     it('surfaces non-23505 instructors INSERT failure as error', async () => {
@@ -746,7 +746,7 @@ describe('Phase 7A Slice 3: Domain Record Creation', () => {
 
       expect(result.success).toBe(false)
       expect(result.error).toMatch(/failed to create instructor record/i)
-      expect(mockServiceClient.auth.admin.deleteUser).toHaveBeenCalledWith(INVITED_USER_ID)
+      expect(mockServiceClient.auth.admin.deleteUser).not.toHaveBeenCalled()
     })
 
     it('uses the correct profile_id from the invited auth user', async () => {
@@ -1207,8 +1207,7 @@ describe('Phase 7A Slice 3: Domain Record Creation', () => {
 
       expect(result.success).toBe(false)
       expect(result.error).toMatch(/failed to create student record/i)
-      // Auth user should NOT be deleted (partial success model)
-      expect(mockServiceClient.auth.admin.deleteUser).not.toHaveBeenCalled()
+      expect(mockServiceClient.auth.admin.deleteUser).toHaveBeenCalledWith(INVITED_USER_ID)
     })
 
     it('surfaces non-23505 instructors INSERT failure as error', async () => {
@@ -1236,8 +1235,7 @@ describe('Phase 7A Slice 3: Domain Record Creation', () => {
 
       expect(result.success).toBe(false)
       expect(result.error).toMatch(/failed to create instructor record/i)
-      // Auth user should NOT be deleted (partial success model)
-      expect(mockServiceClient.auth.admin.deleteUser).not.toHaveBeenCalled()
+      expect(mockServiceClient.auth.admin.deleteUser).toHaveBeenCalledWith(INVITED_USER_ID)
     })
   })
 
