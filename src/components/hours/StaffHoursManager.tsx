@@ -1,9 +1,9 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
-import { hasPermission } from '@/lib/auth-helpers'
+import { hasPermission, isSchoolAdmin } from '@/lib/auth-helpers'
 import { resolveProgramRequirementsForStudents } from '@/lib/programs/requirements'
-import { bulkApproveStudentHours, logStudentHours, reviewStudentHours } from '@/app/instructor/hours/actions'
+import { adjustApprovedStudentHours, bulkApproveStudentHours, logStudentHours, reviewStudentHours } from '@/app/instructor/hours/actions'
 import HoursPdfExports from '@/components/hours/HoursPdfExports'
 import StudentHoursDropdown from '@/components/hours/StudentHoursDropdown'
 import { calculateApprovedPeriodTotals, calculateOfficialApprovedMinutes, formatHourMinutes, getOfficialMinutes } from '@/lib/hours/reporting'
@@ -30,6 +30,7 @@ interface StaffHourLogRow {
   minutes: number
   effective_minutes: number | null
   integrity_status: 'not_approved' | 'valid_unadjusted' | 'valid_adjusted' | 'invalid'
+  adjustment_version: number
   status: HourStatus
   notes: string | null
   rejection_reason: string | null
@@ -151,7 +152,7 @@ export default async function StaffHoursManager({
   const { data: logsData } = studentIds.length
     ? await supabase
         .from('effective_hour_logs')
-        .select('id, user_id, date, category, minutes, effective_minutes, integrity_status, status, notes, rejection_reason, submitted_by, reviewed_by, reviewed_at, created_at, source_type, source_attendance_id, resubmission_of_hour_log_id')
+        .select('id, user_id, date, category, minutes, effective_minutes, integrity_status, adjustment_version, status, notes, rejection_reason, submitted_by, reviewed_by, reviewed_at, created_at, source_type, source_attendance_id, resubmission_of_hour_log_id')
         .eq('school_id', actor.school_id)
         .in('user_id', studentIds)
         .order('date', { ascending: false })
@@ -226,10 +227,17 @@ export default async function StaffHoursManager({
     error === 'rejection-reason-required' ? 'Enter a reason before rejecting an hour entry.' :
     error === 'no-hours-selected' ? 'No pending hour entries were selected for bulk approval.' :
     error === 'bulk-review-failed' ? 'The bulk approval could not be saved. Please try again.' :
+    error === 'invalid-adjustment-hours' ? 'Enter corrected hours between 0 and 24.' :
+    error === 'adjustment-reason-required' ? 'Enter a clear reason between 10 and 500 characters.' :
+    error === 'stale-adjustment' ? 'This hour record changed since you opened it. Review the latest value and try again.' :
+    error === 'attendance-adjustment-mismatch' ? 'Attendance must be corrected first so it matches the new official hours.' :
+    error === 'no-op-adjustment' ? 'The corrected hours must be different from the current official hours.' :
+    error === 'invalid-adjustment' ? 'Only an approved hour entry from your school can be adjusted.' :
+    error === 'adjustment-failed' ? 'The adjustment could not be saved. Review the entry and try again.' :
     null
 
   const schoolName = typeof school?.name === 'string' && school.name ? school.name : 'ASCYN PRO School'
-  const isSchoolAdministrator = actor.role === 'school_admin'
+  const isSchoolAdministrator = isSchoolAdmin(actor.role)
   const isInstructor = actor.role === 'instructor'
   const pendingLogs = logs.filter((log) => log.status === 'pending')
   const reviewedLogs = logs.filter((log) => log.status === 'approved' || log.status === 'rejected')
@@ -292,6 +300,9 @@ export default async function StaffHoursManager({
           <div className="rounded-xl border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 p-4 text-[var(--color-brand-gold)]">
             {bulkApprovedCount} pending hour entr{bulkApprovedCount === 1 ? 'y was' : 'ies were'} approved. Totals and reviewed history have been refreshed.
           </div>
+        )}
+        {highlightedStudentId && !error && (
+          <div className="sr-only" aria-live="polite">Selected student hours loaded.</div>
         )}
         {errorMessage && (
           <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-red-200">
@@ -625,6 +636,73 @@ export default async function StaffHoursManager({
                           <div className="mt-2 rounded-lg border border-warm-bronze/30 bg-warm-bronze/10 p-3 text-sm text-warm-bronze">
                             Rejection reason: {log.rejection_reason}
                           </div>
+                        )}
+                        {log.status === 'approved' && (
+                          <details className="mt-3 rounded-lg border border-graphite bg-charcoal p-3">
+                            <summary className="cursor-pointer font-semibold text-[var(--color-brand-gold)]">
+                              Adjust Hours
+                            </summary>
+                            <form action={adjustApprovedStudentHours} className="mt-3 space-y-3">
+                              <input type="hidden" name="hourLogId" value={log.id} />
+                              <input
+                                type="hidden"
+                                name="expectedAdjustmentVersion"
+                                value={log.adjustment_version}
+                              />
+                              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                <div className="rounded-lg border border-graphite bg-black p-3">
+                                  <div className="text-xs text-silver">Current official hours</div>
+                                  <div className="mt-1 font-semibold text-white">
+                                    {formatHourMinutes(getOfficialMinutes(log))}
+                                  </div>
+                                  {log.adjustment_version > 0 && (
+                                    <div className="mt-1 text-xs text-silver-gray">
+                                      Previously adjusted · version {log.adjustment_version}
+                                    </div>
+                                  )}
+                                </div>
+                                <label className="space-y-1">
+                                  <span className="text-xs font-medium text-silver">Corrected hours</span>
+                                  <input
+                                    name="correctedHours"
+                                    type="number"
+                                    min="0"
+                                    max="24"
+                                    step="0.01"
+                                    required
+                                    defaultValue={(getOfficialMinutes(log) / 60).toFixed(2)}
+                                    className="w-full rounded-lg border border-graphite bg-black px-3 py-2 text-white"
+                                  />
+                                </label>
+                              </div>
+                              <label className="block space-y-1">
+                                <span className="text-xs font-medium text-silver">Reason for adjustment</span>
+                                <textarea
+                                  name="reason"
+                                  minLength={10}
+                                  maxLength={500}
+                                  required
+                                  rows={2}
+                                  placeholder="Example: Student left 30 minutes early."
+                                  className="w-full rounded-lg border border-graphite bg-black px-3 py-2 text-white"
+                                />
+                              </label>
+                              {log.source_type === 'attendance' && (
+                                <p className="text-xs text-silver">
+                                  Attendance-generated hours must match the corrected attendance record before this adjustment can be saved.
+                                </p>
+                              )}
+                              <p className="text-xs text-silver-gray">
+                                The original approved record stays in the audit history. This changes only the current official total.
+                              </p>
+                              <button
+                                type="submit"
+                                className="rounded-lg bg-[var(--color-brand-gold)] px-4 py-2 text-sm font-semibold text-black"
+                              >
+                                Save Adjustment
+                              </button>
+                            </form>
+                          </details>
                         )}
                       </div>
 
