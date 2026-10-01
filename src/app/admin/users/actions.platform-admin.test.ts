@@ -100,6 +100,7 @@ function buildServiceClient() {
     requires_password_change: false,
   }
   return {
+    rpc: vi.fn().mockResolvedValue({ data: null, error: null }),
     auth: {
       admin: {
         updateUserById: vi.fn().mockResolvedValue({ error: null }),
