@@ -1,35 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import AdminNav from './AdminNav'
 import type { Profile } from '@/types'
 
-const mocks = vi.hoisted(() => ({
-  push: vi.fn(),
-  refresh: vi.fn(),
-  signOut: vi.fn().mockResolvedValue({ error: null }),
-  getUser: vi.fn().mockResolvedValue({ data: { user: { id: 'admin-1', email: 'admin@test.com' } }, error: null }),
-  logLogout: vi.fn().mockResolvedValue(undefined),
-}))
-
 vi.mock('next/navigation', () => ({
   usePathname: () => '/admin',
-  useRouter: () => ({
-    push: mocks.push,
-    refresh: mocks.refresh,
-  }),
-}))
-
-vi.mock('@/lib/supabase', () => ({
-  supabase: {
-    auth: {
-      getUser: mocks.getUser,
-      signOut: mocks.signOut,
-    },
-  },
-}))
-
-vi.mock('@/app/(auth)/actions', () => ({
-  logLogout: mocks.logLogout,
 }))
 
 const adminProfile: Profile = {
@@ -53,11 +28,6 @@ const adminProfile: Profile = {
 describe('AdminNav', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mocks.push.mockClear()
-    mocks.refresh.mockClear()
-    mocks.signOut.mockClear()
-    mocks.getUser.mockClear()
-    mocks.logLogout.mockClear()
   })
 
   it('renders admin name and role', () => {
@@ -77,21 +47,9 @@ describe('AdminNav', () => {
     expect(screen.getByRole('link', { name: /Maintenance/i })).toHaveAttribute('href', '/admin/maintenance')
   })
 
-  it('renders a logout button', () => {
+  it('renders logout as a server-backed navigation link', () => {
     render(<AdminNav user={adminProfile} />)
-    expect(screen.getByRole('button', { name: /Logout/i })).toBeInTheDocument()
-  })
-
-  it('signs out and redirects to login when logout is clicked', async () => {
-    render(<AdminNav user={adminProfile} />)
-    fireEvent.click(screen.getByRole('button', { name: /Logout/i }))
-
-    await waitFor(() => {
-      expect(mocks.logLogout).toHaveBeenCalledWith('admin-1', 'admin@test.com')
-      expect(mocks.signOut).toHaveBeenCalled()
-      expect(mocks.push).toHaveBeenCalledWith('/login')
-      expect(mocks.refresh).toHaveBeenCalled()
-    })
+    expect(screen.getByRole('link', { name: /Logout/i })).toHaveAttribute('href', '/auth/logout')
   })
 
   it('limits navigation links for school_admin', () => {
