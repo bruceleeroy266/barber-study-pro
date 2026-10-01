@@ -7,7 +7,7 @@ import {
 } from '@/lib/programs/requirements'
 import { calculateAttendanceSummary, getTodayAttendanceStatus } from '@/lib/attendance'
 import { mapAttendanceRecordsFromDb } from '@/lib/mappers/operational-data-mappers'
-import { calculateApprovedPeriodTotals } from '@/lib/hours/reporting'
+import { calculateApprovedPeriodTotals, calculateOfficialApprovedMinutes } from '@/lib/hours/reporting'
 import type { HoursReportLog } from '@/lib/hours/reporting'
 import type { AttendanceRecord, AttendanceStatus, HourCategory } from '@/types'
 
@@ -134,8 +134,8 @@ export default async function StudentHoursPage() {
     : defaultProgramRequirements()
 
   let hourQuery = supabase
-    .from('hour_logs')
-    .select('id, user_id, date, category, minutes, status, source_type, resubmission_of_hour_log_id, rejection_reason, reviewed_at, created_at')
+    .from('effective_hour_logs')
+    .select('id, user_id, date, category, minutes, effective_minutes, integrity_status, status, source_type, resubmission_of_hour_log_id, rejection_reason, reviewed_at, created_at')
     .eq('user_id', user.id)
     .order('date', { ascending: false })
     .order('created_at', { ascending: false })
@@ -185,6 +185,8 @@ export default async function StudentHoursPage() {
     date: string
     category: string
     minutes: number
+    effective_minutes: number | null
+    integrity_status: 'not_approved' | 'valid_unadjusted' | 'valid_adjusted' | 'invalid'
     status: 'pending' | 'approved' | 'rejected'
     source_type: 'manual' | 'attendance'
     resubmission_of_hour_log_id: string | null
@@ -241,6 +243,8 @@ export default async function StudentHoursPage() {
     date: row.date,
     category: row.category as HourCategory,
     minutes: row.minutes,
+    effective_minutes: row.effective_minutes,
+    integrity_status: row.integrity_status,
     status: row.status,
     notes: null,
     rejection_reason: row.rejection_reason,
@@ -250,9 +254,7 @@ export default async function StudentHoursPage() {
     created_at: row.created_at,
   }))
 
-  const approvedMinutes = hours
-    .filter((row) => row.status === 'approved')
-    .reduce((sum, row) => sum + row.minutes, 0)
+  const approvedMinutes = calculateOfficialApprovedMinutes(reportingHours)
   const pendingMinutes = hours
     .filter((row) => row.status === 'pending')
     .reduce((sum, row) => sum + row.minutes, 0)
