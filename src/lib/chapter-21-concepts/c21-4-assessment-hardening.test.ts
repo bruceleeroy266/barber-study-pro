@@ -153,7 +153,10 @@ describe('C21-4 assessment hardening certification', () => {
       'the agreement and actual working relationship',
     )
     expect(source).toContain(
-      'the booth-renter label alone does not determine tax treatment',
+      'Use the booth-renter label alone to decide legal status',
+    )
+    expect(source).toContain(
+      'Classification and business duties depend on the full facts and applicable rules rather than a label alone',
     )
     expect(source).toContain(
       'Whether self-employment tax, withholding, estimated payments, or other obligations apply depends on classification',
@@ -177,7 +180,10 @@ describe('C21-4 assessment hardening certification', () => {
       'define a measurable goal, verify consent/rules, and test results before expanding',
     )
     expect(source).toContain(
-      'testimonials should be genuine, not misleading',
+      'Which client-based marketing signal can add strong social proof when it is genuine and not misleading?',
+    )
+    expect(source).toContain(
+      'Genuine reviews and referrals can add social proof when they reflect real experiences',
     )
   })
 
