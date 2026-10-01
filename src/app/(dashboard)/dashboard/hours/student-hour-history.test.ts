@@ -40,7 +40,7 @@ describe('E4 student hour history', () => {
   })
 
   it('keeps approved-only official totals separate from history status', () => {
-    expect(page).toContain("row.status === 'approved'")
+    expect(page).toContain('calculateOfficialApprovedMinutes(reportingHours)')
     expect(page).toContain("row.status === 'pending'")
     expect(page).toContain('Approved entries count toward your official total; pending and rejected entries do not.')
   })
@@ -59,7 +59,7 @@ describe('E4 student hour history', () => {
   })
 
   it('continues to query only the authenticated student own hour records', () => {
-    expect(page).toContain(".from('hour_logs')")
+    expect(page).toContain(".from('effective_hour_logs')")
     expect(page).toContain(".eq('user_id', user.id)")
   })
 })
