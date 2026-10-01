@@ -865,7 +865,7 @@ describe('Phase 7A Slice 3: Domain Record Creation', () => {
         }),
         { onConflict: 'id' }
       )
-      expect(mockServiceClient.auth.admin.deleteUser).toHaveBeenCalledWith(INVITED_USER_ID)
+      expect(mockServiceClient.auth.admin.deleteUser).not.toHaveBeenCalled()
     })
 
     it('rolls back the auth user when profile reconciliation fails', async () => {
@@ -1413,7 +1413,7 @@ describe('deleteUser', () => {
 
     expect(result.success).toBe(false)
     expect(result.error).toMatch(/cannot delete your own account/i)
-    expect(mockServiceClient.auth.admin.deleteUser).toHaveBeenCalledWith(INVITED_USER_ID)
+    expect(mockServiceClient.auth.admin.deleteUser).not.toHaveBeenCalled()
   })
 
   it('rejects when the admin is not authenticated', async () => {
@@ -1470,7 +1470,7 @@ describe('deleteUser', () => {
 
     expect(result.success).toBe(false)
     expect(result.error).toMatch(/cannot delete platform administrators/i)
-    expect(mockServiceClient.auth.admin.deleteUser).toHaveBeenCalledWith(INVITED_USER_ID)
+    expect(mockServiceClient.auth.admin.deleteUser).not.toHaveBeenCalled()
   })
 
   it('prevents school admins from deleting users outside their school', async () => {
@@ -1507,7 +1507,7 @@ describe('deleteUser', () => {
 
     expect(result.success).toBe(false)
     expect(result.error).toMatch(/forbidden/i)
-    expect(mockServiceClient.auth.admin.deleteUser).toHaveBeenCalledWith(INVITED_USER_ID)
+    expect(mockServiceClient.auth.admin.deleteUser).not.toHaveBeenCalled()
   })
 
   it('returns an error when the auth delete fails', async () => {
