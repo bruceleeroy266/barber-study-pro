@@ -1,3 +1,4 @@
+import { getOfficialMinutes } from '@/lib/hours/reporting'
 import { createClient } from '@/lib/supabase-server'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
@@ -435,7 +436,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
 
   // Get hour logs
   const { data: hourLogs } = await supabase
-    .from('hour_logs')
+    .from('effective_hour_logs')
     .select('*')
     .eq('school_id', instructorProfile.school_id)
     .eq('user_id', studentId)
@@ -480,9 +481,10 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
   const boardState = schoolState ?? (usingDemoData ? demoSchool.state : null) ?? '—'
 
   const REQUIRED_MINUTES = programRequirements.requiredHours * 60
-  const approvedMinutes = hourLogRecords
-    .filter((h) => h.status === 'approved')
-    .reduce((sum, h) => sum + h.minutes, 0)
+  const approvedMinutes = hourLogRecords.reduce(
+    (sum, h) => sum + getOfficialMinutes(h),
+    0,
+  )
   const pendingMinutes = hourLogRecords
     .filter((h) => h.status === 'pending')
     .reduce((sum, h) => sum + h.minutes, 0)
