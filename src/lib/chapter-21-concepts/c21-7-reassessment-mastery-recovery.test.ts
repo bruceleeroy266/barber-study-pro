@@ -58,10 +58,10 @@ describe('C21-7 fresh reassessment reserve and mastery recovery', () => {
   })
 
   it('keeps reassessment IDs and prompts fresh from both initial assessment and micro-check banks', () => {
-    const initialIds = new Set(
+    const initialIds = new Set<string>(
       chapter21PremiumQuizQuestions.map((question) => question.id),
     )
-    const microIds = new Set(
+    const microIds = new Set<string>(
       chapter21MicroChecks.flatMap((check) =>
         check.questions.map((question) => question.id),
       ),
