@@ -195,7 +195,7 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
       {/* Flashcards Section */}
       {flashcards && flashcards.length > 0 && (
         <div className="bg-charcoal border border-graphite rounded-2xl p-8">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
             <div>
               <h2 className="text-xl font-semibold text-white">Flashcards</h2>
               <p className="text-silver text-sm">Master key concepts with interactive flashcards</p>
@@ -219,7 +219,7 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
       {/* Quiz Section */}
       {quiz && questions && questions.length > 0 && (
         <div className="bg-charcoal border border-graphite rounded-2xl p-8">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
             <div>
               <h2 className="text-xl font-semibold text-white">Chapter Quiz</h2>
               <p className="text-silver text-sm">Test your knowledge with {questions.length} questions</p>
@@ -285,7 +285,7 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
       )}
 
       {/* Navigation */}
-      <div className="flex items-center justify-between pt-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pt-4">
         {previousChapterNumber !== null && (
           <Link
             href={`/dashboard/chapters/${previousChapterNumber}`}
@@ -297,7 +297,7 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
         {nextChapterNumber !== null && (
           <Link
             href={`/dashboard/chapters/${nextChapterNumber}`}
-            className="flex items-center gap-2 text-silver hover:text-[var(--color-brand-gold)] transition-colors ml-auto"
+            className="flex items-center gap-2 text-silver hover:text-[var(--color-brand-gold)] transition-colors sm:ml-auto"
           >
             Chapter {nextChapterNumber} →
           </Link>
