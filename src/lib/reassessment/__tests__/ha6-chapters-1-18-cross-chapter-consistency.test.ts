@@ -51,7 +51,8 @@ describe('HA-6 Chapters 1-18 cross-chapter consistency', () => {
       const provider = registry.getProvider(chapterId(chapter))
       expect(provider).toBeDefined()
       for (const conceptId of provider!.getAllConceptIds()) {
-        expect(conceptId, `Chapter ${chapter} concept ${conceptId}`).toMatch(new RegExp(`^ch${chapter}-`))
+        const namespace = chapter === 2 ? /^C-2-\d{2}$/ : new RegExp(`^ch${chapter}-`)
+        expect(conceptId, `Chapter ${chapter} concept ${conceptId}`).toMatch(namespace)
         expect(seen.has(conceptId), `duplicate concept ${conceptId}`).toBe(false)
         seen.set(conceptId, chapter)
       }
