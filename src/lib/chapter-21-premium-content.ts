@@ -131,10 +131,10 @@ export const chapter21PremiumContent: ChapterContent = {
     {
       type: 'htmlContent',
       id: 'ch21-lo1',
-      standardId: 'CH21-LO01',
+      standardId: 'LO-21-01',
       title: 'LO1: Your Two Main Paths Into Business',
       html: `
-        <div class="p-6 max-w-4xl mx-auto">
+        <div class="p-6 max-w-4xl mx-auto" data-learning-objective="LO-21-01" data-concept-family="ch21-business-entry-paths" data-legacy-standard-id="CH21-LO01">
           <p class="mb-4 text-gray-300">
             There are two broad ways to work for yourself as a barber: <strong>open or acquire your own barbershop</strong>, or <strong>rent a booth or chair inside an existing shop</strong>.
             Both give you more independence than a traditional employee position, but they carry very different levels of risk, control, and responsibility.
@@ -148,14 +148,17 @@ export const chapter21PremiumContent: ChapterContent = {
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Path 2: Booth or Chair Rental</h4>
           <p class="mb-3 text-gray-300">
-            Booth rental lets you operate your own mini-business inside someone else's shop. You pay a flat weekly or monthly rent for your station,
-            set your own schedule, keep your own client records, and handle your own taxes and supplies. The risk is lower than owning a shop, but so is the control over environment and brand.
+            Booth or chair rental can provide more business independence inside another shop, but the label alone does not determine legal or tax status. The actual agreement and working relationship control who sets schedules and prices, handles client records and payments, supplies tools, carries insurance, pays expenses, and has tax or licensing obligations. Compare the real terms and applicable rules before treating the arrangement as an independent business.
           </p>
 
           <div class="bg-ascyn-gold/10 border-l-4 border-ascyn-gold p-4 my-5 rounded-r">
             <p class="text-gray-200"><strong>ASCYN PRO Insight:</strong> Many successful barbers move from employee → booth renter → shop owner over time. There is no single "right" path—only the path that matches your current resources, risk tolerance, and client base.</p>
           </div>
-        </div>
+
+
+          <div class="bg-ascyn-gold/10 border-l-4 border-ascyn-gold p-4 my-5 rounded-r" id="ch21-apply-01" data-learning-objective="LO-21-01" data-concept-family="ch21-business-entry-paths" data-graded="false">
+            <p class="text-gray-200"><strong>Apply It:</strong> You are deciding between opening a shop and renting a chair. List the facts you would compare—capital, fixed costs, client base, control, agreement terms, and management responsibility—before choosing a path.</p>
+          </div>        </div>
       `,
     },
 
@@ -165,10 +168,10 @@ export const chapter21PremiumContent: ChapterContent = {
     {
       type: 'htmlContent',
       id: 'ch21-lo2',
-      standardId: 'CH21-LO02',
+      standardId: 'LO-21-02',
       title: 'LO2: What to Consider Before Opening a Shop',
       html: `
-        <div class="p-6 max-w-4xl mx-auto">
+        <div class="p-6 max-w-4xl mx-auto" data-learning-objective="LO-21-02" data-concept-family="ch21-shop-opening-planning" data-legacy-standard-id="CH21-LO02">
           <p class="mb-4 text-gray-300">
             Opening a barbershop is exciting, but excitement does not replace preparation. Before you sign a lease or buy chairs, work through these practical factors.
           </p>
@@ -181,20 +184,17 @@ export const chapter21PremiumContent: ChapterContent = {
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Capital and Startup Costs</h4>
           <p class="mb-3 text-gray-300">
-            Startup costs include the lease deposit, renovations, barber chairs, stations, mirrors, sinks, waiting-area furniture, point-of-sale systems, initial inventory,
-            licenses, insurance, and enough operating cash to cover 3–6 months of expenses before the shop turns profitable.
+            Startup planning should include the lease deposit, renovations, barber chairs, stations, mirrors, sinks, waiting-area furniture, point-of-sale systems, initial inventory, insurance, required registrations or licenses, and a realistic operating-cash reserve. There is no universal number of months that guarantees success; estimate the reserve from your expected fixed costs, revenue ramp, financing terms, and risk tolerance.
           </p>
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Legal Structure and Licensing</h4>
           <p class="mb-3 text-gray-300">
-            Choose a legal structure—sole proprietorship, partnership, limited liability company (LLC), or corporation. Register the business, obtain an Employer Identification Number (EIN),
-            and secure all required state and local barbershop licenses, health permits, and occupancy permits.
+            Choose a business structure after comparing liability, tax, governance, filing, and financing implications. Then verify which registrations, tax IDs, professional or establishment licenses, zoning or occupancy approvals, health-related permits, and local requirements actually apply to the business and location. Requirements vary by jurisdiction and business structure, so use current official sources or qualified legal, tax, or accounting guidance.
           </p>
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Staffing Model</h4>
           <p class="mb-3 text-gray-300">
-            Decide whether you will hire employees, rent booths to independent barbers, or use a hybrid model. Each choice changes your payroll responsibilities,
-            tax obligations, and day-to-day management load.
+            Decide whether the shop will use employees, properly structured rental arrangements, or another lawful model. Do not assume a worker becomes an independent contractor because the agreement uses a booth-renter label. Payroll, tax, insurance, wage, recordkeeping, and management obligations depend on the actual relationship and current applicable rules.
           </p>
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Culture and Client Experience</h4>
@@ -202,7 +202,11 @@ export const chapter21PremiumContent: ChapterContent = {
             Define the atmosphere you want. Music, décor, service menu, pricing, appointment style, and staff dress code all communicate what kind of shop you are running.
             A clear identity attracts the right clients and repels the wrong ones.
           </p>
-        </div>
+
+
+          <div class="bg-ascyn-gold/10 border-l-4 border-ascyn-gold p-4 my-5 rounded-r" id="ch21-apply-02" data-learning-objective="LO-21-02" data-concept-family="ch21-shop-opening-planning" data-graded="false">
+            <p class="text-gray-200"><strong>Apply It:</strong> Before signing a lease, build a short due-diligence list covering location, realistic startup cash, permits or licenses, staffing model, insurance, occupancy, and the client experience you want to create.</p>
+          </div>        </div>
       `,
     },
 
@@ -212,36 +216,32 @@ export const chapter21PremiumContent: ChapterContent = {
     {
       type: 'htmlContent',
       id: 'ch21-lo3',
-      standardId: 'CH21-LO03',
+      standardId: 'LO-21-03',
       title: 'LO3: Types of Barbershop Ownership',
       html: `
-        <div class="p-6 max-w-4xl mx-auto">
+        <div class="p-6 max-w-4xl mx-auto" data-learning-objective="LO-21-03" data-concept-family="ch21-ownership-legal-structures" data-legacy-standard-id="CH21-LO03">
           <p class="mb-4 text-gray-300">
             The legal structure you choose affects taxes, liability, decision-making, and how you raise money. Here are the most common ownership forms for barbershops.
           </p>
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Sole Proprietorship</h4>
           <p class="mb-3 text-gray-300">
-            One person owns the business. It is the simplest and cheapest to start, but the owner is personally liable for all business debts and legal claims.
-            Income and expenses are reported on the owner's personal tax return.
+            One person owns the business without forming a separate entity. It can be comparatively simple to start, but there is generally no entity-level liability shield between the owner and business obligations. Tax reporting and local registration requirements depend on the facts and current rules.
           </p>
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Partnership</h4>
           <p class="mb-3 text-gray-300">
-            Two or more people share ownership, profits, and responsibilities. A partnership can bring more capital and skills, but it also requires a clear agreement that outlines
-            each partner's role, contribution, profit split, and exit plan. Without one, disputes can destroy the business.
+            Two or more people may share ownership, profits, and responsibilities through a partnership or another multi-owner structure. Written agreements should address contributions, authority, profit and loss allocation, decision-making, dispute resolution, and exit terms. Legal and tax consequences vary by the chosen structure and jurisdiction.
           </p>
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Limited Liability Company (LLC)</h4>
           <p class="mb-3 text-gray-300">
-            An LLC separates personal and business liability. If the shop is sued or goes into debt, your personal assets usually receive protection.
-            LLCs also offer flexible tax treatment and are the most common choice for independent shop owners.
+            An LLC is a state-law business entity that may provide limited-liability protection when properly formed and maintained, but the protection is not absolute and does not replace insurance, contracts, or compliance. Tax treatment can vary based on ownership and elections. Do not assume an LLC is automatically the best structure; compare the facts with qualified legal and tax guidance.
           </p>
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Corporation</h4>
           <p class="mb-3 text-gray-300">
-            A corporation is a separate legal entity owned by shareholders. It offers the strongest liability protection but involves more paperwork,
-            stricter record-keeping requirements, and double taxation unless structured as an S corporation. This form is more common for multi-location or franchise operations.
+            A corporation is a separate legal entity owned by shareholders. Corporate governance, liability protection, tax treatment, payroll, filings, and recordkeeping depend on the corporation type and any valid tax elections. Avoid reducing the choice to a simple "double taxation versus S corporation" rule; compare current requirements with a qualified professional.
           </p>
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Franchise</h4>
@@ -251,9 +251,13 @@ export const chapter21PremiumContent: ChapterContent = {
           </p>
 
           <div class="bg-ascyn-gold/10 border-l-4 border-ascyn-gold p-4 my-5 rounded-r">
-            <p class="text-gray-200"><strong>ASCYN PRO Insight:</strong> Most first-time shop owners choose an LLC because it balances liability protection with manageable paperwork. Consult an accountant and attorney before making a final decision.</p>
+            <p class="text-gray-200"><strong>ASCYN PRO Insight:</strong> No single business structure is automatically right for every shop. Compare liability exposure, ownership, tax treatment, financing, governance, filing costs, and future plans, then verify current requirements with qualified legal and tax professionals.</p>
           </div>
-        </div>
+
+
+          <div class="bg-ascyn-gold/10 border-l-4 border-ascyn-gold p-4 my-5 rounded-r" id="ch21-apply-03" data-learning-objective="LO-21-03" data-concept-family="ch21-ownership-legal-structures" data-graded="false">
+            <p class="text-gray-200"><strong>Apply It:</strong> Compare two possible ownership structures for a small shop. Identify what you still need to verify about liability, tax treatment, governance, filings, and written agreements before deciding.</p>
+          </div>        </div>
       `,
     },
 
@@ -263,10 +267,10 @@ export const chapter21PremiumContent: ChapterContent = {
     {
       type: 'htmlContent',
       id: 'ch21-lo4',
-      standardId: 'CH21-LO04',
+      standardId: 'LO-21-04',
       title: 'LO4: What Belongs in a Business Plan',
       html: `
-        <div class="p-6 max-w-4xl mx-auto">
+        <div class="p-6 max-w-4xl mx-auto" data-learning-objective="LO-21-04" data-concept-family="ch21-business-plan-financial-planning" data-legacy-standard-id="CH21-LO04">
           <p class="mb-4 text-gray-300">
             A business plan is not just paperwork for a lender—it is your thinking made visible. It forces you to answer hard questions before you spend real money.
           </p>
@@ -304,10 +308,13 @@ export const chapter21PremiumContent: ChapterContent = {
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Financial Projections</h4>
           <p class="mb-3 text-gray-300">
-            Include a startup budget, projected income statement, cash-flow forecast, and break-even analysis. Lenders and investors will focus heavily on this section.
-            Be realistic—overly optimistic projections lead to undercapitalized shops.
+            Include a startup budget, projected income statement, cash-flow forecast, and break-even analysis built from stated assumptions. Lenders or investors may evaluate this information along with credit, collateral, experience, market conditions, and other factors. Use realistic ranges and document the assumptions instead of presenting a forecast as a guarantee.
           </p>
-        </div>
+
+
+          <div class="bg-ascyn-gold/10 border-l-4 border-ascyn-gold p-4 my-5 rounded-r" id="ch21-apply-04" data-learning-objective="LO-21-04" data-concept-family="ch21-business-plan-financial-planning" data-graded="false">
+            <p class="text-gray-200"><strong>Apply It:</strong> Take one proposed shop idea and test whether the market, pricing, startup budget, cash-flow forecast, break-even assumptions, and staffing plan support each other.</p>
+          </div>        </div>
       `,
     },
 
@@ -317,10 +324,10 @@ export const chapter21PremiumContent: ChapterContent = {
     {
       type: 'htmlContent',
       id: 'ch21-lo5',
-      standardId: 'CH21-LO05',
+      standardId: 'LO-21-05',
       title: 'LO5: Why Record Keeping Is Essential',
       html: `
-        <div class="p-6 max-w-4xl mx-auto">
+        <div class="p-6 max-w-4xl mx-auto" data-learning-objective="LO-21-05" data-concept-family="ch21-recordkeeping-financial-compliance" data-legacy-standard-id="CH21-LO05">
           <p class="mb-4 text-gray-300">
             Record keeping is one of the least glamorous parts of barbering—and one of the most important. Good records protect your income, your license, and your peace of mind.
           </p>
@@ -333,14 +340,12 @@ export const chapter21PremiumContent: ChapterContent = {
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Client Records</h4>
           <p class="mb-3 text-gray-300">
-            Keep contact information, service history, product preferences, allergies, formulas, and appointment notes. Client records personalize service,
-            support rebooking, and protect you if a dispute or reaction ever occurs.
+            Keep only client information that serves a legitimate business or service purpose, such as contact details, service history, preferences, formulas, and relevant appointment notes. Protect access to those records, follow applicable privacy and security requirements, and avoid collecting sensitive information you do not need.
           </p>
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Tax and Legal Compliance</h4>
           <p class="mb-3 text-gray-300">
-            The IRS and state tax agencies do not accept "I think I made about..." as documentation. Whether you are an employee, booth renter, or shop owner,
-            you must report income accurately and keep records for the required number of years.
+            Accurate income and expense records support tax reporting and business decisions. Record-retention periods are not one universal number: they can depend on the document, tax issue, jurisdiction, business structure, employment obligations, and other legal requirements. Verify current federal, state, and local retention rules from official sources or a qualified professional.
           </p>
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Business Performance</h4>
@@ -352,7 +357,11 @@ export const chapter21PremiumContent: ChapterContent = {
           <div class="bg-ascyn-gold/10 border-l-4 border-ascyn-gold p-4 my-5 rounded-r">
             <p class="text-gray-200"><strong>ASCYN PRO Insight:</strong> Set a weekly 30-minute "money date" with your records. Review revenue, expenses, and appointments. Small, consistent attention prevents year-end panic.</p>
           </div>
-        </div>
+
+
+          <div class="bg-ascyn-gold/10 border-l-4 border-ascyn-gold p-4 my-5 rounded-r" id="ch21-apply-05" data-learning-objective="LO-21-05" data-concept-family="ch21-recordkeeping-financial-compliance" data-graded="false">
+            <p class="text-gray-200"><strong>Apply It:</strong> Choose one month of hypothetical business activity and identify which income, expense, client, and supporting records you would retain, then note which retention or reporting rules still need current-source verification.</p>
+          </div>        </div>
       `,
     },
 
@@ -362,34 +371,32 @@ export const chapter21PremiumContent: ChapterContent = {
     {
       type: 'htmlContent',
       id: 'ch21-lo6',
-      standardId: 'CH21-LO06',
+      standardId: 'LO-21-06',
       title: 'LO6: The Responsibilities of a Booth Renter',
       html: `
-        <div class="p-6 max-w-4xl mx-auto">
+        <div class="p-6 max-w-4xl mx-auto" data-learning-objective="LO-21-06" data-concept-family="ch21-booth-rental-independent-business-responsibilities" data-legacy-standard-id="CH21-LO06">
           <p class="mb-4 text-gray-300">
-            Booth rental looks like employment from the outside, but legally and financially it is much closer to running a small business. You are responsible for far more than just showing up and cutting hair.
+            A booth-rental arrangement can involve substantial independent-business responsibilities, but the label "booth renter" does not by itself determine worker classification, tax treatment, or legal obligations. Evaluate the written agreement and the real facts of the relationship, including control, pricing, scheduling, payment handling, expenses, client records, insurance, and licensing.
           </p>
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Paying Rent on Time</h4>
           <p class="mb-3 text-gray-300">
-            Rent is usually a flat weekly or monthly fee. It must be paid regardless of how busy you were. Treat it like a non-negotiable overhead expense.
+            Rental payment terms vary. Confirm the amount, frequency, due date, included services, deposits, late-payment terms, termination rules, and any percentage-based or additional charges in the actual agreement before treating rent as a fixed overhead item.
           </p>
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Collecting Payment and Managing Books</h4>
           <p class="mb-3 text-gray-300">
-            You collect your own service fees, tips, and product sales. You track them. You issue receipts if required. You reconcile your cash and digital payments daily.
+            The agreement and actual operating model should clearly identify who collects service fees, tips, and product revenue; who issues receipts; who controls merchant accounts; and who maintains the books. Reconcile the records that are your responsibility consistently.
           </p>
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Taxes and Self-Employment Obligations</h4>
           <p class="mb-3 text-gray-300">
-            The shop owner does not withhold taxes for you. You must report all income, pay self-employment tax, and usually make quarterly estimated tax payments.
-            Set aside 25–30% of every dollar you earn so tax season does not become a crisis.
+            Tax obligations depend on the worker's actual classification, income, business structure, deductions, withholding, and current federal and state rules. Do not use a fixed savings percentage as a universal tax rule. Keep accurate records and verify whether estimated payments, self-employment tax, payroll treatment, or other obligations apply with the IRS, state tax authority, or a qualified tax professional.
           </p>
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Insurance and Supplies</h4>
           <p class="mb-3 text-gray-300">
-            Many booth renters carry their own liability insurance. You also buy your own tools, products, capes, towels, and sanitation supplies.
-            Read your rental agreement carefully to know what the shop provides and what you must bring.
+            Insurance and supply responsibilities should be confirmed from the agreement and applicable rules. Determine what coverage the shop carries, what coverage you may need, and who supplies tools, products, linens, sanitation materials, utilities, software, and other operating resources.
           </p>
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Building and Serving Your Clientele</h4>
@@ -400,9 +407,13 @@ export const chapter21PremiumContent: ChapterContent = {
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Following Shop Rules</h4>
           <p class="mb-3 text-gray-300">
-            Even though you are independent, you still operate inside someone else's business. Honor the shop's hours, cleanliness standards, conflict-resolution expectations, and culture.
+            Follow lawful shop policies and the written agreement, but remember that excessive control over schedules, methods, pricing, or other business decisions can be relevant when evaluating the real working relationship. Classification depends on the full facts and circumstances, not a label alone.
           </p>
-        </div>
+
+
+          <div class="bg-ascyn-gold/10 border-l-4 border-ascyn-gold p-4 my-5 rounded-r" id="ch21-apply-06" data-learning-objective="LO-21-06" data-concept-family="ch21-booth-rental-independent-business-responsibilities" data-graded="false">
+            <p class="text-gray-200"><strong>Apply It:</strong> Review a hypothetical booth-rental agreement and identify which facts—not just the label—determine control, payment handling, taxes, insurance, licensing, supplies, client records, and other responsibilities.</p>
+          </div>        </div>
       `,
     },
 
@@ -412,10 +423,10 @@ export const chapter21PremiumContent: ChapterContent = {
     {
       type: 'htmlContent',
       id: 'ch21-lo7',
-      standardId: 'CH21-LO07',
+      standardId: 'LO-21-07',
       title: 'LO7: What Makes a Barbershop Successful',
       html: `
-        <div class="p-6 max-w-4xl mx-auto">
+        <div class="p-6 max-w-4xl mx-auto" data-learning-objective="LO-21-07" data-concept-family="ch21-shop-operations-management" data-legacy-standard-id="CH21-LO07">
           <p class="mb-4 text-gray-300">
             A successful barbershop is more than a group of talented barbers under one roof. Success comes from systems, culture, and consistency.
           </p>
@@ -428,7 +439,7 @@ export const chapter21PremiumContent: ChapterContent = {
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Cleanliness and Professional Environment</h4>
           <p class="mb-3 text-gray-300">
-            Clients judge your shop the moment they walk in. Clean floors, sanitized stations, fresh towels, pleasant lighting, and organized tools signal professionalism and safety.
+            Clients notice cleanliness and organization immediately. Maintain the operational environment and follow the actual infection-control and sanitation requirements taught in the dedicated safety curriculum and required by current law or board rules. Chapter 21 treats cleanliness as an operations responsibility; it does not replace the safety chapter's procedures.
           </p>
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Strong Customer Service</h4>
@@ -456,7 +467,11 @@ export const chapter21PremiumContent: ChapterContent = {
           <p class="mb-3 text-gray-300">
             The energy inside the shop is felt by every client. Drama, gossip, and negativity drive people away. Respect, mentorship, and shared standards keep talent and clients in the building.
           </p>
-        </div>
+
+
+          <div class="bg-ascyn-gold/10 border-l-4 border-ascyn-gold p-4 my-5 rounded-r" id="ch21-apply-07" data-learning-objective="LO-21-07" data-concept-family="ch21-shop-operations-management" data-graded="false">
+            <p class="text-gray-200"><strong>Apply It:</strong> A shop is busy but cash is tight and client complaints are rising. Identify the operating data you would review first and the process changes you would test before spending more money.</p>
+          </div>        </div>
       `,
     },
 
@@ -466,10 +481,10 @@ export const chapter21PremiumContent: ChapterContent = {
     {
       type: 'htmlContent',
       id: 'ch21-lo8',
-      standardId: 'CH21-LO08',
+      standardId: 'LO-21-08',
       title: 'LO8: Why Advertising Is Vital',
       html: `
-        <div class="p-6 max-w-4xl mx-auto">
+        <div class="p-6 max-w-4xl mx-auto" data-learning-objective="LO-21-08" data-concept-family="ch21-advertising-marketing-client-consent" data-legacy-standard-id="CH21-LO08">
           <p class="mb-4 text-gray-300">
             The best haircut in town means nothing if no one knows you exist. Advertising is how you attract new clients, remind current clients to return, and differentiate your shop from competitors.
           </p>
@@ -486,24 +501,27 @@ export const chapter21PremiumContent: ChapterContent = {
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Creating Consistency</h4>
           <p class="mb-3 text-gray-300">
-            Advertising is not a one-time grand-opening event. It is an ongoing habit. Consistent posting, referral programs, and promotions keep your appointment book full during slow weeks.
+            Advertising is not a one-time grand-opening event. Consistent promotion can support demand, but no channel or campaign guarantees a full appointment book. Track results and adjust the message, offer, audience, and spending based on evidence.
           </p>
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Common Advertising Channels</h4>
           <p class="mb-3 text-gray-300">
-            Social media (Instagram, TikTok, Facebook), Google Business Profile, local flyers, referral cards, email or text reminders, partnerships with nearby businesses,
-            and community sponsorships are all cost-effective ways to market a barbershop.
+            Social media, local search listings, flyers, referral cards, email or text outreach, nearby-business partnerships, and community sponsorships can all be useful channels depending on the audience, cost, consent, platform rules, and applicable advertising or communications requirements.
           </p>
 
           <h4 class="text-lg font-bold text-ascyn-gold mt-5 mb-2">Reputation as Advertising</h4>
           <p class="mb-3 text-gray-300">
-            Every satisfied client is a walking advertisement. Reviews, tagged photos, and personal referrals carry more weight than paid ads because they come from trust.
+            Reviews, referrals, and client-approved photos can build trust, but testimonials and images must be used honestly and with appropriate permission. Do not create misleading endorsements, hide material promotion terms, or assume a social-media tag equals consent for advertising use.
           </p>
 
           <div class="bg-ascyn-gold/10 border-l-4 border-ascyn-gold p-4 my-5 rounded-r">
-            <p class="text-gray-200"><strong>ASCYN PRO Insight:</strong> Start with one platform and one message. Post consistently, show your work, and always get client consent before sharing photos. A small, active presence beats a scattered, inactive one.</p>
+            <p class="text-gray-200"><strong>ASCYN PRO Insight:</strong> Start with a channel and message that match your target client. Obtain clear permission before using identifiable client images, describe promotions truthfully, state important terms clearly, and follow applicable privacy, advertising, communications, platform, school, and shop rules.</p>
           </div>
-        </div>
+
+
+          <div class="bg-ascyn-gold/10 border-l-4 border-ascyn-gold p-4 my-5 rounded-r" id="ch21-apply-08" data-learning-objective="LO-21-08" data-concept-family="ch21-advertising-marketing-client-consent" data-graded="false">
+            <p class="text-gray-200"><strong>Apply It:</strong> Plan one promotion that clearly states its terms, uses truthful claims, respects client permission and privacy, and identifies any platform, shop, or local advertising rules that must be checked before launch.</p>
+          </div>        </div>
       `,
     },
 
