@@ -6,7 +6,7 @@ const read = (file: string) =>
   fs.readFileSync(path.join(process.cwd(), file), 'utf8')
 
 const base = read(
-  'supabase/migrations/20261001224000_com_1b_communication_database_foundation.sql',
+  'supabase/migrations/20261001224500_com1b_communication_foundation.sql',
 )
 const completion = read(
   'supabase/migrations/20261001230500_com_1b_foundation_completion.sql',
