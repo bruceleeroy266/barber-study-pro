@@ -541,7 +541,7 @@ export const chapter21PremiumContent: ChapterContent = {
             `A barber has built a strong client base, saved $25,000, and wants more control over pricing and scheduling. She does not yet want to manage a full shop with employees. Which option best fits her current situation?`,
           options: [
             { letter: 'A', text: `Open a corporation with multiple shareholders immediately.`, feedback: `Incorrect. This is excessive capital, complexity, and risk for someone not ready to manage a full shop.` },
-            { letter: 'B', text: `Become a booth renter inside an established shop to operate her own mini-business with lower overhead.`, feedback: `Correct. Booth rental offers independence, control, and lower risk than opening a full shop.` },
+            { letter: 'B', text: `Evaluate a properly structured booth or chair rental arrangement and compare the actual agreement, control, expenses, and responsibilities with full-shop ownership.`, feedback: `Correct. A rental arrangement can reduce some whole-shop overhead, but the real independence, risk, and responsibilities depend on the agreement and working relationship.` },
             { letter: 'C', text: `Remain an employee and wait until she has enough clients to buy a franchise.`, feedback: `Incorrect. She already has a strong client base and wants more control; waiting is not necessary if booth rental is available.` },
           ],
           correctAnswer: 'B',
@@ -646,7 +646,7 @@ export const chapter21PremiumContent: ChapterContent = {
             `A booth renter accepts $400 in cash tips over a month and plans not to report them because the shop owner does not track them. What is wrong with this plan?`,
           options: [
             { letter: 'A', text: `Nothing; the shop owner is responsible for all taxes in a rental arrangement.`, feedback: `Incorrect. Booth renters are independent and responsible for reporting their own income, including tips.` },
-            { letter: 'B', text: `Tips are taxable income that must be tracked and reported; failing to report can trigger penalties and reduce future benefits.`, feedback: `Correct. Accurate reporting protects the barber legally and makes true income visible for loans and benefits.` },
+            { letter: 'B', text: `Track the cash tips accurately and follow current reporting requirements for the actual work arrangement.`, feedback: `Correct. Cash does not become exempt from reporting merely because the shop owner does not track it; current federal, state, and local requirements should be verified.` },
             { letter: 'C', text: `She should return the tips to clients to avoid the issue.`, feedback: `Incorrect. Clients expect her to keep tips. The correct action is reporting them, not refusing them.` },
           ],
           correctAnswer: 'B',
@@ -657,7 +657,7 @@ export const chapter21PremiumContent: ChapterContent = {
             `A booth renter's rental agreement says she must carry her own liability insurance and provide her own tools and sanitation supplies. Which responsibility is this describing?`,
           options: [
             { letter: 'A', text: `Employee benefits provided by the shop owner`, feedback: `Incorrect. Employees receive benefits from the employer; booth renters typically provide their own insurance and supplies.` },
-            { letter: 'B', text: `Independent business expenses that belong to the booth renter`, feedback: `Correct. Booth renters operate their own small business and cover their own insurance, tools, and supplies.` },
+            { letter: 'B', text: `Contractual operating responsibilities that must be verified from the actual rental agreement and applicable rules`, feedback: `Correct. Insurance, tools, supplies, utilities, and other expenses should be confirmed from the written agreement rather than assumed from the booth-renter label.` },
             { letter: 'C', text: `Optional extras she can ignore if money is tight`, feedback: `Incorrect. These are contractual obligations, not optional luxuries. Ignoring them can lead to eviction or liability exposure.` },
           ],
           correctAnswer: 'B',
@@ -754,7 +754,7 @@ export const chapter21PremiumContent: ChapterContent = {
             `Your shop is busy on Saturdays but nearly empty on Tuesdays and Wednesdays. Which response best uses advertising and operations principles?`,
           options: [
             { letter: 'A', text: `Lower all prices permanently to attract more clients.`, feedback: `Incorrect. Across-the-board discounting cuts profit and trains clients to wait for sales.` },
-            { letter: 'B', text: `Run targeted weekday promotions, send rebooking reminders, and create a loyalty program for off-peak visits.`, feedback: `Correct. Targeted advertising plus operational incentives smooth demand without destroying margins.` },
+            { letter: 'B', text: `Review demand, rebooking, staffing, pricing, and campaign data, then test a targeted weekday change and measure the result.`, feedback: `Correct. Evidence-based operational changes are stronger than permanent discounts or one universal promotion formula.` },
             { letter: 'C', text: `Do nothing; slow days are normal for every shop.`, feedback: `Incorrect. Accepting slow days leaves money on the table and wastes chair capacity.` },
           ],
           correctAnswer: 'B',
@@ -775,8 +775,8 @@ export const chapter21PremiumContent: ChapterContent = {
           situation:
             `A new barber wants to join your shop as a booth renter. She asks if you will handle her taxes and provide her with a W-2. How should you respond?`,
           options: [
-            { letter: 'A', text: `Agree to handle her taxes to make the arrangement easier.`, feedback: `Incorrect. Treating a booth renter like an employee creates tax misclassification risk.` },
-            { letter: 'B', text: `Explain that booth renters are independent, receive a 1099 if applicable, and are responsible for their own taxes and records.`, feedback: `Correct. Clear classification protects both parties and follows IRS guidelines.` },
+            { letter: 'A', text: `Assume the shop should handle payroll taxes because every renter is really an employee.`, feedback: `Incorrect. The label alone does not determine the relationship; the actual facts and applicable rules must be evaluated.` },
+            { letter: 'B', text: `Review the actual agreement and working relationship, then verify whether payroll treatment, information returns, estimated payments, or other tax duties apply under current rules.`, feedback: `Correct. Tax treatment and forms depend on the actual classification and current requirements rather than a booth-renter label alone.` },
             { letter: 'C', text: `Refuse to let her rent because she does not understand taxes.`, feedback: `Incorrect. Lack of knowledge is an opportunity to educate, not a reason to reject a qualified renter.` },
           ],
           correctAnswer: 'B',
