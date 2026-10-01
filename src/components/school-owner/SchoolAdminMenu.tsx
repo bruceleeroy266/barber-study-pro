@@ -2,9 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
-import { logLogout } from '@/app/(auth)/actions'
 import {
   ChevronDown,
   LayoutDashboard,
@@ -28,7 +25,6 @@ const items = [
 export default function SchoolAdminMenu() {
   const [open, setOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
-  const router = useRouter()
 
   useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
@@ -49,19 +45,6 @@ export default function SchoolAdminMenu() {
       document.removeEventListener('keydown', handleKeyDown)
     }
   }, [])
-
-  const handleLogout = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser()
-      await logLogout(user?.id ?? 'unknown', user?.email)
-    } catch {
-      // Logging should never block sign-out.
-    }
-
-    await supabase.auth.signOut()
-    router.push('/login')
-    router.refresh()
-  }
 
   return (
     <div ref={rootRef} className="relative">
@@ -108,15 +91,14 @@ export default function SchoolAdminMenu() {
           </div>
 
           <div className="border-t border-graphite p-2">
-            <button
-              type="button"
+            <a
+              href="/auth/logout"
               role="menuitem"
-              onClick={handleLogout}
               className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm text-silver transition-colors hover:bg-silver/10 hover:text-white"
             >
               <LogOut className="h-4 w-4" />
               <span>Logout</span>
-            </button>
+            </a>
           </div>
           </div>
         </>
