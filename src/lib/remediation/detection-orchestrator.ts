@@ -35,6 +35,9 @@ import {
   getChapterDetectionProvider,
   type ChapterRemediationAssignment,
 } from './chapter-registry'
+import { requiredLegacyRecoveryPercent, type LegacyChapterId } from '@/lib/reassessment/legacy-safety-recovery'
+import { deriveModernCycleRecoveryRequirement } from '@/lib/reassessment/modern-safety-registry'
+import type { ModernRecoveryChapterId } from '@/lib/reassessment/modern-recovery-policy'
 import {
   detectAllChapter19CombinedConceptGaps,
   type Chapter19CombinedMicroCheckRow,
@@ -125,7 +128,10 @@ export interface IDetectionOrchestratorDbClient {
     cycleNumber: number
     detectionState: DetectionState
     detectionConfidence: DetectionConfidence
-    detectionEvidence: ConceptEvidence
+    detectionEvidence: ConceptEvidence & {
+      ha3UrgentSafety?: boolean
+      ha3RequiredRecoveryPercent?: 80 | 100
+    }
     status: 'targeted'
     assignments: Array<{
       assignmentType: 'content_block' | 'flashcard'
@@ -290,7 +296,42 @@ export class DetectionOrchestratorService {
         // Generate assignments from canonical mappings (via provider)
         const assignments = provider.buildAssignmentsForConcept(concept.conceptId)
 
-        // Create new remediation cycle with assignments atomically
+        const legacy = /^ch-[1-7]$/.test(chapterId)
+        const modern = /^ch-(?:9|1[0-8])$/.test(chapterId)
+        // Modern safety is chapter-wide: two recent high-risk misses may span
+        // different concept families. Build an immutable chapter evidence
+        // snapshot from every detected concept before deriving the threshold
+        // for this cycle. Reassessment answers never participate here.
+        const chapterDetectionEvidence = modern
+          ? {
+              results: Array.from(detectionResults.values())
+                .flatMap((result) => result.evidence.results ?? [])
+                .filter(
+                  (result, index, all) =>
+                    all.findIndex(
+                      (candidate) =>
+                        candidate.attemptId === result.attemptId &&
+                        candidate.questionId === result.questionId,
+                    ) === index,
+                ),
+            }
+          : null
+        const recoveryRequirement = legacy
+          ? {
+              urgentSafety: requiredLegacyRecoveryPercent(chapterId as LegacyChapterId, concept.conceptId) === 100,
+              requiredPassPercent: requiredLegacyRecoveryPercent(chapterId as LegacyChapterId, concept.conceptId),
+            }
+          : modern
+            ? await deriveModernCycleRecoveryRequirement({
+                chapterId: chapterId as ModernRecoveryChapterId,
+                conceptId: concept.conceptId,
+                detectionEvidence: chapterDetectionEvidence,
+              })
+            : { urgentSafety: false, requiredPassPercent: 80 as const }
+
+        // Create new remediation cycle with assignments atomically. HA-3
+        // snapshots the server-derived recovery requirement into immutable
+        // detection evidence; reassessment answers cannot downgrade it.
         const cycleId = await this.dbClient.createRemediationCycleWithAssignments({
           userId,
           conceptId: concept.conceptId,
@@ -298,7 +339,11 @@ export class DetectionOrchestratorService {
           cycleNumber,
           detectionState: concept.detectionState,
           detectionConfidence: concept.detectionConfidence,
-          detectionEvidence: concept.evidence,
+          detectionEvidence: {
+            ...concept.evidence,
+            ha3UrgentSafety: recoveryRequirement.urgentSafety,
+            ha3RequiredRecoveryPercent: recoveryRequirement.requiredPassPercent,
+          },
           status: 'targeted',
           assignments,
         })

@@ -102,6 +102,17 @@ export async function saveGrade(
 
   try {
     if (grade.id) {
+      const { data: existingGrade } = await supabase
+        .from('grades')
+        .select('id, student_id, school_id')
+        .eq('id', grade.id)
+        .eq('school_id', profile.school_id)
+        .maybeSingle()
+
+      if (!existingGrade || existingGrade.student_id !== grade.studentId) {
+        return { success: false, message: 'Grade not found for this student and school.' }
+      }
+
       const { data, error } = await supabase
         .from('grades')
         .update(payload)

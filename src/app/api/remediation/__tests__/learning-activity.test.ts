@@ -371,7 +371,14 @@ describe('POST /api/remediation/cycles/[cycleId]/reassessment/submit — learnin
       getAllConceptIds: () => ['C-2-01'],
       getAllQuestionIds: () => ['q-1'],
     } as never)
-    vi.mocked(initializeChapterDetectionProvider).mockReturnValue({ chapterId: 'ch-2' } as never)
+    vi.mocked(initializeChapterDetectionProvider).mockReturnValue({
+      chapterId: 'ch-2',
+      detectConceptState: vi.fn().mockResolvedValue({
+        state: 'currently_performing_well',
+        confidence: 'high',
+        evidence: { results: [] },
+      }),
+    } as never)
     vi.mocked(createSupabaseKnowledgeCheckClient).mockReturnValue({
       getReassessmentReservationsForCycle: vi.fn().mockResolvedValue([]),
       getReassessmentAttemptsForCycle: vi.fn().mockResolvedValue([]),
@@ -388,9 +395,21 @@ describe('POST /api/remediation/cycles/[cycleId]/reassessment/submit — learnin
     vi.mocked(getConsumedAttemptId).mockResolvedValue(null)
     vi.mocked(createSupabaseJsClient).mockReturnValue({
       rpc: vi.fn().mockResolvedValue(rpcResult),
-      from: vi.fn(),
+      from: vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          in: vi.fn().mockReturnValue({
+            order: vi.fn().mockResolvedValue({ data: [{ id: 'attempt-1', score: 1 }] }),
+          }),
+        }),
+      }),
     } as never)
     vi.mocked(createEvaluationService).mockReturnValue({
+      evaluateCycle: vi.fn().mockResolvedValue({
+        success: true,
+        outcome: 'successful',
+        evaluationId: 'eval-1',
+        alreadyEvaluated: false,
+      }),
       evaluateCycleWithDetection: vi.fn().mockResolvedValue({
         success: true,
         outcome: 'successful',

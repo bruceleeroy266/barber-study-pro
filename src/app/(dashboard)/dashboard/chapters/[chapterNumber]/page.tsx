@@ -41,11 +41,18 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
     notFound()
   }
 
-  // Determine the next active chapter for post-quiz navigation.
-  const nextChapter = localChapters
-    .filter((ch) => ch.is_active && ch.chapter_number > num)
-    .sort((a, b) => a.chapter_number - b.chapter_number)[0]
-  const nextChapterNumber = nextChapter?.chapter_number ?? null
+  // Resolve adjacent navigation from the active curriculum rather than
+  // arithmetic chapter numbers. This prevents links to inactive/missing chapters.
+  const activeChapters = localChapters
+    .filter((ch) => ch.is_active)
+    .sort((a, b) => a.chapter_number - b.chapter_number)
+  const activeIndex = activeChapters.findIndex((ch) => ch.chapter_number === num)
+  const previousChapterNumber = activeIndex > 0
+    ? activeChapters[activeIndex - 1].chapter_number
+    : null
+  const nextChapterNumber = activeIndex >= 0 && activeIndex < activeChapters.length - 1
+    ? activeChapters[activeIndex + 1].chapter_number
+    : null
 
   // Get flashcards from local data
   const flashcards = getLocalFlashcards(chapter.id)
@@ -279,20 +286,20 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
 
       {/* Navigation */}
       <div className="flex items-center justify-between pt-4">
-        {num > 1 && (
+        {previousChapterNumber !== null && (
           <Link
-            href={`/dashboard/chapters/${num - 1}`}
+            href={`/dashboard/chapters/${previousChapterNumber}`}
             className="flex items-center gap-2 text-silver hover:text-[var(--color-brand-gold)] transition-colors"
           >
-            ← Chapter {num - 1}
+            ← Chapter {previousChapterNumber}
           </Link>
         )}
-        {num < 21 && (
+        {nextChapterNumber !== null && (
           <Link
-            href={`/dashboard/chapters/${num + 1}`}
+            href={`/dashboard/chapters/${nextChapterNumber}`}
             className="flex items-center gap-2 text-silver hover:text-[var(--color-brand-gold)] transition-colors ml-auto"
           >
-            Chapter {num + 1} →
+            Chapter {nextChapterNumber} →
           </Link>
         )}
       </div>

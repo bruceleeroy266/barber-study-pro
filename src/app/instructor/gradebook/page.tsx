@@ -33,6 +33,7 @@ export default function InstructorGradebookPage() {
   const [editingGrade, setEditingGrade] = useState<Grade | null>(null)
   const [historyGrade, setHistoryGrade] = useState<Grade | null>(null)
   const [saveError, setSaveError] = useState<string | null>(null)
+  const [gradeSavePending, setGradeSavePending] = useState(false)
 
   useEffect(() => {
     async function init() {
@@ -130,7 +131,9 @@ export default function InstructorGradebookPage() {
   }, [historyGrade])
 
   async function handleSaveGrade(grade: Grade) {
+    if (gradeSavePending) return
     setSaveError(null)
+    setGradeSavePending(true)
 
     if (isDemoDataAllowed()) {
       setGrades((prev) => {
@@ -141,12 +144,14 @@ export default function InstructorGradebookPage() {
         return [grade, ...prev]
       })
       setEditingGrade(null)
+      setGradeSavePending(false)
       return
     }
 
     const result = await saveGrade(grade)
     if (!result.success || !result.grade) {
       setSaveError(result.message)
+      setGradeSavePending(false)
       return
     }
 
@@ -158,6 +163,7 @@ export default function InstructorGradebookPage() {
       return [result.grade!, ...prev]
     })
     setEditingGrade(null)
+    setGradeSavePending(false)
   }
 
   if (loading) {
@@ -218,6 +224,7 @@ export default function InstructorGradebookPage() {
           grade={editingGrade}
           student={selectedStudent}
           categories={categories}
+          pending={gradeSavePending}
           onSave={handleSaveGrade}
           onClose={() => setEditingGrade(null)}
         />

@@ -65,6 +65,13 @@ export interface ConceptEvidence<
   hasHistoricalWeakness: boolean
   firstAttemptAt: string | null
   lastAttemptAt: string | null
+  /** Immutable item-level snapshot used by server-authoritative safety policy. */
+  results?: readonly {
+    questionId: string
+    isCorrect: boolean
+    attemptId: string
+    completedAt: string
+  }[]
 }
 
 export interface ConceptDetectionResult<
@@ -307,6 +314,7 @@ export function buildConceptEvidence<
     hasHistoricalWeakness,
     firstAttemptAt,
     lastAttemptAt,
+    results: allResults.map((result) => ({ ...result })),
   }
 }
 

@@ -80,8 +80,12 @@ export default function InstructorNav({ user }: InstructorNavProps) {
             <Logo variant="full" size="3xl" className="hidden lg:block" />
           </Link>
           <button
+            type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-silver hover:text-white"
+            aria-label={mobileMenuOpen ? 'Close instructor navigation' : 'Open instructor navigation'}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="instructor-mobile-navigation"
+            className="min-h-11 min-w-11 p-2 text-silver hover:text-white"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {mobileMenuOpen ? (
@@ -96,8 +100,8 @@ export default function InstructorNav({ user }: InstructorNavProps) {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-40 bg-black pt-16 overflow-y-auto">
-          <nav className="p-4 space-y-2 pb-8">
+        <div id="instructor-mobile-navigation" className="lg:hidden fixed inset-0 z-40 bg-black pt-16 overflow-y-auto">
+          <nav aria-label="Instructor navigation" className="p-4 space-y-2 pb-8">
             {navItems.map((item) => {
               const Icon = item.icon
               return (
@@ -129,14 +133,14 @@ export default function InstructorNav({ user }: InstructorNavProps) {
       )}
 
       {/* Desktop sidebar */}
-      <aside className="hidden lg:block fixed left-0 top-0 bottom-0 w-64 bg-charcoal border-r border-graphite">
+      <aside className="hidden lg:block fixed left-0 top-0 bottom-0 w-64 bg-charcoal border-r border-graphite overflow-y-auto">
         <div className="p-6">
           <Link href="/instructor" className="flex items-center">
             <Logo variant="full" size="3xl" />
           </Link>
         </div>
         
-        <nav className="px-4 space-y-2">
+        <nav aria-label="Instructor navigation" className="px-4 space-y-2 pb-8">
           {navItems.map((item) => {
             const Icon = item.icon
             return (
