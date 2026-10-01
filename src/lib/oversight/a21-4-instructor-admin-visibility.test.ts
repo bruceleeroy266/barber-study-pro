@@ -66,7 +66,7 @@ describe('A21-4 Chapters 1-21 instructor / school-admin visibility', () => {
     const quiz = read('supabase/migrations/20260714010000_fix_quiz_progress_missed_rls.sql')
     const micro = read('supabase/migrations/20260926044500_create_chapter_micro_check_attempts.sql')
     const remediation = read('supabase/migrations/20260818000000_phase_6c2a_remediation_foundation.sql')
-    const activity = read('supabase/migrations/20260930165000_chapter_activity_evidence.sql')
+    const activity = read('supabase/migrations/20260928043000_create_chapter_activity_evidence.sql')
     expect(quiz).toContain("role in ('instructor', 'admin', 'school_admin')")
     expect(quiz).toContain('public.current_user_school_id() = public.user_school_id(user_id)')
     expect(micro).toContain('current_user_school_id() = user_school_id(user_id)')
