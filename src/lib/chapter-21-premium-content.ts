@@ -584,11 +584,11 @@ export const chapter21PremiumContent: ChapterContent = {
         {
           id: 'ch21-scenario-004',
           situation:
-            `A barber wants to open a single-owner shop and protect personal assets from business lawsuits or debts. Which ownership structure is most appropriate?`,
+            `A barber wants a single-owner shop and is comparing structures partly because of liability concerns. What is the strongest next step?`,
           options: [
-            { letter: 'A', text: `Sole proprietorship, because it separates personal and business liability.`, feedback: `Incorrect. A sole proprietorship does not separate personal liability from business liability.` },
-            { letter: 'B', text: `Limited liability company (LLC), because it generally protects personal assets while keeping paperwork manageable.`, feedback: `Correct. An LLC is the most common choice for independent shop owners seeking liability protection.` },
-            { letter: 'C', text: `Corporation, because every new shop needs the strongest possible structure.`, feedback: `Incorrect. A corporation offers strong protection but is often unnecessarily complex and costly for a single small shop.` },
+            { letter: 'A', text: `Choose a sole proprietorship because every single-owner business must use it.`, feedback: `Incorrect. A single owner can have more than one possible structure, and the best fit depends on the facts and applicable rules.` },
+            { letter: 'B', text: `Compare structures such as an LLC or corporation using current liability, tax, governance, filing, insurance, and financing considerations with qualified advice.`, feedback: `Correct. Entity choice should be based on the full situation rather than a universal claim that one form always provides the best protection.` },
+            { letter: 'C', text: `Choose the structure with the strongest-sounding name because liability protection is absolute once an entity is formed.`, feedback: `Incorrect. Liability protection is not absolute and depends on proper formation, maintenance, conduct, contracts, insurance, and applicable law.` },
           ],
           correctAnswer: 'B',
         },
