@@ -41,6 +41,18 @@ interface StaffHourLogRow {
   created_at: string | null
   source_type: 'manual' | 'attendance'
   source_attendance_id: string | null
+  attendance_status: string | null
+  attendance_minutes_present: number | null
+  attendance_updated_at: string | null
+  attendance_provenance_status:
+    | 'not_applicable'
+    | 'missing_source'
+    | 'invalid_source'
+    | 'attendance_not_creditable'
+    | 'invalid_hour_chain'
+    | 'attendance_minutes_missing'
+    | 'aligned'
+    | 'needs_adjustment'
   resubmission_of_hour_log_id: string | null
 }
 
@@ -155,7 +167,7 @@ export default async function StaffHoursManager({
   const { data: logsData } = studentIds.length
     ? await supabase
         .from('effective_hour_logs')
-        .select('id, user_id, date, category, minutes, effective_minutes, original_minutes, integrity_status, adjustment_version, status, notes, rejection_reason, submitted_by, reviewed_by, reviewed_at, created_at, source_type, source_attendance_id, resubmission_of_hour_log_id')
+        .select('id, user_id, date, category, minutes, effective_minutes, original_minutes, integrity_status, adjustment_version, status, notes, rejection_reason, submitted_by, reviewed_by, reviewed_at, created_at, source_type, source_attendance_id, attendance_status, attendance_minutes_present, attendance_updated_at, attendance_provenance_status, resubmission_of_hour_log_id')
         .eq('school_id', actor.school_id)
         .in('user_id', studentIds)
         .order('date', { ascending: false })
@@ -626,6 +638,16 @@ export default async function StaffHoursManager({
                               Corrected resubmission
                             </span>
                           )}
+                          {log.source_type === 'attendance' && log.attendance_provenance_status === 'needs_adjustment' && (
+                            <span className="inline-flex items-center rounded-full border border-warm-bronze/40 bg-warm-bronze/10 px-2.5 py-1 text-xs font-semibold text-warm-bronze">
+                              Attendance changed · adjustment needed
+                            </span>
+                          )}
+                          {log.source_type === 'attendance' && ['missing_source', 'invalid_source', 'attendance_not_creditable', 'attendance_minutes_missing', 'invalid_hour_chain'].includes(log.attendance_provenance_status) && (
+                            <span className="inline-flex items-center rounded-full border border-red-500/30 bg-red-500/10 px-2.5 py-1 text-xs font-semibold text-red-200">
+                              Attendance source needs review
+                            </span>
+                          )}
                           <span
                             className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold ${
                               log.status === 'approved'
@@ -675,7 +697,13 @@ export default async function StaffHoursManager({
                                     max="24"
                                     step="0.01"
                                     required
-                                    defaultValue={(getOfficialMinutes(log) / 60).toFixed(2)}
+                                    defaultValue={(
+                                      log.source_type === 'attendance' &&
+                                      log.attendance_provenance_status === 'needs_adjustment' &&
+                                      log.attendance_minutes_present !== null
+                                        ? log.attendance_minutes_present
+                                        : getOfficialMinutes(log)
+                                    / 60).toFixed(2)}
                                     className="w-full rounded-lg border border-graphite bg-black px-3 py-2 text-white"
                                   />
                                 </label>
@@ -693,9 +721,28 @@ export default async function StaffHoursManager({
                                 />
                               </label>
                               {log.source_type === 'attendance' && (
-                                <p className="text-xs text-silver">
-                                  Attendance-generated hours must match the corrected attendance record before this adjustment can be saved.
-                                </p>
+                                <div className="rounded-lg border border-graphite bg-black p-3 text-xs text-silver">
+                                  <div className="font-medium text-white">Attendance source</div>
+                                  <div className="mt-1">
+                                    Current attendance: {log.attendance_status ?? 'Unavailable'}
+                                    {log.attendance_minutes_present !== null
+                                      ? ` · ${formatHourMinutes(log.attendance_minutes_present)} recorded`
+                                      : ''}
+                                  </div>
+                                  {log.attendance_provenance_status === 'needs_adjustment' ? (
+                                    <div className="mt-1 text-warm-bronze">
+                                      Attendance has changed since these hours became official. Adjust the official hours to match the corrected attendance.
+                                    </div>
+                                  ) : log.attendance_provenance_status === 'aligned' ? (
+                                    <div className="mt-1 text-[var(--color-brand-gold)]">
+                                      Attendance and official hours are aligned.
+                                    </div>
+                                  ) : (
+                                    <div className="mt-1 text-red-200">
+                                      Review the attendance source before saving an hour adjustment.
+                                    </div>
+                                  )}
+                                </div>
                               )}
                               <p className="text-xs text-silver-gray">
                                 The original approved record stays in the audit history. This changes only the current official total.
