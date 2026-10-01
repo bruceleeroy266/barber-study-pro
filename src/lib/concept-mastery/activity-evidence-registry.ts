@@ -20,6 +20,7 @@ import { chapter17ContentConceptMappings, chapter17FlashcardConceptMappings } fr
 import { chapter18ContentConceptMappings, chapter18FlashcardConceptMappings } from '../chapter-18-concepts/mappings'
 import { chapter19ContentConceptMappings, chapter19FlashcardConceptMappings } from '../chapter-19-concepts/mappings'
 import { chapter20ContentConceptMappings, chapter20FlashcardConceptMappings } from '../chapter-20-concepts/mappings'
+import { chapter21ContentConceptMappings, chapter21FlashcardConceptMappings } from '../chapter-21-concepts/mappings'
 
 type GenericMapping = {
   flashcardId?: string
@@ -70,6 +71,7 @@ const flashcardMappings: Record<string, readonly GenericMapping[]> = {
   'ch-18': chapter18FlashcardConceptMappings,
   'ch-19': chapter19FlashcardConceptMappings,
   'ch-20': chapter20FlashcardConceptMappings,
+  'ch-21': chapter21FlashcardConceptMappings,
 }
 
 const contentMappings: Record<string, readonly GenericMapping[]> = {
@@ -93,6 +95,7 @@ const contentMappings: Record<string, readonly GenericMapping[]> = {
   'ch-18': chapter18ContentConceptMappings,
   'ch-19': chapter19ContentConceptMappings,
   'ch-20': chapter20ContentConceptMappings,
+  'ch-21': chapter21ContentConceptMappings,
 }
 
 export function getFlashcardEvidenceConcept(chapterId: string, flashcardId: string): string | null {
@@ -129,6 +132,29 @@ const scenarioItemConceptOverrides: Readonly<Record<string, readonly string[]>> 
     'ch20-financial-responsibility-income-reporting',
     'ch20-ethical-selling-retailing',
     'ch20-employment-classification-compensation',
+  ],
+  'ch-21:ch21-kc1': [
+    'ch21-business-entry-paths',
+    'ch21-shop-opening-planning',
+  ],
+  'ch-21:ch21-kc2': [
+    'ch21-ownership-legal-structures',
+    'ch21-ownership-legal-structures',
+  ],
+  'ch-21:ch21-kc3': [
+    'ch21-business-plan-financial-planning',
+    'ch21-business-plan-financial-planning',
+  ],
+  'ch-21:ch21-kc4': [
+    'ch21-recordkeeping-financial-compliance',
+    'ch21-booth-rental-independent-business-responsibilities',
+  ],
+  'ch-21:ch21-real-shop-scenarios': [
+    'ch21-business-entry-paths',
+    'ch21-shop-operations-management',
+    'ch21-recordkeeping-financial-compliance',
+    'ch21-booth-rental-independent-business-responsibilities',
+    'ch21-advertising-marketing-client-consent',
   ],
 }
 
