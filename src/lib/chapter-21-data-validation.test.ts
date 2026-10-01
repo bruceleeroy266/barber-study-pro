@@ -25,6 +25,11 @@ describe('Chapter 21 — Data Validation', () => {
   const quizQuestionIds = new Set(quizQuestions.map((q) => q.id))
   const competencyIds = new Set(competencies.map((c) => c.id))
   const learningObjectiveIds = new Set(learningObjectives.map((lo) => lo.id))
+  const canonicalLearningObjectiveId = (legacyId: string) =>
+    legacyId.replace(/^CH21-LO(\d{2})$/, 'LO-21-$1')
+  const canonicalLearningObjectiveIds = new Set(
+    learningObjectives.map((lo) => canonicalLearningObjectiveId(lo.id)),
+  )
 
   it('has the expected chapter metadata', () => {
     expect(content.chapterNumber).toBe(21)
@@ -139,7 +144,7 @@ describe('Chapter 21 — Data Validation', () => {
 
   it('maps every quiz question to a valid learning objective', () => {
     for (const q of quizQuestions) {
-      expect(learningObjectiveIds.has(q.learningObjective!)).toBe(true)
+      expect(canonicalLearningObjectiveIds.has(q.learningObjective!)).toBe(true)
     }
   })
 
@@ -149,7 +154,9 @@ describe('Chapter 21 — Data Validation', () => {
       counts.set(q.learningObjective!, (counts.get(q.learningObjective!) ?? 0) + 1)
     }
     for (const lo of learningObjectives) {
-      expect(counts.get(lo.id) ?? 0).toBeGreaterThanOrEqual(2)
+      expect(
+        counts.get(canonicalLearningObjectiveId(lo.id)) ?? 0,
+      ).toBeGreaterThanOrEqual(2)
     }
   })
 

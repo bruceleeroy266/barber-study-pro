@@ -1,14 +1,14 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { chapter20PremiumQuizQuestions } from '../chapter-20-premium-quiz'
-import { chapter20QuizQuestionConceptMappings } from './mappings'
-import { getChapter20ReassessmentReserve } from './reassessment-reserve'
+import { chapter21PremiumQuizQuestions } from '../chapter-21-premium-quiz'
+import { chapter21QuizQuestionConceptMappings } from './mappings'
+import { getChapter21ReassessmentReserve } from './reassessment-reserve'
 import {
-  buildChapter20InstructorDiagnostics,
-  type Chapter20InstructorQuizAttempt,
+  buildChapter21InstructorDiagnostics,
+  type Chapter21InstructorQuizAttempt,
 } from './instructor-diagnostics'
-import type { Chapter20MicroCheckAttemptRow } from './micro-check-persistence'
+import type { Chapter21MicroCheckAttemptRow } from './micro-check-persistence'
 import {
   buildLiveInstructorChapterGrade,
   type LiveInstructorActivityEvidenceRow,
@@ -21,7 +21,7 @@ import { canAccessRoute, isInstructorOrAdmin } from '../security/permissions'
 
 const root = process.cwd()
 const read = (path: string) => readFileSync(join(root, path), 'utf8')
-const ts = '2026-09-30T22:30:00.000Z'
+const ts = '2026-10-01T02:30:00.000Z'
 
 function wrongAnswer(correct: string): 'a' | 'b' | 'c' | 'd' {
   return (
@@ -31,24 +31,24 @@ function wrongAnswer(correct: string): 'a' | 'b' | 'c' | 'd' {
   )
 }
 
-describe('C20-8 instructor and school-admin diagnostics', () => {
+describe('C21-8 instructor and school-admin diagnostics', () => {
   it('shows preserved initial misses and successful five-question recovery', () => {
-    const target = 'ch20-financial-responsibility-income-reporting'
-    const initialQuestions = chapter20PremiumQuizQuestions.filter(
+    const target = 'ch21-recordkeeping-financial-compliance'
+    const initialQuestions = chapter21PremiumQuizQuestions.filter(
       (question) =>
-        chapter20QuizQuestionConceptMappings.some(
+        chapter21QuizQuestionConceptMappings.some(
           (mapping) =>
             mapping.questionId === question.id &&
             mapping.conceptFamilyId === target,
         ),
     )
-    expect(initialQuestions).toHaveLength(3)
+    expect(initialQuestions).toHaveLength(2)
 
-    const initialAttempt: Chapter20InstructorQuizAttempt = {
-      quiz_id: 'quiz-20',
+    const initialAttempt: Chapter21InstructorQuizAttempt = {
+      quiz_id: 'quiz-21',
       percentage: 80,
       answers_json: Object.fromEntries(
-        initialQuestions.slice(0, 2).map((question) => [
+        initialQuestions.map((question) => [
           question.id,
           wrongAnswer(question.correct_answer),
         ]),
@@ -59,10 +59,10 @@ describe('C20-8 instructor and school-admin diagnostics', () => {
       remediation_cycle_id: null,
     }
 
-    const reserve = getChapter20ReassessmentReserve(target)
+    const reserve = getChapter21ReassessmentReserve(target)
     expect(reserve).toHaveLength(5)
-    const reassessmentAttempt: Chapter20InstructorQuizAttempt = {
-      quiz_id: 'quiz-20',
+    const reassessmentAttempt: Chapter21InstructorQuizAttempt = {
+      quiz_id: 'quiz-21',
       percentage: 100,
       answers_json: Object.fromEntries(
         reserve.map((question) => [
@@ -70,23 +70,23 @@ describe('C20-8 instructor and school-admin diagnostics', () => {
           question.correctAnswer,
         ]),
       ),
-      completed_at: '2026-09-30T22:35:00.000Z',
+      completed_at: '2026-10-01T02:35:00.000Z',
       is_reassessment: true,
       target_concept_id: target,
-      remediation_cycle_id: 'cycle-c20-finance',
+      remediation_cycle_id: 'cycle-c21-records',
     }
 
-    const diagnostics = buildChapter20InstructorDiagnostics({
-      studentId: 'student-c20-diagnostics',
+    const diagnostics = buildChapter21InstructorDiagnostics({
+      studentId: 'student-c21-diagnostics',
       completionPercent: 100,
       microCheckRows: [],
       quizAttempts: [reassessmentAttempt, initialAttempt],
       activityRows: [],
-      referenceTime: '2026-09-30T22:36:00.000Z',
+      referenceTime: '2026-10-01T02:36:00.000Z',
     })
 
     const concept = diagnostics.concepts.find((item) =>
-      item.conceptName.includes('Financial Responsibility'),
+      item.conceptName.includes('Recordkeeping'),
     )
     expect(concept).toBeDefined()
     expect(concept!.initialMisses).toBe(2)
@@ -96,49 +96,47 @@ describe('C20-8 instructor and school-admin diagnostics', () => {
     expect(diagnostics.remediationReassessmentPercent).toBe(100)
   })
 
-  it('includes durable flashcard and scenario/application evidence in concept mastery', () => {
+  it('includes durable flashcard and scenario/application evidence in mastery', () => {
     const activityRows: LiveInstructorActivityEvidenceRow[] = [
       {
-        chapter_id: 'ch-20',
+        chapter_id: 'ch-21',
         source: 'flashcard',
-        item_id: 'fc-ch20-001',
+        item_id: 'fc-ch21-001',
         is_correct: true,
         answered_at: ts,
       },
       {
-        chapter_id: 'ch-20',
+        chapter_id: 'ch-21',
         source: 'scenario_application',
-        item_id: 'ch20-kc1:0',
+        item_id: 'ch21-kc1:0',
         is_correct: false,
-        answered_at: '2026-09-30T22:31:00.000Z',
+        answered_at: '2026-10-01T02:31:00.000Z',
       },
     ]
 
-    const diagnostics = buildChapter20InstructorDiagnostics({
-      studentId: 'student-c20-activity',
+    const diagnostics = buildChapter21InstructorDiagnostics({
+      studentId: 'student-c21-activity',
       completionPercent: 0,
       microCheckRows: [],
       quizAttempts: [],
       activityRows,
-      referenceTime: '2026-09-30T22:32:00.000Z',
+      referenceTime: '2026-10-01T02:32:00.000Z',
     })
 
     expect(diagnostics.evidenceCount).toBe(2)
-    expect(
-      diagnostics.concepts.some((concept) => concept.observations > 0),
-    ).toBe(true)
+    expect(diagnostics.concepts.some((concept) => concept.observations > 0)).toBe(true)
     expect(diagnostics.preservedInitialMissCount).toBe(1)
   })
 
-  it('surfaces classification/tax/privacy compliance without bodily-safety escalation', () => {
-    const rows: Chapter20MicroCheckAttemptRow[] = [
+  it('surfaces business/legal compliance without bodily-safety escalation', () => {
+    const rows: Chapter21MicroCheckAttemptRow[] = [
       {
-        id: 'row-tax-1',
-        user_id: 'student-c20-compliance',
-        chapter_id: 'ch-20',
-        check_id: 'mc-20-04',
-        question_id: 'mcq-20-007',
-        concept_id: 'ch20-financial-responsibility-income-reporting',
+        id: 'row-c21-1',
+        user_id: 'student-c21-compliance',
+        chapter_id: 'ch-21',
+        check_id: 'mc-21-06',
+        question_id: 'mcq-21-011',
+        concept_id: 'ch21-booth-rental-independent-business-responsibilities',
         difficulty: 'application',
         selected_answer: 'a',
         is_correct: false,
@@ -146,64 +144,58 @@ describe('C20-8 instructor and school-admin diagnostics', () => {
         created_at: ts,
       },
       {
-        id: 'row-tax-2',
-        user_id: 'student-c20-compliance',
-        chapter_id: 'ch-20',
-        check_id: 'mc-20-04',
-        question_id: 'mcq-20-008',
-        concept_id: 'ch20-financial-responsibility-income-reporting',
+        id: 'row-c21-2',
+        user_id: 'student-c21-compliance',
+        chapter_id: 'ch-21',
+        check_id: 'mc-21-06',
+        question_id: 'mcq-21-012',
+        concept_id: 'ch21-booth-rental-independent-business-responsibilities',
         difficulty: 'scenario',
         selected_answer: 'a',
         is_correct: false,
-        answered_at: '2026-09-30T22:31:00.000Z',
-        created_at: '2026-09-30T22:31:00.000Z',
+        answered_at: '2026-10-01T02:31:00.000Z',
+        created_at: '2026-10-01T02:31:00.000Z',
       },
     ]
 
-    const diagnostics = buildChapter20InstructorDiagnostics({
-      studentId: 'student-c20-compliance',
+    const diagnostics = buildChapter21InstructorDiagnostics({
+      studentId: 'student-c21-compliance',
       completionPercent: 0,
       microCheckRows: rows,
       quizAttempts: [],
       activityRows: [],
-      referenceTime: '2026-09-30T22:32:00.000Z',
+      referenceTime: '2026-10-01T02:32:00.000Z',
     })
 
     expect(diagnostics.complianceIntervention.level).toBe('elevated')
-    expect(
-      diagnostics.complianceIntervention.requiresInstructorReview,
-    ).toBe(true)
-    expect(
-      diagnostics.complianceIntervention.requiresFormalReassessment,
-    ).toBe(true)
-    expect(
-      diagnostics.complianceIntervention.reassessmentPassPercent,
-    ).toBe(80)
+    expect(diagnostics.complianceIntervention.requiresInstructorReview).toBe(true)
+    expect(diagnostics.complianceIntervention.requiresFormalReassessment).toBe(true)
+    expect(diagnostics.complianceIntervention.reassessmentPassPercent).toBe(80)
     expect(diagnostics.remediationStatus).toContain('Compliance review')
-    expect(diagnostics.remediationStatus).not.toContain('safety')
+    expect(diagnostics.remediationStatus.toLowerCase()).not.toContain('safety')
   })
 
-  it('integrates Chapter 20 with live 20/10/40/15/15 grade using real activity inventories', () => {
+  it('integrates Chapter 21 with the live 20/10/40/15/15 grade', () => {
     const activityRows: LiveInstructorActivityEvidenceRow[] = [
-      ...getFlashcardEvidenceInventory('ch-20').map((itemId) => ({
-        chapter_id: 'ch-20',
+      ...getFlashcardEvidenceInventory('ch-21').map((itemId) => ({
+        chapter_id: 'ch-21',
         source: 'flashcard' as const,
         item_id: itemId,
         is_correct: true,
       })),
-      ...getScenarioEvidenceInventory('ch-20').map((itemId) => ({
-        chapter_id: 'ch-20',
+      ...getScenarioEvidenceInventory('ch-21').map((itemId) => ({
+        chapter_id: 'ch-21',
         source: 'scenario_application' as const,
         item_id: itemId,
         is_correct: true,
       })),
     ]
 
-    expect(getFlashcardEvidenceInventory('ch-20')).toHaveLength(60)
-    expect(getScenarioEvidenceInventory('ch-20')).toHaveLength(13)
+    expect(getFlashcardEvidenceInventory('ch-21')).toHaveLength(60)
+    expect(getScenarioEvidenceInventory('ch-21')).toHaveLength(13)
 
     const grade = buildLiveInstructorChapterGrade({
-      chapterId: 'ch-20',
+      chapterId: 'ch-21',
       microCheckPercent: 100,
       chapterAssessmentPercent: 100,
       remediationReassessmentPercent: 100,
@@ -222,14 +214,14 @@ describe('C20-8 instructor and school-admin diagnostics', () => {
     expect(grade.evidenceComplete).toBe(true)
   })
 
-  it('uses staff authorization and same-school student lookup before exposing Chapter 20 diagnostics', () => {
+  it('uses staff authorization and same-school lookup before exposing Chapter 21 diagnostics', () => {
     expect(isInstructorOrAdmin('instructor')).toBe(true)
     expect(isInstructorOrAdmin('school_admin')).toBe(true)
     expect(isInstructorOrAdmin('admin')).toBe(true)
     expect(isInstructorOrAdmin('student')).toBe(false)
-    expect(canAccessRoute('instructor', '/instructor/student/student-c20')).toBe(true)
-    expect(canAccessRoute('school_admin', '/instructor/student/student-c20')).toBe(true)
-    expect(canAccessRoute('student', '/instructor/student/student-c20')).toBe(false)
+    expect(canAccessRoute('instructor', '/instructor/student/student-c21')).toBe(true)
+    expect(canAccessRoute('school_admin', '/instructor/student/student-c21')).toBe(true)
+    expect(canAccessRoute('student', '/instructor/student/student-c21')).toBe(false)
 
     const page = read('src/app/instructor/student/[studentId]/page.tsx')
     expect(page).toContain(
@@ -237,24 +229,24 @@ describe('C20-8 instructor and school-admin diagnostics', () => {
     )
     expect(page).toContain(".eq('school_id', instructorProfile.school_id)")
     expect(page).toContain(".in('role', ['student', 'apprentice'])")
-    expect(page).toContain("row.chapter_id === 'ch-20'")
-    expect(page).toContain('buildChapter20InstructorDiagnostics({')
-    expect(page).toContain("buildLiveGrade('ch-20', chapter20Diagnostics)")
-    expect(page).toContain('Chapter 20 — Working Behind the Chair')
+    expect(page).toContain("row.chapter_id === 'ch-21'")
+    expect(page).toContain('buildChapter21InstructorDiagnostics({')
+    expect(page).toContain("buildLiveGrade('ch-21', chapter21Diagnostics)")
+    expect(page).toContain('Chapter 21 — The Business of Barbering')
     expect(page).toContain(
-      'chapter20Diagnostics.complianceIntervention.requiresInstructorReview',
+      'chapter21Diagnostics.complianceIntervention.requiresInstructorReview',
     )
-    expect(page).toContain('chapter20Diagnostics.remediationStatus')
-    expect(page).toContain('chapter20Diagnostics.latestReassessment')
-    expect(page).toContain('chapter20Diagnostics.weakestConcepts')
-    expect(page).toContain('chapter20Diagnostics.concepts.map')
-    expect(page).toContain('chapter20Diagnostics.preservedInitialMissCount')
+    expect(page).toContain('chapter21Diagnostics.remediationStatus')
+    expect(page).toContain('chapter21Diagnostics.latestReassessment')
+    expect(page).toContain('chapter21Diagnostics.weakestConcepts')
+    expect(page).toContain('chapter21Diagnostics.concepts.map')
+    expect(page).toContain('chapter21Diagnostics.preservedInitialMissCount')
   })
 
-  it('does not expose raw answers, internal evidence IDs, or remediation cycle IDs in the Chapter 20 panel', () => {
+  it('does not expose raw answers or internal identifiers in the Chapter 21 panel', () => {
     const page = read('src/app/instructor/student/[studentId]/page.tsx')
     const marker =
-      '{/* Chapter 20 mastery, compliance, remediation & instructor visibility */}'
+      '{/* Chapter 21 mastery, business/legal compliance, remediation & instructor visibility */}'
     const start = page.indexOf(marker)
     expect(start).toBeGreaterThanOrEqual(0)
     const section = page.slice(
@@ -272,10 +264,10 @@ describe('C20-8 instructor and school-admin diagnostics', () => {
     expect(section).not.toContain('remediation_cycle_id')
   })
 
-  it('includes Chapter 20 in both shared durable-evidence reads', () => {
+  it('includes Chapter 21 in both shared durable-evidence reads', () => {
     const page = read('src/app/instructor/student/[studentId]/page.tsx')
+    const ch21Occurrences = page.match(/'ch-21'/g) ?? []
+    expect(ch21Occurrences.length).toBeGreaterThanOrEqual(6)
     expect(page).toContain("'ch-19','ch-20','ch-21']")
-    const ch20Occurrences = page.match(/'ch-20'/g) ?? []
-    expect(ch20Occurrences.length).toBeGreaterThanOrEqual(6)
   })
 })

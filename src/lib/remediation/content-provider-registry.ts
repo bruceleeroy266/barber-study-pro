@@ -241,6 +241,19 @@ import { chapter20PremiumFlashcards } from '@/lib/chapter-20-premium-flashcards'
 import { chapter20PremiumQuizQuestions } from '@/lib/chapter-20-premium-quiz'
 import { chapter20ReassessmentReserve } from '@/lib/chapter-20-concepts/reassessment-reserve'
 
+import {
+  chapter21RemediationContentConceptMappings,
+  chapter21FlashcardConceptMappings,
+  chapter21QuizQuestionConceptMappings,
+} from '@/lib/chapter-21-concepts/mappings'
+import {
+  ACTIVE_CHAPTER21_CONCEPT_FAMILY_IDS,
+  chapter21ConceptFamilies,
+} from '@/lib/chapter-21-concepts/concepts'
+import { chapter21PremiumFlashcards } from '@/lib/chapter-21-premium-flashcards'
+import { chapter21PremiumQuizQuestions } from '@/lib/chapter-21-premium-quiz'
+import { chapter21ReassessmentReserve } from '@/lib/chapter-21-concepts/reassessment-reserve'
+
 import { getChapterContent } from '@/lib/chapter-content'
 
 // ───────────────────────────────────────────────
@@ -1898,6 +1911,105 @@ const chapter20Provider: ChapterRemediationContentProvider = {
   },
 }
 
+
+const chapter21ContentMappingsProjected = chapter21RemediationContentConceptMappings.map((mapping) => ({
+  contentBlockId: mapping.contentBlockId,
+  conceptId: mapping.conceptFamilyId as string,
+}))
+const chapter21FlashcardMappingsProjected = chapter21FlashcardConceptMappings.map((mapping) => ({
+  flashcardId: mapping.flashcardId as string,
+  conceptId: mapping.conceptFamilyId as string,
+}))
+const chapter21QuizMappingsProjected = [
+  ...chapter21QuizQuestionConceptMappings.map((mapping) => ({
+    questionId: mapping.questionId as string,
+    conceptId: mapping.conceptFamilyId as string,
+  })),
+  ...chapter21ReassessmentReserve.map((question) => ({
+    questionId: question.id as string,
+    conceptId: question.conceptFamilyId as string,
+  })),
+]
+
+function chapter21ReserveAsQuizQuestion(questionId: string): QuizQuestion | null {
+  const question = chapter21ReassessmentReserve.find(
+    (item) => item.id === questionId,
+  )
+  if (!question) return null
+
+  return {
+    id: question.id,
+    quiz_id: 'quiz-21',
+    question: question.question,
+    answer_a: question.answer_a,
+    answer_b: question.answer_b,
+    answer_c: question.answer_c,
+    answer_d: question.answer_d,
+    correct_answer: question.correctAnswer,
+    explanation: question.explanation,
+    difficulty:
+      question.difficulty === 'scenario' ? 'hard' : 'medium',
+    learningObjective: question.learningObjectiveId,
+    order_index:
+      1000 +
+      chapter21ReassessmentReserve.findIndex(
+        (item) => item.id === question.id,
+      ),
+  }
+}
+
+function isChapter21ConceptFamilyId(conceptId: string): boolean {
+  return (ACTIVE_CHAPTER21_CONCEPT_FAMILY_IDS as readonly string[]).includes(conceptId)
+}
+
+const chapter21Provider: ChapterRemediationContentProvider = {
+  chapterId: 'ch-21',
+  getConceptName(conceptId) {
+    return chapter21ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic'
+  },
+  getContentBlockIdsForConcept(conceptId) {
+    return chapter21ContentMappingsProjected
+      .filter((mapping) => mapping.conceptId === conceptId)
+      .map((mapping) => mapping.contentBlockId)
+  },
+  getFlashcardIdsForConcept(conceptId) {
+    return chapter21FlashcardMappingsProjected
+      .filter((mapping) => mapping.conceptId === conceptId)
+      .map((mapping) => mapping.flashcardId)
+  },
+  filterContentByConcept(conceptId) {
+    return filterSectionsByMappedBlockIds(
+      21,
+      new Set(this.getContentBlockIdsForConcept(conceptId)),
+    )
+  },
+  filterFlashcardsByConcept(conceptId) {
+    const mappedIds = new Set(this.getFlashcardIdsForConcept(conceptId))
+    return chapter21PremiumFlashcards.filter(
+      (card) => card.is_active && mappedIds.has(card.id),
+    )
+  },
+  buildRemediationContentBundle(conceptId) {
+    return buildBundle(this, conceptId)
+  },
+  getQuizQuestionById(questionId) {
+    return (
+      chapter21PremiumQuizQuestions.find(
+        (question) => question.id === questionId,
+      ) ?? chapter21ReserveAsQuizQuestion(questionId)
+    )
+  },
+  filterKeyTermsByConcept(conceptId) {
+    if (!isChapter21ConceptFamilyId(conceptId)) return []
+    return []
+  },
+  getConceptQuestionCount(conceptId) {
+    return chapter21QuizMappingsProjected.filter(
+      (mapping) => mapping.conceptId === conceptId,
+    ).length
+  },
+}
+
 const chapter16ContentMappingsProjected = chapter16ContentConceptMappings.map((mapping) => ({
   contentBlockId: mapping.contentBlockId,
   conceptId: mapping.conceptFamilyId as string,
@@ -2001,6 +2113,7 @@ const contentProviders = new Map<ChapterId, ChapterRemediationContentProvider>([
   ['ch-18', chapter18Provider],
   ['ch-19', chapter19Provider],
   ['ch-20', chapter20Provider],
+  ['ch-21', chapter21Provider],
 ])
 
 /**

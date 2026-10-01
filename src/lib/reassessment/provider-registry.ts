@@ -32,6 +32,7 @@ import { getChapter17MappingProvider } from './adapters/chapter-17-adapter'
 import { getChapter18MappingProvider } from './adapters/chapter-18-adapter'
 import { getChapter19MappingProvider } from './adapters/chapter-19-adapter'
 import { getChapter20MappingProvider } from './adapters/chapter-20-adapter'
+import { getChapter21MappingProvider } from './adapters/chapter-21-adapter'
 import {
   Chapter1DetectionProvider,
   createChapter1DetectionProvider,
@@ -132,6 +133,11 @@ import {
   createChapter20DetectionProvider,
   type Chapter20DetectionProviderConfig,
 } from './adapters/chapter-20-detection-provider'
+import {
+  Chapter21DetectionProvider,
+  createChapter21DetectionProvider,
+  type Chapter21DetectionProviderConfig,
+} from './adapters/chapter-21-detection-provider'
 
 // ───────────────────────────────────────────────
 // Concept Detection Provider Interface
@@ -217,6 +223,8 @@ class MappingProviderRegistry {
     this.registerProvider(getChapter19MappingProvider())
     // Register Chapter 20 (C20-7 reassessment/mastery recovery)
     this.registerProvider(getChapter20MappingProvider())
+    // Register Chapter 21 (C21-7 reassessment/mastery recovery)
+    this.registerProvider(getChapter21MappingProvider())
   }
 
   /**
@@ -579,6 +587,15 @@ export function initializeChapter20DetectionProvider(
   return provider
 }
 
+export function initializeChapter21DetectionProvider(
+  config: Chapter21DetectionProviderConfig
+): Chapter21DetectionProvider {
+  const provider = createChapter21DetectionProvider(config)
+  const registry = getDetectionProviderRegistry()
+  registry.registerProvider(provider)
+  return provider
+}
+
 /**
  * Initialize and register the detection provider for a chapter (C3-3).
  *
@@ -650,6 +667,9 @@ export function initializeChapterDetectionProvider(
   }
   if (chapterId === 'ch-20') {
     return initializeChapter20DetectionProvider(config)
+  }
+  if (chapterId === 'ch-21') {
+    return initializeChapter21DetectionProvider(config)
   }
   return undefined
 }

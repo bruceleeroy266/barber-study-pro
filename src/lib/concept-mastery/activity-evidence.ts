@@ -119,9 +119,19 @@ export async function persistChapterActivityEvidence(
 ): Promise<ChapterActivityEvidenceRow | null> {
   if (!isUnifiedActivityEvidenceChapter(input.chapterId)) return null
 
-  if (input.chapterId === 'ch-19' || input.chapterId === 'ch-20') {
+  if (
+    input.chapterId === 'ch-19' ||
+    input.chapterId === 'ch-20' ||
+    input.chapterId === 'ch-21'
+  ) {
     try {
-      const response = await fetch(`/api/${input.chapterId === 'ch-19' ? 'chapter-19' : 'chapter-20'}/activity-evidence`, {
+      const routeChapter =
+        input.chapterId === 'ch-19'
+          ? 'chapter-19'
+          : input.chapterId === 'ch-20'
+            ? 'chapter-20'
+            : 'chapter-21'
+      const response = await fetch(`/api/${routeChapter}/activity-evidence`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
