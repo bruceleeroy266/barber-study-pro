@@ -8,6 +8,7 @@ import type {
 } from '@/lib/chapter-21-concepts/micro-checks'
 import type { Chapter21MicroCheckAttemptRow } from '@/lib/chapter-21-concepts/micro-check-persistence'
 import { persistChapter21MicroCheckAttempt } from '@/lib/chapter-21-concepts/micro-check-persistence'
+import { classifyChapter21MicroCheckMiss } from '@/lib/chapter-21-concepts/escalation'
 
 interface Props {
   check: Chapter21MicroCheck
@@ -92,6 +93,9 @@ export default function Chapter21MicroCheckCard({
       {check.questions.map((question, index) => {
         const attempt = attemptMap.get(question.id)
         const chosen = selected[question.id]
+        const compliance = attempt
+          ? classifyChapter21MicroCheckMiss(question, attempt.is_correct)
+          : null
 
         return (
           <div
@@ -166,9 +170,30 @@ export default function Chapter21MicroCheckCard({
                     color: attempt.is_correct ? theme.primary : theme.text,
                   }}
                 >
-                  {attempt.is_correct ? '✓ Correct' : 'Review this concept'}
+                  {attempt.is_correct
+                    ? '✓ Correct'
+                    : compliance?.requiresTargetedComplianceReview
+                      ? '⚠ Compliance review required'
+                      : 'Review this concept'}
                 </p>
                 <p className="mt-1">{question.explanation}</p>
+                {compliance?.requiresTargetedComplianceReview && (
+                  <div
+                    className="mt-3 rounded-lg border px-3 py-3"
+                    style={{
+                      borderColor: theme.border,
+                      background: theme.background,
+                    }}
+                  >
+                    <p
+                      className="font-semibold"
+                      style={{ color: theme.primary }}
+                    >
+                      Targeted Compliance Review
+                    </p>
+                    <p className="mt-1">{compliance.studentMessage}</p>
+                  </div>
+                )}
               </div>
             )}
           </div>
