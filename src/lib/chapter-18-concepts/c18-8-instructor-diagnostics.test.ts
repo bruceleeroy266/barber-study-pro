@@ -203,6 +203,6 @@ describe('C18-8 instructor and school-admin diagnostics', () => {
     const page = read('src/app/instructor/student/[studentId]/page.tsx')
     const ch18Occurrences = page.match(/'ch-18'/g) ?? []
     expect(ch18Occurrences.length).toBeGreaterThanOrEqual(6)
-    expect(page).toContain("'ch-17','ch-18','ch-19']")
+    expect(page).toContain("'ch-17','ch-18','ch-19','ch-20']")
   })
 })

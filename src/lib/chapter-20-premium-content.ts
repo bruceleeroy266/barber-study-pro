@@ -44,30 +44,30 @@ export const chapter20PremiumContent: ChapterContent = {
       standardId: 'CH20-LO01',
       title: 'Chapter 20 Lesson',
       subtitle: 'Introduction and Learning Objectives',
-      html: `<style>.ch20-legacy-content {  --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
-.ch20-legacy-content * {  margin: 0; padding: 0; box-sizing: border-box; }
-.ch20-legacy-content body {  font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
-.ch20-legacy-content .content {  max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
-.ch20-legacy-content .section {  margin-bottom: 3rem; }
-.ch20-legacy-content .section h1.lesson-title {  font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
-.ch20-legacy-content .section h2 {  font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
-.ch20-legacy-content .section h3 {  font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
-.ch20-legacy-content .section h4 {  font-size: 1.1rem; font-weight: 600; margin: 1.25rem 0 0.5rem; color: #e0e0e0; }
-.ch20-legacy-content .section p, .ch20-legacy-content .section ul, .ch20-legacy-content .section ol {  margin-bottom: 1rem; color: #ccc; }
-.ch20-legacy-content .section ul, .ch20-legacy-content .section ol {  margin-left: 1.5rem; }
-.ch20-legacy-content .section li {  margin-bottom: 0.35rem; }
-.ch20-legacy-content .section table {  width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
-.ch20-legacy-content .section th, .ch20-legacy-content .section td {  border: 1px solid var(--medium-gray); padding: 0.6rem 0.75rem; text-align: left; }
-.ch20-legacy-content .section th {  background: rgba(212,175,55,0.15); color: var(--gold); font-weight: 600; }
-.ch20-legacy-content .section tr:nth-child(even) {  background: rgba(255,255,255,0.03); }
-.ch20-legacy-content .section caption {  caption-side: top; text-align: left; font-weight: 600; color: var(--gold); padding: 0.5rem 0; }
-.ch20-legacy-content .key-point {  background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
-.ch20-legacy-content .key-point strong {  color: var(--gold); }
-.ch20-legacy-content .did-you-know {  background: rgba(255,255,255,0.05); border-left: 4px solid #888; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
-.ch20-legacy-content .quiz-section {  background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
-.ch20-legacy-content .quiz-section h2 {  color: var(--gold); margin-bottom: 1.5rem; }
-.ch20-legacy-content hr {  border: 0; border-top: 1px solid var(--medium-gray); margin: 2rem 0; }</style>
-<div class="ch20-legacy-content">
+      html: `<style>.ch20-lesson-content {  --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+.ch20-lesson-content * {  margin: 0; padding: 0; box-sizing: border-box; }
+.ch20-lesson-content body {  font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+.ch20-lesson-content .content {  max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+.ch20-lesson-content .section {  margin-bottom: 3rem; }
+.ch20-lesson-content .section h1.lesson-title {  font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+.ch20-lesson-content .section h2 {  font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+.ch20-lesson-content .section h3 {  font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+.ch20-lesson-content .section h4 {  font-size: 1.1rem; font-weight: 600; margin: 1.25rem 0 0.5rem; color: #e0e0e0; }
+.ch20-lesson-content .section p, .ch20-lesson-content .section ul, .ch20-lesson-content .section ol {  margin-bottom: 1rem; color: #ccc; }
+.ch20-lesson-content .section ul, .ch20-lesson-content .section ol {  margin-left: 1.5rem; }
+.ch20-lesson-content .section li {  margin-bottom: 0.35rem; }
+.ch20-lesson-content .section table {  width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
+.ch20-lesson-content .section th, .ch20-lesson-content .section td {  border: 1px solid var(--medium-gray); padding: 0.6rem 0.75rem; text-align: left; }
+.ch20-lesson-content .section th {  background: rgba(212,175,55,0.15); color: var(--gold); font-weight: 600; }
+.ch20-lesson-content .section tr:nth-child(even) {  background: rgba(255,255,255,0.03); }
+.ch20-lesson-content .section caption {  caption-side: top; text-align: left; font-weight: 600; color: var(--gold); padding: 0.5rem 0; }
+.ch20-lesson-content .key-point {  background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+.ch20-lesson-content .key-point strong {  color: var(--gold); }
+.ch20-lesson-content .did-you-know {  background: rgba(255,255,255,0.05); border-left: 4px solid #888; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+.ch20-lesson-content .quiz-section {  background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
+.ch20-lesson-content .quiz-section h2 {  color: var(--gold); margin-bottom: 1.5rem; }
+.ch20-lesson-content hr {  border: 0; border-top: 1px solid var(--medium-gray); margin: 2rem 0; }</style>
+<div class="ch20-lesson-content">
 <section class="section">
 <h2>Introduction and Why Study Working Behind the Chair</h2>
 <p>Completing barber school and passing your state licensing exam is a major milestone, but it is only the beginning. Your first position behind the chair introduces new responsibilities that go far beyond technical skill. Success now depends on your conduct, reliability, teamwork, financial discipline, and ability to build lasting client relationships.</p>
@@ -97,31 +97,31 @@ export const chapter20PremiumContent: ChapterContent = {
       id: 'ch20-lo1',
       standardId: 'CH20-LO01',
       title: 'LO1 — From Student to Professional',
-      html: `<style>.ch20-legacy-content {  --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
-.ch20-legacy-content * {  margin: 0; padding: 0; box-sizing: border-box; }
-.ch20-legacy-content body {  font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
-.ch20-legacy-content .content {  max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
-.ch20-legacy-content .section {  margin-bottom: 3rem; }
-.ch20-legacy-content .section h1.lesson-title {  font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
-.ch20-legacy-content .section h2 {  font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
-.ch20-legacy-content .section h3 {  font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
-.ch20-legacy-content .section h4 {  font-size: 1.1rem; font-weight: 600; margin: 1.25rem 0 0.5rem; color: #e0e0e0; }
-.ch20-legacy-content .section p, .ch20-legacy-content .section ul, .ch20-legacy-content .section ol {  margin-bottom: 1rem; color: #ccc; }
-.ch20-legacy-content .section ul, .ch20-legacy-content .section ol {  margin-left: 1.5rem; }
-.ch20-legacy-content .section li {  margin-bottom: 0.35rem; }
-.ch20-legacy-content .section table {  width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
-.ch20-legacy-content .section th, .ch20-legacy-content .section td {  border: 1px solid var(--medium-gray); padding: 0.6rem 0.75rem; text-align: left; }
-.ch20-legacy-content .section th {  background: rgba(212,175,55,0.15); color: var(--gold); font-weight: 600; }
-.ch20-legacy-content .section tr:nth-child(even) {  background: rgba(255,255,255,0.03); }
-.ch20-legacy-content .section caption {  caption-side: top; text-align: left; font-weight: 600; color: var(--gold); padding: 0.5rem 0; }
-.ch20-legacy-content .key-point {  background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
-.ch20-legacy-content .key-point strong {  color: var(--gold); }
-.ch20-legacy-content .did-you-know {  background: rgba(255,255,255,0.05); border-left: 4px solid #888; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
-.ch20-legacy-content .quiz-section {  background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
-.ch20-legacy-content .quiz-section h2 {  color: var(--gold); margin-bottom: 1.5rem; }
-.ch20-legacy-content hr {  border: 0; border-top: 1px solid var(--medium-gray); margin: 2rem 0; }</style>
-<div class="ch20-legacy-content">
-<section class="section">
+      html: `<style>.ch20-lesson-content {  --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+.ch20-lesson-content * {  margin: 0; padding: 0; box-sizing: border-box; }
+.ch20-lesson-content body {  font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+.ch20-lesson-content .content {  max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+.ch20-lesson-content .section {  margin-bottom: 3rem; }
+.ch20-lesson-content .section h1.lesson-title {  font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+.ch20-lesson-content .section h2 {  font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+.ch20-lesson-content .section h3 {  font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+.ch20-lesson-content .section h4 {  font-size: 1.1rem; font-weight: 600; margin: 1.25rem 0 0.5rem; color: #e0e0e0; }
+.ch20-lesson-content .section p, .ch20-lesson-content .section ul, .ch20-lesson-content .section ol {  margin-bottom: 1rem; color: #ccc; }
+.ch20-lesson-content .section ul, .ch20-lesson-content .section ol {  margin-left: 1.5rem; }
+.ch20-lesson-content .section li {  margin-bottom: 0.35rem; }
+.ch20-lesson-content .section table {  width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
+.ch20-lesson-content .section th, .ch20-lesson-content .section td {  border: 1px solid var(--medium-gray); padding: 0.6rem 0.75rem; text-align: left; }
+.ch20-lesson-content .section th {  background: rgba(212,175,55,0.15); color: var(--gold); font-weight: 600; }
+.ch20-lesson-content .section tr:nth-child(even) {  background: rgba(255,255,255,0.03); }
+.ch20-lesson-content .section caption {  caption-side: top; text-align: left; font-weight: 600; color: var(--gold); padding: 0.5rem 0; }
+.ch20-lesson-content .key-point {  background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+.ch20-lesson-content .key-point strong {  color: var(--gold); }
+.ch20-lesson-content .did-you-know {  background: rgba(255,255,255,0.05); border-left: 4px solid #888; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+.ch20-lesson-content .quiz-section {  background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
+.ch20-lesson-content .quiz-section h2 {  color: var(--gold); margin-bottom: 1.5rem; }
+.ch20-lesson-content hr {  border: 0; border-top: 1px solid var(--medium-gray); margin: 2rem 0; }</style>
+<div class="ch20-lesson-content">
+<section class="section" data-concept-family="ch20-professional-transition-workplace-expectations">
 <h2>LO1 — From Student to Professional</h2>
 <p>Barbering school is designed to be a supportive learning environment. You are allowed to repeat procedures, correct mistakes, and adjust your schedule when life gets complicated. The workplace is different. When you accept a paycheck, you accept the duty to put the barbershop and its clients ahead of your personal convenience.</p>
 <p>That means arriving on time for every scheduled shift, being prepared to perform any service or task assigned to you, and honoring your appointments even when something tempting comes up. Calling out for a concert or personal event inconveniences clients, burdens coworkers, and can permanently damage your reputation.</p>
@@ -135,7 +135,8 @@ export const chapter20PremiumContent: ChapterContent = {
 </ul>
 <h3>The Job Description</h3>
 <p>A job description is a written document that outlines the duties, responsibilities, and expectations of a specific position. If your shop does not use them, consider writing one for yourself and reviewing it with your manager. This prevents misunderstandings and gives you a clear path for evaluation and growth.</p>
-<div class="did-you-know"><strong>Did You Know?</strong> A written job description protects both you and the employer by spelling out exactly what success looks like in your role.</div>
+<div class="did-you-know"><strong>Did You Know?</strong> A written job description can reduce misunderstandings by clarifying duties, expectations, and evaluation criteria.</div>
+<div class="key-point" id="ch20-apply-01" data-concept-family="ch20-professional-transition-workplace-expectations"><strong>Apply It:</strong> You are scheduled for a full shift when a personal event comes up. Identify the professional obligations you should verify before deciding what to do, and explain how your choice could affect clients and coworkers.</div>
 <hr>
 </section>
 </div>`,
@@ -145,31 +146,31 @@ export const chapter20PremiumContent: ChapterContent = {
       id: 'ch20-lo2',
       standardId: 'CH20-LO02',
       title: 'LO2 — Habits of a Good Barbershop Team Player',
-      html: `<style>.ch20-legacy-content {  --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
-.ch20-legacy-content * {  margin: 0; padding: 0; box-sizing: border-box; }
-.ch20-legacy-content body {  font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
-.ch20-legacy-content .content {  max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
-.ch20-legacy-content .section {  margin-bottom: 3rem; }
-.ch20-legacy-content .section h1.lesson-title {  font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
-.ch20-legacy-content .section h2 {  font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
-.ch20-legacy-content .section h3 {  font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
-.ch20-legacy-content .section h4 {  font-size: 1.1rem; font-weight: 600; margin: 1.25rem 0 0.5rem; color: #e0e0e0; }
-.ch20-legacy-content .section p, .ch20-legacy-content .section ul, .ch20-legacy-content .section ol {  margin-bottom: 1rem; color: #ccc; }
-.ch20-legacy-content .section ul, .ch20-legacy-content .section ol {  margin-left: 1.5rem; }
-.ch20-legacy-content .section li {  margin-bottom: 0.35rem; }
-.ch20-legacy-content .section table {  width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
-.ch20-legacy-content .section th, .ch20-legacy-content .section td {  border: 1px solid var(--medium-gray); padding: 0.6rem 0.75rem; text-align: left; }
-.ch20-legacy-content .section th {  background: rgba(212,175,55,0.15); color: var(--gold); font-weight: 600; }
-.ch20-legacy-content .section tr:nth-child(even) {  background: rgba(255,255,255,0.03); }
-.ch20-legacy-content .section caption {  caption-side: top; text-align: left; font-weight: 600; color: var(--gold); padding: 0.5rem 0; }
-.ch20-legacy-content .key-point {  background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
-.ch20-legacy-content .key-point strong {  color: var(--gold); }
-.ch20-legacy-content .did-you-know {  background: rgba(255,255,255,0.05); border-left: 4px solid #888; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
-.ch20-legacy-content .quiz-section {  background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
-.ch20-legacy-content .quiz-section h2 {  color: var(--gold); margin-bottom: 1.5rem; }
-.ch20-legacy-content hr {  border: 0; border-top: 1px solid var(--medium-gray); margin: 2rem 0; }</style>
-<div class="ch20-legacy-content">
-<section class="section">
+      html: `<style>.ch20-lesson-content {  --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+.ch20-lesson-content * {  margin: 0; padding: 0; box-sizing: border-box; }
+.ch20-lesson-content body {  font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+.ch20-lesson-content .content {  max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+.ch20-lesson-content .section {  margin-bottom: 3rem; }
+.ch20-lesson-content .section h1.lesson-title {  font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+.ch20-lesson-content .section h2 {  font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+.ch20-lesson-content .section h3 {  font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+.ch20-lesson-content .section h4 {  font-size: 1.1rem; font-weight: 600; margin: 1.25rem 0 0.5rem; color: #e0e0e0; }
+.ch20-lesson-content .section p, .ch20-lesson-content .section ul, .ch20-lesson-content .section ol {  margin-bottom: 1rem; color: #ccc; }
+.ch20-lesson-content .section ul, .ch20-lesson-content .section ol {  margin-left: 1.5rem; }
+.ch20-lesson-content .section li {  margin-bottom: 0.35rem; }
+.ch20-lesson-content .section table {  width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
+.ch20-lesson-content .section th, .ch20-lesson-content .section td {  border: 1px solid var(--medium-gray); padding: 0.6rem 0.75rem; text-align: left; }
+.ch20-lesson-content .section th {  background: rgba(212,175,55,0.15); color: var(--gold); font-weight: 600; }
+.ch20-lesson-content .section tr:nth-child(even) {  background: rgba(255,255,255,0.03); }
+.ch20-lesson-content .section caption {  caption-side: top; text-align: left; font-weight: 600; color: var(--gold); padding: 0.5rem 0; }
+.ch20-lesson-content .key-point {  background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+.ch20-lesson-content .key-point strong {  color: var(--gold); }
+.ch20-lesson-content .did-you-know {  background: rgba(255,255,255,0.05); border-left: 4px solid #888; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+.ch20-lesson-content .quiz-section {  background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
+.ch20-lesson-content .quiz-section h2 {  color: var(--gold); margin-bottom: 1.5rem; }
+.ch20-lesson-content hr {  border: 0; border-top: 1px solid var(--medium-gray); margin: 2rem 0; }</style>
+<div class="ch20-lesson-content">
+<section class="section" data-concept-family="ch20-teamwork-workplace-relationships">
 <h2>LO2 — Habits of a Good Barbershop Team Player</h2>
 <p>Many new graduates expect a high-paying job doing only the services they prefer. The reality is that you will probably start by performing a wide range of tasks, some of which are not glamorous. The good news is that this hands-on experience is where real growth happens.</p>
 <h3>Thriving in a Service Profession</h3>
@@ -193,7 +194,8 @@ export const chapter20PremiumContent: ChapterContent = {
 </ul>
 <h3>Employee Evaluation and Role Models</h3>
 <p>Most shops schedule a formal evaluation around 90 days after hiring and annually after that. Do not wait for a scheduled review; ask for feedback whenever you need it. Find a role model in the shop who has the kind of success you want, observe their habits, and ask respectful questions. A mentor's guidance can accelerate your progress dramatically.</p>
-<div class="key-point"><strong>Key Point:</strong> Good teammates make the whole shop successful. No single barber succeeds alone.</div>
+<div class="key-point"><strong>Key Point:</strong> Good teammates support the whole shop while still communicating boundaries and concerns professionally.</div>
+<div class="key-point" id="ch20-apply-02" data-concept-family="ch20-teamwork-workplace-relationships"><strong>Apply It:</strong> A coworker repeatedly leaves shared cleanup for others. Plan a direct, respectful conversation that addresses the behavior without gossip, personal attacks, or unnecessary escalation.</div>
 <hr>
 </section>
 </div>`,
@@ -203,39 +205,40 @@ export const chapter20PremiumContent: ChapterContent = {
       id: 'ch20-lo3',
       standardId: 'CH20-LO03',
       title: 'LO3 — Employment Classifications and Compensation',
-      html: `<style>.ch20-legacy-content {  --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
-.ch20-legacy-content * {  margin: 0; padding: 0; box-sizing: border-box; }
-.ch20-legacy-content body {  font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
-.ch20-legacy-content .content {  max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
-.ch20-legacy-content .section {  margin-bottom: 3rem; }
-.ch20-legacy-content .section h1.lesson-title {  font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
-.ch20-legacy-content .section h2 {  font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
-.ch20-legacy-content .section h3 {  font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
-.ch20-legacy-content .section h4 {  font-size: 1.1rem; font-weight: 600; margin: 1.25rem 0 0.5rem; color: #e0e0e0; }
-.ch20-legacy-content .section p, .ch20-legacy-content .section ul, .ch20-legacy-content .section ol {  margin-bottom: 1rem; color: #ccc; }
-.ch20-legacy-content .section ul, .ch20-legacy-content .section ol {  margin-left: 1.5rem; }
-.ch20-legacy-content .section li {  margin-bottom: 0.35rem; }
-.ch20-legacy-content .section table {  width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
-.ch20-legacy-content .section th, .ch20-legacy-content .section td {  border: 1px solid var(--medium-gray); padding: 0.6rem 0.75rem; text-align: left; }
-.ch20-legacy-content .section th {  background: rgba(212,175,55,0.15); color: var(--gold); font-weight: 600; }
-.ch20-legacy-content .section tr:nth-child(even) {  background: rgba(255,255,255,0.03); }
-.ch20-legacy-content .section caption {  caption-side: top; text-align: left; font-weight: 600; color: var(--gold); padding: 0.5rem 0; }
-.ch20-legacy-content .key-point {  background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
-.ch20-legacy-content .key-point strong {  color: var(--gold); }
-.ch20-legacy-content .did-you-know {  background: rgba(255,255,255,0.05); border-left: 4px solid #888; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
-.ch20-legacy-content .quiz-section {  background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
-.ch20-legacy-content .quiz-section h2 {  color: var(--gold); margin-bottom: 1.5rem; }
-.ch20-legacy-content hr {  border: 0; border-top: 1px solid var(--medium-gray); margin: 2rem 0; }</style>
-<div class="ch20-legacy-content">
-<section class="section">
+      html: `<style>.ch20-lesson-content {  --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+.ch20-lesson-content * {  margin: 0; padding: 0; box-sizing: border-box; }
+.ch20-lesson-content body {  font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+.ch20-lesson-content .content {  max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+.ch20-lesson-content .section {  margin-bottom: 3rem; }
+.ch20-lesson-content .section h1.lesson-title {  font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+.ch20-lesson-content .section h2 {  font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+.ch20-lesson-content .section h3 {  font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+.ch20-lesson-content .section h4 {  font-size: 1.1rem; font-weight: 600; margin: 1.25rem 0 0.5rem; color: #e0e0e0; }
+.ch20-lesson-content .section p, .ch20-lesson-content .section ul, .ch20-lesson-content .section ol {  margin-bottom: 1rem; color: #ccc; }
+.ch20-lesson-content .section ul, .ch20-lesson-content .section ol {  margin-left: 1.5rem; }
+.ch20-lesson-content .section li {  margin-bottom: 0.35rem; }
+.ch20-lesson-content .section table {  width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
+.ch20-lesson-content .section th, .ch20-lesson-content .section td {  border: 1px solid var(--medium-gray); padding: 0.6rem 0.75rem; text-align: left; }
+.ch20-lesson-content .section th {  background: rgba(212,175,55,0.15); color: var(--gold); font-weight: 600; }
+.ch20-lesson-content .section tr:nth-child(even) {  background: rgba(255,255,255,0.03); }
+.ch20-lesson-content .section caption {  caption-side: top; text-align: left; font-weight: 600; color: var(--gold); padding: 0.5rem 0; }
+.ch20-lesson-content .key-point {  background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+.ch20-lesson-content .key-point strong {  color: var(--gold); }
+.ch20-lesson-content .did-you-know {  background: rgba(255,255,255,0.05); border-left: 4px solid #888; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+.ch20-lesson-content .quiz-section {  background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
+.ch20-lesson-content .quiz-section h2 {  color: var(--gold); margin-bottom: 1.5rem; }
+.ch20-lesson-content hr {  border: 0; border-top: 1px solid var(--medium-gray); margin: 2rem 0; }</style>
+<div class="ch20-lesson-content">
+<section class="section" data-concept-family="ch20-employment-classification-compensation">
 <h2>LO3 — Employment Classifications and Compensation</h2>
-<p>When you evaluate a job offer, compensation is usually your first concern. Barbers are generally classified as employees, independent contractors, or booth renters. Each status carries different responsibilities, freedoms, and tax obligations.</p>
+<p>When you evaluate a work arrangement, compensation matters, but the label placed on the arrangement does not by itself determine legal or tax status. Employee versus independent-contractor treatment depends on the actual facts and circumstances, including behavioral control, financial control, and the relationship between the parties. Booth rental can also involve separate business, licensing, tax, insurance, and recordkeeping duties that vary by jurisdiction and agreement.</p>
 <h3>Employee Status</h3>
-<p>As an employee, the shop sets your hours, controls how work is performed, and may require a uniform. Clients are usually booked for you, and you typically handle only tips. The employer withholds income and Medicare taxes, pays part of your Social Security tax, pays unemployment taxes, and provides a Form W-2. You must still report wages, tips of $20 or more per month, and commissions.</p>
+<p>An employee relationship generally involves the business retaining the right to direct or control important aspects of how the work is performed. Payroll withholding, wage reporting, benefits, scheduling, tools, and other obligations depend on the actual relationship and applicable law. Do not infer status from a title, commission arrangement, or chair-rental label alone.</p>
 <h3>Independent Contractor Status</h3>
-<p>Independent contractors may rent a chair or work for a percentage of service revenue. You must obtain a tax identification number, carry your own business insurance, and handle your own income and self-employment taxes. You should receive Form 1099-MISC when you earn more than $600 in a year. A written contract is required, and quarterly tax payments may be necessary.</p>
+<p>An independent contractor generally operates with greater business independence, but classification depends on the full working relationship rather than a single factor. Tax identification, estimated taxes, insurance, contracts, records, and information-return rules can change and can depend on the facts. Verify current federal requirements with the IRS and state or local requirements with the applicable authority or qualified tax professional.</p>
 <h3>Booth Renter Status</h3>
-<p>Booth rental is essentially running a small business within a barbershop. You lease space, set your own hours, book your own appointments, collect all service revenue, and pay your own taxes, licenses, insurance, and supplies. Overhead is usually low, but you need enough clientele to cover rent and still pay yourself.</p>
+<p>Booth rental may function like operating a small business within a barbershop, but the practical and legal responsibilities depend on the actual agreement and applicable law. A renter may be responsible for appointments, revenue collection, supplies, insurance, taxes, licenses, and records, but those responsibilities should be verified rather than assumed. Before signing, review the agreement carefully and confirm which party controls scheduling, pricing, client records, products, fees, and other business terms. Overhead may be lower than opening a standalone shop, but you still need enough clientele to cover rent and still pay yourself.</p>
+<div class="key-point" id="ch20-apply-03" data-concept-family="ch20-employment-classification-compensation"><strong>Apply It:</strong> Two shops use different labels for similar chair arrangements. List the facts you would need to compare before drawing conclusions about worker status, taxes, control, or business responsibility.</div>
 <h3>Wage Structures</h3>
 <ul>
 <li><strong>Straight hourly salary:</strong> Common in chains and franchises; provides fixed income while you build clientele.</li>
@@ -244,7 +247,7 @@ export const chapter20PremiumContent: ChapterContent = {
 </ul>
 <p>Some commission arrangements take a fee "off the top" for the shop before applying your percentage. Always make sure you understand the math before accepting a position.</p>
 <h3>Tips</h3>
-<p>Tips are additional income and must be tracked and reported on your tax return. Reporting tips accurately helps when applying for loans, increases your Social Security retirement benefits, and keeps you on the right side of tax law.</p>
+<p>Tips and other taxable income must be tracked and reported according to current tax rules. Keep a daily tip record and supporting records rather than relying on memory. Verify current requirements with the IRS and applicable state or local guidance, or with a qualified tax professional, because reporting duties can vary by work arrangement and can change.</p>
 <h3>Employment Classification Overview</h3>
 <table>
 <caption>How employment status affects control, taxes, and daily responsibilities</caption>
@@ -252,14 +255,12 @@ export const chapter20PremiumContent: ChapterContent = {
 <tr><th scope="col">Factor</th><th scope="col">Employee</th><th scope="col">Independent Contractor</th><th scope="col">Booth Renter</th></tr>
 </thead>
 <tbody>
-<tr><th scope="row">Who decides how work is done</th><td>The shop provides instruction and evaluates performance</td><td>The worker decides how to perform services</td><td>The worker has full control over methods and services</td></tr>
-<tr><th scope="row">Schedule</th><td>Hours set or scheduled by business</td><td>Sets own hours with agreement</td><td>Sets own hours and schedule</td></tr>
-<tr><th scope="row">Appointments</th><td>Scheduled by business</td><td>May schedule own appointments</td><td>Schedules own appointments</td></tr>
-<tr><th scope="row">Revenue collection</th><td>Collected at front desk</td><td>May be collected at front desk</td><td>Collected by booth renter</td></tr>
-<tr><th scope="row">Equipment / facilities</th><td>Provided by shop</td><td>May pay for certain equipment</td><td>Certain equipment included in lease</td></tr>
-<tr><th scope="row">Benefits</th><td>May be provided</td><td>No benefits</td><td>No benefits</td></tr>
-<tr><th scope="row">Tax responsibility</th><td>Employer withholds taxes</td><td>Responsible for all taxes, licenses, insurance</td><td>Responsible for all taxes, licenses, insurance, advertising</td></tr>
-<tr><th scope="row">Forms</th><td>Employer provides W-2</td><td>Owner provides 1099; written contract required</td><td>Lease required; 1099 for rent paid</td></tr>
+<tr><th scope="row">Control of work</th><td>The business may retain significant direction or control</td><td>Greater business independence may be present</td><td>Responsibilities depend on the actual rental agreement and working relationship</td></tr>
+<tr><th scope="row">Schedule / pricing / clients</th><td>Terms depend on the employment relationship and shop policy</td><td>Terms depend on the actual relationship and agreement</td><td>Terms must be verified from the agreement and applicable rules</td></tr>
+<tr><th scope="row">Equipment / facilities</th><td>May be supplied by the business</td><td>May be supplied by either party depending on the facts</td><td>Lease terms should specify what is included</td></tr>
+<tr><th scope="row">Benefits</th><td>May be available depending on the employment arrangement</td><td>Do not assume benefits from the contractor label</td><td>Do not assume benefits from the booth-rental label</td></tr>
+<tr><th scope="row">Tax / reporting</th><td>Payroll and reporting duties follow current rules for the actual relationship</td><td>Verify current tax, information-return, licensing, insurance, and recordkeeping duties</td><td>Verify current tax, lease, licensing, insurance, and recordkeeping duties</td></tr>
+<tr><th scope="row">Status verification</th><td colspan="3">No single label, payment method, schedule term, or form determines status by itself; evaluate the full working relationship and current applicable rules.</td></tr>
 </tbody>
 </table>
 <div class="key-point"><strong>Key Point:</strong> State laws vary. Some states restrict or prohibit booth rental arrangements. Always check your current state board rules and consult a licensed attorney or tax professional before signing any agreement.</div>
@@ -272,36 +273,37 @@ export const chapter20PremiumContent: ChapterContent = {
       id: 'ch20-lo4',
       standardId: 'CH20-LO04',
       title: 'LO4 — Manage Your Money',
-      html: `<style>.ch20-legacy-content {  --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
-.ch20-legacy-content * {  margin: 0; padding: 0; box-sizing: border-box; }
-.ch20-legacy-content body {  font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
-.ch20-legacy-content .content {  max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
-.ch20-legacy-content .section {  margin-bottom: 3rem; }
-.ch20-legacy-content .section h1.lesson-title {  font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
-.ch20-legacy-content .section h2 {  font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
-.ch20-legacy-content .section h3 {  font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
-.ch20-legacy-content .section h4 {  font-size: 1.1rem; font-weight: 600; margin: 1.25rem 0 0.5rem; color: #e0e0e0; }
-.ch20-legacy-content .section p, .ch20-legacy-content .section ul, .ch20-legacy-content .section ol {  margin-bottom: 1rem; color: #ccc; }
-.ch20-legacy-content .section ul, .ch20-legacy-content .section ol {  margin-left: 1.5rem; }
-.ch20-legacy-content .section li {  margin-bottom: 0.35rem; }
-.ch20-legacy-content .section table {  width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
-.ch20-legacy-content .section th, .ch20-legacy-content .section td {  border: 1px solid var(--medium-gray); padding: 0.6rem 0.75rem; text-align: left; }
-.ch20-legacy-content .section th {  background: rgba(212,175,55,0.15); color: var(--gold); font-weight: 600; }
-.ch20-legacy-content .section tr:nth-child(even) {  background: rgba(255,255,255,0.03); }
-.ch20-legacy-content .section caption {  caption-side: top; text-align: left; font-weight: 600; color: var(--gold); padding: 0.5rem 0; }
-.ch20-legacy-content .key-point {  background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
-.ch20-legacy-content .key-point strong {  color: var(--gold); }
-.ch20-legacy-content .did-you-know {  background: rgba(255,255,255,0.05); border-left: 4px solid #888; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
-.ch20-legacy-content .quiz-section {  background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
-.ch20-legacy-content .quiz-section h2 {  color: var(--gold); margin-bottom: 1.5rem; }
-.ch20-legacy-content hr {  border: 0; border-top: 1px solid var(--medium-gray); margin: 2rem 0; }</style>
-<div class="ch20-legacy-content">
-<section class="section">
+      html: `<style>.ch20-lesson-content {  --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+.ch20-lesson-content * {  margin: 0; padding: 0; box-sizing: border-box; }
+.ch20-lesson-content body {  font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+.ch20-lesson-content .content {  max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+.ch20-lesson-content .section {  margin-bottom: 3rem; }
+.ch20-lesson-content .section h1.lesson-title {  font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+.ch20-lesson-content .section h2 {  font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+.ch20-lesson-content .section h3 {  font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+.ch20-lesson-content .section h4 {  font-size: 1.1rem; font-weight: 600; margin: 1.25rem 0 0.5rem; color: #e0e0e0; }
+.ch20-lesson-content .section p, .ch20-lesson-content .section ul, .ch20-lesson-content .section ol {  margin-bottom: 1rem; color: #ccc; }
+.ch20-lesson-content .section ul, .ch20-lesson-content .section ol {  margin-left: 1.5rem; }
+.ch20-lesson-content .section li {  margin-bottom: 0.35rem; }
+.ch20-lesson-content .section table {  width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
+.ch20-lesson-content .section th, .ch20-lesson-content .section td {  border: 1px solid var(--medium-gray); padding: 0.6rem 0.75rem; text-align: left; }
+.ch20-lesson-content .section th {  background: rgba(212,175,55,0.15); color: var(--gold); font-weight: 600; }
+.ch20-lesson-content .section tr:nth-child(even) {  background: rgba(255,255,255,0.03); }
+.ch20-lesson-content .section caption {  caption-side: top; text-align: left; font-weight: 600; color: var(--gold); padding: 0.5rem 0; }
+.ch20-lesson-content .key-point {  background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+.ch20-lesson-content .key-point strong {  color: var(--gold); }
+.ch20-lesson-content .did-you-know {  background: rgba(255,255,255,0.05); border-left: 4px solid #888; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+.ch20-lesson-content .quiz-section {  background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
+.ch20-lesson-content .quiz-section h2 {  color: var(--gold); margin-bottom: 1.5rem; }
+.ch20-lesson-content hr {  border: 0; border-top: 1px solid var(--medium-gray); margin: 2rem 0; }</style>
+<div class="ch20-lesson-content">
+<section class="section" data-concept-family="ch20-financial-responsibility-income-reporting">
 <h2>LO4 — Manage Your Money</h2>
 <p>Barbering offers freedom and creativity, but it also requires financial discipline. Unlike corporate employees who have taxes, insurance, and retirement contributions handled automatically, most barbers must plan these items themselves.</p>
 <h3>Reporting Your Income</h3>
-<p>Report all cash tips and additional income, even if it does not appear on your paycheck. Income from outside jobs such as weddings, parties, or private residences must also be reported. Failing to report income can lead to fines, legal action, reduced borrowing power, and lower Social Security benefits.</p>
-<p>The best practice is to keep a daily tip log. Total your tips weekly, then monthly, and keep a year-end summary on the first page of your log. This makes tax preparation simple and accurate.</p>
+<p>Tips and other taxable income must be tracked and reported according to current tax rules. Income from side work can also create reporting obligations depending on the facts and the worker's actual arrangement. Verify current requirements with the IRS and applicable state or local guidance, or with a qualified tax professional.</p>
+<p>The best practice is to keep a daily tip record and supporting records, then summarize income regularly so reporting is based on reliable documentation rather than memory.</p>
+<div class="key-point" id="ch20-apply-04" data-concept-family="ch20-financial-responsibility-income-reporting"><strong>Apply It:</strong> A barber earns wages, tips, and occasional side income. Build a simple recordkeeping plan that captures income consistently and identifies which current tax rules or professional guidance must be verified.</div>
 <h3>Personal Budget</h3>
 <p>A personal budget is not restrictive; it is a tool for freedom. A simple monthly worksheet includes expenses such as rent, car payment, insurance, utilities, groceries, health insurance, entertainment, student loans, retirement savings, and an emergency fund. Compare total expenses to total income, including take-home pay and tips. If the balance is negative, identify expenses you can reduce or income you can increase.</p>
 <h3>Repaying Debt</h3>
@@ -311,8 +313,8 @@ export const chapter20PremiumContent: ChapterContent = {
 <ul>
 <li><strong>Spend less:</strong> Reduce unnecessary spending and redirect the savings.</li>
 <li><strong>Work more hours:</strong> Choose busy shifts, come in early, stay late, and maximize Saturdays.</li>
-<li><strong>Increase service prices:</strong> Once you have mastered your services and built loyalty, raise prices by a reasonable amount based on market research.</li>
-<li><strong>Retail more:</strong> Recommend products you believe in; most shops pay commission on retail sales.</li>
+<li><strong>Increase service prices:</strong> Consider skill level, costs, demand, client communication, market conditions, and shop policy before changing prices; there is no universal timing formula.</li>
+<li><strong>Retail more:</strong> Recommend products ethically based on client needs. Retail sales may increase earnings when the actual compensation plan includes a commission or incentive.</li>
 </ul>
 <h3>Seek Professional Advice</h3>
 <p>Financial planners, accountants, and bankers can help with debt reduction, investments, and retirement options. Be an informed consumer: consider whether advice makes sense for your situation before acting on it.</p>
@@ -328,31 +330,31 @@ export const chapter20PremiumContent: ChapterContent = {
       id: 'ch20-lo5',
       standardId: 'CH20-LO05',
       title: 'LO5 — Ethical Selling Behind the Chair',
-      html: `<style>.ch20-legacy-content {  --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
-.ch20-legacy-content * {  margin: 0; padding: 0; box-sizing: border-box; }
-.ch20-legacy-content body {  font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
-.ch20-legacy-content .content {  max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
-.ch20-legacy-content .section {  margin-bottom: 3rem; }
-.ch20-legacy-content .section h1.lesson-title {  font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
-.ch20-legacy-content .section h2 {  font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
-.ch20-legacy-content .section h3 {  font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
-.ch20-legacy-content .section h4 {  font-size: 1.1rem; font-weight: 600; margin: 1.25rem 0 0.5rem; color: #e0e0e0; }
-.ch20-legacy-content .section p, .ch20-legacy-content .section ul, .ch20-legacy-content .section ol {  margin-bottom: 1rem; color: #ccc; }
-.ch20-legacy-content .section ul, .ch20-legacy-content .section ol {  margin-left: 1.5rem; }
-.ch20-legacy-content .section li {  margin-bottom: 0.35rem; }
-.ch20-legacy-content .section table {  width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
-.ch20-legacy-content .section th, .ch20-legacy-content .section td {  border: 1px solid var(--medium-gray); padding: 0.6rem 0.75rem; text-align: left; }
-.ch20-legacy-content .section th {  background: rgba(212,175,55,0.15); color: var(--gold); font-weight: 600; }
-.ch20-legacy-content .section tr:nth-child(even) {  background: rgba(255,255,255,0.03); }
-.ch20-legacy-content .section caption {  caption-side: top; text-align: left; font-weight: 600; color: var(--gold); padding: 0.5rem 0; }
-.ch20-legacy-content .key-point {  background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
-.ch20-legacy-content .key-point strong {  color: var(--gold); }
-.ch20-legacy-content .did-you-know {  background: rgba(255,255,255,0.05); border-left: 4px solid #888; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
-.ch20-legacy-content .quiz-section {  background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
-.ch20-legacy-content .quiz-section h2 {  color: var(--gold); margin-bottom: 1.5rem; }
-.ch20-legacy-content hr {  border: 0; border-top: 1px solid var(--medium-gray); margin: 2rem 0; }</style>
-<div class="ch20-legacy-content">
-<section class="section">
+      html: `<style>.ch20-lesson-content {  --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+.ch20-lesson-content * {  margin: 0; padding: 0; box-sizing: border-box; }
+.ch20-lesson-content body {  font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+.ch20-lesson-content .content {  max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+.ch20-lesson-content .section {  margin-bottom: 3rem; }
+.ch20-lesson-content .section h1.lesson-title {  font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+.ch20-lesson-content .section h2 {  font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+.ch20-lesson-content .section h3 {  font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+.ch20-lesson-content .section h4 {  font-size: 1.1rem; font-weight: 600; margin: 1.25rem 0 0.5rem; color: #e0e0e0; }
+.ch20-lesson-content .section p, .ch20-lesson-content .section ul, .ch20-lesson-content .section ol {  margin-bottom: 1rem; color: #ccc; }
+.ch20-lesson-content .section ul, .ch20-lesson-content .section ol {  margin-left: 1.5rem; }
+.ch20-lesson-content .section li {  margin-bottom: 0.35rem; }
+.ch20-lesson-content .section table {  width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
+.ch20-lesson-content .section th, .ch20-lesson-content .section td {  border: 1px solid var(--medium-gray); padding: 0.6rem 0.75rem; text-align: left; }
+.ch20-lesson-content .section th {  background: rgba(212,175,55,0.15); color: var(--gold); font-weight: 600; }
+.ch20-lesson-content .section tr:nth-child(even) {  background: rgba(255,255,255,0.03); }
+.ch20-lesson-content .section caption {  caption-side: top; text-align: left; font-weight: 600; color: var(--gold); padding: 0.5rem 0; }
+.ch20-lesson-content .key-point {  background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+.ch20-lesson-content .key-point strong {  color: var(--gold); }
+.ch20-lesson-content .did-you-know {  background: rgba(255,255,255,0.05); border-left: 4px solid #888; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+.ch20-lesson-content .quiz-section {  background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
+.ch20-lesson-content .quiz-section h2 {  color: var(--gold); margin-bottom: 1.5rem; }
+.ch20-lesson-content hr {  border: 0; border-top: 1px solid var(--medium-gray); margin: 2rem 0; }</style>
+<div class="ch20-lesson-content">
+<section class="section" data-concept-family="ch20-ethical-selling-retailing">
 <h2>LO5 — Ethical Selling Behind the Chair</h2>
 <p>Selling is not about being pushy. When done ethically, it is a service that helps clients look and feel their best. Two key income-boosting strategies are ticket upgrading and retailing.</p>
 <h3>Ticket Upgrading</h3>
@@ -373,6 +375,7 @@ export const chapter20PremiumContent: ChapterContent = {
 </ul>
 <h3>The Psychology of Selling</h3>
 <p>Clients buy for different reasons: vanity (wanting to look better), personal satisfaction (wanting to feel better), or problem solving (wanting easier maintenance). Identify the motive and frame your recommendation around the benefit that matters most to the client.</p>
+<div class="key-point" id="ch20-apply-05" data-concept-family="ch20-ethical-selling-retailing"><strong>Apply It:</strong> A client says a recommended product is too expensive. Respond in a way that clarifies the need, explains the benefit, respects the client's decision, and avoids pressure or misleading claims.</div>
 <h3>Overcoming Objections</h3>
 <p>Objections are normal. Restate the objection in a way that addresses the client's need. For example, if a client says he already has color-safe shampoo, you might reply, "I understand, but not all color-safe shampoos add moisture. Since you mentioned wanting more shine, this one will do that while protecting your color." For price objections, offer a sample when possible, or reiterate the long-term value.</p>
 <h3>Retail Scenario</h3>
@@ -387,31 +390,31 @@ export const chapter20PremiumContent: ChapterContent = {
       id: 'ch20-lo6',
       standardId: 'CH20-LO06',
       title: 'LO6 — Keep Current Clients and Expand Your Client Base',
-      html: `<style>.ch20-legacy-content {  --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
-.ch20-legacy-content * {  margin: 0; padding: 0; box-sizing: border-box; }
-.ch20-legacy-content body {  font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
-.ch20-legacy-content .content {  max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
-.ch20-legacy-content .section {  margin-bottom: 3rem; }
-.ch20-legacy-content .section h1.lesson-title {  font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
-.ch20-legacy-content .section h2 {  font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
-.ch20-legacy-content .section h3 {  font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
-.ch20-legacy-content .section h4 {  font-size: 1.1rem; font-weight: 600; margin: 1.25rem 0 0.5rem; color: #e0e0e0; }
-.ch20-legacy-content .section p, .ch20-legacy-content .section ul, .ch20-legacy-content .section ol {  margin-bottom: 1rem; color: #ccc; }
-.ch20-legacy-content .section ul, .ch20-legacy-content .section ol {  margin-left: 1.5rem; }
-.ch20-legacy-content .section li {  margin-bottom: 0.35rem; }
-.ch20-legacy-content .section table {  width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
-.ch20-legacy-content .section th, .ch20-legacy-content .section td {  border: 1px solid var(--medium-gray); padding: 0.6rem 0.75rem; text-align: left; }
-.ch20-legacy-content .section th {  background: rgba(212,175,55,0.15); color: var(--gold); font-weight: 600; }
-.ch20-legacy-content .section tr:nth-child(even) {  background: rgba(255,255,255,0.03); }
-.ch20-legacy-content .section caption {  caption-side: top; text-align: left; font-weight: 600; color: var(--gold); padding: 0.5rem 0; }
-.ch20-legacy-content .key-point {  background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
-.ch20-legacy-content .key-point strong {  color: var(--gold); }
-.ch20-legacy-content .did-you-know {  background: rgba(255,255,255,0.05); border-left: 4px solid #888; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
-.ch20-legacy-content .quiz-section {  background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
-.ch20-legacy-content .quiz-section h2 {  color: var(--gold); margin-bottom: 1.5rem; }
-.ch20-legacy-content hr {  border: 0; border-top: 1px solid var(--medium-gray); margin: 2rem 0; }</style>
-<div class="ch20-legacy-content">
-<section class="section">
+      html: `<style>.ch20-lesson-content {  --gold: #D4AF37; --dark: #0a0a0a; --dark-gray: #1a1a1a; --medium-gray: #2a2a2a; --light-gray: #888; --white: #ffffff; }
+.ch20-lesson-content * {  margin: 0; padding: 0; box-sizing: border-box; }
+.ch20-lesson-content body {  font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.7; }
+.ch20-lesson-content .content {  max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+.ch20-lesson-content .section {  margin-bottom: 3rem; }
+.ch20-lesson-content .section h1.lesson-title {  font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+.ch20-lesson-content .section h2 {  font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gold); }
+.ch20-lesson-content .section h3 {  font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+.ch20-lesson-content .section h4 {  font-size: 1.1rem; font-weight: 600; margin: 1.25rem 0 0.5rem; color: #e0e0e0; }
+.ch20-lesson-content .section p, .ch20-lesson-content .section ul, .ch20-lesson-content .section ol {  margin-bottom: 1rem; color: #ccc; }
+.ch20-lesson-content .section ul, .ch20-lesson-content .section ol {  margin-left: 1.5rem; }
+.ch20-lesson-content .section li {  margin-bottom: 0.35rem; }
+.ch20-lesson-content .section table {  width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
+.ch20-lesson-content .section th, .ch20-lesson-content .section td {  border: 1px solid var(--medium-gray); padding: 0.6rem 0.75rem; text-align: left; }
+.ch20-lesson-content .section th {  background: rgba(212,175,55,0.15); color: var(--gold); font-weight: 600; }
+.ch20-lesson-content .section tr:nth-child(even) {  background: rgba(255,255,255,0.03); }
+.ch20-lesson-content .section caption {  caption-side: top; text-align: left; font-weight: 600; color: var(--gold); padding: 0.5rem 0; }
+.ch20-lesson-content .key-point {  background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+.ch20-lesson-content .key-point strong {  color: var(--gold); }
+.ch20-lesson-content .did-you-know {  background: rgba(255,255,255,0.05); border-left: 4px solid #888; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+.ch20-lesson-content .quiz-section {  background: var(--medium-gray); border-radius: 12px; padding: 2rem; margin: 3rem 0; border: 1px solid var(--gold); }
+.ch20-lesson-content .quiz-section h2 {  color: var(--gold); margin-bottom: 1.5rem; }
+.ch20-lesson-content hr {  border: 0; border-top: 1px solid var(--medium-gray); margin: 2rem 0; }</style>
+<div class="ch20-lesson-content">
+<section class="section" data-concept-family="ch20-client-retention-marketing-consent">
 <h2>LO6 — Keep Current Clients and Expand Your Client Base</h2>
 <p>Once your service quality is solid, marketing and retention become the engines of growth. Your client base is the group of customers who return to you regularly.</p>
 <h3>Marketing Techniques</h3>
@@ -422,11 +425,12 @@ export const chapter20PremiumContent: ChapterContent = {
 <li><strong>Respect:</strong> Avoid gossip and negativity.</li>
 <li><strong>Positivity:</strong> Clients prefer being around upbeat people.</li>
 <li><strong>Professional boundaries:</strong> Keep the relationship appropriate and client-focused.</li>
-<li><strong>Email and social media:</strong> Collect email addresses and use Facebook, Yelp, and Instagram to showcase work and build credibility. Always get permission before posting client photos.</li>
+<li><strong>Email and social media:</strong> Use appropriate marketing channels to showcase work and build credibility. Obtain clear client permission before posting identifiable photos, and follow applicable privacy, advertising, platform, school, and shop rules.</li>
 <li><strong>Business card referrals:</strong> Give loyal clients cards to hand out; reward them with a discount or complimentary add-on when a referral books.</li>
 <li><strong>Local business referrals:</strong> Partner with nearby gyms, tailors, diners, or cigar shops for cross-promotion.</li>
 <li><strong>Public speaking:</strong> Offer short grooming presentations to community groups, schools, or organizations.</li>
 </ul>
+<div class="key-point" id="ch20-apply-06" data-concept-family="ch20-client-retention-marketing-consent"><strong>Apply It:</strong> You want to post a finished haircut and offer a referral promotion. Identify what client permission, shop policy, platform rule, and advertising/privacy considerations you should verify before publishing.</div>
 <h3>Rebooking Clients</h3>
 <p>The best time to rebook is while the client is still in the chair. Discuss hair condition, styling habits, and maintenance needs. Listen carefully; clients often give clues about upcoming events that create natural reasons to return. Build efficiency so clients wait less and you can serve more people per day.</p>
 <h3>On Your Way</h3>
@@ -531,9 +535,9 @@ export const chapter20PremiumContent: ChapterContent = {
           id: `ch20-scenario-005`,
           situation:
             `At the end of a busy week, you have $200 in cash tips. What is the best practice for tax reporting?`,
-          options: [            { letter: `A`, text: `Keep the cash and do not report it because there is no paper trail.`, feedback: `Incorrect. All tips are taxable income. Failing to report them can lead to fines and reduces your Social Security benefits and borrowing power.` },
-            { letter: `B`, text: `Record the tips in a daily log and include them in your total income.`, feedback: `Correct. Accurate tip tracking protects you legally and financially. Keep a daily log with weekly and year-end totals.` },
-            { letter: `C`, text: `Report only the tips that appear on your paycheck.`, feedback: `Incorrect. Cash tips must also be reported if they total $20 or more in a month. Relying only on paycheck records underreports your income.` },
+          options: [            { letter: `A`, text: `Keep the cash and ignore it because cash never creates a reporting obligation.`, feedback: `Incorrect. Cash payment does not by itself remove a reporting obligation. Taxable tips and other taxable income should be tracked under current rules.` },
+            { letter: `B`, text: `Record the tips consistently, keep supporting records, and include taxable amounts as current rules require.`, feedback: `Correct. Reliable records support accurate reporting. Verify current requirements for the actual work arrangement with the IRS and applicable state or local guidance.` },
+            { letter: `C`, text: `Use an old fixed dollar threshold without checking whether the rule still applies.`, feedback: `Incorrect. Forms, thresholds, and reporting duties can change and can depend on the work arrangement, so current official guidance should be verified.` },
           ],
           correctAnswer: `B`,
         },
@@ -967,7 +971,7 @@ export const chapter20PremiumContent: ChapterContent = {
       description: 'Describe employer expectations and the behavioral changes required when moving from barbering school to professional employment.',
       importance: 'critical',
       difficulty: 'medium',
-      learningObjectives: ['CH20-LO01'],
+      learningObjectives: ['LO-20-01'],
       flashcardIds: ['fc-ch20-001', 'fc-ch20-002', 'fc-ch20-003', 'fc-ch20-004', 'fc-ch20-005', 'fc-ch20-006', 'fc-ch20-007', 'fc-ch20-008', 'fc-ch20-009', 'fc-ch20-010'],
       quizQuestionIds: ['qq-20-01', 'qq-20-02', 'qq-20-03'],
     },
@@ -978,7 +982,7 @@ export const chapter20PremiumContent: ChapterContent = {
       description: 'Demonstrate the teamwork principles, communication habits, and conflict-resolution skills that create a productive barbershop environment.',
       importance: 'critical',
       difficulty: 'easy',
-      learningObjectives: ['CH20-LO02'],
+      learningObjectives: ['LO-20-02'],
       flashcardIds: ['fc-ch20-011', 'fc-ch20-012', 'fc-ch20-013', 'fc-ch20-014', 'fc-ch20-015', 'fc-ch20-016', 'fc-ch20-017', 'fc-ch20-018', 'fc-ch20-019', 'fc-ch20-020'],
       quizQuestionIds: ['qq-20-04', 'qq-20-05', 'qq-20-06'],
     },
@@ -989,7 +993,7 @@ export const chapter20PremiumContent: ChapterContent = {
       description: 'Compare employee, independent contractor, and booth renter status along with common wage structures and tax responsibilities.',
       importance: 'critical',
       difficulty: 'hard',
-      learningObjectives: ['CH20-LO03'],
+      learningObjectives: ['LO-20-03'],
       flashcardIds: ['fc-ch20-021', 'fc-ch20-022', 'fc-ch20-023', 'fc-ch20-024', 'fc-ch20-025', 'fc-ch20-026', 'fc-ch20-027', 'fc-ch20-028', 'fc-ch20-029', 'fc-ch20-030'],
       quizQuestionIds: ['qq-20-07', 'qq-20-08', 'qq-20-09'],
     },
@@ -1000,7 +1004,7 @@ export const chapter20PremiumContent: ChapterContent = {
       description: 'Record tips and income accurately, build a personal budget, manage debt, and identify ways to increase net income.',
       importance: 'critical',
       difficulty: 'medium',
-      learningObjectives: ['CH20-LO04'],
+      learningObjectives: ['LO-20-04'],
       flashcardIds: ['fc-ch20-031', 'fc-ch20-032', 'fc-ch20-033', 'fc-ch20-034', 'fc-ch20-035', 'fc-ch20-036', 'fc-ch20-037', 'fc-ch20-038', 'fc-ch20-039', 'fc-ch20-040'],
       quizQuestionIds: ['qq-20-10', 'qq-20-11', 'qq-20-12'],
     },
@@ -1011,7 +1015,7 @@ export const chapter20PremiumContent: ChapterContent = {
       description: 'Apply the principles of selling to recommend services and products ethically while overcoming objections without pressure.',
       importance: 'critical',
       difficulty: 'medium',
-      learningObjectives: ['CH20-LO05'],
+      learningObjectives: ['LO-20-05'],
       flashcardIds: ['fc-ch20-041', 'fc-ch20-042', 'fc-ch20-043', 'fc-ch20-044', 'fc-ch20-045', 'fc-ch20-046', 'fc-ch20-047', 'fc-ch20-048', 'fc-ch20-049', 'fc-ch20-050'],
       quizQuestionIds: ['qq-20-13', 'qq-20-14'],
     },
@@ -1022,14 +1026,14 @@ export const chapter20PremiumContent: ChapterContent = {
       description: 'Use marketing, rebooking, social media, and referral strategies to attract new clients and keep current clients returning.',
       importance: 'critical',
       difficulty: 'easy',
-      learningObjectives: ['CH20-LO06'],
+      learningObjectives: ['LO-20-06'],
       flashcardIds: ['fc-ch20-051', 'fc-ch20-052', 'fc-ch20-053', 'fc-ch20-054', 'fc-ch20-055', 'fc-ch20-056', 'fc-ch20-057', 'fc-ch20-058', 'fc-ch20-059', 'fc-ch20-060'],
       quizQuestionIds: ['qq-20-15', 'qq-20-16', 'qq-20-17'],
     },
   ],
   learningObjectives: [
     {
-      id: 'CH20-LO01',
+      id: 'LO-20-01',
       standardId: 'CH20-LO01',
       description: 'Describe what is expected of a new employee and what this means in terms of everyday behavior.',
       competencyIds: ['CH20-C01'],
@@ -1038,7 +1042,7 @@ export const chapter20PremiumContent: ChapterContent = {
       quizQuestionIds: ['qq-20-01', 'qq-20-02', 'qq-20-03'],
     },
     {
-      id: 'CH20-LO02',
+      id: 'LO-20-02',
       standardId: 'CH20-LO02',
       description: 'List the habits of a good barbershop team player.',
       competencyIds: ['CH20-C02'],
@@ -1047,7 +1051,7 @@ export const chapter20PremiumContent: ChapterContent = {
       quizQuestionIds: ['qq-20-04', 'qq-20-05', 'qq-20-06'],
     },
     {
-      id: 'CH20-LO03',
+      id: 'LO-20-03',
       standardId: 'CH20-LO03',
       description: 'Describe three different ways in which barbers are compensated.',
       competencyIds: ['CH20-C03'],
@@ -1056,7 +1060,7 @@ export const chapter20PremiumContent: ChapterContent = {
       quizQuestionIds: ['qq-20-07', 'qq-20-08', 'qq-20-09'],
     },
     {
-      id: 'CH20-LO04',
+      id: 'LO-20-04',
       standardId: 'CH20-LO04',
       description: 'Determine the best way to record tips and make additional income.',
       competencyIds: ['CH20-C04'],
@@ -1065,7 +1069,7 @@ export const chapter20PremiumContent: ChapterContent = {
       quizQuestionIds: ['qq-20-10', 'qq-20-11', 'qq-20-12'],
     },
     {
-      id: 'CH20-LO05',
+      id: 'LO-20-05',
       standardId: 'CH20-LO05',
       description: 'Explain the principles of selling products and services in the barbershop.',
       competencyIds: ['CH20-C05'],
@@ -1074,7 +1078,7 @@ export const chapter20PremiumContent: ChapterContent = {
       quizQuestionIds: ['qq-20-13', 'qq-20-14'],
     },
     {
-      id: 'CH20-LO06',
+      id: 'LO-20-06',
       standardId: 'CH20-LO06',
       description: 'List the most effective ways to build a client base.',
       competencyIds: ['CH20-C06'],

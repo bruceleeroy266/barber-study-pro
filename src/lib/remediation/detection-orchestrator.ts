@@ -40,6 +40,11 @@ import {
   type Chapter19CombinedMicroCheckRow,
   type Chapter19CombinedActivityRow,
 } from '@/lib/chapter-19-concepts/detection'
+import {
+  detectAllChapter20CombinedConceptGaps,
+  type Chapter20CombinedMicroCheckRow,
+  type Chapter20CombinedActivityRow,
+} from '@/lib/chapter-20-concepts/detection'
 
 // ───────────────────────────────────────────────
 // Types
@@ -95,6 +100,13 @@ export interface IDetectionOrchestratorDbClient {
   getChapter19ActivityEvidence?(
     userId: string,
   ): Promise<Chapter19CombinedActivityRow[]>
+
+  getChapter20MicroCheckEvidence?(
+    userId: string,
+  ): Promise<Chapter20CombinedMicroCheckRow[]>
+  getChapter20ActivityEvidence?(
+    userId: string,
+  ): Promise<Chapter20CombinedActivityRow[]>
 
   /**
    * Check if an active remediation cycle exists for a user + concept.
@@ -215,6 +227,22 @@ export class DetectionOrchestratorService {
             Promise.resolve([]),
         ])
         const combined = detectAllChapter19CombinedConceptGaps(
+          quizAttempts,
+          microCheckRows,
+          activityRows,
+        )
+        detectionResults = new Map<ConceptId, ConceptDetectionResult>()
+        for (const [conceptId, result] of combined) {
+          detectionResults.set(conceptId, result)
+        }
+      } else if (chapterId === 'ch-20') {
+        const [microCheckRows, activityRows] = await Promise.all([
+          this.dbClient.getChapter20MicroCheckEvidence?.(userId) ??
+            Promise.resolve([]),
+          this.dbClient.getChapter20ActivityEvidence?.(userId) ??
+            Promise.resolve([]),
+        ])
+        const combined = detectAllChapter20CombinedConceptGaps(
           quizAttempts,
           microCheckRows,
           activityRows,
@@ -437,6 +465,50 @@ export class SupabaseDetectionOrchestratorDbClient implements IDetectionOrchestr
     }
 
     return data as Chapter19CombinedActivityRow[]
+  }
+
+  async getChapter20MicroCheckEvidence(
+    userId: string,
+  ): Promise<Chapter20CombinedMicroCheckRow[]> {
+    const { data, error } = await this.supabase
+      .from('chapter_micro_check_attempts')
+      .select('question_id,selected_answer,answered_at')
+      .eq('user_id', userId)
+      .eq('chapter_id', 'ch-20')
+      .order('answered_at', { ascending: true })
+
+    if (error || !data) {
+      if (error) {
+        console.error(
+          '[SupabaseDetectionOrchestrator] Failed to read Chapter 20 micro-check evidence:',
+          error.message,
+        )
+      }
+      return []
+    }
+    return data as Chapter20CombinedMicroCheckRow[]
+  }
+
+  async getChapter20ActivityEvidence(
+    userId: string,
+  ): Promise<Chapter20CombinedActivityRow[]> {
+    const { data, error } = await this.supabase
+      .from('chapter_activity_evidence')
+      .select('source,item_id,is_correct,answered_at')
+      .eq('user_id', userId)
+      .eq('chapter_id', 'ch-20')
+      .order('answered_at', { ascending: true })
+
+    if (error || !data) {
+      if (error) {
+        console.error(
+          '[SupabaseDetectionOrchestrator] Failed to read Chapter 20 activity evidence:',
+          error.message,
+        )
+      }
+      return []
+    }
+    return data as Chapter20CombinedActivityRow[]
   }
 
   async getActiveCycleForConcept(userId: string, conceptId: ConceptId): Promise<{ id: string } | null> {
