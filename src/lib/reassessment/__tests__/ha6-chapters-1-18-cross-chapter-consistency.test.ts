@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { getMappingProviderRegistry } from '../provider-registry'
 import { getChapterContentProvider } from '@/lib/remediation/content-provider-registry'
-import { getChapterRemediationProvider, isConceptDetectionSupported } from '@/lib/remediation/chapter-registry'
+import { getChapterDetectionProvider, isConceptDetectionSupported } from '@/lib/remediation/chapter-registry'
 import { SHARED_GRADE_WEIGHTS } from '@/lib/concept-mastery/shared-grading'
 import { chapter1MicroChecks } from '@/lib/chapter-1-concepts/micro-checks'
 import { chapter2MicroChecks } from '@/lib/chapter-2-concepts/micro-checks'
@@ -121,11 +121,11 @@ describe('HA-6 Chapters 1-18 cross-chapter consistency', () => {
       const id = chapterId(chapter)
       const mapping = registry.getProvider(id)!
       const content = getChapterContentProvider(id)!
-      const remediation = getChapterRemediationProvider(id)
+      const remediation = getChapterDetectionProvider(id)
       expect(remediation, `Chapter ${chapter} remediation provider`).toBeDefined()
 
       for (const conceptId of mapping.getAllConceptIds()) {
-        const assignments = remediation!.buildAssignments(conceptId)
+        const assignments = remediation!.buildAssignmentsForConcept(conceptId)
         expect(assignments.length, `Chapter ${chapter} concept ${conceptId} assignments`).toBeGreaterThan(0)
         for (const assignment of assignments) {
           if (assignment.assignmentType === 'content_block') {
