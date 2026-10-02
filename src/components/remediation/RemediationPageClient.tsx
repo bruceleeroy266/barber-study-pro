@@ -9,7 +9,7 @@
  * and accessibility hardening without changing remediation policy.
  */
 
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import type {
   StudentRemediationState,
@@ -21,6 +21,7 @@ import RemediationFlashcardReview from './RemediationFlashcardReview'
 import ReassessmentKnowledgeCheck from './ReassessmentKnowledgeCheck'
 import RemediationOutcome from './RemediationOutcome'
 import { Button, Card, Badge, AlertPanel } from '@/components/ui'
+import { useStudySession } from '@/hooks/useStudySession'
 
 interface KnowledgeCheckQuestion {
   id: string
@@ -59,6 +60,8 @@ export default function RemediationPageClient({
   knowledgeCheck,
 }: RemediationPageClientProps) {
   const router = useRouter()
+  const { recordActivity: recordRemediationActivity } = useStudySession({ surfaceType: 'remediation', surfaceId: cycleId })
+  const { recordActivity: recordReassessmentActivity } = useStudySession({ surfaceType: 'reassessment', surfaceId: cycleId })
   const [studentState, setStudentState] = useState<StudentRemediationState>(initialState)
   const [progress, setProgress] = useState(initialProgress)
   const [error, setError] = useState<string | null>(null)
@@ -108,10 +111,16 @@ export default function RemediationPageClient({
     studentState: StudentRemediationState
   } | null>(null)
 
-  const reservationIsStale = useMemo(() => {
-    if (!reservationStartedAt) return false
-    const elapsedMs = Date.now() - reservationStartedAt.getTime()
-    return elapsedMs > 60 * 60 * 1000
+  const [reservationIsStale, setReservationIsStale] = useState(false)
+
+  useEffect(() => {
+    if (!reservationStartedAt) return
+
+    const expiresAt = reservationStartedAt.getTime() + 60 * 60 * 1000
+    const remainingMs = Math.max(0, expiresAt - Date.now())
+    const timeout = window.setTimeout(() => setReservationIsStale(true), remainingMs)
+
+    return () => window.clearTimeout(timeout)
   }, [reservationStartedAt])
 
   const beginAction = useCallback((action: NonNullable<typeof activeAction>) => {
@@ -132,6 +141,7 @@ export default function RemediationPageClient({
 
   const recordEvent = useCallback(async (eventType: string, assetId?: string) => {
     try {
+      void recordRemediationActivity()
       const response = await fetch(`/api/remediation/cycles/${cycleId}/events`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -149,7 +159,7 @@ export default function RemediationPageClient({
       setError(err instanceof Error ? err.message : 'Failed to record event')
       return false
     }
-  }, [cycleId])
+  }, [cycleId, recordRemediationActivity])
 
   const handleStartReview = useCallback(async () => {
     if (!beginAction('start-review')) return
@@ -205,6 +215,7 @@ export default function RemediationPageClient({
 
   const startKnowledgeCheckQuestion = useCallback(async () => {
     if (!beginAction('start-reassessment')) return
+    void recordReassessmentActivity()
     setError(null)
 
     try {
@@ -238,6 +249,7 @@ export default function RemediationPageClient({
       if (data.knowledgeCheck?.questionNumber) {
         setQuestionNumber(data.knowledgeCheck.questionNumber)
       }
+      setReservationIsStale(false)
       setReservationStartedAt(new Date())
       setStudentState('reassessment_in_progress')
     } catch (err) {
@@ -246,10 +258,11 @@ export default function RemediationPageClient({
     } finally {
       endAction()
     }
-  }, [beginAction, cycleId, endAction])
+  }, [beginAction, cycleId, endAction, recordReassessmentActivity])
 
   const handleSubmitAnswer = useCallback(async (answer: string) => {
     if (!reassessmentData) return
+    void recordReassessmentActivity()
     if (reservationIsStale) {
       setError('This knowledge check session has expired. Refresh to resume safely from your saved progress.')
       return
@@ -311,7 +324,7 @@ export default function RemediationPageClient({
     } finally {
       endAction()
     }
-  }, [beginAction, cycleId, endAction, reassessmentData, reservationIsStale, startKnowledgeCheckQuestion])
+  }, [beginAction, cycleId, endAction, reassessmentData, reservationIsStale, startKnowledgeCheckQuestion, recordReassessmentActivity])
 
   const handleTryAgain = useCallback(() => {
     setOutcome(null)

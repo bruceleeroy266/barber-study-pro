@@ -150,6 +150,7 @@ import {
   type Chapter21MicroCheckAttemptRow,
 } from '@/lib/chapter-21-concepts/micro-check-persistence'
 import { supabase } from '@/lib/supabase'
+import { useStudySession } from '@/hooks/useStudySession'
 import {
   areKnowledgeCheckSectionsComplete,
   calculateChapterProgress,
@@ -191,6 +192,7 @@ function SectionWrapper({
 
 export default function ChapterContent({ sections, theme, chapterId, userId, lessonCompleted = false, knowledgeChecksCompleted = false }: ChapterContentProps) {
   const t = theme || defaultTheme
+  const { recordActivity } = useStudySession({ surfaceType: 'lesson', surfaceId: chapterId ?? null, enabled: !!userId && !!chapterId })
   const knowledgeCheckSectionIds = useMemo(
     () => sections
       .filter((section) => section.type === 'scenarioBlock' || section.type === 'proScenario')
@@ -997,7 +999,11 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
   }
 
   return (
-    <div className="space-y-10">
+    <div
+      className="space-y-10"
+      onPointerDownCapture={() => { void recordActivity() }}
+      onKeyDownCapture={() => { void recordActivity() }}
+    >
       {sections.map((section) => {
         const chapter1MicroCheck = chapterId === 'ch-1'
           ? chapter1MicroChecks.find((check) => check.afterSectionId === section.id)

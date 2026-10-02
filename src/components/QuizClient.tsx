@@ -13,6 +13,7 @@ import { Quiz, QuizQuestion, QuizAttempt } from '@/types'
 import RemediationPanel from './chapter/RemediationPanel'
 import type { ChapterCompetency, ChapterRemediationPath } from '@/lib/chapter-content'
 import { Button, Card, Badge, ProgressBar, Alert } from '@/components/ui'
+import { useStudySession } from '@/hooks/useStudySession'
 
 interface QuizClientProps {
   quiz: Quiz
@@ -74,6 +75,7 @@ export default function QuizClient({
   quizAccessRequestId = null,
   quizAccessSchoolId = null,
 }: QuizClientProps) {
+  const { recordActivity, linkQuizAttempt, endSession } = useStudySession({ surfaceType: 'quiz', surfaceId: quiz.id, enabled: !!userId })
   const [started, setStarted] = useState(false)
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
@@ -104,10 +106,12 @@ export default function QuizClient({
   const isLastQuestion = currentQuestion === shuffledQuestions.length - 1
 
   const handleSelectAnswer = useCallback((answer: string) => {
+    void recordActivity()
     setSelectedAnswer(answer)
-  }, [])
+  }, [recordActivity])
 
   const handleStartQuiz = async () => {
+    void recordActivity()
     if (quizAccessRequestId && quizAccessSchoolId && userId) {
       const { error } = await supabase.from('quiz_access_events').insert({
         request_id: quizAccessRequestId,
@@ -175,6 +179,8 @@ export default function QuizClient({
         console.error('[QuizClient] No quiz attempt ID returned from insert')
         throw new Error('Failed to obtain quiz attempt ID')
       }
+
+      void linkQuizAttempt(persistedQuizAttemptId)
 
       if (quizAccessRequestId && quizAccessSchoolId) {
         const { error: accessEventError } = await supabase.from('quiz_access_events').insert({
@@ -326,6 +332,7 @@ export default function QuizClient({
 
       setScore(finalScore)
       setCompleted(true)
+      void endSession()
     } catch (err) {
       console.error('Error saving quiz:', err)
       setSubmitError(
@@ -334,12 +341,13 @@ export default function QuizClient({
     } finally {
       setSaving(false)
     }
-  }, [shuffledQuestions, userId, quiz.id, chapterId, bestAttempt, passingScore, quizAccessRequestId, quizAccessSchoolId])
+  }, [shuffledQuestions, userId, quiz.id, chapterId, bestAttempt, passingScore, quizAccessRequestId, quizAccessSchoolId, linkQuizAttempt, endSession])
 
   // End-of-quiz feedback: record the answer and advance without revealing
   // correctness. On the final question, submit all answers and show results.
   const handleSubmitAnswer = useCallback(() => {
     if (!selectedAnswer || !question) return
+    void recordActivity()
 
     const newAnswers = { ...answers, [question.original.id]: selectedAnswer }
     setAnswers(newAnswers)
@@ -350,7 +358,7 @@ export default function QuizClient({
       setCurrentQuestion((prev) => prev + 1)
       setSelectedAnswer(null)
     }
-  }, [selectedAnswer, question, answers, isLastQuestion, finishQuiz])
+  }, [selectedAnswer, question, answers, isLastQuestion, finishQuiz, recordActivity])
 
   const restartQuiz = useCallback(() => {
     setStarted(false)
