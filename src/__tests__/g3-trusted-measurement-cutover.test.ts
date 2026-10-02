@@ -53,7 +53,7 @@ describe('G3-1 trusted measurement cutover', () => {
     expect(cutover).toContain(
       'grant execute on function public.link_study_quiz_attempt(uuid, uuid) to authenticated',
     )
-    expect(po1b).toContain('insert into public.trusted_study_activity_days')
+    expect(po1b).toContain('insert into public.study_session_events')
     expect(po1b).toContain('if v_credit_seconds > 0 then')
   })
 
