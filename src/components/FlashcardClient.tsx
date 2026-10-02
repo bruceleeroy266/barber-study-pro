@@ -10,6 +10,7 @@ import { Flashcard } from '@/types'
 import { Button, Card, Badge, ProgressBar, EmptyState, Alert } from '@/components/ui'
 import { getFlashcardEvidenceConcept, isUnifiedActivityEvidenceChapter } from '@/lib/concept-mastery/activity-evidence-registry'
 import { loadChapterActivityEvidence, persistChapterActivityEvidence } from '@/lib/concept-mastery/activity-evidence'
+import { useStudySession } from '@/hooks/useStudySession'
 
 interface FlashcardClientProps {
   flashcards: Flashcard[]
@@ -37,6 +38,7 @@ function getMasteryStorageKey(chapterId: string, userId?: string) {
 }
 
 export default function FlashcardClient({ flashcards, chapterId, userId, isCompleted }: FlashcardClientProps) {
+  const { recordActivity } = useStudySession({ surfaceType: 'flashcards', surfaceId: chapterId, enabled: !!userId })
   const [studyMode, setStudyMode] = useState<StudyMode>(() => {
     if (typeof window === 'undefined') return 'all'
     return (localStorage.getItem(getStudyModeStorageKey(chapterId)) as StudyMode) || 'all'
@@ -209,10 +211,12 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
     : 0
 
   const handleFlip = () => {
+    void recordActivity()
     setIsFlipped((prev) => !prev)
   }
 
   const handleNext = () => {
+    void recordActivity()
     if (safeIndex < effectiveFlashcards.length - 1) {
       setIsFlipped(false)
       setCurrentIndex((prev) => Math.min(prev + 1, effectiveFlashcards.length - 1))
@@ -220,6 +224,7 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
   }
 
   const handlePrevious = () => {
+    void recordActivity()
     if (safeIndex > 0) {
       setIsFlipped(false)
       setCurrentIndex((prev) => Math.max(prev - 1, 0))
@@ -228,6 +233,7 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
 
   const markCurrentCardMastered = async () => {
     if (!currentCard) return
+    void recordActivity()
     setMasteredIds((previous) => {
       if (previous.has(currentCard.id)) return previous
       const next = new Set(previous)
