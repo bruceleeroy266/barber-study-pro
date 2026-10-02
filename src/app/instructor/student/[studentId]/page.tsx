@@ -4869,11 +4869,11 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
               style={{ width: `${overallProgress}%` }}
             />
           </div>
-          <p className="text-sm text-silver-gray mt-3">
-            {completedChapters} of {totalChapters} chapters completed
-            {quizzesCompleted > 0 && ` • ${quizzesCompleted} quizzes passed`}
-            {flashcardsCompleted > 0 && ` • ${flashcardsCompleted} flashcard decks completed`}
-          </p>
+          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm text-silver-gray">
+            <span>{completedChapters} / {totalChapters} chapters complete</span>
+            <span>{flashcardsCompleted} / {totalChapters} flashcard decks complete</span>
+            <span>{quizzesCompleted} quizzes passed</span>
+          </div>
         </div>
 
         {/* Chapter Progress */}
@@ -4886,10 +4886,10 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
               {chapters.map((chapter) => {
                 const chapterProgress = progressRecords.find((p) => p.chapter_id === chapter.id)
                 const pct = chapterProgress?.progress_percentage || 0
-                const flashDone = chapterProgress?.flashcards_completed
-                const quizDone = chapterProgress?.quiz_completed
-                const bestScore = chapterProgress?.best_quiz_score
-                const chapterPassingScore = getLocalQuiz(chapter.id)?.passing_score ?? 80
+                const progressStatus =
+                  pct >= 100 ? 'Complete' :
+                  pct > 0 ? 'In Progress' :
+                  'Not Started'
 
                 return (
                   <div key={chapter.id} className="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
@@ -4899,28 +4899,24 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
                       </span>
                       <div className="min-w-0">
                         <p className="text-white font-medium truncate">{chapter.title}</p>
-                        <div className="flex flex-wrap gap-3 text-xs text-silver mt-1">
-                          <span className={flashDone ? 'text-gold' : ''}>
-                            {flashDone ? '✓ Flashcards' : '○ Flashcards'}
-                          </span>
-                          <span className={quizDone ? 'text-gold' : ''}>
-                            {quizDone ? '✓ Quiz' : '○ Quiz'}
-                          </span>
-                          {bestScore !== null && bestScore !== undefined && (
-                            <span className={bestScore >= chapterPassingScore ? 'text-gold' : 'text-warm-bronze'}>
-                              Best: {bestScore}% (pass: {chapterPassingScore}%)
-                            </span>
-                          )}
-                        </div>
+                        <p className={`mt-1 text-xs ${
+                          progressStatus === 'Complete'
+                            ? 'text-gold'
+                            : progressStatus === 'In Progress'
+                              ? 'text-warm-bronze'
+                              : 'text-silver-gray'
+                        }`}>
+                          {progressStatus}
+                        </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 w-full md:w-56">
                       <div className="flex-1 bg-graphite rounded-full h-2">
                         <div
                           className={`h-2 rounded-full transition-all ${
-                            pct >= chapterPassingScore ? 'bg-gold' :
-                            pct >= 50 ? 'bg-warm-bronze' :
-                            pct > 0 ? 'bg-[var(--color-brand-gold)]' : 'bg-[var(--color-border-secondary)]'
+                            pct >= 100 ? 'bg-gold' :
+                            pct > 0 ? 'bg-warm-bronze' :
+                            'bg-[var(--color-border-secondary)]'
                           }`}
                           style={{ width: `${pct}%` }}
                         />
@@ -4934,29 +4930,6 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           ) : (
             <div className="p-8 text-center text-silver">No chapters available.</div>
           )}
-        </div>
-
-        {/* Flashcard Completion Summary */}
-        <div className="bg-charcoal border border-graphite rounded-xl p-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Flashcard Completion</h2>
-          <div className="flex items-center gap-4">
-            <div className="flex-1 bg-graphite rounded-full h-3">
-              <div
-                className="bg-silver h-3 rounded-full transition-all"
-                style={{ width: `${totalChapters > 0 ? (flashcardsCompleted / totalChapters) * 100 : 0}%` }}
-              />
-            </div>
-            <span className="text-white font-semibold w-24 text-right">
-              {flashcardsCompleted} / {totalChapters}
-            </span>
-          </div>
-          <p className="text-sm text-silver-gray mt-3">
-            {flashcardsCompleted === 0
-              ? 'No flashcard decks completed yet.'
-              : flashcardsCompleted === totalChapters
-              ? 'All flashcard decks completed.'
-              : `${totalChapters - flashcardsCompleted} decks remaining.`}
-          </p>
         </div>
 
         {/* Recent Quiz Attempts */}
