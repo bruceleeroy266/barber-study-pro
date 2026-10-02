@@ -250,7 +250,14 @@ async function inviteSchoolUser(
   await form.locator('input[name="full_name"]').fill(input.name)
   await form.locator('input[name="email"]').fill(input.email)
   await form.locator('select[name="role"]').selectOption(input.role)
-  await form.locator('select[name="school_id"]').selectOption(schoolId)
+
+  const schoolSelect = form.locator('select[name="school_id"]')
+  if (await schoolSelect.count()) {
+    await schoolSelect.selectOption(schoolId)
+  } else {
+    await expect(form.locator('input[type="hidden"][name="school_id"]')).toHaveValue(schoolId)
+  }
+
   await form.locator('select[name="approval_status"]').selectOption('approved')
   await form.getByRole('button', { name: 'Send Invitation' }).click()
 
