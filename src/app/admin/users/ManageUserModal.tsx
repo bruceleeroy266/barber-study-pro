@@ -65,9 +65,10 @@ export default function ManageUserModal({
 
   if (!user) return null
 
-  const selectedRole = roleDraft ?? user.role
-  const selectedSchool = schoolDraft === undefined ? user.school_id : schoolDraft
-  const selectedStatus = statusDraft ?? (user.approval_status === 'pending' ? 'approved' : user.approval_status)
+  const managedUser = user
+  const selectedRole = roleDraft ?? managedUser.role
+  const selectedSchool = schoolDraft === undefined ? managedUser.school_id : schoolDraft
+  const selectedStatus = statusDraft ?? (managedUser.approval_status === 'pending' ? 'approved' : managedUser.approval_status)
   const manageableRoles = isPlatformAdmin
     ? ROLES
     : ROLES.filter((role) => role.value !== 'admin' && role.value !== 'school_admin')
@@ -105,8 +106,8 @@ export default function ManageUserModal({
 
     if (confirmation.kind === 'role') {
       await runAction(
-        `${user.id}:role`,
-        () => changeUserRole(user.id, selectedRole),
+        `${managedUser.id}:role`,
+        () => changeUserRole(managedUser.id, selectedRole),
         `Role updated to ${roleLabel(selectedRole)}`
       )
       return
@@ -114,8 +115,8 @@ export default function ManageUserModal({
 
     if (confirmation.kind === 'school') {
       await runAction(
-        `${user.id}:school`,
-        () => assignUserSchool(user.id, selectedSchool ?? null),
+        `${managedUser.id}:school`,
+        () => assignUserSchool(managedUser.id, selectedSchool ?? null),
         `School updated to ${schoolLabel(selectedSchool ?? null)}`
       )
       return
@@ -123,17 +124,17 @@ export default function ManageUserModal({
 
     if (confirmation.kind === 'status') {
       await runAction(
-        `${user.id}:status`,
-        () => updateUserStatus(user.id, selectedStatus),
+        `${managedUser.id}:status`,
+        () => updateUserStatus(managedUser.id, selectedStatus),
         `Approval status updated to ${statusLabel(selectedStatus)}`
       )
       return
     }
 
     await runAction(
-      `${user.id}:disabled`,
-      () => toggleUserDisabled(user.id, !user.is_disabled),
-      user.is_disabled ? 'Account enabled' : 'Account disabled'
+      `${managedUser.id}:disabled`,
+      () => toggleUserDisabled(managedUser.id, !managedUser.is_disabled),
+      managedUser.is_disabled ? 'Account enabled' : 'Account disabled'
     )
   }
 
@@ -147,21 +148,21 @@ export default function ManageUserModal({
       onClose={() => {
         if (!pendingKey) onClose()
       }}
-      title={`Manage — ${user.full_name}`}
+      title={`Manage — ${managedUser.full_name}`}
       size="md"
     >
       <div className="space-y-6">
         <div className="rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-background-secondary)] p-4">
-          <p className="font-medium text-white">{user.full_name}</p>
-          <p className="mt-1 break-all text-sm text-[var(--color-text-muted)]">{user.email}</p>
+          <p className="font-medium text-white">{managedUser.full_name}</p>
+          <p className="mt-1 break-all text-sm text-[var(--color-text-muted)]">{managedUser.email}</p>
           <dl className="mt-3 grid grid-cols-2 gap-3 text-sm">
             <div>
               <dt className="text-xs uppercase tracking-wide text-[var(--color-text-muted)]">Current role</dt>
-              <dd className="mt-1 text-white">{roleLabel(user.role)}</dd>
+              <dd className="mt-1 text-white">{roleLabel(managedUser.role)}</dd>
             </div>
             <div>
               <dt className="text-xs uppercase tracking-wide text-[var(--color-text-muted)]">Current school</dt>
-              <dd className="mt-1 text-white">{user.school_name ?? 'No school'}</dd>
+              <dd className="mt-1 text-white">{managedUser.school_name ?? 'No school'}</dd>
             </div>
           </dl>
         </div>
@@ -206,29 +207,29 @@ export default function ManageUserModal({
               type="button"
               onClick={() =>
                 runAction(
-                  `${user.id}:setup-link`,
-                  () => resendUserSetupLink(user.id),
+                  `${managedUser.id}:setup-link`,
+                  () => resendUserSetupLink(managedUser.id),
                   'Setup link sent'
                 )
               }
-              disabled={!!pendingKey || user.is_disabled || user.approval_status === 'rejected'}
+              disabled={!!pendingKey || managedUser.is_disabled || managedUser.approval_status === 'rejected'}
               className="min-h-11 rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 px-3 py-2 text-sm text-[var(--color-brand-gold)] disabled:opacity-40"
             >
-              {pendingKey === `${user.id}:setup-link` ? 'Sending…' : 'Send setup link'}
+              {pendingKey === `${managedUser.id}:setup-link` ? 'Sending…' : 'Send setup link'}
             </button>
             <button
               type="button"
               onClick={() =>
                 runAction(
-                  `${user.id}:require-password-reset`,
-                  () => requirePasswordChange(user.id),
+                  `${managedUser.id}:require-password-reset`,
+                  () => requirePasswordChange(managedUser.id),
                   'Password reset required'
                 )
               }
               disabled={!!pendingKey}
               className="min-h-11 rounded-lg border border-[var(--color-border-primary)] px-3 py-2 text-sm text-white disabled:opacity-40"
             >
-              {pendingKey === `${user.id}:require-password-reset` ? 'Saving…' : 'Require password reset'}
+              {pendingKey === `${managedUser.id}:require-password-reset` ? 'Saving…' : 'Require password reset'}
             </button>
           </div>
 
@@ -247,15 +248,15 @@ export default function ManageUserModal({
             type="button"
             onClick={() =>
               runAction(
-                `${user.id}:password-reset`,
-                () => resetUserPassword(user.id, temporaryPassword),
+                `${managedUser.id}:password-reset`,
+                () => resetUserPassword(managedUser.id, temporaryPassword),
                 'Temporary password reset successfully'
               )
             }
             disabled={!!pendingKey || temporaryPassword.length < 8 || temporaryPassword.length > 72}
             className="min-h-11 w-full rounded-lg border border-[var(--color-border-primary)] px-3 py-2 text-sm text-white disabled:opacity-40"
           >
-            {pendingKey === `${user.id}:password-reset` ? 'Resetting…' : 'Reset temporary password'}
+            {pendingKey === `${managedUser.id}:password-reset` ? 'Resetting…' : 'Reset temporary password'}
           </button>
         </section>
 
@@ -281,11 +282,11 @@ export default function ManageUserModal({
             onClick={() =>
               setConfirmation({
                 kind: 'status',
-                from: statusLabel(user.approval_status),
+                from: statusLabel(managedUser.approval_status),
                 to: statusLabel(selectedStatus),
               })
             }
-            disabled={!!pendingKey || selectedStatus === user.approval_status}
+            disabled={!!pendingKey || selectedStatus === managedUser.approval_status}
             className="min-h-11 w-full rounded-lg border border-[var(--color-border-primary)] px-3 py-2 text-sm text-white disabled:opacity-40"
           >
             Review status change
@@ -295,14 +296,14 @@ export default function ManageUserModal({
             onClick={() =>
               setConfirmation({
                 kind: 'disabled',
-                from: user.is_disabled ? 'Disabled' : 'Enabled',
-                to: user.is_disabled ? 'Enabled' : 'Disabled',
+                from: managedUser.is_disabled ? 'Disabled' : 'Enabled',
+                to: managedUser.is_disabled ? 'Enabled' : 'Disabled',
               })
             }
             disabled={!!pendingKey}
             className="min-h-11 w-full rounded-lg border border-silver/30 bg-silver/10 px-3 py-2 text-sm text-silver disabled:opacity-40"
           >
-            {user.is_disabled ? 'Review enable account' : 'Review disable account'}
+            {managedUser.is_disabled ? 'Review enable account' : 'Review disable account'}
           </button>
         </section>
 
@@ -328,11 +329,11 @@ export default function ManageUserModal({
             onClick={() =>
               setConfirmation({
                 kind: 'role',
-                from: roleLabel(user.role),
+                from: roleLabel(managedUser.role),
                 to: roleLabel(selectedRole),
               })
             }
-            disabled={!!pendingKey || selectedRole === user.role}
+            disabled={!!pendingKey || selectedRole === managedUser.role}
             className="min-h-11 w-full rounded-lg border border-[var(--color-border-primary)] px-3 py-2 text-sm text-white disabled:opacity-40"
           >
             Review role change
@@ -361,11 +362,11 @@ export default function ManageUserModal({
                 onClick={() =>
                   setConfirmation({
                     kind: 'school',
-                    from: schoolLabel(user.school_id),
+                    from: schoolLabel(managedUser.school_id),
                     to: schoolLabel(selectedSchool ?? null),
                   })
                 }
-                disabled={!!pendingKey || selectedSchool === user.school_id}
+                disabled={!!pendingKey || selectedSchool === managedUser.school_id}
                 className="min-h-11 w-full rounded-lg border border-[var(--color-border-primary)] px-3 py-2 text-sm text-white disabled:opacity-40"
               >
                 Review school change
@@ -374,17 +375,17 @@ export default function ManageUserModal({
           )}
         </section>
 
-        {user.role === 'student' && (
+        {managedUser.role === 'student' && (
           <section className="space-y-3 border-t border-[var(--color-border-primary)] pt-5">
             <h3 className="text-sm font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">Enrollment</h3>
             <p className="text-sm text-[var(--color-text-secondary)]">
-              {typeof user.enrollment_count === 'number'
-                ? `${user.enrollment_count} active program${user.enrollment_count === 1 ? '' : 's'}`
+              {typeof managedUser.enrollment_count === 'number'
+                ? `${managedUser.enrollment_count} active program${managedUser.enrollment_count === 1 ? '' : 's'}`
                 : 'Enrollment count unavailable'}
             </p>
             <button
               type="button"
-              onClick={() => onManageEnrollment(user)}
+              onClick={() => onManageEnrollment(managedUser)}
               disabled={!!pendingKey}
               className="min-h-11 w-full rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 px-3 py-2 text-sm text-[var(--color-brand-gold)] disabled:opacity-40"
             >
@@ -397,13 +398,13 @@ export default function ManageUserModal({
           <h3 className="text-sm font-semibold uppercase tracking-wide text-silver">Danger zone</h3>
           <button
             type="button"
-            onClick={() => onDelete(user)}
-            disabled={!!pendingKey || user.id === currentUserId}
+            onClick={() => onDelete(managedUser)}
+            disabled={!!pendingKey || managedUser.id === currentUserId}
             className="min-h-11 w-full rounded-lg border border-silver/30 bg-silver/10 px-3 py-2 text-sm text-silver disabled:opacity-40"
           >
             Delete user
           </button>
-          {user.id === currentUserId && (
+          {managedUser.id === currentUserId && (
             <p className="text-xs text-[var(--color-text-muted)]">You cannot delete your own account.</p>
           )}
         </section>
