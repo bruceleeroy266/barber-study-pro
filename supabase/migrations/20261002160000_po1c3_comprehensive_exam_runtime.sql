@@ -49,7 +49,6 @@ create or replace function private.comprehensive_exam_attempt_payload(
 )
 returns jsonb
 language sql
-stable
 security definer
 set search_path = public, private, pg_temp
 as $$
@@ -573,7 +572,7 @@ begin
       or (s.domain = 'facial_hair_skin_care_services' and s.domain_rank <= 15)
   ),
   unscored as (
-    select q.*, false as is_scored
+    select q.*, null::bigint as domain_rank, false as is_scored
     from public.comprehensive_exam_config_questions cq
     join public.comprehensive_exam_questions q
       on q.id = cq.question_id
