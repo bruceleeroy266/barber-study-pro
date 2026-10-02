@@ -16,6 +16,7 @@ vi.mock('./actions', () => ({
   assignUserSchool: vi.fn(),
   requirePasswordChange: vi.fn(),
   resetUserPassword: vi.fn(),
+  resendUserSetupLink: vi.fn(),
   deleteUser: (...args: unknown[]) => mockDeleteUser(...args),
   getUsers: (...args: unknown[]) => mockGetUsers(...args),
   getSchools: (...args: unknown[]) => mockGetSchools(...args),
