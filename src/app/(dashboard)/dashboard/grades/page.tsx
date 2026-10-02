@@ -9,7 +9,7 @@ import {
   demoAssessments,
   demoStudents,
 } from '@/lib/demo-data'
-import { calculateStudentGradePerformance, getGradeColorClass, getLetterGrade } from '@/lib/gradebook'
+import { calculateStudentGradePerformance, getGradeColorClass } from '@/lib/gradebook'
 import StudentGradeWidget from '@/components/gradebook/StudentGradeWidget'
 import StudentGradeReport from '@/components/reports/StudentGradeReport'
 import { mapGradesFromDb, mapGradeCategoriesFromDb, mapAssessmentsFromDb } from '@/lib/mappers/operational-data-mappers'
@@ -145,7 +145,6 @@ export default async function StudentGradesPage() {
                                   variant={grade.percentage >= 90 ? 'success' : grade.percentage >= 80 ? 'gold' : grade.percentage >= 70 ? 'warning' : 'error'}
                                   size="sm"
                                 >
-                                  {getLetterGrade(grade.percentage)}
                                 </Badge>
                               </td>
                               <td className="p-3 text-[var(--color-text-muted)]">{grade.notes || '—'}</td>
