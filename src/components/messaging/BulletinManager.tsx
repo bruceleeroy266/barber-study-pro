@@ -4,6 +4,7 @@ import { FormEvent, useMemo, useState, useTransition } from 'react'
 import { Archive, Megaphone, Pin, Users } from 'lucide-react'
 import {
   archiveBulletin,
+  loadBulletinAcknowledgments,
   publishBulletin,
   type ProductionBulletin,
 } from '@/app/communications/bulletin-actions'
@@ -38,6 +39,7 @@ export default function BulletinManager({
   )
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
+  const [ackDetails, setAckDetails] = useState<Record<string, Array<{ studentId: string; acknowledgedAt: string }>>>({})
   const [isPending, startTransition] = useTransition()
 
   const filteredOptions = useMemo(
@@ -85,6 +87,20 @@ export default function BulletinManager({
         setPublishAt('')
         setExpiresAt('')
         setSelectedIds([])
+      })()
+    })
+  }
+
+  const loadAcknowledgments = (bulletinId: string) => {
+    startTransition(() => {
+      void (async () => {
+        setError(null)
+        const result = await loadBulletinAcknowledgments(bulletinId)
+        if (!result.success) {
+          setError(result.message)
+          return
+        }
+        setAckDetails((current) => ({ ...current, [bulletinId]: result.data }))
       })()
     })
   }
@@ -271,10 +287,43 @@ export default function BulletinManager({
 
               <div className="mt-4 flex flex-wrap gap-4 text-xs text-silver-gray">
                 <span className="inline-flex items-center gap-1"><Users className="w-3.5 h-3.5" /> {bulletin.audiences.length} audience target(s)</span>
-                <span>{bulletin.acknowledgmentCount} acknowledgment(s)</span>
+                <button
+                  type="button"
+                  onClick={() => loadAcknowledgments(bulletin.id)}
+                  className="underline decoration-dotted underline-offset-2"
+                >
+                  {bulletin.acknowledgmentCount} acknowledgment(s)
+                </button>
                 {bulletin.publishAt && <span>Publishes {new Date(bulletin.publishAt).toLocaleString()}</span>}
                 {bulletin.expiresAt && <span>Expires {new Date(bulletin.expiresAt).toLocaleString()}</span>}
               </div>
+
+              {ackDetails[bulletin.id] && (
+                <div className="mt-3 rounded-lg border border-graphite bg-black/30 p-3">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-silver mb-2">
+                    Acknowledgments
+                  </p>
+                  {ackDetails[bulletin.id].length === 0 ? (
+                    <p className="text-sm text-silver-gray">No acknowledgments yet.</p>
+                  ) : (
+                    <ul className="space-y-1 text-sm text-light-gray">
+                      {ackDetails[bulletin.id].map((ack) => {
+                        const studentName =
+                          audienceOptions.find((option) => option.id === ack.studentId)?.name ||
+                          'Student'
+                        return (
+                          <li key={ack.studentId} className="flex flex-wrap justify-between gap-2">
+                            <span>{studentName}</span>
+                            <span className="text-silver-gray">
+                              {new Date(ack.acknowledgedAt).toLocaleString()}
+                            </span>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  )}
+                </div>
+              )}
             </article>
           ))
         )}
