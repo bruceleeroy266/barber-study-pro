@@ -114,7 +114,7 @@ export default function GradebookConfigSection({ config, onChange, errors }: Pro
         <p className="text-sm text-silver">Passing thresholds and grade categories</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4">
         <div className="bg-black border border-graphite rounded-lg p-4">
           <label htmlFor="gradebook-passing" className="block text-sm font-medium text-light-gray mb-2">
             Passing %
@@ -132,26 +132,6 @@ export default function GradebookConfigSection({ config, onChange, errors }: Pro
             className="w-full bg-charcoal border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)] aria-invalid:border-silver"
           />
           <FieldError message={errors.gradebookPassing} />
-        </div>
-
-        <div className="bg-black border border-graphite rounded-lg p-4">
-          <label htmlFor="grading-scale" className="block text-sm font-medium text-light-gray mb-2">
-            Grading Scale
-          </label>
-          <select
-            id="grading-scale"
-            value={gradebookConfig.gradingScale}
-            onChange={(e) =>
-              onChange({
-                ...gradebookConfig,
-                gradingScale: e.target.value as GradebookConfig['gradingScale'],
-              })
-            }
-            className="w-full bg-charcoal border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)]"
-          >
-            <option value="percentage">Percentage</option>
-            <option value="letter">Letter Grade</option>
-          </select>
         </div>
       </div>
 
