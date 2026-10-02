@@ -58,7 +58,7 @@ describe('G3-1 trusted measurement cutover', () => {
   })
 
   it('keeps instructor measurement on the authoritative PO-1B read model', () => {
-    expect(instructor).toContain(".from('trusted_trusted_study_activity_days')")
+    expect(instructor).toContain(".from('trusted_study_activity_days')")
     expect(instructor).toContain('studyMinutesToday')
     expect(instructor).toContain('lastStudyActivityAt')
   })
@@ -80,7 +80,7 @@ describe('G3-1 trusted measurement cutover', () => {
   })
   it('syncs trusted credited PO-1B events into the dashboard rollup exactly at the database boundary', () => {
     const sync = read('supabase/migrations/20261002132500_g3_1_trusted_study_activity_read_model.sql')
-    expect(sync).toContain('create or replace view public.trusted_trusted_study_activity_days')
+    expect(sync).toContain('create or replace view public.trusted_study_activity_days')
     expect(sync).toContain('from public.study_session_events e')
     expect(sync).toContain('where e.credited_seconds > 0')
     expect(sync).toContain('sum(e.credited_seconds)::integer as active_seconds')
