@@ -89,7 +89,8 @@ describe('UserManagementClient — delete user', () => {
       />
     )
 
-    fireEvent.click(screen.getByRole('button', { name: /delete/i }))
+    fireEvent.click(within(screen.getByTestId('mobile-user-list')).getByRole('button', { name: 'Manage user' }))
+    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Delete user' }))
 
     const dialog = screen.getByRole('dialog')
     expect(dialog).toBeInTheDocument()
@@ -107,7 +108,8 @@ describe('UserManagementClient — delete user', () => {
       />
     )
 
-    fireEvent.click(screen.getByRole('button', { name: /delete/i }))
+    fireEvent.click(within(screen.getByTestId('mobile-user-list')).getByRole('button', { name: 'Manage user' }))
+    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Delete user' }))
     fireEvent.click(screen.getByRole('button', { name: 'Confirm delete' }))
 
     await waitFor(() => {
@@ -126,7 +128,8 @@ describe('UserManagementClient — delete user', () => {
       />
     )
 
-    const deleteButton = screen.getByRole('button', { name: /delete/i })
+    fireEvent.click(within(screen.getByTestId('mobile-user-list')).getByRole('button', { name: 'Manage user' }))
+    const deleteButton = within(screen.getByRole('dialog')).getByRole('button', { name: 'Delete user' })
     expect(deleteButton).toBeDisabled()
   })
 
@@ -142,7 +145,8 @@ describe('UserManagementClient — delete user', () => {
       />
     )
 
-    fireEvent.click(screen.getByRole('button', { name: /delete/i }))
+    fireEvent.click(within(screen.getByTestId('mobile-user-list')).getByRole('button', { name: 'Manage user' }))
+    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Delete user' }))
     fireEvent.click(screen.getByRole('button', { name: 'Confirm delete' }))
 
     await waitFor(() => {
@@ -181,7 +185,7 @@ describe('UserManagementClient — UM-H2.1 responsive presentation', () => {
       />
     )
 
-    fireEvent.click(screen.getByRole('button', { name: 'Manage user' }))
+    fireEvent.click(within(screen.getByTestId('mobile-user-list')).getByRole('button', { name: 'Manage user' }))
 
     const dialog = screen.getByRole('dialog')
     expect(within(dialog).getByText('Manage — Target User')).toBeInTheDocument()
