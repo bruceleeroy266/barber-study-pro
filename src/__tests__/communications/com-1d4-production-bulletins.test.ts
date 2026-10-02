@@ -67,7 +67,7 @@ describe('COM-1D.4 production bulletins runtime + UI', () => {
     expect(adminPage).toContain(".in('role', ['student', 'apprentice'])")
     expect(manager).toContain("audienceMode === 'school'")
     expect(manager).toContain("audienceMode === 'program'")
-    expect(manager).toContain("audienceMode === 'student'")
+    expect(manager).toContain("{ type: 'student' as const, studentId: id }")
   })
 
   it('delivers student bulletins and supports append-only acknowledgment', () => {
