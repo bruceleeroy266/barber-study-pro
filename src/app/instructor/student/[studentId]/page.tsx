@@ -4877,10 +4877,19 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
         </div>
 
         {/* Chapter Progress */}
-        <div className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
-          <div className="p-6 border-b border-graphite">
-            <h2 className="text-xl font-semibold text-white">Chapter-by-Chapter Progress</h2>
-          </div>
+        <details className="group bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <summary className="cursor-pointer list-none p-6 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-brand-gold)]">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-semibold text-white">Chapter-by-Chapter Progress</h2>
+                <p className="mt-1 text-sm text-silver-gray">
+                  {totalChapters} chapters · select to view completion by chapter.
+                </p>
+              </div>
+              <span className="text-silver transition-transform duration-200 group-open:rotate-180" aria-hidden="true">⌄</span>
+            </div>
+          </summary>
+          <div className="border-t border-graphite">
           {chapters && chapters.length > 0 ? (
             <div className="divide-y divide-graphite">
               {chapters.map((chapter) => {
@@ -4930,7 +4939,8 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           ) : (
             <div className="p-8 text-center text-silver">No chapters available.</div>
           )}
-        </div>
+          </div>
+        </details>
 
         {/* Recent Quiz Attempts */}
         <div className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
