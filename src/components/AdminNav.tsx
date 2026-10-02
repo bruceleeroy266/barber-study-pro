@@ -17,6 +17,7 @@ import {
   Shield,
   Target,
   MessageSquare,
+  Megaphone,
 } from 'lucide-react'
 import { Profile } from '@/types'
 import { isAdmin } from '@/lib/auth-helpers'
@@ -33,6 +34,7 @@ const adminLinks = [
   { href: '/admin/school/configuration', label: 'School Settings', icon: Settings },
   { href: '/admin/pilot-inquiries', label: 'Pilot Inquiries', icon: Plane },
   { href: '/admin/beta-feedback', label: 'Beta Feedback', icon: MessageSquare },
+  { href: '/admin/bulletins', label: 'Bulletins', icon: Megaphone },
   { href: '/admin/audit', label: 'Audit History', icon: History },
   { href: '/admin/health', label: 'System Health', icon: Activity },
   { href: '/admin/maintenance', label: 'Maintenance', icon: Wrench },
@@ -45,7 +47,7 @@ export default function AdminNav({ user }: AdminNavProps) {
     ? adminLinks
     : [
         ...adminLinks.filter((link) =>
-          ['/admin', '/admin/users', '/admin/school/configuration'].includes(link.href)
+          ['/admin', '/admin/users', '/admin/school/configuration', '/admin/bulletins'].includes(link.href)
         ),
         { href: '/admin/school', label: 'School Dashboard', icon: LayoutDashboard },
       ]
