@@ -533,6 +533,103 @@ test.describe('Pilot onboarding certification', () => {
       .single()
     expect(instructorProfile).toMatchObject({ school_id: schoolId, role: 'instructor' })
 
+    // -----------------------------------------------------------------------
+    // 8. Gate 3 handoff: activated student produces trusted measurement
+    // -----------------------------------------------------------------------
+    const { data: beforeActivityRows } = await service
+      .from('study_activity_days')
+      .select('active_seconds')
+      .eq('user_id', studentProfile!.id)
+
+    const beforeStudySeconds = (beforeActivityRows || []).reduce(
+      (sum, row) => sum + Number(row.active_seconds || 0),
+      0,
+    )
+
+    const { data: beforeHoursRows } = await service
+      .from('hour_logs')
+      .select('minutes')
+      .eq('user_id', studentProfile!.id)
+
+    const beforeOfficialMinutes = (beforeHoursRows || []).reduce(
+      (sum, row) => sum + Number(row.minutes || 0),
+      0,
+    )
+
+    const startResult = await studentSession.page.evaluate(async () => {
+      const response = await fetch('/api/study-sessions/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ surfaceType: 'lesson', surfaceId: 'gate3-certification' }),
+      })
+      return { ok: response.ok, body: await response.json() }
+    })
+    expect(startResult.ok).toBe(true)
+    expect(typeof startResult.body.sessionId).toBe('string')
+
+    const sessionId = String(startResult.body.sessionId)
+
+    const firstActivity = await studentSession.page.evaluate(async (id) => {
+      const response = await fetch('/api/study-sessions/activity', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: id, eventType: 'qualifying_activity' }),
+      })
+      return response.ok
+    }, sessionId)
+    expect(firstActivity).toBe(true)
+
+    await studentSession.page.waitForTimeout(1_100)
+
+    const secondActivity = await studentSession.page.evaluate(async (id) => {
+      const response = await fetch('/api/study-sessions/activity', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: id, eventType: 'qualifying_activity' }),
+      })
+      return response.ok
+    }, sessionId)
+    expect(secondActivity).toBe(true)
+
+    await studentSession.page.evaluate(async (id) => {
+      await fetch('/api/study-sessions/end', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: id }),
+      })
+    }, sessionId)
+
+    await expect.poll(async () => {
+      const { data } = await service
+        .from('study_activity_days')
+        .select('active_seconds')
+        .eq('user_id', studentProfile!.id)
+
+      return (data || []).reduce(
+        (sum, row) => sum + Number(row.active_seconds || 0),
+        0,
+      )
+    }, { timeout: 10_000 }).toBeGreaterThan(beforeStudySeconds)
+
+    const { data: afterHoursRows } = await service
+      .from('hour_logs')
+      .select('minutes')
+      .eq('user_id', studentProfile!.id)
+
+    const afterOfficialMinutes = (afterHoursRows || []).reduce(
+      (sum, row) => sum + Number(row.minutes || 0),
+      0,
+    )
+    expect(afterOfficialMinutes).toBe(beforeOfficialMinutes)
+
+    // Instructor sees the student's trusted study measurement after activation.
+    await instructorSession.page.goto('/instructor')
+    const dashboardStudentRow = instructorSession.page
+      .getByRole('row')
+      .filter({ hasText: STUDENT_EMAIL })
+    await expect(dashboardStudentRow).toBeVisible()
+    await expect(dashboardStudentRow).toContainText('min')
+
     await studentSession.context.close()
     await instructorSession.context.close()
     await schoolAdminSession.context.close()
