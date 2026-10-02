@@ -323,3 +323,55 @@ describe('UserManagementClient — UM-H2.3 Create/Invite mobile safety', () => {
     expect(hiddenSchool.value).toBe('school-1')
   })
 })
+
+
+describe('UserManagementClient — UM-H2.4 final desktop safety', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockGetUsers.mockResolvedValue({
+      success: true,
+      data: { users: [targetUser], count: 1 },
+    })
+  })
+
+  it('keeps the desktop table but routes sensitive mutations through Manage user', () => {
+    render(
+      <UserManagementClient
+        currentUser={currentUser}
+        initialUsers={[targetUser]}
+        initialCount={1}
+        schools={[{ id: 'school-1', name: 'RISE Program' }]}
+      />
+    )
+
+    const desktopTable = screen.getByTestId('desktop-user-table')
+    expect(desktopTable).toHaveClass('hidden', 'md:block')
+    expect(within(desktopTable).getByText('Instructor')).toBeInTheDocument()
+    expect(within(desktopTable).getByText('RISE Program')).toBeInTheDocument()
+    expect(within(desktopTable).getByText('Approved')).toBeInTheDocument()
+    expect(within(desktopTable).getByText('Enabled')).toBeInTheDocument()
+    expect(within(desktopTable).getByRole('button', { name: 'Manage user' })).toBeInTheDocument()
+
+    expect(within(desktopTable).queryByRole('button', { name: /reset password/i })).not.toBeInTheDocument()
+    expect(within(desktopTable).queryByRole('button', { name: /send setup link/i })).not.toBeInTheDocument()
+  })
+
+  it('does not invoke window.prompt from the desktop user-management table', () => {
+    const promptSpy = vi.spyOn(window, 'prompt')
+
+    render(
+      <UserManagementClient
+        currentUser={currentUser}
+        initialUsers={[targetUser]}
+        initialCount={1}
+        schools={[{ id: 'school-1', name: 'RISE Program' }]}
+      />
+    )
+
+    fireEvent.click(within(screen.getByTestId('desktop-user-table')).getByRole('button', { name: 'Manage user' }))
+
+    expect(promptSpy).not.toHaveBeenCalled()
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    promptSpy.mockRestore()
+  })
+})
