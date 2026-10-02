@@ -97,7 +97,7 @@ export default async function DashboardPage() {
 
   // Active lesson/flashcard/quiz study days recorded by the dashboard tracker.
   const { data: studyActivityData } = await supabase
-    .from('study_activity_days')
+    .from('trusted_study_activity_days')
     .select('study_date, timezone')
     .eq('user_id', user.id)
     .order('study_date', { ascending: false })
