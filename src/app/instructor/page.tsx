@@ -266,7 +266,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     .in('user_id', studentIds.length > 0 ? studentIds : ['__none__'])
 
   const { data: studyActivityData } = await supabase
-    .from('study_activity_days')
+    .from('trusted_study_activity_days')
     .select('user_id, study_date, active_seconds, last_active_at, timezone')
     .in('user_id', studentIds.length > 0 ? studentIds : ['__none__'])
 
