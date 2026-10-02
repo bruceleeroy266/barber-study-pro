@@ -634,12 +634,14 @@ test.describe('Pilot onboarding certification', () => {
 
     // Instructor sees the student's trusted study measurement after activation.
     await instructorSession.page.goto('/instructor')
-    const dashboardStudentRow = instructorSession.page
+    const studyActivitySection = instructorSession.page
+      .getByRole('heading', { name: 'Student Study Activity' })
+      .locator('..')
+    const dashboardStudentRow = studyActivitySection
       .getByRole('row')
-      .filter({ hasText: STUDENT_EMAIL })
-      .filter({ hasText: 'min' })
+      .filter({ hasText: STUDENT_NAME })
     await expect(dashboardStudentRow).toHaveCount(1)
-    await expect(dashboardStudentRow).toBeVisible()
+    await expect(dashboardStudentRow).toContainText('min')
 
     await studentSession.context.close()
     await instructorSession.context.close()
