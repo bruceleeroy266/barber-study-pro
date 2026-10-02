@@ -64,6 +64,10 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
   )
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [showInviteForm, setShowInviteForm] = useState(false)
+  const [createRole, setCreateRole] = useState<AppRole>('student')
+  const [inviteRole, setInviteRole] = useState<AppRole>('student')
+  const [isCreatingUser, setIsCreatingUser] = useState(false)
+  const [isInvitingUser, setIsInvitingUser] = useState(false)
   const [deleteCandidate, setDeleteCandidate] = useState<UserListItem | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
   const [enrollmentStudent, setEnrollmentStudent] = useState<UserListItem | null>(null)
@@ -102,23 +106,31 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
 
   async function handleCreateUser(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    if (isCreatingUser) return
+
     const form = new FormData(e.currentTarget)
+    setIsCreatingUser(true)
 
-    const result = await createUser({
-      full_name: String(form.get('full_name') || ''),
-      email: String(form.get('email') || ''),
-      password: String(form.get('password') || ''),
-      role: String(form.get('role') || 'student') as AppRole,
-      school_id: String(form.get('school_id') || '') || null,
-      approval_status: String(form.get('approval_status') || 'pending') as 'pending' | 'approved' | 'rejected',
-    })
+    try {
+      const result = await createUser({
+        full_name: String(form.get('full_name') || ''),
+        email: String(form.get('email') || ''),
+        password: String(form.get('password') || ''),
+        role: String(form.get('role') || 'student') as AppRole,
+        school_id: String(form.get('school_id') || '') || null,
+        approval_status: String(form.get('approval_status') || 'pending') as 'pending' | 'approved' | 'rejected',
+      })
 
-    if (result.success) {
-      setMessage({ type: 'success', text: 'User created successfully' })
-      setShowCreateForm(false)
-      await loadUsers(0)
-    } else {
-      setMessage({ type: 'error', text: result.error || 'Failed to create user' })
+      if (result.success) {
+        setMessage({ type: 'success', text: 'User created successfully' })
+        setShowCreateForm(false)
+        setCreateRole('student')
+        await loadUsers(0)
+      } else {
+        setMessage({ type: 'error', text: result.error || 'Failed to create user' })
+      }
+    } finally {
+      setIsCreatingUser(false)
     }
   }
 
@@ -140,29 +152,37 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
 
   async function handleInviteUser(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    if (isInvitingUser) return
+
     const form = new FormData(e.currentTarget)
+    setIsInvitingUser(true)
 
-    const result = await inviteUser({
-      full_name: String(form.get('full_name') || ''),
-      email: String(form.get('email') || ''),
-      role: String(form.get('role') || 'student') as AppRole,
-      school_id: String(form.get('school_id') || '') || null,
-      approval_status: String(form.get('approval_status') || 'pending') as 'pending' | 'approved' | 'rejected',
-    })
-
-    if (result.success) {
-      setMessage({
-        type: 'success',
-        text: result.data?.alreadyInvited
-          ? 'Invitation already exists. No duplicate email was sent.'
-          : result.data?.recoverySent
-            ? 'Account already existed. A fresh setup link was sent safely.'
-            : 'Invitation sent successfully',
+    try {
+      const result = await inviteUser({
+        full_name: String(form.get('full_name') || ''),
+        email: String(form.get('email') || ''),
+        role: String(form.get('role') || 'student') as AppRole,
+        school_id: String(form.get('school_id') || '') || null,
+        approval_status: String(form.get('approval_status') || 'pending') as 'pending' | 'approved' | 'rejected',
       })
-      setShowInviteForm(false)
-      await loadUsers(0)
-    } else {
-      setMessage({ type: 'error', text: result.error || 'Failed to send invitation' })
+
+      if (result.success) {
+        setMessage({
+          type: 'success',
+          text: result.data?.alreadyInvited
+            ? 'Invitation already exists. No duplicate email was sent.'
+            : result.data?.recoverySent
+              ? 'Account already existed. A fresh setup link was sent safely.'
+              : 'Invitation sent successfully',
+        })
+        setShowInviteForm(false)
+        setInviteRole('student')
+        await loadUsers(0)
+      } else {
+        setMessage({ type: 'error', text: result.error || 'Failed to send invitation' })
+      }
+    } finally {
+      setIsInvitingUser(false)
     }
   }
 
@@ -177,6 +197,15 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
     } else {
       setMessage({ type: 'error', text: result.error || 'Action failed' })
     }
+  }
+
+  function roleRequiresSchool(role: AppRole): boolean {
+    return role === 'student' || role === 'instructor' || role === 'school_admin'
+  }
+
+  function currentSchoolName(): string {
+    if (!currentUser.schoolId) return 'Assigned school unavailable'
+    return schools.find((school) => school.id === currentUser.schoolId)?.name ?? 'Assigned school'
   }
 
   function formatDate(date: string): string {
@@ -266,6 +295,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
             onClick={() => {
               setShowCreateForm(!showCreateForm)
               setShowInviteForm(false)
+              setCreateRole('student')
             }}
             className="px-4 py-2 bg-[var(--color-background-secondary)] text-white border border-[var(--color-border-primary)] rounded-lg hover:border-[var(--color-brand-gold)]/50"
           >
@@ -275,6 +305,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
             onClick={() => {
               setShowInviteForm(!showInviteForm)
               setShowCreateForm(false)
+              setInviteRole('student')
             }}
             className="px-4 py-2 bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/30 rounded-lg hover:bg-[var(--color-brand-gold)]/20"
           >
@@ -286,14 +317,14 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
       {showCreateForm && (
         <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6">
           <h2 className="text-xl font-semibold text-white mb-4">Create User</h2>
-          <form onSubmit={handleCreateUser} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <form onSubmit={handleCreateUser} className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <label className="block text-sm text-[var(--color-text-muted)] mb-1">Full name</label>
               <input
                 name="full_name"
                 type="text"
                 required
-                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               />
             </div>
             <div>
@@ -302,7 +333,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                 name="email"
                 type="email"
                 required
-                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               />
             </div>
             <div>
@@ -313,7 +344,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                 required
                 minLength={8}
                 maxLength={72}
-                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               />
               <p className="text-xs text-[var(--color-text-muted)] mt-1">8–72 characters. User will be forced to change it on first login.</p>
             </div>
@@ -322,7 +353,9 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               <select
                 name="role"
                 required
-                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                value={createRole}
+                onChange={(e) => setCreateRole(e.target.value as AppRole)}
+                className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               >
                 {manageableRoles.map((r) => (
                   <option key={r.value} value={r.value}>
@@ -333,19 +366,33 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
             </div>
             <div>
               <label className="block text-sm text-[var(--color-text-muted)] mb-1">School</label>
-              <select
-                name="school_id"
-                required
-                defaultValue={currentUser.schoolId ?? ''}
-                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
-              >
-                <option value="">No school</option>
-                {schools.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name}
+              {currentUser.isPlatformAdmin ? (
+                <select
+                  name="school_id"
+                  required={roleRequiresSchool(createRole)}
+                  defaultValue=""
+                  className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                >
+                  <option value="">
+                    {roleRequiresSchool(createRole) ? 'Select a school' : 'No school'}
                   </option>
-                ))}
-              </select>
+                  {schools.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <>
+                  <input type="hidden" name="school_id" value={currentUser.schoolId ?? ''} />
+                  <div className="min-h-11 rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-background-secondary)] px-4 py-2 text-white">
+                    {currentSchoolName()}
+                  </div>
+                </>
+              )}
+              <p className="text-xs text-[var(--color-text-muted)] mt-1">
+                {roleRequiresSchool(createRole) ? 'A school is required for this role.' : 'School assignment is optional for this role.'}
+              </p>
             </div>
             <div>
               <label className="block text-sm text-[var(--color-text-muted)] mb-1">Approval status</label>
@@ -353,7 +400,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                 name="approval_status"
                 required
                 defaultValue="pending"
-                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               >
                 {APPROVAL_STATUSES.map((s) => (
                   <option key={s.value} value={s.value}>
@@ -365,9 +412,10 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
             <div className="md:col-span-2">
               <button
                 type="submit"
-                className="px-6 py-2 bg-[var(--color-brand-gold)] text-black font-medium rounded-lg hover:bg-[var(--color-brand-gold)]"
+                disabled={isCreatingUser}
+                className="min-h-11 w-full sm:w-auto px-6 py-2 bg-[var(--color-brand-gold)] text-black font-medium rounded-lg hover:bg-[var(--color-brand-gold)] disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Create User
+                {isCreatingUser ? 'Creating…' : 'Create User'}
               </button>
             </div>
           </form>
@@ -380,14 +428,14 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
           <p className="text-sm text-[var(--color-text-muted)] mb-4">
             Sends an email invitation. The recipient chooses their own password and is redirected to the platform.
           </p>
-          <form onSubmit={handleInviteUser} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <form onSubmit={handleInviteUser} className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <label className="block text-sm text-[var(--color-text-muted)] mb-1">Full name</label>
               <input
                 name="full_name"
                 type="text"
                 required
-                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               />
             </div>
             <div>
@@ -396,7 +444,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                 name="email"
                 type="email"
                 required
-                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               />
             </div>
             <div>
@@ -404,7 +452,9 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               <select
                 name="role"
                 required
-                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                value={inviteRole}
+                onChange={(e) => setInviteRole(e.target.value as AppRole)}
+                className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               >
                 {manageableRoles.map((r) => (
                   <option key={r.value} value={r.value}>
@@ -415,19 +465,33 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
             </div>
             <div>
               <label className="block text-sm text-[var(--color-text-muted)] mb-1">School</label>
-              <select
-                name="school_id"
-                required
-                defaultValue={currentUser.schoolId ?? ''}
-                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
-              >
-                <option value="">No school</option>
-                {schools.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name}
+              {currentUser.isPlatformAdmin ? (
+                <select
+                  name="school_id"
+                  required={roleRequiresSchool(inviteRole)}
+                  defaultValue=""
+                  className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                >
+                  <option value="">
+                    {roleRequiresSchool(inviteRole) ? 'Select a school' : 'No school'}
                   </option>
-                ))}
-              </select>
+                  {schools.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <>
+                  <input type="hidden" name="school_id" value={currentUser.schoolId ?? ''} />
+                  <div className="min-h-11 rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-background-secondary)] px-4 py-2 text-white">
+                    {currentSchoolName()}
+                  </div>
+                </>
+              )}
+              <p className="text-xs text-[var(--color-text-muted)] mt-1">
+                {roleRequiresSchool(inviteRole) ? 'A school is required for this role.' : 'School assignment is optional for this role.'}
+              </p>
             </div>
             <div>
               <label className="block text-sm text-[var(--color-text-muted)] mb-1">Approval status</label>
@@ -435,7 +499,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                 name="approval_status"
                 required
                 defaultValue="pending"
-                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               >
                 {APPROVAL_STATUSES.map((s) => (
                   <option key={s.value} value={s.value}>
@@ -447,9 +511,10 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
             <div className="md:col-span-2">
               <button
                 type="submit"
-                className="px-6 py-2 bg-[var(--color-brand-gold)] text-black font-medium rounded-lg hover:bg-[var(--color-brand-gold)]"
+                disabled={isInvitingUser}
+                className="min-h-11 w-full sm:w-auto px-6 py-2 bg-[var(--color-brand-gold)] text-black font-medium rounded-lg hover:bg-[var(--color-brand-gold)] disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Send Invitation
+                {isInvitingUser ? 'Sending…' : 'Send Invitation'}
               </button>
             </div>
           </form>
