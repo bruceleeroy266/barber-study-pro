@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
-import { isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
+import { isAdmin, isSchoolAdmin, isPlatformAdminProfile } from '@/lib/auth-helpers'
 import { getUsers, getSchools } from './actions'
 import { UserManagementClient } from './UserManagementClient'
 import BackButton from '@/components/ui/BackButton'
@@ -27,7 +27,7 @@ export default async function UserManagementPage() {
     redirect('/dashboard')
   }
 
-  const isPlatformAdmin = isAdmin(profile.role)
+  const isPlatformAdmin = isPlatformAdminProfile(profile)
   const initialUsers = await getUsers({ limit: 50 })
   const initialSchools = await getSchools()
 
