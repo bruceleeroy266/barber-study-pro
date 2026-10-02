@@ -24,6 +24,7 @@ import StudentIdentity from '@/components/StudentIdentity'
 import { AddNoteForm } from './AddNoteForm'
 import { PrintButton } from './PrintButton'
 import ProgressReportModal from './ProgressReportModal'
+import ChapterAccordionGroup, { ChapterAccordionChevron } from './ChapterAccordionGroup'
 import BackButton from '@/components/ui/BackButton'
 import { getInstructorNotes } from './actions'
 import { type Chapter1MicroCheckAttemptRow } from '@/lib/chapter-1-concepts/micro-check-persistence'
@@ -1213,8 +1214,39 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           </div>
         </div>
 
+        <ChapterAccordionGroup>
         {/* Chapter 1 shared mastery diagnostics */}
-        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+        <details data-chapter-accordion className="group bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <summary className="cursor-pointer list-none p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-brand-gold)]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 1 — {chapters.find((chapter) => chapter.chapter_number === 1)?.title ?? ''}
+                </p>
+                <p className="mt-1 text-sm text-silver-gray">Select to view full mastery and learning-gap diagnostics.</p>
+              </div>
+              <ChapterAccordionChevron />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-[var(--color-brand-gold)]">{chapter1LiveGrade.grade.finalGrade}%</div>
+                <div className="text-[11px] text-silver">Chapter Grade</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter1Diagnostics.overallMastery}%</div>
+                <div className="text-[11px] text-silver">Overall Mastery</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="truncate text-sm font-bold capitalize text-white">{chapter1Diagnostics.overallConfidence.replaceAll('_', ' ')}</div>
+                <div className="text-[11px] text-silver">Confidence</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter1Progress?.progress_percentage ?? 0}%</div>
+                <div className="text-[11px] text-silver">Completion</div>
+              </div>
+            </div>
+          </summary>
+          <section className="border-t border-graphite">
           <div className="p-6 border-b border-graphite">
             <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
               Chapter 1 — History of Barbering
@@ -1302,10 +1334,41 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="px-6 py-4 text-xs text-silver-gray">
             Chapter 1 now uses the shared mastery weights. Formal recovery will only apply after five unique reassessment questions are completed for the target concept.
           </div>
-        </section>
+                  </section>
+        </details>
 
         {/* Chapter 2 shared mastery diagnostics */}
-        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+        <details data-chapter-accordion className="group bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <summary className="cursor-pointer list-none p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-brand-gold)]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 2 — {chapters.find((chapter) => chapter.chapter_number === 2)?.title ?? ''}
+                </p>
+                <p className="mt-1 text-sm text-silver-gray">Select to view full mastery and learning-gap diagnostics.</p>
+              </div>
+              <ChapterAccordionChevron />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-[var(--color-brand-gold)]">{chapter2LiveGrade.grade.finalGrade}%</div>
+                <div className="text-[11px] text-silver">Chapter Grade</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter2Diagnostics.overallMastery}%</div>
+                <div className="text-[11px] text-silver">Overall Mastery</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="truncate text-sm font-bold capitalize text-white">{chapter2Diagnostics.overallConfidence.replaceAll('_', ' ')}</div>
+                <div className="text-[11px] text-silver">Confidence</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter2Progress?.progress_percentage ?? 0}%</div>
+                <div className="text-[11px] text-silver">Completion</div>
+              </div>
+            </div>
+          </summary>
+          <section className="border-t border-graphite">
           <div className="p-6 border-b border-graphite">
             <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
               Chapter 2 — Life Skills
@@ -1393,10 +1456,41 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="px-6 py-4 text-xs text-silver-gray">
             Chapter 2 now uses the shared mastery weights. Formal recovery will only apply after five unique reassessment questions are completed for the target concept.
           </div>
-        </section>
+                  </section>
+        </details>
 
         {/* Chapter 3 shared mastery diagnostics */}
-        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+        <details data-chapter-accordion className="group bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <summary className="cursor-pointer list-none p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-brand-gold)]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 3 — {chapters.find((chapter) => chapter.chapter_number === 3)?.title ?? ''}
+                </p>
+                <p className="mt-1 text-sm text-silver-gray">Select to view full mastery and learning-gap diagnostics.</p>
+              </div>
+              <ChapterAccordionChevron />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-[var(--color-brand-gold)]">{chapter3LiveGrade.grade.finalGrade}%</div>
+                <div className="text-[11px] text-silver">Chapter Grade</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter3Diagnostics.overallMastery}%</div>
+                <div className="text-[11px] text-silver">Overall Mastery</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="truncate text-sm font-bold capitalize text-white">{chapter3Diagnostics.overallConfidence.replaceAll('_', ' ')}</div>
+                <div className="text-[11px] text-silver">Confidence</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter3Progress?.progress_percentage ?? 0}%</div>
+                <div className="text-[11px] text-silver">Completion</div>
+              </div>
+            </div>
+          </summary>
+          <section className="border-t border-graphite">
           <div className="p-6 border-b border-graphite">
             <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
               Chapter 3 — Professional Image
@@ -1496,10 +1590,41 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="px-6 py-4 text-xs text-silver-gray">
             Chapter 3 now uses the shared mastery weights. Formal recovery will only apply after five unique reassessment questions are completed for the target concept.
           </div>
-        </section>
+                  </section>
+        </details>
 
         {/* Chapter 4 shared mastery diagnostics */}
-        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+        <details data-chapter-accordion className="group bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <summary className="cursor-pointer list-none p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-brand-gold)]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 4 — {chapters.find((chapter) => chapter.chapter_number === 4)?.title ?? ''}
+                </p>
+                <p className="mt-1 text-sm text-silver-gray">Select to view full mastery and learning-gap diagnostics.</p>
+              </div>
+              <ChapterAccordionChevron />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-[var(--color-brand-gold)]">{chapter4LiveGrade.grade.finalGrade}%</div>
+                <div className="text-[11px] text-silver">Chapter Grade</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter4Diagnostics.overallMastery}%</div>
+                <div className="text-[11px] text-silver">Overall Mastery</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="truncate text-sm font-bold capitalize text-white">{chapter4Diagnostics.overallConfidence.replaceAll('_', ' ')}</div>
+                <div className="text-[11px] text-silver">Confidence</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter4Progress?.progress_percentage ?? 0}%</div>
+                <div className="text-[11px] text-silver">Completion</div>
+              </div>
+            </div>
+          </summary>
+          <section className="border-t border-graphite">
           <div className="p-6 border-b border-graphite">
             <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
               Chapter 4 — Infection Control
@@ -1599,10 +1724,41 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="px-6 py-4 text-xs text-silver-gray">
             Chapter 4 now uses the shared mastery weights. Formal recovery will only apply after five unique reassessment questions are completed for the target concept.
           </div>
-        </section>
+                  </section>
+        </details>
 
         {/* Chapter 5 shared mastery diagnostics */}
-        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+        <details data-chapter-accordion className="group bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <summary className="cursor-pointer list-none p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-brand-gold)]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 5 — {chapters.find((chapter) => chapter.chapter_number === 5)?.title ?? ''}
+                </p>
+                <p className="mt-1 text-sm text-silver-gray">Select to view full mastery and learning-gap diagnostics.</p>
+              </div>
+              <ChapterAccordionChevron />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-[var(--color-brand-gold)]">{chapter5LiveGrade.grade.finalGrade}%</div>
+                <div className="text-[11px] text-silver">Chapter Grade</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter5Diagnostics.overallMastery}%</div>
+                <div className="text-[11px] text-silver">Overall Mastery</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="truncate text-sm font-bold capitalize text-white">{chapter5Diagnostics.overallConfidence.replaceAll('_', ' ')}</div>
+                <div className="text-[11px] text-silver">Confidence</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter5Progress?.progress_percentage ?? 0}%</div>
+                <div className="text-[11px] text-silver">Completion</div>
+              </div>
+            </div>
+          </summary>
+          <section className="border-t border-graphite">
           <div className="p-6 border-b border-graphite">
             <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
               Chapter 5 — Implements, Tools & Equipment
@@ -1702,10 +1858,41 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="px-6 py-4 text-xs text-silver-gray">
             Chapter 5 now uses the shared mastery weights. Formal recovery will only apply after five unique reassessment questions are completed for the target concept.
           </div>
-        </section>
+                  </section>
+        </details>
 
         {/* Chapter 6 shared mastery diagnostics */}
-        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+        <details data-chapter-accordion className="group bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <summary className="cursor-pointer list-none p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-brand-gold)]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 6 — {chapters.find((chapter) => chapter.chapter_number === 6)?.title ?? ''}
+                </p>
+                <p className="mt-1 text-sm text-silver-gray">Select to view full mastery and learning-gap diagnostics.</p>
+              </div>
+              <ChapterAccordionChevron />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-[var(--color-brand-gold)]">{chapter6LiveGrade.grade.finalGrade}%</div>
+                <div className="text-[11px] text-silver">Chapter Grade</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter6Diagnostics.overallMastery}%</div>
+                <div className="text-[11px] text-silver">Overall Mastery</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="truncate text-sm font-bold capitalize text-white">{chapter6Diagnostics.overallConfidence.replaceAll('_', ' ')}</div>
+                <div className="text-[11px] text-silver">Confidence</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter6Progress?.progress_percentage ?? 0}%</div>
+                <div className="text-[11px] text-silver">Completion</div>
+              </div>
+            </div>
+          </summary>
+          <section className="border-t border-graphite">
           <div className="p-6 border-b border-graphite">
             <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
               Chapter 6 — Anatomy & Physiology
@@ -1793,10 +1980,41 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="px-6 py-4 text-xs text-silver-gray">
             Chapter 6 now uses the shared mastery weights. Formal recovery will only apply after five unique reassessment questions are completed for the target concept.
           </div>
-        </section>
+                  </section>
+        </details>
 
         {/* Chapter 7 diagnostic & intervention presentation */}
-        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+        <details data-chapter-accordion className="group bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <summary className="cursor-pointer list-none p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-brand-gold)]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 7 — {chapters.find((chapter) => chapter.chapter_number === 7)?.title ?? ''}
+                </p>
+                <p className="mt-1 text-sm text-silver-gray">Select to view full mastery and learning-gap diagnostics.</p>
+              </div>
+              <ChapterAccordionChevron />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-[var(--color-brand-gold)]">{chapter7LiveGrade.grade.finalGrade}%</div>
+                <div className="text-[11px] text-silver">Chapter Grade</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter7Diagnostics.overallMastery}%</div>
+                <div className="text-[11px] text-silver">Overall Mastery</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="truncate text-sm font-bold capitalize text-white">{chapter7Diagnostics.overallConfidence.replaceAll('_', ' ')}</div>
+                <div className="text-[11px] text-silver">Confidence</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter7Progress?.progress_percentage ?? 0}%</div>
+                <div className="text-[11px] text-silver">Completion</div>
+              </div>
+            </div>
+          </summary>
+          <section className="border-t border-graphite">
           <div className="p-6 border-b border-graphite">
             <div className="flex flex-col gap-4">
               <div>
@@ -1963,10 +2181,41 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="px-6 pb-6 text-xs text-silver-gray">
             Grade hierarchy remains locked: micro checks 20%, flashcards 10%, chapter assessment 40%, scenario/application 15%, remediation/reassessment recovery 15%. Missing grade components are not replaced by completion activity.
           </div>
-        </section>
+                  </section>
+        </details>
 
         {/* Chapter 8 mastery, safety, remediation & instructor visibility */}
-        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+        <details data-chapter-accordion className="group bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <summary className="cursor-pointer list-none p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-brand-gold)]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 8 — {chapters.find((chapter) => chapter.chapter_number === 8)?.title ?? ''}
+                </p>
+                <p className="mt-1 text-sm text-silver-gray">Select to view full mastery and learning-gap diagnostics.</p>
+              </div>
+              <ChapterAccordionChevron />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-[var(--color-brand-gold)]">{chapter8LiveGrade.grade.finalGrade}%</div>
+                <div className="text-[11px] text-silver">Chapter Grade</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter8Diagnostics.overallMastery}%</div>
+                <div className="text-[11px] text-silver">Overall Mastery</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="truncate text-sm font-bold capitalize text-white">{chapter8Diagnostics.overallConfidence.replaceAll('_', ' ')}</div>
+                <div className="text-[11px] text-silver">Confidence</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter8Progress?.progress_percentage ?? 0}%</div>
+                <div className="text-[11px] text-silver">Completion</div>
+              </div>
+            </div>
+          </summary>
+          <section className="border-t border-graphite">
           <div className="p-6 border-b border-graphite">
             <div className="flex flex-col gap-4">
               <div>
@@ -2138,10 +2387,41 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="px-6 pb-6 text-xs text-silver-gray">
             Chapter 8 preserves first-attempt misses after recovery. Formal reassessment is five fresh questions; critical electrical/light safety concepts require 100% when safety escalation requires reassessment.
           </div>
-        </section>
+                  </section>
+        </details>
 
         {/* Chapter 9 mastery, safety, remediation & instructor visibility */}
-        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+        <details data-chapter-accordion className="group bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <summary className="cursor-pointer list-none p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-brand-gold)]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 9 — {chapters.find((chapter) => chapter.chapter_number === 9)?.title ?? ''}
+                </p>
+                <p className="mt-1 text-sm text-silver-gray">Select to view full mastery and learning-gap diagnostics.</p>
+              </div>
+              <ChapterAccordionChevron />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-[var(--color-brand-gold)]">{chapter9LiveGrade.grade.finalGrade}%</div>
+                <div className="text-[11px] text-silver">Chapter Grade</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter9Diagnostics.overallMastery}%</div>
+                <div className="text-[11px] text-silver">Overall Mastery</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="truncate text-sm font-bold capitalize text-white">{chapter9Diagnostics.overallConfidence.replaceAll('_', ' ')}</div>
+                <div className="text-[11px] text-silver">Confidence</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter9Progress?.progress_percentage ?? 0}%</div>
+                <div className="text-[11px] text-silver">Completion</div>
+              </div>
+            </div>
+          </summary>
+          <section className="border-t border-graphite">
           <div className="p-6 border-b border-graphite">
             <div className="flex flex-col gap-4">
               <div>
@@ -2302,10 +2582,41 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="px-6 pb-6 text-xs text-silver-gray">
             Initial misses remain historical evidence after recovery. Chapter 9 uses the shared mastery hierarchy: micro checks 20%, flashcards 10%, chapter assessment 40%, scenario/application 15%, and remediation/reassessment recovery 15%.
           </div>
-        </section>
+                  </section>
+        </details>
 
         {/* Chapter 10 mastery, safety, remediation & instructor visibility */}
-        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+        <details data-chapter-accordion className="group bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <summary className="cursor-pointer list-none p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-brand-gold)]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 10 — {chapters.find((chapter) => chapter.chapter_number === 10)?.title ?? ''}
+                </p>
+                <p className="mt-1 text-sm text-silver-gray">Select to view full mastery and learning-gap diagnostics.</p>
+              </div>
+              <ChapterAccordionChevron />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-[var(--color-brand-gold)]">{chapter10LiveGrade.grade.finalGrade}%</div>
+                <div className="text-[11px] text-silver">Chapter Grade</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter10Diagnostics.overallMastery}%</div>
+                <div className="text-[11px] text-silver">Overall Mastery</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="truncate text-sm font-bold capitalize text-white">{chapter10Diagnostics.overallConfidence.replaceAll('_', ' ')}</div>
+                <div className="text-[11px] text-silver">Confidence</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter10Progress?.progress_percentage ?? 0}%</div>
+                <div className="text-[11px] text-silver">Completion</div>
+              </div>
+            </div>
+          </summary>
+          <section className="border-t border-graphite">
           <div className="p-6 border-b border-graphite">
             <div className="flex flex-col gap-4">
               <div>
@@ -2466,10 +2777,41 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="px-6 pb-6 text-xs text-silver-gray">
             Initial misses remain historical evidence after recovery. Chapter 10 uses the shared mastery hierarchy: micro checks 20%, flashcards 10%, chapter assessment 40%, scenario/application 15%, and remediation/reassessment recovery 15%.
           </div>
-        </section>
+                  </section>
+        </details>
 
         {/* Chapter 11 mastery, safety, remediation & instructor visibility */}
-        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+        <details data-chapter-accordion className="group bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <summary className="cursor-pointer list-none p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-brand-gold)]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 11 — {chapters.find((chapter) => chapter.chapter_number === 11)?.title ?? ''}
+                </p>
+                <p className="mt-1 text-sm text-silver-gray">Select to view full mastery and learning-gap diagnostics.</p>
+              </div>
+              <ChapterAccordionChevron />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-[var(--color-brand-gold)]">{chapter11LiveGrade.grade.finalGrade}%</div>
+                <div className="text-[11px] text-silver">Chapter Grade</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter11Diagnostics.overallMastery}%</div>
+                <div className="text-[11px] text-silver">Overall Mastery</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="truncate text-sm font-bold capitalize text-white">{chapter11Diagnostics.overallConfidence.replaceAll('_', ' ')}</div>
+                <div className="text-[11px] text-silver">Confidence</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter11Progress?.progress_percentage ?? 0}%</div>
+                <div className="text-[11px] text-silver">Completion</div>
+              </div>
+            </div>
+          </summary>
+          <section className="border-t border-graphite">
           <div className="p-6 border-b border-graphite">
             <div className="flex flex-col gap-4">
               <div>
@@ -2630,10 +2972,41 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="px-6 pb-6 text-xs text-silver-gray">
             Initial misses remain historical evidence after recovery. Chapter 11 uses the shared mastery hierarchy: micro checks 20%, flashcards 10%, chapter assessment 40%, scenario/application 15%, and remediation/reassessment recovery 15%.
           </div>
-        </section>
+                  </section>
+        </details>
 
         {/* Chapter 12 mastery, safety, remediation & instructor visibility */}
-        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+        <details data-chapter-accordion className="group bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <summary className="cursor-pointer list-none p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-brand-gold)]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 12 — {chapters.find((chapter) => chapter.chapter_number === 12)?.title ?? ''}
+                </p>
+                <p className="mt-1 text-sm text-silver-gray">Select to view full mastery and learning-gap diagnostics.</p>
+              </div>
+              <ChapterAccordionChevron />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-[var(--color-brand-gold)]">{chapter12LiveGrade.grade.finalGrade}%</div>
+                <div className="text-[11px] text-silver">Chapter Grade</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter12Diagnostics.overallMastery}%</div>
+                <div className="text-[11px] text-silver">Overall Mastery</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="truncate text-sm font-bold capitalize text-white">{chapter12Diagnostics.overallConfidence.replaceAll('_', ' ')}</div>
+                <div className="text-[11px] text-silver">Confidence</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter12Progress?.progress_percentage ?? 0}%</div>
+                <div className="text-[11px] text-silver">Completion</div>
+              </div>
+            </div>
+          </summary>
+          <section className="border-t border-graphite">
           <div className="p-6 border-b border-graphite">
             <div className="flex flex-col gap-4">
               <div>
@@ -2794,10 +3167,41 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="px-6 pb-6 text-xs text-silver-gray">
             Initial misses remain historical evidence after recovery. Chapter 12 uses the shared mastery hierarchy: micro checks 20%, flashcards 10%, chapter assessment 40%, scenario/application 15%, and remediation/reassessment recovery 15%.
           </div>
-        </section>
+                  </section>
+        </details>
 
         {/* Chapter 13 mastery, safety, remediation & instructor visibility */}
-        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+        <details data-chapter-accordion className="group bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <summary className="cursor-pointer list-none p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-brand-gold)]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 13 — {chapters.find((chapter) => chapter.chapter_number === 13)?.title ?? ''}
+                </p>
+                <p className="mt-1 text-sm text-silver-gray">Select to view full mastery and learning-gap diagnostics.</p>
+              </div>
+              <ChapterAccordionChevron />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-[var(--color-brand-gold)]">{chapter13LiveGrade.grade.finalGrade}%</div>
+                <div className="text-[11px] text-silver">Chapter Grade</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter13Diagnostics.overallMastery}%</div>
+                <div className="text-[11px] text-silver">Overall Mastery</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="truncate text-sm font-bold capitalize text-white">{chapter13Diagnostics.overallConfidence.replaceAll('_', ' ')}</div>
+                <div className="text-[11px] text-silver">Confidence</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter13Progress?.progress_percentage ?? 0}%</div>
+                <div className="text-[11px] text-silver">Completion</div>
+              </div>
+            </div>
+          </summary>
+          <section className="border-t border-graphite">
           <div className="p-6 border-b border-graphite">
             <div className="flex flex-col gap-4">
               <div>
@@ -2958,10 +3362,41 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="px-6 pb-6 text-xs text-silver-gray">
             Initial misses remain historical evidence after recovery. Chapter 13 uses the shared mastery hierarchy: micro checks 20%, flashcards 10%, chapter assessment 40%, scenario/application 15%, and remediation/reassessment recovery 15%.
           </div>
-        </section>
+                  </section>
+        </details>
 
         {/* Chapter 14 mastery, safety, remediation & instructor visibility */}
-        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+        <details data-chapter-accordion className="group bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <summary className="cursor-pointer list-none p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-brand-gold)]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 14 — {chapters.find((chapter) => chapter.chapter_number === 14)?.title ?? ''}
+                </p>
+                <p className="mt-1 text-sm text-silver-gray">Select to view full mastery and learning-gap diagnostics.</p>
+              </div>
+              <ChapterAccordionChevron />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-[var(--color-brand-gold)]">{chapter14LiveGrade.grade.finalGrade}%</div>
+                <div className="text-[11px] text-silver">Chapter Grade</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter14Diagnostics.overallMastery}%</div>
+                <div className="text-[11px] text-silver">Overall Mastery</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="truncate text-sm font-bold capitalize text-white">{chapter14Diagnostics.overallConfidence.replaceAll('_', ' ')}</div>
+                <div className="text-[11px] text-silver">Confidence</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter14Progress?.progress_percentage ?? 0}%</div>
+                <div className="text-[11px] text-silver">Completion</div>
+              </div>
+            </div>
+          </summary>
+          <section className="border-t border-graphite">
           <div className="p-6 border-b border-graphite">
             <div className="flex flex-col gap-4">
               <div>
@@ -3122,11 +3557,42 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="px-6 pb-6 text-xs text-silver-gray">
             Initial misses remain historical evidence after recovery. Chapter 14 uses the shared mastery hierarchy: micro checks 20%, flashcards 10%, chapter assessment 40%, scenario/application 15%, and remediation/reassessment recovery 15%.
           </div>
-        </section>
+                  </section>
+        </details>
 
 
         {/* Chapter 15 mastery, safety, remediation & instructor visibility */}
-        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+        <details data-chapter-accordion className="group bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <summary className="cursor-pointer list-none p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-brand-gold)]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 15 — {chapters.find((chapter) => chapter.chapter_number === 15)?.title ?? ''}
+                </p>
+                <p className="mt-1 text-sm text-silver-gray">Select to view full mastery and learning-gap diagnostics.</p>
+              </div>
+              <ChapterAccordionChevron />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-[var(--color-brand-gold)]">{chapter15LiveGrade.grade.finalGrade}%</div>
+                <div className="text-[11px] text-silver">Chapter Grade</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter15Diagnostics.overallMastery}%</div>
+                <div className="text-[11px] text-silver">Overall Mastery</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="truncate text-sm font-bold capitalize text-white">{chapter15Diagnostics.overallConfidence.replaceAll('_', ' ')}</div>
+                <div className="text-[11px] text-silver">Confidence</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter15Progress?.progress_percentage ?? 0}%</div>
+                <div className="text-[11px] text-silver">Completion</div>
+              </div>
+            </div>
+          </summary>
+          <section className="border-t border-graphite">
           <div className="p-6 border-b border-graphite">
             <div className="flex flex-col gap-4">
               <div>
@@ -3287,10 +3753,41 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="px-6 pb-6 text-xs text-silver-gray">
             Initial misses remain historical evidence after recovery. Chapter 15 uses the shared mastery hierarchy: micro checks 20%, flashcards 10%, chapter assessment 40%, scenario/application 15%, and remediation/reassessment recovery 15%.
           </div>
-        </section>
+                  </section>
+        </details>
 
         {/* Chapter 16 mastery, safety, remediation & instructor visibility */}
-        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+        <details data-chapter-accordion className="group bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <summary className="cursor-pointer list-none p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-brand-gold)]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 16 — {chapters.find((chapter) => chapter.chapter_number === 16)?.title ?? ''}
+                </p>
+                <p className="mt-1 text-sm text-silver-gray">Select to view full mastery and learning-gap diagnostics.</p>
+              </div>
+              <ChapterAccordionChevron />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-[var(--color-brand-gold)]">{chapter16LiveGrade.grade.finalGrade}%</div>
+                <div className="text-[11px] text-silver">Chapter Grade</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter16Diagnostics.overallMastery}%</div>
+                <div className="text-[11px] text-silver">Overall Mastery</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="truncate text-sm font-bold capitalize text-white">{chapter16Diagnostics.overallConfidence.replaceAll('_', ' ')}</div>
+                <div className="text-[11px] text-silver">Confidence</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter16Progress?.progress_percentage ?? 0}%</div>
+                <div className="text-[11px] text-silver">Completion</div>
+              </div>
+            </div>
+          </summary>
+          <section className="border-t border-graphite">
           <div className="p-6 border-b border-graphite">
             <div className="flex flex-col gap-4">
               <div>
@@ -3451,10 +3948,41 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="px-6 pb-6 text-xs text-silver-gray">
             Initial misses remain historical evidence after recovery. Chapter 16 uses the shared mastery hierarchy: micro checks 20%, flashcards 10%, chapter assessment 40%, scenario/application 15%, and remediation/reassessment recovery 15%.
           </div>
-        </section>
+                  </section>
+        </details>
 
         {/* Chapter 17 mastery, chemical safety, remediation & instructor visibility */}
-        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+        <details data-chapter-accordion className="group bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <summary className="cursor-pointer list-none p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-brand-gold)]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 17 — {chapters.find((chapter) => chapter.chapter_number === 17)?.title ?? ''}
+                </p>
+                <p className="mt-1 text-sm text-silver-gray">Select to view full mastery and learning-gap diagnostics.</p>
+              </div>
+              <ChapterAccordionChevron />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-[var(--color-brand-gold)]">{chapter17LiveGrade.grade.finalGrade}%</div>
+                <div className="text-[11px] text-silver">Chapter Grade</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter17Diagnostics.overallMastery}%</div>
+                <div className="text-[11px] text-silver">Overall Mastery</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="truncate text-sm font-bold capitalize text-white">{chapter17Diagnostics.overallConfidence.replaceAll('_', ' ')}</div>
+                <div className="text-[11px] text-silver">Confidence</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter17Progress?.progress_percentage ?? 0}%</div>
+                <div className="text-[11px] text-silver">Completion</div>
+              </div>
+            </div>
+          </summary>
+          <section className="border-t border-graphite">
           <div className="p-6 border-b border-graphite">
             <div className="flex flex-col gap-4">
               <div>
@@ -3587,10 +4115,41 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="px-6 pb-6 text-xs text-silver-gray">
             Initial misses remain historical evidence after recovery. Chapter 17 uses the shared mastery hierarchy: micro checks 20%, flashcards 10%, chapter assessment 40%, scenario/application 15%, and remediation/reassessment recovery 15%.
           </div>
-        </section>
+                  </section>
+        </details>
 
         {/* Chapter 18 mastery, haircolor/lightener safety, remediation & instructor visibility */}
-        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+        <details data-chapter-accordion className="group bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <summary className="cursor-pointer list-none p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-brand-gold)]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 18 — {chapters.find((chapter) => chapter.chapter_number === 18)?.title ?? ''}
+                </p>
+                <p className="mt-1 text-sm text-silver-gray">Select to view full mastery and learning-gap diagnostics.</p>
+              </div>
+              <ChapterAccordionChevron />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-[var(--color-brand-gold)]">{chapter18LiveGrade.grade.finalGrade}%</div>
+                <div className="text-[11px] text-silver">Chapter Grade</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter18Diagnostics.overallMastery}%</div>
+                <div className="text-[11px] text-silver">Overall Mastery</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="truncate text-sm font-bold capitalize text-white">{chapter18Diagnostics.overallConfidence.replaceAll('_', ' ')}</div>
+                <div className="text-[11px] text-silver">Confidence</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter18Progress?.progress_percentage ?? 0}%</div>
+                <div className="text-[11px] text-silver">Completion</div>
+              </div>
+            </div>
+          </summary>
+          <section className="border-t border-graphite">
           <div className="p-6 border-b border-graphite">
             <div className="flex flex-col gap-4">
               <div>
@@ -3723,10 +4282,41 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="px-6 pb-6 text-xs text-silver-gray">
             Initial misses remain historical evidence after recovery. Chapter 18 uses the shared mastery hierarchy: micro checks 20%, flashcards 10%, chapter assessment 40%, scenario/application 15%, and remediation/reassessment recovery 15%.
           </div>
-        </section>
+                  </section>
+        </details>
 
         {/* Chapter 19 mastery, licensing/compliance, safety, remediation & instructor visibility */}
-        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+        <details data-chapter-accordion className="group bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <summary className="cursor-pointer list-none p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-brand-gold)]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 19 — {chapters.find((chapter) => chapter.chapter_number === 19)?.title ?? ''}
+                </p>
+                <p className="mt-1 text-sm text-silver-gray">Select to view full mastery and learning-gap diagnostics.</p>
+              </div>
+              <ChapterAccordionChevron />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-[var(--color-brand-gold)]">{chapter19LiveGrade.grade.finalGrade}%</div>
+                <div className="text-[11px] text-silver">Chapter Grade</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter19Diagnostics.overallMastery}%</div>
+                <div className="text-[11px] text-silver">Overall Mastery</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="truncate text-sm font-bold capitalize text-white">{chapter19Diagnostics.overallConfidence.replaceAll('_', ' ')}</div>
+                <div className="text-[11px] text-silver">Confidence</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter19Progress?.progress_percentage ?? 0}%</div>
+                <div className="text-[11px] text-silver">Completion</div>
+              </div>
+            </div>
+          </summary>
+          <section className="border-t border-graphite">
           <div className="p-6 border-b border-graphite">
             <div className="flex flex-col gap-4">
               <div>
@@ -3875,10 +4465,41 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="px-6 pb-6 text-xs text-silver-gray">
             Initial misses remain historical evidence after recovery. Chapter 19 keeps practical bodily-safety escalation distinct from licensing and employment-law compliance review and uses the shared 20/10/40/15/15 mastery hierarchy.
           </div>
-        </section>
+                  </section>
+        </details>
 
         {/* Chapter 20 mastery, compliance, remediation & instructor visibility */}
-        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+        <details data-chapter-accordion className="group bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <summary className="cursor-pointer list-none p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-brand-gold)]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 20 — {chapters.find((chapter) => chapter.chapter_number === 20)?.title ?? ''}
+                </p>
+                <p className="mt-1 text-sm text-silver-gray">Select to view full mastery and learning-gap diagnostics.</p>
+              </div>
+              <ChapterAccordionChevron />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-[var(--color-brand-gold)]">{chapter20LiveGrade.grade.finalGrade}%</div>
+                <div className="text-[11px] text-silver">Chapter Grade</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter20Diagnostics.overallMastery}%</div>
+                <div className="text-[11px] text-silver">Overall Mastery</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="truncate text-sm font-bold capitalize text-white">{chapter20Diagnostics.overallConfidence.replaceAll('_', ' ')}</div>
+                <div className="text-[11px] text-silver">Confidence</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter20Progress?.progress_percentage ?? 0}%</div>
+                <div className="text-[11px] text-silver">Completion</div>
+              </div>
+            </div>
+          </summary>
+          <section className="border-t border-graphite">
           <div className="p-6 border-b border-graphite">
             <div className="flex flex-col gap-4">
               <div>
@@ -4011,10 +4632,41 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="px-6 pb-6 text-xs text-silver-gray">
             Preserved initial misses: {chapter20Diagnostics.preservedInitialMissCount}. Chapter 20 compliance review stays separate from bodily-safety escalation; successful 80% reassessment can raise mastery without deleting the original diagnostic record.
           </div>
-        </section>
+                  </section>
+        </details>
 
         {/* Chapter 21 mastery, business/legal compliance, remediation & instructor visibility */}
-        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
+        <details data-chapter-accordion className="group bg-charcoal border border-graphite rounded-xl overflow-hidden">
+          <summary className="cursor-pointer list-none p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-brand-gold)]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
+                  Chapter 21 — {chapters.find((chapter) => chapter.chapter_number === 21)?.title ?? ''}
+                </p>
+                <p className="mt-1 text-sm text-silver-gray">Select to view full mastery and learning-gap diagnostics.</p>
+              </div>
+              <ChapterAccordionChevron />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-[var(--color-brand-gold)]">{chapter21LiveGrade.grade.finalGrade}%</div>
+                <div className="text-[11px] text-silver">Chapter Grade</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter21Diagnostics.overallMastery}%</div>
+                <div className="text-[11px] text-silver">Overall Mastery</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="truncate text-sm font-bold capitalize text-white">{chapter21Diagnostics.overallConfidence.replaceAll('_', ' ')}</div>
+                <div className="text-[11px] text-silver">Confidence</div>
+              </div>
+              <div className="rounded-lg border border-graphite bg-black px-3 py-2">
+                <div className="text-lg font-bold text-white">{chapter21Progress?.progress_percentage ?? 0}%</div>
+                <div className="text-[11px] text-silver">Completion</div>
+              </div>
+            </div>
+          </summary>
+          <section className="border-t border-graphite">
           <div className="p-6 border-b border-graphite">
             <div className="flex flex-col gap-4">
               <div>
@@ -4147,7 +4799,9 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="px-6 pb-6 text-xs text-silver-gray">
             Preserved initial misses: {chapter21Diagnostics.preservedInitialMissCount}. Chapter 21 compliance review stays separate from bodily-safety escalation; successful 80% reassessment can raise mastery without deleting the original diagnostic record.
           </div>
-        </section>
+                  </section>
+        </details>
+        </ChapterAccordionGroup>
 
         {/* Phase 5 — Board Readiness & Analytics */}
         <BoardReadinessCard readiness={boardReadiness} />
