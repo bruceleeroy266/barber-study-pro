@@ -112,8 +112,9 @@ describe('PO-1C.2 certified comprehensive-exam inventory', () => {
 
   it('registers every imported item as both scored-eligible and unscored-eligible', () => {
     for (const key of ['scientific', 'implements', 'hair', 'facial'] as const) {
-      expect(sql[key]).toContain(
-        'select cfg.id,qs.id,true,true,true from cfg cross join qs',
+      const normalized = sql[key].replace(/\s+/g, ' ')
+      expect(normalized).toContain(
+        'select cfg.id, qs.id, true, true, true from cfg cross join qs',
       )
     }
   })
