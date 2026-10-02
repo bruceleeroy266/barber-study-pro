@@ -141,11 +141,6 @@ export default async function StudentGradesPage() {
                                 {grade.percentage}%
                               </td>
                               <td className="p-3">
-                                <Badge
-                                  variant={grade.percentage >= 90 ? 'success' : grade.percentage >= 80 ? 'gold' : grade.percentage >= 70 ? 'warning' : 'error'}
-                                  size="sm"
-                                >
-                                </Badge>
                               </td>
                               <td className="p-3 text-[var(--color-text-muted)]">{grade.notes || '—'}</td>
                             </tr>
