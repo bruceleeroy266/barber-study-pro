@@ -4,13 +4,6 @@ import { useState, useTransition } from 'react'
 import {
   createUser,
   inviteUser,
-  updateUserStatus,
-  toggleUserDisabled,
-  changeUserRole,
-  assignUserSchool,
-  requirePasswordChange,
-  resetUserPassword,
-  resendUserSetupLink,
   deleteUser,
   getUsers,
   getSchools,
@@ -183,19 +176,6 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
       }
     } finally {
       setIsInvitingUser(false)
-    }
-  }
-
-  async function handleAction<T extends unknown[]>(
-    action: (...args: T) => Promise<{ success: boolean; error?: string }>,
-    ...args: T
-  ) {
-    const result = await action(...args)
-    if (result.success) {
-      setMessage({ type: 'success', text: 'Action completed' })
-      await loadUsers(offset)
-    } else {
-      setMessage({ type: 'error', text: result.error || 'Action failed' })
     }
   }
 
@@ -592,60 +572,26 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                   <td className="px-4 py-3 text-white">{user.full_name}</td>
                   <td className="px-4 py-3 text-[var(--color-text-secondary)]">{user.email}</td>
                   <td className="px-4 py-3">
-                    <select
-                      value={user.role}
-                      onChange={(e) => handleAction(changeUserRole, user.id, e.target.value as AppRole)}
-                      className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded px-2 py-1 text-sm text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
-                    >
-                      {manageableRoles.map((r) => (
-                        <option key={r.value} value={r.value}>
-                          {r.label}
-                        </option>
-                      ))}
-                    </select>
+                    <span className="inline-flex rounded-full border border-gold/30 bg-gold/10 px-2 py-1 text-xs font-medium text-gold">
+                      {ROLES.find((r) => r.value === user.role)?.label ?? user.role}
+                    </span>
                   </td>
                   <td className="px-4 py-3 text-[var(--color-text-secondary)]">
-                    {currentUser.isPlatformAdmin ? (
-                      <select
-                        value={user.school_id ?? ''}
-                        onChange={(e) => handleAction(assignUserSchool, user.id, e.target.value || null)}
-                        className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded px-2 py-1 text-sm text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
-                      >
-                        <option value="">No school</option>
-                        {schools.map((s) => (
-                          <option key={s.id} value={s.id}>
-                            {s.name}
-                          </option>
-                        ))}
-                      </select>
-                    ) : (
-                      user.school_name ?? '—'
-                    )}
+                    {user.school_name ?? 'No school'}
+                  </td>
+                  <td className="px-4 py-3 text-[var(--color-text-secondary)]">
+                    {APPROVAL_STATUSES.find((status) => status.value === user.approval_status)?.label ?? user.approval_status}
                   </td>
                   <td className="px-4 py-3">
-                    <select
-                      value={user.approval_status}
-                      onChange={(e) => handleAction(updateUserStatus, user.id, e.target.value as 'approved' | 'rejected')}
-                      className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded px-2 py-1 text-sm text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
-                    >
-                      {APPROVAL_STATUSES.map((s) => (
-                        <option key={s.value} value={s.value}>
-                          {s.label}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td className="px-4 py-3">
-                    <button
-                      onClick={() => handleAction(toggleUserDisabled, user.id, !user.is_disabled)}
-                      className={`px-2 py-1 rounded text-xs font-medium ${
+                    <span
+                      className={`inline-flex px-2 py-1 rounded text-xs font-medium ${
                         user.is_disabled
                           ? 'bg-silver/20 text-silver border border-silver/30'
                           : 'bg-gold/20 text-gold border border-gold/30'
                       }`}
                     >
                       {user.is_disabled ? 'Disabled' : 'Enabled'}
-                    </button>
+                    </span>
                   </td>
                   <td className="px-4 py-3">
                     <span
@@ -662,64 +608,21 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-2">
                       <button
-                        onClick={() => handleAction(resendUserSetupLink, user.id)}
-                        disabled={user.is_disabled || user.approval_status === 'rejected'}
-                        title={
-                          user.is_disabled
-                            ? 'Re-enable this account before sending an access link'
-                            : user.approval_status === 'rejected'
-                              ? 'Approve this account before sending an access link'
-                              : 'Send a fresh account setup / password recovery link'
-                        }
-                        className="px-2 py-1 text-xs bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/30 rounded hover:bg-[var(--color-brand-gold)]/20 disabled:opacity-40 disabled:cursor-not-allowed"
+                        type="button"
+                        onClick={() => setManageCandidate(user)}
+                        className="px-3 py-1.5 text-xs bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/30 rounded hover:bg-[var(--color-brand-gold)]/20"
                       >
-                        Send setup link
-                      </button>
-                      <button
-                        onClick={() => handleAction(requirePasswordChange, user.id)}
-                        className="px-2 py-1 text-xs bg-[var(--color-background-secondary)] text-[var(--color-text-secondary)] border border-[var(--color-border-primary)] rounded hover:border-[var(--color-brand-gold)]/50"
-                      >
-                        Require password reset
-                      </button>
-                      <button
-                        onClick={() => {
-                          const password = prompt('Enter new temporary password (8-72 chars):')
-                          if (password) handleAction(resetUserPassword, user.id, password)
-                        }}
-                        className="px-2 py-1 text-xs bg-[var(--color-background-secondary)] text-[var(--color-text-secondary)] border border-[var(--color-border-primary)] rounded hover:border-[var(--color-brand-gold)]/50"
-                      >
-                        Reset password
+                        Manage user
                       </button>
                       {user.role === 'student' && (
-                        <span className="inline-flex items-center gap-1">
-                          {typeof user.enrollment_count === 'number' && (
-                            <span
-                              className={`inline-flex items-center px-1.5 py-0.5 text-xs rounded-full ${
-                                user.enrollment_count > 0
-                                  ? 'bg-gold/10 text-gold border border-gold/20'
-                                  : 'bg-[var(--color-border-secondary)] text-[var(--color-text-muted)] border border-silver-gray'
-                              }`}
-                              title={`${user.enrollment_count} active enrollment${user.enrollment_count !== 1 ? 's' : ''}`}
-                            >
-                              {user.enrollment_count} program{user.enrollment_count !== 1 ? 's' : ''}
-                            </span>
-                          )}
-                          <button
-                            onClick={() => setEnrollmentStudent(user)}
-                            className="px-2 py-1 text-xs bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/30 rounded hover:bg-[var(--color-brand-gold)]/20"
-                          >
-                            Enroll
-                          </button>
-                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setEnrollmentStudent(user)}
+                          className="px-3 py-1.5 text-xs bg-[var(--color-background-secondary)] text-[var(--color-text-secondary)] border border-[var(--color-border-primary)] rounded hover:border-[var(--color-brand-gold)]/50"
+                        >
+                          Manage enrollment
+                        </button>
                       )}
-                      <button
-                        onClick={() => setDeleteCandidate(user)}
-                        disabled={user.id === currentUser.id}
-                        title={user.id === currentUser.id ? 'You cannot delete your own account' : 'Delete user'}
-                        className="px-2 py-1 text-xs bg-silver/10 text-silver border border-silver/30 rounded hover:bg-silver/20 disabled:opacity-40 disabled:cursor-not-allowed"
-                      >
-                        Delete
-                      </button>
                     </div>
                   </td>
                 </tr>
