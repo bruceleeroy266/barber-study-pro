@@ -111,10 +111,25 @@ export default function RemediationPageClient({
     studentState: StudentRemediationState
   } | null>(null)
 
-  const reservationIsStale = useMemo(() => {
-    if (!reservationStartedAt) return false
-    const elapsedMs = Date.now() - reservationStartedAt.getTime()
-    return elapsedMs > 60 * 60 * 1000
+  const [reservationIsStale, setReservationIsStale] = useState(false)
+
+  useEffect(() => {
+    if (!reservationStartedAt) {
+      setReservationIsStale(false)
+      return
+    }
+
+    const expiresAt = reservationStartedAt.getTime() + 60 * 60 * 1000
+    const remainingMs = Math.max(0, expiresAt - Date.now())
+
+    if (remainingMs === 0) {
+      setReservationIsStale(true)
+      return
+    }
+
+    setReservationIsStale(false)
+    const timeout = window.setTimeout(() => setReservationIsStale(true), remainingMs)
+    return () => window.clearTimeout(timeout)
   }, [reservationStartedAt])
 
   const beginAction = useCallback((action: NonNullable<typeof activeAction>) => {
