@@ -26,6 +26,18 @@ interface CommunicationReadRow {
   read_at?: string
 }
 
+interface CommunicationThreadRow {
+  id: string
+  school_id: string
+  student_id: string
+  instructor_id: string
+  subject: string
+  status: string
+  last_message_at: string | null
+  created_at: string
+  updated_at: string
+}
+
 export interface ProductionCommunicationThread {
   id: string
   schoolId: string
@@ -97,17 +109,7 @@ async function getMessagingActor(): Promise<
   }
 }
 
-function mapThread(row: {
-  id: string
-  school_id: string
-  student_id: string
-  instructor_id: string
-  subject: string
-  status: string
-  last_message_at: string | null
-  created_at: string
-  updated_at: string
-}): ProductionCommunicationThread {
+function mapThread(row: CommunicationThreadRow): ProductionCommunicationThread {
   return {
     id: row.id,
     schoolId: row.school_id,
@@ -242,7 +244,7 @@ export async function loadCommunicationThreads(): Promise<
   }
 
   const rows = data || []
-  const threadIds = rows.map((thread) => thread.id)
+  const threadIds = rows.map((thread: CommunicationThreadRow) => thread.id)
   const unreadByThread = new Map<string, number>()
 
   if (threadIds.length > 0) {
@@ -256,7 +258,9 @@ export async function loadCommunicationThreads(): Promise<
       return { success: false, message: incomingError.message }
     }
 
-    const incomingIds = (incoming || []).map((message) => message.id)
+    const incomingIds = (incoming || []).map(
+      (message: Pick<CommunicationMessageRow, 'id'>) => message.id
+    )
     const readIds = new Set<string>()
 
     if (incomingIds.length > 0) {
@@ -275,7 +279,9 @@ export async function loadCommunicationThreads(): Promise<
       }
     }
 
-    for (const message of incoming || []) {
+    for (const message of (incoming || []) as Array<
+      Pick<CommunicationMessageRow, 'id' | 'thread_id'>
+    >) {
       if (!readIds.has(message.id)) {
         unreadByThread.set(
           message.thread_id,
@@ -287,7 +293,7 @@ export async function loadCommunicationThreads(): Promise<
 
   return {
     success: true,
-    data: rows.map((row) => ({
+    data: rows.map((row: CommunicationThreadRow) => ({
       ...mapThread(row),
       unreadCount: unreadByThread.get(row.id) || 0,
     })),
