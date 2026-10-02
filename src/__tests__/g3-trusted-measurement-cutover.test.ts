@@ -74,4 +74,17 @@ describe('G3-1 trusted measurement cutover', () => {
     expect(cutoverLower).not.toContain('attendance_corrections')
     expect(cutoverLower).not.toContain('hour_adjustments')
   })
+  it('syncs trusted credited PO-1B events into the dashboard rollup exactly at the database boundary', () => {
+    const sync = read('supabase/migrations/20261002124500_g3_1_authoritative_rollup_sync.sql')
+    expect(sync).toContain('create or replace function public.sync_po1b_study_activity_day()')
+    expect(sync).toContain('after insert on public.study_session_events')
+    expect(sync).toContain('when (new.credited_seconds > 0)')
+    expect(sync).toContain('insert into public.study_activity_days')
+    expect(sync).toContain('new.credited_seconds')
+    expect(sync).not.toContain('p_seconds integer')
+    expect(sync).not.toContain('hour_logs')
+    expect(sync).not.toContain('attendance_records')
+    expect(sync).not.toContain('attendance_corrections')
+  })
+
 })
