@@ -4,13 +4,6 @@ import { useState, useTransition } from 'react'
 import {
   createUser,
   inviteUser,
-  updateUserStatus,
-  toggleUserDisabled,
-  changeUserRole,
-  assignUserSchool,
-  requirePasswordChange,
-  resetUserPassword,
-  resendUserSetupLink,
   deleteUser,
   getUsers,
   getSchools,
@@ -19,6 +12,8 @@ import {
 import { AppRole } from '@/types'
 import Modal from '@/components/ui/Modal'
 import EnrollmentModal from './EnrollmentModal'
+import UserManagementMobileCard from './UserManagementMobileCard'
+import ManageUserModal from './ManageUserModal'
 
 interface CurrentUser {
   id: string
@@ -62,9 +57,14 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
   )
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [showInviteForm, setShowInviteForm] = useState(false)
+  const [createRole, setCreateRole] = useState<AppRole>('student')
+  const [inviteRole, setInviteRole] = useState<AppRole>('student')
+  const [isCreatingUser, setIsCreatingUser] = useState(false)
+  const [isInvitingUser, setIsInvitingUser] = useState(false)
   const [deleteCandidate, setDeleteCandidate] = useState<UserListItem | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
   const [enrollmentStudent, setEnrollmentStudent] = useState<UserListItem | null>(null)
+  const [manageCandidate, setManageCandidate] = useState<UserListItem | null>(null)
   const [isPending, startTransition] = useTransition()
 
   const LIMIT = 50
@@ -99,23 +99,31 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
 
   async function handleCreateUser(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    if (isCreatingUser) return
+
     const form = new FormData(e.currentTarget)
+    setIsCreatingUser(true)
 
-    const result = await createUser({
-      full_name: String(form.get('full_name') || ''),
-      email: String(form.get('email') || ''),
-      password: String(form.get('password') || ''),
-      role: String(form.get('role') || 'student') as AppRole,
-      school_id: String(form.get('school_id') || '') || null,
-      approval_status: String(form.get('approval_status') || 'pending') as 'pending' | 'approved' | 'rejected',
-    })
+    try {
+      const result = await createUser({
+        full_name: String(form.get('full_name') || ''),
+        email: String(form.get('email') || ''),
+        password: String(form.get('password') || ''),
+        role: String(form.get('role') || 'student') as AppRole,
+        school_id: String(form.get('school_id') || '') || null,
+        approval_status: String(form.get('approval_status') || 'pending') as 'pending' | 'approved' | 'rejected',
+      })
 
-    if (result.success) {
-      setMessage({ type: 'success', text: 'User created successfully' })
-      setShowCreateForm(false)
-      await loadUsers(0)
-    } else {
-      setMessage({ type: 'error', text: result.error || 'Failed to create user' })
+      if (result.success) {
+        setMessage({ type: 'success', text: 'User created successfully' })
+        setShowCreateForm(false)
+        setCreateRole('student')
+        await loadUsers(0)
+      } else {
+        setMessage({ type: 'error', text: result.error || 'Failed to create user' })
+      }
+    } finally {
+      setIsCreatingUser(false)
     }
   }
 
@@ -137,43 +145,47 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
 
   async function handleInviteUser(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    if (isInvitingUser) return
+
     const form = new FormData(e.currentTarget)
+    setIsInvitingUser(true)
 
-    const result = await inviteUser({
-      full_name: String(form.get('full_name') || ''),
-      email: String(form.get('email') || ''),
-      role: String(form.get('role') || 'student') as AppRole,
-      school_id: String(form.get('school_id') || '') || null,
-      approval_status: String(form.get('approval_status') || 'pending') as 'pending' | 'approved' | 'rejected',
-    })
-
-    if (result.success) {
-      setMessage({
-        type: 'success',
-        text: result.data?.alreadyInvited
-          ? 'Invitation already exists. No duplicate email was sent.'
-          : result.data?.recoverySent
-            ? 'Account already existed. A fresh setup link was sent safely.'
-            : 'Invitation sent successfully',
+    try {
+      const result = await inviteUser({
+        full_name: String(form.get('full_name') || ''),
+        email: String(form.get('email') || ''),
+        role: String(form.get('role') || 'student') as AppRole,
+        school_id: String(form.get('school_id') || '') || null,
+        approval_status: String(form.get('approval_status') || 'pending') as 'pending' | 'approved' | 'rejected',
       })
-      setShowInviteForm(false)
-      await loadUsers(0)
-    } else {
-      setMessage({ type: 'error', text: result.error || 'Failed to send invitation' })
+
+      if (result.success) {
+        setMessage({
+          type: 'success',
+          text: result.data?.alreadyInvited
+            ? 'Invitation already exists. No duplicate email was sent.'
+            : result.data?.recoverySent
+              ? 'Account already existed. A fresh setup link was sent safely.'
+              : 'Invitation sent successfully',
+        })
+        setShowInviteForm(false)
+        setInviteRole('student')
+        await loadUsers(0)
+      } else {
+        setMessage({ type: 'error', text: result.error || 'Failed to send invitation' })
+      }
+    } finally {
+      setIsInvitingUser(false)
     }
   }
 
-  async function handleAction<T extends unknown[]>(
-    action: (...args: T) => Promise<{ success: boolean; error?: string }>,
-    ...args: T
-  ) {
-    const result = await action(...args)
-    if (result.success) {
-      setMessage({ type: 'success', text: 'Action completed' })
-      await loadUsers(offset)
-    } else {
-      setMessage({ type: 'error', text: result.error || 'Action failed' })
-    }
+  function roleRequiresSchool(role: AppRole): boolean {
+    return role === 'student' || role === 'instructor' || role === 'school_admin'
+  }
+
+  function currentSchoolName(): string {
+    if (!currentUser.schoolId) return 'Assigned school unavailable'
+    return schools.find((school) => school.id === currentUser.schoolId)?.name ?? 'Assigned school'
   }
 
   function formatDate(date: string): string {
@@ -263,6 +275,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
             onClick={() => {
               setShowCreateForm(!showCreateForm)
               setShowInviteForm(false)
+              setCreateRole('student')
             }}
             className="px-4 py-2 bg-[var(--color-background-secondary)] text-white border border-[var(--color-border-primary)] rounded-lg hover:border-[var(--color-brand-gold)]/50"
           >
@@ -272,6 +285,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
             onClick={() => {
               setShowInviteForm(!showInviteForm)
               setShowCreateForm(false)
+              setInviteRole('student')
             }}
             className="px-4 py-2 bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/30 rounded-lg hover:bg-[var(--color-brand-gold)]/20"
           >
@@ -283,43 +297,49 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
       {showCreateForm && (
         <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6">
           <h2 className="text-xl font-semibold text-white mb-4">Create User</h2>
-          <form onSubmit={handleCreateUser} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <form onSubmit={handleCreateUser} className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Full name</label>
+              <label htmlFor="create-full-name" className="block text-sm text-[var(--color-text-muted)] mb-1">Full name</label>
               <input
+                id="create-full-name"
                 name="full_name"
                 type="text"
                 required
-                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               />
             </div>
             <div>
-              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Email</label>
+              <label htmlFor="create-email" className="block text-sm text-[var(--color-text-muted)] mb-1">Email</label>
               <input
+                id="create-email"
                 name="email"
                 type="email"
                 required
-                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               />
             </div>
             <div>
-              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Temporary password</label>
+              <label htmlFor="create-password" className="block text-sm text-[var(--color-text-muted)] mb-1">Temporary password</label>
               <input
+                id="create-password"
                 name="password"
                 type="password"
                 required
                 minLength={8}
                 maxLength={72}
-                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               />
               <p className="text-xs text-[var(--color-text-muted)] mt-1">8–72 characters. User will be forced to change it on first login.</p>
             </div>
             <div>
-              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Role</label>
+              <label htmlFor="create-role" className="block text-sm text-[var(--color-text-muted)] mb-1">Role</label>
               <select
+                id="create-role"
                 name="role"
                 required
-                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                value={createRole}
+                onChange={(e) => setCreateRole(e.target.value as AppRole)}
+                className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               >
                 {manageableRoles.map((r) => (
                   <option key={r.value} value={r.value}>
@@ -329,28 +349,44 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               </select>
             </div>
             <div>
-              <label className="block text-sm text-[var(--color-text-muted)] mb-1">School</label>
-              <select
-                name="school_id"
-                required
-                defaultValue={currentUser.schoolId ?? ''}
-                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
-              >
-                <option value="">No school</option>
-                {schools.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name}
+              <label htmlFor="create-school" className="block text-sm text-[var(--color-text-muted)] mb-1">School</label>
+              {currentUser.isPlatformAdmin ? (
+                <select
+                  id="create-school"
+                  name="school_id"
+                  required={roleRequiresSchool(createRole)}
+                  defaultValue=""
+                  className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                >
+                  <option value="">
+                    {roleRequiresSchool(createRole) ? 'Select a school' : 'No school'}
                   </option>
-                ))}
-              </select>
+                  {schools.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <>
+                  <input type="hidden" name="school_id" value={currentUser.schoolId ?? ''} />
+                  <div className="min-h-11 rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-background-secondary)] px-4 py-2 text-white">
+                    {currentSchoolName()}
+                  </div>
+                </>
+              )}
+              <p className="text-xs text-[var(--color-text-muted)] mt-1">
+                {roleRequiresSchool(createRole) ? 'A school is required for this role.' : 'School assignment is optional for this role.'}
+              </p>
             </div>
             <div>
-              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Approval status</label>
+              <label htmlFor="create-approval-status" className="block text-sm text-[var(--color-text-muted)] mb-1">Approval status</label>
               <select
+                id="create-approval-status"
                 name="approval_status"
                 required
                 defaultValue="pending"
-                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               >
                 {APPROVAL_STATUSES.map((s) => (
                   <option key={s.value} value={s.value}>
@@ -362,9 +398,10 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
             <div className="md:col-span-2">
               <button
                 type="submit"
-                className="px-6 py-2 bg-[var(--color-brand-gold)] text-black font-medium rounded-lg hover:bg-[var(--color-brand-gold)]"
+                disabled={isCreatingUser}
+                className="min-h-11 w-full sm:w-auto px-6 py-2 bg-[var(--color-brand-gold)] text-black font-medium rounded-lg hover:bg-[var(--color-brand-gold)] disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Create User
+                {isCreatingUser ? 'Creating…' : 'Create User'}
               </button>
             </div>
           </form>
@@ -377,31 +414,36 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
           <p className="text-sm text-[var(--color-text-muted)] mb-4">
             Sends an email invitation. The recipient chooses their own password and is redirected to the platform.
           </p>
-          <form onSubmit={handleInviteUser} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <form onSubmit={handleInviteUser} className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Full name</label>
+              <label htmlFor="invite-full-name" className="block text-sm text-[var(--color-text-muted)] mb-1">Full name</label>
               <input
+                id="invite-full-name"
                 name="full_name"
                 type="text"
                 required
-                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               />
             </div>
             <div>
-              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Email</label>
+              <label htmlFor="invite-email" className="block text-sm text-[var(--color-text-muted)] mb-1">Email</label>
               <input
+                id="invite-email"
                 name="email"
                 type="email"
                 required
-                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               />
             </div>
             <div>
-              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Role</label>
+              <label htmlFor="invite-role" className="block text-sm text-[var(--color-text-muted)] mb-1">Role</label>
               <select
+                id="invite-role"
                 name="role"
                 required
-                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                value={inviteRole}
+                onChange={(e) => setInviteRole(e.target.value as AppRole)}
+                className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               >
                 {manageableRoles.map((r) => (
                   <option key={r.value} value={r.value}>
@@ -411,28 +453,44 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               </select>
             </div>
             <div>
-              <label className="block text-sm text-[var(--color-text-muted)] mb-1">School</label>
-              <select
-                name="school_id"
-                required
-                defaultValue={currentUser.schoolId ?? ''}
-                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
-              >
-                <option value="">No school</option>
-                {schools.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name}
+              <label htmlFor="invite-school" className="block text-sm text-[var(--color-text-muted)] mb-1">School</label>
+              {currentUser.isPlatformAdmin ? (
+                <select
+                  id="invite-school"
+                  name="school_id"
+                  required={roleRequiresSchool(inviteRole)}
+                  defaultValue=""
+                  className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                >
+                  <option value="">
+                    {roleRequiresSchool(inviteRole) ? 'Select a school' : 'No school'}
                   </option>
-                ))}
-              </select>
+                  {schools.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <>
+                  <input type="hidden" name="school_id" value={currentUser.schoolId ?? ''} />
+                  <div className="min-h-11 rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-background-secondary)] px-4 py-2 text-white">
+                    {currentSchoolName()}
+                  </div>
+                </>
+              )}
+              <p className="text-xs text-[var(--color-text-muted)] mt-1">
+                {roleRequiresSchool(inviteRole) ? 'A school is required for this role.' : 'School assignment is optional for this role.'}
+              </p>
             </div>
             <div>
-              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Approval status</label>
+              <label htmlFor="invite-approval-status" className="block text-sm text-[var(--color-text-muted)] mb-1">Approval status</label>
               <select
+                id="invite-approval-status"
                 name="approval_status"
                 required
                 defaultValue="pending"
-                className="w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
               >
                 {APPROVAL_STATUSES.map((s) => (
                   <option key={s.value} value={s.value}>
@@ -444,16 +502,55 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
             <div className="md:col-span-2">
               <button
                 type="submit"
-                className="px-6 py-2 bg-[var(--color-brand-gold)] text-black font-medium rounded-lg hover:bg-[var(--color-brand-gold)]"
+                disabled={isInvitingUser}
+                className="min-h-11 w-full sm:w-auto px-6 py-2 bg-[var(--color-brand-gold)] text-black font-medium rounded-lg hover:bg-[var(--color-brand-gold)] disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Send Invitation
+                {isInvitingUser ? 'Sending…' : 'Send Invitation'}
               </button>
             </div>
           </form>
         </div>
       )}
 
-      <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl overflow-hidden">
+      <section data-testid="mobile-user-list" className="space-y-3 md:hidden" aria-label="Users">
+        {users.map((user) => (
+          <UserManagementMobileCard
+            key={user.id}
+            user={user}
+            onManage={setManageCandidate}
+          />
+        ))}
+        {users.length === 0 && (
+          <div className="rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-background-primary)] px-4 py-8 text-center text-[var(--color-text-muted)]">
+            No users found
+          </div>
+        )}
+        <div className="flex items-center justify-between gap-3 pt-1 text-sm text-[var(--color-text-muted)]">
+          <span>
+            Showing {users.length} of {count} users
+          </span>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => loadUsers(Math.max(0, offset - LIMIT))}
+              disabled={offset === 0}
+              className="min-h-10 rounded-lg bg-[var(--color-background-secondary)] px-3 py-2 disabled:opacity-50"
+            >
+              Previous
+            </button>
+            <button
+              type="button"
+              onClick={() => loadUsers(offset + LIMIT)}
+              disabled={offset + LIMIT >= count}
+              className="min-h-10 rounded-lg bg-[var(--color-background-secondary)] px-3 py-2 disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <div data-testid="desktop-user-table" className="hidden md:block bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl overflow-hidden">
         <div className="max-h-[calc(100vh-16rem)] min-h-[20rem] overflow-auto overscroll-contain">
           <table className="w-full min-w-[1100px] text-left">
             <thead className="sticky top-0 z-10 bg-[var(--color-background-primary)] border-b border-[var(--color-border-primary)]">
@@ -475,60 +572,26 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                   <td className="px-4 py-3 text-white">{user.full_name}</td>
                   <td className="px-4 py-3 text-[var(--color-text-secondary)]">{user.email}</td>
                   <td className="px-4 py-3">
-                    <select
-                      value={user.role}
-                      onChange={(e) => handleAction(changeUserRole, user.id, e.target.value as AppRole)}
-                      className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded px-2 py-1 text-sm text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
-                    >
-                      {manageableRoles.map((r) => (
-                        <option key={r.value} value={r.value}>
-                          {r.label}
-                        </option>
-                      ))}
-                    </select>
+                    <span className="inline-flex rounded-full border border-gold/30 bg-gold/10 px-2 py-1 text-xs font-medium text-gold">
+                      {ROLES.find((r) => r.value === user.role)?.label ?? user.role}
+                    </span>
                   </td>
                   <td className="px-4 py-3 text-[var(--color-text-secondary)]">
-                    {currentUser.isPlatformAdmin ? (
-                      <select
-                        value={user.school_id ?? ''}
-                        onChange={(e) => handleAction(assignUserSchool, user.id, e.target.value || null)}
-                        className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded px-2 py-1 text-sm text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
-                      >
-                        <option value="">No school</option>
-                        {schools.map((s) => (
-                          <option key={s.id} value={s.id}>
-                            {s.name}
-                          </option>
-                        ))}
-                      </select>
-                    ) : (
-                      user.school_name ?? '—'
-                    )}
+                    {user.school_name ?? 'No school'}
+                  </td>
+                  <td className="px-4 py-3 text-[var(--color-text-secondary)]">
+                    {APPROVAL_STATUSES.find((status) => status.value === user.approval_status)?.label ?? user.approval_status}
                   </td>
                   <td className="px-4 py-3">
-                    <select
-                      value={user.approval_status}
-                      onChange={(e) => handleAction(updateUserStatus, user.id, e.target.value as 'approved' | 'rejected')}
-                      className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded px-2 py-1 text-sm text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
-                    >
-                      {APPROVAL_STATUSES.map((s) => (
-                        <option key={s.value} value={s.value}>
-                          {s.label}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td className="px-4 py-3">
-                    <button
-                      onClick={() => handleAction(toggleUserDisabled, user.id, !user.is_disabled)}
-                      className={`px-2 py-1 rounded text-xs font-medium ${
+                    <span
+                      className={`inline-flex px-2 py-1 rounded text-xs font-medium ${
                         user.is_disabled
                           ? 'bg-silver/20 text-silver border border-silver/30'
                           : 'bg-gold/20 text-gold border border-gold/30'
                       }`}
                     >
                       {user.is_disabled ? 'Disabled' : 'Enabled'}
-                    </button>
+                    </span>
                   </td>
                   <td className="px-4 py-3">
                     <span
@@ -545,64 +608,21 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-2">
                       <button
-                        onClick={() => handleAction(resendUserSetupLink, user.id)}
-                        disabled={user.is_disabled || user.approval_status === 'rejected'}
-                        title={
-                          user.is_disabled
-                            ? 'Re-enable this account before sending an access link'
-                            : user.approval_status === 'rejected'
-                              ? 'Approve this account before sending an access link'
-                              : 'Send a fresh account setup / password recovery link'
-                        }
-                        className="px-2 py-1 text-xs bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/30 rounded hover:bg-[var(--color-brand-gold)]/20 disabled:opacity-40 disabled:cursor-not-allowed"
+                        type="button"
+                        onClick={() => setManageCandidate(user)}
+                        className="px-3 py-1.5 text-xs bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/30 rounded hover:bg-[var(--color-brand-gold)]/20"
                       >
-                        Send setup link
-                      </button>
-                      <button
-                        onClick={() => handleAction(requirePasswordChange, user.id)}
-                        className="px-2 py-1 text-xs bg-[var(--color-background-secondary)] text-[var(--color-text-secondary)] border border-[var(--color-border-primary)] rounded hover:border-[var(--color-brand-gold)]/50"
-                      >
-                        Require password reset
-                      </button>
-                      <button
-                        onClick={() => {
-                          const password = prompt('Enter new temporary password (8-72 chars):')
-                          if (password) handleAction(resetUserPassword, user.id, password)
-                        }}
-                        className="px-2 py-1 text-xs bg-[var(--color-background-secondary)] text-[var(--color-text-secondary)] border border-[var(--color-border-primary)] rounded hover:border-[var(--color-brand-gold)]/50"
-                      >
-                        Reset password
+                        Manage user
                       </button>
                       {user.role === 'student' && (
-                        <span className="inline-flex items-center gap-1">
-                          {typeof user.enrollment_count === 'number' && (
-                            <span
-                              className={`inline-flex items-center px-1.5 py-0.5 text-xs rounded-full ${
-                                user.enrollment_count > 0
-                                  ? 'bg-gold/10 text-gold border border-gold/20'
-                                  : 'bg-[var(--color-border-secondary)] text-[var(--color-text-muted)] border border-silver-gray'
-                              }`}
-                              title={`${user.enrollment_count} active enrollment${user.enrollment_count !== 1 ? 's' : ''}`}
-                            >
-                              {user.enrollment_count} program{user.enrollment_count !== 1 ? 's' : ''}
-                            </span>
-                          )}
-                          <button
-                            onClick={() => setEnrollmentStudent(user)}
-                            className="px-2 py-1 text-xs bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/30 rounded hover:bg-[var(--color-brand-gold)]/20"
-                          >
-                            Enroll
-                          </button>
-                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setEnrollmentStudent(user)}
+                          className="px-3 py-1.5 text-xs bg-[var(--color-background-secondary)] text-[var(--color-text-secondary)] border border-[var(--color-border-primary)] rounded hover:border-[var(--color-brand-gold)]/50"
+                        >
+                          Manage enrollment
+                        </button>
                       )}
-                      <button
-                        onClick={() => setDeleteCandidate(user)}
-                        disabled={user.id === currentUser.id}
-                        title={user.id === currentUser.id ? 'You cannot delete your own account' : 'Delete user'}
-                        className="px-2 py-1 text-xs bg-silver/10 text-silver border border-silver/30 rounded hover:bg-silver/20 disabled:opacity-40 disabled:cursor-not-allowed"
-                      >
-                        Delete
-                      </button>
                     </div>
                   </td>
                 </tr>
@@ -640,6 +660,26 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
           </div>
         </div>
       </div>
+
+      <ManageUserModal
+        user={manageCandidate}
+        currentUserId={currentUser.id}
+        isPlatformAdmin={currentUser.isPlatformAdmin}
+        schools={schools}
+        onClose={() => setManageCandidate(null)}
+        onUpdated={async (text) => {
+          setMessage({ type: 'success', text })
+          await loadUsers(offset)
+        }}
+        onManageEnrollment={(user) => {
+          setManageCandidate(null)
+          setEnrollmentStudent(user)
+        }}
+        onDelete={(user) => {
+          setManageCandidate(null)
+          setDeleteCandidate(user)
+        }}
+      />
 
       {/* Enrollment Modal */}
       {enrollmentStudent && (
