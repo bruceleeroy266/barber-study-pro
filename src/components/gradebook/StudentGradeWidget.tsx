@@ -1,7 +1,7 @@
 'use client'
 
 import { StudentGradePerformance } from '@/types'
-import { getLetterGrade, getGradeColorClass } from '@/lib/gradebook'
+import { getGradeColorClass } from '@/lib/gradebook'
 import { TrendingUp, TrendingDown, Minus, AlertCircle } from 'lucide-react'
 
 interface StudentGradeWidgetProps {
@@ -42,7 +42,6 @@ export default function StudentGradeWidget({ performance }: StudentGradeWidgetPr
         <span className={`text-5xl font-bold ${getGradeColorClass(performance.overallGrade)}`}>
           {performance.overallGrade}%
         </span>
-        <span className="text-xl text-silver">{getLetterGrade(performance.overallGrade)}</span>
       </div>
 
       <div className="flex items-center gap-2 mb-6">
