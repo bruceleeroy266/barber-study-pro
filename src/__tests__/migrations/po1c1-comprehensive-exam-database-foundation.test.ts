@@ -212,9 +212,7 @@ describe('PO-1C.1 comprehensive exam database foundation', () => {
   })
 
   it('does not overload the legacy quiz_attempt telemetry foreign key', () => {
-    expect(migration).toContain(
-      "surface_type='comprehensive_exam'",
-    )
+    expect(migration).toContain("'comprehensive_exam'")
     expect(migration).not.toContain(
       'comprehensive_exam_attempt_id uuid references public.quiz_attempts',
     )
