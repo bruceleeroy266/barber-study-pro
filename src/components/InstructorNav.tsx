@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutDashboard, Users, Calendar, CalendarClock, Calculator, FileCheck, MessageSquare, ClipboardCheck, LogOut, GraduationCap, AlertTriangle, BookOpen } from 'lucide-react'
+import { LayoutDashboard, Users, Calendar, CalendarClock, Calculator, FileCheck, MessageSquare, Megaphone, ClipboardCheck, LogOut, GraduationCap, AlertTriangle, BookOpen } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { Profile } from '@/types'
 import { logLogout } from '@/app/(auth)/actions'
@@ -22,6 +22,7 @@ const navItems = [
   { href: '/instructor/gradebook', label: 'Gradebook', icon: Calculator },
   { href: '/instructor/compliance', label: 'Compliance', icon: FileCheck },
   { href: '/instructor/messages', label: 'Messages', icon: MessageSquare },
+  { href: '/instructor/bulletins', label: 'Bulletins', icon: Megaphone },
   { href: '/instructor/assessments', label: 'Assessments', icon: ClipboardCheck },
   { href: '/instructor/rubrics', label: 'Rubrics', icon: GraduationCap },
   { href: '/instructor/chapters', label: 'Teaching Notes', icon: BookOpen },
