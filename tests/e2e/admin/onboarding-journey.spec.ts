@@ -637,8 +637,9 @@ test.describe('Pilot onboarding certification', () => {
     const dashboardStudentRow = instructorSession.page
       .getByRole('row')
       .filter({ hasText: STUDENT_EMAIL })
+      .filter({ hasText: 'min' })
+    await expect(dashboardStudentRow).toHaveCount(1)
     await expect(dashboardStudentRow).toBeVisible()
-    await expect(dashboardStudentRow).toContainText('min')
 
     await studentSession.context.close()
     await instructorSession.context.close()
