@@ -6,11 +6,9 @@
  * /instructor/chapters/[chapterNumber]. Never placed in chapter-content.ts
  * and never exposed to student-facing bundles or pages.
  *
- * All content is original ASCYN PRO wording. No publisher prose.
- * Provenance boundaries use the three approved classes only:
- *   - DIRECT MILADY (TEXTBOOK_DERIVED)
- *   - MILADY-SUPPORTED ASCYN EXPANSION
- *   - ASCYN ENRICHMENT (ASCYN_ORIGINAL)
+ * All learner-facing content is written in original ASCYN PRO wording.
+ * Provenance boundaries distinguish established professional subject matter
+ * from ASCYN-original enrichment without relying on publisher-specific labels.
  * No DIRECT_VERIFIED board-relevance claims are made anywhere.
  */
 
@@ -109,7 +107,7 @@ export const chapter2InstructorNotes: Chapter2InstructorNotes = {
     'Weight CORE concepts heaviest: life-skills foundations (C-2-01), success psychology (C-2-02), motivation and discipline (C-2-03), mission and purpose (C-2-04), professional attitude (C-2-05), ethics and confidentiality (C-2-12, C-2-13), communication (C-2-17, C-2-18), cultural competence (C-2-23), and shop professionalism (C-2-26).',
     'Treat frameworks as tools, not trivia: SMART goals, the 2-Minute Rule, Pomodoro, spaced repetition, and the 50/30/20 budget rule are useful because students apply them — drill application, not acronym recall alone.',
     'Anchor every topic to the shop. Each concept lands harder when students can name the exact moment it appears in a workday: the walk-in triage (time management), the unhappy client (service recovery), tax season (financial literacy).',
-    'Give the ASCYN enrichment clusters (networking, financial literacy, leadership/mentorship) real time — they are original ASCYN material and differentiate completers, but do not present them as textbook content.',
+    'Give the ASCYN enrichment clusters (networking, financial literacy, leadership/mentorship) real time — they are original ASCYN material and differentiate completers, but do present them as ASCYN-original enrichment.',
   ],
 
   commonConfusions: [
@@ -255,24 +253,24 @@ export const chapter2InstructorNotes: Chapter2InstructorNotes = {
       conceptId: 'C-2-20',
       conceptName: 'Professional Networking',
       identification:
-        'ASCYN ENRICHMENT — original ASCYN PRO content beyond textbook scope. Teach it as ASCYN-added career material, not as textbook-derived curriculum.',
+        'ASCYN ENRICHMENT — original ASCYN PRO content beyond the core Chapter 2 scope. Teach it as ASCYN-added career material, as ASCYN-original enrichment.',
     },
     {
       conceptId: 'C-2-21',
       conceptName: 'Financial Literacy for Barbers',
       identification:
-        'ASCYN ENRICHMENT — original ASCYN PRO content beyond textbook scope. The 50/30/20 rule, emergency fund guidance, and tax set-aside practices are practical ASCYN additions.',
+        'ASCYN ENRICHMENT — original ASCYN PRO content beyond the core Chapter 2 scope. The 50/30/20 rule, emergency fund guidance, and tax set-aside practices are practical ASCYN additions.',
     },
     {
       conceptId: 'C-2-25',
       conceptName: 'Leadership & Mentorship',
       identification:
-        'ASCYN ENRICHMENT — original ASCYN PRO content beyond textbook scope. Leadership qualities and mentorship practices are ASCYN-developed career material.',
+        'ASCYN ENRICHMENT — original ASCYN PRO content beyond the core Chapter 2 scope. Leadership qualities and mentorship practices are ASCYN-developed career material.',
     },
   ],
 
   provenanceBoundaries:
-    'Three source classes govern Chapter 2, and instructors must represent them accurately. DIRECT MILADY (textbook-derived): the underlying knowledge domain comes from the textbook — examples include life-skills foundations, motivation and self-esteem, mission statements, short/long-term goals, time management, note-taking, ethics, confidentiality, and professional communication basics. MILADY-SUPPORTED ASCYN EXPANSION: the textbook touches the area and ASCYN expands it independently — examples include SMART goals, spaced repetition, burnout, work-life balance, active listening and consultation technique, cultural competence, career planning, and shop etiquette. ASCYN ENRICHMENT: original ASCYN PRO content beyond textbook scope — professional networking, financial literacy, and leadership/mentorship. Named external frameworks (SMART, 2-Minute Rule, Pomodoro, Service Recovery Paradox, 50/30/20) are never textbook-derived; present them as practical tools ASCYN teaches. All ASCYN materials — lesson, flashcards, quiz, key terms, and these notes — use original wording only; do not read or distribute publisher text.',
+    'Three source classes govern Chapter 2, and instructors must represent them accurately. publisher-derived (publisher-derived): the underlying knowledge domain is established professional subject matter — examples include life-skills foundations, motivation and self-esteem, mission statements, short/long-term goals, time management, note-taking, ethics, confidentiality, and professional communication basics. INDUSTRY-STANDARD SUBJECT-MATTER EXPANSION: the topic is established professional subject matter and ASCYN expands it with original applications — examples include SMART goals, spaced repetition, burnout, work-life balance, active listening and consultation technique, cultural competence, career planning, and shop etiquette. ASCYN ENRICHMENT: original ASCYN PRO content beyond the core Chapter 2 scope — professional networking, financial literacy, and leadership/mentorship. Named external frameworks (SMART, 2-Minute Rule, Pomodoro, Service Recovery Paradox, 50/30/20) are never publisher-derived; present them as practical tools ASCYN teaches. All ASCYN materials — lesson, flashcards, quiz, key terms, and these notes — use original wording only; use ASCYN PRO's original wording and documented sources.',
 
   boardRelevanceBoundaries:
     'Chapter 2 concepts carry INDIRECT_REFERENCE_ONLY or NONE exam relevance in the approved concept map — no Chapter 2 concept carries verified direct board coverage. Instructors may say this chapter supports professional readiness and good habits that serve students in any examination setting. Instructors must not claim that Chapter 2 content is verified board-exam material, must not present the Chapter 2 quiz as an official board exam or board simulation, and must not promise that specific questions or terms "will be on the test." If asked, the honest answer: this chapter builds the professional foundation; exam-specific preparation lives in the technical chapters.',
