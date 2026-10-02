@@ -10,6 +10,22 @@ interface MessagingActor {
   role: MessagingRole
 }
 
+interface CommunicationMessageRow {
+  id: string
+  thread_id: string
+  school_id: string
+  sender_id: string
+  body: string
+  sent_at: string
+  created_at: string
+}
+
+interface CommunicationReadRow {
+  message_id: string
+  reader_id?: string
+  read_at?: string
+}
+
 export interface ProductionCommunicationThread {
   id: string
   schoolId: string
@@ -166,7 +182,7 @@ export async function loadCommunicationThreadMessages(
     return { success: false, message: messageError.message }
   }
 
-  const messageIds = (messages || []).map((message) => message.id)
+  const messageIds = (messages || []).map((message: CommunicationMessageRow) => message.id)
   let readByMessage = new Map<string, string>()
 
   if (messageIds.length > 0) {
@@ -180,14 +196,14 @@ export async function loadCommunicationThreadMessages(
       return { success: false, message: readsError.message }
     }
 
-    readByMessage = new Map((reads || []).map((read) => [read.message_id, read.read_at]))
+    readByMessage = new Map((reads || []).map((read: CommunicationReadRow) => [read.message_id, read.read_at ?? '']))
   }
 
   return {
     success: true,
     data: {
       thread: mapThread(thread),
-      messages: (messages || []).map((message) => ({
+      messages: (messages || []).map((message: CommunicationMessageRow) => ({
         id: message.id,
         threadId: message.thread_id,
         schoolId: message.school_id,
@@ -295,7 +311,7 @@ export async function markCommunicationThreadRead(
     return { success: false, message: messageError.message }
   }
 
-  const incomingIds = (incomingMessages || []).map((message) => message.id)
+  const incomingIds = (incomingMessages || []).map((message: Pick<CommunicationMessageRow, 'id' | 'sender_id'>) => message.id)
   if (incomingIds.length === 0) {
     return { success: true, data: { markedRead: 0 } }
   }
@@ -310,8 +326,8 @@ export async function markCommunicationThreadRead(
     return { success: false, message: readsError.message }
   }
 
-  const existingIds = new Set((existingReads || []).map((read) => read.message_id))
-  const unreadIds = incomingIds.filter((messageId) => !existingIds.has(messageId))
+  const existingIds = new Set((existingReads || []).map((read: Pick<CommunicationReadRow, 'message_id'>) => read.message_id))
+  const unreadIds = incomingIds.filter((messageId: string) => !existingIds.has(messageId))
 
   if (unreadIds.length === 0) {
     return { success: true, data: { markedRead: 0 } }
@@ -319,7 +335,7 @@ export async function markCommunicationThreadRead(
 
   const { error: insertError } = await supabase
     .from('communication_message_reads')
-    .insert(unreadIds.map((messageId) => ({ message_id: messageId, reader_id: actor.id })))
+    .insert(unreadIds.map((messageId: string) => ({ message_id: messageId, reader_id: actor.id })))
 
   if (insertError) {
     return { success: false, message: insertError.message }
