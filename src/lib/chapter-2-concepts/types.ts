@@ -38,15 +38,19 @@ export type QuizQuestionId = `qq-2-${string}`
 // Classification Enums
 // ───────────────────────────────────────────────
 
-/** Source provenance classification. Publisher-specific legacy values remain for compatibility while chapters migrate to neutral provenance. */
+/**
+ * Shared source provenance classification.
+ * Legacy publisher-specific values remain temporarily for cross-chapter compatibility;
+ * active Chapter 2 data is forbidden from using them by the Chapter 2 provenance firewall.
+ */
 export type SourceProvenance =
   | 'INDUSTRY_STANDARD_SUBJECT_MATTER' // Established professional subject matter expressed in ASCYN PRO wording
   | 'OFFICIAL_REGULATORY'              // Government/regulatory requirement or guidance
   | 'OFFICIAL_EXAM_GUIDE'              // Verified official candidate guide / exam blueprint source
-  | 'TEXTBOOK_DERIVED'                 // Legacy value — migrate away from publisher-derived provenance
-  | 'MILADY_SUPPORTED_EXPANSION'       // Legacy value — migrate away from publisher-named provenance
+  | 'TEXTBOOK_DERIVED'                 // Legacy compatibility only; forbidden in active Chapter 2 data
+  | 'MILADY_SUPPORTED_EXPANSION'       // Legacy compatibility only; forbidden in active Chapter 2 data
   | 'ASCYN_ORIGINAL'                   // Original ASCYN PRO content
-  | 'ASCYN_EXTENSION'                  // Legacy ASCYN extension value retained for compatibility
+  | 'ASCYN_EXTENSION'                  // ASCYN-developed extension of established subject matter
 
 /** Concept importance level */
 export type ConceptImportance = 'core' | 'supporting' | 'enrichment'
