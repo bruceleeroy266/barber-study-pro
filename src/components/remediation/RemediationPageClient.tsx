@@ -9,7 +9,7 @@
  * and accessibility hardening without changing remediation policy.
  */
 
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import type {
   StudentRemediationState,
