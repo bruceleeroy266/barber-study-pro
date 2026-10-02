@@ -19,6 +19,7 @@ import {
 import { AppRole } from '@/types'
 import Modal from '@/components/ui/Modal'
 import EnrollmentModal from './EnrollmentModal'
+import UserManagementMobileCard from './UserManagementMobileCard'
 
 interface CurrentUser {
   id: string
@@ -65,6 +66,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
   const [deleteCandidate, setDeleteCandidate] = useState<UserListItem | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
   const [enrollmentStudent, setEnrollmentStudent] = useState<UserListItem | null>(null)
+  const [manageCandidate, setManageCandidate] = useState<UserListItem | null>(null)
   const [isPending, startTransition] = useTransition()
 
   const LIMIT = 50
@@ -453,7 +455,45 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
         </div>
       )}
 
-      <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl overflow-hidden">
+      <section data-testid="mobile-user-list" className="space-y-3 md:hidden" aria-label="Users">
+        {users.map((user) => (
+          <UserManagementMobileCard
+            key={user.id}
+            user={user}
+            onManage={setManageCandidate}
+          />
+        ))}
+        {users.length === 0 && (
+          <div className="rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-background-primary)] px-4 py-8 text-center text-[var(--color-text-muted)]">
+            No users found
+          </div>
+        )}
+        <div className="flex items-center justify-between gap-3 pt-1 text-sm text-[var(--color-text-muted)]">
+          <span>
+            Showing {users.length} of {count} users
+          </span>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => loadUsers(Math.max(0, offset - LIMIT))}
+              disabled={offset === 0}
+              className="min-h-10 rounded-lg bg-[var(--color-background-secondary)] px-3 py-2 disabled:opacity-50"
+            >
+              Previous
+            </button>
+            <button
+              type="button"
+              onClick={() => loadUsers(offset + LIMIT)}
+              disabled={offset + LIMIT >= count}
+              className="min-h-10 rounded-lg bg-[var(--color-background-secondary)] px-3 py-2 disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <div data-testid="desktop-user-table" className="hidden md:block bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl overflow-hidden">
         <div className="max-h-[calc(100vh-16rem)] min-h-[20rem] overflow-auto overscroll-contain">
           <table className="w-full min-w-[1100px] text-left">
             <thead className="sticky top-0 z-10 bg-[var(--color-background-primary)] border-b border-[var(--color-border-primary)]">
@@ -640,6 +680,39 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={!!manageCandidate}
+        onClose={() => setManageCandidate(null)}
+        title={manageCandidate ? `Manage — ${manageCandidate.full_name}` : 'Manage user'}
+        size="sm"
+      >
+        {manageCandidate && (
+          <div className="space-y-4">
+            <div className="rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-background-secondary)] p-4">
+              <p className="font-medium text-white">{manageCandidate.full_name}</p>
+              <p className="mt-1 break-all text-sm text-[var(--color-text-muted)]">{manageCandidate.email}</p>
+              <dl className="mt-3 grid grid-cols-2 gap-3 text-sm">
+                <div>
+                  <dt className="text-xs uppercase tracking-wide text-[var(--color-text-muted)]">Role</dt>
+                  <dd className="mt-1 text-white">
+                    {ROLES.find((role) => role.value === manageCandidate.role)?.label ?? manageCandidate.role}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-xs uppercase tracking-wide text-[var(--color-text-muted)]">School</dt>
+                  <dd className="mt-1 text-white">{manageCandidate.school_name ?? 'No school'}</dd>
+                </div>
+              </dl>
+            </div>
+            <p className="text-sm text-[var(--color-text-muted)]">
+              Mobile management controls are intentionally staged behind the next UM-H2 slice so role,
+              school, status, and password mutations can be moved here with explicit confirmations and
+              duplicate-tap protection.
+            </p>
+          </div>
+        )}
+      </Modal>
 
       {/* Enrollment Modal */}
       {enrollmentStudent && (
