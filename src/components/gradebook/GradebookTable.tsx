@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { Grade, GradeCategory, Profile } from '@/types'
-import { calculateCategoryAverage, getLetterGrade, getGradeColorClass } from '@/lib/gradebook'
+import { calculateCategoryAverage, getGradeColorClass } from '@/lib/gradebook'
 import { History } from 'lucide-react'
 
 interface GradebookTableProps {
@@ -133,7 +133,7 @@ export default function GradebookTable({
                             {grade.percentage}%
                           </div>
                           <div className="text-xs text-silver-gray">
-                            {grade.score}/{grade.maxScore} · {getLetterGrade(grade.percentage)}
+                            {grade.score}/{grade.maxScore} · {grade.percentage}%
                           </div>
                           {grade.notes && (
                             <div className="text-xs text-silver-gray truncate max-w-[120px]">{grade.notes}</div>

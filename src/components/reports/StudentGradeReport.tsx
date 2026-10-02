@@ -1,7 +1,7 @@
 'use client'
 
 import { StudentGradePerformance, Grade, GradeCategory, Profile, Assessment } from '@/types'
-import { getLetterGrade, getGradeColorClass } from '@/lib/gradebook'
+import { getGradeColorClass } from '@/lib/gradebook'
 import { formatScore } from '@/lib/assessments'
 
 interface StudentGradeReportProps {
@@ -40,7 +40,6 @@ export default function StudentGradeReport({
           <p className={`text-4xl font-bold ${getGradeColorClass(performance.overallGrade)}`}>
             {performance.overallGrade}%
           </p>
-          <p className="text-lg text-gray-700">{getLetterGrade(performance.overallGrade)}</p>
         </div>
       </div>
 

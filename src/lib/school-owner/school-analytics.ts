@@ -28,7 +28,7 @@ import {
 } from '@/types'
 import { calculateAttendanceSummary } from '@/lib/attendance'
 import { calculateBoardReadiness } from '@/lib/readiness'
-import { calculateOverallGrade, getLetterGrade } from '@/lib/gradebook'
+import { calculateOverallGrade } from '@/lib/gradebook'
 import { localChapters } from '@/lib/local-data'
 import { DEFAULT_REQUIRED_HOURS } from '@/lib/programs/requirements'
 import { getOfficialMinutes } from '@/lib/hours/reporting'
@@ -450,11 +450,11 @@ export function buildSchoolAnalyticsSnapshot(inputs: SchoolAnalyticsInputs): Sch
   }))
 
   const gradeDistribution = [
-    { label: 'A (90-100%)', count: rows.filter((r) => r.overallGrade >= 90).length, colorClass: 'bg-gold' },
-    { label: 'B (80-89%)', count: rows.filter((r) => r.overallGrade >= 80 && r.overallGrade < 90).length, colorClass: 'bg-silver' },
-    { label: 'C (70-79%)', count: rows.filter((r) => r.overallGrade >= 70 && r.overallGrade < 80).length, colorClass: 'bg-warm-bronze' },
-    { label: 'D (60-69%)', count: rows.filter((r) => r.overallGrade >= 60 && r.overallGrade < 70).length, colorClass: 'bg-warm-bronze' },
-    { label: 'F (<60%)', count: rows.filter((r) => r.overallGrade > 0 && r.overallGrade < 60).length, colorClass: 'bg-silver' },
+    { label: '90-100%', count: rows.filter((r) => r.overallGrade >= 90).length, colorClass: 'bg-gold' },
+    { label: '80-89%', count: rows.filter((r) => r.overallGrade >= 80 && r.overallGrade < 90).length, colorClass: 'bg-silver' },
+    { label: '70-79%', count: rows.filter((r) => r.overallGrade >= 70 && r.overallGrade < 80).length, colorClass: 'bg-warm-bronze' },
+    { label: '60-69%', count: rows.filter((r) => r.overallGrade >= 60 && r.overallGrade < 70).length, colorClass: 'bg-warm-bronze' },
+    { label: 'Below 60%', count: rows.filter((r) => r.overallGrade > 0 && r.overallGrade < 60).length, colorClass: 'bg-silver' },
     { label: 'No Grade', count: rows.filter((r) => r.overallGrade === 0).length, colorClass: 'bg-silver-gray' },
   ]
 
@@ -514,7 +514,6 @@ export function generateSchoolReport(
         rows: rows.map((r) => ({
           Student: r.fullName,
           Grade: `${r.overallGrade}%`,
-          Letter: getLetterGrade(r.overallGrade),
         })),
       }
     case 'hours':
