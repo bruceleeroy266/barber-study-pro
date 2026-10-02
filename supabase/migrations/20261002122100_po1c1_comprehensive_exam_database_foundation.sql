@@ -70,6 +70,10 @@ create unique index if not exists uq_comprehensive_exam_configs_slug_version
 create index if not exists idx_comprehensive_exam_configs_status
   on public.comprehensive_exam_configs(status, slug, version desc);
 
+create unique index if not exists uq_comprehensive_exam_configs_active_slug
+  on public.comprehensive_exam_configs(slug)
+  where status = 'active';
+
 create table if not exists public.comprehensive_exam_config_domains (
   config_id uuid not null references public.comprehensive_exam_configs(id) on delete cascade,
   domain text not null,
@@ -344,12 +348,6 @@ create table if not exists public.comprehensive_exam_attempt_items (
     check (
       (selected_option is null and answered_at is null)
       or (selected_option is not null and answered_at is not null)
-    ),
-  constraint comprehensive_exam_attempt_items_flag_timestamp_check
-    check (
-      (not flagged and flag_updated_at is null)
-      or flagged
-      or flag_updated_at is not null
     )
 );
 
