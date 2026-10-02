@@ -120,6 +120,106 @@ function mapThread(row: {
   }
 }
 
+export async function openCommunicationThread(
+  counterpartId: string,
+  subject = 'Conversation'
+): Promise<MessagingRuntimeResult<{
+  thread: ProductionCommunicationThread
+  created: boolean
+}>> {
+  const trimmedSubject = subject.trim()
+
+  if (!counterpartId) {
+    return { success: false, message: 'A messaging counterpart is required.' }
+  }
+
+  if (trimmedSubject.length < 1 || trimmedSubject.length > 160) {
+    return { success: false, message: 'Conversation subjects must be between 1 and 160 characters.' }
+  }
+
+  const actorResult = await getMessagingActor()
+  if (!actorResult.success) return actorResult
+
+  const { actor, supabase } = actorResult.data
+  const studentId = actor.role === 'instructor' ? counterpartId : actor.id
+  const instructorId = actor.role === 'instructor' ? actor.id : counterpartId
+
+  const { data: assignment, error: assignmentError } = await supabase
+    .from('student_instructor_assignments')
+    .select('id, school_id, student_id, instructor_id')
+    .eq('school_id', actor.schoolId)
+    .eq('student_id', studentId)
+    .eq('instructor_id', instructorId)
+    .eq('is_active', true)
+    .is('ended_at', null)
+    .maybeSingle()
+
+  if (assignmentError) {
+    return { success: false, message: assignmentError.message }
+  }
+
+  if (!assignment) {
+    return { success: false, message: 'No active instructor assignment exists for this conversation.' }
+  }
+
+  const { data: existingThreads, error: existingError } = await supabase
+    .from('communication_threads')
+    .select(
+      'id, school_id, student_id, instructor_id, subject, status, last_message_at, created_at, updated_at'
+    )
+    .eq('school_id', assignment.school_id)
+    .eq('student_id', assignment.student_id)
+    .eq('instructor_id', assignment.instructor_id)
+    .eq('status', 'active')
+    .order('created_at', { ascending: false })
+    .limit(1)
+
+  if (existingError) {
+    return { success: false, message: existingError.message }
+  }
+
+  const existingThread = existingThreads?.[0]
+  if (existingThread) {
+    return {
+      success: true,
+      data: {
+        thread: mapThread(existingThread),
+        created: false,
+      },
+    }
+  }
+
+  const { data: createdThread, error: createError } = await supabase
+    .from('communication_threads')
+    .insert({
+      school_id: assignment.school_id,
+      student_id: assignment.student_id,
+      instructor_id: assignment.instructor_id,
+      subject: trimmedSubject,
+      status: 'active',
+      created_by: actor.id,
+    })
+    .select(
+      'id, school_id, student_id, instructor_id, subject, status, last_message_at, created_at, updated_at'
+    )
+    .single()
+
+  if (createError || !createdThread) {
+    return {
+      success: false,
+      message: createError?.message || 'Unable to open this conversation.',
+    }
+  }
+
+  return {
+    success: true,
+    data: {
+      thread: mapThread(createdThread),
+      created: true,
+    },
+  }
+}
+
 export async function loadCommunicationThreads(): Promise<
   MessagingRuntimeResult<ProductionCommunicationThread[]>
 > {
