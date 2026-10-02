@@ -23,7 +23,6 @@ const ROLES = [
 ] as const
 
 const STATUSES = [
-  { value: 'pending', label: 'Pending' },
   { value: 'approved', label: 'Approved' },
   { value: 'rejected', label: 'Rejected' },
 ] as const
@@ -58,7 +57,7 @@ export default function ManageUserModal({
 }: Props) {
   const [roleDraft, setRoleDraft] = useState<AppRole | null>(null)
   const [schoolDraft, setSchoolDraft] = useState<string | null | undefined>(undefined)
-  const [statusDraft, setStatusDraft] = useState<'pending' | 'approved' | 'rejected' | null>(null)
+  const [statusDraft, setStatusDraft] = useState<'approved' | 'rejected' | null>(null)
   const [temporaryPassword, setTemporaryPassword] = useState('')
   const [confirmation, setConfirmation] = useState<Confirmation>(null)
   const [pendingKey, setPendingKey] = useState<string | null>(null)
@@ -68,13 +67,14 @@ export default function ManageUserModal({
 
   const selectedRole = roleDraft ?? user.role
   const selectedSchool = schoolDraft === undefined ? user.school_id : schoolDraft
-  const selectedStatus = statusDraft ?? user.approval_status
+  const selectedStatus = statusDraft ?? (user.approval_status === 'pending' ? 'approved' : user.approval_status)
   const manageableRoles = isPlatformAdmin
     ? ROLES
     : ROLES.filter((role) => role.value !== 'admin' && role.value !== 'school_admin')
 
   const roleLabel = (value: string) => ROLES.find((role) => role.value === value)?.label ?? value
-  const statusLabel = (value: string) => STATUSES.find((status) => status.value === value)?.label ?? value
+  const statusLabel = (value: string) =>
+    value === 'pending' ? 'Pending' : STATUSES.find((status) => status.value === value)?.label ?? value
   const schoolLabel = (value: string | null) =>
     value ? schools.find((school) => school.id === value)?.name ?? 'Unknown school' : 'No school'
 
@@ -266,7 +266,7 @@ export default function ManageUserModal({
             <select
               value={selectedStatus}
               onChange={(event) => {
-                setStatusDraft(event.target.value as 'pending' | 'approved' | 'rejected')
+                setStatusDraft(event.target.value as 'approved' | 'rejected')
                 setConfirmation(null)
               }}
               className="mt-1 min-h-11 w-full rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-background-primary)] px-3 py-2 text-white"
