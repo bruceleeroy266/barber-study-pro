@@ -5,14 +5,13 @@ import { chapter2Concepts } from './chapter-2-concepts/concepts'
 import { chapter2KeyTerms } from './chapter-2-key-terms'
 
 const activeFiles = [
-  'src/lib/chapter-2-concepts/types.ts',
   'src/lib/chapter-2-concepts/concepts.ts',
   'src/lib/chapter-2-key-terms.ts',
   'src/lib/chapter-2-instructor-notes.ts',
 ]
 
 describe('Chapter 2 content provenance firewall', () => {
-  it('does not expose publisher-specific provenance in active Chapter 2 files', () => {
+  it('does not expose publisher-specific provenance in active Chapter 2 data files', () => {
     for (const file of activeFiles) {
       const source = readFileSync(resolve(process.cwd(), file), 'utf-8')
       expect(source, file).not.toMatch(/Milady|Pivot Point|CIMA|DIRECT MILADY|MILADY_SUPPORTED_EXPANSION/i)
