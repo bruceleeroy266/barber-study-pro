@@ -53,12 +53,12 @@ describe('G3-1 trusted measurement cutover', () => {
     expect(cutover).toContain(
       'grant execute on function public.link_study_quiz_attempt(uuid, uuid) to authenticated',
     )
-    expect(po1b).toContain('insert into public.study_activity_days')
+    expect(po1b).toContain('insert into public.trusted_study_activity_days')
     expect(po1b).toContain('if v_credit_seconds > 0 then')
   })
 
-  it('keeps instructor measurement on the trusted study_activity_days rollup', () => {
-    expect(instructor).toContain(".from('study_activity_days')")
+  it('keeps instructor measurement on the authoritative PO-1B read model', () => {
+    expect(instructor).toContain(".from('trusted_trusted_study_activity_days')")
     expect(instructor).toContain('studyMinutesToday')
     expect(instructor).toContain('lastStudyActivityAt')
   })
@@ -79,12 +79,12 @@ describe('G3-1 trusted measurement cutover', () => {
     expect(cutoverLower).not.toContain('hour_adjustments')
   })
   it('syncs trusted credited PO-1B events into the dashboard rollup exactly at the database boundary', () => {
-    const sync = read('supabase/migrations/20261002131000_g3_1_session_delta_rollup_sync.sql')
-    expect(sync).toContain('create or replace function public.sync_po1b_session_delta_to_study_day()')
-    expect(sync).toContain('after update of active_seconds on public.study_sessions')
-    expect(sync).toContain('when (new.active_seconds > old.active_seconds)')
-    expect(sync).toContain('insert into public.study_activity_days')
-    expect(sync).toContain('new.active_seconds - old.active_seconds')
+    const sync = read('supabase/migrations/20261002132500_g3_1_trusted_study_activity_read_model.sql')
+    expect(sync).toContain('create or replace view public.trusted_trusted_study_activity_days')
+    expect(sync).toContain('from public.study_session_events e')
+    expect(sync).toContain('where e.credited_seconds > 0')
+    expect(sync).toContain('sum(e.credited_seconds)::integer as active_seconds')
+    expect(sync).toContain("'Authoritative Gate 3 daily study measurement")
     expect(sync).not.toContain('p_seconds integer')
     expect(sync).not.toContain('hour_logs')
     expect(sync).not.toContain('attendance_records')
