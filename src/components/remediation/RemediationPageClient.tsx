@@ -114,21 +114,12 @@ export default function RemediationPageClient({
   const [reservationIsStale, setReservationIsStale] = useState(false)
 
   useEffect(() => {
-    if (!reservationStartedAt) {
-      setReservationIsStale(false)
-      return
-    }
+    if (!reservationStartedAt) return
 
     const expiresAt = reservationStartedAt.getTime() + 60 * 60 * 1000
     const remainingMs = Math.max(0, expiresAt - Date.now())
-
-    if (remainingMs === 0) {
-      setReservationIsStale(true)
-      return
-    }
-
-    setReservationIsStale(false)
     const timeout = window.setTimeout(() => setReservationIsStale(true), remainingMs)
+
     return () => window.clearTimeout(timeout)
   }, [reservationStartedAt])
 
@@ -258,6 +249,7 @@ export default function RemediationPageClient({
       if (data.knowledgeCheck?.questionNumber) {
         setQuestionNumber(data.knowledgeCheck.questionNumber)
       }
+      setReservationIsStale(false)
       setReservationStartedAt(new Date())
       setStudentState('reassessment_in_progress')
     } catch (err) {
