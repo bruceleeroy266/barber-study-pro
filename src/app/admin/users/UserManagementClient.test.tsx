@@ -3,13 +3,15 @@ import { render, screen, fireEvent, waitFor, within } from '@testing-library/rea
 import type { ReactNode } from 'react'
 import { UserManagementClient } from './UserManagementClient'
 
+const mockCreateUser = vi.fn()
+const mockInviteUser = vi.fn()
 const mockDeleteUser = vi.fn()
 const mockGetUsers = vi.fn()
 const mockGetSchools = vi.fn()
 
 vi.mock('./actions', () => ({
-  createUser: vi.fn(),
-  inviteUser: vi.fn(),
+  createUser: (...args: unknown[]) => mockCreateUser(...args),
+  inviteUser: (...args: unknown[]) => mockInviteUser(...args),
   updateUserStatus: vi.fn(),
   toggleUserDisabled: vi.fn(),
   changeUserRole: vi.fn(),
@@ -185,5 +187,139 @@ describe('UserManagementClient — UM-H2.1 responsive presentation', () => {
     expect(within(dialog).getByText('Manage — Target User')).toBeInTheDocument()
     expect(within(dialog).getByText('target@ascynpro.test')).toBeInTheDocument()
     expect(within(dialog).getAllByText('RISE Program').length).toBeGreaterThanOrEqual(1)
+  })
+})
+
+
+describe('UserManagementClient — UM-H2.3 Create/Invite mobile safety', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockGetUsers.mockResolvedValue({
+      success: true,
+      data: { users: [], count: 0 },
+    })
+    mockCreateUser.mockResolvedValue({ success: true, data: { id: 'created-id' } })
+    mockInviteUser.mockResolvedValue({ success: true, data: { id: 'invited-id' } })
+  })
+
+  it('requires a school for Student but allows No school for Admin', () => {
+    render(
+      <UserManagementClient
+        currentUser={currentUser}
+        initialUsers={[]}
+        initialCount={0}
+        schools={[{ id: 'school-1', name: 'RISE Program' }]}
+      />
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Create User' }))
+
+    const createPanel = screen.getByRole('heading', { name: 'Create User' }).parentElement!
+    const schoolSelect = within(createPanel).getByLabelText('School')
+    const roleSelect = within(createPanel).getByLabelText('Role')
+
+    expect(schoolSelect).toBeRequired()
+    expect(within(schoolSelect).getByRole('option', { name: 'Select a school' })).toBeInTheDocument()
+
+    fireEvent.change(roleSelect, { target: { value: 'admin' } })
+
+    expect(schoolSelect).not.toBeRequired()
+    expect(within(schoolSelect).getByRole('option', { name: 'No school' })).toBeInTheDocument()
+  })
+
+  it('locks Create User while the request is pending and prevents duplicate submission', async () => {
+    let resolveCreate: ((value: { success: boolean; data: { id: string } }) => void) | undefined
+    mockCreateUser.mockImplementation(
+      () => new Promise((resolve) => { resolveCreate = resolve })
+    )
+
+    render(
+      <UserManagementClient
+        currentUser={currentUser}
+        initialUsers={[]}
+        initialCount={0}
+        schools={[{ id: 'school-1', name: 'RISE Program' }]}
+      />
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Create User' }))
+    const createPanel = screen.getByRole('heading', { name: 'Create User' }).parentElement!
+
+    fireEvent.change(within(createPanel).getByLabelText('Full name'), { target: { value: 'New Student' } })
+    fireEvent.change(within(createPanel).getByLabelText('Email'), { target: { value: 'new@student.test' } })
+    fireEvent.change(within(createPanel).getByLabelText('Temporary password'), { target: { value: 'Temporary123!' } })
+    fireEvent.change(within(createPanel).getByLabelText('School'), { target: { value: 'school-1' } })
+
+    fireEvent.submit(within(createPanel).getByRole('button', { name: 'Create User' }).closest('form')!)
+
+    await waitFor(() => {
+      expect(within(createPanel).getByRole('button', { name: 'Creating…' })).toBeDisabled()
+    })
+
+    fireEvent.submit(within(createPanel).getByRole('button', { name: 'Creating…' }).closest('form')!)
+    expect(mockCreateUser).toHaveBeenCalledTimes(1)
+
+    resolveCreate?.({ success: true, data: { id: 'created-id' } })
+    await waitFor(() => expect(mockGetUsers).toHaveBeenCalled())
+  })
+
+  it('locks Send Invitation while pending and prevents duplicate submission', async () => {
+    let resolveInvite: ((value: { success: boolean; data: { id: string } }) => void) | undefined
+    mockInviteUser.mockImplementation(
+      () => new Promise((resolve) => { resolveInvite = resolve })
+    )
+
+    render(
+      <UserManagementClient
+        currentUser={currentUser}
+        initialUsers={[]}
+        initialCount={0}
+        schools={[{ id: 'school-1', name: 'RISE Program' }]}
+      />
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Invite User' }))
+    const invitePanel = screen.getByRole('heading', { name: 'Invite User' }).parentElement!
+
+    fireEvent.change(within(invitePanel).getByLabelText('Full name'), { target: { value: 'Invited Student' } })
+    fireEvent.change(within(invitePanel).getByLabelText('Email'), { target: { value: 'invite@student.test' } })
+    fireEvent.change(within(invitePanel).getByLabelText('School'), { target: { value: 'school-1' } })
+
+    fireEvent.submit(within(invitePanel).getByRole('button', { name: 'Send Invitation' }).closest('form')!)
+
+    await waitFor(() => {
+      expect(within(invitePanel).getByRole('button', { name: 'Sending…' })).toBeDisabled()
+    })
+
+    fireEvent.submit(within(invitePanel).getByRole('button', { name: 'Sending…' }).closest('form')!)
+    expect(mockInviteUser).toHaveBeenCalledTimes(1)
+
+    resolveInvite?.({ success: true, data: { id: 'invited-id' } })
+    await waitFor(() => expect(mockGetUsers).toHaveBeenCalled())
+  })
+
+  it('locks a school admin to their own school without a No school selector', () => {
+    render(
+      <UserManagementClient
+        currentUser={{
+          id: 'school-admin-id',
+          role: 'school_admin',
+          schoolId: 'school-1',
+          isPlatformAdmin: false,
+        }}
+        initialUsers={[]}
+        initialCount={0}
+        schools={[{ id: 'school-1', name: 'RISE Program' }]}
+      />
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Invite User' }))
+    const invitePanel = screen.getByRole('heading', { name: 'Invite User' }).parentElement!
+
+    expect(within(invitePanel).queryByRole('combobox', { name: 'School' })).not.toBeInTheDocument()
+    expect(within(invitePanel).getByText('RISE Program')).toBeInTheDocument()
+
+    const hiddenSchool = invitePanel.querySelector('input[name="school_id"]') as HTMLInputElement
+    expect(hiddenSchool.value).toBe('school-1')
   })
 })
