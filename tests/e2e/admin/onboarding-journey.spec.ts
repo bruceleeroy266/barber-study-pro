@@ -537,7 +537,7 @@ test.describe('Pilot onboarding certification', () => {
     // 8. Gate 3 handoff: activated student produces trusted measurement
     // -----------------------------------------------------------------------
     const { data: beforeActivityRows } = await service
-      .from('study_activity_days')
+      .from('trusted_study_activity_days')
       .select('active_seconds')
       .eq('user_id', studentProfile!.id)
 
@@ -611,7 +611,7 @@ test.describe('Pilot onboarding certification', () => {
 
     await expect.poll(async () => {
       const { data } = await service
-        .from('study_activity_days')
+        .from('trusted_study_activity_days')
         .select('active_seconds')
         .eq('user_id', studentProfile!.id)
 
