@@ -579,7 +579,7 @@ test.describe('Pilot onboarding certification', () => {
     }, sessionId)
     expect(firstActivity).toBe(true)
 
-    await studentSession.page.waitForTimeout(1_100)
+    await studentSession.page.waitForTimeout(2_500)
 
     const secondActivity = await studentSession.page.evaluate(async (id) => {
       const response = await fetch('/api/study-sessions/activity', {
@@ -598,6 +598,16 @@ test.describe('Pilot onboarding certification', () => {
         body: JSON.stringify({ sessionId: id }),
       })
     }, sessionId)
+
+    await expect.poll(async () => {
+      const { data } = await service
+        .from('study_sessions')
+        .select('active_seconds')
+        .eq('id', sessionId)
+        .single()
+
+      return Number(data?.active_seconds || 0)
+    }, { timeout: 10_000 }).toBeGreaterThan(0)
 
     await expect.poll(async () => {
       const { data } = await service
