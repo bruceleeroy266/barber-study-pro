@@ -106,8 +106,6 @@ export function useStudySession({
 
   useEffect(() => {
     if (!enabled) return
-    void ensureSession()
-
     const heartbeat = window.setInterval(() => {
       const lastQualifyingAt = lastQualifyingAtRef.current
       if (!lastQualifyingAt) return
