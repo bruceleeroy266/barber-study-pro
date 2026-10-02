@@ -259,11 +259,29 @@ export async function loadStudentBulletins(): Promise<
     acknowledgments = (data || []) as AckRow[]
   }
 
+  const priorityRank: Record<BulletinPriority, number> = {
+    urgent: 2,
+    important: 1,
+    normal: 0,
+  }
+
+  const mapped = ((bulletins || []) as BulletinRow[]).map((bulletin) =>
+    mapBulletin(bulletin, [], acknowledgments, actor.id)
+  )
+
+  mapped.sort((a, b) => {
+    if (a.isPinned !== b.isPinned) return a.isPinned ? -1 : 1
+    if (priorityRank[a.priority] !== priorityRank[b.priority]) {
+      return priorityRank[b.priority] - priorityRank[a.priority]
+    }
+    const aTime = new Date(a.publishAt || a.createdAt).getTime()
+    const bTime = new Date(b.publishAt || b.createdAt).getTime()
+    return bTime - aTime
+  })
+
   return {
     success: true,
-    data: ((bulletins || []) as BulletinRow[]).map((bulletin) =>
-      mapBulletin(bulletin, [], acknowledgments, actor.id)
-    ),
+    data: mapped,
   }
 }
 
