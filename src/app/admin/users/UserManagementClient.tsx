@@ -20,6 +20,7 @@ import { AppRole } from '@/types'
 import Modal from '@/components/ui/Modal'
 import EnrollmentModal from './EnrollmentModal'
 import UserManagementMobileCard from './UserManagementMobileCard'
+import ManageUserModal from './ManageUserModal'
 
 interface CurrentUser {
   id: string
@@ -681,38 +682,25 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
         </div>
       </div>
 
-      <Modal
-        isOpen={!!manageCandidate}
+      <ManageUserModal
+        user={manageCandidate}
+        currentUserId={currentUser.id}
+        isPlatformAdmin={currentUser.isPlatformAdmin}
+        schools={schools}
         onClose={() => setManageCandidate(null)}
-        title={manageCandidate ? `Manage — ${manageCandidate.full_name}` : 'Manage user'}
-        size="sm"
-      >
-        {manageCandidate && (
-          <div className="space-y-4">
-            <div className="rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-background-secondary)] p-4">
-              <p className="font-medium text-white">{manageCandidate.full_name}</p>
-              <p className="mt-1 break-all text-sm text-[var(--color-text-muted)]">{manageCandidate.email}</p>
-              <dl className="mt-3 grid grid-cols-2 gap-3 text-sm">
-                <div>
-                  <dt className="text-xs uppercase tracking-wide text-[var(--color-text-muted)]">Role</dt>
-                  <dd className="mt-1 text-white">
-                    {ROLES.find((role) => role.value === manageCandidate.role)?.label ?? manageCandidate.role}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-xs uppercase tracking-wide text-[var(--color-text-muted)]">School</dt>
-                  <dd className="mt-1 text-white">{manageCandidate.school_name ?? 'No school'}</dd>
-                </div>
-              </dl>
-            </div>
-            <p className="text-sm text-[var(--color-text-muted)]">
-              Mobile management controls are intentionally staged behind the next UM-H2 slice so role,
-              school, status, and password mutations can be moved here with explicit confirmations and
-              duplicate-tap protection.
-            </p>
-          </div>
-        )}
-      </Modal>
+        onUpdated={async (text) => {
+          setMessage({ type: 'success', text })
+          await loadUsers(offset)
+        }}
+        onManageEnrollment={(user) => {
+          setManageCandidate(null)
+          setEnrollmentStudent(user)
+        }}
+        onDelete={(user) => {
+          setManageCandidate(null)
+          setDeleteCandidate(user)
+        }}
+      />
 
       {/* Enrollment Modal */}
       {enrollmentStudent && (
