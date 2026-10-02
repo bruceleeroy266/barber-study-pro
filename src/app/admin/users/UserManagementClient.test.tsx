@@ -147,3 +147,42 @@ describe('UserManagementClient — delete user', () => {
     })
   })
 })
+
+
+describe('UserManagementClient — UM-H2.1 responsive presentation', () => {
+  it('renders a mobile card list and keeps the desktop table behind the md breakpoint', () => {
+    render(
+      <UserManagementClient
+        currentUser={currentUser}
+        initialUsers={[targetUser]}
+        initialCount={1}
+        schools={[{ id: 'school-1', name: 'RISE Program' }]}
+      />
+    )
+
+    const mobileList = screen.getByTestId('mobile-user-list')
+    const desktopTable = screen.getByTestId('desktop-user-table')
+
+    expect(mobileList).toHaveClass('md:hidden')
+    expect(desktopTable).toHaveClass('hidden', 'md:block')
+    expect(screen.getByTestId('mobile-user-card')).toBeInTheDocument()
+  })
+
+  it('opens the mobile Manage user shell for the selected user', () => {
+    render(
+      <UserManagementClient
+        currentUser={currentUser}
+        initialUsers={[targetUser]}
+        initialCount={1}
+        schools={[{ id: 'school-1', name: 'RISE Program' }]}
+      />
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Manage user' }))
+
+    const dialog = screen.getByRole('dialog')
+    expect(within(dialog).getByText('Manage — Target User')).toBeInTheDocument()
+    expect(within(dialog).getByText('target@ascynpro.test')).toBeInTheDocument()
+    expect(within(dialog).getByText('RISE Program')).toBeInTheDocument()
+  })
+})
