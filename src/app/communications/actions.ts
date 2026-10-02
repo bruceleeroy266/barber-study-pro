@@ -36,6 +36,7 @@ export interface ProductionCommunicationThread {
   lastMessageAt: string | null
   createdAt: string
   updatedAt: string
+  unreadCount: number
 }
 
 export interface ProductionCommunicationMessage {
@@ -117,6 +118,7 @@ function mapThread(row: {
     lastMessageAt: row.last_message_at,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
+    unreadCount: 0,
   }
 }
 
@@ -226,7 +228,7 @@ export async function loadCommunicationThreads(): Promise<
   const actorResult = await getMessagingActor()
   if (!actorResult.success) return actorResult
 
-  const { supabase } = actorResult.data
+  const { actor, supabase } = actorResult.data
   const { data, error } = await supabase
     .from('communication_threads')
     .select(
@@ -239,9 +241,56 @@ export async function loadCommunicationThreads(): Promise<
     return { success: false, message: error.message }
   }
 
+  const rows = data || []
+  const threadIds = rows.map((thread) => thread.id)
+  const unreadByThread = new Map<string, number>()
+
+  if (threadIds.length > 0) {
+    const { data: incoming, error: incomingError } = await supabase
+      .from('communication_messages')
+      .select('id, thread_id')
+      .in('thread_id', threadIds)
+      .neq('sender_id', actor.id)
+
+    if (incomingError) {
+      return { success: false, message: incomingError.message }
+    }
+
+    const incomingIds = (incoming || []).map((message) => message.id)
+    const readIds = new Set<string>()
+
+    if (incomingIds.length > 0) {
+      const { data: reads, error: readsError } = await supabase
+        .from('communication_message_reads')
+        .select('message_id')
+        .eq('reader_id', actor.id)
+        .in('message_id', incomingIds)
+
+      if (readsError) {
+        return { success: false, message: readsError.message }
+      }
+
+      for (const read of reads || []) {
+        readIds.add(read.message_id)
+      }
+    }
+
+    for (const message of incoming || []) {
+      if (!readIds.has(message.id)) {
+        unreadByThread.set(
+          message.thread_id,
+          (unreadByThread.get(message.thread_id) || 0) + 1
+        )
+      }
+    }
+  }
+
   return {
     success: true,
-    data: (data || []).map(mapThread),
+    data: rows.map((row) => ({
+      ...mapThread(row),
+      unreadCount: unreadByThread.get(row.id) || 0,
+    })),
   }
 }
 
@@ -314,6 +363,49 @@ export async function loadCommunicationThreadMessages(
         readAt: readByMessage.get(message.id) ?? null,
       })),
     },
+  }
+}
+
+export async function archiveCommunicationThread(
+  threadId: string
+): Promise<MessagingRuntimeResult<{ thread: ProductionCommunicationThread }>> {
+  if (!threadId) {
+    return { success: false, message: 'A thread is required.' }
+  }
+
+  const actorResult = await getMessagingActor()
+  if (!actorResult.success) return actorResult
+
+  const { actor, supabase } = actorResult.data
+
+  if (actor.role !== 'instructor') {
+    return { success: false, message: 'Only instructors can archive conversations.' }
+  }
+
+  const { data: thread, error } = await supabase
+    .from('communication_threads')
+    .update({
+      status: 'archived',
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', threadId)
+    .eq('instructor_id', actor.id)
+    .eq('status', 'active')
+    .select(
+      'id, school_id, student_id, instructor_id, subject, status, last_message_at, created_at, updated_at'
+    )
+    .single()
+
+  if (error || !thread) {
+    return {
+      success: false,
+      message: error?.message || 'Unable to archive this conversation.',
+    }
+  }
+
+  return {
+    success: true,
+    data: { thread: mapThread(thread) },
   }
 }
 
@@ -438,6 +530,9 @@ export async function markCommunicationThreadRead(
     .insert(unreadIds.map((messageId: string) => ({ message_id: messageId, reader_id: actor.id })))
 
   if (insertError) {
+    if (insertError.code === '23505') {
+      return { success: true, data: { markedRead: 0 } }
+    }
     return { success: false, message: insertError.message }
   }
 
