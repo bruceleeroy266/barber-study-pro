@@ -319,8 +319,9 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
           <h2 className="text-xl font-semibold text-white mb-4">Create User</h2>
           <form onSubmit={handleCreateUser} className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Full name</label>
+              <label htmlFor="create-full-name" className="block text-sm text-[var(--color-text-muted)] mb-1">Full name</label>
               <input
+                id="create-full-name"
                 name="full_name"
                 type="text"
                 required
@@ -328,8 +329,9 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               />
             </div>
             <div>
-              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Email</label>
+              <label htmlFor="create-email" className="block text-sm text-[var(--color-text-muted)] mb-1">Email</label>
               <input
+                id="create-email"
                 name="email"
                 type="email"
                 required
@@ -337,8 +339,9 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               />
             </div>
             <div>
-              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Temporary password</label>
+              <label htmlFor="create-password" className="block text-sm text-[var(--color-text-muted)] mb-1">Temporary password</label>
               <input
+                id="create-password"
                 name="password"
                 type="password"
                 required
@@ -349,8 +352,9 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               <p className="text-xs text-[var(--color-text-muted)] mt-1">8–72 characters. User will be forced to change it on first login.</p>
             </div>
             <div>
-              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Role</label>
+              <label htmlFor="create-role" className="block text-sm text-[var(--color-text-muted)] mb-1">Role</label>
               <select
+                id="create-role"
                 name="role"
                 required
                 value={createRole}
@@ -365,9 +369,10 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               </select>
             </div>
             <div>
-              <label className="block text-sm text-[var(--color-text-muted)] mb-1">School</label>
+              <label htmlFor="create-school" className="block text-sm text-[var(--color-text-muted)] mb-1">School</label>
               {currentUser.isPlatformAdmin ? (
                 <select
+                  id="create-school"
                   name="school_id"
                   required={roleRequiresSchool(createRole)}
                   defaultValue=""
@@ -395,8 +400,9 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               </p>
             </div>
             <div>
-              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Approval status</label>
+              <label htmlFor="create-approval-status" className="block text-sm text-[var(--color-text-muted)] mb-1">Approval status</label>
               <select
+                id="create-approval-status"
                 name="approval_status"
                 required
                 defaultValue="pending"
@@ -430,8 +436,9 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
           </p>
           <form onSubmit={handleInviteUser} className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Full name</label>
+              <label htmlFor="invite-full-name" className="block text-sm text-[var(--color-text-muted)] mb-1">Full name</label>
               <input
+                id="invite-full-name"
                 name="full_name"
                 type="text"
                 required
@@ -439,8 +446,9 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               />
             </div>
             <div>
-              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Email</label>
+              <label htmlFor="invite-email" className="block text-sm text-[var(--color-text-muted)] mb-1">Email</label>
               <input
+                id="invite-email"
                 name="email"
                 type="email"
                 required
@@ -448,8 +456,9 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               />
             </div>
             <div>
-              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Role</label>
+              <label htmlFor="invite-role" className="block text-sm text-[var(--color-text-muted)] mb-1">Role</label>
               <select
+                id="invite-role"
                 name="role"
                 required
                 value={inviteRole}
@@ -464,9 +473,10 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               </select>
             </div>
             <div>
-              <label className="block text-sm text-[var(--color-text-muted)] mb-1">School</label>
+              <label htmlFor="invite-school" className="block text-sm text-[var(--color-text-muted)] mb-1">School</label>
               {currentUser.isPlatformAdmin ? (
                 <select
+                  id="invite-school"
                   name="school_id"
                   required={roleRequiresSchool(inviteRole)}
                   defaultValue=""
@@ -494,8 +504,9 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               </p>
             </div>
             <div>
-              <label className="block text-sm text-[var(--color-text-muted)] mb-1">Approval status</label>
+              <label htmlFor="invite-approval-status" className="block text-sm text-[var(--color-text-muted)] mb-1">Approval status</label>
               <select
+                id="invite-approval-status"
                 name="approval_status"
                 required
                 defaultValue="pending"
