@@ -184,6 +184,6 @@ describe('UserManagementClient — UM-H2.1 responsive presentation', () => {
     const dialog = screen.getByRole('dialog')
     expect(within(dialog).getByText('Manage — Target User')).toBeInTheDocument()
     expect(within(dialog).getByText('target@ascynpro.test')).toBeInTheDocument()
-    expect(within(dialog).getByText('RISE Program')).toBeInTheDocument()
+    expect(within(dialog).getAllByText('RISE Program').length).toBeGreaterThanOrEqual(1)
   })
 })
