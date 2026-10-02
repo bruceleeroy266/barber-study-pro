@@ -8,8 +8,22 @@ import {
 } from '@/lib/demo-data'
 import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
 import InstructorMessageDashboard from '@/components/messaging/InstructorMessageDashboard'
+import ProductionMessageCenter, {
+  type ProductionMessagingPerson,
+} from '@/components/messaging/ProductionMessageCenter'
 import ProductionMessagingPlaceholder from '@/components/messaging/ProductionMessagingPlaceholder'
 import BackButton from '@/components/ui/BackButton'
+import { loadCommunicationThreads } from '@/app/communications/actions'
+
+interface PersonRow {
+  id: string
+  full_name: string
+  role: string
+}
+
+interface AssignmentRow {
+  student_id: string
+}
 
 export default async function InstructorMessagesPage() {
   const supabase = await createClient()
@@ -34,25 +48,94 @@ export default async function InstructorMessagesPage() {
   }
 
   const instructorProfile = profile as Profile
-
-  // Phase 13C.1: messaging is only functional in explicit safe demo mode.
-  // In production (Supabase configured), show a disabled/coming-soon state
-  // instead of fake demo threads and notifications.
   const demoMode = isExplicitDemoMode()
   const supabaseConfigured = isSupabaseConfigured()
   const isSafeDemo = demoMode && !supabaseConfigured
 
   if (!isSafeDemo) {
+    // COM-1A explicitly keeps private thread access participant-only.
+    // Admin roles retain their existing route but do not gain private-message browsing.
+    if (instructorProfile.role !== 'instructor') {
+      return (
+        <ProductionMessagingPlaceholder
+          title="Instructor Messaging"
+          backHref="/instructor"
+          backLabel="Back to Instructor Dashboard"
+        />
+      )
+    }
+
+    const threadsResult = await loadCommunicationThreads()
+    const initialThreads = threadsResult.success ? threadsResult.data : []
+
+    const { data: assignmentRows } = await supabase
+      .from('student_instructor_assignments')
+      .select('student_id')
+      .eq('school_id', instructorProfile.school_id)
+      .eq('instructor_id', user.id)
+      .eq('is_active', true)
+      .is('ended_at', null)
+
+    const assignedStudentIds = (assignmentRows || []).map(
+      (assignment: AssignmentRow) => assignment.student_id
+    )
+
+    const participantIds = Array.from(
+      new Set([
+        ...assignedStudentIds,
+        ...initialThreads.flatMap((thread) => [thread.studentId, thread.instructorId]),
+      ])
+    ).filter((id) => id !== user.id)
+
+    let peopleRows: PersonRow[] = []
+    if (participantIds.length > 0) {
+      const { data } = await supabase
+        .from('profiles')
+        .select('id, full_name, role')
+        .eq('school_id', instructorProfile.school_id)
+        .in('id', participantIds)
+
+      peopleRows = (data || []) as PersonRow[]
+    }
+
+    const people: ProductionMessagingPerson[] = peopleRows
+      .filter((person) =>
+        ['student', 'apprentice', 'instructor'].includes(person.role)
+      )
+      .map((person) => ({
+        id: person.id,
+        name: person.full_name,
+        role: person.role as ProductionMessagingPerson['role'],
+      }))
+
+    const assignedSet = new Set(assignedStudentIds)
+    const availableCounterparts = people.filter((person) =>
+      assignedSet.has(person.id)
+    )
+
     return (
-      <ProductionMessagingPlaceholder
-        title="Instructor Messaging"
-        backHref="/instructor"
-        backLabel="Back to Instructor Dashboard"
-      />
+      <div className="min-h-screen bg-[var(--color-background-primary)] p-6 md:p-8">
+        <BackButton
+          fallbackHref="/instructor"
+          label="Back to instructor dashboard"
+        />
+        <div className="max-w-7xl mx-auto mt-6">
+          <ProductionMessageCenter
+            currentUserId={user.id}
+            currentUserName={instructorProfile.full_name}
+            currentUserRole="instructor"
+            initialThreads={initialThreads}
+            people={people}
+            availableCounterparts={availableCounterparts}
+            title="Instructor Messaging"
+            subtitle="Private conversations with your assigned students."
+          />
+        </div>
+      </div>
     )
   }
 
-  // Demo-only path: load the school roster and demo notifications.
+  // Safe demo path remains unchanged.
   const { data: students } = await supabase
     .from('profiles')
     .select('*')
@@ -62,7 +145,9 @@ export default async function InstructorMessagesPage() {
   let rosterStudents: Profile[] = (students as Profile[]) || []
   if (rosterStudents.length === 0) {
     rosterStudents = demoStudents.filter(
-      (s) => s.school_id === instructorProfile.school_id || !instructorProfile.school_id
+      (student) =>
+        student.school_id === instructorProfile.school_id ||
+        !instructorProfile.school_id
     )
   }
 
@@ -70,8 +155,11 @@ export default async function InstructorMessagesPage() {
 
   return (
     <div className="min-h-screen bg-[var(--color-background-primary)] p-6 md:p-8">
-        <BackButton fallbackHref="/instructor" label="Back to instructor dashboard" />
-      <div className="max-w-7xl mx-auto">
+      <BackButton
+        fallbackHref="/instructor"
+        label="Back to instructor dashboard"
+      />
+      <div className="max-w-7xl mx-auto mt-6">
         <InstructorMessageDashboard
           instructorId={user.id}
           instructorName={instructorProfile.full_name}
