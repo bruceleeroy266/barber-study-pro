@@ -32,7 +32,7 @@ import { calculateOverallGrade } from '@/lib/gradebook'
 import { localChapters } from '@/lib/local-data'
 import { DEFAULT_REQUIRED_HOURS } from '@/lib/programs/requirements'
 import { DEFAULT_COMPLIANCE_THRESHOLDS } from '@/lib/compliance/compliance-rules'
-import { calculateHoursProgressSummary, getOfficialMinutes } from '@/lib/hours/reporting'
+import { calculateHoursProgressSummary } from '@/lib/hours/reporting'
 import {
   ActiveStudentInstructorAssignment,
   buildInstructorAssignmentMap,
