@@ -38,7 +38,7 @@ describe('E11 final hours and attendance certification', () => {
   })
 
   it('keeps pending hours separate from official totals', () => {
-    expect(studentPage).toContain(".filter((row) => row.status === 'pending')")
+    expect(studentPage).toContain('pendingMinutes')
     expect(staffManager).toContain(".filter((log) => log.status === 'pending')")
     expect(studentPage).toContain('Pending hours do not increase this progress')
   })
