@@ -13,6 +13,7 @@ import DemoDataBanner from '@/components/DemoDataBanner'
 import { getDemoMissedQuestionsForUser } from '@/lib/demo-analytics'
 import { getReadinessColorClass } from '@/lib/readiness'
 import { calculateCanonicalStudentLearningMetrics } from '@/lib/student-level/metrics'
+import { resolveLastLearningActivityAt } from '@/lib/student-level/activity'
 import { analyzePerformance } from '@/lib/analytics'
 import { generateStudyPlan } from '@/lib/recommendations'
 import { calculateAttendanceSummary, getRecentAttendance, getStatusColorClass } from '@/lib/attendance'
@@ -360,6 +361,13 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     .eq('user_id', studentId)
     .order('completed_at', { ascending: false })
 
+  // ADM-1D parity: detail/report must use the same trusted study evidence as
+  // roster surfaces when resolving "Last learning activity".
+  const { data: trustedStudyActivityRows } = await supabase
+    .from('trusted_study_activity_days')
+    .select('last_active_at')
+    .eq('user_id', studentId)
+
   // Chapters 1–10 share one immutable micro-check evidence read for this student.
   // The same rows feed the same diagnostics whether the authorized viewer is an
   // instructor or school admin; role changes authorization, never calculations.
@@ -512,6 +520,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     flashcardsCompleted,
     quizzesPassed: quizzesCompleted,
     averageQuizScore: avgQuizScore,
+    hasQuizEvidence,
     readiness: boardReadiness,
   } = canonicalMetrics
   const readiness = {
@@ -1066,12 +1075,11 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
   })
   const chapter21LiveGrade = buildLiveGrade('ch-21', chapter21Diagnostics)
 
-  // Last activity across all progress records
-  const lastStudiedDates = progressRecords
-    .map((p) => p.last_studied_at)
-    .filter((d): d is string => !!d)
-    .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
-  const lastActivityAt = lastStudiedDates[0] || null
+  const lastActivityAt = resolveLastLearningActivityAt({
+    progress: progressRecords,
+    attempts: attemptRecords,
+    trustedActivity: (trustedStudyActivityRows ?? []) as Array<{ last_active_at: string | null }>,
+  })
 
   // Phase 5 analytics
   const questions = Object.values(allQuizQuestions).flat()
@@ -1120,6 +1128,21 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
   const strongAreas = sortedByScoreDesc.filter((c) => c.score >= 80).slice(0, 3)
 
   const boardRisk = getBoardRisk(attemptedChapters)
+
+  // The printable/admin report uses the same analytics weak areas as the
+  // student-facing analytics, not the older best-quiz-score ranking.
+  const reportWeakAreas = analytics.weakAreas.slice(0, 5)
+  const reportHasPerformanceEvidence = attemptRecords.length > 0
+
+  // Keep Board Exam Risk evidence-aligned with canonical readiness. No quiz
+  // evidence is "No Data" rather than incorrectly labeling a new learner High Risk.
+  const reportBoardRisk = !hasQuizEvidence
+    ? { label: 'No Data' }
+    : boardReadiness.level === 'Ready'
+      ? { label: 'Low Risk' }
+      : boardReadiness.level === 'At Risk'
+        ? { label: 'High Risk' }
+        : { label: 'Moderate Risk' }
 
   return (
     <div className="min-h-screen bg-black p-6 md:p-8">
@@ -1171,12 +1194,13 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           overallProgress={overallProgress}
           avgQuizScore={avgQuizScore}
           readiness={readiness}
-          boardRisk={boardRisk}
+          boardRisk={reportBoardRisk}
           chapters={chapters}
           progressRecords={progressRecords}
           attemptRecords={attemptRecords}
-          hasEnoughQuizData={hasEnoughQuizData}
-          weakAreas={weakAreas}
+          hasEnoughQuizData={reportHasPerformanceEvidence}
+          hasQuizEvidence={hasQuizEvidence}
+          weakAreas={reportWeakAreas}
           noteRecords={noteRecords}
         />
 
@@ -1209,7 +1233,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
 
           <div className="bg-charcoal border border-graphite rounded-xl p-5">
             <div className={`text-2xl font-bold ${avgQuizScore >= 80 ? 'text-gold' : avgQuizScore >= 60 ? 'text-warm-bronze' : avgQuizScore > 0 ? 'text-silver' : 'text-silver-gray'}`}>
-              {avgQuizScore > 0 ? `${avgQuizScore}%` : '—'}
+              {hasQuizEvidence ? `${avgQuizScore}%` : '—'}
             </div>
             <div className="text-xs text-silver mt-1">Quiz Average</div>
           </div>
