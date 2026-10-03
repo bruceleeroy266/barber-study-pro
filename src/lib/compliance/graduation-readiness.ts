@@ -27,8 +27,12 @@ export function calculateGraduationReadiness(
   const remainingItems: string[] = []
 
   const hoursRatio = Math.min(1, inputs.completedHours / thresholds.requiredHours)
-  const assessmentRatio = Math.min(1, inputs.completedAssessments / thresholds.requiredAssessments)
-  const practicalRatio = Math.min(1, inputs.completedPracticals / thresholds.requiredPracticals)
+  const assessmentRatio = thresholds.requiredAssessments > 0
+    ? Math.min(1, inputs.completedAssessments / thresholds.requiredAssessments)
+    : 1
+  const practicalRatio = thresholds.requiredPracticals > 0
+    ? Math.min(1, inputs.completedPracticals / thresholds.requiredPracticals)
+    : 1
   const attendanceRatio = Math.min(1, inputs.attendancePercentage / thresholds.minimumAttendancePercentage)
   const readinessRatio = Math.min(1, inputs.readinessScore / thresholds.minimumReadinessScore)
   const gradeRatio = Math.min(1, inputs.overallGrade / thresholds.minimumOverallGrade)
@@ -46,10 +50,10 @@ export function calculateGraduationReadiness(
   if (inputs.completedHours < thresholds.requiredHours) {
     remainingItems.push(`${Math.max(0, thresholds.requiredHours - inputs.completedHours)} hours remaining`)
   }
-  if (inputs.completedAssessments < thresholds.requiredAssessments) {
+  if (thresholds.requiredAssessments > 0 && inputs.completedAssessments < thresholds.requiredAssessments) {
     remainingItems.push(`${thresholds.requiredAssessments - inputs.completedAssessments} assessments remaining`)
   }
-  if (inputs.completedPracticals < thresholds.requiredPracticals) {
+  if (thresholds.requiredPracticals > 0 && inputs.completedPracticals < thresholds.requiredPracticals) {
     remainingItems.push(`${thresholds.requiredPracticals - inputs.completedPracticals} practicals remaining`)
   }
   if (inputs.attendancePercentage < thresholds.minimumAttendancePercentage) {
