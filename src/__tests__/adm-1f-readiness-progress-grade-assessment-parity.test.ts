@@ -182,7 +182,7 @@ describe('ADM-1F readiness/progress/grade/assessment parity', () => {
           assessmentType: 'HAIRCUT',
           score: 0,
           scoringType: 'NUMERIC',
-          qualitativeResult: 'NOT_PASS',
+          qualitativeResult: 'FAIL',
           feedback: '',
           assessmentDate: '2026-10-03T00:00:00Z',
           evaluatorId: 'instructor-1',
