@@ -27,6 +27,7 @@ export async function loadActiveStudentInstructorAssignments(
     .select('school_id, student_id, instructor_id')
     .eq('school_id', schoolId)
     .eq('is_active', true)
+    .is('ended_at', null)
 
   if (instructorId) {
     query = query.eq('instructor_id', instructorId)
