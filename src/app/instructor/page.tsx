@@ -7,7 +7,8 @@ import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 import { demoStudents, demoStudentProgress, demoStudentQuizAttempts, demoHourLogs, demoAttendanceRecords, getDemoNotificationsForUser, getDemoThreadsForUser, demoGrades, demoGradeCategories, demoAssessments } from '@/lib/demo-data'
 import { isDemoDataAllowed } from '@/lib/demo-helpers'
 import DemoDataBanner from '@/components/DemoDataBanner'
-import { calculateBoardReadiness, getReadinessColorClass } from '@/lib/readiness'
+import { getReadinessColorClass } from '@/lib/readiness'
+import { calculateCanonicalStudentLearningMetrics } from '@/lib/student-level/metrics'
 import { analyzePerformance } from '@/lib/analytics'
 import { getAttendanceConcerns, getStatusColorClass } from '@/lib/attendance'
 import { calculateClassGradeSummary, getGradeColorClass } from '@/lib/gradebook'
@@ -117,13 +118,18 @@ function computeStudentStats(
       .map((row) => row.last_active_at)
       .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())[0] || null
 
-    const completedChapters = progress.filter((p) => p.progress_percentage === 100).length
-    const totalProgressSum = progress.reduce((sum, p) => sum + p.progress_percentage, 0)
-    const overallProgress = totalChapters > 0 ? Math.round(totalProgressSum / totalChapters) : 0
-
-    const avgQuizScore = attempts.length > 0
-      ? Math.round(attempts.reduce((sum, a) => sum + a.percentage, 0) / attempts.length)
-      : 0
+    const canonicalMetrics = calculateCanonicalStudentLearningMetrics({
+      userId: student.id,
+      progress,
+      attempts,
+      totalChapters,
+    })
+    const {
+      completedChapters,
+      overallProgress,
+      averageQuizScore: avgQuizScore,
+      readiness,
+    } = canonicalMetrics
 
     const lastStudiedDates = progress
       .map((p) => p.last_studied_at)
@@ -141,13 +147,6 @@ function computeStudentStats(
     const daysSinceActive = signals.daysSinceLearning
     const daysSinceLogin = signals.daysSinceLogin
     const lastLoginAt = signals.lastLoginAt
-
-    const readiness = calculateBoardReadiness({
-      userId: student.id,
-      attempts,
-      progress,
-      totalChapters,
-    })
 
     // Determine weakest category from analytics
     const analytics = analyzePerformance({
