@@ -5,6 +5,10 @@ import type { Profile } from '@/types'
 
 vi.mock('next/navigation', () => ({
   usePathname: () => '/admin',
+  useRouter: () => ({
+    back: vi.fn(),
+    push: vi.fn(),
+  }),
 }))
 
 const adminProfile: Profile = {

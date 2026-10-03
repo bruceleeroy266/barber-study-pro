@@ -10,6 +10,7 @@ import { isInstructorOrAdmin, isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
 import { isDashboardNavItemActive } from '@/lib/nav-active'
 import { logLogout } from '@/app/(auth)/actions'
 import { Logo } from '@/components/brand'
+import BackButton from '@/components/ui/BackButton'
 
 interface DashboardNavProps {
   user: Profile | null
@@ -121,6 +122,9 @@ export default function DashboardNav({ user }: DashboardNavProps) {
       {mobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-40 bg-black pt-16 overflow-y-auto">
           <nav className="p-4 space-y-2 pb-8">
+            <div className="px-2 pb-2">
+              <BackButton fallbackHref="/dashboard" label="Back" />
+            </div>
             {navItems.map((item) => {
               const Icon = item.icon
               return (
@@ -166,6 +170,10 @@ export default function DashboardNav({ user }: DashboardNavProps) {
             <span className="inline-block mt-2 px-2 py-1 bg-gold/10 text-gold text-xs rounded capitalize">
               {user?.role || 'Student'}
             </span>
+          </div>
+
+          <div className="mb-3">
+            <BackButton fallbackHref="/dashboard" label="Back" />
           </div>
 
           <nav className="space-y-1">
