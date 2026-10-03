@@ -559,6 +559,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                 <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Email</th>
                 <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Role</th>
                 <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">School</th>
+                <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Instructor</th>
                 <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Status</th>
                 <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Disabled</th>
                 <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Password Reset</th>
@@ -578,6 +579,11 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                   </td>
                   <td className="px-4 py-3 text-[var(--color-text-secondary)]">
                     {user.school_name ?? 'No school'}
+                  </td>
+                  <td className="px-4 py-3 text-[var(--color-text-secondary)]">
+                    {user.role === 'student' || user.role === 'apprentice'
+                      ? user.assigned_instructor_name ?? 'Unassigned'
+                      : '—'}
                   </td>
                   <td className="px-4 py-3 text-[var(--color-text-secondary)]">
                     {APPROVAL_STATUSES.find((status) => status.value === user.approval_status)?.label ?? user.approval_status}
@@ -629,7 +635,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               ))}
               {users.length === 0 && (
                 <tr>
-                  <td colSpan={9} className="px-4 py-8 text-center text-[var(--color-text-muted)]">
+                  <td colSpan={10} className="px-4 py-8 text-center text-[var(--color-text-muted)]">
                     No users found
                   </td>
                 </tr>
