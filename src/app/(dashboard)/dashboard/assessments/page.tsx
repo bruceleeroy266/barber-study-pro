@@ -82,8 +82,8 @@ export default async function StudentAssessmentsPage() {
           />
           <MetricCard
             label="Pass Rate"
-            value={`${passRate}%`}
-            variant={passRate >= 80 ? 'success' : passRate >= 60 ? 'warning' : 'error'}
+            value={assessments.length > 0 ? `${passRate}%` : '—'}
+            variant={assessments.length === 0 ? 'default' : passRate >= 80 ? 'success' : passRate >= 60 ? 'warning' : 'error'}
           />
         </div>
       </div>
