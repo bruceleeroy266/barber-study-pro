@@ -135,6 +135,7 @@ import {
 } from '@/lib/chapter-21-concepts/instructor-diagnostics'
 import { mapHourLogsFromDb, mapAttendanceRecordsFromDb, mapAttendanceNotesFromDb } from '@/lib/mappers/operational-data-mappers'
 import { getLastSignInAtMap } from '@/lib/instructor/last-login'
+import { isStudentAssignedToInstructor } from '@/lib/instructor/assignments'
 import { buildLiveInstructorChapterGrade, type LiveInstructorActivityEvidenceRow } from '@/lib/concept-mastery/live-instructor-grade'
 
 interface StudentDetailPageProps {
@@ -300,6 +301,24 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     .single()
 
   const typedStudent = student as Profile | null
+
+  // Same-school membership is not enough for an instructor. The active
+  // student↔instructor assignment is the canonical authorization boundary.
+  if (
+    typedStudent &&
+    instructorProfile.role === 'instructor' &&
+    instructorProfile.school_id
+  ) {
+    const assigned = await isStudentAssignedToInstructor(
+      supabase,
+      instructorProfile.school_id,
+      user.id,
+      studentId
+    )
+    if (!assigned) {
+      notFound()
+    }
+  }
 
   // Demo fallback: if real data is unavailable, check demo students.
   // Phase 6B-1 R-3: demo data is NEVER substituted in production.
