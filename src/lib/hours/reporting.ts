@@ -54,6 +54,11 @@ export function calculateOfficialApprovedMinutes(logs: HoursReportLog[]): number
   return logs.reduce((sum, log) => sum + getOfficialMinutes(log), 0)
 }
 
+export type HoursProgressLog = Pick<
+  HoursReportLog,
+  'id' | 'status' | 'minutes' | 'effective_minutes' | 'integrity_status'
+>
+
 export interface HoursProgressSummary {
   approvedMinutes: number
   pendingMinutes: number
@@ -71,13 +76,13 @@ export interface HoursProgressSummary {
  * increase completion percentage.
  */
 export function calculateHoursProgressSummary(
-  logs: HoursReportLog[],
+  logs: HoursProgressLog[],
   requiredHours: number,
 ): HoursProgressSummary {
   const safeRequiredHours =
     Number.isFinite(requiredHours) && requiredHours > 0 ? requiredHours : 0
   const requiredMinutes = safeRequiredHours * 60
-  const approvedMinutes = calculateOfficialApprovedMinutes(logs)
+  const approvedMinutes = logs.reduce((sum, log) => sum + getOfficialMinutes(log), 0)
   const pendingMinutes = logs
     .filter((log) => log.status === 'pending')
     .reduce((sum, log) => sum + log.minutes, 0)
