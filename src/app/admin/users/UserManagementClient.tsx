@@ -6,7 +6,6 @@ import {
   inviteUser,
   deleteUser,
   getUsers,
-  getSchools,
   UserListItem,
 } from './actions'
 import { AppRole } from '@/types'
