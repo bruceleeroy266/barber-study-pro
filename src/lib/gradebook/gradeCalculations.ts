@@ -92,7 +92,7 @@ export function isStudentAtRisk(
   recentAssessments: Assessment[]
 ): boolean {
   const hasFailingGrade = hasGradeEvidence && overallGrade < 70
-  const hasManyMissing = missingAssignments >= 2
+  const hasManyMissing = hasGradeEvidence && missingAssignments >= 2
   const hasFailedAssessment = recentAssessments.some((a) => !a.isPassed)
   return hasFailingGrade || hasManyMissing || hasFailedAssessment
 }
@@ -114,7 +114,13 @@ export function calculateStudentGradePerformance(
   const overallGrade = calculateOverallGrade(grades, categories)
   const gradeBreakdown = calculateGradeBreakdown(grades, categories)
   const trendDirection = calculateGradeTrend(grades)
-  const isAtRisk = isStudentAtRisk(overallGrade, hasGradeEvidence, missingAssignments, recentAssessments)
+  const evidenceBackedMissingAssignments = hasGradeEvidence ? missingAssignments : 0
+  const isAtRisk = isStudentAtRisk(
+    overallGrade,
+    hasGradeEvidence,
+    evidenceBackedMissingAssignments,
+    recentAssessments
+  )
 
   return {
     studentId,
@@ -123,7 +129,7 @@ export function calculateStudentGradePerformance(
     gradeBreakdown,
     trendDirection,
     isAtRisk,
-    missingAssignments,
+    missingAssignments: evidenceBackedMissingAssignments,
     recentAssessments,
   }
 }
