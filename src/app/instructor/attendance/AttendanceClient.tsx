@@ -119,8 +119,6 @@ export default function AttendanceClient({
     defaultDate,
   })
 
-  const { exporting, exportData } = useAttendanceExport({ records, students, schoolName })
-
   const [correctionRecord, setCorrectionRecord] = useState<AttendanceRecord | null>(null)
   const [auditRecord, setAuditRecord] = useState<AttendanceRecord | null>(null)
   const [expandedStudentId, setExpandedStudentId] = useState<string | null>(null)
@@ -154,6 +152,8 @@ export default function AttendanceClient({
       })
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   }, [records, filters, students])
+
+  const { exporting, exportData } = useAttendanceExport({ records: filteredRecords, students, schoolName })
 
   const studentMap = useMemo(() => new Map(students.map((s) => [s.id, s])), [students])
   const expectationMap = useMemo(
