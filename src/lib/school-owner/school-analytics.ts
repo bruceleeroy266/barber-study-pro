@@ -680,7 +680,7 @@ export function generateSchoolReport(
         return {
           Student: r.fullName,
           Completed: formatHourMinutes(summary.approvedMinutes),
-          Required: `${r.requiredHours}h`,
+          Required: r.requiredHours,
           Remaining: formatHourMinutes(summary.remainingMinutes),
         }
       })
