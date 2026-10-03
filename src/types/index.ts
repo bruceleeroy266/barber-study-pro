@@ -594,6 +594,7 @@ export interface SchoolOverviewMetrics {
   averageAttendance: number
   averageReadiness: number
   averageGrade: number
+  hasGradeEvidence: boolean
   completedHours: number
   remainingHours: number
   assessmentCompletionRate: number

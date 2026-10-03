@@ -8,8 +8,8 @@
 
 import { Profile, AttendanceRecord, HourLog, QuizAttempt, StudentProgress, Grade, GradeCategory, Assessment, ComplianceAlert } from '@/types'
 import { calculateAttendanceSummary } from '@/lib/attendance'
-import { calculateBoardReadiness } from '@/lib/readiness'
-import { calculateOverallGrade } from '@/lib/gradebook'
+import { calculateCanonicalStudentLearningMetrics } from '@/lib/student-level/metrics'
+import { calculateStudentGradePerformance } from '@/lib/gradebook'
 import { localChapters } from '@/lib/local-data'
 import { calculateComplianceScore, ComplianceScoreInputs } from './compliance-score'
 import { determineBoardEligibility } from './board-eligibility'
@@ -50,24 +50,39 @@ export function buildStudentCompliance(inputs: StudentComplianceInputs) {
 
   const attempts = quizAttempts.filter((a) => a.user_id === student.id)
   const prog = progress.filter((p) => p.user_id === student.id)
-  const readiness = calculateBoardReadiness({
+  const learningMetrics = calculateCanonicalStudentLearningMetrics({
     userId: student.id,
     attempts,
     progress: prog,
     totalChapters: localChapters.length,
-    streakDays: 0,
   })
+  const readiness = learningMetrics.readiness
 
   const sGrades = grades.filter((g) => g.studentId === student.id)
-  const overallGrade = calculateOverallGrade(sGrades, gradeCategories)
+  const gradePerformance = calculateStudentGradePerformance(
+    student.id,
+    sGrades,
+    gradeCategories,
+    assessments.filter((a) => a.studentId === student.id),
+    0,
+  )
+  const overallGrade = gradePerformance.overallGrade
 
   const sAssessments = assessments.filter((a) => a.studentId === student.id)
   const passedAssessments = sAssessments.filter((a) => a.isPassed).length
-  const assessmentPassRate = sAssessments.length > 0 ? Math.round((passedAssessments / sAssessments.length) * 100) : 0
+  const completedAssessments = sAssessments.length
+  const assessmentPassRate = completedAssessments > 0
+    ? Math.round((passedAssessments / completedAssessments) * 100)
+    : 0
 
-  // Demo scope: all assessments are practical skill evaluations
+  // The current assessment model stores instructor-evaluated practical skill
+  // assessments. Until a distinct practical-event table exists, the same
+  // records are the auditable practical evidence source.
+  const completedPracticals = sAssessments.length
   const passedPracticals = passedAssessments
-  const practicalPassRate = assessmentPassRate
+  const practicalPassRate = completedPracticals > 0
+    ? Math.round((passedPracticals / completedPracticals) * 100)
+    : 0
 
   const complianceInputs: ComplianceScoreInputs = {
     attendancePercentage: attSummary.attendancePercentage,
@@ -76,8 +91,8 @@ export function buildStudentCompliance(inputs: StudentComplianceInputs) {
     practicalPassRate,
     readinessScore: readiness.score,
     overallGrade,
-    completedAssessments: passedAssessments,
-    completedPracticals: passedPracticals,
+    completedAssessments,
+    completedPracticals,
   }
 
   const complianceScore = calculateComplianceScore(complianceInputs, thresholds)
@@ -86,8 +101,8 @@ export function buildStudentCompliance(inputs: StudentComplianceInputs) {
     studentId: student.id,
     fullName: student.full_name,
     completedHours,
-    completedAssessments: passedAssessments,
-    completedPracticals: passedPracticals,
+    completedAssessments,
+    completedPracticals,
     attendancePercentage: attSummary.attendancePercentage,
     readinessScore: readiness.score,
     overallGrade,
@@ -105,6 +120,10 @@ export function buildStudentCompliance(inputs: StudentComplianceInputs) {
     assessmentPassRate,
     practicalPassRate,
     overallGrade,
+    hasAttendanceEvidence: attSummary.totalDays > 0,
+    hasReadinessEvidence: learningMetrics.hasReadinessEvidence,
+    hasGradeEvidence: gradePerformance.hasGradeEvidence,
+    hasAssessmentEvidence: completedAssessments > 0,
   }
 }
 
@@ -151,13 +170,14 @@ export function buildComplianceAlerts(inputs: StudentComplianceInputs): Complian
 
   const sAssessments = assessments.filter((a) => a.studentId === student.id)
   const passedAssessments = sAssessments.filter((a) => a.isPassed).length
-  const requiredAssessments = Math.max(thresholds.requiredAssessments, sAssessments.length)
-  if (passedAssessments < requiredAssessments) {
+  const completedAssessments = sAssessments.length
+  const requiredAssessments = thresholds.requiredAssessments
+  if (requiredAssessments > 0 && completedAssessments < requiredAssessments) {
     alerts.push({
       id: `comp-assess-${student.id}`,
       type: 'missing_assessments',
       title: 'Missing Assessments',
-      description: `${student.full_name}: ${passedAssessments}/${requiredAssessments} assessments passed`,
+      description: `${student.full_name}: ${completedAssessments}/${requiredAssessments} assessments completed`,
       studentId: student.id,
       studentName: student.full_name,
       priority: 'high',
@@ -165,14 +185,13 @@ export function buildComplianceAlerts(inputs: StudentComplianceInputs): Complian
     })
   }
 
-  // Demo scope: all assessments are treated as practicals
-  const passedPracticals = passedAssessments
-  if (passedPracticals < thresholds.requiredPracticals) {
+  const completedPracticals = sAssessments.length
+  if (thresholds.requiredPracticals > 0 && completedPracticals < thresholds.requiredPracticals) {
     alerts.push({
       id: `comp-prac-${student.id}`,
       type: 'missing_practicals',
       title: 'Missing Practicals',
-      description: `${student.full_name}: ${passedPracticals}/${thresholds.requiredPracticals} practicals passed`,
+      description: `${student.full_name}: ${completedPracticals}/${thresholds.requiredPracticals} practicals completed`,
       studentId: student.id,
       studentName: student.full_name,
       priority: 'high',
@@ -182,15 +201,15 @@ export function buildComplianceAlerts(inputs: StudentComplianceInputs): Complian
 
   const attempts = quizAttempts.filter((a) => a.user_id === student.id)
   const prog = progress.filter((p) => p.user_id === student.id)
-  const readiness = calculateBoardReadiness({
+  const learningMetrics = calculateCanonicalStudentLearningMetrics({
     userId: student.id,
     attempts,
     progress: prog,
     totalChapters: localChapters.length,
-    streakDays: 0,
   })
+  const readiness = learningMetrics.readiness
 
-  if (readiness.score < thresholds.minimumReadinessScore) {
+  if (learningMetrics.hasReadinessEvidence && readiness.score < thresholds.minimumReadinessScore) {
     alerts.push({
       id: `comp-ready-${student.id}`,
       type: 'low_readiness',
@@ -204,8 +223,15 @@ export function buildComplianceAlerts(inputs: StudentComplianceInputs): Complian
   }
 
   const sGrades = grades.filter((g) => g.studentId === student.id)
-  const overallGrade = calculateOverallGrade(sGrades, gradeCategories)
-  if (overallGrade > 0 && overallGrade < thresholds.minimumOverallGrade) {
+  const gradePerformance = calculateStudentGradePerformance(
+    student.id,
+    sGrades,
+    gradeCategories,
+    sAssessments,
+    0,
+  )
+  const overallGrade = gradePerformance.overallGrade
+  if (gradePerformance.hasGradeEvidence && overallGrade < thresholds.minimumOverallGrade) {
     alerts.push({
       id: `comp-grade-${student.id}`,
       type: 'low_grade',
@@ -220,8 +246,8 @@ export function buildComplianceAlerts(inputs: StudentComplianceInputs): Complian
 
   if (
     completedHours < thresholds.requiredHours ||
-    passedAssessments < thresholds.requiredAssessments ||
-    passedPracticals < thresholds.requiredPracticals
+    (thresholds.requiredAssessments > 0 && completedAssessments < thresholds.requiredAssessments) ||
+    (thresholds.requiredPracticals > 0 && completedPracticals < thresholds.requiredPracticals)
   ) {
     alerts.push({
       id: `comp-grad-${student.id}`,
@@ -238,17 +264,19 @@ export function buildComplianceAlerts(inputs: StudentComplianceInputs): Complian
   const allRequirementsMet =
     completedHours >= thresholds.requiredHours &&
     attSummary.attendancePercentage >= thresholds.minimumAttendancePercentage &&
-    passedAssessments >= thresholds.requiredAssessments &&
-    passedPracticals >= thresholds.requiredPracticals &&
+    (thresholds.requiredAssessments <= 0 || completedAssessments >= thresholds.requiredAssessments) &&
+    (thresholds.requiredPracticals <= 0 || completedPracticals >= thresholds.requiredPracticals) &&
+    learningMetrics.hasReadinessEvidence &&
     readiness.score >= thresholds.minimumReadinessScore &&
+    gradePerformance.hasGradeEvidence &&
     overallGrade >= thresholds.minimumOverallGrade
 
   if (allRequirementsMet) {
     alerts.push({
       id: `comp-eligible-${student.id}`,
       type: 'board_eligible',
-      title: 'Board Eligible',
-      description: `${student.full_name}: All state board requirements met`,
+      title: 'Tracked Requirements Met',
+      description: `${student.full_name}: All ASCYN PRO tracked program requirements met`,
       studentId: student.id,
       studentName: student.full_name,
       priority: 'medium',

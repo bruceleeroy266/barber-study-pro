@@ -2,7 +2,10 @@
  * STATE BOARD COMPLIANCE RULES
  * ASCYN PRO / ASCYN PRO V2
  *
- * Configurable thresholds used by the compliance engine.
+ * Configurable ASCYN PRO tracking thresholds used by the compliance engine.
+ * These are internal product defaults, not a representation of any state's
+ * licensing rules. Program-specific completion counts must come from the
+ * school's configured program records.
  */
 
 import { DEFAULT_REQUIRED_HOURS } from '@/lib/programs/requirements'
@@ -25,8 +28,8 @@ export const DEFAULT_COMPLIANCE_THRESHOLDS: ComplianceRuleThresholds = {
   minimumOverallGrade: 70,
   minimumAssessmentPassRate: 80,
   minimumPracticalPassRate: 80,
-  requiredAssessments: 5,
-  requiredPracticals: 10,
+  requiredAssessments: 0,
+  requiredPracticals: 0,
 }
 
 /**
