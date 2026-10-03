@@ -40,7 +40,7 @@ describe('E4 student hour history', () => {
   })
 
   it('keeps approved-only official totals separate from history status', () => {
-    expect(page).toContain('calculateOfficialApprovedMinutes(reportingHours)')
+    expect(page).toContain('calculateHoursProgressSummary(reportingHours, requirements.requiredHours)')
     expect(page).toContain("row.status === 'pending'")
     expect(page).toContain('Approved entries count toward your official total; pending and rejected entries do not.')
   })
