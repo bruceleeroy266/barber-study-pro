@@ -219,6 +219,7 @@ export function buildSchoolOverviewMetrics(inputs: SchoolAnalyticsInputs): Schoo
     averageAttendance: clampPercentage(average(attendancePercentages)),
     averageReadiness: clampPercentage(average(readinessScores)),
     averageGrade: clampPercentage(average(gradePercentages)),
+    hasGradeEvidence: gradePercentages.length > 0,
     completedHours: Math.round(completedMinutesSum / 60),
     remainingHours: Math.round(remainingMinutesSum / 60),
     assessmentCompletionRate:
