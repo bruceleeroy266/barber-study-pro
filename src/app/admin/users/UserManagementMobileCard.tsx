@@ -68,6 +68,14 @@ export default function UserManagementMobileCard({
           <dt className="text-xs uppercase tracking-wide text-[var(--color-text-muted)]">Created</dt>
           <dd className="mt-1 text-white">{formatCreatedAt(user.created_at)}</dd>
         </div>
+        {(user.role === 'student' || user.role === 'apprentice') && (
+          <div className="col-span-2">
+            <dt className="text-xs uppercase tracking-wide text-[var(--color-text-muted)]">Instructor</dt>
+            <dd className="mt-1 text-white">
+              {user.assigned_instructor_name ?? 'Unassigned'}
+            </dd>
+          </div>
+        )}
       </dl>
 
       {user.role === 'student' && typeof user.enrollment_count === 'number' && (
