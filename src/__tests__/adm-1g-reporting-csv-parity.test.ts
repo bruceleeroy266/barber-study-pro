@@ -3,7 +3,7 @@ import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { convertRowsToCSV } from '@/lib/export-utils'
 import { generateSchoolReport, type SchoolAnalyticsInputs } from '@/lib/school-owner/school-analytics'
-import type { Profile } from '@/types'
+import type { HourLog, Profile } from '@/types'
 
 function student(id: string): Profile {
   return {
@@ -65,6 +65,43 @@ describe('ADM-1G reporting + CSV parity', () => {
     expect(generateSchoolReport('readiness', data).summary).toBe('Average readiness: No Data')
     expect(generateSchoolReport('grade', data).summary).toBe('Average grade: No Grade')
     expect(generateSchoolReport('assessment', data).summary).toBe('Average pass rate: No Assessments')
+  })
+
+  it('preserves partial official hours instead of rounding report values to whole hours', () => {
+    const data = inputs()
+    data.hourLogs = [{
+      id: 'hour-1',
+      user_id: 's1',
+      date: '2026-10-03',
+      category: 'Clinic',
+      minutes: 450,
+      status: 'approved',
+      notes: null,
+      created_at: '2026-10-03T00:00:00Z',
+      updated_at: '2026-10-03T00:00:00Z',
+      effective_minutes: 450,
+      integrity_status: 'valid_unadjusted',
+    } as HourLog]
+    data.requiredHoursByStudentId = { s1: 1200 }
+
+    const report = generateSchoolReport('hours', data)
+    expect(report.summary).toBe('Total completed hours: 7h 30m')
+    expect(report.rows[0]).toMatchObject({
+      Completed: '7h 30m',
+      Required: '1200h',
+      Remaining: '1192h 30m',
+    })
+  })
+
+  it('school summary keeps no-evidence metrics distinct from a measured zero', () => {
+    const report = generateSchoolReport('school_summary', inputs())
+    const values = Object.fromEntries(
+      report.rows.map((row) => [String(row.Metric), row.Value])
+    )
+
+    expect(values['Average Attendance']).toBe('No Data')
+    expect(values['Average Readiness']).toBe('No Data')
+    expect(values['Average Grade']).toBe('No Grade')
   })
 
   it('attendance exports the same filtered records visible on screen', () => {
