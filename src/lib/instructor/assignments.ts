@@ -1,3 +1,5 @@
+import type { SupabaseClient } from '@supabase/supabase-js'
+
 /**
  * CANONICAL STUDENT ↔ INSTRUCTOR ASSIGNMENT HELPERS
  *
@@ -13,7 +15,7 @@ export interface ActiveStudentInstructorAssignment {
   instructor_id: string
 }
 
-type SupabaseLike = { from: (table: string) => any }
+type SupabaseLike = Pick<SupabaseClient, 'from'>
 
 export async function loadActiveStudentInstructorAssignments(
   supabase: SupabaseLike,
