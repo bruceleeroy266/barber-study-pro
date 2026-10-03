@@ -30,7 +30,7 @@ function attempt(id: string, percentage: number): QuizAttempt {
     score: percentage,
     total_questions: 100,
     percentage,
-    answers: {},
+    answers_json: {},
     completed_at: '2026-10-03T00:00:00.000Z',
   } as QuizAttempt
 }
