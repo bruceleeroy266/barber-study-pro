@@ -417,22 +417,23 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
         </Link>
 
         <div className="bg-charcoal border border-graphite rounded-xl p-6">
-          <h2 className="text-lg font-semibold text-white mb-4">License Requirements</h2>
+          <h2 className="text-lg font-semibold text-white mb-1">Program Requirement Tracking</h2>
+          <p className="mb-4 text-xs text-silver-gray">Internal ASCYN PRO tracking based on school-configured requirements; not a licensing or state-board determination.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-black border border-graphite rounded-lg p-4">
-              <p className="text-sm text-silver">School Compliance Rate</p>
+              <p className="text-sm text-silver">ASCYN Tracking Score</p>
               <p className="text-2xl font-bold text-white">{avgComplianceScore}%</p>
             </div>
             <div className="bg-black border border-graphite rounded-lg p-4">
-              <p className="text-sm text-silver">Eligible Students</p>
+              <p className="text-sm text-silver">Tracked Requirements Met</p>
               <p className="text-2xl font-bold text-gold">{eligibleStudents}</p>
             </div>
             <div className="bg-black border border-graphite rounded-lg p-4">
-              <p className="text-sm text-silver">Near Eligibility</p>
+              <p className="text-sm text-silver">Nearly Complete</p>
               <p className="text-2xl font-bold text-warm-bronze">{nearEligibleStudents}</p>
             </div>
             <div className="bg-black border border-graphite rounded-lg p-4">
-              <p className="text-sm text-silver">At-Risk Students</p>
+              <p className="text-sm text-silver">Needs Attention</p>
               <p className="text-2xl font-bold text-silver">{complianceAtRisk}</p>
             </div>
           </div>
