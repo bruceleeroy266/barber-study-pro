@@ -28,11 +28,13 @@ describe('COM-2D new message UX', () => {
   })
 
   it('creates or reuses the authorized thread and sends in one action', () => {
-    expect(source).toContain(
-      "const threadResult = await openCommunicationThread(\n            counterpartId,\n            'Conversation'\n          )"
+    const normalized = source.replace(/\s+/g, ' ')
+
+    expect(normalized).toContain(
+      "const threadResult = await openCommunicationThread( counterpartId, 'Conversation' )"
     )
-    expect(source).toContain(
-      'const messageResult = await sendCommunicationMessage(\n            threadResult.data.thread.id,\n            bodyToSend\n          )'
+    expect(normalized).toContain(
+      'const messageResult = await sendCommunicationMessage( threadResult.data.thread.id, bodyToSend )'
     )
   })
 
