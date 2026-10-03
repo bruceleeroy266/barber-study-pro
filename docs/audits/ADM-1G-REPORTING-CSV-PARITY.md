@@ -36,3 +36,15 @@ Audit report generation and export behavior across school/admin, compliance, att
 
 ## Certification boundary
 ADM-1G can close only after the exact PR head passes Engineering Verification and Vercel. No historical trend reconstruction is included; that remains ADM-1I.
+
+
+## Deeper audit findings and repairs
+- School hours report rows previously rounded approved and remaining minutes to whole hours. A valid 7h 30m total could be exported as 8 hours. Hours reports now preserve exact hour/minute values from canonical approved/effective minutes.
+- School summary report previously reintroduced numeric 0 for attendance, readiness, and grade even when the specialized reports correctly said No Data / No Grade. School summary now preserves the same evidence-aware semantics.
+- Student printable grade report labeled its sections “Recent Grades” and “Recent Assessments” but sliced unsorted input. Both sections now sort newest-first before limiting to ten rows.
+- The first ADM-1G certification attempt exposed a TypeScript formatter variance error in the shared export utility. Formatters were hardened to accept unknown input and validate types internally rather than weakening the export-column contract.
+
+## Deeper audit boundary
+- The generic UI ExportButton contains a dormant placeholder PDF action but has no production consumer; active attendance PDF export is implemented separately and remains in scope/certified.
+- Legacy export-column constants are currently not wired into production aggregate reporting; ADM-1G does not expand them into new features.
+- Historical trend reconstruction remains ADM-1I.
