@@ -68,8 +68,6 @@ set search_path = public, pg_temp
 as $$
 declare
   v_actor_id uuid := auth.uid();
-  v_actor_role text;
-  v_actor_school_id uuid;
   v_target_role text;
   v_target_school_id uuid;
   v_count integer;
@@ -88,12 +86,9 @@ begin
     raise exception 'Reset reason is required';
   end if;
 
-  select role, school_id
-    into v_actor_role, v_actor_school_id
-  from public.profiles
-  where id = v_actor_id;
-
-  if v_actor_role is null then
+  if not exists (
+    select 1 from public.profiles where id = v_actor_id
+  ) then
     raise exception 'Authorized actor profile not found';
   end if;
 
@@ -110,15 +105,8 @@ begin
     raise exception 'Academic reset is limited to student/apprentice profiles';
   end if;
 
-  if not (
-    public.is_platform_admin()
-    or (
-      v_actor_role in ('school_admin', 'admin')
-      and v_actor_school_id is not null
-      and v_actor_school_id = v_target_school_id
-    )
-  ) then
-    raise exception 'Not authorized to reset this student';
+  if not public.is_platform_admin() then
+    raise exception 'Platform administrator authorization required';
   end if;
 
   -- Prevent concurrent reset/write races for the same student.
@@ -274,8 +262,5 @@ revoke all on function public.reset_student_academic_state(uuid, text, boolean)
   from public, anon;
 grant execute on function public.reset_student_academic_state(uuid, text, boolean)
   to authenticated;
-grant execute on function public.reset_student_academic_state(uuid, text, boolean)
-  to service_role;
-
 comment on function public.reset_student_academic_state(uuid, text, boolean) is
   'Authorization-checked academic reset for designated test/pilot students. Preserves identity, enrollment, attendance, hours, communications, notes, schedules, and security/audit history.';
