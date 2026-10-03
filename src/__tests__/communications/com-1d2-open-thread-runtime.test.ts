@@ -20,18 +20,21 @@ describe('COM-1D.2 open-thread runtime', () => {
     expect(source).not.toContain('MessageCenter')
   })
 
-  it('derives the student/instructor pair from the authenticated actor role', () => {
-    expect(source).toContain("actor.role === 'instructor' ? counterpartId : actor.id")
-    expect(source).toContain("actor.role === 'instructor' ? actor.id : counterpartId")
+  it('authorizes the authenticated actor and requested counterpart through the database pair policy', () => {
+    expect(source).toContain('communication_pair_authorized')
+    expect(source).toContain('p_actor_id: actor.id')
+    expect(source).toContain('p_recipient_id: counterpartId')
+    expect(source).toContain('p_school_id: actor.schoolId')
+    expect(source).toContain("'You are not authorized to message this person.'")
   })
 
-  it('requires the exact active same-school assignment before opening a thread', () => {
-    expect(source).toContain(".from('student_instructor_assignments')")
-    expect(source).toContain(".eq('school_id', actor.schoolId)")
-    expect(source).toContain(".eq('student_id', studentId)")
-    expect(source).toContain(".eq('instructor_id', instructorId)")
-    expect(source).toContain(".eq('is_active', true)")
-    expect(source).toContain(".is('ended_at', null)")
+  it('keeps legacy learner/instructor evidence only when the authorized pair has those roles', () => {
+    expect(source).toContain('actorIsLearner')
+    expect(source).toContain('counterpartIsLearner')
+    expect(source).toContain('actorIsInstructor')
+    expect(source).toContain('counterpartIsInstructor')
+    expect(source).toContain('student_id: studentId')
+    expect(source).toContain('instructor_id: instructorId')
   })
 
   it('reuses an existing active thread before creating a new one', () => {
@@ -42,10 +45,10 @@ describe('COM-1D.2 open-thread runtime', () => {
     expect(source).toContain('created: false')
   })
 
-  it('creates a thread only from assignment-derived identities and authenticated creator', () => {
-    expect(source).toContain('school_id: assignment.school_id')
-    expect(source).toContain('student_id: assignment.student_id')
-    expect(source).toContain('instructor_id: assignment.instructor_id')
+  it('creates a generic participant thread from the authorized identities and authenticated creator', () => {
+    expect(source).toContain('school_id: actor.schoolId')
+    expect(source).toContain('participant_one_id: actor.id')
+    expect(source).toContain('participant_two_id: counterpartId')
     expect(source).toContain('created_by: actor.id')
     expect(source).toContain("status: 'active'")
     expect(source).toContain('created: true')
