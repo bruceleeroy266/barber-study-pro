@@ -54,3 +54,24 @@ School analytics must consume that same helper rather than recalculating readine
 
 ## Boundary
 No historical trend correction is part of this slice. Historical trend accuracy remains ADM-1I.
+
+
+## Deeper audit findings and repairs
+- Instructor class quiz/readiness cards previously used `> 0` as the evidence test, which hid legitimate 0 values as “—”. They now use explicit evidence counts.
+- Instructor learning-support flags could classify students with no persisted progress/readiness evidence as low progress/readiness. Those flags now require relevant evidence.
+- Board-readiness overview counts now exclude students with no readiness evidence rather than silently counting their default readiness level.
+- Instructor “Assessment Queue” was a sliced list of failed assessments, so the metric could never exceed five and its label implied a workflow queue that did not exist. The dashboard now shows the full failed-assessment count while keeping the five-item display list.
+- School student-performance rows now carry explicit readiness, grade, and assessment evidence flags.
+- School filters and cells no longer treat missing readiness/grade/assessment evidence as a failing 0.
+- Gradebook missing-category risk now requires actual grade evidence. A completely ungraded student is not labeled at risk merely because configured categories contain no grades yet.
+- Real 0% grades and real 0% assessment pass rates remain valid evidence and remain visible as zero.
+
+## Report/export parity
+- School readiness/grade/assessment reports already use evidence-aware `No Data`, `No Grade`, and `No Assessments` output and remain the canonical school report behavior.
+- Student printable grade report now preserves the same “No Grade” semantic as the student grade widget.
+- Record-level CSV exports remain raw evidence exports; no local aggregate percentage formula is introduced there.
+- Compliance reporting retains requirement-based 0 values because those reports measure requirement fulfillment rather than “did evidence exist?” presentation semantics.
+
+## Remaining certification work
+- Exact-head Engineering Verification and Vercel must pass after the deeper repairs.
+- If they pass unchanged, ADM-1F is ready for merge authorization. Historical trend reconstruction remains ADM-1I.
