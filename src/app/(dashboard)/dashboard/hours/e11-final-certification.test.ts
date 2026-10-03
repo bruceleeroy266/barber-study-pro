@@ -30,7 +30,7 @@ describe('E11 final hours and attendance certification', () => {
 
   it('routes official totals through the canonical effective-hours contract', () => {
     expect(studentPage).toContain(".from('effective_hour_logs')")
-    expect(studentPage).toContain('calculateOfficialApprovedMinutes(reportingHours)')
+    expect(studentPage).toContain('calculateHoursProgressSummary(reportingHours, requirements.requiredHours)')
     expect(staffManager).toContain(".from('effective_hour_logs')")
     expect(staffManager).toContain('calculateOfficialApprovedMinutes(studentLogs)')
     expect(pdfExport).toContain('calculateOfficialApprovedMinutes(studentLogs)')
