@@ -2,7 +2,7 @@
  * COMPLIANCE REPORTS
  * ASCYN PRO / ASCYN PRO V2
  *
- * Generates demo CSV-ready compliance reports for audit preparation.
+ * Generates CSV-ready internal program-requirement reports for audit preparation.
  */
 
 import { ComplianceReport, ComplianceReportType, Profile } from '@/types'
@@ -50,27 +50,31 @@ export function generateComplianceReport(
     case 'student_compliance':
       return {
         type,
-        title: 'Student Compliance Report',
+        title: 'Student Requirement Tracking Report',
         generatedAt: now,
-        summary: `Compliance overview for ${inputs.students.length} students`,
+        summary: `ASCYN PRO requirement tracking overview for ${inputs.students.length} students`,
         rows: rows.map((r) => ({
           Student: r.fullName,
-          'Compliance Score': r.complianceScore.score,
-          Attendance: `${r.attendanceSummary.attendancePercentage}%`,
+          'Tracking Score': r.complianceScore.score,
+          Attendance: r.hasAttendanceEvidence ? `${r.attendanceSummary.attendancePercentage}%` : 'No Attendance Data',
           Hours: `${Math.round(r.completedHours)}/${r.graduationReadiness.requiredHours}`,
-          'Assessments Pass': `${r.assessmentPassRate}%`,
-          'Practicals Pass': `${r.practicalPassRate}%`,
-          Readiness: r.readiness.score,
-          Grade: `${r.overallGrade}%`,
+          'Assessment Pass Rate': r.graduationReadiness.requiredAssessments <= 0
+            ? 'Not Required'
+            : r.hasAssessmentEvidence ? `${r.assessmentPassRate}%` : 'No Assessments',
+          'Practical Pass Rate': r.graduationReadiness.requiredPracticals <= 0
+            ? 'Not Required'
+            : r.hasAssessmentEvidence ? `${r.practicalPassRate}%` : 'No Practicals',
+          Readiness: r.hasReadinessEvidence ? r.readiness.score : 'No Data',
+          Grade: r.hasGradeEvidence ? `${r.overallGrade}%` : 'No Grade',
           Status: r.complianceScore.label,
         })),
       }
     case 'graduation_readiness':
       return {
         type,
-        title: 'Graduation Readiness Report',
+        title: 'Program Completion Readiness Report',
         generatedAt: now,
-        summary: `${rows.filter((r) => r.graduationReadiness.isReady).length} of ${rows.length} students ready for graduation`,
+        summary: `${rows.filter((r) => r.graduationReadiness.isReady).length} of ${rows.length} students meet all ASCYN PRO tracked program thresholds`,
         rows: rows.map((r) => ({
           Student: r.fullName,
           'Readiness %': r.graduationReadiness.percentage,
@@ -84,9 +88,9 @@ export function generateComplianceReport(
     case 'board_eligibility':
       return {
         type,
-        title: 'Board Eligibility Report',
+        title: 'Tracked Requirements Check',
         generatedAt: now,
-        summary: `${rows.filter((r) => r.boardEligibility.status === 'eligible').length} eligible, ${rows.filter((r) => r.boardEligibility.status === 'near_eligible').length} near eligible`,
+        summary: `${rows.filter((r) => r.boardEligibility.status === 'eligible').length} meet all tracked requirements, ${rows.filter((r) => r.boardEligibility.status === 'near_eligible').length} nearly complete`,
         rows: rows.map((r) => ({
           Student: r.fullName,
           Status: r.boardEligibility.label,
@@ -96,13 +100,13 @@ export function generateComplianceReport(
     case 'instructor_compliance':
       return {
         type,
-        title: 'Instructor Compliance Report',
+        title: 'Instructor Requirement Tracking Report',
         generatedAt: now,
-        summary: `Compliance summary across ${inputs.students.length} students`,
+        summary: `Requirement tracking summary across ${inputs.students.length} students`,
         rows: rows.map((r) => ({
           Student: r.fullName,
-          'Compliance Score': r.complianceScore.score,
-          'Board Eligible': r.boardEligibility.status === 'eligible' ? 'Yes' : 'No',
+          'Tracking Score': r.complianceScore.score,
+          'Tracked Requirements Met': r.boardEligibility.status === 'eligible' ? 'Yes' : 'No',
           'At Risk': r.complianceScore.score < 70 ? 'Yes' : 'No',
         })),
       }
@@ -112,15 +116,15 @@ export function generateComplianceReport(
       const eligibleCount = rows.filter((r) => r.boardEligibility.status === 'eligible').length
       return {
         type,
-        title: 'School Compliance Report',
+        title: 'School Requirement Tracking Report',
         generatedAt: now,
-        summary: `Average compliance score: ${avgScore}/100 | Eligible students: ${eligibleCount}`,
+        summary: `Average ASCYN tracking score: ${avgScore}/100 | Students meeting tracked requirements: ${eligibleCount}`,
         rows: [
-          { Metric: 'Average Compliance Score', Value: avgScore },
-          { Metric: 'Eligible Students', Value: eligibleCount },
-          { Metric: 'Near Eligible Students', Value: rows.filter((r) => r.boardEligibility.status === 'near_eligible').length },
-          { Metric: 'Not Eligible Students', Value: rows.filter((r) => r.boardEligibility.status === 'not_eligible').length },
-          { Metric: 'At-Risk Students', Value: rows.filter((r) => r.complianceScore.score < 70).length },
+          { Metric: 'Average Tracking Score', Value: avgScore },
+          { Metric: 'Tracked Requirements Met', Value: eligibleCount },
+          { Metric: 'Nearly Complete', Value: rows.filter((r) => r.boardEligibility.status === 'near_eligible').length },
+          { Metric: 'Requirements Remaining', Value: rows.filter((r) => r.boardEligibility.status === 'not_eligible').length },
+          { Metric: 'Needs Attention', Value: rows.filter((r) => r.complianceScore.score < 70).length },
         ],
       }
     }

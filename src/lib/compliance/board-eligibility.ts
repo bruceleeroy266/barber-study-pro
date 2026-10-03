@@ -32,16 +32,30 @@ export function determineBoardEligibility(
     missingRequirements,
     `Attendance: ${inputs.attendancePercentage}% (need ${thresholds.minimumAttendancePercentage}%)`
   )
-  addIfMissing(
-    inputs.assessmentPassRate < thresholds.minimumAssessmentPassRate,
-    missingRequirements,
-    `Assessment pass rate: ${inputs.assessmentPassRate}% (need ${thresholds.minimumAssessmentPassRate}%)`
-  )
-  addIfMissing(
-    inputs.practicalPassRate < thresholds.minimumPracticalPassRate,
-    missingRequirements,
-    `Practical pass rate: ${inputs.practicalPassRate}% (need ${thresholds.minimumPracticalPassRate}%)`
-  )
+  if (thresholds.requiredAssessments > 0) {
+    addIfMissing(
+      inputs.completedAssessments < thresholds.requiredAssessments,
+      missingRequirements,
+      `Assessments completed: ${inputs.completedAssessments}/${thresholds.requiredAssessments}`
+    )
+    addIfMissing(
+      inputs.assessmentPassRate < thresholds.minimumAssessmentPassRate,
+      missingRequirements,
+      `Assessment pass rate: ${inputs.assessmentPassRate}% (need ${thresholds.minimumAssessmentPassRate}%)`
+    )
+  }
+  if (thresholds.requiredPracticals > 0) {
+    addIfMissing(
+      inputs.completedPracticals < thresholds.requiredPracticals,
+      missingRequirements,
+      `Practicals completed: ${inputs.completedPracticals}/${thresholds.requiredPracticals}`
+    )
+    addIfMissing(
+      inputs.practicalPassRate < thresholds.minimumPracticalPassRate,
+      missingRequirements,
+      `Practical pass rate: ${inputs.practicalPassRate}% (need ${thresholds.minimumPracticalPassRate}%)`
+    )
+  }
   addIfMissing(
     inputs.readinessScore < thresholds.minimumReadinessScore,
     missingRequirements,
@@ -63,28 +77,28 @@ export function determineBoardEligibility(
   let status: BoardEligibilityStatus
   if (allMet) {
     status = 'eligible'
-    reasons.push('All state board requirements met')
+    reasons.push('All ASCYN PRO tracked program requirements met')
   } else if (mostlyMet) {
     status = 'near_eligible'
-    reasons.push('Close to eligibility; minor requirements remain')
+    reasons.push('Close to meeting the tracked program requirements')
   } else {
     status = 'not_eligible'
-    reasons.push('Multiple state board requirements not yet met')
+    reasons.push('Multiple tracked program requirements remain')
   }
 
   let label: string
   let colorClass: string
   switch (status) {
     case 'eligible':
-      label = 'Eligible for Board'
+      label = 'Tracked Requirements Met'
       colorClass = 'text-gold'
       break
     case 'near_eligible':
-      label = 'Nearly Eligible'
+      label = 'Nearly Complete'
       colorClass = 'text-warm-bronze'
       break
     default:
-      label = 'Not Eligible'
+      label = 'Requirements Remaining'
       colorClass = 'text-silver'
   }
 

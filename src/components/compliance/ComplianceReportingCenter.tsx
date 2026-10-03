@@ -10,11 +10,11 @@ interface Props {
 }
 
 const reportMeta: { type: ComplianceReportType; label: string; icon: React.ElementType }[] = [
-  { type: 'student_compliance', label: 'Student Compliance', icon: UserCheck },
-  { type: 'graduation_readiness', label: 'Graduation Readiness', icon: GraduationCap },
-  { type: 'board_eligibility', label: 'Board Eligibility', icon: Award },
-  { type: 'instructor_compliance', label: 'Instructor Compliance', icon: Users },
-  { type: 'school_compliance', label: 'School Compliance', icon: School },
+  { type: 'student_compliance', label: 'Student Tracking', icon: UserCheck },
+  { type: 'graduation_readiness', label: 'Program Completion', icon: GraduationCap },
+  { type: 'board_eligibility', label: 'Requirements Check', icon: Award },
+  { type: 'instructor_compliance', label: 'Instructor Tracking', icon: Users },
+  { type: 'school_compliance', label: 'School Tracking', icon: School },
 ]
 
 function exportCsv(report: ComplianceReport) {
@@ -41,8 +41,11 @@ export default function ComplianceReportingCenter({ reports }: Props) {
       <div className="p-4 border-b border-graphite">
         <h2 className="text-lg font-semibold text-white flex items-center gap-2">
           <FileText className="w-5 h-5 text-[var(--color-brand-gold)]" />
-          Audit Preparation Center
+          Program Requirement Audit Center
         </h2>
+        <p className="mt-1 text-xs text-silver-gray">
+          Internal ASCYN PRO tracking based on school-configured program requirements. This does not determine state-board or licensing eligibility.
+        </p>
       </div>
 
       <div className="grid grid-cols-2 gap-px border-b border-graphite bg-graphite sm:grid-cols-3 lg:grid-cols-5">

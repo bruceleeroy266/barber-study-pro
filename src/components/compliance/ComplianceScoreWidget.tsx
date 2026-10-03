@@ -9,7 +9,7 @@ interface Props {
 export default function ComplianceScoreWidget({ score }: Props) {
   return (
     <div className="bg-charcoal border border-graphite rounded-xl p-6">
-      <h2 className="text-lg font-semibold text-white mb-4">Compliance Score</h2>
+      <h2 className="text-lg font-semibold text-white mb-4">ASCYN Tracking Score</h2>
       <div className="flex flex-col items-center">
         <div className="w-36 h-36 relative">
           <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
@@ -64,7 +64,7 @@ export default function ComplianceScoreWidget({ score }: Props) {
                   req.status === 'met' ? 'bg-gold' : req.status === 'partial' ? 'bg-warm-bronze' : 'bg-silver'
                 }`}
                 style={{
-                  width: `${Math.min(100, (req.actualValue / req.requiredValue) * 100)}%`,
+                  width: `${req.requiredValue > 0 ? Math.min(100, (req.actualValue / req.requiredValue) * 100) : 100}%`,
                 }}
               />
             </div>

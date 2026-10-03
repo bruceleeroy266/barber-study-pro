@@ -13,7 +13,7 @@ export default function BoardEligibilityWidget({ eligibility }: Props) {
 
   return (
     <div className="bg-charcoal border border-graphite rounded-xl p-6">
-      <h2 className="text-lg font-semibold text-white mb-4">Board Eligibility</h2>
+      <h2 className="text-lg font-semibold text-white mb-4">Tracked Requirements Check</h2>
       <div className="flex items-center gap-4 mb-4">
         <div className={`p-3 rounded-full bg-opacity-10 ${eligibility.colorClass.replace('text-', 'bg-')}`}>
           <Icon className={`w-8 h-8 ${eligibility.colorClass}`} />
