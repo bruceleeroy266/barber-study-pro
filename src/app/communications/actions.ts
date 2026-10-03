@@ -2,7 +2,7 @@
 
 import { createClient } from '@/lib/supabase-server'
 
-type MessagingRole = 'student' | 'apprentice' | 'instructor'
+type MessagingRole = 'student' | 'apprentice' | 'instructor' | 'school_admin' | 'admin'
 
 interface MessagingActor {
   id: string
@@ -29,8 +29,10 @@ interface CommunicationReadRow {
 interface CommunicationThreadRow {
   id: string
   school_id: string
-  student_id: string
-  instructor_id: string
+  student_id: string | null
+  instructor_id: string | null
+  participant_one_id: string
+  participant_two_id: string
   subject: string
   status: string
   last_message_at: string | null
@@ -41,8 +43,10 @@ interface CommunicationThreadRow {
 export interface ProductionCommunicationThread {
   id: string
   schoolId: string
-  studentId: string
-  instructorId: string
+  studentId: string | null
+  instructorId: string | null
+  participantOneId: string
+  participantTwoId: string
   subject: string
   status: 'active' | 'archived'
   lastMessageAt: string | null
@@ -92,7 +96,7 @@ async function getMessagingActor(): Promise<
     return { success: false, message: 'Your account is not assigned to a school.' }
   }
 
-  if (!['student', 'apprentice', 'instructor'].includes(profile.role)) {
+  if (!['student', 'apprentice', 'instructor', 'school_admin', 'admin'].includes(profile.role)) {
     return { success: false, message: 'Messaging is not available for this account role.' }
   }
 
@@ -115,6 +119,8 @@ function mapThread(row: CommunicationThreadRow): ProductionCommunicationThread {
     schoolId: row.school_id,
     studentId: row.student_id,
     instructorId: row.instructor_id,
+    participantOneId: row.participant_one_id,
+    participantTwoId: row.participant_two_id,
     subject: row.subject,
     status: row.status as 'active' | 'archived',
     lastMessageAt: row.last_message_at,
@@ -145,36 +151,44 @@ export async function openCommunicationThread(
   if (!actorResult.success) return actorResult
 
   const { actor, supabase } = actorResult.data
-  const studentId = actor.role === 'instructor' ? counterpartId : actor.id
-  const instructorId = actor.role === 'instructor' ? actor.id : counterpartId
 
-  const { data: assignment, error: assignmentError } = await supabase
-    .from('student_instructor_assignments')
-    .select('id, school_id, student_id, instructor_id')
-    .eq('school_id', actor.schoolId)
-    .eq('student_id', studentId)
-    .eq('instructor_id', instructorId)
-    .eq('is_active', true)
-    .is('ended_at', null)
-    .maybeSingle()
+  const { data: counterpart, error: counterpartError } = await supabase
+    .from('profiles')
+    .select('id, school_id, role, approval_status, is_disabled')
+    .eq('id', counterpartId)
+    .single()
 
-  if (assignmentError) {
-    return { success: false, message: assignmentError.message }
+  if (counterpartError || !counterpart) {
+    return { success: false, message: 'This recipient is not available.' }
   }
 
-  if (!assignment) {
-    return { success: false, message: 'No active instructor assignment exists for this conversation.' }
+  const { data: authorized, error: authorizationError } = await supabase.rpc(
+    'communication_pair_authorized',
+    {
+      p_actor_id: actor.id,
+      p_recipient_id: counterpartId,
+      p_school_id: actor.schoolId,
+    }
+  )
+
+  if (authorizationError) {
+    return { success: false, message: 'Unable to verify this recipient.' }
+  }
+
+  if (!authorized) {
+    return { success: false, message: 'You are not authorized to message this person.' }
   }
 
   const { data: existingThreads, error: existingError } = await supabase
     .from('communication_threads')
     .select(
-      'id, school_id, student_id, instructor_id, subject, status, last_message_at, created_at, updated_at'
+      'id, school_id, student_id, instructor_id, participant_one_id, participant_two_id, subject, status, last_message_at, created_at, updated_at'
     )
-    .eq('school_id', assignment.school_id)
-    .eq('student_id', assignment.student_id)
-    .eq('instructor_id', assignment.instructor_id)
+    .eq('school_id', actor.schoolId)
     .eq('status', 'active')
+    .or(
+      `and(participant_one_id.eq.${actor.id},participant_two_id.eq.${counterpartId}),and(participant_one_id.eq.${counterpartId},participant_two_id.eq.${actor.id})`
+    )
     .order('created_at', { ascending: false })
     .limit(1)
 
@@ -193,18 +207,37 @@ export async function openCommunicationThread(
     }
   }
 
+  const actorIsLearner = actor.role === 'student' || actor.role === 'apprentice'
+  const counterpartIsLearner =
+    counterpart.role === 'student' || counterpart.role === 'apprentice'
+  const actorIsInstructor = actor.role === 'instructor'
+  const counterpartIsInstructor = counterpart.role === 'instructor'
+
+  let studentId: string | null = null
+  let instructorId: string | null = null
+
+  if (actorIsLearner && counterpartIsInstructor) {
+    studentId = actor.id
+    instructorId = counterpartId
+  } else if (actorIsInstructor && counterpartIsLearner) {
+    studentId = counterpartId
+    instructorId = actor.id
+  }
+
   const { data: createdThread, error: createError } = await supabase
     .from('communication_threads')
     .insert({
-      school_id: assignment.school_id,
-      student_id: assignment.student_id,
-      instructor_id: assignment.instructor_id,
+      school_id: actor.schoolId,
+      student_id: studentId,
+      instructor_id: instructorId,
+      participant_one_id: actor.id,
+      participant_two_id: counterpartId,
       subject: trimmedSubject,
       status: 'active',
       created_by: actor.id,
     })
     .select(
-      'id, school_id, student_id, instructor_id, subject, status, last_message_at, created_at, updated_at'
+      'id, school_id, student_id, instructor_id, participant_one_id, participant_two_id, subject, status, last_message_at, created_at, updated_at'
     )
     .single()
 
@@ -234,7 +267,7 @@ export async function loadCommunicationThreads(): Promise<
   const { data, error } = await supabase
     .from('communication_threads')
     .select(
-      'id, school_id, student_id, instructor_id, subject, status, last_message_at, created_at, updated_at'
+      'id, school_id, student_id, instructor_id, participant_one_id, participant_two_id, subject, status, last_message_at, created_at, updated_at'
     )
     .order('last_message_at', { ascending: false })
     .order('created_at', { ascending: false })
@@ -318,7 +351,7 @@ export async function loadCommunicationThreadMessages(
   const { data: thread, error: threadError } = await supabase
     .from('communication_threads')
     .select(
-      'id, school_id, student_id, instructor_id, subject, status, last_message_at, created_at, updated_at'
+      'id, school_id, student_id, instructor_id, participant_one_id, participant_two_id, subject, status, last_message_at, created_at, updated_at'
     )
     .eq('id', threadId)
     .single()
@@ -395,10 +428,10 @@ export async function archiveCommunicationThread(
       updated_at: new Date().toISOString(),
     })
     .eq('id', threadId)
-    .eq('instructor_id', actor.id)
+    .or(`participant_one_id.eq.${actor.id},participant_two_id.eq.${actor.id}`)
     .eq('status', 'active')
     .select(
-      'id, school_id, student_id, instructor_id, subject, status, last_message_at, created_at, updated_at'
+      'id, school_id, student_id, instructor_id, participant_one_id, participant_two_id, subject, status, last_message_at, created_at, updated_at'
     )
     .single()
 
