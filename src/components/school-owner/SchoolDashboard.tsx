@@ -23,7 +23,7 @@ import {
   buildSchoolAnalyticsSnapshot,
   generateSchoolReport,
 } from '@/lib/school-owner/school-analytics'
-import { buildStudentCompliance, generateComplianceReport, thresholdsWithRequiredHours, ComplianceRuleThresholds } from '@/lib/compliance'
+import { buildStudentCompliance, generateComplianceReport, thresholdsWithRequiredHours, ComplianceRuleThresholds, DEFAULT_COMPLIANCE_THRESHOLDS } from '@/lib/compliance'
 import { resolveProgramRequirementsForStudents } from '@/lib/programs/requirements'
 import SchoolOverviewMetrics from './SchoolOverviewMetrics'
 import ComplianceReportingCenter from '@/components/compliance/ComplianceReportingCenter'
@@ -143,13 +143,25 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
   const requiredHoursByStudentId = Object.fromEntries(
     students.map((student) => [
       student.id,
-      programRequirementsByStudent.get(student.id)?.requiredHours ?? 1500,
+      programRequirementsByStudent.get(student.id)?.requiredHours ?? DEFAULT_COMPLIANCE_THRESHOLDS.requiredHours,
+    ]),
+  )
+  const requiredAssessmentsByStudentId = Object.fromEntries(
+    students.map((student) => [
+      student.id,
+      programRequirementsByStudent.get(student.id)?.requiredAssessments ?? DEFAULT_COMPLIANCE_THRESHOLDS.requiredAssessments,
     ]),
   )
   const thresholdsByStudentId = new Map<string, ComplianceRuleThresholds>(
     students.map((student) => [
       student.id,
-      thresholdsWithRequiredHours(requiredHoursByStudentId[student.id]),
+      {
+        ...thresholdsWithRequiredHours(requiredHoursByStudentId[student.id]),
+        requiredAssessments: requiredAssessmentsByStudentId[student.id],
+        requiredPracticals:
+          programRequirementsByStudent.get(student.id)?.requiredPracticals ??
+          DEFAULT_COMPLIANCE_THRESHOLDS.requiredPracticals,
+      },
     ]),
   )
 
@@ -221,6 +233,7 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
     assessments,
     notifications,
     requiredHoursByStudentId,
+    requiredAssessmentsByStudentId,
   }
 
   const metrics = buildSchoolOverviewMetrics(inputs)
