@@ -14,7 +14,6 @@ import {
   MessageCircle,
   Plus,
   Send,
-  UserRound,
 } from 'lucide-react'
 import {
   archiveCommunicationThread,
@@ -72,17 +71,16 @@ export default function ProductionMessageCenter({
     useState<ProductionCommunicationThread | null>(null)
   const [messages, setMessages] = useState<ProductionCommunicationMessage[]>([])
   const [replyBody, setReplyBody] = useState('')
-  const [counterpartId, setCounterpartId] = useState(
-    availableCounterparts.length === 1 ? availableCounterparts[0].id : ''
-  )
-  const [subject, setSubject] = useState('Conversation')
+  const [isComposing, setIsComposing] = useState(false)
+  const [counterpartId, setCounterpartId] = useState('')
+  const [newMessageBody, setNewMessageBody] = useState('')
   const [filter, setFilter] = useState<ThreadFilter>('inbox')
   const [error, setError] = useState<string | null>(null)
   const [statusMessage, setStatusMessage] = useState('')
   const [loadingThreadId, setLoadingThreadId] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
   const sendLockedRef = useRef(false)
-  const openLockedRef = useRef(false)
+  const composeLockedRef = useRef(false)
 
   const peopleById = useMemo(
     () => new Map(people.map((person) => [person.id, person])),
@@ -168,46 +166,67 @@ export default function ProductionMessageCenter({
     })
   }
 
-  const handleOpenConversation = (event: FormEvent) => {
+  const handleNewMessageSend = (event: FormEvent) => {
     event.preventDefault()
     if (
       !counterpartId ||
-      !subject.trim() ||
+      !newMessageBody.trim() ||
       isPending ||
-      openLockedRef.current
+      composeLockedRef.current
     ) {
       return
     }
 
-    openLockedRef.current = true
+    composeLockedRef.current = true
     startTransition(() => {
       void (async () => {
+        const bodyToSend = newMessageBody
         try {
           setError(null)
-          setStatusMessage('Opening conversation')
-          const result = await openCommunicationThread(counterpartId, subject)
-          if (!result.success) {
-            setError(result.message)
+          setStatusMessage('Sending new message')
+
+          const threadResult = await openCommunicationThread(
+            counterpartId,
+            'Conversation'
+          )
+          if (!threadResult.success) {
+            setError(threadResult.message)
+            return
+          }
+
+          const messageResult = await sendCommunicationMessage(
+            threadResult.data.thread.id,
+            bodyToSend
+          )
+          if (!messageResult.success) {
+            setError(messageResult.message)
             return
           }
 
           setThreads((current) => {
+            const nextThread = {
+              ...threadResult.data.thread,
+              lastMessageAt: messageResult.data.sentAt,
+              unreadCount: 0,
+            }
             const exists = current.some(
-              (thread) => thread.id === result.data.thread.id
+              (thread) => thread.id === nextThread.id
             )
             return exists
               ? current.map((thread) =>
-                  thread.id === result.data.thread.id
-                    ? result.data.thread
-                    : thread
+                  thread.id === nextThread.id ? nextThread : thread
                 )
-              : [result.data.thread, ...current]
+              : [nextThread, ...current]
           })
-          setSubject('Conversation')
+
+          setNewMessageBody('')
+          setCounterpartId('')
+          setIsComposing(false)
           setFilter('inbox')
-          await loadThread(result.data.thread.id)
+          await loadThread(threadResult.data.thread.id)
+          setStatusMessage('Message sent')
         } finally {
-          openLockedRef.current = false
+          composeLockedRef.current = false
         }
       })()
     })
@@ -332,9 +351,24 @@ export default function ProductionMessageCenter({
       <div className="grid grid-cols-1 xl:grid-cols-[340px_minmax(0,1fr)] gap-5 min-h-[620px]">
         <aside className="bg-charcoal border border-graphite rounded-xl overflow-hidden flex flex-col min-h-[420px] xl:min-h-[620px]">
           <div className="p-4 border-b border-graphite space-y-3">
-            <div className="flex items-center gap-2">
-              <MessageCircle className="w-5 h-5 text-[var(--color-brand-gold)]" />
-              <h2 className="font-semibold text-white">Conversations</h2>
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <MessageCircle className="w-5 h-5 text-[var(--color-brand-gold)]" />
+                <h2 className="font-semibold text-white">Conversations</h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setError(null)
+                  setSelectedThread(null)
+                  setIsComposing(true)
+                }}
+                disabled={availableCounterparts.length === 0 || isPending}
+                className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-[var(--color-brand-gold)] px-3 py-2 text-sm font-semibold text-black disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              >
+                <Plus className="w-4 h-4" />
+                New Message
+              </button>
             </div>
 
             <div
@@ -441,62 +475,98 @@ export default function ProductionMessageCenter({
             )}
           </div>
 
-          {availableCounterparts.length > 0 && (
-            <form
-              onSubmit={handleOpenConversation}
-              className="p-4 border-t border-graphite space-y-3"
-            >
-              <div className="flex items-center gap-2 text-sm font-medium text-white">
-                <Plus className="w-4 h-4" />
-                New conversation
-              </div>
-              <label className="text-xs text-silver" htmlFor="message-counterpart">
-                Assigned recipient
-              </label>
-              <select
-                id="message-counterpart"
-                value={counterpartId}
-                onChange={(event) => setCounterpartId(event.target.value)}
-                className="w-full min-h-11 bg-black border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)]"
-              >
-                <option value="">
-                  Choose assigned {currentUserRole === 'instructor' ? 'student' : 'instructor'}
-                </option>
-                {availableCounterparts.map((person) => (
-                  <option key={person.id} value={person.id}>
-                    {person.name}
-                  </option>
-                ))}
-              </select>
-              <label className="text-xs text-silver" htmlFor="message-subject">
-                Conversation subject
-              </label>
-              <input
-                id="message-subject"
-                value={subject}
-                onChange={(event) => setSubject(event.target.value)}
-                maxLength={160}
-                className="w-full min-h-11 bg-black border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)]"
-                placeholder="Conversation subject"
-              />
-              <button
-                type="submit"
-                disabled={isPending || !counterpartId || !subject.trim()}
-                className="w-full min-h-11 inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--color-brand-gold)] px-3 py-2 text-sm font-semibold text-black disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-              >
-                {isPending ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <UserRound className="w-4 h-4" />
-                )}
-                Open conversation
-              </button>
-            </form>
-          )}
         </aside>
 
         <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden flex flex-col min-h-[520px] xl:min-h-[620px]">
-          {selectedThread ? (
+          {isComposing ? (
+            <form
+              onSubmit={handleNewMessageSend}
+              className="flex-1 flex flex-col"
+              aria-label="New message"
+            >
+              <div className="p-4 border-b border-graphite">
+                <h2 className="text-lg font-semibold text-white">New Message</h2>
+                <p className="text-sm text-silver mt-1">
+                  Pick a person you are allowed to message, type your message, then send.
+                </p>
+              </div>
+
+              <div className="flex-1 p-4 space-y-5">
+                <div>
+                  <label
+                    className="block text-sm font-medium text-white mb-2"
+                    htmlFor="message-counterpart"
+                  >
+                    Pick Person
+                  </label>
+                  <select
+                    id="message-counterpart"
+                    value={counterpartId}
+                    onChange={(event) => setCounterpartId(event.target.value)}
+                    className="w-full min-h-12 bg-black border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)]"
+                  >
+                    <option value="">Choose a person</option>
+                    {availableCounterparts.map((person) => (
+                      <option key={person.id} value={person.id}>
+                        {person.name} — {person.role === 'instructor' ? 'Instructor' : 'Student'}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="mt-2 text-xs text-silver-gray">
+                    Only authorized recipients appear here.
+                  </p>
+                </div>
+
+                <div>
+                  <label
+                    className="block text-sm font-medium text-white mb-2"
+                    htmlFor="new-message-body"
+                  >
+                    Message
+                  </label>
+                  <textarea
+                    id="new-message-body"
+                    value={newMessageBody}
+                    onChange={(event) => setNewMessageBody(event.target.value)}
+                    maxLength={4000}
+                    rows={8}
+                    placeholder="Type your message…"
+                    className="w-full bg-black border border-[var(--color-border-secondary)] rounded-lg px-4 py-3 text-white placeholder-silver-gray resize-y focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)]"
+                  />
+                  <div className="mt-2 text-right text-xs text-silver-gray">
+                    {newMessageBody.length}/4000
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-t border-graphite p-4 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsComposing(false)
+                    setCounterpartId('')
+                    setNewMessageBody('')
+                  }}
+                  disabled={isPending}
+                  className="min-h-12 rounded-lg border border-graphite px-4 py-2 text-sm font-medium text-silver hover:bg-graphite/50 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)]"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isPending || !counterpartId || !newMessageBody.trim()}
+                  className="min-h-12 inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--color-brand-gold)] px-5 py-2 text-sm font-semibold text-black disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                >
+                  {isPending ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <Send className="w-5 h-5" />
+                  )}
+                  Send
+                </button>
+              </div>
+            </form>
+          ) : selectedThread ? (
             <>
               <div className="p-4 border-b border-graphite flex flex-wrap items-start justify-between gap-3">
                 <div>
@@ -631,8 +701,13 @@ export default function ProductionMessageCenter({
                   Select a conversation
                 </p>
                 <p className="text-sm text-silver mt-1">
-                  Messages stay between the assigned student and instructor.
+                  Select a conversation or choose New Message.
                 </p>
+                {availableCounterparts.length === 0 && (
+                  <p className="text-xs text-silver-gray mt-3">
+                    No authorized recipients are available right now.
+                  </p>
+                )}
               </div>
             </div>
           )}
