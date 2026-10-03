@@ -39,9 +39,10 @@ describe('ADM-1C route assignment boundaries', () => {
 
     expect(instructorMessages).toContain("from('student_instructor_assignments')")
     expect(studentMessages).toContain("from('student_instructor_assignments')")
-    expect(actions).toContain("from('student_instructor_assignments')")
-    expect(actions).toContain(".eq('is_active', true)")
-    expect(actions).toContain(".is('ended_at', null)")
+    expect(instructorMessages).toContain('resolveAuthorizedMessagingRecipients')
+    expect(actions).toContain('communication_pair_authorized')
+    expect(actions).toContain('participant_one_id')
+    expect(actions).toContain('participant_two_id')
   })
 
   it('keeps the student dashboard self-scoped rather than exposing another learner', () => {
