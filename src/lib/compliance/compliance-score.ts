@@ -40,11 +40,22 @@ export function calculateComplianceScore(
   const hoursStatus = getStatusForThreshold(inputs.completedHours, thresholds.requiredHours)
   const hoursScore = clamp((inputs.completedHours / thresholds.requiredHours) * 100)
 
-  const assessmentStatus = getStatusForThreshold(inputs.assessmentPassRate, thresholds.minimumAssessmentPassRate)
-  const assessmentScore = clamp(inputs.assessmentPassRate)
+  const assessmentsRequired = thresholds.requiredAssessments > 0
+  const practicalsRequired = thresholds.requiredPracticals > 0
 
-  const practicalStatus = getStatusForThreshold(inputs.practicalPassRate, thresholds.minimumPracticalPassRate)
-  const practicalScore = clamp(inputs.practicalPassRate)
+  const assessmentStatus = !assessmentsRequired
+    ? 'met'
+    : inputs.completedAssessments < thresholds.requiredAssessments
+      ? 'missing'
+      : getStatusForThreshold(inputs.assessmentPassRate, thresholds.minimumAssessmentPassRate)
+  const assessmentScore = assessmentsRequired ? clamp(inputs.assessmentPassRate) : 100
+
+  const practicalStatus = !practicalsRequired
+    ? 'met'
+    : inputs.completedPracticals < thresholds.requiredPracticals
+      ? 'missing'
+      : getStatusForThreshold(inputs.practicalPassRate, thresholds.minimumPracticalPassRate)
+  const practicalScore = practicalsRequired ? clamp(inputs.practicalPassRate) : 100
 
   const readinessStatus = getStatusForThreshold(inputs.readinessScore, thresholds.minimumReadinessScore)
   const readinessScore = clamp(inputs.readinessScore)
@@ -79,23 +90,27 @@ export function calculateComplianceScore(
       id: 'assessments',
       name: 'Assessment Pass Rate',
       category: 'assessments',
-      requiredValue: thresholds.minimumAssessmentPassRate,
-      actualValue: clamp(inputs.assessmentPassRate),
+      requiredValue: assessmentsRequired ? thresholds.minimumAssessmentPassRate : 0,
+      actualValue: assessmentsRequired ? clamp(inputs.assessmentPassRate) : 0,
       unit: '%',
       status: assessmentStatus,
       weight: COMPLIANCE_WEIGHTS.assessments,
-      description: `Achieve at least ${thresholds.minimumAssessmentPassRate}% on assessments`,
+      description: assessmentsRequired
+        ? `Complete ${thresholds.requiredAssessments} assessments and achieve at least ${thresholds.minimumAssessmentPassRate}% pass rate`
+        : 'No assessment requirement configured for this program',
     },
     {
       id: 'practicals',
       name: 'Practical Pass Rate',
       category: 'practicals',
-      requiredValue: thresholds.minimumPracticalPassRate,
-      actualValue: clamp(inputs.practicalPassRate),
+      requiredValue: practicalsRequired ? thresholds.minimumPracticalPassRate : 0,
+      actualValue: practicalsRequired ? clamp(inputs.practicalPassRate) : 0,
       unit: '%',
       status: practicalStatus,
       weight: COMPLIANCE_WEIGHTS.practicals,
-      description: `Achieve at least ${thresholds.minimumPracticalPassRate}% on practicals`,
+      description: practicalsRequired
+        ? `Complete ${thresholds.requiredPracticals} practicals and achieve at least ${thresholds.minimumPracticalPassRate}% pass rate`
+        : 'No practical requirement configured for this program',
     },
     {
       id: 'readiness',
