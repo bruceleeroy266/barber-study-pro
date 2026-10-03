@@ -33,6 +33,10 @@ import { localChapters } from '@/lib/local-data'
 import { DEFAULT_REQUIRED_HOURS } from '@/lib/programs/requirements'
 import { DEFAULT_COMPLIANCE_THRESHOLDS } from '@/lib/compliance/compliance-rules'
 import { getOfficialMinutes } from '@/lib/hours/reporting'
+import {
+  ActiveStudentInstructorAssignment,
+  buildInstructorAssignmentMap,
+} from '@/lib/instructor/assignments'
 
 /**
  * Resolve the applicable program's required hours for school analytics.
@@ -65,6 +69,8 @@ export interface SchoolAnalyticsInputs {
   requiredAssessments?: number | null
   /** Per-student required assessment counts keyed by profile id. */
   requiredAssessmentsByStudentId?: Readonly<Record<string, number>>
+  /** Canonical active student↔instructor relationships for instructor analytics. */
+  instructorAssignments?: ReadonlyArray<ActiveStudentInstructorAssignment>
 }
 
 function getDaysAgo(days: number): string {
@@ -282,46 +288,75 @@ export function buildStudentPerformanceRows(inputs: SchoolAnalyticsInputs): Stud
 
 export function buildInstructorPerformanceRows(inputs: SchoolAnalyticsInputs): InstructorPerformanceRow[] {
   const { instructors, students, attendanceRecords, quizAttempts, progress, grades, gradeCategories, assessments } = inputs
+  const assignmentMap = buildInstructorAssignmentMap(inputs.instructorAssignments ?? [])
 
   return instructors.map((instructor) => {
-    // Demo scope: all students are assigned to the single demo instructor
-    const assignedStudents = students.filter((s) => s.role === 'student' || s.role === 'apprentice')
-
-    const attendances = assignedStudents.map((s) =>
-      calculateAttendanceSummary(s.id, studentAttendanceRecords(s.id, attendanceRecords)).attendancePercentage
+    const assignedIds = assignmentMap.get(instructor.id) ?? new Set<string>()
+    const assignedStudents = students.filter(
+      (student) =>
+        (student.role === 'student' || student.role === 'apprentice') &&
+        assignedIds.has(student.id)
     )
 
-    const readinesses = assignedStudents.map((s) => {
-      const attempts = studentAttempts(s.id, quizAttempts)
-      const prog = studentProgress(s.id, progress)
-      return calculateBoardReadiness({
-        userId: s.id,
-        attempts,
-        progress: prog,
-        totalChapters: localChapters.length,
-        streakDays: 0,
-      }).score
-    })
+    const attendances = assignedStudents
+      .map((student) => {
+        const records = studentAttendanceRecords(student.id, attendanceRecords)
+        return records.length > 0
+          ? calculateAttendanceSummary(student.id, records).attendancePercentage
+          : null
+      })
+      .filter((value): value is number => value !== null)
 
-    const gradesList = assignedStudents.map((s) => calculateOverallGrade(studentGrades(s.id, grades), gradeCategories))
+    const readinesses = assignedStudents
+      .map((student) => {
+        const attempts = studentAttempts(student.id, quizAttempts)
+        const prog = studentProgress(student.id, progress)
+        if (!hasReadinessEvidence(attempts, prog)) return null
+        return calculateBoardReadiness({
+          userId: student.id,
+          attempts,
+          progress: prog,
+          totalChapters: localChapters.length,
+          streakDays: 0,
+        }).score
+      })
+      .filter((value): value is number => value !== null)
 
-    const instructorAssessments = assessments.filter((a) => a.evaluatorId === instructor.id)
+    const gradesList = assignedStudents
+      .map((student) => {
+        const studentGradeRows = studentGrades(student.id, grades)
+        return hasGradeEvidence(studentGradeRows)
+          ? calculateOverallGrade(studentGradeRows, gradeCategories)
+          : null
+      })
+      .filter((value): value is number => value !== null)
 
-    // Demo scope: messages sent approximated by notifications authored by instructor
-    const messagesSent = instructor.id === 'demo-instructor' ? 12 : 0
+    // Instructor performance should reflect work performed for students they own,
+    // never assessments of unrelated students in the same school.
+    const assignedStudentIdSet = new Set(assignedStudents.map((student) => student.id))
+    const instructorAssessments = assessments.filter(
+      (assessment) =>
+        assessment.evaluatorId === instructor.id &&
+        assignedStudentIdSet.has(assessment.studentId)
+    )
+
+    // Messaging counts are not yet part of the canonical school analytics input.
+    // Keep this truthful rather than carrying the old demo-only synthetic count.
+    const messagesSent = 0
 
     const avgReadiness = average(readinesses)
+    const avgAttendance = average(attendances)
     let successIndicator: 'high' | 'medium' | 'low' = 'low'
-    if (avgReadiness >= 80 && average(attendances) >= 80) successIndicator = 'high'
-    else if (avgReadiness >= 70 && average(attendances) >= 70) successIndicator = 'medium'
+    if (assignedStudents.length > 0 && avgReadiness >= 80 && avgAttendance >= 80) successIndicator = 'high'
+    else if (assignedStudents.length > 0 && avgReadiness >= 70 && avgAttendance >= 70) successIndicator = 'medium'
 
     return {
       instructorId: instructor.id,
       fullName: instructor.full_name,
       studentsAssigned: assignedStudents.length,
-      averageAttendance: average(attendances),
-      averageReadiness: avgReadiness,
-      averageGrade: average(gradesList),
+      averageAttendance: clampPercentage(avgAttendance),
+      averageReadiness: clampPercentage(avgReadiness),
+      averageGrade: clampPercentage(average(gradesList)),
       assessmentsCompleted: instructorAssessments.length,
       messagesSent,
       successIndicator,

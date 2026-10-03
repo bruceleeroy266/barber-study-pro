@@ -1,13 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Modal from '@/components/ui/Modal'
 import type { AppRole } from '@/types'
 import {
+  assignStudentInstructor,
   assignUserSchool,
   changeUserRole,
   requirePasswordChange,
   resendUserSetupLink,
+  getInstructorAssignmentOptions,
   resetUserPassword,
   toggleUserDisabled,
   updateUserStatus,
@@ -62,6 +64,42 @@ export default function ManageUserModal({
   const [confirmation, setConfirmation] = useState<Confirmation>(null)
   const [pendingKey, setPendingKey] = useState<string | null>(null)
   const [localError, setLocalError] = useState<string | null>(null)
+  const [instructorOptions, setInstructorOptions] = useState<Array<{ id: string; full_name: string }>>([])
+  const [instructorDraft, setInstructorDraft] = useState<string>('')
+  const [assignmentLoadedFor, setAssignmentLoadedFor] = useState<string | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+
+    async function loadAssignment() {
+      if (!user || (user.role !== 'student' && user.role !== 'apprentice')) {
+        setInstructorOptions([])
+        setInstructorDraft('')
+        setAssignmentLoadedFor(null)
+        return
+      }
+
+      const result = await getInstructorAssignmentOptions(user.id)
+      if (cancelled) return
+
+      if (!result.success || !result.data) {
+        setLocalError(result.error || 'Failed to load instructor assignment')
+        setInstructorOptions([])
+        setInstructorDraft('')
+        setAssignmentLoadedFor(user.id)
+        return
+      }
+
+      setInstructorOptions(result.data.instructors)
+      setInstructorDraft(result.data.current_instructor_id ?? '')
+      setAssignmentLoadedFor(user.id)
+    }
+
+    loadAssignment()
+    return () => {
+      cancelled = true
+    }
+  }, [user])
 
   if (!user) return null
 
@@ -374,6 +412,49 @@ export default function ManageUserModal({
             </>
           )}
         </section>
+
+        {(managedUser.role === 'student' || managedUser.role === 'apprentice') && (
+          <section className="space-y-3 border-t border-[var(--color-border-primary)] pt-5">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">Instructor Assignment</h3>
+            <p className="text-sm text-[var(--color-text-secondary)]">
+              This assignment controls the instructor roster, private messaging relationship, student-detail access, and instructor analytics.
+            </p>
+            <label className="block text-sm text-[var(--color-text-muted)]">
+              Assigned instructor
+              <select
+                value={instructorDraft}
+                onChange={(event) => setInstructorDraft(event.target.value)}
+                disabled={!!pendingKey || assignmentLoadedFor !== managedUser.id}
+                className="mt-1 min-h-11 w-full rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-background-primary)] px-3 py-2 text-white disabled:opacity-50"
+              >
+                <option value="">Unassigned</option>
+                {instructorOptions.map((instructor) => (
+                  <option key={instructor.id} value={instructor.id}>{instructor.full_name}</option>
+                ))}
+              </select>
+            </label>
+            <button
+              type="button"
+              onClick={() =>
+                runAction(
+                  `${managedUser.id}:instructor-assignment`,
+                  () => assignStudentInstructor(managedUser.id, instructorDraft || null),
+                  instructorDraft
+                    ? 'Instructor assignment updated'
+                    : 'Instructor assignment cleared'
+                )
+              }
+              disabled={
+                !!pendingKey ||
+                assignmentLoadedFor !== managedUser.id ||
+                instructorDraft === (managedUser.assigned_instructor_id ?? '')
+              }
+              className="min-h-11 w-full rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 px-3 py-2 text-sm text-[var(--color-brand-gold)] disabled:opacity-40"
+            >
+              {pendingKey === `${managedUser.id}:instructor-assignment` ? 'Saving…' : 'Save instructor assignment'}
+            </button>
+          </section>
+        )}
 
         {managedUser.role === 'student' && (
           <section className="space-y-3 border-t border-[var(--color-border-primary)] pt-5">

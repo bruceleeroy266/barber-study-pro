@@ -43,20 +43,24 @@ const mocks = vi.hoisted(() => {
           },
           error: null,
         })
-        // Second profiles query uses in() to fetch school-scoped students.
-        chain.in = vi.fn().mockResolvedValue({
-          data: [
-            {
-              id: 'student-1',
-              email: 'student@ascyn-smoke.test',
-              full_name: 'Smoke Test Student',
-              role: 'student',
-              school_id: 'school-1',
-              approval_status: 'approved',
-            },
-          ],
-          error: null,
-        })
+        // The real Supabase builder may chain multiple .in() filters before
+        // it is awaited. Keep .in() chainable and resolve the roster via then().
+        chain.in = vi.fn().mockReturnThis()
+        chain.then = vi.fn((resolve) =>
+          Promise.resolve({
+            data: [
+              {
+                id: 'student-1',
+                email: 'student@ascyn-smoke.test',
+                full_name: 'Smoke Test Student',
+                role: 'student',
+                school_id: 'school-1',
+                approval_status: 'approved',
+              },
+            ],
+            error: null,
+          }).then(resolve)
+        )
         return chain
       }
       return createChain(table)
@@ -168,7 +172,8 @@ describe('InstructorPage — Phase 6B-1 R-3 demo data safeguards', () => {
         const chain: Record<string, ReturnType<typeof vi.fn>> = {
           select: vi.fn().mockReturnThis(),
           eq: vi.fn().mockReturnThis(),
-          in: vi.fn().mockResolvedValue({ data: [], error: null }),
+          in: vi.fn().mockReturnThis(),
+          then: vi.fn((resolve) => Promise.resolve({ data: [], error: null }).then(resolve)),
           or: vi.fn().mockReturnThis(),
           order: vi.fn().mockReturnThis(),
           limit: vi.fn().mockResolvedValue({ data: [], error: null }),
@@ -235,17 +240,20 @@ describe('InstructorPage — Phase 6B-1 R-3 demo data safeguards', () => {
         const chain: Record<string, ReturnType<typeof vi.fn>> = {
           select: vi.fn().mockReturnThis(),
           eq: vi.fn().mockReturnThis(),
-          in: vi.fn().mockResolvedValue({
-            data: [{
-              id: 'student-1',
-              email: 'student@ascyn-smoke.test',
-              full_name: 'Real Student',
-              role: 'student',
-              school_id: 'school-1',
-              approval_status: 'approved',
-            }],
-            error: null,
-          }),
+          in: vi.fn().mockReturnThis(),
+          then: vi.fn((resolve) =>
+            Promise.resolve({
+              data: [{
+                id: 'student-1',
+                email: 'student@ascyn-smoke.test',
+                full_name: 'Real Student',
+                role: 'student',
+                school_id: 'school-1',
+                approval_status: 'approved',
+              }],
+              error: null,
+            }).then(resolve)
+          ),
           or: vi.fn().mockReturnThis(),
           order: vi.fn().mockReturnThis(),
           limit: vi.fn().mockResolvedValue({ data: [], error: null }),
@@ -295,17 +303,20 @@ describe('InstructorPage — Phase 6B-1 R-3 demo data safeguards', () => {
         const chain: Record<string, ReturnType<typeof vi.fn>> = {
           select: vi.fn().mockReturnThis(),
           eq: vi.fn().mockReturnThis(),
-          in: vi.fn().mockResolvedValue({
-            data: [{
-              id: 'student-1',
-              email: 'student@ascyn-smoke.test',
-              full_name: 'Real Student Not Demo',
-              role: 'student',
-              school_id: 'school-1',
-              approval_status: 'approved',
-            }],
-            error: null,
-          }),
+          in: vi.fn().mockReturnThis(),
+          then: vi.fn((resolve) =>
+            Promise.resolve({
+              data: [{
+                id: 'student-1',
+                email: 'student@ascyn-smoke.test',
+                full_name: 'Real Student Not Demo',
+                role: 'student',
+                school_id: 'school-1',
+                approval_status: 'approved',
+              }],
+              error: null,
+            }).then(resolve)
+          ),
           or: vi.fn().mockReturnThis(),
           order: vi.fn().mockReturnThis(),
           limit: vi.fn().mockResolvedValue({ data: [], error: null }),

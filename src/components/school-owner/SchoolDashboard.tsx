@@ -34,6 +34,7 @@ import SchoolAnalyticsCharts from './SchoolAnalyticsCharts'
 import AlertsCenter from './AlertsCenter'
 import ReportingCenter from './ReportingCenter'
 import { mapAttendanceRecordsFromDb, mapHourLogsFromDb, mapGradesFromDb, mapGradeCategoriesFromDb, mapAssessmentsFromDb } from '@/lib/mappers/operational-data-mappers'
+import { loadActiveStudentInstructorAssignments } from '@/lib/instructor/assignments'
 
 interface SchoolDashboardProps {
   schoolId: string
@@ -114,6 +115,8 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
     .select('*')
     .in('user_id', schoolUserIds)
   if (notificationsError) queryErrors.push('Failed to load notifications')
+
+  const instructorAssignments = await loadActiveStudentInstructorAssignments(supabase, schoolId)
 
   const useDemo = isDemoFallbackEnabled()
 
@@ -234,6 +237,7 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
     notifications,
     requiredHoursByStudentId,
     requiredAssessmentsByStudentId,
+    instructorAssignments,
   }
 
   const metrics = buildSchoolOverviewMetrics(inputs)

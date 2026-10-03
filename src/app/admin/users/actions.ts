@@ -17,6 +17,8 @@ export interface UserListItem {
   is_disabled: boolean
   requires_password_change: boolean
   enrollment_count?: number
+  assigned_instructor_id?: string | null
+  assigned_instructor_name?: string | null
   created_at: string
   updated_at: string
 }
@@ -277,8 +279,10 @@ export async function getUsers(filters: UserFilters = {}): Promise<ActionResult<
     }
   })
 
-  // Fetch enrollment counts for students
-  const studentProfileIds = users.filter((u) => u.role === 'student').map((u) => u.id)
+  // Fetch enrollment counts and canonical instructor assignments for learners.
+  const studentProfileIds = users
+    .filter((u) => u.role === 'student' || u.role === 'apprentice')
+    .map((u) => u.id)
   if (studentProfileIds.length > 0) {
     const serviceClient = createServiceRoleClient()
     // Resolve profile IDs to canonical student IDs first
@@ -331,7 +335,254 @@ export async function getUsers(filters: UserFilters = {}): Promise<ActionResult<
     }
   }
 
+  if (studentProfileIds.length > 0) {
+    const serviceClient = createServiceRoleClient()
+    const { data: assignmentRows } = await serviceClient
+      .from('student_instructor_assignments')
+      .select('student_id, instructor_id')
+      .in('student_id', studentProfileIds)
+      .eq('is_active', true)
+      .is('ended_at', null)
+
+    const instructorIds = Array.from(
+      new Set((assignmentRows ?? []).map((row) => String(row.instructor_id)))
+    )
+
+    const instructorNames = new Map<string, string>()
+    if (instructorIds.length > 0) {
+      const { data: instructorProfiles } = await serviceClient
+        .from('profiles')
+        .select('id, full_name, role')
+        .in('id', instructorIds)
+
+      for (const profile of instructorProfiles ?? []) {
+        if (profile.role === 'instructor') {
+          instructorNames.set(String(profile.id), String(profile.full_name || 'Instructor'))
+        }
+      }
+    }
+
+    const assignmentByStudent = new Map<string, string>()
+    for (const row of assignmentRows ?? []) {
+      assignmentByStudent.set(String(row.student_id), String(row.instructor_id))
+    }
+
+    for (const user of users) {
+      if (user.role !== 'student' && user.role !== 'apprentice') continue
+      const instructorId = assignmentByStudent.get(user.id) ?? null
+      user.assigned_instructor_id = instructorId
+      user.assigned_instructor_name = instructorId
+        ? instructorNames.get(instructorId) ?? 'Assigned instructor'
+        : null
+    }
+  }
+
   return { success: true, data: { users, count: count ?? 0 } }
+}
+
+export interface InstructorAssignmentOption {
+  id: string
+  full_name: string
+}
+
+export interface InstructorAssignmentState {
+  school_id: string
+  current_instructor_id: string | null
+  instructors: InstructorAssignmentOption[]
+}
+
+async function getManageableLearner(
+  admin: AdminContext,
+  studentId: string
+): Promise<ActionResult<{ id: string; email: string; full_name: string; school_id: string }>> {
+  const serviceClient = createServiceRoleClient()
+  const { data: student, error } = await serviceClient
+    .from('profiles')
+    .select('id, email, full_name, school_id, role')
+    .eq('id', studentId)
+    .maybeSingle()
+
+  if (error || !student || !student.school_id || !['student', 'apprentice'].includes(student.role)) {
+    return { success: false, error: 'Student not found' }
+  }
+
+  if (!admin.isPlatformAdmin && student.school_id !== admin.schoolId) {
+    return { success: false, error: 'Forbidden' }
+  }
+
+  return {
+    success: true,
+    data: {
+      id: String(student.id),
+      email: String(student.email || ''),
+      full_name: String(student.full_name || ''),
+      school_id: String(student.school_id),
+    },
+  }
+}
+
+export async function getInstructorAssignmentOptions(
+  studentId: string
+): Promise<ActionResult<InstructorAssignmentState>> {
+  const adminResult = await getCurrentAdmin()
+  if (!adminResult.success || !adminResult.data) {
+    return { success: false, error: adminResult.error }
+  }
+
+  const learnerResult = await getManageableLearner(adminResult.data, studentId)
+  if (!learnerResult.success || !learnerResult.data) {
+    return { success: false, error: learnerResult.error }
+  }
+
+  const learner = learnerResult.data
+  const serviceClient = createServiceRoleClient()
+
+  const [{ data: instructors, error: instructorsError }, { data: assignment, error: assignmentError }] =
+    await Promise.all([
+      serviceClient
+        .from('profiles')
+        .select('id, full_name')
+        .eq('school_id', learner.school_id)
+        .eq('role', 'instructor')
+        .eq('is_disabled', false)
+        .eq('approval_status', 'approved')
+        .order('full_name'),
+      serviceClient
+        .from('student_instructor_assignments')
+        .select('instructor_id')
+        .eq('school_id', learner.school_id)
+        .eq('student_id', learner.id)
+        .eq('is_active', true)
+        .is('ended_at', null)
+        .maybeSingle(),
+    ])
+
+  if (instructorsError || assignmentError) {
+    const errorMessage =
+      instructorsError?.message || assignmentError?.message || 'Failed to load instructor assignment'
+
+    if (process.env.ASCYN_TEST_ENVIRONMENT === 'true') {
+      console.error('[ADM-1C assignment options]', {
+        studentId: learner.id,
+        schoolId: learner.school_id,
+        instructorsError: instructorsError?.message ?? null,
+        assignmentError: assignmentError?.message ?? null,
+      })
+    }
+
+    return {
+      success: false,
+      error: errorMessage,
+    }
+  }
+
+  return {
+    success: true,
+    data: {
+      school_id: learner.school_id,
+      current_instructor_id: assignment?.instructor_id ? String(assignment.instructor_id) : null,
+      instructors: (instructors ?? []).map((row) => ({
+        id: String(row.id),
+        full_name: String(row.full_name || 'Instructor'),
+      })),
+    },
+  }
+}
+
+export async function assignStudentInstructor(
+  studentId: string,
+  instructorId: string | null
+): Promise<ActionResult> {
+  const adminResult = await getCurrentAdmin()
+  if (!adminResult.success || !adminResult.data) {
+    return { success: false, error: adminResult.error }
+  }
+
+  const admin = adminResult.data
+  const learnerResult = await getManageableLearner(admin, studentId)
+  if (!learnerResult.success || !learnerResult.data) {
+    return { success: false, error: learnerResult.error }
+  }
+
+  const learner = learnerResult.data
+  const serviceClient = createServiceRoleClient()
+
+  if (instructorId) {
+    const { data: instructor, error: instructorError } = await serviceClient
+      .from('profiles')
+      .select('id, school_id, role, is_disabled, approval_status')
+      .eq('id', instructorId)
+      .maybeSingle()
+
+    if (
+      instructorError ||
+      !instructor ||
+      instructor.role !== 'instructor' ||
+      instructor.school_id !== learner.school_id ||
+      instructor.is_disabled ||
+      instructor.approval_status !== 'approved'
+    ) {
+      return { success: false, error: 'Instructor is not available for this student' }
+    }
+  }
+
+  const { data: existingRows, error: existingError } = await serviceClient
+    .from('student_instructor_assignments')
+    .select('id, instructor_id')
+    .eq('school_id', learner.school_id)
+    .eq('student_id', learner.id)
+    .eq('is_active', true)
+    .is('ended_at', null)
+
+  if (existingError) {
+    return { success: false, error: existingError.message }
+  }
+
+  const current = existingRows?.[0] ?? null
+  const currentInstructorId = current?.instructor_id ? String(current.instructor_id) : null
+  if (currentInstructorId === instructorId) {
+    return { success: true }
+  }
+
+  const now = new Date().toISOString()
+  if ((existingRows ?? []).length > 0) {
+    const activeIds = (existingRows ?? []).map((row) => row.id)
+    const { error: endError } = await serviceClient
+      .from('student_instructor_assignments')
+      .update({ is_active: false, ended_at: now, updated_at: now })
+      .in('id', activeIds)
+
+    if (endError) {
+      return { success: false, error: endError.message }
+    }
+  }
+
+  if (instructorId) {
+    const { error: insertError } = await serviceClient
+      .from('student_instructor_assignments')
+      .insert({
+        school_id: learner.school_id,
+        student_id: learner.id,
+        instructor_id: instructorId,
+        assigned_by: admin.userId,
+      })
+
+    if (insertError) {
+      return { success: false, error: insertError.message }
+    }
+  }
+
+  await logUserManagementAction(
+    admin,
+    learner.id,
+    learner.email,
+    'assign_student_instructor',
+    { instructor_id: currentInstructorId },
+    { instructor_id: instructorId },
+    learner.school_id
+  )
+
+  return { success: true }
 }
 
 export async function getUserById(id: string): Promise<ActionResult<UserListItem>> {

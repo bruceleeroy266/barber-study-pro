@@ -515,7 +515,65 @@ test.describe('Pilot onboarding certification', () => {
     })
 
     // -----------------------------------------------------------------------
-    // 7. Instructor verifies the newly onboarded student is visible
+    // 6b. School admin explicitly assigns the student to the instructor.
+    // -----------------------------------------------------------------------
+    const { data: assignableInstructor } = await service
+      .from('profiles')
+      .select('id, full_name, school_id, role, approval_status, is_disabled')
+      .eq('email', INSTRUCTOR_EMAIL)
+      .single()
+
+    expect(assignableInstructor).toMatchObject({
+      full_name: INSTRUCTOR_NAME,
+      school_id: schoolId,
+      role: 'instructor',
+      approval_status: 'approved',
+      is_disabled: false,
+    })
+
+    await schoolAdminSession.page.goto('/admin/users')
+    await schoolAdminSession.page.locator('input[placeholder="Search name or email"]').fill(STUDENT_EMAIL)
+    await schoolAdminSession.page.getByRole('button', { name: 'Search' }).click()
+    const assignmentRow = schoolAdminSession.page.getByRole('row').filter({ hasText: STUDENT_EMAIL })
+    await assignmentRow.getByRole('button', { name: 'Manage user' }).click()
+    const manageUserDialog = schoolAdminSession.page.getByRole('dialog', {
+      name: new RegExp(`Manage.*${STUDENT_NAME}`),
+    })
+    const instructorSelect = manageUserDialog.getByLabel('Assigned instructor')
+    await expect(instructorSelect).toBeEnabled()
+    await instructorSelect.selectOption(String(assignableInstructor!.id))
+    await manageUserDialog.getByRole('button', { name: 'Save instructor assignment' }).click()
+
+    // The assignment save is a server action. Do not leave the admin page
+    // until the action has fully resolved and the modal closes; navigating
+    // immediately can abort the in-flight mutation and make the instructor
+    // roster assertion race the database write.
+    await expect(manageUserDialog).toBeHidden()
+
+    // Certify the canonical assignment row itself before checking the
+    // instructor-facing roster. This distinguishes persistence failures from
+    // rendering/scoping failures and prevents false negatives from UI timing.
+    const { data: activeAssignment, error: activeAssignmentError } = await service
+      .from('student_instructor_assignments')
+      .select('school_id, student_id, instructor_id, is_active, ended_at')
+      .eq('school_id', schoolId)
+      .eq('student_id', studentProfile!.id)
+      .eq('instructor_id', assignableInstructor!.id)
+      .eq('is_active', true)
+      .is('ended_at', null)
+      .single()
+
+    expect(activeAssignmentError).toBeNull()
+    expect(activeAssignment).toMatchObject({
+      school_id: schoolId,
+      student_id: studentProfile!.id,
+      instructor_id: assignableInstructor!.id,
+      is_active: true,
+      ended_at: null,
+    })
+
+    // -----------------------------------------------------------------------
+    // 7. Instructor verifies the newly onboarded assigned student is visible
     // -----------------------------------------------------------------------
     await instructorSession.page.goto('/instructor/students')
     const instructorStudentRow = instructorSession.page

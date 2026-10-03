@@ -350,7 +350,7 @@ describe('UserManagementClient — UM-H2.4 final desktop safety', () => {
 
     const desktopTable = screen.getByTestId('desktop-user-table')
     expect(desktopTable).toHaveClass('hidden', 'md:block')
-    expect(within(desktopTable).getByText('Instructor')).toBeInTheDocument()
+    expect(within(desktopTable).getByRole('columnheader', { name: 'Instructor' })).toBeInTheDocument()
     expect(within(desktopTable).getByText('RISE Program')).toBeInTheDocument()
     expect(within(desktopTable).getByText('Approved')).toBeInTheDocument()
     expect(within(desktopTable).getByText('Enabled')).toBeInTheDocument()
