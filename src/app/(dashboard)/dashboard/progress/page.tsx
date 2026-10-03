@@ -3,7 +3,6 @@ import { redirect } from 'next/navigation'
 import { StudentProgress, QuizAttempt, AttendanceRecord } from '@/types'
 import { localChapters } from '@/lib/local-data'
 import { allQuizQuestions } from '@/lib/quiz-data'
-import { calculateBoardReadiness } from '@/lib/readiness'
 import { analyzePerformance } from '@/lib/analytics'
 import { generateStudyPlan } from '@/lib/recommendations'
 import { getDemoMissedQuestionsForUser } from '@/lib/demo-analytics'
@@ -14,6 +13,7 @@ import WeakAreaAnalytics from '@/components/WeakAreaAnalytics'
 import StudyRecommendations from '@/components/StudyRecommendations'
 import AnalyticsCharts from '@/components/AnalyticsCharts'
 import { mapAttendanceRecordsFromDb } from '@/lib/mappers/operational-data-mappers'
+import { calculateCanonicalStudentLearningMetrics } from '@/lib/student-level/metrics'
 
 // Phase 4 Design System Components
 import { Card } from '@/components/ui/Card'
@@ -73,12 +73,20 @@ export default async function ProgressPage() {
   const progress: StudentProgress[] = progressData || []
   const attempts: QuizAttempt[] = attemptsData || []
   const totalChapters = chapters?.length || 0
-  const completedChapters = progress.filter(p => p.progress_percentage === 100).length || 0
-  const flashcardsCompleted = progress.filter(p => p.flashcards_completed).length || 0
-  const quizzesCompleted = progress.filter(p => p.quiz_completed).length || 0
-  const averageQuizScore = attempts.length
-    ? Math.round(attempts.reduce((acc, a) => acc + a.percentage, 0) / attempts.length)
-    : 0
+  const canonicalMetrics = calculateCanonicalStudentLearningMetrics({
+    userId: user.id,
+    progress,
+    attempts,
+    totalChapters,
+  })
+  const {
+    completedChapters,
+    overallProgress,
+    flashcardsCompleted,
+    quizzesPassed: quizzesCompleted,
+    averageQuizScore,
+    readiness,
+  } = canonicalMetrics
 
   // Phase 5 analytics
   const attemptRecords = attempts
@@ -91,13 +99,6 @@ export default async function ProgressPage() {
     progress: progressRecords,
     chapters,
     questions,
-  })
-
-  const readiness = calculateBoardReadiness({
-    userId: user.id,
-    attempts: attemptRecords,
-    progress: progressRecords,
-    totalChapters,
   })
 
   const { buildMissedQuestions } = await import('@/lib/analytics')
@@ -138,7 +139,7 @@ export default async function ProgressPage() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <MetricCard
             label="Overall Progress"
-            value={`${Math.round(((completedChapters / totalChapters) * 100) || 0)}%`}
+            value={`${overallProgress}%`}
             variant="default"
           />
           

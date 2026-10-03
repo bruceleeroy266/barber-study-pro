@@ -4,8 +4,8 @@ import { redirect } from 'next/navigation'
 import { QuizAttempt, StudentProgress, AttendanceRecord, Grade, GradeCategory, Assessment } from '@/types'
 import { localChapters } from '@/lib/local-data'
 import { allQuizQuestions } from '@/lib/quiz-data'
-import { calculateBoardReadiness } from '@/lib/readiness'
 import { analyzePerformance } from '@/lib/analytics'
+import { calculateCanonicalStudentLearningMetrics } from '@/lib/student-level/metrics'
 import { generateStudyPlan } from '@/lib/recommendations'
 import { getDemoMissedQuestionsForUser } from '@/lib/demo-analytics'
 import { demoAttendanceRecords, getDemoNotificationsForUser, getDemoThreadsForUser, getDemoAnnouncementsForSchool, demoAnnouncements, demoGrades, demoGradeCategories, demoAssessments } from '@/lib/demo-data'
@@ -268,12 +268,20 @@ export default async function DashboardPage() {
   const totalChapters = chapters.length
   const progress: StudentProgress[] = progressData || []
   const attempts: QuizAttempt[] = attemptsData || []
-  const completedChapters = progress.filter(p => p.progress_percentage === 100).length || 0
-  const inProgressChapters = progress.filter(p => p.progress_percentage > 0 && p.progress_percentage < 100).length || 0
-  const totalProgressSum = progress.reduce((acc, p) => acc + p.progress_percentage, 0) || 0
-  const averageProgress = totalChapters > 0
-    ? Math.round(totalProgressSum / totalChapters)
-    : 0
+  const canonicalMetrics = calculateCanonicalStudentLearningMetrics({
+    userId: user.id,
+    progress,
+    attempts,
+    totalChapters,
+  })
+  const {
+    completedChapters,
+    overallProgress: averageProgress,
+    readiness,
+  } = canonicalMetrics
+  const inProgressChapters = progress.filter(
+    p => p.progress_percentage > 0 && p.progress_percentage < 100
+  ).length || 0
 
   // Phase 5 analytics
   const attemptRecords = attempts
@@ -319,14 +327,6 @@ export default async function DashboardPage() {
       studyStreakDays += 1
     }
   }
-
-  const readiness = calculateBoardReadiness({
-    userId: user.id,
-    attempts: attemptRecords,
-    progress: progressRecords,
-    totalChapters,
-    streakDays: studyStreakDays,
-  })
 
   // Use the persisted missed-question bank as the authoritative source so the
   // dashboard count always matches /dashboard/missed-questions.

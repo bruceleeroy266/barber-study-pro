@@ -11,7 +11,8 @@ import { isDemoDataAllowed } from '@/lib/demo-helpers'
 import { defaultProgramRequirements, resolveSchoolState, resolveStudentProgramRequirements } from '@/lib/programs/requirements'
 import DemoDataBanner from '@/components/DemoDataBanner'
 import { getDemoMissedQuestionsForUser } from '@/lib/demo-analytics'
-import { calculateBoardReadiness } from '@/lib/readiness'
+import { getReadinessColorClass } from '@/lib/readiness'
+import { calculateCanonicalStudentLearningMetrics } from '@/lib/student-level/metrics'
 import { analyzePerformance } from '@/lib/analytics'
 import { generateStudyPlan } from '@/lib/recommendations'
 import { calculateAttendanceSummary, getRecentAttendance, getStatusColorClass } from '@/lib/attendance'
@@ -178,21 +179,6 @@ function formatDaysAgo(dateString: string | null): string {
   if (days === 0) return 'Today'
   if (days === 1) return 'Yesterday'
   return `${days} days ago`
-}
-
-function getReadinessEstimate(overallProgress: number, avgQuizScore: number): {
-  label: string
-  score: number
-  color: string
-} {
-  // Weighted readiness score: 50% chapter completion + 50% quiz performance
-  const score = Math.round(overallProgress * 0.5 + avgQuizScore * 0.5)
-
-  if (score >= 85) return { label: 'Board Ready', score, color: 'text-gold' }
-  if (score >= 70) return { label: 'Almost Ready', score, color: 'text-silver' }
-  if (score >= 50) return { label: 'On Track', score, color: 'text-warm-bronze' }
-  if (score >= 25) return { label: 'Needs Review', score, color: 'text-warm-bronze' }
-  return { label: 'Getting Started', score, color: 'text-silver' }
 }
 
 interface ChapterScore {
@@ -514,15 +500,25 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     : 0
 
   const totalChapters = chapters?.length || 0
-  const completedChapters = progressRecords.filter((p) => p.progress_percentage === 100).length
-  const overallProgress = totalChapters > 0
-    ? Math.round(progressRecords.reduce((sum, p) => sum + p.progress_percentage, 0) / totalChapters)
-    : 0
-  const flashcardsCompleted = progressRecords.filter((p) => p.flashcards_completed).length
-  const quizzesCompleted = progressRecords.filter((p) => p.quiz_completed).length
-  const avgQuizScore = attemptRecords.length > 0
-    ? Math.round(attemptRecords.reduce((sum, a) => sum + a.percentage, 0) / attemptRecords.length)
-    : 0
+  const canonicalMetrics = calculateCanonicalStudentLearningMetrics({
+    userId: studentId,
+    progress: progressRecords,
+    attempts: attemptRecords,
+    totalChapters,
+  })
+  const {
+    completedChapters,
+    overallProgress,
+    flashcardsCompleted,
+    quizzesPassed: quizzesCompleted,
+    averageQuizScore: avgQuizScore,
+    readiness: boardReadiness,
+  } = canonicalMetrics
+  const readiness = {
+    label: boardReadiness.level,
+    score: boardReadiness.score,
+    color: getReadinessColorClass(boardReadiness.score),
+  }
 
   const chapter1MicroCheckAttempts = (chapter1MicroCheckRows ?? []) as Chapter1MicroCheckAttemptRow[]
   const chapter1Progress = progressRecords.find((record) => record.chapter_id === 'ch-1')
@@ -1077,8 +1073,6 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
   const lastActivityAt = lastStudiedDates[0] || null
 
-  const readiness = getReadinessEstimate(overallProgress, avgQuizScore)
-
   // Phase 5 analytics
   const questions = Object.values(allQuizQuestions).flat()
   const analytics = analyzePerformance({
@@ -1087,13 +1081,6 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     progress: progressRecords,
     chapters,
     questions,
-  })
-
-  const boardReadiness = calculateBoardReadiness({
-    userId: studentId,
-    attempts: attemptRecords,
-    progress: progressRecords,
-    totalChapters,
   })
 
   const { buildMissedQuestions } = await import('@/lib/analytics')
