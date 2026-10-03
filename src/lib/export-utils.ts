@@ -77,9 +77,10 @@ export function exportToCSV(data: Record<string, unknown>[], columns: ExportColu
 /**
  * Format date for export
  */
-export function formatDateForExport(date: string | Date | null): string {
-  if (!date) return ''
-  const d = typeof date === 'string' ? new Date(date) : date
+export function formatDateForExport(value: unknown): string {
+  if (!(typeof value === 'string' || value instanceof Date)) return ''
+  const d = typeof value === 'string' ? new Date(value) : value
+  if (Number.isNaN(d.getTime())) return ''
   return d.toLocaleDateString('en-US', {
     year: 'numeric',
     month: '2-digit',
@@ -90,16 +91,17 @@ export function formatDateForExport(date: string | Date | null): string {
 /**
  * Format percentage for export
  */
-export function formatPercentageForExport(value: number | null | undefined): string {
-  if (value === null || value === undefined) return ''
+export function formatPercentageForExport(value: unknown): string {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return ''
   return `${value}%`
 }
 
 /**
  * Format minutes to hours for export
  */
-export function formatMinutesForExport(minutes: number | null | undefined): string {
-  if (minutes === null || minutes === undefined) return ''
+export function formatMinutesForExport(value: unknown): string {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return ''
+  const minutes = value
   const hours = Math.floor(minutes / 60)
   const mins = minutes % 60
   return `${hours}h ${mins}m`
