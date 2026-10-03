@@ -61,7 +61,7 @@ export default function SchoolOverviewMetrics({ metrics }: Props) {
       />
       <MetricCard
         label="Avg Grade"
-        value={`${metrics.averageGrade}%`}
+        value={metrics.hasGradeEvidence ? `${metrics.averageGrade}%` : 'No Grade'}
         icon={Calculator}
         colorClass="text-silver"
       />
