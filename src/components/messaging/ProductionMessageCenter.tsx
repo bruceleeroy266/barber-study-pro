@@ -28,13 +28,13 @@ import {
 export interface ProductionMessagingPerson {
   id: string
   name: string
-  role: 'student' | 'apprentice' | 'instructor'
+  role: 'student' | 'apprentice' | 'instructor' | 'school_admin' | 'admin'
 }
 
 interface ProductionMessageCenterProps {
   currentUserId: string
   currentUserName: string
-  currentUserRole: 'student' | 'apprentice' | 'instructor'
+  currentUserRole: 'student' | 'apprentice' | 'instructor' | 'school_admin' | 'admin'
   initialThreads: ProductionCommunicationThread[]
   people: ProductionMessagingPerson[]
   availableCounterparts: ProductionMessagingPerson[]
@@ -106,8 +106,10 @@ export default function ProductionMessageCenter({
 
   const counterpartForThread = (thread: ProductionCommunicationThread) => {
     const counterpart =
-      thread.studentId === currentUserId ? thread.instructorId : thread.studentId
-    return peopleById.get(counterpart)?.name || 'Assigned participant'
+      thread.participantOneId === currentUserId
+        ? thread.participantTwoId
+        : thread.participantOneId
+    return peopleById.get(counterpart)?.name || 'Authorized participant'
   }
 
   const replaceThread = (nextThread: ProductionCommunicationThread) => {
@@ -508,7 +510,11 @@ export default function ProductionMessageCenter({
                     <option value="">Choose a person</option>
                     {availableCounterparts.map((person) => (
                       <option key={person.id} value={person.id}>
-                        {person.name} — {person.role === 'instructor' ? 'Instructor' : 'Student'}
+                        {person.name} — {person.role === 'instructor'
+                          ? 'Instructor'
+                          : person.role === 'school_admin' || person.role === 'admin'
+                            ? 'School Admin'
+                            : 'Student'}
                       </option>
                     ))}
                   </select>
@@ -685,10 +691,7 @@ export default function ProductionMessageCenter({
                   </button>
                 </div>
                 <div className="mt-2 flex flex-wrap justify-between gap-3 text-xs text-silver-gray">
-                  <span>
-                    Private to your assigned{' '}
-                    {currentUserRole === 'instructor' ? 'student' : 'instructor'}.
-                  </span>
+                  <span>Private to this authorized recipient.</span>
                   <span>{replyBody.length}/4000</span>
                 </div>
               </form>
