@@ -502,7 +502,13 @@ export function buildSchoolAnalyticsSnapshot(inputs: SchoolAnalyticsInputs): Sch
 
   const hoursCompletionTrend = last14.map((p) => ({
     ...p,
-    value: Math.round(average(rows.map((r) => (r.completedHours / r.requiredHours) * 100))),
+    value: clampPercentage(
+      Math.round(
+        average(
+          rows.map((r) => (r.requiredHours > 0 ? (r.completedHours / r.requiredHours) * 100 : 0))
+        )
+      )
+    ),
   }))
 
   const gradeDistribution = [
@@ -534,7 +540,29 @@ export function generateSchoolReport(
   inputs: SchoolAnalyticsInputs
 ): SchoolReport {
   const rows = buildStudentPerformanceRows(inputs)
+  const metrics = buildSchoolOverviewMetrics(inputs)
   const now = new Date().toISOString()
+  const attendanceEvidence = new Set(
+    inputs.attendanceRecords.map((record) => record.userId)
+  )
+  const readinessEvidence = new Set(
+    inputs.students
+      .filter((student) =>
+        hasReadinessEvidence(
+          studentAttempts(student.id, inputs.quizAttempts),
+          studentProgress(student.id, inputs.progress)
+        )
+      )
+      .map((student) => student.id)
+  )
+  const gradeEvidence = new Set(
+    inputs.students
+      .filter((student) => hasGradeEvidence(studentGrades(student.id, inputs.grades)))
+      .map((student) => student.id)
+  )
+  const assessmentEvidence = new Set(
+    inputs.assessments.map((assessment) => assessment.studentId)
+  )
 
   switch (type) {
     case 'attendance':
@@ -542,11 +570,17 @@ export function generateSchoolReport(
         type,
         title: 'Attendance Report',
         generatedAt: now,
-        summary: `Average attendance: ${average(rows.map((r) => r.attendancePercentage))}%`,
+        summary: `Average attendance: ${metrics.averageAttendance}%`,
         rows: rows.map((r) => ({
           Student: r.fullName,
-          Attendance: `${r.attendancePercentage}%`,
-          Status: r.attendancePercentage >= 80 ? 'Good' : r.attendancePercentage >= 70 ? 'Warning' : 'At Risk',
+          Attendance: attendanceEvidence.has(r.studentId) ? `${r.attendancePercentage}%` : 'No Data',
+          Status: !attendanceEvidence.has(r.studentId)
+            ? 'No Data'
+            : r.attendancePercentage >= 80
+              ? 'Good'
+              : r.attendancePercentage >= 70
+                ? 'Warning'
+                : 'At Risk',
         })),
       }
     case 'readiness':
@@ -554,11 +588,17 @@ export function generateSchoolReport(
         type,
         title: 'Board Readiness Report',
         generatedAt: now,
-        summary: `Average readiness: ${average(rows.map((r) => r.readinessScore))}`,
+        summary: `Average readiness: ${metrics.averageReadiness}`,
         rows: rows.map((r) => ({
           Student: r.fullName,
-          Readiness: r.readinessScore,
-          Status: r.readinessScore >= 80 ? 'Ready' : r.readinessScore >= 70 ? 'Review' : 'At Risk',
+          Readiness: readinessEvidence.has(r.studentId) ? r.readinessScore : 'No Data',
+          Status: !readinessEvidence.has(r.studentId)
+            ? 'No Data'
+            : r.readinessScore >= 80
+              ? 'Ready'
+              : r.readinessScore >= 70
+                ? 'Review'
+                : 'At Risk',
         })),
       }
     case 'grade':
@@ -566,10 +606,10 @@ export function generateSchoolReport(
         type,
         title: 'Grade Report',
         generatedAt: now,
-        summary: `Average grade: ${average(rows.map((r) => r.overallGrade))}%`,
+        summary: `Average grade: ${metrics.averageGrade}%`,
         rows: rows.map((r) => ({
           Student: r.fullName,
-          Grade: `${r.overallGrade}%`,
+          Grade: gradeEvidence.has(r.studentId) ? `${r.overallGrade}%` : 'No Grade',
         })),
       }
     case 'hours':
@@ -590,16 +630,21 @@ export function generateSchoolReport(
         type,
         title: 'Assessment Report',
         generatedAt: now,
-        summary: `Average pass rate: ${average(rows.map((r) => r.assessmentPassRate))}%`,
+        summary: `Average pass rate: ${clampPercentage(
+          average(rows.filter((r) => assessmentEvidence.has(r.studentId)).map((r) => r.assessmentPassRate))
+        )}%`,
         rows: rows.map((r) => ({
           Student: r.fullName,
-          'Pass Rate': `${r.assessmentPassRate}%`,
-          Status: r.assessmentPassRate >= 80 ? 'Passing' : 'Needs Practice',
+          'Pass Rate': assessmentEvidence.has(r.studentId) ? `${r.assessmentPassRate}%` : 'No Assessments',
+          Status: !assessmentEvidence.has(r.studentId)
+            ? 'No Assessments'
+            : r.assessmentPassRate >= 80
+              ? 'Passing'
+              : 'Needs Practice',
         })),
       }
     case 'school_summary':
     default: {
-      const metrics = buildSchoolOverviewMetrics(inputs)
       return {
         type,
         title: 'School Summary Report',
