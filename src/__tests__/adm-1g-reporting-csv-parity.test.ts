@@ -88,7 +88,7 @@ describe('ADM-1G reporting + CSV parity', () => {
     expect(report.summary).toBe('Total completed hours: 7h 30m')
     expect(report.rows[0]).toMatchObject({
       Completed: '7h 30m',
-      Required: '1200h',
+      Required: 1200,
       Remaining: '1192h 30m',
     })
   })
