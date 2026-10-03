@@ -32,7 +32,7 @@ import { calculateOverallGrade } from '@/lib/gradebook'
 import { localChapters } from '@/lib/local-data'
 import { DEFAULT_REQUIRED_HOURS } from '@/lib/programs/requirements'
 import { DEFAULT_COMPLIANCE_THRESHOLDS } from '@/lib/compliance/compliance-rules'
-import { calculateHoursProgressSummary, formatHourMinutes } from '@/lib/hours/reporting'
+import { calculateHoursProgressSummary } from '@/lib/hours/reporting'
 import {
   ActiveStudentInstructorAssignment,
   buildInstructorAssignmentMap,
@@ -679,23 +679,23 @@ export function generateSchoolReport(
         )
         return {
           Student: r.fullName,
-          Completed: formatHourMinutes(summary.approvedMinutes),
+          Completed: Math.round(summary.approvedMinutes / 60),
           Required: r.requiredHours,
-          Remaining: formatHourMinutes(summary.remainingMinutes),
+          Remaining: Math.round(summary.remainingMinutes / 60),
         }
       })
       return {
         type,
         title: 'Hours Completion Report',
         generatedAt: now,
-        summary: `Total completed hours: ${formatHourMinutes(
+        summary: `Total completed hours: ${Math.round(
           rows.reduce((sum, r) => {
             const summary = calculateHoursProgressSummary(
               studentHourLogs(r.studentId, inputs.hourLogs),
               r.requiredHours,
             )
             return sum + summary.approvedMinutes
-          }, 0)
+          }, 0) / 60
         )}`,
         rows: hourRows,
       }
