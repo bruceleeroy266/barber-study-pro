@@ -40,14 +40,14 @@ export default function StudentGradeWidget({ performance }: StudentGradeWidgetPr
 
       <div className="flex items-baseline gap-3 mb-4">
         <span className={`text-5xl font-bold ${getGradeColorClass(performance.overallGrade)}`}>
-          {performance.overallGrade}%
+          {performance.hasGradeEvidence ? `${performance.overallGrade}%` : '—'}
         </span>
       </div>
 
       <div className="flex items-center gap-2 mb-6">
         <TrendIcon className={`w-5 h-5 ${trendColor}`} />
         <span className={`text-sm capitalize ${trendColor}`}>
-          {performance.trendDirection} trend
+          {performance.hasGradeEvidence ? `${performance.trendDirection} trend` : 'No grade data'}
         </span>
       </div>
 
