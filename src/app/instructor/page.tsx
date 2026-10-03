@@ -22,6 +22,7 @@ import { mapHourLogsFromDb, mapAttendanceRecordsFromDb, mapGradesFromDb, mapGrad
 import { getLastSignInAtMap } from '@/lib/instructor/last-login'
 import { loadAssignedStudentIds } from '@/lib/instructor/assignments'
 import { deriveLearningVsLoginSignals } from '@/lib/instructor/activity-signals'
+import { resolveLastLearningActivityAt } from '@/lib/student-level/activity'
 
 interface RosterStudent extends Profile {
   overallProgress: number
@@ -114,9 +115,11 @@ function computeStudentStats(
         studyStreakDays += 1
       }
     }
-    const lastStudyActivityAt = activity
-      .map((row) => row.last_active_at)
-      .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())[0] || null
+    const lastStudyActivityAt = resolveLastLearningActivityAt({
+      progress,
+      attempts,
+      trustedActivity: activity,
+    })
 
     const canonicalMetrics = calculateCanonicalStudentLearningMetrics({
       userId: student.id,
@@ -131,12 +134,7 @@ function computeStudentStats(
       readiness,
     } = canonicalMetrics
 
-    const lastStudiedDates = progress
-      .map((p) => p.last_studied_at)
-      .filter((d): d is string => !!d)
-      .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
-    const legacyLastStudiedAt = lastStudiedDates[0] || null
-    const lastStudiedAt = lastStudyActivityAt || legacyLastStudiedAt
+    const lastStudiedAt = lastStudyActivityAt
 
     // Two DISTINCT recency signals: learning activity (study work) vs login
     // (account access). They are derived independently and never conflated.
@@ -419,7 +417,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     ? Math.round(studentStats.reduce((sum, s) => sum + s.overallProgress, 0) / totalStudents)
     : 0
 
-  const studentsWithQuizzes = studentStats.filter((s) => s.avgQuizScore > 0)
+  const studentsWithQuizzes = studentStats.filter((s) => s.quizzesTaken > 0)
   const classAvgQuiz = studentsWithQuizzes.length > 0
     ? Math.round(studentsWithQuizzes.reduce((sum, s) => sum + s.avgQuizScore, 0) / studentsWithQuizzes.length)
     : 0
@@ -433,7 +431,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
   const atRiskStudents = studentStats.filter((s) => {
     const lowReadiness = s.readinessScore > 0 && s.readinessScore < 70
     const lowProgress = s.overallProgress < 50
-    const lowQuiz = s.avgQuizScore > 0 && s.avgQuizScore < 70
+    const lowQuiz = s.quizzesTaken > 0 && s.avgQuizScore < 70
     const inactive = s.daysSinceActive !== null && s.daysSinceActive > 14
     return lowReadiness || lowProgress || lowQuiz || inactive
   })
@@ -1021,7 +1019,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
                       </td>
                       <td className="p-4">
                         <span className={`text-xl font-bold ${getReadinessColorClass(student.readinessScore)}`}>
-                          {student.readinessScore > 0 ? student.readinessScore : '—'}
+                          {student.readinessScore}
                         </span>
                       </td>
                       <td className="p-4">
@@ -1106,7 +1104,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
                       const factors: string[] = []
                       if (student.readinessScore > 0 && student.readinessScore < 70) factors.push('Low readiness')
                       if (student.overallProgress < 50) factors.push('Low progress')
-                      if (student.avgQuizScore > 0 && student.avgQuizScore < 70) factors.push('Low quiz avg')
+                      if (student.quizzesTaken > 0 && student.avgQuizScore < 70) factors.push('Low quiz avg')
                       if (student.daysSinceActive !== null && student.daysSinceActive > 14) factors.push('Inactive')
                       return (
                         <tr key={student.id} className="border-b border-[var(--color-border-primary)]/50 hover:bg-[var(--color-background-secondary)]/30 transition-colors">
@@ -1295,9 +1293,9 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
                         <span className={`font-semibold ${
                           student.avgQuizScore >= 80 ? 'text-gold' :
                           student.avgQuizScore >= 60 ? 'text-warm-bronze' :
-                          student.avgQuizScore > 0 ? 'text-silver' : 'text-[var(--color-text-muted)]'
+                          student.quizzesTaken > 0 ? 'text-silver' : 'text-[var(--color-text-muted)]'
                         }`}>
-                          {student.avgQuizScore > 0 ? `${student.avgQuizScore}%` : '—'}
+                          {student.quizzesTaken > 0 ? `${student.avgQuizScore}%` : '—'}
                         </span>
                       </td>
                       <td className="p-4">

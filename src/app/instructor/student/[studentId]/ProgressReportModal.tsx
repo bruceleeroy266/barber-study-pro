@@ -4,19 +4,12 @@ import { useState, useRef } from 'react'
 import Modal from '@/components/ui/Modal'
 import StudentIdentity from '@/components/StudentIdentity'
 import { PrintButton } from './PrintButton'
-import { Profile, StudentProgress, QuizAttempt, InstructorNote } from '@/types'
+import { Profile, StudentProgress, QuizAttempt, InstructorNote, AreaPerformance } from '@/types'
 
 interface ChapterInfo {
   id: string
   chapter_number: number
   title: string
-}
-
-interface WeakAreaInfo {
-  chapterId: string
-  chapterNumber: number
-  chapterTitle: string
-  score: number
 }
 
 interface ProgressReportModalProps {
@@ -30,13 +23,14 @@ interface ProgressReportModalProps {
   lastLoginAt?: string | null
   overallProgress: number
   avgQuizScore: number
+  hasQuizEvidence?: boolean
   readiness: { label: string; score: number }
   boardRisk: { label: string }
   chapters: ChapterInfo[]
   progressRecords: StudentProgress[]
   attemptRecords: QuizAttempt[]
   hasEnoughQuizData: boolean
-  weakAreas: WeakAreaInfo[]
+  weakAreas: AreaPerformance[]
   noteRecords: InstructorNote[]
 }
 
@@ -63,6 +57,7 @@ export default function ProgressReportModal({
   lastLoginAt = null,
   overallProgress,
   avgQuizScore,
+  hasQuizEvidence = avgQuizScore > 0,
   readiness,
   boardRisk,
   chapters,
@@ -130,7 +125,7 @@ export default function ProgressReportModal({
               <div className="text-xs text-silver-gray">Overall Progress</div>
             </div>
             <div className="border border-gray-200 rounded-lg p-4">
-              <div className="text-2xl font-bold text-white">{avgQuizScore > 0 ? `${avgQuizScore}%` : '—'}</div>
+              <div className="text-2xl font-bold text-white">{hasQuizEvidence ? `${avgQuizScore}%` : '—'}</div>
               <div className="text-xs text-silver-gray">Quiz Average</div>
             </div>
             <div className="border border-gray-200 rounded-lg p-4">
@@ -216,8 +211,10 @@ export default function ProgressReportModal({
             ) : weakAreas.length > 0 ? (
               <div className="space-y-2">
                 {weakAreas.map((area) => (
-                  <div key={area.chapterId} className="flex items-center justify-between border border-gray-200 rounded-lg p-3">
-                    <span className="font-medium">Ch.{area.chapterNumber} — {area.chapterTitle}</span>
+                  <div key={area.id} className="flex items-center justify-between border border-gray-200 rounded-lg p-3">
+                    <span className="font-medium">
+                      {area.chapterNumber ? `Ch.${area.chapterNumber} — ` : ''}{area.name}
+                    </span>
                     <span className="font-bold">{area.score}%</span>
                   </div>
                 ))}
