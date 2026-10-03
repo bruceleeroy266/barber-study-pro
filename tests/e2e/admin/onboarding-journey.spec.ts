@@ -544,6 +544,34 @@ test.describe('Pilot onboarding certification', () => {
     await instructorSelect.selectOption(String(assignableInstructor!.id))
     await manageUserDialog.getByRole('button', { name: 'Save instructor assignment' }).click()
 
+    // The assignment save is a server action. Do not leave the admin page
+    // until the action has fully resolved and the modal closes; navigating
+    // immediately can abort the in-flight mutation and make the instructor
+    // roster assertion race the database write.
+    await expect(manageUserDialog).toBeHidden()
+
+    // Certify the canonical assignment row itself before checking the
+    // instructor-facing roster. This distinguishes persistence failures from
+    // rendering/scoping failures and prevents false negatives from UI timing.
+    const { data: activeAssignment, error: activeAssignmentError } = await service
+      .from('student_instructor_assignments')
+      .select('school_id, student_id, instructor_id, is_active, ended_at')
+      .eq('school_id', schoolId)
+      .eq('student_id', studentProfile!.id)
+      .eq('instructor_id', assignableInstructor!.id)
+      .eq('is_active', true)
+      .is('ended_at', null)
+      .single()
+
+    expect(activeAssignmentError).toBeNull()
+    expect(activeAssignment).toMatchObject({
+      school_id: schoolId,
+      student_id: studentProfile!.id,
+      instructor_id: assignableInstructor!.id,
+      is_active: true,
+      ended_at: null,
+    })
+
     // -----------------------------------------------------------------------
     // 7. Instructor verifies the newly onboarded assigned student is visible
     // -----------------------------------------------------------------------
