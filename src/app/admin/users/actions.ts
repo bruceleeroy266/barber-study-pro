@@ -17,6 +17,8 @@ export interface UserListItem {
   is_disabled: boolean
   requires_password_change: boolean
   enrollment_count?: number
+  assigned_instructor_id?: string | null
+  assigned_instructor_name?: string | null
   created_at: string
   updated_at: string
 }
@@ -277,8 +279,10 @@ export async function getUsers(filters: UserFilters = {}): Promise<ActionResult<
     }
   })
 
-  // Fetch enrollment counts for students
-  const studentProfileIds = users.filter((u) => u.role === 'student').map((u) => u.id)
+  // Fetch enrollment counts and canonical instructor assignments for learners.
+  const studentProfileIds = users
+    .filter((u) => u.role === 'student' || u.role === 'apprentice')
+    .map((u) => u.id)
   if (studentProfileIds.length > 0) {
     const serviceClient = createServiceRoleClient()
     // Resolve profile IDs to canonical student IDs first
@@ -328,6 +332,48 @@ export async function getUsers(filters: UserFilters = {}): Promise<ActionResult<
           user.enrollment_count = 0
         }
       }
+    }
+  }
+
+  if (studentProfileIds.length > 0) {
+    const serviceClient = createServiceRoleClient()
+    const { data: assignmentRows } = await serviceClient
+      .from('student_instructor_assignments')
+      .select('student_id, instructor_id')
+      .in('student_id', studentProfileIds)
+      .eq('is_active', true)
+      .is('ended_at', null)
+
+    const instructorIds = Array.from(
+      new Set((assignmentRows ?? []).map((row) => String(row.instructor_id)))
+    )
+
+    const instructorNames = new Map<string, string>()
+    if (instructorIds.length > 0) {
+      const { data: instructorProfiles } = await serviceClient
+        .from('profiles')
+        .select('id, full_name, role')
+        .in('id', instructorIds)
+
+      for (const profile of instructorProfiles ?? []) {
+        if (profile.role === 'instructor') {
+          instructorNames.set(String(profile.id), String(profile.full_name || 'Instructor'))
+        }
+      }
+    }
+
+    const assignmentByStudent = new Map<string, string>()
+    for (const row of assignmentRows ?? []) {
+      assignmentByStudent.set(String(row.student_id), String(row.instructor_id))
+    }
+
+    for (const user of users) {
+      if (user.role !== 'student' && user.role !== 'apprentice') continue
+      const instructorId = assignmentByStudent.get(user.id) ?? null
+      user.assigned_instructor_id = instructorId
+      user.assigned_instructor_name = instructorId
+        ? instructorNames.get(instructorId) ?? 'Assigned instructor'
+        : null
     }
   }
 
