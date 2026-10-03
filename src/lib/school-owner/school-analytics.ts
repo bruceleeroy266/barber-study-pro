@@ -32,7 +32,7 @@ import { calculateOverallGrade } from '@/lib/gradebook'
 import { localChapters } from '@/lib/local-data'
 import { DEFAULT_REQUIRED_HOURS } from '@/lib/programs/requirements'
 import { DEFAULT_COMPLIANCE_THRESHOLDS } from '@/lib/compliance/compliance-rules'
-import { calculateHoursProgressSummary } from '@/lib/hours/reporting'
+import { calculateHoursProgressSummary, formatHourMinutes } from '@/lib/hours/reporting'
 import {
   ActiveStudentInstructorAssignment,
   buildInstructorAssignmentMap,
@@ -679,23 +679,23 @@ export function generateSchoolReport(
         )
         return {
           Student: r.fullName,
-          Completed: Math.round(summary.approvedMinutes / 60),
-          Required: r.requiredHours,
-          Remaining: Math.round(summary.remainingMinutes / 60),
+          Completed: formatHourMinutes(summary.approvedMinutes),
+          Required: `${r.requiredHours}h`,
+          Remaining: formatHourMinutes(summary.remainingMinutes),
         }
       })
       return {
         type,
         title: 'Hours Completion Report',
         generatedAt: now,
-        summary: `Total completed hours: ${Math.round(
+        summary: `Total completed hours: ${formatHourMinutes(
           rows.reduce((sum, r) => {
             const summary = calculateHoursProgressSummary(
               studentHourLogs(r.studentId, inputs.hourLogs),
               r.requiredHours,
             )
             return sum + summary.approvedMinutes
-          }, 0) / 60
+          }, 0)
         )}`,
         rows: hourRows,
       }
@@ -731,9 +731,9 @@ export function generateSchoolReport(
           { Metric: 'Total Students', Value: metrics.totalStudents },
           { Metric: 'Active Students', Value: metrics.activeStudents },
           { Metric: 'At-Risk Students', Value: metrics.atRiskStudents },
-          { Metric: 'Average Attendance', Value: `${metrics.averageAttendance}%` },
-          { Metric: 'Average Readiness', Value: metrics.averageReadiness },
-          { Metric: 'Average Grade', Value: `${metrics.averageGrade}%` },
+          { Metric: 'Average Attendance', Value: attendanceEvidence.size > 0 ? `${metrics.averageAttendance}%` : 'No Data' },
+          { Metric: 'Average Readiness', Value: readinessEvidence.size > 0 ? metrics.averageReadiness : 'No Data' },
+          { Metric: 'Average Grade', Value: gradeEvidence.size > 0 ? `${metrics.averageGrade}%` : 'No Grade' },
           { Metric: 'Completed Hours', Value: metrics.completedHours },
           { Metric: 'Assessment Completion', Value: `${metrics.assessmentCompletionRate}%` },
         ],
