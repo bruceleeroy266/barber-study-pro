@@ -9,7 +9,7 @@ describe('ADM-1C route assignment boundaries', () => {
   it('requires canonical assignments to be active and unended', () => {
     const helper = source('src/lib/instructor/assignments.ts')
     expect(helper).toContain(".eq('is_active', true)")
-    expect(helper).toContain(".is('ended_at', null)")
+    expect(helper).toContain("row.ended_at == null")
   })
 
   it('scopes both instructor roster surfaces through active assignments', () => {
