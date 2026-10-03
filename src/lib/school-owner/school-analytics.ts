@@ -32,7 +32,7 @@ import { calculateOverallGrade } from '@/lib/gradebook'
 import { localChapters } from '@/lib/local-data'
 import { DEFAULT_REQUIRED_HOURS } from '@/lib/programs/requirements'
 import { DEFAULT_COMPLIANCE_THRESHOLDS } from '@/lib/compliance/compliance-rules'
-import { getOfficialMinutes } from '@/lib/hours/reporting'
+import { calculateHoursProgressSummary, getOfficialMinutes } from '@/lib/hours/reporting'
 import {
   ActiveStudentInstructorAssignment,
   buildInstructorAssignmentMap,
@@ -148,7 +148,8 @@ export function buildSchoolOverviewMetrics(inputs: SchoolAnalyticsInputs): Schoo
   const graduatedStudents = 0 // No graduation workflow is persisted yet.
 
   let atRiskCount = 0
-  let completedHoursSum = 0
+  let completedMinutesSum = 0
+  let remainingMinutesSum = 0
   let assessmentCompletedCount = 0
   let assessmentRequiredCount = 0
   const attendancePercentages: number[] = []
@@ -183,9 +184,12 @@ export function buildSchoolOverviewMetrics(inputs: SchoolAnalyticsInputs): Schoo
       gradePercentages.push(overall)
     }
 
-    const approvedMinutes = studentHourLogs(student.id, hourLogs)
-      .reduce((sum, h) => sum + getOfficialMinutes(h), 0)
-    completedHoursSum += approvedMinutes / 60
+    const hourSummary = calculateHoursProgressSummary(
+      studentHourLogs(student.id, hourLogs),
+      requiredHoursForStudent(inputs, student.id),
+    )
+    completedMinutesSum += hourSummary.approvedMinutes
+    remainingMinutesSum += hourSummary.remainingMinutes
 
     const sAssessments = studentAssessments(student.id, assessments)
     assessmentCompletedCount += Math.min(sAssessments.length, requiredAssessmentsForStudent(inputs, student.id))
@@ -208,11 +212,6 @@ export function buildSchoolOverviewMetrics(inputs: SchoolAnalyticsInputs): Schoo
     if (hasRiskEvidence) atRiskCount += 1
   }
 
-  const totalRequiredHours = students.reduce(
-    (sum, student) => sum + requiredHoursForStudent(inputs, student.id),
-    0,
-  )
-
   return {
     totalStudents,
     activeStudents,
@@ -221,8 +220,8 @@ export function buildSchoolOverviewMetrics(inputs: SchoolAnalyticsInputs): Schoo
     averageAttendance: clampPercentage(average(attendancePercentages)),
     averageReadiness: clampPercentage(average(readinessScores)),
     averageGrade: clampPercentage(average(gradePercentages)),
-    completedHours: Math.round(completedHoursSum),
-    remainingHours: Math.max(0, totalRequiredHours - Math.round(completedHoursSum)),
+    completedHours: Math.round(completedMinutesSum / 60),
+    remainingHours: Math.round(remainingMinutesSum / 60),
     assessmentCompletionRate:
       assessmentRequiredCount > 0
         ? clampPercentage(Math.round((assessmentCompletedCount / assessmentRequiredCount) * 100))
@@ -248,9 +247,11 @@ export function buildStudentPerformanceRows(inputs: SchoolAnalyticsInputs): Stud
     const sGrades = studentGrades(student.id, grades)
     const overall = calculateOverallGrade(sGrades, gradeCategories)
     const sAssessments = studentAssessments(student.id, assessments)
-    const approvedMinutes = studentHourLogs(student.id, hourLogs)
-      .reduce((sum, h) => sum + getOfficialMinutes(h), 0)
-    const completedHours = approvedMinutes / 60
+    const hourSummary = calculateHoursProgressSummary(
+      studentHourLogs(student.id, hourLogs),
+      requiredHours,
+    )
+    const completedHours = hourSummary.approvedMinutes / 60
 
     const passed = sAssessments.filter((a) => a.isPassed).length
     const passRate = sAssessments.length > 0 ? Math.round((passed / sAssessments.length) * 100) : 0
@@ -474,10 +475,12 @@ export function buildSchoolAlerts(inputs: SchoolAnalyticsInputs): SchoolOwnerAle
       })
     }
 
-    const approvedMinutes = studentHourLogs(student.id, inputs.hourLogs)
-      .reduce((sum, h) => sum + getOfficialMinutes(h), 0)
-    const completedHours = approvedMinutes / 60
     const requiredHours = requiredHoursForStudent(inputs, student.id)
+    const hourSummary = calculateHoursProgressSummary(
+      studentHourLogs(student.id, inputs.hourLogs),
+      requiredHours,
+    )
+    const completedHours = hourSummary.approvedMinutes / 60
     if (completedHours < requiredHours * 0.5) {
       alerts.push({
         id: `hours-${student.id}`,
@@ -647,19 +650,35 @@ export function generateSchoolReport(
           Grade: gradeEvidence.has(r.studentId) ? `${r.overallGrade}%` : 'No Grade',
         })),
       }
-    case 'hours':
+    case 'hours': {
+      const hourRows = rows.map((r) => {
+        const summary = calculateHoursProgressSummary(
+          studentHourLogs(r.studentId, inputs.hourLogs),
+          r.requiredHours,
+        )
+        return {
+          Student: r.fullName,
+          Completed: Math.round(summary.approvedMinutes / 60),
+          Required: r.requiredHours,
+          Remaining: Math.round(summary.remainingMinutes / 60),
+        }
+      })
       return {
         type,
         title: 'Hours Completion Report',
         generatedAt: now,
-        summary: `Total completed hours: ${rows.reduce((sum, r) => sum + r.completedHours, 0)}`,
-        rows: rows.map((r) => ({
-          Student: r.fullName,
-          Completed: r.completedHours,
-          Required: r.requiredHours,
-          Remaining: Math.max(0, r.requiredHours - r.completedHours),
-        })),
+        summary: `Total completed hours: ${Math.round(
+          rows.reduce((sum, r) => {
+            const summary = calculateHoursProgressSummary(
+              studentHourLogs(r.studentId, inputs.hourLogs),
+              r.requiredHours,
+            )
+            return sum + summary.approvedMinutes
+          }, 0) / 60
+        )}`,
+        rows: hourRows,
       }
+    }
     case 'assessment':
       return {
         type,
