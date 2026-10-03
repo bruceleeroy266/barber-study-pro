@@ -6,9 +6,9 @@ import { redirect } from 'next/navigation'
 import { isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
 import Link from 'next/link'
 import { Logo } from '@/components/brand'
-import { ArrowLeft } from 'lucide-react'
 import { getRoleBasedRedirect } from '@/lib/auth-access'
 import SchoolAdminMenu from '@/components/school-owner/SchoolAdminMenu'
+import BackButton from '@/components/ui/BackButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -43,14 +43,8 @@ export default async function SchoolLayout({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex min-w-0 items-center justify-between gap-2 h-16">
             <div className="flex min-w-0 items-center gap-2 sm:gap-4">
-              {isSchoolAdmin(profile.role) ? (
-                <SchoolAdminMenu />
-              ) : (
-                <Link href={dashboardHref} className="flex items-center gap-2 text-silver hover:text-white transition-colors">
-                  <ArrowLeft className="w-4 h-4" />
-                  <span className="text-sm">Dashboard</span>
-                </Link>
-              )}
+              <BackButton fallbackHref={dashboardHref} label="Back" />
+              {isSchoolAdmin(profile.role) && <SchoolAdminMenu />}
               <div className="hidden h-6 w-px bg-graphite sm:block" />
               <Link href="/school" className="flex shrink-0 items-center">
                 <Logo variant="compact" size="md" className="lg:hidden" />
