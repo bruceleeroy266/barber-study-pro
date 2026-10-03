@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import {
   buildSchoolAlerts,
   buildSchoolAnalyticsSnapshot,
+  buildStudentPerformanceRows,
   type SchoolAnalyticsInputs,
 } from '@/lib/school-owner/school-analytics'
 import { calculateStudentGradePerformance } from '@/lib/gradebook'
@@ -168,11 +169,69 @@ describe('ADM-1F readiness/progress/grade/assessment parity', () => {
     expect(snapshot.assessmentCompletionTrend[0]?.value).toBe(100)
   })
 
+  it('school performance rows preserve no-data evidence separately from real zero values', () => {
+    const rows = buildStudentPerformanceRows(
+      inputs({
+        students: [student('zero'), student('none')],
+        grades: [grade('zero', 0)],
+        assessments: [{
+          id: 'assessment-zero',
+          studentId: 'zero',
+          assessmentType: 'HAIRCUT',
+          score: 0,
+          scoringType: 'NUMERIC',
+          qualitativeResult: 'NOT_PASS',
+          feedback: '',
+          assessmentDate: '2026-10-03T00:00:00Z',
+          evaluatorId: 'instructor-1',
+          evaluatorName: 'Instructor',
+          rubricId: 'rubric-1',
+          isPassed: false,
+        }],
+      })
+    )
+
+    const zero = rows.find((row) => row.studentId === 'zero')!
+    const none = rows.find((row) => row.studentId === 'none')!
+
+    expect(zero.hasGradeEvidence).toBe(true)
+    expect(zero.overallGrade).toBe(0)
+    expect(zero.hasAssessmentEvidence).toBe(true)
+    expect(zero.assessmentPassRate).toBe(0)
+
+    expect(none.hasGradeEvidence).toBe(false)
+    expect(none.hasAssessmentEvidence).toBe(false)
+  })
+
   it('student assessment UI shows no-data rather than a false 0% pass rate', () => {
     const page = fs.readFileSync(
       path.join(process.cwd(), 'src/app/(dashboard)/dashboard/assessments/page.tsx'),
       'utf8',
     )
     expect(page).toContain("assessments.length > 0 ? `${passRate}%` : '—'")
+  })
+
+  it('school performance panel does not classify missing evidence as failed performance', () => {
+    const panel = fs.readFileSync(
+      path.join(process.cwd(), 'src/components/school-owner/StudentPerformancePanel.tsx'),
+      'utf8',
+    )
+    expect(panel).toContain('r.hasReadinessEvidence && r.readinessScore < 70')
+    expect(panel).toContain('r.hasAssessmentEvidence && r.assessmentPassRate < 80')
+    expect(panel).toContain("row.hasGradeEvidence ? `${row.overallGrade}%` : '—'")
+    expect(panel).toContain("row.hasAssessmentEvidence ? `${row.assessmentPassRate}%` : '—'")
+  })
+
+  it('instructor class metrics keep real zero evidence separate from no data', () => {
+    const page = fs.readFileSync(
+      path.join(process.cwd(), 'src/app/instructor/page.tsx'),
+      'utf8',
+    )
+    expect(page).toContain('studentStats.filter((s) => s.hasReadinessEvidence)')
+    expect(page).toContain("studentsWithQuizzes.length > 0 ? `${classAvgQuiz}%` : '—'")
+    expect(page).toContain("studentsWithReadiness.length > 0 ? classAvgReadiness : '—'")
+    expect(page).toContain('const failedAssessments = assessmentRecords.filter((a) => !a.isPassed)')
+    expect(page).toContain('{failedAssessments.length}')
+    expect(page).toContain('Failed Assessments')
   })
 })
