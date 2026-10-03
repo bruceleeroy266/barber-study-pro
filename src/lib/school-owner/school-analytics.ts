@@ -629,7 +629,7 @@ export function generateSchoolReport(
         type,
         title: 'Attendance Report',
         generatedAt: now,
-        summary: `Average attendance: ${metrics.averageAttendance}%`,
+        summary: attendanceEvidence.size > 0 ? `Average attendance: ${metrics.averageAttendance}%` : 'Average attendance: No Data',
         rows: rows.map((r) => ({
           Student: r.fullName,
           Attendance: attendanceEvidence.has(r.studentId) ? `${r.attendancePercentage}%` : 'No Data',
@@ -647,7 +647,7 @@ export function generateSchoolReport(
         type,
         title: 'Board Readiness Report',
         generatedAt: now,
-        summary: `Average readiness: ${metrics.averageReadiness}`,
+        summary: readinessEvidence.size > 0 ? `Average readiness: ${metrics.averageReadiness}` : 'Average readiness: No Data',
         rows: rows.map((r) => ({
           Student: r.fullName,
           Readiness: readinessEvidence.has(r.studentId) ? r.readinessScore : 'No Data',
@@ -665,7 +665,7 @@ export function generateSchoolReport(
         type,
         title: 'Grade Report',
         generatedAt: now,
-        summary: `Average grade: ${metrics.averageGrade}%`,
+        summary: gradeEvidence.size > 0 ? `Average grade: ${metrics.averageGrade}%` : 'Average grade: No Grade',
         rows: rows.map((r) => ({
           Student: r.fullName,
           Grade: gradeEvidence.has(r.studentId) ? `${r.overallGrade}%` : 'No Grade',
@@ -705,9 +705,11 @@ export function generateSchoolReport(
         type,
         title: 'Assessment Report',
         generatedAt: now,
-        summary: `Average pass rate: ${clampPercentage(
-          average(rows.filter((r) => assessmentEvidence.has(r.studentId)).map((r) => r.assessmentPassRate))
-        )}%`,
+        summary: assessmentEvidence.size > 0
+          ? `Average pass rate: ${clampPercentage(
+              average(rows.filter((r) => assessmentEvidence.has(r.studentId)).map((r) => r.assessmentPassRate))
+            )}%`
+          : 'Average pass rate: No Assessments',
         rows: rows.map((r) => ({
           Student: r.fullName,
           'Pass Rate': assessmentEvidence.has(r.studentId) ? `${r.assessmentPassRate}%` : 'No Assessments',
