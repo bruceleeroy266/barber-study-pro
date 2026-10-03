@@ -20,7 +20,7 @@ describe('E5 student rejection and correction visibility', () => {
     expect(page).toContain('Rejection reason')
     expect(page).toContain('Rejected hours do not count toward your official total.')
     expect(page).toContain("entry.status === 'rejected' && entry.rejection_reason")
-    expect(page).toContain('calculateOfficialApprovedMinutes(reportingHours)')
+    expect(page).toContain('calculateHoursProgressSummary(reportingHours, requirements.requiredHours)')
     expect(page).toContain("row.status === 'pending'")
   })
 
