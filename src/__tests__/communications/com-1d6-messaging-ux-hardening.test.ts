@@ -34,7 +34,8 @@ describe('COM-1D.6 messaging UX hardening', () => {
     expect(actions).toContain('export async function archiveCommunicationThread')
     expect(actions).toContain("actor.role !== 'instructor'")
     expect(actions).toContain("status: 'archived'")
-    expect(actions).toContain(".eq('instructor_id', actor.id)")
+    expect(actions).toContain('participant_one_id.eq.')
+    expect(actions).toContain('participant_two_id.eq.')
     expect(actions).toContain(".eq('status', 'active')")
   })
 
