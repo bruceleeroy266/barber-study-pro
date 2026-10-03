@@ -60,7 +60,7 @@ describe('E11 final hours and attendance certification', () => {
 
   it('exports only approved detail rows while reporting pending separately in summaries', () => {
     expect(pdfExport).toContain("const approved = logs.filter((log) => log.status === 'approved')")
-    expect(pdfExport).toContain("studentLogs\n      .filter((log) => log.status === 'pending')")
+    expect(pdfExport).toContain('calculateHoursProgressSummary(studentLogs, student.requiredHours)')
   })
 
   it('calculates period totals from approved rows only', () => {
