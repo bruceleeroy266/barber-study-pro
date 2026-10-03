@@ -56,8 +56,14 @@ describe('ADM-1C route assignment boundaries', () => {
 
     expect(actions).toContain("from('student_instructor_assignments')")
     expect(actions).toContain('assigned_instructor_name')
+    expect(actions).toContain('getInstructorAssignmentOptions')
+    expect(actions).toContain('assignStudentInstructor')
     expect(desktop).toContain("user.assigned_instructor_name ?? 'Unassigned'")
     expect(mobile).toContain("user.assigned_instructor_name ?? 'Unassigned'")
     expect(school).toContain('loadActiveStudentInstructorAssignments')
+
+    const manageModal = source('src/app/admin/users/ManageUserModal.tsx')
+    expect(manageModal).toContain('Save instructor assignment')
+    expect(manageModal).toContain('assignStudentInstructor')
   })
 })
