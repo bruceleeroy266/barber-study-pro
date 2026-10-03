@@ -115,6 +115,20 @@ describe('ADM-1G reporting + CSV parity', () => {
     )
   })
 
+  it('student grade report sorts grades and assessments before taking recent rows', () => {
+    const source = fs.readFileSync(
+      path.join(process.cwd(), 'src/components/reports/StudentGradeReport.tsx'),
+      'utf8',
+    )
+
+    expect(source).toContain(
+      ".sort((a, b) => new Date(b.dateEntered).getTime() - new Date(a.dateEntered).getTime())"
+    )
+    expect(source).toContain(
+      ".sort((a, b) => new Date(b.assessmentDate).getTime() - new Date(a.assessmentDate).getTime())"
+    )
+  })
+
   it('school and compliance reporting centers share the canonical CSV serializer', () => {
     const school = fs.readFileSync(
       path.join(process.cwd(), 'src/components/school-owner/ReportingCenter.tsx'),
