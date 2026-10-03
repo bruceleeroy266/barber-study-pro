@@ -13,6 +13,7 @@ export interface ActiveStudentInstructorAssignment {
   school_id: string
   student_id: string
   instructor_id: string
+  ended_at?: string | null
 }
 
 type SupabaseLike = Pick<SupabaseClient, 'from'>
@@ -24,7 +25,7 @@ export async function loadActiveStudentInstructorAssignments(
 ): Promise<ActiveStudentInstructorAssignment[]> {
   let query = supabase
     .from('student_instructor_assignments')
-    .select('school_id, student_id, instructor_id')
+    .select('school_id, student_id, instructor_id, ended_at')
     .eq('school_id', schoolId)
     .eq('is_active', true)
 
@@ -38,6 +39,7 @@ export async function loadActiveStudentInstructorAssignments(
   return (data as ActiveStudentInstructorAssignment[]).filter(
     (row) =>
       row.school_id === schoolId &&
+      row.ended_at == null &&
       typeof row.student_id === 'string' &&
       typeof row.instructor_id === 'string'
   )

@@ -6,6 +6,12 @@ function source(path: string): string {
 }
 
 describe('ADM-1C route assignment boundaries', () => {
+  it('requires canonical assignments to be active and unended', () => {
+    const helper = source('src/lib/instructor/assignments.ts')
+    expect(helper).toContain(".eq('is_active', true)")
+    expect(helper).toContain("row.ended_at == null")
+  })
+
   it('scopes both instructor roster surfaces through active assignments', () => {
     for (const path of [
       'src/app/instructor/page.tsx',
@@ -58,6 +64,9 @@ describe('ADM-1C route assignment boundaries', () => {
     expect(actions).toContain('assigned_instructor_name')
     expect(actions).toContain('getInstructorAssignmentOptions')
     expect(actions).toContain('assignStudentInstructor')
+    expect(actions).toContain("revalidatePath('/admin/users')")
+    expect(actions).toContain("revalidatePath('/instructor')")
+    expect(actions).toContain("revalidatePath('/instructor/students')")
     expect(desktop).toContain("user.assigned_instructor_name ?? 'Unassigned'")
     expect(mobile).toContain("user.assigned_instructor_name ?? 'Unassigned'")
     expect(school).toContain('loadActiveStudentInstructorAssignments')
