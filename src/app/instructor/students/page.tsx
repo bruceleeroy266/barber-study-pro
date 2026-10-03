@@ -11,6 +11,7 @@ import { analyzePerformance } from '@/lib/analytics'
 import { allQuizQuestions } from '@/lib/quiz-data'
 import StudentIdentity from '@/components/StudentIdentity'
 import { getLastSignInAtMap } from '@/lib/instructor/last-login'
+import { loadAssignedStudentIds } from '@/lib/instructor/assignments'
 import { deriveLearningVsLoginSignals } from '@/lib/instructor/activity-signals'
 
 interface RosterStudent extends Profile {
@@ -172,13 +173,27 @@ export default async function InstructorStudentsPage() {
   const schoolId = profile.school_id
   const schoolName = (profile.schools as { name?: string } | null)?.name || 'Your School'
 
-  // Fetch students in the same school
-  const { data: students } = await supabase
+  // Instructors see only their canonical active roster. School/admin roles
+  // retain school-wide oversight while using the same downstream calculations.
+  const assignedStudentIds =
+    profile.role === 'instructor'
+      ? await loadAssignedStudentIds(supabase, schoolId, user.id)
+      : null
+
+  let studentQuery = supabase
     .from('profiles')
     .select('*')
     .eq('school_id', schoolId)
     .in('role', ['student', 'apprentice'])
 
+  if (assignedStudentIds) {
+    studentQuery = studentQuery.in(
+      'id',
+      assignedStudentIds.length > 0 ? assignedStudentIds : ['__none__']
+    )
+  }
+
+  const { data: students } = await studentQuery
   let rosterStudents: Profile[] = (students as Profile[]) || []
 
   // Demo fallback
