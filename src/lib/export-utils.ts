@@ -7,7 +7,22 @@
 export interface ExportColumn {
   key: string
   label: string
-  format?: (value: any) => string
+  format?: (value: unknown) => string
+}
+
+export function escapeCsvCell(value: unknown): string {
+  if (value === null || value === undefined) return ''
+  const stringValue = String(value).replace(/"/g, '""')
+  return /[",\r\n]/.test(stringValue) ? `"${stringValue}"` : stringValue
+}
+
+export function convertRowsToCSV(data: Record<string, unknown>[]): string {
+  if (data.length === 0) return ''
+
+  const headers = Object.keys(data[0])
+  const rows = data.map((row) => headers.map((header) => escapeCsvCell(row[header])).join(','))
+
+  return [headers.map(escapeCsvCell).join(','), ...rows].join('\r\n')
 }
 
 /**
@@ -15,7 +30,7 @@ export interface ExportColumn {
  */
 export function convertToCSV(data: Record<string, unknown>[], columns: ExportColumn[]): string {
   // Header row
-  const headers = columns.map((col) => col.label).join(',')
+  const headers = columns.map((col) => escapeCsvCell(col.label)).join(',')
   
   // Data rows
   const rows = data.map((row) => {
@@ -24,18 +39,12 @@ export function convertToCSV(data: Record<string, unknown>[], columns: ExportCol
         const value = row[col.key]
         const formatted = col.format ? col.format(value) : value
         
-        // Escape commas and quotes
-        if (formatted === null || formatted === undefined) return ''
-        const stringValue = String(formatted)
-        if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
-          return `"${stringValue.replace(/"/g, '""')}"`
-        }
-        return stringValue
+        return escapeCsvCell(formatted)
       })
       .join(',')
   })
   
-  return [headers, ...rows].join('\n')
+  return [headers, ...rows].join('\r\n')
 }
 
 /**
@@ -68,9 +77,10 @@ export function exportToCSV(data: Record<string, unknown>[], columns: ExportColu
 /**
  * Format date for export
  */
-export function formatDateForExport(date: string | Date | null): string {
-  if (!date) return ''
-  const d = typeof date === 'string' ? new Date(date) : date
+export function formatDateForExport(value: unknown): string {
+  if (!(typeof value === 'string' || value instanceof Date)) return ''
+  const d = typeof value === 'string' ? new Date(value) : value
+  if (Number.isNaN(d.getTime())) return ''
   return d.toLocaleDateString('en-US', {
     year: 'numeric',
     month: '2-digit',
@@ -81,16 +91,17 @@ export function formatDateForExport(date: string | Date | null): string {
 /**
  * Format percentage for export
  */
-export function formatPercentageForExport(value: number | null): string {
-  if (value === null || value === undefined) return ''
+export function formatPercentageForExport(value: unknown): string {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return ''
   return `${value}%`
 }
 
 /**
  * Format minutes to hours for export
  */
-export function formatMinutesForExport(minutes: number | null): string {
-  if (minutes === null || minutes === undefined) return ''
+export function formatMinutesForExport(value: unknown): string {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return ''
+  const minutes = value
   const hours = Math.floor(minutes / 60)
   const mins = minutes % 60
   return `${hours}h ${mins}m`

@@ -19,8 +19,12 @@ export default function StudentGradeReport({
   categories,
   assessments,
 }: StudentGradeReportProps) {
-  const studentGrades = grades.filter((g) => g.studentId === student.id && !g.isExcused)
-  const studentAssessments = assessments.filter((a) => a.studentId === student.id)
+  const studentGrades = grades
+    .filter((g) => g.studentId === student.id && !g.isExcused)
+    .sort((a, b) => new Date(b.dateEntered).getTime() - new Date(a.dateEntered).getTime())
+  const studentAssessments = assessments
+    .filter((a) => a.studentId === student.id)
+    .sort((a, b) => new Date(b.assessmentDate).getTime() - new Date(a.assessmentDate).getTime())
 
   return (
     <div className="bg-white text-gray-900 rounded-xl p-8 print:p-0 print:shadow-none max-w-3xl mx-auto">
