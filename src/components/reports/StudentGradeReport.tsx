@@ -38,7 +38,7 @@ export default function StudentGradeReport({
         <div className="text-right">
           <p className="text-sm text-silver-gray">Overall Grade</p>
           <p className={`text-4xl font-bold ${getGradeColorClass(performance.overallGrade)}`}>
-            {performance.overallGrade}%
+            {performance.hasGradeEvidence ? `${performance.overallGrade}%` : 'No Grade'}
           </p>
         </div>
       </div>
