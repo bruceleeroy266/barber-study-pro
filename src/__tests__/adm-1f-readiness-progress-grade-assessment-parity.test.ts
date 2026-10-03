@@ -96,10 +96,12 @@ describe('ADM-1F readiness/progress/grade/assessment parity', () => {
   })
 
   it('keeps a student with no grade evidence distinct from a real zero', () => {
-    const performance = calculateStudentGradePerformance('s1', [], [category], [], 0)
+    const performance = calculateStudentGradePerformance('s1', [], [category], [], 4)
 
     expect(performance.hasGradeEvidence).toBe(false)
     expect(performance.overallGrade).toBe(0)
+    expect(performance.missingAssignments).toBe(0)
+    expect(performance.isAtRisk).toBe(false)
   })
 
   it('does not create a low-readiness alert when the student has no learning evidence', () => {
