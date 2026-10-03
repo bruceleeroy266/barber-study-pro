@@ -458,9 +458,21 @@ export async function getInstructorAssignmentOptions(
     ])
 
   if (instructorsError || assignmentError) {
+    const errorMessage =
+      instructorsError?.message || assignmentError?.message || 'Failed to load instructor assignment'
+
+    if (process.env.ASCYN_TEST_ENVIRONMENT === 'true') {
+      console.error('[ADM-1C assignment options]', {
+        studentId: learner.id,
+        schoolId: learner.school_id,
+        instructorsError: instructorsError?.message ?? null,
+        assignmentError: assignmentError?.message ?? null,
+      })
+    }
+
     return {
       success: false,
-      error: instructorsError?.message || assignmentError?.message || 'Failed to load instructor assignment',
+      error: errorMessage,
     }
   }
 
