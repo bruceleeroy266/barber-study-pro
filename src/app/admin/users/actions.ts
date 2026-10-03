@@ -5,6 +5,7 @@ import { createServiceRoleClient } from '@/lib/supabase-service-role'
 import { isAdmin, isSchoolAdmin, isPlatformAdminProfile } from '@/lib/auth-helpers'
 import { AppRole } from '@/types'
 import { isKnownRole } from '@/lib/security/permissions'
+import { revalidatePath } from 'next/cache'
 
 export interface UserListItem {
   id: string
@@ -541,6 +542,12 @@ export async function assignStudentInstructor(
   const current = existingRows?.[0] ?? null
   const currentInstructorId = current?.instructor_id ? String(current.instructor_id) : null
   if (currentInstructorId === instructorId) {
+    revalidatePath('/admin/users')
+    revalidatePath('/instructor')
+    revalidatePath('/instructor/students')
+    revalidatePath('/instructor/messages')
+    revalidatePath('/dashboard/messages')
+    revalidatePath('/school')
     return { success: true }
   }
 
@@ -581,6 +588,17 @@ export async function assignStudentInstructor(
     { instructor_id: instructorId },
     learner.school_id
   )
+
+  // Assignment ownership is consumed by several server-rendered surfaces.
+  // Invalidate all roster/report/messaging entry points immediately so a
+  // newly assigned student is visible on the next request without waiting for
+  // stale route output to age out.
+  revalidatePath('/admin/users')
+  revalidatePath('/instructor')
+  revalidatePath('/instructor/students')
+  revalidatePath('/instructor/messages')
+  revalidatePath('/dashboard/messages')
+  revalidatePath('/school')
 
   return { success: true }
 }
