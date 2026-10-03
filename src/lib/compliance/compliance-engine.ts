@@ -275,7 +275,7 @@ export function buildComplianceAlerts(inputs: StudentComplianceInputs): Complian
     alerts.push({
       id: `comp-eligible-${student.id}`,
       type: 'board_eligible',
-      title: 'Board Eligible',
+      title: 'Tracked Requirements Met',
       description: `${student.full_name}: All ASCYN PRO tracked program requirements met`,
       studentId: student.id,
       studentName: student.full_name,
