@@ -53,9 +53,9 @@ describe('COM-1D.6 messaging UX hardening', () => {
 
   it('prevents duplicate open/send submissions at the client interaction boundary', () => {
     expect(center).toContain('sendLockedRef')
-    expect(center).toContain('openLockedRef')
+    expect(center).toContain('composeLockedRef')
     expect(center).toContain('sendLockedRef.current')
-    expect(center).toContain('openLockedRef.current')
+    expect(center).toContain('composeLockedRef.current')
     expect(center).toContain(
       'current.some((message) => message.id === result.data.id)'
     )

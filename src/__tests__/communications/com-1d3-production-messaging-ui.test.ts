@@ -66,13 +66,14 @@ describe('COM-1D.3 production messaging UI integration', () => {
     expect(center).not.toContain('SUPABASE_SERVICE_ROLE')
   })
 
-  it('supports thread selection, reply, and assignment-safe conversation creation', () => {
+  it('supports thread selection, reply, and assignment-safe first-send creation', () => {
     expect(center).toContain('handleSelect')
     expect(center).toContain('handleSend')
-    expect(center).toContain('handleOpenConversation')
+    expect(center).toContain('handleNewMessageSend')
     expect(center).toContain('availableCounterparts')
-    expect(center).toContain('Open conversation')
-    expect(center).toContain('Private to your assigned')
+    expect(center).toContain('Only authorized recipients appear here.')
+    expect(center).toContain('openCommunicationThread')
+    expect(center).toContain('sendCommunicationMessage')
   })
 
   it('keeps the old multi-recipient compose route out of production', () => {
