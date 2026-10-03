@@ -3,7 +3,7 @@
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import type { HoursReportLog, HoursReportStudent } from './reporting'
-import { calculateApprovedPeriodTotals, calculateOfficialApprovedMinutes, formatHourMinutes, getOfficialMinutes } from './reporting'
+import { calculateApprovedPeriodTotals, calculateHoursProgressSummary, formatHourMinutes, getOfficialMinutes } from './reporting'
 
 export interface HoursPdfOptions {
   schoolName: string
@@ -49,11 +49,11 @@ export function exportHoursStateBoardPdf(options: HoursPdfOptions): void {
 
   const summaryBody = students.map((student) => {
     const studentLogs = logs.filter((log) => log.user_id === student.id)
-    const approvedMinutes = calculateOfficialApprovedMinutes(studentLogs)
-    const pendingMinutes = studentLogs
-      .filter((log) => log.status === 'pending')
-      .reduce((sum, log) => sum + log.minutes, 0)
-    const remainingMinutes = Math.max(0, student.requiredHours * 60 - approvedMinutes)
+    const {
+      approvedMinutes,
+      pendingMinutes,
+      remainingMinutes,
+    } = calculateHoursProgressSummary(studentLogs, student.requiredHours)
     const periods = calculateApprovedPeriodTotals(studentLogs, generated, timeZone)
 
     return [
