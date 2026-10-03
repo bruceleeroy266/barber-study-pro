@@ -62,15 +62,15 @@ function verifyMobileReportStructure(container: HTMLElement) {
 }
 
 describe('school reporting mobile layout safeguards', () => {
-  it('keeps Audit Preparation Center controls mobile-safe', () => {
+  it('keeps Program Requirement Audit Center controls mobile-safe', () => {
     const { container } = render(
       <ComplianceReportingCenter reports={complianceReports} />,
     )
 
-    expect(screen.getByText('Audit Preparation Center')).toBeInTheDocument()
+    expect(screen.getByText('Program Requirement Audit Center')).toBeInTheDocument()
     expect(screen.getAllByRole('button')).toHaveLength(6)
 
-    const tabGrid = screen.getByRole('button', { name: /Student Compliance/i }).parentElement
+    const tabGrid = screen.getByRole('button', { name: /Student Tracking/i }).parentElement
     expect(tabGrid).toHaveClass('grid-cols-2')
     expect(tabGrid).toHaveClass('sm:grid-cols-3')
     expect(tabGrid).toHaveClass('lg:grid-cols-5')
