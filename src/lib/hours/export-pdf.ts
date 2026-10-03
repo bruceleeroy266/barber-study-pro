@@ -103,7 +103,7 @@ export function exportHoursStateBoardPdf(options: HoursPdfOptions): void {
         log.notes ?? '—',
         log.submitted_by_name ?? log.submitted_by ?? '—',
         log.reviewed_by_name ?? log.reviewed_by ?? '—',
-        log.reviewed_at ? new Date(log.reviewed_at).toLocaleString('en-US') : '—',
+        log.reviewed_at ? new Date(log.reviewed_at).toLocaleString('en-US', { timeZone }) : '—',
       ]
     })
 
