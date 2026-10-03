@@ -102,13 +102,13 @@ describe('H&A-6C downstream effective-hours migration', () => {
   })
 
   it('routes totals, compliance, analytics, notifications, and PDF output through official minutes', () => {
-    expect(studentHours).toContain('calculateOfficialApprovedMinutes(reportingHours)')
-    expect(staffHours).toContain('calculateOfficialApprovedMinutes(studentLogs)')
-    expect(instructorStudent).toContain('getOfficialMinutes(h)')
+    expect(studentHours).toContain('calculateHoursProgressSummary(reportingHours, requirements.requiredHours)')
+    expect(staffHours).toContain('calculateHoursProgressSummary(studentLogs, requiredHours)')
+    expect(instructorStudent).toContain('calculateHoursProgressSummary(hourLogRecords, programRequirements.requiredHours)')
     expect(complianceEngine).toContain('getOfficialMinutes(h)')
-    expect(schoolAnalytics).toContain('getOfficialMinutes(h)')
+    expect(schoolAnalytics).toContain('calculateHoursProgressSummary')
     expect(notificationEngine).toContain('getOfficialMinutes(h)')
-    expect(pdf).toContain('calculateOfficialApprovedMinutes(studentLogs)')
+    expect(pdf).toContain('calculateHoursProgressSummary(studentLogs, student.requiredHours)')
     expect(pdf).toContain('getOfficialMinutes(log)')
   })
 
@@ -120,8 +120,8 @@ describe('H&A-6C downstream effective-hours migration', () => {
   })
 
   it('keeps pending calculations raw and separate from official effective totals', () => {
-    expect(studentHours).toContain(".filter((row) => row.status === 'pending')")
-    expect(staffHours).toContain(".filter((log) => log.status === 'pending')")
+    expect(studentHours).toContain('pendingMinutes')
+    expect(staffHours).toContain('pendingMinutes')
     expect(notificationEngine).toContain(".filter((h) => h.status === 'pending')")
   })
 

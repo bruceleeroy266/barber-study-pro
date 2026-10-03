@@ -7,7 +7,7 @@ import {
 } from '@/lib/programs/requirements'
 import { calculateAttendanceSummary, getTodayAttendanceStatus } from '@/lib/attendance'
 import { mapAttendanceRecordsFromDb } from '@/lib/mappers/operational-data-mappers'
-import { calculateApprovedPeriodTotals, calculateOfficialApprovedMinutes } from '@/lib/hours/reporting'
+import { calculateApprovedPeriodTotals, calculateHoursProgressSummary } from '@/lib/hours/reporting'
 import type { HoursReportLog } from '@/lib/hours/reporting'
 import type { AttendanceRecord, AttendanceStatus, HourCategory } from '@/types'
 
@@ -254,21 +254,19 @@ export default async function StudentHoursPage() {
     created_at: row.created_at,
   }))
 
-  const approvedMinutes = calculateOfficialApprovedMinutes(reportingHours)
-  const pendingMinutes = hours
-    .filter((row) => row.status === 'pending')
-    .reduce((sum, row) => sum + row.minutes, 0)
+  const {
+    approvedMinutes,
+    pendingMinutes,
+    requiredMinutes,
+    remainingMinutes,
+    completionPercentage,
+  } = calculateHoursProgressSummary(reportingHours, requirements.requiredHours)
 
   const approvedPeriods = calculateApprovedPeriodTotals(
     reportingHours,
     new Date(),
     schoolTimeZone,
   )
-
-  const requiredMinutes = requirements.requiredHours * 60
-  const remainingMinutes = Math.max(0, requiredMinutes - approvedMinutes)
-  const completionPercentage =
-    requiredMinutes > 0 ? Math.min(100, Math.round((approvedMinutes / requiredMinutes) * 100)) : 0
 
   const attendanceRecords: AttendanceRecord[] =
     mapAttendanceRecordsFromDb(attendanceRows ?? []) ?? []

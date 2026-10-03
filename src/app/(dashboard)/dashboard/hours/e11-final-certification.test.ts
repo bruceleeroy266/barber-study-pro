@@ -30,16 +30,16 @@ describe('E11 final hours and attendance certification', () => {
 
   it('routes official totals through the canonical effective-hours contract', () => {
     expect(studentPage).toContain(".from('effective_hour_logs')")
-    expect(studentPage).toContain('calculateOfficialApprovedMinutes(reportingHours)')
+    expect(studentPage).toContain('calculateHoursProgressSummary(reportingHours, requirements.requiredHours)')
     expect(staffManager).toContain(".from('effective_hour_logs')")
-    expect(staffManager).toContain('calculateOfficialApprovedMinutes(studentLogs)')
-    expect(pdfExport).toContain('calculateOfficialApprovedMinutes(studentLogs)')
+    expect(staffManager).toContain('calculateHoursProgressSummary(studentLogs, requiredHours)')
+    expect(pdfExport).toContain('calculateHoursProgressSummary(studentLogs, student.requiredHours)')
     expect(pdfExport).toContain('getOfficialMinutes(log)')
   })
 
   it('keeps pending hours separate from official totals', () => {
-    expect(studentPage).toContain(".filter((row) => row.status === 'pending')")
-    expect(staffManager).toContain(".filter((log) => log.status === 'pending')")
+    expect(studentPage).toContain('pendingMinutes')
+    expect(staffManager).toContain('pendingMinutes')
     expect(studentPage).toContain('Pending hours do not increase this progress')
   })
 
@@ -60,7 +60,7 @@ describe('E11 final hours and attendance certification', () => {
 
   it('exports only approved detail rows while reporting pending separately in summaries', () => {
     expect(pdfExport).toContain("const approved = logs.filter((log) => log.status === 'approved')")
-    expect(pdfExport).toContain("studentLogs\n      .filter((log) => log.status === 'pending')")
+    expect(pdfExport).toContain('calculateHoursProgressSummary(studentLogs, student.requiredHours)')
   })
 
   it('calculates period totals from approved rows only', () => {

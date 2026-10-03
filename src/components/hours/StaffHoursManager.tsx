@@ -6,7 +6,7 @@ import { resolveProgramRequirementsForStudents } from '@/lib/programs/requiremen
 import { adjustApprovedStudentHours, bulkApproveStudentHours, logStudentHours, reviewStudentHours } from '@/app/instructor/hours/actions'
 import HoursPdfExports from '@/components/hours/HoursPdfExports'
 import StudentHoursDropdown from '@/components/hours/StudentHoursDropdown'
-import { calculateApprovedPeriodTotals, calculateOfficialApprovedMinutes, formatHourMinutes, getOfficialMinutes } from '@/lib/hours/reporting'
+import { calculateApprovedPeriodTotals, calculateHoursProgressSummary, formatHourMinutes, getOfficialMinutes } from '@/lib/hours/reporting'
 import type { HourCategory, HourStatus } from '@/types'
 
 interface HoursRosterStudent {
@@ -200,18 +200,14 @@ export default async function StaffHoursManager({
 
   const rows = students.map((student) => {
     const studentLogs = logs.filter((log) => log.user_id === student.id)
-    const approvedMinutes = calculateOfficialApprovedMinutes(studentLogs)
-    const pendingMinutes = studentLogs
-      .filter((log) => log.status === 'pending')
-      .reduce((sum, log) => sum + log.minutes, 0)
-
     const requirements = requirementMap.get(student.id)
     const requiredHours = requirements?.requiredHours ?? 1200
-    const requiredMinutes = requiredHours * 60
-    const remainingMinutes = Math.max(0, requiredMinutes - approvedMinutes)
-    const percentage = requiredMinutes > 0
-      ? Math.min(100, Math.round((approvedMinutes / requiredMinutes) * 100))
-      : 0
+    const {
+      approvedMinutes,
+      pendingMinutes,
+      remainingMinutes,
+      completionPercentage: percentage,
+    } = calculateHoursProgressSummary(studentLogs, requiredHours)
 
     return {
       ...student,

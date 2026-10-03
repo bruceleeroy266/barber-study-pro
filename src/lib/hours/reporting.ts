@@ -54,6 +54,53 @@ export function calculateOfficialApprovedMinutes(logs: HoursReportLog[]): number
   return logs.reduce((sum, log) => sum + getOfficialMinutes(log), 0)
 }
 
+export type HoursProgressLog = Pick<
+  HoursReportLog,
+  'id' | 'status' | 'minutes' | 'effective_minutes' | 'integrity_status'
+>
+
+export interface HoursProgressSummary {
+  approvedMinutes: number
+  pendingMinutes: number
+  requiredHours: number
+  requiredMinutes: number
+  remainingMinutes: number
+  completionPercentage: number
+}
+
+/**
+ * ADM-1E canonical student-hours parity contract.
+ *
+ * Approved hours always come from the official effective-hour chain.
+ * Pending hours are informational only and never reduce remaining hours or
+ * increase completion percentage.
+ */
+export function calculateHoursProgressSummary(
+  logs: HoursProgressLog[],
+  requiredHours: number,
+): HoursProgressSummary {
+  const safeRequiredHours =
+    Number.isFinite(requiredHours) && requiredHours > 0 ? requiredHours : 0
+  const requiredMinutes = safeRequiredHours * 60
+  const approvedMinutes = logs.reduce((sum, log) => sum + getOfficialMinutes(log), 0)
+  const pendingMinutes = logs
+    .filter((log) => log.status === 'pending')
+    .reduce((sum, log) => sum + log.minutes, 0)
+  const remainingMinutes = Math.max(0, requiredMinutes - approvedMinutes)
+  const completionPercentage = requiredMinutes > 0
+    ? Math.min(100, Math.max(0, Math.round((approvedMinutes / requiredMinutes) * 100)))
+    : 0
+
+  return {
+    approvedMinutes,
+    pendingMinutes,
+    requiredHours: safeRequiredHours,
+    requiredMinutes,
+    remainingMinutes,
+    completionPercentage,
+  }
+}
+
 function toDateKey(date: Date, timeZone: string): string {
   const parts = new Intl.DateTimeFormat('en-CA', {
     timeZone,
