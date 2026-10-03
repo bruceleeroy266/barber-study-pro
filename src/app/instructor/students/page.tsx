@@ -251,7 +251,7 @@ export default async function InstructorStudentsPage() {
   const atRiskStudents = studentStats.filter((s) => {
     const lowReadiness = s.readinessScore > 0 && s.readinessScore < 70
     const lowProgress = s.overallProgress < 50
-    const lowQuiz = s.avgQuizScore > 0 && s.avgQuizScore < 70
+    const lowQuiz = s.quizzesTaken > 0 && s.avgQuizScore < 70
     const inactive = s.daysSinceActive !== null && s.daysSinceActive > 14
     return lowReadiness || lowProgress || lowQuiz || inactive
   })
@@ -304,7 +304,7 @@ export default async function InstructorStudentsPage() {
                 const factors: string[] = []
                 if (student.readinessScore > 0 && student.readinessScore < 70) factors.push('Low readiness')
                 if (student.overallProgress < 50) factors.push('Low progress')
-                if (student.avgQuizScore > 0 && student.avgQuizScore < 70) factors.push('Low quiz avg')
+                if (student.quizzesTaken > 0 && student.avgQuizScore < 70) factors.push('Low quiz avg')
                 if (student.daysSinceActive !== null && student.daysSinceActive > 14) factors.push('Inactive')
                 
                 return (
@@ -398,7 +398,7 @@ export default async function InstructorStudentsPage() {
                       <td className="p-4">
                         <div className="flex items-center gap-2">
                           <span className={`text-lg font-bold ${getReadinessColorClass(student.readinessScore)}`}>
-                            {student.readinessScore > 0 ? student.readinessScore : '—'}
+                            {student.readinessScore}
                           </span>
                           <span className={`px-2 py-1 rounded text-xs font-semibold border ${readinessBadgeClasses(student.readinessLevel)}`}>
                             {student.readinessLevel}
@@ -409,9 +409,9 @@ export default async function InstructorStudentsPage() {
                         <span className={`font-semibold ${
                           student.avgQuizScore >= 80 ? 'text-gold' :
                           student.avgQuizScore >= 60 ? 'text-warm-bronze' :
-                          student.avgQuizScore > 0 ? 'text-silver' : 'text-[var(--color-text-muted)]'
+                          student.quizzesTaken > 0 ? 'text-silver' : 'text-[var(--color-text-muted)]'
                         }`}>
-                          {student.avgQuizScore > 0 ? `${student.avgQuizScore}%` : '—'}
+                          {student.quizzesTaken > 0 ? `${student.avgQuizScore}%` : '—'}
                         </span>
                       </td>
                       <td className="p-4 text-[var(--color-text-secondary)] whitespace-nowrap">
