@@ -7,7 +7,22 @@
 export interface ExportColumn {
   key: string
   label: string
-  format?: (value: any) => string
+  format?: (value: unknown) => string
+}
+
+export function escapeCsvCell(value: unknown): string {
+  if (value === null || value === undefined) return ''
+  const stringValue = String(value).replace(/"/g, '""')
+  return /[",\r\n]/.test(stringValue) ? `"${stringValue}"` : stringValue
+}
+
+export function convertRowsToCSV(data: Record<string, unknown>[]): string {
+  if (data.length === 0) return ''
+
+  const headers = Object.keys(data[0])
+  const rows = data.map((row) => headers.map((header) => escapeCsvCell(row[header])).join(','))
+
+  return [headers.map(escapeCsvCell).join(','), ...rows].join('\r\n')
 }
 
 /**
@@ -15,7 +30,7 @@ export interface ExportColumn {
  */
 export function convertToCSV(data: Record<string, unknown>[], columns: ExportColumn[]): string {
   // Header row
-  const headers = columns.map((col) => col.label).join(',')
+  const headers = columns.map((col) => escapeCsvCell(col.label)).join(',')
   
   // Data rows
   const rows = data.map((row) => {
@@ -24,18 +39,12 @@ export function convertToCSV(data: Record<string, unknown>[], columns: ExportCol
         const value = row[col.key]
         const formatted = col.format ? col.format(value) : value
         
-        // Escape commas and quotes
-        if (formatted === null || formatted === undefined) return ''
-        const stringValue = String(formatted)
-        if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
-          return `"${stringValue.replace(/"/g, '""')}"`
-        }
-        return stringValue
+        return escapeCsvCell(formatted)
       })
       .join(',')
   })
   
-  return [headers, ...rows].join('\n')
+  return [headers, ...rows].join('\r\n')
 }
 
 /**
@@ -81,7 +90,7 @@ export function formatDateForExport(date: string | Date | null): string {
 /**
  * Format percentage for export
  */
-export function formatPercentageForExport(value: number | null): string {
+export function formatPercentageForExport(value: number | null | undefined): string {
   if (value === null || value === undefined) return ''
   return `${value}%`
 }
@@ -89,7 +98,7 @@ export function formatPercentageForExport(value: number | null): string {
 /**
  * Format minutes to hours for export
  */
-export function formatMinutesForExport(minutes: number | null): string {
+export function formatMinutesForExport(minutes: number | null | undefined): string {
   if (minutes === null || minutes === undefined) return ''
   const hours = Math.floor(minutes / 60)
   const mins = minutes % 60
