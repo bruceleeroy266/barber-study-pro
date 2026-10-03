@@ -16,6 +16,8 @@ export interface CanonicalStudentLearningMetrics {
   quizzesPassed: number
   averageQuizScore: number
   hasQuizEvidence: boolean
+  hasProgressEvidence: boolean
+  hasReadinessEvidence: boolean
   readiness: ReturnType<typeof calculateBoardReadiness>
 }
 
@@ -64,6 +66,18 @@ export function calculateCanonicalStudentLearningMetrics(
       )
     : 0
 
+  const hasProgressEvidence = progress.length > 0
+  const hasQuizEvidence = attempts.length > 0
+  const hasReadinessEvidence =
+    hasQuizEvidence ||
+    progress.some((record) =>
+      record.progress_percentage > 0 ||
+      record.lesson_completed === true ||
+      record.flashcards_completed === true ||
+      record.knowledge_checks_completed === true ||
+      record.quiz_completed === true
+    )
+
   return {
     totalChapters: safeTotalChapters,
     completedChapters,
@@ -71,7 +85,9 @@ export function calculateCanonicalStudentLearningMetrics(
     flashcardsCompleted,
     quizzesPassed,
     averageQuizScore,
-    hasQuizEvidence: attempts.length > 0,
+    hasQuizEvidence,
+    hasProgressEvidence,
+    hasReadinessEvidence,
     readiness: calculateBoardReadiness({
       userId,
       attempts,
