@@ -7,6 +7,7 @@ import { analyzePerformance } from '@/lib/analytics'
 import { generateStudyPlan } from '@/lib/recommendations'
 import { getDemoMissedQuestionsForUser } from '@/lib/demo-analytics'
 import { demoAttendanceRecords } from '@/lib/demo-data'
+import { isDemoFallbackEnabled } from '@/lib/demo-helpers'
 import { calculateAttendanceSummary } from '@/lib/attendance'
 import BoardReadinessCard from '@/components/BoardReadinessCard'
 import WeakAreaAnalytics from '@/components/WeakAreaAnalytics'
@@ -63,7 +64,7 @@ export default async function ProgressPage() {
   const { data: attendanceData } = await attendanceQuery
 
   let attendanceRecords: AttendanceRecord[] = mapAttendanceRecordsFromDb(attendanceData || []) || []
-  if (attendanceRecords.length === 0) {
+  if (attendanceRecords.length === 0 && isDemoFallbackEnabled()) {
     attendanceRecords = demoAttendanceRecords.filter((a) => a.userId === user.id)
   }
 
