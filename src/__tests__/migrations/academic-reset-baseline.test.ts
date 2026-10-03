@@ -16,7 +16,8 @@ describe('academic reset baseline', () => {
     expect(migration).toContain('create or replace function public.reset_student_academic_state')
     expect(migration).toContain("v_target_role not in ('student', 'apprentice')")
     expect(migration).toContain('public.is_platform_admin()')
-    expect(migration).toContain("v_actor_role in ('school_admin', 'admin')")
+    expect(migration).toContain("raise exception 'Platform administrator authorization required'")
+    expect(migration).not.toContain("v_actor_role in ('school_admin', 'admin')")
     expect(migration).toContain('pg_advisory_xact_lock')
   })
 
