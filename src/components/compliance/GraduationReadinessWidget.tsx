@@ -10,7 +10,7 @@ interface Props {
 export default function GraduationReadinessWidget({ readiness }: Props) {
   return (
     <div className="bg-charcoal border border-graphite rounded-xl p-6">
-      <h2 className="text-lg font-semibold text-white mb-4">Graduation Readiness</h2>
+      <h2 className="text-lg font-semibold text-white mb-4">Program Completion Readiness</h2>
       <div className="flex flex-col items-center mb-6">
         <div className="w-32 h-32 relative">
           <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
@@ -39,7 +39,7 @@ export default function GraduationReadinessWidget({ readiness }: Props) {
         <p className="text-sm text-silver mt-2">
           {readiness.isReady ? (
             <span className="inline-flex items-center gap-1 text-gold">
-              <CheckCircle className="w-4 h-4" /> Ready for graduation
+              <CheckCircle className="w-4 h-4" /> All tracked thresholds met
             </span>
           ) : (
             <span className="inline-flex items-center gap-1 text-warm-bronze">
