@@ -9,6 +9,7 @@ import { Profile } from '@/types'
 import { logLogout } from '@/app/(auth)/actions'
 import { Logo } from '@/components/brand'
 import EscalationBadge from '@/components/instructor/EscalationBadge'
+import BackButton from '@/components/ui/BackButton'
 
 interface InstructorNavProps {
   user: Profile | null
@@ -35,6 +36,10 @@ export default function InstructorNav({ user }: InstructorNavProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
+  const backFallbackHref =
+    user?.role === 'admin' ? '/admin' :
+    user?.role === 'school_admin' ? '/school' :
+    '/instructor'
 
   const isNavItemActive = (href: string) =>
     pathname === href || (href !== '/instructor' && pathname.startsWith(`${href}/`))
@@ -103,6 +108,9 @@ export default function InstructorNav({ user }: InstructorNavProps) {
       {mobileMenuOpen && (
         <div id="instructor-mobile-navigation" className="lg:hidden fixed inset-0 z-40 bg-black pt-16 overflow-y-auto">
           <nav aria-label="Instructor navigation" className="p-4 space-y-2 pb-8">
+            <div className="px-2 pb-2">
+              <BackButton fallbackHref={backFallbackHref} label="Back" />
+            </div>
             {navItems.map((item) => {
               const Icon = item.icon
               return (
@@ -142,6 +150,9 @@ export default function InstructorNav({ user }: InstructorNavProps) {
         </div>
         
         <nav aria-label="Instructor navigation" className="px-4 space-y-2 pb-8">
+          <div className="px-2 pb-2">
+            <BackButton fallbackHref={backFallbackHref} label="Back" />
+          </div>
           {navItems.map((item) => {
             const Icon = item.icon
             return (
