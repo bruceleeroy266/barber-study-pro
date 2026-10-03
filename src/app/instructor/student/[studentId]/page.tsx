@@ -1,4 +1,4 @@
-import { getOfficialMinutes } from '@/lib/hours/reporting'
+import { calculateHoursProgressSummary } from '@/lib/hours/reporting'
 import { createClient } from '@/lib/supabase-server'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
@@ -494,18 +494,13 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
   const programName = programRequirements.programName ?? (usingDemoData ? demoProgram?.name ?? null : null) ?? '—'
   const boardState = schoolState ?? (usingDemoData ? demoSchool.state : null) ?? '—'
 
-  const REQUIRED_MINUTES = programRequirements.requiredHours * 60
-  const approvedMinutes = hourLogRecords.reduce(
-    (sum, h) => sum + getOfficialMinutes(h),
-    0,
-  )
-  const pendingMinutes = hourLogRecords
-    .filter((h) => h.status === 'pending')
-    .reduce((sum, h) => sum + h.minutes, 0)
-  const remainingMinutes = Math.max(0, REQUIRED_MINUTES - approvedMinutes)
-  const completionPercentage = REQUIRED_MINUTES > 0
-    ? Math.round((approvedMinutes / REQUIRED_MINUTES) * 100)
-    : 0
+  const {
+    approvedMinutes,
+    pendingMinutes,
+    requiredMinutes: REQUIRED_MINUTES,
+    remainingMinutes,
+    completionPercentage,
+  } = calculateHoursProgressSummary(hourLogRecords, programRequirements.requiredHours)
 
   const totalChapters = chapters?.length || 0
   const canonicalMetrics = calculateCanonicalStudentLearningMetrics({
@@ -5137,7 +5132,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
         <div className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
           <div className="p-6 border-b border-graphite">
             <h2 className="text-xl font-semibold text-white">Attendance Summary</h2>
-            <p className="text-sm text-silver mt-1">Last 11 school days</p>
+            <p className="text-sm text-silver mt-1">All recorded school days</p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4 p-6 border-b border-graphite">
