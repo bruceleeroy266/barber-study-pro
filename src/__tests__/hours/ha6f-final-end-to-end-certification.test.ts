@@ -187,7 +187,7 @@ describe('H&A-6F final end-to-end certification', () => {
     expect(reporting).toContain('getOfficialMinutes')
     expect(pdf).toContain('getOfficialMinutes(log)')
     expect(compliance).toContain('getOfficialMinutes(h)')
-    expect(analytics).toContain('getOfficialMinutes(h)')
+    expect(analytics).toContain('calculateHoursProgressSummary')
     expect(notifications).toContain('getOfficialMinutes(h)')
   })
 
