@@ -7,7 +7,7 @@ import {
 } from '@/lib/programs/requirements'
 import { calculateAttendanceSummary, getTodayAttendanceStatus } from '@/lib/attendance'
 import { mapAttendanceRecordsFromDb } from '@/lib/mappers/operational-data-mappers'
-import { calculateApprovedPeriodTotals, calculateOfficialApprovedMinutes } from '@/lib/hours/reporting'
+import { calculateApprovedPeriodTotals, calculateHoursProgressSummary } from '@/lib/hours/reporting'
 import type { HoursReportLog } from '@/lib/hours/reporting'
 import type { AttendanceRecord, AttendanceStatus, HourCategory } from '@/types'
 
