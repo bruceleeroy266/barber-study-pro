@@ -22,6 +22,7 @@ import {
 import { Profile } from '@/types'
 import { isAdmin } from '@/lib/auth-helpers'
 import { Logo } from '@/components/brand'
+import BackButton from '@/components/ui/BackButton'
 
 interface AdminNavProps {
   user: Profile | null
@@ -43,6 +44,7 @@ const adminLinks = [
 export default function AdminNav({ user }: AdminNavProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const pathname = usePathname()
+  const backFallbackHref = isAdmin(user?.role ?? '') ? '/admin' : '/school'
   const navLinks = isAdmin(user?.role ?? '')
     ? adminLinks
     : [
@@ -78,6 +80,9 @@ export default function AdminNav({ user }: AdminNavProps) {
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-40 bg-black pt-16 overflow-y-auto">
           <nav className="p-4 space-y-2 pb-8">
+            <div className="px-2 pb-2">
+              <BackButton fallbackHref={backFallbackHref} label="Back" />
+            </div>
             {navLinks.map((link) => {
               const Icon = link.icon
               const active = pathname === link.href
@@ -122,6 +127,10 @@ export default function AdminNav({ user }: AdminNavProps) {
             <span className="inline-block mt-2 px-2 py-1 bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] text-xs rounded capitalize">
               {user?.role || 'admin'}
             </span>
+          </div>
+
+          <div className="mb-3">
+            <BackButton fallbackHref={backFallbackHref} label="Back" />
           </div>
 
           <nav className="space-y-1">
