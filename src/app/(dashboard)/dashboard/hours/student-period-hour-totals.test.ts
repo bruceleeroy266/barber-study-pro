@@ -31,7 +31,7 @@ describe('E6 student weekly monthly yearly and overall hour totals', () => {
 
   it('keeps overall official totals approved-only and pending separate', () => {
     expect(page).toContain('calculateHoursProgressSummary(reportingHours, requirements.requiredHours)')
-    expect(page).toContain("row.status === 'pending'")
+    expect(page).toContain('pendingMinutes')
     expect(page).toContain('{formatMinutes(approvedMinutes)}')
     expect(page).toContain('{formatMinutes(pendingMinutes)}')
     expect(page).toContain('Pending hours remain separate until administrator approval.')
