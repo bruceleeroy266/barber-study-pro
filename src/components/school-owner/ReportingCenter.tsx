@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { SchoolReport, SchoolReportType } from '@/types'
+import { convertRowsToCSV } from '@/lib/export-utils'
 import { FileText, Download, CalendarCheck, Target, Calculator, Clock, ClipboardCheck, School } from 'lucide-react'
 
 interface Props {
@@ -19,26 +20,16 @@ const reportMeta: { type: SchoolReportType; label: string; icon: React.ElementTy
 
 function exportCsv(report: SchoolReport) {
   if (report.rows.length === 0) return
-  const headers = Object.keys(report.rows[0])
-  const csv = [
-    headers.join(','),
-    ...report.rows.map((row) =>
-      headers
-        .map((h) => {
-          const val = row[h]
-          const str = String(val ?? '')
-          return str.includes(',') ? `"${str}"` : str
-        })
-        .join(',')
-    ),
-  ].join('\n')
+  const csv = convertRowsToCSV(report.rows)
 
-  const blob = new Blob([csv], { type: 'text/csv' })
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
   a.download = `${report.type}-report.csv`
+  document.body.appendChild(a)
   a.click()
+  document.body.removeChild(a)
   URL.revokeObjectURL(url)
 }
 
