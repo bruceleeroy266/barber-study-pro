@@ -35,6 +35,8 @@ interface RosterStudent extends Profile {
   daysSinceLogin: number | null
   readinessScore: number
   readinessLevel: ReadinessLevel
+  hasProgressEvidence: boolean
+  hasReadinessEvidence: boolean
   weakestCategory: string | null
   studyMinutesToday: number
   studyStreakDays: number
@@ -132,6 +134,8 @@ function computeStudentStats(
       overallProgress,
       averageQuizScore: avgQuizScore,
       readiness,
+      hasProgressEvidence,
+      hasReadinessEvidence,
     } = canonicalMetrics
 
     const lastStudiedAt = lastStudyActivityAt
@@ -168,6 +172,8 @@ function computeStudentStats(
       daysSinceLogin,
       readinessScore: readiness.score,
       readinessLevel: readiness.level,
+      hasProgressEvidence,
+      hasReadinessEvidence,
       weakestCategory,
       studyMinutesToday,
       studyStreakDays,
@@ -367,7 +373,8 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     .sort((a, b) => new Date(b.assessmentDate).getTime() - new Date(a.assessmentDate).getTime())
     .slice(0, 5)
 
-  const assessmentQueue = assessmentRecords.filter((a) => !a.isPassed).slice(0, 5)
+  const failedAssessments = assessmentRecords.filter((a) => !a.isPassed)
+  const assessmentQueue = failedAssessments.slice(0, 5)
 
   const today = new Date().toISOString().split('T')[0]
   const todayRecords = attendanceRecords.filter((a) => a.date === today)
@@ -422,15 +429,15 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     ? Math.round(studentsWithQuizzes.reduce((sum, s) => sum + s.avgQuizScore, 0) / studentsWithQuizzes.length)
     : 0
 
-  const studentsWithReadiness = studentStats.filter((s) => s.readinessScore > 0)
+  const studentsWithReadiness = studentStats.filter((s) => s.hasReadinessEvidence)
   const classAvgReadiness = studentsWithReadiness.length > 0
     ? Math.round(studentsWithReadiness.reduce((sum, s) => sum + s.readinessScore, 0) / studentsWithReadiness.length)
     : 0
 
   // At-risk students: readiness below 70, low progress, low quiz avg, or inactive > 14 days
   const atRiskStudents = studentStats.filter((s) => {
-    const lowReadiness = s.readinessScore > 0 && s.readinessScore < 70
-    const lowProgress = s.overallProgress < 50
+    const lowReadiness = s.hasReadinessEvidence && s.readinessScore < 70
+    const lowProgress = s.hasProgressEvidence && s.overallProgress < 50
     const lowQuiz = s.quizzesTaken > 0 && s.avgQuizScore < 70
     const inactive = s.daysSinceActive !== null && s.daysSinceActive > 14
     return lowReadiness || lowProgress || lowQuiz || inactive
@@ -442,10 +449,10 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
   const strongestChapters = [...chapterClassScores].sort((a, b) => b.avgScore - a.avgScore).slice(0, 5)
 
   // Board readiness overview counts
-  const readyCount = studentStats.filter((s) => s.readinessLevel === 'Ready').length
-  const nearlyReadyCount = studentStats.filter((s) => s.readinessLevel === 'Nearly Ready').length
-  const needsReviewCount = studentStats.filter((s) => s.readinessLevel === 'Needs Review').length
-  const atRiskCount = studentStats.filter((s) => s.readinessLevel === 'At Risk').length
+  const readyCount = studentStats.filter((s) => s.hasReadinessEvidence && s.readinessLevel === 'Ready').length
+  const nearlyReadyCount = studentStats.filter((s) => s.hasReadinessEvidence && s.readinessLevel === 'Nearly Ready').length
+  const needsReviewCount = studentStats.filter((s) => s.hasReadinessEvidence && s.readinessLevel === 'Needs Review').length
+  const atRiskCount = studentStats.filter((s) => s.hasReadinessEvidence && s.readinessLevel === 'At Risk').length
 
   // Recommended instructor actions
   const recommendedActions: string[] = []
@@ -552,7 +559,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
               classAvgQuiz >= 60 ? 'text-warm-bronze' :
               classAvgQuiz > 0 ? 'text-silver' : 'text-[var(--color-text-muted)]'
             }`}>
-              {classAvgQuiz > 0 ? `${classAvgQuiz}%` : '—'}
+              {studentsWithQuizzes.length > 0 ? `${classAvgQuiz}%` : '—'}
             </div>
             <div className="text-xs text-[var(--color-text-muted)] mt-1">Quiz Attempt Average</div>
           </div>
@@ -564,7 +571,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
               classAvgReadiness >= 70 ? 'text-warm-bronze' :
               classAvgReadiness > 0 ? 'text-silver' : 'text-[var(--color-text-muted)]'
             }`}>
-              {classAvgReadiness > 0 ? classAvgReadiness : '—'}
+              {studentsWithReadiness.length > 0 ? classAvgReadiness : '—'}
             </div>
             <div className="text-xs text-[var(--color-text-muted)] mt-1">Board Readiness</div>
           </div>
@@ -698,8 +705,8 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
               <div className="text-xs text-[var(--color-text-muted)] mt-1">Total Assessments</div>
             </div>
             <div className="bg-[var(--color-background-primary)] border border-warm-bronze/30 rounded-xl p-4 text-center">
-              <div className="text-3xl font-bold text-warm-bronze">{assessmentQueue.length}</div>
-              <div className="text-xs text-[var(--color-text-muted)] mt-1">Assessment Queue</div>
+              <div className="text-3xl font-bold text-warm-bronze">{failedAssessments.length}</div>
+              <div className="text-xs text-[var(--color-text-muted)] mt-1">Failed Assessments</div>
             </div>
           </div>
 
@@ -1019,12 +1026,12 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
                       </td>
                       <td className="p-4">
                         <span className={`text-xl font-bold ${getReadinessColorClass(student.readinessScore)}`}>
-                          {student.readinessScore}
+                          {student.hasReadinessEvidence ? student.readinessScore : '—'}
                         </span>
                       </td>
                       <td className="p-4">
-                        <span className={`px-2 py-1 rounded text-xs font-semibold border ${readinessBadgeClasses(student.readinessLevel)}`}>
-                          {student.readinessLevel}
+                        <span className={`px-2 py-1 rounded text-xs font-semibold border ${student.hasReadinessEvidence ? readinessBadgeClasses(student.readinessLevel) : 'bg-[var(--color-border-secondary)] text-[var(--color-text-secondary)] border-silver-gray'}`}>
+                          {student.hasReadinessEvidence ? student.readinessLevel : 'No Data'}
                         </span>
                       </td>
                       <td className="p-4 text-[var(--color-text-muted)]">
