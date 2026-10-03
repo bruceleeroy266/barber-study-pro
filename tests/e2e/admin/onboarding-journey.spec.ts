@@ -517,6 +517,20 @@ test.describe('Pilot onboarding certification', () => {
     // -----------------------------------------------------------------------
     // 6b. School admin explicitly assigns the student to the instructor.
     // -----------------------------------------------------------------------
+    const { data: assignableInstructor } = await service
+      .from('profiles')
+      .select('id, full_name, school_id, role, approval_status, is_disabled')
+      .eq('email', INSTRUCTOR_EMAIL)
+      .single()
+
+    expect(assignableInstructor).toMatchObject({
+      full_name: INSTRUCTOR_NAME,
+      school_id: schoolId,
+      role: 'instructor',
+      approval_status: 'approved',
+      is_disabled: false,
+    })
+
     await schoolAdminSession.page.goto('/admin/users')
     await schoolAdminSession.page.locator('input[placeholder="Search name or email"]').fill(STUDENT_EMAIL)
     await schoolAdminSession.page.getByRole('button', { name: 'Search' }).click()
@@ -525,7 +539,9 @@ test.describe('Pilot onboarding certification', () => {
     const manageUserDialog = schoolAdminSession.page.getByRole('dialog', {
       name: new RegExp(`Manage.*${STUDENT_NAME}`),
     })
-    await manageUserDialog.getByLabel('Assigned instructor').selectOption({ label: INSTRUCTOR_NAME })
+    const instructorSelect = manageUserDialog.getByLabel('Assigned instructor')
+    await expect(instructorSelect).toBeEnabled()
+    await instructorSelect.selectOption(String(assignableInstructor!.id))
     await manageUserDialog.getByRole('button', { name: 'Save instructor assignment' }).click()
 
     // -----------------------------------------------------------------------
