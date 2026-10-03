@@ -515,7 +515,21 @@ test.describe('Pilot onboarding certification', () => {
     })
 
     // -----------------------------------------------------------------------
-    // 7. Instructor verifies the newly onboarded student is visible
+    // 6b. School admin explicitly assigns the student to the instructor.
+    // -----------------------------------------------------------------------
+    await schoolAdminSession.page.goto('/admin/users')
+    await schoolAdminSession.page.locator('input[placeholder="Search name or email"]').fill(STUDENT_EMAIL)
+    await schoolAdminSession.page.getByRole('button', { name: 'Search' }).click()
+    const assignmentRow = schoolAdminSession.page.getByRole('row').filter({ hasText: STUDENT_EMAIL })
+    await assignmentRow.getByRole('button', { name: 'Manage user' }).click()
+    const manageUserDialog = schoolAdminSession.page.getByRole('dialog', {
+      name: new RegExp(`Manage.*${STUDENT_NAME}`),
+    })
+    await manageUserDialog.getByLabel('Assigned instructor').selectOption({ label: INSTRUCTOR_NAME })
+    await manageUserDialog.getByRole('button', { name: 'Save instructor assignment' }).click()
+
+    // -----------------------------------------------------------------------
+    // 7. Instructor verifies the newly onboarded assigned student is visible
     // -----------------------------------------------------------------------
     await instructorSession.page.goto('/instructor/students')
     const instructorStudentRow = instructorSession.page
