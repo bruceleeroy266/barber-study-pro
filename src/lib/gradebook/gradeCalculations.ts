@@ -87,10 +87,11 @@ export function calculateGradeTrend(grades: Grade[]): 'improving' | 'stable' | '
 
 export function isStudentAtRisk(
   overallGrade: number,
+  hasGradeEvidence: boolean,
   missingAssignments: number,
   recentAssessments: Assessment[]
 ): boolean {
-  const hasFailingGrade = overallGrade > 0 && overallGrade < 70
+  const hasFailingGrade = hasGradeEvidence && overallGrade < 70
   const hasManyMissing = missingAssignments >= 2
   const hasFailedAssessment = recentAssessments.some((a) => !a.isPassed)
   return hasFailingGrade || hasManyMissing || hasFailedAssessment
@@ -109,13 +110,15 @@ export function calculateStudentGradePerformance(
     .sort((a, b) => new Date(b.assessmentDate).getTime() - new Date(a.assessmentDate).getTime())
     .slice(0, 5)
 
+  const hasGradeEvidence = grades.some((grade) => !grade.isExcused)
   const overallGrade = calculateOverallGrade(grades, categories)
   const gradeBreakdown = calculateGradeBreakdown(grades, categories)
   const trendDirection = calculateGradeTrend(grades)
-  const isAtRisk = isStudentAtRisk(overallGrade, missingAssignments, recentAssessments)
+  const isAtRisk = isStudentAtRisk(overallGrade, hasGradeEvidence, missingAssignments, recentAssessments)
 
   return {
     studentId,
+    hasGradeEvidence,
     overallGrade,
     gradeBreakdown,
     trendDirection,
