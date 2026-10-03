@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { StudentProgress } from '@/types'
 import { localChapters } from '@/lib/local-data'
+import { calculateCanonicalStudentLearningMetrics } from '@/lib/student-level/metrics'
 
 // Phase 4 Design System Components
 import { Card } from '@/components/ui/Card'
@@ -26,12 +27,17 @@ export default async function ChaptersPage() {
     .select('*')
     .eq('user_id', user?.id) as { data: StudentProgress[] | null; error: Error | null }
 
-  // Calculate overall progress
+  // ADM-1D: the chapter index uses the same curriculum-progress formula as
+  // student dashboard, instructor detail, and the progress report.
+  const progressRecords = progress ?? []
   const totalChapters = chapters.length
-  const completedChapters = progress?.filter(p => p.progress_percentage === 100).length || 0
-  const overallProgress = totalChapters > 0
-    ? Math.round((completedChapters / totalChapters) * 100)
-    : 0
+  const { completedChapters, overallProgress } =
+    calculateCanonicalStudentLearningMetrics({
+      userId: user.id,
+      progress: progressRecords,
+      attempts: [],
+      totalChapters,
+    })
 
   return (
     <div className="space-y-8">
