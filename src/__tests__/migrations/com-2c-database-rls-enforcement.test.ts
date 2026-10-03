@@ -9,9 +9,17 @@ const MIGRATION_PATH = path.join(
 
 describe('COM-2C database / RLS enforcement', () => {
   let sql = ''
+  let authorizationHelper = ''
 
   beforeAll(() => {
     sql = fs.readFileSync(MIGRATION_PATH, 'utf-8')
+    const helperStart = sql.indexOf(
+      'create or replace function public.communication_pair_authorized'
+    )
+    const helperEnd = sql.indexOf(
+      'revoke all on function public.communication_pair_authorized'
+    )
+    authorizationHelper = sql.slice(helperStart, helperEnd)
   })
 
   it('adds generic participants without discarding legacy student/instructor evidence', () => {
@@ -31,29 +39,50 @@ describe('COM-2C database / RLS enforcement', () => {
   })
 
   it('creates one canonical database authorization function', () => {
-    expect(sql).toContain('communication_pair_authorized')
-    expect(sql).toContain("actor_approval_status = 'approved'")
-    expect(sql).toContain("recipient_approval_status = 'approved'")
-    expect(sql).toContain('actor_is_disabled = false')
-    expect(sql).toContain('recipient_is_disabled = false')
-    expect(sql).toContain("actor_role in ('student', 'apprentice')")
-    expect(sql).toContain("recipient_role in ('admin', 'school_admin')")
-    expect(sql).toContain("actor_role = 'instructor'")
-    expect(sql).toContain('assignment.is_active = true')
-    expect(sql).toContain('assignment.ended_at is null')
+    expect(authorizationHelper).toContain('communication_pair_authorized')
+    expect(authorizationHelper).toContain("actor_approval_status = 'approved'")
+    expect(authorizationHelper).toContain("recipient_approval_status = 'approved'")
+    expect(authorizationHelper).toContain('actor_is_disabled = false')
+    expect(authorizationHelper).toContain('recipient_is_disabled = false')
+    expect(authorizationHelper).toContain("actor_role in ('student', 'apprentice')")
+    expect(authorizationHelper).toContain("recipient_role in ('admin', 'school_admin')")
+    expect(authorizationHelper).toContain("actor_role = 'instructor'")
+    expect(authorizationHelper).toContain('assignment.is_active = true')
+    expect(authorizationHelper).toContain('assignment.ended_at is null')
   })
 
-  it('does not authorize student-to-student, instructor-to-instructor, or admin-to-admin pairs', () => {
-    expect(sql).not.toMatch(/actor_role in \('student', 'apprentice'\)[\s\S]*recipient_role in \('student', 'apprentice'\)/)
-    expect(sql).not.toMatch(/actor_role = 'instructor'[\s\S]*recipient_role = 'instructor'/)
-    expect(sql).not.toMatch(/actor_role in \('admin', 'school_admin'\)[\s\S]*recipient_role in \('admin', 'school_admin'\)/)
+  it('authorizes only the six intended directional relationship clauses', () => {
+    const normalized = authorizationHelper.replace(/\s+/g, ' ')
+
+    const allowedClauses = [
+      "actor_role in ('student', 'apprentice') and recipient_role = 'instructor'",
+      "actor_role = 'instructor' and recipient_role in ('student', 'apprentice')",
+      "actor_role in ('student', 'apprentice') and recipient_role in ('admin', 'school_admin')",
+      "actor_role in ('admin', 'school_admin') and recipient_role in ('student', 'apprentice')",
+      "actor_role = 'instructor' and recipient_role in ('admin', 'school_admin')",
+      "actor_role in ('admin', 'school_admin') and recipient_role = 'instructor'",
+    ]
+
+    for (const clause of allowedClauses) {
+      expect(normalized).toContain(clause)
+    }
+
+    expect(normalized).not.toContain(
+      "actor_role in ('student', 'apprentice') and recipient_role in ('student', 'apprentice')"
+    )
+    expect(normalized).not.toContain(
+      "actor_role = 'instructor' and recipient_role = 'instructor'"
+    )
+    expect(normalized).not.toContain(
+      "actor_role in ('admin', 'school_admin') and recipient_role in ('admin', 'school_admin')"
+    )
   })
 
   it('requires same-school active approved participants', () => {
-    expect(sql).toContain('actor_school_id = p_school_id')
-    expect(sql).toContain('recipient_school_id = p_school_id')
-    expect(sql).toContain("actor_approval_status = 'approved'")
-    expect(sql).toContain("recipient_approval_status = 'approved'")
+    expect(authorizationHelper).toContain('actor_school_id = p_school_id')
+    expect(authorizationHelper).toContain('recipient_school_id = p_school_id')
+    expect(authorizationHelper).toContain("actor_approval_status = 'approved'")
+    expect(authorizationHelper).toContain("recipient_approval_status = 'approved'")
   })
 
   it('enforces participant-only thread visibility and canonical authorization on creation', () => {
