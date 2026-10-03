@@ -48,13 +48,13 @@ export default function StudentPerformancePanel({ rows }: Props) {
         data = data.filter((r) => r.attendancePercentage < 80)
         break
       case 'lowReadiness':
-        data = data.filter((r) => r.readinessScore < 70)
+        data = data.filter((r) => r.hasReadinessEvidence && r.readinessScore < 70)
         break
       case 'missingHours':
         data = data.filter((r) => r.completedHours < r.requiredHours * 0.5)
         break
       case 'failedAssessment':
-        data = data.filter((r) => r.assessmentPassRate < 80)
+        data = data.filter((r) => r.hasAssessmentEvidence && r.assessmentPassRate < 80)
         break
     }
     data.sort((a, b) => {
@@ -142,12 +142,12 @@ export default function StudentPerformancePanel({ rows }: Props) {
                 </td>
                 <td className="px-4 py-3">
                   <span className={`font-medium ${row.readinessScore >= 80 ? 'text-gold' : row.readinessScore >= 70 ? 'text-warm-bronze' : 'text-silver'}`}>
-                    {row.readinessScore}
+                    {row.hasReadinessEvidence ? row.readinessScore : '—'}
                   </span>
                 </td>
                 <td className="px-4 py-3">
                   <span className={`font-medium ${row.overallGrade >= 80 ? 'text-gold' : row.overallGrade >= 70 ? 'text-warm-bronze' : 'text-silver'}`}>
-                    {row.overallGrade}%
+                    {row.hasGradeEvidence ? `${row.overallGrade}%` : '—'}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-light-gray">
@@ -155,7 +155,7 @@ export default function StudentPerformancePanel({ rows }: Props) {
                 </td>
                 <td className="px-4 py-3">
                   <span className={`font-medium ${row.assessmentPassRate >= 80 ? 'text-gold' : 'text-silver'}`}>
-                    {row.assessmentPassRate}%
+                    {row.hasAssessmentEvidence ? `${row.assessmentPassRate}%` : '—'}
                   </span>
                 </td>
                 <td className="px-4 py-3">

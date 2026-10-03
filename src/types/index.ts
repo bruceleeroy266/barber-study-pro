@@ -554,6 +554,7 @@ export interface GradeBreakdown {
 
 export interface StudentGradePerformance {
   studentId: string
+  hasGradeEvidence: boolean
   overallGrade: number
   gradeBreakdown: GradeBreakdown[]
   trendDirection: 'improving' | 'stable' | 'declining'
@@ -603,7 +604,10 @@ export interface StudentPerformanceRow {
   fullName: string
   attendancePercentage: number
   readinessScore: number
+  hasReadinessEvidence: boolean
   overallGrade: number
+  hasGradeEvidence: boolean
+  hasAssessmentEvidence: boolean
   completedHours: number
   requiredHours: number
   assessmentPassRate: number

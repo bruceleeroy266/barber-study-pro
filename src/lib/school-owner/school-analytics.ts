@@ -27,7 +27,7 @@ import {
   TrendPoint,
 } from '@/types'
 import { calculateAttendanceSummary } from '@/lib/attendance'
-import { calculateBoardReadiness } from '@/lib/readiness'
+import { calculateCanonicalStudentLearningMetrics } from '@/lib/student-level/metrics'
 import { calculateOverallGrade } from '@/lib/gradebook'
 import { localChapters } from '@/lib/local-data'
 import { DEFAULT_REQUIRED_HOURS } from '@/lib/programs/requirements'
@@ -165,13 +165,12 @@ export function buildSchoolOverviewMetrics(inputs: SchoolAnalyticsInputs): Schoo
 
     const attempts = studentAttempts(student.id, quizAttempts)
     const prog = studentProgress(student.id, progress)
-    const readiness = calculateBoardReadiness({
+    const readiness = calculateCanonicalStudentLearningMetrics({
       userId: student.id,
       attempts,
       progress: prog,
       totalChapters: localChapters.length,
-      streakDays: 0,
-    })
+    }).readiness
     const studentHasReadinessEvidence = hasReadinessEvidence(attempts, prog)
     if (studentHasReadinessEvidence) {
       readinessScores.push(clampPercentage(readiness.score))
@@ -237,13 +236,12 @@ export function buildStudentPerformanceRows(inputs: SchoolAnalyticsInputs): Stud
     const attSummary = calculateAttendanceSummary(student.id, studentAttendanceRecords(student.id, attendanceRecords))
     const attempts = studentAttempts(student.id, quizAttempts)
     const prog = studentProgress(student.id, progress)
-    const readiness = calculateBoardReadiness({
+    const readiness = calculateCanonicalStudentLearningMetrics({
       userId: student.id,
       attempts,
       progress: prog,
       totalChapters: localChapters.length,
-      streakDays: 0,
-    })
+    }).readiness
     const sGrades = studentGrades(student.id, grades)
     const overall = calculateOverallGrade(sGrades, gradeCategories)
     const sAssessments = studentAssessments(student.id, assessments)
@@ -277,7 +275,10 @@ export function buildStudentPerformanceRows(inputs: SchoolAnalyticsInputs): Stud
       fullName: student.full_name,
       attendancePercentage: attSummary.attendancePercentage,
       readinessScore: readiness.score,
+      hasReadinessEvidence: studentHasReadinessEvidence,
       overallGrade: overall,
+      hasGradeEvidence: studentHasGradeEvidence,
+      hasAssessmentEvidence: sAssessments.length > 0,
       completedHours: Math.round(completedHours),
       requiredHours,
       assessmentPassRate: passRate,
@@ -313,13 +314,12 @@ export function buildInstructorPerformanceRows(inputs: SchoolAnalyticsInputs): I
         const attempts = studentAttempts(student.id, quizAttempts)
         const prog = studentProgress(student.id, progress)
         if (!hasReadinessEvidence(attempts, prog)) return null
-        return calculateBoardReadiness({
+        return calculateCanonicalStudentLearningMetrics({
           userId: student.id,
           attempts,
           progress: prog,
           totalChapters: localChapters.length,
-          streakDays: 0,
-        }).score
+        }).readiness.score
       })
       .filter((value): value is number => value !== null)
 
@@ -454,14 +454,13 @@ export function buildSchoolAlerts(inputs: SchoolAnalyticsInputs): SchoolOwnerAle
 
     const attempts = studentAttempts(student.id, quizAttempts)
     const prog = studentProgress(student.id, progress)
-    const readiness = calculateBoardReadiness({
+    const readiness = calculateCanonicalStudentLearningMetrics({
       userId: student.id,
       attempts,
       progress: prog,
       totalChapters: localChapters.length,
-      streakDays: 0,
-    })
-    if (readiness.score < 70) {
+    }).readiness
+    if (hasReadinessEvidence(attempts, prog) && readiness.score < 70) {
       alerts.push({
         id: `ready-${student.id}`,
         type: 'low_readiness',
@@ -517,6 +516,24 @@ export function buildSchoolAlerts(inputs: SchoolAnalyticsInputs): SchoolOwnerAle
 
 export function buildSchoolAnalyticsSnapshot(inputs: SchoolAnalyticsInputs): SchoolAnalyticsSnapshot {
   const rows = buildStudentPerformanceRows(inputs)
+  const readinessEvidence = new Set(
+    inputs.students
+      .filter((student) =>
+        hasReadinessEvidence(
+          studentAttempts(student.id, inputs.quizAttempts),
+          studentProgress(student.id, inputs.progress)
+        )
+      )
+      .map((student) => student.id)
+  )
+  const gradeEvidence = new Set(
+    inputs.students
+      .filter((student) => hasGradeEvidence(studentGrades(student.id, inputs.grades)))
+      .map((student) => student.id)
+  )
+  const assessmentEvidence = new Set(
+    inputs.assessments.map((assessment) => assessment.studentId)
+  )
 
   const last14: TrendPoint[] = []
   for (let i = 13; i >= 0; i--) {
@@ -530,12 +547,16 @@ export function buildSchoolAnalyticsSnapshot(inputs: SchoolAnalyticsInputs): Sch
 
   const readinessTrend = last14.map((p) => ({
     ...p,
-    value: Math.round(average(rows.map((r) => r.readinessScore))),
+    value: Math.round(
+      average(rows.filter((r) => readinessEvidence.has(r.studentId)).map((r) => r.readinessScore))
+    ),
   }))
 
   const assessmentCompletionTrend = last14.map((p) => ({
     ...p,
-    value: average(rows.map((r) => r.assessmentPassRate)),
+    value: average(
+      rows.filter((r) => assessmentEvidence.has(r.studentId)).map((r) => r.assessmentPassRate)
+    ),
   }))
 
   const hoursCompletionTrend = last14.map((p) => ({
@@ -554,8 +575,8 @@ export function buildSchoolAnalyticsSnapshot(inputs: SchoolAnalyticsInputs): Sch
     { label: '80-89%', count: rows.filter((r) => r.overallGrade >= 80 && r.overallGrade < 90).length, colorClass: 'bg-silver' },
     { label: '70-79%', count: rows.filter((r) => r.overallGrade >= 70 && r.overallGrade < 80).length, colorClass: 'bg-warm-bronze' },
     { label: '60-69%', count: rows.filter((r) => r.overallGrade >= 60 && r.overallGrade < 70).length, colorClass: 'bg-warm-bronze' },
-    { label: 'Below 60%', count: rows.filter((r) => r.overallGrade > 0 && r.overallGrade < 60).length, colorClass: 'bg-silver' },
-    { label: 'No Grade', count: rows.filter((r) => r.overallGrade === 0).length, colorClass: 'bg-silver-gray' },
+    { label: 'Below 60%', count: rows.filter((r) => gradeEvidence.has(r.studentId) && r.overallGrade < 60).length, colorClass: 'bg-silver' },
+    { label: 'No Grade', count: rows.filter((r) => !gradeEvidence.has(r.studentId)).length, colorClass: 'bg-silver-gray' },
   ]
 
   const riskDistribution = [
