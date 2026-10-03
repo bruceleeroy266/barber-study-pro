@@ -554,6 +554,7 @@ export interface GradeBreakdown {
 
 export interface StudentGradePerformance {
   studentId: string
+  hasGradeEvidence: boolean
   overallGrade: number
   gradeBreakdown: GradeBreakdown[]
   trendDirection: 'improving' | 'stable' | 'declining'
