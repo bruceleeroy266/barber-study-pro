@@ -22,6 +22,7 @@ import { mapHourLogsFromDb, mapAttendanceRecordsFromDb, mapGradesFromDb, mapGrad
 import { getLastSignInAtMap } from '@/lib/instructor/last-login'
 import { loadAssignedStudentIds } from '@/lib/instructor/assignments'
 import { deriveLearningVsLoginSignals } from '@/lib/instructor/activity-signals'
+import { resolveLastLearningActivityAt } from '@/lib/student-level/activity'
 
 interface RosterStudent extends Profile {
   overallProgress: number
@@ -114,9 +115,11 @@ function computeStudentStats(
         studyStreakDays += 1
       }
     }
-    const lastStudyActivityAt = activity
-      .map((row) => row.last_active_at)
-      .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())[0] || null
+    const lastStudyActivityAt = resolveLastLearningActivityAt({
+      progress,
+      attempts,
+      trustedActivity: activity,
+    })
 
     const canonicalMetrics = calculateCanonicalStudentLearningMetrics({
       userId: student.id,
@@ -131,12 +134,7 @@ function computeStudentStats(
       readiness,
     } = canonicalMetrics
 
-    const lastStudiedDates = progress
-      .map((p) => p.last_studied_at)
-      .filter((d): d is string => !!d)
-      .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
-    const legacyLastStudiedAt = lastStudiedDates[0] || null
-    const lastStudiedAt = lastStudyActivityAt || legacyLastStudiedAt
+    const lastStudiedAt = lastStudyActivityAt
 
     // Two DISTINCT recency signals: learning activity (study work) vs login
     // (account access). They are derived independently and never conflated.
