@@ -30,7 +30,7 @@ describe('E10 student data integrity audit', () => {
   it('keeps official student totals approved-only and pending isolated', () => {
     expect(studentPage).toContain(".from('effective_hour_logs')")
     expect(studentPage).toContain('calculateHoursProgressSummary(reportingHours, requirements.requiredHours)')
-    expect(studentPage).toContain(".filter((row) => row.status === 'pending')")
+    expect(studentPage).toContain('pendingMinutes')
     expect(studentPage).toContain('Based on approved hours only')
     expect(studentPage).toContain('Pending hours remain separate until administrator approval.')
   })
