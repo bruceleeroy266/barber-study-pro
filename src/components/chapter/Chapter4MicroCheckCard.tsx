@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import type { ChapterTheme } from '@/lib/chapter-content'
+import RandomizedMicroCheckChoices from './RandomizedMicroCheckChoices'
 import type {
   Chapter4MicroCheck,
   Chapter4MicroCheckAnswer,
@@ -84,39 +85,20 @@ export default function Chapter4MicroCheckCard({
             <p className="font-medium" style={{ color: theme.text }}>
               {index + 1}. {question.question}
             </p>
-
-            <div className="grid gap-2">
-              {(['a', 'b', 'c', 'd'] as const).map((answerKey) => {
-                const text = question[`answer_${answerKey}`]
-                const locked = !!attempt
-                const active = locked
-                  ? attempt.selected_answer === answerKey
-                  : chosen === answerKey
-
-                return (
-                  <button
-                    key={answerKey}
-                    type="button"
-                    disabled={locked || saving === question.id}
-                    onClick={() =>
-                      setSelected((previous) => ({
-                        ...previous,
-                        [question.id]: answerKey,
-                      }))
-                    }
-                    className="w-full rounded-lg border px-3 py-3 text-left disabled:cursor-default"
-                    style={{
-                      borderColor: active ? theme.primary : theme.border,
-                      background: active ? `${theme.primary}18` : theme.background,
-                      color: theme.text,
-                    }}
-                  >
-                    <span className="font-semibold uppercase mr-2">{answerKey}.</span>
-                    {text}
-                  </button>
-                )
-              })}
-            </div>
+            <RandomizedMicroCheckChoices
+              question={question}
+              chosen={chosen}
+              recordedAnswer={attempt?.selected_answer}
+              locked={!!attempt}
+              disabled={saving === question.id}
+              theme={theme}
+              onSelect={(answerKey) =>
+                setSelected((previous) => ({
+                  ...previous,
+                  [question.id]: answerKey,
+                }))
+              }
+            />
 
             {!attempt && (
               <button
