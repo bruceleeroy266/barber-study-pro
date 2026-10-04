@@ -29,7 +29,7 @@ export const chapter5MicroChecks: readonly Chapter5MicroCheck[] = [
     id:'mc-5-01',afterSectionId:'comb-mastery',conceptFamilyId:'ch5-combs-brushes',title:'Combs & Brushes Check',
     questions:[
       q('mcq-5-001','ch5-combs-brushes','understanding','Which tool choice best fits sectioning and parting?','A tail comb.','A pressing comb.','A razor shaper.','A clipper guard.','a','Chapter 5 identifies the tail comb as a sectioning and parting tool.'),
-      q('mcq-5-002','ch5-combs-brushes','scenario','A comb has a rough, damaged tooth that could catch hair or scratch the client. What is the best response?','Reserve it for services where the comb does not contact the scalp or skin.','Remove it from service and replace it.','Use it only for clipper-over-comb because the clipper reduces direct contact with the damaged tooth.','Smooth the rough edge before the next section and keep using the comb if it no longer catches.','b','Damaged combs should be removed from service rather than used around the client.')
+      q('mcq-5-002','ch5-combs-brushes','scenario','A comb has a rough, damaged tooth that could catch hair or scratch the client. What is the best response?','Reserve it for services with minimal scalp contact.','Remove it from service and replace it.','Use it for clipper-over-comb because the clipper limits direct contact.','Smooth the rough edge and keep using it if it no longer catches.','b','Damaged combs should be removed from service rather than used around the client.')
     ]
   },
   {
@@ -64,7 +64,7 @@ export const chapter5MicroChecks: readonly Chapter5MicroCheck[] = [
     id:'mc-5-06',afterSectionId:'station-setup',conceptFamilyId:'ch5-equipment-safety',title:'Equipment & Tool Safety Check',
     questions:[
       q('mcq-5-011','ch5-equipment-safety','understanding','What is the primary purpose of a neck strip during a haircut service?','To create a barrier between the cape and the client’s skin.','To sharpen shears between sections.','To measure hair length around the neckline.','To hold clipper guards in place.','a','The neck strip functions as a clean barrier between the cape and the client.'),
-      q('mcq-5-012','ch5-equipment-safety','scenario','A workstation has damaged electrical equipment mixed with clean service supplies. What is the strongest response?','Separate the damaged equipment from clean supplies and use it cautiously until the current client is finished.','Remove damaged equipment from service and restore a clean, organized, safe station before proceeding.','Keep the damaged equipment isolated at the back of the station and use it only when necessary.','Explain the condition of the equipment and use it only if the client accepts the risk.','b','Professional tool safety includes equipment condition, clean organization, and removing unsafe tools from service.')
+      q('mcq-5-012','ch5-equipment-safety','scenario','A workstation has damaged electrical equipment mixed with clean service supplies. What is the strongest response?','Separate the damaged equipment from clean supplies and use it cautiously until the current client is finished.','Remove damaged equipment from service and restore a clean, organized, safe station before proceeding.','Keep the damaged equipment isolated and use it when necessary.','Explain the condition and use it if the client accepts the risk.','b','Professional tool safety includes equipment condition, clean organization, and removing unsafe tools from service.')
     ]
   },
 ]
