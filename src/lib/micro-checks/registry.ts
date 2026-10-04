@@ -23,7 +23,8 @@ import type { FourChoiceMicroCheckQuestion, MicroCheckAnswerKey } from './random
 
 export interface RegisteredMicroCheckQuestion extends FourChoiceMicroCheckQuestion {
   id: string
-  conceptFamilyId: string
+  conceptFamilyId?: string
+  conceptId?: string
   difficulty: 'understanding' | 'application' | 'scenario'
   explanation: string
   correctAnswer: MicroCheckAnswerKey
@@ -61,6 +62,7 @@ const chapterMicroCheckRegistry: Readonly<Record<string, readonly RegisteredMicr
 export interface ResolvedRegisteredMicroCheckQuestion {
   chapterId: string
   checkId: string
+  conceptId: string
   question: RegisteredMicroCheckQuestion
 }
 
@@ -74,9 +76,13 @@ export function resolveRegisteredMicroCheckQuestion(
   for (const check of checks) {
     const question = check.questions.find((candidate) => candidate.id === questionId)
     if (question) {
+      const conceptId = question.conceptFamilyId ?? question.conceptId
+      if (!conceptId) return null
+
       return {
         chapterId,
         checkId: check.id,
+        conceptId,
         question,
       }
     }
