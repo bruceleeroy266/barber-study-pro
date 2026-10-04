@@ -248,7 +248,9 @@ describe('C18-5 Chapter 18 micro-check immutable evidence integration', () => {
 
     expect(source).toContain('attemptMap.has(questionId)')
     expect(source).toContain('Lock First Attempt')
-    expect(source).toContain('disabled={locked || saving === question.id}')
+    expect(source).toContain('locked={!!attempt}')
+    expect(source).toContain('disabled={saving === question.id}')
+    expect(source).toContain("import RandomizedMicroCheckChoices from './RandomizedMicroCheckChoices'")
     expect(source).not.toContain('update(')
     expect(source).not.toContain('delete(')
   })
