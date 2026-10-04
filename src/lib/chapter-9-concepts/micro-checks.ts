@@ -45,14 +45,14 @@ export const chapter9MicroChecks: readonly Chapter9MicroCheck[] = [
   {
     id: 'mc-9-01', afterSectionId: 'epidermis-layers', conceptFamilyId: 'ch9-epidermis-skin-barrier', title: 'Subcutaneous tissue & Barrier Check',
     questions: [
-      q('mcq-9-001','ch9-epidermis-skin-barrier','application','A superficial abrasion remains within the epidermis. Which fact best explains why bleeding may not occur until deeper tissue is reached?','The epidermis contains no blood vessels.','The epidermis receives nutrients by diffusion and contains tiny capillaries.','Surface capillaries collapse normally and reopen with deeper damage.','Blood vessels are limited to the deepest epidermal layers.','a','The epidermis is avascular; blood vessels are located in the dermis.'),
+      q('mcq-9-001','ch9-epidermis-skin-barrier','application','A superficial abrasion remains within the epidermis. Which fact best explains why bleeding may not occur until deeper tissue is reached?','The epidermis contains no blood vessels.','Tiny capillaries exist in the epidermis.','Surface capillaries close under normal conditions.','Vessels exist in the deepest epidermal layers.','a','The epidermis is avascular; blood vessels are located in the dermis.'),
       q('mcq-9-002','ch9-epidermis-skin-barrier','understanding','Which epidermal layer contains melanocytes that produce melanin?','Deep epidermis','Stratum lucidum','Stratum germinativum','Stratum granulosum','c','Melanocytes are found in the stratum germinativum, also called the basal cell layer.')
     ],
   },
   {
     id: 'mc-9-02', afterSectionId: 'skin-characteristics', conceptFamilyId: 'ch9-dermis-subcutaneous-support', title: 'Dermis & Support Check',
     questions: [
-      q('mcq-9-003','ch9-dermis-subcutaneous-support','scenario','A question describes the layer containing vessels, nerves, glands, follicles, collagen, and elastin. Which layer is being tested?','Stratum corneum','Dermis','Epidermis','Papillary layer','b','The dermis contains the skin’s vascular, neural, glandular, follicular, and connective-support structures.'),
+      q('mcq-9-003','ch9-dermis-subcutaneous-support','scenario','A question describes the layer containing vessels, nerves, glands, follicles, collagen, and elastin. Which layer is being tested?','Corneum','Dermis','Epidermis','Hypodermis','b','The dermis contains the skin’s vascular, neural, glandular, follicular, and connective-support structures.'),
       q('mcq-9-004','ch9-dermis-subcutaneous-support','application','Aging skin loses both structural strength and recoil. Which pairing best explains those changes?','Keratin—strength; melanin—recoil','Sebum—strength; sweat—recoil','Elastin—strength; collagen—pigment','Collagen—strength; elastin—elasticity','d','Collagen supports strength and structure; elastin supports elasticity and flexibility.')
     ],
   },
