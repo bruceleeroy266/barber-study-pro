@@ -11,7 +11,11 @@ create table if not exists public.chapter_micro_check_remediation_attempts (
   answered_at timestamptz not null default now(),
   created_at timestamptz not null default now(),
   constraint chapter_micro_check_remediation_attempts_once_unique
-    unique (user_id, chapter_id, question_id)
+    unique (user_id, chapter_id, question_id),
+  constraint chapter_micro_check_remediation_requires_initial
+    foreign key (user_id, chapter_id, question_id)
+    references public.chapter_micro_check_attempts (user_id, chapter_id, question_id)
+    on delete cascade
 );
 
 comment on table public.chapter_micro_check_remediation_attempts is
