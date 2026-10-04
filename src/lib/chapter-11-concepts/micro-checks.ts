@@ -71,7 +71,7 @@ export const chapter11MicroChecks: readonly Chapter11MicroCheck[] = [
         'a','Chapter 11 uses condition, texture, density, porosity, elasticity, and scalp findings to guide product selection.'),
       q('mcq-11-004','ch11-analysis-product-selection','scenario',
         'A client has dry, damaged hair. Which product direction best matches Chapter 11?',
-        'Use a clarifying shampoo followed by a lightweight conditioner to remove buildup before adding moisture','Use a pH-balanced cleanser only, since damaged hair should avoid added protein','Use a heavy oil treatment first, then choose shampoo based on how much residue remains','Gentle cleansing with deep moisturizing and protein/moisturizing repair options',
+        'Use a clarifying shampoo followed by a lightweight conditioner to remove buildup before adding moisture','Use a pH-balanced cleanser without added protein, since damaged hair should avoid protein','Use a heavy oil treatment first, then choose shampoo based on how much residue remains','Gentle cleansing with deep moisturizing and protein/moisturizing repair options',
         'd','The Chapter 11 product table pairs dry/damaged hair with gentle cleansing, deep moisturizing, and repair options.'),
     ],
   },
@@ -115,7 +115,7 @@ export const chapter11MicroChecks: readonly Chapter11MicroCheck[] = [
     questions: [
       q('mcq-11-009','ch11-treatment-equipment','application',
         'What may be used as a substitute for a scalp steamer?',
-        'A hot towel or series of hot-towel applications','A hood dryer set to low heat with the scalp covered by a damp towel','A warm mist spray applied continuously while the treatment processes','A series of warm compresses applied only to the hair lengths, not the scalp',
+        'A hot towel or series of hot-towel applications','A hood dryer set to low heat with the scalp covered by a damp towel','A warm mist spray applied continuously while the treatment processes','A series of warm compresses applied to the hair lengths rather than the scalp',
         'a','Chapter 11 states that hot towels may substitute for a scalp steamer.'),
       q('mcq-11-010','ch11-treatment-equipment','scenario',
         'A barber is using an electric massager. Which control set is required?',
