@@ -89,6 +89,36 @@ export async function POST(request: NextRequest) {
   const { question, checkId, chapterId } = resolved
   const admin = createServiceRoleClient()
 
+  const { data: initialAttempt, error: initialError } = await admin
+    .from('chapter_micro_check_attempts')
+    .select('id,is_correct')
+    .eq('user_id', user.id)
+    .eq('chapter_id', chapterId)
+    .eq('question_id', question.id)
+    .maybeSingle()
+
+  if (initialError) {
+    console.error('[Micro-check remediation API] initial lookup failed:', initialError.message)
+    return NextResponse.json(
+      { error: 'Unable to verify first-attempt evidence' },
+      { status: 500 },
+    )
+  }
+
+  if (!initialAttempt) {
+    return NextResponse.json(
+      { error: 'A recorded first attempt is required before remediation' },
+      { status: 409 },
+    )
+  }
+
+  if (initialAttempt.is_correct) {
+    return NextResponse.json(
+      { error: 'Remediation is available only after an incorrect first attempt' },
+      { status: 409 },
+    )
+  }
+
   const payload = {
     user_id: user.id,
     chapter_id: chapterId,
