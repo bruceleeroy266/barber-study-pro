@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import type { ChapterTheme } from '@/lib/chapter-content'
+import RandomizedMicroCheckChoices from './RandomizedMicroCheckChoices'
 import type { Chapter20MicroCheck, Chapter20MicroCheckAnswer } from '@/lib/chapter-20-concepts/micro-checks'
 import type { Chapter20MicroCheckAttemptRow } from '@/lib/chapter-20-concepts/micro-check-persistence'
 import { persistChapter20MicroCheckAttempt } from '@/lib/chapter-20-concepts/micro-check-persistence'
@@ -54,21 +55,20 @@ export default function Chapter20MicroCheckCard({ check, userId, theme, attempts
         return (
           <div key={question.id} className="rounded-xl border p-4 space-y-3" style={{ borderColor: theme.border }}>
             <p className="font-medium" style={{ color: theme.text }}>{index + 1}. {question.question}</p>
-            <div className="grid gap-2">
-              {(['a','b','c','d'] as const).map((answerKey) => {
-                const answerText = question[`answer_${answerKey}`]
-                const locked = !!attempt
-                const active = locked ? attempt.selected_answer === answerKey : chosen === answerKey
-                return (
-                  <button key={answerKey} type="button" disabled={locked || saving === question.id}
-                    onClick={() => setSelected((previous) => ({ ...previous, [question.id]: answerKey }))}
-                    className="w-full rounded-lg border px-3 py-3 text-left disabled:cursor-default"
-                    style={{ borderColor: active ? theme.primary : theme.border, background: active ? `${theme.primary}18` : theme.background, color: theme.text }}>
-                    <span className="font-semibold uppercase mr-2">{answerKey}.</span>{answerText}
-                  </button>
-                )
-              })}
-            </div>
+            <RandomizedMicroCheckChoices
+              question={question}
+              chosen={chosen}
+              recordedAnswer={attempt?.selected_answer}
+              locked={!!attempt}
+              disabled={saving === question.id}
+              theme={theme}
+              onSelect={(answerKey) =>
+                setSelected((previous) => ({
+                  ...previous,
+                  [question.id]: answerKey,
+                }))
+              }
+            />
             {!attempt && (
               <button type="button" disabled={!chosen || saving === question.id} onClick={() => void submit(question.id)}
                 className="rounded-lg px-4 py-2 text-sm font-semibold disabled:opacity-50" style={{ background: theme.primary, color: '#000' }}>
