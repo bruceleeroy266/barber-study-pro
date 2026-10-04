@@ -9,6 +9,7 @@ import {
 } from 'react'
 import {
   Archive,
+  ArrowLeft,
   Inbox,
   Loader2,
   MessageCircle,
@@ -104,12 +105,33 @@ export default function ProductionMessageCenter({
     return threads.filter((thread) => thread.status === 'active')
   }, [filter, threads])
 
-  const counterpartForThread = (thread: ProductionCommunicationThread) => {
-    const counterpart =
+  const counterpartPersonForThread = (
+    thread: ProductionCommunicationThread
+  ) => {
+    const counterpartIdForThread =
       thread.participantOneId === currentUserId
         ? thread.participantTwoId
         : thread.participantOneId
-    return peopleById.get(counterpart)?.name || 'Authorized participant'
+    return peopleById.get(counterpartIdForThread)
+  }
+
+  const counterpartForThread = (thread: ProductionCommunicationThread) =>
+    counterpartPersonForThread(thread)?.name || 'Authorized participant'
+
+  const roleLabel = (role: ProductionMessagingPerson['role'] | undefined) => {
+    if (role === 'instructor') return 'Instructor'
+    if (role === 'school_admin' || role === 'admin') return 'School Admin'
+    if (role === 'apprentice') return 'Apprentice'
+    return 'Student'
+  }
+
+  const returnToInbox = () => {
+    setError(null)
+    setIsComposing(false)
+    setSelectedThread(null)
+    setCounterpartId('')
+    setNewMessageBody('')
+    setReplyBody('')
   }
 
   const replaceThread = (nextThread: ProductionCommunicationThread) => {
@@ -463,12 +485,14 @@ export default function ProductionMessageCenter({
                             </span>
                           ) : null}
                         </div>
-                        <p className="text-sm text-silver truncate mt-0.5">
-                          {thread.subject}
-                        </p>
-                        <p className="text-xs text-silver-gray mt-1">
-                          {formatWhen(thread.lastMessageAt || thread.createdAt)}
-                        </p>
+                        <div className="mt-0.5 flex items-center justify-between gap-3">
+                          <p className="text-sm text-silver truncate">
+                            {roleLabel(counterpartPersonForThread(thread)?.role)}
+                          </p>
+                          <p className="text-xs text-silver-gray shrink-0">
+                            {formatWhen(thread.lastMessageAt || thread.createdAt)}
+                          </p>
+                        </div>
                       </button>
                     </li>
                   )
@@ -487,6 +511,15 @@ export default function ProductionMessageCenter({
               aria-label="New message"
             >
               <div className="p-4 border-b border-graphite">
+                <button
+                  type="button"
+                  onClick={returnToInbox}
+                  disabled={isPending}
+                  className="mb-3 inline-flex min-h-10 items-center gap-2 rounded-lg px-2 text-sm font-medium text-silver hover:bg-graphite/50 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)]"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  Back to conversations
+                </button>
                 <h2 className="text-lg font-semibold text-white">New Message</h2>
                 <p className="text-sm text-silver mt-1">
                   Pick a person you are allowed to message, type your message, then send.
@@ -548,11 +581,7 @@ export default function ProductionMessageCenter({
               <div className="border-t border-graphite p-4 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
                 <button
                   type="button"
-                  onClick={() => {
-                    setIsComposing(false)
-                    setCounterpartId('')
-                    setNewMessageBody('')
-                  }}
+                  onClick={returnToInbox}
                   disabled={isPending}
                   className="min-h-12 rounded-lg border border-graphite px-4 py-2 text-sm font-medium text-silver hover:bg-graphite/50 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)]"
                 >
@@ -576,11 +605,21 @@ export default function ProductionMessageCenter({
             <>
               <div className="p-4 border-b border-graphite flex flex-wrap items-start justify-between gap-3">
                 <div>
+                  <button
+                    type="button"
+                    onClick={returnToInbox}
+                    className="mb-3 inline-flex min-h-10 items-center gap-2 rounded-lg px-2 text-sm font-medium text-silver hover:bg-graphite/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)]"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    Back to conversations
+                  </button>
                   <h2 className="text-lg font-semibold text-white">
                     {counterpartForThread(selectedThread)}
                   </h2>
                   <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-silver">
-                    <span>{selectedThread.subject}</span>
+                    <span>
+                      {roleLabel(counterpartPersonForThread(selectedThread)?.role)}
+                    </span>
                     {selectedThread.status === 'archived' && (
                       <span className="text-silver-gray">Archived</span>
                     )}
