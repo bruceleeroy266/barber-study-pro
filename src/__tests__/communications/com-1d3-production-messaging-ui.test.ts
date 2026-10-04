@@ -32,15 +32,16 @@ describe('COM-1D.3 production messaging UI integration', () => {
     center = fs.readFileSync(PRODUCTION_CENTER, 'utf-8')
   })
 
-  it('replaces the production placeholder for instructor participants with the certified message center', () => {
+  it('uses the certified message center for instructors and school-attached admins', () => {
     expect(instructorPage).toContain('ProductionMessageCenter')
     expect(instructorPage).toContain('loadCommunicationThreads')
-    expect(instructorPage).toContain("instructorProfile.role !== 'instructor'")
+    expect(instructorPage).toContain('resolveAuthorizedMessagingRecipients')
     expect(instructorPage).toContain(
       ".from('student_instructor_assignments')"
     )
-    expect(instructorPage).toContain(".eq('instructor_id', user.id)")
+    expect(instructorPage).toContain(".eq('school_id', instructorProfile.school_id)")
     expect(instructorPage).toContain(".eq('is_active', true)")
+    expect(instructorPage).toContain('School Messaging')
   })
 
   it('replaces the student production placeholder with assigned-instructor messaging only', () => {

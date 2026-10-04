@@ -65,7 +65,10 @@ export default async function StudentMessagesPage() {
     const participantIds = Array.from(
       new Set([
         ...assignedInstructorIds,
-        ...initialThreads.flatMap((thread) => [thread.studentId, thread.instructorId]),
+        ...initialThreads.flatMap((thread) => [
+          thread.participantOneId,
+          thread.participantTwoId,
+        ]),
       ])
     ).filter((id) => id !== user.id)
 
@@ -82,7 +85,9 @@ export default async function StudentMessagesPage() {
 
     const people: ProductionMessagingPerson[] = peopleRows
       .filter((person) =>
-        ['student', 'apprentice', 'instructor'].includes(person.role)
+        ['student', 'apprentice', 'instructor', 'school_admin', 'admin'].includes(
+          person.role
+        )
       )
       .map((person) => ({
         id: person.id,

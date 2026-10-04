@@ -11,18 +11,25 @@ import InstructorMessageDashboard from '@/components/messaging/InstructorMessage
 import ProductionMessageCenter, {
   type ProductionMessagingPerson,
 } from '@/components/messaging/ProductionMessageCenter'
-import ProductionMessagingPlaceholder from '@/components/messaging/ProductionMessagingPlaceholder'
 import BackButton from '@/components/ui/BackButton'
 import { loadCommunicationThreads } from '@/app/communications/actions'
+import { resolveAuthorizedMessagingRecipients } from '@/lib/communications/authorized-recipients'
 
 interface PersonRow {
   id: string
   full_name: string
-  role: string
+  role: Profile['role']
+  school_id: string | null
+  approval_status: string | null
+  is_disabled: boolean | null
 }
 
 interface AssignmentRow {
   student_id: string
+  instructor_id: string
+  school_id: string
+  is_active: boolean
+  ended_at: string | null
 }
 
 export default async function InstructorMessagesPage() {
@@ -53,54 +60,55 @@ export default async function InstructorMessagesPage() {
   const isSafeDemo = demoMode && !supabaseConfigured
 
   if (!isSafeDemo) {
-    // COM-1A explicitly keeps private thread access participant-only.
-    // Admin roles retain their existing route but do not gain private-message browsing.
-    if (instructorProfile.role !== 'instructor') {
-      return (
-        <ProductionMessagingPlaceholder
-          title="Instructor Messaging"
-          backHref="/instructor"
-          backLabel="Back to Instructor Dashboard"
-        />
-      )
-    }
-
     const threadsResult = await loadCommunicationThreads()
     const initialThreads = threadsResult.success ? threadsResult.data : []
 
-    const { data: assignmentRows } = await supabase
-      .from('student_instructor_assignments')
-      .select('student_id')
+    const { data: peopleData } = await supabase
+      .from('profiles')
+      .select('id, full_name, role, school_id, approval_status, is_disabled')
       .eq('school_id', instructorProfile.school_id)
-      .eq('instructor_id', user.id)
+      .neq('id', user.id)
+
+    const { data: assignmentData } = await supabase
+      .from('student_instructor_assignments')
+      .select('student_id, instructor_id, school_id, is_active, ended_at')
+      .eq('school_id', instructorProfile.school_id)
       .eq('is_active', true)
       .is('ended_at', null)
 
-    const assignedStudentIds = (assignmentRows || []).map(
-      (assignment: AssignmentRow) => assignment.student_id
+    const peopleRows = (peopleData || []) as PersonRow[]
+    const assignmentRows = (assignmentData || []) as AssignmentRow[]
+
+    const authorizedRecipients = resolveAuthorizedMessagingRecipients(
+      {
+        id: user.id,
+        role: instructorProfile.role,
+        schoolId: instructorProfile.school_id,
+        approvalStatus: instructorProfile.approval_status,
+        isDisabled: instructorProfile.is_disabled,
+      },
+      peopleRows.map((person) => ({
+        id: person.id,
+        fullName: person.full_name,
+        role: person.role,
+        schoolId: person.school_id,
+        approvalStatus: person.approval_status,
+        isDisabled: person.is_disabled,
+      })),
+      assignmentRows.map((assignment) => ({
+        studentId: assignment.student_id,
+        instructorId: assignment.instructor_id,
+        schoolId: assignment.school_id,
+        isActive: assignment.is_active,
+        endedAt: assignment.ended_at,
+      }))
     )
-
-    const participantIds = Array.from(
-      new Set([
-        ...assignedStudentIds,
-        ...initialThreads.flatMap((thread) => [thread.studentId, thread.instructorId]),
-      ])
-    ).filter((id) => id !== user.id)
-
-    let peopleRows: PersonRow[] = []
-    if (participantIds.length > 0) {
-      const { data } = await supabase
-        .from('profiles')
-        .select('id, full_name, role')
-        .eq('school_id', instructorProfile.school_id)
-        .in('id', participantIds)
-
-      peopleRows = (data || []) as PersonRow[]
-    }
 
     const people: ProductionMessagingPerson[] = peopleRows
       .filter((person) =>
-        ['student', 'apprentice', 'instructor'].includes(person.role)
+        ['student', 'apprentice', 'instructor', 'school_admin', 'admin'].includes(
+          person.role
+        )
       )
       .map((person) => ({
         id: person.id,
@@ -108,27 +116,36 @@ export default async function InstructorMessagesPage() {
         role: person.role as ProductionMessagingPerson['role'],
       }))
 
-    const assignedSet = new Set(assignedStudentIds)
-    const availableCounterparts = people.filter((person) =>
-      assignedSet.has(person.id)
+    const authorizedIds = new Set(
+      authorizedRecipients.map((recipient) => recipient.id)
     )
+    const availableCounterparts = people.filter((person) =>
+      authorizedIds.has(person.id)
+    )
+
+    const adminLike =
+      instructorProfile.role === 'school_admin' || instructorProfile.role === 'admin'
 
     return (
       <div className="min-h-screen bg-[var(--color-background-primary)] p-6 md:p-8">
         <BackButton
-          fallbackHref="/instructor"
-          label="Back to instructor dashboard"
+          fallbackHref={adminLike ? '/admin' : '/instructor'}
+          label={adminLike ? 'Back to admin dashboard' : 'Back to instructor dashboard'}
         />
         <div className="max-w-7xl mx-auto mt-6">
           <ProductionMessageCenter
             currentUserId={user.id}
             currentUserName={instructorProfile.full_name}
-            currentUserRole="instructor"
+            currentUserRole={instructorProfile.role as ProductionMessagingPerson['role']}
             initialThreads={initialThreads}
             people={people}
             availableCounterparts={availableCounterparts}
-            title="Instructor Messaging"
-            subtitle="Private conversations with your assigned students."
+            title={adminLike ? 'School Messaging' : 'Instructor Messaging'}
+            subtitle={
+              adminLike
+                ? 'Private conversations with authorized students and instructors at your school.'
+                : 'Private conversations with assigned students and your school administrators.'
+            }
           />
         </div>
       </div>
