@@ -149,9 +149,9 @@ export const chapter20MicroChecks: readonly Chapter20MicroCheck[] = [
     questions: [
       q('mcq-20-009','ch20-ethical-selling-retailing','LO-20-05','application',
         'A client says a recommended product is too expensive. What is the best response?',
-        'Offer a lower-priced alternative first, then explain the original product only if the client asks why it costs more',
+        'Offer a lower-priced alternative first, then explain the original product if the client asks about the price difference',
         'Acknowledge the concern, explain relevant benefits honestly, and respect the client’s decision',
-        'Emphasize the product’s likely results and offer a satisfaction guarantee to reduce concern about price',
+        'Emphasize the product’s likely results and promise a refund if the client is dissatisfied',
         'Offer a discount immediately rather than discussing whether the product fits the client’s needs',
         'b','Ethical selling is client-centered: clarify needs, explain relevant benefits truthfully, and avoid pressure or unsupported promises.'),
       q('mcq-20-010','ch20-ethical-selling-retailing','LO-20-05','understanding',
