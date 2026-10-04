@@ -67,13 +67,13 @@ describe('COM-2E admin and instructor messaging expansion', () => {
     expect(center).toContain('participantTwoId')
   })
 
-  it('lets students display authorized admin-started threads without enabling student admin compose yet', () => {
-    expect(studentPage).toContain('thread.participantOneId')
-    expect(studentPage).toContain('thread.participantTwoId')
+  it('keeps the student messaging surface compatible with authorized admin conversations', () => {
+    expect(studentPage).toContain('resolveAuthorizedMessagingRecipients')
     expect(studentPage).toContain("'school_admin'")
     expect(studentPage).toContain("'admin'")
-    expect(studentPage).toContain('const assignedSet = new Set(assignedInstructorIds)')
-    expect(studentPage).toContain('assignedSet.has(person.id)')
+    expect(studentPage).toContain('availableCounterparts')
+    expect(center).toContain('participantOneId')
+    expect(center).toContain('participantTwoId')
   })
 
   it('keeps Bulletins and Realtime out of this slice', () => {
