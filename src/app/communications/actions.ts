@@ -70,6 +70,17 @@ export type MessagingRuntimeResult<T> =
   | { success: true; data: T }
   | { success: false; message: string }
 
+function logMessagingFailure(
+  operation: string,
+  error: { code?: string; message?: string } | null | undefined
+) {
+  console.error('[communications]', {
+    operation,
+    code: error?.code || 'unknown',
+    message: error?.message || 'unknown failure',
+  })
+}
+
 async function getMessagingActor(): Promise<
   MessagingRuntimeResult<{ actor: MessagingActor; supabase: Awaited<ReturnType<typeof createClient>> }>
 > {
@@ -172,7 +183,8 @@ export async function openCommunicationThread(
   )
 
   if (authorizationError) {
-    return { success: false, message: 'Unable to verify this recipient.' }
+    logMessagingFailure('authorize_recipient', authorizationError)
+    return { success: false, message: 'Unable to verify this recipient right now.' }
   }
 
   if (!authorized) {
@@ -193,7 +205,8 @@ export async function openCommunicationThread(
     .limit(1)
 
   if (existingError) {
-    return { success: false, message: existingError.message }
+    logMessagingFailure('open_thread_lookup', existingError)
+    return { success: false, message: 'Unable to open this conversation right now.' }
   }
 
   const existingThread = existingThreads?.[0]
@@ -242,9 +255,10 @@ export async function openCommunicationThread(
     .single()
 
   if (createError || !createdThread) {
+    logMessagingFailure('open_thread_create', createError)
     return {
       success: false,
-      message: createError?.message || 'Unable to open this conversation.',
+      message: 'Unable to open this conversation right now.',
     }
   }
 
@@ -273,7 +287,8 @@ export async function loadCommunicationThreads(): Promise<
     .order('created_at', { ascending: false })
 
   if (error) {
-    return { success: false, message: error.message }
+    logMessagingFailure('load_threads', error)
+    return { success: false, message: 'Unable to load conversations right now.' }
   }
 
   const rows = data || []
@@ -288,7 +303,8 @@ export async function loadCommunicationThreads(): Promise<
       .neq('sender_id', actor.id)
 
     if (incomingError) {
-      return { success: false, message: incomingError.message }
+      logMessagingFailure('load_unread_messages', incomingError)
+      return { success: false, message: 'Unable to load unread status right now.' }
     }
 
     const incomingIds = (incoming || []).map(
@@ -304,7 +320,8 @@ export async function loadCommunicationThreads(): Promise<
         .in('message_id', incomingIds)
 
       if (readsError) {
-        return { success: false, message: readsError.message }
+        logMessagingFailure('load_unread_receipts', readsError)
+        return { success: false, message: 'Unable to load unread status right now.' }
       }
 
       for (const read of reads || []) {
@@ -367,7 +384,8 @@ export async function loadCommunicationThreadMessages(
     .order('sent_at', { ascending: true })
 
   if (messageError) {
-    return { success: false, message: messageError.message }
+    logMessagingFailure('load_thread_messages', messageError)
+    return { success: false, message: 'Unable to load this conversation right now.' }
   }
 
   const messageIds = (messages || []).map((message: CommunicationMessageRow) => message.id)
@@ -381,7 +399,8 @@ export async function loadCommunicationThreadMessages(
       .eq('reader_id', actor.id)
 
     if (readsError) {
-      return { success: false, message: readsError.message }
+      logMessagingFailure('load_thread_reads', readsError)
+      return { success: false, message: 'Unable to load message status right now.' }
     }
 
     readByMessage = new Map((reads || []).map((read: CommunicationReadRow) => [read.message_id, read.read_at ?? '']))
@@ -436,9 +455,10 @@ export async function archiveCommunicationThread(
     .single()
 
   if (error || !thread) {
+    logMessagingFailure('archive_thread', error)
     return {
       success: false,
-      message: error?.message || 'Unable to archive this conversation.',
+      message: 'Unable to archive this conversation right now.',
     }
   }
 
@@ -492,7 +512,8 @@ export async function sendCommunicationMessage(
     .single()
 
   if (error || !message) {
-    return { success: false, message: error?.message || 'Unable to send message.' }
+    logMessagingFailure('send_message', error)
+    return { success: false, message: 'Unable to send this message right now.' }
   }
 
   return {
@@ -539,7 +560,8 @@ export async function markCommunicationThreadRead(
     .neq('sender_id', actor.id)
 
   if (messageError) {
-    return { success: false, message: messageError.message }
+    logMessagingFailure('mark_read_load_messages', messageError)
+    return { success: false, message: 'Unable to update read status right now.' }
   }
 
   const incomingIds = (incomingMessages || []).map((message: Pick<CommunicationMessageRow, 'id' | 'sender_id'>) => message.id)
@@ -554,7 +576,8 @@ export async function markCommunicationThreadRead(
     .in('message_id', incomingIds)
 
   if (readsError) {
-    return { success: false, message: readsError.message }
+    logMessagingFailure('mark_read_load_receipts', readsError)
+    return { success: false, message: 'Unable to update read status right now.' }
   }
 
   const existingIds = new Set((existingReads || []).map((read: Pick<CommunicationReadRow, 'message_id'>) => read.message_id))
@@ -572,7 +595,8 @@ export async function markCommunicationThreadRead(
     if (insertError.code === '23505') {
       return { success: true, data: { markedRead: 0 } }
     }
-    return { success: false, message: insertError.message }
+    logMessagingFailure('mark_read_insert_receipts', insertError)
+    return { success: false, message: 'Unable to update read status right now.' }
   }
 
   return { success: true, data: { markedRead: unreadIds.length } }
