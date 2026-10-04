@@ -8,15 +8,23 @@ import ProductionMessageCenter, {
   type ProductionMessagingPerson,
 } from '@/components/messaging/ProductionMessageCenter'
 import { loadCommunicationThreads } from '@/app/communications/actions'
+import { resolveAuthorizedMessagingRecipients } from '@/lib/communications/authorized-recipients'
 
 interface PersonRow {
   id: string
   full_name: string
-  role: string
+  role: Profile['role']
+  school_id: string | null
+  approval_status: string | null
+  is_disabled: boolean | null
 }
 
 interface AssignmentRow {
+  student_id: string
   instructor_id: string
+  school_id: string
+  is_active: boolean
+  ended_at: string | null
 }
 
 export default async function StudentMessagesPage() {
@@ -50,38 +58,47 @@ export default async function StudentMessagesPage() {
     const threadsResult = await loadCommunicationThreads()
     const initialThreads = threadsResult.success ? threadsResult.data : []
 
-    const { data: assignmentRows } = await supabase
+    const { data: peopleData } = await supabase
+      .from('profiles')
+      .select('id, full_name, role, school_id, approval_status, is_disabled')
+      .eq('school_id', studentProfile.school_id)
+      .neq('id', user.id)
+
+    const { data: assignmentData } = await supabase
       .from('student_instructor_assignments')
-      .select('instructor_id')
+      .select('student_id, instructor_id, school_id, is_active, ended_at')
       .eq('school_id', studentProfile.school_id)
       .eq('student_id', user.id)
       .eq('is_active', true)
       .is('ended_at', null)
 
-    const assignedInstructorIds = (assignmentRows || []).map(
-      (assignment: AssignmentRow) => assignment.instructor_id
+    const peopleRows = (peopleData || []) as PersonRow[]
+    const assignmentRows = (assignmentData || []) as AssignmentRow[]
+
+    const authorizedRecipients = resolveAuthorizedMessagingRecipients(
+      {
+        id: user.id,
+        role: studentProfile.role,
+        schoolId: studentProfile.school_id,
+        approvalStatus: studentProfile.approval_status,
+        isDisabled: studentProfile.is_disabled,
+      },
+      peopleRows.map((person) => ({
+        id: person.id,
+        fullName: person.full_name,
+        role: person.role,
+        schoolId: person.school_id,
+        approvalStatus: person.approval_status,
+        isDisabled: person.is_disabled,
+      })),
+      assignmentRows.map((assignment) => ({
+        studentId: assignment.student_id,
+        instructorId: assignment.instructor_id,
+        schoolId: assignment.school_id,
+        isActive: assignment.is_active,
+        endedAt: assignment.ended_at,
+      }))
     )
-
-    const participantIds = Array.from(
-      new Set([
-        ...assignedInstructorIds,
-        ...initialThreads.flatMap((thread) => [
-          thread.participantOneId,
-          thread.participantTwoId,
-        ]),
-      ])
-    ).filter((id) => id !== user.id)
-
-    let peopleRows: PersonRow[] = []
-    if (participantIds.length > 0) {
-      const { data } = await supabase
-        .from('profiles')
-        .select('id, full_name, role')
-        .eq('school_id', studentProfile.school_id)
-        .in('id', participantIds)
-
-      peopleRows = (data || []) as PersonRow[]
-    }
 
     const people: ProductionMessagingPerson[] = peopleRows
       .filter((person) =>
@@ -95,9 +112,11 @@ export default async function StudentMessagesPage() {
         role: person.role as ProductionMessagingPerson['role'],
       }))
 
-    const assignedSet = new Set(assignedInstructorIds)
+    const authorizedIds = new Set(
+      authorizedRecipients.map((recipient) => recipient.id)
+    )
     const availableCounterparts = people.filter((person) =>
-      assignedSet.has(person.id)
+      authorizedIds.has(person.id)
     )
 
     return (
@@ -112,7 +131,7 @@ export default async function StudentMessagesPage() {
           people={people}
           availableCounterparts={availableCounterparts}
           title="Messages"
-          subtitle="Private conversations with your assigned instructor."
+          subtitle="Private conversations with your assigned instructor and authorized school administrators."
         />
       </div>
     )
