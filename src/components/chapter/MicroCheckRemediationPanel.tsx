@@ -42,7 +42,15 @@ export default function MicroCheckRemediationPanel({
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const hint = useMemo(() => resolveMicroCheckHint(question), [question])
+  const hint = useMemo(
+    () =>
+      resolveMicroCheckHint({
+        ...question,
+        conceptFamilyId:
+          question.conceptFamilyId ?? question.conceptId ?? question.id,
+      }),
+    [question],
+  )
 
   useEffect(() => {
     let cancelled = false
