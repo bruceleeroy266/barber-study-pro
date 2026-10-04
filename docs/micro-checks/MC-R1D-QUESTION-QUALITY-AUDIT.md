@@ -202,3 +202,9 @@ No invalid correct-answer keys or duplicate-answer grading ambiguities were dete
 mcq-2-020, mcq-17-004, mcq-17-013, mcq-19-002, mcq-21-005, mcq-21-016.
 
 These items have a correct answer that is uniquely nuanced/professional relative to the distractors and should be repaired first in MC-R1E.
+
+
+## Exact severity inventory
+
+Chapter 1 P1: mcq-1-009, mcq-1-010.  
+Chapter 1 P2: mcq-1-002, mcq-1-008.
