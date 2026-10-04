@@ -52,7 +52,7 @@ export const chapter8MicroChecks: readonly Chapter8MicroCheck[] = [
   {
     id: 'mc-8-02', afterSectionId: 'current-types', conceptFamilyId: 'ch8-current-conversion', title: 'Current & Conversion Check',
     questions: [
-      q('mcq-8-003','ch8-current-conversion','application','A cordless clipper battery stores DC while its charger receives wall AC. What function is required for charging?','AC-to-DC rectification.','The charger converts stored DC into AC before charging.','The grounding path stores part of the incoming voltage.','A fuse regulates and supplies the battery current.','a','Charging a DC battery from an AC supply requires an AC-to-DC rectifying function.'),
+      q('mcq-8-003','ch8-current-conversion','application','A cordless clipper battery stores DC while its charger receives wall AC. What function is required for charging?','AC-to-DC rectification.','The charger converts DC into AC first.','Grounding stores part of the incoming voltage.','A fuse regulates the battery current.','a','Charging a DC battery from an AC supply requires an AC-to-DC rectifying function.'),
       q('mcq-8-004','ch8-current-conversion','understanding','Which statement correctly distinguishes DC and AC?','DC flows one direction; AC reverses direction periodically.','DC is considered direct current only when its voltage remains constant without pulsing.','AC and DC are distinguished mainly by their typical voltage level rather than current direction.','AC reverses direction only after current passes through the connected load.','a','DC and AC are distinguished by current direction, not a universal safety ranking.')
     ],
   },
