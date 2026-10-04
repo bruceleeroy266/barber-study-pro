@@ -157,3 +157,48 @@ MC-R1D is GREEN only when:
 6. Vercel preview is READY on that same exact head.
 
 The next slice after MC-R1D is **MC-R1E — Distractor Hardening**.
+
+
+# MC-R1D Full Audit Results
+
+Questions reviewed: **330**  
+P0: **0**  
+P1: **85**  
+P2: **153**  
+P3: **0**  
+Flagged: **238**  
+Unflagged: **92**  
+Reconciliation: **238 + 92 = 330**
+
+No invalid correct-answer keys or duplicate-answer grading ambiguities were detected. The dominant findings are Q1/Q3/Q4 issues: distractor plausibility, cue-heavy absolute wording, and correct-answer length/specificity imbalance.
+
+| Ch | Q | P1 | P2 | Unflagged |
+|---:|---:|---:|---:|---:|
+|1|10|2|2|6|
+|2|20|4|11|5|
+|3|8|1|4|3|
+|4|12|4|5|3|
+|5|12|3|4|5|
+|6|20|5|12|3|
+|7|23|3|11|9|
+|8|22|10|8|4|
+|9|21|3|9|9|
+|10|19|1|7|11|
+|11|17|4|7|6|
+|12|16|0|13|3|
+|13|16|3|7|6|
+|14|14|5|5|4|
+|15|14|4|9|1|
+|16|16|4|5|7|
+|17|14|10|4|0|
+|18|14|4|7|3|
+|19|14|1|11|2|
+|20|12|3|7|2|
+|21|16|11|5|0|
+|**Total**|**330**|**85**|**153**|**92**|
+
+## High-priority Q2 concept-neighborhood flags
+
+mcq-2-020, mcq-17-004, mcq-17-013, mcq-19-002, mcq-21-005, mcq-21-016.
+
+These items have a correct answer that is uniquely nuanced/professional relative to the distractors and should be repaired first in MC-R1E.
