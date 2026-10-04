@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 import type { ChapterTheme } from '@/lib/chapter-content'
 import RandomizedMicroCheckChoices from './RandomizedMicroCheckChoices'
+import MicroCheckRemediationPanel from './MicroCheckRemediationPanel'
 import type {
   Chapter2MicroCheck,
   Chapter2MicroCheckAnswer,
@@ -123,7 +124,16 @@ export default function Chapter2MicroCheckCard({
                 >
                   {attempt.is_correct ? '✓ Correct' : 'Review this concept'}
                 </p>
-                <p className="mt-1">{question.explanation}</p>
+                {attempt.is_correct && (
+                  <p className="mt-1">{question.explanation}</p>
+                )}
+                {!attempt.is_correct && (
+                  <MicroCheckRemediationPanel
+                    chapterId="ch-2"
+                    question={question}
+                    theme={theme}
+                  />
+                )}
               </div>
             )}
           </div>

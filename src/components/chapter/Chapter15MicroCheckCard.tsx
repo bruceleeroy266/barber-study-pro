@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 import type { ChapterTheme } from '@/lib/chapter-content'
 import RandomizedMicroCheckChoices from './RandomizedMicroCheckChoices'
+import MicroCheckRemediationPanel from './MicroCheckRemediationPanel'
 import type { Chapter15MicroCheck, Chapter15MicroCheckAnswer } from '@/lib/chapter-15-concepts/micro-checks'
 import type { Chapter15MicroCheckAttemptRow } from '@/lib/chapter-15-concepts/micro-check-persistence'
 import { persistChapter15MicroCheckAttempt } from '@/lib/chapter-15-concepts/micro-check-persistence'
@@ -87,7 +88,16 @@ export default function Chapter15MicroCheckCard({ check, userId, theme, attempts
                       ? '⚠ Safety/scope review required'
                       : 'Review this concept'}
                 </p>
-                <p className="mt-1">{question.explanation}</p>
+                {attempt.is_correct && (
+                  <p className="mt-1">{question.explanation}</p>
+                )}
+                {!attempt.is_correct && (
+                  <MicroCheckRemediationPanel
+                    chapterId="ch-15"
+                    question={question}
+                    theme={theme}
+                  />
+                )}
                 {safetyIntervention?.requiresTargetedSafetyReview && (
                   <div className="mt-3 rounded-lg border px-3 py-3" style={{ borderColor: theme.primaryDark, background: theme.background }}>
                     <p className="font-semibold" style={{ color: theme.primary }}>Targeted Safety Review</p>
