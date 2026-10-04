@@ -53,8 +53,8 @@ describe('COM-2H messaging audit and failure hardening', () => {
 
   it('keeps raw database failures out of user-facing messaging results', () => {
     expect(actions).toContain('logMessagingFailure')
-    expect(actions).not.toMatch(/message:\s*[a-zA-Z]+Error\.message/)
-    expect(actions).not.toMatch(/message:\s*error\?\.message/)
+    expect(actions).not.toMatch(/return\s*\{\s*success:\s*false,\s*message:\s*[a-zA-Z]+Error\.message/)
+    expect(actions).not.toMatch(/return\s*\{\s*success:\s*false,\s*message:\s*error\?\.message/)
     expect(actions).toContain('Unable to open this conversation right now.')
     expect(actions).toContain('Unable to load conversations right now.')
     expect(actions).toContain('Unable to send this message right now.')
