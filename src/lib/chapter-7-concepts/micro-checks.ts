@@ -142,7 +142,7 @@ export const chapter7MicroChecks: readonly Chapter7MicroCheck[] = [
     title: 'Cosmetic Preparations Check',
     questions: [
       q('mcq-7-019','ch7-other-preparations','understanding','Which ingredient-purpose pairing is correct?','Glycerin — humectant.','Alum — surfactant.','Petrolatum — oxidizing agent.','Witch hazel — reducing agent.','a','Glycerin is commonly used as a humectant in cosmetic preparations.'),
-      q('mcq-7-020','ch7-other-preparations','application','A barber is choosing between a styling aid, massage cream, astringent, and moisturizer. What should drive the choice?','Service purpose, client condition, formula, and product directions.','Product pH and ingredient strength should drive the choice because they predict performance across preparation types.','Client preference and fragrance should drive the choice when products serve similar cosmetic purposes.','The product category alone should determine selection because each category has a standard use regardless of hair or skin condition.','a','Cosmetic preparations have different purposes; selection should match the service and client.')
+      q('mcq-7-020','ch7-other-preparations','application','A barber is choosing between a styling aid, massage cream, astringent, and moisturizer. What should drive the choice?','Service purpose, client condition, formula, and product directions.','Product pH, ingredient strength, and brand category.','Client fragrance preference, budget, and product texture.','Product category, advertised benefit, and shelf life.','a','Cosmetic preparations have different purposes; selection should match the service and client.')
     ],
   },
   {
