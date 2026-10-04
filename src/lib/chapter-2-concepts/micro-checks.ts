@@ -65,7 +65,7 @@ export const chapter2MicroChecks: readonly Chapter2MicroCheck[] = [
     conceptId: 'C-2-07',
     title: 'Goal Tracking Check',
     questions: [
-      q('mcq-2-003','C-2-07','understanding','Why should a long-term goal be reviewed at regular intervals?','To compare progress with the plan and adjust actions when needed.','To replace the goal every week.','To avoid setting deadlines.','To focus only on the final result.','a','Tracking lets the learner compare actual progress with planned milestones and make adjustments.'),
+      q('mcq-2-003','C-2-07','understanding','Why should a long-term goal be reviewed at regular intervals?','To compare progress with the plan and adjust actions when needed.','To reset milestones whenever progress falls behind the original schedule.','To confirm whether the deadline should be extended before comparing current progress.','To measure the final result while leaving the original action plan unchanged.','a','Tracking lets the learner compare actual progress with planned milestones and make adjustments.'),
       q('mcq-2-004','C-2-07','application','A student wants to finish required training hours by a target month. Which approach best supports that goal?','Break the total into smaller milestones and review actual progress against them.','Wait until the final month to calculate the remaining hours.','Use only a vague intention with no dates.','Change the target whenever a week is difficult.','a','Milestones and regular progress reviews turn a large goal into measurable actions.'),
     ],
   },
@@ -75,7 +75,7 @@ export const chapter2MicroChecks: readonly Chapter2MicroCheck[] = [
     conceptId: 'C-2-08',
     title: 'Time Management Check',
     questions: [
-      q('mcq-2-005','C-2-08','understanding','What is the main purpose of a time-management system?','To direct limited time toward priorities instead of reacting to everything equally.','To keep every minute occupied.','To eliminate all breaks.','To guarantee that every task takes the same amount of time.','a','Time management is about prioritizing and planning limited time, not filling every minute.'),
+      q('mcq-2-005','C-2-08','understanding','What is the main purpose of a time-management system?','To direct limited time toward priorities instead of reacting to everything equally.','To schedule as many tasks as possible so unplanned time is minimized.','To reserve equal blocks of time for each responsibility regardless of priority.','To create a fixed daily schedule that should be followed unless an emergency occurs.','a','Time management is about prioritizing and planning limited time, not filling every minute.'),
       q('mcq-2-006','C-2-08','scenario','A barber is running behind and a walk-in requests immediate service. What is the most professional response?','Give an honest wait estimate and offer a realistic service time or booking option.','Rush the current client to create space.','Promise immediate service even if the estimate is unrealistic.','Ignore the walk-in until the schedule clears.','a','Clear expectations and realistic scheduling protect both service quality and client trust.'),
     ],
   },
@@ -116,7 +116,7 @@ export const chapter2MicroChecks: readonly Chapter2MicroCheck[] = [
     title: 'Professional Ethics Check',
     questions: [
       q('mcq-2-013','C-2-12','understanding','Which behavior best reflects professional ethics?','Being truthful about skill limits and recommending only what serves the client appropriately.','Promising results that are uncertain to secure the sale.','Hiding mistakes when the client is unlikely to notice.','Recommending products mainly because they have the highest price.','a','Professional ethics includes honesty, accountability, and recommendations based on the client’s legitimate needs.'),
-      q('mcq-2-014','C-2-12','scenario','A client requests a service the barber is not confident performing. What is the most ethical response?','Explain the limitation honestly and offer an appropriate referral or alternative.','Attempt it without telling the client.','Guarantee the result to maintain confidence.','Ask another student to complete it without explanation.','a','Honesty about competence protects the client and supports professional trust.'),
+      q('mcq-2-014','C-2-12','scenario','A client requests a service the barber is not confident performing. What is the most ethical response?','Explain the limitation honestly and offer an appropriate referral or alternative.','Explain that the service is unfamiliar, but perform it if the client accepts the risk.','Ask a more experienced coworker to supervise while completing the service yourself.','Offer a modified version of the service that stays within your current skill limits without discussing the limitation.','a','Honesty about competence protects the client and supports professional trust.'),
     ],
   },
   {
