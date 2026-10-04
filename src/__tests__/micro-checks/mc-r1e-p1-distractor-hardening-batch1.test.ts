@@ -43,16 +43,26 @@ const hardened: Record<string, AnswerKey> = {
   'mcq-21-016': 'b',
 }
 
-const banks = [
-  ...chapter2MicroChecks,
-  ...chapter8MicroChecks,
-  ...chapter17MicroChecks,
-  ...chapter19MicroChecks,
-  ...chapter21MicroChecks,
+type TestQuestion = {
+  id: string
+  answer_a: string
+  answer_b: string
+  answer_c: string
+  answer_d: string
+  correctAnswer: AnswerKey
+}
+
+const questions: TestQuestion[] = [
+  ...chapter2MicroChecks.flatMap((check) => check.questions),
+  ...chapter8MicroChecks.flatMap((check) => check.questions),
+  ...chapter17MicroChecks.flatMap((check) => check.questions),
+  ...chapter19MicroChecks.flatMap((check) => check.questions),
+  ...chapter21MicroChecks.flatMap((check) => check.questions),
 ]
 
-const questions = banks.flatMap((check) => check.questions)
-const byId = new Map(questions.map((question) => [question.id, question]))
+const byId = new Map<string, TestQuestion>(
+  questions.map((question) => [question.id, question]),
+)
 
 const cuePattern = /\b(always|never|automatically|completely|guarantee(?:d|s)?|every time|exactly)\b/i
 
