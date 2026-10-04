@@ -87,7 +87,7 @@ export const chapter11MicroChecks: readonly Chapter11MicroCheck[] = [
         'b','Chapter 11 identifies rotary, sliding, and back-and-forth scalp-massage movements.'),
       q('mcq-11-006','ch11-scalp-massage','scenario',
         'While working from behind the ears toward the crown, which movement choice matches the Chapter 11 table?',
-        'Rotary and sliding','Use back-and-forth then rotary movement','Use tapping with light pulling','Use continuous sliding movement',
+        'Rotary and sliding','Use back-and-forth, then rotary','Use tapping with light pull','Use continuous sliding',
         'a','The Chapter 11 massage table assigns rotary and sliding movements to this area.'),
     ],
   },
