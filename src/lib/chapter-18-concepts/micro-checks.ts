@@ -81,11 +81,11 @@ export const chapter18MicroChecks: readonly Chapter18MicroCheck[] = [
     questions: [
       q('mcq-18-005','ch18-color-products','understanding',
         'Which description best fits many demipermanent systems?',
-        'Direct dye with no oxidative component in every case','Oxidative deposit-focused color using a dedicated low-strength developer or activator','Lightener used only off the scalp','Temporary surface color guaranteed to shampoo out once',
+        'Direct-dye deposit color that uses an activator mainly to improve penetration rather than oxidation','Oxidative deposit-focused color using a dedicated low-strength developer or activator','Low-lift oxidative color that uses standard permanent-color developer but is removed sooner','Surface-deposit color that uses a weak developer but is designed to shampoo out within several washes',
         'b','Many demipermanent systems use oxidative dye chemistry with a dedicated low-strength developer or activator. Exact use and longevity remain product-specific.'),
       q('mcq-18-006','ch18-color-products','application',
         'A client asks whether a semipermanent color will always last exactly six to eight shampoos. What is the best response?',
-        'Yes, that is a universal rule','No; longevity varies by formula, hair condition, use, and manufacturer guidance','Only if 20-volume developer is added','Only if the hair is low porosity',
+        'Six to eight shampoos is a reasonable fixed estimate when the hair is healthy and the same brand is used consistently','No; longevity varies by formula, hair condition, use, and manufacturer guidance','Longevity is mainly determined by porosity, so manufacturer guidance matters less once the hair condition is known','Semipermanent color lasts a predictable number of shampoos if no heat or clarifying products are used',
         'b','Semipermanent longevity is not one fixed wash-count rule. Product formula, hair condition, use, and manufacturer claims matter.'),
     ],
   },
@@ -113,7 +113,7 @@ export const chapter18MicroChecks: readonly Chapter18MicroCheck[] = [
     questions: [
       q('mcq-18-009','ch18-application-consultation-procedures','application',
         'A client returns for a lightener retouch with previously lightened mids and ends. Where should fresh lightener generally be placed?',
-        'Apply from scalp to ends every time','Target new growth and avoid unapproved overlap onto previously lightened or sensitized hair','Pull through all lengths during the final minutes','Apply only to the ends',
+        'Apply to new growth first, then refresh mids and ends with the same lightener for the last few minutes if the target level is uniform','Target new growth and avoid unapproved overlap onto previously lightened or sensitized hair','Apply through the previously lightened lengths at a weaker mixture so the whole head processes evenly','Apply to new growth and overlap slightly onto the old lightened area to avoid a visible band',
         'b','Retouches generally target new growth while avoiding unnecessary or unapproved overlap onto previously lightened or sensitized hair.'),
       q('mcq-18-010','ch18-application-consultation-procedures','scenario',
         'A client cannot clearly describe previous home color or chemical services. What is the best consultation response before proceeding?',
@@ -129,7 +129,7 @@ export const chapter18MicroChecks: readonly Chapter18MicroCheck[] = [
     questions: [
       q('mcq-18-011','ch18-correction-gray-porosity','application',
         'Previously lightened, porous lengths are being tinted darker. What is the best first planning step?',
-        'Automatically add 40-volume developer','Use one formula everywhere without analysis','Assess the hair and choose a manufacturer-supported tint-back, filler, or equalization strategy','Always choose a shade exactly two levels lighter',
+        'Choose a low-volume developer and apply the target shade directly because porous hair absorbs pigment quickly','Use the same formula from roots through ends so the final tone develops uniformly','Assess the hair and choose a manufacturer-supported tint-back, filler, or equalization strategy','Select a shade slightly lighter than the target to compensate for the darker result common on porous lengths',
         'c','Tint-back on porous hair may need replacement tone, filler, or equalization, but the correct approach depends on analysis and the product system.'),
       q('mcq-18-012','ch18-correction-gray-porosity','application',
         'A client wants durable gray coverage. What should determine the formulation plan?',
