@@ -38,7 +38,7 @@ const POSITION_REFERENCE_PATTERN =
   /\b(?:first|second|third|fourth)\s+(?:choice|option|answer)\b/i
 
 const DEFAULT_NEUTRAL_HINT =
-  'Review the key rule for this concept and compare each option against that rule.'
+  'Review the key rule for this concept and compare each response against that rule.'
 
 function normalize(value: string): string {
   return value
