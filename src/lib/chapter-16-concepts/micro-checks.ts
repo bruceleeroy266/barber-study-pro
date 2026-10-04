@@ -81,7 +81,7 @@ export const chapter16MicroChecks: readonly Chapter16MicroCheck[] = [
     questions: [
       q('mcq-16-005','ch16-graduated-cut','understanding',
         'What visual effect is most associated with graduation?',
-        'Weight buildup along a design line','Most weight concentrated near the perimeter with little change through the interior','Evenly distributed layers that remove weight rather than build it','A subtle shape change created mainly by perimeter cleanup rather than interior weight control',
+        'Weight buildup along a design line','Most weight concentrated near the perimeter','Evenly distributed layers that remove weight','A subtle shape change created mainly by perimeter cleanup',
         'a','Graduation uses controlled elevation to build and shift weight through a planned area of the haircut.'),
       q('mcq-16-006','ch16-graduated-cut','application',
         'Why are narrow, controlled subsections useful when building a graduated shape?',
@@ -113,7 +113,7 @@ export const chapter16MicroChecks: readonly Chapter16MicroCheck[] = [
     questions: [
       q('mcq-16-009','ch16-long-layer','understanding',
         'What is the primary design goal of long layering?',
-        'Preserve more perimeter length while adding shorter interior layers','Build strong lower weight while keeping the top and sides progressively longer','Create equal-length layers while preserving a longer outline around the perimeter','Preserve the natural fall while adding only slight interior shortening',
+        'Preserve more perimeter length while adding shorter interior layers','Build strong lower weight while keeping the top and sides progressively longer','Create equal-length layers while preserving a longer outline around the perimeter','Preserve natural fall while adding slight interior shortening',
         'a','Long layering keeps more visible length around the perimeter while using higher elevation to create interior movement.'),
       q('mcq-16-010','ch16-long-layer','scenario',
         'A client wants movement but does not want the perimeter to become noticeably shorter. Which approach best supports that goal?',
