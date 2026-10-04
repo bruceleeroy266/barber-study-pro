@@ -157,10 +157,10 @@ export const chapter13MicroChecks: readonly Chapter13MicroCheck[] = [
     questions: [
       q('mcq-13-011','ch13-facial-hair-design','application',
         'What should guide mustache or beard design most directly?',
-        'Start with a standard face-shape design, then adjust only the length to match the client’s maintenance preference',
-        'Choose the design from density and texture first, then adapt facial proportions after the outline is established',
+        'Start with a standard face-shape design, then adjust the length to match the client’s maintenance preference',
+        'Choose the design from density and texture first, then adapt facial proportions after establishing the outline',
         'Client preference, facial proportions, natural growth, density, texture, and maintenance needs',
-        'Use current style trends as the starting point and adjust only when the natural growth pattern prevents the design',
+        'Use current style trends as the starting point and adjust when the natural growth pattern limits the design',
         'c','Design examples are guides; professional design adapts proportion and shape to the individual client.'),
       q('mcq-13-012','ch13-facial-hair-design','scenario',
         'A client wants a much shorter beard. What is the safest first trimming strategy?',
