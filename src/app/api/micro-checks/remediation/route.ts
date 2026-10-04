@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
   }
 
   const selectedAnswer = body.selectedAnswer as MicroCheckAnswerKey
-  const { question, checkId, chapterId } = resolved
+  const { question, checkId, chapterId, conceptId } = resolved
   const admin = createServiceRoleClient()
 
   const { data: initialAttempt, error: initialError } = await admin
@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
     chapter_id: chapterId,
     check_id: checkId,
     question_id: question.id,
-    concept_id: question.conceptFamilyId,
+    concept_id: conceptId,
     difficulty: question.difficulty,
     selected_answer: selectedAnswer,
     is_correct: selectedAnswer === question.correctAnswer,
