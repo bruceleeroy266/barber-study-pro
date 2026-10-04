@@ -49,7 +49,7 @@ export const chapter18MicroChecks: readonly Chapter18MicroCheck[] = [
     questions: [
       q('mcq-18-001','ch18-analysis-structure','application',
         'A client has visibly porous, sensitized mids and ends but healthier new growth. What should happen before choosing one formula for the entire head?',
-        'Use a stronger developer on the porous lengths so the healthier new growth and ends finish together','Analyze the condition differences and use a strand test when appropriate','Treat the hair as one condition if the target is darker because porosity matters mainly during lightening','Use one formula and time if density is consistent, then adjust only if the strand test shows uneven lift',
+        'Use a stronger developer on the porous lengths so the healthier new growth and ends finish together','Analyze the condition differences and use a strand test when appropriate','Treat the hair as one condition when the target is darker','Use one formula and time if density is consistent, then adjust after testing',
         'b','Porosity and integrity can vary across the head. Analyze those differences and use strand testing when appropriate instead of automatically increasing developer strength.'),
       q('mcq-18-002','ch18-analysis-structure','understanding',
         'Which statement best describes elasticity in a haircolor consultation?',
