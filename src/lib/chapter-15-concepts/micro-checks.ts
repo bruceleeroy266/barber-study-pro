@@ -97,11 +97,11 @@ export const chapter15MicroChecks: readonly Chapter15MicroCheck[] = [
     questions: [
       q('mcq-15-007','ch15-system-selection-measurement-template','application',
         'A client needs a system quickly and has common size and color needs. Which option is usually the better starting point?',
-        'A stock system that can be fitted and customized','A custom system, because common sizes and colors still require fabrication to ensure a secure fit.','A custom mold when the client needs a quick result, because precise fitting reduces later adjustment time.','A stock system only after a mold confirms that the client’s head measurements fall within standard sizing.',
+        'A stock system that can be fitted and customized','A custom system because precise fit matters more than speed.','A custom mold because precise fitting can reduce later adjustments.','A stock system after a mold confirms standard sizing.',
         'a','Stock systems are intended for standard size/color needs and can be customized after fitting, while custom systems require additional fabrication time.'),
       q('mcq-15-008','ch15-system-selection-measurement-template','scenario',
         'What is the safest way to record dimensions for a custom order?',
-        'Use visual estimates for minor dimensions and measure only the main length and width.','Use a standard front-to-back orientation and convert the measurements later if the manufacturer requests another format.','Record accurate measurements using the manufacturer’s required format and units','Round small differences to the nearest standard size so the manufacturer can select the closest available base.',
+        'Estimate minor dimensions and measure the main length and width.','Use a standard orientation and convert the measurements later if needed.','Record accurate measurements using the manufacturer’s required format and units','Round small differences to the nearest standard size.',
         'c','Accurate measurement matters, and ordering format/orientation should follow the manufacturer’s instructions.'),
     ],
   },
