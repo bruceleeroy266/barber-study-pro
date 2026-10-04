@@ -342,7 +342,7 @@ export default function ProductionMessageCenter({
   }
 
   const filterButtonClass = (active: boolean) =>
-    `inline-flex min-h-10 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] ${
+    `inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg px-2 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] sm:gap-2 sm:px-3 ${
       active
         ? 'bg-[var(--color-brand-gold)] text-black'
         : 'border border-graphite text-silver hover:bg-graphite/50'
@@ -373,7 +373,10 @@ export default function ProductionMessageCenter({
       )}
 
       <div className="grid grid-cols-1 xl:grid-cols-[340px_minmax(0,1fr)] gap-5 min-h-[620px]">
-        <aside className="bg-charcoal border border-graphite rounded-xl overflow-hidden flex flex-col min-h-[420px] xl:min-h-[620px]">
+        <aside
+          className={`bg-charcoal border border-graphite rounded-xl overflow-hidden flex-col min-h-[420px] xl:min-h-[620px] ${isComposing || selectedThread ? 'hidden xl:flex' : 'flex'}`}
+          aria-label="Conversation list"
+        >
           <div className="p-4 border-b border-graphite space-y-3">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
@@ -388,7 +391,7 @@ export default function ProductionMessageCenter({
                   setIsComposing(true)
                 }}
                 disabled={availableCounterparts.length === 0 || isPending}
-                className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-[var(--color-brand-gold)] px-3 py-2 text-sm font-semibold text-black disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[var(--color-brand-gold)] px-3 py-2 text-sm font-semibold text-black disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
                 <Plus className="w-4 h-4" />
                 New Message
@@ -404,6 +407,8 @@ export default function ProductionMessageCenter({
                 type="button"
                 role="tab"
                 aria-selected={filter === 'inbox'}
+                aria-controls="conversation-filter-panel"
+                id="conversation-filter-inbox"
                 onClick={() => setFilter('inbox')}
                 className={filterButtonClass(filter === 'inbox')}
               >
@@ -414,6 +419,8 @@ export default function ProductionMessageCenter({
                 type="button"
                 role="tab"
                 aria-selected={filter === 'unread'}
+                aria-controls="conversation-filter-panel"
+                id="conversation-filter-unread"
                 onClick={() => setFilter('unread')}
                 className={filterButtonClass(filter === 'unread')}
               >
@@ -429,6 +436,8 @@ export default function ProductionMessageCenter({
                 type="button"
                 role="tab"
                 aria-selected={filter === 'archived'}
+                aria-controls="conversation-filter-panel"
+                id="conversation-filter-archived"
                 onClick={() => setFilter('archived')}
                 className={filterButtonClass(filter === 'archived')}
               >
@@ -443,7 +452,12 @@ export default function ProductionMessageCenter({
             </p>
           </div>
 
-          <div className="flex-1 overflow-y-auto" role="tabpanel">
+          <div
+            id="conversation-filter-panel"
+            className="flex-1 overflow-y-auto"
+            role="tabpanel"
+            aria-labelledby={`conversation-filter-${filter}`}
+          >
             {visibleThreads.length === 0 ? (
               <div className="p-5 text-sm text-silver-gray">
                 {filter === 'unread'
@@ -503,7 +517,10 @@ export default function ProductionMessageCenter({
 
         </aside>
 
-        <section className="bg-charcoal border border-graphite rounded-xl overflow-hidden flex flex-col min-h-[520px] xl:min-h-[620px]">
+        <section
+          className={`bg-charcoal border border-graphite rounded-xl overflow-hidden flex-col min-h-[520px] xl:min-h-[620px] ${isComposing || selectedThread ? 'flex' : 'hidden xl:flex'}`}
+          aria-label={isComposing ? 'New message' : selectedThread ? 'Conversation' : 'Conversation details'}
+        >
           {isComposing ? (
             <form
               onSubmit={handleNewMessageSend}
@@ -515,7 +532,7 @@ export default function ProductionMessageCenter({
                   type="button"
                   onClick={returnToInbox}
                   disabled={isPending}
-                  className="mb-3 inline-flex min-h-10 items-center gap-2 rounded-lg px-2 text-sm font-medium text-silver hover:bg-graphite/50 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)]"
+                  className="mb-3 inline-flex min-h-11 items-center gap-2 rounded-lg px-2 text-sm font-medium text-silver hover:bg-graphite/50 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)]"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   Back to conversations
@@ -608,7 +625,7 @@ export default function ProductionMessageCenter({
                   <button
                     type="button"
                     onClick={returnToInbox}
-                    className="mb-3 inline-flex min-h-10 items-center gap-2 rounded-lg px-2 text-sm font-medium text-silver hover:bg-graphite/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)]"
+                    className="mb-3 inline-flex min-h-11 items-center gap-2 rounded-lg px-2 text-sm font-medium text-silver hover:bg-graphite/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)]"
                   >
                     <ArrowLeft className="w-4 h-4" />
                     Back to conversations
@@ -632,7 +649,7 @@ export default function ProductionMessageCenter({
                       type="button"
                       onClick={handleArchive}
                       disabled={isPending}
-                      className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-graphite px-3 py-2 text-sm text-silver hover:bg-graphite/50 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)]"
+                      className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-graphite px-3 py-2 text-sm text-silver hover:bg-graphite/50 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)]"
                     >
                       <Archive className="w-4 h-4" />
                       Archive
