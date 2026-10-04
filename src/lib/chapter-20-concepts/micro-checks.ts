@@ -57,7 +57,7 @@ export const chapter20MicroChecks: readonly Chapter20MicroCheck[] = [
     questions: [
       q('mcq-20-001','ch20-professional-transition-workplace-expectations','LO-20-01','application',
         'A barber has a personal event during a scheduled shift with booked clients. What is the strongest professional response?',
-        'Arrange personal plans around the shift and notify the shop only if coverage becomes impossible',
+        'Arrange personal plans around the shift and notify the shop if coverage fails',
         'Follow the shop’s call-off or schedule-change process early and protect client commitments when possible',
         'Secure a coworker’s agreement to cover and notify management afterward if the shift is fully handled',
         'Wait until the day of the shift to see whether appointments cancel before requesting a change',
