@@ -81,7 +81,7 @@ export const chapter14MicroChecks: readonly Chapter14MicroCheck[] = [
     questions: [
       q('mcq-14-005','ch14-cutting-geometry-guides','understanding',
         'What does a traveling guide do?',
-        'Stays in the original section while later sections are directed back to it','Moves with each newly cut section','Moves along the perimeter while the interior is cut from a stationary reference','Moves with each clipper section but remains fixed during shear cutting',
+        'Stays in one section while later sections are directed back','Moves with each newly cut section','Moves along the perimeter while the interior stays on a stationary guide','Moves with clipper sections but stays fixed during shear cutting',
         'b','A traveling guide progresses along the head shape so each newly cut section guides the next.'),
       q('mcq-14-006','ch14-cutting-geometry-guides','scenario',
         'A barber wants to verify a section cut in one direction. Which action best represents cross-checking?',
