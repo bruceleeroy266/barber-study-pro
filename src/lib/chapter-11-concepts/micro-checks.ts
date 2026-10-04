@@ -51,7 +51,7 @@ export const chapter11MicroChecks: readonly Chapter11MicroCheck[] = [
     questions: [
       q('mcq-11-001','ch11-shampoo-draping-service','application',
         'A client is receiving a wet shampoo service. Which draping choice best matches Chapter 11?',
-        'Use a dry cape with a fresh neck strip if the client’s clothing stays protected','Use a waterproof shampoo cape','Use minimal draping for a quick shampoo when the client’s clothing is unlikely to get wet','Use a neck strip and towel combination without a waterproof cape',
+        'Use a dry cape and fresh neck strip','Use a waterproof shampoo cape','Use minimal draping for a quick shampoo','Use a neck strip and towel instead of a waterproof cape',
         'b','Chapter 11 identifies a waterproof shampoo cape for wet or chemical services.'),
       q('mcq-11-002','ch11-shampoo-draping-service','scenario',
         'A wheelchair-bound client is uncomfortable in the usual shampoo position. What should the barber do?',
@@ -87,7 +87,7 @@ export const chapter11MicroChecks: readonly Chapter11MicroCheck[] = [
         'b','Chapter 11 identifies rotary, sliding, and back-and-forth scalp-massage movements.'),
       q('mcq-11-006','ch11-scalp-massage','scenario',
         'While working from behind the ears toward the crown, which movement choice matches the Chapter 11 table?',
-        'Rotary and sliding','Use back-and-forth movement first, then rotary movement near the crown','Use tapping with light pulling to stimulate the area behind the ears','Use a continuous sliding movement without adding rotary motion',
+        'Rotary and sliding','Use back-and-forth movement followed by rotary movement','Use tapping with light pulling behind the ears','Use continuous sliding without rotary motion',
         'a','The Chapter 11 massage table assigns rotary and sliding movements to this area.'),
     ],
   },
