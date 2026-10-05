@@ -137,7 +137,14 @@ export default async function SchoolConfigurationPage({ searchParams }: SchoolCo
       },
       branding: {
         ...savedConfig.branding,
-        secondaryColor: savedConfig.branding.secondaryColor ?? 'var(--color-brand-graphite)',
+        primaryColor:
+          /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(savedConfig.branding.primaryColor)
+            ? savedConfig.branding.primaryColor
+            : '#D4AF37',
+        secondaryColor:
+          /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(savedConfig.branding.secondaryColor ?? '')
+            ? savedConfig.branding.secondaryColor
+            : '#1F2937',
       },
       studentDefaults: savedConfig.studentDefaults ?? {
         passingPercentage: 70,
