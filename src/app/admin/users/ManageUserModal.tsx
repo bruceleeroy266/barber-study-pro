@@ -13,6 +13,7 @@ import {
   resetUserPassword,
   setUserSchoolMetricsInclusion,
   toggleUserDisabled,
+  updateUserIdentity,
   updateUserStatus,
   type UserListItem,
 } from './actions'
@@ -36,6 +37,7 @@ type Confirmation =
   | { kind: 'status'; from: string; to: string }
   | { kind: 'disabled'; from: string; to: string }
   | { kind: 'metrics'; from: string; to: string }
+  | { kind: 'identity'; from: string; to: string }
   | null
 
 interface Props {
@@ -69,6 +71,15 @@ export default function ManageUserModal({
   const [instructorOptions, setInstructorOptions] = useState<Array<{ id: string; full_name: string }>>([])
   const [instructorDraft, setInstructorDraft] = useState<string>('')
   const [assignmentLoadedFor, setAssignmentLoadedFor] = useState<string | null>(null)
+  const [fullNameDraft, setFullNameDraft] = useState('')
+  const [emailDraft, setEmailDraft] = useState('')
+
+  useEffect(() => {
+    setFullNameDraft(user?.full_name ?? '')
+    setEmailDraft(user?.email ?? '')
+    setConfirmation(null)
+    setLocalError(null)
+  }, [user])
 
   useEffect(() => {
     let cancelled = false
@@ -171,6 +182,18 @@ export default function ManageUserModal({
       return
     }
 
+    if (confirmation.kind === 'identity') {
+      await runAction(
+        `${managedUser.id}:identity`,
+        () => updateUserIdentity(managedUser.id, {
+          full_name: fullNameDraft,
+          email: emailDraft,
+        }),
+        'User name and login email updated'
+      )
+      return
+    }
+
     if (confirmation.kind === 'metrics') {
       const nextValue = managedUser.include_in_school_metrics === false
       await runAction(
@@ -191,8 +214,17 @@ export default function ManageUserModal({
   }
 
   const confirmationLabel = confirmation
-    ? `Change ${confirmation.kind} from ${confirmation.from} to ${confirmation.to}?`
+    ? confirmation.kind === 'identity'
+      ? 'Save these identity changes?'
+      : `Change ${confirmation.kind} from ${confirmation.from} to ${confirmation.to}?`
     : ''
+
+  const normalizedIdentityDraftEmail = emailDraft.trim().toLowerCase()
+  const identityChanged =
+    fullNameDraft.trim() !== managedUser.full_name.trim() ||
+    normalizedIdentityDraftEmail !== managedUser.email.trim().toLowerCase()
+  const emailChanged =
+    normalizedIdentityDraftEmail !== managedUser.email.trim().toLowerCase()
 
   return (
     <Modal
@@ -225,11 +257,72 @@ export default function ManageUserModal({
           </div>
         )}
 
+        <section className="space-y-3">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">Identity</h3>
+          <p className="text-sm text-[var(--color-text-secondary)]">
+            Correct the user&apos;s display name or login email. Passwords are never shown here; use Send setup link for credential recovery.
+          </p>
+          <label className="block text-sm text-[var(--color-text-muted)]">
+            Full name
+            <input
+              type="text"
+              value={fullNameDraft}
+              maxLength={200}
+              onChange={(event) => {
+                setFullNameDraft(event.target.value)
+                setConfirmation(null)
+              }}
+              className="mt-1 min-h-11 w-full rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-background-primary)] px-3 py-2 text-white"
+            />
+          </label>
+          <label className="block text-sm text-[var(--color-text-muted)]">
+            Login email
+            <input
+              type="email"
+              value={emailDraft}
+              onChange={(event) => {
+                setEmailDraft(event.target.value)
+                setConfirmation(null)
+              }}
+              className="mt-1 min-h-11 w-full rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-background-primary)] px-3 py-2 text-white"
+            />
+          </label>
+          {emailChanged && (
+            <div className="rounded-lg border border-[var(--color-brand-gold)]/40 bg-[var(--color-brand-gold)]/10 p-3">
+              <p className="text-sm font-medium text-white">Login email will change</p>
+              <p className="mt-1 text-xs text-[var(--color-text-muted)]">
+                The user will sign in with the new email. Their account ID, school data, progress, and onboarding history stay attached to the same account.
+              </p>
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={() =>
+              setConfirmation({
+                kind: 'identity',
+                from: `${managedUser.full_name} <${managedUser.email}>`,
+                to: `${fullNameDraft.trim()} <${normalizedIdentityDraftEmail}>`,
+              })
+            }
+            disabled={
+              !!pendingKey ||
+              !identityChanged ||
+              !fullNameDraft.trim() ||
+              !normalizedIdentityDraftEmail
+            }
+            className="min-h-11 w-full rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 px-3 py-2 text-sm text-[var(--color-brand-gold)] disabled:opacity-40"
+          >
+            Review identity change
+          </button>
+        </section>
+
         {confirmation && (
           <div className="rounded-lg border border-[var(--color-brand-gold)]/40 bg-[var(--color-brand-gold)]/10 p-4">
             <p className="text-sm font-medium text-white">{confirmationLabel}</p>
             <p className="mt-1 text-xs text-[var(--color-text-muted)]">
-              Nothing changes until you confirm this action.
+              {confirmation.kind === 'identity' && emailChanged
+                ? 'This changes the user’s login email immediately. Nothing changes until you confirm.'
+                : 'Nothing changes until you confirm this action.'}
             </p>
             <div className="mt-3 flex gap-2">
               <button
