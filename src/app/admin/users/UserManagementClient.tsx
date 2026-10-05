@@ -729,6 +729,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                 <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Role</th>
                 <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">School</th>
                 <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Instructor</th>
+                <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Metrics</th>
                 <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Status</th>
                 <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Disabled</th>
                 <th scope="col" className="px-4 py-3 text-sm font-medium text-[var(--color-text-muted)]">Password Reset</th>
@@ -753,6 +754,19 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                     {user.role === 'student' || user.role === 'apprentice'
                       ? user.assigned_instructor_name ?? 'Unassigned'
                       : '—'}
+                  </td>
+                  <td className="px-4 py-3">
+                    {user.role === 'student' || user.role === 'apprentice' ? (
+                      <span className={`inline-flex rounded px-2 py-1 text-xs font-medium ${
+                        user.include_in_school_metrics === false
+                          ? 'border border-warm-bronze/30 bg-warm-bronze/10 text-warm-bronze'
+                          : 'border border-gold/30 bg-gold/10 text-gold'
+                      }`}>
+                        {user.include_in_school_metrics === false ? 'Excluded' : 'Included'}
+                      </span>
+                    ) : (
+                      <span className="text-[var(--color-text-muted)]">—</span>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-[var(--color-text-secondary)]">
                     {APPROVAL_STATUSES.find((status) => status.value === user.approval_status)?.label ?? user.approval_status}
