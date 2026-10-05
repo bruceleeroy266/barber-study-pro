@@ -160,6 +160,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
         role: String(form.get('role') || 'student') as AppRole,
         school_id: String(form.get('school_id') || '') || null,
         approval_status: String(form.get('approval_status') || 'pending') as 'pending' | 'approved' | 'rejected',
+        include_in_school_metrics: String(form.get('include_in_school_metrics') ?? 'true') !== 'false',
       })
 
       if (result.success) {
@@ -221,6 +222,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
         role: String(form.get('role') || 'student') as AppRole,
         school_id: String(form.get('school_id') || '') || null,
         approval_status: String(form.get('approval_status') || 'pending') as 'pending' | 'approved' | 'rejected',
+        include_in_school_metrics: String(form.get('include_in_school_metrics') ?? 'true') !== 'false',
       })
 
       if (result.success) {
@@ -548,6 +550,23 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                 {roleRequiresSchool(createRole) ? 'A school is required for this role.' : 'School assignment is optional for this role.'}
               </p>
             </div>
+            {(createRole === 'student' || createRole === 'apprentice') && (
+              <div>
+                <label htmlFor="create-school-metrics" className="block text-sm text-[var(--color-text-muted)] mb-1">School Metrics</label>
+                <select
+                  id="create-school-metrics"
+                  name="include_in_school_metrics"
+                  defaultValue="true"
+                  className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                >
+                  <option value="true">Included — counts toward school/class performance</option>
+                  <option value="false">Excluded — individual data stays visible, does not affect aggregates</option>
+                </select>
+                <p className="text-xs text-[var(--color-text-muted)] mt-1">
+                  Use Excluded for supplemental or cross-program learners, such as cosmetology students in a barber pilot.
+                </p>
+              </div>
+            )}
             <div>
               <label htmlFor="create-approval-status" className="block text-sm text-[var(--color-text-muted)] mb-1">Approval status</label>
               <select
@@ -652,6 +671,23 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
                 {roleRequiresSchool(inviteRole) ? 'A school is required for this role.' : 'School assignment is optional for this role.'}
               </p>
             </div>
+            {(inviteRole === 'student' || inviteRole === 'apprentice') && (
+              <div>
+                <label htmlFor="invite-school-metrics" className="block text-sm text-[var(--color-text-muted)] mb-1">School Metrics</label>
+                <select
+                  id="invite-school-metrics"
+                  name="include_in_school_metrics"
+                  defaultValue="true"
+                  className="min-h-11 w-full bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[var(--color-brand-gold)]"
+                >
+                  <option value="true">Included — counts toward school/class performance</option>
+                  <option value="false">Excluded — individual data stays visible, does not affect aggregates</option>
+                </select>
+                <p className="text-xs text-[var(--color-text-muted)] mt-1">
+                  Use Excluded for supplemental or cross-program learners, such as cosmetology students in a barber pilot.
+                </p>
+              </div>
+            )}
             <div>
               <label htmlFor="invite-approval-status" className="block text-sm text-[var(--color-text-muted)] mb-1">Approval status</label>
               <select

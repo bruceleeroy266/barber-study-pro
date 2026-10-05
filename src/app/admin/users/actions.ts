@@ -57,6 +57,7 @@ interface UserFormData {
   role: AppRole
   school_id: string | null
   approval_status: 'pending' | 'approved' | 'rejected'
+  include_in_school_metrics?: boolean
 }
 
 export interface InviteUserFormData {
@@ -65,9 +66,17 @@ export interface InviteUserFormData {
   role: AppRole
   school_id: string | null
   approval_status: 'pending' | 'approved' | 'rejected'
+  include_in_school_metrics?: boolean
 }
 
 const MANAGEABLE_ROLES: AppRole[] = ['student', 'instructor', 'apprentice', 'admin', 'school_admin']
+
+function resolveSchoolMetricsInclusion(role: AppRole, requested?: boolean): boolean {
+  // Only learners participate in the school-metrics inclusion contract.
+  // Omitted values and all non-learner roles remain included by default.
+  if (role !== 'student' && role !== 'apprentice') return true
+  return requested !== false
+}
 
 /**
  * Creates a domain record (student or instructor) for a user profile.
@@ -775,7 +784,10 @@ export async function createUser(formData: UserFormData): Promise<ActionResult<{
       school_id: formData.school_id,
       approval_status: formData.approval_status,
       is_disabled: false,
-      include_in_school_metrics: true,
+      include_in_school_metrics: resolveSchoolMetricsInclusion(
+        formData.role,
+        formData.include_in_school_metrics
+      ),
       requires_password_change: true,
     },
     { onConflict: 'id' }
@@ -811,6 +823,10 @@ export async function createUser(formData: UserFormData): Promise<ActionResult<{
       role: formData.role,
       school_id: formData.school_id,
       approval_status: formData.approval_status,
+      include_in_school_metrics: resolveSchoolMetricsInclusion(
+        formData.role,
+        formData.include_in_school_metrics
+      ),
       requires_password_change: true,
     },
     formData.school_id
@@ -1182,6 +1198,10 @@ export async function inviteUser(formData: InviteUserFormData): Promise<ActionRe
         school_id: formData.school_id,
         approval_status: formData.approval_status,
         is_disabled: false,
+        include_in_school_metrics: resolveSchoolMetricsInclusion(
+          formData.role,
+          formData.include_in_school_metrics
+        ),
         requires_password_change: false,
       },
       { onConflict: 'id' }
@@ -1238,6 +1258,10 @@ export async function inviteUser(formData: InviteUserFormData): Promise<ActionRe
       role: formData.role,
       school_id: formData.school_id,
       approval_status: formData.approval_status,
+      include_in_school_metrics: resolveSchoolMetricsInclusion(
+        formData.role,
+        formData.include_in_school_metrics
+      ),
       redirect_to: redirectTo,
     },
     formData.school_id
