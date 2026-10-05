@@ -6,7 +6,7 @@ import {
   reduceMicroCheckAttempt,
   type MicroCheckAttemptSnapshot,
 } from '@/lib/micro-checks/attempt-state'
-import { resolveMicroCheckHint } from '@/lib/micro-checks/hints'
+import { buildMicroCheckCoverageHint } from '@/lib/micro-checks/hint-content'
 import type { MicroCheckAnswerKey } from '@/lib/micro-checks/randomization'
 import type { RegisteredMicroCheckQuestion } from '@/lib/micro-checks/registry'
 import RandomizedMicroCheckChoices from './RandomizedMicroCheckChoices'
@@ -44,7 +44,7 @@ export default function MicroCheckRemediationPanel({
 
   const hint = useMemo(
     () =>
-      resolveMicroCheckHint({
+      buildMicroCheckCoverageHint({
         ...question,
         conceptFamilyId:
           question.conceptFamilyId ?? question.conceptId ?? question.id,
