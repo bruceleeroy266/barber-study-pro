@@ -243,6 +243,19 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
     instructorAssignments,
   }
 
+  const metricStudents = students.filter((student) => student.include_in_school_metrics !== false)
+  const metricStudentIds = new Set(metricStudents.map((student) => student.id))
+  const metricComplianceInputs = {
+    students: metricStudents,
+    attendanceRecords: attendanceRecords.filter((record) => metricStudentIds.has(record.userId)),
+    hourLogs: hourLogs.filter((record) => metricStudentIds.has(record.user_id)),
+    quizAttempts: quizAttempts.filter((record) => metricStudentIds.has(record.user_id)),
+    progress: progress.filter((record) => metricStudentIds.has(record.user_id)),
+    grades: grades.filter((record) => metricStudentIds.has(record.studentId)),
+    gradeCategories,
+    assessments: assessments.filter((record) => metricStudentIds.has(record.studentId)),
+  }
+
   const metrics = buildSchoolOverviewMetrics(inputs)
   const health = buildSchoolHealthScore(inputs)
   const studentRows = buildStudentPerformanceRows(inputs)
@@ -273,76 +286,29 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
     })
   )
 
-  const complianceReport = generateComplianceReport('school_compliance', {
-    students,
-    attendanceRecords,
-    hourLogs,
-    quizAttempts,
-    progress,
-    grades,
-    gradeCategories,
-    assessments,
-  }, thresholdsByStudentId)
+  const metricStudentCompliances = studentCompliances.filter((compliance) =>
+    metricStudentIds.has(compliance.studentId)
+  )
+  const complianceReport = generateComplianceReport(
+    'school_compliance',
+    metricComplianceInputs,
+    thresholdsByStudentId
+  )
 
   const avgComplianceScore =
-    studentCompliances.length > 0
-      ? Math.round(studentCompliances.reduce((sum, c) => sum + c.complianceScore.score, 0) / studentCompliances.length)
+    metricStudentCompliances.length > 0
+      ? Math.round(metricStudentCompliances.reduce((sum, c) => sum + c.complianceScore.score, 0) / metricStudentCompliances.length)
       : 0
-  const eligibleStudents = studentCompliances.filter((c) => c.boardEligibility.status === 'eligible').length
-  const nearEligibleStudents = studentCompliances.filter((c) => c.boardEligibility.status === 'near_eligible').length
-  const complianceAtRisk = studentCompliances.filter((c) => c.complianceScore.score < 70).length
+  const eligibleStudents = metricStudentCompliances.filter((c) => c.boardEligibility.status === 'eligible').length
+  const nearEligibleStudents = metricStudentCompliances.filter((c) => c.boardEligibility.status === 'near_eligible').length
+  const complianceAtRisk = metricStudentCompliances.filter((c) => c.complianceScore.score < 70).length
 
   const complianceReports = {
-    student_compliance: generateComplianceReport('student_compliance', {
-      students,
-      attendanceRecords,
-      hourLogs,
-      quizAttempts,
-      progress,
-      grades,
-      gradeCategories,
-      assessments,
-    }, thresholdsByStudentId),
-    graduation_readiness: generateComplianceReport('graduation_readiness', {
-      students,
-      attendanceRecords,
-      hourLogs,
-      quizAttempts,
-      progress,
-      grades,
-      gradeCategories,
-      assessments,
-    }, thresholdsByStudentId),
-    board_eligibility: generateComplianceReport('board_eligibility', {
-      students,
-      attendanceRecords,
-      hourLogs,
-      quizAttempts,
-      progress,
-      grades,
-      gradeCategories,
-      assessments,
-    }, thresholdsByStudentId),
-    instructor_compliance: generateComplianceReport('instructor_compliance', {
-      students,
-      attendanceRecords,
-      hourLogs,
-      quizAttempts,
-      progress,
-      grades,
-      gradeCategories,
-      assessments,
-    }, thresholdsByStudentId),
-    school_compliance: generateComplianceReport('school_compliance', {
-      students,
-      attendanceRecords,
-      hourLogs,
-      quizAttempts,
-      progress,
-      grades,
-      gradeCategories,
-      assessments,
-    }, thresholdsByStudentId),
+    student_compliance: generateComplianceReport('student_compliance', metricComplianceInputs, thresholdsByStudentId),
+    graduation_readiness: generateComplianceReport('graduation_readiness', metricComplianceInputs, thresholdsByStudentId),
+    board_eligibility: generateComplianceReport('board_eligibility', metricComplianceInputs, thresholdsByStudentId),
+    instructor_compliance: generateComplianceReport('instructor_compliance', metricComplianceInputs, thresholdsByStudentId),
+    school_compliance: generateComplianceReport('school_compliance', metricComplianceInputs, thresholdsByStudentId),
   }
 
   return (
