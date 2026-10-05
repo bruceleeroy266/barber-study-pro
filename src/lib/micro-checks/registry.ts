@@ -94,3 +94,32 @@ export function resolveRegisteredMicroCheckQuestion(
 export function registeredMicroCheckChapterIds(): readonly string[] {
   return Object.keys(chapterMicroCheckRegistry)
 }
+
+
+export interface RegisteredMicroCheckQuestionEntry {
+  chapterId: string
+  checkId: string
+  conceptId: string
+  question: RegisteredMicroCheckQuestion
+}
+
+export function registeredMicroCheckQuestions(): readonly RegisteredMicroCheckQuestionEntry[] {
+  const entries: RegisteredMicroCheckQuestionEntry[] = []
+
+  for (const [chapterId, checks] of Object.entries(chapterMicroCheckRegistry)) {
+    for (const check of checks) {
+      for (const question of check.questions) {
+        const conceptId = question.conceptFamilyId ?? question.conceptId
+        if (!conceptId) continue
+        entries.push({
+          chapterId,
+          checkId: check.id,
+          conceptId,
+          question,
+        })
+      }
+    }
+  }
+
+  return entries
+}
