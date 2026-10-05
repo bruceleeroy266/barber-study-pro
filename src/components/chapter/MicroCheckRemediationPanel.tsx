@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ChapterTheme } from '@/lib/chapter-content'
 import {
   reduceMicroCheckAttempt,
@@ -41,6 +41,8 @@ export default function MicroCheckRemediationPanel({
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const retryRegionRef = useRef<HTMLDivElement | null>(null)
+  const completionRef = useRef<HTMLDivElement | null>(null)
 
   const hint = useMemo(
     () =>
@@ -115,6 +117,15 @@ export default function MicroCheckRemediationPanel({
     )
   }
 
+  useEffect(() => {
+    if (snapshot.state === 'remediation_active') {
+      retryRegionRef.current?.focus()
+    }
+    if (snapshot.state === 'remediation_complete') {
+      completionRef.current?.focus()
+    }
+  }, [snapshot.state])
+
   const submitRetry = async () => {
     if (
       snapshot.state !== 'remediation_active' ||
@@ -167,7 +178,12 @@ export default function MicroCheckRemediationPanel({
 
   if (loading) {
     return (
-      <p className="mt-3 text-sm" style={{ color: theme.textMuted }}>
+      <p
+        className="mt-3 text-sm"
+        role="status"
+        aria-live="polite"
+        style={{ color: theme.textMuted }}
+      >
         Checking retry status…
       </p>
     )
@@ -176,7 +192,11 @@ export default function MicroCheckRemediationPanel({
   if (snapshot.state === 'remediation_complete') {
     return (
       <div
-        className="mt-3 rounded-lg border px-3 py-3 text-sm"
+        ref={completionRef}
+        tabIndex={-1}
+        role="status"
+        aria-live="polite"
+        className="mt-3 rounded-lg border px-3 py-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         style={{ borderColor: theme.border, background: theme.background }}
       >
         <p className="font-semibold" style={{ color: theme.text }}>
@@ -193,11 +213,18 @@ export default function MicroCheckRemediationPanel({
 
   return (
     <div
-      className="mt-3 rounded-lg border px-3 py-3 text-sm space-y-3"
+      ref={retryRegionRef}
+      tabIndex={-1}
+      aria-busy={saving}
+      className="mt-3 rounded-lg border px-3 py-3 text-sm space-y-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
       style={{ borderColor: theme.border, background: theme.background }}
     >
       <div>
-        <p className="font-semibold" style={{ color: theme.primary }}>
+        <p
+          className="font-semibold"
+          id={`micro-check-hint-${question.id}`}
+          style={{ color: theme.primary }}
+        >
           Hint
         </p>
         <p className="mt-1" style={{ color: theme.textMuted }}>
@@ -228,8 +255,10 @@ export default function MicroCheckRemediationPanel({
           <button
             type="button"
             disabled={!selected || saving}
+            aria-disabled={!selected || saving}
+            aria-describedby={`micro-check-hint-${question.id}`}
             onClick={() => void submitRetry()}
-            className="rounded-lg px-4 py-2 text-sm font-semibold disabled:opacity-50"
+            className="min-h-11 rounded-lg px-4 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50"
             style={{ background: theme.primary, color: '#000' }}
           >
             {saving ? 'Saving…' : 'Lock Retry'}
@@ -237,7 +266,11 @@ export default function MicroCheckRemediationPanel({
         </>
       )}
 
-      {error && <p className="text-sm text-red-300">{error}</p>}
+      {error && (
+        <p className="text-sm text-red-300" role="alert">
+          {error}
+        </p>
+      )}
     </div>
   )
 }
