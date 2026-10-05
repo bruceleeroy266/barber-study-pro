@@ -229,7 +229,7 @@ describe('ADM-1F readiness/progress/grade/assessment parity', () => {
       path.join(process.cwd(), 'src/app/instructor/page.tsx'),
       'utf8',
     )
-    expect(page).toContain('studentStats.filter((s) => s.hasReadinessEvidence)')
+    expect(page).toContain('metricStudentStats.filter((s) => s.hasReadinessEvidence)')
     expect(page).toContain("studentsWithQuizzes.length > 0 ? `${classAvgQuiz}%` : '—'")
     expect(page).toContain("studentsWithReadiness.length > 0 ? classAvgReadiness : '—'")
     expect(page).toContain('const failedAssessments = assessmentRecords.filter((a) => !a.isPassed)')
