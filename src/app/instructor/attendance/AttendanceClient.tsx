@@ -153,6 +153,20 @@ export default function AttendanceClient({
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   }, [records, filters, students])
 
+  const metricStudentIds = useMemo(
+    () => new Set(
+      students
+        .filter((student) => student.include_in_school_metrics !== false)
+        .map((student) => student.id)
+    ),
+    [students]
+  )
+  const metricFilteredRecords = useMemo(
+    () => filteredRecords.filter((record) => metricStudentIds.has(record.userId)),
+    [filteredRecords, metricStudentIds]
+  )
+  const excludedStudentCount = students.length - metricStudentIds.size
+
   const { exporting, exportData } = useAttendanceExport({ records: filteredRecords, students, schoolName })
 
   const studentMap = useMemo(() => new Map(students.map((s) => [s.id, s])), [students])
@@ -458,7 +472,12 @@ export default function AttendanceClient({
         <details className="rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-surface-primary)]">
           <summary className="cursor-pointer p-4 md:p-6 text-lg font-semibold text-white">Attendance history, filters & export</summary>
           <div className="px-4 pb-4 md:px-6 md:pb-6">
-            <AttendanceSummary records={filteredRecords} />
+            {excludedStudentCount > 0 && (
+              <p className="mb-3 text-xs text-[var(--color-text-muted)]">
+                Attendance summary metrics exclude {excludedStudentCount} learner{excludedStudentCount === 1 ? '' : 's'} marked Excluded from School Metrics. Individual records remain visible below.
+              </p>
+            )}
+            <AttendanceSummary records={metricFilteredRecords} />
 
         {error && (
           <div className="bg-silver/10 border border-silver/20 rounded-lg p-4 text-silver">
