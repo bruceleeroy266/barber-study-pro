@@ -57,6 +57,9 @@ export default async function InstructorComplianceDashboard() {
   }
 
   const studentIds = students.map((s) => s.id)
+  const metricStudents = students.filter((student) => student.include_in_school_metrics !== false)
+  const metricStudentIds = metricStudents.map((student) => student.id)
+  const metricStudentIdSet = new Set(metricStudentIds)
   const studentIdFilter = studentIds.length > 0 ? studentIds : ['__none__']
 
   // Resolve each student's program requirements (programs.required_hours) so
@@ -163,14 +166,14 @@ export default async function InstructorComplianceDashboard() {
   )
 
   const reportInputs = {
-    students,
-    attendanceRecords,
-    hourLogs,
-    quizAttempts,
-    progress,
-    grades,
+    students: metricStudents,
+    attendanceRecords: attendanceRecords.filter((record) => metricStudentIdSet.has(record.userId)),
+    hourLogs: hourLogs.filter((record) => metricStudentIdSet.has(record.user_id)),
+    quizAttempts: quizAttempts.filter((record) => metricStudentIdSet.has(record.user_id)),
+    progress: progress.filter((record) => metricStudentIdSet.has(record.user_id)),
+    grades: grades.filter((record) => metricStudentIdSet.has(record.studentId)),
     gradeCategories,
-    assessments,
+    assessments: assessments.filter((record) => metricStudentIdSet.has(record.studentId)),
   }
 
   const complianceReports = {
@@ -184,20 +187,23 @@ export default async function InstructorComplianceDashboard() {
   const requiredHoursFor = (studentId: string) =>
     thresholdsByStudentId.get(studentId)?.requiredHours ?? DEFAULT_COMPLIANCE_THRESHOLDS.requiredHours
 
-  const atRiskStudents = studentCompliances.filter((c) => c.complianceScore.score < 70)
-  const missingHours = studentCompliances.filter((c) => c.completedHours < requiredHoursFor(c.studentId) * 0.5)
-  const missingPracticals = studentCompliances.filter((c) =>
+  const metricStudentCompliances = studentCompliances.filter((compliance) =>
+    metricStudentIdSet.has(compliance.studentId)
+  )
+  const atRiskStudents = metricStudentCompliances.filter((c) => c.complianceScore.score < 70)
+  const missingHours = metricStudentCompliances.filter((c) => c.completedHours < requiredHoursFor(c.studentId) * 0.5)
+  const missingPracticals = metricStudentCompliances.filter((c) =>
     c.graduationReadiness.requiredPracticals > 0 &&
     c.graduationReadiness.completedPracticals < c.graduationReadiness.requiredPracticals
   )
-  const missingAssessments = studentCompliances.filter((c) =>
+  const missingAssessments = metricStudentCompliances.filter((c) =>
     c.graduationReadiness.requiredAssessments > 0 &&
     c.graduationReadiness.completedAssessments < c.graduationReadiness.requiredAssessments
   )
-  const lowReadiness = studentCompliances.filter((c) =>
+  const lowReadiness = metricStudentCompliances.filter((c) =>
     c.hasReadinessEvidence && c.readiness.score < DEFAULT_COMPLIANCE_THRESHOLDS.minimumReadinessScore
   )
-  const trackedRequirementsMet = studentCompliances.filter((c) => c.boardEligibility.status === 'eligible')
+  const trackedRequirementsMet = metricStudentCompliances.filter((c) => c.boardEligibility.status === 'eligible')
 
   return (
     <div className="min-h-screen bg-[var(--color-background-primary)] p-6 lg:p-8">
