@@ -74,7 +74,14 @@ export default function InstructorsSection({ config }: Props) {
   }, [schoolId])
 
   useEffect(() => {
-    void load()
+    // Defer the async refresh until after the effect commits. This keeps the
+    // effect itself free of synchronous state updates while still loading the
+    // live school instructor roster immediately after mount.
+    const timeoutId = window.setTimeout(() => {
+      void load()
+    }, 0)
+
+    return () => window.clearTimeout(timeoutId)
   }, [load])
 
   async function handleInvite(event: React.FormEvent<HTMLFormElement>) {
