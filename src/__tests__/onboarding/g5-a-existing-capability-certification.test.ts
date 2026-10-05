@@ -7,13 +7,15 @@ const read = (relativePath: string) =>
   fs.readFileSync(path.join(root, relativePath), 'utf-8')
 
 describe('G5-A existing onboarding capability certification', () => {
-  it('certifies the school dashboard already provides a basic launch guide', () => {
+  it('certifies the school dashboard preserves guided launch setup through the canonical setup center', () => {
     const dashboard = read('src/components/school-owner/SchoolDashboard.tsx')
+    const setupCenter = read('src/components/school-owner/SchoolSetupCenter.tsx')
 
-    expect(dashboard).toContain('Invite instructor')
-    expect(dashboard).toContain('Invite students')
-    expect(dashboard).toContain('Enroll students')
-    expect(dashboard).toContain('Begin pilot')
+    expect(dashboard).toContain('loadSchoolOnboardingStatus')
+    expect(dashboard).toContain('<SchoolSetupCenter status={onboardingStatus} />')
+    expect(setupCenter).toContain('Next action')
+    expect(setupCenter).toContain('Launch blockers')
+    expect(setupCenter).toContain('Ready to Launch')
   })
 
   it('certifies school admins can invite and create users through existing user management', () => {
