@@ -72,8 +72,8 @@ describe('G5-D guided setup actions', () => {
   it('opens existing enrollment and assignment controls rather than creating parallel actions', () => {
     const client = read('src/app/admin/users/UserManagementClient.tsx')
 
-    expect(client).toContain('setEnrollmentStudent(studentNeedingEnrollment)')
-    expect(client).toContain('setManageCandidate(learnerNeedingAssignment)')
+    expect(client).toContain("setupMode === 'enrollment'")
+    expect(client).toContain("setupMode === 'assignment'")
     expect(client).toContain('(user.enrollment_count ?? 0) === 0')
     expect(client).toContain('!user.assigned_instructor_id')
     expect(client).not.toContain('insertEnrollment')
