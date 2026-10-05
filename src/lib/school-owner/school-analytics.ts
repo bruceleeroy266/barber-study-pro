@@ -89,6 +89,10 @@ function clampPercentage(value: number): number {
   return Math.max(0, Math.min(100, value))
 }
 
+function metricEligibleStudents(students: Profile[]): Profile[] {
+  return students.filter((student) => student.include_in_school_metrics !== false)
+}
+
 function hasReadinessEvidence(attempts: QuizAttempt[], progress: StudentProgress[]): boolean {
   return attempts.length > 0 || progress.some((record) =>
     record.progress_percentage > 0 ||
@@ -143,8 +147,9 @@ function requiredAssessmentsForStudent(inputs: SchoolAnalyticsInputs, studentId:
 export function buildSchoolOverviewMetrics(inputs: SchoolAnalyticsInputs): SchoolOverviewMetrics {
   const { students, attendanceRecords, quizAttempts, progress, grades, gradeCategories, assessments, hourLogs } =
     inputs
-  const totalStudents = students.length
-  const activeStudents = students.filter((s) => s.role === 'student' || s.role === 'apprentice').length
+  const metricStudents = metricEligibleStudents(students)
+  const totalStudents = metricStudents.length
+  const activeStudents = metricStudents.filter((s) => s.role === 'student' || s.role === 'apprentice').length
   const graduatedStudents = 0 // No graduation workflow is persisted yet.
 
   let atRiskCount = 0
@@ -156,7 +161,7 @@ export function buildSchoolOverviewMetrics(inputs: SchoolAnalyticsInputs): Schoo
   const readinessScores: number[] = []
   const gradePercentages: number[] = []
 
-  for (const student of students) {
+  for (const student of metricStudents) {
     const sAttendance = studentAttendanceRecords(student.id, attendanceRecords)
     const attSummary = calculateAttendanceSummary(student.id, sAttendance)
     if (sAttendance.length > 0) {
@@ -291,11 +296,12 @@ export function buildStudentPerformanceRows(inputs: SchoolAnalyticsInputs): Stud
 
 export function buildInstructorPerformanceRows(inputs: SchoolAnalyticsInputs): InstructorPerformanceRow[] {
   const { instructors, students, attendanceRecords, quizAttempts, progress, grades, gradeCategories, assessments } = inputs
+  const metricStudents = metricEligibleStudents(students)
   const assignmentMap = buildInstructorAssignmentMap(inputs.instructorAssignments ?? [])
 
   return instructors.map((instructor) => {
     const assignedIds = assignmentMap.get(instructor.id) ?? new Set<string>()
-    const assignedStudents = students.filter(
+    const assignedStudents = metricStudents.filter(
       (student) =>
         (student.role === 'student' || student.role === 'apprentice') &&
         assignedIds.has(student.id)
@@ -372,7 +378,7 @@ export function buildSchoolHealthScore(inputs: SchoolAnalyticsInputs): SchoolHea
   const readinessScore = clampPercentage(metrics.averageReadiness)
   const gradeScore = clampPercentage(metrics.averageGrade)
   const assessmentScore = clampPercentage(metrics.assessmentCompletionRate)
-  const totalRequiredHours = inputs.students.reduce(
+  const totalRequiredHours = metricEligibleStudents(inputs.students).reduce(
     (sum, student) => sum + requiredHoursForStudent(inputs, student.id),
     0,
   )
@@ -516,9 +522,10 @@ export function buildSchoolAlerts(inputs: SchoolAnalyticsInputs): SchoolOwnerAle
 }
 
 export function buildSchoolAnalyticsSnapshot(inputs: SchoolAnalyticsInputs): SchoolAnalyticsSnapshot {
-  const rows = buildStudentPerformanceRows(inputs)
+  const metricStudentIds = new Set(metricEligibleStudents(inputs.students).map((student) => student.id))
+  const rows = buildStudentPerformanceRows(inputs).filter((row) => metricStudentIds.has(row.studentId))
   const readinessEvidence = new Set(
-    inputs.students
+    metricEligibleStudents(inputs.students)
       .filter((student) =>
         hasReadinessEvidence(
           studentAttempts(student.id, inputs.quizAttempts),
@@ -528,12 +535,14 @@ export function buildSchoolAnalyticsSnapshot(inputs: SchoolAnalyticsInputs): Sch
       .map((student) => student.id)
   )
   const gradeEvidence = new Set(
-    inputs.students
+    metricEligibleStudents(inputs.students)
       .filter((student) => hasGradeEvidence(studentGrades(student.id, inputs.grades)))
       .map((student) => student.id)
   )
   const assessmentEvidence = new Set(
-    inputs.assessments.map((assessment) => assessment.studentId)
+    inputs.assessments
+      .filter((assessment) => metricStudentIds.has(assessment.studentId))
+      .map((assessment) => assessment.studentId)
   )
 
   const last14: TrendPoint[] = []
@@ -600,13 +609,17 @@ export function generateSchoolReport(
   inputs: SchoolAnalyticsInputs
 ): SchoolReport {
   const rows = buildStudentPerformanceRows(inputs)
+  const metricStudentIds = new Set(metricEligibleStudents(inputs.students).map((student) => student.id))
+  const metricRows = rows.filter((row) => metricStudentIds.has(row.studentId))
   const metrics = buildSchoolOverviewMetrics(inputs)
   const now = new Date().toISOString()
   const attendanceEvidence = new Set(
-    inputs.attendanceRecords.map((record) => record.userId)
+    inputs.attendanceRecords
+      .filter((record) => metricStudentIds.has(record.userId))
+      .map((record) => record.userId)
   )
   const readinessEvidence = new Set(
-    inputs.students
+    metricEligibleStudents(inputs.students)
       .filter((student) =>
         hasReadinessEvidence(
           studentAttempts(student.id, inputs.quizAttempts),
@@ -616,12 +629,14 @@ export function generateSchoolReport(
       .map((student) => student.id)
   )
   const gradeEvidence = new Set(
-    inputs.students
+    metricEligibleStudents(inputs.students)
       .filter((student) => hasGradeEvidence(studentGrades(student.id, inputs.grades)))
       .map((student) => student.id)
   )
   const assessmentEvidence = new Set(
-    inputs.assessments.map((assessment) => assessment.studentId)
+    inputs.assessments
+      .filter((assessment) => metricStudentIds.has(assessment.studentId))
+      .map((assessment) => assessment.studentId)
   )
 
   switch (type) {
@@ -690,7 +705,7 @@ export function generateSchoolReport(
         title: 'Hours Completion Report',
         generatedAt: now,
         summary: `Total completed hours: ${Math.round(
-          rows.reduce((sum, r) => {
+          metricRows.reduce((sum, r) => {
             const summary = calculateHoursProgressSummary(
               studentHourLogs(r.studentId, inputs.hourLogs),
               r.requiredHours,
@@ -708,7 +723,7 @@ export function generateSchoolReport(
         generatedAt: now,
         summary: assessmentEvidence.size > 0
           ? `Average pass rate: ${clampPercentage(
-              average(rows.filter((r) => assessmentEvidence.has(r.studentId)).map((r) => r.assessmentPassRate))
+              average(metricRows.filter((r) => assessmentEvidence.has(r.studentId)).map((r) => r.assessmentPassRate))
             )}%`
           : 'Average pass rate: No Assessments',
         rows: rows.map((r) => ({
