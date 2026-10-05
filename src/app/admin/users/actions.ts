@@ -1891,6 +1891,7 @@ export async function getSchoolPrograms(): Promise<ActionResult<ProgramOption[]>
 interface ManagedUser {
   id: string
   email: string
+  full_name: string
   role: AppRole
   school_id: string | null
   approval_status: 'pending' | 'approved' | 'rejected'
@@ -1905,7 +1906,7 @@ async function getManagedUser(
 ): Promise<{ success: boolean; user?: ManagedUser; error?: string }> {
   const { data, error } = await serviceClient
     .from('profiles')
-    .select('id, email, role, school_id, approval_status, is_disabled, requires_password_change')
+    .select('id, email, full_name, role, school_id, approval_status, is_disabled, requires_password_change')
     .eq('id', id)
     .single()
 
@@ -1922,6 +1923,7 @@ async function getManagedUser(
     user: {
       id: String(data.id),
       email: String(data.email),
+      full_name: String(data.full_name || ''),
       role: String(data.role) as AppRole,
       school_id: data.school_id ? String(data.school_id) : null,
       approval_status: String(data.approval_status) as 'pending' | 'approved' | 'rejected',
