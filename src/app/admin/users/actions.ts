@@ -1419,8 +1419,9 @@ function isValidIdentityEmail(email: string): boolean {
  * so this action performs an explicit compensating rollback if the profile
  * write fails after the Auth mutation.
  *
- * Invitation-lifecycle reconciliation is intentionally handled by UM-H3.3
- * before this action is exposed in the admin UI.
+ * UM-H3.3 extends the database side of this flow so profiles and the matching
+ * onboarding invitation reconcile in one transaction while preserving lifecycle
+ * status and auditable email history.
  */
 export async function updateUserIdentity(
   id: string,
@@ -1524,16 +1525,20 @@ export async function updateUserIdentity(
     return { success: false, error: duplicateMessage }
   }
 
-  const profileChanges: { email?: string; full_name?: string } = {}
-  if (emailChanged) profileChanges.email = nextEmail
-  if (nameChanged) profileChanges.full_name = nextFullName
+  // Keep the application profile and the matching onboarding invitation in a
+  // single database transaction. The RPC preserves invitation status
+  // (pending/accepted/expired/revoked) and appends email-history metadata.
+  const { error: reconciliationError } = await serviceClient.rpc(
+    'reconcile_user_identity_profile_and_invitation',
+    {
+      p_user_id: id,
+      p_expected_old_email: oldEmail,
+      p_new_email: nextEmail,
+      p_full_name: nextFullName,
+    }
+  )
 
-  const { error: profileUpdateError } = await serviceClient
-    .from('profiles')
-    .update(profileChanges)
-    .eq('id', id)
-
-  if (profileUpdateError) {
+  if (reconciliationError) {
     const rollbackChanges: {
       email?: string
       user_metadata?: Record<string, unknown>
@@ -1547,14 +1552,16 @@ export async function updateUserIdentity(
       return {
         success: false,
         error:
-          `Failed to update profile identity: ${profileUpdateError.message}. ` +
+          `Failed to reconcile profile/onboarding identity: ${reconciliationError.message}. ` +
           `Auth rollback also failed: ${rollbackError.message}. Administrator cleanup is required.`,
       }
     }
 
     return {
       success: false,
-      error: `Failed to update profile identity: ${profileUpdateError.message}. Authentication changes were rolled back.`,
+      error:
+        `Failed to reconcile profile/onboarding identity: ${reconciliationError.message}. ` +
+        'Authentication changes were rolled back.',
     }
   }
 
