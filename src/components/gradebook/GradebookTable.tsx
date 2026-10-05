@@ -52,6 +52,15 @@ export default function GradebookTable({
       : categories.filter((c) => c.id === selectedCategory)
   }, [categories, selectedCategory])
 
+  const metricStudentIds = useMemo(
+    () => new Set(
+      students
+        .filter((student) => student.include_in_school_metrics !== false)
+        .map((student) => student.id)
+    ),
+    [students]
+  )
+
   function getGrade(studentId: string, categoryId: string): Grade | undefined {
     return grades
       .filter((g) => g.studentId === studentId && g.categoryId === categoryId)
@@ -59,7 +68,7 @@ export default function GradebookTable({
   }
 
   function getCategoryAverage(categoryId: string): number {
-    return calculateCategoryAverage(grades.filter((g) => g.categoryId === categoryId && !g.isExcused))
+    return calculateCategoryAverage(grades.filter((g) => g.categoryId === categoryId && !g.isExcused && metricStudentIds.has(g.studentId)))
   }
 
   return (
