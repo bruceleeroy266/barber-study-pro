@@ -61,7 +61,7 @@ export async function loadSchoolOnboardingStatus(
   pushError(sourceErrors, 'students', studentsResult.error)
   pushError(sourceErrors, 'assignments', assignmentsResult.error)
 
-  const studentRows = Array.isArray(studentsResult.data)
+  const studentRows: Array<{ id: string; profile_id: string }> = Array.isArray(studentsResult.data)
     ? studentsResult.data.map((row: any) => ({
         id: String(row.id),
         profile_id: String(row.profile_id),
