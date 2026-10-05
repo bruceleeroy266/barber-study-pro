@@ -357,11 +357,16 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     assessmentRecords = demoAssessments.filter((a) => studentIds.includes(a.studentId))
   }
 
+  const metricStudentIds = rosterStudents
+    .filter((student) => student.include_in_school_metrics !== false)
+    .map((student) => student.id)
+  const metricStudentIdSet = new Set(metricStudentIds)
+
   const classGradeSummary = calculateClassGradeSummary(
-    studentIds,
-    gradeRecords,
+    metricStudentIds,
+    gradeRecords.filter((grade) => metricStudentIdSet.has(grade.studentId)),
     gradeCategories,
-    assessmentRecords
+    assessmentRecords.filter((assessment) => metricStudentIdSet.has(assessment.studentId))
   )
   const classAvgGrade = classGradeSummary.classAverage
   const gradeAtRiskCount = classGradeSummary.atRiskCount
@@ -378,11 +383,12 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
 
   const today = new Date().toISOString().split('T')[0]
   const todayRecords = attendanceRecords.filter((a) => a.date === today)
-  const presentToday = todayRecords.filter((a) => a.status === 'Present').length
-  const absentToday = todayRecords.filter((a) => a.status === 'Absent').length
-  const tardyToday = todayRecords.filter((a) => a.status === 'Tardy').length
-  const excusedToday = todayRecords.filter((a) => a.status === 'Excused').length
-  const notMarkedToday = rosterStudents.length - todayRecords.length
+  const metricTodayRecords = todayRecords.filter((record) => metricStudentIdSet.has(record.userId))
+  const presentToday = metricTodayRecords.filter((a) => a.status === 'Present').length
+  const absentToday = metricTodayRecords.filter((a) => a.status === 'Absent').length
+  const tardyToday = metricTodayRecords.filter((a) => a.status === 'Tardy').length
+  const excusedToday = metricTodayRecords.filter((a) => a.status === 'Excused').length
+  const notMarkedToday = metricStudentIds.length - metricTodayRecords.length
 
   const attendanceConcerns = getAttendanceConcerns(rosterStudents, attendanceRecords)
 
@@ -400,6 +406,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
   }, {})
 
   const studentStats = computeStudentStats(rosterStudents, progressRecords, attemptRecords, chapters, questions, lastSignInMap, (studyActivityData || []) as Array<{ user_id: string; study_date: string; active_seconds: number; last_active_at: string; timezone: string | null }>)
+  const metricStudentStats = studentStats.filter((student) => student.include_in_school_metrics !== false)
 
   // Filter by search query (name, email, or role)
   const filteredStudents = searchQuery
@@ -414,28 +421,28 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
   // Sort by name for stable roster order
   filteredStudents.sort((a, b) => a.full_name.localeCompare(b.full_name))
 
-  const totalStudents = studentStats.length
-  const activeStudents = studentStats.filter((s) => {
+  const totalStudents = metricStudentStats.length
+  const activeStudents = metricStudentStats.filter((s) => {
     if (s.daysSinceActive === null) return false
     return s.daysSinceActive <= ACTIVE_DAYS
   }).length
 
   const classAvgProgress = totalStudents > 0
-    ? Math.round(studentStats.reduce((sum, s) => sum + s.overallProgress, 0) / totalStudents)
+    ? Math.round(metricStudentStats.reduce((sum, s) => sum + s.overallProgress, 0) / totalStudents)
     : 0
 
-  const studentsWithQuizzes = studentStats.filter((s) => s.quizzesTaken > 0)
+  const studentsWithQuizzes = metricStudentStats.filter((s) => s.quizzesTaken > 0)
   const classAvgQuiz = studentsWithQuizzes.length > 0
     ? Math.round(studentsWithQuizzes.reduce((sum, s) => sum + s.avgQuizScore, 0) / studentsWithQuizzes.length)
     : 0
 
-  const studentsWithReadiness = studentStats.filter((s) => s.hasReadinessEvidence)
+  const studentsWithReadiness = metricStudentStats.filter((s) => s.hasReadinessEvidence)
   const classAvgReadiness = studentsWithReadiness.length > 0
     ? Math.round(studentsWithReadiness.reduce((sum, s) => sum + s.readinessScore, 0) / studentsWithReadiness.length)
     : 0
 
   // At-risk students: readiness below 70, low progress, low quiz avg, or inactive > 14 days
-  const atRiskStudents = studentStats.filter((s) => {
+  const atRiskStudents = metricStudentStats.filter((s) => {
     const lowReadiness = s.hasReadinessEvidence && s.readinessScore < 70
     const lowProgress = s.hasProgressEvidence && s.overallProgress < 50
     const lowQuiz = s.quizzesTaken > 0 && s.avgQuizScore < 70
@@ -444,15 +451,18 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
   })
 
   // Chapter-level class analytics
-  const chapterClassScores = computeChapterClassScores(chapters, progressRecords)
+  const chapterClassScores = computeChapterClassScores(
+    chapters,
+    progressRecords.filter((record) => metricStudentIdSet.has(record.user_id))
+  )
   const weakestChapters = [...chapterClassScores].sort((a, b) => a.avgScore - b.avgScore).slice(0, 5)
   const strongestChapters = [...chapterClassScores].sort((a, b) => b.avgScore - a.avgScore).slice(0, 5)
 
   // Board readiness overview counts
-  const readyCount = studentStats.filter((s) => s.hasReadinessEvidence && s.readinessLevel === 'Ready').length
-  const nearlyReadyCount = studentStats.filter((s) => s.hasReadinessEvidence && s.readinessLevel === 'Nearly Ready').length
-  const needsReviewCount = studentStats.filter((s) => s.hasReadinessEvidence && s.readinessLevel === 'Needs Review').length
-  const atRiskCount = studentStats.filter((s) => s.hasReadinessEvidence && s.readinessLevel === 'At Risk').length
+  const readyCount = metricStudentStats.filter((s) => s.hasReadinessEvidence && s.readinessLevel === 'Ready').length
+  const nearlyReadyCount = metricStudentStats.filter((s) => s.hasReadinessEvidence && s.readinessLevel === 'Nearly Ready').length
+  const needsReviewCount = metricStudentStats.filter((s) => s.hasReadinessEvidence && s.readinessLevel === 'Needs Review').length
+  const atRiskCount = metricStudentStats.filter((s) => s.hasReadinessEvidence && s.readinessLevel === 'At Risk').length
 
   // Recommended instructor actions
   const recommendedActions: string[] = []
@@ -462,14 +472,14 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
   if (classAvgQuiz > 0 && classAvgQuiz < 80) {
     recommendedActions.push('Assign a review quiz to reinforce concepts across the class.')
   }
-  const inactiveStudents = studentStats.filter((s) => s.daysSinceActive !== null && s.daysSinceActive > 14)
+  const inactiveStudents = metricStudentStats.filter((s) => s.daysSinceActive !== null && s.daysSinceActive > 14)
   if (inactiveStudents.length > 0) {
     recommendedActions.push(`Follow up with ${inactiveStudents.length} inactive student${inactiveStudents.length === 1 ? '' : 's'}.`)
   }
   if (atRiskStudents.length > 0) {
     recommendedActions.push(`Schedule check-ins with ${atRiskStudents.length} at-risk student${atRiskStudents.length === 1 ? '' : 's'}.`)
   }
-  if (recommendedActions.length === 0 && studentStats.length > 0) {
+  if (recommendedActions.length === 0 && metricStudentStats.length > 0) {
     recommendedActions.push('Class is on track. Continue current study plan and monitor progress.')
   }
 
