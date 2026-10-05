@@ -129,6 +129,156 @@ export async function sendPilotInquiryReply(
   }
 }
 
+export type AdminAddSchoolInput = {
+  schoolName: string
+  contactName: string
+  email: string
+  phone?: string
+  cohortSize?: string
+}
+
+export type AdminAddSchoolResult = {
+  success: boolean
+  inquiryId?: string
+  schoolId?: string
+  schoolName?: string
+  partialSuccess?: boolean
+  sideEffectError?: string
+  error?: string
+}
+
+/**
+ * Platform-admin shortcut for adding a new Barbering pilot school from Admin.
+ *
+ * This is intentionally a thin wrapper over the existing certified pipeline:
+ *   inquiry record -> approvePilotInquiry() -> createSchoolFromInquiry()
+ *
+ * It does not create a second provisioning path.
+ */
+export async function addSchoolFromAdmin(
+  input: AdminAddSchoolInput
+): Promise<AdminAddSchoolResult> {
+  try {
+    const supabase = await createClient()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+    if (authError || !user) {
+      return { success: false, error: 'Authentication required.' }
+    }
+
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('role, school_id')
+      .eq('id', user.id)
+      .single()
+
+    if (profileError || !profile || profile.role !== 'admin' || profile.school_id !== null) {
+      return { success: false, error: 'Only platform administrators may add schools.' }
+    }
+
+    const schoolName = input.schoolName.trim()
+    const contactName = input.contactName.trim()
+    const email = input.email.trim().toLowerCase()
+    const phone = input.phone?.trim() || null
+    const cohortSize = input.cohortSize?.trim() || null
+
+    if (!schoolName || !contactName || !email) {
+      return { success: false, error: 'School name, contact name, and email are required.' }
+    }
+
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
+      return { success: false, error: 'Enter a valid school contact email.' }
+    }
+
+    if (cohortSize && (!/^\d+$/.test(cohortSize) || Number(cohortSize) < 1 || Number(cohortSize) > 30)) {
+      return { success: false, error: 'Pilot cohort size must be between 1 and 30 students.' }
+    }
+
+    const serviceClient = createServiceRoleClient()
+
+    const { data: existingSchool } = await serviceClient
+      .from('schools')
+      .select('id, name')
+      .ilike('name', schoolName)
+      .is('deleted_at', null)
+      .maybeSingle()
+
+    if (existingSchool) {
+      return { success: false, error: `A school named "${existingSchool.name}" already exists.` }
+    }
+
+    const { data: inquiry, error: insertError } = await serviceClient
+      .from('pilot_inquiries')
+      .insert({
+        school_name: schoolName,
+        contact_name: contactName,
+        email,
+        phone,
+        program_type: 'Barbering',
+        cohort_size: cohortSize,
+        message: 'Created directly by a platform administrator during school onboarding.',
+        status: 'new',
+        is_test: false,
+      })
+      .select('id')
+      .single()
+
+    if (insertError || !inquiry?.id) {
+      return { success: false, error: insertError?.message || 'Failed to create the school onboarding record.' }
+    }
+
+    const inquiryId = String(inquiry.id)
+    const approval = await approvePilotInquiry(inquiryId)
+    if (!approval.success) {
+      revalidatePath('/admin/pilot-inquiries')
+      return {
+        success: false,
+        inquiryId,
+        error: `School onboarding record was saved, but approval failed: ${approval.error || 'Unknown error'}`,
+      }
+    }
+
+    const creation = await createSchoolFromInquiry(inquiryId)
+    if (!creation.success) {
+      revalidatePath('/admin/pilot-inquiries')
+      return {
+        success: false,
+        inquiryId,
+        error: `School onboarding record was approved, but provisioning failed: ${creation.error || 'Unknown error'}`,
+      }
+    }
+
+    void logSecurityEvent('sensitive_config_change', 'success', `Platform admin added school ${schoolName}`, {
+      userId: user.id,
+      email: user.email,
+      role: profile.role,
+      resource: '/admin/pilot-inquiries',
+      resourceId: inquiryId,
+      action: 'admin_add_school',
+      metadata: {
+        schoolId: creation.schoolId,
+        schoolName,
+        contactEmail: email,
+      },
+    })
+
+    revalidatePath('/admin')
+    revalidatePath('/admin/pilot-inquiries')
+    revalidatePath('/admin/users')
+
+    return {
+      success: true,
+      inquiryId,
+      schoolId: creation.schoolId,
+      schoolName: creation.schoolName || schoolName,
+      partialSuccess: creation.partialSuccess,
+      sideEffectError: creation.sideEffectError,
+    }
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : String(err) }
+  }
+}
+
 // ============================================================================
 // Phase 7A Slice 5.5 (P0-1) — Approve Pilot Inquiry
 // ============================================================================
