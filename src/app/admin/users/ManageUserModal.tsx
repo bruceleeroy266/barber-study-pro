@@ -71,15 +71,8 @@ export default function ManageUserModal({
   const [instructorOptions, setInstructorOptions] = useState<Array<{ id: string; full_name: string }>>([])
   const [instructorDraft, setInstructorDraft] = useState<string>('')
   const [assignmentLoadedFor, setAssignmentLoadedFor] = useState<string | null>(null)
-  const [fullNameDraft, setFullNameDraft] = useState('')
-  const [emailDraft, setEmailDraft] = useState('')
-
-  useEffect(() => {
-    setFullNameDraft(user?.full_name ?? '')
-    setEmailDraft(user?.email ?? '')
-    setConfirmation(null)
-    setLocalError(null)
-  }, [user])
+  const [fullNameDraft, setFullNameDraft] = useState(user?.full_name ?? '')
+  const [emailDraft, setEmailDraft] = useState(user?.email ?? '')
 
   useEffect(() => {
     let cancelled = false
