@@ -10,6 +10,7 @@ const mockResendUserSetupLink = vi.fn()
 const mockResetUserPassword = vi.fn()
 const mockToggleUserDisabled = vi.fn()
 const mockUpdateUserStatus = vi.fn()
+const mockUpdateUserIdentity = vi.fn()
 
 vi.mock('./actions', () => ({
   assignUserSchool: (...args: unknown[]) => mockAssignUserSchool(...args),
@@ -19,6 +20,7 @@ vi.mock('./actions', () => ({
   resetUserPassword: (...args: unknown[]) => mockResetUserPassword(...args),
   toggleUserDisabled: (...args: unknown[]) => mockToggleUserDisabled(...args),
   updateUserStatus: (...args: unknown[]) => mockUpdateUserStatus(...args),
+  updateUserIdentity: (...args: unknown[]) => mockUpdateUserIdentity(...args),
 }))
 
 vi.mock('@/components/ui/Modal', () => ({
@@ -75,6 +77,54 @@ describe('ManageUserModal — UM-H2.2 action safety', () => {
     mockResetUserPassword.mockResolvedValue({ success: true })
     mockToggleUserDisabled.mockResolvedValue({ success: true })
     mockUpdateUserStatus.mockResolvedValue({ success: true })
+    mockUpdateUserIdentity.mockResolvedValue({ success: true })
+  })
+
+  it('does not update identity until the explicit confirmation is accepted', async () => {
+    render(<ManageUserModal {...props} />)
+
+    fireEvent.change(screen.getByLabelText('Full name'), {
+      target: { value: 'Corrected User' },
+    })
+    fireEvent.change(screen.getByLabelText('Login email'), {
+      target: { value: 'corrected@ascynpro.test' },
+    })
+
+    expect(mockUpdateUserIdentity).not.toHaveBeenCalled()
+    expect(screen.getByText('Login email will change')).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Review identity change' }))
+    expect(mockUpdateUserIdentity).not.toHaveBeenCalled()
+    expect(screen.getByText('Save these identity changes?')).toBeInTheDocument()
+    expect(screen.getByText(/changes the user’s login email immediately/i)).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm change' }))
+
+    await waitFor(() => {
+      expect(mockUpdateUserIdentity).toHaveBeenCalledWith('target-id', {
+        full_name: 'Corrected User',
+        email: 'corrected@ascynpro.test',
+      })
+    })
+  })
+
+  it('allows a name-only correction without the login-email warning', () => {
+    render(<ManageUserModal {...props} />)
+
+    fireEvent.change(screen.getByLabelText('Full name'), {
+      target: { value: 'Corrected User' },
+    })
+
+    expect(screen.queryByText('Login email will change')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Review identity change' })).toBeEnabled()
+  })
+
+  it('keeps password recovery separate from identity editing', () => {
+    render(<ManageUserModal {...props} />)
+
+    expect(screen.getByText(/Passwords are never shown here/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Send setup link' })).toBeInTheDocument()
+    expect(screen.queryByLabelText(/current password/i)).not.toBeInTheDocument()
   })
 
   it('does not change role until the explicit confirmation is accepted', async () => {
