@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { resolveSchoolOnboardingStatus, type OnboardingSourceSnapshot, type SchoolOnboardingStatus } from './status-resolver'
 
 type SupabaseLike = { from: (table: string) => any }
