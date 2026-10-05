@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState, useTransition } from 'react'
-import { useSearchParams } from 'next/navigation'
 import {
   createUser,
   inviteUser,
@@ -28,6 +27,7 @@ interface Props {
   initialCount: number
   schools: { id: string; name: string }[]
   error?: string
+  setupMode?: string | null
 }
 
 const ROLES = [
@@ -44,9 +44,7 @@ const APPROVAL_STATUSES = [
   { value: 'rejected', label: 'Rejected' },
 ]
 
-export function UserManagementClient({ currentUser, initialUsers, initialCount, schools, error }: Props) {
-  const searchParams = useSearchParams()
-  const setupMode = searchParams.get('setup')
+export function UserManagementClient({ currentUser, initialUsers, initialCount, schools, error, setupMode = null }: Props) {
   const inviteSetupRole: AppRole = setupMode === 'invite-instructor' ? 'instructor' : 'student'
   const [users, setUsers] = useState<UserListItem[]>(initialUsers)
   const [count, setCount] = useState(initialCount)
