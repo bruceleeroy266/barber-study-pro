@@ -9,7 +9,11 @@ export const metadata = {
   title: 'User Management | ASCYN PRO Admin',
 }
 
-export default async function UserManagementPage() {
+interface UserManagementPageProps {
+  searchParams: Promise<{ setup?: string }>
+}
+
+export default async function UserManagementPage({ searchParams }: UserManagementPageProps) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -28,6 +32,7 @@ export default async function UserManagementPage() {
   }
 
   const isPlatformAdmin = isPlatformAdminProfile(profile)
+  const { setup } = await searchParams
   const initialUsers = await getUsers({ limit: 50 })
   const initialSchools = await getSchools()
 
@@ -55,6 +60,7 @@ export default async function UserManagementPage() {
           initialCount={initialUsers.success ? initialUsers.data?.count ?? 0 : 0}
           schools={initialSchools.success ? initialSchools.data ?? [] : []}
           error={!initialUsers.success ? initialUsers.error : undefined}
+          setupMode={setup ?? null}
         />
       </div>
     </div>
