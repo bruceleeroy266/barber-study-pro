@@ -78,6 +78,23 @@ const tabs: TabDef[] = [
   { id: 'roles', label: 'Roles & Permissions', icon: Shield },
 ]
 
+function tabForValidationError(errorKey: string): TabId {
+  if (errorKey.startsWith('school')) return 'profile'
+  if (errorKey.startsWith('branding')) return 'branding'
+  if (errorKey === 'programs' || errorKey.startsWith('program_')) return 'programs'
+  if (['attendanceTarget', 'autoExcuseLimit', 'tardyThreshold'].includes(errorKey)) return 'attendance'
+  if (errorKey === 'requiredHours') return 'hours'
+  if (errorKey.startsWith('gradebook')) return 'gradebook'
+  if (errorKey.startsWith('assessment')) return 'assessments'
+  if (['studentPassing', 'maxQuizAttempts', 'requiredAttendance'].includes(errorKey)) return 'students'
+  return 'profile'
+}
+
+function tabLabel(tabId: TabId): string {
+  return tabs.find((tab) => tab.id === tabId)?.label ?? 'School Profile'
+}
+
+
 interface SchoolConfigurationClientProps {
   initialConfig: SchoolConfiguration
   isDemo: boolean
@@ -123,9 +140,17 @@ export default function SchoolConfigurationClient({
   }
 
   async function handleSave() {
-    const isValid = validate(config)
-    if (!isValid) {
-      setFeedback({ type: 'error', message: 'Please fix validation errors before saving.' })
+    const nextErrors = validateSchoolConfiguration(config)
+    setErrors(nextErrors)
+
+    if (Object.keys(nextErrors).length > 0) {
+      const firstErrorKey = Object.keys(nextErrors)[0]
+      const errorTab = tabForValidationError(firstErrorKey)
+      setActiveTab(errorTab)
+      setFeedback({
+        type: 'error',
+        message: `Please fix the highlighted validation error in ${tabLabel(errorTab)} before saving.`,
+      })
       return
     }
 
