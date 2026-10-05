@@ -17,6 +17,8 @@ export interface UserListItem {
   approval_status: 'pending' | 'approved' | 'rejected'
   is_disabled: boolean
   requires_password_change: boolean
+  invitation_status?: 'pending' | 'accepted' | 'expired' | 'revoked' | null
+  invitation_expires_at?: string | null
   enrollment_count?: number
   assigned_instructor_id?: string | null
   assigned_instructor_name?: string | null
@@ -375,6 +377,38 @@ export async function getUsers(filters: UserFilters = {}): Promise<ActionResult<
       user.assigned_instructor_name = instructorId
         ? instructorNames.get(instructorId) ?? 'Assigned instructor'
         : null
+    }
+  }
+
+  const lifecycleUsers = users.filter(
+    (user) => user.school_id && ['school_admin', 'instructor', 'student'].includes(user.role)
+  )
+  if (lifecycleUsers.length > 0) {
+    const serviceClient = createServiceRoleClient()
+    const schoolIds = Array.from(new Set(lifecycleUsers.map((user) => String(user.school_id))))
+    const emails = Array.from(new Set(lifecycleUsers.map((user) => user.email.toLowerCase())))
+
+    const { data: invitationRows } = await serviceClient
+      .from('school_onboarding_invitations')
+      .select('school_id, email, role, status, expires_at')
+      .in('school_id', schoolIds)
+      .in('email', emails)
+
+    const invitationByKey = new Map<string, { status: UserListItem['invitation_status']; expires_at: string | null }>()
+    for (const row of invitationRows ?? []) {
+      const key = `${String(row.school_id)}|${String(row.email).toLowerCase()}|${String(row.role)}`
+      invitationByKey.set(key, {
+        status: String(row.status) as UserListItem['invitation_status'],
+        expires_at: row.expires_at ? String(row.expires_at) : null,
+      })
+    }
+
+    for (const user of users) {
+      if (!user.school_id) continue
+      const key = `${user.school_id}|${user.email.toLowerCase()}|${user.role}`
+      const invitation = invitationByKey.get(key)
+      user.invitation_status = invitation?.status ?? null
+      user.invitation_expires_at = invitation?.expires_at ?? null
     }
   }
 
@@ -939,6 +973,20 @@ export async function resendUserSetupLink(id: string): Promise<ActionResult> {
   if (!recoveryResult.success) {
     return recoveryResult
   }
+
+  const lifecycleResult = await ensurePendingInvitationLifecycle(serviceClient, admin, {
+    authUserId: target.id,
+    email: target.email.toLowerCase(),
+    fullName: target.full_name,
+    role: target.role,
+    schoolId: target.school_id,
+  })
+  if (!lifecycleResult.success) {
+    return { success: false, error: lifecycleResult.error }
+  }
+
+  revalidatePath('/admin/users')
+  revalidatePath('/school')
 
   await logUserManagementAction(
     admin,
