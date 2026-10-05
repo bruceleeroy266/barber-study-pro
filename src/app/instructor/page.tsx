@@ -374,11 +374,14 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     .map((studentId) => rosterStudents.find((student) => student.id === studentId))
     .filter(Boolean) as Profile[]
 
-  const recentAssessments = [...assessmentRecords]
+  const metricAssessmentRecords = assessmentRecords.filter((assessment) =>
+    metricStudentIdSet.has(assessment.studentId)
+  )
+  const recentAssessments = [...metricAssessmentRecords]
     .sort((a, b) => new Date(b.assessmentDate).getTime() - new Date(a.assessmentDate).getTime())
     .slice(0, 5)
 
-  const failedAssessments = assessmentRecords.filter((a) => !a.isPassed)
+  const failedAssessments = metricAssessmentRecords.filter((a) => !a.isPassed)
   const assessmentQueue = failedAssessments.slice(0, 5)
 
   const today = new Date().toISOString().split('T')[0]
@@ -711,7 +714,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
               <div className="text-xs text-[var(--color-text-muted)] mt-1">Gradebook At Risk</div>
             </div>
             <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-4 text-center">
-              <div className="text-3xl font-bold text-silver">{assessmentRecords.length}</div>
+              <div className="text-3xl font-bold text-silver">{metricAssessmentRecords.length}</div>
               <div className="text-xs text-[var(--color-text-muted)] mt-1">Total Assessments</div>
             </div>
             <div className="bg-[var(--color-background-primary)] border border-warm-bronze/30 rounded-xl p-4 text-center">

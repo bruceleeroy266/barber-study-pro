@@ -232,7 +232,7 @@ describe('ADM-1F readiness/progress/grade/assessment parity', () => {
     expect(page).toContain('metricStudentStats.filter((s) => s.hasReadinessEvidence)')
     expect(page).toContain("studentsWithQuizzes.length > 0 ? `${classAvgQuiz}%` : '—'")
     expect(page).toContain("studentsWithReadiness.length > 0 ? classAvgReadiness : '—'")
-    expect(page).toContain('const failedAssessments = assessmentRecords.filter((a) => !a.isPassed)')
+    expect(page).toContain('const failedAssessments = metricAssessmentRecords.filter((a) => !a.isPassed)')
     expect(page).toContain('{failedAssessments.length}')
     expect(page).toContain('Failed Assessments')
   })
