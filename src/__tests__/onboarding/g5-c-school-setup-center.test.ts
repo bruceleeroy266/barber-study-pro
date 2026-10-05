@@ -23,8 +23,9 @@ describe('G5-C School Setup Center', () => {
     expect(center).toContain('status.completedSteps')
     expect(center).toContain('status.totalSteps')
     expect(center).toContain('status.nextAction')
-    expect(center).toContain('status.nextAction.action')
-    expect(center).toContain('status.nextAction.href')
+    expect(center).toContain('resolveGuidedOnboardingAction(status.nextAction)')
+    expect(center).toContain('nextAction.label')
+    expect(center).toContain('nextAction.href')
   })
 
   it('renders resolver-owned steps and blockers instead of recreating readiness rules', () => {

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import type { SchoolOnboardingStatus } from '@/lib/onboarding'
+import { resolveGuidedOnboardingAction, type SchoolOnboardingStatus } from '@/lib/onboarding'
 
 interface SchoolSetupCenterProps {
   status: SchoolOnboardingStatus
@@ -7,6 +7,7 @@ interface SchoolSetupCenterProps {
 
 export default function SchoolSetupCenter({ status }: SchoolSetupCenterProps) {
   const complete = status.readyToLaunch
+  const nextAction = status.nextAction ? resolveGuidedOnboardingAction(status.nextAction) : null
 
   return (
     <section
@@ -46,15 +47,15 @@ export default function SchoolSetupCenter({ status }: SchoolSetupCenterProps) {
         </div>
       </div>
 
-      {status.nextAction && (
+      {nextAction && (
         <div className="mt-6 rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 p-4">
           <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">Next action</p>
-          <p className="mt-1 font-semibold text-white">{status.nextAction.message}</p>
+          <p className="mt-1 font-semibold text-white">{status.nextAction?.message}</p>
           <Link
-            href={status.nextAction.href}
+            href={nextAction.href}
             className="mt-3 inline-flex rounded-lg bg-[var(--color-brand-gold)] px-4 py-2 text-sm font-semibold text-black hover:opacity-90"
           >
-            {status.nextAction.action}
+            {nextAction.label}
           </Link>
         </div>
       )}
@@ -89,17 +90,23 @@ export default function SchoolSetupCenter({ status }: SchoolSetupCenterProps) {
         <div className="mt-6 rounded-lg border border-red-500/20 bg-red-500/10 p-4">
           <h3 className="font-semibold text-red-300">Launch blockers</h3>
           <div className="mt-3 space-y-3">
-            {status.blockers.map((blocker) => (
-              <div key={blocker.code} className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-sm text-red-200">{blocker.message}</p>
-                <Link
-                  href={blocker.href}
-                  className="shrink-0 text-sm font-semibold text-[var(--color-brand-gold)] hover:underline"
-                >
-                  {blocker.action} →
-                </Link>
-              </div>
-            ))}
+            {status.blockers.map((blocker) => {
+              const guided = resolveGuidedOnboardingAction(blocker)
+              return (
+                <div key={blocker.code} className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p className="text-sm text-red-200">{blocker.message}</p>
+                    <p className="mt-1 text-xs text-red-200/70">{guided.guidance}</p>
+                  </div>
+                  <Link
+                    href={guided.href}
+                    className="shrink-0 text-sm font-semibold text-[var(--color-brand-gold)] hover:underline"
+                  >
+                    {guided.label} →
+                  </Link>
+                </div>
+              )
+            })}
           </div>
         </div>
       )}

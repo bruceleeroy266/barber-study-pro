@@ -27,6 +27,7 @@ interface Props {
   initialCount: number
   schools: { id: string; name: string }[]
   error?: string
+  setupMode?: string | null
 }
 
 const ROLES = [
@@ -43,7 +44,8 @@ const APPROVAL_STATUSES = [
   { value: 'rejected', label: 'Rejected' },
 ]
 
-export function UserManagementClient({ currentUser, initialUsers, initialCount, schools, error }: Props) {
+export function UserManagementClient({ currentUser, initialUsers, initialCount, schools, error, setupMode = null }: Props) {
+  const inviteSetupRole: AppRole = setupMode === 'invite-instructor' ? 'instructor' : 'student'
   const [users, setUsers] = useState<UserListItem[]>(initialUsers)
   const [count, setCount] = useState(initialCount)
   const [search, setSearch] = useState('')
@@ -55,18 +57,49 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
     error ? { type: 'error', text: error } : null
   )
   const [showCreateForm, setShowCreateForm] = useState(false)
-  const [showInviteForm, setShowInviteForm] = useState(false)
+  const [showInviteForm, setShowInviteForm] = useState(
+    setupMode === 'invite-instructor' || setupMode === 'invite-student'
+  )
   const [createRole, setCreateRole] = useState<AppRole>('student')
-  const [inviteRole, setInviteRole] = useState<AppRole>('student')
+  const [inviteRole, setInviteRole] = useState<AppRole>(inviteSetupRole)
   const [isCreatingUser, setIsCreatingUser] = useState(false)
   const [isInvitingUser, setIsInvitingUser] = useState(false)
   const [deleteCandidate, setDeleteCandidate] = useState<UserListItem | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
-  const [enrollmentStudent, setEnrollmentStudent] = useState<UserListItem | null>(null)
-  const [manageCandidate, setManageCandidate] = useState<UserListItem | null>(null)
+  const [enrollmentStudent, setEnrollmentStudent] = useState<UserListItem | null>(() =>
+    setupMode === 'enrollment'
+      ? initialUsers.find(
+          (user) => user.role === 'student' && (user.enrollment_count ?? 0) === 0
+        ) ?? null
+      : null
+  )
+  const [manageCandidate, setManageCandidate] = useState<UserListItem | null>(() =>
+    setupMode === 'assignment'
+      ? initialUsers.find(
+          (user) =>
+            (user.role === 'student' || user.role === 'apprentice') &&
+            !user.assigned_instructor_id
+        ) ?? null
+      : null
+  )
   const [isPending, startTransition] = useTransition()
 
   const LIMIT = 50
+
+  const setupGuidance =
+    setupMode === 'invite-instructor'
+      ? 'Add an instructor: the invitation form is open with Instructor selected.'
+      : setupMode === 'invite-student'
+        ? 'Add students: the invitation form is open with Student selected.'
+        : setupMode === 'enrollment'
+          ? 'Complete enrollment: ASCYN PRO opened the first active student who still needs a program enrollment.'
+          : setupMode === 'assignment'
+            ? 'Assign an instructor: ASCYN PRO opened the first active learner who is still unassigned.'
+            : setupMode === 'recover-invitations' || setupMode === 'review-invitations'
+              ? 'Review onboarding accounts below. Open Manage on the affected account and use the existing setup-link recovery action when needed.'
+              : setupMode === 'manage-admins'
+                ? 'Review school administrator accounts and activate the required admin.'
+                : null
 
   const manageableRoles = currentUser.isPlatformAdmin
     ? ROLES
@@ -193,6 +226,15 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
 
   return (
     <div className="space-y-6">
+      {setupGuidance && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 p-4 text-sm text-[var(--color-brand-gold)]"
+        >
+          <span className="font-semibold">School Setup:</span> {setupGuidance}
+        </div>
+      )}
       {message && (
         <div
           role="status"
