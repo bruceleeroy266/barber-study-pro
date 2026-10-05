@@ -11,6 +11,7 @@ import {
   resendUserSetupLink,
   getInstructorAssignmentOptions,
   resetUserPassword,
+  setUserSchoolMetricsInclusion,
   toggleUserDisabled,
   updateUserStatus,
   type UserListItem,
@@ -34,6 +35,7 @@ type Confirmation =
   | { kind: 'school'; from: string; to: string }
   | { kind: 'status'; from: string; to: string }
   | { kind: 'disabled'; from: string; to: string }
+  | { kind: 'metrics'; from: string; to: string }
   | null
 
 interface Props {
@@ -165,6 +167,18 @@ export default function ManageUserModal({
         `${managedUser.id}:status`,
         () => updateUserStatus(managedUser.id, selectedStatus),
         `Approval status updated to ${statusLabel(selectedStatus)}`
+      )
+      return
+    }
+
+    if (confirmation.kind === 'metrics') {
+      const nextValue = managedUser.include_in_school_metrics === false
+      await runAction(
+        `${managedUser.id}:metrics`,
+        () => setUserSchoolMetricsInclusion(managedUser.id, nextValue),
+        nextValue
+          ? 'Student included in school metrics'
+          : 'Student excluded from school metrics'
       )
       return
     }
@@ -412,6 +426,41 @@ export default function ManageUserModal({
             </>
           )}
         </section>
+
+        {(managedUser.role === 'student' || managedUser.role === 'apprentice') && (
+          <section className="space-y-3 border-t border-[var(--color-border-primary)] pt-5">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">School Metrics</h3>
+            <p className="text-sm text-[var(--color-text-secondary)]">
+              Individual scores, progress, hours, and activity stay visible either way. This setting only controls whether this learner contributes to school and class aggregate percentages, counts, health scores, and summary reports.
+            </p>
+            <div className="rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-background-primary)] p-3">
+              <p className="text-sm font-medium text-white">
+                {managedUser.include_in_school_metrics === false
+                  ? 'Excluded from aggregate school metrics'
+                  : 'Included in aggregate school metrics'}
+              </p>
+              <p className="mt-1 text-xs text-[var(--color-text-muted)]">
+                Default is included. Use exclusion for supplemental or cross-program pilot learners whose activity should not change the primary cohort baseline.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() =>
+                setConfirmation({
+                  kind: 'metrics',
+                  from: managedUser.include_in_school_metrics === false ? 'Excluded' : 'Included',
+                  to: managedUser.include_in_school_metrics === false ? 'Included' : 'Excluded',
+                })
+              }
+              disabled={!!pendingKey}
+              className="min-h-11 w-full rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 px-3 py-2 text-sm text-[var(--color-brand-gold)] disabled:opacity-40"
+            >
+              {managedUser.include_in_school_metrics === false
+                ? 'Review include in school metrics'
+                : 'Review exclude from school metrics'}
+            </button>
+          </section>
+        )}
 
         {(managedUser.role === 'student' || managedUser.role === 'apprentice') && (
           <section className="space-y-3 border-t border-[var(--color-border-primary)] pt-5">
