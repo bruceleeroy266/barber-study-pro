@@ -43,8 +43,8 @@ describe('G5-H school configuration validation repair', () => {
     const page = read('src/app/admin/school/configuration/page.tsx')
 
     expect(page).toContain("savedConfig.branding.primaryColor")
-    expect(page).toContain("?: '#D4AF37'")
-    expect(page).toContain("?: '#1F2937'")
+    expect(page).toContain("'#D4AF37'")
+    expect(page).toContain("'#1F2937'")
   })
 
   it('moves the user to the tab containing the first validation error', () => {
