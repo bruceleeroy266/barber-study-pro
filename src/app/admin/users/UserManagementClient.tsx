@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import {
   createUser,
   inviteUser,
@@ -66,35 +66,25 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
   const [isInvitingUser, setIsInvitingUser] = useState(false)
   const [deleteCandidate, setDeleteCandidate] = useState<UserListItem | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
-  const [enrollmentStudent, setEnrollmentStudent] = useState<UserListItem | null>(null)
-  const [manageCandidate, setManageCandidate] = useState<UserListItem | null>(null)
+  const [enrollmentStudent, setEnrollmentStudent] = useState<UserListItem | null>(() =>
+    setupMode === 'enrollment'
+      ? initialUsers.find(
+          (user) => user.role === 'student' && (user.enrollment_count ?? 0) === 0
+        ) ?? null
+      : null
+  )
+  const [manageCandidate, setManageCandidate] = useState<UserListItem | null>(() =>
+    setupMode === 'assignment'
+      ? initialUsers.find(
+          (user) =>
+            (user.role === 'student' || user.role === 'apprentice') &&
+            !user.assigned_instructor_id
+        ) ?? null
+      : null
+  )
   const [isPending, startTransition] = useTransition()
 
   const LIMIT = 50
-
-  useEffect(() => {
-    if (setupMode === 'enrollment') {
-      const studentNeedingEnrollment = initialUsers.find(
-        (user) => user.role === 'student' && (user.enrollment_count ?? 0) === 0
-      )
-      if (studentNeedingEnrollment) {
-        setManageCandidate(null)
-        setEnrollmentStudent(studentNeedingEnrollment)
-      }
-    }
-
-    if (setupMode === 'assignment') {
-      const learnerNeedingAssignment = initialUsers.find(
-        (user) =>
-          (user.role === 'student' || user.role === 'apprentice') &&
-          !user.assigned_instructor_id
-      )
-      if (learnerNeedingAssignment) {
-        setEnrollmentStudent(null)
-        setManageCandidate(learnerNeedingAssignment)
-      }
-    }
-  }, [initialUsers, setupMode])
 
   const setupGuidance =
     setupMode === 'invite-instructor'
