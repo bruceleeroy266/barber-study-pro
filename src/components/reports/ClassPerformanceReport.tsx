@@ -16,18 +16,30 @@ export default function ClassPerformanceReport({
   categories,
   assessments,
 }: ClassPerformanceReportProps) {
-  const summary = calculateClassGradeSummary(
+  const metricStudents = students.filter((student) => student.include_in_school_metrics !== false)
+  const metricStudentIds = new Set(metricStudents.map((student) => student.id))
+  const metricGrades = grades.filter((grade) => metricStudentIds.has(grade.studentId))
+  const metricAssessments = assessments.filter((assessment) => metricStudentIds.has(assessment.studentId))
+
+  const aggregateSummary = calculateClassGradeSummary(
+    metricStudents.map((student) => student.id),
+    metricGrades,
+    categories,
+    metricAssessments
+  )
+  const individualSummary = calculateClassGradeSummary(
     students.map((student) => student.id),
     grades,
     categories,
     assessments
   )
-  const { performances, classAverage, atRiskCount, passingCount } = summary
+  const { classAverage, atRiskCount, passingCount } = aggregateSummary
+  const performances = individualSummary.performances
 
   const categoryAverages = categories
     .filter((c) => c.isActive)
     .map((category) => {
-      const categoryGrades = grades.filter((g) => g.categoryId === category.id && !g.isExcused)
+      const categoryGrades = metricGrades.filter((g) => g.categoryId === category.id && !g.isExcused)
       const avg =
         categoryGrades.length > 0
           ? Math.round(
@@ -54,7 +66,7 @@ export default function ClassPerformanceReport({
         <div className="bg-gray-50 rounded-lg p-4">
           <p className="text-sm text-silver-gray">Passing Students</p>
           <p className="text-3xl font-bold text-gold">
-            {passingCount}/{summary.gradedPerformances.length}
+            {passingCount}/{aggregateSummary.gradedPerformances.length}
           </p>
         </div>
         <div className="bg-gray-50 rounded-lg p-4">
