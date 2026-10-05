@@ -887,6 +887,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
       </div>
 
       <ManageUserModal
+        key={manageCandidate?.id ?? 'no-managed-user'}
         user={manageCandidate}
         currentUserId={currentUser.id}
         isPlatformAdmin={currentUser.isPlatformAdmin}
