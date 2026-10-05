@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase-server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
-import { Settings, Activity, History, Flag, Wrench, Archive, Bell, Users, Plane, LayoutDashboard, MessageSquare } from 'lucide-react'
+import { Settings, Activity, History, Flag, Wrench, Archive, Bell, Users, Plane, LayoutDashboard, MessageSquare, PlusCircle } from 'lucide-react'
 
 export default async function AdminDashboard() {
   const supabase = await createClient()
@@ -142,6 +142,22 @@ export default async function AdminDashboard() {
           {/* Platform-admin-only cards */}
           {isPlatformAdmin && (
             <>
+              <Link
+                href="/admin/pilot-inquiries?add=school"
+                className="bg-[var(--color-background-primary)] border border-[var(--color-brand-gold)]/30 rounded-xl p-6 hover:border-[var(--color-brand-gold)] transition-colors group"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="text-lg font-semibold text-white group-hover:text-[var(--color-brand-gold)]">Add School</h2>
+                  <PlusCircle className="w-5 h-5 text-[var(--color-brand-gold)]" />
+                </div>
+                <p className="text-[var(--color-text-muted)] text-sm mb-4">
+                  Create a new Barbering pilot school directly from Admin
+                </p>
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[var(--color-brand-gold)] text-black text-sm font-semibold rounded-lg">
+                  Add New School
+                </span>
+              </Link>
+
               <Link
                 href="/admin/pilot-inquiries"
                 className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6 hover:border-[var(--color-brand-gold)]/30 transition-colors group"
