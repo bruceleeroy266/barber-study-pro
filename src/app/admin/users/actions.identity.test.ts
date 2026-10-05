@@ -54,7 +54,7 @@ function mockService(options: {
   duplicateProfiles?: Array<{ id: string }>
   authLookupError?: { message: string } | null
   authUpdateErrors?: Array<{ message: string } | null>
-  profileUpdateError?: { message: string } | null
+  reconciliationError?: { message: string } | null
   duplicateLookupError?: { message: string } | null
 } = {}) {
   const profile: Profile = {
@@ -77,13 +77,10 @@ function mockService(options: {
   }
   authUpdate.mockResolvedValue({ data: { user: {} }, error: null })
 
-  const profileUpdate = vi.fn().mockReturnValue({
-    eq: vi.fn().mockResolvedValue({
-      data: null,
-      error: options.profileUpdateError ?? null,
-    }),
+  const rpc = vi.fn().mockResolvedValue({
+    data: { profile_updated: true, invitation_reconciled: true, invitation_status: 'pending' },
+    error: options.reconciliationError ?? null,
   })
-
   const auditInsert = vi.fn().mockResolvedValue({ data: null, error: null })
 
   const serviceClient = {
@@ -104,6 +101,7 @@ function mockService(options: {
         updateUserById: authUpdate,
       },
     },
+    rpc,
     from: vi.fn((table: string) => {
       if (table === 'profiles') {
         return {
@@ -127,7 +125,6 @@ function mockService(options: {
               }),
             }
           }),
-          update: profileUpdate,
         }
       }
 
@@ -143,10 +140,10 @@ function mockService(options: {
     createServiceRoleClient: vi.fn().mockReturnValue(serviceClient),
   }))
 
-  return { profile, serviceClient, authUpdate, profileUpdate, auditInsert }
+  return { profile, serviceClient, authUpdate, rpc, auditInsert }
 }
 
-describe('UM-H3.2 updateUserIdentity', () => {
+describe('UM-H3.2/3 updateUserIdentity', () => {
   beforeEach(() => {
     vi.resetModules()
     mockCaller()
@@ -158,8 +155,8 @@ describe('UM-H3.2 updateUserIdentity', () => {
     vi.restoreAllMocks()
   })
 
-  it('updates Auth and profile email/name together while preserving user metadata', async () => {
-    const { authUpdate, profileUpdate, auditInsert } = mockService()
+  it('updates Auth then transactionally reconciles profile + onboarding identity', async () => {
+    const { authUpdate, rpc, auditInsert } = mockService()
     const { updateUserIdentity } = await import('./actions')
 
     const result = await updateUserIdentity(USER_ID, {
@@ -187,10 +184,15 @@ describe('UM-H3.2 updateUserIdentity', () => {
         },
       })
     )
-    expect(profileUpdate).toHaveBeenCalledWith({
-      email: 'correct@example.test',
-      full_name: 'Correct Name',
-    })
+    expect(rpc).toHaveBeenCalledWith(
+      'reconcile_user_identity_profile_and_invitation',
+      {
+        p_user_id: USER_ID,
+        p_expected_old_email: 'old@example.test',
+        p_new_email: 'correct@example.test',
+        p_full_name: 'Correct Name',
+      }
+    )
     expect(auditInsert).toHaveBeenCalledWith(
       expect.objectContaining({
         target_user_id: USER_ID,
@@ -219,7 +221,7 @@ describe('UM-H3.2 updateUserIdentity', () => {
   it('blocks a school admin from editing another school', async () => {
     vi.resetModules()
     mockCaller('school_admin', SCHOOL_A)
-    const { authUpdate } = mockService({ profile: { school_id: SCHOOL_B } })
+    const { authUpdate, rpc } = mockService({ profile: { school_id: SCHOOL_B } })
     const { updateUserIdentity } = await import('./actions')
 
     const result = await updateUserIdentity(USER_ID, {
@@ -230,10 +232,11 @@ describe('UM-H3.2 updateUserIdentity', () => {
     expect(result.success).toBe(false)
     expect(result.error).toMatch(/forbidden/i)
     expect(authUpdate).not.toHaveBeenCalled()
+    expect(rpc).not.toHaveBeenCalled()
   })
 
   it('rejects invalid email before mutating Auth', async () => {
-    const { authUpdate } = mockService()
+    const { authUpdate, rpc } = mockService()
     const { updateUserIdentity } = await import('./actions')
 
     const result = await updateUserIdentity(USER_ID, {
@@ -244,10 +247,11 @@ describe('UM-H3.2 updateUserIdentity', () => {
     expect(result.success).toBe(false)
     expect(result.error).toMatch(/valid email/i)
     expect(authUpdate).not.toHaveBeenCalled()
+    expect(rpc).not.toHaveBeenCalled()
   })
 
   it('rejects a duplicate profile email before mutating Auth', async () => {
-    const { authUpdate } = mockService({ duplicateProfiles: [{ id: 'other-user' }] })
+    const { authUpdate, rpc } = mockService({ duplicateProfiles: [{ id: 'other-user' }] })
     const { updateUserIdentity } = await import('./actions')
 
     const result = await updateUserIdentity(USER_ID, {
@@ -258,10 +262,11 @@ describe('UM-H3.2 updateUserIdentity', () => {
     expect(result.success).toBe(false)
     expect(result.error).toMatch(/already exists/i)
     expect(authUpdate).not.toHaveBeenCalled()
+    expect(rpc).not.toHaveBeenCalled()
   })
 
   it('refuses to edit when Auth and profile email are already out of sync', async () => {
-    const { authUpdate, profileUpdate } = mockService({ authEmail: 'different@example.test' })
+    const { authUpdate, rpc } = mockService({ authEmail: 'different@example.test' })
     const { updateUserIdentity } = await import('./actions')
 
     const result = await updateUserIdentity(USER_ID, {
@@ -272,11 +277,11 @@ describe('UM-H3.2 updateUserIdentity', () => {
     expect(result.success).toBe(false)
     expect(result.error).toMatch(/does not match/i)
     expect(authUpdate).not.toHaveBeenCalled()
-    expect(profileUpdate).not.toHaveBeenCalled()
+    expect(rpc).not.toHaveBeenCalled()
   })
 
-  it('does not change profile data when Auth rejects the new email', async () => {
-    const { authUpdate, profileUpdate } = mockService({
+  it('does not reconcile database identity when Auth rejects the new email', async () => {
+    const { authUpdate, rpc } = mockService({
       authUpdateErrors: [{ message: 'A user with this email already exists' }],
     })
     const { updateUserIdentity } = await import('./actions')
@@ -289,12 +294,12 @@ describe('UM-H3.2 updateUserIdentity', () => {
     expect(result.success).toBe(false)
     expect(result.error).toMatch(/already exists/i)
     expect(authUpdate).toHaveBeenCalledTimes(1)
-    expect(profileUpdate).not.toHaveBeenCalled()
+    expect(rpc).not.toHaveBeenCalled()
   })
 
-  it('rolls Auth back when the profile write fails', async () => {
-    const { authUpdate } = mockService({
-      profileUpdateError: { message: 'profile write failed' },
+  it('rolls Auth back when profile/invitation reconciliation fails', async () => {
+    const { authUpdate, rpc } = mockService({
+      reconciliationError: { message: 'invitation conflict' },
       authUpdateErrors: [null, null],
     })
     const { updateUserIdentity } = await import('./actions')
@@ -306,6 +311,7 @@ describe('UM-H3.2 updateUserIdentity', () => {
 
     expect(result.success).toBe(false)
     expect(result.error).toMatch(/rolled back/i)
+    expect(rpc).toHaveBeenCalledTimes(1)
     expect(authUpdate).toHaveBeenCalledTimes(2)
     expect(authUpdate).toHaveBeenNthCalledWith(
       2,
@@ -321,9 +327,9 @@ describe('UM-H3.2 updateUserIdentity', () => {
     )
   })
 
-  it('surfaces administrator-cleanup state when profile write and Auth rollback both fail', async () => {
+  it('surfaces administrator-cleanup state when reconciliation and Auth rollback both fail', async () => {
     const { authUpdate } = mockService({
-      profileUpdateError: { message: 'profile write failed' },
+      reconciliationError: { message: 'database reconciliation failed' },
       authUpdateErrors: [null, { message: 'rollback failed' }],
     })
     const { updateUserIdentity } = await import('./actions')
@@ -339,7 +345,7 @@ describe('UM-H3.2 updateUserIdentity', () => {
   })
 
   it('returns an idempotent no-op when normalized identity is unchanged', async () => {
-    const { authUpdate, profileUpdate } = mockService()
+    const { authUpdate, rpc } = mockService()
     const { updateUserIdentity } = await import('./actions')
 
     const result = await updateUserIdentity(USER_ID, {
@@ -357,6 +363,6 @@ describe('UM-H3.2 updateUserIdentity', () => {
       },
     })
     expect(authUpdate).not.toHaveBeenCalled()
-    expect(profileUpdate).not.toHaveBeenCalled()
+    expect(rpc).not.toHaveBeenCalled()
   })
 })
