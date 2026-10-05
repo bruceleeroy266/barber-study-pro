@@ -246,9 +246,12 @@ export default async function InstructorStudentsPage() {
   // Sort by name
   studentStats.sort((a, b) => a.full_name.localeCompare(b.full_name))
 
-  const totalStudents = studentStats.length
-  const activeStudents = studentStats.filter((s) => s.daysSinceActive !== null && s.daysSinceActive <= 7).length
-  const atRiskStudents = studentStats.filter((s) => {
+  // Keep supplemental/cross-program learners visible in the roster while
+  // excluding them from class-level aggregate cards.
+  const metricStudentStats = studentStats.filter((student) => student.include_in_school_metrics !== false)
+  const totalStudents = metricStudentStats.length
+  const activeStudents = metricStudentStats.filter((s) => s.daysSinceActive !== null && s.daysSinceActive <= 7).length
+  const atRiskStudents = metricStudentStats.filter((s) => {
     const lowReadiness = s.readinessScore > 0 && s.readinessScore < 70
     const lowProgress = s.overallProgress < 50
     const lowQuiz = s.quizzesTaken > 0 && s.avgQuizScore < 70
@@ -287,7 +290,7 @@ export default async function InstructorStudentsPage() {
           </div>
           <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-5">
             <div className="text-2xl font-bold text-gold">
-              {studentStats.filter((s) => s.readinessLevel === 'Ready').length}
+              {metricStudentStats.filter((s) => s.readinessLevel === 'Ready').length}
             </div>
             <div className="text-xs text-[var(--color-text-muted)] mt-1">Board Ready</div>
           </div>

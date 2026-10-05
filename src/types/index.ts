@@ -11,6 +11,8 @@ export interface Profile {
   avatar_url: string | null
   approval_status: 'pending' | 'approved' | 'rejected'
   is_disabled: boolean
+  /** Defaults to true. False keeps individual learning data visible while excluding this learner from school/class aggregate metrics. */
+  include_in_school_metrics?: boolean
   approved_by: string | null
   approved_at: string | null
   requires_password_change: boolean

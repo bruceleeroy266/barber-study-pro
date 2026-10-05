@@ -69,12 +69,20 @@ export default function UserManagementMobileCard({
           <dd className="mt-1 text-white">{formatCreatedAt(user.created_at)}</dd>
         </div>
         {(user.role === 'student' || user.role === 'apprentice') && (
-          <div className="col-span-2">
-            <dt className="text-xs uppercase tracking-wide text-[var(--color-text-muted)]">Instructor</dt>
-            <dd className="mt-1 text-white">
-              {user.assigned_instructor_name ?? 'Unassigned'}
-            </dd>
-          </div>
+          <>
+            <div>
+              <dt className="text-xs uppercase tracking-wide text-[var(--color-text-muted)]">Metrics</dt>
+              <dd className="mt-1 text-white">
+                {user.include_in_school_metrics === false ? 'Excluded' : 'Included'}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-xs uppercase tracking-wide text-[var(--color-text-muted)]">Instructor</dt>
+              <dd className="mt-1 text-white">
+                {user.assigned_instructor_name ?? 'Unassigned'}
+              </dd>
+            </div>
+          </>
         )}
       </dl>
 
