@@ -10,6 +10,10 @@ const SCHOOL_B = '22222222-2222-4222-8222-222222222222'
 const USER_ID = '33333333-3333-4333-8333-333333333333'
 const EMAIL = 'student@example.test'
 
+vi.mock('next/cache', () => ({
+  revalidatePath: vi.fn(),
+}))
+
 function mockCaller(role = 'school_admin', schoolId: string | null = SCHOOL_A) {
   vi.doMock('@/lib/supabase-server', () => ({
     createClient: vi.fn().mockResolvedValue({
@@ -40,7 +44,7 @@ function makeServiceClient(existingProfile: {
   school_id?: string | null
   approval_status?: string
   is_disabled?: boolean
-} = {}) {
+} = {}, invitationStatus: 'pending' | 'accepted' | 'expired' | 'revoked' | null = null) {
   const profile = {
     id: USER_ID,
     email: EMAIL,
@@ -61,6 +65,11 @@ function makeServiceClient(existingProfile: {
     data: { users: [{ id: USER_ID, email: profile.email }] },
     error: null,
   })
+
+  const invitationUpdate = vi.fn().mockReturnValue({
+    eq: vi.fn().mockResolvedValue({ data: null, error: null }),
+  })
+  const invitationInsert = vi.fn().mockResolvedValue({ data: null, error: null })
 
   const serviceClient = {
     auth: {
@@ -107,15 +116,16 @@ function makeServiceClient(existingProfile: {
             eq: vi.fn().mockReturnValue({
               eq: vi.fn().mockReturnValue({
                 eq: vi.fn().mockReturnValue({
-                  maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
+                  maybeSingle: vi.fn().mockResolvedValue({
+                    data: invitationStatus ? { id: 'invitation-1', status: invitationStatus } : null,
+                    error: null,
+                  }),
                 }),
               }),
             }),
           }),
-          insert: vi.fn().mockResolvedValue({ data: null, error: null }),
-          update: vi.fn().mockReturnValue({
-            eq: vi.fn().mockResolvedValue({ data: null, error: null }),
-          }),
+          insert: invitationInsert,
+          update: invitationUpdate,
         }
       }
 
@@ -127,7 +137,7 @@ function makeServiceClient(existingProfile: {
     createServiceRoleClient: vi.fn().mockReturnValue(serviceClient),
   }))
 
-  return { serviceClient, resetPasswordForEmail, getUserById, listUsers }
+  return { serviceClient, resetPasswordForEmail, getUserById, listUsers, invitationUpdate, invitationInsert }
 }
 
 describe('pilot invitation recovery', () => {
@@ -205,6 +215,24 @@ describe('pilot invitation recovery', () => {
     expect(resetPasswordForEmail).toHaveBeenCalledWith(
       EMAIL,
       { redirectTo: 'http://localhost:3000/auth/callback?type=recovery' }
+    )
+  })
+
+  it('reopens an expired invitation to pending when a fresh setup link is sent', async () => {
+    const { invitationUpdate } = makeServiceClient({}, 'expired')
+    const { resendUserSetupLink } = await import('./actions')
+
+    const result = await resendUserSetupLink(USER_ID)
+
+    expect(result.success).toBe(true)
+    expect(invitationUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        auth_user_id: USER_ID,
+        status: 'pending',
+        accepted_at: null,
+        revoked_at: null,
+        revoked_by: null,
+      })
     )
   })
 
