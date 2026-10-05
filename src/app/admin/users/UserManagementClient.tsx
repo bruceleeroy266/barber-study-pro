@@ -6,6 +6,7 @@ import {
   inviteUser,
   deleteUser,
   getUsers,
+  resendUserSetupLink,
   UserListItem,
 } from './actions'
 import { AppRole } from '@/types'
@@ -66,6 +67,7 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
   const [isInvitingUser, setIsInvitingUser] = useState(false)
   const [deleteCandidate, setDeleteCandidate] = useState<UserListItem | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [recoveringUserId, setRecoveringUserId] = useState<string | null>(null)
   const [enrollmentStudent, setEnrollmentStudent] = useState<UserListItem | null>(() =>
     setupMode === 'enrollment'
       ? initialUsers.find(
@@ -100,6 +102,20 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
               : setupMode === 'manage-admins'
                 ? 'Review school administrator accounts and activate the required admin.'
                 : null
+
+  const recoveryUsers = users.filter((user) => {
+    const invitationNeedsAttention =
+      user.invitation_status === 'pending' ||
+      user.invitation_status === 'expired' ||
+      user.invitation_status === 'revoked'
+    const enrollmentMissing =
+      user.role === 'student' && (user.enrollment_count ?? 0) === 0
+    const assignmentMissing =
+      (user.role === 'student' || user.role === 'apprentice') &&
+      !user.assigned_instructor_id
+
+    return invitationNeedsAttention || enrollmentMissing || assignmentMissing
+  })
 
   const manageableRoles = currentUser.isPlatformAdmin
     ? ROLES
@@ -156,6 +172,22 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
       }
     } finally {
       setIsCreatingUser(false)
+    }
+  }
+
+  async function handleSetupLinkRecovery(user: UserListItem) {
+    if (recoveringUserId) return
+
+    setRecoveringUserId(user.id)
+    setMessage(null)
+    const result = await resendUserSetupLink(user.id)
+    setRecoveringUserId(null)
+
+    if (result.success) {
+      setMessage({ type: 'success', text: `Fresh setup link sent to ${user.email}` })
+      await loadUsers(0)
+    } else {
+      setMessage({ type: 'error', text: result.error || 'Failed to send setup link' })
     }
   }
 
@@ -235,6 +267,102 @@ export function UserManagementClient({ currentUser, initialUsers, initialCount, 
           <span className="font-semibold">School Setup:</span> {setupGuidance}
         </div>
       )}
+      {recoveryUsers.length > 0 && (
+        <section
+          aria-labelledby="onboarding-recovery-title"
+          className="rounded-xl border border-[var(--color-brand-gold)]/30 bg-[var(--color-background-primary)] p-5"
+        >
+          <div className="mb-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">School Setup Recovery</p>
+            <h2 id="onboarding-recovery-title" className="mt-1 text-xl font-semibold text-white">
+              {recoveryUsers.length} account{recoveryUsers.length === 1 ? '' : 's'} need attention
+            </h2>
+            <p className="mt-1 text-sm text-[var(--color-text-muted)]">
+              Fix setup links, enrollment, and instructor assignments here without restarting onboarding.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            {recoveryUsers.map((user) => {
+              const invitationNeedsAttention =
+                user.invitation_status === 'pending' ||
+                user.invitation_status === 'expired' ||
+                user.invitation_status === 'revoked'
+              const enrollmentMissing =
+                user.role === 'student' && (user.enrollment_count ?? 0) === 0
+              const assignmentMissing =
+                (user.role === 'student' || user.role === 'apprentice') &&
+                !user.assigned_instructor_id
+
+              return (
+                <div key={user.id} className="rounded-lg border border-[var(--color-border-primary)] bg-black p-4">
+                  <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                    <div>
+                      <p className="font-semibold text-white">{user.full_name || user.email}</p>
+                      <p className="text-xs text-[var(--color-text-muted)]">{user.email}</p>
+                      <div className="mt-2 flex flex-wrap gap-2 text-xs">
+                        {invitationNeedsAttention && (
+                          <span className="rounded-full border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 px-2 py-1 text-[var(--color-brand-gold)]">
+                            Invitation: {user.invitation_status}
+                          </span>
+                        )}
+                        {enrollmentMissing && (
+                          <span className="rounded-full border border-silver/30 bg-silver/10 px-2 py-1 text-silver">
+                            Enrollment missing
+                          </span>
+                        )}
+                        {assignmentMissing && (
+                          <span className="rounded-full border border-silver/30 bg-silver/10 px-2 py-1 text-silver">
+                            Instructor unassigned
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
+                      {invitationNeedsAttention && (
+                        <button
+                          type="button"
+                          onClick={() => handleSetupLinkRecovery(user)}
+                          disabled={recoveringUserId === user.id}
+                          className="min-h-10 rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 px-3 py-2 text-sm font-semibold text-[var(--color-brand-gold)] disabled:opacity-50"
+                        >
+                          {recoveringUserId === user.id ? 'Sending…' : 'Send fresh setup link'}
+                        </button>
+                      )}
+                      {enrollmentMissing && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setManageCandidate(null)
+                            setEnrollmentStudent(user)
+                          }}
+                          className="min-h-10 rounded-lg border border-[var(--color-border-primary)] px-3 py-2 text-sm text-white"
+                        >
+                          Fix enrollment
+                        </button>
+                      )}
+                      {assignmentMissing && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEnrollmentStudent(null)
+                            setManageCandidate(user)
+                          }}
+                          className="min-h-10 rounded-lg border border-[var(--color-border-primary)] px-3 py-2 text-sm text-white"
+                        >
+                          Assign instructor
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </section>
+      )}
+
       {message && (
         <div
           role="status"
