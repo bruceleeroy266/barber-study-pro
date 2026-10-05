@@ -1390,6 +1390,207 @@ export async function setUserSchoolMetricsInclusion(
   return { success: true }
 }
 
+
+export interface UpdateUserIdentityInput {
+  full_name: string
+  email: string
+}
+
+export interface UpdateUserIdentityResult {
+  id: string
+  full_name: string
+  email: string
+  changed: boolean
+}
+
+function normalizeIdentityEmail(email: string): string {
+  return email.trim().toLowerCase()
+}
+
+function isValidIdentityEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+}
+
+/**
+ * UM-H3.2 — Secure user identity correction.
+ *
+ * Auth is the canonical login identity while profiles mirrors email/name for
+ * application use. Auth and Postgres cannot participate in one transaction,
+ * so this action performs an explicit compensating rollback if the profile
+ * write fails after the Auth mutation.
+ *
+ * Invitation-lifecycle reconciliation is intentionally handled by UM-H3.3
+ * before this action is exposed in the admin UI.
+ */
+export async function updateUserIdentity(
+  id: string,
+  input: UpdateUserIdentityInput
+): Promise<ActionResult<UpdateUserIdentityResult>> {
+  const adminResult = await getCurrentAdmin()
+  if (!adminResult.success || !adminResult.data) {
+    return { success: false, error: adminResult.error }
+  }
+
+  const admin = adminResult.data
+  const serviceClient = createServiceRoleClient()
+  const userResult = await getManagedUser(serviceClient, admin, id)
+
+  if (!userResult.success || !userResult.user) {
+    return { success: false, error: userResult.error }
+  }
+
+  const target = userResult.user
+  const nextFullName = input.full_name.trim()
+  const nextEmail = normalizeIdentityEmail(input.email)
+  const oldEmail = normalizeIdentityEmail(target.email)
+  const oldFullName = target.full_name.trim()
+
+  if (!nextFullName) {
+    return { success: false, error: 'Full name is required' }
+  }
+  if (nextFullName.length > 200) {
+    return { success: false, error: 'Full name must be 200 characters or fewer' }
+  }
+  if (!isValidIdentityEmail(nextEmail)) {
+    return { success: false, error: 'Enter a valid email address' }
+  }
+
+  const emailChanged = nextEmail !== oldEmail
+  const nameChanged = nextFullName !== oldFullName
+
+  if (!emailChanged && !nameChanged) {
+    return {
+      success: true,
+      data: {
+        id: target.id,
+        full_name: target.full_name,
+        email: oldEmail,
+        changed: false,
+      },
+    }
+  }
+
+  const { data: authData, error: authLookupError } = await serviceClient.auth.admin.getUserById(id)
+  const authUser = authData?.user
+  if (authLookupError || !authUser || !authUser.email) {
+    return { success: false, error: 'Authentication account not found for this user' }
+  }
+
+  const currentAuthEmail = normalizeIdentityEmail(authUser.email)
+  if (currentAuthEmail !== oldEmail) {
+    return {
+      success: false,
+      error: 'Authentication email does not match the managed profile. Repair identity drift before editing this user.',
+    }
+  }
+
+  if (emailChanged) {
+    const { data: duplicateProfiles, error: duplicateLookupError } = await serviceClient
+      .from('profiles')
+      .select('id')
+      .ilike('email', nextEmail)
+      .neq('id', id)
+      .limit(1)
+
+    if (duplicateLookupError) {
+      return { success: false, error: `Failed to verify email availability: ${duplicateLookupError.message}` }
+    }
+
+    if ((duplicateProfiles ?? []).length > 0) {
+      return { success: false, error: 'An account with this email already exists' }
+    }
+  }
+
+  const oldUserMetadata =
+    authUser.user_metadata && typeof authUser.user_metadata === 'object'
+      ? { ...authUser.user_metadata }
+      : {}
+  const nextUserMetadata = nameChanged
+    ? { ...oldUserMetadata, full_name: nextFullName }
+    : oldUserMetadata
+
+  const authChanges: {
+    email?: string
+    user_metadata?: Record<string, unknown>
+  } = {}
+  if (emailChanged) authChanges.email = nextEmail
+  if (nameChanged) authChanges.user_metadata = nextUserMetadata
+
+  const { error: authUpdateError } = await serviceClient.auth.admin.updateUserById(id, authChanges)
+  if (authUpdateError) {
+    const duplicateMessage = /already|duplicate|exists|registered/i.test(authUpdateError.message)
+      ? 'An account with this email already exists'
+      : `Failed to update authentication identity: ${authUpdateError.message}`
+    return { success: false, error: duplicateMessage }
+  }
+
+  const profileChanges: { email?: string; full_name?: string } = {}
+  if (emailChanged) profileChanges.email = nextEmail
+  if (nameChanged) profileChanges.full_name = nextFullName
+
+  const { error: profileUpdateError } = await serviceClient
+    .from('profiles')
+    .update(profileChanges)
+    .eq('id', id)
+
+  if (profileUpdateError) {
+    const rollbackChanges: {
+      email?: string
+      user_metadata?: Record<string, unknown>
+    } = {}
+    if (emailChanged) rollbackChanges.email = currentAuthEmail
+    if (nameChanged) rollbackChanges.user_metadata = oldUserMetadata
+
+    const { error: rollbackError } = await serviceClient.auth.admin.updateUserById(id, rollbackChanges)
+
+    if (rollbackError) {
+      return {
+        success: false,
+        error:
+          `Failed to update profile identity: ${profileUpdateError.message}. ` +
+          `Auth rollback also failed: ${rollbackError.message}. Administrator cleanup is required.`,
+      }
+    }
+
+    return {
+      success: false,
+      error: `Failed to update profile identity: ${profileUpdateError.message}. Authentication changes were rolled back.`,
+    }
+  }
+
+  await logUserManagementAction(
+    admin,
+    id,
+    nextEmail,
+    'update_user_identity',
+    {
+      full_name: target.full_name,
+      email: oldEmail,
+    },
+    {
+      full_name: nextFullName,
+      email: nextEmail,
+    },
+    target.school_id
+  )
+
+  revalidatePath('/admin/users')
+  revalidatePath('/school')
+  revalidatePath('/instructor')
+  revalidatePath('/instructor/students')
+  revalidatePath('/dashboard/profile')
+
+  return {
+    success: true,
+    data: {
+      id,
+      full_name: nextFullName,
+      email: nextEmail,
+      changed: true,
+    },
+  }
+}
+
 export async function changeUserRole(id: string, role: AppRole): Promise<ActionResult> {
   const adminResult = await getCurrentAdmin()
   if (!adminResult.success || !adminResult.data) {
