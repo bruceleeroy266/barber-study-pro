@@ -30,7 +30,12 @@ export default function RandomizedMicroCheckChoices({
   const [choices] = useState(() => buildShuffledMicroCheckChoices(question))
 
   return (
-    <div className="grid gap-2">
+    <div
+      className="grid gap-2"
+      role="group"
+      aria-label="Answer choices"
+      aria-disabled={locked || disabled}
+    >
       {choices.map((choice) => {
         const active = locked
           ? recordedAnswer === choice.sourceKey
@@ -41,8 +46,9 @@ export default function RandomizedMicroCheckChoices({
             key={choice.sourceKey}
             type="button"
             disabled={locked || disabled}
+            aria-pressed={active}
             onClick={() => onSelect(choice.sourceKey)}
-            className="w-full rounded-lg border px-3 py-3 text-left disabled:cursor-default"
+            className="w-full min-h-11 rounded-lg border px-3 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-default disabled:opacity-70"
             style={{
               borderColor: active ? theme.primary : theme.border,
               background: active ? `${theme.primary}18` : theme.background,
