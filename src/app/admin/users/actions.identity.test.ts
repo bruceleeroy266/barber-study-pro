@@ -26,6 +26,9 @@ type Profile = {
 }
 
 function mockCaller(role = 'admin', schoolId: string | null = null) {
+  // Replace any per-test caller mock deterministically. vi.resetModules()
+  // clears the module cache but does not unregister a queued doMock factory.
+  vi.doUnmock('@/lib/supabase-server')
   vi.doMock('@/lib/supabase-server', () => ({
     createClient: vi.fn().mockResolvedValue({
       auth: {
@@ -136,6 +139,9 @@ function mockService(options: {
     }),
   }
 
+  // Same rule as mockCaller(): explicitly replace the prior factory so
+  // tenant-boundary tests cannot inherit another test's service mock.
+  vi.doUnmock('@/lib/supabase-service-role')
   vi.doMock('@/lib/supabase-service-role', () => ({
     createServiceRoleClient: vi.fn().mockReturnValue(serviceClient),
   }))
