@@ -16,6 +16,7 @@ export interface UserListItem {
   school_name: string | null
   approval_status: 'pending' | 'approved' | 'rejected'
   is_disabled: boolean
+  include_in_school_metrics: boolean
   requires_password_change: boolean
   invitation_status?: 'pending' | 'accepted' | 'expired' | 'revoked' | null
   invitation_expires_at?: string | null
@@ -218,6 +219,7 @@ export async function getUsers(filters: UserFilters = {}): Promise<ActionResult<
       school_id,
       approval_status,
       is_disabled,
+      include_in_school_metrics,
       requires_password_change,
       created_at,
       updated_at,
@@ -276,6 +278,7 @@ export async function getUsers(filters: UserFilters = {}): Promise<ActionResult<
       school_name: school?.name ?? null,
       approval_status: String(row.approval_status) as 'pending' | 'approved' | 'rejected',
       is_disabled: Boolean(row.is_disabled),
+      include_in_school_metrics: row.include_in_school_metrics !== false,
       requires_password_change: Boolean(row.requires_password_change),
       created_at: String(row.created_at),
       updated_at: String(row.updated_at),
@@ -656,6 +659,7 @@ export async function getUserById(id: string): Promise<ActionResult<UserListItem
       school_id,
       approval_status,
       is_disabled,
+      include_in_school_metrics,
       requires_password_change,
       created_at,
       updated_at,
@@ -685,6 +689,7 @@ export async function getUserById(id: string): Promise<ActionResult<UserListItem
       school_name: school?.name ?? null,
       approval_status: String(data.approval_status) as 'pending' | 'approved' | 'rejected',
       is_disabled: Boolean(data.is_disabled),
+      include_in_school_metrics: data.include_in_school_metrics !== false,
       requires_password_change: Boolean(data.requires_password_change),
       created_at: String(data.created_at),
       updated_at: String(data.updated_at),
@@ -770,6 +775,7 @@ export async function createUser(formData: UserFormData): Promise<ActionResult<{
       school_id: formData.school_id,
       approval_status: formData.approval_status,
       is_disabled: false,
+      include_in_school_metrics: true,
       requires_password_change: true,
     },
     { onConflict: 'id' }
@@ -1305,6 +1311,57 @@ export async function toggleUserDisabled(id: string, isDisabled: boolean): Promi
   }
 
   await logUserManagementAction(admin, id, userResult.user.email, isDisabled ? 'disable_user' : 'enable_user', oldValues, newValues, userResult.user.school_id)
+
+  return { success: true }
+}
+
+export async function setUserSchoolMetricsInclusion(
+  id: string,
+  includeInSchoolMetrics: boolean
+): Promise<ActionResult> {
+  const adminResult = await getCurrentAdmin()
+  if (!adminResult.success || !adminResult.data) {
+    return { success: false, error: adminResult.error }
+  }
+
+  const admin = adminResult.data
+  const serviceClient = createServiceRoleClient()
+  const userResult = await getManagedUser(serviceClient, admin, id)
+  if (!userResult.success || !userResult.user) {
+    return { success: false, error: userResult.error }
+  }
+
+  const learner = userResult.user
+  if (learner.role !== 'student' && learner.role !== 'apprentice') {
+    return { success: false, error: 'School metrics inclusion applies only to students and apprentices' }
+  }
+
+  const oldValues = { include_in_school_metrics: learner.include_in_school_metrics }
+  const newValues = { include_in_school_metrics: includeInSchoolMetrics }
+
+  const { error } = await serviceClient
+    .from('profiles')
+    .update({ include_in_school_metrics: includeInSchoolMetrics })
+    .eq('id', id)
+
+  if (error) {
+    return { success: false, error: error.message }
+  }
+
+  await logUserManagementAction(
+    admin,
+    id,
+    learner.email,
+    'set_school_metrics_inclusion',
+    oldValues,
+    newValues,
+    learner.school_id
+  )
+
+  revalidatePath('/admin/users')
+  revalidatePath('/school')
+  revalidatePath('/instructor')
+  revalidatePath('/instructor/students')
 
   return { success: true }
 }
@@ -1896,6 +1953,7 @@ interface ManagedUser {
   school_id: string | null
   approval_status: 'pending' | 'approved' | 'rejected'
   is_disabled: boolean
+  include_in_school_metrics: boolean
   requires_password_change: boolean
 }
 
@@ -1906,7 +1964,7 @@ async function getManagedUser(
 ): Promise<{ success: boolean; user?: ManagedUser; error?: string }> {
   const { data, error } = await serviceClient
     .from('profiles')
-    .select('id, email, full_name, role, school_id, approval_status, is_disabled, requires_password_change')
+    .select('id, email, full_name, role, school_id, approval_status, is_disabled, include_in_school_metrics, requires_password_change')
     .eq('id', id)
     .single()
 
@@ -1928,6 +1986,7 @@ async function getManagedUser(
       school_id: data.school_id ? String(data.school_id) : null,
       approval_status: String(data.approval_status) as 'pending' | 'approved' | 'rejected',
       is_disabled: Boolean(data.is_disabled),
+      include_in_school_metrics: data.include_in_school_metrics !== false,
       requires_password_change: Boolean(data.requires_password_change),
     },
   }
