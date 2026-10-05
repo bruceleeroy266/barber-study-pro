@@ -16,7 +16,7 @@ export interface UserListItem {
   school_name: string | null
   approval_status: 'pending' | 'approved' | 'rejected'
   is_disabled: boolean
-  include_in_school_metrics: boolean
+  include_in_school_metrics?: boolean
   requires_password_change: boolean
   invitation_status?: 'pending' | 'accepted' | 'expired' | 'revoked' | null
   invitation_expires_at?: string | null
