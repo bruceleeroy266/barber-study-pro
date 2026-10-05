@@ -6,6 +6,7 @@ import { Mail, Phone, Calendar, Tag, Trash2, CheckCircle, XCircle, HelpCircle, A
 import ReplyModal from './ReplyModal'
 import ApproveInquiryModal from './ApproveInquiryModal'
 import CreateSchoolModal from './CreateSchoolModal'
+import AddSchoolModal from './AddSchoolModal'
 import BackButton from '@/components/ui/BackButton'
 
 export const dynamic = 'force-dynamic'
@@ -57,13 +58,19 @@ function formatDate(iso: string): string {
   })
 }
 
-export default async function PilotInquiriesPage() {
+export default async function PilotInquiriesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ add?: string }>
+}) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
     redirect('/login')
   }
+
+  const { add } = await searchParams
 
   const { data: profile } = await supabase
     .from('profiles')
@@ -74,6 +81,8 @@ export default async function PilotInquiriesPage() {
   if (!profile || !(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
     redirect('/dashboard')
   }
+
+  const isPlatformAdmin = profile.role === 'admin' && profile.school_id === null
 
   const { data: inquiries, error } = await supabase
     .from('pilot_inquiries')
@@ -98,6 +107,7 @@ export default async function PilotInquiriesPage() {
               {rows.length} submission{rows.length === 1 ? '' : 's'} found
             </p>
           </div>
+          {isPlatformAdmin && <AddSchoolModal defaultOpen={add === 'school'} />}
         </div>
 
         {error && (
