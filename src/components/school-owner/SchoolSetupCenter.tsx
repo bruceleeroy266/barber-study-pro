@@ -1,5 +1,9 @@
 import Link from 'next/link'
-import { resolveGuidedOnboardingAction, type SchoolOnboardingStatus } from '@/lib/onboarding'
+import {
+  buildSchoolLaunchPreflight,
+  resolveGuidedOnboardingAction,
+  type SchoolOnboardingStatus,
+} from '@/lib/onboarding'
 
 interface SchoolSetupCenterProps {
   status: SchoolOnboardingStatus
@@ -7,6 +11,7 @@ interface SchoolSetupCenterProps {
 
 export default function SchoolSetupCenter({ status }: SchoolSetupCenterProps) {
   const complete = status.readyToLaunch
+  const preflight = buildSchoolLaunchPreflight(status)
   const nextAction = status.nextAction ? resolveGuidedOnboardingAction(status.nextAction) : null
 
   return (
@@ -84,6 +89,69 @@ export default function SchoolSetupCenter({ status }: SchoolSetupCenterProps) {
             </div>
           </div>
         ))}
+      </div>
+
+      <div
+        className={`mt-6 rounded-lg border p-4 ${
+          preflight.authorized
+            ? 'border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10'
+            : 'border-red-500/20 bg-red-500/10'
+        }`}
+        aria-labelledby="launch-preflight-title"
+      >
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-silver-gray">
+              Ready-to-Launch Preflight
+            </p>
+            <h3
+              id="launch-preflight-title"
+              className={`mt-1 text-lg font-semibold ${
+                preflight.authorized ? 'text-[var(--color-brand-gold)]' : 'text-red-300'
+              }`}
+            >
+              {preflight.authorized ? 'Launch Authorized' : 'Launch Locked'}
+            </h3>
+            <p className="mt-1 text-sm text-silver">{preflight.summary}</p>
+          </div>
+          <div
+            role="status"
+            aria-live="polite"
+            className="shrink-0 rounded-full border border-graphite bg-black px-3 py-1 text-xs font-semibold text-white"
+          >
+            {preflight.checks.filter((check) => check.passed).length} of {preflight.checks.length} checks passed
+          </div>
+        </div>
+
+        <div className="mt-4 grid grid-cols-1 gap-2 md:grid-cols-2">
+          {preflight.checks.map((check) => (
+            <div
+              key={check.id}
+              className="flex items-start gap-3 rounded-lg border border-graphite bg-black p-3"
+            >
+              <span
+                aria-hidden="true"
+                className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
+                  check.passed
+                    ? 'bg-[var(--color-brand-gold)] text-black'
+                    : 'border border-red-400 text-red-300'
+                }`}
+              >
+                {check.passed ? '✓' : '!'}
+              </span>
+              <div>
+                <p className="text-sm font-semibold text-white">{check.title}</p>
+                {!check.passed && <p className="mt-1 text-xs text-red-200/80">{check.detail}</p>}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {!preflight.authorized && (
+          <p className="mt-4 text-xs text-red-200/80">
+            Resolve every launch blocker below. ASCYN PRO fails closed if required setup data cannot be verified.
+          </p>
+        )}
       </div>
 
       {status.blockers.length > 0 && (
