@@ -10,6 +10,10 @@ const SCHOOL_B = '22222222-2222-4222-8222-222222222222'
 const USER_ID = '33333333-3333-4333-8333-333333333333'
 const EMAIL = 'student@example.test'
 
+vi.mock('next/cache', () => ({
+  revalidatePath: vi.fn(),
+}))
+
 function mockCaller(role = 'school_admin', schoolId: string | null = SCHOOL_A) {
   vi.doMock('@/lib/supabase-server', () => ({
     createClient: vi.fn().mockResolvedValue({
