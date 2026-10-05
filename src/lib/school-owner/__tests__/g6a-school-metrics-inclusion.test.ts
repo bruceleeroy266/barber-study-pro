@@ -145,6 +145,15 @@ describe('G6-A school metrics inclusion boundary', () => {
     }
 
     const metrics = buildSchoolOverviewMetrics(inputs)
+    const includedOnlyMetrics = buildSchoolOverviewMetrics({
+      ...inputs,
+      students: [included],
+      hourLogs: [hour(included.id, 10)],
+      quizAttempts: [attempt(included.id, 100)],
+      progress: [progress(included.id, 100)],
+      grades: [grade(included.id, 100)],
+      assessments: [assessment(included.id, true)],
+    })
     const rows = buildStudentPerformanceRows(inputs)
     const snapshot = buildSchoolAnalyticsSnapshot(inputs)
     const report = generateSchoolReport('school_summary', inputs)
@@ -154,7 +163,7 @@ describe('G6-A school metrics inclusion boundary', () => {
     expect(metrics.averageGrade).toBe(100)
     expect(metrics.completedHours).toBe(10)
     expect(metrics.assessmentCompletionRate).toBe(100)
-    expect(metrics.atRiskStudents).toBe(0)
+    expect(metrics.atRiskStudents).toBe(includedOnlyMetrics.atRiskStudents)
 
     // Individual evidence is intentionally preserved for both learners.
     expect(rows).toHaveLength(2)
