@@ -17,6 +17,26 @@ const HOUR_CATEGORIES: HourCategory[] = [
 
 const ALLOWED_RETURN_PATHS = new Set(['/instructor/hours', '/school/hours'])
 
+async function canReviewStudentHours(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  actor: { id: string; role: string | null; school_id: string | null },
+): Promise<boolean> {
+  if (!actor.school_id) return false
+  if (isSchoolAdmin(actor.role)) return true
+  if (actor.role !== 'instructor') return false
+
+  const { data } = await supabase
+    .from('instructors')
+    .select('can_approve_hours')
+    .eq('profile_id', actor.id)
+    .eq('school_id', actor.school_id)
+    .eq('is_active', true)
+    .is('deleted_at', null)
+    .maybeSingle()
+
+  return data?.can_approve_hours === true
+}
+
 export async function logStudentHours(formData: FormData) {
   const studentId = String(formData.get('studentId') || '').trim()
   const date = String(formData.get('date') || '').trim()
@@ -106,13 +126,15 @@ export async function reviewStudentHours(formData: FormData) {
   const hourLogId = String(formData.get('hourLogId') || '').trim()
   const decision = String(formData.get('decision') || '').trim()
   const rejectionReason = String(formData.get('rejectionReason') || '').trim()
+  const returnToRaw = String(formData.get('returnTo') || '/school/hours')
+  const returnTo = ALLOWED_RETURN_PATHS.has(returnToRaw) ? returnToRaw : '/school/hours'
 
   if (!hourLogId || !['approved', 'rejected'].includes(decision)) {
-    redirect('/school/hours?error=invalid-review')
+    redirect(`${returnTo}?error=invalid-review`)
   }
 
   if (decision === 'rejected' && !rejectionReason) {
-    redirect('/school/hours?error=rejection-reason-required')
+    redirect(`${returnTo}?error=rejection-reason-required`)
   }
 
   const supabase = await createClient()
@@ -125,7 +147,7 @@ export async function reviewStudentHours(formData: FormData) {
     .eq('id', user.id)
     .single()
 
-  if (!actor?.school_id || !isSchoolAdmin(actor.role)) {
+  if (!actor?.school_id || !(await canReviewStudentHours(supabase, actor))) {
     redirect('/dashboard')
   }
 
@@ -142,30 +164,26 @@ export async function reviewStudentHours(formData: FormData) {
 
   if (target.status !== 'pending') {
     redirect(
-      `/school/hours?alreadyReviewed=${encodeURIComponent(target.status)}&student=${encodeURIComponent(target.user_id)}`,
+      `${returnTo}?alreadyReviewed=${encodeURIComponent(target.status)}&student=${encodeURIComponent(target.user_id)}`,
     )
   }
 
-  const { data: updated, error } = await supabase
-    .from('hour_logs')
-    .update({
-      status: decision,
-      reviewed_by: user.id,
-      reviewed_at: new Date().toISOString(),
-      rejection_reason: decision === 'rejected' ? rejectionReason.slice(0, 500) : null,
-    })
-    .eq('id', hourLogId)
-    .eq('school_id', actor.school_id)
-    .eq('status', 'pending')
-    .select('id, user_id, status')
-    .maybeSingle()
+  const { data: reviewedRows, error } = await supabase.rpc(
+    'review_hour_log_as_authorized_approver',
+    {
+      p_hour_log_id: hourLogId,
+      p_decision: decision,
+      p_rejection_reason: decision === 'rejected' ? rejectionReason.slice(0, 500) : null,
+    },
+  )
+  const updated = Array.isArray(reviewedRows) ? reviewedRows[0] ?? null : null
 
   if (error) {
     console.error('[StaffHours] Failed to review hours', error)
     const message = error.message.toLowerCase()
     redirect(
       message.includes('daily approved hours cannot exceed 1440')
-        ? '/school/hours?error=daily-hour-cap'
+        ? `${returnTo}?error=daily-hour-cap`
         : '/school/hours?error=review-failed',
     )
   }
@@ -180,7 +198,7 @@ export async function reviewStudentHours(formData: FormData) {
 
     if (refreshError) {
       console.error('[StaffHours] Failed to refresh hour review state', refreshError)
-      redirect('/school/hours?error=review-failed')
+      redirect(`${returnTo}?error=review-failed`)
     }
 
     if (!current) {
@@ -188,7 +206,7 @@ export async function reviewStudentHours(formData: FormData) {
     }
 
     redirect(
-      `/school/hours?alreadyReviewed=${encodeURIComponent(current.status)}&student=${encodeURIComponent(current.user_id)}`,
+      `${returnTo}?alreadyReviewed=${encodeURIComponent(current.status)}&student=${encodeURIComponent(current.user_id)}`,
     )
   }
 
@@ -197,11 +215,13 @@ export async function reviewStudentHours(formData: FormData) {
   revalidatePath('/instructor/hours')
   revalidatePath(`/instructor/student/${updated.user_id}`)
 
-  redirect(`/school/hours?reviewed=${decision}&student=${encodeURIComponent(updated.user_id)}`)
+  redirect(`${returnTo}?reviewed=${decision}&student=${encodeURIComponent(updated.user_id)}`)
 }
 
 
 export async function bulkApproveStudentHours(formData: FormData) {
+  const returnToRaw = String(formData.get('returnTo') || '/school/hours')
+  const returnTo = ALLOWED_RETURN_PATHS.has(returnToRaw) ? returnToRaw : '/school/hours'
   const hourLogIds = Array.from(
     new Set(
       formData
@@ -212,7 +232,7 @@ export async function bulkApproveStudentHours(formData: FormData) {
   ).slice(0, 500)
 
   if (hourLogIds.length === 0) {
-    redirect('/school/hours?error=no-hours-selected')
+    redirect(`${returnTo}?error=no-hours-selected`)
   }
 
   const supabase = await createClient()
@@ -225,30 +245,21 @@ export async function bulkApproveStudentHours(formData: FormData) {
     .eq('id', user.id)
     .single()
 
-  if (!actor?.school_id || !isSchoolAdmin(actor.role)) {
+  if (!actor?.school_id || !(await canReviewStudentHours(supabase, actor))) {
     redirect('/dashboard')
   }
 
-  const reviewedAt = new Date().toISOString()
-  const { data: updated, error } = await supabase
-    .from('hour_logs')
-    .update({
-      status: 'approved',
-      reviewed_by: user.id,
-      reviewed_at: reviewedAt,
-      rejection_reason: null,
-    })
-    .eq('school_id', actor.school_id)
-    .eq('status', 'pending')
-    .in('id', hourLogIds)
-    .select('id, user_id')
+  const { data: updated, error } = await supabase.rpc(
+    'bulk_approve_hour_logs_as_authorized_approver',
+    { p_hour_log_ids: hourLogIds },
+  )
 
   if (error) {
     console.error('[StaffHours] Failed to bulk approve hours', error)
     const message = error.message.toLowerCase()
     redirect(
       message.includes('daily approved hours cannot exceed 1440')
-        ? '/school/hours?error=daily-hour-cap'
+        ? `${returnTo}?error=daily-hour-cap`
         : '/school/hours?error=bulk-review-failed',
     )
   }
@@ -265,7 +276,7 @@ export async function bulkApproveStudentHours(formData: FormData) {
     revalidatePath(`/instructor/student/${studentId}`)
   }
 
-  redirect(`/school/hours?bulkApproved=${updatedRows.length}`)
+  redirect(`${returnTo}?bulkApproved=${updatedRows.length}`)
 }
 
 

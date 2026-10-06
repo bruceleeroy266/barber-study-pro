@@ -19,6 +19,10 @@ const policyHotfix = readFileSync(
   join(root, 'supabase/migrations/20260926071000_fix_attendance_hour_policy_qualification.sql'),
   'utf-8',
 )
+const delegatedApproverMigration = readFileSync(
+  join(root, 'supabase/migrations/20261006214500_delegated_hour_approver.sql'),
+  'utf-8',
+)
 
 describe('Segment C attendance-generated hours', () => {
   it('enforces one hour log per attendance record at the database layer', () => {
@@ -70,9 +74,10 @@ describe('Segment C attendance-generated hours', () => {
 
   it('keeps generated pending rows inside the existing idempotent admin approval workflow', () => {
     expect(adminApprovalAction).toContain("if (target.status !== 'pending')")
-    expect(adminApprovalAction).toContain(".eq('status', 'pending')")
-    expect(adminApprovalAction).toContain('reviewed_by: user.id')
-    expect(adminApprovalAction).toContain('reviewed_at: new Date().toISOString()')
+    expect(adminApprovalAction).toContain("'review_hour_log_as_authorized_approver'")
+    expect(delegatedApproverMigration).toContain("h.status = 'pending'")
+    expect(delegatedApproverMigration).toContain('reviewed_by = v_actor_id')
+    expect(delegatedApproverMigration).toContain('reviewed_at = clock_timestamp()')
     expect(adminApprovalAction).toContain('alreadyReviewed=')
   })
 

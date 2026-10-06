@@ -13,6 +13,7 @@ const generationActions = readFileSync(join(root, 'src/app/instructor/attendance
 const pdfExport = readFileSync(join(root, 'src/lib/hours/export-pdf.ts'), 'utf-8')
 const complianceRules = readFileSync(join(root, 'src/lib/compliance/compliance-rules.ts'), 'utf-8')
 const requiredHoursMigration = readFileSync(join(root, 'supabase/migrations/20260926223803_set_program_required_hours_default_1200.sql'), 'utf-8')
+const delegatedApproverMigration = readFileSync(join(root, 'supabase/migrations/20261006214500_delegated_hour_approver.sql'), 'utf-8')
 
 describe('E11 final hours and attendance certification', () => {
   it('uses a 1200-hour fallback consistently when no configured program resolves', () => {
@@ -43,12 +44,14 @@ describe('E11 final hours and attendance certification', () => {
     expect(studentPage).toContain('Pending hours do not increase this progress')
   })
 
-  it('requires school-admin, school-scoped, pending-only review with provenance', () => {
+  it('requires school-scoped authorized review with pending-only provenance', () => {
+    expect(reviewActions).toContain('canReviewStudentHours')
     expect(reviewActions).toContain('isSchoolAdmin(actor.role)')
-    expect(reviewActions).toContain(".eq('school_id', actor.school_id)")
-    expect(reviewActions).toContain(".eq('status', 'pending')")
-    expect(reviewActions).toContain('reviewed_by: user.id')
-    expect(reviewActions).toContain('reviewed_at: new Date().toISOString()')
+    expect(reviewActions).toContain("'review_hour_log_as_authorized_approver'")
+    expect(delegatedApproverMigration).toContain('i.school_id = v_school_id')
+    expect(delegatedApproverMigration).toContain("h.status = 'pending'")
+    expect(delegatedApproverMigration).toContain('reviewed_by = v_actor_id')
+    expect(delegatedApproverMigration).toContain('reviewed_at = clock_timestamp()')
   })
 
   it('prevents attendance regeneration from overwriting an approved decision', () => {

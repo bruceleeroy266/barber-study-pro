@@ -251,6 +251,17 @@ export default async function StaffHoursManager({
   const schoolName = typeof school?.name === 'string' && school.name ? school.name : 'ASCYN PRO School'
   const isSchoolAdministrator = isSchoolAdmin(actor.role)
   const isInstructor = actor.role === 'instructor'
+  const { data: delegatedApprover } = isInstructor
+    ? await supabase
+        .from('instructors')
+        .select('can_approve_hours')
+        .eq('profile_id', actor.id)
+        .eq('school_id', actor.school_id)
+        .eq('is_active', true)
+        .is('deleted_at', null)
+        .maybeSingle()
+    : { data: null }
+  const canReviewHours = isSchoolAdministrator || delegatedApprover?.can_approve_hours === true
   const pendingLogs = logs.filter((log) => log.status === 'pending')
   const reviewedLogs = logs.filter((log) => log.status === 'approved' || log.status === 'rejected')
   const filteredPendingLogs = pendingLogs.filter((log) => {
@@ -287,7 +298,9 @@ export default async function StaffHoursManager({
             <h1 className="mt-2 text-3xl font-bold text-white">{title}</h1>
             <p className="mt-1 text-silver">
               {isInstructor
-                ? 'Submit each student’s daily school hours for administrator approval.'
+                ? canReviewHours
+                  ? 'Submit student hours and review pending entries as an authorized hour approver.'
+                  : 'Submit each student’s daily school hours for authorized review.'
                 : 'Review instructor submissions, approve official hours, and prepare state-board records.'}
             </p>
           </div>
@@ -328,7 +341,7 @@ export default async function StaffHoursManager({
         <section className="rounded-xl border border-graphite bg-charcoal p-4 sm:p-6">
           <h2 className="text-xl font-semibold text-white">Submit Daily Hours</h2>
           <p className="mt-1 text-sm text-silver">
-            Instructor entries remain pending until a school administrator approves them.
+            Instructor entries remain pending until an authorized hour approver reviews them.
           </p>
 
           <form action={logStudentHours} className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
@@ -415,7 +428,7 @@ export default async function StaffHoursManager({
         </section>
         )}
 
-        {isSchoolAdministrator && (
+        {canReviewHours && (
           <section className="rounded-xl border border-graphite bg-charcoal p-4 sm:p-6">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
@@ -498,7 +511,7 @@ export default async function StaffHoursManager({
                 </button>
                 {hasQueueFilters && (
                   <Link
-                    href="/school/hours"
+                    href={returnTo}
                     className="min-h-10 rounded-lg border border-graphite px-3 py-2 text-sm font-semibold text-silver hover:text-white"
                   >
                     Clear
@@ -509,6 +522,7 @@ export default async function StaffHoursManager({
 
             {filteredPendingLogs.length > 0 && (
               <form action={bulkApproveStudentHours} className="mt-4 rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/5 p-3">
+                <input type="hidden" name="returnTo" value={returnTo} />
                 {filteredPendingLogs.map((log) => (
                   <input key={log.id} type="hidden" name="hourLogId" value={log.id} />
                 ))}
@@ -556,6 +570,7 @@ export default async function StaffHoursManager({
 
                       <div className="grid grid-cols-2 gap-2 sm:flex">
                         <form action={reviewStudentHours} className="col-span-2 flex flex-col gap-2 sm:col-span-1 sm:min-w-56">
+                          <input type="hidden" name="returnTo" value={returnTo} />
                           <input type="hidden" name="hourLogId" value={log.id} />
                           <input type="hidden" name="decision" value="rejected" />
                           <input
@@ -574,6 +589,7 @@ export default async function StaffHoursManager({
                           </button>
                         </form>
                         <form action={reviewStudentHours}>
+                          <input type="hidden" name="returnTo" value={returnTo} />
                           <input type="hidden" name="hourLogId" value={log.id} />
                           <input type="hidden" name="decision" value="approved" />
                           <button
@@ -600,7 +616,7 @@ export default async function StaffHoursManager({
           </section>
         )}
 
-        {isSchoolAdministrator && (
+        {canReviewHours && (
           <section className="rounded-xl border border-graphite bg-charcoal p-4 sm:p-6">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
@@ -661,7 +677,7 @@ export default async function StaffHoursManager({
                             Rejection reason: {log.rejection_reason}
                           </div>
                         )}
-                        {log.status === 'approved' && (
+                        {isSchoolAdministrator && log.status === 'approved' && (
                           <details className="mt-3 rounded-lg border border-graphite bg-charcoal p-3">
                             <summary className="cursor-pointer font-semibold text-[var(--color-brand-gold)]">
                               Adjust Hours
