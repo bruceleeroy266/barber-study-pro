@@ -29,6 +29,10 @@ const qualificationHotfix = readFileSync(
   join(root, 'supabase/migrations/20260926071000_fix_attendance_hour_policy_qualification.sql'),
   'utf-8',
 )
+const delegatedApproverMigration = readFileSync(
+  join(root, 'supabase/migrations/20261006214500_delegated_hour_approver.sql'),
+  'utf-8',
+)
 
 describe('C7 final Segment C end-to-end certification', () => {
   it('connects Submit Day to attendance persistence and pending hour generation', () => {
@@ -66,9 +70,10 @@ describe('C7 final Segment C end-to-end certification', () => {
 
   it('routes pending generated hours through the existing idempotent admin approval gate', () => {
     expect(approvalAction).toContain("if (target.status !== 'pending')")
-    expect(approvalAction).toContain(".eq('status', 'pending')")
-    expect(approvalAction).toContain('reviewed_by: user.id')
-    expect(approvalAction).toContain('reviewed_at: new Date().toISOString()')
+    expect(approvalAction).toContain("'review_hour_log_as_authorized_approver'")
+    expect(delegatedApproverMigration).toContain("h.status = 'pending'")
+    expect(delegatedApproverMigration).toContain('reviewed_by = v_actor_id')
+    expect(delegatedApproverMigration).toContain('reviewed_at = clock_timestamp()')
     expect(approvalAction).toContain('alreadyReviewed=')
   })
 
