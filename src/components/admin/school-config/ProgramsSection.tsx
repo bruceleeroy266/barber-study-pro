@@ -18,7 +18,7 @@ interface Props {
 }
 
 const PROGRAM_TEMPLATES = [
-  { name: 'Barbering', requiredHours: 1250, requiredAssessments: 10, requiredPracticals: 20 },
+  { name: 'Barbering', requiredHours: 1500, requiredAssessments: 10, requiredPracticals: 20 },
   { name: 'Cosmetology', requiredHours: 1500, requiredAssessments: 12, requiredPracticals: 24 },
   { name: 'Esthetics', requiredHours: 600, requiredAssessments: 8, requiredPracticals: 16 },
   { name: 'Nail Technology', requiredHours: 600, requiredAssessments: 6, requiredPracticals: 12 },
@@ -91,7 +91,7 @@ export default function ProgramsSection({ config, onChange, targetSchoolId }: Pr
   function applyTemplate(template: typeof PROGRAM_TEMPLATES[0]) {
     setNewProgram({
       name: template.name,
-      requiredHours: template.requiredHours,
+      requiredHours: template.name === 'Barbering' ? defaultBarberHours : template.requiredHours,
       requiredAssessments: template.requiredAssessments,
       requiredPracticals: template.requiredPracticals,
     })
