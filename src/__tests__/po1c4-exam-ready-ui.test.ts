@@ -44,7 +44,7 @@ describe('PO-1C.4 Exam Ready simulator UI', () => {
     expect(shell).toContain("setSaveMessage('Answer saved')")
     expect(question).toContain('Flag for review')
     expect(combined).not.toContain('correctoption')
-    expect(combined).not.toContain('correct answer')
+    expect(combined).not.toContain('correct_answer')
     expect(combined).not.toContain('iscored')
   })
 
