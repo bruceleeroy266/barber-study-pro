@@ -21,23 +21,30 @@ const resubmissionMigration = readFileSync(
   join(root, 'supabase/migrations/20260926072000_rejected_attendance_hour_resubmission.sql'),
   'utf-8',
 )
+const delegatedApproverMigration = readFileSync(
+  join(root, 'supabase/migrations/20261006214500_delegated_hour_approver.sql'),
+  'utf-8',
+)
 
 describe('D6 final Admin Approval certification', () => {
   it('keeps single approval school-scoped, pending-only, reviewed, and idempotent', () => {
     expect(actions).toContain('export async function reviewStudentHours')
     expect(actions).toContain("if (target.status !== 'pending')")
     expect(actions).toContain(".eq('school_id', actor.school_id)")
-    expect(actions).toContain(".eq('status', 'pending')")
-    expect(actions).toContain('reviewed_by: user.id')
-    expect(actions).toContain('reviewed_at: new Date().toISOString()')
+    expect(actions).toContain("'review_hour_log_as_authorized_approver'")
+    expect(delegatedApproverMigration).toContain("h.status = 'pending'")
+    expect(delegatedApproverMigration).toContain('reviewed_by = v_actor_id')
+    expect(delegatedApproverMigration).toContain('reviewed_at = clock_timestamp()')
     expect(actions).toContain('alreadyReviewed=')
   })
 
   it('bulk approves only the currently filtered pending ids and leaves rejection individual', () => {
     expect(actions).toContain('export async function bulkApproveStudentHours')
-    expect(actions).toContain(".eq('school_id', actor.school_id)")
-    expect(actions).toContain(".eq('status', 'pending')")
-    expect(actions).toContain(".in('id', hourLogIds)")
+    expect(actions).toContain("'bulk_approve_hour_logs_as_authorized_approver'")
+    expect(actions).toContain('{ p_hour_log_ids: hourLogIds }')
+    expect(delegatedApproverMigration).toContain('h.school_id = v_school_id')
+    expect(delegatedApproverMigration).toContain("h.status = 'pending'")
+    expect(delegatedApproverMigration).toContain('h.id = any(p_hour_log_ids)')
     expect(manager).toContain('<form action={bulkApproveStudentHours}')
     expect(manager).toContain('filteredPendingLogs.map((log) => (')
     expect(manager).toContain('Rejections remain individual.')
@@ -47,7 +54,7 @@ describe('D6 final Admin Approval certification', () => {
 
   it('requires and preserves rejection evidence', () => {
     expect(actions).toContain("if (decision === 'rejected' && !rejectionReason)")
-    expect(actions).toContain("rejection_reason: decision === 'rejected' ? rejectionReason.slice(0, 500) : null")
+    expect(delegatedApproverMigration).toContain("when p_decision = 'rejected' then left(btrim(p_rejection_reason), 500)")
     expect(manager).toContain("log.status === 'rejected' && log.rejection_reason")
     expect(manager).toContain('Rejection reason:')
   })
