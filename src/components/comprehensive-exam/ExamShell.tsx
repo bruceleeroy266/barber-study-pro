@@ -81,7 +81,10 @@ export default function ExamShell() {
   }, [loadHistory])
 
   useEffect(() => {
-    void loadEntry()
+    const timeout = window.setTimeout(() => {
+      void loadEntry()
+    }, 0)
+    return () => window.clearTimeout(timeout)
   }, [loadEntry])
 
   const applyAttempt = useCallback((next: ExamAttempt) => {
@@ -105,7 +108,7 @@ export default function ExamShell() {
       await fetch(`/api/comprehensive-exam/attempts/${attempt.attemptId}`, { cache: 'no-store' }),
     )
     if (payload.attempt) applyAttempt(payload.attempt as ExamAttempt)
-  }, [attempt?.attemptId, applyAttempt])
+  }, [attempt, applyAttempt])
 
   useEffect(() => {
     if (!attempt || attempt.status !== 'active') return
