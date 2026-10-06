@@ -41,7 +41,7 @@ describe('PO-1C.4 Exam Ready simulator UI', () => {
 
   it('autosaves answers and flags without revealing correctness', () => {
     expect(question).toContain('Saving answer…')
-    expect(question).toContain('Answer saved')
+    expect(shell).toContain("setSaveMessage('Answer saved')")
     expect(question).toContain('Flag for review')
     expect(combined).not.toContain('correctoption')
     expect(combined).not.toContain('correct answer')
