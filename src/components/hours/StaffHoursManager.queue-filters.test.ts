@@ -42,7 +42,7 @@ describe('D3 admin hour approval queue filters', () => {
     expect(manager).toContain('All students')
     expect(manager).toContain('All sources')
     expect(manager).toContain('All categories')
-    expect(manager).toContain('href="/school/hours"')
+    expect(manager).toContain('href={returnTo}')
   })
 
   it('shows filtered counts and a specific empty-filter state', () => {
