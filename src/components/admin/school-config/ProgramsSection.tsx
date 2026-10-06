@@ -14,10 +14,11 @@ import {
 interface Props {
   config: SchoolConfiguration
   onChange: (programs: AcademicProgram[]) => void
+  targetSchoolId?: string
 }
 
 const PROGRAM_TEMPLATES = [
-  { name: 'Barbering', requiredHours: 1500, requiredAssessments: 10, requiredPracticals: 20 },
+  { name: 'Barbering', requiredHours: 1250, requiredAssessments: 10, requiredPracticals: 20 },
   { name: 'Cosmetology', requiredHours: 1500, requiredAssessments: 12, requiredPracticals: 24 },
   { name: 'Esthetics', requiredHours: 600, requiredAssessments: 8, requiredPracticals: 16 },
   { name: 'Nail Technology', requiredHours: 600, requiredAssessments: 6, requiredPracticals: 12 },
@@ -39,7 +40,7 @@ function mapDbToAcademicProgram(db: ProgramListItem): AcademicProgram {
   }
 }
 
-export default function ProgramsSection({ config: _config, onChange }: Props) {
+export default function ProgramsSection({ config, onChange, targetSchoolId }: Props) {
   // config.programs is intentionally NOT used as display source.
   // dbPrograms (loaded from server) is the single source of truth.
   const [dbPrograms, setDbPrograms] = useState<ProgramListItem[]>([])
@@ -48,9 +49,10 @@ export default function ProgramsSection({ config: _config, onChange }: Props) {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editForm, setEditForm] = useState<Partial<AcademicProgram>>({})
   const [isAdding, setIsAdding] = useState(false)
+  const defaultBarberHours = config.school.state?.trim().toUpperCase() === 'OK' ? 1250 : 1500
   const [newProgram, setNewProgram] = useState<Partial<AcademicProgram>>({
     name: '',
-    requiredHours: 1500,
+    requiredHours: defaultBarberHours,
     requiredAssessments: 10,
     requiredPracticals: 20,
   })
@@ -60,7 +62,7 @@ export default function ProgramsSection({ config: _config, onChange }: Props) {
   const loadPrograms = useCallback(async () => {
     setIsLoading(true)
     setActionError(null)
-    const result = await getPrograms()
+    const result = await getPrograms(targetSchoolId)
     setIsLoading(false)
     if (result.success && result.data) {
       setDbPrograms(result.data)
@@ -70,7 +72,7 @@ export default function ProgramsSection({ config: _config, onChange }: Props) {
     } else if (result.error) {
       setActionError(result.error)
     }
-  }, [onChange])
+  }, [onChange, targetSchoolId])
 
   useEffect(() => {
     loadPrograms()
@@ -113,15 +115,15 @@ export default function ProgramsSection({ config: _config, onChange }: Props) {
 
     const result = await createProgram({
       name,
-      required_hours: newProgram.requiredHours ?? 1500,
+      required_hours: newProgram.requiredHours ?? defaultBarberHours,
       required_assessments: newProgram.requiredAssessments ?? 10,
       required_practicals: newProgram.requiredPracticals ?? 20,
-    })
+    }, targetSchoolId)
 
     setPendingAction(null)
 
     if (result.success) {
-      setNewProgram({ name: '', requiredHours: 1500, requiredAssessments: 10, requiredPracticals: 20 })
+      setNewProgram({ name: '', requiredHours: defaultBarberHours, requiredAssessments: 10, requiredPracticals: 20 })
       setIsAdding(false)
       await loadPrograms()
     } else {
@@ -159,7 +161,7 @@ export default function ProgramsSection({ config: _config, onChange }: Props) {
       required_hours: editForm.requiredHours,
       required_assessments: editForm.requiredAssessments,
       required_practicals: editForm.requiredPracticals,
-    })
+    }, targetSchoolId)
 
     setPendingAction(null)
 
@@ -183,7 +185,7 @@ export default function ProgramsSection({ config: _config, onChange }: Props) {
     setPendingAction(`deactivate-${programId}`)
     setActionError(null)
 
-    const result = await deactivateProgram(programId)
+    const result = await deactivateProgram(programId, targetSchoolId)
 
     setPendingAction(null)
 
