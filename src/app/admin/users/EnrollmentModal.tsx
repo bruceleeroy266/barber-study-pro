@@ -44,7 +44,7 @@ export default function EnrollmentModal({
 
     const [enrollmentsResult, programsResult] = await Promise.all([
       getStudentEnrollments(studentId),
-      getSchoolPrograms(),
+      getSchoolPrograms(studentId),
     ])
 
     if (enrollmentsResult.success && enrollmentsResult.data) {

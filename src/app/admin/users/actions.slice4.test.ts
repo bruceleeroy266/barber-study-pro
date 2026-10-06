@@ -77,6 +77,12 @@ function createMockServiceClient(overrides: ServiceClientOverrides = {}) {
             error: null,
           }),
           is: () => ({
+            eq: () => ({
+              order: () => Promise.resolve({
+                data: [{ id: PROGRAM_ID, name: 'Barbering Fundamentals', school_id: RISE_SCHOOL_ID }],
+                error: null,
+              }),
+            }),
             order: () => Promise.resolve({
               data: [{ id: PROGRAM_ID, name: 'Barbering Fundamentals', school_id: RISE_SCHOOL_ID }],
               error: null,
@@ -771,7 +777,7 @@ describe('Phase 7A Slice 4: getSchoolPrograms()', () => {
     setupEnrollmentMocks({}, 'admin', null) // platform admin caller
     const { getSchoolPrograms: getProgramsAction } = await import('./actions')
 
-    const result = await getProgramsAction()
+    const result = await getProgramsAction(STUDENT_PROFILE_ID)
 
     expect(result.success).toBe(true)
   })
@@ -788,7 +794,7 @@ describe('Phase 7A Slice 4: getSchoolPrograms()', () => {
 
     const { getSchoolPrograms: getProgramsAction } = await import('./actions')
 
-    const result = await getProgramsAction()
+    const result = await getProgramsAction(STUDENT_PROFILE_ID)
 
     expect(result.success).toBe(false)
     expect(result.error).toMatch(/unauthorized/i)
