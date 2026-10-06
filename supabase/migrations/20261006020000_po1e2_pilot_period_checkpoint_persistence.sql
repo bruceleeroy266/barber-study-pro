@@ -540,9 +540,7 @@ begin
     raise exception 'Finalized pilot measurement checkpoints are immutable';
   end if;
 
-  if tg_op = 'UPDATE'
-     and old.status = 'finalized'
-     and row(new.*) is distinct from row(old.*) then
+  if tg_op = 'UPDATE' and old.status = 'finalized' then
     raise exception 'Finalized pilot measurement checkpoints are immutable';
   end if;
 
@@ -574,13 +572,6 @@ grant execute on function public.activate_pilot_measurement_period(uuid) to auth
 grant execute on function public.complete_pilot_measurement_period(uuid) to authenticated;
 grant execute on function public.create_pilot_measurement_checkpoint_draft(uuid, text, timestamptz, uuid[], uuid[], jsonb, jsonb, jsonb, text) to authenticated;
 grant execute on function public.finalize_pilot_measurement_checkpoint(uuid) to authenticated;
-
--- Explicit service-role operational access for controlled backfills/support.
-grant execute on function public.create_pilot_measurement_period(uuid, date, text, date) to service_role;
-grant execute on function public.activate_pilot_measurement_period(uuid) to service_role;
-grant execute on function public.complete_pilot_measurement_period(uuid) to service_role;
-grant execute on function public.create_pilot_measurement_checkpoint_draft(uuid, text, timestamptz, uuid[], uuid[], jsonb, jsonb, jsonb, text) to service_role;
-grant execute on function public.finalize_pilot_measurement_checkpoint(uuid) to service_role;
 
 comment on table public.pilot_measurement_periods is
   'PO-1E official school pilot measurement periods. Observational/reporting only.';
