@@ -100,6 +100,7 @@ interface Props {
   alreadyReviewedStatus?: string | null
   bulkApprovedCount?: number | null
   adjusted?: boolean
+  contractSaved?: boolean
   queueStudentFilter?: string
   queueDateFilter?: string
   queueSourceFilter?: string
@@ -117,6 +118,7 @@ export default async function StaffHoursManager({
   alreadyReviewedStatus = null,
   bulkApprovedCount = null,
   adjusted = false,
+  contractSaved = false,
   queueStudentFilter = '',
   queueDateFilter = '',
   queueSourceFilter = '',
@@ -364,6 +366,15 @@ export default async function StaffHoursManager({
     error === 'no-op-adjustment' ? 'The corrected hours must be different from the current official hours.' :
     error === 'invalid-adjustment' ? 'Only an approved hour entry from your school can be adjusted.' :
     error === 'adjustment-failed' ? 'The adjustment could not be saved. Review the entry and try again.' :
+    error === 'student-contract-student' ? 'That student is not available for hours setup at this school.' :
+    error === 'student-contract-enrollment' ? 'This student does not have an active program enrollment to configure.' :
+    error === 'student-contract-prior' ? 'Enter valid accepted prior / transfer hours.' :
+    error === 'student-contract-requirement' ? 'Enter a valid student-specific required-hour total.' :
+    error === 'student-contract-reason' ? 'Enter a clear reason between 10 and 1,000 characters.' :
+    error === 'student-contract-source' ? 'The source / document reference must be 500 characters or fewer.' :
+    error === 'student-contract-stale' ? 'This student hours setup changed since you opened it. Review the latest values and try again.' :
+    error === 'student-contract-noop' ? 'Change the prior hours or special requirement before saving.' :
+    error === 'student-contract-failed' ? 'The student hours setup could not be saved. Review the values and try again.' :
     null
 
   const schoolName = typeof school?.name === 'string' && school.name ? school.name : 'ASCYN PRO School'
@@ -447,6 +458,11 @@ export default async function StaffHoursManager({
         {adjusted && (
           <div className="rounded-xl border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 p-4 text-[var(--color-brand-gold)]" role="status">
             Hours adjusted. Official totals and reports now use the corrected value; the original approval remains in the audit history.
+          </div>
+        )}
+        {contractSaved && (
+          <div className="rounded-xl border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 p-4 text-[var(--color-brand-gold)]" role="status">
+            Student hours setup saved. Prior credit, special requirement, remaining hours, and completion have been recalculated.
           </div>
         )}
         {errorMessage && (
