@@ -159,7 +159,7 @@ export async function reviewStudentHours(formData: FormData) {
     .maybeSingle()
 
   if (!target) {
-    redirect('/school/hours?error=invalid-review')
+    redirect(`${returnTo}?error=invalid-review`)
   }
 
   if (target.status !== 'pending') {
@@ -184,7 +184,7 @@ export async function reviewStudentHours(formData: FormData) {
     redirect(
       message.includes('daily approved hours cannot exceed 1440')
         ? `${returnTo}?error=daily-hour-cap`
-        : '/school/hours?error=review-failed',
+        : `${returnTo}?error=review-failed`,
     )
   }
 
@@ -260,7 +260,7 @@ export async function bulkApproveStudentHours(formData: FormData) {
     redirect(
       message.includes('daily approved hours cannot exceed 1440')
         ? `${returnTo}?error=daily-hour-cap`
-        : '/school/hours?error=bulk-review-failed',
+        : `${returnTo}?error=bulk-review-failed`,
     )
   }
 
