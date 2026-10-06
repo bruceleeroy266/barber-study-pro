@@ -11,6 +11,7 @@ import {
   BarChart3,
   ShieldCheck,
   Clock3,
+  ChartNoAxesCombined,
 } from 'lucide-react'
 
 const items = [
@@ -18,6 +19,7 @@ const items = [
   { href: '/admin/users', label: 'Manage Users', icon: Users },
   { href: '/admin/school/configuration', label: 'School Settings', icon: Settings },
   { href: '/school#performance', label: 'Student & Instructor Performance', icon: BarChart3 },
+  { href: '/school/pilot-measurement', label: 'Pilot Measurement', icon: ChartNoAxesCombined },
   { href: '/school/hours', label: 'Student Hours', icon: Clock3 },
   { href: '/school#reports-compliance', label: 'Reports & Compliance', icon: ShieldCheck },
 ]
