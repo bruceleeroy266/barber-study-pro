@@ -201,7 +201,7 @@ export function resolvePilotMeasurement(inputs: PilotMeasurementInputs): PilotMe
   })
 
   const aggregateLearners = learners.filter((learner) => includedIds.has(learner.studentId))
-  const examLearners = aggregateLearners.filter((learner) => learner.latestExam?.percentage !== null)
+  const examLearners = aggregateLearners.filter((learner) => typeof learner.latestExam?.percentage === 'number')
   const progressLearners = aggregateLearners.filter((learner) => learner.overallProgress !== null)
   const readinessLearners = aggregateLearners.filter((learner) => learner.readinessScore !== null)
   const activityLearners = aggregateLearners.filter((learner) => learner.activeStudySeconds > 0)
