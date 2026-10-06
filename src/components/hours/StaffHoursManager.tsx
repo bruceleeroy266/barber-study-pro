@@ -993,6 +993,136 @@ export default async function StaffHoursManager({
                     </div>
                   </div>
 
+                  <div className="mt-5 rounded-xl border border-[var(--color-brand-gold)]/25 bg-black p-4">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                      <div>
+                        <h4 className="font-semibold text-white">Student Hours Setup</h4>
+                        <p className="mt-1 text-sm text-silver">
+                          Program requirements stay school-wide. Prior credit and special requirements apply only to this student&apos;s active enrollment.
+                        </p>
+                      </div>
+                      <span className="shrink-0 rounded-full border border-graphite px-2.5 py-1 text-xs font-semibold text-silver">
+                        {selectedStudent.requirementSource === 'student_override'
+                          ? 'Student-specific requirement'
+                          : 'Program requirement'}
+                      </span>
+                    </div>
+
+                    {selectedStudent.enrollmentId ? (
+                      <>
+                        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-5">
+                          <div className="rounded-lg border border-graphite bg-charcoal p-3">
+                            <div className="text-xs text-silver">Program standard</div>
+                            <div className="mt-1 font-bold text-white">{selectedStudent.requiredHours}h</div>
+                          </div>
+                          <div className="rounded-lg border border-graphite bg-charcoal p-3">
+                            <div className="text-xs text-silver">Prior / transfer</div>
+                            <div className="mt-1 font-bold text-white">{formatHours(selectedStudent.priorCreditMinutes)}</div>
+                          </div>
+                          <div className="rounded-lg border border-graphite bg-charcoal p-3">
+                            <div className="text-xs text-silver">Earned here</div>
+                            <div className="mt-1 font-bold text-white">{formatHours(selectedStudent.approvedMinutes)}</div>
+                          </div>
+                          <div className="rounded-lg border border-graphite bg-charcoal p-3">
+                            <div className="text-xs text-silver">Effective requirement</div>
+                            <div className="mt-1 font-bold text-white">{formatHours(selectedStudent.effectiveRequiredMinutes)}</div>
+                          </div>
+                          <div className="rounded-lg border border-graphite bg-charcoal p-3">
+                            <div className="text-xs text-silver">Remaining</div>
+                            <div className="mt-1 font-bold text-warm-bronze">{formatHours(selectedStudent.remainingMinutes)}</div>
+                          </div>
+                        </div>
+
+                        <div className="mt-3 rounded-lg border border-graphite bg-charcoal p-3 text-sm text-light-gray">
+                          <span className="font-semibold text-white">How ASCYN PRO calculated this:</span>{' '}
+                          {formatHours(selectedStudent.effectiveRequiredMinutes)} required −{' '}
+                          {formatHours(selectedStudent.priorCreditMinutes)} accepted prior hours −{' '}
+                          {formatHours(selectedStudent.approvedMinutes)} earned here ={' '}
+                          <span className="font-semibold text-warm-bronze">
+                            {formatHours(selectedStudent.remainingMinutes)} remaining
+                          </span>.
+                        </div>
+
+                        {isSchoolAdministrator ? (
+                          <details className="mt-4 rounded-lg border border-graphite bg-charcoal p-4">
+                            <summary className="cursor-pointer font-semibold text-[var(--color-brand-gold)]">
+                              Edit Student Hours Setup
+                            </summary>
+                            <div className="mt-4">
+                              <StudentHoursSetupForm
+                                studentId={selectedStudent.id}
+                                returnTo={returnTo}
+                                programRequiredHours={selectedStudent.requiredHours}
+                                priorCreditMinutes={selectedStudent.priorCreditMinutes}
+                                requirementOverrideMinutes={selectedStudent.requirementOverrideMinutes}
+                                contractVersion={selectedStudent.contractVersion}
+                              />
+                            </div>
+                          </details>
+                        ) : (
+                          <div className="mt-4 rounded-lg border border-graphite bg-charcoal p-3 text-sm text-silver">
+                            Instructors can view this breakdown. A school administrator must make official changes to accepted prior hours or a student-specific requirement.
+                          </div>
+                        )}
+
+                        <div className="mt-4">
+                          <div className="text-sm font-semibold text-white">Setup audit history</div>
+                          {selectedContractEvents.length > 0 ? (
+                            <div className="mt-2 space-y-2">
+                              {selectedContractEvents.map((event) => (
+                                <div key={event.id} className="rounded-lg border border-graphite bg-charcoal p-3 text-sm">
+                                  <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                                    <div className="font-medium text-light-gray">
+                                      Version {event.contract_version} · {event.change_type.replaceAll('_', ' ')}
+                                    </div>
+                                    <div className="text-xs text-silver-gray">
+                                      {new Date(event.changed_at).toLocaleString('en-US', {
+                                        timeZone: schoolTimeZone,
+                                        year: 'numeric',
+                                        month: 'short',
+                                        day: 'numeric',
+                                        hour: 'numeric',
+                                        minute: '2-digit',
+                                      })}
+                                    </div>
+                                  </div>
+                                  <div className="mt-2 text-xs text-silver">
+                                    Prior credit: {formatHours(event.previous_prior_credit_minutes)} → {formatHours(event.new_prior_credit_minutes)}
+                                    {' · '}
+                                    Requirement: {event.previous_requirement_override_minutes === null
+                                      ? 'program standard'
+                                      : formatHours(event.previous_requirement_override_minutes)}
+                                    {' → '}
+                                    {event.new_requirement_override_minutes === null
+                                      ? 'program standard'
+                                      : formatHours(event.new_requirement_override_minutes)}
+                                  </div>
+                                  <div className="mt-1 text-xs text-silver">
+                                    Changed by {actorNameMap.get(event.changed_by) ?? 'Authorized administrator'}
+                                  </div>
+                                  <div className="mt-2 text-light-gray">{event.reason}</div>
+                                  {event.source_reference && (
+                                    <div className="mt-1 text-xs text-silver-gray">
+                                      Source: {event.source_reference}
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="mt-2 text-sm text-silver">
+                              No prior-credit or special-requirement changes have been recorded for this enrollment.
+                            </p>
+                          )}
+                        </div>
+                      </>
+                    ) : (
+                      <div className="mt-4 rounded-lg border border-warm-bronze/30 bg-warm-bronze/10 p-3 text-sm text-warm-bronze">
+                        This student needs an active program enrollment before prior hours or a special requirement can be configured.
+                      </div>
+                    )}
+                  </div>
+
                   {isSchoolAdministrator && (
                     <div className="mt-5 grid grid-cols-3 gap-3">
                       <div className="rounded-lg border border-graphite bg-black p-3">
@@ -1010,14 +1140,22 @@ export default async function StaffHoursManager({
                     </div>
                   )}
 
-                  <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                  <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
                     <div className="rounded-lg bg-black p-3">
-                      <div className="text-xs text-silver">Accumulated</div>
+                      <div className="text-xs text-silver">Earned Here</div>
                       <div className="mt-1 text-xl font-bold text-white">{formatHours(selectedStudent.approvedMinutes)}</div>
                     </div>
                     <div className="rounded-lg bg-black p-3">
+                      <div className="text-xs text-silver">Prior Credit</div>
+                      <div className="mt-1 text-xl font-bold text-white">{formatHours(selectedStudent.priorCreditMinutes)}</div>
+                    </div>
+                    <div className="rounded-lg bg-black p-3">
+                      <div className="text-xs text-silver">Counted Total</div>
+                      <div className="mt-1 text-xl font-bold text-white">{formatHours(selectedStudent.creditedAndEarnedMinutes)}</div>
+                    </div>
+                    <div className="rounded-lg bg-black p-3">
                       <div className="text-xs text-silver">Required</div>
-                      <div className="mt-1 text-xl font-bold text-white">{selectedStudent.requiredHours}h</div>
+                      <div className="mt-1 text-xl font-bold text-white">{formatHours(selectedStudent.effectiveRequiredMinutes)}</div>
                     </div>
                     <div className="rounded-lg bg-black p-3">
                       <div className="text-xs text-silver">Remaining</div>
