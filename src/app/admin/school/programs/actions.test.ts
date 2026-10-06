@@ -397,7 +397,7 @@ describe('Phase 7A Slice 5: createProgram()', () => {
     expect(result.error).toMatch(/forbidden/i)
   })
 
-  it('rejects admin without school assignment', async () => {
+  it('rejects school admin without school assignment', async () => {
     vi.doMock('@/lib/supabase-server', () => ({
       createClient: vi.fn().mockResolvedValue(mockAuthUser('school_admin', null)),
     }))
@@ -409,7 +409,7 @@ describe('Phase 7A Slice 5: createProgram()', () => {
     const result = await createAction({ name: 'Test Program' })
 
     expect(result.success).toBe(false)
-    expect(result.error).toMatch(/target school must be selected/i)
+    expect(result.error).toMatch(/must be assigned to a school/i)
   })
 
   it('rejects empty program name', async () => {
@@ -561,7 +561,7 @@ describe('Phase 7A Slice 5: createProgram()', () => {
     const result = await createAction({ name: 'Platform Program' })
 
     expect(result.success).toBe(false)
-    expect(result.error).toMatch(/must be assigned to a school/i)
+    expect(result.error).toMatch(/target school must be selected/i)
   })
 })
 
@@ -790,6 +790,7 @@ describe('Phase 7A Slice 5: updateProgram()', () => {
     }))
     vi.doMock('@/lib/supabase-service-role', () => ({
       createServiceRoleClient: vi.fn().mockReturnValue(mockServiceClient({
+        schoolResponse: Promise.resolve({ data: { id: OTHER_SCHOOL_ID }, error: null }),
         singleResponse: Promise.resolve({
           data: {
             id: PROGRAM_ID,
@@ -890,6 +891,7 @@ describe('Phase 7A Slice 5: deactivateProgram()', () => {
     }))
     vi.doMock('@/lib/supabase-service-role', () => ({
       createServiceRoleClient: vi.fn().mockReturnValue(mockServiceClient({
+        schoolResponse: Promise.resolve({ data: { id: OTHER_SCHOOL_ID }, error: null }),
         singleResponse: Promise.resolve({
           data: {
             id: PROGRAM_ID,
