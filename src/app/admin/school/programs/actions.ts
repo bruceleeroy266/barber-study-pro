@@ -95,7 +95,7 @@ async function getCurrentAdmin(): Promise<ActionResult<AdminContext>> {
 }
 
 function isValidUUID(value: string): boolean {
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value)
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value)
 }
 
 async function resolveEffectiveSchoolId(
@@ -135,11 +135,11 @@ async function resolveEffectiveSchoolId(
 
 /**
  * Returns all non-deleted programs for the caller's school.
- * Platform admins without a school_id see all programs (for platform management).
+ * Platform admins must provide one validated selected school.
  * School admins are scoped to their own school.
  *
- * Tenant boundary: school_id is derived server-side from the caller's profile.
- * Never trusts client-provided school_id.
+ * Tenant boundary: every read/write resolves to exactly one effective school.
+ * School-attached admins never trust a client-provided school id.
  */
 export async function getPrograms(targetSchoolId?: string): Promise<ActionResult<ProgramListItem[]>> {
   const adminResult = await getCurrentAdmin()
