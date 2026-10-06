@@ -253,9 +253,21 @@ export default async function StaffPilotMeasurementView({
                   {row ? `Finalized ${row.finalized_at ? new Date(row.finalized_at).toLocaleDateString('en-US') : ''}` : 'Not finalized'}
                 </p>
                 {row && (
-                  <p className="mt-2 text-xs text-[var(--color-text-muted)]">
-                    {row.included_student_count} included · {row.excluded_student_count} excluded
-                  </p>
+                  <>
+                    <p className="mt-2 text-xs text-[var(--color-text-muted)]">
+                      {row.included_student_count} included · {row.excluded_student_count} excluded
+                    </p>
+                    <Link
+                      href={
+                        viewer === 'platform_admin'
+                          ? `/admin/school/pilot-measurement/report/${type}?school=${schoolId}`
+                          : `/school/pilot-measurement/report/${type}`
+                      }
+                      className="mt-3 inline-block text-sm font-medium text-[var(--color-brand-gold)] hover:underline"
+                    >
+                      View report
+                    </Link>
+                  </>
                 )}
               </div>
             )
