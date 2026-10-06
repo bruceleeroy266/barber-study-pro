@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutDashboard, Users, Calendar, CalendarClock, Calculator, FileCheck, MessageSquare, Megaphone, ClipboardCheck, LogOut, GraduationCap, AlertTriangle, BookOpen } from 'lucide-react'
+import { LayoutDashboard, Users, Calendar, CalendarClock, Calculator, FileCheck, MessageSquare, Megaphone, ClipboardCheck, LogOut, GraduationCap, AlertTriangle, BookOpen, ChartNoAxesCombined } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { Profile } from '@/types'
 import { logLogout } from '@/app/(auth)/actions'
@@ -18,6 +18,7 @@ interface InstructorNavProps {
 const navItems = [
   { href: '/instructor', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/instructor/students', label: 'Students', icon: Users },
+  { href: '/instructor/pilot-measurement', label: 'Pilot Measurement', icon: ChartNoAxesCombined },
   { href: '/instructor/attendance', label: 'Attendance', icon: Calendar },
   { href: '/instructor/schedules', label: 'Schedules', icon: CalendarClock },
   { href: '/instructor/gradebook', label: 'Gradebook', icon: Calculator },
