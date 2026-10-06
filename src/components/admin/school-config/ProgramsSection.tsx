@@ -437,9 +437,9 @@ export default function ProgramsSection({ config, onChange, targetSchoolId }: Pr
               </div>
             ) : (
               /* View Mode */
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-3">
                     <h3 className="text-lg font-medium text-white">{program.name}</h3>
                     <span
                       className={`px-2 py-0.5 rounded text-xs font-medium ${
@@ -451,14 +451,14 @@ export default function ProgramsSection({ config, onChange, targetSchoolId }: Pr
                       {program.active ? 'Active' : 'Inactive'}
                     </span>
                   </div>
-                  <div className="flex items-center gap-6 mt-2 text-sm text-silver">
-                    <span>{program.requiredHours} hours</span>
-                    <span>{program.requiredAssessments} assessments</span>
-                    <span>{program.requiredPracticals} practicals</span>
+                  <div className="mt-3 grid grid-cols-3 gap-3 text-sm text-silver">
+                    <span className="min-w-0">{program.requiredHours}<span className="block text-xs">hours</span></span>
+                    <span className="min-w-0">{program.requiredAssessments}<span className="block text-xs">assessments</span></span>
+                    <span className="min-w-0">{program.requiredPracticals}<span className="block text-xs">practicals</span></span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2 sm:justify-end">
                   <button
                     type="button"
                     onClick={() => handleDbDeactivate(program.id)}
