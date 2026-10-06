@@ -9,6 +9,7 @@ interface PageProps {
     alreadyReviewed?: string
     bulkApproved?: string
     adjusted?: string
+    contractSaved?: string
     queueStudent?: string
     queueDate?: string
     queueSource?: string
@@ -33,6 +34,7 @@ export default async function SchoolHoursPage({ searchParams }: PageProps) {
         ? Number(params.bulkApproved)
         : null}
       adjusted={params.adjusted === '1'}
+      contractSaved={params.contractSaved === '1'}
       queueStudentFilter={params.queueStudent ?? ''}
       queueDateFilter={params.queueDate ?? ''}
       queueSourceFilter={params.queueSource ?? ''}
