@@ -277,6 +277,7 @@ export default function SchoolConfigurationClient({
                 <ProgramsSection
                   config={config}
                   onChange={(programs) => updateConfig({ programs })}
+                  targetSchoolId={targetSchoolId}
                 />
               )}
               {activeTab === 'instructors' && <InstructorsSection config={config} />}
