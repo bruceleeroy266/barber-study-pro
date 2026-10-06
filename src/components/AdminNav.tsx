@@ -18,6 +18,7 @@ import {
   Target,
   MessageSquare,
   Megaphone,
+  ChartNoAxesCombined,
 } from 'lucide-react'
 import { Profile } from '@/types'
 import { isAdmin } from '@/lib/auth-helpers'
@@ -33,6 +34,7 @@ const adminLinks = [
   { href: '/admin/nabba/leads', label: 'NABBA Leads', icon: Target },
   { href: '/admin/users', label: 'Users', icon: Users },
   { href: '/admin/school/configuration', label: 'School Settings', icon: Settings },
+  { href: '/admin/school/pilot-measurement', label: 'Pilot Measurement', icon: ChartNoAxesCombined },
   { href: '/admin/pilot-inquiries', label: 'Pilot Inquiries', icon: Plane },
   { href: '/admin/beta-feedback', label: 'Beta Feedback', icon: MessageSquare },
   { href: '/admin/bulletins', label: 'Bulletins', icon: Megaphone },
@@ -49,7 +51,7 @@ export default function AdminNav({ user }: AdminNavProps) {
     ? adminLinks
     : [
         ...adminLinks.filter((link) =>
-          ['/admin', '/admin/users', '/admin/school/configuration', '/admin/bulletins'].includes(link.href)
+          ['/admin', '/admin/users', '/admin/school/configuration', '/admin/school/pilot-measurement', '/admin/bulletins'].includes(link.href)
         ),
         { href: '/admin/school', label: 'School Dashboard', icon: LayoutDashboard },
       ]
