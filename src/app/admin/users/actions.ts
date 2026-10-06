@@ -2140,7 +2140,9 @@ export async function getStudentEnrollments(
   return { success: true, data: enrollments }
 }
 
-export async function getSchoolPrograms(): Promise<ActionResult<ProgramOption[]>> {
+export async function getSchoolPrograms(
+  studentProfileId: string
+): Promise<ActionResult<ProgramOption[]>> {
   // 1. Verify caller authorization
   const adminResult = await getCurrentAdmin()
   if (!adminResult.success || !adminResult.data) {
@@ -2150,19 +2152,27 @@ export async function getSchoolPrograms(): Promise<ActionResult<ProgramOption[]>
 
   const serviceClient = createServiceRoleClient()
 
-  let query = serviceClient
+  // 2. Resolve the student so the program picker is always scoped to the
+  // student's school. Platform admins can manage multiple schools, but the
+  // enrollment modal must never mix programs from unrelated schools.
+  const studentResult = await resolveStudentDomainRecord(serviceClient, studentProfileId)
+  if (!studentResult.success || !studentResult.student) {
+    return { success: false, error: studentResult.error }
+  }
+  const student = studentResult.student
+
+  // 3. Tenant boundary for school-scoped admins.
+  if (!admin.isPlatformAdmin && student.school_id !== admin.schoolId) {
+    return { success: false, error: 'Forbidden: student belongs to a different school' }
+  }
+
+  const { data, error } = await serviceClient
     .from('programs')
     .select('id, name, school_id')
     .eq('is_active', true)
     .is('deleted_at', null)
+    .eq('school_id', student.school_id)
     .order('name')
-
-  // School admins only see their own school's programs
-  if (!admin.isPlatformAdmin && admin.schoolId) {
-    query = query.eq('school_id', admin.schoolId)
-  }
-
-  const { data, error } = await query
 
   if (error) {
     return { success: false, error: `Failed to fetch programs: ${error.message}` }
