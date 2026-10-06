@@ -6,7 +6,9 @@ import { resolveProgramRequirementsForStudents } from '@/lib/programs/requiremen
 import { adjustApprovedStudentHours, bulkApproveStudentHours, logStudentHours, reviewStudentHours } from '@/app/instructor/hours/actions'
 import HoursPdfExports from '@/components/hours/HoursPdfExports'
 import StudentHoursDropdown from '@/components/hours/StudentHoursDropdown'
-import { calculateApprovedPeriodTotals, calculateHoursProgressSummary, formatHourMinutes, getOfficialMinutes } from '@/lib/hours/reporting'
+import StudentHoursSetupForm from '@/components/hours/StudentHoursSetupForm'
+import { calculateApprovedPeriodTotals, formatHourMinutes, getOfficialMinutes } from '@/lib/hours/reporting'
+import { calculateAdaptiveStudentHours } from '@/lib/hours/adaptive-student-hours'
 import type { HourCategory, HourStatus } from '@/types'
 
 interface HoursRosterStudent {
@@ -175,8 +177,106 @@ export default async function StaffHoursManager({
     : { data: [] }
 
   const logs = (logsData ?? []) as StaffHourLogRow[]
+
+  const { data: studentRowsData } = studentIds.length
+    ? await supabase
+        .from('students')
+        .select('id, profile_id')
+        .eq('school_id', actor.school_id)
+        .in('profile_id', studentIds)
+        .eq('is_active', true)
+        .is('deleted_at', null)
+    : { data: [] }
+
+  const studentRowByProfile = new Map<string, string>(
+    ((studentRowsData ?? []) as Array<{ id: string; profile_id: string }>)
+      .map((row) => [row.profile_id, row.id]),
+  )
+  const studentRowIds = Array.from(studentRowByProfile.values())
+
+  const { data: enrollmentRowsData } = studentRowIds.length
+    ? await supabase
+        .from('enrollments')
+        .select('id, student_id, program_id, created_at')
+        .in('student_id', studentRowIds)
+        .eq('status', 'active')
+        .eq('is_active', true)
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false })
+    : { data: [] }
+
+  const activeEnrollmentByStudent = new Map<
+    string,
+    { id: string; student_id: string; program_id: string; created_at: string | null }
+  >()
+  for (const enrollment of (enrollmentRowsData ?? []) as Array<{
+    id: string
+    student_id: string
+    program_id: string
+    created_at: string | null
+  }>) {
+    if (!activeEnrollmentByStudent.has(enrollment.student_id)) {
+      activeEnrollmentByStudent.set(enrollment.student_id, enrollment)
+    }
+  }
+
+  const enrollmentIds = Array.from(activeEnrollmentByStudent.values()).map((row) => row.id)
+  const { data: contractsData } = enrollmentIds.length
+    ? await supabase
+        .from('enrollment_hour_contracts')
+        .select('enrollment_id, prior_credit_minutes, requirement_override_minutes, version, updated_by, updated_at')
+        .in('enrollment_id', enrollmentIds)
+    : { data: [] }
+
+  const contractByEnrollment = new Map<
+    string,
+    {
+      enrollment_id: string
+      prior_credit_minutes: number
+      requirement_override_minutes: number | null
+      version: number
+      updated_by: string
+      updated_at: string
+    }
+  >(
+    ((contractsData ?? []) as Array<{
+      enrollment_id: string
+      prior_credit_minutes: number
+      requirement_override_minutes: number | null
+      version: number
+      updated_by: string
+      updated_at: string
+    }>).map((row) => [row.enrollment_id, row]),
+  )
+
+  const { data: contractEventsData } = enrollmentIds.length
+    ? await supabase
+        .from('enrollment_hour_contract_events')
+        .select('id, enrollment_id, contract_version, previous_prior_credit_minutes, new_prior_credit_minutes, previous_requirement_override_minutes, new_requirement_override_minutes, change_type, reason, source_reference, changed_by, changed_at')
+        .in('enrollment_id', enrollmentIds)
+        .order('changed_at', { ascending: false })
+        .limit(100)
+    : { data: [] }
+
+  const contractEvents = (contractEventsData ?? []) as Array<{
+    id: string
+    enrollment_id: string
+    contract_version: number
+    previous_prior_credit_minutes: number
+    new_prior_credit_minutes: number
+    previous_requirement_override_minutes: number | null
+    new_requirement_override_minutes: number | null
+    change_type: string
+    reason: string
+    source_reference: string | null
+    changed_by: string
+    changed_at: string
+  }>
   const actorIds = Array.from(new Set(
-    logs.flatMap((log) => [log.submitted_by, log.reviewed_by]).filter(Boolean),
+    [
+      ...logs.flatMap((log) => [log.submitted_by, log.reviewed_by]),
+      ...contractEvents.map((event) => event.changed_by),
+    ].filter(Boolean),
   )) as string[]
   const { data: actorsData } = actorIds.length
     ? await supabase
@@ -202,20 +302,35 @@ export default async function StaffHoursManager({
     const studentLogs = logs.filter((log) => log.user_id === student.id)
     const requirements = requirementMap.get(student.id)
     const requiredHours = requirements?.requiredHours ?? 1200
-    const {
-      approvedMinutes,
-      pendingMinutes,
-      remainingMinutes,
-      completionPercentage: percentage,
-    } = calculateHoursProgressSummary(studentLogs, requiredHours)
+    const studentRowId = studentRowByProfile.get(student.id) ?? null
+    const enrollment = studentRowId ? activeEnrollmentByStudent.get(studentRowId) ?? null : null
+    const contract = enrollment ? contractByEnrollment.get(enrollment.id) ?? null : null
+    const adaptive = calculateAdaptiveStudentHours(studentLogs, {
+      programRequiredHours: requiredHours,
+      priorCreditMinutes: contract?.prior_credit_minutes ?? 0,
+      requirementOverrideMinutes: contract?.requirement_override_minutes ?? null,
+      contractVersion: contract?.version ?? 0,
+    })
+    const pendingMinutes = studentLogs
+      .filter((log) => log.status === 'pending')
+      .reduce((sum, log) => sum + log.minutes, 0)
 
     return {
       ...student,
-      approvedMinutes,
+      enrollmentId: enrollment?.id ?? null,
+      approvedMinutes: adaptive.earnedApprovedMinutes,
+      priorCreditMinutes: adaptive.priorCreditMinutes,
+      creditedAndEarnedMinutes: adaptive.creditedAndEarnedMinutes,
       pendingMinutes,
       requiredHours,
-      remainingMinutes,
-      percentage,
+      programRequiredMinutes: adaptive.programRequiredMinutes,
+      effectiveRequiredMinutes: adaptive.effectiveRequiredMinutes,
+      effectiveRequiredHours: adaptive.effectiveRequiredHours,
+      requirementOverrideMinutes: contract?.requirement_override_minutes ?? null,
+      requirementSource: adaptive.requirementSource,
+      contractVersion: adaptive.contractVersion,
+      remainingMinutes: adaptive.remainingMinutes,
+      percentage: adaptive.completionPercentage,
       periods: calculateApprovedPeriodTotals(studentLogs, new Date(), schoolTimeZone),
       recentLogs: studentLogs.slice(0, 5),
     }
@@ -225,6 +340,9 @@ export default async function StaffHoursManager({
     ? highlightedStudentId
     : rows[0]?.id ?? ''
   const selectedStudent = rows.find((row) => row.id === selectedId) ?? null
+  const selectedContractEvents = selectedStudent?.enrollmentId
+    ? contractEvents.filter((event) => event.enrollment_id === selectedStudent.enrollmentId).slice(0, 5)
+    : []
 
   const errorMessage =
     error === 'missing-fields' ? 'Choose a student and date.' :
