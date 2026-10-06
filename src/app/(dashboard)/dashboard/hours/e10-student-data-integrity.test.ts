@@ -25,6 +25,10 @@ const resubmissionMigration = readFileSync(
   join(root, 'supabase/migrations/20260926072000_rejected_attendance_hour_resubmission.sql'),
   'utf-8',
 )
+const delegatedApproverMigration = readFileSync(
+  join(root, 'supabase/migrations/20261006214500_delegated_hour_approver.sql'),
+  'utf-8',
+)
 
 describe('E10 student data integrity audit', () => {
   it('keeps official student totals approved-only and pending isolated', () => {
@@ -37,9 +41,11 @@ describe('E10 student data integrity audit', () => {
 
   it('keeps single and bulk review school-scoped, pending-only, and review-provenanced', () => {
     expect(reviewActions).toContain(".eq('school_id', actor.school_id)")
-    expect(reviewActions).toContain(".eq('status', 'pending')")
-    expect(reviewActions).toContain('reviewed_by: user.id')
-    expect(reviewActions).toContain('reviewed_at:')
+    expect(reviewActions).toContain("'review_hour_log_as_authorized_approver'")
+    expect(reviewActions).toContain("'bulk_approve_hour_logs_as_authorized_approver'")
+    expect(delegatedApproverMigration).toContain("h.status = 'pending'")
+    expect(delegatedApproverMigration).toContain('reviewed_by = v_actor_id')
+    expect(delegatedApproverMigration).toContain('reviewed_at = clock_timestamp()')
     expect(reviewActions).toContain('alreadyReviewed=')
   })
 
