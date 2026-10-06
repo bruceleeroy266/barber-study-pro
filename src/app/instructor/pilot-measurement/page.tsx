@@ -15,6 +15,19 @@ import type { Profile, QuizAttempt, StudentProgress } from '@/types'
 
 export const dynamic = 'force-dynamic'
 
+interface FinalizedCheckpointRow {
+  id: string
+  checkpoint_type: PilotCheckpointType
+  target_date: string
+  status: 'finalized'
+  generated_at: string
+  finalized_at: string | null
+  included_student_count: number
+  excluded_student_count: number
+  coverage: Record<string, unknown>
+  metrics: Record<string, unknown>
+}
+
 function formatSeconds(seconds: number | null): string {
   if (seconds === null) return 'No evidence'
   const totalMinutes = Math.round(seconds / 60)
@@ -156,7 +169,7 @@ export default async function InstructorPilotMeasurementPage() {
     allowedStudentIds: assignedStudentIds ? new Set(assignedStudentIds) : undefined,
   })
 
-  const finalized = checkpointsResult.data ?? []
+  const finalized = (checkpointsResult.data ?? []) as FinalizedCheckpointRow[]
   const needsAttention = snapshot.learners
     .filter((learner) => learner.includedInAggregate && learner.needsAttention)
     .sort((a, b) => a.fullName.localeCompare(b.fullName))
@@ -173,8 +186,9 @@ export default async function InstructorPilotMeasurementPage() {
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
         <MetricCard label="Included learners" value={String(snapshot.includedStudentCount)} />
+        <MetricCard label="Excluded learners" value={String(snapshot.excludedStudentCount)} />
         <MetricCard label="Active learners" value={String(snapshot.metrics.activeLearnerCount)} />
         <MetricCard label="Avg Exam Ready" value={formatPercent(snapshot.metrics.averageLatestExamPercentage)} />
         <MetricCard label="Avg readiness" value={formatPercent(snapshot.metrics.averageReadinessScore)} />
@@ -190,10 +204,27 @@ export default async function InstructorPilotMeasurementPage() {
         </div>
       </section>
 
-      <section className="grid gap-4 lg:grid-cols-3">
+      <section className="grid gap-4 lg:grid-cols-4">
         <MetricCard label="Total active study time" value={formatSeconds(snapshot.metrics.totalActiveStudySeconds)} />
         <MetricCard label="Avg study time / included learner" value={formatSeconds(snapshot.metrics.averageActiveStudySeconds)} />
+        <MetricCard label="Exam Ready passing rate" value={formatPercent(snapshot.metrics.examPassingRate)} />
         <MetricCard label="Needs attention" value={String(snapshot.metrics.needsAttentionCount)} />
+      </section>
+
+      <section className="rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-background-secondary)] p-5">
+        <h2 className="text-xl font-semibold text-white">Exam Ready domains</h2>
+        {Object.keys(snapshot.metrics.examDomainPercentages).length === 0 ? (
+          <p className="mt-3 text-[var(--color-text-muted)]">No completed Exam Ready domain evidence yet.</p>
+        ) : (
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {Object.entries(snapshot.metrics.examDomainPercentages).map(([domain, percentage]) => (
+              <div key={domain} className="rounded-lg border border-[var(--color-border-primary)] p-4">
+                <p className="text-sm text-[var(--color-text-muted)]">{domain}</p>
+                <p className="mt-1 text-xl font-semibold text-white">{formatPercent(percentage)}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-background-secondary)] p-5">
