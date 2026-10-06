@@ -9,6 +9,7 @@ import {
   type PilotStudyActivityRow,
 } from '@/lib/pilot-measurement/resolver'
 import type { Profile, QuizAttempt, StudentProgress } from '@/types'
+import PilotCheckpointControls from '@/components/pilot-measurement/PilotCheckpointControls'
 
 interface StaffPilotMeasurementViewProps {
   schoolId: string
@@ -235,6 +236,10 @@ export default async function StaffPilotMeasurementView({
           </div>
         )}
       </section>
+
+      {viewer === 'platform_admin' && (
+        <PilotCheckpointControls schoolId={schoolId} />
+      )}
 
       <section className="rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-background-secondary)] p-5">
         <h2 className="text-xl font-semibold text-white">Official checkpoint timeline</h2>
