@@ -8,6 +8,7 @@ interface PageProps {
     reviewed?: string
     alreadyReviewed?: string
     bulkApproved?: string
+    contractSaved?: string
     queueStudent?: string
     queueDate?: string
     queueSource?: string
