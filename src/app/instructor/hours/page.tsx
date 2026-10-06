@@ -5,6 +5,13 @@ interface PageProps {
     saved?: string
     error?: string
     student?: string
+    reviewed?: string
+    alreadyReviewed?: string
+    bulkApproved?: string
+    queueStudent?: string
+    queueDate?: string
+    queueSource?: string
+    queueCategory?: string
   }>
 }
 
@@ -18,6 +25,15 @@ export default async function InstructorHoursPage({ searchParams }: PageProps) {
       saved={params.saved === '1'}
       error={params.error ?? null}
       highlightedStudentId={params.student ?? null}
+      reviewedStatus={params.reviewed ?? null}
+      alreadyReviewedStatus={params.alreadyReviewed ?? null}
+      bulkApprovedCount={params.bulkApproved !== undefined && /^\d+$/.test(params.bulkApproved)
+        ? Number(params.bulkApproved)
+        : null}
+      queueStudentFilter={params.queueStudent ?? ''}
+      queueDateFilter={params.queueDate ?? ''}
+      queueSourceFilter={params.queueSource ?? ''}
+      queueCategoryFilter={params.queueCategory ?? ''}
     />
   )
 }

@@ -232,7 +232,7 @@ export default async function StaffHoursManager({
     error === 'invalid-hours' ? 'Enter more than 0 and no more than 24 hours.' :
     error === 'student-not-found' ? 'That student is not in your school.' :
     error === 'save-failed' ? 'Hours could not be saved. Please try again.' :
-    error === 'instructor-only' ? 'Only instructors submit daily hours. School administrators review and approve them.' :
+    error === 'instructor-only' ? 'Only instructors submit daily hours. Authorized hour approvers review and approve them.' :
     error === 'invalid-review' ? 'That hour entry could not be reviewed.' :
     error === 'review-failed' ? 'The approval decision could not be saved. Please try again.' :
     error === 'rejection-reason-required' ? 'Enter a reason before rejecting an hour entry.' :
@@ -634,8 +634,8 @@ export default async function StaffHoursManager({
               {reviewedLogs.slice(0, 25).map((log) => {
                 const student = rows.find((entry) => entry.id === log.user_id)
                 const reviewerName = log.reviewed_by
-                  ? (actorNameMap.get(log.reviewed_by) ?? 'School administrator')
-                  : 'School administrator'
+                  ? (actorNameMap.get(log.reviewed_by) ?? 'Authorized reviewer')
+                  : 'Authorized reviewer'
                 return (
                   <article key={log.id} className="rounded-lg border border-graphite bg-black p-4">
                     <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
