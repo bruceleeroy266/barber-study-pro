@@ -230,18 +230,13 @@ describe('PO-1C.3 comprehensive exam runtime', () => {
     expect(api).not.toContain('domain_breakdown')
   })
 
-  it('does not build the polished simulator UI in PO-1C.3', () => {
-    const forbidden = [
-      'src/components/comprehensive-exam/ExamShell.tsx',
-      'src/components/comprehensive-exam/QuestionNavigator.tsx',
-      'src/components/comprehensive-exam/ExamQuestion.tsx',
-      'src/components/comprehensive-exam/ReviewScreen.tsx',
-      'src/components/comprehensive-exam/ExamResults.tsx',
-      'src/app/(dashboard)/dashboard/exam-ready/page.tsx',
-    ]
-
-    for (const file of forbidden) {
-      expect(fs.existsSync(path.join(process.cwd(), file))).toBe(false)
-    }
+  it('keeps PO-1C.3 itself runtime/API-only even after later UI slices exist', () => {
+    const lower = migration.toLowerCase()
+    expect(lower).not.toContain('examshell.tsx')
+    expect(lower).not.toContain('questionnavigator.tsx')
+    expect(lower).not.toContain('examquestion.tsx')
+    expect(lower).not.toContain('reviewscreen.tsx')
+    expect(lower).not.toContain('examresults.tsx')
+    expect(lower).not.toContain('/dashboard/exam-ready')
   })
 })

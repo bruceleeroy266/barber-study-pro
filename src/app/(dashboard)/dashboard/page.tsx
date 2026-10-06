@@ -609,6 +609,20 @@ export default async function DashboardPage() {
                 </Link>
 
                 <Link
+                  href="/dashboard/exam-ready"
+                  className="flex items-center justify-between p-3 bg-[var(--color-background-secondary)]/50 rounded-lg hover:bg-[var(--color-background-secondary)] transition-colors group"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-xl">🎯</span>
+                    <div>
+                      <p className="text-white font-medium">Exam Ready</p>
+                      <p className="text-xs text-[var(--color-text-muted)]">110-question simulator</p>
+                    </div>
+                  </div>
+                  <span className="text-[var(--color-text-muted)] group-hover:text-[var(--color-brand-gold)]">→</span>
+                </Link>
+
+                <Link
                   href="/dashboard/grades"
                   className="flex items-center justify-between p-3 bg-[var(--color-background-secondary)]/50 rounded-lg hover:bg-[var(--color-background-secondary)] transition-colors group"
                 >
