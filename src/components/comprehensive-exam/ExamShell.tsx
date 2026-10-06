@@ -90,7 +90,7 @@ export default function ExamShell() {
     if (next.status === 'active') {
       const firstUnanswered = next.items.find((item) => !item.selectedOption)?.position ?? 1
       setCurrentPosition(firstUnanswered)
-      setSecondsLeft(Math.max(0, Math.floor((new Date(next.expiresAt).getTime() - Date.now()) / 1000)))
+      setSecondsLeft(Math.max(0, next.remainingSeconds))
       setView('active')
     } else {
       setSecondsLeft(0)
@@ -110,21 +110,19 @@ export default function ExamShell() {
   useEffect(() => {
     if (!attempt || attempt.status !== 'active') return
     const tick = window.setInterval(() => {
-      const remaining = Math.max(
-        0,
-        Math.floor((new Date(attempt.expiresAt).getTime() - Date.now()) / 1000),
-      )
-      setSecondsLeft(remaining)
-      if (remaining === 0 && !expirationHandledRef.current) {
-        expirationHandledRef.current = true
-        void refreshAttempt().catch(() => {
-          setQuestionError('Time expired. Reconnecting to finalize your exam…')
-          expirationHandledRef.current = false
-        })
-      }
+      setSecondsLeft((remaining) => Math.max(0, remaining - 1))
     }, 1000)
     return () => window.clearInterval(tick)
-  }, [attempt, refreshAttempt])
+  }, [attempt])
+
+  useEffect(() => {
+    if (!attempt || attempt.status !== 'active' || secondsLeft !== 0 || expirationHandledRef.current) return
+    expirationHandledRef.current = true
+    void refreshAttempt().catch(() => {
+      setQuestionError('Time expired. Reconnecting to finalize your exam…')
+      expirationHandledRef.current = false
+    })
+  }, [attempt, secondsLeft, refreshAttempt])
 
   useEffect(() => {
     if (!attempt || attempt.status !== 'active') return
