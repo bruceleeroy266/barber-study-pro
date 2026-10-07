@@ -409,6 +409,9 @@ export default async function StaffHoursManager({
     full_name: student.full_name,
     email: student.email,
     requiredHours: student.requiredHours,
+    priorCreditMinutes: student.priorCreditMinutes,
+    requirementOverrideMinutes: student.requirementOverrideMinutes,
+    contractVersion: student.contractVersion,
   }))
   const exportLogs = logs.map((log) => ({
     ...log,
