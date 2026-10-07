@@ -170,16 +170,17 @@ export default function ProductionMessageCenter({
         return
       }
 
+      const remainingUnread = readResult.data.remainingUnread
       setThreads((current) =>
         current.map((thread) =>
           thread.id === threadId
-            ? { ...thread, unreadCount: 0 }
+            ? { ...thread, unreadCount: remainingUnread }
             : thread
         )
       )
       setSelectedThread((current) =>
         current?.id === threadId
-          ? { ...current, unreadCount: 0 }
+          ? { ...current, unreadCount: remainingUnread }
           : current
       )
       setStatusMessage('Conversation loaded')
