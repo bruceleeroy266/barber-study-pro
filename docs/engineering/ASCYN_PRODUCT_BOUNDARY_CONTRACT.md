@@ -221,7 +221,48 @@ ASCYN MUST NOT turn the Admin Dashboard into:
 - tuition management;
 - admissions CRM.
 
-## 9. Institutional Data Layer direction
+## 9. Guarded integration zones
+
+The following areas are explicitly tagged **GUARDED INTEGRATION ZONES** because ASCYN needs them operationally but they carry the highest risk of drifting into SIS/ERP scope.
+
+### H&A — GUARDED INTEGRATION ZONE
+Allowed:
+- ASCYN-native attendance/hour capture when no external source exists;
+- effective-hours calculations;
+- corrections, provenance, authorization, and auditability;
+- use of attendance/hour context in instructional risk and reporting.
+
+Guardrail:
+- prefer external institutional sources when designated authoritative;
+- do not add physical time-clock hardware, payroll, financial-aid attendance logic, or regulatory attendance filing engines.
+
+### Onboarding / roster / enrollment — GUARDED INTEGRATION ZONE
+Allowed:
+- ASCYN account activation;
+- school/program association required to operate ASCYN;
+- instructor/student assignment required for teaching permissions;
+- manual fallback when no integration exists.
+
+Guardrail:
+- do not turn ASCYN into the authoritative admissions CRM or full student-information record;
+- prefer synchronization/import for institutional enrollment, roster, and status data when a supported source exists;
+- avoid duplicate institutional data entry without documented reason.
+
+### Admin reporting — GUARDED INTEGRATION ZONE
+Allowed:
+- instructional health;
+- mastery/readiness;
+- intervention need;
+- attendance + learning risk;
+- pilot outcomes;
+- ASCYN evidence integrity and operational support views.
+
+Guardrail:
+- do not expand into accounting, tuition, financial aid, payroll, accreditation filing, federal reporting, or admissions-pipeline management.
+
+Every new slice touching one of these zones must explicitly state the authoritative data source and the scope ceiling.
+
+## 10. Institutional Data Layer direction
 
 Future integration architecture should target an ASCYN Institutional Data Layer rather than a one-off SMART dependency.
 
@@ -242,7 +283,7 @@ Requirements:
 
 SMART, if integrated later, is Connector #1—not ASCYN's architecture.
 
-## 10. Gate scope-collision rule
+## 11. Gate scope-collision rule
 
 Before implementation begins, every future Gate or major feature slice MUST answer:
 
@@ -259,7 +300,7 @@ Before implementation begins, every future Gate or major feature slice MUST answ
 
 A Gate may not be marked implementation-ready until this collision check is complete.
 
-## 11. Automatic stop conditions
+## 12. Automatic stop conditions
 
 Implementation MUST STOP for architecture review when a proposed feature:
 - enters a DO NOT BUILD category;
@@ -271,7 +312,7 @@ Implementation MUST STOP for architecture review when a proposed feature:
 - requires users to maintain the same institutional record in multiple systems without a documented reason;
 - materially expands ASCYN from learning platform into general SIS/ERP territory.
 
-## 12. Exception policy
+## 13. Exception policy
 
 A customer request, pilot request, competitor feature, or convenient engineering opportunity is not sufficient to override this contract.
 
@@ -284,7 +325,7 @@ An exception requires:
 6. written amendment to this contract;
 7. separate implementation authorization.
 
-## 13. Decision rule
+## 14. Decision rule
 
 When uncertain, prefer the option that keeps ASCYN closest to:
 
@@ -294,7 +335,7 @@ and furthest from:
 
 **finance → accounting → compliance filing → admissions CRM → physical timekeeping → general SIS administration**
 
-## 14. Contract certification
+## 15. Contract certification
 
 This contract is considered architecturally locked when:
 - it exists on production main;
