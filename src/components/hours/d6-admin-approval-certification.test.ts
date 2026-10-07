@@ -150,10 +150,10 @@ describe('D6 final Admin Approval certification', () => {
 
   it('keeps the staff-view accumulated and period totals approved-only', () => {
     expect(manager).toContain(".from('effective_hour_logs')")
-    expect(manager).toContain('calculateHoursProgressSummary(studentLogs, requiredHours)')
+    expect(manager).toContain('calculateAdaptiveStudentHours(studentLogs, {')
     expect(manager).toContain(".filter((log) => log.status === 'pending')")
     expect(manager).toContain('calculateApprovedPeriodTotals(studentLogs, new Date(), schoolTimeZone)')
-    expect(manager).toContain('Accumulated')
+    expect(manager).toContain('Earned Here')
     expect(manager).toContain('This Week')
     expect(manager).toContain('This Month')
     expect(manager).toContain('This Year')
