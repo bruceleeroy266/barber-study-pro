@@ -3,10 +3,9 @@ import { redirect } from 'next/navigation'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 import BackButtonPrevention from '@/components/auth/BackButtonPrevention'
 import InstructorNav from '@/components/InstructorNav'
+import SupportModeBanner from '@/components/support/SupportModeBanner'
+import { resolveSupportAccessContext } from '@/lib/support-access'
 
-// Instructor pages require an authenticated instructor/admin user, so they must
-// be rendered dynamically at request time. Static generation would call
-// createClient() without a user session and fail when Supabase env vars are missing.
 export const dynamic = 'force-dynamic'
 
 export default async function InstructorLayout({
@@ -14,27 +13,34 @@ export default async function InstructorLayout({
 }: {
   children: React.ReactNode
 }) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
 
-  if (!user) {
-    redirect('/login')
+  const profile = context.effectiveProfile
+  if (!isInstructorOrAdmin(profile.role)) {
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile || !isInstructorOrAdmin(profile.role)) {
-    redirect('/dashboard')
+  let schoolName: string | null = null
+  if (context.supportActive && profile.school_id) {
+    const supabase = await createClient()
+    const { data: school } = await supabase.from('schools').select('name').eq('id', profile.school_id).maybeSingle()
+    schoolName = school?.name ?? null
   }
 
   return (
     <div className="min-h-screen bg-black">
       <BackButtonPrevention />
-      <InstructorNav user={profile} />
+      {context.supportActive && context.targetProfile && (
+        <SupportModeBanner
+          actorEmail={context.actorEmail}
+          targetName={context.targetProfile.full_name}
+          targetEmail={context.targetProfile.email}
+          targetRole={context.targetProfile.role}
+          schoolName={schoolName}
+        />
+      )}
+      <InstructorNav user={{ role: profile.role }} />
       <main id="main-content" className="min-h-screen pt-16 lg:pl-64 lg:pt-0">
         <div className="p-4 lg:p-8 max-w-7xl mx-auto">
           {children}

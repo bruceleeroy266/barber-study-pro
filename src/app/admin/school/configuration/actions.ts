@@ -5,6 +5,7 @@ import { isAdmin, isSchoolAdmin, isPlatformAdminProfile } from '@/lib/auth-helpe
 import { SchoolConfiguration } from '@/types'
 import { validateSchoolConfiguration, hasValidationErrors } from '@/lib/school-config/validation'
 import { logPermissionDenied, logSensitiveConfigChange } from '@/lib/security/audit-logger'
+import { resolveSupportAccessContext, logSupportAction } from '@/lib/support-access'
 
 export interface SaveConfigurationResult {
   success: boolean
@@ -21,17 +22,13 @@ export async function saveSchoolConfiguration(
   targetSchoolId?: string
 ): Promise<SaveConfigurationResult> {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) {
+  const context = await resolveSupportAccessContext()
+  if (!context) {
     return { success: false, message: 'You must be signed in to save settings.' }
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role, school_id')
-    .eq('id', user.id)
-    .single()
+  const profile = context.effectiveProfile
+  const user = { id: context.actorUserId, email: context.actorEmail }
 
   if (!profile || !(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
     await logPermissionDenied('manage_settings', {
@@ -53,7 +50,7 @@ export async function saveSchoolConfiguration(
   //   A client-provided targetSchoolId is NEVER trusted for these callers.
   let effectiveSchoolId: string
 
-  if (isPlatformAdminProfile(profile)) {
+  if (!context.supportActive && isPlatformAdminProfile(profile)) {
     if (!targetSchoolId || !isValidUuid(targetSchoolId)) {
       return { success: false, message: 'A target school must be selected before saving.' }
     }
@@ -193,6 +190,8 @@ export async function saveSchoolConfiguration(
       }
       return { success: false, message: error.message }
     }
+
+    await logSupportAction(context, 'save_school_configuration', 'school_settings', { effectiveSchoolId, changedFields })
 
     await logSensitiveConfigChange('school_settings', {
       userId: user.id,

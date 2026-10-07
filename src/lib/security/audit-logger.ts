@@ -23,6 +23,7 @@ export type SecurityEventType =
   | 'data_export'
   | 'session_expired'
   | 'logout'
+  | 'support_access'
 
 export const SECURITY_EVENT_TYPES: readonly SecurityEventType[] = [
   'failed_login',
@@ -35,6 +36,7 @@ export const SECURITY_EVENT_TYPES: readonly SecurityEventType[] = [
   'data_export',
   'session_expired',
   'logout',
+  'support_access',
 ] as const
 
 export type SecurityEventResult = 'allowed' | 'denied' | 'blocked' | 'success' | 'failure'

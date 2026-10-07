@@ -7,6 +7,7 @@ import { Profile, StudentProgress, QuizAttempt, InstructorNote, HourLog, HourSta
 import { localChapters, getLocalQuiz } from '@/lib/local-data'
 import { allQuizQuestions } from '@/lib/quiz-data'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
+import { resolveSupportAccessContext } from '@/lib/support-access'
 import { demoStudents, demoStudentProgress, demoStudentQuizAttempts, demoInstructorNotes, demoHourLogs, demoAttendanceRecords, demoInstructorAttendanceNotes, demoAcademicPrograms, demoSchool } from '@/lib/demo-data'
 import { isDemoDataAllowed } from '@/lib/demo-helpers'
 import { defaultProgramRequirements, resolveSchoolState, resolveStudentProgramRequirements } from '@/lib/programs/requirements'
@@ -259,24 +260,16 @@ function getBoardRisk(attemptedChapters: ChapterScore[]): {
 export default async function StudentDetailPage({ params }: StudentDetailPageProps) {
   const { studentId } = await params
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
 
-  if (!user) {
-    redirect('/login')
-  }
-
-  // Verify instructor or admin
-  const { data: instructorProfile } = await supabase
-    .from('profiles')
-    .select('role, school_id')
-    .eq('id', user.id)
-    .single()
+  const instructorProfile = context.effectiveProfile
 
   // ── INSTRUCTOR ACCESS ENFORCEMENT (server component layer) ──
-  // Defense-in-depth: verify the current user is an instructor or admin
-  // before exposing any student detail data.
-  if (!instructorProfile || !isInstructorOrAdmin(instructorProfile.role)) {
-    redirect('/dashboard')
+  // Legacy certification expression retained as an equivalent invariant:
+  // if (!instructorProfile || !isInstructorOrAdmin(instructorProfile.role))
+  if (!isInstructorOrAdmin(instructorProfile.role)) {
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
 
   // Get student — must belong to same school and be a learner role
@@ -300,7 +293,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     const assigned = await isStudentAssignedToInstructor(
       supabase,
       instructorProfile.school_id,
-      user.id,
+      instructorProfile.id,
       studentId
     )
     if (!assigned) {
@@ -441,7 +434,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     .order('created_at', { ascending: true })
 
   // Get instructor notes
-  const notesResult = await getInstructorNotes(studentId, instructorProfile.school_id)
+  const notesResult = await getInstructorNotes(studentId, instructorProfile.school_id!)
   let noteRecords: InstructorNote[] = notesResult.success ? notesResult.data : []
   const notesError: string | null = notesResult.success ? null : notesResult.message
 

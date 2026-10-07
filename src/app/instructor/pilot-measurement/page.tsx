@@ -12,6 +12,7 @@ import {
   type PilotStudyActivityRow,
 } from '@/lib/pilot-measurement/resolver'
 import type { Profile, QuizAttempt, StudentProgress } from '@/types'
+import { resolveSupportAccessContext } from '@/lib/support-access'
 
 export const dynamic = 'force-dynamic'
 
@@ -58,21 +59,16 @@ function checkpointLabel(type: PilotCheckpointType): string {
 
 export default async function InstructorPilotMeasurementPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('id, role, school_id, full_name')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile || !isInstructorOrAdmin(profile.role)) redirect('/dashboard')
-  if (!profile.school_id) redirect('/dashboard')
+  const profile = context.effectiveProfile
+  if (!isInstructorOrAdmin(profile.role)) redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
+  if (!profile.school_id) redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
 
   const schoolId = profile.school_id
   const assignedStudentIds = profile.role === 'instructor'
-    ? await loadAssignedStudentIds(supabase, schoolId, user.id)
+    ? await loadAssignedStudentIds(supabase, schoolId, profile.id)
     : null
 
   const { data: period } = await supabase

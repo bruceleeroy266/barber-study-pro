@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase-server'
+import { resolveSupportAccessContext, logSupportAction, type SupportAccessContext } from '@/lib/support-access'
 
 type BulletinPriority = 'normal' | 'important' | 'urgent'
 type BulletinStatus = 'draft' | 'published' | 'archived'
@@ -99,24 +100,18 @@ async function getBulletinActor(): Promise<
   BulletinRuntimeResult<{
     actor: BulletinActor
     supabase: Awaited<ReturnType<typeof createClient>>
+    supportContext: SupportAccessContext
   }>
 > {
   const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const supportContext = await resolveSupportAccessContext()
 
-  if (!user) {
+  if (!supportContext) {
     return { success: false, message: 'You must be signed in to use bulletins.' }
   }
 
-  const { data: profile, error } = await supabase
-    .from('profiles')
-    .select('id, school_id, role')
-    .eq('id', user.id)
-    .single()
-
-  if (error || !profile || !profile.school_id) {
+  const profile = supportContext.effectiveProfile
+  if (!profile.school_id) {
     return { success: false, message: 'Your account is not assigned to a school.' }
   }
 
@@ -128,8 +123,9 @@ async function getBulletinActor(): Promise<
     success: true,
     data: {
       supabase,
+      supportContext,
       actor: {
-        id: user.id,
+        id: profile.id,
         schoolId: profile.school_id,
         role: profile.role as BulletinActor['role'],
       },
@@ -182,7 +178,7 @@ export async function loadManagedBulletins(): Promise<
   const actorResult = await getBulletinActor()
   if (!actorResult.success) return actorResult
 
-  const { actor, supabase } = actorResult.data
+  const { actor, supabase, supportContext } = actorResult.data
   if (!['instructor', 'admin', 'school_admin'].includes(actor.role)) {
     return { success: false, message: 'Bulletin management is not available for this account.' }
   }
@@ -231,7 +227,7 @@ export async function loadStudentBulletins(): Promise<
   const actorResult = await getBulletinActor()
   if (!actorResult.success) return actorResult
 
-  const { actor, supabase } = actorResult.data
+  const { actor, supabase, supportContext } = actorResult.data
   if (!['student', 'apprentice'].includes(actor.role)) {
     return { success: false, message: 'Student bulletin delivery is not available for this account.' }
   }
@@ -291,7 +287,7 @@ export async function publishBulletin(
   const actorResult = await getBulletinActor()
   if (!actorResult.success) return actorResult
 
-  const { actor, supabase } = actorResult.data
+  const { actor, supabase, supportContext } = actorResult.data
   if (!['instructor', 'admin', 'school_admin'].includes(actor.role)) {
     return { success: false, message: 'You are not authorized to publish bulletins.' }
   }
@@ -407,7 +403,7 @@ export async function archiveBulletin(
   const actorResult = await getBulletinActor()
   if (!actorResult.success) return actorResult
 
-  const { actor, supabase } = actorResult.data
+  const { actor, supabase, supportContext } = actorResult.data
   if (!['instructor', 'admin', 'school_admin'].includes(actor.role)) {
     return { success: false, message: 'You are not authorized to archive bulletins.' }
   }
@@ -434,7 +430,7 @@ export async function acknowledgeBulletin(
   const actorResult = await getBulletinActor()
   if (!actorResult.success) return actorResult
 
-  const { actor, supabase } = actorResult.data
+  const { actor, supabase, supportContext } = actorResult.data
   if (!['student', 'apprentice'].includes(actor.role)) {
     return { success: false, message: 'Only students may acknowledge bulletins.' }
   }
@@ -465,7 +461,7 @@ export async function loadBulletinAcknowledgments(
   const actorResult = await getBulletinActor()
   if (!actorResult.success) return actorResult
 
-  const { actor, supabase } = actorResult.data
+  const { actor, supabase, supportContext } = actorResult.data
   if (!['instructor', 'admin', 'school_admin'].includes(actor.role)) {
     return { success: false, message: 'You are not authorized to view acknowledgments.' }
   }

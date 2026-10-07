@@ -3,7 +3,8 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Profile, StudentProgress, QuizAttempt, HourLog, ReadinessLevel, AttendanceRecord, Grade, GradeCategory, Assessment } from '@/types'
 import { localChapters } from '@/lib/local-data'
-import { isInstructorOrAdmin, isPlatformAdminProfile } from '@/lib/auth-helpers'
+import { isInstructorOrAdmin } from '@/lib/auth-helpers'
+import { resolveSupportAccessContext } from '@/lib/support-access'
 import { demoStudents, demoStudentProgress, demoStudentQuizAttempts, demoHourLogs, demoAttendanceRecords, getDemoNotificationsForUser, getDemoThreadsForUser, demoGrades, demoGradeCategories, demoAssessments } from '@/lib/demo-data'
 import { isDemoDataAllowed } from '@/lib/demo-helpers'
 import DemoDataBanner from '@/components/DemoDataBanner'
@@ -52,7 +53,7 @@ interface ChapterClassScore {
 }
 
 interface InstructorDashboardProps {
-  searchParams: Promise<{ q?: string; viewAs?: string }>
+  searchParams: Promise<{ q?: string }>
 }
 
 const ACTIVE_DAYS = 7
@@ -205,61 +206,26 @@ function computeChapterClassScores(
 }
 
 export default async function InstructorDashboard({ searchParams }: InstructorDashboardProps) {
-  const { q, viewAs } = await searchParams
+  const { q } = await searchParams
   const searchQuery = (q || '').trim().toLowerCase()
 
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
 
-  if (!user) {
-    redirect('/login')
-  }
-
-  // Verify the signed-in caller first. Platform admins may optionally open
-  // a scoped instructor support view without changing their authenticated identity.
-  const { data: callerProfile } = await supabase
-    .from('profiles')
-    .select('role, school_id, full_name, schools(*)')
-    .eq('id', user.id)
-    .single()
-
-  if (!callerProfile || !isInstructorOrAdmin(callerProfile.role)) {
-    redirect('/dashboard')
-  }
-
-  const isSupportView = Boolean(viewAs) && isPlatformAdminProfile(callerProfile)
-  let profile = callerProfile
-  let dashboardInstructorId = user.id
-  let supportInstructorName: string | null = null
-
-  if (isSupportView && viewAs) {
-    const { data: targetInstructor } = await supabase
-      .from('profiles')
-      .select('id, role, school_id, full_name, approval_status, is_disabled, schools(*)')
-      .eq('id', viewAs)
-      .maybeSingle()
-
-    if (
-      !targetInstructor ||
-      targetInstructor.role !== 'instructor' ||
-      !targetInstructor.school_id ||
-      targetInstructor.is_disabled ||
-      targetInstructor.approval_status !== 'approved'
-    ) {
-      redirect('/admin/support-access')
-    }
-
-    profile = targetInstructor
-    dashboardInstructorId = targetInstructor.id
-    supportInstructorName = targetInstructor.full_name || 'Instructor'
+  const profile = context.effectiveProfile
+  if (!isInstructorOrAdmin(profile.role)) {
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
 
   if (!profile.school_id) {
-    redirect(isSupportView ? '/admin/support-access' : '/dashboard')
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
 
+  const dashboardInstructorId = profile.role === 'instructor' ? profile.id : context.actorUserId
   const schoolId = profile.school_id
-  const schoolName = (profile.schools as { name?: string } | null)?.name || 'Your School'
+  const { data: schoolRow } = await supabase.from('schools').select('name').eq('id', schoolId).maybeSingle()
+  const schoolName = schoolRow?.name || 'Your School'
 
   // Instructors see only their canonical active roster. In platform-admin
   // support view, use the selected instructor's canonical assignment scope.
@@ -518,26 +484,6 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     <div className="min-h-screen bg-[var(--color-background-primary)] p-6 md:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
         {usingDemoData && <DemoDataBanner />}
-        {isSupportView && (
-          <div className="rounded-xl border border-[var(--color-brand-gold)]/40 bg-[var(--color-brand-gold)]/10 p-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <div className="text-sm font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
-                  Platform Admin Support View
-                </div>
-                <p className="mt-1 text-sm text-[var(--color-text-muted)]">
-                  Viewing {supportInstructorName}&apos;s instructor dashboard for {schoolName}. You remain signed in as platform administrator.
-                </p>
-              </div>
-              <Link
-                href="/admin/support-access"
-                className="inline-flex shrink-0 items-center justify-center rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-background-primary)] px-4 py-2 text-sm font-medium text-[var(--color-brand-gold)]"
-              >
-                Back to Support Access
-              </Link>
-            </div>
-          </div>
-        )}
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-white mb-2">Instructor Dashboard</h1>
@@ -970,7 +916,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
                   >
                     <div className="min-w-0">
                       <p className="font-medium text-white">
-                        {getThreadDisplayName(thread, user.id)}
+                        {getThreadDisplayName(thread, dashboardInstructorId)}
                       </p>
                       <p className="text-sm text-[var(--color-text-muted)]">{thread.subject}</p>
                       <p className="text-xs text-[var(--color-text-muted)] truncate mt-0.5">

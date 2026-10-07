@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase-server'
 import { hasPermission } from '@/lib/auth-helpers'
 import type { HourCategory } from '@/types'
+import { resolveSupportAccessContext, logSupportAction } from '@/lib/support-access'
 
 export interface AttendanceHourGenerationResult {
   created: number
@@ -43,16 +44,11 @@ export async function generatePendingHoursFromAttendance(
   }
 
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('You must be signed in.')
+  const context = await resolveSupportAccessContext()
+  if (!context) throw new Error('You must be signed in.')
 
-  const { data: actor } = await supabase
-    .from('profiles')
-    .select('id, role, school_id')
-    .eq('id', user.id)
-    .single()
-
-  if (!actor?.school_id || !hasPermission(actor.role, 'manage_attendance')) {
+  const actor = context.effectiveProfile
+  if (!actor.school_id || !hasPermission(actor.role, 'manage_attendance')) {
     throw new Error('You do not have permission to generate student hours.')
   }
 
@@ -170,7 +166,7 @@ export async function generatePendingHoursFromAttendance(
           minutes: attendance.minutes_present,
           category,
           notes: 'Updated from resubmitted Daily Attendance & Hours.',
-          submitted_by: user.id,
+          submitted_by: context.actorUserId,
           updated_at: new Date().toISOString(),
         })
         .eq('id', existing.id)
@@ -226,7 +222,7 @@ export async function generatePendingHoursFromAttendance(
         notes: isResubmission
           ? 'Corrected attendance resubmitted after hour rejection.'
           : 'Generated from submitted Daily Attendance & Hours.',
-        submitted_by: user.id,
+        submitted_by: context.actorUserId,
         reviewed_by: null,
         reviewed_at: null,
         rejection_reason: null,
@@ -261,6 +257,16 @@ export async function generatePendingHoursFromAttendance(
   for (const studentId of studentIds) {
     revalidatePath(`/instructor/student/${studentId}`)
   }
+
+  await logSupportAction(context, 'generate_hours_from_attendance', 'hour_logs', {
+    date,
+    created,
+    resubmitted,
+    updated,
+    skipped,
+    attendanceCount: attendanceRows.length,
+    effectiveRole: actor.role,
+  })
 
   return {
     created,
