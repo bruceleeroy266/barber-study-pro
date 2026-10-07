@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase-server'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 import { logPermissionDenied, logUnauthorizedAccess } from '@/lib/security/audit-logger'
+import { resolveSupportAccessContext, logSupportAction } from '@/lib/support-access'
 import { Assessment } from '@/types'
 import {
   mapAssessmentFromDb,
@@ -19,17 +20,13 @@ export async function saveAssessment(
   assessment: Partial<Assessment> & { studentId: string; assessmentType: Assessment['assessmentType'] }
 ): Promise<SaveAssessmentResult> {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) {
+  const context = await resolveSupportAccessContext()
+  if (!context) {
     return { success: false, message: 'You must be signed in to save an assessment.' }
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role, full_name, school_id')
-    .eq('id', user.id)
-    .single()
+  const profile = context.effectiveProfile
+  const user = { id: context.actorUserId, email: context.actorEmail }
 
   if (!profile || !isInstructorOrAdmin(profile.role)) {
     await logPermissionDenied('manage_assessments', {
@@ -45,6 +42,22 @@ export async function saveAssessment(
 
   if (!profile.school_id) {
     return { success: false, message: 'Your account is not assigned to a school.' }
+  }
+
+  if (profile.role === 'instructor') {
+    const { data: assignment } = await supabase
+      .from('student_instructor_assignments')
+      .select('student_id')
+      .eq('school_id', profile.school_id)
+      .eq('instructor_id', profile.id)
+      .eq('student_id', assessment.studentId)
+      .eq('is_active', true)
+      .is('ended_at', null)
+      .maybeSingle()
+
+    if (!assignment) {
+      return { success: false, message: 'This student is not assigned to the selected instructor.' }
+    }
   }
 
   // Verify student belongs to actor's school
@@ -93,8 +106,8 @@ export async function saveAssessment(
   const payload = {
     ...mapAssessmentToDb(assessment),
     school_id: profile.school_id,
-    evaluator_id: user.id,
-    evaluator_name: profile.full_name || user.email || 'Instructor',
+    evaluator_id: profile.id,
+    evaluator_name: profile.full_name || profile.email || 'Instructor',
     updated_at: now,
   }
 
@@ -109,6 +122,7 @@ export async function saveAssessment(
         .single()
 
       if (error) return { success: false, message: error.message }
+      await logSupportAction(context, 'update_assessment', 'assessments', { assessmentId: assessment.id, studentId: assessment.studentId, effectiveRole: profile.role })
       return { success: true, message: 'Assessment updated.', assessment: mapAssessmentFromDb(data) }
     }
 
@@ -119,6 +133,7 @@ export async function saveAssessment(
       .single()
 
     if (error) return { success: false, message: error.message }
+    await logSupportAction(context, 'create_assessment', 'assessments', { studentId: assessment.studentId, effectiveRole: profile.role })
     return { success: true, message: 'Assessment saved.', assessment: mapAssessmentFromDb(data) }
   } catch (err) {
     return {
