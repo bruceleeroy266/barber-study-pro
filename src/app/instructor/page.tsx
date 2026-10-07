@@ -916,7 +916,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
                   >
                     <div className="min-w-0">
                       <p className="font-medium text-white">
-                        {getThreadDisplayName(thread, user.id)}
+                        {getThreadDisplayName(thread, dashboardInstructorId)}
                       </p>
                       <p className="text-sm text-[var(--color-text-muted)]">{thread.subject}</p>
                       <p className="text-xs text-[var(--color-text-muted)] truncate mt-0.5">
