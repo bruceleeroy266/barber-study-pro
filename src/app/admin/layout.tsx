@@ -38,7 +38,7 @@ export default async function AdminLayout({
   return (
     <div className="min-h-screen bg-black flex">
       <BackButtonPrevention />
-      <AdminNav user={navProfile as any} />
+      <AdminNav user={navProfile} />
       <main id="main-content" className="flex-1 min-w-0 lg:pl-64">
         <div className="lg:hidden h-14" />
         {context.supportActive && context.targetProfile && (
