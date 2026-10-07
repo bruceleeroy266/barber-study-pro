@@ -10,6 +10,7 @@ import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 import { createSupabaseInstructorClient } from '@/lib/instructor/supabase-client'
+import { resolveSupportAccessContext } from '@/lib/support-access'
 import EscalationList from '@/components/instructor/EscalationList'
 import {
   resolveConceptName,
@@ -20,27 +21,18 @@ import {
 export const dynamic = 'force-dynamic'
 
 export default async function InstructorEscalationsPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
 
-  if (!user) {
-    redirect('/login')
-  }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile || !isInstructorOrAdmin(profile.role)) {
-    redirect('/dashboard')
+  const profile = context.effectiveProfile
+  if (!isInstructorOrAdmin(profile.role)) {
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
 
   if (!profile.school_id) {
     return (
       <div className="text-center py-12">
-        <p className="text-silver">No school association found for your account.</p>
+        <p className="text-silver">No school association found for this support role.</p>
       </div>
     )
   }
