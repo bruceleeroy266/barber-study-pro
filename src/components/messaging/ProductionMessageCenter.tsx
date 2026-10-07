@@ -189,6 +189,7 @@ export default function ProductionMessageCenter({
   }
 
   const handleSelect = (threadId: string) => {
+    replyOperationIdRef.current = null
     startTransition(() => {
       void loadThread(threadId)
     })
@@ -570,7 +571,10 @@ export default function ProductionMessageCenter({
                   <select
                     id="message-counterpart"
                     value={counterpartId}
-                    onChange={(event) => setCounterpartId(event.target.value)}
+                    onChange={(event) => {
+                      composeOperationIdRef.current = null
+                      setCounterpartId(event.target.value)
+                    }}
                     className="w-full min-h-12 bg-black border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)]"
                   >
                     <option value="">Choose a person</option>
