@@ -125,11 +125,9 @@ export default function EnrollmentModal({
     setWithdrawingId(null)
   }
 
-  // Filter out programs the student is already actively enrolled in
-  const activeProgramIds = new Set(
-    enrollments.filter((e) => e.is_active && e.status === 'active').map((e) => e.program_id)
-  )
-  const availablePrograms = programs.filter((p) => !activeProgramIds.has(p.id))
+  const activeEnrollment =
+    enrollments.find((e) => e.is_active && e.status === 'active') ?? null
+  const availablePrograms = activeEnrollment ? [] : programs
 
   function statusBadge(status: string, isActive: boolean) {
     if (!isActive || status === 'withdrawn') {
@@ -250,6 +248,18 @@ export default function EnrollmentModal({
             </div>
 
             {/* Enroll in new program */}
+            {activeEnrollment && (
+              <div className="rounded-lg border border-warm-bronze/30 bg-warm-bronze/10 p-4">
+                <div className="text-sm font-medium text-warm-bronze">
+                  One active program at a time
+                </div>
+                <p className="mt-1 text-sm text-[var(--color-text-muted)]">
+                  This student is currently enrolled in {activeEnrollment.program_name ?? 'a program'}.
+                  Withdraw that enrollment before assigning a different program.
+                </p>
+              </div>
+            )}
+
             {availablePrograms.length > 0 && (
               <div>
                 <h3 className="text-sm font-medium text-[var(--color-text-muted)] mb-3 uppercase tracking-wider">
@@ -297,9 +307,9 @@ export default function EnrollmentModal({
               </div>
             )}
 
-            {availablePrograms.length === 0 && programs.length > 0 && (
+            {availablePrograms.length === 0 && programs.length > 0 && !activeEnrollment && (
               <p className="text-sm text-[var(--color-text-muted)] text-center py-2">
-                Student is enrolled in all available programs.
+                No additional program is available for enrollment.
               </p>
             )}
 
