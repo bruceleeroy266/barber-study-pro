@@ -15,19 +15,6 @@ import type { Profile, QuizAttempt, StudentProgress } from '@/types'
 
 export const dynamic = 'force-dynamic'
 
-interface FinalizedCheckpointRow {
-  id: string
-  checkpoint_type: PilotCheckpointType
-  target_date: string
-  status: 'finalized'
-  generated_at: string
-  finalized_at: string | null
-  included_student_count: number
-  excluded_student_count: number
-  coverage: Record<string, unknown>
-  metrics: Record<string, unknown>
-}
-
 function formatSeconds(seconds: number | null): string {
   if (seconds === null) return 'No evidence'
   const totalMinutes = Math.round(seconds / 60)
@@ -124,7 +111,6 @@ export default async function InstructorPilotMeasurementPage() {
     activityResult,
     examResult,
     remediationResult,
-    checkpointsResult,
   ] = await Promise.all([
     supabase.from('student_progress').select('*').in('user_id', ids),
     supabase.from('quiz_attempts').select('*').in('user_id', ids),
@@ -141,12 +127,6 @@ export default async function InstructorPilotMeasurementPage() {
       .from('remediation_cycles')
       .select('user_id,status,outcome,created_at')
       .in('user_id', ids),
-    supabase
-      .from('pilot_measurement_checkpoints')
-      .select('id,checkpoint_type,target_date,status,generated_at,finalized_at,included_student_count,excluded_student_count,coverage,metrics')
-      .eq('pilot_period_id', period.id)
-      .eq('status', 'finalized')
-      .order('target_date', { ascending: true }),
   ])
 
   const now = new Date()
@@ -169,7 +149,6 @@ export default async function InstructorPilotMeasurementPage() {
     allowedStudentIds: assignedStudentIds ? new Set(assignedStudentIds) : undefined,
   })
 
-  const finalized = (checkpointsResult.data ?? []) as FinalizedCheckpointRow[]
   const needsAttention = snapshot.learners
     .filter((learner) => learner.includedInAggregate && learner.needsAttention)
     .sort((a, b) => a.fullName.localeCompare(b.fullName))
@@ -254,35 +233,10 @@ export default async function InstructorPilotMeasurementPage() {
       </section>
 
       <section className="rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-background-secondary)] p-5">
-        <h2 className="text-xl font-semibold text-white">Checkpoint history</h2>
-        {finalized.length === 0 ? (
-          <p className="mt-3 text-[var(--color-text-muted)]">
-            No official checkpoints have been finalized yet. This page is showing live evidence through {now.toLocaleDateString('en-US')}.
-          </p>
-        ) : (
-          <div className="mt-4 overflow-x-auto">
-            <table className="w-full min-w-[640px] text-left text-sm">
-              <thead className="text-[var(--color-text-muted)]">
-                <tr>
-                  <th className="pb-3 pr-4">Checkpoint</th>
-                  <th className="pb-3 pr-4">Target date</th>
-                  <th className="pb-3 pr-4">Included</th>
-                  <th className="pb-3">Finalized</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[var(--color-border-primary)] text-[var(--color-text-secondary)]">
-                {finalized.map((row) => (
-                  <tr key={row.id}>
-                    <td className="py-3 pr-4 font-medium text-white">{checkpointLabel(row.checkpoint_type as PilotCheckpointType)}</td>
-                    <td className="py-3 pr-4">{row.target_date}</td>
-                    <td className="py-3 pr-4">{row.included_student_count}</td>
-                    <td className="py-3">{row.finalized_at ? new Date(row.finalized_at).toLocaleDateString('en-US') : '—'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <h2 className="text-xl font-semibold text-white">Official checkpoint reports</h2>
+        <p className="mt-3 text-[var(--color-text-muted)]">
+          Official school-wide Baseline, Day 30, Day 60, and Day 90 checkpoint snapshots are limited to school administrators and ASCYN PRO platform administrators. This instructor view remains scoped to your assigned learners.
+        </p>
       </section>
 
       <section className="rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-background-secondary)] p-5">
