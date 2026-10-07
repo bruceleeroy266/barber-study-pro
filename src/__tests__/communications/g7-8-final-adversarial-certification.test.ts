@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest'
 const read = (p: string) => fs.readFileSync(path.join(process.cwd(), p), 'utf8')
 
 const certification = read('docs/engineering/GATE7_G7-8_FINAL_ADVERSARIAL_CERTIFICATION.md')
+const callerGuard = read('supabase/migrations/20261007200500_g7_8_s1_pair_authorization_caller_guard.sql')
 
 const requiredEvidence = [
   'src/__tests__/communications/com-1e-final-communications-certification.test.ts',
@@ -31,7 +32,7 @@ describe('G7-8 final adversarial certification matrix', () => {
     }
   })
 
-  it('locks all four reliability families into final certification', () => {
+  it('locks the full Gate 7 reliability matrix into final certification', () => {
     expect(certification).toContain('exactly-once and concurrency')
     expect(certification).toContain('read/unread convergence')
     expect(certification).toContain('archive and relationship races')
@@ -39,10 +40,21 @@ describe('G7-8 final adversarial certification matrix', () => {
     expect(certification).toContain('failure/mobile refresh')
   })
 
-  it('does not allow G7-8 to hide the live SECURITY DEFINER blocker', () => {
-    expect(certification).toContain('G7-8-S1 — SECURITY BLOCKER')
-    expect(certification).toContain('auth.uid() = p_actor_id OR auth.uid() = p_recipient_id')
-    expect(certification).toContain('BLOCKED until G7-8-S1 is repaired')
+  it('repairs the SECURITY DEFINER helper by requiring caller membership', () => {
+    expect(callerGuard).toContain('security definer')
+    expect(callerGuard).toContain('auth.uid() as id')
+    expect(callerGuard).toContain('caller.id is not null')
+    expect(callerGuard).toContain('caller.id in (p_actor_id, p_recipient_id)')
+    expect(callerGuard).toContain('from public, anon')
+    expect(callerGuard).toContain('to authenticated')
+  })
+
+  it('preserves the canonical messaging relationships after the caller guard', () => {
+    expect(callerGuard).toContain("actor_role in ('student', 'apprentice')")
+    expect(callerGuard).toContain("recipient_role = 'instructor'")
+    expect(callerGuard).toContain('public.student_instructor_assignments')
+    expect(callerGuard).toContain("recipient_role in ('admin', 'school_admin')")
+    expect(callerGuard).toContain("actor_role in ('admin', 'school_admin')")
   })
 
   it('requires exact-head and exact-production closure evidence', () => {
