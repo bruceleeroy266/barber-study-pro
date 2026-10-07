@@ -42,7 +42,7 @@ const hours: HourLog[] = [
     created_at: '2026-10-01T12:00:00Z',
     effective_minutes: 120 * 60,
     integrity_status: 'valid_unadjusted',
-  } as HourLog,
+  } as unknown as HourLog,
 ]
 
 describe('STUDENT-HOURS-2 cross-surface adaptive parity', () => {
