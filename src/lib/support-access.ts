@@ -42,7 +42,7 @@ export async function resolveSupportAccessContext(): Promise<SupportAccessContex
     .from('profiles')
     .select('id,email,full_name,role,school_id,approval_status,is_disabled')
     .eq('id', user.id)
-    .maybeSingle()
+    .single()
 
   if (!actor) return null
 
