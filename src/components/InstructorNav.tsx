@@ -5,14 +5,13 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { LayoutDashboard, Users, Calendar, CalendarClock, Calculator, FileCheck, MessageSquare, Megaphone, ClipboardCheck, LogOut, GraduationCap, AlertTriangle, BookOpen, ChartNoAxesCombined } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
-import { Profile } from '@/types'
 import { logLogout } from '@/app/(auth)/actions'
 import { Logo } from '@/components/brand'
 import EscalationBadge from '@/components/instructor/EscalationBadge'
 import BackButton from '@/components/ui/BackButton'
 
 interface InstructorNavProps {
-  user: Pick<Profile, 'role'> | null
+  user: { role?: string | null } | null
 }
 
 const navItems = [
