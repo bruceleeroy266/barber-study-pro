@@ -12,7 +12,7 @@ describe('ADM-1E attendance/hours parity contract', () => {
       'src/lib/hours/export-pdf.ts',
       'src/lib/school-owner/school-analytics.ts',
     ]) {
-      expect(source(path)).toContain('calculateHoursProgressSummary')
+      expect(source(path)).toContain('calculateAdaptiveStudentHours')
     }
   })
 
@@ -43,14 +43,14 @@ describe('ADM-1E attendance/hours parity contract', () => {
     const pdf = source('src/lib/hours/export-pdf.ts')
     const school = source('src/lib/school-owner/school-analytics.ts')
 
-    expect(pdf).toContain('calculateHoursProgressSummary')
-    expect(school).toContain('calculateHoursProgressSummary')
+    expect(pdf).toContain('calculateAdaptiveStudentHours')
+    expect(school).toContain('calculateAdaptiveStudentHours')
     expect(pdf).not.toContain('Math.max(0, student.requiredHours * 60 - approvedMinutes)')
   })
 
   it('prevents instructor-detail completion from exceeding the shared 100-percent cap', () => {
     const detail = source('src/app/instructor/student/[studentId]/page.tsx')
-    expect(detail).toContain('calculateHoursProgressSummary')
+    expect(detail).toContain('calculateAdaptiveStudentHours')
     expect(detail).not.toContain('Math.round((approvedMinutes / REQUIRED_MINUTES) * 100)')
   })
 })
