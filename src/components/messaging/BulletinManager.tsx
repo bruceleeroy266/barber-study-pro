@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useMemo, useState, useTransition } from 'react'
+import { FormEvent, useEffect, useMemo, useRef, useState, useTransition } from 'react'
 import { Archive, Megaphone, Pin, Users } from 'lucide-react'
 import {
   archiveBulletin,
@@ -41,6 +41,21 @@ export default function BulletinManager({
   const [error, setError] = useState<string | null>(null)
   const [ackDetails, setAckDetails] = useState<Record<string, Array<{ studentId: string; acknowledgedAt: string }>>>({})
   const [isPending, startTransition] = useTransition()
+  const publishOperationIdRef = useRef<string | null>(null)
+
+  useEffect(() => {
+    publishOperationIdRef.current = null
+  }, [
+    title,
+    body,
+    priority,
+    isPinned,
+    ackRequired,
+    publishAt,
+    expiresAt,
+    audienceMode,
+    selectedIds,
+  ])
 
   const filteredOptions = useMemo(
     () => audienceOptions.filter((option) => option.kind === audienceMode),
@@ -62,6 +77,10 @@ export default function BulletinManager({
     startTransition(() => {
       void (async () => {
         setError(null)
+        const operationId =
+          publishOperationIdRef.current ?? crypto.randomUUID()
+        publishOperationIdRef.current = operationId
+
         const result = await publishBulletin({
           title,
           body,
@@ -71,14 +90,19 @@ export default function BulletinManager({
           publishAt: publishAt ? new Date(publishAt).toISOString() : null,
           expiresAt: expiresAt ? new Date(expiresAt).toISOString() : null,
           audiences,
-        })
+        }, operationId)
 
         if (!result.success) {
           setError(result.message)
           return
         }
 
-        setBulletins((current) => [result.data, ...current])
+        publishOperationIdRef.current = null
+        setBulletins((current) =>
+          current.some((bulletin) => bulletin.id === result.data.id)
+            ? current
+            : [result.data, ...current]
+        )
         setTitle('')
         setBody('')
         setPriority('normal')
