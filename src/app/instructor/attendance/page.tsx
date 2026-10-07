@@ -7,6 +7,8 @@ import AttendanceClient from './AttendanceClient'
 import { mapAttendanceRecordsFromDb } from '@/lib/mappers/operational-data-mappers'
 import BackButton from '@/components/ui/BackButton'
 import { resolveDailyScheduleExpectations } from '@/lib/schedules/daily-expectations'
+import { resolveSupportAccessContext } from '@/lib/support-access'
+import { loadAssignedStudentIds } from '@/lib/instructor/assignments'
 
 function isDemoFallbackEnabled(): boolean {
   if (process.env.NEXT_PUBLIC_DEMO_MODE === 'true') return true
@@ -22,25 +24,23 @@ function isDemoFallbackEnabled(): boolean {
 
 export default async function AttendanceManagementPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
 
-  if (!user) {
-    redirect('/login')
-  }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('id, role, school_id, full_name, email, schools(name, timezone)')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile || !isInstructorOrAdmin(profile.role)) {
-    redirect('/dashboard')
+  const profile = context.effectiveProfile
+  if (!isInstructorOrAdmin(profile.role)) {
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
 
   if (!profile.school_id) {
-    redirect('/dashboard')
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
+
+  const { data: schoolRow } = await supabase
+    .from('schools')
+    .select('name, timezone')
+    .eq('id', profile.school_id)
+    .maybeSingle()
 
   const typedProfile: Profile = {
     id: profile.id,
@@ -61,16 +61,27 @@ export default async function AttendanceManagementPage() {
   }
 
   const schoolId = profile.school_id || null
-  const schoolRecord = profile.schools as { name?: string; timezone?: string | null } | null
-  const schoolName = schoolRecord?.name || 'Your School'
-  const schoolTimeZone = schoolRecord?.timezone || 'UTC'
+  const schoolName = schoolRow?.name || 'Your School'
+  const schoolTimeZone = schoolRow?.timezone || 'UTC'
 
-  const { data: studentsData } = await supabase
+  const assignedStudentIds = profile.role === 'instructor'
+    ? await loadAssignedStudentIds(supabase, schoolId, profile.id)
+    : null
+
+  let studentsQuery = supabase
     .from('profiles')
     .select('*')
     .eq('school_id', schoolId)
     .in('role', ['student', 'apprentice'])
 
+  if (assignedStudentIds) {
+    studentsQuery = studentsQuery.in(
+      'id',
+      assignedStudentIds.length > 0 ? assignedStudentIds : ['__none__']
+    )
+  }
+
+  const { data: studentsData } = await studentsQuery
   let students: Profile[] = (studentsData as Profile[]) || []
 
   if (students.length === 0 && isDemoFallbackEnabled()) {
