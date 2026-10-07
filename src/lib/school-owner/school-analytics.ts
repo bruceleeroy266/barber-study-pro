@@ -32,7 +32,7 @@ import { calculateOverallGrade } from '@/lib/gradebook'
 import { localChapters } from '@/lib/local-data'
 import { DEFAULT_REQUIRED_HOURS } from '@/lib/programs/requirements'
 import { DEFAULT_COMPLIANCE_THRESHOLDS } from '@/lib/compliance/compliance-rules'
-import { calculateHoursProgressSummary } from '@/lib/hours/reporting'
+import { calculateAdaptiveStudentHours } from '@/lib/hours/adaptive-student-hours'
 import {
   ActiveStudentInstructorAssignment,
   buildInstructorAssignmentMap,
@@ -65,6 +65,10 @@ export interface SchoolAnalyticsInputs {
   requiredHours?: number | null
   /** Per-student program hour requirements keyed by profile id. */
   requiredHoursByStudentId?: Readonly<Record<string, number>>
+  /** Per-student accepted prior/transfer credit keyed by profile id. */
+  priorCreditMinutesByStudentId?: Readonly<Record<string, number>>
+  /** Per-student total requirement override keyed by profile id. */
+  requirementOverrideMinutesByStudentId?: Readonly<Record<string, number | null>>
   /** School-level fallback for required assessments when a student-specific program value is unavailable. */
   requiredAssessments?: number | null
   /** Per-student required assessment counts keyed by profile id. */
@@ -136,6 +140,17 @@ function requiredHoursForStudent(inputs: SchoolAnalyticsInputs, studentId: strin
   return resolveRequiredHours(studentValue ?? inputs.requiredHours)
 }
 
+function adaptiveHoursForStudent(inputs: SchoolAnalyticsInputs, studentId: string) {
+  return calculateAdaptiveStudentHours(
+    studentHourLogs(studentId, inputs.hourLogs),
+    {
+      programRequiredHours: requiredHoursForStudent(inputs, studentId),
+      priorCreditMinutes: inputs.priorCreditMinutesByStudentId?.[studentId] ?? 0,
+      requirementOverrideMinutes: inputs.requirementOverrideMinutesByStudentId?.[studentId] ?? null,
+    },
+  )
+}
+
 function requiredAssessmentsForStudent(inputs: SchoolAnalyticsInputs, studentId: string): number {
   const studentValue = inputs.requiredAssessmentsByStudentId?.[studentId]
   const candidate = studentValue ?? inputs.requiredAssessments
@@ -188,11 +203,8 @@ export function buildSchoolOverviewMetrics(inputs: SchoolAnalyticsInputs): Schoo
       gradePercentages.push(overall)
     }
 
-    const hourSummary = calculateHoursProgressSummary(
-      studentHourLogs(student.id, hourLogs),
-      requiredHoursForStudent(inputs, student.id),
-    )
-    completedMinutesSum += hourSummary.approvedMinutes
+    const hourSummary = adaptiveHoursForStudent(inputs, student.id)
+    completedMinutesSum += hourSummary.creditedAndEarnedMinutes
     remainingMinutesSum += hourSummary.remainingMinutes
 
     const sAssessments = studentAssessments(student.id, assessments)
@@ -251,11 +263,8 @@ export function buildStudentPerformanceRows(inputs: SchoolAnalyticsInputs): Stud
     const sGrades = studentGrades(student.id, grades)
     const overall = calculateOverallGrade(sGrades, gradeCategories)
     const sAssessments = studentAssessments(student.id, assessments)
-    const hourSummary = calculateHoursProgressSummary(
-      studentHourLogs(student.id, hourLogs),
-      requiredHours,
-    )
-    const completedHours = hourSummary.approvedMinutes / 60
+    const hourSummary = adaptiveHoursForStudent(inputs, student.id)
+    const completedHours = hourSummary.creditedAndEarnedMinutes / 60
 
     const passed = sAssessments.filter((a) => a.isPassed).length
     const passRate = sAssessments.length > 0 ? Math.round((passed / sAssessments.length) * 100) : 0
@@ -286,7 +295,7 @@ export function buildStudentPerformanceRows(inputs: SchoolAnalyticsInputs): Stud
       hasGradeEvidence: studentHasGradeEvidence,
       hasAssessmentEvidence: sAssessments.length > 0,
       completedHours: Math.round(completedHours),
-      requiredHours,
+      requiredHours: hourSummary.effectiveRequiredHours,
       assessmentPassRate: passRate,
       isAtRisk: riskReasons.length > 0,
       riskReasons,
@@ -481,12 +490,9 @@ export function buildSchoolAlerts(inputs: SchoolAnalyticsInputs): SchoolOwnerAle
       })
     }
 
-    const requiredHours = requiredHoursForStudent(inputs, student.id)
-    const hourSummary = calculateHoursProgressSummary(
-      studentHourLogs(student.id, inputs.hourLogs),
-      requiredHours,
-    )
-    const completedHours = hourSummary.approvedMinutes / 60
+    const hourSummary = adaptiveHoursForStudent(inputs, student.id)
+    const completedHours = hourSummary.creditedAndEarnedMinutes / 60
+    const requiredHours = hourSummary.effectiveRequiredHours
     if (completedHours < requiredHours * 0.5) {
       alerts.push({
         id: `hours-${student.id}`,
@@ -689,14 +695,13 @@ export function generateSchoolReport(
       }
     case 'hours': {
       const hourRows = rows.map((r) => {
-        const summary = calculateHoursProgressSummary(
-          studentHourLogs(r.studentId, inputs.hourLogs),
-          r.requiredHours,
-        )
+        const summary = adaptiveHoursForStudent(inputs, r.studentId)
         return {
           Student: r.fullName,
-          Completed: Math.round(summary.approvedMinutes / 60),
-          Required: r.requiredHours,
+          Completed: Math.round(summary.creditedAndEarnedMinutes / 60),
+          'Earned Here': Math.round(summary.earnedApprovedMinutes / 60),
+          'Prior Credit': Math.round(summary.priorCreditMinutes / 60),
+          Required: Math.round(summary.effectiveRequiredHours),
           Remaining: Math.round(summary.remainingMinutes / 60),
         }
       })
@@ -706,11 +711,8 @@ export function generateSchoolReport(
         generatedAt: now,
         summary: `Total completed hours: ${Math.round(
           metricRows.reduce((sum, r) => {
-            const summary = calculateHoursProgressSummary(
-              studentHourLogs(r.studentId, inputs.hourLogs),
-              r.requiredHours,
-            )
-            return sum + summary.approvedMinutes
+            const summary = adaptiveHoursForStudent(inputs, r.studentId)
+            return sum + summary.creditedAndEarnedMinutes
           }, 0) / 60
         )}`,
         rows: hourRows,
