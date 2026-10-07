@@ -7,6 +7,8 @@ const read = (file: string) => fs.readFileSync(path.join(process.cwd(), file), '
 describe('ADMIN-SUPPORT-ACCESS-1', () => {
   const adminDashboard = read('src/app/admin/page.tsx')
   const supportHub = read('src/app/admin/support-access/page.tsx')
+  const supportActions = read('src/app/admin/support-access/actions.ts')
+  const supportRuntime = read('src/lib/support-access.ts')
   const instructorDashboard = read('src/app/instructor/page.tsx')
 
   it('adds Support Access to the platform admin dashboard', () => {
@@ -17,26 +19,28 @@ describe('ADMIN-SUPPORT-ACCESS-1', () => {
   it('keeps cross-school support access platform-admin only', () => {
     expect(supportHub).toContain('isPlatformAdminProfile(caller)')
     expect(supportHub).toContain("redirect('/admin')")
+    expect(supportRuntime).toContain('isPlatformAdminProfile(actorProfile)')
   })
 
-  it('lists instructor and school-admin dashboards', () => {
+  it('lists instructor and school-admin dashboards and starts persistent mode', () => {
     expect(supportHub).toContain("['instructor', 'school_admin', 'admin']")
     expect(supportHub).toContain('Instructor Dashboards')
     expect(supportHub).toContain('School Admin Dashboards')
-    expect(supportHub).toContain('/instructor?viewAs=')
-    expect(supportHub).toContain('/admin/school?school=')
+    expect(supportHub).toContain('action={startSupportMode}')
+    expect(supportHub).toContain('name="targetProfileId"')
+    expect(supportActions).toContain('startSupportAccess(targetProfileId)')
   })
 
-  it('scopes instructor support view to the selected approved instructor', () => {
-    expect(instructorDashboard).toContain('isPlatformAdminProfile(callerProfile)')
-    expect(instructorDashboard).toContain("targetInstructor.role !== 'instructor'")
-    expect(instructorDashboard).toContain("targetInstructor.approval_status !== 'approved'")
+  it('scopes the instructor dashboard to the selected effective instructor', () => {
+    expect(instructorDashboard).toContain('resolveSupportAccessContext()')
+    expect(instructorDashboard).toContain('context.effectiveProfile')
     expect(instructorDashboard).toContain('loadAssignedStudentIds(supabase, schoolId, dashboardInstructorId)')
   })
 
-  it('preserves platform admin identity and provides a return path', () => {
-    expect(instructorDashboard).toContain('Platform Admin Support View')
-    expect(instructorDashboard).toContain('You remain signed in as platform administrator.')
-    expect(instructorDashboard).toContain('href="/admin/support-access"')
+  it('retains the true platform admin while support context is active', () => {
+    expect(supportRuntime).toContain('actorUserId: user.id')
+    expect(supportRuntime).toContain('effectiveProfile: targetProfile')
+    expect(supportRuntime).toContain("httpOnly: true")
+    expect(supportRuntime).toContain("sameSite: 'strict'")
   })
 })
