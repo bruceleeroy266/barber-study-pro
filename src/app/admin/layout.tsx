@@ -16,29 +16,29 @@ export default async function AdminLayout({
   const context = await resolveSupportAccessContext()
   if (!context) redirect('/login')
 
-  const profile = context.effectiveProfile
+  const actorProfile = context.actorProfile
+  const effectiveProfile = context.effectiveProfile
 
-  // The support hub itself must remain reachable by the real platform admin
-  // even if a support target is an instructor. Instructor support routes live
-  // under /instructor and do not use this layout after the session starts.
-  if (!(isAdmin(profile.role) || isSchoolAdmin(profile.role)) && context.supportActive) {
-    redirect('/instructor')
-  }
-  if (!(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
+  if (!(isAdmin(actorProfile.role) || isSchoolAdmin(actorProfile.role))) {
     redirect('/dashboard')
   }
 
+  const navProfile =
+    isAdmin(effectiveProfile.role) || isSchoolAdmin(effectiveProfile.role)
+      ? effectiveProfile
+      : actorProfile
+
   let schoolName: string | null = null
-  if (context.supportActive && profile.school_id) {
+  if (context.supportActive && effectiveProfile.school_id) {
     const supabase = await createClient()
-    const { data: school } = await supabase.from('schools').select('name').eq('id', profile.school_id).maybeSingle()
+    const { data: school } = await supabase.from('schools').select('name').eq('id', effectiveProfile.school_id).maybeSingle()
     schoolName = school?.name ?? null
   }
 
   return (
     <div className="min-h-screen bg-black flex">
       <BackButtonPrevention />
-      <AdminNav user={profile as any} />
+      <AdminNav user={navProfile as any} />
       <main id="main-content" className="flex-1 min-w-0 lg:pl-64">
         <div className="lg:hidden h-14" />
         {context.supportActive && context.targetProfile && (
