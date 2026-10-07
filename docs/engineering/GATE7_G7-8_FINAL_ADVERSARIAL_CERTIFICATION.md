@@ -4,7 +4,7 @@
 **Gate:** Gate 7 — Communications Reliability  
 **Slice:** G7-8 — Final Adversarial Certification  
 **Baseline:** production `main` at `a6df1edff8f5f2e3736767e88df35449811430f7`  
-**Status:** IN PROGRESS — G7-8-S1 REPAIR IMPLEMENTED, CERTIFICATION PENDING
+**Status:** FINAL CERTIFICATION IN PROGRESS — G7-8-S1 GREEN
 
 ## Product Boundary
 > **Product-boundary check:** PASS — this Gate complies with `docs/engineering/ASCYN_PRODUCT_BOUNDARY_CONTRACT.md` and is classified as **COEXIST**. No DO NOT BUILD capability is introduced.
@@ -136,7 +136,28 @@ Migration:
 - `supabase/migrations/20261007200500_g7_8_s1_pair_authorization_caller_guard.sql`
 
 ### Certification state
-**BLOCKED until disposable-Supabase certification and live production application/verification complete.**
+**G7-8-S1: GREEN.**
+
+Verified:
+- Engineering Verification #1732 passed on repair head `fac1787e8668e95e751348b197caeaaa8890fa1b`;
+- full TypeScript/lint/unit/build suite passed;
+- disposable local Supabase started successfully with the migration applied;
+- build against disposable Supabase passed;
+- true pilot/onboarding certification passed;
+- exact-head Vercel preview reached READY;
+- live production migration `g7_8_s1_pair_authorization_caller_guard` applied successfully;
+- live function retains SECURITY DEFINER where required for canonical relationship lookup;
+- caller-membership guard is present;
+- `authenticated` retains execute;
+- `anon` and `PUBLIC` cannot execute;
+- legitimate student caller → assigned instructor returns true;
+- legitimate instructor caller as the recipient orientation returns true;
+- unrelated authenticated caller probing the same pair returns false;
+- student → same-school admin returns true;
+- student → student returns false;
+- cross-school pair returns false.
+
+The Supabase security advisor still generically flags the helper because it is intentionally SECURITY DEFINER and callable by authenticated users. That generic advisory is expected for this design; the specific G7-8-S1 oracle exposure is mitigated by the enforced caller-membership predicate and direct production verification.
 
 ## 6. Existing automated evidence
 
@@ -149,7 +170,42 @@ G7-8 reuses and must keep GREEN:
 - `g7-6-bulletin-reliability.test.ts`;
 - `g7-7-failure-mobile-refresh.test.ts`.
 
-## 7. Gate-close rule
+## 7. Final adversarial matrix result
+
+### COM-1 boundaries
+PASS:
+- Realtime remains deferred;
+- no service-role communication bypass was introduced;
+- messaging and bulletins remain separate;
+- archive and bulletin runtime boundaries remain intact.
+
+### COM-2 permission model
+PASS:
+- allowed role relationships remain allowed;
+- student-to-student remains blocked;
+- unassigned/cross-school relationships remain blocked;
+- database helper + RLS remain authoritative;
+- schoolless platform-admin private-message browsing remains blocked by product/runtime rules.
+
+### Gate 7 reliability matrix
+PASS:
+- G7-3 exactly-once message/thread convergence;
+- G7-4 read/unread convergence;
+- G7-5 archive/relationship race protection;
+- G7-6 atomic/idempotent bulletin publish + ack/server-time rules;
+- G7-7 failure/mobile refresh convergence;
+- G7-8-S1 caller-membership privacy hardening.
+
+### Live production structural verification
+PASS:
+- RLS enabled on all six communications/bulletin tables;
+- all Gate 7 uniqueness indexes present;
+- message insert race trigger present;
+- read and acknowledgment uniqueness present;
+- unread and bulletin RPCs remain SECURITY INVOKER;
+- pair authorization helper retains guarded SECURITY DEFINER behavior.
+
+## 8. Gate-close rule
 
 G7-8 may be marked GREEN only after:
 1. G7-8-S1 is repaired;
