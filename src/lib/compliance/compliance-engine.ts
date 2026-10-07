@@ -15,7 +15,7 @@ import { calculateComplianceScore, ComplianceScoreInputs } from './compliance-sc
 import { determineBoardEligibility } from './board-eligibility'
 import { calculateGraduationReadiness } from './graduation-readiness'
 import { ComplianceRuleThresholds, DEFAULT_COMPLIANCE_THRESHOLDS } from './compliance-rules'
-import { getOfficialMinutes } from '@/lib/hours/reporting'
+import { calculateAdaptiveStudentHours } from '@/lib/hours/adaptive-student-hours'
 
 export interface StudentComplianceInputs {
   student: Profile
@@ -32,21 +32,34 @@ export interface StudentComplianceInputs {
    * DEFAULT_COMPLIANCE_THRESHOLDS, preserving prior behavior.
    */
   thresholds?: ComplianceRuleThresholds
+  /** Accepted prior/transfer credit for the student's active enrollment. */
+  priorCreditMinutes?: number | null
+  /** Optional student-specific total requirement for the active enrollment. */
+  requirementOverrideMinutes?: number | null
 }
 
 export function buildStudentCompliance(inputs: StudentComplianceInputs) {
   const { student, attendanceRecords, hourLogs, quizAttempts, progress, grades, gradeCategories, assessments } = inputs
-  const thresholds = inputs.thresholds ?? DEFAULT_COMPLIANCE_THRESHOLDS
+  const baseThresholds = inputs.thresholds ?? DEFAULT_COMPLIANCE_THRESHOLDS
 
   const attSummary = calculateAttendanceSummary(
     student.id,
     attendanceRecords.filter((r) => r.userId === student.id)
   )
 
-  const approvedMinutes = hourLogs
-    .filter((h) => h.user_id === student.id)
-    .reduce((sum, h) => sum + getOfficialMinutes(h), 0)
-  const completedHours = approvedMinutes / 60
+  const adaptiveHours = calculateAdaptiveStudentHours(
+    hourLogs.filter((h) => h.user_id === student.id),
+    {
+      programRequiredHours: baseThresholds.requiredHours,
+      priorCreditMinutes: inputs.priorCreditMinutes ?? 0,
+      requirementOverrideMinutes: inputs.requirementOverrideMinutes ?? null,
+    },
+  )
+  const completedHours = adaptiveHours.creditedAndEarnedMinutes / 60
+  const thresholds: ComplianceRuleThresholds = {
+    ...baseThresholds,
+    requiredHours: adaptiveHours.effectiveRequiredHours,
+  }
 
   const attempts = quizAttempts.filter((a) => a.user_id === student.id)
   const prog = progress.filter((p) => p.user_id === student.id)
@@ -87,6 +100,8 @@ export function buildStudentCompliance(inputs: StudentComplianceInputs) {
   const complianceInputs: ComplianceScoreInputs = {
     attendancePercentage: attSummary.attendancePercentage,
     completedHours,
+    earnedHours: adaptiveHours.earnedApprovedMinutes / 60,
+    priorCreditHours: adaptiveHours.priorCreditMinutes / 60,
     assessmentPassRate,
     practicalPassRate,
     readinessScore: readiness.score,
@@ -130,7 +145,7 @@ export function buildStudentCompliance(inputs: StudentComplianceInputs) {
 export function buildComplianceAlerts(inputs: StudentComplianceInputs): ComplianceAlert[] {
   const { student, attendanceRecords, hourLogs, quizAttempts, progress, grades, gradeCategories, assessments } = inputs
   const alerts: ComplianceAlert[] = []
-  const thresholds = inputs.thresholds ?? DEFAULT_COMPLIANCE_THRESHOLDS
+  const baseThresholds = inputs.thresholds ?? DEFAULT_COMPLIANCE_THRESHOLDS
 
   const attSummary = calculateAttendanceSummary(
     student.id,
@@ -150,10 +165,19 @@ export function buildComplianceAlerts(inputs: StudentComplianceInputs): Complian
     })
   }
 
-  const approvedMinutes = hourLogs
-    .filter((h) => h.user_id === student.id)
-    .reduce((sum, h) => sum + getOfficialMinutes(h), 0)
-  const completedHours = approvedMinutes / 60
+  const adaptiveHours = calculateAdaptiveStudentHours(
+    hourLogs.filter((h) => h.user_id === student.id),
+    {
+      programRequiredHours: baseThresholds.requiredHours,
+      priorCreditMinutes: inputs.priorCreditMinutes ?? 0,
+      requirementOverrideMinutes: inputs.requirementOverrideMinutes ?? null,
+    },
+  )
+  const completedHours = adaptiveHours.creditedAndEarnedMinutes / 60
+  const thresholds: ComplianceRuleThresholds = {
+    ...baseThresholds,
+    requiredHours: adaptiveHours.effectiveRequiredHours,
+  }
 
   if (completedHours < thresholds.requiredHours * 0.5) {
     alerts.push({
