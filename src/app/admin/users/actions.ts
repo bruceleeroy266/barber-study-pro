@@ -1977,7 +1977,8 @@ export async function enrollStudent(
     return { success: false, error: programResult.error }
   }
 
-  // 5. Insert enrollment — UNIQUE(student_id, program_id) prevents duplicates
+  // 5. Insert enrollment. Database constraints protect both same-program
+  // duplicates and concurrent attempts to create two active enrollments.
   const { data: enrollmentData, error: insertError } = await serviceClient
     .from('enrollments')
     .insert({
@@ -1992,9 +1993,11 @@ export async function enrollStudent(
     .single()
 
   if (insertError) {
-    // PostgreSQL 23505 = unique_violation → student already enrolled in this program
     if (insertError.code === '23505') {
-      return { success: false, error: 'Student is already enrolled in this program' }
+      return {
+        success: false,
+        error: 'Student is already enrolled in an active program. Withdraw the current enrollment before enrolling the student in another program.',
+      }
     }
     return { success: false, error: `Failed to create enrollment: ${insertError.message}` }
   }
