@@ -6,6 +6,7 @@ import { isAdmin, isSchoolAdmin, isPlatformAdminProfile } from '@/lib/auth-helpe
 import { AppRole } from '@/types'
 import { isKnownRole } from '@/lib/security/permissions'
 import { revalidatePath } from 'next/cache'
+import { resolveSupportAccessContext, logSupportAction } from '@/lib/support-access'
 
 export interface UserListItem {
   id: string
@@ -120,35 +121,32 @@ async function createDomainRecord(
 }
 
 async function getCurrentAdmin(): Promise<ActionResult<AdminContext>> {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) {
+  const context = await resolveSupportAccessContext()
+  if (!context) {
     return { success: false, error: 'Unauthorized' }
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role, school_id')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile || !(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
+  const profile = context.effectiveProfile
+  if (!(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
     return { success: false, error: 'Forbidden' }
   }
+
+  await logSupportAction(context, 'user_management', 'admin_users', {
+    effectiveRole: profile.role,
+    effectiveSchoolId: profile.school_id,
+  })
 
   return {
     success: true,
     data: {
-      userId: user.id,
-      email: user.email ?? '',
+      // Mutations remain attributable to the real authenticated platform admin.
+      userId: context.actorUserId,
+      email: context.actorEmail ?? '',
       role: profile.role as AppRole,
       schoolId: profile.school_id ?? null,
-      // Canonical platform admin: role='admin' AND school_id IS NULL.
-      // A school-attached 'admin' is tenant-scoped (security correction:
-      // previously isAdmin(role) alone granted platform scope, which let a
-      // school-attached admin act cross-school via service-role actions).
-      isPlatformAdmin: isPlatformAdminProfile(profile),
+      // While support mode is active, privileges are intentionally reduced to
+      // the selected staff role even though the true actor is a platform admin.
+      isPlatformAdmin: context.supportActive ? false : isPlatformAdminProfile(profile),
     },
   }
 }
