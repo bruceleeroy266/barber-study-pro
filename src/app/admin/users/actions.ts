@@ -1977,7 +1977,38 @@ export async function enrollStudent(
     return { success: false, error: programResult.error }
   }
 
-  // 5. Insert enrollment — UNIQUE(student_id, program_id) prevents duplicates
+  // 5. Guard against conflicting active enrollment before insert.
+  // The database also enforces this invariant with a partial unique index,
+  // so concurrent requests cannot bypass the application check.
+  const { data: activeEnrollment, error: activeEnrollmentError } = await serviceClient
+    .from('enrollments')
+    .select('id, program_id, programs(name)')
+    .eq('student_id', student.id)
+    .eq('status', 'active')
+    .eq('is_active', true)
+    .is('deleted_at', null)
+    .limit(1)
+    .maybeSingle()
+
+  if (activeEnrollmentError) {
+    return {
+      success: false,
+      error: `Failed to verify current enrollment: ${activeEnrollmentError.message}`,
+    }
+  }
+
+  if (activeEnrollment) {
+    const activeProgram = activeEnrollment.programs as unknown as { name?: string } | null
+    return {
+      success: false,
+      error:
+        `Student already has an active enrollment${activeProgram?.name ? ` in ${activeProgram.name}` : ''}. ` +
+        'Withdraw the current enrollment before enrolling the student in another program.',
+    }
+  }
+
+  // 6. Insert enrollment. Database constraints protect both same-program
+  // duplicates and concurrent attempts to create two active enrollments.
   const { data: enrollmentData, error: insertError } = await serviceClient
     .from('enrollments')
     .insert({
@@ -1992,14 +2023,16 @@ export async function enrollStudent(
     .single()
 
   if (insertError) {
-    // PostgreSQL 23505 = unique_violation → student already enrolled in this program
     if (insertError.code === '23505') {
-      return { success: false, error: 'Student is already enrolled in this program' }
+      return {
+        success: false,
+        error: 'Student already has an active enrollment. Withdraw the current enrollment before enrolling the student in another program.',
+      }
     }
     return { success: false, error: `Failed to create enrollment: ${insertError.message}` }
   }
 
-  // 6. Audit log (non-blocking)
+  // 7. Audit log (non-blocking)
   await logUserManagementAction(
     admin,
     studentProfileId,
