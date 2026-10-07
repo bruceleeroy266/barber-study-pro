@@ -1,6 +1,6 @@
 import { Notification, NotificationPriority, AttendanceSummary, BoardReadiness, HourLog, StudentProgress, Grade, Assessment } from '@/types'
 import { DEFAULT_REQUIRED_HOURS } from '@/lib/programs/requirements'
-import { getOfficialMinutes } from '@/lib/hours/reporting'
+import { calculateAdaptiveStudentHours } from '@/lib/hours/adaptive-student-hours'
 
 export interface NotificationInput {
   userId: string
@@ -13,6 +13,8 @@ export interface NotificationInput {
   assessments?: Assessment[]
   /** Applicable program's configured required_hours; falls back to the schema default when unset/invalid. */
   requiredHours?: number | null
+  priorCreditMinutes?: number | null
+  requirementOverrideMinutes?: number | null
 }
 
 /**
@@ -140,25 +142,29 @@ export function generateNotificationsFromReadiness(
 export function generateNotificationsFromHours(
   userId: string,
   hourLogs: HourLog[],
-  requiredHours?: number | null
+  requiredHours?: number | null,
+  priorCreditMinutes?: number | null,
+  requirementOverrideMinutes?: number | null,
 ): Notification[] {
   const notifications: Notification[] = []
-  const approvedMinutes = hourLogs.reduce(
-    (sum, h) => sum + getOfficialMinutes(h),
-    0,
-  )
+  const adaptive = calculateAdaptiveStudentHours(hourLogs, {
+    programRequiredHours: resolveRequiredHours(requiredHours),
+    priorCreditMinutes: priorCreditMinutes ?? 0,
+    requirementOverrideMinutes: requirementOverrideMinutes ?? null,
+  })
+  const completedMinutes = adaptive.creditedAndEarnedMinutes
   const pendingMinutes = hourLogs
     .filter((h) => h.status === 'pending')
     .reduce((sum, h) => sum + h.minutes, 0)
-  const requiredMinutes = resolveRequiredHours(requiredHours) * 60
+  const requiredMinutes = adaptive.effectiveRequiredMinutes
 
-  if (approvedMinutes < requiredMinutes * 0.5) {
+  if (completedMinutes < requiredMinutes * 0.5) {
     notifications.push(
       buildNotification(
         userId,
         'missing_hours',
         'Missing Hours',
-        `You have logged ${Math.floor(approvedMinutes / 60)} approved hours. You are behind the program pace.`,
+        `You have ${Math.floor(completedMinutes / 60)} hours counted toward your requirement. You are behind the program pace.`,
         'high',
         '/dashboard'
       )
@@ -312,7 +318,15 @@ export function generateAllNotifications(input: NotificationInput): Notification
     notifications.push(...generateNotificationsFromReadiness(input.userId, input.readiness))
   }
   if (input.hourLogs && input.hourLogs.length > 0) {
-    notifications.push(...generateNotificationsFromHours(input.userId, input.hourLogs, input.requiredHours))
+    notifications.push(
+      ...generateNotificationsFromHours(
+        input.userId,
+        input.hourLogs,
+        input.requiredHours,
+        input.priorCreditMinutes,
+        input.requirementOverrideMinutes,
+      ),
+    )
   }
   if (input.progress && input.progress.length > 0) {
     notifications.push(...generateNotificationsFromProgress(input.userId, input.progress))
