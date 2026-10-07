@@ -27,6 +27,11 @@ interface CommunicationReadRow {
   read_at?: string
 }
 
+interface CommunicationUnreadCountRow {
+  thread_id: string
+  unread_count: number | string
+}
+
 interface CommunicationThreadRow {
   id: string
   school_id: string
@@ -304,7 +309,7 @@ export async function loadCommunicationThreads(): Promise<
   const actorResult = await getMessagingActor()
   if (!actorResult.success) return actorResult
 
-  const { actor, supabase } = actorResult.data
+  const { supabase } = actorResult.data
   const { data, error } = await supabase
     .from('communication_threads')
     .select(
@@ -318,59 +323,26 @@ export async function loadCommunicationThreads(): Promise<
     return { success: false, message: 'Unable to load conversations right now.' }
   }
 
-  const rows = data || []
-  const threadIds = rows.map((thread: CommunicationThreadRow) => thread.id)
-  const unreadByThread = new Map<string, number>()
+  const rows = (data || []) as CommunicationThreadRow[]
+  const { data: unreadRows, error: unreadError } = await supabase.rpc(
+    'communication_unread_counts'
+  )
 
-  if (threadIds.length > 0) {
-    const { data: incoming, error: incomingError } = await supabase
-      .from('communication_messages')
-      .select('id, thread_id')
-      .in('thread_id', threadIds)
-      .neq('sender_id', actor.id)
-
-    if (incomingError) {
-      logMessagingFailure('load_unread_messages', incomingError)
-      return { success: false, message: 'Unable to load unread status right now.' }
-    }
-
-    const incomingIds = (incoming || []).map(
-      (message: Pick<CommunicationMessageRow, 'id'>) => message.id
-    )
-    const readIds = new Set<string>()
-
-    if (incomingIds.length > 0) {
-      const { data: reads, error: readsError } = await supabase
-        .from('communication_message_reads')
-        .select('message_id')
-        .eq('reader_id', actor.id)
-        .in('message_id', incomingIds)
-
-      if (readsError) {
-        logMessagingFailure('load_unread_receipts', readsError)
-        return { success: false, message: 'Unable to load unread status right now.' }
-      }
-
-      for (const read of reads || []) {
-        readIds.add(read.message_id)
-      }
-    }
-
-    for (const message of (incoming || []) as Array<
-      Pick<CommunicationMessageRow, 'id' | 'thread_id'>
-    >) {
-      if (!readIds.has(message.id)) {
-        unreadByThread.set(
-          message.thread_id,
-          (unreadByThread.get(message.thread_id) || 0) + 1
-        )
-      }
-    }
+  if (unreadError) {
+    logMessagingFailure('load_unread_counts', unreadError)
+    return { success: false, message: 'Unable to load unread status right now.' }
   }
+
+  const unreadByThread = new Map<string, number>(
+    ((unreadRows || []) as CommunicationUnreadCountRow[]).map((row) => [
+      row.thread_id,
+      Number(row.unread_count) || 0,
+    ])
+  )
 
   return {
     success: true,
-    data: rows.map((row: CommunicationThreadRow) => ({
+    data: rows.map((row) => ({
       ...mapThread(row),
       unreadCount: unreadByThread.get(row.id) || 0,
     })),
@@ -592,7 +564,7 @@ export async function sendCommunicationMessage(
 
 export async function markCommunicationThreadRead(
   threadId: string
-): Promise<MessagingRuntimeResult<{ markedRead: number }>> {
+): Promise<MessagingRuntimeResult<{ markedRead: number; remainingUnread: number }>> {
   if (!threadId) {
     return { success: false, message: 'A thread is required.' }
   }
@@ -614,7 +586,7 @@ export async function markCommunicationThreadRead(
 
   const { data: incomingMessages, error: messageError } = await supabase
     .from('communication_messages')
-    .select('id, sender_id')
+    .select('id')
     .eq('thread_id', threadId)
     .neq('sender_id', actor.id)
 
@@ -623,40 +595,51 @@ export async function markCommunicationThreadRead(
     return { success: false, message: 'Unable to update read status right now.' }
   }
 
-  const incomingIds = (incomingMessages || []).map((message: Pick<CommunicationMessageRow, 'id' | 'sender_id'>) => message.id)
+  const incomingIds = (incomingMessages || []).map(
+    (message: Pick<CommunicationMessageRow, 'id'>) => message.id
+  )
   if (incomingIds.length === 0) {
-    return { success: true, data: { markedRead: 0 } }
+    return { success: true, data: { markedRead: 0, remainingUnread: 0 } }
   }
 
-  const { data: existingReads, error: readsError } = await supabase
+  const { data: insertedReads, error: insertError } = await supabase
     .from('communication_message_reads')
+    .upsert(
+      incomingIds.map((messageId: string) => ({
+        message_id: messageId,
+        reader_id: actor.id,
+      })),
+      {
+        onConflict: 'message_id,reader_id',
+        ignoreDuplicates: true,
+      }
+    )
     .select('message_id')
-    .eq('reader_id', actor.id)
-    .in('message_id', incomingIds)
-
-  if (readsError) {
-    logMessagingFailure('mark_read_load_receipts', readsError)
-    return { success: false, message: 'Unable to update read status right now.' }
-  }
-
-  const existingIds = new Set((existingReads || []).map((read: Pick<CommunicationReadRow, 'message_id'>) => read.message_id))
-  const unreadIds = incomingIds.filter((messageId: string) => !existingIds.has(messageId))
-
-  if (unreadIds.length === 0) {
-    return { success: true, data: { markedRead: 0 } }
-  }
-
-  const { error: insertError } = await supabase
-    .from('communication_message_reads')
-    .insert(unreadIds.map((messageId: string) => ({ message_id: messageId, reader_id: actor.id })))
 
   if (insertError) {
-    if (insertError.code === '23505') {
-      return { success: true, data: { markedRead: 0 } }
-    }
-    logMessagingFailure('mark_read_insert_receipts', insertError)
+    logMessagingFailure('mark_read_upsert_receipts', insertError)
     return { success: false, message: 'Unable to update read status right now.' }
   }
 
-  return { success: true, data: { markedRead: unreadIds.length } }
+  const { data: unreadRows, error: unreadError } = await supabase.rpc(
+    'communication_unread_counts'
+  )
+
+  if (unreadError) {
+    logMessagingFailure('mark_read_reconcile_unread', unreadError)
+    return { success: false, message: 'Unable to reconcile unread status right now.' }
+  }
+
+  const remainingUnread =
+    ((unreadRows || []) as CommunicationUnreadCountRow[])
+      .find((row) => row.thread_id === threadId)
+      ?.unread_count ?? 0
+
+  return {
+    success: true,
+    data: {
+      markedRead: insertedReads?.length || 0,
+      remainingUnread: Number(remainingUnread) || 0,
+    },
+  }
 }

@@ -56,10 +56,11 @@ describe('COM-1D.1 server messaging runtime', () => {
   it('marks only incoming messages read and remains idempotent', () => {
     expect(source).toContain('export async function markCommunicationThreadRead')
     expect(source).toContain(".neq('sender_id', actor.id)")
-    expect(source).toContain(".eq('reader_id', actor.id)")
-    expect(source).toContain('existingIds')
-    expect(source).toContain('unreadIds')
+    expect(source).toContain("onConflict: 'message_id,reader_id'")
+    expect(source).toContain('ignoreDuplicates: true')
     expect(source).toContain('reader_id: actor.id')
+    expect(source).toContain("'communication_unread_counts'")
+    expect(source).toContain('remainingUnread')
   })
 
   it('does not create threads, wire realtime, or activate bulletin runtime in this slice', () => {
