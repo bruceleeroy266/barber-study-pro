@@ -1996,7 +1996,7 @@ export async function enrollStudent(
     if (insertError.code === '23505') {
       return {
         success: false,
-        error: 'Student already has an active enrollment. Withdraw the current enrollment before enrolling the student in another program.',
+        error: 'Student is already enrolled in an active program. Withdraw the current enrollment before enrolling the student in another program.',
       }
     }
     return { success: false, error: `Failed to create enrollment: ${insertError.message}` }
