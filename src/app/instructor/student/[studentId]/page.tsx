@@ -432,7 +432,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     .order('created_at', { ascending: true })
 
   // Get instructor notes
-  const notesResult = await getInstructorNotes(studentId, instructorProfile.school_id)
+  const notesResult = await getInstructorNotes(studentId, instructorProfile.school_id!)
   let noteRecords: InstructorNote[] = notesResult.success ? notesResult.data : []
   const notesError: string | null = notesResult.success ? null : notesResult.message
 
