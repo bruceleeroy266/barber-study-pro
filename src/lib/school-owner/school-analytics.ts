@@ -160,7 +160,7 @@ function requiredAssessmentsForStudent(inputs: SchoolAnalyticsInputs, studentId:
 }
 
 export function buildSchoolOverviewMetrics(inputs: SchoolAnalyticsInputs): SchoolOverviewMetrics {
-  const { students, attendanceRecords, quizAttempts, progress, grades, gradeCategories, assessments, hourLogs } =
+  const { students, attendanceRecords, quizAttempts, progress, grades, gradeCategories, assessments } =
     inputs
   const metricStudents = metricEligibleStudents(students)
   const totalStudents = metricStudents.length
@@ -247,7 +247,7 @@ export function buildSchoolOverviewMetrics(inputs: SchoolAnalyticsInputs): Schoo
 }
 
 export function buildStudentPerformanceRows(inputs: SchoolAnalyticsInputs): StudentPerformanceRow[] {
-  const { students, attendanceRecords, quizAttempts, progress, grades, gradeCategories, assessments, hourLogs } =
+  const { students, attendanceRecords, quizAttempts, progress, grades, gradeCategories, assessments } =
     inputs
   return students.map((student) => {
     const attSummary = calculateAttendanceSummary(student.id, studentAttendanceRecords(student.id, attendanceRecords))
