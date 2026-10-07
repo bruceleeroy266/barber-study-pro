@@ -55,6 +55,34 @@ describe('PO-1E.1 pilot measurement resolver', () => {
     expect(snapshot.coverage.examReady).toEqual({ measured: 1, total: 1 })
   })
 
+  it('keeps disabled learners visible but excludes them from aggregate metrics', () => {
+    const disabled = { ...profile('disabled'), is_disabled: true }
+    const snapshot = resolvePilotMeasurement({
+      schoolId: 'school-1',
+      students: [profile('active'), disabled],
+      progress: [],
+      quizAttempts: [],
+      remediation: [],
+      studyActivity: [
+        { user_id: 'active', study_date: '2026-10-10', active_seconds: 600, last_active_at: '2026-10-10T10:00:00Z' },
+        { user_id: 'disabled', study_date: '2026-10-10', active_seconds: 3600, last_active_at: '2026-10-10T10:00:00Z' },
+      ],
+      examAttempts: [
+        { id:'active-exam', user_id:'active', status:'completed', started_at:'2026-10-10T09:00:00Z', completed_at:'2026-10-10T10:00:00Z', attempt_number:1, percentage:80, passed:true, domain_breakdown:null, elapsed_seconds:3600, unanswered_at_submit:0 },
+        { id:'disabled-exam', user_id:'disabled', status:'completed', started_at:'2026-10-10T09:00:00Z', completed_at:'2026-10-10T10:00:00Z', attempt_number:1, percentage:100, passed:true, domain_breakdown:null, elapsed_seconds:3600, unanswered_at_submit:0 },
+      ],
+      window: buildPilotCheckpointWindow('2026-10-10', 'baseline'),
+    })
+
+    expect(snapshot.learners).toHaveLength(2)
+    expect(snapshot.learners.find((row) => row.studentId === 'disabled')?.includedInAggregate).toBe(false)
+    expect(snapshot.includedStudentCount).toBe(1)
+    expect(snapshot.excludedStudentCount).toBe(1)
+    expect(snapshot.metrics.totalActiveStudySeconds).toBe(600)
+    expect(snapshot.metrics.averageLatestExamPercentage).toBe(80)
+    expect(snapshot.coverage.examReady).toEqual({ measured: 1, total: 1 })
+  })
+
   it('uses latest completed Exam Ready attempt at or before cutoff', () => {
     const snapshot = resolvePilotMeasurement({
       schoolId: 'school-1',
