@@ -3,20 +3,16 @@
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase-server'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
+import { resolveSupportAccessContext, logSupportAction } from '@/lib/support-access'
 
 async function getActor() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Authentication required')
+  const context = await resolveSupportAccessContext()
+  if (!context) throw new Error('Authentication required')
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('id, role, school_id')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile) throw new Error('Profile not found')
-  return { supabase, user, profile }
+  const profile = context.effectiveProfile
+  const user = { id: context.actorUserId, email: context.actorEmail }
+  return { supabase, user, profile, context }
 }
 
 export async function requestQuizAccess(formData: FormData) {
@@ -37,11 +33,12 @@ export async function requestQuizAccess(formData: FormData) {
   if (error) throw new Error(error.message)
 
   revalidatePath(`/dashboard/chapters/${chapterId.replace('ch-', '')}`)
+  await logSupportAction(context, 'bulk_approve_quiz_access', 'quiz_access_requests', { requestIds: safeIds, effectiveRole: profile.role })
   revalidatePath('/instructor/quiz-approvals')
 }
 
 export async function setQuizApprovalSettings(formData: FormData) {
-  const { supabase, user, profile } = await getActor()
+  const { supabase, user, profile, context } = await getActor()
   if (!profile.school_id || !isInstructorOrAdmin(profile.role)) {
     throw new Error('Instructor access required')
   }
@@ -60,6 +57,7 @@ export async function setQuizApprovalSettings(formData: FormData) {
     }, { onConflict: 'school_id' })
 
   if (error) throw new Error(error.message)
+  await logSupportAction(context, 'set_quiz_approval_settings', 'quiz_approval_settings', { effectiveRole: profile.role, schoolId: profile.school_id })
   revalidatePath('/instructor/quiz-approvals')
 }
 
@@ -102,6 +100,7 @@ export async function reviewQuizAccess(requestId: string, decision: 'approved' |
     actor_id: user.id,
   })
 
+  await logSupportAction(context, 'review_quiz_access', 'quiz_access_requests', { requestId, decision, studentId: request.student_id, effectiveRole: profile.role })
   revalidatePath('/instructor/quiz-approvals')
 }
 
