@@ -18,6 +18,8 @@ export interface ComplianceReportInputs {
   grades: StudentComplianceInputs['grades']
   gradeCategories: StudentComplianceInputs['gradeCategories']
   assessments: StudentComplianceInputs['assessments']
+  priorCreditMinutesByStudentId?: Readonly<Record<string, number>>
+  requirementOverrideMinutesByStudentId?: Readonly<Record<string, number | null>>
 }
 
 function buildStudentInputs(
@@ -35,6 +37,8 @@ function buildStudentInputs(
     gradeCategories: inputs.gradeCategories,
     assessments: inputs.assessments,
     thresholds: thresholdsByStudentId?.get(student.id),
+    priorCreditMinutes: inputs.priorCreditMinutesByStudentId?.[student.id] ?? 0,
+    requirementOverrideMinutes: inputs.requirementOverrideMinutesByStudentId?.[student.id] ?? null,
   }
 }
 
