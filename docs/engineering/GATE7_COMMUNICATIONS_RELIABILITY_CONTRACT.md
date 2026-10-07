@@ -368,6 +368,14 @@ Gate 7 cannot close without automated and production-safe evidence for at least:
 
 Implementation begins only after this G7-1 contract is merged and certified.
 
+### Product Boundary requirement beginning with G7-6
+
+Every Gate 7 slice from **G7-6 forward** must include this statement in its contract/certification document before implementation may be certified:
+
+> **Product-boundary check:** PASS — this Gate complies with `docs/engineering/ASCYN_PRODUCT_BOUNDARY_CONTRACT.md` and is classified as **COEXIST**. No DO NOT BUILD capability is introduced.
+
+The slice must also identify whether it touches a guarded integration zone. Gate 7 Communications normally does not; any exception requires explicit architecture review.
+
 ### G7-2 — Reliability collision audit
 Inventory schema, runtime, UI and tests against every invariant above. Produce a finding matrix before changing behavior.
 
