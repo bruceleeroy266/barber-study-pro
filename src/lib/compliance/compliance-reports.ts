@@ -62,6 +62,8 @@ export function generateComplianceReport(
           'Tracking Score': r.complianceScore.score,
           Attendance: r.hasAttendanceEvidence ? `${r.attendanceSummary.attendancePercentage}%` : 'No Attendance Data',
           Hours: `${Math.round(r.completedHours)}/${r.graduationReadiness.requiredHours}`,
+          'Earned Here': Math.round(r.earnedHours),
+          'Prior Credit': Math.round(r.priorCreditHours),
           'Assessment Pass Rate': r.graduationReadiness.requiredAssessments <= 0
             ? 'Not Required'
             : r.hasAssessmentEvidence ? `${r.assessmentPassRate}%` : 'No Assessments',
@@ -83,6 +85,8 @@ export function generateComplianceReport(
           Student: r.fullName,
           'Readiness %': r.graduationReadiness.percentage,
           'Hours Complete': `${r.graduationReadiness.completedHours}/${r.graduationReadiness.requiredHours}`,
+          'Earned Here': Math.round(r.earnedHours),
+          'Prior Credit': Math.round(r.priorCreditHours),
           'Assessments Complete': `${r.graduationReadiness.completedAssessments}/${r.graduationReadiness.requiredAssessments}`,
           'Practicals Complete': `${r.graduationReadiness.completedPracticals}/${r.graduationReadiness.requiredPracticals}`,
           Ready: r.graduationReadiness.isReady ? 'Yes' : 'No',
