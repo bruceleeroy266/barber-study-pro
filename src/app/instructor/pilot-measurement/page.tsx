@@ -5,6 +5,7 @@ import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 import { loadAssignedStudentIds } from '@/lib/instructor/assignments'
 import {
   buildPilotCheckpointWindow,
+  checkpointForPilotInstant,
   resolvePilotMeasurement,
   type PilotCheckpointType,
   type PilotExamAttemptRow,
@@ -25,15 +26,6 @@ function formatSeconds(seconds: number | null): string {
 
 function formatPercent(value: number | null): string {
   return value === null ? 'No evidence' : `${Math.round(value)}%`
-}
-
-function checkpointForDate(startDate: string, now: Date): PilotCheckpointType {
-  const start = new Date(`${startDate}T00:00:00.000Z`)
-  const elapsed = Math.max(0, Math.floor((now.getTime() - start.getTime()) / 86_400_000))
-  if (elapsed >= 90) return 'day_90'
-  if (elapsed >= 60) return 'day_60'
-  if (elapsed >= 30) return 'day_30'
-  return 'baseline'
 }
 
 function checkpointLabel(type: PilotCheckpointType): string {
@@ -130,11 +122,12 @@ export default async function InstructorPilotMeasurementPage() {
   ])
 
   const now = new Date()
-  const currentCheckpoint = checkpointForDate(period.pilot_start_date, now)
+  const currentCheckpoint = checkpointForPilotInstant(period.pilot_start_date, now, period.timezone)
   const window = buildPilotCheckpointWindow(
     period.pilot_start_date,
     currentCheckpoint,
-    now.toISOString()
+    now.toISOString(),
+    period.timezone,
   )
 
   const snapshot = resolvePilotMeasurement({

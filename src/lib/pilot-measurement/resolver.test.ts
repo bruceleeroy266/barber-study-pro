@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { Profile } from '@/types'
-import { buildPilotCheckpointWindow, resolvePilotMeasurement } from '@/lib/pilot-measurement/resolver'
+import { buildPilotCheckpointWindow, checkpointForPilotInstant, resolvePilotMeasurement } from '@/lib/pilot-measurement/resolver'
 
 const profile = (id: string, included = true): Profile => ({
   id,
@@ -29,6 +29,33 @@ describe('PO-1E.1 pilot measurement resolver', () => {
     expect(buildPilotCheckpointWindow('2026-10-10', 'day_90').targetDate).toBe('2027-01-08')
   })
 
+  it('honors the pilot timezone for window start and checkpoint cutoff', () => {
+    const baseline = buildPilotCheckpointWindow('2026-10-10', 'baseline', undefined, 'America/Chicago')
+    expect(baseline.windowStart).toBe('2026-10-10T05:00:00.000Z')
+    expect(baseline.cutoffAt).toBe('2026-10-11T04:59:59.999Z')
+
+    const day30 = buildPilotCheckpointWindow('2026-10-10', 'day_30', undefined, 'America/Chicago')
+    expect(day30.targetDate).toBe('2026-11-09')
+    expect(day30.cutoffAt).toBe('2026-11-10T05:59:59.999Z')
+  })
+
+  it('does not advance checkpoint phase before the local calendar date', () => {
+    expect(
+      checkpointForPilotInstant(
+        '2026-10-10',
+        new Date('2026-11-09T05:59:59.999Z'),
+        'America/Chicago',
+      ),
+    ).toBe('baseline')
+    expect(
+      checkpointForPilotInstant(
+        '2026-10-10',
+        new Date('2026-11-09T06:00:00.000Z'),
+        'America/Chicago',
+      ),
+    ).toBe('day_30')
+  })
+
   it('keeps excluded learners visible but out of aggregate metrics', () => {
     const snapshot = resolvePilotMeasurement({
       schoolId: 'school-1',
@@ -48,6 +75,34 @@ describe('PO-1E.1 pilot measurement resolver', () => {
     })
 
     expect(snapshot.learners).toHaveLength(2)
+    expect(snapshot.includedStudentCount).toBe(1)
+    expect(snapshot.excludedStudentCount).toBe(1)
+    expect(snapshot.metrics.totalActiveStudySeconds).toBe(600)
+    expect(snapshot.metrics.averageLatestExamPercentage).toBe(80)
+    expect(snapshot.coverage.examReady).toEqual({ measured: 1, total: 1 })
+  })
+
+  it('keeps disabled learners visible but excludes them from aggregate metrics', () => {
+    const disabled = { ...profile('disabled'), is_disabled: true }
+    const snapshot = resolvePilotMeasurement({
+      schoolId: 'school-1',
+      students: [profile('active'), disabled],
+      progress: [],
+      quizAttempts: [],
+      remediation: [],
+      studyActivity: [
+        { user_id: 'active', study_date: '2026-10-10', active_seconds: 600, last_active_at: '2026-10-10T10:00:00Z' },
+        { user_id: 'disabled', study_date: '2026-10-10', active_seconds: 3600, last_active_at: '2026-10-10T10:00:00Z' },
+      ],
+      examAttempts: [
+        { id:'active-exam', user_id:'active', status:'completed', started_at:'2026-10-10T09:00:00Z', completed_at:'2026-10-10T10:00:00Z', attempt_number:1, percentage:80, passed:true, domain_breakdown:null, elapsed_seconds:3600, unanswered_at_submit:0 },
+        { id:'disabled-exam', user_id:'disabled', status:'completed', started_at:'2026-10-10T09:00:00Z', completed_at:'2026-10-10T10:00:00Z', attempt_number:1, percentage:100, passed:true, domain_breakdown:null, elapsed_seconds:3600, unanswered_at_submit:0 },
+      ],
+      window: buildPilotCheckpointWindow('2026-10-10', 'baseline'),
+    })
+
+    expect(snapshot.learners).toHaveLength(2)
+    expect(snapshot.learners.find((row) => row.studentId === 'disabled')?.includedInAggregate).toBe(false)
     expect(snapshot.includedStudentCount).toBe(1)
     expect(snapshot.excludedStudentCount).toBe(1)
     expect(snapshot.metrics.totalActiveStudySeconds).toBe(600)

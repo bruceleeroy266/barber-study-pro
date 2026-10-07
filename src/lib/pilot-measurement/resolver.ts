@@ -142,7 +142,9 @@ export function resolvePilotMeasurement(inputs: PilotMeasurementInputs): PilotMe
     (!inputs.allowedStudentIds || inputs.allowedStudentIds.has(student.id))
   )
 
-  const included = authorizedStudents.filter((student) => student.include_in_school_metrics !== false)
+  const included = authorizedStudents.filter((student) =>
+    student.include_in_school_metrics !== false && !student.is_disabled
+  )
   const includedIds = new Set(included.map((student) => student.id))
 
   const learners: PilotLearnerMeasurement[] = authorizedStudents.map((student) => {
@@ -186,7 +188,7 @@ export function resolvePilotMeasurement(inputs: PilotMeasurementInputs): PilotMe
     return {
       studentId: student.id,
       fullName: student.full_name,
-      includedInAggregate: student.include_in_school_metrics !== false,
+      includedInAggregate: student.include_in_school_metrics !== false && !student.is_disabled,
       activeStudySeconds,
       qualifyingStudyDays,
       latestLearningAt,
@@ -286,28 +288,99 @@ export function resolvePilotMeasurement(inputs: PilotMeasurementInputs): PilotMe
   }
 }
 
+function addDateOnlyDays(dateText: string, days: number): string {
+  const [year, month, day] = dateText.split('-').map(Number)
+  const date = new Date(Date.UTC(year, month - 1, day))
+  if (Number.isNaN(date.getTime())) throw new Error('Invalid pilot date')
+  date.setUTCDate(date.getUTCDate() + days)
+  return date.toISOString().slice(0, 10)
+}
+
+function zonedMidnightToUtc(dateText: string, timeZone: string): Date {
+  const [year, month, day] = dateText.split('-').map(Number)
+  const targetWallClock = Date.UTC(year, month - 1, day, 0, 0, 0)
+  let candidate = targetWallClock
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23',
+  })
+
+  for (let i = 0; i < 3; i += 1) {
+    const parts = Object.fromEntries(
+      formatter.formatToParts(new Date(candidate))
+        .filter((part) => part.type !== 'literal')
+        .map((part) => [part.type, part.value])
+    )
+    const represented = Date.UTC(
+      Number(parts.year),
+      Number(parts.month) - 1,
+      Number(parts.day),
+      Number(parts.hour),
+      Number(parts.minute),
+      Number(parts.second),
+    )
+    const delta = represented - targetWallClock
+    if (delta === 0) break
+    candidate -= delta
+  }
+
+  return new Date(candidate)
+}
+
+export function endOfPilotLocalDate(dateText: string, timeZone: string): string {
+  const nextDate = addDateOnlyDays(dateText, 1)
+  return new Date(zonedMidnightToUtc(nextDate, timeZone).getTime() - 1).toISOString()
+}
+
+export function checkpointForPilotInstant(
+  pilotStartDate: string,
+  instant: Date,
+  timeZone: string,
+): PilotCheckpointType {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat('en-US', {
+      timeZone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).formatToParts(instant)
+      .filter((part) => part.type !== 'literal')
+      .map((part) => [part.type, part.value])
+  )
+  const localDate = `${parts.year}-${parts.month}-${parts.day}`
+  const startMs = Date.parse(`${pilotStartDate}T00:00:00.000Z`)
+  const localMs = Date.parse(`${localDate}T00:00:00.000Z`)
+  const elapsed = Math.max(0, Math.floor((localMs - startMs) / 86_400_000))
+  if (elapsed >= 90) return 'day_90'
+  if (elapsed >= 60) return 'day_60'
+  if (elapsed >= 30) return 'day_30'
+  return 'baseline'
+}
+
 export function buildPilotCheckpointWindow(
   pilotStartDate: string,
   type: PilotCheckpointType,
-  cutoffAt?: string
+  cutoffAt?: string,
+  timeZone = 'UTC',
 ): PilotCheckpointWindow {
-  const start = new Date(`${pilotStartDate}T00:00:00.000Z`)
-  if (Number.isNaN(start.getTime())) throw new Error('Invalid pilot start date')
-
   const offsetDays: Record<PilotCheckpointType, number> = {
     baseline: 0,
     day_30: 30,
     day_60: 60,
     day_90: 90,
   }
-  const target = new Date(start)
-  target.setUTCDate(target.getUTCDate() + offsetDays[type])
-  const targetDate = target.toISOString().slice(0, 10)
+  const targetDate = addDateOnlyDays(pilotStartDate, offsetDays[type])
 
   return {
     type,
     targetDate,
-    windowStart: start.toISOString(),
-    cutoffAt: cutoffAt ?? `${targetDate}T23:59:59.999Z`,
+    windowStart: zonedMidnightToUtc(pilotStartDate, timeZone).toISOString(),
+    cutoffAt: cutoffAt ?? endOfPilotLocalDate(targetDate, timeZone),
   }
 }

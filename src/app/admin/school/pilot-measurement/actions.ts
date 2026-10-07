@@ -104,7 +104,7 @@ async function loadCheckpointSnapshot(
     return { ok: false as const, error: 'No active or completed pilot measurement period exists for this school.' }
   }
 
-  const window = buildPilotCheckpointWindow(period.pilot_start_date, checkpointType)
+  const window = buildPilotCheckpointWindow(period.pilot_start_date, checkpointType, undefined, period.timezone)
   const now = new Date()
   const targetCutoff = new Date(window.cutoffAt)
   const previewCutoff = now < targetCutoff ? now.toISOString() : window.cutoffAt
@@ -159,7 +159,7 @@ async function loadCheckpointSnapshot(
     studyActivity: (activityResult.data ?? []) as PilotStudyActivityRow[],
     examAttempts: (examResult.data ?? []) as PilotExamAttemptRow[],
     remediation: (remediationResult.data ?? []) as PilotRemediationRow[],
-    window: buildPilotCheckpointWindow(period.pilot_start_date, checkpointType, previewCutoff),
+    window: buildPilotCheckpointWindow(period.pilot_start_date, checkpointType, previewCutoff, period.timezone),
   })
 
   const includedStudentIds = snapshot.learners
