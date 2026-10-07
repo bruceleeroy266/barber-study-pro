@@ -131,6 +131,7 @@ export default function ProductionMessageCenter({
   const returnToInbox = () => {
     viewEpochRef.current += 1
     setError(null)
+    setStatusMessage('')
     setIsComposing(false)
     setSelectedThread(null)
     setCounterpartId('')
@@ -445,6 +446,7 @@ export default function ProductionMessageCenter({
                 onClick={() => {
                   viewEpochRef.current += 1
                   setError(null)
+                  setStatusMessage('')
                   setSelectedThread(null)
                   setIsComposing(true)
                 }}
