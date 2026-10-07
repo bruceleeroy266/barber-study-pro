@@ -335,7 +335,7 @@ export default async function StudentHoursPage() {
         <div className="rounded-xl border border-graphite bg-charcoal p-4 sm:p-5">
           <div className="text-sm text-silver">Remaining Hours</div>
           <div className="mt-2 text-2xl font-bold text-white">{formatMinutes(remainingMinutes)}</div>
-          <div className="mt-1 text-xs text-silver">Based on approved hours only</div>
+          <div className="mt-1 text-xs text-silver">Based on accepted prior credit plus approved hours earned here</div>
         </div>
 
         <div className="rounded-xl border border-graphite bg-charcoal p-4 sm:p-5">
