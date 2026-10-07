@@ -4,20 +4,16 @@ import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 import QuizApprovalQueueClient, { type QuizApprovalRequestRow } from './QuizApprovalQueueClient'
 import { setQuizApprovalSettings } from './actions'
 import { localChapters } from '@/lib/local-data'
+import { resolveSupportAccessContext } from '@/lib/support-access'
 
 export default async function QuizApprovalsPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role, school_id')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile?.school_id || !isInstructorOrAdmin(profile.role)) {
-    redirect('/dashboard')
+  const profile = context.effectiveProfile
+  if (!profile.school_id || !isInstructorOrAdmin(profile.role)) {
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
 
   const [{ data: settings }, { data: requests }] = await Promise.all([
