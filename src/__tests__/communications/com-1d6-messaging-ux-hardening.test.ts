@@ -26,8 +26,9 @@ describe('COM-1D.6 messaging UX hardening', () => {
   })
 
   it('makes read marking idempotent under uniqueness races', () => {
-    expect(actions).toContain("insertError.code === '23505'")
-    expect(actions).toContain('markedRead: 0')
+    expect(actions).toContain("onConflict: 'message_id,reader_id'")
+    expect(actions).toContain('ignoreDuplicates: true')
+    expect(actions).toContain('remainingUnread')
   })
 
   it('exposes instructor-only archive runtime without widening student behavior', () => {
