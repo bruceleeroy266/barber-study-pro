@@ -343,12 +343,17 @@ export function checkpointForPilotInstant(
   instant: Date,
   timeZone: string,
 ): PilotCheckpointType {
-  const localDate = new Intl.DateTimeFormat('en-CA', {
-    timeZone,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(instant)
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat('en-US', {
+      timeZone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).formatToParts(instant)
+      .filter((part) => part.type !== 'literal')
+      .map((part) => [part.type, part.value])
+  )
+  const localDate = `${parts.year}-${parts.month}-${parts.day}`
   const startMs = Date.parse(`${pilotStartDate}T00:00:00.000Z`)
   const localMs = Date.parse(`${localDate}T00:00:00.000Z`)
   const elapsed = Math.max(0, Math.floor((localMs - startMs) / 86_400_000))
