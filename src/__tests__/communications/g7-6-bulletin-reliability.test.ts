@@ -9,8 +9,16 @@ const migration = read('supabase/migrations/20261007182000_g7_6_bulletin_reliabi
 const delivery = read('supabase/migrations/20261002024000_com1d4_bulletin_rls_recursion_fix.sql')
 const ack = read('supabase/migrations/20261002000500_com1c4_bulletin_delivery_ack_authorization.sql')
 const foundation = read('supabase/migrations/20261001224500_com1b_communication_foundation.sql')
+const certification = read('docs/engineering/GATE7_G7-6_BULLETIN_RELIABILITY.md')
 
 describe('G7-6 bulletin reliability hardening', () => {
+  it('passes the locked product-boundary contract without entering a guarded integration zone', () => {
+    expect(certification).toContain('Product-boundary check:** PASS')
+    expect(certification).toContain('classified as **COEXIST**')
+    expect(certification).toContain('No DO NOT BUILD capability is introduced')
+    expect(certification).toContain('Guarded integration zone contact:** NONE')
+  })
+
   it('publishes bulletin + audiences atomically through one database operation', () => {
     expect(migration).toContain('create or replace function public.publish_bulletin_atomic')
     expect(migration).toContain('security invoker')
