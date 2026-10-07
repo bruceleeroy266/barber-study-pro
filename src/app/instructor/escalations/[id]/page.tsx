@@ -8,6 +8,7 @@ import { createClient } from '@/lib/supabase-server'
 import { redirect, notFound } from 'next/navigation'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 import { createSupabaseInstructorClient } from '@/lib/instructor/supabase-client'
+import { resolveSupportAccessContext } from '@/lib/support-access'
 import EscalationDetail from '@/components/instructor/EscalationDetail'
 import {
   resolveConceptName,
@@ -28,25 +29,16 @@ interface PageProps {
 
 export default async function EscalationDetailPage({ params }: PageProps) {
   const { id } = await params
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
 
-  if (!user) {
-    redirect('/login')
-  }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile || !isInstructorOrAdmin(profile.role)) {
-    redirect('/dashboard')
+  const profile = context.effectiveProfile
+  if (!isInstructorOrAdmin(profile.role)) {
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
 
   if (!profile.school_id) {
-    redirect('/instructor')
+    redirect(context.supportActive ? '/admin/support-access' : '/instructor')
   }
 
   const instructorClient = createSupabaseInstructorClient()
@@ -103,7 +95,7 @@ export default async function EscalationDetailPage({ params }: PageProps) {
           resolutionSummary: escalation.resolutionSummary,
           followUpRequired: escalation.followUpRequired,
         }}
-        currentUserId={user.id}
+        currentUserId={profile.id}
         diagnostics={diagnostics}
       />
     </div>
