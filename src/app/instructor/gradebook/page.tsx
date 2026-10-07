@@ -88,7 +88,7 @@ export default function InstructorGradebookPage() {
           .eq('instructor_id', profile.id)
           .eq('is_active', true)
           .is('ended_at', null)
-        assignedStudentIds = (assignments ?? []).map((row) => row.student_id)
+        assignedStudentIds = (assignments ?? []).map((row: { student_id: string }) => row.student_id)
       }
 
       let studentsQuery = supabase
