@@ -77,7 +77,6 @@ export async function resolveSupportAccessContext(): Promise<SupportAccessContex
   )
 
   if (!validTarget || !targetProfile) {
-    cookieStore.delete(SUPPORT_ACCESS_COOKIE)
     await logSecurityEvent('support_access', 'blocked', 'Invalid or unavailable support target', {
       userId: user.id,
       email: user.email,
