@@ -250,7 +250,6 @@ export function buildStudentPerformanceRows(inputs: SchoolAnalyticsInputs): Stud
   const { students, attendanceRecords, quizAttempts, progress, grades, gradeCategories, assessments, hourLogs } =
     inputs
   return students.map((student) => {
-    const requiredHours = requiredHoursForStudent(inputs, student.id)
     const attSummary = calculateAttendanceSummary(student.id, studentAttendanceRecords(student.id, attendanceRecords))
     const attempts = studentAttempts(student.id, quizAttempts)
     const prog = studentProgress(student.id, progress)
@@ -388,7 +387,7 @@ export function buildSchoolHealthScore(inputs: SchoolAnalyticsInputs): SchoolHea
   const gradeScore = clampPercentage(metrics.averageGrade)
   const assessmentScore = clampPercentage(metrics.assessmentCompletionRate)
   const totalRequiredHours = metricEligibleStudents(inputs.students).reduce(
-    (sum, student) => sum + requiredHoursForStudent(inputs, student.id),
+    (sum, student) => sum + adaptiveHoursForStudent(inputs, student.id).effectiveRequiredHours,
     0,
   )
   const hoursScore =
