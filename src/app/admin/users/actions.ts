@@ -1977,37 +1977,7 @@ export async function enrollStudent(
     return { success: false, error: programResult.error }
   }
 
-  // 5. Guard against conflicting active enrollment before insert.
-  // The database also enforces this invariant with a partial unique index,
-  // so concurrent requests cannot bypass the application check.
-  const { data: activeEnrollment, error: activeEnrollmentError } = await serviceClient
-    .from('enrollments')
-    .select('id, program_id, programs(name)')
-    .eq('student_id', student.id)
-    .eq('status', 'active')
-    .eq('is_active', true)
-    .is('deleted_at', null)
-    .limit(1)
-    .maybeSingle()
-
-  if (activeEnrollmentError) {
-    return {
-      success: false,
-      error: `Failed to verify current enrollment: ${activeEnrollmentError.message}`,
-    }
-  }
-
-  if (activeEnrollment) {
-    const activeProgram = activeEnrollment.programs as unknown as { name?: string } | null
-    return {
-      success: false,
-      error:
-        `Student already has an active enrollment${activeProgram?.name ? ` in ${activeProgram.name}` : ''}. ` +
-        'Withdraw the current enrollment before enrolling the student in another program.',
-    }
-  }
-
-  // 6. Insert enrollment. Database constraints protect both same-program
+  // 5. Insert enrollment. Database constraints protect both same-program
   // duplicates and concurrent attempts to create two active enrollments.
   const { data: enrollmentData, error: insertError } = await serviceClient
     .from('enrollments')
@@ -2032,7 +2002,7 @@ export async function enrollStudent(
     return { success: false, error: `Failed to create enrollment: ${insertError.message}` }
   }
 
-  // 7. Audit log (non-blocking)
+  // 6. Audit log (non-blocking)
   await logUserManagementAction(
     admin,
     studentProfileId,
