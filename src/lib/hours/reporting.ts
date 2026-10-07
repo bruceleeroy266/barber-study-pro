@@ -5,6 +5,9 @@ export interface HoursReportStudent {
   full_name: string
   email: string
   requiredHours: number
+  priorCreditMinutes?: number
+  requirementOverrideMinutes?: number | null
+  contractVersion?: number
 }
 
 export interface HoursReportLog {
