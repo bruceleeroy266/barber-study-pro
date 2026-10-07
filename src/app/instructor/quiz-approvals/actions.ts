@@ -33,7 +33,6 @@ export async function requestQuizAccess(formData: FormData) {
   if (error) throw new Error(error.message)
 
   revalidatePath(`/dashboard/chapters/${chapterId.replace('ch-', '')}`)
-  await logSupportAction(context, 'bulk_approve_quiz_access', 'quiz_access_requests', { requestIds: safeIds, effectiveRole: profile.role })
   revalidatePath('/instructor/quiz-approvals')
 }
 
@@ -62,7 +61,7 @@ export async function setQuizApprovalSettings(formData: FormData) {
 }
 
 export async function reviewQuizAccess(requestId: string, decision: 'approved' | 'denied') {
-  const { supabase, user, profile } = await getActor()
+  const { supabase, user, profile, context } = await getActor()
   if (!profile.school_id || !isInstructorOrAdmin(profile.role)) {
     throw new Error('Instructor access required')
   }
