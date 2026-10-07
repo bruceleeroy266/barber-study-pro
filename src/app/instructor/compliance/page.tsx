@@ -20,38 +20,43 @@ import ComplianceAlertsPanel from '@/components/compliance/ComplianceAlertsPanel
 import ComplianceReportingCenter from '@/components/compliance/ComplianceReportingCenter'
 import { CheckCircle, AlertTriangle, Clock, Wrench, ClipboardCheck, Target } from 'lucide-react'
 import { mapAttendanceRecordsFromDb, mapHourLogsFromDb, mapGradesFromDb, mapGradeCategoriesFromDb, mapAssessmentsFromDb } from '@/lib/mappers/operational-data-mappers'
+import { resolveSupportAccessContext } from '@/lib/support-access'
+import { loadAssignedStudentIds } from '@/lib/instructor/assignments'
 
 export default async function InstructorComplianceDashboard() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
 
-  if (!user) {
-    redirect('/login')
-  }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role, school_id')
-    .eq('id', user.id)
-    .single()
-  if (!profile || (profile.role !== 'instructor' && profile.role !== 'admin')) {
-    redirect('/dashboard')
+  const profile = context.effectiveProfile
+  if (profile.role !== 'instructor' && profile.role !== 'admin' && profile.role !== 'school_admin') {
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
 
   if (!profile.school_id) {
-    redirect('/dashboard')
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
 
   const useDemo = isDemoFallbackEnabled()
   const schoolId = profile.school_id
+  const assignedStudentIds = profile.role === 'instructor'
+    ? await loadAssignedStudentIds(supabase, schoolId, profile.id)
+    : null
 
-  // Scope all student-facing data to the instructor's assigned school.
-  const { data: studentsData } = await supabase
+  let studentQuery = supabase
     .from('profiles')
     .select('*')
     .eq('school_id', schoolId)
     .in('role', ['student', 'apprentice'])
 
+  if (assignedStudentIds) {
+    studentQuery = studentQuery.in(
+      'id',
+      assignedStudentIds.length > 0 ? assignedStudentIds : ['__none__']
+    )
+  }
+
+  const { data: studentsData } = await studentQuery
   let students: Profile[] = (studentsData as Profile[]) || []
   if (students.length === 0 && useDemo) {
     students = demoStudents.filter((s) => s.school_id === schoolId || !schoolId)
