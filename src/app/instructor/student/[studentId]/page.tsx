@@ -1,4 +1,5 @@
-import { calculateHoursProgressSummary } from '@/lib/hours/reporting'
+import { calculateAdaptiveStudentHours } from '@/lib/hours/adaptive-student-hours'
+import { loadEnrollmentHourContractForStudent } from '@/lib/hours/adaptive-student-hours-data'
 import { createClient } from '@/lib/supabase-server'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
@@ -336,13 +337,21 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
   // school-configured values instead of hard-coded single-state assumptions.
   // Fallback chain: active enrollment's program → school's active program →
   // default 1500 (matches the programs table schema default); missing state → '—'.
-  const [programRequirements, schoolState] = await Promise.all([
+  const [programRequirements, schoolState, hourContract] = await Promise.all([
     instructorProfile.school_id
       ? resolveStudentProgramRequirements(supabase, instructorProfile.school_id, studentId)
       : Promise.resolve(defaultProgramRequirements()),
     instructorProfile.school_id
       ? resolveSchoolState(supabase, instructorProfile.school_id)
       : Promise.resolve(null),
+    instructorProfile.school_id
+      ? loadEnrollmentHourContractForStudent(supabase, instructorProfile.school_id, studentId)
+      : Promise.resolve({
+          enrollmentId: null,
+          priorCreditMinutes: 0,
+          requirementOverrideMinutes: null,
+          contractVersion: 0,
+        }),
   ])
 
   // Use local chapters (not Supabase)
@@ -494,13 +503,19 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
   const programName = programRequirements.programName ?? (usingDemoData ? demoProgram?.name ?? null : null) ?? '—'
   const boardState = schoolState ?? (usingDemoData ? demoSchool.state : null) ?? '—'
 
-  const {
-    approvedMinutes,
-    pendingMinutes,
-    requiredMinutes: REQUIRED_MINUTES,
-    remainingMinutes,
-    completionPercentage,
-  } = calculateHoursProgressSummary(hourLogRecords, programRequirements.requiredHours)
+  const adaptiveHours = calculateAdaptiveStudentHours(hourLogRecords, {
+    programRequiredHours: programRequirements.requiredHours,
+    priorCreditMinutes: hourContract.priorCreditMinutes,
+    requirementOverrideMinutes: hourContract.requirementOverrideMinutes,
+    contractVersion: hourContract.contractVersion,
+  })
+  const approvedMinutes = adaptiveHours.earnedApprovedMinutes
+  const pendingMinutes = hourLogRecords
+    .filter((log) => log.status === 'pending')
+    .reduce((sum, log) => sum + log.minutes, 0)
+  const REQUIRED_MINUTES = adaptiveHours.effectiveRequiredMinutes
+  const remainingMinutes = adaptiveHours.remainingMinutes
+  const completionPercentage = adaptiveHours.completionPercentage
 
   const totalChapters = chapters?.length || 0
   const canonicalMetrics = calculateCanonicalStudentLearningMetrics({
@@ -5424,6 +5439,9 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div className="border border-gray-200 rounded-lg p-4">
               <div className="text-2xl font-bold text-white">{formatMinutes(REQUIRED_MINUTES)}</div>
+              <div className="mt-1 text-xs text-[var(--color-text-muted)]">
+                {adaptiveHours.requirementSource === 'student_override' ? 'Student-specific requirement' : 'Program requirement'}
+              </div>
               <div className="text-xs text-silver-gray">Required Hours</div>
             </div>
             <div className="border border-gray-200 rounded-lg p-4">
