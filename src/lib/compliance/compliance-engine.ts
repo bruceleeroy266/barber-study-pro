@@ -100,8 +100,6 @@ export function buildStudentCompliance(inputs: StudentComplianceInputs) {
   const complianceInputs: ComplianceScoreInputs = {
     attendancePercentage: attSummary.attendancePercentage,
     completedHours,
-    earnedHours: adaptiveHours.earnedApprovedMinutes / 60,
-    priorCreditHours: adaptiveHours.priorCreditMinutes / 60,
     assessmentPassRate,
     practicalPassRate,
     readinessScore: readiness.score,
@@ -132,6 +130,8 @@ export function buildStudentCompliance(inputs: StudentComplianceInputs) {
     attendanceSummary: attSummary,
     readiness,
     completedHours,
+    earnedHours: adaptiveHours.earnedApprovedMinutes / 60,
+    priorCreditHours: adaptiveHours.priorCreditMinutes / 60,
     assessmentPassRate,
     practicalPassRate,
     overallGrade,
