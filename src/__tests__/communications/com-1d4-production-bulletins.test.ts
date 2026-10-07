@@ -34,19 +34,19 @@ describe('COM-1D.4 production bulletins runtime + UI', () => {
     expect(actions).not.toContain('createAdmin')
   })
 
-  it('publishes via draft -> audience -> published sequence', () => {
-    expect(actions).toContain("status: 'draft'")
-    expect(actions).toContain(".from('bulletin_audiences')")
-    expect(actions).toContain(".update({ status: 'published'")
+  it('publishes atomically through the database reliability boundary', () => {
+    expect(actions).toContain("supabase.rpc(\n    'publish_bulletin_atomic'")
     expect(actions).toContain('Choose at least one bulletin audience.')
+    expect(actions).toContain('operationId')
+    expect(actions).not.toContain('Bulletin draft was saved, but audience targeting failed')
   })
 
   it('supports priority, pinning, scheduling, expiration, and acknowledgment-required state', () => {
-    expect(actions).toContain("priority: input.priority")
-    expect(actions).toContain('is_pinned: input.isPinned')
-    expect(actions).toContain('acknowledgment_required: input.acknowledgmentRequired')
-    expect(actions).toContain('publish_at: publishAt')
-    expect(actions).toContain('expires_at: expiresAt')
+    expect(actions).toContain('p_priority: input.priority')
+    expect(actions).toContain('p_is_pinned: input.isPinned')
+    expect(actions).toContain('p_acknowledgment_required: input.acknowledgmentRequired')
+    expect(actions).toContain('p_publish_at: publishAt')
+    expect(actions).toContain('p_expires_at: expiresAt')
     expect(manager).toContain('type="datetime-local"')
     expect(manager).toContain('Require acknowledgment')
     expect(manager).toContain('Pin bulletin')
@@ -74,7 +74,8 @@ describe('COM-1D.4 production bulletins runtime + UI', () => {
     expect(studentPage).toContain('loadStudentBulletins')
     expect(actions).toContain('export async function acknowledgeBulletin')
     expect(actions).toContain(".from('bulletin_acknowledgments')")
-    expect(actions).toContain('error.code ===')
+    expect(actions).toContain("onConflict: 'bulletin_id,student_id'")
+    expect(actions).toContain('ignoreDuplicates: true')
     expect(feed).toContain('Acknowledged')
     expect(feed).toContain('Acknowledge')
   })
