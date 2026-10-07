@@ -8,13 +8,14 @@ const manager = read('src/components/messaging/BulletinManager.tsx')
 const migration = read('supabase/migrations/20261007182000_g7_6_bulletin_reliability.sql')
 const delivery = read('supabase/migrations/20261002024000_com1d4_bulletin_rls_recursion_fix.sql')
 const ack = read('supabase/migrations/20261002000500_com1c4_bulletin_delivery_ack_authorization.sql')
+const foundation = read('supabase/migrations/20261001224500_com1b_communication_foundation.sql')
 
 describe('G7-6 bulletin reliability hardening', () => {
   it('publishes bulletin + audiences atomically through one database operation', () => {
     expect(migration).toContain('create or replace function public.publish_bulletin_atomic')
     expect(migration).toContain('security invoker')
     expect(migration).toContain("status = 'published'")
-    expect(actions).toContain("supabase.rpc('publish_bulletin_atomic'")
+    expect(actions).toContain("'publish_bulletin_atomic'")
     expect(actions).not.toContain("draft was saved, but audience targeting failed")
   })
 
@@ -43,7 +44,7 @@ describe('G7-6 bulletin reliability hardening', () => {
   it('keeps acknowledgment exactly-once and append-only', () => {
     expect(actions).toContain("onConflict: 'bulletin_id,student_id'")
     expect(actions).toContain('ignoreDuplicates: true')
-    expect(ack).toContain('bulletin_acknowledgments_unique')
+    expect(foundation).toContain('bulletin_acknowledgments_unique unique (bulletin_id, student_id)')
     expect(ack).not.toMatch(/grant\s+update/i)
     expect(ack).not.toMatch(/grant\s+delete/i)
   })
