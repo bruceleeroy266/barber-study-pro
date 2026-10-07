@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase-server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
-import { Settings, Activity, History, Flag, Wrench, Archive, Bell, Users, Plane, LayoutDashboard, MessageSquare, PlusCircle } from 'lucide-react'
+import { Settings, Activity, History, Flag, Wrench, Archive, Bell, Users, Plane, LayoutDashboard, MessageSquare, PlusCircle, LifeBuoy } from 'lucide-react'
 
 export default async function AdminDashboard() {
   const supabase = await createClient()
@@ -142,6 +142,22 @@ export default async function AdminDashboard() {
           {/* Platform-admin-only cards */}
           {isPlatformAdmin && (
             <>
+              <Link
+                href="/admin/support-access"
+                className="bg-[var(--color-background-primary)] border border-[var(--color-brand-gold)]/30 rounded-xl p-6 hover:border-[var(--color-brand-gold)] transition-colors group"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="text-lg font-semibold text-white group-hover:text-[var(--color-brand-gold)]">Support Access</h2>
+                  <LifeBuoy className="w-5 h-5 text-[var(--color-brand-gold)]" />
+                </div>
+                <p className="text-[var(--color-text-muted)] text-sm mb-4">
+                  Open instructor and school-admin dashboards to help schools without leaving your platform-admin account
+                </p>
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[var(--color-brand-gold)] text-black text-sm font-semibold rounded-lg">
+                  Open Support Access
+                </span>
+              </Link>
+
               <Link
                 href="/admin/pilot-inquiries?add=school"
                 className="bg-[var(--color-background-primary)] border border-[var(--color-brand-gold)]/30 rounded-xl p-6 hover:border-[var(--color-brand-gold)] transition-colors group"
