@@ -101,7 +101,7 @@ async function getMessagingActor(): Promise<
 
   const { data: profile, error } = await supabase
     .from('profiles')
-    .select('id, school_id, role')
+    .select('id, school_id, role, approval_status, is_disabled')
     .eq('id', user.id)
     .single()
 
@@ -111,6 +111,10 @@ async function getMessagingActor(): Promise<
 
   if (!profile.school_id) {
     return { success: false, message: 'Your account is not assigned to a school.' }
+  }
+
+  if (profile.approval_status !== 'approved' || profile.is_disabled) {
+    return { success: false, message: 'Messaging is not available for this account.' }
   }
 
   if (!['student', 'apprentice', 'instructor', 'school_admin', 'admin'].includes(profile.role)) {
@@ -439,6 +443,54 @@ export async function archiveCommunicationThread(
     return { success: false, message: 'Only instructors can archive conversations.' }
   }
 
+  const { data: existingThread, error: existingError } = await supabase
+    .from('communication_threads')
+    .select(
+      'id, school_id, student_id, instructor_id, participant_one_id, participant_two_id, subject, status, last_message_at, created_at, updated_at'
+    )
+    .eq('id', threadId)
+    .single()
+
+  if (existingError || !existingThread) {
+    return { success: false, message: 'Conversation not found or not authorized.' }
+  }
+
+  const counterpartId =
+    existingThread.participant_one_id === actor.id
+      ? existingThread.participant_two_id
+      : existingThread.participant_two_id === actor.id
+        ? existingThread.participant_one_id
+        : null
+
+  if (!counterpartId) {
+    return { success: false, message: 'Conversation not found or not authorized.' }
+  }
+
+  const { data: authorized, error: authorizationError } = await supabase.rpc(
+    'communication_pair_authorized',
+    {
+      p_actor_id: actor.id,
+      p_recipient_id: counterpartId,
+      p_school_id: existingThread.school_id,
+    }
+  )
+
+  if (authorizationError) {
+    logMessagingFailure('archive_thread_authorize', authorizationError)
+    return { success: false, message: 'Unable to verify this conversation right now.' }
+  }
+
+  if (!authorized) {
+    return { success: false, message: 'You are no longer authorized to archive this conversation.' }
+  }
+
+  if (existingThread.status === 'archived') {
+    return {
+      success: true,
+      data: { thread: mapThread(existingThread) },
+    }
+  }
+
   const { data: thread, error } = await supabase
     .from('communication_threads')
     .update({
@@ -446,14 +498,13 @@ export async function archiveCommunicationThread(
       updated_at: new Date().toISOString(),
     })
     .eq('id', threadId)
-    .or(`participant_one_id.eq.${actor.id},participant_two_id.eq.${actor.id}`)
     .eq('status', 'active')
     .select(
       'id, school_id, student_id, instructor_id, participant_one_id, participant_two_id, subject, status, last_message_at, created_at, updated_at'
     )
-    .single()
+    .maybeSingle()
 
-  if (error || !thread) {
+  if (error) {
     logMessagingFailure('archive_thread', error)
     return {
       success: false,
@@ -461,9 +512,61 @@ export async function archiveCommunicationThread(
     }
   }
 
+  if (thread) {
+    return {
+      success: true,
+      data: { thread: mapThread(thread) },
+    }
+  }
+
+  // Another request may have archived the thread after the first read.
+  // Re-read persisted state and re-check current authorization before
+  // treating the repeated attempt as idempotent success.
+  const { data: racedThread, error: racedError } = await supabase
+    .from('communication_threads')
+    .select(
+      'id, school_id, student_id, instructor_id, participant_one_id, participant_two_id, subject, status, last_message_at, created_at, updated_at'
+    )
+    .eq('id', threadId)
+    .maybeSingle()
+
+  if (racedError || !racedThread || racedThread.status !== 'archived') {
+    logMessagingFailure('archive_thread_race_reload', racedError)
+    return { success: false, message: 'Unable to archive this conversation right now.' }
+  }
+
+  const racedCounterpartId =
+    racedThread.participant_one_id === actor.id
+      ? racedThread.participant_two_id
+      : racedThread.participant_two_id === actor.id
+        ? racedThread.participant_one_id
+        : null
+
+  if (!racedCounterpartId) {
+    return { success: false, message: 'Conversation not found or not authorized.' }
+  }
+
+  const { data: stillAuthorized, error: recheckError } = await supabase.rpc(
+    'communication_pair_authorized',
+    {
+      p_actor_id: actor.id,
+      p_recipient_id: racedCounterpartId,
+      p_school_id: racedThread.school_id,
+    }
+  )
+
+  if (recheckError) {
+    logMessagingFailure('archive_thread_race_authorize', recheckError)
+    return { success: false, message: 'Unable to verify this conversation right now.' }
+  }
+
+  if (!stillAuthorized) {
+    return { success: false, message: 'You are no longer authorized to archive this conversation.' }
+  }
+
   return {
     success: true,
-    data: { thread: mapThread(thread) },
+    data: { thread: mapThread(racedThread) },
   }
 }
 
