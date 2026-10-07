@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase-server'
+import { resolveSupportAccessContext, logSupportAction, type SupportAccessContext } from '@/lib/support-access'
 
 type MessagingRole = 'student' | 'apprentice' | 'instructor' | 'school_admin' | 'admin'
 
@@ -82,27 +83,15 @@ function logMessagingFailure(
 }
 
 async function getMessagingActor(): Promise<
-  MessagingRuntimeResult<{ actor: MessagingActor; supabase: Awaited<ReturnType<typeof createClient>> }>
+  MessagingRuntimeResult<{ actor: MessagingActor; supabase: Awaited<ReturnType<typeof createClient>>; supportContext: SupportAccessContext }>
 > {
   const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
+  const supportContext = await resolveSupportAccessContext()
+  if (!supportContext) {
     return { success: false, message: 'You must be signed in to use messaging.' }
   }
 
-  const { data: profile, error } = await supabase
-    .from('profiles')
-    .select('id, school_id, role')
-    .eq('id', user.id)
-    .single()
-
-  if (error || !profile) {
-    return { success: false, message: 'Unable to load your messaging profile.' }
-  }
-
+  const profile = supportContext.effectiveProfile
   if (!profile.school_id) {
     return { success: false, message: 'Your account is not assigned to a school.' }
   }
@@ -115,8 +104,9 @@ async function getMessagingActor(): Promise<
     success: true,
     data: {
       supabase,
+      supportContext,
       actor: {
-        id: user.id,
+        id: profile.id,
         schoolId: profile.school_id,
         role: profile.role as MessagingRole,
       },
@@ -161,7 +151,7 @@ export async function openCommunicationThread(
   const actorResult = await getMessagingActor()
   if (!actorResult.success) return actorResult
 
-  const { actor, supabase } = actorResult.data
+  const { actor, supabase, supportContext } = actorResult.data
 
   const { data: counterpart, error: counterpartError } = await supabase
     .from('profiles')
@@ -262,6 +252,7 @@ export async function openCommunicationThread(
     }
   }
 
+  await logSupportAction(supportContext, 'open_message_thread', 'communication_threads', { counterpartId, threadId: createdThread.id, effectiveRole: actor.role })
   return {
     success: true,
     data: {
