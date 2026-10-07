@@ -84,6 +84,7 @@ export default function ProductionMessageCenter({
   const composeLockedRef = useRef(false)
   const replyOperationIdRef = useRef<string | null>(null)
   const composeOperationIdRef = useRef<string | null>(null)
+  const viewEpochRef = useRef(0)
 
   const peopleById = useMemo(
     () => new Map(people.map((person) => [person.id, person])),
@@ -128,7 +129,9 @@ export default function ProductionMessageCenter({
   }
 
   const returnToInbox = () => {
+    viewEpochRef.current += 1
     setError(null)
+    setStatusMessage('')
     setIsComposing(false)
     setSelectedThread(null)
     setCounterpartId('')
@@ -149,13 +152,14 @@ export default function ProductionMessageCenter({
     )
   }
 
-  const loadThread = async (threadId: string) => {
+  const loadThread = async (threadId: string, requestEpoch: number) => {
     setError(null)
     setStatusMessage('Loading conversation')
     setLoadingThreadId(threadId)
 
     try {
       const result = await loadCommunicationThreadMessages(threadId)
+      if (viewEpochRef.current !== requestEpoch) return
       if (!result.success) {
         setError(result.message)
         return
@@ -165,6 +169,7 @@ export default function ProductionMessageCenter({
       setMessages(result.data.messages)
 
       const readResult = await markCommunicationThreadRead(threadId)
+      if (viewEpochRef.current !== requestEpoch) return
       if (!readResult.success) {
         setError(readResult.message)
         return
@@ -185,14 +190,18 @@ export default function ProductionMessageCenter({
       )
       setStatusMessage('Conversation loaded')
     } finally {
-      setLoadingThreadId(null)
+      if (viewEpochRef.current === requestEpoch) {
+        setLoadingThreadId(null)
+      }
     }
   }
 
   const handleSelect = (threadId: string) => {
     replyOperationIdRef.current = null
+    const requestEpoch = viewEpochRef.current + 1
+    viewEpochRef.current = requestEpoch
     startTransition(() => {
-      void loadThread(threadId)
+      void loadThread(threadId, requestEpoch)
     })
   }
 
@@ -211,6 +220,7 @@ export default function ProductionMessageCenter({
     startTransition(() => {
       void (async () => {
         const bodyToSend = newMessageBody
+        const requestEpoch = viewEpochRef.current
         try {
           setError(null)
           setStatusMessage('Sending new message')
@@ -220,7 +230,9 @@ export default function ProductionMessageCenter({
             'Conversation'
           )
           if (!threadResult.success) {
-            setError(threadResult.message)
+            if (viewEpochRef.current === requestEpoch) {
+              setError(threadResult.message)
+            }
             return
           }
 
@@ -234,7 +246,9 @@ export default function ProductionMessageCenter({
             operationId
           )
           if (!messageResult.success) {
-            setError(messageResult.message)
+            if (viewEpochRef.current === requestEpoch) {
+              setError(messageResult.message)
+            }
             return
           }
 
@@ -255,12 +269,18 @@ export default function ProductionMessageCenter({
           })
 
           composeOperationIdRef.current = null
-          setNewMessageBody('')
-          setCounterpartId('')
-          setIsComposing(false)
-          setFilter('inbox')
-          await loadThread(threadResult.data.thread.id)
-          setStatusMessage('Message sent')
+          if (viewEpochRef.current === requestEpoch) {
+            setNewMessageBody('')
+            setCounterpartId('')
+            setIsComposing(false)
+            setFilter('inbox')
+            const nextEpoch = requestEpoch + 1
+            viewEpochRef.current = nextEpoch
+            await loadThread(threadResult.data.thread.id, nextEpoch)
+            if (viewEpochRef.current === nextEpoch) {
+              setStatusMessage('Message sent')
+            }
+          }
         } finally {
           composeLockedRef.current = false
         }
@@ -284,6 +304,7 @@ export default function ProductionMessageCenter({
     startTransition(() => {
       void (async () => {
         const bodyToSend = replyBody
+        const requestEpoch = viewEpochRef.current
         try {
           setError(null)
           setStatusMessage('Sending message')
@@ -298,18 +319,22 @@ export default function ProductionMessageCenter({
           )
 
           if (!result.success) {
-            setError(result.message)
+            if (viewEpochRef.current === requestEpoch) {
+              setError(result.message)
+            }
             return
           }
 
-          setMessages((current) => {
+          if (viewEpochRef.current === requestEpoch) {
+            setMessages((current) => {
             if (current.some((message) => message.id === result.data.id)) {
               return current
             }
-            return [...current, result.data]
-          })
-          replyOperationIdRef.current = null
-          setReplyBody('')
+              return [...current, result.data]
+            })
+            replyOperationIdRef.current = null
+            setReplyBody('')
+          }
           setThreads((current) =>
             current.map((thread) =>
               thread.id === selectedThread.id
@@ -321,7 +346,9 @@ export default function ProductionMessageCenter({
                 : thread
             )
           )
-          setStatusMessage('Message sent')
+          if (viewEpochRef.current === requestEpoch) {
+            setStatusMessage('Message sent')
+          }
         } finally {
           sendLockedRef.current = false
         }
@@ -339,22 +366,35 @@ export default function ProductionMessageCenter({
       return
     }
 
+    const requestEpoch = viewEpochRef.current
     startTransition(() => {
       void (async () => {
         setError(null)
         setStatusMessage('Archiving conversation')
         const result = await archiveCommunicationThread(selectedThread.id)
         if (!result.success) {
-          setError(result.message)
+          if (viewEpochRef.current === requestEpoch) {
+            setError(result.message)
+          }
           return
         }
 
-        replaceThread({
-          ...result.data.thread,
-          unreadCount: selectedThread.unreadCount,
-        })
-        setFilter('archived')
-        setStatusMessage('Conversation archived')
+        setThreads((current) =>
+          current.map((thread) =>
+            thread.id === result.data.thread.id
+              ? { ...result.data.thread, unreadCount: thread.unreadCount }
+              : thread
+          )
+        )
+        if (viewEpochRef.current === requestEpoch) {
+          setSelectedThread((current) =>
+            current?.id === result.data.thread.id
+              ? { ...result.data.thread, unreadCount: current.unreadCount }
+              : current
+          )
+          setFilter('archived')
+          setStatusMessage('Conversation archived')
+        }
       })()
     })
   }
@@ -404,7 +444,9 @@ export default function ProductionMessageCenter({
               <button
                 type="button"
                 onClick={() => {
+                  viewEpochRef.current += 1
                   setError(null)
+                  setStatusMessage('')
                   setSelectedThread(null)
                   setIsComposing(true)
                 }}
