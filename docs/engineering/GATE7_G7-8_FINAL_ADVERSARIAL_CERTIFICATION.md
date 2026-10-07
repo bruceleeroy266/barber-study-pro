@@ -4,7 +4,7 @@
 **Gate:** Gate 7 — Communications Reliability  
 **Slice:** G7-8 — Final Adversarial Certification  
 **Baseline:** production `main` at `a6df1edff8f5f2e3736767e88df35449811430f7`  
-**Status:** IN PROGRESS — SECURITY BLOCKER IDENTIFIED
+**Status:** IN PROGRESS — G7-8-S1 REPAIR IMPLEMENTED, CERTIFICATION PENDING
 
 ## Product Boundary
 > **Product-boundary check:** PASS — this Gate complies with `docs/engineering/ASCYN_PRODUCT_BOUNDARY_CONTRACT.md` and is classified as **COEXIST**. No DO NOT BUILD capability is introduced.
@@ -118,22 +118,25 @@ The function does **not** by itself create a message/thread authorization bypass
 
 However, a signed-in user can directly call the RPC as a boolean authorization/relationship oracle for two other user IDs if those IDs are known. That is unnecessary cross-user information exposure and fails the final Gate 7 privacy/adversarial standard.
 
-### Required repair
-Preserve the helper's canonical pair logic and SECURITY DEFINER need, but require the authenticated caller to be one of the requested pair before any privileged profile/assignment evaluation succeeds.
+### Repair implemented
+A new migration adds an authenticated-caller membership guard before privileged pair evaluation.
 
-Equivalent invariant:
+Required invariant now implemented:
 
 > `auth.uid() = p_actor_id OR auth.uid() = p_recipient_id`
 
-The repair must preserve:
+The repair preserves:
 - thread INSERT policy use when the caller may occupy either participant column;
 - message INSERT policy use;
 - G7-5 race-guard use;
 - current same-school and assignment rules;
 - `anon` / `PUBLIC` execute denial.
 
+Migration:
+- `supabase/migrations/20261007200500_g7_8_s1_pair_authorization_caller_guard.sql`
+
 ### Certification state
-**BLOCKED until G7-8-S1 is repaired and verified in a disposable Supabase environment and then live production.**
+**BLOCKED until disposable-Supabase certification and live production application/verification complete.**
 
 ## 6. Existing automated evidence
 
