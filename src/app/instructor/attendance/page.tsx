@@ -46,7 +46,7 @@ export default async function AttendanceManagementPage() {
     id: profile.id,
     email: profile.email || '',
     full_name: profile.full_name || '',
-    role: profile.role,
+    role: profile.role as Profile['role'],
     school_id: profile.school_id || null,
     barber_shop_name: null,
     mentor_name: null,
@@ -60,7 +60,7 @@ export default async function AttendanceManagementPage() {
     updated_at: '',
   }
 
-  const schoolId = profile.school_id || null
+  const schoolId: string = profile.school_id
   const schoolName = schoolRow?.name || 'Your School'
   const schoolTimeZone = schoolRow?.timezone || 'UTC'
 
