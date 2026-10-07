@@ -25,6 +25,7 @@ import {
 } from '@/lib/school-owner/school-analytics'
 import { buildStudentCompliance, generateComplianceReport, thresholdsWithRequiredHours, ComplianceRuleThresholds, DEFAULT_COMPLIANCE_THRESHOLDS } from '@/lib/compliance'
 import { resolveProgramRequirementsForStudents } from '@/lib/programs/requirements'
+import { loadEnrollmentHourContractsForStudents } from '@/lib/hours/adaptive-student-hours-data'
 import SchoolOverviewMetrics from './SchoolOverviewMetrics'
 import ComplianceReportingCenter from '@/components/compliance/ComplianceReportingCenter'
 import SchoolHealthScore from './SchoolHealthScore'
@@ -141,15 +142,34 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
 
   // Resolve required training hours independently for every student. This keeps
   // mixed-program schools accurate and prevents a class-wide hours requirement.
-  const programRequirementsByStudent = await resolveProgramRequirementsForStudents(
-    supabase,
-    schoolId,
-    students.map((student) => student.id),
-  )
+  const [programRequirementsByStudent, hourContractsByStudent] = await Promise.all([
+    resolveProgramRequirementsForStudents(
+      supabase,
+      schoolId,
+      students.map((student) => student.id),
+    ),
+    loadEnrollmentHourContractsForStudents(
+      supabase,
+      schoolId,
+      students.map((student) => student.id),
+    ),
+  ])
   const requiredHoursByStudentId = Object.fromEntries(
     students.map((student) => [
       student.id,
       programRequirementsByStudent.get(student.id)?.requiredHours ?? DEFAULT_COMPLIANCE_THRESHOLDS.requiredHours,
+    ]),
+  )
+  const priorCreditMinutesByStudentId = Object.fromEntries(
+    students.map((student) => [
+      student.id,
+      hourContractsByStudent.get(student.id)?.priorCreditMinutes ?? 0,
+    ]),
+  )
+  const requirementOverrideMinutesByStudentId = Object.fromEntries(
+    students.map((student) => [
+      student.id,
+      hourContractsByStudent.get(student.id)?.requirementOverrideMinutes ?? null,
     ]),
   )
   const requiredAssessmentsByStudentId = Object.fromEntries(
@@ -239,6 +259,8 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
     assessments,
     notifications,
     requiredHoursByStudentId,
+    priorCreditMinutesByStudentId,
+    requirementOverrideMinutesByStudentId,
     requiredAssessmentsByStudentId,
     instructorAssignments,
   }
@@ -254,6 +276,8 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
     grades: grades.filter((record) => metricStudentIds.has(record.studentId)),
     gradeCategories,
     assessments: assessments.filter((record) => metricStudentIds.has(record.studentId)),
+    priorCreditMinutesByStudentId,
+    requirementOverrideMinutesByStudentId,
   }
 
   const metrics = buildSchoolOverviewMetrics(inputs)
@@ -283,6 +307,8 @@ export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps
       gradeCategories,
       assessments,
       thresholds: thresholdsByStudentId.get(student.id),
+      priorCreditMinutes: priorCreditMinutesByStudentId[student.id] ?? 0,
+      requirementOverrideMinutes: requirementOverrideMinutesByStudentId[student.id] ?? null,
     })
   )
 
