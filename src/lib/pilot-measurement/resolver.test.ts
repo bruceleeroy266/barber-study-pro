@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { Profile } from '@/types'
-import { buildPilotCheckpointWindow, resolvePilotMeasurement } from '@/lib/pilot-measurement/resolver'
+import { buildPilotCheckpointWindow, checkpointForPilotInstant, resolvePilotMeasurement } from '@/lib/pilot-measurement/resolver'
 
 const profile = (id: string, included = true): Profile => ({
   id,
@@ -37,6 +37,23 @@ describe('PO-1E.1 pilot measurement resolver', () => {
     const day30 = buildPilotCheckpointWindow('2026-10-10', 'day_30', undefined, 'America/Chicago')
     expect(day30.targetDate).toBe('2026-11-09')
     expect(day30.cutoffAt).toBe('2026-11-10T05:59:59.999Z')
+  })
+
+  it('does not advance checkpoint phase before the local calendar date', () => {
+    expect(
+      checkpointForPilotInstant(
+        '2026-10-10',
+        new Date('2026-11-09T05:59:59.999Z'),
+        'America/Chicago',
+      ),
+    ).toBe('baseline')
+    expect(
+      checkpointForPilotInstant(
+        '2026-10-10',
+        new Date('2026-11-09T06:00:00.000Z'),
+        'America/Chicago',
+      ),
+    ).toBe('day_30')
   })
 
   it('keeps excluded learners visible but out of aggregate metrics', () => {
