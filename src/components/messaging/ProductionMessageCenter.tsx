@@ -229,7 +229,9 @@ export default function ProductionMessageCenter({
             'Conversation'
           )
           if (!threadResult.success) {
-            setError(threadResult.message)
+            if (viewEpochRef.current === requestEpoch) {
+              setError(threadResult.message)
+            }
             return
           }
 
@@ -243,7 +245,9 @@ export default function ProductionMessageCenter({
             operationId
           )
           if (!messageResult.success) {
-            setError(messageResult.message)
+            if (viewEpochRef.current === requestEpoch) {
+              setError(messageResult.message)
+            }
             return
           }
 
@@ -299,6 +303,7 @@ export default function ProductionMessageCenter({
     startTransition(() => {
       void (async () => {
         const bodyToSend = replyBody
+        const requestEpoch = viewEpochRef.current
         try {
           setError(null)
           setStatusMessage('Sending message')
@@ -313,18 +318,22 @@ export default function ProductionMessageCenter({
           )
 
           if (!result.success) {
-            setError(result.message)
+            if (viewEpochRef.current === requestEpoch) {
+              setError(result.message)
+            }
             return
           }
 
-          setMessages((current) => {
+          if (viewEpochRef.current === requestEpoch) {
+            setMessages((current) => {
             if (current.some((message) => message.id === result.data.id)) {
               return current
             }
-            return [...current, result.data]
-          })
-          replyOperationIdRef.current = null
-          setReplyBody('')
+              return [...current, result.data]
+            })
+            replyOperationIdRef.current = null
+            setReplyBody('')
+          }
           setThreads((current) =>
             current.map((thread) =>
               thread.id === selectedThread.id
@@ -336,7 +345,9 @@ export default function ProductionMessageCenter({
                 : thread
             )
           )
-          setStatusMessage('Message sent')
+          if (viewEpochRef.current === requestEpoch) {
+            setStatusMessage('Message sent')
+          }
         } finally {
           sendLockedRef.current = false
         }
@@ -354,22 +365,35 @@ export default function ProductionMessageCenter({
       return
     }
 
+    const requestEpoch = viewEpochRef.current
     startTransition(() => {
       void (async () => {
         setError(null)
         setStatusMessage('Archiving conversation')
         const result = await archiveCommunicationThread(selectedThread.id)
         if (!result.success) {
-          setError(result.message)
+          if (viewEpochRef.current === requestEpoch) {
+            setError(result.message)
+          }
           return
         }
 
-        replaceThread({
-          ...result.data.thread,
-          unreadCount: selectedThread.unreadCount,
-        })
-        setFilter('archived')
-        setStatusMessage('Conversation archived')
+        setThreads((current) =>
+          current.map((thread) =>
+            thread.id === result.data.thread.id
+              ? { ...result.data.thread, unreadCount: thread.unreadCount }
+              : thread
+          )
+        )
+        if (viewEpochRef.current === requestEpoch) {
+          setSelectedThread((current) =>
+            current?.id === result.data.thread.id
+              ? { ...result.data.thread, unreadCount: current.unreadCount }
+              : current
+          )
+          setFilter('archived')
+          setStatusMessage('Conversation archived')
+        }
       })()
     })
   }
