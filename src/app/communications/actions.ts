@@ -16,6 +16,7 @@ interface CommunicationMessageRow {
   school_id: string
   sender_id: string
   body: string
+  client_operation_id?: string | null
   sent_at: string
   created_at: string
 }
@@ -255,6 +256,32 @@ export async function openCommunicationThread(
     .single()
 
   if (createError || !createdThread) {
+    if (createError?.code === '23505') {
+      const { data: racedThreads, error: racedError } = await supabase
+        .from('communication_threads')
+        .select(
+          'id, school_id, student_id, instructor_id, participant_one_id, participant_two_id, subject, status, last_message_at, created_at, updated_at'
+        )
+        .eq('school_id', actor.schoolId)
+        .eq('status', 'active')
+        .or(
+          `and(participant_one_id.eq.${actor.id},participant_two_id.eq.${counterpartId}),and(participant_one_id.eq.${counterpartId},participant_two_id.eq.${actor.id})`
+        )
+        .order('created_at', { ascending: false })
+        .limit(1)
+
+      const racedThread = racedThreads?.[0]
+      if (!racedError && racedThread) {
+        return {
+          success: true,
+          data: {
+            thread: mapThread(racedThread),
+            created: false,
+          },
+        }
+      }
+    }
+
     logMessagingFailure('open_thread_create', createError)
     return {
       success: false,
@@ -470,11 +497,15 @@ export async function archiveCommunicationThread(
 
 export async function sendCommunicationMessage(
   threadId: string,
-  body: string
+  body: string,
+  operationId: string
 ): Promise<MessagingRuntimeResult<ProductionCommunicationMessage>> {
   const trimmedBody = body.trim()
   if (!threadId) {
     return { success: false, message: 'A thread is required.' }
+  }
+  if (!operationId || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(operationId)) {
+    return { success: false, message: 'A valid message operation is required.' }
   }
   if (trimmedBody.length < 1 || trimmedBody.length > 4000) {
     return { success: false, message: 'Messages must be between 1 and 4,000 characters.' }
@@ -507,25 +538,53 @@ export async function sendCommunicationMessage(
       school_id: thread.school_id,
       sender_id: actor.id,
       body: trimmedBody,
+      client_operation_id: operationId,
     })
-    .select('id, thread_id, school_id, sender_id, body, sent_at, created_at')
+    .select('id, thread_id, school_id, sender_id, body, client_operation_id, sent_at, created_at')
     .single()
 
+  let persistedMessage = message
+
   if (error || !message) {
-    logMessagingFailure('send_message', error)
+    if (error?.code === '23505') {
+      const { data: existing, error: existingError } = await supabase
+        .from('communication_messages')
+        .select('id, thread_id, school_id, sender_id, body, client_operation_id, sent_at, created_at')
+        .eq('sender_id', actor.id)
+        .eq('client_operation_id', operationId)
+        .maybeSingle()
+
+      if (
+        !existingError &&
+        existing &&
+        existing.thread_id === thread.id &&
+        existing.body === trimmedBody
+      ) {
+        persistedMessage = existing
+      } else {
+        logMessagingFailure('send_message_idempotency_conflict', existingError || error)
+        return { success: false, message: 'Unable to safely retry this message.' }
+      }
+    } else {
+      logMessagingFailure('send_message', error)
+      return { success: false, message: 'Unable to send this message right now.' }
+    }
+  }
+
+  if (!persistedMessage) {
     return { success: false, message: 'Unable to send this message right now.' }
   }
 
   return {
     success: true,
     data: {
-      id: message.id,
-      threadId: message.thread_id,
-      schoolId: message.school_id,
-      senderId: message.sender_id,
-      body: message.body,
-      sentAt: message.sent_at,
-      createdAt: message.created_at,
+      id: persistedMessage.id,
+      threadId: persistedMessage.thread_id,
+      schoolId: persistedMessage.school_id,
+      senderId: persistedMessage.sender_id,
+      body: persistedMessage.body,
+      sentAt: persistedMessage.sent_at,
+      createdAt: persistedMessage.created_at,
       readAt: null,
     },
   }

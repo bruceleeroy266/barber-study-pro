@@ -34,13 +34,18 @@ describe('COM-2D new message UX', () => {
       "const threadResult = await openCommunicationThread( counterpartId, 'Conversation' )"
     )
     expect(normalized).toContain(
-      'const messageResult = await sendCommunicationMessage( threadResult.data.thread.id, bodyToSend )'
+      'const messageResult = await sendCommunicationMessage( threadResult.data.thread.id, bodyToSend, operationId )'
     )
   })
 
   it('does not require a subject before sending the first message', () => {
     expect(source).not.toContain('Conversation subject')
     expect(source).not.toContain('Open conversation')
+  })
+
+  it('keeps a stable operation id around the first-send retry path', () => {
+    expect(source).toContain('composeOperationIdRef.current ?? crypto.randomUUID()')
+    expect(source).toContain('composeOperationIdRef.current = operationId')
   })
 
   it('locks duplicate first-send interaction while pending', () => {

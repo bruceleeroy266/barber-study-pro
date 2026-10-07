@@ -82,6 +82,8 @@ export default function ProductionMessageCenter({
   const [isPending, startTransition] = useTransition()
   const sendLockedRef = useRef(false)
   const composeLockedRef = useRef(false)
+  const replyOperationIdRef = useRef<string | null>(null)
+  const composeOperationIdRef = useRef<string | null>(null)
 
   const peopleById = useMemo(
     () => new Map(people.map((person) => [person.id, person])),
@@ -132,6 +134,8 @@ export default function ProductionMessageCenter({
     setCounterpartId('')
     setNewMessageBody('')
     setReplyBody('')
+    replyOperationIdRef.current = null
+    composeOperationIdRef.current = null
   }
 
   const replaceThread = (nextThread: ProductionCommunicationThread) => {
@@ -185,6 +189,7 @@ export default function ProductionMessageCenter({
   }
 
   const handleSelect = (threadId: string) => {
+    replyOperationIdRef.current = null
     startTransition(() => {
       void loadThread(threadId)
     })
@@ -218,9 +223,14 @@ export default function ProductionMessageCenter({
             return
           }
 
+          const operationId =
+            composeOperationIdRef.current ?? crypto.randomUUID()
+          composeOperationIdRef.current = operationId
+
           const messageResult = await sendCommunicationMessage(
             threadResult.data.thread.id,
-            bodyToSend
+            bodyToSend,
+            operationId
           )
           if (!messageResult.success) {
             setError(messageResult.message)
@@ -243,6 +253,7 @@ export default function ProductionMessageCenter({
               : [nextThread, ...current]
           })
 
+          composeOperationIdRef.current = null
           setNewMessageBody('')
           setCounterpartId('')
           setIsComposing(false)
@@ -275,9 +286,14 @@ export default function ProductionMessageCenter({
         try {
           setError(null)
           setStatusMessage('Sending message')
+          const operationId =
+            replyOperationIdRef.current ?? crypto.randomUUID()
+          replyOperationIdRef.current = operationId
+
           const result = await sendCommunicationMessage(
             selectedThread.id,
-            bodyToSend
+            bodyToSend,
+            operationId
           )
 
           if (!result.success) {
@@ -291,6 +307,7 @@ export default function ProductionMessageCenter({
             }
             return [...current, result.data]
           })
+          replyOperationIdRef.current = null
           setReplyBody('')
           setThreads((current) =>
             current.map((thread) =>
@@ -554,7 +571,10 @@ export default function ProductionMessageCenter({
                   <select
                     id="message-counterpart"
                     value={counterpartId}
-                    onChange={(event) => setCounterpartId(event.target.value)}
+                    onChange={(event) => {
+                      composeOperationIdRef.current = null
+                      setCounterpartId(event.target.value)
+                    }}
                     className="w-full min-h-12 bg-black border border-[var(--color-border-secondary)] rounded-lg px-3 py-2 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)]"
                   >
                     <option value="">Choose a person</option>
@@ -583,7 +603,10 @@ export default function ProductionMessageCenter({
                   <textarea
                     id="new-message-body"
                     value={newMessageBody}
-                    onChange={(event) => setNewMessageBody(event.target.value)}
+                    onChange={(event) => {
+                      composeOperationIdRef.current = null
+                      setNewMessageBody(event.target.value)
+                    }}
                     maxLength={4000}
                     rows={8}
                     placeholder="Type your message…"
@@ -716,7 +739,10 @@ export default function ProductionMessageCenter({
                     <textarea
                       id="production-message-reply"
                       value={replyBody}
-                      onChange={(event) => setReplyBody(event.target.value)}
+                      onChange={(event) => {
+                        replyOperationIdRef.current = null
+                        setReplyBody(event.target.value)
+                      }}
                       disabled={selectedThread.status !== 'active' || isPending}
                       maxLength={4000}
                       rows={3}
