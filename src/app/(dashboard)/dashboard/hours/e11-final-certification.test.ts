@@ -31,10 +31,10 @@ describe('E11 final hours and attendance certification', () => {
 
   it('routes official totals through the canonical effective-hours contract', () => {
     expect(studentPage).toContain(".from('effective_hour_logs')")
-    expect(studentPage).toContain('calculateHoursProgressSummary(reportingHours, requirements.requiredHours)')
+    expect(studentPage).toContain('calculateAdaptiveStudentHours(reportingHours, {')
     expect(staffManager).toContain(".from('effective_hour_logs')")
-    expect(staffManager).toContain('calculateHoursProgressSummary(studentLogs, requiredHours)')
-    expect(pdfExport).toContain('calculateHoursProgressSummary(studentLogs, student.requiredHours)')
+    expect(staffManager).toContain('calculateAdaptiveStudentHours(studentLogs, {')
+    expect(pdfExport).toContain('calculateAdaptiveStudentHours(studentLogs, {')
     expect(pdfExport).toContain('getOfficialMinutes(log)')
   })
 
@@ -63,7 +63,7 @@ describe('E11 final hours and attendance certification', () => {
 
   it('exports only approved detail rows while reporting pending separately in summaries', () => {
     expect(pdfExport).toContain("const approved = logs.filter((log) => log.status === 'approved')")
-    expect(pdfExport).toContain('calculateHoursProgressSummary(studentLogs, student.requiredHours)')
+    expect(pdfExport).toContain('calculateAdaptiveStudentHours(studentLogs, {')
   })
 
   it('calculates period totals from approved rows only', () => {

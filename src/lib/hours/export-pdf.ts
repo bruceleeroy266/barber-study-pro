@@ -3,7 +3,8 @@
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import type { HoursReportLog, HoursReportStudent } from './reporting'
-import { calculateApprovedPeriodTotals, calculateHoursProgressSummary, formatHourMinutes, getOfficialMinutes } from './reporting'
+import { calculateApprovedPeriodTotals, formatHourMinutes, getOfficialMinutes } from './reporting'
+import { calculateAdaptiveStudentHours } from './adaptive-student-hours'
 
 export interface HoursPdfOptions {
   schoolName: string
@@ -49,11 +50,15 @@ export function exportHoursStateBoardPdf(options: HoursPdfOptions): void {
 
   const summaryBody = students.map((student) => {
     const studentLogs = logs.filter((log) => log.user_id === student.id)
-    const {
-      approvedMinutes,
-      pendingMinutes,
-      remainingMinutes,
-    } = calculateHoursProgressSummary(studentLogs, student.requiredHours)
+    const adaptive = calculateAdaptiveStudentHours(studentLogs, {
+      programRequiredHours: student.requiredHours,
+      priorCreditMinutes: student.priorCreditMinutes ?? 0,
+      requirementOverrideMinutes: student.requirementOverrideMinutes ?? null,
+      contractVersion: student.contractVersion ?? 0,
+    })
+    const pendingMinutes = studentLogs
+      .filter((log) => log.status === 'pending')
+      .reduce((sum, log) => sum + log.minutes, 0)
     const periods = calculateApprovedPeriodTotals(studentLogs, generated, timeZone)
 
     return [
@@ -63,9 +68,11 @@ export function exportHoursStateBoardPdf(options: HoursPdfOptions): void {
       formatHourMinutes(periods.weekMinutes),
       formatHourMinutes(periods.monthMinutes),
       formatHourMinutes(periods.yearMinutes),
-      formatHourMinutes(approvedMinutes),
-      `${student.requiredHours}h`,
-      formatHourMinutes(remainingMinutes),
+      formatHourMinutes(adaptive.earnedApprovedMinutes),
+      formatHourMinutes(adaptive.priorCreditMinutes),
+      formatHourMinutes(adaptive.creditedAndEarnedMinutes),
+      formatHourMinutes(adaptive.effectiveRequiredMinutes),
+      formatHourMinutes(adaptive.remainingMinutes),
       formatHourMinutes(pendingMinutes),
     ]
   })
@@ -79,7 +86,9 @@ export function exportHoursStateBoardPdf(options: HoursPdfOptions): void {
       'Week',
       'Month',
       'Year',
-      'Approved Total',
+      'Earned Here',
+      'Prior Credit',
+      'Counted Total',
       'Required',
       'Remaining',
       'Pending',
@@ -150,7 +159,7 @@ export function exportHoursStateBoardPdf(options: HoursPdfOptions): void {
   doc.setFontSize(8)
   doc.setTextColor(100, 100, 100)
   doc.text(
-    'Only approved hours are included in official accumulated totals. Pending and rejected entries are shown only as an audit trail.',
+    'Earned-here totals include approved hours only. Accepted prior credit is reported separately and combines with approved hours only for requirement progress. Pending and rejected entries remain audit-only.',
     14,
     doc.internal.pageSize.getHeight() - 8,
   )

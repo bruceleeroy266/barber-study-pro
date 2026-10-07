@@ -7,8 +7,10 @@ import {
 } from '@/lib/programs/requirements'
 import { calculateAttendanceSummary, getTodayAttendanceStatus } from '@/lib/attendance'
 import { mapAttendanceRecordsFromDb } from '@/lib/mappers/operational-data-mappers'
-import { calculateApprovedPeriodTotals, calculateHoursProgressSummary } from '@/lib/hours/reporting'
+import { calculateApprovedPeriodTotals } from '@/lib/hours/reporting'
 import type { HoursReportLog } from '@/lib/hours/reporting'
+import { calculateAdaptiveStudentHours } from '@/lib/hours/adaptive-student-hours'
+import { loadEnrollmentHourContractForStudent } from '@/lib/hours/adaptive-student-hours-data'
 import type { AttendanceRecord, AttendanceStatus, HourCategory } from '@/types'
 
 function formatMinutes(minutes: number): string {
@@ -133,6 +135,15 @@ export default async function StudentHoursPage() {
     ? await resolveStudentProgramRequirements(supabase, schoolId, user.id)
     : defaultProgramRequirements()
 
+  const hourContract = schoolId
+    ? await loadEnrollmentHourContractForStudent(supabase, schoolId, user.id)
+    : {
+        enrollmentId: null,
+        priorCreditMinutes: 0,
+        requirementOverrideMinutes: null,
+        contractVersion: 0,
+      }
+
   let hourQuery = supabase
     .from('effective_hour_logs')
     .select('id, user_id, date, category, minutes, effective_minutes, integrity_status, status, source_type, resubmission_of_hour_log_id, rejection_reason, reviewed_at, created_at')
@@ -254,13 +265,19 @@ export default async function StudentHoursPage() {
     created_at: row.created_at,
   }))
 
-  const {
-    approvedMinutes,
-    pendingMinutes,
-    requiredMinutes,
-    remainingMinutes,
-    completionPercentage,
-  } = calculateHoursProgressSummary(reportingHours, requirements.requiredHours)
+  const adaptiveHours = calculateAdaptiveStudentHours(reportingHours, {
+    programRequiredHours: requirements.requiredHours,
+    priorCreditMinutes: hourContract.priorCreditMinutes,
+    requirementOverrideMinutes: hourContract.requirementOverrideMinutes,
+    contractVersion: hourContract.contractVersion,
+  })
+  const approvedMinutes = adaptiveHours.earnedApprovedMinutes
+  const pendingMinutes = reportingHours
+    .filter((log) => log.status === 'pending')
+    .reduce((sum, log) => sum + log.minutes, 0)
+  const requiredMinutes = adaptiveHours.effectiveRequiredMinutes
+  const remainingMinutes = adaptiveHours.remainingMinutes
+  const completionPercentage = adaptiveHours.completionPercentage
 
   const approvedPeriods = calculateApprovedPeriodTotals(
     reportingHours,
@@ -293,7 +310,7 @@ export default async function StudentHoursPage() {
         <div><span className="font-semibold text-warm-bronze">Rejected</span> · does not count toward official hours</div>
       </div>
 
-      <section aria-labelledby="hours-summary-heading" className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5">
+      <section aria-labelledby="hours-summary-heading" className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-6">
         <h2 id="hours-summary-heading" className="sr-only">Hours summary</h2>
         <div className="rounded-xl border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 p-4 sm:p-5">
           <div className="text-sm text-silver">Approved Hours</div>
@@ -301,6 +318,12 @@ export default async function StudentHoursPage() {
             {formatMinutes(approvedMinutes)}
           </div>
           <div className="mt-1 text-xs text-silver">Counts toward your official total</div>
+        </div>
+
+        <div className="rounded-xl border border-graphite bg-charcoal p-4 sm:p-5">
+          <div className="text-sm text-silver">Prior / Transfer Hours</div>
+          <div className="mt-2 text-2xl font-bold text-white">{formatMinutes(adaptiveHours.priorCreditMinutes)}</div>
+          <div className="mt-1 text-xs text-silver">Accepted by your school from prior training</div>
         </div>
 
         <div className="rounded-xl border border-graphite bg-charcoal p-4 sm:p-5">
@@ -312,14 +335,16 @@ export default async function StudentHoursPage() {
         <div className="rounded-xl border border-graphite bg-charcoal p-4 sm:p-5">
           <div className="text-sm text-silver">Remaining Hours</div>
           <div className="mt-2 text-2xl font-bold text-white">{formatMinutes(remainingMinutes)}</div>
-          <div className="mt-1 text-xs text-silver">Based on approved hours only</div>
+          <div className="mt-1 text-xs text-silver">Based on accepted prior credit plus approved hours earned here</div>
         </div>
 
         <div className="rounded-xl border border-graphite bg-charcoal p-4 sm:p-5">
           <div className="text-sm text-silver">Required Hours</div>
-          <div className="mt-2 text-2xl font-bold text-white">{requirements.requiredHours}h</div>
+          <div className="mt-2 text-2xl font-bold text-white">{formatMinutes(requiredMinutes)}</div>
           <div className="mt-1 text-xs text-silver">
-            {requirements.programName ?? 'Configured school requirement'}
+            {adaptiveHours.requirementSource === 'student_override'
+              ? 'Student-specific requirement'
+              : (requirements.programName ?? 'Configured school requirement')}
           </div>
         </div>
 
@@ -449,7 +474,10 @@ export default async function StudentHoursPage() {
         </div>
 
         <div className="mt-3 text-sm text-silver">
-          {formatMinutes(approvedMinutes)} approved of {requirements.requiredHours}h required
+          {formatMinutes(adaptiveHours.creditedAndEarnedMinutes)} counted toward {formatMinutes(requiredMinutes)} required
+          {adaptiveHours.priorCreditMinutes > 0
+            ? ` · includes ${formatMinutes(adaptiveHours.priorCreditMinutes)} prior / transfer credit`
+            : ''}
         </div>
       </section>
 

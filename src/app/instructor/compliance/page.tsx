@@ -15,6 +15,7 @@ import { isDemoFallbackEnabled } from '@/lib/demo-helpers'
 import BackButton from '@/components/ui/BackButton'
 import { buildStudentCompliance, buildComplianceAlerts, generateComplianceReport, thresholdsWithRequiredHours, ComplianceRuleThresholds, DEFAULT_COMPLIANCE_THRESHOLDS } from '@/lib/compliance'
 import { resolveProgramRequirementsForStudents } from '@/lib/programs/requirements'
+import { loadEnrollmentHourContractsForStudents } from '@/lib/hours/adaptive-student-hours-data'
 import ComplianceAlertsPanel from '@/components/compliance/ComplianceAlertsPanel'
 import ComplianceReportingCenter from '@/components/compliance/ComplianceReportingCenter'
 import { CheckCircle, AlertTriangle, Clock, Wrench, ClipboardCheck, Target } from 'lucide-react'
@@ -66,7 +67,10 @@ export default async function InstructorComplianceDashboard() {
   // compliance surfaces reflect the school's configured program, not a
   // hard-coded hours assumption. Falls back per student to the school program,
   // then to the app-wide default.
-  const programRequirements = await resolveProgramRequirementsForStudents(supabase, schoolId, studentIds)
+  const [programRequirements, hourContractsByStudent] = await Promise.all([
+    resolveProgramRequirementsForStudents(supabase, schoolId, studentIds),
+    loadEnrollmentHourContractsForStudents(supabase, schoolId, studentIds),
+  ])
   const thresholdsByStudentId = new Map<string, ComplianceRuleThresholds>(
     studentIds.map((id) => {
       const requirements = programRequirements.get(id)
@@ -148,6 +152,8 @@ export default async function InstructorComplianceDashboard() {
       gradeCategories,
       assessments,
       thresholds: thresholdsByStudentId.get(student.id),
+      priorCreditMinutes: hourContractsByStudent.get(student.id)?.priorCreditMinutes ?? 0,
+      requirementOverrideMinutes: hourContractsByStudent.get(student.id)?.requirementOverrideMinutes ?? null,
     })
   )
 
@@ -162,7 +168,16 @@ export default async function InstructorComplianceDashboard() {
       gradeCategories,
       assessments,
       thresholds: thresholdsByStudentId.get(student.id),
+      priorCreditMinutes: hourContractsByStudent.get(student.id)?.priorCreditMinutes ?? 0,
+      requirementOverrideMinutes: hourContractsByStudent.get(student.id)?.requirementOverrideMinutes ?? null,
     })
+  )
+
+  const priorCreditMinutesByStudentId = Object.fromEntries(
+    studentIds.map((id) => [id, hourContractsByStudent.get(id)?.priorCreditMinutes ?? 0]),
+  )
+  const requirementOverrideMinutesByStudentId = Object.fromEntries(
+    studentIds.map((id) => [id, hourContractsByStudent.get(id)?.requirementOverrideMinutes ?? null]),
   )
 
   const reportInputs = {
@@ -174,6 +189,8 @@ export default async function InstructorComplianceDashboard() {
     grades: grades.filter((record) => metricStudentIdSet.has(record.studentId)),
     gradeCategories,
     assessments: assessments.filter((record) => metricStudentIdSet.has(record.studentId)),
+    priorCreditMinutesByStudentId,
+    requirementOverrideMinutesByStudentId,
   }
 
   const complianceReports = {
@@ -184,14 +201,13 @@ export default async function InstructorComplianceDashboard() {
     school_compliance: generateComplianceReport('school_compliance', reportInputs, thresholdsByStudentId),
   }
 
-  const requiredHoursFor = (studentId: string) =>
-    thresholdsByStudentId.get(studentId)?.requiredHours ?? DEFAULT_COMPLIANCE_THRESHOLDS.requiredHours
-
   const metricStudentCompliances = studentCompliances.filter((compliance) =>
     metricStudentIdSet.has(compliance.studentId)
   )
   const atRiskStudents = metricStudentCompliances.filter((c) => c.complianceScore.score < 70)
-  const missingHours = metricStudentCompliances.filter((c) => c.completedHours < requiredHoursFor(c.studentId) * 0.5)
+  const missingHours = metricStudentCompliances.filter(
+    (c) => c.completedHours < c.graduationReadiness.requiredHours * 0.5,
+  )
   const missingPracticals = metricStudentCompliances.filter((c) =>
     c.graduationReadiness.requiredPracticals > 0 &&
     c.graduationReadiness.completedPracticals < c.graduationReadiness.requiredPracticals

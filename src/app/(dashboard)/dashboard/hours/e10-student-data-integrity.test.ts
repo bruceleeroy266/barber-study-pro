@@ -33,9 +33,9 @@ const delegatedApproverMigration = readFileSync(
 describe('E10 student data integrity audit', () => {
   it('keeps official student totals approved-only and pending isolated', () => {
     expect(studentPage).toContain(".from('effective_hour_logs')")
-    expect(studentPage).toContain('calculateHoursProgressSummary(reportingHours, requirements.requiredHours)')
+    expect(studentPage).toContain('calculateAdaptiveStudentHours(reportingHours, {')
     expect(studentPage).toContain('pendingMinutes')
-    expect(studentPage).toContain('Based on approved hours only')
+    expect(studentPage).toContain('Based on accepted prior credit plus approved hours earned here')
     expect(studentPage).toContain('Pending hours remain separate until administrator approval.')
   })
 

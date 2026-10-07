@@ -14,6 +14,7 @@ import {
 import { isDemoFallbackEnabled } from '@/lib/demo-helpers'
 import { buildStudentCompliance, buildComplianceAlerts, thresholdsWithRequiredHours } from '@/lib/compliance'
 import { resolveStudentProgramRequirements } from '@/lib/programs/requirements'
+import { loadEnrollmentHourContractForStudent } from '@/lib/hours/adaptive-student-hours-data'
 import ComplianceScoreWidget from '@/components/compliance/ComplianceScoreWidget'
 import BoardEligibilityWidget from '@/components/compliance/BoardEligibilityWidget'
 import GraduationReadinessWidget from '@/components/compliance/GraduationReadinessWidget'
@@ -113,11 +114,18 @@ export default async function StudentComplianceDashboard() {
       (currentProfile.role === 'student' || currentProfile.role === 'apprentice') &&
       profile?.school_id
   )
-  const thresholds = thresholdsWithRequiredHours(
-    isRealStudent
-      ? (await resolveStudentProgramRequirements(supabase, profile.school_id, student.id)).requiredHours
-      : undefined
-  )
+  const programRequirements = isRealStudent
+    ? await resolveStudentProgramRequirements(supabase, profile.school_id, student.id)
+    : null
+  const hourContract = isRealStudent
+    ? await loadEnrollmentHourContractForStudent(supabase, profile.school_id, student.id)
+    : {
+        enrollmentId: null,
+        priorCreditMinutes: 0,
+        requirementOverrideMinutes: null,
+        contractVersion: 0,
+      }
+  const thresholds = thresholdsWithRequiredHours(programRequirements?.requiredHours)
 
   const inputs = {
     student,
@@ -129,6 +137,8 @@ export default async function StudentComplianceDashboard() {
     gradeCategories,
     assessments,
     thresholds,
+    priorCreditMinutes: hourContract.priorCreditMinutes,
+    requirementOverrideMinutes: hourContract.requirementOverrideMinutes,
   }
 
   const compliance = buildStudentCompliance(inputs)

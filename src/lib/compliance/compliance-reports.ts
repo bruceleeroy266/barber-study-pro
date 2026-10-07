@@ -18,6 +18,8 @@ export interface ComplianceReportInputs {
   grades: StudentComplianceInputs['grades']
   gradeCategories: StudentComplianceInputs['gradeCategories']
   assessments: StudentComplianceInputs['assessments']
+  priorCreditMinutesByStudentId?: Readonly<Record<string, number>>
+  requirementOverrideMinutesByStudentId?: Readonly<Record<string, number | null>>
 }
 
 function buildStudentInputs(
@@ -35,6 +37,8 @@ function buildStudentInputs(
     gradeCategories: inputs.gradeCategories,
     assessments: inputs.assessments,
     thresholds: thresholdsByStudentId?.get(student.id),
+    priorCreditMinutes: inputs.priorCreditMinutesByStudentId?.[student.id] ?? 0,
+    requirementOverrideMinutes: inputs.requirementOverrideMinutesByStudentId?.[student.id] ?? null,
   }
 }
 
@@ -58,6 +62,8 @@ export function generateComplianceReport(
           'Tracking Score': r.complianceScore.score,
           Attendance: r.hasAttendanceEvidence ? `${r.attendanceSummary.attendancePercentage}%` : 'No Attendance Data',
           Hours: `${Math.round(r.completedHours)}/${r.graduationReadiness.requiredHours}`,
+          'Earned Here': Math.round(r.earnedHours),
+          'Prior Credit': Math.round(r.priorCreditHours),
           'Assessment Pass Rate': r.graduationReadiness.requiredAssessments <= 0
             ? 'Not Required'
             : r.hasAssessmentEvidence ? `${r.assessmentPassRate}%` : 'No Assessments',
@@ -79,6 +85,8 @@ export function generateComplianceReport(
           Student: r.fullName,
           'Readiness %': r.graduationReadiness.percentage,
           'Hours Complete': `${r.graduationReadiness.completedHours}/${r.graduationReadiness.requiredHours}`,
+          'Earned Here': Math.round(r.earnedHours),
+          'Prior Credit': Math.round(r.priorCreditHours),
           'Assessments Complete': `${r.graduationReadiness.completedAssessments}/${r.graduationReadiness.requiredAssessments}`,
           'Practicals Complete': `${r.graduationReadiness.completedPracticals}/${r.graduationReadiness.requiredPracticals}`,
           Ready: r.graduationReadiness.isReady ? 'Yes' : 'No',

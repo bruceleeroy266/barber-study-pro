@@ -144,11 +144,11 @@ describe('C7 final Segment C end-to-end certification', () => {
 
   it('calculates official accumulated totals from approved rows only in the staff view', () => {
     expect(staffHoursManager).toContain(".from('effective_hour_logs')")
-    expect(staffHoursManager).toContain('calculateHoursProgressSummary(studentLogs, requiredHours)')
+    expect(staffHoursManager).toContain('calculateAdaptiveStudentHours(studentLogs, {')
     expect(staffHoursManager).toContain(".filter((log) => log.status === 'pending')")
-    expect(staffHoursManager).toContain('approvedMinutes')
+    expect(staffHoursManager).toContain('earnedApprovedMinutes')
     expect(staffHoursManager).toContain('pendingMinutes')
-    expect(staffHoursManager).toContain('Accumulated')
+    expect(staffHoursManager).toContain('Earned Here')
     expect(staffHoursManager).toContain('Pending')
   })
 

@@ -6,7 +6,9 @@ import { resolveProgramRequirementsForStudents } from '@/lib/programs/requiremen
 import { adjustApprovedStudentHours, bulkApproveStudentHours, logStudentHours, reviewStudentHours } from '@/app/instructor/hours/actions'
 import HoursPdfExports from '@/components/hours/HoursPdfExports'
 import StudentHoursDropdown from '@/components/hours/StudentHoursDropdown'
-import { calculateApprovedPeriodTotals, calculateHoursProgressSummary, formatHourMinutes, getOfficialMinutes } from '@/lib/hours/reporting'
+import StudentHoursSetupForm from '@/components/hours/StudentHoursSetupForm'
+import { calculateApprovedPeriodTotals, formatHourMinutes, getOfficialMinutes } from '@/lib/hours/reporting'
+import { calculateAdaptiveStudentHours } from '@/lib/hours/adaptive-student-hours'
 import type { HourCategory, HourStatus } from '@/types'
 
 interface HoursRosterStudent {
@@ -98,6 +100,7 @@ interface Props {
   alreadyReviewedStatus?: string | null
   bulkApprovedCount?: number | null
   adjusted?: boolean
+  contractSaved?: boolean
   queueStudentFilter?: string
   queueDateFilter?: string
   queueSourceFilter?: string
@@ -115,6 +118,7 @@ export default async function StaffHoursManager({
   alreadyReviewedStatus = null,
   bulkApprovedCount = null,
   adjusted = false,
+  contractSaved = false,
   queueStudentFilter = '',
   queueDateFilter = '',
   queueSourceFilter = '',
@@ -175,8 +179,106 @@ export default async function StaffHoursManager({
     : { data: [] }
 
   const logs = (logsData ?? []) as StaffHourLogRow[]
+
+  const { data: studentRowsData } = studentIds.length
+    ? await supabase
+        .from('students')
+        .select('id, profile_id')
+        .eq('school_id', actor.school_id)
+        .in('profile_id', studentIds)
+        .eq('is_active', true)
+        .is('deleted_at', null)
+    : { data: [] }
+
+  const studentRowByProfile = new Map<string, string>(
+    ((studentRowsData ?? []) as Array<{ id: string; profile_id: string }>)
+      .map((row) => [row.profile_id, row.id]),
+  )
+  const studentRowIds = Array.from(studentRowByProfile.values())
+
+  const { data: enrollmentRowsData } = studentRowIds.length
+    ? await supabase
+        .from('enrollments')
+        .select('id, student_id, program_id, created_at')
+        .in('student_id', studentRowIds)
+        .eq('status', 'active')
+        .eq('is_active', true)
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false })
+    : { data: [] }
+
+  const activeEnrollmentByStudent = new Map<
+    string,
+    { id: string; student_id: string; program_id: string; created_at: string | null }
+  >()
+  for (const enrollment of (enrollmentRowsData ?? []) as Array<{
+    id: string
+    student_id: string
+    program_id: string
+    created_at: string | null
+  }>) {
+    if (!activeEnrollmentByStudent.has(enrollment.student_id)) {
+      activeEnrollmentByStudent.set(enrollment.student_id, enrollment)
+    }
+  }
+
+  const enrollmentIds = Array.from(activeEnrollmentByStudent.values()).map((row) => row.id)
+  const { data: contractsData } = enrollmentIds.length
+    ? await supabase
+        .from('enrollment_hour_contracts')
+        .select('enrollment_id, prior_credit_minutes, requirement_override_minutes, version, updated_by, updated_at')
+        .in('enrollment_id', enrollmentIds)
+    : { data: [] }
+
+  const contractByEnrollment = new Map<
+    string,
+    {
+      enrollment_id: string
+      prior_credit_minutes: number
+      requirement_override_minutes: number | null
+      version: number
+      updated_by: string
+      updated_at: string
+    }
+  >(
+    ((contractsData ?? []) as Array<{
+      enrollment_id: string
+      prior_credit_minutes: number
+      requirement_override_minutes: number | null
+      version: number
+      updated_by: string
+      updated_at: string
+    }>).map((row) => [row.enrollment_id, row]),
+  )
+
+  const { data: contractEventsData } = enrollmentIds.length
+    ? await supabase
+        .from('enrollment_hour_contract_events')
+        .select('id, enrollment_id, contract_version, previous_prior_credit_minutes, new_prior_credit_minutes, previous_requirement_override_minutes, new_requirement_override_minutes, change_type, reason, source_reference, changed_by, changed_at')
+        .in('enrollment_id', enrollmentIds)
+        .order('changed_at', { ascending: false })
+        .limit(100)
+    : { data: [] }
+
+  const contractEvents = (contractEventsData ?? []) as Array<{
+    id: string
+    enrollment_id: string
+    contract_version: number
+    previous_prior_credit_minutes: number
+    new_prior_credit_minutes: number
+    previous_requirement_override_minutes: number | null
+    new_requirement_override_minutes: number | null
+    change_type: string
+    reason: string
+    source_reference: string | null
+    changed_by: string
+    changed_at: string
+  }>
   const actorIds = Array.from(new Set(
-    logs.flatMap((log) => [log.submitted_by, log.reviewed_by]).filter(Boolean),
+    [
+      ...logs.flatMap((log) => [log.submitted_by, log.reviewed_by]),
+      ...contractEvents.map((event) => event.changed_by),
+    ].filter(Boolean),
   )) as string[]
   const { data: actorsData } = actorIds.length
     ? await supabase
@@ -202,20 +304,35 @@ export default async function StaffHoursManager({
     const studentLogs = logs.filter((log) => log.user_id === student.id)
     const requirements = requirementMap.get(student.id)
     const requiredHours = requirements?.requiredHours ?? 1200
-    const {
-      approvedMinutes,
-      pendingMinutes,
-      remainingMinutes,
-      completionPercentage: percentage,
-    } = calculateHoursProgressSummary(studentLogs, requiredHours)
+    const studentRowId = studentRowByProfile.get(student.id) ?? null
+    const enrollment = studentRowId ? activeEnrollmentByStudent.get(studentRowId) ?? null : null
+    const contract = enrollment ? contractByEnrollment.get(enrollment.id) ?? null : null
+    const adaptive = calculateAdaptiveStudentHours(studentLogs, {
+      programRequiredHours: requiredHours,
+      priorCreditMinutes: contract?.prior_credit_minutes ?? 0,
+      requirementOverrideMinutes: contract?.requirement_override_minutes ?? null,
+      contractVersion: contract?.version ?? 0,
+    })
+    const pendingMinutes = studentLogs
+      .filter((log) => log.status === 'pending')
+      .reduce((sum, log) => sum + log.minutes, 0)
 
     return {
       ...student,
-      approvedMinutes,
+      enrollmentId: enrollment?.id ?? null,
+      approvedMinutes: adaptive.earnedApprovedMinutes,
+      priorCreditMinutes: adaptive.priorCreditMinutes,
+      creditedAndEarnedMinutes: adaptive.creditedAndEarnedMinutes,
       pendingMinutes,
       requiredHours,
-      remainingMinutes,
-      percentage,
+      programRequiredMinutes: adaptive.programRequiredMinutes,
+      effectiveRequiredMinutes: adaptive.effectiveRequiredMinutes,
+      effectiveRequiredHours: adaptive.effectiveRequiredHours,
+      requirementOverrideMinutes: contract?.requirement_override_minutes ?? null,
+      requirementSource: adaptive.requirementSource,
+      contractVersion: adaptive.contractVersion,
+      remainingMinutes: adaptive.remainingMinutes,
+      percentage: adaptive.completionPercentage,
       periods: calculateApprovedPeriodTotals(studentLogs, new Date(), schoolTimeZone),
       recentLogs: studentLogs.slice(0, 5),
     }
@@ -225,6 +342,9 @@ export default async function StaffHoursManager({
     ? highlightedStudentId
     : rows[0]?.id ?? ''
   const selectedStudent = rows.find((row) => row.id === selectedId) ?? null
+  const selectedContractEvents = selectedStudent?.enrollmentId
+    ? contractEvents.filter((event) => event.enrollment_id === selectedStudent.enrollmentId).slice(0, 5)
+    : []
 
   const errorMessage =
     error === 'missing-fields' ? 'Choose a student and date.' :
@@ -246,6 +366,15 @@ export default async function StaffHoursManager({
     error === 'no-op-adjustment' ? 'The corrected hours must be different from the current official hours.' :
     error === 'invalid-adjustment' ? 'Only an approved hour entry from your school can be adjusted.' :
     error === 'adjustment-failed' ? 'The adjustment could not be saved. Review the entry and try again.' :
+    error === 'student-contract-student' ? 'That student is not available for hours setup at this school.' :
+    error === 'student-contract-enrollment' ? 'This student does not have an active program enrollment to configure.' :
+    error === 'student-contract-prior' ? 'Enter valid accepted prior / transfer hours.' :
+    error === 'student-contract-requirement' ? 'Enter a valid student-specific required-hour total.' :
+    error === 'student-contract-reason' ? 'Enter a clear reason between 10 and 1,000 characters.' :
+    error === 'student-contract-source' ? 'The source / document reference must be 500 characters or fewer.' :
+    error === 'student-contract-stale' ? 'This student hours setup changed since you opened it. Review the latest values and try again.' :
+    error === 'student-contract-noop' ? 'Change the prior hours or special requirement before saving.' :
+    error === 'student-contract-failed' ? 'The student hours setup could not be saved. Review the values and try again.' :
     null
 
   const schoolName = typeof school?.name === 'string' && school.name ? school.name : 'ASCYN PRO School'
@@ -280,6 +409,9 @@ export default async function StaffHoursManager({
     full_name: student.full_name,
     email: student.email,
     requiredHours: student.requiredHours,
+    priorCreditMinutes: student.priorCreditMinutes,
+    requirementOverrideMinutes: student.requirementOverrideMinutes,
+    contractVersion: student.contractVersion,
   }))
   const exportLogs = logs.map((log) => ({
     ...log,
@@ -329,6 +461,11 @@ export default async function StaffHoursManager({
         {adjusted && (
           <div className="rounded-xl border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 p-4 text-[var(--color-brand-gold)]" role="status">
             Hours adjusted. Official totals and reports now use the corrected value; the original approval remains in the audit history.
+          </div>
+        )}
+        {contractSaved && (
+          <div className="rounded-xl border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 p-4 text-[var(--color-brand-gold)]" role="status">
+            Student hours setup saved. Prior credit, special requirement, remaining hours, and completion have been recalculated.
           </div>
         )}
         {errorMessage && (
@@ -859,6 +996,136 @@ export default async function StaffHoursManager({
                     </div>
                   </div>
 
+                  <div className="mt-5 rounded-xl border border-[var(--color-brand-gold)]/25 bg-black p-4">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                      <div>
+                        <h4 className="font-semibold text-white">Student Hours Setup</h4>
+                        <p className="mt-1 text-sm text-silver">
+                          Program requirements stay school-wide. Prior credit and special requirements apply only to this student&apos;s active enrollment.
+                        </p>
+                      </div>
+                      <span className="shrink-0 rounded-full border border-graphite px-2.5 py-1 text-xs font-semibold text-silver">
+                        {selectedStudent.requirementSource === 'student_override'
+                          ? 'Student-specific requirement'
+                          : 'Program requirement'}
+                      </span>
+                    </div>
+
+                    {selectedStudent.enrollmentId ? (
+                      <>
+                        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-5">
+                          <div className="rounded-lg border border-graphite bg-charcoal p-3">
+                            <div className="text-xs text-silver">Program standard</div>
+                            <div className="mt-1 font-bold text-white">{selectedStudent.requiredHours}h</div>
+                          </div>
+                          <div className="rounded-lg border border-graphite bg-charcoal p-3">
+                            <div className="text-xs text-silver">Prior / transfer</div>
+                            <div className="mt-1 font-bold text-white">{formatHours(selectedStudent.priorCreditMinutes)}</div>
+                          </div>
+                          <div className="rounded-lg border border-graphite bg-charcoal p-3">
+                            <div className="text-xs text-silver">Earned here</div>
+                            <div className="mt-1 font-bold text-white">{formatHours(selectedStudent.approvedMinutes)}</div>
+                          </div>
+                          <div className="rounded-lg border border-graphite bg-charcoal p-3">
+                            <div className="text-xs text-silver">Effective requirement</div>
+                            <div className="mt-1 font-bold text-white">{formatHours(selectedStudent.effectiveRequiredMinutes)}</div>
+                          </div>
+                          <div className="rounded-lg border border-graphite bg-charcoal p-3">
+                            <div className="text-xs text-silver">Remaining</div>
+                            <div className="mt-1 font-bold text-warm-bronze">{formatHours(selectedStudent.remainingMinutes)}</div>
+                          </div>
+                        </div>
+
+                        <div className="mt-3 rounded-lg border border-graphite bg-charcoal p-3 text-sm text-light-gray">
+                          <span className="font-semibold text-white">How ASCYN PRO calculated this:</span>{' '}
+                          {formatHours(selectedStudent.effectiveRequiredMinutes)} required −{' '}
+                          {formatHours(selectedStudent.priorCreditMinutes)} accepted prior hours −{' '}
+                          {formatHours(selectedStudent.approvedMinutes)} earned here ={' '}
+                          <span className="font-semibold text-warm-bronze">
+                            {formatHours(selectedStudent.remainingMinutes)} remaining
+                          </span>.
+                        </div>
+
+                        {isSchoolAdministrator ? (
+                          <details className="mt-4 rounded-lg border border-graphite bg-charcoal p-4">
+                            <summary className="cursor-pointer font-semibold text-[var(--color-brand-gold)]">
+                              Edit Student Hours Setup
+                            </summary>
+                            <div className="mt-4">
+                              <StudentHoursSetupForm
+                                studentId={selectedStudent.id}
+                                returnTo={returnTo}
+                                programRequiredHours={selectedStudent.requiredHours}
+                                priorCreditMinutes={selectedStudent.priorCreditMinutes}
+                                requirementOverrideMinutes={selectedStudent.requirementOverrideMinutes}
+                                contractVersion={selectedStudent.contractVersion}
+                              />
+                            </div>
+                          </details>
+                        ) : (
+                          <div className="mt-4 rounded-lg border border-graphite bg-charcoal p-3 text-sm text-silver">
+                            Instructors can view this breakdown. A school administrator must make official changes to accepted prior hours or a student-specific requirement.
+                          </div>
+                        )}
+
+                        <div className="mt-4">
+                          <div className="text-sm font-semibold text-white">Setup audit history</div>
+                          {selectedContractEvents.length > 0 ? (
+                            <div className="mt-2 space-y-2">
+                              {selectedContractEvents.map((event) => (
+                                <div key={event.id} className="rounded-lg border border-graphite bg-charcoal p-3 text-sm">
+                                  <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                                    <div className="font-medium text-light-gray">
+                                      Version {event.contract_version} · {event.change_type.replaceAll('_', ' ')}
+                                    </div>
+                                    <div className="text-xs text-silver-gray">
+                                      {new Date(event.changed_at).toLocaleString('en-US', {
+                                        timeZone: schoolTimeZone,
+                                        year: 'numeric',
+                                        month: 'short',
+                                        day: 'numeric',
+                                        hour: 'numeric',
+                                        minute: '2-digit',
+                                      })}
+                                    </div>
+                                  </div>
+                                  <div className="mt-2 text-xs text-silver">
+                                    Prior credit: {formatHours(event.previous_prior_credit_minutes)} → {formatHours(event.new_prior_credit_minutes)}
+                                    {' · '}
+                                    Requirement: {event.previous_requirement_override_minutes === null
+                                      ? 'program standard'
+                                      : formatHours(event.previous_requirement_override_minutes)}
+                                    {' → '}
+                                    {event.new_requirement_override_minutes === null
+                                      ? 'program standard'
+                                      : formatHours(event.new_requirement_override_minutes)}
+                                  </div>
+                                  <div className="mt-1 text-xs text-silver">
+                                    Changed by {actorNameMap.get(event.changed_by) ?? 'Authorized administrator'}
+                                  </div>
+                                  <div className="mt-2 text-light-gray">{event.reason}</div>
+                                  {event.source_reference && (
+                                    <div className="mt-1 text-xs text-silver-gray">
+                                      Source: {event.source_reference}
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="mt-2 text-sm text-silver">
+                              No prior-credit or special-requirement changes have been recorded for this enrollment.
+                            </p>
+                          )}
+                        </div>
+                      </>
+                    ) : (
+                      <div className="mt-4 rounded-lg border border-warm-bronze/30 bg-warm-bronze/10 p-3 text-sm text-warm-bronze">
+                        This student needs an active program enrollment before prior hours or a special requirement can be configured.
+                      </div>
+                    )}
+                  </div>
+
                   {isSchoolAdministrator && (
                     <div className="mt-5 grid grid-cols-3 gap-3">
                       <div className="rounded-lg border border-graphite bg-black p-3">
@@ -876,14 +1143,22 @@ export default async function StaffHoursManager({
                     </div>
                   )}
 
-                  <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                  <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
                     <div className="rounded-lg bg-black p-3">
-                      <div className="text-xs text-silver">Accumulated</div>
+                      <div className="text-xs text-silver">Earned Here</div>
                       <div className="mt-1 text-xl font-bold text-white">{formatHours(selectedStudent.approvedMinutes)}</div>
                     </div>
                     <div className="rounded-lg bg-black p-3">
+                      <div className="text-xs text-silver">Prior Credit</div>
+                      <div className="mt-1 text-xl font-bold text-white">{formatHours(selectedStudent.priorCreditMinutes)}</div>
+                    </div>
+                    <div className="rounded-lg bg-black p-3">
+                      <div className="text-xs text-silver">Counted Total</div>
+                      <div className="mt-1 text-xl font-bold text-white">{formatHours(selectedStudent.creditedAndEarnedMinutes)}</div>
+                    </div>
+                    <div className="rounded-lg bg-black p-3">
                       <div className="text-xs text-silver">Required</div>
-                      <div className="mt-1 text-xl font-bold text-white">{selectedStudent.requiredHours}h</div>
+                      <div className="mt-1 text-xl font-bold text-white">{formatHours(selectedStudent.effectiveRequiredMinutes)}</div>
                     </div>
                     <div className="rounded-lg bg-black p-3">
                       <div className="text-xs text-silver">Remaining</div>

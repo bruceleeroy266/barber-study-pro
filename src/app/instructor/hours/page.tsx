@@ -8,6 +8,7 @@ interface PageProps {
     reviewed?: string
     alreadyReviewed?: string
     bulkApproved?: string
+    contractSaved?: string
     queueStudent?: string
     queueDate?: string
     queueSource?: string
@@ -30,6 +31,7 @@ export default async function InstructorHoursPage({ searchParams }: PageProps) {
       bulkApprovedCount={params.bulkApproved !== undefined && /^\d+$/.test(params.bulkApproved)
         ? Number(params.bulkApproved)
         : null}
+      contractSaved={params.contractSaved === '1'}
       queueStudentFilter={params.queueStudent ?? ''}
       queueDateFilter={params.queueDate ?? ''}
       queueSourceFilter={params.queueSource ?? ''}

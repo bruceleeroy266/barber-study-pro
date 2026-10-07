@@ -371,3 +371,158 @@ export async function adjustApprovedStudentHours(formData: FormData) {
     `/school/hours?adjusted=1&student=${encodeURIComponent(target.user_id)}`,
   )
 }
+
+
+const STUDENT_HOUR_CHANGE_TYPES = new Set([
+  'transfer_credit',
+  'returning_student',
+  'redo_requirement',
+  'correction',
+  'other',
+])
+
+export async function setStudentHourContract(formData: FormData) {
+  const studentProfileId = String(formData.get('studentId') || '').trim()
+  const returnToRaw = String(formData.get('returnTo') || '/school/hours')
+  const returnTo = ALLOWED_RETURN_PATHS.has(returnToRaw) ? returnToRaw : '/school/hours'
+  const startingFromZero = String(formData.get('startingFromZero') || 'yes') === 'yes'
+  const priorCreditHours = Number(formData.get('priorCreditHours') || 0)
+  const useSpecialRequirement = String(formData.get('useSpecialRequirement') || '') === 'yes'
+  const specialRequirementHours = Number(formData.get('specialRequirementHours') || 0)
+  const changeTypeRaw = String(formData.get('changeType') || 'other').trim()
+  const changeType = STUDENT_HOUR_CHANGE_TYPES.has(changeTypeRaw) ? changeTypeRaw : 'other'
+  const reason = String(formData.get('reason') || '').trim()
+  const sourceReference = String(formData.get('sourceReference') || '').trim()
+  const expectedVersion = Number(formData.get('expectedVersion') || 0)
+
+  if (!studentProfileId) {
+    redirect(`${returnTo}?error=student-contract-student&student=${encodeURIComponent(studentProfileId)}`)
+  }
+
+  if (
+    !Number.isFinite(priorCreditHours) ||
+    priorCreditHours < 0 ||
+    priorCreditHours > 16666.66
+  ) {
+    redirect(`${returnTo}?error=student-contract-prior&student=${encodeURIComponent(studentProfileId)}`)
+  }
+
+  if (
+    useSpecialRequirement &&
+    (!Number.isFinite(specialRequirementHours) ||
+      specialRequirementHours <= 0 ||
+      specialRequirementHours > 16666.66)
+  ) {
+    redirect(`${returnTo}?error=student-contract-requirement&student=${encodeURIComponent(studentProfileId)}`)
+  }
+
+  if (reason.length < 10 || reason.length > 1000) {
+    redirect(`${returnTo}?error=student-contract-reason&student=${encodeURIComponent(studentProfileId)}`)
+  }
+
+  if (sourceReference.length > 500) {
+    redirect(`${returnTo}?error=student-contract-source&student=${encodeURIComponent(studentProfileId)}`)
+  }
+
+  if (!Number.isInteger(expectedVersion) || expectedVersion < 0) {
+    redirect(`${returnTo}?error=student-contract-stale&student=${encodeURIComponent(studentProfileId)}`)
+  }
+
+  const priorCreditMinutes = startingFromZero ? 0 : Math.round(priorCreditHours * 60)
+  const requirementOverrideMinutes = useSpecialRequirement
+    ? Math.round(specialRequirementHours * 60)
+    : null
+
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
+  const { data: actor } = await supabase
+    .from('profiles')
+    .select('id, role, school_id')
+    .eq('id', user.id)
+    .single()
+
+  if (!actor?.school_id || !isSchoolAdmin(actor.role)) {
+    redirect('/dashboard')
+  }
+
+  const { data: studentRow } = await supabase
+    .from('students')
+    .select('id, profile_id, school_id')
+    .eq('profile_id', studentProfileId)
+    .eq('school_id', actor.school_id)
+    .eq('is_active', true)
+    .is('deleted_at', null)
+    .maybeSingle()
+
+  if (!studentRow) {
+    redirect(`${returnTo}?error=student-contract-student&student=${encodeURIComponent(studentProfileId)}`)
+  }
+
+  const { data: enrollmentRows } = await supabase
+    .from('enrollments')
+    .select('id, program_id, created_at')
+    .eq('student_id', studentRow.id)
+    .eq('status', 'active')
+    .eq('is_active', true)
+    .is('deleted_at', null)
+    .order('created_at', { ascending: false })
+    .limit(1)
+
+  const enrollment = enrollmentRows?.[0] ?? null
+  if (!enrollment) {
+    redirect(`${returnTo}?error=student-contract-enrollment&student=${encodeURIComponent(studentProfileId)}`)
+  }
+
+  const { data: program } = await supabase
+    .from('programs')
+    .select('id, school_id')
+    .eq('id', enrollment.program_id)
+    .eq('school_id', actor.school_id)
+    .is('deleted_at', null)
+    .maybeSingle()
+
+  if (!program) {
+    redirect(`${returnTo}?error=student-contract-enrollment&student=${encodeURIComponent(studentProfileId)}`)
+  }
+
+  const { error } = await supabase.rpc('set_enrollment_hour_contract', {
+    p_enrollment_id: enrollment.id,
+    p_prior_credit_minutes: priorCreditMinutes,
+    p_requirement_override_minutes: requirementOverrideMinutes,
+    p_change_type: changeType,
+    p_reason: reason,
+    p_source_reference: sourceReference || null,
+    p_expected_version: expectedVersion,
+  })
+
+  if (error) {
+    console.error('[StaffHours] Failed to set enrollment hour contract', error)
+    const message = error.message.toLowerCase()
+    const code =
+      message.includes('changed since') ||
+      message.includes('changed during') ||
+      message.includes('expected version')
+        ? 'student-contract-stale'
+        : message.includes('must modify')
+          ? 'student-contract-noop'
+          : 'student-contract-failed'
+
+    redirect(
+      `${returnTo}?error=${code}&student=${encodeURIComponent(studentProfileId)}`,
+    )
+  }
+
+  revalidatePath('/school')
+  revalidatePath('/school/hours')
+  revalidatePath('/instructor/hours')
+  revalidatePath('/dashboard/hours')
+  revalidatePath('/dashboard/compliance')
+  revalidatePath('/instructor/compliance')
+  revalidatePath(`/instructor/student/${studentProfileId}`)
+
+  redirect(
+    `${returnTo}?contractSaved=1&student=${encodeURIComponent(studentProfileId)}`,
+  )
+}

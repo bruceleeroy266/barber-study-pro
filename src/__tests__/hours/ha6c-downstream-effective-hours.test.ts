@@ -102,13 +102,13 @@ describe('H&A-6C downstream effective-hours migration', () => {
   })
 
   it('routes totals, compliance, analytics, notifications, and PDF output through official minutes', () => {
-    expect(studentHours).toContain('calculateHoursProgressSummary(reportingHours, requirements.requiredHours)')
-    expect(staffHours).toContain('calculateHoursProgressSummary(studentLogs, requiredHours)')
-    expect(instructorStudent).toContain('calculateHoursProgressSummary(hourLogRecords, programRequirements.requiredHours)')
-    expect(complianceEngine).toContain('getOfficialMinutes(h)')
-    expect(schoolAnalytics).toContain('calculateHoursProgressSummary')
-    expect(notificationEngine).toContain('getOfficialMinutes(h)')
-    expect(pdf).toContain('calculateHoursProgressSummary(studentLogs, student.requiredHours)')
+    expect(studentHours).toContain('calculateAdaptiveStudentHours(reportingHours, {')
+    expect(staffHours).toContain('calculateAdaptiveStudentHours(studentLogs, {')
+    expect(instructorStudent).toContain('calculateAdaptiveStudentHours(hourLogRecords, {')
+    expect(complianceEngine).toContain('calculateAdaptiveStudentHours')
+    expect(schoolAnalytics).toContain('calculateAdaptiveStudentHours')
+    expect(notificationEngine).toContain('calculateAdaptiveStudentHours')
+    expect(pdf).toContain('calculateAdaptiveStudentHours(studentLogs, {')
     expect(pdf).toContain('getOfficialMinutes(log)')
   })
 

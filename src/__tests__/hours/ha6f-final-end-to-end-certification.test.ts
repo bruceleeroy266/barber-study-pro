@@ -186,9 +186,9 @@ describe('H&A-6F final end-to-end certification', () => {
   it('routes all official downstream consumers through effective-hour helpers', () => {
     expect(reporting).toContain('getOfficialMinutes')
     expect(pdf).toContain('getOfficialMinutes(log)')
-    expect(compliance).toContain('getOfficialMinutes(h)')
-    expect(analytics).toContain('calculateHoursProgressSummary')
-    expect(notifications).toContain('getOfficialMinutes(h)')
+    expect(compliance).toContain('calculateAdaptiveStudentHours')
+    expect(analytics).toContain('calculateAdaptiveStudentHours')
+    expect(notifications).toContain('calculateAdaptiveStudentHours')
   })
 
   it('keeps rejected attendance correction/resubmission semantics separate from approved adjustments', () => {

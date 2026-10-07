@@ -49,7 +49,7 @@ describe('generateNotificationsFromHours with configured program required_hours'
     const behind = [makeHourLog('u1', 400 * 60, 'approved')]
     const notifications = generateNotificationsFromHours('u1', behind, 1000)
     expect(missingHoursTitles(notifications)).toHaveLength(1)
-    expect(missingHoursTitles(notifications)[0]?.body).toContain('400 approved hours')
+    expect(missingHoursTitles(notifications)[0]?.body).toContain('400 hours counted toward your requirement')
   })
 
   it.each([undefined, null, 0, -100, NaN])('falls back to the 1200 schema default for %s', (value) => {
@@ -66,7 +66,7 @@ describe('generateNotificationsFromHours with configured program required_hours'
     }]
     const notifications = generateNotificationsFromHours('u1', adjusted, 1000)
     expect(missingHoursTitles(notifications)).toHaveLength(1)
-    expect(missingHoursTitles(notifications)[0]?.body).toContain('400 approved hours')
+    expect(missingHoursTitles(notifications)[0]?.body).toContain('400 hours counted toward your requirement')
   })
 
   it('pending-hours notification is independent of required_hours', () => {
