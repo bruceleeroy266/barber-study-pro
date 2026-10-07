@@ -40,7 +40,7 @@ export default async function InstructorLayout({
           schoolName={schoolName}
         />
       )}
-      <InstructorNav user={{ role: profile.role as any }} />
+      <InstructorNav user={{ role: profile.role }} />
       <main id="main-content" className="min-h-screen pt-16 lg:pl-64 lg:pt-0">
         <div className="p-4 lg:p-8 max-w-7xl mx-auto">
           {children}
