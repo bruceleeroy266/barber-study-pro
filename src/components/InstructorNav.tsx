@@ -12,7 +12,7 @@ import EscalationBadge from '@/components/instructor/EscalationBadge'
 import BackButton from '@/components/ui/BackButton'
 
 interface InstructorNavProps {
-  user: Profile | null
+  user: Pick<Profile, 'role'> | null
 }
 
 const navItems = [
