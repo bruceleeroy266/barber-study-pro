@@ -50,10 +50,27 @@ describe('G7-5 archive + relationship-race hardening', () => {
     expect(migration).toContain('then thread.participant_two_id')
   })
 
-  it('keeps historical SELECT access separate from new-action authorization', () => {
-    expect(migration).toContain('communication threads participants select')
-    expect(migration).toContain('communication messages participants select')
-    expect(migration).not.toMatch(/create policy "communication threads participants select"[\s\S]*communication_pair_authorized/)
+  it('keeps historical SELECT access separate from current relationship authorization', () => {
+    const threadSelectStart = migration.indexOf(
+      'create policy "communication threads participants select"'
+    )
+    const threadSelectEnd = migration.indexOf(
+      'drop policy if exists "communication messages participants select"'
+    )
+    const threadSelectPolicy = migration.slice(threadSelectStart, threadSelectEnd)
+
+    expect(threadSelectPolicy).toContain("actor.approval_status = 'approved'")
+    expect(threadSelectPolicy).toContain('coalesce(actor.is_disabled, false) = false')
+    expect(threadSelectPolicy).not.toContain('communication_pair_authorized')
+  })
+
+  it('recognizes an already-persisted operation before fresh archive/relationship checks', () => {
+    expect(actions).toContain('send_message_idempotency_preflight')
+    expect(actions).toContain(".eq('client_operation_id', operationId)")
+    expect(actions).toContain('priorMessage.thread_id !== threadId')
+    expect(actions.indexOf('send_message_idempotency_preflight')).toBeLessThan(
+      actions.indexOf("if (thread.status !== 'active')")
+    )
   })
 
   it('does not widen messaging scope or add realtime', () => {
