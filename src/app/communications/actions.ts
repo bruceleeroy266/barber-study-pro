@@ -82,6 +82,9 @@ function logMessagingFailure(
   })
 }
 
+// Authentication still originates from the canonical server client. The support
+// resolver internally performs supabase.auth.getUser() and preserves that user
+// as the true actor while returning an effective support role.
 async function getMessagingActor(): Promise<
   MessagingRuntimeResult<{ actor: MessagingActor; supabase: Awaited<ReturnType<typeof createClient>>; supportContext: SupportAccessContext }>
 > {
