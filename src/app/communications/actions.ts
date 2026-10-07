@@ -591,7 +591,46 @@ export async function sendCommunicationMessage(
 
   const { actor, supabase } = actorResult.data
 
-  // RLS confirms participant visibility here and re-checks active assignment on INSERT.
+  // Exactly-once retry recognition happens before fresh sendability checks.
+  // If this operation already persisted, a later archive/assignment change must
+  // not turn the confirmed historical send into a false failure.
+  const { data: priorMessage, error: priorMessageError } = await supabase
+    .from('communication_messages')
+    .select('id, thread_id, school_id, sender_id, body, client_operation_id, sent_at, created_at')
+    .eq('sender_id', actor.id)
+    .eq('client_operation_id', operationId)
+    .maybeSingle()
+
+  if (priorMessageError) {
+    logMessagingFailure('send_message_idempotency_preflight', priorMessageError)
+    return { success: false, message: 'Unable to safely retry this message.' }
+  }
+
+  if (priorMessage) {
+    if (
+      priorMessage.thread_id !== threadId ||
+      priorMessage.body !== trimmedBody
+    ) {
+      return { success: false, message: 'Unable to safely retry this message.' }
+    }
+
+    return {
+      success: true,
+      data: {
+        id: priorMessage.id,
+        threadId: priorMessage.thread_id,
+        schoolId: priorMessage.school_id,
+        senderId: priorMessage.sender_id,
+        body: priorMessage.body,
+        sentAt: priorMessage.sent_at,
+        createdAt: priorMessage.created_at,
+        readAt: null,
+      },
+    }
+  }
+
+  // RLS + the G7-5 insert race guard confirm participant visibility,
+  // active thread state, and the current canonical relationship.
   const { data: thread, error: threadError } = await supabase
     .from('communication_threads')
     .select('id, school_id, status')
