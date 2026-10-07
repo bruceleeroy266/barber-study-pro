@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase-server'
 import {
   buildPilotCheckpointWindow,
+  checkpointForPilotInstant,
+  endOfPilotLocalDate,
   resolvePilotMeasurement,
   type PilotCheckpointType,
   type PilotExamAttemptRow,
@@ -48,15 +50,6 @@ function checkpointLabel(type: PilotCheckpointType): string {
     case 'day_60': return 'Day 60'
     case 'day_90': return 'Day 90'
   }
-}
-
-function checkpointForDate(startDate: string, now: Date): PilotCheckpointType {
-  const start = new Date(`${startDate}T00:00:00.000Z`)
-  const elapsed = Math.max(0, Math.floor((now.getTime() - start.getTime()) / 86_400_000))
-  if (elapsed >= 90) return 'day_90'
-  if (elapsed >= 60) return 'day_60'
-  if (elapsed >= 30) return 'day_30'
-  return 'baseline'
 }
 
 export default async function StaffPilotMeasurementView({
@@ -151,9 +144,9 @@ export default async function StaffPilotMeasurementView({
   const now = new Date()
   const liveCheckpoint = period.status === 'completed'
     ? 'day_90'
-    : checkpointForDate(period.pilot_start_date, now)
+    : checkpointForPilotInstant(period.pilot_start_date, now, period.timezone)
   const liveCutoff = period.status === 'completed'
-    ? `${period.pilot_end_date}T23:59:59.999Z`
+    ? endOfPilotLocalDate(period.pilot_end_date, period.timezone)
     : now.toISOString()
 
   const snapshot = resolvePilotMeasurement({
@@ -164,7 +157,7 @@ export default async function StaffPilotMeasurementView({
     studyActivity: (activityResult.data ?? []) as PilotStudyActivityRow[],
     examAttempts: (examResult.data ?? []) as PilotExamAttemptRow[],
     remediation: (remediationResult.data ?? []) as PilotRemediationRow[],
-    window: buildPilotCheckpointWindow(period.pilot_start_date, liveCheckpoint, liveCutoff),
+    window: buildPilotCheckpointWindow(period.pilot_start_date, liveCheckpoint, liveCutoff, period.timezone),
   })
 
   const finalized = (checkpointsResult.data ?? []) as FinalizedCheckpointRow[]
