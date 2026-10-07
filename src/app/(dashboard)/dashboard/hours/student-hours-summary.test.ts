@@ -23,9 +23,9 @@ describe('E2 student attendance and hours summary', () => {
   })
 
   it('keeps official progress approved-only and pending separate', () => {
-    expect(page).toContain('calculateHoursProgressSummary(reportingHours, requirements.requiredHours)')
+    expect(page).toContain('calculateAdaptiveStudentHours(reportingHours, {')
     expect(page).toContain('pendingMinutes')
-    expect(page).toContain('Based on approved hours only')
+    expect(page).toContain('Based on accepted prior credit plus approved hours earned here')
     expect(page).toContain('Pending hours do not increase this progress')
   })
 
