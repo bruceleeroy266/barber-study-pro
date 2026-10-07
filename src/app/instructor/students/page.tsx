@@ -15,6 +15,7 @@ import { getLastSignInAtMap } from '@/lib/instructor/last-login'
 import { loadAssignedStudentIds } from '@/lib/instructor/assignments'
 import { deriveLearningVsLoginSignals } from '@/lib/instructor/activity-signals'
 import { resolveLastLearningActivityAt } from '@/lib/student-level/activity'
+import { resolveSupportAccessContext } from '@/lib/support-access'
 
 interface RosterStudent extends Profile {
   overallProgress: number
@@ -149,34 +150,26 @@ function readinessBadgeClasses(level: string): string {
 
 export default async function InstructorStudentsPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
 
-  if (!user) {
-    redirect('/login')
-  }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role, school_id, full_name, schools(*)')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile || !isInstructorOrAdmin(profile.role)) {
-    redirect('/dashboard')
+  const profile = context.effectiveProfile
+  if (!isInstructorOrAdmin(profile.role)) {
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
 
   if (!profile.school_id) {
-    redirect('/dashboard')
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
 
   const schoolId = profile.school_id
-  const schoolName = (profile.schools as { name?: string } | null)?.name || 'Your School'
+  const { data: schoolRow } = await supabase.from('schools').select('name').eq('id', schoolId).maybeSingle()
+  const schoolName = schoolRow?.name || 'Your School'
 
-  // Instructors see only their canonical active roster. School/admin roles
-  // retain school-wide oversight while using the same downstream calculations.
+  // Instructors see only their canonical active roster.
   const assignedStudentIds =
     profile.role === 'instructor'
-      ? await loadAssignedStudentIds(supabase, schoolId, user.id)
+      ? await loadAssignedStudentIds(supabase, schoolId, profile.id)
       : null
 
   let studentQuery = supabase
