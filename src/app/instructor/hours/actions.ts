@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
 import { hasPermission, isSchoolAdmin } from '@/lib/auth-helpers'
 import type { HourCategory } from '@/types'
+import { resolveSupportAccessContext, logSupportAction } from '@/lib/support-access'
 
 const HOUR_CATEGORIES: HourCategory[] = [
   'Theory',
@@ -64,14 +65,10 @@ export async function logStudentHours(formData: FormData) {
   }
 
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-
-  const { data: actor } = await supabase
-    .from('profiles')
-    .select('id, role, school_id')
-    .eq('id', user.id)
-    .single()
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
+  const actor = context.effectiveProfile
+  const trueActorId = context.actorUserId
 
   if (!actor?.school_id || !hasPermission(actor.role, 'manage_attendance')) {
     redirect('/dashboard')
@@ -103,7 +100,7 @@ export async function logStudentHours(formData: FormData) {
       minutes,
       status: 'pending',
       notes: notes || null,
-      submitted_by: user.id,
+      submitted_by: trueActorId,
       reviewed_by: null,
       reviewed_at: null,
     })
@@ -112,6 +109,8 @@ export async function logStudentHours(formData: FormData) {
     console.error('[StaffHours] Failed to add hours', error)
     redirect(`${returnTo}?error=save-failed`)
   }
+
+  await logSupportAction(context, 'log_hours', 'hour_logs', { studentId, minutes, category, effectiveRole: actor.role })
 
   revalidatePath('/instructor')
   revalidatePath('/instructor/hours')
@@ -138,14 +137,10 @@ export async function reviewStudentHours(formData: FormData) {
   }
 
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-
-  const { data: actor } = await supabase
-    .from('profiles')
-    .select('id, role, school_id')
-    .eq('id', user.id)
-    .single()
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
+  const actor = context.effectiveProfile
+  const trueActorId = context.actorUserId
 
   if (!actor?.school_id || !(await canReviewStudentHours(supabase, actor))) {
     redirect('/dashboard')
@@ -210,6 +205,8 @@ export async function reviewStudentHours(formData: FormData) {
     )
   }
 
+  await logSupportAction(context, 'review_hours', 'hour_logs', { hourLogId, decision, studentId: updated.user_id, effectiveRole: actor.role })
+
   revalidatePath('/school')
   revalidatePath('/school/hours')
   revalidatePath('/instructor/hours')
@@ -236,14 +233,10 @@ export async function bulkApproveStudentHours(formData: FormData) {
   }
 
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-
-  const { data: actor } = await supabase
-    .from('profiles')
-    .select('id, role, school_id')
-    .eq('id', user.id)
-    .single()
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
+  const actor = context.effectiveProfile
+  const trueActorId = context.actorUserId
 
   if (!actor?.school_id || !(await canReviewStudentHours(supabase, actor))) {
     redirect('/dashboard')
@@ -268,6 +261,8 @@ export async function bulkApproveStudentHours(formData: FormData) {
   const affectedStudentIds = Array.from(
     new Set(updatedRows.map((row: { id: string; user_id: string }) => row.user_id).filter(Boolean)),
   )
+
+  await logSupportAction(context, 'bulk_approve_hours', 'hour_logs', { hourLogIds, approvedCount: updatedRows.length, effectiveRole: actor.role })
 
   revalidatePath('/school')
   revalidatePath('/school/hours')
@@ -309,14 +304,10 @@ export async function adjustApprovedStudentHours(formData: FormData) {
   }
 
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-
-  const { data: actor } = await supabase
-    .from('profiles')
-    .select('id, role, school_id')
-    .eq('id', user.id)
-    .single()
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
+  const actor = context.effectiveProfile
+  const trueActorId = context.actorUserId
 
   if (!actor?.school_id || !isSchoolAdmin(actor.role)) {
     redirect('/dashboard')
@@ -358,6 +349,8 @@ export async function adjustApprovedStudentHours(formData: FormData) {
       `/school/hours?error=${code}&student=${encodeURIComponent(target.user_id)}`,
     )
   }
+
+  await logSupportAction(context, 'adjust_approved_hours', 'hour_logs', { hourLogId, correctedMinutes, effectiveRole: actor.role })
 
   revalidatePath('/school')
   revalidatePath('/school/hours')
@@ -434,14 +427,10 @@ export async function setStudentHourContract(formData: FormData) {
     : null
 
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-
-  const { data: actor } = await supabase
-    .from('profiles')
-    .select('id, role, school_id')
-    .eq('id', user.id)
-    .single()
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
+  const actor = context.effectiveProfile
+  const trueActorId = context.actorUserId
 
   if (!actor?.school_id || !isSchoolAdmin(actor.role)) {
     redirect('/dashboard')
@@ -515,6 +504,8 @@ export async function setStudentHourContract(formData: FormData) {
   }
 
   revalidatePath('/school')
+  await logSupportAction(context, 'set_student_hour_contract', 'enrollment_hour_contracts', { studentProfileId, enrollmentId: enrollment.id, effectiveRole: actor.role })
+
   revalidatePath('/school/hours')
   revalidatePath('/instructor/hours')
   revalidatePath('/dashboard/hours')
