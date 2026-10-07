@@ -142,7 +142,9 @@ export function resolvePilotMeasurement(inputs: PilotMeasurementInputs): PilotMe
     (!inputs.allowedStudentIds || inputs.allowedStudentIds.has(student.id))
   )
 
-  const included = authorizedStudents.filter((student) => student.include_in_school_metrics !== false)
+  const included = authorizedStudents.filter((student) =>
+    student.include_in_school_metrics !== false && !student.is_disabled
+  )
   const includedIds = new Set(included.map((student) => student.id))
 
   const learners: PilotLearnerMeasurement[] = authorizedStudents.map((student) => {
@@ -186,7 +188,7 @@ export function resolvePilotMeasurement(inputs: PilotMeasurementInputs): PilotMe
     return {
       studentId: student.id,
       fullName: student.full_name,
-      includedInAggregate: student.include_in_school_metrics !== false,
+      includedInAggregate: student.include_in_school_metrics !== false && !student.is_disabled,
       activeStudySeconds,
       qualifyingStudyDays,
       latestLearningAt,
