@@ -29,6 +29,16 @@ describe('PO-1E.1 pilot measurement resolver', () => {
     expect(buildPilotCheckpointWindow('2026-10-10', 'day_90').targetDate).toBe('2027-01-08')
   })
 
+  it('honors the pilot timezone for window start and checkpoint cutoff', () => {
+    const baseline = buildPilotCheckpointWindow('2026-10-10', 'baseline', undefined, 'America/Chicago')
+    expect(baseline.windowStart).toBe('2026-10-10T05:00:00.000Z')
+    expect(baseline.cutoffAt).toBe('2026-10-11T04:59:59.999Z')
+
+    const day30 = buildPilotCheckpointWindow('2026-10-10', 'day_30', undefined, 'America/Chicago')
+    expect(day30.targetDate).toBe('2026-11-09')
+    expect(day30.cutoffAt).toBe('2026-11-10T05:59:59.999Z')
+  })
+
   it('keeps excluded learners visible but out of aggregate metrics', () => {
     const snapshot = resolvePilotMeasurement({
       schoolId: 'school-1',
