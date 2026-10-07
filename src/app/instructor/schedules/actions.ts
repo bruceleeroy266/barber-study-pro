@@ -149,7 +149,7 @@ export async function assignTemplateSchedule(formData: FormData) {
   const { supabase, user, actor } = await getStaffActor()
 
   try {
-    await requireSchoolStudent(supabase, actor.school_id, studentId)
+    await requireSchoolStudent(supabase, actor.school_id!, studentId)
   } catch {
     scheduleRedirect({ error: 'student-not-found' })
   }
@@ -243,7 +243,7 @@ export async function saveCustomStudentSchedule(formData: FormData) {
 
   const { supabase, user, actor } = await getStaffActor()
   try {
-    await requireSchoolStudent(supabase, actor.school_id, studentId)
+    await requireSchoolStudent(supabase, actor.school_id!, studentId)
   } catch {
     scheduleRedirect({ error: 'student-not-found' })
   }
@@ -309,7 +309,7 @@ export async function saveScheduleOverride(formData: FormData) {
 
   const { supabase, user, actor } = await getStaffActor()
   try {
-    await requireSchoolStudent(supabase, actor.school_id, studentId)
+    await requireSchoolStudent(supabase, actor.school_id!, studentId)
   } catch {
     scheduleRedirect({ error: 'student-not-found' })
   }
