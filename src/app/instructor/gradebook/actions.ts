@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase-server'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 import { logPermissionDenied, logUnauthorizedAccess } from '@/lib/security/audit-logger'
+import { resolveSupportAccessContext, logSupportAction } from '@/lib/support-access'
 import { Grade } from '@/types'
 import {
   mapGradeFromDb,
@@ -19,17 +20,13 @@ export async function saveGrade(
   grade: Omit<Grade, 'id'> & { id?: string }
 ): Promise<SaveGradeResult> {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) {
+  const context = await resolveSupportAccessContext()
+  if (!context) {
     return { success: false, message: 'You must be signed in to save a grade.' }
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role, full_name, school_id')
-    .eq('id', user.id)
-    .single()
+  const profile = context.effectiveProfile
+  const user = { id: context.actorUserId, email: context.actorEmail }
 
   if (!profile || !isInstructorOrAdmin(profile.role)) {
     await logPermissionDenied('manage_gradebook', {
@@ -45,6 +42,22 @@ export async function saveGrade(
 
   if (!profile.school_id) {
     return { success: false, message: 'Your account is not assigned to a school.' }
+  }
+
+  if (profile.role === 'instructor') {
+    const { data: assignment } = await supabase
+      .from('student_instructor_assignments')
+      .select('student_id')
+      .eq('school_id', profile.school_id)
+      .eq('instructor_id', profile.id)
+      .eq('student_id', grade.studentId)
+      .eq('is_active', true)
+      .is('ended_at', null)
+      .maybeSingle()
+
+    if (!assignment) {
+      return { success: false, message: 'This student is not assigned to the selected instructor.' }
+    }
   }
 
   // Verify student belongs to actor's school
@@ -95,8 +108,8 @@ export async function saveGrade(
   const payload = {
     ...mapGradeToDb(grade),
     school_id: profile.school_id,
-    instructor_id: user.id,
-    instructor_name: profile.full_name || user.email || 'Instructor',
+    instructor_id: profile.id,
+    instructor_name: profile.full_name || profile.email || 'Instructor',
     date_modified: now,
   }
 
@@ -122,6 +135,7 @@ export async function saveGrade(
         .single()
 
       if (error) return { success: false, message: error.message }
+      await logSupportAction(context, 'update_grade', 'grades', { gradeId: grade.id, studentId: grade.studentId, effectiveRole: profile.role })
       return { success: true, message: 'Grade updated.', grade: mapGradeFromDb(data) }
     }
 
@@ -132,6 +146,7 @@ export async function saveGrade(
       .single()
 
     if (error) return { success: false, message: error.message }
+    await logSupportAction(context, 'create_grade', 'grades', { studentId: grade.studentId, effectiveRole: profile.role })
     return { success: true, message: 'Grade saved.', grade: mapGradeFromDb(data) }
   } catch (err) {
     return {
