@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
 import { hasPermission } from '@/lib/auth-helpers'
+import { resolveSupportAccessContext } from '@/lib/support-access'
 
 const DAY_COUNT = 7
 const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/
@@ -53,20 +54,16 @@ function parseDays(formData: FormData): DayInput[] {
 
 async function getStaffActor() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
 
-  const { data: actor } = await supabase
-    .from('profiles')
-    .select('id, role, school_id')
-    .eq('id', user.id)
-    .single()
-
-  if (!actor?.school_id || !hasPermission(actor.role, 'manage_attendance')) {
-    redirect('/dashboard')
+  const actor = context.effectiveProfile
+  if (!actor.school_id || !hasPermission(actor.role, 'manage_attendance')) {
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
 
-  return { supabase, user, actor }
+  const user = { id: context.actorUserId, email: context.actorEmail }
+  return { supabase, user, actor, context }
 }
 
 async function requireSchoolStudent(
