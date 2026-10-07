@@ -1,5 +1,10 @@
 # G7-6 — Bulletin Reliability Hardening
 
+## Product Boundary
+> **Product-boundary check:** PASS — this Gate complies with `docs/engineering/ASCYN_PRODUCT_BOUNDARY_CONTRACT.md` and is classified as **COEXIST**. No DO NOT BUILD capability is introduced.
+
+**Guarded integration zone contact:** NONE. G7-6 changes bulletin reliability only and does not touch H&A, onboarding/roster, or Admin Reporting.
+
 ## Goal
 Make bulletin publication exactly-once, transactional, audience-authorized, and deterministic around publish/expiration time.
 
@@ -42,7 +47,7 @@ Visibility and acknowledgment eligibility continue to use PostgreSQL `now()` in 
 Bulletin actions require approved, non-disabled profiles in their current school.
 
 ## Non-goals
-No Realtime, replies, comments, reactions, SMS/email delivery, or Gate 8 UI redesign.
+No Realtime, replies, comments, reactions, SMS/email delivery, permission expansion, or Gate 8 UI redesign.
 
 ## Exit criteria
 G7-6 is GREEN only after full exact-head CI, disposable-Supabase certification, exact-head Vercel READY, live migration apply, live function/index/grant/security verification, merge, and exact production READY.
