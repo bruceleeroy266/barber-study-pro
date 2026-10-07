@@ -50,10 +50,23 @@ No local-only state may be required to recover confirmed communication truth.
 - read and acknowledgment retries remain idempotent;
 - retry after uncertain response must converge to the persisted result.
 
-## First implementation finding
+## Certified implementation findings
+### Stale response race
 The pre-G7-7 message center allowed an older asynchronous conversation load to finish after a newer mobile navigation and overwrite current selection/state.
 
 G7-7 adds a monotonic view epoch so stale load/read responses are ignored by the UI after navigation changes. This affects display convergence only; it does not cancel or weaken database authorization/persistence.
+
+### Failure retry recovery
+The existing G7-3 idempotency keys remain stable when an unchanged send is retried after an uncertain/failing response. If the user edits the body or changes the compose recipient, the operation identity is cleared so the edited submission is treated as a new user intent rather than a mismatched retry.
+
+### Back-navigation convergence
+Late failures are only shown when the initiating view is still current. A delayed failure after the user backs out, switches conversation, or enters compose cannot overwrite the newer screen with stale error/status state. Confirmed persisted success may still update the thread list because server truth is authoritative.
+
+### Refresh convergence
+The instructor/admin and student production message routes reload `loadCommunicationThreads()` on the server. Full refresh therefore reconstructs thread/archive/unread state from Postgres rather than local browser storage.
+
+### Diagnostic evidence
+Server actions retain operation-scoped diagnostic logging while returning safe generic user-facing failures. G7-7 does not add message bodies to diagnostics and does not expose raw database/RLS errors to ordinary users.
 
 ## Non-goals
 No:
