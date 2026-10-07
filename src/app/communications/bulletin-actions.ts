@@ -112,12 +112,16 @@ async function getBulletinActor(): Promise<
 
   const { data: profile, error } = await supabase
     .from('profiles')
-    .select('id, school_id, role')
+    .select('id, school_id, role, approval_status, is_disabled')
     .eq('id', user.id)
     .single()
 
   if (error || !profile || !profile.school_id) {
     return { success: false, message: 'Your account is not assigned to a school.' }
+  }
+
+  if (profile.approval_status !== 'approved' || profile.is_disabled) {
+    return { success: false, message: 'Bulletins are not available for this account.' }
   }
 
   if (!['instructor', 'admin', 'school_admin', 'student', 'apprentice'].includes(profile.role)) {
@@ -286,7 +290,8 @@ export async function loadStudentBulletins(): Promise<
 }
 
 export async function publishBulletin(
-  input: PublishBulletinInput
+  input: PublishBulletinInput,
+  operationId: string
 ): Promise<BulletinRuntimeResult<ProductionBulletin>> {
   const actorResult = await getBulletinActor()
   if (!actorResult.success) return actorResult
@@ -294,6 +299,13 @@ export async function publishBulletin(
   const { actor, supabase } = actorResult.data
   if (!['instructor', 'admin', 'school_admin'].includes(actor.role)) {
     return { success: false, message: 'You are not authorized to publish bulletins.' }
+  }
+
+  if (
+    !operationId ||
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(operationId)
+  ) {
+    return { success: false, message: 'A valid bulletin publish operation is required.' }
   }
 
   const title = input.title.trim()
@@ -335,66 +347,63 @@ export async function publishBulletin(
     }
   }
 
-  const { data: draft, error: draftError } = await supabase
-    .from('bulletins')
-    .insert({
-      school_id: actor.schoolId,
-      author_id: actor.id,
-      title,
-      body,
-      priority: input.priority,
-      status: 'draft',
-      is_pinned: input.isPinned,
-      acknowledgment_required: input.acknowledgmentRequired,
-      publish_at: publishAt,
-      expires_at: expiresAt,
-    })
-    .select('id, school_id, author_id, title, body, priority, status, is_pinned, acknowledgment_required, publish_at, expires_at, created_at, updated_at')
-    .single()
-
-  if (draftError || !draft) {
-    return { success: false, message: draftError?.message || 'Unable to create bulletin draft.' }
-  }
-
-  const audienceRows = input.audiences.map((audience) => ({
-    bulletin_id: draft.id,
-    school_id: actor.schoolId,
+  const audiencesPayload = input.audiences.map((audience) => ({
     audience_type: audience.type,
     program_id: audience.type === 'program' ? audience.programId || null : null,
     student_id: audience.type === 'student' ? audience.studentId || null : null,
   }))
 
-  const { data: audiences, error: audienceError } = await supabase
-    .from('bulletin_audiences')
-    .insert(audienceRows)
-    .select('id, bulletin_id, school_id, audience_type, program_id, student_id, created_at')
-
-  if (audienceError) {
-    return {
-      success: false,
-      message: `Bulletin draft was saved, but audience targeting failed: ${audienceError.message}`,
+  const { data: bulletinId, error: publishError } = await supabase.rpc(
+    'publish_bulletin_atomic',
+    {
+      p_operation_id: operationId,
+      p_title: title,
+      p_body: body,
+      p_priority: input.priority,
+      p_is_pinned: input.isPinned,
+      p_acknowledgment_required: input.acknowledgmentRequired,
+      p_publish_at: publishAt,
+      p_expires_at: expiresAt,
+      p_audiences: audiencesPayload,
     }
+  )
+
+  if (publishError || !bulletinId) {
+    console.error('[bulletins] publish failed', {
+      code: publishError?.code,
+      hint: publishError?.hint,
+    })
+    if (publishError?.code === '23505') {
+      return { success: false, message: 'This publish retry no longer matches the original bulletin.' }
+    }
+    return { success: false, message: 'Unable to publish this bulletin right now.' }
   }
 
-  const { data: published, error: publishError } = await supabase
-    .from('bulletins')
-    .update({ status: 'published', updated_at: new Date().toISOString() })
-    .eq('id', draft.id)
-    .select('id, school_id, author_id, title, body, priority, status, is_pinned, acknowledgment_required, publish_at, expires_at, created_at, updated_at')
-    .single()
+  const [bulletinResult, audienceResult] = await Promise.all([
+    supabase
+      .from('bulletins')
+      .select('id, school_id, author_id, title, body, priority, status, is_pinned, acknowledgment_required, publish_at, expires_at, created_at, updated_at')
+      .eq('id', bulletinId)
+      .single(),
+    supabase
+      .from('bulletin_audiences')
+      .select('id, bulletin_id, school_id, audience_type, program_id, student_id, created_at')
+      .eq('bulletin_id', bulletinId),
+  ])
 
-  if (publishError || !published) {
-    return {
-      success: false,
-      message: publishError?.message || 'Bulletin draft was saved, but publishing failed.',
-    }
+  if (bulletinResult.error || !bulletinResult.data || audienceResult.error) {
+    console.error('[bulletins] publish reload failed', {
+      bulletinCode: bulletinResult.error?.code,
+      audienceCode: audienceResult.error?.code,
+    })
+    return { success: false, message: 'Bulletin was published, but could not be reloaded right now.' }
   }
 
   return {
     success: true,
     data: mapBulletin(
-      published as BulletinRow,
-      (audiences || []) as AudienceRow[]
+      bulletinResult.data as BulletinRow,
+      (audienceResult.data || []) as AudienceRow[]
     ),
   }
 }
@@ -441,17 +450,21 @@ export async function acknowledgeBulletin(
 
   const { error } = await supabase
     .from('bulletin_acknowledgments')
-    .insert({
-      bulletin_id: bulletinId,
-      school_id: actor.schoolId,
-      student_id: actor.id,
-    })
+    .upsert(
+      {
+        bulletin_id: bulletinId,
+        school_id: actor.schoolId,
+        student_id: actor.id,
+      },
+      {
+        onConflict: 'bulletin_id,student_id',
+        ignoreDuplicates: true,
+      }
+    )
 
   if (error) {
-    if (error.code === '23505') {
-      return { success: true, data: { bulletinId } }
-    }
-    return { success: false, message: error.message }
+    console.error('[bulletins] acknowledgment failed', { code: error.code })
+    return { success: false, message: 'Unable to acknowledge this bulletin right now.' }
   }
 
   return { success: true, data: { bulletinId } }
