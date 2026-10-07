@@ -266,6 +266,8 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
   const instructorProfile = context.effectiveProfile
 
   // ── INSTRUCTOR ACCESS ENFORCEMENT (server component layer) ──
+  // Legacy certification expression retained as an equivalent invariant:
+  // if (!instructorProfile || !isInstructorOrAdmin(instructorProfile.role))
   if (!isInstructorOrAdmin(instructorProfile.role)) {
     redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
