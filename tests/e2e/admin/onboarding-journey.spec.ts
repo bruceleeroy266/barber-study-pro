@@ -240,6 +240,7 @@ async function certifyMobileNavigation(
   page: Page,
   options: {
     triggerName: RegExp
+    triggerControl: string
     navigationName: string
     verifyStudentHeaderOffset?: boolean
   }
@@ -247,8 +248,9 @@ async function certifyMobileNavigation(
   for (const width of [320, 360, 390]) {
     await page.setViewportSize({ width, height: 720 })
 
-    const trigger = page.getByRole('button', { name: options.triggerName })
+    const trigger = page.locator(`button[aria-controls="${options.triggerControl}"]`)
     await expect(trigger).toBeVisible()
+    await expect(trigger).toHaveAccessibleName(options.triggerName)
     await expect(trigger).toHaveAttribute('aria-expanded', 'false')
 
     const targetSize = await trigger.evaluate((element) => {
@@ -370,6 +372,7 @@ test.describe('Pilot onboarding certification', () => {
     await login(adminPage, PLATFORM_ADMIN_EMAIL, PLATFORM_ADMIN_PASSWORD, /\/admin(?:\/|$)/)
     await certifyMobileNavigation(adminPage, {
       triggerName: /Open admin navigation/i,
+      triggerControl: 'admin-mobile-navigation',
       navigationName: 'Admin navigation',
     })
 
@@ -482,6 +485,7 @@ test.describe('Pilot onboarding certification', () => {
 
     await certifyMobileNavigation(instructorSession.page, {
       triggerName: /Open instructor navigation/i,
+      triggerControl: 'instructor-mobile-navigation',
       navigationName: 'Instructor navigation',
     })
 
@@ -525,6 +529,7 @@ test.describe('Pilot onboarding certification', () => {
 
     await certifyMobileNavigation(studentSession.page, {
       triggerName: /Open student navigation/i,
+      triggerControl: 'student-mobile-navigation',
       navigationName: 'Student navigation',
       verifyStudentHeaderOffset: true,
     })
