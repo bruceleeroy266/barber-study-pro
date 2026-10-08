@@ -17,7 +17,7 @@ import {
   SchoolAnalyticsInputs,
 } from '@/lib/school-owner/school-analytics'
 import { DEFAULT_REQUIRED_HOURS } from '@/lib/programs/requirements'
-import { Profile, HourLog, HourStatus } from '@/types'
+import { Profile, HourLog, HourStatus, AttendanceRecord } from '@/types'
 
 function makeStudent(id: string): Profile {
   return {
@@ -36,6 +36,27 @@ function makeStudent(id: string): Profile {
     requires_password_change: false,
     created_at: '2026-01-01T00:00:00Z',
     updated_at: '2026-01-01T00:00:00Z',
+  }
+}
+
+function makeAttendanceRecord(
+  userId: string,
+  status: AttendanceRecord['status'],
+  date = '2026-09-01'
+): AttendanceRecord {
+  return {
+    id: `attendance-${userId}-${date}-${status}`,
+    userId,
+    schoolId: 'school-1',
+    date,
+    status,
+    clockedInAt: null,
+    clockedOutAt: null,
+    minutesPresent: status === 'Present' ? 480 : null,
+    note: null,
+    verifiedBy: null,
+    createdAt: `${date}T00:00:00Z`,
+    updatedAt: `${date}T00:00:00Z`,
   }
 }
 
@@ -204,6 +225,53 @@ describe('school analytics with per-student hour requirements', () => {
     expect(missing.some((alert) => alert.studentId === 's1')).toBe(false)
     expect(missing.some((alert) => alert.studentId === 's2')).toBe(true)
     expect(missing.find((alert) => alert.studentId === 's2')?.description).toContain('of 1500 hours')
+  })
+})
+
+describe('school alerts evidence gating', () => {
+  it('does not generate low-attendance or missing-hours alerts for a brand-new student with no evidence', () => {
+    const inputs = makeInputs({
+      students: [makeStudent('new-student')],
+      requiredHours: 1250,
+    })
+
+    const alerts = buildSchoolAlerts(inputs)
+
+    expect(alerts.filter((alert) => alert.type === 'low_attendance')).toHaveLength(0)
+    expect(alerts.filter((alert) => alert.type === 'missing_hours')).toHaveLength(0)
+  })
+
+  it('generates low-attendance only after real attendance evidence exists', () => {
+    const inputs = makeInputs({
+      students: [makeStudent('attendance-risk')],
+      attendanceRecords: [
+        makeAttendanceRecord('attendance-risk', 'Absent', '2026-09-01'),
+      ],
+    })
+
+    const lowAttendance = buildSchoolAlerts(inputs).filter(
+      (alert) => alert.type === 'low_attendance'
+    )
+
+    expect(lowAttendance).toHaveLength(1)
+    expect(lowAttendance[0]?.studentId).toBe('attendance-risk')
+    expect(lowAttendance[0]?.description).toContain('Attendance is 0%')
+  })
+
+  it('generates missing-hours only after real hour evidence exists and the student is below pace', () => {
+    const inputs = makeInputs({
+      students: [makeStudent('hours-risk')],
+      hourLogs: [makeHourLog('hours-risk', 100 * 60, 'approved')],
+      requiredHours: 1250,
+    })
+
+    const missingHours = buildSchoolAlerts(inputs).filter(
+      (alert) => alert.type === 'missing_hours'
+    )
+
+    expect(missingHours).toHaveLength(1)
+    expect(missingHours[0]?.studentId).toBe('hours-risk')
+    expect(missingHours[0]?.description).toBe('Student hours-risk: 100 of 1250 hours completed')
   })
 })
 
