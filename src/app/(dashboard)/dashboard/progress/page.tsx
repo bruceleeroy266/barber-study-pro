@@ -79,7 +79,6 @@ export default async function ProgressPage() {
     progress,
     attempts,
     totalChapters,
-    hasEvidence: hasReadinessEvidence,
   })
   const {
     completedChapters,
