@@ -20,6 +20,8 @@ export interface RecommendationsInputs {
   strongAreas: AreaPerformance[]
   missedQuestions: MissedQuestion[]
   totalChapters: number
+  /** Explicit learning/readiness evidence gate for zero-data surfaces. */
+  hasEvidence?: boolean
 }
 
 function nextIncompleteChapter(
@@ -42,6 +44,27 @@ function nextIncompleteChapter(
 export function generateStudyPlan(inputs: RecommendationsInputs): StudyRecommendation[] {
   const { userId, readiness, weakAreas, missedQuestions, totalChapters } = inputs
   const recommendations: StudyRecommendation[] = []
+  const inferredEvidence =
+    readiness.totalQuestionsAnswered > 0 ||
+    readiness.chaptersCompleted > 0 ||
+    readiness.quizCompletionRate > 0 ||
+    readiness.flashcardEngagementRate > 0 ||
+    weakAreas.length > 0 ||
+    missedQuestions.length > 0
+  const hasEvidence = inputs.hasEvidence ?? inferredEvidence
+
+  if (!hasEvidence) {
+    recommendations.push({
+      id: `rec-start-${userId}`,
+      type: 'study',
+      title: 'Start your first learning activity',
+      description: 'Complete a lesson, flashcard deck, or quiz to begin building personalized recommendations.',
+      chapterNumber: 1,
+      priority: 'medium',
+      estimatedMinutes: 15,
+    })
+    return recommendations
+  }
 
   const nextChapter = nextIncompleteChapter(readiness, weakAreas)
 

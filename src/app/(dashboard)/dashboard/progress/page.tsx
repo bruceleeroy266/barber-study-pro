@@ -87,6 +87,8 @@ export default async function ProgressPage() {
     quizzesPassed: quizzesCompleted,
     averageQuizScore,
     readiness,
+    hasProgressEvidence,
+    hasReadinessEvidence,
   } = canonicalMetrics
 
   // Phase 5 analytics
@@ -140,7 +142,7 @@ export default async function ProgressPage() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <MetricCard
             label="Overall Progress"
-            value={`${overallProgress}%`}
+            value={hasProgressEvidence ? `${overallProgress}%` : '—'}
             variant="default"
           />
           
@@ -158,20 +160,20 @@ export default async function ProgressPage() {
           
           <MetricCard
             label="Avg Quiz Score"
-            value={`${averageQuizScore}%`}
+            value={attempts.length > 0 ? `${averageQuizScore}%` : '—'}
             variant="warning"
           />
 
           <MetricCard
             label="Attendance"
-            value={`${attendanceSummary.attendancePercentage}%`}
-            variant={attendanceSummary.attendancePercentage >= 80 ? 'success' : attendanceSummary.attendancePercentage >= 70 ? 'warning' : 'error'}
+            value={attendanceRecords.length > 0 ? `${attendanceSummary.attendancePercentage}%` : '—'}
+            variant={attendanceRecords.length === 0 ? 'default' : attendanceSummary.attendancePercentage >= 80 ? 'success' : attendanceSummary.attendancePercentage >= 70 ? 'warning' : 'error'}
           />
         </div>
       </div>
 
       {/* ZONE 2: Board Readiness */}
-      <BoardReadinessCard readiness={readiness} />
+      <BoardReadinessCard readiness={readiness} hasEvidence={hasReadinessEvidence} />
 
       {/* ZONE 3: Detailed Analytics */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
@@ -186,6 +188,7 @@ export default async function ProgressPage() {
       {/* Analytics Charts */}
       <AnalyticsCharts
         readinessScore={readiness.score}
+        hasReadinessEvidence={hasReadinessEvidence}
         categoryPerformance={analytics.categoryPerformance}
         chapterPerformance={analytics.chapterPerformance}
         missedQuestionTrend={analytics.missedQuestionTrend}
