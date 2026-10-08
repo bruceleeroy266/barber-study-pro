@@ -296,7 +296,7 @@ export default async function InstructorStudentsPage() {
           </div>
           <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-5">
             <div className="text-2xl font-bold text-gold">
-              {metricStudentStats.filter((s) => s.readinessLevel === 'Ready').length}
+              {metricStudentStats.filter((s) => s.hasReadinessEvidence && s.readinessLevel === 'Ready').length}
             </div>
             <div className="text-xs text-[var(--color-text-muted)] mt-1">Board Ready</div>
           </div>
@@ -395,22 +395,29 @@ export default async function InstructorStudentsPage() {
                           <div className="flex-1 bg-[var(--color-background-secondary)] rounded-full h-2 w-24">
                             <div
                               className={`h-2 rounded-full ${
+                                !student.hasProgressEvidence ? 'bg-silver-gray' :
                                 student.overallProgress >= 80 ? 'bg-gold' :
                                 student.overallProgress >= 50 ? 'bg-warm-bronze' : 'bg-silver'
                               }`}
-                              style={{ width: `${student.overallProgress}%` }}
+                              style={{ width: student.hasProgressEvidence ? `${student.overallProgress}%` : '0%' }}
                             />
                           </div>
-                          <span className="text-[var(--color-text-secondary)] text-xs w-10 text-right">{student.overallProgress}%</span>
+                          <span className="text-[var(--color-text-secondary)] text-xs w-10 text-right">
+                            {student.hasProgressEvidence ? `${student.overallProgress}%` : '—'}
+                          </span>
                         </div>
                       </td>
                       <td className="p-4">
                         <div className="flex items-center gap-2">
-                          <span className={`text-lg font-bold ${getReadinessColorClass(student.readinessScore)}`}>
-                            {student.readinessScore}
+                          <span className={`text-lg font-bold ${student.hasReadinessEvidence ? getReadinessColorClass(student.readinessScore) : 'text-[var(--color-text-muted)]'}`}>
+                            {student.hasReadinessEvidence ? student.readinessScore : '—'}
                           </span>
-                          <span className={`px-2 py-1 rounded text-xs font-semibold border ${readinessBadgeClasses(student.readinessLevel)}`}>
-                            {student.readinessLevel}
+                          <span className={`px-2 py-1 rounded text-xs font-semibold border ${
+                            student.hasReadinessEvidence
+                              ? readinessBadgeClasses(student.readinessLevel)
+                              : 'bg-[var(--color-border-secondary)] text-[var(--color-text-muted)] border-silver-gray'
+                          }`}>
+                            {student.hasReadinessEvidence ? student.readinessLevel : 'No Data'}
                           </span>
                         </div>
                       </td>
