@@ -40,6 +40,14 @@ describe('G8-3 global shell + navigation foundation', () => {
     expect(studentNav).toContain('aria-label="Student navigation"')
   })
 
+  it('marks current navigation destinations and uses focus-visible rings', () => {
+    for (const nav of [studentNav, instructorNav, adminNav]) {
+      expect(nav).toContain('aria-current=')
+      expect(nav).toContain('focus-visible:outline-none')
+      expect(nav).toContain('focus-visible:ring-2')
+    }
+  })
+
   it('uses the shared accessible mobile-menu behavior across all role shells', () => {
     for (const nav of [studentNav, instructorNav, adminNav]) {
       expect(nav).toContain('useAccessibleMobileMenu')
