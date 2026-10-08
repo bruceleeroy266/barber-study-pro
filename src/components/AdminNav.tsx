@@ -25,6 +25,7 @@ import { Profile } from '@/types'
 import { isAdmin } from '@/lib/auth-helpers'
 import { Logo } from '@/components/brand'
 import BackButton from '@/components/ui/BackButton'
+import { useAccessibleMobileMenu } from '@/hooks/useAccessibleMobileMenu'
 
 interface AdminNavProps {
   user: Profile | null
@@ -47,6 +48,7 @@ const adminLinks = [
 
 export default function AdminNav({ user }: AdminNavProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const { triggerRef, panelRef } = useAccessibleMobileMenu(mobileOpen, setMobileOpen)
   const pathname = usePathname()
   const backFallbackHref = isAdmin(user?.role ?? '') ? '/admin' : '/school'
   const navLinks = isAdmin(user?.role ?? '')
@@ -70,10 +72,13 @@ export default function AdminNav({ user }: AdminNavProps) {
             <Shield className="w-4 h-4 text-[var(--color-brand-gold)]" />
           </Link>
           <button
+            ref={triggerRef}
             type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="p-2 text-silver hover:text-white"
-            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+            className="min-h-11 min-w-11 p-2 text-silver hover:text-white"
+            aria-label={mobileOpen ? 'Close admin navigation' : 'Open admin navigation'}
+            aria-expanded={mobileOpen}
+            aria-controls="admin-mobile-navigation"
           >
             {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -82,8 +87,16 @@ export default function AdminNav({ user }: AdminNavProps) {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="lg:hidden fixed inset-0 z-40 bg-black pt-16 overflow-y-auto">
-          <nav className="p-4 space-y-2 pb-8">
+        <div
+          ref={panelRef}
+          id="admin-mobile-navigation"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Admin navigation menu"
+          tabIndex={-1}
+          className="lg:hidden fixed inset-0 z-40 bg-black pt-16 overflow-y-auto"
+        >
+          <nav aria-label="Admin navigation" className="p-4 space-y-2 pb-8">
             <div className="px-2 pb-2">
               <BackButton fallbackHref={backFallbackHref} label="Back" />
             </div>
@@ -137,7 +150,7 @@ export default function AdminNav({ user }: AdminNavProps) {
             <BackButton fallbackHref={backFallbackHref} label="Back" />
           </div>
 
-          <nav className="space-y-1">
+          <nav aria-label="Admin navigation" className="space-y-1">
             {navLinks.map((link) => {
               const Icon = link.icon
               const active = pathname === link.href
