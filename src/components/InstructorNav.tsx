@@ -95,7 +95,7 @@ export default function InstructorNav({ user }: InstructorNavProps) {
             aria-label={mobileMenuOpen ? 'Close instructor navigation' : 'Open instructor navigation'}
             aria-expanded={mobileMenuOpen}
             aria-controls="instructor-mobile-navigation"
-            className="min-h-11 min-w-11 p-2 text-silver hover:text-white"
+            className="min-h-11 min-w-11 p-2 text-silver hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal rounded-lg"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {mobileMenuOpen ? (
@@ -129,8 +129,9 @@ export default function InstructorNav({ user }: InstructorNavProps) {
                 <Link
                   key={item.href}
                   href={item.href}
+                  aria-current={isNavItemActive(item.href) ? 'page' : undefined}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                     isNavItemActive(item.href)
                       ? 'bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/20'
                       : 'text-silver hover:bg-graphite hover:text-white'
@@ -171,7 +172,8 @@ export default function InstructorNav({ user }: InstructorNavProps) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                aria-current={isNavItemActive(item.href) ? 'page' : undefined}
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal ${
                   isNavItemActive(item.href)
                     ? 'bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/20'
                     : 'text-silver hover:bg-graphite hover:text-white'
