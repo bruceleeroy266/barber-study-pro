@@ -326,13 +326,14 @@ export default async function SchoolDashboard({ schoolId, privilegedRead = false
     thresholdsByStudentId
   )
 
+  const evidenceStudentCompliances = metricStudentCompliances.filter((c) => c.hasTrackingEvidence)
   const avgComplianceScore =
-    metricStudentCompliances.length > 0
-      ? Math.round(metricStudentCompliances.reduce((sum, c) => sum + c.complianceScore.score, 0) / metricStudentCompliances.length)
-      : 0
-  const eligibleStudents = metricStudentCompliances.filter((c) => c.boardEligibility.status === 'eligible').length
-  const nearEligibleStudents = metricStudentCompliances.filter((c) => c.boardEligibility.status === 'near_eligible').length
-  const complianceAtRisk = metricStudentCompliances.filter((c) => c.complianceScore.score < 70).length
+    evidenceStudentCompliances.length > 0
+      ? Math.round(evidenceStudentCompliances.reduce((sum, c) => sum + c.complianceScore.score, 0) / evidenceStudentCompliances.length)
+      : null
+  const eligibleStudents = evidenceStudentCompliances.filter((c) => c.boardEligibility.status === 'eligible').length
+  const nearEligibleStudents = evidenceStudentCompliances.filter((c) => c.boardEligibility.status === 'near_eligible').length
+  const complianceAtRisk = evidenceStudentCompliances.filter((c) => c.complianceScore.score < 70).length
 
   const complianceReports = {
     student_compliance: generateComplianceReport('student_compliance', metricComplianceInputs, thresholdsByStudentId),
@@ -388,7 +389,7 @@ export default async function SchoolDashboard({ schoolId, privilegedRead = false
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-black border border-graphite rounded-lg p-4">
               <p className="text-sm text-silver">ASCYN Tracking Score</p>
-              <p className="text-2xl font-bold text-white">{avgComplianceScore}%</p>
+              <p className="text-2xl font-bold text-white">{avgComplianceScore === null ? 'Not enough data yet' : `${avgComplianceScore}%`}</p>
             </div>
             <div className="bg-black border border-graphite rounded-lg p-4">
               <p className="text-sm text-silver">Tracked Requirements Met</p>
