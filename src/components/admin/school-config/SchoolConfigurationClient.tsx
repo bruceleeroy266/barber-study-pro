@@ -139,6 +139,13 @@ export default function SchoolConfigurationClient({
     })
   }
 
+  const syncDbPrograms = useCallback((programs: SchoolConfiguration['programs']) => {
+    // Programs persist through dedicated server actions. Keep the configuration
+    // snapshot aligned without falsely marking the whole page as unsaved.
+    setConfig((prev) => ({ ...prev, programs }))
+    setSavedConfig((prev) => ({ ...prev, programs }))
+  }, [])
+
   async function handleSave() {
     const nextErrors = validateSchoolConfiguration(config)
     setErrors(nextErrors)
@@ -276,7 +283,8 @@ export default function SchoolConfigurationClient({
               {activeTab === 'programs' && (
                 <ProgramsSection
                   config={config}
-                  onChange={(programs) => updateConfig({ programs })}
+                  onChange={syncDbPrograms}
+                  targetSchoolId={targetSchoolId}
                 />
               )}
               {activeTab === 'instructors' && <InstructorsSection config={config} />}

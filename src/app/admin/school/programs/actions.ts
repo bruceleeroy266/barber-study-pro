@@ -98,25 +98,62 @@ function isValidUUID(value: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value)
 }
 
+async function resolveEffectiveSchoolId(
+  admin: AdminContext,
+  targetSchoolId?: string,
+): Promise<ActionResult<string>> {
+  if (!admin.isPlatformAdmin) {
+    if (!admin.schoolId) {
+      return { success: false, error: 'You must be assigned to a school.' }
+    }
+    return { success: true, data: admin.schoolId }
+  }
+
+  if (!targetSchoolId || !isValidUUID(targetSchoolId)) {
+    return { success: false, error: 'A valid target school must be selected.' }
+  }
+
+  const serviceClient = createServiceRoleClient()
+  const { data: school } = await serviceClient
+    .from('schools')
+    .select('id')
+    .eq('id', targetSchoolId)
+    .eq('is_active', true)
+    .is('deleted_at', null)
+    .maybeSingle()
+
+  if (!school) {
+    return { success: false, error: 'The selected school is not active or does not exist.' }
+  }
+
+  return { success: true, data: school.id }
+}
+
 // ============================================================================
 // GET PROGRAMS
 // ============================================================================
 
 /**
  * Returns all non-deleted programs for the caller's school.
- * Platform admins without a school_id see all programs (for platform management).
+ * Platform admins must provide one validated selected school.
  * School admins are scoped to their own school.
  *
- * Tenant boundary: school_id is derived server-side from the caller's profile.
- * Never trusts client-provided school_id.
+ * Tenant boundary: every read/write resolves to exactly one effective school.
+ * School-attached admins never trust a client-provided school id.
  */
-export async function getPrograms(): Promise<ActionResult<ProgramListItem[]>> {
+export async function getPrograms(targetSchoolId?: string): Promise<ActionResult<ProgramListItem[]>> {
   const adminResult = await getCurrentAdmin()
   if (!adminResult.success || !adminResult.data) {
     return { success: false, error: adminResult.error }
   }
 
   const admin = adminResult.data
+  const schoolResult = await resolveEffectiveSchoolId(admin, targetSchoolId)
+  if (!schoolResult.success || !schoolResult.data) {
+    return { success: false, error: schoolResult.error }
+  }
+
+  const effectiveSchoolId = schoolResult.data
   const serviceClient = createServiceRoleClient()
 
   let query = serviceClient
@@ -125,11 +162,9 @@ export async function getPrograms(): Promise<ActionResult<ProgramListItem[]>> {
     .is('deleted_at', null)
     .order('name')
 
-  // Tenant boundary: school_admin can only see their own school's programs.
-  // Platform admin (school_id IS NULL) can see all programs.
-  if (!admin.isPlatformAdmin && admin.schoolId) {
-    query = query.eq('school_id', admin.schoolId)
-  }
+  // Always scope to exactly one effective school. Platform admins must pass the
+  // selected school explicitly; school-attached admins are pinned to their own.
+  query = query.eq('school_id', effectiveSchoolId)
 
   const { data, error } = await query
 
@@ -196,7 +231,8 @@ export async function getPrograms(): Promise<ActionResult<ProgramListItem[]>> {
  * will be tracked in a separate enrollment_hours or student_hours table in a future slice).
  */
 export async function createProgram(
-  input: CreateProgramInput
+  input: CreateProgramInput,
+  targetSchoolId?: string,
 ): Promise<ActionResult<{ id: string }>> {
   const adminResult = await getCurrentAdmin()
   if (!adminResult.success || !adminResult.data) {
@@ -204,11 +240,11 @@ export async function createProgram(
   }
 
   const admin = adminResult.data
-
-  // Caller must be assigned to a school to create programs.
-  if (!admin.schoolId) {
-    return { success: false, error: 'You must be assigned to a school to create programs.' }
+  const schoolResult = await resolveEffectiveSchoolId(admin, targetSchoolId)
+  if (!schoolResult.success || !schoolResult.data) {
+    return { success: false, error: schoolResult.error }
   }
+  const effectiveSchoolId = schoolResult.data
 
   // Validate input
   const name = input.name?.trim()
@@ -249,7 +285,7 @@ export async function createProgram(
   const { data, error } = await serviceClient
     .from('programs')
     .insert({
-      school_id: admin.schoolId,
+      school_id: effectiveSchoolId,
       name,
       description,
       required_hours: requiredHours,
@@ -291,7 +327,8 @@ export async function createProgram(
  */
 export async function updateProgram(
   programId: string,
-  input: UpdateProgramInput
+  input: UpdateProgramInput,
+  targetSchoolId?: string,
 ): Promise<ActionResult> {
   if (!isValidUUID(programId)) {
     return { success: false, error: 'Invalid program identifier format.' }
@@ -303,10 +340,11 @@ export async function updateProgram(
   }
 
   const admin = adminResult.data
-
-  if (!admin.schoolId && !admin.isPlatformAdmin) {
-    return { success: false, error: 'You must be assigned to a school to update programs.' }
+  const schoolResult = await resolveEffectiveSchoolId(admin, targetSchoolId)
+  if (!schoolResult.success || !schoolResult.data) {
+    return { success: false, error: schoolResult.error }
   }
+  const effectiveSchoolId = schoolResult.data
 
   const serviceClient = createServiceRoleClient()
 
@@ -322,13 +360,13 @@ export async function updateProgram(
     return { success: false, error: 'Program not found.' }
   }
 
-  // Tenant boundary: school_admin can only update programs in their own school.
-  if (!admin.isPlatformAdmin && program.school_id !== admin.schoolId) {
+  // Tenant boundary: the program must belong to the one school being administered.
+  if (program.school_id !== effectiveSchoolId) {
     await logPermissionDenied('update_program', {
       userId: admin.userId,
       email: admin.email,
       role: admin.role,
-      schoolId: admin.schoolId,
+      schoolId: effectiveSchoolId,
       resource: programId,
       action: 'update',
     })
@@ -443,7 +481,7 @@ export async function updateProgram(
  * Lifecycle: idempotent — calling deactivate on an already-deleted program succeeds.
  * Safety: soft-delete only; never hard-deletes to preserve enrollment history integrity.
  */
-export async function deactivateProgram(programId: string): Promise<ActionResult> {
+export async function deactivateProgram(programId: string, targetSchoolId?: string): Promise<ActionResult> {
   if (!isValidUUID(programId)) {
     return { success: false, error: 'Invalid program identifier format.' }
   }
@@ -454,10 +492,11 @@ export async function deactivateProgram(programId: string): Promise<ActionResult
   }
 
   const admin = adminResult.data
-
-  if (!admin.schoolId && !admin.isPlatformAdmin) {
-    return { success: false, error: 'You must be assigned to a school to deactivate programs.' }
+  const schoolResult = await resolveEffectiveSchoolId(admin, targetSchoolId)
+  if (!schoolResult.success || !schoolResult.data) {
+    return { success: false, error: schoolResult.error }
   }
+  const effectiveSchoolId = schoolResult.data
 
   const serviceClient = createServiceRoleClient()
 
@@ -472,13 +511,13 @@ export async function deactivateProgram(programId: string): Promise<ActionResult
     return { success: false, error: 'Program not found.' }
   }
 
-  // Tenant boundary
-  if (!admin.isPlatformAdmin && program.school_id !== admin.schoolId) {
+  // Tenant boundary: the program must belong to the one school being administered.
+  if (program.school_id !== effectiveSchoolId) {
     await logPermissionDenied('deactivate_program', {
       userId: admin.userId,
       email: admin.email,
       role: admin.role,
-      schoolId: admin.schoolId,
+      schoolId: effectiveSchoolId,
       resource: programId,
       action: 'deactivate',
     })
