@@ -214,6 +214,31 @@ describe('ADM-1B school-level mathematics integrity', () => {
     expect(row.riskReasons).toEqual([])
   })
 
+  it('renders zero-evidence school health as not enough data instead of critical', () => {
+    const data = inputs({ students: [student('new-student')] })
+
+    const health = buildSchoolHealthScore(data)
+    const report = generateSchoolReport('school_summary', data)
+
+    expect(health.score).toBe(0)
+    expect(health.hasEvidence).toBe(false)
+    expect(health.label).toBe('Not enough data yet')
+    expect(report.summary).toBe('School health: Not enough data yet')
+  })
+
+  it('preserves a real 0/100 critical score when actual evidence exists', () => {
+    const data = inputs({
+      students: [student('zero-score-student')],
+      quizAttempts: [attempt('zero-score-student', 0)],
+    })
+
+    const health = buildSchoolHealthScore(data)
+
+    expect(health.score).toBe(0)
+    expect(health.hasEvidence).toBe(true)
+    expect(health.label).toBe('Critical')
+  })
+
   it('counts genuine negative evidence as at-risk', () => {
     const atRisk = student('risk')
     const data = inputs({
