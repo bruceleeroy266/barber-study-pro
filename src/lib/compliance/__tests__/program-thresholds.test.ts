@@ -119,26 +119,45 @@ describe('per-program requiredHours through the compliance stack', () => {
     expect(result.remainingItems.some((r) => r.includes('hours remaining'))).toBe(false)
   })
 
-  it('compliance reports render per-student required hours', () => {
+  it('compliance reports preserve per-student required hours once hour evidence exists', () => {
     const students = [makeStudent('s1'), makeStudent('s2')]
     const map = new Map<string, ComplianceRuleThresholds>([
       ['s1', thresholdsWithRequiredHours(1000)],
       // s2 intentionally unmapped → default fallback
     ])
-    const report = generateComplianceReport(
+    const emptyReport = generateComplianceReport(
       'student_compliance',
       { students, ...emptyReportInputs },
       map
     )
-    const row1 = report.rows.find((r) => r.Student === 'Student s1')
-    const row2 = report.rows.find((r) => r.Student === 'Student s2')
-    expect(row1?.Hours).toBe('0/1000')
-    expect(row2?.Hours).toBe('0/1200')
+    expect(emptyReport.rows.find((r) => r.Student === 'Student s1')?.Hours).toBe('No Hours Data')
+    expect(emptyReport.rows.find((r) => r.Student === 'Student s2')?.Hours).toBe('No Hours Data')
+
+    const measuredReport = generateComplianceReport(
+      'student_compliance',
+      {
+        students,
+        ...emptyReportInputs,
+        priorCreditMinutesByStudentId: { s1: 60, s2: 60 },
+      },
+      map
+    )
+    const row1 = measuredReport.rows.find((r) => r.Student === 'Student s1')
+    const row2 = measuredReport.rows.find((r) => r.Student === 'Student s2')
+    expect(row1?.Hours).toBe('1/1000')
+    expect(row2?.Hours).toBe('1/1200')
   })
 
-  it('omitting the thresholds map preserves prior hard-coded behavior', () => {
+  it('omitting the thresholds map preserves the default required-hours fallback after evidence exists', () => {
     const students = [makeStudent('s1')]
-    const report = generateComplianceReport('student_compliance', { students, ...emptyReportInputs })
-    expect(report.rows[0]?.Hours).toBe('0/1200')
+    const emptyReport = generateComplianceReport('student_compliance', { students, ...emptyReportInputs })
+    expect(emptyReport.rows[0]?.Hours).toBe('No Hours Data')
+
+    const measuredReport = generateComplianceReport('student_compliance', {
+      students,
+      ...emptyReportInputs,
+      priorCreditMinutesByStudentId: { s1: 60 },
+    })
+    expect(measuredReport.rows[0]?.Hours).toBe('1/1200')
   })
 })
