@@ -49,13 +49,13 @@ export default function SchoolOverviewMetrics({ metrics }: Props) {
       />
       <MetricCard
         label="Avg Attendance"
-        value={`${metrics.averageAttendance}%`}
+        value={metrics.hasAttendanceEvidence ? `${metrics.averageAttendance}%` : 'Not enough data yet'}
         icon={CalendarCheck}
         colorClass="text-gold"
       />
       <MetricCard
         label="Avg Readiness"
-        value={metrics.averageReadiness}
+        value={metrics.hasReadinessEvidence ? metrics.averageReadiness : 'Not enough data yet'}
         icon={Target}
         colorClass="text-[var(--color-brand-gold)]"
       />
@@ -67,7 +67,7 @@ export default function SchoolOverviewMetrics({ metrics }: Props) {
       />
       <MetricCard
         label="Assessment Completion"
-        value={`${metrics.assessmentCompletionRate}%`}
+        value={metrics.hasAssessmentEvidence ? `${metrics.assessmentCompletionRate}%` : 'Not enough data yet'}
         icon={ClipboardCheck}
         colorClass="text-silver"
       />

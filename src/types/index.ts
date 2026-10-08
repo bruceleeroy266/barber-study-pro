@@ -594,26 +594,33 @@ export interface SchoolOverviewMetrics {
   graduatedStudents: number
   atRiskStudents: number
   averageAttendance: number
+  hasAttendanceEvidence: boolean
   averageReadiness: number
+  hasReadinessEvidence: boolean
   averageGrade: number
   hasGradeEvidence: boolean
   completedHours: number
+  hasHoursEvidence: boolean
   remainingHours: number
   assessmentCompletionRate: number
+  hasAssessmentEvidence: boolean
 }
 
 export interface StudentPerformanceRow {
   studentId: string
   fullName: string
   attendancePercentage: number
+  hasAttendanceEvidence: boolean
   readinessScore: number
   hasReadinessEvidence: boolean
   overallGrade: number
   hasGradeEvidence: boolean
   hasAssessmentEvidence: boolean
   completedHours: number
+  hasHoursEvidence: boolean
   requiredHours: number
   assessmentPassRate: number
+  hasAnyEvidence: boolean
   isAtRisk: boolean
   riskReasons: string[]
 }

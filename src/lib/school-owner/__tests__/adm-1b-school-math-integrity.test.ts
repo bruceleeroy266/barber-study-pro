@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  buildSchoolAnalyticsSnapshot,
   buildSchoolHealthScore,
   buildSchoolOverviewMetrics,
   buildStudentPerformanceRows,
@@ -207,11 +208,30 @@ describe('ADM-1B school-level mathematics integrity', () => {
     const row = buildStudentPerformanceRows(data)[0]
 
     expect(metrics.averageAttendance).toBe(0)
+    expect(metrics.hasAttendanceEvidence).toBe(false)
     expect(metrics.averageReadiness).toBe(0)
+    expect(metrics.hasReadinessEvidence).toBe(false)
     expect(metrics.averageGrade).toBe(0)
+    expect(metrics.hasGradeEvidence).toBe(false)
+    expect(metrics.hasHoursEvidence).toBe(false)
+    expect(metrics.hasAssessmentEvidence).toBe(false)
     expect(metrics.atRiskStudents).toBe(0)
+    expect(row.hasAttendanceEvidence).toBe(false)
+    expect(row.hasHoursEvidence).toBe(false)
+    expect(row.hasAnyEvidence).toBe(false)
     expect(row.isAtRisk).toBe(false)
     expect(row.riskReasons).toEqual([])
+
+    const snapshot = buildSchoolAnalyticsSnapshot(data)
+    expect(snapshot.attendanceTrend).toEqual([])
+    expect(snapshot.readinessTrend).toEqual([])
+    expect(snapshot.assessmentCompletionTrend).toEqual([])
+    expect(snapshot.hoursCompletionTrend).toEqual([])
+    expect(snapshot.riskDistribution).toEqual([
+      { label: 'At Risk', count: 0, colorClass: 'bg-silver' },
+      { label: 'On Track', count: 0, colorClass: 'bg-gold' },
+      { label: 'No Data', count: 1, colorClass: 'bg-silver-gray' },
+    ])
   })
 
   it('renders zero-evidence school health as not enough data instead of critical', () => {
@@ -237,6 +257,33 @@ describe('ADM-1B school-level mathematics integrity', () => {
     expect(health.score).toBe(0)
     expect(health.hasEvidence).toBe(true)
     expect(health.label).toBe('Critical')
+  })
+
+  it('preserves measured school overview and risk distribution after real evidence exists', () => {
+    const measured = student('measured')
+    const data = inputs({
+      students: [measured],
+      attendanceRecords: [attendance('measured')],
+      hourLogs: [hourLog('measured', 100)],
+      quizAttempts: [attempt('measured', 60)],
+      progress: [progress('measured', 20)],
+      assessments: [assessment('measured', 1, false)],
+    })
+
+    const metrics = buildSchoolOverviewMetrics(data)
+    const row = buildStudentPerformanceRows(data)[0]
+    const snapshot = buildSchoolAnalyticsSnapshot(data)
+
+    expect(metrics.hasAttendanceEvidence).toBe(true)
+    expect(metrics.hasReadinessEvidence).toBe(true)
+    expect(metrics.hasHoursEvidence).toBe(true)
+    expect(metrics.hasAssessmentEvidence).toBe(true)
+    expect(row.hasAnyEvidence).toBe(true)
+    expect(snapshot.attendanceTrend).toHaveLength(14)
+    expect(snapshot.readinessTrend).toHaveLength(14)
+    expect(snapshot.assessmentCompletionTrend).toHaveLength(14)
+    expect(snapshot.hoursCompletionTrend).toHaveLength(14)
+    expect(snapshot.riskDistribution.find((bucket) => bucket.label === 'No Data')?.count).toBe(0)
   })
 
   it('counts genuine negative evidence as at-risk', () => {
