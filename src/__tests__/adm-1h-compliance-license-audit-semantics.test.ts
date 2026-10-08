@@ -144,6 +144,31 @@ describe('ADM-1H compliance/license/audit-center semantics', () => {
     expect(row?.Status).toBe('Critical')
   })
 
+  it('keeps school-level tracking aggregates in no-data state until evidence exists', () => {
+    const report = generateComplianceReport(
+      'school_compliance',
+      { students: [student('s1'), student('s2')], ...emptyInputs },
+    )
+
+    expect(report.summary).toBe('Average ASCYN tracking score: Not enough data yet')
+    expect(report.rows.find((row) => row.Metric === 'Average Tracking Score')?.Value).toBe('Not enough data yet')
+    expect(report.rows.find((row) => row.Metric === 'Needs Attention')?.Value).toBe(0)
+  })
+
+  it('uses only students with real evidence in school-level tracking aggregates', () => {
+    const report = generateComplianceReport(
+      'school_compliance',
+      {
+        students: [student('s1'), student('s2')],
+        ...emptyInputs,
+        hourLogs: [hourLog('s1', 300)],
+      },
+    )
+
+    expect(report.rows.find((row) => row.Metric === 'Average Tracking Score')?.Value).toBe(41)
+    expect(report.rows.find((row) => row.Metric === 'Needs Attention')?.Value).toBe(1)
+  })
+
   it('does not present the internal requirements report as a licensing determination', () => {
     const report = generateComplianceReport(
       'board_eligibility',
