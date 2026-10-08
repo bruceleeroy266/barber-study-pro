@@ -101,14 +101,17 @@ export function resolveSchoolOnboardingStatus(
     .map((learner) => learner.id)
 
   const activeInstructorIds = new Set(instructors.map((i) => i.id))
+  const canonicalStudentIdToProfileId = new Map(
+    input.studentRows.map((row) => [row.id, row.profile_id])
+  )
   const assignedLearnerIds = new Set(
     input.activeAssignments
-      .filter(
+      .filter((assignment) => activeInstructorIds.has(assignment.instructor_id))
+      .map(
         (assignment) =>
-          learnerProfileIds.has(assignment.student_id) &&
-          activeInstructorIds.has(assignment.instructor_id)
+          canonicalStudentIdToProfileId.get(assignment.student_id) ?? assignment.student_id
       )
-      .map((assignment) => assignment.student_id)
+      .filter((studentProfileId) => learnerProfileIds.has(studentProfileId))
   )
   const unassignedLearnerIds = learners
     .filter((learner) => !assignedLearnerIds.has(learner.id))
