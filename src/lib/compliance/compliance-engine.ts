@@ -167,7 +167,8 @@ export function buildComplianceAlerts(inputs: StudentComplianceInputs): Complian
     attendanceRecords.filter((r) => r.userId === student.id)
   )
 
-  if (attSummary.isAtRisk) {
+  const hasAttendanceEvidence = attSummary.totalDays > 0
+  if (hasAttendanceEvidence && attSummary.isAtRisk) {
     alerts.push({
       id: `comp-att-${student.id}`,
       type: 'low_attendance',
@@ -194,7 +195,9 @@ export function buildComplianceAlerts(inputs: StudentComplianceInputs): Complian
     requiredHours: adaptiveHours.effectiveRequiredHours,
   }
 
-  if (completedHours < thresholds.requiredHours * 0.5) {
+  const studentHourLogs = hourLogs.filter((h) => h.user_id === student.id)
+  const hasHoursEvidence = studentHourLogs.length > 0 || adaptiveHours.priorCreditMinutes > 0
+  if (hasHoursEvidence && completedHours < thresholds.requiredHours * 0.5) {
     alerts.push({
       id: `comp-hours-${student.id}`,
       type: 'missing_hours',
@@ -211,7 +214,8 @@ export function buildComplianceAlerts(inputs: StudentComplianceInputs): Complian
   const passedAssessments = sAssessments.filter((a) => a.isPassed).length
   const completedAssessments = sAssessments.length
   const requiredAssessments = thresholds.requiredAssessments
-  if (requiredAssessments > 0 && completedAssessments < requiredAssessments) {
+  const hasAssessmentEvidence = completedAssessments > 0
+  if (hasAssessmentEvidence && requiredAssessments > 0 && completedAssessments < requiredAssessments) {
     alerts.push({
       id: `comp-assess-${student.id}`,
       type: 'missing_assessments',
@@ -225,7 +229,7 @@ export function buildComplianceAlerts(inputs: StudentComplianceInputs): Complian
   }
 
   const completedPracticals = sAssessments.length
-  if (thresholds.requiredPracticals > 0 && completedPracticals < thresholds.requiredPracticals) {
+  if (hasAssessmentEvidence && thresholds.requiredPracticals > 0 && completedPracticals < thresholds.requiredPracticals) {
     alerts.push({
       id: `comp-prac-${student.id}`,
       type: 'missing_practicals',
@@ -283,10 +287,14 @@ export function buildComplianceAlerts(inputs: StudentComplianceInputs): Complian
     })
   }
 
+  const hasGraduationEvidence = hasHoursEvidence || hasAssessmentEvidence
   if (
-    completedHours < thresholds.requiredHours ||
-    (thresholds.requiredAssessments > 0 && completedAssessments < thresholds.requiredAssessments) ||
-    (thresholds.requiredPracticals > 0 && completedPracticals < thresholds.requiredPracticals)
+    hasGraduationEvidence &&
+    (
+      (hasHoursEvidence && completedHours < thresholds.requiredHours) ||
+      (hasAssessmentEvidence && thresholds.requiredAssessments > 0 && completedAssessments < thresholds.requiredAssessments) ||
+      (hasAssessmentEvidence && thresholds.requiredPracticals > 0 && completedPracticals < thresholds.requiredPracticals)
+    )
   ) {
     alerts.push({
       id: `comp-grad-${student.id}`,
