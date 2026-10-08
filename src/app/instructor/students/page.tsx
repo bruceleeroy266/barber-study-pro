@@ -27,6 +27,8 @@ interface RosterStudent extends Profile {
   daysSinceLogin: number | null
   readinessScore: number
   readinessLevel: string
+  hasProgressEvidence: boolean
+  hasReadinessEvidence: boolean
   weakestCategory: string | null
   studyMinutesToday: number
   studyStreakDays: number
@@ -89,6 +91,8 @@ function computeStudentStats(
       overallProgress,
       averageQuizScore: avgQuizScore,
       readiness,
+      hasProgressEvidence,
+      hasReadinessEvidence,
     } = canonicalMetrics
 
     const lastStudiedAt = lastStudyActivityAt
@@ -124,6 +128,8 @@ function computeStudentStats(
       daysSinceLogin,
       readinessScore: readiness.score,
       readinessLevel: readiness.level,
+      hasProgressEvidence,
+      hasReadinessEvidence,
       weakestCategory,
       studyMinutesToday,
       studyStreakDays,
@@ -252,8 +258,8 @@ export default async function InstructorStudentsPage() {
   const totalStudents = metricStudentStats.length
   const activeStudents = metricStudentStats.filter((s) => s.daysSinceActive !== null && s.daysSinceActive <= 7).length
   const atRiskStudents = metricStudentStats.filter((s) => {
-    const lowReadiness = s.readinessScore > 0 && s.readinessScore < 70
-    const lowProgress = s.overallProgress < 50
+    const lowReadiness = s.hasReadinessEvidence && s.readinessScore < 70
+    const lowProgress = s.hasProgressEvidence && s.overallProgress < 50
     const lowQuiz = s.quizzesTaken > 0 && s.avgQuizScore < 70
     const inactive = s.daysSinceActive !== null && s.daysSinceActive > 14
     return lowReadiness || lowProgress || lowQuiz || inactive
@@ -305,8 +311,8 @@ export default async function InstructorStudentsPage() {
             <div className="space-y-3">
               {atRiskStudents.slice(0, 5).map((student) => {
                 const factors: string[] = []
-                if (student.readinessScore > 0 && student.readinessScore < 70) factors.push('Low readiness')
-                if (student.overallProgress < 50) factors.push('Low progress')
+                if (student.hasReadinessEvidence && student.readinessScore < 70) factors.push('Low readiness')
+                if (student.hasProgressEvidence && student.overallProgress < 50) factors.push('Low progress')
                 if (student.quizzesTaken > 0 && student.avgQuizScore < 70) factors.push('Low quiz avg')
                 if (student.daysSinceActive !== null && student.daysSinceActive > 14) factors.push('Inactive')
                 
