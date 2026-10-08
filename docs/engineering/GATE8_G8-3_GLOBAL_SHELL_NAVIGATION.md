@@ -4,7 +4,7 @@
 **Gate:** Gate 8 — Mobile + Accessibility Reliability  
 **Slice:** G8-3 — Global Shell + Navigation Foundation  
 **Baseline:** production `main` at `1941f5e41f7a7669c14f213ce6d7f45d95483f4c`  
-**Status:** IMPLEMENTATION IN PROGRESS — HIGH SHELL/NAV FINDINGS REPAIRED
+**Status:** IMPLEMENTATION IN PROGRESS — HIGH SHELL/NAV FINDINGS REPAIRED + NARROW-VIEWPORT CERTIFICATION ADDED
 
 ## Product Boundary
 
@@ -85,12 +85,43 @@ This slice does not change:
 - Escape, focus trap, focus return, and scroll lock implementation;
 - no messaging or database migration scope.
 
-## Remaining G8-3 work after this first HIGH pass
+## Continued G8-3 certification
 
-Still to certify/consider within G8-3:
-- route-current semantics such as `aria-current`;
-- shared focus-visible normalization where warranted;
-- live 320/360/390 mobile navigation behavior;
-- any global overflow/touch primitive needed by later slices.
+### Current-route semantics
+Primary student, instructor, and admin navigation links now expose `aria-current="page"` when active. This supplements the existing visual active state without changing route matching or authorization.
+
+### Focus-visible normalization
+Mobile-menu triggers and primary navigation links now use explicit `focus-visible` rings instead of relying only on hover/color treatment. Existing working focus behavior is preserved; no global design-system rewrite is introduced.
+
+### 320 / 360 / 390 CSS px browser certification
+The existing disposable-Supabase onboarding browser journey now certifies the real authenticated role shells at 320, 360, and 390 CSS px for:
+- platform admin;
+- instructor;
+- student.
+
+At each width the certification checks:
+- mobile trigger is visible;
+- trigger is at least 44x44 CSS px;
+- no document-level horizontal overflow;
+- menu opens and reports expanded state;
+- focus moves into the opened modal navigation;
+- Escape closes the menu;
+- focus returns to the trigger.
+
+For the student shell it additionally verifies the first main-content block begins below the fixed mobile header.
+
+### Focus lifecycle unit test
+`src/__tests__/useAccessibleMobileMenu.test.tsx` verifies in jsdom:
+- focus entry;
+- forward and reverse Tab containment;
+- Escape close;
+- trigger focus restoration;
+- body scroll lock restoration.
+
+## Remaining G8-3 work after this pass
+
+Still to consider within G8-3:
+- any additional global overflow/touch primitive needed by later slices;
+- final exact-head CI + Vercel certification before merge.
 
 Those are not allowed to expand business scope.
