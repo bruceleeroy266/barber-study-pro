@@ -10,6 +10,7 @@ import { logLogout } from '@/app/(auth)/actions'
 import { Logo } from '@/components/brand'
 import EscalationBadge from '@/components/instructor/EscalationBadge'
 import BackButton from '@/components/ui/BackButton'
+import { useAccessibleMobileMenu } from '@/hooks/useAccessibleMobileMenu'
 
 interface InstructorNavProps {
   user: Profile | null
@@ -35,6 +36,7 @@ const navItems = [
 
 export default function InstructorNav({ user }: InstructorNavProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { triggerRef, panelRef } = useAccessibleMobileMenu(mobileMenuOpen, setMobileMenuOpen)
   const pathname = usePathname()
   const router = useRouter()
   const backFallbackHref =
@@ -87,6 +89,7 @@ export default function InstructorNav({ user }: InstructorNavProps) {
             <Logo variant="full" size="3xl" className="hidden lg:block" />
           </Link>
           <button
+            ref={triggerRef}
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? 'Close instructor navigation' : 'Open instructor navigation'}
@@ -107,7 +110,15 @@ export default function InstructorNav({ user }: InstructorNavProps) {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div id="instructor-mobile-navigation" className="lg:hidden fixed inset-0 z-40 bg-black pt-16 overflow-y-auto">
+        <div
+          ref={panelRef}
+          id="instructor-mobile-navigation"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Instructor navigation menu"
+          tabIndex={-1}
+          className="lg:hidden fixed inset-0 z-40 bg-black pt-16 overflow-y-auto"
+        >
           <nav aria-label="Instructor navigation" className="p-4 space-y-2 pb-8">
             <div className="px-2 pb-2">
               <BackButton fallbackHref={backFallbackHref} label="Back" />
