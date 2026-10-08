@@ -7,11 +7,27 @@ import { Card, ProgressBar } from '@/components/ui'
 
 interface BoardReadinessCardProps {
   readiness: BoardReadiness
+  hasEvidence?: boolean
 }
 
-export default function BoardReadinessCard({ readiness }: BoardReadinessCardProps) {
+export default function BoardReadinessCard({ readiness, hasEvidence = true }: BoardReadinessCardProps) {
   const colorClass = getReadinessColorClass(readiness.score)
   const bgClass = getReadinessBgClass(readiness.score)
+
+  if (!hasEvidence) {
+    return (
+      <Card variant="default" padding="lg">
+        <h2 className="text-xl font-semibold text-white flex items-center gap-2">
+          <Award className="w-5 h-5 text-[var(--color-brand-gold)]" />
+          Board Readiness
+        </h2>
+        <p className="mt-3 text-lg font-semibold text-[var(--color-text-secondary)]">Not enough data yet</p>
+        <p className="mt-1 text-sm text-[var(--color-text-muted)]">
+          Readiness will appear after you complete learning activities or quizzes.
+        </p>
+      </Card>
+    )
+  }
 
   return (
     <Card variant="default" padding="lg" className="space-y-6">
