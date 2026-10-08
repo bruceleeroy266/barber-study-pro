@@ -531,6 +531,8 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     quizzesPassed: quizzesCompleted,
     averageQuizScore: avgQuizScore,
     hasQuizEvidence,
+    hasProgressEvidence,
+    hasReadinessEvidence,
     readiness: boardReadiness,
   } = canonicalMetrics
   const readiness = {
@@ -1120,6 +1122,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     strongAreas: analytics.strongAreas,
     missedQuestions,
     totalChapters,
+    hasEvidence: hasReadinessEvidence,
   })
 
   // Weak area analytics (legacy)
@@ -1221,7 +1224,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
               overallProgress >= 80 ? 'text-gold' :
               overallProgress >= 50 ? 'text-warm-bronze' : 'text-silver'
             }`}>
-              {overallProgress}%
+              {hasProgressEvidence ? `${overallProgress}%` : '—'}
             </div>
             <div className="text-xs text-silver mt-1">Overall Progress</div>
           </div>
@@ -1249,8 +1252,10 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           </div>
 
           <div className="bg-charcoal border border-graphite rounded-xl p-5">
-            <div className={`text-2xl font-bold ${readiness.color}`}>{readiness.score}</div>
-            <div className="text-xs text-silver mt-1">{readiness.label}</div>
+            <div className={`text-2xl font-bold ${hasReadinessEvidence ? readiness.color : 'text-silver-gray'}`}>
+              {hasReadinessEvidence ? readiness.score : '—'}
+            </div>
+            <div className="text-xs text-silver mt-1">{hasReadinessEvidence ? readiness.label : 'No Data'}</div>
           </div>
         </div>
 
@@ -4844,7 +4849,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
         </ChapterAccordionGroup>
 
         {/* Phase 5 — Board Readiness & Analytics */}
-        <BoardReadinessCard readiness={boardReadiness} />
+        <BoardReadinessCard readiness={boardReadiness} hasEvidence={hasReadinessEvidence} />
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           <div className="xl:col-span-2">
@@ -4857,6 +4862,7 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
 
         <AnalyticsCharts
           readinessScore={boardReadiness.score}
+          hasReadinessEvidence={hasReadinessEvidence}
           categoryPerformance={analytics.categoryPerformance}
           chapterPerformance={analytics.chapterPerformance}
           missedQuestionTrend={analytics.missedQuestionTrend}
