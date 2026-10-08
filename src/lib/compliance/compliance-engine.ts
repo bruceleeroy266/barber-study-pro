@@ -121,6 +121,19 @@ export function buildStudentCompliance(inputs: StudentComplianceInputs) {
     overallGrade,
   }, thresholds)
 
+  const studentHourLogs = hourLogs.filter((h) => h.user_id === student.id)
+  const hasAttendanceEvidence = attSummary.totalDays > 0
+  const hasHoursEvidence = studentHourLogs.length > 0 || adaptiveHours.priorCreditMinutes > 0
+  const hasReadinessEvidence = learningMetrics.hasReadinessEvidence
+  const hasGradeEvidence = gradePerformance.hasGradeEvidence
+  const hasAssessmentEvidence = completedAssessments > 0
+  const hasTrackingEvidence =
+    hasAttendanceEvidence ||
+    hasHoursEvidence ||
+    hasReadinessEvidence ||
+    hasGradeEvidence ||
+    hasAssessmentEvidence
+
   return {
     studentId: student.id,
     fullName: student.full_name,
@@ -135,10 +148,12 @@ export function buildStudentCompliance(inputs: StudentComplianceInputs) {
     assessmentPassRate,
     practicalPassRate,
     overallGrade,
-    hasAttendanceEvidence: attSummary.totalDays > 0,
-    hasReadinessEvidence: learningMetrics.hasReadinessEvidence,
-    hasGradeEvidence: gradePerformance.hasGradeEvidence,
-    hasAssessmentEvidence: completedAssessments > 0,
+    hasAttendanceEvidence,
+    hasHoursEvidence,
+    hasReadinessEvidence,
+    hasGradeEvidence,
+    hasAssessmentEvidence,
+    hasTrackingEvidence,
   }
 }
 

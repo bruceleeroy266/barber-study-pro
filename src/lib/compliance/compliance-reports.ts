@@ -59,7 +59,7 @@ export function generateComplianceReport(
         summary: `ASCYN PRO requirement tracking overview for ${inputs.students.length} students`,
         rows: rows.map((r) => ({
           Student: r.fullName,
-          'Tracking Score': r.complianceScore.score,
+          'Tracking Score': r.hasTrackingEvidence ? r.complianceScore.score : 'Not enough data yet',
           Attendance: r.hasAttendanceEvidence ? `${r.attendanceSummary.attendancePercentage}%` : 'No Attendance Data',
           Hours: `${Math.round(r.completedHours)}/${r.graduationReadiness.requiredHours}`,
           'Earned Here': Math.round(r.earnedHours),
@@ -72,7 +72,7 @@ export function generateComplianceReport(
             : r.hasAssessmentEvidence ? `${r.practicalPassRate}%` : 'No Practicals',
           Readiness: r.hasReadinessEvidence ? r.readiness.score : 'No Data',
           Grade: r.hasGradeEvidence ? `${r.overallGrade}%` : 'No Grade',
-          Status: r.complianceScore.label,
+          Status: r.hasTrackingEvidence ? r.complianceScore.label : 'Not enough data yet',
         })),
       }
     case 'graduation_readiness':
