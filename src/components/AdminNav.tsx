@@ -75,7 +75,7 @@ export default function AdminNav({ user }: AdminNavProps) {
             ref={triggerRef}
             type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="min-h-11 min-w-11 p-2 text-silver hover:text-white"
+            className="min-h-11 min-w-11 p-2 text-silver hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal rounded-lg"
             aria-label={mobileOpen ? 'Close admin navigation' : 'Open admin navigation'}
             aria-expanded={mobileOpen}
             aria-controls="admin-mobile-navigation"
@@ -107,8 +107,9 @@ export default function AdminNav({ user }: AdminNavProps) {
                 <Link
                   key={link.href}
                   href={link.href}
+                  aria-current={active ? 'page' : undefined}
                   onClick={() => setMobileOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                     active
                       ? 'bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/20'
                       : 'text-silver hover:bg-graphite hover:text-white'
@@ -158,7 +159,8 @@ export default function AdminNav({ user }: AdminNavProps) {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                  aria-current={active ? 'page' : undefined}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal ${
                     active
                       ? 'bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/20'
                       : 'text-silver hover:bg-graphite hover:text-white'
