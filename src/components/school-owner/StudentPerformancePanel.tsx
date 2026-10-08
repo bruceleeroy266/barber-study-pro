@@ -45,13 +45,13 @@ export default function StudentPerformancePanel({ rows }: Props) {
         data = data.filter((r) => r.isAtRisk)
         break
       case 'lowAttendance':
-        data = data.filter((r) => r.attendancePercentage < 80)
+        data = data.filter((r) => r.hasAttendanceEvidence && r.attendancePercentage < 80)
         break
       case 'lowReadiness':
         data = data.filter((r) => r.hasReadinessEvidence && r.readinessScore < 70)
         break
       case 'missingHours':
-        data = data.filter((r) => r.completedHours < r.requiredHours * 0.5)
+        data = data.filter((r) => r.hasHoursEvidence && r.completedHours < r.requiredHours * 0.5)
         break
       case 'failedAssessment':
         data = data.filter((r) => r.hasAssessmentEvidence && r.assessmentPassRate < 80)
@@ -136,8 +136,8 @@ export default function StudentPerformancePanel({ rows }: Props) {
                   )}
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`font-medium ${row.attendancePercentage >= 80 ? 'text-gold' : row.attendancePercentage >= 70 ? 'text-warm-bronze' : 'text-silver'}`}>
-                    {row.attendancePercentage}%
+                  <span className={`font-medium ${!row.hasAttendanceEvidence ? 'text-silver-gray' : row.attendancePercentage >= 80 ? 'text-gold' : row.attendancePercentage >= 70 ? 'text-warm-bronze' : 'text-silver'}`}>
+                    {row.hasAttendanceEvidence ? `${row.attendancePercentage}%` : '—'}
                   </span>
                 </td>
                 <td className="px-4 py-3">
@@ -151,7 +151,7 @@ export default function StudentPerformancePanel({ rows }: Props) {
                   </span>
                 </td>
                 <td className="px-4 py-3 text-light-gray">
-                  {row.completedHours}/{row.requiredHours}
+                  {row.hasHoursEvidence ? `${row.completedHours}/${row.requiredHours}` : '—'}
                 </td>
                 <td className="px-4 py-3">
                   <span className={`font-medium ${row.assessmentPassRate >= 80 ? 'text-gold' : 'text-silver'}`}>
@@ -159,7 +159,11 @@ export default function StudentPerformancePanel({ rows }: Props) {
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  {row.isAtRisk ? (
+                  {!row.hasAnyEvidence ? (
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-graphite text-silver-gray border border-graphite">
+                      No Data
+                    </span>
+                  ) : row.isAtRisk ? (
                     <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-silver/10 text-silver border border-silver/20">
                       <AlertTriangle className="w-3 h-3" /> At Risk
                     </span>
