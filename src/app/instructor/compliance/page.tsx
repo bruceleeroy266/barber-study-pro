@@ -204,22 +204,28 @@ export default async function InstructorComplianceDashboard() {
   const metricStudentCompliances = studentCompliances.filter((compliance) =>
     metricStudentIdSet.has(compliance.studentId)
   )
-  const atRiskStudents = metricStudentCompliances.filter((c) => c.complianceScore.score < 70)
+  const atRiskStudents = metricStudentCompliances.filter(
+    (c) => c.hasTrackingEvidence && c.complianceScore.score < 70
+  )
   const missingHours = metricStudentCompliances.filter(
-    (c) => c.completedHours < c.graduationReadiness.requiredHours * 0.5,
+    (c) => c.hasHoursEvidence && c.completedHours < c.graduationReadiness.requiredHours * 0.5,
   )
   const missingPracticals = metricStudentCompliances.filter((c) =>
+    c.hasAssessmentEvidence &&
     c.graduationReadiness.requiredPracticals > 0 &&
     c.graduationReadiness.completedPracticals < c.graduationReadiness.requiredPracticals
   )
   const missingAssessments = metricStudentCompliances.filter((c) =>
+    c.hasAssessmentEvidence &&
     c.graduationReadiness.requiredAssessments > 0 &&
     c.graduationReadiness.completedAssessments < c.graduationReadiness.requiredAssessments
   )
   const lowReadiness = metricStudentCompliances.filter((c) =>
     c.hasReadinessEvidence && c.readiness.score < DEFAULT_COMPLIANCE_THRESHOLDS.minimumReadinessScore
   )
-  const trackedRequirementsMet = metricStudentCompliances.filter((c) => c.boardEligibility.status === 'eligible')
+  const trackedRequirementsMet = metricStudentCompliances.filter(
+    (c) => c.hasTrackingEvidence && c.boardEligibility.status === 'eligible'
+  )
 
   return (
     <div className="min-h-screen bg-[var(--color-background-primary)] p-6 lg:p-8">
@@ -283,16 +289,18 @@ export default async function InstructorComplianceDashboard() {
                   <tr key={c.studentId} className="hover:bg-[var(--color-background-secondary)]/30">
                     <td className="px-4 py-3 text-white font-medium">{c.fullName}</td>
                     <td className="px-4 py-3">
-                      <span className={`font-medium ${c.complianceScore.colorClass}`}>{c.complianceScore.score}</span>
+                      <span className={`font-medium ${c.hasTrackingEvidence ? c.complianceScore.colorClass : 'text-[var(--color-text-muted)]'}`}>
+                        {c.hasTrackingEvidence ? c.complianceScore.score : '—'}
+                      </span>
                     </td>
                     <td className="px-4 py-3 text-[var(--color-text-secondary)]">{c.hasAttendanceEvidence ? `${c.attendanceSummary.attendancePercentage}%` : '—'}</td>
-                    <td className="px-4 py-3 text-[var(--color-text-secondary)]">{Math.round(c.completedHours)}/{c.graduationReadiness.requiredHours}</td>
+                    <td className="px-4 py-3 text-[var(--color-text-secondary)]">{c.hasHoursEvidence ? `${Math.round(c.completedHours)}/${c.graduationReadiness.requiredHours}` : '—'}</td>
                     <td className="px-4 py-3 text-[var(--color-text-secondary)]">{c.graduationReadiness.requiredAssessments <= 0 ? 'N/A' : c.hasAssessmentEvidence ? `${c.assessmentPassRate}%` : '—'}</td>
                     <td className="px-4 py-3 text-[var(--color-text-secondary)]">{c.graduationReadiness.requiredPracticals <= 0 ? 'N/A' : c.hasAssessmentEvidence ? `${c.practicalPassRate}%` : '—'}</td>
                     <td className="px-4 py-3 text-[var(--color-text-secondary)]">{c.hasReadinessEvidence ? c.readiness.score : '—'}</td>
                     <td className="px-4 py-3">
-                      <span className={`text-xs font-medium ${c.boardEligibility.colorClass}`}>
-                        {c.boardEligibility.label}
+                      <span className={`text-xs font-medium ${c.hasTrackingEvidence ? c.boardEligibility.colorClass : 'text-[var(--color-text-muted)]'}`}>
+                        {c.hasTrackingEvidence ? c.boardEligibility.label : 'No Data'}
                       </span>
                     </td>
                   </tr>
