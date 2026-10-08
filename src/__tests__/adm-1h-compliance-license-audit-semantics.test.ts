@@ -148,6 +148,7 @@ describe('ADM-1H compliance/license/audit-center semantics', () => {
     expect(row?.['Tracking Score']).toBe('Not enough data yet')
     expect(row?.Status).toBe('Not enough data yet')
     expect(row?.Attendance).toBe('No Attendance Data')
+    expect(row?.Hours).toBe('No Hours Data')
     expect(row?.['Assessment Pass Rate']).toBe('Not Required')
     expect(row?.['Practical Pass Rate']).toBe('Not Required')
     expect(row?.Readiness).toBe('No Data')
@@ -193,6 +194,62 @@ describe('ADM-1H compliance/license/audit-center semantics', () => {
 
     expect(report.rows.find((row) => row.Metric === 'Average Tracking Score')?.Value).toBe(41)
     expect(report.rows.find((row) => row.Metric === 'Needs Attention')?.Value).toBe(1)
+  })
+
+  it('NZD-2: keeps program-completion readiness neutral with zero evidence', () => {
+    const report = generateComplianceReport(
+      'graduation_readiness',
+      { students: [student('s1')], ...emptyInputs },
+    )
+    const row = report.rows[0]
+
+    expect(report.summary).toBe('Program completion readiness: Not enough data yet')
+    expect(row?.['Readiness %']).toBe('Not enough data yet')
+    expect(row?.['Hours Complete']).toBe('No Hours Data')
+    expect(row?.Ready).toBe('Not enough data yet')
+    expect(row?.['Remaining Items']).toBe('Not enough data yet')
+  })
+
+  it('NZD-2: keeps tracked-requirements check neutral with zero evidence', () => {
+    const report = generateComplianceReport(
+      'board_eligibility',
+      { students: [student('s1')], ...emptyInputs },
+    )
+    const row = report.rows[0]
+
+    expect(report.summary).toBe('Tracked requirements: Not enough data yet')
+    expect(row?.Status).toBe('Not enough data yet')
+    expect(row?.['Missing Requirements']).toBe('Not enough data yet')
+  })
+
+  it('NZD-2: keeps instructor requirement report neutral with zero evidence', () => {
+    const report = generateComplianceReport(
+      'instructor_compliance',
+      { students: [student('s1')], ...emptyInputs },
+    )
+    const row = report.rows[0]
+
+    expect(report.summary).toBe('Requirement tracking summary: Not enough data yet')
+    expect(row?.['Tracking Score']).toBe('Not enough data yet')
+    expect(row?.['Tracked Requirements Met']).toBe('Not enough data yet')
+    expect(row?.['At Risk']).toBe('Not enough data yet')
+  })
+
+  it('NZD-2: preserves legitimate negative compliance-report statuses once evidence exists', () => {
+    const data = {
+      students: [student('s1')],
+      ...emptyInputs,
+      hourLogs: [hourLog('s1', 100)],
+    }
+
+    const completion = generateComplianceReport('graduation_readiness', data)
+    const tracked = generateComplianceReport('board_eligibility', data)
+    const instructor = generateComplianceReport('instructor_compliance', data)
+
+    expect(completion.rows[0]?.Ready).toBe('No')
+    expect(completion.rows[0]?.['Hours Complete']).toBe('100/1200')
+    expect(tracked.rows[0]?.Status).not.toBe('Not enough data yet')
+    expect(instructor.rows[0]?.['At Risk']).toBe('Yes')
   })
 
   it('does not present the internal requirements report as a licensing determination', () => {
