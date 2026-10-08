@@ -102,6 +102,7 @@ export default function PilotPage() {
         </div>
       </nav>
 
+      <main id="main-content" tabIndex={-1} className="outline-none">
       {/* Hero */}
       <section className="relative pt-32 pb-16 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-brand-gold)]/5 via-transparent to-transparent pointer-events-none" />
@@ -421,6 +422,8 @@ export default function PilotPage() {
       </section>
 
       {/* Footer */}
+      </main>
+
       <footer className="border-t border-white/10 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">

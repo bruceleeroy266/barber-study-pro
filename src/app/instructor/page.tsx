@@ -515,8 +515,8 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
   }
 
   return (
-    <div className="min-h-screen bg-[var(--color-background-primary)] p-6 md:p-8">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen min-w-0 bg-[var(--color-background-primary)] p-4 sm:p-6 md:p-8">
+      <div className="mx-auto max-w-7xl min-w-0 space-y-8">
         {usingDemoData && <DemoDataBanner />}
         {isSupportView && (
           <div className="rounded-xl border border-[var(--color-brand-gold)]/40 bg-[var(--color-brand-gold)]/10 p-4">
@@ -538,18 +538,18 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
             </div>
           </div>
         )}
-        <div className="flex items-center justify-between">
-          <div>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
             <h1 className="text-3xl font-bold text-white mb-2">Instructor Dashboard</h1>
             <p className="text-[var(--color-text-muted)]">
               {schoolName} — Student roster and progress overview
             </p>
           </div>
           {/* Phase 6C-5: Escalation Badge */}
-          <div className="flex items-center gap-4">
+          <div className="flex min-w-0 items-center gap-4">
             <Link
               href="/instructor/escalations"
-              className="flex items-center gap-2 px-4 py-2 bg-[var(--color-background-secondary)] border border-[var(--color-border-primary)] rounded-lg hover:border-[var(--color-brand-gold)]/30 transition-colors"
+              className="inline-flex w-full items-center justify-center gap-2 px-4 py-2 sm:w-auto bg-[var(--color-background-secondary)] border border-[var(--color-border-primary)] rounded-lg hover:border-[var(--color-brand-gold)]/30 transition-colors"
             >
               <span className="text-sm text-[var(--color-text-secondary)]">Escalations</span>
               <EscalationBadge />

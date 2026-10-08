@@ -235,6 +235,70 @@ async function acceptInvitationAndFirstLogin(
   return { context, page }
 }
 
+
+async function certifyMobileNavigation(
+  page: Page,
+  options: {
+    triggerName: RegExp
+    triggerControl: string
+    navigationName: string
+    verifyStudentHeaderOffset?: boolean
+  }
+) {
+  for (const width of [320, 360, 390]) {
+    await page.setViewportSize({ width, height: 720 })
+
+    const trigger = page.locator(`button[aria-controls="${options.triggerControl}"]`)
+    await expect(trigger).toBeVisible()
+    await expect(trigger).toHaveAccessibleName(options.triggerName)
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false')
+
+    const targetSize = await trigger.evaluate((element) => {
+      const rect = element.getBoundingClientRect()
+      return { width: rect.width, height: rect.height }
+    })
+    expect(targetSize.width).toBeGreaterThanOrEqual(44)
+    expect(targetSize.height).toBeGreaterThanOrEqual(44)
+
+    const hasHorizontalOverflow = await page.evaluate(
+      () => document.documentElement.scrollWidth > document.documentElement.clientWidth
+    )
+    expect(hasHorizontalOverflow).toBe(false)
+
+    if (options.verifyStudentHeaderOffset) {
+      const geometry = await page.evaluate(() => {
+        const main = document.querySelector('#main-content')
+        const firstContent = main?.firstElementChild
+        const menuButton = document.querySelector<HTMLButtonElement>(
+          'button[aria-controls="student-mobile-navigation"]'
+        )
+        const header = menuButton?.closest('.fixed')
+        return {
+          headerBottom: header?.getBoundingClientRect().bottom ?? 0,
+          contentTop: firstContent?.getBoundingClientRect().top ?? -1,
+        }
+      })
+      expect(geometry.contentTop).toBeGreaterThanOrEqual(geometry.headerBottom)
+    }
+
+    await trigger.click()
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true')
+
+    const navigation = page.getByRole('navigation', { name: options.navigationName }).first()
+    await expect(navigation).toBeVisible()
+    await expect.poll(async () => {
+      return page.evaluate(() => {
+        const active = document.activeElement
+        return Boolean(active && active.closest('[aria-modal="true"]'))
+      })
+    }).toBe(true)
+
+    await page.keyboard.press('Escape')
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false')
+    await expect(trigger).toBeFocused()
+  }
+}
+
 async function inviteSchoolUser(
   page: Page,
   schoolId: string,
@@ -306,6 +370,11 @@ test.describe('Pilot onboarding certification', () => {
     const adminContext = await browser.newContext()
     const adminPage = await adminContext.newPage()
     await login(adminPage, PLATFORM_ADMIN_EMAIL, PLATFORM_ADMIN_PASSWORD, /\/admin(?:\/|$)/)
+    await certifyMobileNavigation(adminPage, {
+      triggerName: /Open admin navigation/i,
+      triggerControl: 'admin-mobile-navigation',
+      navigationName: 'Admin navigation',
+    })
 
     await adminPage.goto('/admin/pilot-inquiries')
     await expect(adminPage.getByRole('heading', { name: SCHOOL_NAME })).toBeVisible()
@@ -414,6 +483,12 @@ test.describe('Pilot onboarding certification', () => {
       /\/instructor(?:\/|$)/
     )
 
+    await certifyMobileNavigation(instructorSession.page, {
+      triggerName: /Open instructor navigation/i,
+      triggerControl: 'instructor-mobile-navigation',
+      navigationName: 'Instructor navigation',
+    })
+
     const { data: acceptedInstructorInvite } = await service
       .from('school_onboarding_invitations')
       .select('status, accepted_at')
@@ -451,6 +526,13 @@ test.describe('Pilot onboarding certification', () => {
       /\/dashboard(?:\/|$)/,
       { betaAgreementName: STUDENT_NAME }
     )
+
+    await certifyMobileNavigation(studentSession.page, {
+      triggerName: /Open student navigation/i,
+      triggerControl: 'student-mobile-navigation',
+      navigationName: 'Student navigation',
+      verifyStudentHeaderOffset: true,
+    })
 
     const { data: acceptedStudentInvite } = await service
       .from('school_onboarding_invitations')

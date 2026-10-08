@@ -35,7 +35,7 @@ export default async function AdminLayout({
     <div className="min-h-screen bg-black flex">
       <BackButtonPrevention />
       <AdminNav user={profile} />
-      <main id="main-content" className="flex-1 min-w-0 lg:pl-64">
+      <main id="main-content" tabIndex={-1} className="flex-1 min-w-0 outline-none lg:pl-64">
         {/* Mobile top spacing for the fixed header */}
         <div className="lg:hidden h-14" />
         {children}

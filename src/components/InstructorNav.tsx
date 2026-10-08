@@ -10,6 +10,7 @@ import { logLogout } from '@/app/(auth)/actions'
 import { Logo } from '@/components/brand'
 import EscalationBadge from '@/components/instructor/EscalationBadge'
 import BackButton from '@/components/ui/BackButton'
+import { useAccessibleMobileMenu } from '@/hooks/useAccessibleMobileMenu'
 
 interface InstructorNavProps {
   user: Profile | null
@@ -35,6 +36,7 @@ const navItems = [
 
 export default function InstructorNav({ user }: InstructorNavProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { triggerRef, panelRef } = useAccessibleMobileMenu(mobileMenuOpen, setMobileMenuOpen)
   const pathname = usePathname()
   const router = useRouter()
   const backFallbackHref =
@@ -87,12 +89,13 @@ export default function InstructorNav({ user }: InstructorNavProps) {
             <Logo variant="full" size="3xl" className="hidden lg:block" />
           </Link>
           <button
+            ref={triggerRef}
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? 'Close instructor navigation' : 'Open instructor navigation'}
             aria-expanded={mobileMenuOpen}
             aria-controls="instructor-mobile-navigation"
-            className="min-h-11 min-w-11 p-2 text-silver hover:text-white"
+            className="min-h-11 min-w-11 p-2 text-silver hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal rounded-lg"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {mobileMenuOpen ? (
@@ -107,7 +110,15 @@ export default function InstructorNav({ user }: InstructorNavProps) {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div id="instructor-mobile-navigation" className="lg:hidden fixed inset-0 z-40 bg-black pt-16 overflow-y-auto">
+        <div
+          ref={panelRef}
+          id="instructor-mobile-navigation"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Instructor navigation menu"
+          tabIndex={-1}
+          className="lg:hidden fixed inset-0 z-40 bg-black pt-16 overflow-y-auto"
+        >
           <nav aria-label="Instructor navigation" className="p-4 space-y-2 pb-8">
             <div className="px-2 pb-2">
               <BackButton fallbackHref={backFallbackHref} label="Back" />
@@ -118,8 +129,9 @@ export default function InstructorNav({ user }: InstructorNavProps) {
                 <Link
                   key={item.href}
                   href={item.href}
+                  aria-current={isNavItemActive(item.href) ? 'page' : undefined}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                     isNavItemActive(item.href)
                       ? 'bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/20'
                       : 'text-silver hover:bg-graphite hover:text-white'
@@ -160,7 +172,8 @@ export default function InstructorNav({ user }: InstructorNavProps) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                aria-current={isNavItemActive(item.href) ? 'page' : undefined}
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal ${
                   isNavItemActive(item.href)
                     ? 'bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] border border-[var(--color-brand-gold)]/20'
                     : 'text-silver hover:bg-graphite hover:text-white'

@@ -11,6 +11,7 @@ import { isDashboardNavItemActive } from '@/lib/nav-active'
 import { logLogout } from '@/app/(auth)/actions'
 import { Logo } from '@/components/brand'
 import BackButton from '@/components/ui/BackButton'
+import { useAccessibleMobileMenu } from '@/hooks/useAccessibleMobileMenu'
 
 interface DashboardNavProps {
   user: Profile | null
@@ -39,6 +40,7 @@ const instructorNavItems = [
 
 export default function DashboardNav({ user }: DashboardNavProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { triggerRef, panelRef } = useAccessibleMobileMenu(mobileMenuOpen, setMobileMenuOpen)
   const pathname = usePathname()
   const router = useRouter()
 
@@ -104,8 +106,13 @@ export default function DashboardNav({ user }: DashboardNavProps) {
             <Logo variant="full" size="3xl" className="hidden lg:block" />
           </Link>
           <button
+            ref={triggerRef}
+            type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-silver-gray hover:text-white"
+            aria-label={mobileMenuOpen ? 'Close student navigation' : 'Open student navigation'}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="student-mobile-navigation"
+            className="min-h-11 min-w-11 p-2 text-silver-gray hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-lg"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {mobileMenuOpen ? (
@@ -120,8 +127,16 @@ export default function DashboardNav({ user }: DashboardNavProps) {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-40 bg-black pt-16 overflow-y-auto">
-          <nav className="p-4 space-y-2 pb-8">
+        <div
+          ref={panelRef}
+          id="student-mobile-navigation"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Student navigation menu"
+          tabIndex={-1}
+          className="lg:hidden fixed inset-0 z-40 bg-black pt-16 overflow-y-auto"
+        >
+          <nav aria-label="Student navigation" className="p-4 space-y-2 pb-8">
             <div className="px-2 pb-2">
               <BackButton fallbackHref="/dashboard" label="Back" />
             </div>
@@ -131,8 +146,9 @@ export default function DashboardNav({ user }: DashboardNavProps) {
                 <Link
                   key={item.href}
                   href={item.href}
+                  aria-current={isDashboardNavItemActive(pathname, item.href) ? 'page' : undefined}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                     isDashboardNavItemActive(pathname, item.href)
                       ? 'bg-gold/10 text-gold border border-gold/20'
                       : 'text-silver-gray hover:bg-charcoal hover:text-white'
@@ -176,14 +192,15 @@ export default function DashboardNav({ user }: DashboardNavProps) {
             <BackButton fallbackHref="/dashboard" label="Back" />
           </div>
 
-          <nav className="space-y-1">
+          <nav aria-label="Student navigation" className="space-y-1">
             {navItems.map((item) => {
               const Icon = item.icon
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                  aria-current={isDashboardNavItemActive(pathname, item.href) ? 'page' : undefined}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal ${
                     isDashboardNavItemActive(pathname, item.href)
                       ? 'bg-gold/10 text-gold border border-gold/20'
                       : 'text-silver-gray hover:bg-graphite hover:text-white'

@@ -39,6 +39,7 @@ export default async function HomePage() {
         </div>
       </nav>
 
+      <main id="main-content" tabIndex={-1} className="outline-none">
       <section className="relative pt-32 pb-20 lg:pt-44 lg:pb-32 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-brand-gold)]/5 via-transparent to-transparent pointer-events-none" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-[var(--color-brand-gold)]/[0.03] rounded-full blur-3xl pointer-events-none" />
@@ -91,6 +92,8 @@ export default async function HomePage() {
       </section>
 
       <section className="py-20 border-t border-white/10"><div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center"><h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Bring ASCYN PRO to Your School?</h2><p className="text-xl text-[var(--color-text-muted)] mb-10">See the platform in action or request information about the 90-day school pilot.</p><div className="flex flex-col sm:flex-row gap-4 justify-center"><Link href="/pilot" className="px-8 py-4 bg-[var(--color-brand-gold)] text-[var(--color-background-primary)] font-bold rounded-xl hover:bg-[var(--color-brand-gold-light)] transition-all shadow-lg shadow-gold/20">Request Pilot Access</Link><Link href="/demo" className="px-8 py-4 bg-white/5 text-white font-semibold rounded-xl hover:bg-white/10 transition-all border border-white/10">View Demo</Link></div></div></section>
+
+      </main>
 
       <footer className="border-t border-white/10 py-12"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div className="flex flex-col md:flex-row items-center justify-between gap-4"><div className="flex items-center"><Logo variant="full" size="4xl" /></div><div className="flex items-center gap-6"><SignInButton className="text-[var(--color-text-muted)] hover:text-white text-sm transition-colors">Pilot Login</SignInButton><Link href="/pilot" className="text-[var(--color-text-muted)] hover:text-white text-sm transition-colors">Request Pilot Access</Link></div><p className="text-[var(--color-text-muted)] text-sm">© 2026 ASCYN PRO. Built for future licensed professionals.</p></div></div></footer>
     </div>
