@@ -209,18 +209,18 @@ export function buildSchoolOverviewMetrics(inputs: SchoolAnalyticsInputs): Schoo
     const studentHasHoursEvidence =
       studentHourLogs(student.id, inputs.hourLogs).length > 0 ||
       (inputs.priorCreditMinutesByStudentId?.[student.id] ?? 0) > 0
-    if (studentHasHoursEvidence) {
-      hasHoursEvidenceForSchool = true
-      completedMinutesSum += hourSummary.creditedAndEarnedMinutes
-      remainingMinutesSum += hourSummary.remainingMinutes
-    }
+    if (studentHasHoursEvidence) hasHoursEvidenceForSchool = true
+    // Preserve canonical aggregate hour math; evidence controls presentation/status,
+    // not the underlying requirement total.
+    completedMinutesSum += hourSummary.creditedAndEarnedMinutes
+    remainingMinutesSum += hourSummary.remainingMinutes
 
     const sAssessments = studentAssessments(student.id, assessments)
-    if (sAssessments.length > 0) {
-      hasAssessmentEvidenceForSchool = true
-      assessmentCompletedCount += Math.min(sAssessments.length, requiredAssessmentsForStudent(inputs, student.id))
-      assessmentRequiredCount += requiredAssessmentsForStudent(inputs, student.id)
-    }
+    if (sAssessments.length > 0) hasAssessmentEvidenceForSchool = true
+    // Preserve canonical program denominator; evidence controls whether the
+    // percentage is presented as measured data.
+    assessmentCompletedCount += Math.min(sAssessments.length, requiredAssessmentsForStudent(inputs, student.id))
+    assessmentRequiredCount += requiredAssessmentsForStudent(inputs, student.id)
 
     const missing = studentHasGradeEvidence
       ? gradeCategories.filter(
