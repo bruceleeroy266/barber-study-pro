@@ -4,6 +4,7 @@ import { AreaPerformance } from '@/types'
 
 interface AnalyticsChartsProps {
   readinessScore: number
+  hasReadinessEvidence?: boolean
   categoryPerformance: AreaPerformance[]
   chapterPerformance: AreaPerformance[]
   missedQuestionTrend: { date: string; count: number }[]
@@ -125,6 +126,7 @@ function ReadinessGauge({ score }: { score: number }) {
 
 export default function AnalyticsCharts({
   readinessScore,
+  hasReadinessEvidence = true,
   categoryPerformance,
   chapterPerformance,
   missedQuestionTrend,
@@ -145,7 +147,11 @@ export default function AnalyticsCharts({
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div className="bg-charcoal border border-graphite rounded-xl p-6">
         <h3 className="text-lg font-semibold text-white mb-4">Readiness Score</h3>
-        <ReadinessGauge score={readinessScore} />
+        {hasReadinessEvidence ? (
+          <ReadinessGauge score={readinessScore} />
+        ) : (
+          <p className="text-silver-gray text-sm">Not enough data yet. Complete learning activities or quizzes to generate readiness analytics.</p>
+        )}
       </div>
 
       <div className="bg-charcoal border border-graphite rounded-xl p-6">
