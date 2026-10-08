@@ -61,7 +61,7 @@ export function generateComplianceReport(
           Student: r.fullName,
           'Tracking Score': r.hasTrackingEvidence ? r.complianceScore.score : 'Not enough data yet',
           Attendance: r.hasAttendanceEvidence ? `${r.attendanceSummary.attendancePercentage}%` : 'No Attendance Data',
-          Hours: `${Math.round(r.completedHours)}/${r.graduationReadiness.requiredHours}`,
+          Hours: r.hasHoursEvidence ? `${Math.round(r.completedHours)}/${r.graduationReadiness.requiredHours}` : 'No Hours Data',
           'Earned Here': Math.round(r.earnedHours),
           'Prior Credit': Math.round(r.priorCreditHours),
           'Assessment Pass Rate': r.graduationReadiness.requiredAssessments <= 0
@@ -75,49 +75,82 @@ export function generateComplianceReport(
           Status: r.hasTrackingEvidence ? r.complianceScore.label : 'Not enough data yet',
         })),
       }
-    case 'graduation_readiness':
+    case 'graduation_readiness': {
+      const evidenceRows = rows.filter((r) => r.hasTrackingEvidence)
+      const readyCount = evidenceRows.filter((r) => r.graduationReadiness.isReady).length
       return {
         type,
         title: 'Program Completion Readiness Report',
         generatedAt: now,
-        summary: `${rows.filter((r) => r.graduationReadiness.isReady).length} of ${rows.length} students meet all ASCYN PRO tracked program thresholds`,
+        summary: evidenceRows.length === 0
+          ? 'Program completion readiness: Not enough data yet'
+          : `${readyCount} of ${evidenceRows.length} students with tracked evidence meet all ASCYN PRO tracked program thresholds`,
         rows: rows.map((r) => ({
           Student: r.fullName,
-          'Readiness %': r.graduationReadiness.percentage,
-          'Hours Complete': `${r.graduationReadiness.completedHours}/${r.graduationReadiness.requiredHours}`,
-          'Earned Here': Math.round(r.earnedHours),
-          'Prior Credit': Math.round(r.priorCreditHours),
-          'Assessments Complete': `${r.graduationReadiness.completedAssessments}/${r.graduationReadiness.requiredAssessments}`,
-          'Practicals Complete': `${r.graduationReadiness.completedPracticals}/${r.graduationReadiness.requiredPracticals}`,
-          Ready: r.graduationReadiness.isReady ? 'Yes' : 'No',
-          'Remaining Items': r.graduationReadiness.remainingItems.join('; ') || 'None',
+          'Readiness %': r.hasTrackingEvidence ? r.graduationReadiness.percentage : 'Not enough data yet',
+          'Hours Complete': r.hasHoursEvidence
+            ? `${r.graduationReadiness.completedHours}/${r.graduationReadiness.requiredHours}`
+            : 'No Hours Data',
+          'Earned Here': r.hasHoursEvidence ? Math.round(r.earnedHours) : 'No Hours Data',
+          'Prior Credit': r.hasHoursEvidence ? Math.round(r.priorCreditHours) : 'No Hours Data',
+          'Assessments Complete': r.graduationReadiness.requiredAssessments <= 0
+            ? 'Not Required'
+            : r.hasAssessmentEvidence
+              ? `${r.graduationReadiness.completedAssessments}/${r.graduationReadiness.requiredAssessments}`
+              : 'No Assessments',
+          'Practicals Complete': r.graduationReadiness.requiredPracticals <= 0
+            ? 'Not Required'
+            : r.hasAssessmentEvidence
+              ? `${r.graduationReadiness.completedPracticals}/${r.graduationReadiness.requiredPracticals}`
+              : 'No Practicals',
+          Ready: r.hasTrackingEvidence ? (r.graduationReadiness.isReady ? 'Yes' : 'No') : 'Not enough data yet',
+          'Remaining Items': r.hasTrackingEvidence
+            ? (r.graduationReadiness.remainingItems.join('; ') || 'None')
+            : 'Not enough data yet',
         })),
       }
-    case 'board_eligibility':
+    }
+    case 'board_eligibility': {
+      const evidenceRows = rows.filter((r) => r.hasTrackingEvidence)
+      const metCount = evidenceRows.filter((r) => r.boardEligibility.status === 'eligible').length
+      const nearCount = evidenceRows.filter((r) => r.boardEligibility.status === 'near_eligible').length
       return {
         type,
         title: 'Tracked Requirements Check',
         generatedAt: now,
-        summary: `${rows.filter((r) => r.boardEligibility.status === 'eligible').length} meet all tracked requirements, ${rows.filter((r) => r.boardEligibility.status === 'near_eligible').length} nearly complete`,
+        summary: evidenceRows.length === 0
+          ? 'Tracked requirements: Not enough data yet'
+          : `${metCount} meet all tracked requirements, ${nearCount} nearly complete among students with tracked evidence`,
         rows: rows.map((r) => ({
           Student: r.fullName,
-          Status: r.boardEligibility.label,
-          'Missing Requirements': r.boardEligibility.missingRequirements.join('; ') || 'None',
+          Status: r.hasTrackingEvidence ? r.boardEligibility.label : 'Not enough data yet',
+          'Missing Requirements': r.hasTrackingEvidence
+            ? (r.boardEligibility.missingRequirements.join('; ') || 'None')
+            : 'Not enough data yet',
         })),
       }
-    case 'instructor_compliance':
+    }
+    case 'instructor_compliance': {
+      const evidenceRows = rows.filter((r) => r.hasTrackingEvidence)
       return {
         type,
         title: 'Instructor Requirement Tracking Report',
         generatedAt: now,
-        summary: `Requirement tracking summary across ${inputs.students.length} students`,
+        summary: evidenceRows.length === 0
+          ? 'Requirement tracking summary: Not enough data yet'
+          : `Requirement tracking summary across ${evidenceRows.length} students with tracked evidence`,
         rows: rows.map((r) => ({
           Student: r.fullName,
-          'Tracking Score': r.complianceScore.score,
-          'Tracked Requirements Met': r.boardEligibility.status === 'eligible' ? 'Yes' : 'No',
-          'At Risk': r.complianceScore.score < 70 ? 'Yes' : 'No',
+          'Tracking Score': r.hasTrackingEvidence ? r.complianceScore.score : 'Not enough data yet',
+          'Tracked Requirements Met': r.hasTrackingEvidence
+            ? (r.boardEligibility.status === 'eligible' ? 'Yes' : 'No')
+            : 'Not enough data yet',
+          'At Risk': r.hasTrackingEvidence
+            ? (r.complianceScore.score < 70 ? 'Yes' : 'No')
+            : 'Not enough data yet',
         })),
       }
+    }
     case 'school_compliance':
     default: {
       const evidenceRows = rows.filter((r) => r.hasTrackingEvidence)
