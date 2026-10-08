@@ -82,7 +82,7 @@ export default async function SchoolOwnerDashboard({ searchParams }: SchoolOwner
             title={`Administering: ${selected.name}`}
             description="You are viewing this school as a platform administrator."
           />
-          <SchoolDashboard schoolId={selected.id} />
+          <SchoolDashboard schoolId={selected.id} privilegedRead />
         </div>
       </div>
     )

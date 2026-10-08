@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase-server'
+import { createServiceRoleClient } from '@/lib/supabase-service-role'
 import Link from 'next/link'
 import { Profile, AttendanceRecord, HourLog, QuizAttempt, StudentProgress, Grade, GradeCategory, Assessment, Notification } from '@/types'
 import {
@@ -41,10 +42,14 @@ import SchoolSetupCenter from './SchoolSetupCenter'
 
 interface SchoolDashboardProps {
   schoolId: string
+  privilegedRead?: boolean
 }
 
-export default async function SchoolDashboard({ schoolId }: SchoolDashboardProps) {
-  const supabase = await createClient()
+export default async function SchoolDashboard({ schoolId, privilegedRead = false }: SchoolDashboardProps) {
+  // Platform-admin support access is validated by the parent route before this
+  // privileged read mode is enabled. Ordinary school-admin views remain bound
+  // to the caller's RLS-scoped Supabase client.
+  const supabase = privilegedRead ? createServiceRoleClient() : await createClient()
   const queryErrors: string[] = []
   const onboardingStatus = await loadSchoolOnboardingStatus(supabase, schoolId)
 
