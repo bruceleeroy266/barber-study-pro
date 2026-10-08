@@ -19,12 +19,9 @@ jobs:
       ASCYN_PRODUCTION_CERTIFICATION: 'true'
       EXPECTED_SHA: ${{ inputs.expected_sha }}
       GH_TOKEN: ${{ github.token }}
-      ASCYN_PROD_ADMIN_STATE: ${{ secrets.ASCYN_PROD_ADMIN_STATE }}
-      ASCYN_PROD_INSTRUCTOR_STATE: ${{ secrets.ASCYN_PROD_INSTRUCTOR_STATE }}
-      ASCYN_PROD_STUDENT_STATE: ${{ secrets.ASCYN_PROD_STUDENT_STATE }}
     steps:
       - uses: actions/checkout@v4
-      - name: Verify SHA, production build status and role sessions
+      - name: Verify expected commit SHA and Vercel status
         shell: bash
         run: |
           set -euo pipefail
@@ -33,10 +30,6 @@ jobs:
           git cat-file -e "$EXPECTED_SHA^{commit}"
           STATUS=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${EXPECTED_SHA}/status" --jq '.statuses | map(select(.context == "Vercel" and .state == "success")) | length')
           [[ "$STATUS" -gt 0 ]] || { echo "Exact deployed SHA has no successful Vercel status"; exit 1; }
-          for ROLE in ADMIN INSTRUCTOR STUDENT; do
-            KEY="ASCYN_PROD_${ROLE}_STATE"
-            [[ -n "${!KEY:-}" ]] || { echo "Missing ${KEY}: cannot certify"; exit 1; }
-          done
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -50,17 +43,31 @@ jobs:
         run: |
           set -euo pipefail
           [[ -n "$VERCEL_TOKEN" ]] || { echo "VERCEL_TOKEN required for exact-production verification"; exit 1; }
-          RESPONSE=$(curl --fail-with-body --silent --show-error -H "Authorization: Bearer $VERCEL_TOKEN" "https://api.vercel.com/v13/deployments/barber-study-pro?limit=10&target=production")
-          EXPECTED_SHA="$EXPECTED_SHA" node -e '
-            const r=JSON.parse(process.argv[1]);const d=r.deployments || [];
-            const live=d.find(x => (x.alias||[]).includes("ascynpro.com"));
-            if(!live || live.readyState!=="READY" || live.meta?.githubCommitSha!==process.env.EXPECTED_SHA) {
-              console.error("Exact production alias/SHA not verified.");process.exit(1)
+          RESPONSE=$(curl --fail-with-body --silent --show-error -H "Authorization: Bearer $VERCEL_TOKEN" "https://api.vercel.com/v13/deployments/ascynpro.com")
+          RESPONSE="$RESPONSE" node -e '
+            const r=JSON.parse(process.env.RESPONSE);
+            const ready=r.readyState==="READY" || r.state==="READY";
+            const production=r.target==="production";
+            const exact=r.meta?.githubCommitSha===process.env.EXPECTED_SHA;
+            const aliases=Array.isArray(r.alias) && r.alias.includes("ascynpro.com");
+            if(!ready || !production || !exact || !aliases) {
+              console.error("The live ascynpro.com alias is not READY on the exact requested commit."); process.exit(1)
             }
-            console.log("Exact production alias and SHA verified.")
-          ' "$RESPONSE"
+            console.log("Verified current production alias, READY state, and exact SHA.")
+          '
       - name: Read-only 3-role / 3-viewport Playwright certification
-        run: npx playwright test --config playwright.production.config.ts
+        env:
+          ASCYN_PROD_ADMIN_STATE: ${{ secrets.ASCYN_PROD_ADMIN_STATE }}
+          ASCYN_PROD_INSTRUCTOR_STATE: ${{ secrets.ASCYN_PROD_INSTRUCTOR_STATE }}
+          ASCYN_PROD_STUDENT_STATE: ${{ secrets.ASCYN_PROD_STUDENT_STATE }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for ROLE in ADMIN INSTRUCTOR STUDENT; do
+            KEY="ASCYN_PROD_${ROLE}_STATE"
+            [[ -n "${!KEY:-}" ]] || { echo "Missing role session for ${ROLE}; certification is blocked."; exit 1; }
+          done
+          npx playwright test --config playwright.production.config.ts
       - name: Publish test evidence
         if: always()
         uses: actions/upload-artifact@v4
