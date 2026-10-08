@@ -156,6 +156,17 @@ describe('ADM-1G reporting + CSV parity', () => {
     expect(compliance).toContain('convertRowsToCSV(report.rows)')
   })
 
+  it('NZD-3 instructor class progress excludes learners without progress evidence', () => {
+    const source = fs.readFileSync(
+      path.join(process.cwd(), 'src/app/instructor/page.tsx'),
+      'utf8',
+    )
+    expect(source).toContain('metricStudentStats.filter((s) => s.hasProgressEvidence)')
+    expect(source).toContain('studentsWithProgress.reduce((sum, s) => sum + s.overallProgress, 0) / studentsWithProgress.length')
+    expect(source).toContain("studentsWithProgress.length > 0 ? \`${classAvgProgress}%\` : '—'")
+    expect(source).toContain('No learning data yet. Have students begin their first lesson or practice activity.')
+  })
+
   it('hours PDF renders approval timestamps in the configured school timezone', () => {
     const source = fs.readFileSync(
       path.join(process.cwd(), 'src/lib/hours/export-pdf.ts'),
