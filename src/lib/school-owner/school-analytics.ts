@@ -484,19 +484,22 @@ export function buildSchoolAlerts(inputs: SchoolAnalyticsInputs): SchoolOwnerAle
   })
 
   for (const student of students) {
-    const attSummary = calculateAttendanceSummary(student.id, studentAttendanceRecords(student.id, attendanceRecords))
-    if (attSummary.isAtRisk) {
-      alerts.push({
-        id: `att-${student.id}`,
-        type: 'low_attendance',
-        title: 'Low Attendance',
-        description: `${student.full_name}: ${attSummary.riskReason}`,
-        studentId: student.id,
-        studentName: student.full_name,
-        priority: 'high',
-        createdAt: new Date().toISOString(),
-        actionUrl: '/instructor/attendance',
-      })
+    const studentAttendance = studentAttendanceRecords(student.id, attendanceRecords)
+    if (studentAttendance.length > 0) {
+      const attSummary = calculateAttendanceSummary(student.id, studentAttendance)
+      if (attSummary.isAtRisk) {
+        alerts.push({
+          id: `att-${student.id}`,
+          type: 'low_attendance',
+          title: 'Low Attendance',
+          description: `${student.full_name}: ${attSummary.riskReason}`,
+          studentId: student.id,
+          studentName: student.full_name,
+          priority: 'high',
+          createdAt: new Date().toISOString(),
+          actionUrl: '/instructor/attendance',
+        })
+      }
     }
 
     const attempts = studentAttempts(student.id, quizAttempts)
@@ -521,21 +524,26 @@ export function buildSchoolAlerts(inputs: SchoolAnalyticsInputs): SchoolOwnerAle
       })
     }
 
-    const hourSummary = adaptiveHoursForStudent(inputs, student.id)
-    const completedHours = hourSummary.creditedAndEarnedMinutes / 60
-    const requiredHours = hourSummary.effectiveRequiredHours
-    if (completedHours < requiredHours * 0.5) {
-      alerts.push({
-        id: `hours-${student.id}`,
-        type: 'missing_hours',
-        title: 'Missing Hours',
-        description: `${student.full_name}: ${Math.round(completedHours)} of ${requiredHours} hours completed`,
-        studentId: student.id,
-        studentName: student.full_name,
-        priority: 'medium',
-        createdAt: new Date().toISOString(),
-        actionUrl: '/dashboard',
-      })
+    const studentHours = studentHourLogs(student.id, inputs.hourLogs)
+    const priorCreditMinutes = inputs.priorCreditMinutesByStudentId?.[student.id] ?? 0
+    const hasHoursEvidence = studentHours.length > 0 || priorCreditMinutes > 0
+    if (hasHoursEvidence) {
+      const hourSummary = adaptiveHoursForStudent(inputs, student.id)
+      const completedHours = hourSummary.creditedAndEarnedMinutes / 60
+      const requiredHours = hourSummary.effectiveRequiredHours
+      if (completedHours < requiredHours * 0.5) {
+        alerts.push({
+          id: `hours-${student.id}`,
+          type: 'missing_hours',
+          title: 'Missing Hours',
+          description: `${student.full_name}: ${Math.round(completedHours)} of ${requiredHours} hours completed`,
+          studentId: student.id,
+          studentName: student.full_name,
+          priority: 'medium',
+          createdAt: new Date().toISOString(),
+          actionUrl: '/dashboard',
+        })
+      }
     }
 
     const sAssessments = studentAssessments(student.id, assessments)
