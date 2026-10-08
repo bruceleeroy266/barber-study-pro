@@ -29,23 +29,32 @@ export default function SchoolHealthScore({ health }: Props) {
                 stroke="currentColor"
                 strokeWidth="3"
               />
-              <path
-                className={health.colorClass}
-                strokeDasharray={`${health.score}, 100`}
-                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="3"
-              />
+              {health.hasEvidence && (
+                <path
+                  className={health.colorClass}
+                  strokeDasharray={`${health.score}, 100`}
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                />
+              )}
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className={`text-3xl font-bold ${health.colorClass}`}>{health.score}</span>
-              <span className="text-xs text-silver">/100</span>
+              <span className={`text-3xl font-bold ${health.colorClass}`}>
+                {health.hasEvidence ? health.score : '—'}
+              </span>
+              {health.hasEvidence && <span className="text-xs text-silver">/100</span>}
             </div>
           </div>
           <div className="mt-2 text-center">
             <p className={`text-lg font-semibold ${health.colorClass}`}>{health.label}</p>
             <p className="text-xs text-silver-gray" title="Composite score based on attendance, academic performance, compliance, and student progress">School Health Score</p>
+            {!health.hasEvidence && (
+              <p className="mt-2 max-w-xs text-xs leading-5 text-silver-gray">
+                School Health will appear after students begin generating attendance and learning activity.
+              </p>
+            )}
           </div>
         </div>
 
@@ -58,13 +67,13 @@ export default function SchoolHealthScore({ health }: Props) {
                   <Icon className="w-4 h-4 text-silver-gray" />
                   <span className="text-xs text-silver">{c.label}</span>
                 </div>
-                <div className="text-xl font-bold text-white">{c.value}</div>
+                <div className="text-xl font-bold text-white">{health.hasEvidence ? c.value : '—'}</div>
                 <div className="w-full bg-graphite rounded-full h-1.5 mt-2">
                   <div
                     className={`h-full rounded-full ${
                       c.value >= 80 ? 'bg-gold' : c.value >= 70 ? 'bg-warm-bronze' : c.value >= 60 ? 'bg-warm-bronze' : 'bg-silver'
                     }`}
-                    style={{ width: `${Math.max(0, Math.min(100, c.value))}%` }}
+                    style={{ width: health.hasEvidence ? `${Math.max(0, Math.min(100, c.value))}%` : '0%' }}
                   />
                 </div>
               </div>

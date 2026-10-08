@@ -634,6 +634,7 @@ export interface SchoolHealthScore {
   score: number
   label: string
   colorClass: string
+  hasEvidence: boolean
   componentScores: {
     attendance: number
     readiness: number

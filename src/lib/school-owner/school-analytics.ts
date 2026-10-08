@@ -403,9 +403,40 @@ export function buildSchoolHealthScore(inputs: SchoolAnalyticsInputs): SchoolHea
       hoursScore * 0.15
   )
 
-  let label = 'Critical'
+  const healthStudents = metricEligibleStudents(inputs.students)
+  const healthStudentIds = new Set(healthStudents.map((student) => student.id))
+  const hasAttendanceEvidence = inputs.attendanceRecords.some((record) =>
+    healthStudentIds.has(record.userId)
+  )
+  const hasReadinessEvidenceForSchool = healthStudents.some((student) =>
+    hasReadinessEvidence(
+      studentAttempts(student.id, inputs.quizAttempts),
+      studentProgress(student.id, inputs.progress)
+    )
+  )
+  const hasGradeEvidenceForSchool = inputs.grades.some(
+    (grade) => healthStudentIds.has(grade.studentId) && !grade.isExcused
+  )
+  const hasAssessmentEvidence = inputs.assessments.some((assessment) =>
+    healthStudentIds.has(assessment.studentId)
+  )
+  const hasHoursEvidence =
+    inputs.hourLogs.some((hourLog) => healthStudentIds.has(hourLog.user_id)) ||
+    healthStudents.some(
+      (student) => (inputs.priorCreditMinutesByStudentId?.[student.id] ?? 0) > 0
+    )
+  const hasEvidence =
+    hasAttendanceEvidence ||
+    hasReadinessEvidenceForSchool ||
+    hasGradeEvidenceForSchool ||
+    hasAssessmentEvidence ||
+    hasHoursEvidence
+
+  let label = hasEvidence ? 'Critical' : 'Not enough data yet'
   let colorClass = 'text-silver'
-  if (score >= 90) {
+  if (!hasEvidence) {
+    colorClass = 'text-silver-gray'
+  } else if (score >= 90) {
     label = 'Excellent'
     colorClass = 'text-gold'
   } else if (score >= 80) {
@@ -423,6 +454,7 @@ export function buildSchoolHealthScore(inputs: SchoolAnalyticsInputs): SchoolHea
     score,
     label,
     colorClass,
+    hasEvidence,
     componentScores: {
       attendance: attendanceScore,
       readiness: readinessScore,
@@ -743,7 +775,12 @@ export function generateSchoolReport(
         type,
         title: 'School Summary Report',
         generatedAt: now,
-        summary: `School health: ${buildSchoolHealthScore(inputs).score}/100`,
+        summary: (() => {
+          const health = buildSchoolHealthScore(inputs)
+          return health.hasEvidence
+            ? `School health: ${health.score}/100`
+            : 'School health: Not enough data yet'
+        })(),
         rows: [
           { Metric: 'Total Students', Value: metrics.totalStudents },
           { Metric: 'Active Students', Value: metrics.activeStudents },
