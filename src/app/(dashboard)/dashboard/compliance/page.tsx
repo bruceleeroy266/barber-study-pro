@@ -152,11 +152,21 @@ export default async function StudentComplianceDashboard() {
           <p className="text-[var(--color-text-muted)]">Track your licensing readiness and graduation requirements</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <ComplianceScoreWidget score={compliance.complianceScore} />
-          <BoardEligibilityWidget eligibility={compliance.boardEligibility} />
-          <GraduationReadinessWidget readiness={compliance.graduationReadiness} />
-        </div>
+        {compliance.hasTrackingEvidence ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <ComplianceScoreWidget score={compliance.complianceScore} />
+            <BoardEligibilityWidget eligibility={compliance.boardEligibility} />
+            <GraduationReadinessWidget readiness={compliance.graduationReadiness} />
+          </div>
+        ) : (
+          <div className="rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-background-secondary)] p-6">
+            <h2 className="text-xl font-semibold text-white">Not enough data yet</h2>
+            <p className="mt-2 text-sm text-[var(--color-text-muted)]">
+              ASCYN PRO will calculate tracking, requirement, and program-completion status after real attendance,
+              hours, learning, grade, or assessment evidence is recorded.
+            </p>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
@@ -165,7 +175,11 @@ export default async function StudentComplianceDashboard() {
           <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-6">
             <h2 className="text-lg font-semibold text-white mb-4">Recommendations</h2>
             <ul className="space-y-3">
-              {compliance.graduationReadiness.remainingItems.length === 0 ? (
+              {!compliance.hasTrackingEvidence ? (
+                <li className="text-sm text-[var(--color-text-muted)]">
+                  Recommendations will appear after real learning or program evidence is recorded.
+                </li>
+              ) : compliance.graduationReadiness.remainingItems.length === 0 ? (
                 <li className="text-sm text-gold flex items-start gap-2">
                   <span>✓</span> All requirements met. Schedule your board exam.
                 </li>
@@ -177,13 +191,13 @@ export default async function StudentComplianceDashboard() {
                   </li>
                 ))
               )}
-              {compliance.attendanceSummary.isAtRisk && (
+              {compliance.hasAttendanceEvidence && compliance.attendanceSummary.isAtRisk && (
                 <li className="text-sm text-[var(--color-text-secondary)] flex items-start gap-2">
                   <span className="text-[var(--color-brand-gold)]">•</span>
                   Improve attendance to avoid licensing delays.
                 </li>
               )}
-              {compliance.readiness.score < 70 && (
+              {compliance.hasReadinessEvidence && compliance.readiness.score < 70 && (
                 <li className="text-sm text-[var(--color-text-secondary)] flex items-start gap-2">
                   <span className="text-[var(--color-brand-gold)]">•</span>
                   Review missed questions and weak areas to boost readiness.
