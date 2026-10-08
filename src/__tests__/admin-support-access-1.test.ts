@@ -34,6 +34,15 @@ describe('ADMIN-SUPPORT-ACCESS-1', () => {
     expect(instructorDashboard).toContain('loadAssignedStudentIds(supabase, schoolId, dashboardInstructorId)')
   })
 
+  it('uses privileged server-side reads only for validated platform school support view', () => {
+    const schoolAdminPage = read('src/app/admin/school/page.tsx')
+    const schoolDashboard = read('src/components/school-owner/SchoolDashboard.tsx')
+
+    expect(schoolAdminPage).toContain('<SchoolDashboard schoolId={selected.id} privilegedRead />')
+    expect(schoolAdminPage).toContain('<SchoolDashboard schoolId={profile.school_id} />')
+    expect(schoolDashboard).toContain('privilegedRead ? createServiceRoleClient() : await createClient()')
+  })
+
   it('preserves platform admin identity and provides a return path', () => {
     expect(instructorDashboard).toContain('Platform Admin Support View')
     expect(instructorDashboard).toContain('You remain signed in as platform administrator.')
