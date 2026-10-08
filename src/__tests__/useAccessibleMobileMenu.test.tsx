@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { useState } from 'react'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { useAccessibleMobileMenu } from '@/hooks/useAccessibleMobileMenu'
 
 function Harness() {
@@ -20,6 +20,8 @@ function Harness() {
   )
 }
 
+afterEach(() => vi.restoreAllMocks())
+
 describe('useAccessibleMobileMenu', () => {
   it('moves focus into the menu, traps focus, closes on Escape, and restores trigger focus', async () => {
     render(<Harness />)
@@ -30,6 +32,10 @@ describe('useAccessibleMobileMenu', () => {
 
     const first = await screen.findByRole('link', { name: 'First' })
     const last = screen.getByRole('button', { name: 'Last' })
+
+    // jsdom provides no layout rectangles; simulate visible menu controls.
+    vi.spyOn(first, 'getClientRects').mockReturnValue([{} as DOMRect] as unknown as DOMRectList)
+    vi.spyOn(last, 'getClientRects').mockReturnValue([{} as DOMRect] as unknown as DOMRectList)
 
     await waitFor(() => expect(first).toHaveFocus())
     expect(document.body.style.overflow).toBe('hidden')
