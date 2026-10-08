@@ -33,7 +33,7 @@ for (const { role, route, control } of roles) {
       const page = await context.newPage()
       try {
         await page.goto(route, { waitUntil: 'domcontentloaded' })
-        await expect(page).toHaveURL(new RegExp(`^https://ascynpro\\.com${route.replace(/\\//g, '\\/')}(?:[/?#]|$)`))
+        await expect(page).toHaveURL(new RegExp(`^https://ascynpro\\.com${route}(?:[/?#]|$)`))
         await expect.poll(() => page.evaluate(() => window.innerWidth)).toBe(width)
         const trigger = page.locator(`button[aria-controls="${control}"]`)
         await expect(trigger).toHaveCount(1)
@@ -66,7 +66,7 @@ for (const { role, route, control } of roles) {
         if (role === 'student') {
           const clearance = await page.evaluate(() => {
             const header = document.querySelector('button[aria-controls="student-mobile-navigation"]')?.closest('.fixed')?.getBoundingClientRect()
-            const main = document.querySelector('main')?.getBoundingClientRect()
+            const main = document.querySelector('main')?.firstElementChild?.getBoundingClientRect()
             return { headerBottom: header?.bottom ?? null, mainTop: main?.top ?? null }
           })
           expect(clearance.headerBottom).not.toBeNull()
