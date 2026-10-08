@@ -55,7 +55,7 @@ export default async function DashboardLayout({
     <div className="min-h-screen bg-black">
       <BackButtonPrevention />
       <DashboardNav user={profile} />
-      <main id="main-content" tabIndex={-1} className="min-h-screen pt-16 outline-none lg:pl-64 lg:pt-0">
+      <main id="main-content" tabIndex={-1} className="min-h-screen pt-[72px] outline-none lg:pl-64 lg:pt-0">
         <div className="p-4 lg:p-8 max-w-7xl mx-auto">
           {children}
         </div>
