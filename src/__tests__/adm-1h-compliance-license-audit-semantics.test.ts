@@ -7,7 +7,7 @@ import {
   DEFAULT_COMPLIANCE_THRESHOLDS,
   type ComplianceRuleThresholds,
 } from '@/lib/compliance'
-import type { Profile } from '@/types'
+import type { HourLog, Profile } from '@/types'
 
 const baseInputs = {
   attendancePercentage: 100,
@@ -35,6 +35,21 @@ function student(id: string): Profile {
     approved_by: null,
     approved_at: null,
     requires_password_change: false,
+    created_at: '2026-10-03T00:00:00Z',
+    updated_at: '2026-10-03T00:00:00Z',
+  }
+}
+
+
+function hourLog(userId: string, hours: number): HourLog {
+  return {
+    id: `hours-${userId}`,
+    user_id: userId,
+    date: '2026-10-03',
+    category: 'Clinic',
+    minutes: hours * 60,
+    status: 'approved',
+    notes: null,
     created_at: '2026-10-03T00:00:00Z',
     updated_at: '2026-10-03T00:00:00Z',
   }
@@ -104,11 +119,29 @@ describe('ADM-1H compliance/license/audit-center semantics', () => {
     const row = report.rows[0]
 
     expect(report.title).toBe('Student Requirement Tracking Report')
+    expect(row?.['Tracking Score']).toBe('Not enough data yet')
+    expect(row?.Status).toBe('Not enough data yet')
     expect(row?.Attendance).toBe('No Attendance Data')
     expect(row?.['Assessment Pass Rate']).toBe('Not Required')
     expect(row?.['Practical Pass Rate']).toBe('Not Required')
     expect(row?.Readiness).toBe('No Data')
     expect(row?.Grade).toBe('No Grade')
+  })
+
+  it('preserves a legitimate tracking score once real tracked evidence exists', () => {
+    const report = generateComplianceReport(
+      'student_compliance',
+      {
+        students: [student('s1')],
+        ...emptyInputs,
+        hourLogs: [hourLog('s1', 300)],
+      },
+    )
+    const row = report.rows[0]
+
+    expect(typeof row?.['Tracking Score']).toBe('number')
+    expect(row?.['Tracking Score']).toBe(41)
+    expect(row?.Status).toBe('Critical')
   })
 
   it('does not present the internal requirements report as a licensing determination', () => {
