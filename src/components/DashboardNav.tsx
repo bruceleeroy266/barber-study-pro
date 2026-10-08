@@ -112,7 +112,7 @@ export default function DashboardNav({ user }: DashboardNavProps) {
             aria-label={mobileMenuOpen ? 'Close student navigation' : 'Open student navigation'}
             aria-expanded={mobileMenuOpen}
             aria-controls="student-mobile-navigation"
-            className="min-h-11 min-w-11 p-2 text-silver-gray hover:text-white"
+            className="min-h-11 min-w-11 p-2 text-silver-gray hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-lg"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {mobileMenuOpen ? (
@@ -146,8 +146,9 @@ export default function DashboardNav({ user }: DashboardNavProps) {
                 <Link
                   key={item.href}
                   href={item.href}
+                  aria-current={isDashboardNavItemActive(pathname, item.href) ? 'page' : undefined}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                     isDashboardNavItemActive(pathname, item.href)
                       ? 'bg-gold/10 text-gold border border-gold/20'
                       : 'text-silver-gray hover:bg-charcoal hover:text-white'
@@ -198,7 +199,8 @@ export default function DashboardNav({ user }: DashboardNavProps) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                  aria-current={isDashboardNavItemActive(pathname, item.href) ? 'page' : undefined}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal ${
                     isDashboardNavItemActive(pathname, item.href)
                       ? 'bg-gold/10 text-gold border border-gold/20'
                       : 'text-silver-gray hover:bg-graphite hover:text-white'
