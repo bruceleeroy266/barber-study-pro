@@ -120,19 +120,27 @@ export function generateComplianceReport(
       }
     case 'school_compliance':
     default: {
-      const avgScore = rows.length > 0 ? Math.round(rows.reduce((sum, r) => sum + r.complianceScore.score, 0) / rows.length) : 0
-      const eligibleCount = rows.filter((r) => r.boardEligibility.status === 'eligible').length
+      const evidenceRows = rows.filter((r) => r.hasTrackingEvidence)
+      const avgScore = evidenceRows.length > 0
+        ? Math.round(evidenceRows.reduce((sum, r) => sum + r.complianceScore.score, 0) / evidenceRows.length)
+        : null
+      const eligibleCount = evidenceRows.filter((r) => r.boardEligibility.status === 'eligible').length
+      const nearEligibleCount = evidenceRows.filter((r) => r.boardEligibility.status === 'near_eligible').length
+      const requirementsRemainingCount = evidenceRows.filter((r) => r.boardEligibility.status === 'not_eligible').length
+      const needsAttentionCount = evidenceRows.filter((r) => r.complianceScore.score < 70).length
       return {
         type,
         title: 'School Requirement Tracking Report',
         generatedAt: now,
-        summary: `Average ASCYN tracking score: ${avgScore}/100 | Students meeting tracked requirements: ${eligibleCount}`,
+        summary: avgScore === null
+          ? 'Average ASCYN tracking score: Not enough data yet'
+          : `Average ASCYN tracking score: ${avgScore}/100 | Students meeting tracked requirements: ${eligibleCount}`,
         rows: [
-          { Metric: 'Average Tracking Score', Value: avgScore },
+          { Metric: 'Average Tracking Score', Value: avgScore ?? 'Not enough data yet' },
           { Metric: 'Tracked Requirements Met', Value: eligibleCount },
-          { Metric: 'Nearly Complete', Value: rows.filter((r) => r.boardEligibility.status === 'near_eligible').length },
-          { Metric: 'Requirements Remaining', Value: rows.filter((r) => r.boardEligibility.status === 'not_eligible').length },
-          { Metric: 'Needs Attention', Value: rows.filter((r) => r.complianceScore.score < 70).length },
+          { Metric: 'Nearly Complete', Value: nearEligibleCount },
+          { Metric: 'Requirements Remaining', Value: requirementsRemainingCount },
+          { Metric: 'Needs Attention', Value: needsAttentionCount },
         ],
       }
     }
