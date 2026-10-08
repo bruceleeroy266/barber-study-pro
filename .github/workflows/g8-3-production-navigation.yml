@@ -1,0 +1,78 @@
+name: G8-3 Production Navigation Certification
+on:
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: 'Exact deployed production Git SHA (40 hex characters)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  certify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PLAYWRIGHT_BASE_URL: https://ascynpro.com
+      ASCYN_PRODUCTION_CERTIFICATION: 'true'
+      EXPECTED_SHA: ${{ inputs.expected_sha }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify expected commit SHA and Vercel status
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "Invalid SHA"; exit 1; }
+          git fetch --depth=1 origin "$EXPECTED_SHA"
+          git cat-file -e "$EXPECTED_SHA^{commit}"
+          STATUS=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${EXPECTED_SHA}/status" --jq '.statuses | map(select(.context == "Vercel" and .state == "success")) | length')
+          [[ "$STATUS" -gt 0 ]] || { echo "Exact deployed SHA has no successful Vercel status"; exit 1; }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Verify deployed SHA is current production alias
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ -n "$VERCEL_TOKEN" ]] || { echo "VERCEL_TOKEN required for exact-production verification"; exit 1; }
+          RESPONSE=$(curl --fail-with-body --silent --show-error -H "Authorization: Bearer $VERCEL_TOKEN" "https://api.vercel.com/v13/deployments/ascynpro.com")
+          RESPONSE="$RESPONSE" node -e '
+            const r=JSON.parse(process.env.RESPONSE);
+            const ready=r.readyState==="READY" || r.state==="READY";
+            const production=r.target==="production";
+            const exact=r.meta?.githubCommitSha===process.env.EXPECTED_SHA;
+            const aliases=Array.isArray(r.alias) && r.alias.includes("ascynpro.com");
+            if(!ready || !production || !exact || !aliases) {
+              console.error("The live ascynpro.com alias is not READY on the exact requested commit."); process.exit(1)
+            }
+            console.log("Verified current production alias, READY state, and exact SHA.")
+          '
+      - name: Read-only 3-role / 3-viewport Playwright certification
+        env:
+          ASCYN_PROD_ADMIN_STATE: ${{ secrets.ASCYN_PROD_ADMIN_STATE }}
+          ASCYN_PROD_INSTRUCTOR_STATE: ${{ secrets.ASCYN_PROD_INSTRUCTOR_STATE }}
+          ASCYN_PROD_STUDENT_STATE: ${{ secrets.ASCYN_PROD_STUDENT_STATE }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for ROLE in ADMIN INSTRUCTOR STUDENT; do
+            KEY="ASCYN_PROD_${ROLE}_STATE"
+            [[ -n "${!KEY:-}" ]] || { echo "Missing role session for ${ROLE}; certification is blocked."; exit 1; }
+          done
+          npx playwright test --config playwright.production.config.ts
+      - name: Publish test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g8-3-production-navigation-evidence
+          path: |
+            test-results/production-navigation.json
+          retention-days: 7
