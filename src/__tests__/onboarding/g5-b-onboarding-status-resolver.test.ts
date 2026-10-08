@@ -18,7 +18,7 @@ function completeSnapshot(): OnboardingSourceSnapshot {
     ],
     studentRows: [{ id: 'student-row-1', profile_id: 'student-1' }],
     activeEnrollmentStudentIds: ['student-row-1'],
-    activeAssignments: [{ student_id: 'student-1', instructor_id: 'inst-1' }],
+    activeAssignments: [{ student_id: 'student-row-1', instructor_id: 'inst-1' }],
     sourceErrors: [],
   }
 }
@@ -64,7 +64,18 @@ describe('G5-B onboarding status resolver', () => {
     })
   })
 
-  it('detects missing canonical instructor assignment by profile id', () => {
+  it('accepts legacy profile-id assignments while normalizing canonical student ids', () => {
+    const input = completeSnapshot()
+    input.activeAssignments = [{ student_id: 'student-1', instructor_id: 'inst-1' }]
+
+    const result = resolveSchoolOnboardingStatus(input)
+
+    expect(result.readyToLaunch).toBe(true)
+    expect(result.counts.unassignedLearners).toBe(0)
+    expect(result.steps.find((item) => item.id === 'assignment')?.complete).toBe(true)
+  })
+
+  it('detects missing canonical instructor assignment', () => {
     const input = completeSnapshot()
     input.activeAssignments = []
 
