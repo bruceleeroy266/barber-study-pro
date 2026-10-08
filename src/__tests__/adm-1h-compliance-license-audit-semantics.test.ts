@@ -4,6 +4,7 @@ import {
   calculateGraduationReadiness,
   determineBoardEligibility,
   generateComplianceReport,
+  buildComplianceAlerts,
   DEFAULT_COMPLIANCE_THRESHOLDS,
   type ComplianceRuleThresholds,
 } from '@/lib/compliance'
@@ -109,6 +110,31 @@ describe('ADM-1H compliance/license/audit-center semantics', () => {
     const check = determineBoardEligibility(inputs, thresholds)
     expect(check.status).not.toBe('eligible')
     expect(check.missingRequirements).toContain('Assessments completed: 1/2')
+  })
+
+  it('NZD-1: emits no compliance alerts when a new student has zero evidence', () => {
+    const alerts = buildComplianceAlerts({
+      student: student('nzd-empty'),
+      ...emptyInputs,
+      thresholds: {
+        ...DEFAULT_COMPLIANCE_THRESHOLDS,
+        requiredAssessments: 10,
+        requiredPracticals: 10,
+      },
+    })
+
+    expect(alerts).toEqual([])
+  })
+
+  it('NZD-1: preserves legitimate missing-hours and graduation-risk alerts once hour evidence exists', () => {
+    const alerts = buildComplianceAlerts({
+      student: student('nzd-hours'),
+      ...emptyInputs,
+      hourLogs: [hourLog('nzd-hours', 100)],
+    })
+
+    expect(alerts.some((alert) => alert.type === 'missing_hours')).toBe(true)
+    expect(alerts.some((alert) => alert.type === 'graduation_risk')).toBe(true)
   })
 
   it('uses evidence-aware no-data language in internal tracking reports', () => {
