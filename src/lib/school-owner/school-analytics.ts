@@ -738,6 +738,14 @@ export function generateSchoolReport(
       .filter((assessment) => metricStudentIds.has(assessment.studentId))
       .map((assessment) => assessment.studentId)
   )
+  const hoursEvidence = new Set(
+    metricEligibleStudents(inputs.students)
+      .filter((student) =>
+        studentHourLogs(student.id, inputs.hourLogs).length > 0 ||
+        (inputs.priorCreditMinutesByStudentId?.[student.id] ?? 0) > 0
+      )
+      .map((student) => student.id)
+  )
 
   switch (type) {
     case 'attendance':
@@ -792,23 +800,25 @@ export function generateSchoolReport(
         const summary = adaptiveHoursForStudent(inputs, r.studentId)
         return {
           Student: r.fullName,
-          Completed: Math.round(summary.creditedAndEarnedMinutes / 60),
-          'Earned Here': Math.round(summary.earnedApprovedMinutes / 60),
-          'Prior Credit': Math.round(summary.priorCreditMinutes / 60),
+          Completed: hoursEvidence.has(r.studentId) ? Math.round(summary.creditedAndEarnedMinutes / 60) : 'No Data',
+          'Earned Here': hoursEvidence.has(r.studentId) ? Math.round(summary.earnedApprovedMinutes / 60) : 'No Data',
+          'Prior Credit': hoursEvidence.has(r.studentId) ? Math.round(summary.priorCreditMinutes / 60) : 'No Data',
           Required: Math.round(summary.effectiveRequiredHours),
-          Remaining: Math.round(summary.remainingMinutes / 60),
+          Remaining: hoursEvidence.has(r.studentId) ? Math.round(summary.remainingMinutes / 60) : 'No Data',
         }
       })
       return {
         type,
         title: 'Hours Completion Report',
         generatedAt: now,
-        summary: `Total completed hours: ${Math.round(
-          metricRows.reduce((sum, r) => {
-            const summary = adaptiveHoursForStudent(inputs, r.studentId)
-            return sum + summary.creditedAndEarnedMinutes
-          }, 0) / 60
-        )}`,
+        summary: hoursEvidence.size === 0
+          ? 'Total completed hours: No Data'
+          : `Total completed hours: ${Math.round(
+              metricRows.reduce((sum, r) => {
+                const summary = adaptiveHoursForStudent(inputs, r.studentId)
+                return sum + summary.creditedAndEarnedMinutes
+              }, 0) / 60
+            )}`,
         rows: hourRows,
       }
     }
@@ -851,8 +861,8 @@ export function generateSchoolReport(
           { Metric: 'Average Attendance', Value: attendanceEvidence.size > 0 ? `${metrics.averageAttendance}%` : 'No Data' },
           { Metric: 'Average Readiness', Value: readinessEvidence.size > 0 ? metrics.averageReadiness : 'No Data' },
           { Metric: 'Average Grade', Value: gradeEvidence.size > 0 ? `${metrics.averageGrade}%` : 'No Grade' },
-          { Metric: 'Completed Hours', Value: metrics.completedHours },
-          { Metric: 'Assessment Completion', Value: `${metrics.assessmentCompletionRate}%` },
+          { Metric: 'Completed Hours', Value: hoursEvidence.size > 0 ? metrics.completedHours : 'No Data' },
+          { Metric: 'Assessment Completion', Value: assessmentEvidence.size > 0 ? `${metrics.assessmentCompletionRate}%` : 'No Assessments' },
         ],
       }
     }

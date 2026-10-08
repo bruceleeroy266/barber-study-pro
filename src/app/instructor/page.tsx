@@ -458,8 +458,9 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     return s.daysSinceActive <= ACTIVE_DAYS
   }).length
 
-  const classAvgProgress = totalStudents > 0
-    ? Math.round(metricStudentStats.reduce((sum, s) => sum + s.overallProgress, 0) / totalStudents)
+  const studentsWithProgress = metricStudentStats.filter((s) => s.hasProgressEvidence)
+  const classAvgProgress = studentsWithProgress.length > 0
+    ? Math.round(studentsWithProgress.reduce((sum, s) => sum + s.overallProgress, 0) / studentsWithProgress.length)
     : 0
 
   const studentsWithQuizzes = metricStudentStats.filter((s) => s.quizzesTaken > 0)
@@ -511,7 +512,11 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     recommendedActions.push(`Schedule check-ins with ${atRiskStudents.length} at-risk student${atRiskStudents.length === 1 ? '' : 's'}.`)
   }
   if (recommendedActions.length === 0 && metricStudentStats.length > 0) {
-    recommendedActions.push('Class is on track. Continue current study plan and monitor progress.')
+    if (metricStudentStats.some((s) => s.hasProgressEvidence || s.hasReadinessEvidence || s.quizzesTaken > 0)) {
+      recommendedActions.push('Class is on track. Continue current study plan and monitor progress.')
+    } else {
+      recommendedActions.push('No learning data yet. Have students begin their first lesson or practice activity.')
+    }
   }
 
   return (
@@ -609,7 +614,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
               classAvgProgress >= 80 ? 'text-gold' :
               classAvgProgress >= 50 ? 'text-warm-bronze' : 'text-silver'
             }`}>
-              {classAvgProgress}%
+              {studentsWithProgress.length > 0 ? `${classAvgProgress}%` : '—'}
             </div>
             <div className="text-xs text-[var(--color-text-muted)] mt-1">Curriculum Progress</div>
           </div>

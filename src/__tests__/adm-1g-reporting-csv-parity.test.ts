@@ -78,6 +78,45 @@ describe('ADM-1G reporting + CSV parity', () => {
     expect(values['Average Grade']).toBe('No Grade')
   })
 
+  it('NZD-3: untouched hours report does not turn absence of evidence into zero hours', () => {
+    const data = { ...inputs(), requiredHours: 1000 }
+    const report = generateSchoolReport('hours', data)
+    expect(report.summary).toBe('Total completed hours: No Data')
+    expect(report.rows[0]).toMatchObject({
+      Completed: 'No Data',
+      'Earned Here': 'No Data',
+      'Prior Credit': 'No Data',
+      Required: 1000,
+      Remaining: 'No Data',
+    })
+    const summary = generateSchoolReport('school_summary', data)
+    const values = Object.fromEntries(summary.rows.map((row) => [String(row.Metric), row.Value]))
+    expect(values['Completed Hours']).toBe('No Data')
+    expect(values['Assessment Completion']).toBe('No Assessments')
+    expect(convertRowsToCSV(report.rows)).toContain('No Data')
+  })
+
+  it('NZD-3: genuine prior-credit evidence preserves measured hours and requirements', () => {
+    const data = {
+      ...inputs(),
+      requiredHours: 1000,
+      priorCreditMinutesByStudentId: { s1: 60 },
+    }
+    const report = generateSchoolReport('hours', data)
+    expect(report.summary).toBe('Total completed hours: 1')
+    expect(report.rows[0]).toMatchObject({
+      Completed: 1,
+      'Earned Here': 0,
+      'Prior Credit': 1,
+      Required: 1000,
+      Remaining: 999,
+    })
+    const summary = generateSchoolReport('school_summary', data)
+    const values = Object.fromEntries(summary.rows.map((row) => [String(row.Metric), row.Value]))
+    expect(values['Completed Hours']).toBe(1)
+    expect(values['Assessment Completion']).toBe('No Assessments')
+  })
+
   it('attendance exports the same filtered records visible on screen', () => {
     const source = fs.readFileSync(
       path.join(process.cwd(), 'src/app/instructor/attendance/AttendanceClient.tsx'),
@@ -115,6 +154,17 @@ describe('ADM-1G reporting + CSV parity', () => {
 
     expect(school).toContain('convertRowsToCSV(report.rows)')
     expect(compliance).toContain('convertRowsToCSV(report.rows)')
+  })
+
+  it('NZD-3 instructor class progress excludes learners without progress evidence', () => {
+    const source = fs.readFileSync(
+      path.join(process.cwd(), 'src/app/instructor/page.tsx'),
+      'utf8',
+    )
+    expect(source).toContain('metricStudentStats.filter((s) => s.hasProgressEvidence)')
+    expect(source).toContain('studentsWithProgress.reduce((sum, s) => sum + s.overallProgress, 0) / studentsWithProgress.length')
+    expect(source).toContain("studentsWithProgress.length > 0 ? \`${classAvgProgress}%\` : '—'")
+    expect(source).toContain('No learning data yet. Have students begin their first lesson or practice activity.')
   })
 
   it('hours PDF renders approval timestamps in the configured school timezone', () => {
