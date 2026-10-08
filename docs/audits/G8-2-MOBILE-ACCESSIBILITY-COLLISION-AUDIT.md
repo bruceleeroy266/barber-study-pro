@@ -53,6 +53,44 @@ The dominant collision themes are:
 6. older responsive tests that are too shallow for the locked Gate 8 contract;
 7. no automated accessibility regression scanner currently found in the repo.
 
+## 2.5 Required Gate 8 surface inventory reconciliation
+
+This table closes the G8-1 minimum-surface inventory requirement. “Covered” means the route/surface family is explicitly represented by current-main static inspection in this audit; “Deferred live certification” means responsive/keyboard/screen-reader behavior must still be proven in its assigned later slice.
+
+| Contract-required surface | Role | G8-2 inventory status | Current audit linkage | Later certification owner |
+|---|---|---|---|---|
+| Student dashboard | Student/Apprentice | **Covered** | G8A-002 / G8A-003 / G8A-004 / G8A-009 | G8-3 + G8-7 |
+| Chapter / lesson surfaces | Student/Apprentice | **Covered; deferred live certification** | student `/dashboard/*` shell findings + current responsive suite review | G8-4 + G8-7 |
+| Assessments / reassessment | Student/Apprentice | **Covered; deferred live certification** | student shell + responsive-test coverage gap G8A-007 | G8-4 + G8-8 |
+| Flashcards / micro-checks | Student/Apprentice | **Covered; deferred live certification** | student learning family + G8A-007 | G8-4 + G8-8 |
+| Remediation | Student/Apprentice | **Covered; deferred live certification** | student learning family + G8A-007 | G8-4 + G8-8 |
+| Exam Ready | Student/Apprentice | **Covered** | G8A-005 / G8A-010 / G8A-014 | G8-4 + G8-7 |
+| Progress / readiness | Student/Apprentice | **Covered; deferred live certification** | student dashboard shell + current responsive-test review | G8-4 + G8-7 |
+| Messages / bulletins | Student/Apprentice | **Covered / preserve Gate 7** | G8A-023 / G8A-024 | G8-4 presentation-only |
+| Account / setup flows used by active students | Student/Apprentice | **Covered; deferred live certification** | G8A-001 / G8A-011 / G8A-025 | G8-6 + G8-7 |
+| Instructor dashboard | Instructor | **Covered** | InstructorNav review + G8A-004 / G8A-021 | G8-3 + G8-5 |
+| Instructor student list / detail | Instructor | **Covered; deferred live certification** | instructor route-family review + G8A-007 | G8-5 + G8-8 |
+| Learning diagnostics | Instructor | **Covered; deferred live certification** | instructor operational family inventory | G8-5 + G8-7 |
+| Intervention / recommended-action surfaces | Instructor | **Covered; deferred live certification** | instructor operational family inventory | G8-5 + G8-7 |
+| Instructional reporting views | Instructor | **Covered; deferred live certification** | dense-data concern G8A-015 | G8-5 + G8-7 |
+| Instructor communications | Instructor | **Covered / preserve Gate 7** | G8A-023 / G8A-024 | G8-5 presentation-only |
+| Instructor pilot measurement | Instructor | **Covered; deferred live certification** | route present in InstructorNav; Product Boundary frozen | G8-5 + G8-7 |
+| School/Admin dashboard | School Admin/Admin | **Covered** | AdminNav + G8A-004 / G8A-008 / G8A-015 | G8-3 + G8-5 |
+| School/student management | School Admin/Admin | **Covered** | G8A-006 / G8A-012 / G8A-015 / G8A-027 | G8-5 + G8-6 |
+| Instructor management | School Admin/Admin | **Covered; deferred live certification** | user-management operational family; guarded-zone rule | G8-5 + G8-6 |
+| Instructional reporting | School Admin/Admin | **Covered; deferred live certification** | G8A-015 | G8-5 + G8-7 |
+| Support Access / support surfaces | Platform Admin | **Covered; deferred live certification** | route present in AdminNav; authorization frozen by G8-1 | G8-5 + G8-8 |
+| Admin communications / bulletins | Admin/School Admin | **Covered / preserve Gate 7** | G8A-023 / G8A-024 | G8-5 presentation-only |
+| Platform Admin Support Mode role switching / support entry | Platform Admin | **Covered; deferred live certification** | support route inventoried; true-actor/permission semantics explicitly frozen | G8-5 + G8-8 |
+| Support Mode visible actor/context | Platform Admin | **Covered; deferred live certification** | Product Boundary + authorization freeze; UI-only verification remains | G8-5 + G8-7 |
+| Support Mode normal destination controls | Platform Admin | **Covered; deferred live certification** | navigation inventory + no-permission-change rule | G8-5 + G8-8 |
+| Sign-in | Public/Auth | **Covered** | G8A-001 / G8A-025 | G8-3 + G8-7 |
+| Invitation / setup | Public/Auth | **Covered; deferred live certification** | public/auth family + onboarding guarded-zone rule | G8-6 + G8-7 |
+| Password setup / reset | Public/Auth | **Covered** | G8A-001 / G8A-011 | G8-6 + G8-7 |
+| Legal / consent entry blockers | Public/Auth/Student | **Covered; deferred live certification** | root/public shell inventory; beta agreement remains business-frozen | G8-6 + G8-7 |
+
+**Surface-inventory conclusion:** no G8-1 required surface is omitted from G8-2. Static inspection does not claim final conformance for every route; the table explicitly carries unresolved live/mobile/keyboard/zoom certification into G8-3 through G8-8.
+
 ## 3. Route × role × issue × severity matrix
 
 | ID | Route / surface | Role | Component / file | Category | Finding | Severity | Required Gate 8 disposition |
