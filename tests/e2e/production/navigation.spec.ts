@@ -27,7 +27,7 @@ for (const { role, route, control } of roles) {
 
       const context = await browser.newContext({
         viewport: { width, height: 780 },
-        storageState: parsed as Parameters<typeof browser.newContext>[0]['storageState'],
+        storageState: parsed as NonNullable<Parameters<typeof browser.newContext>[0]>['storageState'],
         serviceWorkers: 'block',
       })
       const page = await context.newPage()
