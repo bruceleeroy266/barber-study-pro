@@ -27,7 +27,7 @@ describe('G8-3 global shell + navigation foundation', () => {
   })
 
   it('keeps student content below the fixed mobile navigation header', () => {
-    expect(dashboardLayout).toContain('pt-16')
+    expect(dashboardLayout).toContain('pt-[72px]')
     expect(dashboardLayout).toContain('lg:pt-0')
     expect(dashboardLayout).toContain('lg:pl-64')
   })
