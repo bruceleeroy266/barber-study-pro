@@ -75,5 +75,4 @@ jobs:
           name: g8-3-production-navigation-evidence
           path: |
             test-results/production-navigation.json
-            test-results/production/
           retention-days: 7
