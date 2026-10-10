@@ -39,3 +39,18 @@ begin
 end $$;
 revoke all on function public.qa_record_reading_event(uuid,text,smallint) from public,anon;
 grant execute on function public.qa_record_reading_event(uuid,text,smallint) to authenticated;
+
+-- Authorized QA-only readback. No academic or attendance data exposed.
+create or replace function public.qa_read_reading_events()
+returns table(event_id uuid,event_type text,scroll_depth_percent smallint,received_at timestamptz)
+language plpgsql security definer set search_path=public,pg_temp as $$
+begin
+  if auth.uid() is null or not exists (
+    select 1 from public.qa_reading_allowlist q where q.user_id=auth.uid()
+  ) then raise exception 'QA account required'; end if;
+  return query select e.event_id,e.event_type,e.scroll_depth_percent,e.received_at
+    from public.qa_reading_engagement_events e where e.user_id=auth.uid()
+    and e.chapter_id='ch-1' order by e.received_at asc;
+end $$;
+revoke all on function public.qa_read_reading_events() from public,anon;
+grant execute on function public.qa_read_reading_events() to authenticated;
