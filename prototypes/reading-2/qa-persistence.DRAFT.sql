@@ -1,5 +1,12 @@
 -- READING-2A DRAFT ONLY. Do not apply until a disposable QA database is selected.
 -- This is NOT academic evidence, grades, trusted study time, or attendance.
+create table if not exists public.qa_reading_allowlist (
+  user_id uuid primary key references auth.users(id) on delete cascade
+);
+alter table public.qa_reading_allowlist enable row level security;
+revoke all on public.qa_reading_allowlist from anon,authenticated;
+-- Only an authorized administrator may separately populate QA IDs.
+
 create table if not exists public.qa_reading_engagement_events (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
@@ -20,8 +27,7 @@ create or replace function public.qa_record_reading_event(
 begin
   if auth.uid() is null then raise exception 'Unauthenticated'; end if;
   -- Explicit QA allowlist must be supplied before application; fail closed.
-  if not exists (select 1 from public.profiles p where p.id=auth.uid()
-     and p.role='student' and coalesce(p.is_qa_account,false)=true) then
+  if not exists (select 1 from public.qa_reading_allowlist q where q.user_id=auth.uid()) then
     raise exception 'QA account required';
   end if;
   if p_event_type not in ('scroll','reader_action','visible','hidden','tick') then
@@ -31,7 +37,5 @@ begin
   values(auth.uid(),'ch-1',p_event_id,p_event_type,p_scroll_depth_percent)
   on conflict(user_id,event_id) do nothing;
 end $$;
--- NOTE: is_qa_account is a proposed field, not verified in current schema.
--- Use a separately reviewed QA allowlist table instead if absent.
 revoke all on function public.qa_record_reading_event(uuid,text,smallint) from public,anon;
 grant execute on function public.qa_record_reading_event(uuid,text,smallint) to authenticated;
