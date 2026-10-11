@@ -44,10 +44,6 @@ export default function ProScenario({ scenarios, theme, onComplete, chapterId, u
 
   useEffect(() => {
     let current = true
-    setLoadingEvidence(true)
-    setSelectedAnswers({})
-    setRevealed(new Set())
-    setSavedScenarios(new Set())
     if (!chapterId || !userId || !sectionId || !isUnifiedActivityEvidenceChapter(chapterId)) {
       setLoadingEvidence(false)
       return () => { current = false }
