@@ -775,6 +775,18 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
       return
     }
 
+    if (chapterId === 'ch-19') {
+      const requiredQuestionIds = chapter19MicroChecks.flatMap((check) =>
+        check.questions.map((question) => question.id),
+      )
+      const recordedQuestionIds = new Set(
+        chapter19MicroCheckAttempts.map((attempt) => attempt.question_id),
+      )
+      if (!requiredQuestionIds.every((questionId) => recordedQuestionIds.has(questionId))) {
+        return
+      }
+    }
+
     if (chapterId === 'ch-20') {
       const requiredQuestionIds = chapter20MicroChecks.flatMap((check) =>
         check.questions.map((question) => question.id),
@@ -813,6 +825,7 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
       cancelled = true
     }
   }, [
+    chapter19MicroCheckAttempts,
     chapter20MicroCheckAttempts,
     chapter21MicroCheckAttempts,
     chapterId,
