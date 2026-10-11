@@ -41,10 +41,6 @@ export default function ScenarioBlock({ scenarios, theme, onComplete, chapterId,
 
   useEffect(() => {
     let current = true
-    setLoadingEvidence(true)
-    setSelectedAnswers({})
-    setRevealed(new Set())
-    setSavedScenarios(new Set())
     if (!chapterId || !userId || !sectionId || !isUnifiedActivityEvidenceChapter(chapterId)) {
       setLoadingEvidence(false)
       return () => { current = false }
