@@ -358,6 +358,9 @@ export default async function DashboardPage() {
     strongAreas: analytics.strongAreas,
     missedQuestions,
     totalChapters,
+    chapterProgress: progress,
+    quizAttempts: attempts,
+    chapters,
   })
 
   // Find continue chapter (first incomplete)
