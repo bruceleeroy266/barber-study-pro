@@ -359,6 +359,12 @@ export default function ScenarioBlock({ scenarios, theme, onComplete, chapterId,
                 })}
               </div>
 
+              {savedScenarios.has(sIdx) && selected !== undefined && (
+                <p className="mb-3 text-xs font-semibold" data-testid={`saved-scenario-answer-${sectionId}-${sIdx}`}>
+                  Your saved answer: {selected}
+                </p>
+              )}
+
               {/* Reveal Button */}
               {!isRevealed && (
                 <button
