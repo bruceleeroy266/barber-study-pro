@@ -34,7 +34,7 @@ export default function ScenarioBlock({ scenarios, theme, onComplete, chapterId,
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({})
   const [revealed, setRevealed] = useState<Set<number>>(new Set())
 
-  const [loadingEvidence, setLoadingEvidence] = useState(true)
+  const [loadingEvidence, setLoadingEvidence] = useState(() => Boolean(chapterId && userId && sectionId && isUnifiedActivityEvidenceChapter(chapterId)))
   const [savingScenario, setSavingScenario] = useState<number | null>(null)
   const [saveError, setSaveError] = useState<string | null>(null)
   const [savedScenarios, setSavedScenarios] = useState<Set<number>>(new Set())
@@ -42,7 +42,6 @@ export default function ScenarioBlock({ scenarios, theme, onComplete, chapterId,
   useEffect(() => {
     let current = true
     if (!chapterId || !userId || !sectionId || !isUnifiedActivityEvidenceChapter(chapterId)) {
-      queueMicrotask(() => { if (current) setLoadingEvidence(false) })
       return () => { current = false }
     }
     void loadChapterActivityEvidence(userId, chapterId).then(rows => {
