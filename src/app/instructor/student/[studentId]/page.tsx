@@ -1122,6 +1122,9 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
     strongAreas: analytics.strongAreas,
     missedQuestions,
     totalChapters,
+    chapterProgress: progressRecords,
+    quizAttempts: attemptRecords,
+    chapters,
     hasEvidence: hasReadinessEvidence,
   })
 
