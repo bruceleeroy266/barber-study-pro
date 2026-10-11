@@ -45,7 +45,7 @@ export default function ProScenario({ scenarios, theme, onComplete, chapterId, u
   useEffect(() => {
     let current = true
     if (!chapterId || !userId || !sectionId || !isUnifiedActivityEvidenceChapter(chapterId)) {
-      setLoadingEvidence(false)
+      queueMicrotask(() => { if (current) setLoadingEvidence(false) })
       return () => { current = false }
     }
     void loadChapterActivityEvidence(userId, chapterId).then(rows => {
