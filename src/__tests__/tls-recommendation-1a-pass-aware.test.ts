@@ -10,7 +10,7 @@ const readiness: BoardReadiness = {
   chaptersCompleted: 0, totalChapters: 21, recommendedStudyMinutes: 60,
   updatedAt: '2026-10-11T00:00:00.000Z',
 }
-const chapters = localChapters.slice(0, 2) as Chapter[]
+const chapters = localChapters.filter((ch) => ch.chapter_number === 2) as Chapter[]
 const chapter2 = chapters.find((ch) => ch.chapter_number === 2)!
 const progress = (score: number | null, percentage = 50): StudentProgress => ({
   id: 'progress-2', user_id: 'qa', chapter_id: chapter2.id, flashcards_completed: false,
