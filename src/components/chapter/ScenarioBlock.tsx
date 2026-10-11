@@ -5,7 +5,7 @@ import { MessageSquare, CheckCircle, XCircle, Lightbulb, Timer, AlertTriangle } 
 import type { ChapterTheme } from '@/lib/chapter-content'
 import { defaultTheme } from '@/lib/chapter-content'
 import { getScenarioEvidenceConcept, isUnifiedActivityEvidenceChapter } from '@/lib/concept-mastery/activity-evidence-registry'
-import { persistChapterActivityEvidence } from '@/lib/concept-mastery/activity-evidence'
+import { loadChapterActivityEvidence, persistChapterActivityEvidence } from '@/lib/concept-mastery/activity-evidence'
 
 interface ScenarioOption {
   letter: string
@@ -33,6 +33,42 @@ export default function ScenarioBlock({ scenarios, theme, onComplete, chapterId,
   const t = theme || defaultTheme
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({})
   const [revealed, setRevealed] = useState<Set<number>>(new Set())
+
+  const [loadingEvidence, setLoadingEvidence] = useState(true)
+  const [savingScenario, setSavingScenario] = useState<number | null>(null)
+  const [saveError, setSaveError] = useState<string | null>(null)
+  const [savedScenarios, setSavedScenarios] = useState<Set<number>>(new Set())
+
+  useEffect(() => {
+    let current = true
+    setLoadingEvidence(true)
+    setSelectedAnswers({})
+    setRevealed(new Set())
+    setSavedScenarios(new Set())
+    if (!chapterId || !userId || !sectionId || !isUnifiedActivityEvidenceChapter(chapterId)) {
+      setLoadingEvidence(false)
+      return () => { current = false }
+    }
+    void loadChapterActivityEvidence(userId, chapterId).then(rows => {
+      if (!current) return
+      const answers: Record<number, string> = {}
+      const done = new Set<number>()
+      for (const row of rows) {
+        if (row.source !== 'scenario_application') continue
+        if (!row.item_id.startsWith(sectionId + ':')) continue
+        const index = Number(row.item_id.slice(sectionId.length + 1))
+        if (!Number.isInteger(index) || index < 0 || index >= scenarios.length || !row.selected_answer) continue
+        answers[index] = row.selected_answer
+        done.add(index)
+      }
+      setSelectedAnswers(answers)
+      setRevealed(done)
+      setSavedScenarios(done)
+      setLoadingEvidence(false)
+    }).catch(() => { if (current) { setSaveError('Unable to restore saved scenarios'); setLoadingEvidence(false) } })
+    return () => { current = false }
+  }, [chapterId, userId, sectionId, scenarios.length])
+
   const [timeLeft, setTimeLeft] = useState<Record<number, number>>({})
   const [timerExpired, setTimerExpired] = useState<Set<number>>(new Set())
   const [timerStarted, setTimerStarted] = useState<Set<number>>(new Set())
@@ -83,17 +119,19 @@ export default function ScenarioBlock({ scenarios, theme, onComplete, chapterId,
     setSelectedAnswers(prev => ({ ...prev, [scenarioIdx]: letter }))
   }
 
-  const revealAnswer = (scenarioIdx: number) => {
+  const revealAnswer = async (scenarioIdx: number) => {
     // Never award completion for an unanswered scenario. The button is
     // disabled in the UI until an option is selected, but keep this guard
     // here so programmatic calls cannot bypass the progress requirement.
-    if (selectedAnswers[scenarioIdx] === undefined || revealed.has(scenarioIdx)) return
+    if (loadingEvidence || savingScenario !== null || selectedAnswers[scenarioIdx] === undefined || revealed.has(scenarioIdx)) return
+    setSavingScenario(scenarioIdx)
+    setSaveError(null)
 
     if (chapterId && userId && sectionId && isUnifiedActivityEvidenceChapter(chapterId)) {
       const conceptId = getScenarioEvidenceConcept(chapterId, sectionId, scenarioIdx)
       const selected = selectedAnswers[scenarioIdx]
       if (conceptId && selected !== undefined) {
-        void persistChapterActivityEvidence({
+        const saved = await persistChapterActivityEvidence({
           userId,
           chapterId,
           conceptId,
@@ -102,9 +140,13 @@ export default function ScenarioBlock({ scenarios, theme, onComplete, chapterId,
           selectedAnswer: selected,
           isCorrect: selected === scenarios[scenarioIdx]?.correctAnswer,
         })
+        if (!saved) { setSaveError('Unable to save scenario answer'); setSavingScenario(null); return }
+        setSelectedAnswers(prev => ({ ...prev, [scenarioIdx]: saved.selected_answer ?? selected }))
       }
     }
 
+    setSavingScenario(null)
+    setSavedScenarios(prev => new Set(prev).add(scenarioIdx))
     // Stop timer if running
     if (intervalRefs.current[scenarioIdx]) {
       clearInterval(intervalRefs.current[scenarioIdx])
@@ -118,6 +160,7 @@ export default function ScenarioBlock({ scenarios, theme, onComplete, chapterId,
   }
 
   const resetScenario = (scenarioIdx: number) => {
+    if (savedScenarios.has(scenarioIdx)) return
     // Clear timer
     if (intervalRefs.current[scenarioIdx]) {
       clearInterval(intervalRefs.current[scenarioIdx])
@@ -158,6 +201,7 @@ export default function ScenarioBlock({ scenarios, theme, onComplete, chapterId,
 
   return (
     <div className="space-y-6">
+      {saveError && <p role="alert" className="text-sm text-red-500">{saveError}</p>}
       {scenarios.map((scenario, sIdx) => {
         const isRevealed = revealed.has(sIdx)
         const selected = selectedAnswers[sIdx]
@@ -285,7 +329,7 @@ export default function ScenarioBlock({ scenarios, theme, onComplete, chapterId,
                     <button
                       key={option.letter}
                       onClick={() => {
-                        if (Boolean(hasTimer) && !hasStarted) return
+                        if (loadingEvidence || savingScenario !== null || (Boolean(hasTimer) && !hasStarted)) return
                         selectAnswer(sIdx, option.letter)
                       }}
                       aria-label={`Option ${option.letter}: ${option.text}`}
@@ -324,7 +368,7 @@ export default function ScenarioBlock({ scenarios, theme, onComplete, chapterId,
               {!isRevealed && (
                 <button
                   onClick={() => revealAnswer(sIdx)}
-                  disabled={selected === undefined || (Boolean(hasTimer) && !hasStarted)}
+                  disabled={loadingEvidence || savingScenario !== null || selected === undefined || (Boolean(hasTimer) && !hasStarted)}
                   aria-label="Check answer"
                   className="w-full rounded-lg py-2.5 text-sm font-semibold transition-all disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
                   style={{
@@ -360,7 +404,7 @@ export default function ScenarioBlock({ scenarios, theme, onComplete, chapterId,
               )}
 
               {/* Reset Button (shown after reveal) */}
-              {isRevealed && (
+              {isRevealed && !savedScenarios.has(sIdx) && (
                 <button
                   onClick={() => resetScenario(sIdx)}
                   aria-label="Try this scenario again"
