@@ -42,7 +42,7 @@ export default function ScenarioBlock({ scenarios, theme, onComplete, chapterId,
   useEffect(() => {
     let current = true
     if (!chapterId || !userId || !sectionId || !isUnifiedActivityEvidenceChapter(chapterId)) {
-      setLoadingEvidence(false)
+      queueMicrotask(() => { if (current) setLoadingEvidence(false) })
       return () => { current = false }
     }
     void loadChapterActivityEvidence(userId, chapterId).then(rows => {
