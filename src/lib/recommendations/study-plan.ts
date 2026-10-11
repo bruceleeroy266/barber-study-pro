@@ -11,7 +11,12 @@ import {
   BoardReadiness,
   MissedQuestion,
   StudyRecommendation,
+  StudentProgress,
+  QuizAttempt,
+  Chapter,
 } from '@/types'
+import { quizIdToChapterId } from '@/lib/analytics/utils'
+import { getLocalQuiz } from '@/lib/local-data'
 
 export interface RecommendationsInputs {
   userId: string
@@ -22,6 +27,9 @@ export interface RecommendationsInputs {
   totalChapters: number
   /** Explicit learning/readiness evidence gate for zero-data surfaces. */
   hasEvidence?: boolean
+  chapterProgress?: StudentProgress[]
+  quizAttempts?: QuizAttempt[]
+  chapters?: Chapter[]
 }
 
 function nextIncompleteChapter(
@@ -66,7 +74,32 @@ export function generateStudyPlan(inputs: RecommendationsInputs): StudyRecommend
     return recommendations
   }
 
-  const nextChapter = nextIncompleteChapter(readiness, weakAreas)
+  // Authenticated chapter evidence takes precedence over derived weak-area rankings.
+  const chapterStates = inputs.chapters && inputs.chapterProgress && inputs.quizAttempts
+    ? inputs.chapters.map((chapter) => {
+        const progress = inputs.chapterProgress!.find((p) => p.chapter_id === chapter.id)
+        const scores = inputs.quizAttempts!
+          .filter((a) => quizIdToChapterId(a.quiz_id) === chapter.id && !a.is_reassessment)
+          .map((a) => a.percentage)
+        const best = Math.max(-1, progress?.best_quiz_score ?? -1, ...scores)
+        return {
+          chapterNumber: chapter.chapter_number,
+          title: `Ch.${chapter.chapter_number} ${chapter.title}`,
+          passed: best >= (getLocalQuiz(chapter.id)?.passing_score ?? 80),
+          complete: progress?.progress_percentage === 100,
+          score: best >= 0 ? best : null,
+        }
+      })
+    : null
+
+  const failingChapter = chapterStates?.find((state) => state.score !== null && !state.passed)
+  const incompleteChapter = chapterStates?.find((state) => !state.complete)
+  const selectedChapter = failingChapter ?? incompleteChapter
+  const nextChapter = chapterStates
+    ? selectedChapter && { chapterNumber: selectedChapter.chapterNumber, title: selectedChapter.title }
+    : nextIncompleteChapter(readiness, weakAreas)
+  const needsCompletion = Boolean(selectedChapter?.passed && !selectedChapter.complete)
+  const criticalGap = Boolean(selectedChapter && !selectedChapter.passed && selectedChapter.score !== null && selectedChapter.score < 60)
 
   if (nextChapter) {
     recommendations.push({
@@ -74,11 +107,13 @@ export function generateStudyPlan(inputs: RecommendationsInputs): StudyRecommend
       type: 'study',
       title: `Study ${nextChapter.title}`,
       description:
-        readiness.score < 70
-          ? 'Focus here first — this chapter is your highest-priority gap.'
-          : 'Continue building your knowledge with this chapter.',
+        needsCompletion
+          ? 'Your quiz is passed. Finish the remaining chapter requirements.'
+          : criticalGap
+          ? 'Your saved chapter assessment needs targeted review.'
+          : 'Continue the chapter or finish its remaining requirements.',
       chapterNumber: nextChapter.chapterNumber,
-      priority: readiness.score < 70 ? 'critical' : 'high',
+      priority: criticalGap ? 'critical' : needsCompletion ? 'medium' : 'high',
       estimatedMinutes: readiness.recommendedStudyMinutes,
     })
   }
@@ -99,8 +134,8 @@ export function generateStudyPlan(inputs: RecommendationsInputs): StudyRecommend
   }
 
   if (weakAreas.length > 0) {
-    const topWeak = weakAreas[0]
-    recommendations.push({
+    const topWeak = weakAreas.find((area) => !chapterStates || !area.chapterNumber || !chapterStates.find((state) => state.chapterNumber === area.chapterNumber)?.passed)
+    if (topWeak) recommendations.push({
       id: `rec-review-${userId}-flashcards`,
       type: 'review',
       title: `Flashcard Review: ${topWeak.name}`,
