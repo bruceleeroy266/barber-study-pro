@@ -40,7 +40,7 @@ export default function ProScenario({ scenarios, theme, onComplete, chapterId, u
   const [loadingEvidence, setLoadingEvidence] = useState(true)
   const [savingScenario, setSavingScenario] = useState<number | null>(null)
   const [saveError, setSaveError] = useState<string | null>(null)
-  const [savedScenarios, setSavedScenarios] = useState<Set<number>>(new Set())
+  const [, setSavedScenarios] = useState<Set<number>>(new Set())
 
   useEffect(() => {
     let current = true
