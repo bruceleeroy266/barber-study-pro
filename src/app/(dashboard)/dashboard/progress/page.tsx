@@ -123,6 +123,9 @@ export default async function ProgressPage() {
     strongAreas: analytics.strongAreas,
     missedQuestions,
     totalChapters,
+    chapterProgress: progress,
+    quizAttempts: attempts,
+    chapters,
   })
 
   return (
