@@ -60,6 +60,18 @@ describe('SCENARIO-PERSISTENCE-2', () => {
     expect(mocks.persist).not.toHaveBeenCalled()
   })
 
+  it('restores the original incorrect C answer explicitly for attitude scenario index 1', async () => {
+    mocks.load.mockResolvedValue([{
+      ...saved[0],
+      item_id: 'attitude-scenarios:1',
+      selected_answer: 'C',
+      is_correct: false,
+    }])
+    render(<ScenarioBlock scenarios={[scenarios[0], scenarios[0]]} chapterId="ch-2" userId="test-user" sectionId="attitude-scenarios" />)
+    await waitFor(() => expect(screen.getByTestId('saved-scenario-answer-attitude-scenarios-1').textContent).toContain('Your saved answer: C'))
+    expect(mocks.persist).not.toHaveBeenCalled()
+  })
+
   it('does not reveal feedback on failed persistence', async () => {
     mocks.load.mockResolvedValue([])
     render(<ScenarioBlock scenarios={scenarios} chapterId="ch-2" userId="test-user" sectionId="ethics-scenarios" />)
