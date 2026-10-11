@@ -1,11 +1,11 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { MessageSquare, CheckCircle, XCircle, Award, ChevronRight } from 'lucide-react'
 import type { ChapterTheme } from '@/lib/chapter-content'
 import { defaultTheme } from '@/lib/chapter-content'
 import { getScenarioEvidenceConcept, isUnifiedActivityEvidenceChapter } from '@/lib/concept-mastery/activity-evidence-registry'
-import { persistChapterActivityEvidence } from '@/lib/concept-mastery/activity-evidence'
+import { loadChapterActivityEvidence, persistChapterActivityEvidence } from '@/lib/concept-mastery/activity-evidence'
 import { orderInteractiveAnswers } from '@/lib/presentation/stable-answer-order'
 
 interface ProScenarioOption {
@@ -37,6 +37,37 @@ export default function ProScenario({ scenarios, theme, onComplete, chapterId, u
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({})
   const [revealed, setRevealed] = useState<Set<number>>(new Set())
 
+  const [loadingEvidence, setLoadingEvidence] = useState(() => Boolean(chapterId && userId && sectionId && isUnifiedActivityEvidenceChapter(chapterId)))
+  const [savingScenario, setSavingScenario] = useState<number | null>(null)
+  const [saveError, setSaveError] = useState<string | null>(null)
+  const [, setSavedScenarios] = useState<Set<number>>(new Set())
+
+  useEffect(() => {
+    let current = true
+    if (!chapterId || !userId || !sectionId || !isUnifiedActivityEvidenceChapter(chapterId)) {
+      return () => { current = false }
+    }
+    void loadChapterActivityEvidence(userId, chapterId).then(rows => {
+      if (!current) return
+      const answers: Record<number, string> = {}
+      const done = new Set<number>()
+      for (const row of rows) {
+        if (row.source !== 'scenario_application') continue
+        if (!row.item_id.startsWith(sectionId + ':')) continue
+        const index = Number(row.item_id.slice(sectionId.length + 1))
+        if (!Number.isInteger(index) || index < 0 || index >= scenarios.length || !row.selected_answer) continue
+        answers[index] = row.selected_answer
+        done.add(index)
+      }
+      setSelectedAnswers(answers)
+      setRevealed(done)
+      setSavedScenarios(done)
+      setLoadingEvidence(false)
+    }).catch(() => { if (current) { setSaveError('Unable to restore saved scenarios'); setLoadingEvidence(false) } })
+    return () => { current = false }
+  }, [chapterId, userId, sectionId, scenarios.length])
+
+
   const orderedScenarios = useMemo(
     () => scenarios.map((scenario, scenarioIndex) => {
       const correctIndex = scenario.options.findIndex((option) => option.letter === scenario.correctAnswer)
@@ -51,19 +82,21 @@ export default function ProScenario({ scenarios, theme, onComplete, chapterId, u
   )
 
   const selectAnswer = (scenarioIdx: number, originalLetter: string) => {
-    if (revealed.has(scenarioIdx)) return
+    if (loadingEvidence || savingScenario !== null || revealed.has(scenarioIdx)) return
     setSelectedAnswers(prev => ({ ...prev, [scenarioIdx]: originalLetter }))
   }
 
-  const revealAnswer = (scenarioIdx: number) => {
+  const revealAnswer = async (scenarioIdx: number) => {
     // Keep completion tied to an actual student response even if this
     // handler is invoked outside the normal disabled-button UI path.
-    if (revealed.has(scenarioIdx) || selectedAnswers[scenarioIdx] === undefined) return
+    if (loadingEvidence || savingScenario !== null || revealed.has(scenarioIdx) || selectedAnswers[scenarioIdx] === undefined) return
+    setSavingScenario(scenarioIdx)
+    setSaveError(null)
     if (chapterId && userId && sectionId && isUnifiedActivityEvidenceChapter(chapterId)) {
       const conceptId = getScenarioEvidenceConcept(chapterId, sectionId, scenarioIdx)
       const selected = selectedAnswers[scenarioIdx]
       if (conceptId && selected !== undefined) {
-        void persistChapterActivityEvidence({
+        const saved = await persistChapterActivityEvidence({
           userId,
           chapterId,
           conceptId,
@@ -72,9 +105,13 @@ export default function ProScenario({ scenarios, theme, onComplete, chapterId, u
           selectedAnswer: selected,
           isCorrect: selected === scenarios[scenarioIdx]?.correctAnswer,
         })
+        if (!saved) { setSaveError('Unable to save scenario answer'); setSavingScenario(null); return }
+        setSelectedAnswers(prev => ({ ...prev, [scenarioIdx]: saved.selected_answer ?? selected }))
       }
     }
 
+    setSavingScenario(null)
+    setSavedScenarios(prev => new Set(prev).add(scenarioIdx))
     const next = new Set(revealed).add(scenarioIdx)
     setRevealed(next)
     if (next.size === scenarios.length) onComplete?.()
@@ -82,6 +119,7 @@ export default function ProScenario({ scenarios, theme, onComplete, chapterId, u
 
   return (
     <div className="space-y-6">
+      {saveError && <p role="alert" className="text-sm text-red-500">{saveError}</p>}
       {scenarios.map((scenario, sIdx) => {
         const isRevealed = revealed.has(sIdx)
         const selected = selectedAnswers[sIdx]
@@ -208,7 +246,7 @@ export default function ProScenario({ scenarios, theme, onComplete, chapterId, u
               {!isRevealed && (
                 <button
                   onClick={() => revealAnswer(sIdx)}
-                  disabled={selected === undefined}
+                  disabled={loadingEvidence || savingScenario !== null || selected === undefined}
                   className="w-full rounded-lg py-3 text-sm font-semibold transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
                   style={{
                     background: selected !== undefined
@@ -218,7 +256,7 @@ export default function ProScenario({ scenarios, theme, onComplete, chapterId, u
                     boxShadow: selected !== undefined ? `0 4px 16px ${t.primary}30` : 'none',
                   }}
                 >
-                  Reveal Professional Response
+                  {savingScenario === sIdx ? 'Saving…' : 'Reveal Professional Response'}
                 </button>
               )}
 
