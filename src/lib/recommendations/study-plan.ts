@@ -165,8 +165,8 @@ export function generateStudyPlan(inputs: RecommendationsInputs): StudyRecommend
       title: 'Take a Practice Quiz',
       description:
         readiness.score >= 80
-          ? 'Stay sharp with a mixed-chapter practice quiz.'
-          : 'Practice quizzes will expose weak spots before the board exam.',
+          ? `Stay sharp with the Chapter ${practiceChapter.chapter_number} quiz.`
+          : `Practice Chapter ${practiceChapter.chapter_number} to strengthen weak areas before the board exam.`,
       chapterNumber: practiceChapter.chapter_number,
       priority: readiness.score < 70 ? 'high' : 'medium',
       estimatedMinutes: 20,
