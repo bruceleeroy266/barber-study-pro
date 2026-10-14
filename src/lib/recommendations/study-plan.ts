@@ -146,7 +146,19 @@ export function generateStudyPlan(inputs: RecommendationsInputs): StudyRecommend
     })
   }
 
-  if (readiness.quizAverage < 80 || weakAreas.length > 0) {
+  // Only offer a practice action when a real, active chapter quiz can be targeted.
+  const practiceCandidates = (inputs.chapters ?? []).filter((chapter) =>
+    chapter.is_active && Boolean(getLocalQuiz(chapter.id))
+  )
+  const practiceChapter = practiceCandidates.find((chapter) =>
+    chapter.chapter_number === failingChapter?.chapterNumber
+  ) ?? practiceCandidates.find((chapter) =>
+    weakAreas.some((area) => area.chapterNumber === chapter.chapter_number)
+  ) ?? practiceCandidates.find((chapter) =>
+    chapter.chapter_number === incompleteChapter?.chapterNumber
+  ) ?? practiceCandidates[0]
+
+  if ((readiness.quizAverage < 80 || weakAreas.length > 0) && practiceChapter) {
     recommendations.push({
       id: `rec-practice-${userId}-quiz`,
       type: 'practice',
@@ -155,7 +167,7 @@ export function generateStudyPlan(inputs: RecommendationsInputs): StudyRecommend
         readiness.score >= 80
           ? 'Stay sharp with a mixed-chapter practice quiz.'
           : 'Practice quizzes will expose weak spots before the board exam.',
-      chapterNumber: null,
+      chapterNumber: practiceChapter.chapter_number,
       priority: readiness.score < 70 ? 'high' : 'medium',
       estimatedMinutes: 20,
     })
