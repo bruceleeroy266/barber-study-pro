@@ -673,6 +673,16 @@ test.describe('Pilot onboarding certification', () => {
       .single()
     expect(instructorProfile).toMatchObject({ school_id: schoolId, role: 'instructor' })
 
+    // The newly activated student needs genuine chapter evidence before a
+    // practice recommendation is eligible under the zero-data policy.
+    const { error: fixtureError } = await service.from('student_progress').upsert({
+      user_id: studentProfile!.id,
+      chapter_id: 'chapter-1',
+      lesson_completed: true,
+      progress_percentage: 10,
+    }, { onConflict: 'user_id,chapter_id' })
+    expect(fixtureError).toBeNull()
+
     // STUDENT-QUIZ-NAV-3H: isolated authenticated mobile navigation and
     // before/after persistence certification. Never run outside local Supabase.
     const trackedTables = [
