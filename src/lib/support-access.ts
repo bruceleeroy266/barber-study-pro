@@ -1,5 +1,3 @@
-import 'server-only'
-
 import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase-server'
 import { isPlatformAdminProfile } from '@/lib/auth-helpers'
