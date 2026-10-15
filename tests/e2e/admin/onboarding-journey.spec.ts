@@ -673,6 +673,39 @@ test.describe('Pilot onboarding certification', () => {
       .single()
     expect(instructorProfile).toMatchObject({ school_id: schoolId, role: 'instructor' })
 
+    // STUDENT-QUIZ-NAV-3H: isolated authenticated mobile navigation and
+    // before/after persistence certification. Never run outside local Supabase.
+    const trackedTables = [
+      'quiz_attempts', 'student_progress', 'hour_logs',
+      'attendance_records', 'study_sessions', 'trusted_study_activity_days',
+    ] as const
+    const readNavigationBaseline = async () => {
+      const snapshots: Record<string, unknown[]> = {}
+      for (const table of trackedTables) {
+        const { data, error } = await service
+          .from(table)
+          .select('*')
+          .eq('user_id', studentProfile!.id)
+          .order('id', { ascending: true })
+        if (error) throw new Error(`Navigation QA could not read ${table}: ${error.message}`)
+        snapshots[table] = data ?? []
+      }
+      return snapshots
+    }
+    const navigationBefore = await readNavigationBaseline()
+    for (const width of [320, 360, 390]) {
+      await studentSession.page.setViewportSize({ width, height: 720 })
+      await studentSession.page.goto('/dashboard/chapters/1#chapter-quiz')
+      await expect(studentSession.page).toHaveURL(/\/dashboard\/chapters\/1#chapter-quiz$/)
+      await expect(studentSession.page.getByRole('heading', { name: 'Chapter Quiz' })).toBeVisible()
+      const overflow = await studentSession.page.evaluate(() =>
+        document.documentElement.scrollWidth > document.documentElement.clientWidth
+      )
+      expect(overflow).toBe(false)
+    }
+    const navigationAfter = await readNavigationBaseline()
+    expect(navigationAfter).toEqual(navigationBefore)
+
     // -----------------------------------------------------------------------
     // 8. Gate 3 handoff: activated student produces trusted measurement
     // -----------------------------------------------------------------------
