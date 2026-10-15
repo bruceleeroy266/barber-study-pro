@@ -8,20 +8,17 @@ import RubricBuilder from '@/components/assessments/RubricBuilder'
 import RubricEvaluator from '@/components/assessments/RubricEvaluator'
 import { mapAssessmentRubricsFromDb } from '@/lib/mappers/operational-data-mappers'
 import BackButton from '@/components/ui/BackButton'
+import { resolveSupportAccessContext } from '@/lib/support-access'
 
 export default async function InstructorRubricsPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
 
-  if (!user) redirect('/login')
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role, school_id')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile || !isInstructorOrAdmin(profile.role)) redirect('/dashboard')
+  const profile = context.effectiveProfile
+  if (!isInstructorOrAdmin(profile.role)) {
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
+  }
 
   const schoolId = profile.school_id
 
