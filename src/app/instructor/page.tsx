@@ -3,7 +3,8 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Profile, StudentProgress, QuizAttempt, HourLog, ReadinessLevel, AttendanceRecord, Grade, GradeCategory, Assessment } from '@/types'
 import { localChapters } from '@/lib/local-data'
-import { isInstructorOrAdmin, isPlatformAdminProfile } from '@/lib/auth-helpers'
+import { isInstructorOrAdmin } from '@/lib/auth-helpers'
+import { resolveSupportAccessContext } from '@/lib/support-access'
 import { demoStudents, demoStudentProgress, demoStudentQuizAttempts, demoHourLogs, demoAttendanceRecords, getDemoNotificationsForUser, getDemoThreadsForUser, demoGrades, demoGradeCategories, demoAssessments } from '@/lib/demo-data'
 import { isDemoDataAllowed } from '@/lib/demo-helpers'
 import DemoDataBanner from '@/components/DemoDataBanner'
@@ -52,7 +53,7 @@ interface ChapterClassScore {
 }
 
 interface InstructorDashboardProps {
-  searchParams: Promise<{ q?: string; viewAs?: string }>
+  searchParams: Promise<{ q?: string }>
 }
 
 const ACTIVE_DAYS = 7
@@ -205,61 +206,30 @@ function computeChapterClassScores(
 }
 
 export default async function InstructorDashboard({ searchParams }: InstructorDashboardProps) {
-  const { q, viewAs } = await searchParams
+  const { q } = await searchParams
   const searchQuery = (q || '').trim().toLowerCase()
 
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
 
-  if (!user) {
-    redirect('/login')
-  }
-
-  // Verify the signed-in caller first. Platform admins may optionally open
-  // a scoped instructor support view without changing their authenticated identity.
-  const { data: callerProfile } = await supabase
-    .from('profiles')
-    .select('role, school_id, full_name, schools(*)')
-    .eq('id', user.id)
-    .single()
-
-  if (!callerProfile || !isInstructorOrAdmin(callerProfile.role)) {
-    redirect('/dashboard')
-  }
-
-  const isSupportView = Boolean(viewAs) && isPlatformAdminProfile(callerProfile)
-  let profile = callerProfile
-  let dashboardInstructorId = user.id
-  let supportInstructorName: string | null = null
-
-  if (isSupportView && viewAs) {
-    const { data: targetInstructor } = await supabase
-      .from('profiles')
-      .select('id, role, school_id, full_name, approval_status, is_disabled, schools(*)')
-      .eq('id', viewAs)
-      .maybeSingle()
-
-    if (
-      !targetInstructor ||
-      targetInstructor.role !== 'instructor' ||
-      !targetInstructor.school_id ||
-      targetInstructor.is_disabled ||
-      targetInstructor.approval_status !== 'approved'
-    ) {
-      redirect('/admin/support-access')
-    }
-
-    profile = targetInstructor
-    dashboardInstructorId = targetInstructor.id
-    supportInstructorName = targetInstructor.full_name || 'Instructor'
+  const profile = context.effectiveProfile
+  if (!isInstructorOrAdmin(profile.role)) {
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
 
   if (!profile.school_id) {
-    redirect(isSupportView ? '/admin/support-access' : '/dashboard')
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
 
+  const dashboardInstructorId = profile.role === 'instructor' ? profile.id : context.actorUserId
   const schoolId = profile.school_id
-  const schoolName = (profile.schools as { name?: string } | null)?.name || 'Your School'
+  const { data: schoolRow } = await supabase
+    .from('schools')
+    .select('name')
+    .eq('id', schoolId)
+    .maybeSingle()
+  const schoolName = schoolRow?.name || 'Your School'
 
   // Instructors see only their canonical active roster. In platform-admin
   // support view, use the selected instructor's canonical assignment scope.
@@ -523,140 +493,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
     <div className="min-h-screen min-w-0 bg-[var(--color-background-primary)] p-4 sm:p-6 md:p-8">
       <div className="mx-auto max-w-7xl min-w-0 space-y-8">
         {usingDemoData && <DemoDataBanner />}
-        {isSupportView && (
-          <div className="rounded-xl border border-[var(--color-brand-gold)]/40 bg-[var(--color-brand-gold)]/10 p-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <div className="text-sm font-semibold uppercase tracking-wide text-[var(--color-brand-gold)]">
-                  Platform Admin Support View
-                </div>
-                <p className="mt-1 text-sm text-[var(--color-text-muted)]">
-                  Viewing {supportInstructorName}&apos;s instructor dashboard for {schoolName}. You remain signed in as platform administrator.
-                </p>
-              </div>
-              <Link
-                href="/admin/support-access"
-                className="inline-flex shrink-0 items-center justify-center rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-background-primary)] px-4 py-2 text-sm font-medium text-[var(--color-brand-gold)]"
-              >
-                Back to Support Access
-              </Link>
-            </div>
-          </div>
-        )}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="min-w-0">
-            <h1 className="text-3xl font-bold text-white mb-2">Instructor Dashboard</h1>
-            <p className="text-[var(--color-text-muted)]">
-              {schoolName} — Student roster and progress overview
-            </p>
-          </div>
-          {/* Phase 6C-5: Escalation Badge */}
-          <div className="flex min-w-0 items-center gap-4">
-            <Link
-              href="/instructor/escalations"
-              className="inline-flex w-full items-center justify-center gap-2 px-4 py-2 sm:w-auto bg-[var(--color-background-secondary)] border border-[var(--color-border-primary)] rounded-lg hover:border-[var(--color-brand-gold)]/30 transition-colors"
-            >
-              <span className="text-sm text-[var(--color-text-secondary)]">Escalations</span>
-              <EscalationBadge />
-            </Link>
-          </div>
-        </div>
-
-        <div className="bg-[var(--color-background-secondary)] border border-[var(--color-border-primary)] rounded-xl p-5">
-          <h2 className="text-lg font-semibold text-white mb-4">Student Study Activity</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-left text-[var(--color-text-muted)] border-b border-[var(--color-border-primary)]">
-                  <th className="py-3 pr-4">Student</th>
-                  <th className="py-3 pr-4">Study Today</th>
-                  <th className="py-3 pr-4">Study Streak</th>
-                  <th className="py-3">Last Study Activity</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredStudents.map((student) => (
-                  <tr key={student.id} className="border-b border-[var(--color-border-primary)]/60 last:border-0">
-                    <td className="py-3 pr-4">
-                      <Link href={`/instructor/student/${student.id}`} className="text-white font-medium hover:text-[var(--color-brand-gold)]">
-                        {student.full_name}
-                      </Link>
-                    </td>
-                    <td className="py-3 pr-4 text-light-gray">{student.studyMinutesToday} min</td>
-                    <td className="py-3 pr-4 text-light-gray">{student.studyStreakDays} day{student.studyStreakDays === 1 ? '' : 's'}</td>
-                    <td className="py-3 text-light-gray">
-                      {student.lastStudyActivityAt ? new Date(student.lastStudyActivityAt).toLocaleString() : '—'}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Key Metrics */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-5">
-            <div className="text-2xl font-bold text-[var(--color-brand-gold)]">{totalStudents}</div>
-            <div className="text-xs text-[var(--color-text-muted)] mt-1">Total Students</div>
-          </div>
-
-          <div
-            className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-5"
-            title="Students with meaningful learning activity (study work: flashcards, quizzes, remediation) in the last 7 days. Logging in alone does not count."
-          >
-            <div className="text-2xl font-bold text-silver">{activeStudents}</div>
-            <div className="text-xs text-[var(--color-text-muted)] mt-1">Active This Week</div>
-          </div>
-
-          <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-5">
-            <div className={`text-2xl font-bold ${
-              classAvgProgress >= 80 ? 'text-gold' :
-              classAvgProgress >= 50 ? 'text-warm-bronze' : 'text-silver'
-            }`}>
-              {studentsWithProgress.length > 0 ? `${classAvgProgress}%` : '—'}
-            </div>
-            <div className="text-xs text-[var(--color-text-muted)] mt-1">Curriculum Progress</div>
-          </div>
-
-          <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-5">
-            <div className={`text-2xl font-bold ${
-              classAvgQuiz >= 80 ? 'text-gold' :
-              classAvgQuiz >= 60 ? 'text-warm-bronze' :
-              classAvgQuiz > 0 ? 'text-silver' : 'text-[var(--color-text-muted)]'
-            }`}>
-              {studentsWithQuizzes.length > 0 ? `${classAvgQuiz}%` : '—'}
-            </div>
-            <div className="text-xs text-[var(--color-text-muted)] mt-1">Quiz Attempt Average</div>
-          </div>
-
-          <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-5">
-            <div className={`text-2xl font-bold ${
-              classAvgReadiness >= 90 ? 'text-gold' :
-              classAvgReadiness >= 80 ? 'text-warm-bronze' :
-              classAvgReadiness >= 70 ? 'text-warm-bronze' :
-              classAvgReadiness > 0 ? 'text-silver' : 'text-[var(--color-text-muted)]'
-            }`}>
-              {studentsWithReadiness.length > 0 ? classAvgReadiness : '—'}
-            </div>
-            <div className="text-xs text-[var(--color-text-muted)] mt-1">Board Readiness</div>
-          </div>
-
-          <div className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-5">
-            <div className={`text-2xl font-bold ${atRiskStudents.length > 0 ? 'text-silver' : 'text-gold'}`}>
-              {atRiskStudents.length}
-            </div>
-            <div className="text-xs text-[var(--color-text-muted)] mt-1">Learning Support Flags</div>
-          </div>
-        </div>
-
-        {/* Messaging Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Link
-            href="/instructor/messages"
-            className="bg-[var(--color-background-primary)] border border-[var(--color-border-primary)] rounded-xl p-5 hover:border-[var(--color-brand-gold)]/30 transition-colors"
-          >
-            <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-[var(--color-text-muted)]">Unread Messages</p>
                 <p className="text-2xl font-bold text-white mt-1">{unreadThreadCount}</p>
@@ -975,7 +812,7 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
                   >
                     <div className="min-w-0">
                       <p className="font-medium text-white">
-                        {getThreadDisplayName(thread, user.id)}
+                        {getThreadDisplayName(thread, dashboardInstructorId)}
                       </p>
                       <p className="text-sm text-[var(--color-text-muted)]">{thread.subject}</p>
                       <p className="text-xs text-[var(--color-text-muted)] truncate mt-0.5">
