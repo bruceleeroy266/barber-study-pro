@@ -691,6 +691,12 @@ test.describe('Pilot onboarding certification', () => {
       }
       return snapshots
     }
+    // Force the approval-required scenario using the disposable school only.
+    const { error: approvalSettingError } = await service
+      .from('quiz_approval_settings')
+      .upsert({ school_id: schoolId, require_approval: true, auto_approve_when_ready: false },
+        { onConflict: 'school_id' })
+    expect(approvalSettingError).toBeNull()
     const navigationBefore = await readNavigationBaseline()
     for (const width of [320, 360, 390]) {
       await studentSession.page.setViewportSize({ width, height: 720 })
@@ -701,6 +707,8 @@ test.describe('Pilot onboarding certification', () => {
       await practiceLink.click()
       await expect(studentSession.page).toHaveURL(/\/dashboard\/chapters\/\d+#chapter-quiz$/)
       await expect(studentSession.page.getByRole('heading', { name: 'Chapter Quiz' })).toBeVisible()
+      await expect(studentSession.page.getByText('Instructor approval required')).toBeVisible()
+      await expect(studentSession.page.getByRole('button', { name: /Start Quiz/i })).toHaveCount(0)
       const overflow = await studentSession.page.evaluate(() =>
         document.documentElement.scrollWidth > document.documentElement.clientWidth
       )
