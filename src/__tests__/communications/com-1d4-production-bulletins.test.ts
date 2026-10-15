@@ -29,7 +29,7 @@ describe('COM-1D.4 production bulletins runtime + UI', () => {
   it('uses server-only authenticated Supabase runtime and preserves RLS authority', () => {
     expect(actions.startsWith("'use server'")).toBe(true)
     expect(actions).toContain("from '@/lib/supabase-server'")
-    expect(actions).toContain('supabase.auth.getUser()')
+    expect(actions).toContain('resolveSupportAccessContext')
     expect(actions).not.toContain('SUPABASE_SERVICE_ROLE')
     expect(actions).not.toContain('createAdmin')
   })
@@ -56,7 +56,7 @@ describe('COM-1D.4 production bulletins runtime + UI', () => {
     expect(actions).toContain("actor.role === 'instructor'")
     expect(actions).toContain("audience.type !== 'student'")
     expect(instructorPage).toContain(".from('student_instructor_assignments')")
-    expect(instructorPage).toContain(".eq('instructor_id', user.id)")
+    expect(instructorPage).toContain(".eq('instructor_id', profile.id)")
     expect(instructorPage).toContain(".eq('is_active', true)")
     expect(instructorPage).toContain(".is('ended_at', null)")
   })
