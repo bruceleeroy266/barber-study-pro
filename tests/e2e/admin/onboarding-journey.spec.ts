@@ -717,6 +717,26 @@ test.describe('Pilot onboarding certification', () => {
       .upsert({ school_id: schoolId, require_approval: true, auto_approve_when_ready: false },
         { onConflict: 'school_id' })
     expect(approvalSettingError).toBeNull()
+    const readGradeAndApprovalBaseline = async () => {
+      const snapshots: Record<string, string[]> = {}
+      const scopes = [
+        { table: 'grades', client: service, column: 'student_id', value: studentProfile!.id },
+        { table: 'assessments', client: service, column: 'student_id', value: studentProfile!.id },
+        { table: 'quiz_approval_settings', client: staffClient, column: 'school_id', value: schoolId },
+        { table: 'quiz_access_requests', client: staffClient, column: 'student_id', value: studentProfile!.id },
+        { table: 'quiz_access_events', client: staffClient, column: 'student_id', value: studentProfile!.id },
+      ]
+      for (const scope of scopes) {
+        const { data, error } = await scope.client
+          .from(scope.table)
+          .select('*')
+          .eq(scope.column, scope.value)
+        if (error) throw new Error(`Navigation QA could not read ${scope.table}: ${error.message}`)
+        snapshots[scope.table] = (data ?? []).map((row) => JSON.stringify(row)).sort()
+      }
+      return snapshots
+    }
+    const gradeAndApprovalBefore = await readGradeAndApprovalBaseline()
     const navigationBefore = await readNavigationBaseline()
     for (const width of [320, 360, 390]) {
       await studentSession.page.setViewportSize({ width, height: 720 })
@@ -736,6 +756,7 @@ test.describe('Pilot onboarding certification', () => {
     }
     const navigationAfter = await readNavigationBaseline()
     expect(navigationAfter).toEqual(navigationBefore)
+    expect(await readGradeAndApprovalBaseline()).toEqual(gradeAndApprovalBefore)
 
     // -----------------------------------------------------------------------
     // 8. Gate 3 handoff: activated student produces trusted measurement
