@@ -686,17 +686,20 @@ test.describe('Pilot onboarding certification', () => {
           .from(table)
           .select('*')
           .eq('user_id', studentProfile!.id)
-          .order('id', { ascending: true })
         if (error) throw new Error(`Navigation QA could not read ${table}: ${error.message}`)
-        snapshots[table] = data ?? []
+        snapshots[table] = (data ?? []).map((row) => JSON.stringify(row)).sort()
       }
       return snapshots
     }
     const navigationBefore = await readNavigationBaseline()
     for (const width of [320, 360, 390]) {
       await studentSession.page.setViewportSize({ width, height: 720 })
-      await studentSession.page.goto('/dashboard/chapters/1#chapter-quiz')
-      await expect(studentSession.page).toHaveURL(/\/dashboard\/chapters\/1#chapter-quiz$/)
+      await studentSession.page.goto('/dashboard')
+      const practiceLink = studentSession.page.getByRole('link', { name: /Take a Practice Quiz/i })
+      await expect(practiceLink).toBeVisible()
+      await expect(practiceLink).toHaveAttribute('href', /\/dashboard\/chapters\/\d+#chapter-quiz$/)
+      await practiceLink.click()
+      await expect(studentSession.page).toHaveURL(/\/dashboard\/chapters\/\d+#chapter-quiz$/)
       await expect(studentSession.page.getByRole('heading', { name: 'Chapter Quiz' })).toBeVisible()
       const overflow = await studentSession.page.evaluate(() =>
         document.documentElement.scrollWidth > document.documentElement.clientWidth
