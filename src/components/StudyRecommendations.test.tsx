@@ -14,6 +14,15 @@ const sampleRecommendations: StudyRecommendation[] = [
     chapterNumber: 3,
   },
   {
+    id: 'rec-practice',
+    type: 'practice',
+    title: 'Take a Practice Quiz',
+    description: 'Practice Chapter 2.',
+    chapterNumber: 2,
+    priority: 'high',
+    estimatedMinutes: 20,
+  },
+  {
     id: 'rec-2',
     type: 'review',
     title: 'Missed Questions',
@@ -30,6 +39,9 @@ describe('StudyRecommendations', () => {
 
     const chapterLink = screen.getByRole('link', { name: /Review Chapter 3/i })
     expect(chapterLink).toHaveAttribute('href', '/dashboard/chapters/3')
+
+    const practiceLink = screen.getByRole('link', { name: /Take a Practice Quiz/i })
+    expect(practiceLink).toHaveAttribute('href', '/dashboard/chapters/2#chapter-quiz')
 
     const reviewLink = screen.getByRole('link', { name: /Missed Questions/i })
     expect(reviewLink).toHaveAttribute('href', '/dashboard/missed-questions')

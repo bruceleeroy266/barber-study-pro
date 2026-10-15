@@ -57,7 +57,7 @@ export default function StudyRecommendations({ recommendations, studentId, instr
         {recommendations.map((rec) => {
           const Icon = iconForType(rec.type)
           const href = rec.chapterNumber
-            ? `/dashboard/chapters/${rec.chapterNumber}`
+            ? `/dashboard/chapters/${rec.chapterNumber}${rec.type === 'practice' ? '#chapter-quiz' : ''}`
             : rec.type === 'review'
             ? '/dashboard/missed-questions'
             : '/dashboard/chapters'

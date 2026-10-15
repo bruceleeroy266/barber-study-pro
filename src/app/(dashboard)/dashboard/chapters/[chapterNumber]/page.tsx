@@ -218,7 +218,7 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
 
       {/* Quiz Section */}
       {quiz && questions && questions.length > 0 && (
-        <div className="bg-charcoal border border-graphite rounded-2xl p-8">
+        <div id="chapter-quiz" className="bg-charcoal border border-graphite rounded-2xl p-8 scroll-mt-24">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
             <div>
               <h2 className="text-xl font-semibold text-white">Chapter Quiz</h2>

@@ -673,6 +673,91 @@ test.describe('Pilot onboarding certification', () => {
       .single()
     expect(instructorProfile).toMatchObject({ school_id: schoolId, role: 'instructor' })
 
+    // The newly activated student needs genuine chapter evidence before a
+    // practice recommendation is eligible under the zero-data policy.
+    const { error: fixtureError } = await service.from('student_progress').upsert({
+      user_id: studentProfile!.id,
+      chapter_id: 'ch-1',
+      lesson_completed: true,
+      progress_percentage: 10,
+    }, { onConflict: 'user_id,chapter_id' })
+    expect(fixtureError).toBeNull()
+
+    // STUDENT-QUIZ-NAV-3H: isolated authenticated mobile navigation and
+    // before/after persistence certification. Never run outside local Supabase.
+    const trackedTables = [
+      'quiz_attempts', 'student_progress', 'hour_logs',
+      'attendance_records', 'study_sessions', 'trusted_study_activity_days',
+    ] as const
+    const readNavigationBaseline = async () => {
+      const snapshots: Record<string, unknown[]> = {}
+      for (const table of trackedTables) {
+        const { data, error } = await service
+          .from(table)
+          .select('*')
+          .eq('user_id', studentProfile!.id)
+        if (error) throw new Error(`Navigation QA could not read ${table}: ${error.message}`)
+        snapshots[table] = (data ?? []).map((row) => JSON.stringify(row)).sort()
+      }
+      return snapshots
+    }
+    // Force the approval-required scenario using the disposable school only.
+    const staffClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { auth: { persistSession: false, autoRefreshToken: false } },
+    )
+    const { error: staffLoginError } = await staffClient.auth.signInWithPassword({
+      email: SCHOOL_ADMIN_EMAIL,
+      password: SCHOOL_ADMIN_PASSWORD,
+    })
+    expect(staffLoginError).toBeNull()
+    const { error: approvalSettingError } = await staffClient
+      .from('quiz_approval_settings')
+      .upsert({ school_id: schoolId, require_approval: true, auto_approve_when_ready: false },
+        { onConflict: 'school_id' })
+    expect(approvalSettingError).toBeNull()
+    const readGradeAndApprovalBaseline = async () => {
+      const snapshots: Record<string, string[]> = {}
+      const scopes = [
+        { table: 'grades', client: service, column: 'student_id', value: studentProfile!.id },
+        { table: 'assessments', client: service, column: 'student_id', value: studentProfile!.id },
+        { table: 'quiz_approval_settings', client: staffClient, column: 'school_id', value: schoolId },
+        { table: 'quiz_access_requests', client: staffClient, column: 'student_id', value: studentProfile!.id },
+        { table: 'quiz_access_events', client: staffClient, column: 'student_id', value: studentProfile!.id },
+      ]
+      for (const scope of scopes) {
+        const { data, error } = await scope.client
+          .from(scope.table)
+          .select('*')
+          .eq(scope.column, scope.value)
+        if (error) throw new Error(`Navigation QA could not read ${scope.table}: ${error.message}`)
+        snapshots[scope.table] = (data ?? []).map((row) => JSON.stringify(row)).sort()
+      }
+      return snapshots
+    }
+    const gradeAndApprovalBefore = await readGradeAndApprovalBaseline()
+    const navigationBefore = await readNavigationBaseline()
+    for (const width of [320, 360, 390]) {
+      await studentSession.page.setViewportSize({ width, height: 720 })
+      await studentSession.page.goto('/dashboard')
+      const practiceLink = studentSession.page.getByRole('link', { name: /Take a Practice Quiz/i })
+      await expect(practiceLink).toBeVisible()
+      await expect(practiceLink).toHaveAttribute('href', /\/dashboard\/chapters\/\d+#chapter-quiz$/)
+      await practiceLink.click()
+      await expect(studentSession.page).toHaveURL(/\/dashboard\/chapters\/\d+#chapter-quiz$/)
+      await expect(studentSession.page.getByRole('heading', { name: 'Chapter Quiz' })).toBeVisible()
+      await expect(studentSession.page.getByText('Instructor approval required')).toBeVisible()
+      await expect(studentSession.page.getByRole('button', { name: /Start Quiz/i })).toHaveCount(0)
+      const overflow = await studentSession.page.evaluate(() =>
+        document.documentElement.scrollWidth > document.documentElement.clientWidth
+      )
+      expect(overflow).toBe(false)
+    }
+    const navigationAfter = await readNavigationBaseline()
+    expect(navigationAfter).toEqual(navigationBefore)
+    expect(await readGradeAndApprovalBaseline()).toEqual(gradeAndApprovalBefore)
+
     // -----------------------------------------------------------------------
     // 8. Gate 3 handoff: activated student produces trusted measurement
     // -----------------------------------------------------------------------

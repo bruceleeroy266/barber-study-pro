@@ -32,6 +32,23 @@ function plan(p: StudentProgress[], attempts: QuizAttempt[]) {
   })
 }
 describe('TLS-RECOMMENDATION-1A chapter-pass-aware guidance', () => {
+  it('targets a real chapter quiz for practice without changing progress evidence', () => {
+    const savedProgress = progress(45)
+    const savedAttempt = attempt(45)
+    const beforeProgress = JSON.stringify(savedProgress)
+    const beforeAttempt = JSON.stringify(savedAttempt)
+    const results = plan([savedProgress], [savedAttempt])
+    expect(results.find((r) => r.type === 'practice')?.chapterNumber).toBe(2)
+    expect(JSON.stringify(savedProgress)).toBe(beforeProgress)
+    expect(JSON.stringify(savedAttempt)).toBe(beforeAttempt)
+  })
+  it('does not offer a dead-end practice quiz when no chapter quiz is available', () => {
+    const results = generateStudyPlan({
+      userId: 'qa', readiness, weakAreas: [], strongAreas: [], missedQuestions: [],
+      totalChapters: 0, chapters: [], hasEvidence: true,
+    })
+    expect(results.some((r) => r.type === 'practice')).toBe(false)
+  })
   it('does not mark a passed but incomplete chapter critical', () => {
     const results = plan([progress(88)], [attempt(88)])
     const chapter2Study = results.find((r) => r.type === 'study' && r.chapterNumber === 2)
