@@ -677,7 +677,7 @@ test.describe('Pilot onboarding certification', () => {
     // practice recommendation is eligible under the zero-data policy.
     const { error: fixtureError } = await service.from('student_progress').upsert({
       user_id: studentProfile!.id,
-      chapter_id: 'chapter-1',
+      chapter_id: 'ch-1',
       lesson_completed: true,
       progress_percentage: 10,
     }, { onConflict: 'user_id,chapter_id' })
