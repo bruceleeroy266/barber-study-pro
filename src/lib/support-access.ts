@@ -1,7 +1,6 @@
 import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase-server'
 import { isPlatformAdminProfile } from '@/lib/auth-helpers'
-import { logSecurityEvent } from '@/lib/security/audit-logger'
 
 export const SUPPORT_ACCESS_COOKIE = 'ascyn_support_target'
 const SUPPORT_MAX_AGE_SECONDS = 60 * 60 * 4
@@ -84,7 +83,7 @@ export async function resolveSupportAccessContext(): Promise<SupportAccessContex
   )
 
   if (!validTarget || !targetProfile) {
-    await logSecurityEvent('support_access', 'blocked', 'Invalid or unavailable support target', {
+    await (await import('@/lib/security/audit-logger')).logSecurityEvent('support_access', 'blocked', 'Invalid or unavailable support target', {
       userId: user.id,
       email: user.email,
       role: actorProfile.role,
@@ -102,7 +101,7 @@ export async function resolveSupportAccessContext(): Promise<SupportAccessContex
     }
   }
 
-  await logSecurityEvent('support_access', 'allowed', 'Platform admin support context resolved', {
+  await (await import('@/lib/security/audit-logger')).logSecurityEvent('support_access', 'allowed', 'Platform admin support context resolved', {
     userId: user.id,
     email: user.email ?? actorProfile.email,
     role: actorProfile.role,
@@ -140,7 +139,7 @@ export async function startSupportAccess(targetProfileId: string): Promise<{ ok:
     .maybeSingle()
 
   if (!actor || !isPlatformAdminProfile(actor as SupportProfile)) {
-    await logSecurityEvent('support_access', 'denied', 'Non-platform-admin attempted support mode', {
+    await (await import('@/lib/security/audit-logger')).logSecurityEvent('support_access', 'denied', 'Non-platform-admin attempted support mode', {
       userId: user.id,
       email: user.email,
       role: actor?.role ?? null,
@@ -176,7 +175,7 @@ export async function startSupportAccess(targetProfileId: string): Promise<{ ok:
     maxAge: SUPPORT_MAX_AGE_SECONDS,
   })
 
-  await logSecurityEvent('support_access', 'success', 'Platform admin support mode started', {
+  await (await import('@/lib/security/audit-logger')).logSecurityEvent('support_access', 'success', 'Platform admin support mode started', {
     userId: user.id,
     email: user.email ?? actor.email,
     role: actor.role,
@@ -206,7 +205,7 @@ export async function stopSupportAccess(): Promise<void> {
   cookieStore.delete(SUPPORT_ACCESS_COOKIE)
 
   if (user) {
-    await logSecurityEvent('support_access', 'success', 'Platform admin support mode ended', {
+    await (await import('@/lib/security/audit-logger')).logSecurityEvent('support_access', 'success', 'Platform admin support mode ended', {
       userId: user.id,
       email: user.email,
       resource: 'support_access',
@@ -224,7 +223,7 @@ export async function logSupportAction(
 ): Promise<void> {
   if (!context?.supportActive || !context.targetProfile) return
 
-  await logSecurityEvent('support_access', 'success', 'Support-mode action executed', {
+  await (await import('@/lib/security/audit-logger')).logSecurityEvent('support_access', 'success', 'Support-mode action executed', {
     userId: context.actorUserId,
     email: context.actorEmail,
     role: context.actorProfile.role,
