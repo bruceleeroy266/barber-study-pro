@@ -692,7 +692,17 @@ test.describe('Pilot onboarding certification', () => {
       return snapshots
     }
     // Force the approval-required scenario using the disposable school only.
-    const { error: approvalSettingError } = await service
+    const staffClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { auth: { persistSession: false, autoRefreshToken: false } },
+    )
+    const { error: staffLoginError } = await staffClient.auth.signInWithPassword({
+      email: SCHOOL_ADMIN_EMAIL,
+      password: SCHOOL_ADMIN_PASSWORD,
+    })
+    expect(staffLoginError).toBeNull()
+    const { error: approvalSettingError } = await staffClient
       .from('quiz_approval_settings')
       .upsert({ school_id: schoolId, require_approval: true, auto_approve_when_ready: false },
         { onConflict: 'school_id' })
