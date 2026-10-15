@@ -47,8 +47,17 @@ export async function resolveSupportAccessContext(): Promise<SupportAccessContex
   if (!actor) return null
 
   const actorProfile = actor as SupportProfile
-  const cookieStore = await cookies()
-  const targetId = cookieStore.get(SUPPORT_ACCESS_COOKIE)?.value ?? null
+
+  // Unit/action tests and some non-request execution paths do not provide a
+  // Next.js request cookie scope. In those contexts support mode is simply
+  // inactive and the canonical authenticated actor behavior is preserved.
+  let targetId: string | null = null
+  try {
+    const cookieStore = await cookies()
+    targetId = cookieStore.get(SUPPORT_ACCESS_COOKIE)?.value ?? null
+  } catch {
+    targetId = null
+  }
 
   if (!targetId || !isPlatformAdminProfile(actorProfile)) {
     return {
