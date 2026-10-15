@@ -14,6 +14,7 @@ import ProductionMessageCenter, {
 import BackButton from '@/components/ui/BackButton'
 import { loadCommunicationThreads } from '@/app/communications/actions'
 import { resolveAuthorizedMessagingRecipients } from '@/lib/communications/authorized-recipients'
+import { resolveSupportAccessContext } from '@/lib/support-access'
 
 interface PersonRow {
   id: string
@@ -34,27 +35,20 @@ interface AssignmentRow {
 
 export default async function InstructorMessagesPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
 
-  if (!user) {
-    redirect('/login')
-  }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile || !isInstructorOrAdmin(profile.role)) {
-    redirect('/dashboard')
+  const profile = context.effectiveProfile
+  if (!isInstructorOrAdmin(profile.role)) {
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
 
   if (!profile.school_id) {
-    redirect('/dashboard')
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
 
-  const instructorProfile = profile as Profile
+  const instructorProfile = profile as unknown as Profile
+  const effectiveUserId = profile.id
   const demoMode = isExplicitDemoMode()
   const supabaseConfigured = isSupabaseConfigured()
   const isSafeDemo = demoMode && !supabaseConfigured
@@ -67,7 +61,7 @@ export default async function InstructorMessagesPage() {
       .from('profiles')
       .select('id, full_name, role, school_id, approval_status, is_disabled')
       .eq('school_id', instructorProfile.school_id)
-      .neq('id', user.id)
+      .neq('id', effectiveUserId)
 
     const { data: assignmentData } = await supabase
       .from('student_instructor_assignments')
@@ -81,7 +75,7 @@ export default async function InstructorMessagesPage() {
 
     const authorizedRecipients = resolveAuthorizedMessagingRecipients(
       {
-        id: user.id,
+        id: effectiveUserId,
         role: instructorProfile.role,
         schoolId: instructorProfile.school_id,
         approvalStatus: instructorProfile.approval_status,
@@ -134,7 +128,7 @@ export default async function InstructorMessagesPage() {
         />
         <div className="max-w-7xl mx-auto mt-6">
           <ProductionMessageCenter
-            currentUserId={user.id}
+            currentUserId={effectiveUserId}
             currentUserName={instructorProfile.full_name}
             currentUserRole={instructorProfile.role as ProductionMessagingPerson['role']}
             initialThreads={initialThreads}
@@ -168,7 +162,7 @@ export default async function InstructorMessagesPage() {
     )
   }
 
-  const demoNotifications = getDemoNotificationsForUser(user.id)
+  const demoNotifications = getDemoNotificationsForUser(effectiveUserId)
 
   return (
     <div className="min-h-screen bg-[var(--color-background-primary)] p-6 md:p-8">
@@ -178,7 +172,7 @@ export default async function InstructorMessagesPage() {
       />
       <div className="max-w-7xl mx-auto mt-6">
         <InstructorMessageDashboard
-          instructorId={user.id}
+          instructorId={effectiveUserId}
           instructorName={instructorProfile.full_name}
           instructorRole={instructorProfile.role}
           initialNotifications={demoNotifications}
