@@ -43,7 +43,7 @@ describe('Exam Ready 4C offline configuration and selection', () => {
     expect(() => selectDraftExam({ ...plan, domains: plan.domains.map(row => row.domain === 'scientific_concepts' ? { ...row, scored_question_count: 34 } : row) }, seededRandom(1))).toThrow(/blueprint/)
     expect(() => selectDraftExam({ ...plan, questions: plan.questions.map(link => ({ ...link, scored_eligible: false as true })) }, seededRandom(1))).toThrow(/Insufficient scored/)
     expect(() => selectDraftExam({ ...plan, questions: plan.questions.map(link => ({ ...link, unscored_eligible: false as true })) }, seededRandom(1))).toThrow(/Insufficient experimental/)
-    expect(() => selectDraftExam({ ...plan, inventory: plan.inventory.slice(0, 572) }, seededRandom(1))).toThrow(/inventory/)
+    expect(() => selectDraftExam({ ...plan, inventory: plan.inventory.slice(0, 572) }, seededRandom(1))).toThrow(/Invalid draft plan dimensions/)
     expect(() => selectDraftExam(plan, () => 1)).toThrow(/random source/)
   })
 
