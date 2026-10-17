@@ -49,7 +49,7 @@ jobs:
           fi
 
       - name: Exam Ready bank and cross-namespace certification
-        run: npx vitest run src/lib/exam-ready-import/index.test.ts src/lib/exam-ready-import/ci-certification.test.ts src/lib/exam-ready-import/upstream-certification.test.ts
+        run: npx vitest run src/lib/exam-ready-import/index.test.ts src/lib/exam-ready-import/ci-certification.test.ts src/lib/exam-ready-import/upstream-certification.test.ts src/lib/exam-ready-import/registry-adapter.test.ts
 
       - name: Unit tests
         run: npm test
