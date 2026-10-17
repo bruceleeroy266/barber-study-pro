@@ -149,6 +149,7 @@ jobs:
           docker exec -i "$DB_CONTAINER" psql -U postgres -d postgres -v ON_ERROR_STOP=1 < supabase/tests/exam_ready_4d2_isolated_selection.sql
           docker exec -i "$DB_CONTAINER" psql -U postgres -d postgres -v ON_ERROR_STOP=1 < supabase/tests/exam_ready_4d2_runtime_security.sql
           docker exec -i "$DB_CONTAINER" psql -U postgres -d postgres -v ON_ERROR_STOP=1 < supabase/tests/exam_ready_4d2_two_school_runtime.sql
+          docker exec -i "$DB_CONTAINER" psql -U postgres -d postgres -v ON_ERROR_STOP=1 < supabase/tests/exam_ready_4d3_draft_preparation.sql
           docker exec -i "$DB_CONTAINER" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -c "SELECT proname FROM pg_proc WHERE proname = 'start_or_resume_comprehensive_exam';" | grep -q start_or_resume_comprehensive_exam
 
       - name: Build against local Supabase
