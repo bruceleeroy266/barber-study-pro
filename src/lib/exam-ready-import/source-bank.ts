@@ -42,8 +42,8 @@ export function validateExamReadyBank(questions: readonly ExamReadySourceQuestio
     }
     if (!['recall', 'application', 'scenario'].includes(question.type)) issues.push({ id, issue: 'invalid reasoning type' })
     if (!['easy', 'medium', 'hard'].includes(question.difficulty)) issues.push({ id, issue: 'invalid difficulty' })
-    if (!Array.isArray(question.options) || question.options.length < 2) {
-      issues.push({ id, issue: 'insufficient options' })
+    if (!Array.isArray(question.options) || question.options.length !== 4) {
+      issues.push({ id, issue: 'question must have exactly four options' })
       continue
     }
     const optionIds = question.options.map(option => option.id)
