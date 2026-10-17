@@ -1,13 +1,13 @@
 import fs from 'node:fs';
-import type { PracticeQuestion } from './randomize';
-import { infectionControlQuestions } from './infection-control-bank';
-import { anatomyPhysiologyQuestions } from './anatomy-physiology';
-import { scientificConceptGapQuestions } from './scientific-concepts-gap';
-import { hairScalpDisorderQuestionBank } from './hair-scalp-disorders-bank';
-import { hairStructurePropertyQuestionBank } from './hair-structure-properties-bank';
-import { implementsEquipmentQuestions } from './implements-equipment';
-import { hairCareQuestionBank } from './hair-care-services-bank';
-import { facialHairSkinQuestions } from './facial-hair-skin-care';
+import type { PracticeQuestion } from './upstream/randomize';
+import { infectionControlQuestions } from './upstream/infection-control-bank';
+import { anatomyPhysiologyQuestions } from './upstream/anatomy-physiology';
+import { scientificConceptGapQuestions } from './upstream/scientific-concepts-gap';
+import { hairScalpDisorderQuestionBank } from './upstream/hair-scalp-disorders-bank';
+import { hairStructurePropertyQuestionBank } from './upstream/hair-structure-properties-bank';
+import { implementsEquipmentQuestions } from './upstream/implements-equipment';
+import { hairCareQuestionBank } from './upstream/hair-care-services-bank';
+import { facialHairSkinQuestions } from './upstream/facial-hair-skin-care';
 
 const all: PracticeQuestion[]=[
   ...(infectionControlQuestions as PracticeQuestion[]),
