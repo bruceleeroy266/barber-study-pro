@@ -48,6 +48,9 @@ jobs:
             echo "No changed production JS/TS files to lint."
           fi
 
+      - name: Exam Ready bank and cross-namespace certification
+        run: npx vitest run src/lib/exam-ready-import/index.test.ts src/lib/exam-ready-import/ci-certification.test.ts
+
       - name: Unit tests
         run: npm test
 
