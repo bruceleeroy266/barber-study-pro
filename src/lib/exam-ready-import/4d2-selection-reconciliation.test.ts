@@ -1,9 +1,10 @@
 import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { buildDraftExamPlan, selectDraftExam } from './draft-exam-plan'
 
 const migration = readFileSync(
-  new URL('../../../supabase/migrations/20261017190000_exam_ready_4d2_selection_policy.sql', import.meta.url),
+  resolve(process.cwd(), 'supabase/migrations/20261017190000_exam_ready_4d2_selection_policy.sql'),
   'utf8',
 )
 
