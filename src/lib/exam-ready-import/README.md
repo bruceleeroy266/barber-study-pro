@@ -15,3 +15,11 @@ Certification to run before integration:
 - Independently check Milady citations and hardening override behavior.
 
 No release, merge, migration, RLS change, or production deployment is authorized by this import. Await Ping's EXAM-MERGE-AUDIT-2B.
+
+## Stage 3B certification additions
+
+The source-bank validator now requires exactly four options. CI runs `upstream-certification.test.ts` in addition to the existing import tests. That test executes the byte-preserved upstream master-bank certification and difficulty review audit, plus a separate adapted copy of the factual-key-drift audit (source file paths and local imports adjusted to this repository). Difficulty heuristics remain review-only; blocking master-bank and key-drift findings fail CI.
+
+`upstream/full-bank-adversarial-certification.ts` is preserved but **not executed** yet: it requires `@/lib/exam/simulator`, which is not present in ASCYN PRO. The simulator stage must implement/adapt that dependency, add the 1,000-build/110-100-10/domain-quota/scoring checks to CI, and obtain an independent Ping audit before student-facing release.
+
+The Stage 3B tests and CI execution require independent verification; a committed workflow step alone does not establish that the run passed.
