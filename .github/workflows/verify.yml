@@ -154,6 +154,7 @@ jobs:
           docker exec -i "$DB_CONTAINER" psql -U postgres -d postgres -v ON_ERROR_STOP=1 < supabase/tests/exam_ready_4d4_full_transaction_executor.sql
           docker exec -i "$DB_CONTAINER" psql -U postgres -d postgres -v ON_ERROR_STOP=1 < supabase/tests/exam_ready_4d5_import_security.sql
           docker exec -i "$DB_CONTAINER" psql -U postgres -d postgres -v ON_ERROR_STOP=1 < supabase/tests/exam_ready_4d5_import_tenant_boundary.sql
+          docker exec -i "$DB_CONTAINER" psql -U postgres -d postgres -v ON_ERROR_STOP=1 < supabase/tests/exam_ready_4d5_import_role_runtime.sql
           bash scripts/exam-ready-4d5-concurrency-disposable.sh
           bash scripts/exam-ready-4d5-concurrent-import-disposable.sh
           bash scripts/exam-ready-4d5-db-snapshot-disposable.sh
