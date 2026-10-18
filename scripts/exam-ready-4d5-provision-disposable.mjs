@@ -13,7 +13,7 @@ const passwd = randomUUID()+'aA!9'
 const aId=randomUUID(), bId=randomUUID()
 const schools=[
   {id:aId,name:'4D5 Fixture School A',slug:'4d5-a-'+aId.slice(0,8)},
-  {id:bId,name:'4D5 Fixture School B',slug:'4d5-b-'+bId.slice(0,8)},
+  {id:bId,name:'4D5-B-REPORT-MARKER',slug:'4d5-b-'+bId.slice(0,8)},
 ]
 const inserted=await admin.from('schools').insert(schools).select('id')
 if(inserted.error || inserted.data?.length!==2) throw new Error('School seed failed: '+inserted.error?.message)
@@ -100,7 +100,7 @@ const out=[
  'EXAM_ISOLATION_A_SCHOOL_ID='+aId,
  'EXAM_ISOLATION_B_SCHOOL_ID='+bId,
  'EXAM_ISOLATION_B_ATTEMPT_ID='+bAttempt,
- 'EXAM_ISOLATION_B_REPORT_MARKER=93%',
+ 'EXAM_ISOLATION_B_REPORT_MARKER=4D5-B-REPORT-MARKER',
  'EXAM_ISOLATION_A_CSV_MARKER=4D5-A-CSV-MARKER',
  'EXAM_ISOLATION_B_CSV_MARKER=4D5-B-CSV-MARKER',
  'EXAM_ISOLATION_REPORT_URL=http://127.0.0.1:3000'
