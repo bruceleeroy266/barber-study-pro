@@ -152,7 +152,8 @@ describe('ADM-1G reporting + CSV parity', () => {
       'utf8',
     )
 
-    expect(school).toContain('convertRowsToCSV(report.rows)')
+    expect(school).toContain('convertRowsToCSV(publicReportRows(report.rows))')
+    expect(school).toContain('const publicRows = publicReportRows(report.rows)')
     expect(compliance).toContain('convertRowsToCSV(report.rows)')
   })
 
