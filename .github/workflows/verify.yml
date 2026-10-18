@@ -5,7 +5,7 @@ name: Engineering Verification
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, 'feat/exam-ready-4d4-idempotent-import']
     types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches: [main]
@@ -152,6 +152,13 @@ jobs:
           docker exec -i "$DB_CONTAINER" psql -U postgres -d postgres -v ON_ERROR_STOP=1 < supabase/tests/exam_ready_4d3_draft_preparation.sql
           docker exec -i "$DB_CONTAINER" psql -U postgres -d postgres -v ON_ERROR_STOP=1 < supabase/tests/exam_ready_4d4_idempotent_import.sql
           docker exec -i "$DB_CONTAINER" psql -U postgres -d postgres -v ON_ERROR_STOP=1 < supabase/tests/exam_ready_4d4_full_transaction_executor.sql
+          docker exec -i "$DB_CONTAINER" psql -U postgres -d postgres -v ON_ERROR_STOP=1 < supabase/tests/exam_ready_4d5_import_security.sql
+          docker exec -i "$DB_CONTAINER" psql -U postgres -d postgres -v ON_ERROR_STOP=1 < supabase/tests/exam_ready_4d5_import_tenant_boundary.sql
+          docker exec -i "$DB_CONTAINER" psql -U postgres -d postgres -v ON_ERROR_STOP=1 < supabase/tests/exam_ready_4d5_import_role_runtime.sql
+          bash scripts/exam-ready-4d5-concurrency-disposable.sh
+          bash scripts/exam-ready-4d5-concurrent-import-disposable.sh
+          bash scripts/exam-ready-4d5-db-snapshot-disposable.sh
+          cat supabase/tests/exam_ready_4d5_restricted_import_executor.sql supabase/tests/exam_ready_4d5_restricted_import_certification.sql | docker exec -i "$DB_CONTAINER" psql -X -U postgres -d postgres -v ON_ERROR_STOP=1
           docker exec -i "$DB_CONTAINER" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -c "SELECT proname FROM pg_proc WHERE proname = 'start_or_resume_comprehensive_exam';" | grep -q start_or_resume_comprehensive_exam
 
       - name: Build against local Supabase
@@ -159,6 +166,24 @@ jobs:
 
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
+
+      - name: Provision disposable 4D5 School A/B Auth and populated fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/exam-ready-4d5-provision-disposable.mjs
+
+      - name: Certify authenticated 4D5 cross-school direct queries
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx vitest run --config vitest.integration.config.ts tests/integration/rls/exam-ready-4d5-live-school-boundary.test.ts
+
+      - name: Certify 4D5 rendered reports and real Reporting Center CSV
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx playwright test tests/e2e/exam-ready-4d5-two-school-report-denial.spec.ts tests/e2e/exam-ready-4d5-school-csv-download.spec.ts --project=chromium --workers=1
 
       - name: Run true pilot onboarding certification
         run: npx playwright test tests/e2e/admin/onboarding-journey.spec.ts --project=chromium --workers=1
