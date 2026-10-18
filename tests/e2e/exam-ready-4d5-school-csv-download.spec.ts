@@ -24,6 +24,7 @@ test('4D-5 actual Reporting Center CSV download does not contain B data', async 
   await page.goto(new URL('/school',base).toString())
   const center = page.getByText('Reporting Center', {exact:true})
   await expect(center).toBeVisible()
+  await page.getByRole('button',{name:'Readiness Report'}).click()
   const downloadPromise = page.waitForEvent('download')
   await page.getByRole('button',{name:'Export CSV'}).click()
   const download = await downloadPromise
