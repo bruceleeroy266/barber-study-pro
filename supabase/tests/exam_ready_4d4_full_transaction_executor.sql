@@ -24,7 +24,11 @@ BEGIN
   RAISE EXCEPTION 'Import target must be exact versioned draft';
  END IF;
  SELECT count(*) INTO v_n FROM _4d4_manifest;
- IF v_n<>573 OR EXISTS (SELECT 1 FROM _4d4_manifest WHERE content_version<>'exam-ready-573-v1') THEN
+ IF v_n<>573 OR EXISTS (SELECT 1 FROM _4d4_manifest WHERE content_version<>'exam-ready-573-v1') OR
+ (SELECT count(*) FROM _4d4_manifest WHERE domain='scientific_concepts')<>274 OR
+ (SELECT count(*) FROM _4d4_manifest WHERE domain='implements_equipment')<>56 OR
+ (SELECT count(*) FROM _4d4_manifest WHERE domain='hair_care_services')<>173 OR
+ (SELECT count(*) FROM _4d4_manifest WHERE domain='facial_hair_skin_care_services')<>70 THEN
   RAISE EXCEPTION 'Incomplete or invalid manifest';
  END IF;
  -- Reconcile ALL existing source IDs; any conflict with changed content is fatal.
@@ -44,15 +48,20 @@ BEGIN
  -- Recheck after conflict to close race window; no overwrite allowed.
  IF (SELECT count(*) FROM _4d4_manifest m JOIN public.comprehensive_exam_questions q USING(source_question_id))<>573
  OR EXISTS (SELECT 1 FROM _4d4_manifest m JOIN public.comprehensive_exam_questions q USING(source_question_id)
- WHERE q.domain IS DISTINCT FROM m.domain OR q.prompt IS DISTINCT FROM m.prompt OR q.content_version IS DISTINCT FROM m.content_version)
+ WHERE q.source_kind <> 'comprehensive_bank' OR q.status <> 'active' OR q.domain IS DISTINCT FROM m.domain
+ OR q.prompt IS DISTINCT FROM m.prompt OR q.option_a IS DISTINCT FROM m.option_a OR q.option_b IS DISTINCT FROM m.option_b
+ OR q.option_c IS DISTINCT FROM m.option_c OR q.option_d IS DISTINCT FROM m.option_d
+ OR q.correct_option IS DISTINCT FROM m.correct_option OR q.explanation IS DISTINCT FROM m.explanation
+ OR q.content_version IS DISTINCT FROM m.content_version)
  THEN RAISE EXCEPTION 'Post-insert registry mismatch'; END IF;
  INSERT INTO public.comprehensive_exam_config_questions(config_id,question_id,scored_eligible,unscored_eligible,is_active)
  SELECT p_config_id,q.id,true,true,true FROM _4d4_manifest m
  JOIN public.comprehensive_exam_questions q USING(source_question_id)
  ON CONFLICT(config_id,question_id) DO NOTHING;
  IF (SELECT count(*) FROM public.comprehensive_exam_config_questions WHERE config_id=p_config_id)<>573
- OR EXISTS (SELECT 1 FROM public.comprehensive_exam_config_questions
- WHERE config_id=p_config_id AND (NOT scored_eligible OR NOT unscored_eligible OR NOT is_active))
+ OR EXISTS (SELECT 1 FROM public.comprehensive_exam_config_questions l
+ LEFT JOIN _4d4_manifest m ON m.source_question_id=(SELECT source_question_id FROM public.comprehensive_exam_questions q WHERE q.id=l.question_id)
+ WHERE l.config_id=p_config_id AND (m.source_question_id IS NULL OR NOT l.scored_eligible OR NOT l.unscored_eligible OR NOT l.is_active))
  THEN RAISE EXCEPTION 'Draft question links mismatch'; END IF;
 END $fn$;
 
@@ -83,6 +92,24 @@ BEGIN
  END;
  IF (SELECT prompt FROM public.comprehensive_exam_questions WHERE source_question_id='4d4-executor-1')<>'Synthetic 1'
  THEN RAISE EXCEPTION 'Conflict mutated existing question'; END IF;
- RAISE NOTICE '4D4 full synthetic 573-row atomic executor, repeat and conflict PASS';
+ -- Test rollback of a partial import: add a new draft, pre-seed one conflicting row,
+ -- then verify a failed execution creates no links or additional registry questions.
+ UPDATE _4d4_manifest SET prompt='Synthetic 1' WHERE source_question_id='4d4-executor-1';
+ DELETE FROM public.comprehensive_exam_config_questions WHERE config_id=v_config;
+ DELETE FROM public.comprehensive_exam_questions WHERE source_question_id LIKE '4d4-executor-%';
+ INSERT INTO public.comprehensive_exam_questions
+ (source_question_id,source_kind,domain,prompt,option_a,option_b,option_c,option_d,correct_option,explanation,content_version)
+ VALUES ('4d4-executor-573','comprehensive_bank','facial_hair_skin_care_services','CONFLICT','A','B','C','D','a','Synthetic explanation','exam-ready-573-v1');
+ BEGIN
+  PERFORM pg_temp._4d4_execute(v_config);
+  RAISE EXCEPTION 'Partial-conflict manifest accepted';
+ EXCEPTION WHEN raise_exception THEN
+  IF SQLERRM='Partial-conflict manifest accepted' THEN RAISE; END IF;
+ END;
+ IF (SELECT count(*) FROM public.comprehensive_exam_questions WHERE source_question_id LIKE '4d4-executor-%')<>1
+ OR (SELECT count(*) FROM public.comprehensive_exam_config_questions WHERE config_id=v_config)<>0 THEN
+  RAISE EXCEPTION 'Failed import leaked partial writes';
+ END IF;
+ RAISE NOTICE '4D4 full synthetic 573-row atomic executor, repeat, domain, collision and rollback PASS';
 END $test$;
 ROLLBACK;
