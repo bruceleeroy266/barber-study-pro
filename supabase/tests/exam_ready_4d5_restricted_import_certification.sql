@@ -35,6 +35,27 @@ BEGIN
  END LOOP;
  PERFORM pg_temp.exam_ready_execute_import(c);
  PERFORM pg_temp.exam_ready_execute_import(c);
+ -- Actual imported links must not be writable from either school context.
+ FOR n IN 1..2 LOOP
+  PERFORM set_config('request.jwt.claims',json_build_object('role','authenticated','school_id',CASE WHEN n=1 THEN school_a ELSE school_b END)::text,true);
+  BEGIN
+   EXECUTE 'SET LOCAL ROLE authenticated';
+   BEGIN
+    INSERT INTO public.comprehensive_exam_config_questions(config_id,question_id,scored_eligible,unscored_eligible,is_active)
+    SELECT c,q.id,true,true,true FROM public.comprehensive_exam_questions q
+    WHERE q.source_question_id='4d5-restricted-1';
+    RAISE EXCEPTION 'School role modified imported config links';
+   EXCEPTION WHEN insufficient_privilege THEN NULL;
+   WHEN raise_exception THEN
+    IF SQLERRM='School role modified imported config links' THEN RAISE; END IF;
+    RAISE;
+   END;
+  EXCEPTION WHEN OTHERS THEN
+   EXECUTE 'RESET ROLE';
+   RAISE;
+  END;
+  EXECUTE 'RESET ROLE';
+ END LOOP;
  SELECT count(*) INTO n FROM public.comprehensive_exam_config_questions WHERE config_id=c;
  IF n<>573 THEN RAISE EXCEPTION 'Idempotent import links count mismatch'; END IF;
  UPDATE exam_ready_import_manifest SET prompt='Tampered' WHERE source_question_id='4d5-restricted-1';
