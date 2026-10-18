@@ -19,3 +19,23 @@ export function publicConceptDetails<T extends { name: string; description: stri
     description: publicDisplayText(concept.description),
   }
 }
+
+/**
+ * Safe public projection for flat school report tables and downloads.
+ * Drop audit-only source fields and reject nested objects rather than
+ * implicitly stringifying internal metadata into CSV or HTML.
+ * Upstream report generation must still enforce its own explicit DTO schema.
+ */
+export function publicReportRows(rows: ReadonlyArray<Record<string, unknown>>): Record<string, string | number | boolean | null>[] {
+  const internalField = /(?:source[_-]?(?:basis|provenance)|provenance|publisher|citation|restrictedAuditMetadata)/i
+  return rows.map((row) => Object.fromEntries(
+    Object.entries(row)
+      .filter(([key]) => !internalField.test(key) && !/\b(?:milady|cengage)\b/i.test(key))
+      .map(([key, value]) => {
+        if (typeof value === 'string') return [key, publicDisplayText(value)]
+        if (typeof value === 'number' && Number.isFinite(value)) return [key, value]
+        if (typeof value === 'boolean' || value === null) return [key, value]
+        return [key, 'Content under review']
+      }),
+  ))
+}
