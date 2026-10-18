@@ -1,4 +1,4 @@
-import { publicConceptDetails } from './public-content-boundary'
+import { publicConceptDetails, publicDisplayText } from './public-content-boundary'
 /**
  * Instructor Diagnostics Translation
  *
@@ -210,12 +210,12 @@ export function buildCoachingRecommendation(conceptId: ConceptId): CoachingRecom
   const notes = chapter2InstructorNotes
   const confusions = notes.commonConfusions
     .filter((c) => (c.conceptIds as readonly string[]).includes(conceptId))
-    .map((c) => ({ topic: c.topic, clarification: c.clarification }))
+    .map((c) => ({ topic: publicDisplayText(c.topic), clarification: publicDisplayText(c.clarification) }))
   const enrichment = notes.enrichmentIdentification.find((e) => e.conceptId === conceptId)
   return {
     confusions,
-    chapterGuidance: notes.remediationGuidance,
-    enrichmentNote: enrichment ? enrichment.identification : null,
+    chapterGuidance: publicDisplayText(notes.remediationGuidance),
+    enrichmentNote: enrichment ? publicDisplayText(enrichment.identification) : null,
   }
 }
 
