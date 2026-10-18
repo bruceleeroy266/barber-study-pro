@@ -5,7 +5,7 @@
 -- Do not install this function persistently. Never execute against production.
 CREATE OR REPLACE FUNCTION pg_temp.exam_ready_execute_import(p_config_id uuid)
 RETURNS void LANGUAGE plpgsql SECURITY INVOKER SET search_path = pg_catalog, public, pg_temp AS $executor$
-DECLARE v_config public.comprehensive_exam_configs%rowtype;
+DECLARE v_config public.comprehensive_exam_configs%rowtype; v_digest text;
 BEGIN
  IF current_user <> 'postgres' OR session_user <> 'postgres' THEN
   RAISE EXCEPTION 'Importer requires isolated database owner session';
@@ -33,7 +33,7 @@ BEGIN
  OR source_question_id IS NULL OR prompt IS NULL OR correct_option NOT IN ('a','b','c','d')) THEN
   RAISE EXCEPTION 'Incomplete or invalid staged manifest';
  END IF;
- -- Verify all existing registry identities before any write, under the same snapshot.
+ -- The fingerprint is pinned to the reviewed synthetic fixture for this disposable certification.\n -- Real-bank import MUST NOT be attempted until an independently reviewed digest\n -- replaces this fixture pin in a separately approved change.\n SELECT encode(digest(string_agg(concat_ws(E'\\x1f',source_question_id,domain,prompt,option_a,option_b,option_c,option_d,correct_option,explanation,content_version),E'\\x1e' ORDER BY source_question_id),'sha256'),'hex')\n INTO v_digest FROM pg_temp.exam_ready_import_manifest;\n IF v_digest IS DISTINCT FROM 'REPLACE_WITH_REVIEWED_SYNTHETIC_DIGEST' THEN\n  RAISE EXCEPTION 'Unapproved manifest fingerprint';\n END IF;\n -- Verify all existing registry identities before any write, under the same snapshot.
  IF EXISTS (SELECT 1 FROM pg_temp.exam_ready_import_manifest m
  JOIN public.comprehensive_exam_questions q USING(source_question_id)
  WHERE q.source_kind <> 'comprehensive_bank' OR q.status <> 'active'
