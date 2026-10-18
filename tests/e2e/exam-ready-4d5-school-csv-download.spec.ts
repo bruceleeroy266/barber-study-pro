@@ -26,7 +26,7 @@ test('4D-5 actual Reporting Center CSV download does not contain B data', async 
   await expect(center).toBeVisible()
   await page.getByRole('button',{name:'Readiness Report'}).click()
   const downloadPromise = page.waitForEvent('download')
-  await page.getByRole('button',{name:'Export CSV'}).click()
+  await page.getByRole('button',{name:'Export CSV'}).last().click()
   const download = await downloadPromise
   expect(download.suggestedFilename()).toMatch(/-report\.csv$/)
   const stream = await download.createReadStream()
