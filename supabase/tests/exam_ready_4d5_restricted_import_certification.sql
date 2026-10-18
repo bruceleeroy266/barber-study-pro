@@ -56,6 +56,29 @@ BEGIN
   END;
   EXECUTE 'RESET ROLE';
  END LOOP;
+ -- Downstream private answer-key and draft-link read isolation, in each school JWT context.
+ FOR n IN 1..2 LOOP
+  PERFORM set_config('request.jwt.claims',json_build_object('role','authenticated','school_id',CASE WHEN n=1 THEN school_a ELSE school_b END)::text,true);
+  BEGIN
+   EXECUTE 'SET LOCAL ROLE authenticated';
+   BEGIN
+    IF (SELECT count(*) FROM public.comprehensive_exam_questions WHERE source_question_id LIKE '4d5-restricted-%') <> 0 THEN
+     RAISE EXCEPTION 'School context can read private imported answer keys';
+    END IF;
+   EXCEPTION WHEN insufficient_privilege THEN NULL;
+   END;
+   BEGIN
+    IF (SELECT count(*) FROM public.comprehensive_exam_config_questions WHERE config_id=c) <> 0 THEN
+     RAISE EXCEPTION 'School context can read draft import links';
+    END IF;
+   EXCEPTION WHEN insufficient_privilege THEN NULL;
+   END;
+  EXCEPTION WHEN OTHERS THEN
+   EXECUTE 'RESET ROLE';
+   RAISE;
+  END;
+  EXECUTE 'RESET ROLE';
+ END LOOP;
  SELECT count(*) INTO n FROM public.comprehensive_exam_config_questions WHERE config_id=c;
  IF n<>573 THEN RAISE EXCEPTION 'Idempotent import links count mismatch'; END IF;
  UPDATE exam_ready_import_manifest SET prompt='Tampered' WHERE source_question_id='4d5-restricted-1';
