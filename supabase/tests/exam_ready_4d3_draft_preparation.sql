@@ -31,6 +31,25 @@ BEGIN
   END;
   SELECT count(*) INTO v_count FROM public.comprehensive_exam_config_domains WHERE config_id=v_id;
   IF v_count <> 4 THEN RAISE EXCEPTION 'Duplicate domain corrupted draft'; END IF;
+  -- Deliberately fail after a partial insert: exception subtransaction must roll back both rows.
+  BEGIN
+    INSERT INTO public.comprehensive_exam_config_domains(config_id,domain,weight_percent,scored_question_count)
+    VALUES (v_id,'scientific_concepts',35,35);
+    RAISE EXCEPTION 'Partial import unexpectedly accepted';
+  EXCEPTION WHEN unique_violation THEN NULL;
+  END;
+  SELECT count(*) INTO v_count FROM public.comprehensive_exam_config_domains WHERE config_id=v_id;
+  IF v_count <> 4 THEN RAISE EXCEPTION 'Partial insert not rolled back'; END IF;
+  -- A repeated draft config with the same slug/version must fail without mutating the first.
+  BEGIN
+    INSERT INTO public.comprehensive_exam_configs(slug,version,title,status,blueprint_version,question_bank_version,scoring_policy_version)
+    VALUES(v_slug,1,'Conflicting draft','draft','tampered','tampered','tampered');
+    RAISE EXCEPTION 'Duplicate configuration accepted';
+  EXCEPTION WHEN unique_violation THEN NULL;
+  END;
+  IF (SELECT count(*) FROM public.comprehensive_exam_configs WHERE slug=v_slug) <> 1 THEN
+    RAISE EXCEPTION 'Repeat execution corrupted configuration';
+  END IF;
   RAISE NOTICE '4D3 disposable atomic draft preparation and duplicate rollback PASS';
 END $test$;
 ROLLBACK;
