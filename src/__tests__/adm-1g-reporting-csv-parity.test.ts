@@ -154,7 +154,8 @@ describe('ADM-1G reporting + CSV parity', () => {
 
     expect(school).toContain('convertRowsToCSV(publicReportRows(report.rows))')
     expect(school).toContain('const publicRows = publicReportRows(report.rows)')
-    expect(compliance).toContain('convertRowsToCSV(report.rows)')
+    expect(compliance).toContain('convertRowsToCSV(publicReportRows(report.rows))')
+    expect(compliance).toContain('const publicRows = publicReportRows(report.rows)')
   })
 
   it('NZD-3 instructor class progress excludes learners without progress evidence', () => {
