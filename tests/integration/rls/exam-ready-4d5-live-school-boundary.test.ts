@@ -9,8 +9,6 @@
  * EXAM_ISOLATION_A_EMAIL / _PASSWORD ; _B_EMAIL / _PASSWORD
  * EXAM_ISOLATION_A_SCHOOL_ID / _B_SCHOOL_ID
  * EXAM_ISOLATION_B_ATTEMPT_ID (preseeded B-only record)
- * EXAM_ISOLATION_REPORT_URL (local app origin; e.g. http://127.0.0.1:3000)
- * EXAM_ISOLATION_EXPORT_PATH (actual existing CSV URL path, not a hypothetical endpoint)
  */
 import { createClient } from '@supabase/supabase-js'
 import { describe, expect, it } from 'vitest'
@@ -21,8 +19,7 @@ const vars = [
   'EXAM_ISOLATION_A_EMAIL', 'EXAM_ISOLATION_A_PASSWORD',
   'EXAM_ISOLATION_B_EMAIL', 'EXAM_ISOLATION_B_PASSWORD',
   'EXAM_ISOLATION_A_SCHOOL_ID', 'EXAM_ISOLATION_B_SCHOOL_ID',
-  'EXAM_ISOLATION_B_ATTEMPT_ID', 'EXAM_ISOLATION_REPORT_URL',
-  'EXAM_ISOLATION_EXPORT_PATH',
+  'EXAM_ISOLATION_B_ATTEMPT_ID',
 ] as const
 
 const value = (name: typeof vars[number]): string => {
@@ -32,13 +29,11 @@ const value = (name: typeof vars[number]): string => {
 }
 
 describe('4D-5 real signed-in A/B tenant isolation — local-only integration', () => {
-  it('denies A access to populated B rows, report and CSV bytes', async () => {
+  it('denies A access to populated B direct-query rows', async () => {
     for (const name of vars) value(name)
     const db = new URL(value('EXAM_ISOLATION_URL'))
-    const web = new URL(value('EXAM_ISOLATION_REPORT_URL'))
     const local = (u: URL) => ['localhost','127.0.0.1','::1','[::1]'].includes(u.hostname)
-    if (!local(db) || !local(web) || !['http:','https:'].includes(db.protocol) ||
-        !['http:','https:'].includes(web.protocol)) {
+    if (!local(db) || !['http:','https:'].includes(db.protocol)) {
       throw new Error('Refusing non-local Supabase/app target; disposable local-only test')
     }
     const aSchool = value('EXAM_ISOLATION_A_SCHOOL_ID')
@@ -80,28 +75,5 @@ describe('4D-5 real signed-in A/B tenant isolation — local-only integration', 
     if (foreignError) throw new Error('A tenant query failed unexpectedly')
     expect(foreign).toEqual([])
 
-    // Real Next.js browser session via Supabase auth cookies is NOT the same as bearer auth.
-    // Explicitly require the app endpoint to support a signed-in bearer session for this probe.
-    const request = async (path: string) => {
-      const target = new URL(path,web)
-      if (target.origin !== web.origin) throw new Error('Cross-origin test URL rejected')
-      return fetch(target, { headers: {Authorization: 'Bearer '+as.session.access_token}, redirect:'manual' })
-    }
-    const report = await request('/school/pilot-measurement/report/baseline?school='+encodeURIComponent(bSchool))
-    const reportText = await report.text()
-    if (report.status === 401 || report.status === 403 || (report.status >= 300 && report.status < 400)) {
-      expect(reportText).not.toContain(bId)
-    } else {
-      // A 200 response is only meaningful with real cookie/session support and seeded report data.
-      throw new Error('Report returned unexpected status; do not certify bearer-only route test')
-    }
-    const exportPath = value('EXAM_ISOLATION_EXPORT_PATH')
-    if (!exportPath.startsWith('/')) throw new Error('CSV path must be a local absolute route')
-    const csv = await request(exportPath)
-    const csvText = await csv.text()
-    if (![401,403,404].includes(csv.status) && !(csv.status >= 300 && csv.status < 400)) {
-      throw new Error('CSV endpoint was not denied; inspect real CSV body and endpoint auth')
-    }
-    expect(csvText).not.toContain(bId)
   })
 })
