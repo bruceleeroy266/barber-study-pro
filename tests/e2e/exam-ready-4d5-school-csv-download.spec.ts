@@ -18,7 +18,7 @@ test('4D-5 actual Reporting Center CSV download does not contain B data', async 
   if (aMarker === bMarker || aMarker.length < 8 || bMarker.length < 8) throw new Error('Distinct populated A/B markers required')
   await page.goto(new URL('/login', base).toString())
   await page.getByLabel(/email/i).fill(need('EXAM_ISOLATION_A_EMAIL'))
-  await page.getByLabel(/password/i).fill(need('EXAM_ISOLATION_A_PASSWORD'))
+  await page.locator('input#password').fill(need('EXAM_ISOLATION_A_PASSWORD'))
   await page.getByRole('button', {name:/sign in|log in/i}).click()
   await expect(page).not.toHaveURL(/\/login(?:\?|$)/)
   await page.goto(new URL('/school',base).toString())
