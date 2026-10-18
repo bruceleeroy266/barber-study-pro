@@ -27,10 +27,12 @@ export function prepareImportReviewManifest(): ImportReviewManifest {
   // Matches the database executor's source_question_id-ordered concat_ws framing.
   // Reject control characters that could make delimiter-based framing ambiguous.
   const sqlFields = rows.map(row => [row.source_question_id,row.domain,row.prompt,row.option_a,row.option_b,row.option_c,row.option_d,row.correct_option,row.explanation,row.content_version])
-  if (sqlFields.some(fields => fields.some(value => typeof value !== 'string' || /[\\x1e\\x1f]/.test(value)))) {
+  const fieldSeparator = String.fromCharCode(31)
+  const rowSeparator = String.fromCharCode(30)
+  if (sqlFields.some(fields => fields.some(value => typeof value !== 'string' || value.includes(fieldSeparator) || value.includes(rowSeparator)))) {
     throw new Error('Unsafe or null field in SQL-compatible manifest digest')
   }
-  const sqlCompatibleDigestSha256 = createHash('sha256').update(sqlFields.map(fields => fields.join('\\x1f')).join('\\x1e')).digest('hex')
+  const sqlCompatibleDigestSha256 = createHash('sha256').update(sqlFields.map(fields => fields.join(fieldSeparator)).join(rowSeparator)).digest('hex')
   return {
     manifestVersion:'4d5-review-v1',sourceCount:573,sourceDigestSha256:digest,sqlCompatibleDigestSha256,
     sourceIds:rows.map(row=>row.source_question_id),domainCounts,draftConfig:plan.config,
