@@ -77,3 +77,26 @@ Official-source evidence: NIC *National Barber Theory Examination CIB*, effectiv
 | IE-015 | A | Launder used towel before reuse | Supplies/materials: towels + sanitation | Cite specific current Oklahoma sanitation rule separately; publisher/NIC outline alone does not establish laundry handling rule |
 
 General official-source verification for IE-001–015: **blueprint topic mapped**, not page-level answer verification, originality review, or state-regulatory certification. Proposed corrections only. No frozen-bank changes.
+
+
+## Oklahoma sanitation rule verification and IE-016–020 (October 19, 2026)
+
+Official governing text: Oklahoma State Board of Cosmetology and Barbering Rules & Regulations, effective December 1, 2025:
+https://oklahoma.gov/content/dam/ok/en/cosmo/documents/rules-and-regulations/NEWER%202025.rule.book.print.effective.12.1.2025.pdf
+
+| Governing section | Supported detail | Audited item |
+|---|---|---|
+| OAC 175:10-7-12 | Fresh clean towels per client; used linens laundered before reuse; soiled towels/capes in covered vented containers; appropriate neck-strip supply | IE-013, IE-014, IE-015 |
+| OAC 175:10-7-13(a) | Maintain workstation/shampoo area in sanitary condition; no used implements on work station or floor; remove loose/cut hair immediately after patron service | IE-012 |
+| OAC 175:10-7-6 | EPA-registered disinfection according to product label, treatment of tools after use, disinfected implement storage free of contamination | IE-016, IE-017, IE-019 |
+| OAC 175:10-7-15(b) | Electrical equipment maintained in working order according to installation standards | IE-009, IE-010 (general corroboration, not answer key) |
+
+### IE-016–IE-020 provisional factual review
+
+- **IE-016** answer A (remove debris, clean, disinfect a reused nonporous comb) supported by hygiene/disinfection requirements; source's broad 'Oklahoma 2025 sanitation rules' should cite section 175:10-7-6 precisely.
+- **IE-017** answer A (visible debris compromises disinfectant effectiveness) supported by cleaning/disinfection procedures; device components require compatible product/manufacturer instructions, not indiscriminate soaking.
+- **IE-018** answer A (manufacturer-guided clipper blade lubrication reduces friction) sound general equipment-care practice; separate manufacturer manual preferable to claiming the NIC outline provides this specific answer.
+- **IE-019** answer A (reprocess possibly recontaminated comb) consistent with clean-storage requirements.
+- **IE-020** answer A (unsafe loose shear pivot taken out of service until adjusted/repaired) plausible safety practice; precise NIC question-specific sourcing not established. Distractors relatively stronger than adjacent items.
+
+**Review status:** Preliminary factual/key screening only, not publisher originality, individual answer-key verification by NIC, or independent approval. IE-016–020 source question objects unchanged.
