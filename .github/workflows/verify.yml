@@ -143,6 +143,13 @@ jobs:
             echo "TEST_SCHOOL_B_NAME=Test Academy Beta"
             echo "TEST_SCHOOL_B_SLUG=test-academy-beta"
           } >> "$GITHUB_ENV"
+      - name: Match production table grants in disposable fixture
+        shell: bash
+        run: |
+          psql "$TEST_DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+          GRANT SELECT ON public.student_instructor_assignments TO authenticated;
+          GRANT SELECT, INSERT, DELETE ON public.student_instructor_assignments TO service_role;
+          SQL
       - name: Run authenticated assignment RLS regression
         run: npx vitest run --config vitest.integration.config.ts tests/integration/rls/support-access-assignment-select.test.ts
       - name: Stop disposable Supabase
