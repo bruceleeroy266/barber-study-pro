@@ -662,7 +662,7 @@ test.describe('Pilot onboarding certification', () => {
       ['Reporting Center', 'school_summary-report.csv'],
       ['Program Requirement Audit Center', 'school_compliance-report.csv'],
     ] as const) {
-      const center = schoolAdminSession.page.locator('div').filter({ has: schoolAdminSession.page.getByRole('heading', { name: heading, exact: true }) }).last()
+      const center = schoolAdminSession.page.getByRole('heading', { name: heading, exact: true }).locator('xpath=ancestor::div[contains(@class,"rounded-xl")][1]')
       const downloadPromise = schoolAdminSession.page.waitForEvent('download', { timeout: 15_000 })
       await center.getByRole('button', { name: 'Export CSV' }).click()
       const download = await downloadPromise
