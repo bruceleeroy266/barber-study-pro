@@ -737,6 +737,14 @@ test.describe('Pilot onboarding certification', () => {
       }
       return snapshots
     }
+    // P0: capture the actual authenticated server response bytes on disposable
+    // local school/student fixtures; never print or upload the payload.
+    const chapterResponse = await studentSession.page.goto('/dashboard/chapters/1')
+    expect(chapterResponse?.status()).toBe(200)
+    const chapterPayload = (await chapterResponse!.body()).toString('utf8')
+    expect(chapterPayload).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION/i)
+    expect(chapterPayload).not.toMatch(/\\b(?:Milady|Cengage)\\b/i)
+
     const gradeAndApprovalBefore = await readGradeAndApprovalBaseline()
     const navigationBefore = await readNavigationBaseline()
     for (const width of [320, 360, 390]) {
