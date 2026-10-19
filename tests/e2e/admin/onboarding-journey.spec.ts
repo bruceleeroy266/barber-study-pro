@@ -739,12 +739,26 @@ test.describe('Pilot onboarding certification', () => {
     }
     // P0: capture the actual authenticated server response bytes on disposable
     // local school/student fixtures; never print or upload the payload.
+    const jsonApiResponses: Array<{ url: string; payload: string }> = []
+    const collectLocalApiResponse = async (response: import('@playwright/test').APIResponse | import('@playwright/test').Response) => {
+      const url = response.url()
+      const contentType = response.headers()['content-type'] || ''
+      if (!new URL(url).pathname.startsWith('/api/') || !contentType.includes('application/json')) return
+      if (response.status() < 200 || response.status() >= 300) return
+      const payload = (await response.body()).toString('utf8')
+      jsonApiResponses.push({ url: new URL(url).pathname, payload })
+      expect(payload, 'API response must not serialize internal source metadata').not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION/i)
+    }
+    studentSession.page.on('response', collectLocalApiResponse)
     const chapterResponse = await studentSession.page.goto('/dashboard/chapters/1')
     expect(chapterResponse?.status()).toBe(200)
     const chapterPayload = (await chapterResponse!.body()).toString('utf8')
     expect(chapterPayload).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION/i)
     expect(chapterPayload).not.toMatch(/\\b(?:Milady|Cengage)\\b/i)
 
+    // API collection is supplemental: require explicit exercised endpoints for coverage certification.
+    studentSession.page.off('response', collectLocalApiResponse)
+    console.log('P0 captured authenticated JSON API count:', jsonApiResponses.length)
     const gradeAndApprovalBefore = await readGradeAndApprovalBaseline()
     const navigationBefore = await readNavigationBaseline()
     for (const width of [320, 360, 390]) {
