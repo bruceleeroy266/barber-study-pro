@@ -63,3 +63,17 @@ All IE-001–005 cite a generic 'NIC 2025 Barber Theory' implement-functions top
 | REV-1 | All release-bound questions | PR #426 is draft; automated CI has no independent academic authority | Qualified independent human reviewer accepts findings, open exceptions, and final materials | Reviewer identity/role, version reviewed, disposition and approval timestamp recorded; never infer from GitHub green checks |
 
 **Review caution:** A provisional correct answer key is not a citation inspection, originality clearance, or psychometric validation. No release action on this worksheet.
+
+## Verified NIC source mapping and IE-011–IE-015 audit (2026-10-19)
+
+Official-source evidence: NIC *National Barber Theory Examination CIB*, effective June 1, 2025 (revised Sept 1, 2025), content outline printed page 7 / PDF index page 6: **Implements and Equipment Used in Barbering (10%)**. Subdomains list chair/workstation, shears/razors/combs/brushes, towels/drape/neck strips, clippers/blow dryers, safety and sanitation. Provider-hosted copy: https://www.msbcb.ms.gov/wp-content/uploads/2025/08/barber_national_theory_english.pdf and HTML https://prov-testing.github.io/nic_cib/barber_national_theory_english.html. This is exam-domain coverage evidence, **not a source of individualized answer keys** or ASCYN copyright clearance. The bulletin specifies 60 total items, 50 scored; ASCYN's 110-item format is a separate practice simulation, not the official exam format.
+
+| Item | Key | Provisional result | Official blueprint mapping | Item-specific residual issue / acceptance |
+|---|---|---|---|---|
+| IE-011 | A | Secure chair reduces injury risk | Equipment: chair/workstation + safety | Review plausible alternatives; maintain seat-stability safety rather than easy nonsense distractors |
+| IE-012 | A | Unclean workstation is unsafe | Equipment: workstation + sanitation | Separate sanitation from housekeeping; verify applicable state rules when asserting specific cleaning sequence |
+| IE-013 | A | Neck strip as sanitary barrier | Supplies/materials: neck strips | Scope accurate; stronger distractors and local sanitation verification |
+| IE-014 | A | Cape protects clothing | Supplies/materials: drape | Low-discrimination distractors; avoid treating blueprint example as exact answer-key authority |
+| IE-015 | A | Launder used towel before reuse | Supplies/materials: towels + sanitation | Cite specific current Oklahoma sanitation rule separately; publisher/NIC outline alone does not establish laundry handling rule |
+
+General official-source verification for IE-001–015: **blueprint topic mapped**, not page-level answer verification, originality review, or state-regulatory certification. Proposed corrections only. No frozen-bank changes.
