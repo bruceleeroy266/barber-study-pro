@@ -49,3 +49,17 @@ All IE-001–005 cite a generic 'NIC 2025 Barber Theory' implement-functions top
 - Engineering percentage measures previously defined technical/release gates and remains distinct.
 - Pending licensing and human review cannot be self-approved by CI.
 - No update to `src/lib/exam-ready-import/upstream` or database; no publisher content copied into this backlog.
+
+
+## Item-specific P0 evidence and acceptance worksheet — 2026-10-19
+
+| Work item | Pinned assembled item(s) | Direct evidence in repository | Required independent evidence | Acceptance (fail closed) |
+|---|---|---|---|---|
+| SAFE-1 | HP-012, HP-050 | HP-012 assembled override in `hair-structure-properties-hardening.ts` says coarse texture may require stronger processing; HP-050 applies hair-analysis properties before treatment | Validate proposed safe wording with manufacturer procedures and a barbering content reviewer; record product/service scope | Replace unsafe inference with qualified treatment decision; verify one best answer and plausible distractors; reviewer records page/procedure before any source edit |
+| SCI-1 | HS-051 | `hair-scalp-disorders-expansion.ts` uses “variation of canities” and alternating pigmentation; scanned Milady PDF physical p256 / printed p261 uses that textbook framing | Independent dermatologic explanation of pili annulati and identification of source edition/terminology | Document whether source and modern account differ, adopt accurate independently written wording, retain traceability without publisher expression |
+| FACT-1 | HP-020, HP-038 | HP-020 original explanation contains a numerical strength-proportion claim; HP-038 repeats pH concept; HP-020 assembled override only changes prompt/options | Inspect exact scanned Milady physical p247 / printed p252 for numerical claim and independently validate if retained | Numerical claim removed or independently verified with precise citation; review near-duplicate assessment value |
+| ORIG-1 | All 573, priority HS-051, HP-012, HP-020, HP-037, HP-050 | Source question strings and assembled hardening overrides are present; automatic bank validation checks shape, not independent wording | Controlled comparison of each actual assembled stem/4 options/explanation with relevant publisher passages and creation history | Versioned disposition by ID: independently authored, rewrite required, or license required; no unanswered provenance gaps represented as cleared |
+| LIC-1 | All publisher-derived references | `sourceBasis` citations prove research dependency, not re-use permission | Documentary licensing permission or appropriately scoped rights/legal review | Positive written use authorization or documented original-content clearance under the adopted release policy |
+| REV-1 | All release-bound questions | PR #426 is draft; automated CI has no independent academic authority | Qualified independent human reviewer accepts findings, open exceptions, and final materials | Reviewer identity/role, version reviewed, disposition and approval timestamp recorded; never infer from GitHub green checks |
+
+**Review caution:** A provisional correct answer key is not a citation inspection, originality clearance, or psychometric validation. No release action on this worksheet.
