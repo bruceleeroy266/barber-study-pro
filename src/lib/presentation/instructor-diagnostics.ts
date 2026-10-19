@@ -1,3 +1,4 @@
+import { publicConceptDetails, publicDisplayText } from './public-content-boundary'
 /**
  * Instructor Diagnostics Translation
  *
@@ -162,7 +163,7 @@ export function buildCoachingRecommendation(conceptId: ConceptId): CoachingRecom
     const family = chapter6ConceptFamilies.find((concept) => concept.id === conceptId)
     return {
       confusions: family
-        ? [{ topic: family.name, clarification: family.description }]
+        ? [{ topic: publicConceptDetails(family).name, clarification: publicConceptDetails(family).description }]
         : [],
       chapterGuidance:
         'Use the student’s persisted Chapter 6 evidence and targeted-review history to coach the specific anatomy or physiology concept. Reinforce accurate terminology, service-safety relevance, and scope boundaries without diagnosing a condition, then have the student complete the assigned Knowledge Check before judging improvement.',
@@ -174,7 +175,7 @@ export function buildCoachingRecommendation(conceptId: ConceptId): CoachingRecom
     const family = chapter5ConceptFamilies.find((concept) => concept.id === conceptId)
     return {
       confusions: family
-        ? [{ topic: family.name, clarification: family.description }]
+        ? [{ topic: publicConceptDetails(family).name, clarification: publicConceptDetails(family).description }]
         : [],
       chapterGuidance:
         'Use the student’s persisted Chapter 5 evidence and targeted-review history to coach the specific tool, implement, equipment, or safety concept. Reinforce correct selection, handling, care, and safe professional use, then have the student complete the assigned Knowledge Check before judging improvement.',
@@ -186,7 +187,7 @@ export function buildCoachingRecommendation(conceptId: ConceptId): CoachingRecom
     const family = chapter4ConceptFamilies.find((concept) => concept.id === conceptId)
     return {
       confusions: family
-        ? [{ topic: family.name, clarification: family.description }]
+        ? [{ topic: publicConceptDetails(family).name, clarification: publicConceptDetails(family).description }]
         : [],
       chapterGuidance:
         'Use the student’s persisted Chapter 4 evidence and targeted-review history to coach the specific infection-control or safety concept in a realistic barbering scenario. Reinforce the correct procedure and why it prevents harm or contamination, then have the student complete the assigned Knowledge Check before judging improvement.',
@@ -198,7 +199,7 @@ export function buildCoachingRecommendation(conceptId: ConceptId): CoachingRecom
     const family = chapter3ConceptFamilies.find((concept) => concept.id === conceptId)
     return {
       confusions: family
-        ? [{ topic: family.name, clarification: family.description }]
+        ? [{ topic: publicConceptDetails(family).name, clarification: publicConceptDetails(family).description }]
         : [],
       chapterGuidance:
         'Use the student’s persisted evidence and targeted-review history to coach the specific Chapter 3 concept family, then have the student complete the assigned Knowledge Check before judging improvement.',
@@ -209,12 +210,12 @@ export function buildCoachingRecommendation(conceptId: ConceptId): CoachingRecom
   const notes = chapter2InstructorNotes
   const confusions = notes.commonConfusions
     .filter((c) => (c.conceptIds as readonly string[]).includes(conceptId))
-    .map((c) => ({ topic: c.topic, clarification: c.clarification }))
+    .map((c) => ({ topic: publicDisplayText(c.topic), clarification: publicDisplayText(c.clarification) }))
   const enrichment = notes.enrichmentIdentification.find((e) => e.conceptId === conceptId)
   return {
     confusions,
-    chapterGuidance: notes.remediationGuidance,
-    enrichmentNote: enrichment ? enrichment.identification : null,
+    chapterGuidance: publicDisplayText(notes.remediationGuidance),
+    enrichmentNote: enrichment ? publicDisplayText(enrichment.identification) : null,
   }
 }
 

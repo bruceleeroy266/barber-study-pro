@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { ComplianceReport, ComplianceReportType } from '@/types'
 import { convertRowsToCSV } from '@/lib/export-utils'
+import { publicReportRows, publicDisplayText } from '@/lib/presentation/public-content-boundary'
 import { FileText, Download, UserCheck, GraduationCap, Award, Users, School } from 'lucide-react'
 
 interface Props {
@@ -19,7 +20,7 @@ const reportMeta: { type: ComplianceReportType; label: string; icon: React.Eleme
 
 function exportCsv(report: ComplianceReport) {
   if (report.rows.length === 0) return
-  const csv = convertRowsToCSV(report.rows)
+  const csv = convertRowsToCSV(publicReportRows(report.rows))
 
   const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' })
   const url = URL.createObjectURL(blob)
@@ -35,6 +36,7 @@ function exportCsv(report: ComplianceReport) {
 export default function ComplianceReportingCenter({ reports }: Props) {
   const [active, setActive] = useState<ComplianceReportType>('school_compliance')
   const report = reports[active]
+  const publicRows = publicReportRows(report.rows)
 
   return (
     <div className="bg-charcoal border border-graphite rounded-xl overflow-hidden">
@@ -71,8 +73,8 @@ export default function ComplianceReportingCenter({ reports }: Props) {
       <div className="p-4">
         <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <h3 className="text-lg font-semibold text-white">{report.title}</h3>
-            <p className="text-sm text-silver">{report.summary}</p>
+            <h3 className="text-lg font-semibold text-white">{publicDisplayText(report.title)}</h3>
+            <p className="text-sm text-silver">{publicDisplayText(report.summary)}</p>
             <p className="text-xs text-silver-gray mt-1">Generated: {new Date(report.generatedAt).toLocaleString()}</p>
           </div>
           <button
@@ -88,8 +90,8 @@ export default function ComplianceReportingCenter({ reports }: Props) {
           <table className="min-w-[36rem] w-full text-sm">
             <thead className="bg-black text-left">
               <tr>
-                {report.rows.length > 0 &&
-                  Object.keys(report.rows[0]).map((key) => (
+                {publicRows.length > 0 &&
+                  Object.keys(publicRows[0]).map((key) => (
                     <th key={key} className="px-4 py-2 text-xs font-medium text-silver">
                       {key}
                     </th>
@@ -97,7 +99,7 @@ export default function ComplianceReportingCenter({ reports }: Props) {
               </tr>
             </thead>
             <tbody className="divide-y divide-graphite">
-              {report.rows.map((row, idx) => (
+              {publicRows.map((row, idx) => (
                 <tr key={idx} className="hover:bg-graphite/30">
                   {Object.entries(row).map(([key, value]) => (
                     <td key={key} className="px-4 py-2 text-light-gray">

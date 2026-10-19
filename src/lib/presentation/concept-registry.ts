@@ -1,3 +1,4 @@
+import { publicDisplayText } from './public-content-boundary'
 import { chapter2Concepts, RETIRED_CONCEPT_IDS } from '@/lib/chapter-2-concepts/concepts'
 import { chapter3ConceptFamilies } from '@/lib/chapter-3-concepts/concepts'
 import { chapter4ConceptFamilies } from '@/lib/chapter-4-concepts/concepts'
@@ -18,8 +19,8 @@ const retiredConceptIds = new Set<string>(RETIRED_CONCEPT_IDS as readonly string
 export function resolvePresentationConceptName(conceptId: string): string {
   const name = conceptNameById.get(conceptId)
   if (!name) return `Unknown concept (${conceptId})`
-  if (retiredConceptIds.has(conceptId)) return `${name} (retired concept)`
-  return name
+  if (retiredConceptIds.has(conceptId)) return publicDisplayText(`${name} (retired concept)`)
+  return publicDisplayText(name)
 }
 
 export function isChapter3PresentationConcept(conceptId: string): boolean {

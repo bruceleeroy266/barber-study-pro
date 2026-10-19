@@ -8,6 +8,7 @@
 
 import { test, expect, Browser, BrowserContext, Page } from '@playwright/test'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { verifySyntheticExamReadyApi } from './exam-ready-synthetic-helper'
 
 const SCHOOL_NAME = 'ASCYN Pilot Certification School'
 const SCHOOL_ADMIN_NAME = 'Pilot Certification School Admin'
@@ -654,6 +655,28 @@ test.describe('Pilot onboarding certification', () => {
       ended_at: null,
     })
 
+    // P0: inspect actual browser-downloaded CSV bytes for both report centers.
+    // Only the disposable school-admin account and local fixtures are used.
+    await schoolAdminSession.page.goto('/school')
+    for (const [heading, fileName] of [
+      ['Reporting Center', 'school_summary-report.csv'],
+      ['Program Requirement Audit Center', 'school_compliance-report.csv'],
+    ] as const) {
+      const center = schoolAdminSession.page.getByRole('heading', { name: heading, exact: true }).locator('xpath=ancestor::div[contains(@class,"rounded-xl")][1]')
+      const downloadPromise = schoolAdminSession.page.waitForEvent('download', { timeout: 15_000 })
+      await center.getByRole('button', { name: 'Export CSV' }).click()
+      const download = await downloadPromise
+      expect(download.suggestedFilename()).toBe(fileName)
+      const stream = await download.createReadStream()
+      const chunks: Buffer[] = []
+      for await (const chunk of stream) chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk))
+      const bytes = Buffer.concat(chunks)
+      expect(bytes.length).toBeGreaterThan(3)
+      const csvBody = bytes.toString('utf8')
+      expect(csvBody).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION/i)
+      expect(csvBody).not.toMatch(/\\b(?:Milady|Cengage)\\b/i)
+    }
+
     // -----------------------------------------------------------------------
     // 7. Instructor verifies the newly onboarded assigned student is visible
     // -----------------------------------------------------------------------
@@ -736,6 +759,38 @@ test.describe('Pilot onboarding certification', () => {
       }
       return snapshots
     }
+    // P0: capture the actual authenticated server response bytes on disposable
+    // local school/student fixtures; never print or upload the payload.
+    const jsonApiResponses: Array<{ url: string; payload: string }> = []
+    const collectLocalApiResponse = async (response: import('@playwright/test').APIResponse | import('@playwright/test').Response) => {
+      const url = response.url()
+      const contentType = response.headers()['content-type'] || ''
+      if (!new URL(url).pathname.startsWith('/api/') || !contentType.includes('application/json')) return
+      if (response.status() < 200 || response.status() >= 300) return
+      const payload = (await response.body()).toString('utf8')
+      jsonApiResponses.push({ url: new URL(url).pathname, payload })
+      expect(payload, 'API response must not serialize internal source metadata').not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION/i)
+    }
+    studentSession.page.on('response', collectLocalApiResponse)
+    const chapterResponse = await studentSession.page.goto('/dashboard/chapters/1')
+    expect(chapterResponse?.status()).toBe(200)
+    const chapterPayload = (await chapterResponse!.body()).toString('utf8')
+    expect(chapterPayload).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION/i)
+    expect(chapterPayload).not.toMatch(/\\b(?:Milady|Cengage)\\b/i)
+
+    // API collection is supplemental: require explicit exercised endpoints for coverage certification.
+    studentSession.page.off('response', collectLocalApiResponse)
+    console.log('P0 captured authenticated JSON API count:', jsonApiResponses.length)
+    // P0: inspect actual authenticated JSON API response bytes with the
+    // same disposable student's browser context; no production data or bank import.
+    const examHistoryResponse = await studentSession.page.request.get('/api/comprehensive-exam/history')
+    expect(examHistoryResponse.status()).toBe(200)
+    expect(examHistoryResponse.headers()['content-type']).toContain('application/json')
+    const examHistoryBytes = (await examHistoryResponse.body()).toString('utf8')
+    expect(examHistoryBytes).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION/i)
+    expect(examHistoryBytes).not.toMatch(/\\b(?:Milady|Cengage)\\b/i)
+    expect(JSON.parse(examHistoryBytes)).toHaveProperty('history')
+
     const gradeAndApprovalBefore = await readGradeAndApprovalBaseline()
     const navigationBefore = await readNavigationBaseline()
     for (const width of [320, 360, 390]) {
@@ -746,7 +801,10 @@ test.describe('Pilot onboarding certification', () => {
       await expect(practiceLink).toHaveAttribute('href', /\/dashboard\/chapters\/\d+#chapter-quiz$/)
       await practiceLink.click()
       await expect(studentSession.page).toHaveURL(/\/dashboard\/chapters\/\d+#chapter-quiz$/)
-      await expect(studentSession.page.getByRole('heading', { name: 'Chapter Quiz' })).toBeVisible()
+      // Next.js may show the authenticated dashboard shell before the streamed
+      // chapter content arrives under slow GitHub-hosted CI. Keep the real
+      // heading/approval assertions; allow streaming time, and log failures.
+      await expect(studentSession.page.getByRole('heading', { name: 'Chapter Quiz' })).toBeVisible({ timeout: 30_000 })
       await expect(studentSession.page.getByText('Instructor approval required')).toBeVisible()
       await expect(studentSession.page.getByRole('button', { name: /Start Quiz/i })).toHaveCount(0)
       const overflow = await studentSession.page.evaluate(() =>
@@ -867,6 +925,9 @@ test.describe('Pilot onboarding certification', () => {
       .filter({ hasText: STUDENT_NAME })
     await expect(dashboardStudentRow).toHaveCount(1)
     await expect(dashboardStudentRow).toContainText('min')
+
+    // Populated, authenticated API against synthetic-only localhost data.
+    await verifySyntheticExamReadyApi(service, studentSession.page)
 
     await studentSession.context.close()
     await instructorSession.context.close()
