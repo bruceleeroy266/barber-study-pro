@@ -100,3 +100,36 @@ https://oklahoma.gov/content/dam/ok/en/cosmo/documents/rules-and-regulations/NEW
 - **IE-020** answer A (unsafe loose shear pivot taken out of service until adjusted/repaired) plausible safety practice; precise NIC question-specific sourcing not established. Distractors relatively stronger than adjacent items.
 
 **Review status:** Preliminary factual/key screening only, not publisher originality, individual answer-key verification by NIC, or independent approval. IE-016–020 source question objects unchanged.
+
+
+## Implements & Equipment — completion of IE-001–IE-050 overlap audit (2026-10-19)
+
+**Scope:** Fifty IE questions through IE-050 preliminarily screened against frozen source `bb995882ecf95a00ee409a749114e13e5273c3e3`. This is a qualitative content/blueprint overlap assessment, **not** psychometric discrimination or full publisher clearance. IE-051 onward remain to be audited.
+
+### IE-046–IE-050 preliminary checks
+| ID | Key | Factual disposition | Quality flag |
+|---|---|---|---|
+| IE-046 | A | Treat exposed implements in clean container as potentially contaminated if a used comb enters | Closely overlaps IE-019, IE-024, IE-042; contingency requires extent-of-contact assessment and exact state storage procedure before universal claim |
+| IE-047 | A | Follow manufacturer-compatible method while satisfying sanitation rules; **not** permission to omit mandated disinfection | Near-repeat IE-022/035; ask about regulatory/product-label compatibility in replacement |
+| IE-048 | A | Check electrical tool cord, plug, housing, attachments and controls for damage | Overlaps IE-009, IE-020, IE-033, IE-039/050; unlikely 'hard' demand with absurd distractors |
+| IE-049 | A | Trimmer/outliner for precise perimeter detail | Near-repeat IE-007 with improved but still distinct distractors; reassess 'hard' |
+| IE-050 | A | Remove intermittently failing clipper, select safe sanitized replacement | Integrates safety + selection; overlaps IE-009/020/039 but alternatives more realistic |
+
+### Overlap matrix and recommended reviewer action
+| Cluster | IE items | Duplication finding | Review acceptance |
+|---|---|---|---|
+| Tool function / selection | 001–008, 014, 025, 030–032, 049 | IE-007/049 near-repeat; IE-008/025 both dryer; IE-004/031 brush + dryer | Distinct blueprint competency/cognitive target or documented consolidation candidate |
+| Electrical equipment damage and inspection | 009–010, 020, 023, 033–034, 039–040, 048, 050 | Several choose stop-use/inspect; IE-009/039/050 similar scenarios but different hazards | Separate fault diagnosis from hazard response and ensure answer alternatives plausibly competing |
+| Clean / used segregation | 012–013, 015–017, 019, 021, 024, 028, 035, 042–047 | IE-019/042/046 same recontamination principle; IE-013/043 barrier; IE-015/045 linen storage | Tag objective and scenario; confirm jurisdictional rule text for correct procedures and exceptions |
+| Chair safety | 011, 040 | Stabilize chair before service; near-duplicate | Evaluate distinct response complexity |
+| Blow dryer/heat safety | 008, 025, 031, 036, 037 | IE-036/037 near-duplicate heat risk | Distinguish observing injury cues from controlling exposure |
+| Shear & razor safety | 001, 005, 020, 021, 026–029 | Several clear-cut remove/replace decisions; IE-020/029 safety hazard variants | Strengthen authentic evidence-based distractors |
+| General maintenance/manufacturer | 017–018, 022, 026, 034–035, 047–048 | IE-022/047 both manufacturer-directed care | Differentiate tool-type-specific procedure with manufacturer/regulatory hierarchy |
+
+### Regulatory follow-up flags (not yet exact claim certification)
+1. **IE-046 clean-container contamination scope:** whether *all* contents require reprocessing depends on exposure and authoritative Oklahoma wording. Current A appropriately uses 'potentially exposed', but require OAC 175:10-7-6 exact subsection review for a blanket implementation.
+2. **IE-047 electrical-unit disinfection:** ensure manufacturer's non-immersion rule and EPA-registered label/surface compatibility satisfy Oklahoma OAC 175:10-7-6. Cannot equate manufacturer's guidance alone with legal compliance.
+3. **IE-050 unreliable electrical clipper:** confirm safety withdrawal under manufacturer/equipment-safety recommendations; NIC topic mapping is not a question-specific source citation.
+4. **IE-043 neck-strip alternative wording and IE-044 draping:** separately substantiate under OAC 175:10-7-12; do not infer any arbitrary substitute is permitted.
+
+**Source boundaries:** NIC National Barber Theory CIB supports topic categories, not individual answer keys. Oklahoma OAC supports jurisdiction-specific hygiene rules where explicitly mapped. No publisher text similarity clearance, rights permission, or independent reviewer approval is inferred. No changes to question bank or production.
