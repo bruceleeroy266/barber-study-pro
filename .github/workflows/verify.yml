@@ -81,6 +81,74 @@ jobs:
           retention-days: 7
           if-no-files-found: ignore
 
+
+  support-assignment-rls:
+    name: Support Assignment RLS (disposable A/B)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: 2.109.1
+      - name: Start disposable Supabase and export test-only settings
+        shell: bash
+        run: |
+          supabase start
+          supabase status -o env > /tmp/ascyn-rls-local.env
+          set -a
+          source /tmp/ascyn-rls-local.env
+          set +a
+          LOCAL_API_URL="${API_URL:-${SUPABASE_URL:-}}"
+          LOCAL_ANON_KEY="${PUBLISHABLE_KEY:-${ANON_KEY:-}}"
+          LOCAL_SERVICE_KEY="${SECRET_KEY:-${SERVICE_ROLE_KEY:-}}"
+          if [[ -z "$LOCAL_API_URL" || -z "$LOCAL_ANON_KEY" || -z "$LOCAL_SERVICE_KEY" ]]; then
+            echo "Missing disposable Supabase credentials"
+            exit 1
+          fi
+          {
+            echo "ASCYN_TEST_ENVIRONMENT=true"
+            echo "NEXT_PUBLIC_SUPABASE_URL=$LOCAL_API_URL"
+            echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$LOCAL_ANON_KEY"
+            echo "SUPABASE_SERVICE_ROLE_KEY=$LOCAL_SERVICE_KEY"
+            echo "TEST_DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:54322/postgres"
+            echo "TEST_PLATFORM_ADMIN_EMAIL=platform-admin@ascyn-test.local"
+            echo "TEST_PLATFORM_ADMIN_PASSWORD=Test1234!"
+            echo "TEST_SCHOOL_ADMIN_A_EMAIL=school-admin-a@ascyn-test.local"
+            echo "TEST_SCHOOL_ADMIN_A_PASSWORD=Test1234!"
+            echo "TEST_INSTRUCTOR_A_EMAIL=instructor-a@ascyn-test.local"
+            echo "TEST_INSTRUCTOR_A_PASSWORD=Test1234!"
+            echo "TEST_STUDENT_A_EMAIL=student-a@ascyn-test.local"
+            echo "TEST_STUDENT_A_PASSWORD=Test1234!"
+            echo "TEST_SCHOOL_ADMIN_B_EMAIL=school-admin-b@ascyn-test.local"
+            echo "TEST_SCHOOL_ADMIN_B_PASSWORD=Test1234!"
+            echo "TEST_INSTRUCTOR_B_EMAIL=instructor-b@ascyn-test.local"
+            echo "TEST_INSTRUCTOR_B_PASSWORD=Test1234!"
+            echo "TEST_STUDENT_B_EMAIL=student-b@ascyn-test.local"
+            echo "TEST_STUDENT_B_PASSWORD=Test1234!"
+            echo "TEST_SCHOOL_A_ID=aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+            echo "TEST_SCHOOL_A_NAME=Test Academy Alpha"
+            echo "TEST_SCHOOL_A_SLUG=test-academy-alpha"
+            echo "TEST_SCHOOL_B_ID=bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"
+            echo "TEST_SCHOOL_B_NAME=Test Academy Beta"
+            echo "TEST_SCHOOL_B_SLUG=test-academy-beta"
+          } >> "$GITHUB_ENV"
+      - name: Run authenticated assignment RLS regression
+        run: npx vitest run --config vitest.integration.config.ts tests/integration/rls/support-access-assignment-select.test.ts
+      - name: Stop disposable Supabase
+        if: always()
+        run: supabase stop --no-backup
+
   pilot-onboarding-certification:
     name: Pilot Onboarding Certification
     if: github.event_name == 'pull_request'
