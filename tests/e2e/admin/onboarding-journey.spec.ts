@@ -655,6 +655,28 @@ test.describe('Pilot onboarding certification', () => {
       ended_at: null,
     })
 
+    // P0: inspect actual browser-downloaded CSV bytes for both report centers.
+    // Only the disposable school-admin account and local fixtures are used.
+    await schoolAdminSession.page.goto('/school')
+    for (const [heading, fileName] of [
+      ['Reporting Center', 'school_summary-report.csv'],
+      ['Program Requirement Audit Center', 'school_compliance-report.csv'],
+    ] as const) {
+      const center = schoolAdminSession.page.locator('div').filter({ has: schoolAdminSession.page.getByRole('heading', { name: heading, exact: true }) }).last()
+      const downloadPromise = schoolAdminSession.page.waitForEvent('download', { timeout: 15_000 })
+      await center.getByRole('button', { name: 'Export CSV' }).click()
+      const download = await downloadPromise
+      expect(download.suggestedFilename()).toBe(fileName)
+      const stream = await download.createReadStream()
+      const chunks: Buffer[] = []
+      for await (const chunk of stream) chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk))
+      const bytes = Buffer.concat(chunks)
+      expect(bytes.length).toBeGreaterThan(3)
+      const csvBody = bytes.toString('utf8')
+      expect(csvBody).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION/i)
+      expect(csvBody).not.toMatch(/\\b(?:Milady|Cengage)\\b/i)
+    }
+
     // -----------------------------------------------------------------------
     // 7. Instructor verifies the newly onboarded assigned student is visible
     // -----------------------------------------------------------------------
