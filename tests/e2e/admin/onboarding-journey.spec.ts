@@ -8,6 +8,7 @@
 
 import { test, expect, Browser, BrowserContext, Page } from '@playwright/test'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { verifySyntheticExamReadyApi } from './exam-ready-synthetic-helper'
 
 const SCHOOL_NAME = 'ASCYN Pilot Certification School'
 const SCHOOL_ADMIN_NAME = 'Pilot Certification School Admin'
@@ -867,6 +868,9 @@ test.describe('Pilot onboarding certification', () => {
       .filter({ hasText: STUDENT_NAME })
     await expect(dashboardStudentRow).toHaveCount(1)
     await expect(dashboardStudentRow).toContainText('min')
+
+    // Populated, authenticated API against synthetic-only localhost data.
+    await verifySyntheticExamReadyApi(service, studentSession.page)
 
     await studentSession.context.close()
     await instructorSession.context.close()
