@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { convertRowsToCSV } from '@/lib/export-utils'
 import { publicConceptDetails, publicDisplayText, publicReportRows } from './public-content-boundary'
 
 describe('publisher-safe presentation boundary', () => {
@@ -40,5 +41,37 @@ describe('publisher-safe school report projection', () => {
     }])
     expect(rows).toEqual([{ Student: 'Test Student', Score: 87, Notes: 'Content under review', safe: true }])
     expect(JSON.stringify(rows)).not.toMatch(/milady|cengage|sourceBasis|sourceProvenance|restrictedAuditMetadata/i)
+  })
+})
+
+describe('captured report CSV bytes — school-owner and compliance fixtures', () => {
+  const hidden = {
+    sourceBasis: 'Milady Chapter 5',
+    sourceProvenance: 'MILADY_SUPPORTED_EXPANSION',
+    publisher: 'Cengage',
+    restrictedAuditMetadata: { textbook: 'Milady' },
+  }
+
+  for (const surface of ['school-owner', 'compliance']) {
+    it(`${surface} CSV contains no internal metadata in actual UTF-8 output`, () => {
+      const rows = publicReportRows([
+        { Student: 'ASCYN Fixture', Score: 82, Notes: 'Milady publisher quotation', ...hidden },
+        { Student: 'Second Fixture', Score: 91, Notes: 'Safe academic progress', ...hidden },
+      ])
+      const downloadedBytes = Buffer.from('\uFEFF' + convertRowsToCSV(rows), 'utf8')
+      const output = downloadedBytes.toString('utf8')
+      expect(downloadedBytes.subarray(0, 3)).toEqual(Buffer.from([0xef, 0xbb, 0xbf]))
+      expect(output).toContain('ASCYN Fixture')
+      expect(output).toContain('Second Fixture')
+      expect(output).toContain('Content under review')
+      expect(output).not.toMatch(/milady|cengage|sourceBasis|sourceProvenance|restrictedAuditMetadata|publisher/i)
+    })
+  }
+
+  it('blocks accidental provenance in a simulated JSON serialization boundary', () => {
+    const serialized = Buffer.from(JSON.stringify({ rows: publicReportRows([{
+      Student: 'ASCYN Fixture', score: 93, ...hidden,
+    }]) }), 'utf8').toString('utf8')
+    expect(serialized).not.toMatch(/milady|cengage|sourceBasis|sourceProvenance|restrictedAuditMetadata|publisher/i)
   })
 })
