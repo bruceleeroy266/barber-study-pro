@@ -134,6 +134,28 @@ jobs:
             echo "PORT=3000"
           } >> "$GITHUB_ENV"
 
+      - name: Assert clean Exam Ready schema on local migration replay
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { createClient } from '@supabase/supabase-js'
+          const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+          const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+          if (!url?.includes('127.0.0.1') && !url?.includes('localhost')) throw new Error('Refuse remote database target')
+          if (!key) throw new Error('Missing local test service key')
+          const db = createClient(url, key, { auth: { persistSession: false } })
+          for (const table of ['comprehensive_exam_configs', 'comprehensive_exam_questions', 'comprehensive_exam_attempts', 'comprehensive_exam_attempt_items']) {
+            const { error } = await db.from(table).select('*', { head: true, count: 'exact' })
+            if (error) throw new Error('Missing or inaccessible Exam Ready table '+table+': '+error.message)
+            console.log('Verified replayed schema:', table)
+          }
+          const { data: cfg, error: configError } = await db.from('comprehensive_exam_configs').select('status')
+          if (configError) throw new Error('Config seed missing: '+configError.message)
+          if (!cfg?.some(row => row.status === 'draft')) throw new Error('Expected draft comprehensive-exam config')
+          console.log('Exam Ready clean-migration smoke test passed; no data mutated')
+          NODE
+
       - name: Build against local Supabase
         run: npm run build
 
