@@ -133,3 +133,26 @@ https://oklahoma.gov/content/dam/ok/en/cosmo/documents/rules-and-regulations/NEW
 4. **IE-043 neck-strip alternative wording and IE-044 draping:** separately substantiate under OAC 175:10-7-12; do not infer any arbitrary substitute is permitted.
 
 **Source boundaries:** NIC National Barber Theory CIB supports topic categories, not individual answer keys. Oklahoma OAC supports jurisdiction-specific hygiene rules where explicitly mapped. No publisher text similarity clearance, rights permission, or independent reviewer approval is inferred. No changes to question bank or production.
+
+
+## IE-051–IE-055 and Oklahoma-rule interpretation resolution — 2026-10-19
+
+**Evidence source:** Oklahoma Board's unofficial published compilation effective 2025-12-01, https://oklahoma.gov/content/dam/ok/en/cosmo/documents/rules-and-regulations/NEWER%202025.rule.book.print.effective.12.1.2025.pdf (official copy held by Secretary of State). Relevant rules: OAC 175:10-7-5(j), 175:10-7-6(a),(l),(n); 175:10-7-12(d)–(h).
+
+### IE-051–IE-055 provisional academic review (pinned assembled bank)
+| ID | Existing key | Preliminary disposition | Remaining question-specific issue |
+|---|---|---|---|
+| IE-051 | A | Changeable-blade vs conventional straight razor distinctions are correct as described | Specific barbering textbook/edition/page citation and independently original expression still unverified |
+| IE-052 | A | Palming shears while combing best safely controls blades | Training-manual terminology and demonstration evidence still needed |
+| IE-053 | A | Taper comb selected for short-to-long blending | Edition-specific source verification pending |
+| IE-054 | A | Texturizing shears with spaced teeth can create variations in length | The stem's exact 'medium-width' specification is manufacturer/model-specific; verify definition rather than imply all texturizing shears conform |
+| IE-055 | A | Reduce/stop excessive thermal exposure and adjust temperature/time for hair/scalp condition | Other options may partially reduce exposure, but only A directly addresses unsafe temperature; calibrate distractor ambiguity, equipment directions and heat safety |
+
+### Resolved from published rule text / remaining release exceptions
+1. **IE-046 / clean storage:** OAC 175:10-7-5(j) and 175:10-7-6(n) require proper clean/covered storage. A used comb entering a clean bin compromises cleanliness of *potentially exposed* tools; neither section explicitly dictates that absolutely every bin item must be reprocessed without contact/exposure evidence. Keep A's qualified wording, require independent procedure adjudication before any rewrite.
+2. **IE-047 / electrical disinfection:** OAC 175:10-7-6(a) requires an EPA-registered, label-appropriate disinfectant; (l) specifies debris removal, EPA spray/wipe contact time, drying and tool-housing sanitation for electrical tools and removable guards/blades. Accordingly the manufacturer's non-immersion instruction does NOT authorize skipping legally required disinfection. A is conditional on compatible, compliant method, rather than merely arbitrary manufacturer preference.
+3. **IE-043 / neck-strip alternatives:** OAC 175:10-7-12(d) requires maintaining an appropriate supply of neck strips. The board compilation alone does not expressly establish which substitutes count as approved barriers. Thus “or other approved sanitary barrier” in A is **not yet independently grounded**; flag wording for qualified reviewer / board clarification instead of presenting an exemption as a legal rule.
+4. **IE-044 / visibly dirty cape:** OAC 175:10-7-12(g) identifies capes among soiled linens requiring covered, vented storage; (e)-(f) apply laundry/cleanliness to linens. A clean or correctly processed cape is supported; a merely shaken/perfumed cape is not.
+5. **Document-version qualification:** The Board compilation says only the Secretary of State has the official rules. This audit maps the board's published 2025 version but does not represent an independent state-agency legal interpretation.
+
+No frozen source-bank changes or content-import authorization; independent reviewer, page-specific barbering-source validation, and publisher rights remain pending.
