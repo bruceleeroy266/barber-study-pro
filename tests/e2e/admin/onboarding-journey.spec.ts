@@ -759,6 +759,16 @@ test.describe('Pilot onboarding certification', () => {
     // API collection is supplemental: require explicit exercised endpoints for coverage certification.
     studentSession.page.off('response', collectLocalApiResponse)
     console.log('P0 captured authenticated JSON API count:', jsonApiResponses.length)
+    // P0: inspect actual authenticated JSON API response bytes with the
+    // same disposable student's browser context; no production data or bank import.
+    const examHistoryResponse = await studentSession.page.request.get('/api/comprehensive-exam/history')
+    expect(examHistoryResponse.status()).toBe(200)
+    expect(examHistoryResponse.headers()['content-type']).toContain('application/json')
+    const examHistoryBytes = (await examHistoryResponse.body()).toString('utf8')
+    expect(examHistoryBytes).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION/i)
+    expect(examHistoryBytes).not.toMatch(/\\b(?:Milady|Cengage)\\b/i)
+    expect(JSON.parse(examHistoryBytes)).toHaveProperty('history')
+
     const gradeAndApprovalBefore = await readGradeAndApprovalBaseline()
     const navigationBefore = await readNavigationBaseline()
     for (const width of [320, 360, 390]) {
