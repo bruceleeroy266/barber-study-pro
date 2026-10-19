@@ -152,6 +152,12 @@ jobs:
           SQL
       - name: Run authenticated assignment RLS regression
         run: npx vitest run --config vitest.integration.config.ts tests/integration/rls/support-access-assignment-select.test.ts
+      - name: Build local app for authenticated Support Mode browser test
+        run: npm run build
+      - name: Install Chromium for Support Mode test
+        run: npx playwright install --with-deps chromium
+      - name: Run authenticated School A/B Support Mode browser test
+        run: npx playwright test tests/e2e/admin/support-mode-isolation.spec.ts --project=chromium --workers=1
       - name: Stop disposable Supabase
         if: always()
         run: supabase stop --no-backup
