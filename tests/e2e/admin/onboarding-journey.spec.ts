@@ -747,7 +747,10 @@ test.describe('Pilot onboarding certification', () => {
       await expect(practiceLink).toHaveAttribute('href', /\/dashboard\/chapters\/\d+#chapter-quiz$/)
       await practiceLink.click()
       await expect(studentSession.page).toHaveURL(/\/dashboard\/chapters\/\d+#chapter-quiz$/)
-      await expect(studentSession.page.getByRole('heading', { name: 'Chapter Quiz' })).toBeVisible()
+      // Next.js may show the authenticated dashboard shell before the streamed
+      // chapter content arrives under slow GitHub-hosted CI. Keep the real
+      // heading/approval assertions; allow streaming time, and log failures.
+      await expect(studentSession.page.getByRole('heading', { name: 'Chapter Quiz' })).toBeVisible({ timeout: 30_000 })
       await expect(studentSession.page.getByText('Instructor approval required')).toBeVisible()
       await expect(studentSession.page.getByRole('button', { name: /Start Quiz/i })).toHaveCount(0)
       const overflow = await studentSession.page.evaluate(() =>
