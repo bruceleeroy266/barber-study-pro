@@ -884,6 +884,51 @@ test.describe('Pilot onboarding certification', () => {
       .select('status,auth_user_id').eq('school_id', schoolId).eq('email', STUDENT_EMAIL).single()
     expect(finalAcceptedInvite).toMatchObject({ status: 'accepted', auth_user_id: studentProfile!.id })
 
+    // LOGIN-UX-9: Second-school authenticated isolation, LOCAL TEST ONLY.
+    // Never create fixture accounts against production Supabase.
+    const { data: schoolB, error: schoolBError } = await service.from('schools')
+      .insert({ name: 'ASCYN Isolation School B', is_active: true }).select('id').single()
+    expect(schoolBError).toBeNull()
+    expect(schoolB?.id).toBeTruthy()
+    const schoolBId = String(schoolB!.id)
+    expect(schoolBId).not.toBe(schoolId)
+    const schoolBActors = [
+      { role: 'student', email: 'login9-b-student@ascynpro.test', password: 'Login9Student2026!' },
+      { role: 'instructor', email: 'login9-b-instructor@ascynpro.test', password: 'Login9Instructor2026!' },
+      { role: 'school_admin', email: 'login9-b-admin@ascynpro.test', password: 'Login9Admin2026!' },
+    ] as const
+    for (const actor of schoolBActors) {
+      const { data: newAuth, error: newAuthError } = await service.auth.admin.createUser({
+        email: actor.email, password: actor.password, email_confirm: true,
+      })
+      expect(newAuthError).toBeNull()
+      const id = String(newAuth.user!.id)
+      const { error: profileInsertError } = await service.from('profiles').upsert({
+        id, email: actor.email, full_name: 'LOGIN UX9 disposable fixture',
+        role: actor.role, school_id: schoolBId, approval_status: 'approved',
+        is_disabled: false, requires_password_change: false,
+      }, { onConflict: 'id' })
+      expect(profileInsertError).toBeNull()
+      const client = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        { auth: { persistSession: false, autoRefreshToken: false } })
+      const { data: signedIn, error: signInError } = await client.auth.signInWithPassword({ email: actor.email, password: actor.password })
+      expect(signInError).toBeNull()
+      expect(signedIn.user?.id).toBe(id)
+      // A School B actor must not read School A's onboarding-invitation records.
+      const { data: forbiddenInvites, error: inviteReadError } = await client.from('school_onboarding_invitations')
+        .select('id').eq('school_id', schoolId)
+      expect(inviteReadError).toBeNull()
+      expect(forbiddenInvites).toEqual([])
+      const { data: unchangedProfile } = await service.from('profiles').select('id,school_id,role').eq('id', id).single()
+      expect(unchangedProfile).toMatchObject({ id, school_id: schoolBId, role: actor.role })
+      const { data: unchangedAuth } = await service.auth.admin.getUserById(id)
+      expect(unchangedAuth.user?.id).toBe(id)
+      await client.auth.signOut()
+    }
+    // Assert School A records are still intact after School B authentication.
+    const { data: retainedStudent } = await service.from('profiles').select('id,school_id').eq('id', studentProfile!.id).single()
+    expect(retainedStudent).toMatchObject({ id: studentProfile!.id, school_id: schoolId })
+
     await studentSession.context.close()
     await instructorSession.context.close()
     await schoolAdminSession.context.close()
