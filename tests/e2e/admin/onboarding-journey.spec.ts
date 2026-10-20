@@ -87,6 +87,30 @@ function extractInviteUrl(value: unknown): string | null {
   return null
 }
 
+async function waitForRecoveryUrl(email: string): Promise<string> {
+  for (let attempt = 0; attempt < 40; attempt += 1) {
+    const response = await fetch(`${getMailpitUrl()}/api/v1/messages`)
+    if (response.ok) {
+      const body = await response.json() as Record<string, unknown>
+      const messages = (Array.isArray(body.messages) ? body.messages : body.Messages) as Record<string, unknown>[] | undefined
+      for (const message of messages || []) {
+        if (!collectStrings(message).join(' ').toLowerCase().includes(email.toLowerCase())) continue
+        const id = message.ID ?? message.Id ?? message.id
+        if (!id) continue
+        const details = await fetch(`${getMailpitUrl()}/api/v1/message/${encodeURIComponent(String(id))}`)
+        if (!details.ok) continue
+        const urls = collectStrings(await details.json()).flatMap(value => value.match(/https?:\\/\\/[^\\s"'<>]+/g) || [])
+        for (const raw of urls) {
+          const url = raw.replace(/&amp;/g, '&').replace(/\\u0026/g, '&').replace(/[),.;]+$/, '')
+          if (url.includes('/auth/v1/verify') && (url.includes('type=recovery') || url.includes('type%3Drecovery'))) return url
+        }
+      }
+    }
+    await new Promise(resolve => setTimeout(resolve, 500))
+  }
+  throw new Error(`No recovery email/link arrived for disposable account ${email}`)
+}
+
 async function waitForInviteUrl(email: string): Promise<string> {
   const mailpit = getMailpitUrl()
 
@@ -931,6 +955,27 @@ test.describe('Pilot onboarding certification', () => {
         redirectTo: 'http://127.0.0.1:3000/auth/callback?type=recovery',
       })
       expect(recoveryRequestError).toBeNull()
+      // Follow the actual Mailpit delivery into the browser callback, update the
+      // password, and verify that the new credentials can authenticate.
+      const recoveryUrl = await waitForRecoveryUrl(actor.email)
+      const recoveryContext = await browser.newContext()
+      const recoveryPage = await recoveryContext.newPage()
+      await recoveryPage.goto(recoveryUrl)
+      await recoveryPage.waitForURL(/\\/update-password(?:\\?|$)/, { timeout: 20_000 })
+      const newPassword = `Recovered${actor.role.replace('_', '')}2026!`
+      await recoveryPage.locator('#password').fill(newPassword)
+      await recoveryPage.locator('#confirmPassword').fill(newPassword)
+      await recoveryPage.getByRole('button', { name: 'Update Password' }).click()
+      await expect(recoveryPage.getByRole('heading', { name: 'Password Updated!' })).toBeVisible()
+      await recoveryContext.close()
+      const fresh = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        { auth: { persistSession: false, autoRefreshToken: false } })
+      const { data: freshSession, error: freshError } = await fresh.auth.signInWithPassword({
+        email: actor.email, password: newPassword,
+      })
+      expect(freshError).toBeNull()
+      expect(freshSession.user?.id).toBe(id)
+      await fresh.auth.signOut()
       const { data: afterRecoveryAuth } = await service.auth.admin.getUserById(id)
       const { data: afterRecoveryProfile } = await service.from('profiles')
         .select('id,school_id,role,approval_status,requires_password_change').eq('id', id).single()
