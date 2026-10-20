@@ -54,6 +54,11 @@ export async function addInstructorNote(
     return { success: false, message: 'Only instructors and admins can add notes.' }
   }
 
+  // Until persisted dual-actor attribution exists, do not impersonate an instructor as note author.
+  if (context.supportActive) {
+    return { success: false, message: 'Support Mode cannot author instructor notes until true-actor attribution is enabled.' }
+  }
+
   // Multi-school isolation: verify the target student belongs to the same school.
   const { data: student } = await supabase
     .from('profiles')
