@@ -978,7 +978,12 @@ test.describe('Pilot onboarding certification', () => {
       const newPassword = `Recovered${actor.role.replace('_', '')}2026!`
       await recoveryPage.locator('#password').fill(newPassword)
       await recoveryPage.locator('#confirmPassword').fill(newPassword)
+      const passwordUpdateResponse = recoveryPage.waitForResponse(response =>
+        response.url().includes('/auth/v1/user') && response.request().method() === 'PUT',
+        { timeout: 15_000 })
       await recoveryPage.getByRole('button', { name: 'Update Password' }).click()
+      const updateResponse = await passwordUpdateResponse
+      expect(updateResponse.ok(), 'Supabase recovery password update must succeed').toBe(true)
       // The app may immediately route the recovered session to beta-agreement;
       // successful new-credential authentication below is the durable acceptance gate.
       await expect(recoveryPage).toHaveURL(/\/(?:auth\/update-password|login|beta-agreement|dashboard)(?:\?|$)/)
