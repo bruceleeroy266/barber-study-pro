@@ -778,6 +778,15 @@ test.describe('Pilot onboarding certification', () => {
     expect(chapterPayload).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION/i)
     expect(chapterPayload).not.toMatch(/\b(?:Milady|Cengage)\b/i)
 
+    // Authenticated disposable-student chapter route sweep: capture real HTML bytes.
+    // Does not certify remediation cycle APIs or instructor chapter access.
+    for (let chapter = 1; chapter <= 21; chapter += 1) {
+      const chapterResult = await studentSession.page.goto(`/dashboard/chapters/${chapter}`)
+      expect(chapterResult?.status(), `Chapter ${chapter} student HTTP status`).toBe(200)
+      const bytes = (await chapterResult!.body()).toString('utf8')
+      expect(bytes, `Chapter ${chapter} must not expose publisher metadata`).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION|\\b(?:Milady|Cengage)\\b/i)
+    }
+
     // API collection is supplemental: require explicit exercised endpoints for coverage certification.
     studentSession.page.off('response', collectLocalApiResponse)
     console.log('P0 captured authenticated JSON API count:', jsonApiResponses.length)
