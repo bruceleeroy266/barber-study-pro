@@ -54,6 +54,22 @@ describe('ADMIN-SUPPORT-ACCESS-3 persistent support mode', () => {
     expect(messagingActions).toContain('logSupportAction(supportContext')
   })
 
+  it('blocks support-mode authorship until dual-actor persistence exists', () => {
+    const notes = read('src/app/instructor/student/[studentId]/actions.ts')
+    expect(notes).toContain('if (context.supportActive)')
+    expect(notes).toContain('Support Mode cannot author instructor notes')
+    expect(messagingActions).toContain('if (actorResult.data.supportContext.supportActive)')
+    expect(messagingActions).toContain('Support Mode cannot send messages')
+  })
+
+  it('audits every successful support-mode schedule mutation', () => {
+    const schedules = read('src/app/instructor/schedules/actions.ts')
+    for (const action of ['create_schedule_template', 'assign_schedule', 'create_custom_schedule', 'save_schedule_override']) {
+      expect(schedules).toContain(`logSupportAction(context, '${action}'`)
+    }
+    expect(schedules).toContain('created_by: user.id')
+  })
+
   it('reduces platform-admin privileges to school-admin scope while supporting a school', () => {
     expect(userActions).toContain('context.supportActive ? false : isPlatformAdminProfile(profile)')
     expect(configActions).toContain('!context.supportActive && isPlatformAdminProfile(profile)')
