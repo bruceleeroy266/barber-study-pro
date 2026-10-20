@@ -257,6 +257,7 @@ describe('pilot invitation recovery', () => {
   })
 
   it('blocks School B administrator recovery of School A student', async () => {
+    vi.resetModules()
     mockCaller('school_admin', SCHOOL_B)
     const { resetPasswordForEmail } = makeServiceClient({ school_id: SCHOOL_A })
     const { resendUserSetupLink } = await import('./actions')
