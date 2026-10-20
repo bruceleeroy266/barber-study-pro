@@ -30,7 +30,7 @@ export function publicReportRows(rows: ReadonlyArray<Record<string, unknown>>): 
   const internalField = /(?:source[_-]?(?:basis|provenance)|provenance|publisher|citation|restrictedAuditMetadata)/i
   return rows.map((row) => Object.fromEntries(
     Object.entries(row)
-      .filter(([key]) => !internalField.test(key) && !/\b(?:milady|cengage)\b/i.test(key))
+      .filter(([key]) => !internalField.test(key) && !/(?:milady|cengage)/i.test(key))
       .map(([key, value]) => {
         if (typeof value === 'string') return [key, publicDisplayText(value)]
         if (typeof value === 'number' && Number.isFinite(value)) return [key, value]
