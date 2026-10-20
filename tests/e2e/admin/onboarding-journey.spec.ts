@@ -923,6 +923,19 @@ test.describe('Pilot onboarding certification', () => {
       expect(unchangedProfile).toMatchObject({ id, school_id: schoolBId, role: actor.role })
       const { data: unchangedAuth } = await service.auth.admin.getUserById(id)
       expect(unchangedAuth.user?.id).toBe(id)
+      // Exercise the real local GoTrue recovery-mail request without creating users.
+      const { data: beforeRecoveryProfile } = await service.from('profiles')
+        .select('id,school_id,role,approval_status,requires_password_change').eq('id', id).single()
+      const { data: beforeRecoveryAuth } = await service.auth.admin.getUserById(id)
+      const { error: recoveryRequestError } = await client.auth.resetPasswordForEmail(actor.email, {
+        redirectTo: 'http://127.0.0.1:3000/auth/callback?type=recovery',
+      })
+      expect(recoveryRequestError).toBeNull()
+      const { data: afterRecoveryAuth } = await service.auth.admin.getUserById(id)
+      const { data: afterRecoveryProfile } = await service.from('profiles')
+        .select('id,school_id,role,approval_status,requires_password_change').eq('id', id).single()
+      expect(afterRecoveryAuth.user?.id).toBe(beforeRecoveryAuth.user?.id)
+      expect(afterRecoveryProfile).toEqual(beforeRecoveryProfile)
       await client.auth.signOut()
     }
     // Assert School A records are still intact after School B authentication.
