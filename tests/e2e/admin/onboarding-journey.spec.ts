@@ -961,7 +961,7 @@ test.describe('Pilot onboarding certification', () => {
       const recoveryContext = await browser.newContext()
       const recoveryPage = await recoveryContext.newPage()
       await recoveryPage.goto(recoveryUrl)
-      await recoveryPage.waitForURL(/\\/update-password(?:\\?|$)/, { timeout: 20_000 })
+      await recoveryPage.waitForURL(url => url.pathname === '/update-password', { timeout: 20_000 })
       const newPassword = `Recovered${actor.role.replace('_', '')}2026!`
       await recoveryPage.locator('#password').fill(newPassword)
       await recoveryPage.locator('#confirmPassword').fill(newPassword)
