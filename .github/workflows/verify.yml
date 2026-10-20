@@ -158,7 +158,7 @@ jobs:
           GRANT SELECT, INSERT, DELETE ON public.student_schedule_overrides TO service_role;
           SQL
       - name: Run authenticated assignment RLS regression
-        run: npx vitest run --config vitest.integration.config.ts tests/integration/rls/support-access-assignment-select.test.ts tests/integration/rls/support-access-assignment-mutations.test.ts tests/integration/rls/support-access-audit-persistence.test.ts
+        run: npx vitest run --config vitest.integration.config.ts tests/integration/rls/support-access-assignment-select.test.ts tests/integration/rls/support-access-assignment-mutations.test.ts tests/integration/rls/support-access-audit-persistence.test.ts tests/integration/rls/support-schedule-rpc-negative.test.ts
       - name: Build local app for authenticated Support Mode browser test
         run: npm run build
       - name: Install Chromium for Support Mode test
