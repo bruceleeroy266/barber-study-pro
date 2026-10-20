@@ -990,10 +990,22 @@ test.describe('Pilot onboarding certification', () => {
     const sessionB = await browser.newContext()
     const pageB = await sessionB.newPage()
     await login(pageB, 'p0-student-b@ascynpro.test', 'DisposableB2026!', /\/dashboard(?:\/|$)/)
+    // Full persisted snapshots bracket both cross-school HTTP reads.
+    const cycleIds = [ownedByA.id, ownedByB.id]
+    const readCycleSnapshot = async () => {
+      const { data, error } = await service.from('remediation_cycles')
+        .select('*').in('id', cycleIds).order('id')
+      expect(error).toBeNull()
+      expect(data).toHaveLength(2)
+      return data!
+    }
+    const beforeDeniedReads = await readCycleSnapshot()
     const forbiddenA = await pageB.request.get(`/api/remediation/cycles/${ownedByA.id}`)
     const forbiddenB = await studentSession.page.request.get(`/api/remediation/cycles/${ownedByB.id}`)
     expect([403, 404]).toContain(forbiddenA.status())
     expect([403, 404]).toContain(forbiddenB.status())
+    const afterDeniedReads = await readCycleSnapshot()
+    expect(afterDeniedReads).toEqual(beforeDeniedReads)
     const { data: persistedCycles, error: persistError } = await service.from('remediation_cycles')
       .select('id,user_id,status').in('id', [ownedByA.id, ownedByB.id])
     expect(persistError).toBeNull()
