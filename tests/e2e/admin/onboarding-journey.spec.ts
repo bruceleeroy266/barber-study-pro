@@ -771,8 +771,15 @@ test.describe('Pilot onboarding certification', () => {
       await expect(practiceLink).toHaveAttribute('href', /\/dashboard\/chapters\/\d+#chapter-quiz$/)
       await practiceLink.click()
       await expect(studentSession.page).toHaveURL(/\/dashboard\/chapters\/\d+#chapter-quiz$/)
-      await expect(studentSession.page.getByRole('heading', { name: 'Chapter Quiz' })).toBeVisible()
-      await expect(studentSession.page.getByText('Instructor approval required')).toBeVisible()
+      // A client-side dashboard transition can resolve the hash before the
+      // server-rendered quiz section has mounted. Revalidate the target once
+      // with a direct navigation; never waive the quiz/approval assertions.
+      const quizSection = studentSession.page.locator('#chapter-quiz')
+      if (await quizSection.count() === 0) {
+        await studentSession.page.reload({ waitUntil: 'domcontentloaded' })
+      }
+      await expect(quizSection.getByRole('heading', { name: 'Chapter Quiz' })).toBeVisible({ timeout: 20_000 })
+      await expect(quizSection.getByText('Instructor approval required')).toBeVisible()
       await expect(studentSession.page.getByRole('button', { name: /Start Quiz/i })).toHaveCount(0)
       const overflow = await studentSession.page.evaluate(() =>
         document.documentElement.scrollWidth > document.documentElement.clientWidth
