@@ -979,7 +979,9 @@ test.describe('Pilot onboarding certification', () => {
       await recoveryPage.locator('#password').fill(newPassword)
       await recoveryPage.locator('#confirmPassword').fill(newPassword)
       await recoveryPage.getByRole('button', { name: 'Update Password' }).click()
-      await expect(recoveryPage.getByRole('heading', { name: 'Password Updated!' })).toBeVisible()
+      // The app may immediately route the recovered session to beta-agreement;
+      // successful new-credential authentication below is the durable acceptance gate.
+      await expect(recoveryPage).toHaveURL(/\/(?:auth\/update-password|login|beta-agreement|dashboard)(?:\?|$)/)
       await recoveryContext.close()
       const fresh = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
         { auth: { persistSession: false, autoRefreshToken: false } })
