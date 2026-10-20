@@ -868,6 +868,22 @@ test.describe('Pilot onboarding certification', () => {
     await expect(dashboardStudentRow).toHaveCount(1)
     await expect(dashboardStudentRow).toContainText('min')
 
+    // LOGIN-UX-6: read-after-activation identity and lifecycle invariants.
+    // This does not create/delete auth accounts and runs only in local CI.
+    const { data: studentAuth, error: studentAuthError } = await service.auth.admin.getUserById(studentProfile!.id)
+    expect(studentAuthError).toBeNull()
+    expect(studentAuth.user?.id).toBe(studentProfile!.id)
+    expect(studentAuth.user?.email?.toLowerCase()).toBe(STUDENT_EMAIL)
+    const { data: finalStudentProfile } = await service.from('profiles')
+      .select('id,school_id,role').eq('id', studentProfile!.id).single()
+    expect(finalStudentProfile).toMatchObject({ id: studentProfile!.id, school_id: schoolId, role: 'student' })
+    const { data: finalEnrollment } = await service.from('enrollments')
+      .select('id,student_id,program_id,is_active').eq('id', enrollment!.id).single()
+    expect(finalEnrollment).toMatchObject({ id: enrollment!.id, student_id: studentDomain!.id, program_id: barberProgram.id, is_active: true })
+    const { data: finalAcceptedInvite } = await service.from('school_onboarding_invitations')
+      .select('status,auth_user_id').eq('school_id', schoolId).eq('email', STUDENT_EMAIL).single()
+    expect(finalAcceptedInvite).toMatchObject({ status: 'accepted', auth_user_id: studentProfile!.id })
+
     await studentSession.context.close()
     await instructorSession.context.close()
     await schoolAdminSession.context.close()
