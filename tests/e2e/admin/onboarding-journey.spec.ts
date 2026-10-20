@@ -909,12 +909,35 @@ test.describe('Pilot onboarding certification', () => {
       .select('status,auth_user_id').eq('school_id', schoolId).eq('email', STUDENT_EMAIL).single()
     expect(finalAcceptedInvite).toMatchObject({ status: 'accepted', auth_user_id: studentProfile!.id })
 
+    // LOGIN-UX-30: run the actual administrator resend Server Action through
+    // authenticated School A UI; verify lifecycle and user identity in local DB.
+    const { error: expireInviteError } = await service
+      .from('school_onboarding_invitations')
+      .update({ status: 'expired' })
+      .eq('school_id', schoolId).eq('email', STUDENT_EMAIL)
+    expect(expireInviteError).toBeNull()
+    const { data: aAuthBeforeResend } = await service.auth.admin.getUserById(studentProfile!.id)
+    await schoolAdminSession.page.goto('/admin/users')
+    const recoveryCard = schoolAdminSession.page.locator('div.rounded-lg')
+      .filter({ hasText: STUDENT_EMAIL })
+      .filter({ has: schoolAdminSession.page.getByRole('button', { name: 'Send fresh setup link' }) })
+      .first()
+    await recoveryCard.getByRole('button', { name: 'Send fresh setup link' }).click()
+    await expect(schoolAdminSession.page.getByText(`Fresh setup link sent to ${STUDENT_EMAIL}`)).toBeVisible()
+    const { data: afterResendInvite, error: afterResendInviteError } = await service
+      .from('school_onboarding_invitations')
+      .select('status,auth_user_id').eq('school_id', schoolId).eq('email', STUDENT_EMAIL).single()
+    expect(afterResendInviteError).toBeNull()
+    expect(afterResendInvite).toMatchObject({ status: 'pending', auth_user_id: studentProfile!.id })
+    const { data: aAuthAfterResend } = await service.auth.admin.getUserById(studentProfile!.id)
+    expect(aAuthAfterResend.user?.id).toBe(aAuthBeforeResend.user?.id)
+
     // LOGIN-UX-23: immutable School A evidence before testing School B sessions.
     const schoolAIdentityBefore = {
       authId: studentAuth.user!.id,
       profile: finalStudentProfile,
       enrollment: finalEnrollment,
-      invitation: finalAcceptedInvite,
+      invitation: afterResendInvite,
     }
     // LOGIN-UX-9: Second-school authenticated isolation, LOCAL TEST ONLY.
     // Never create fixture accounts against production Supabase.
