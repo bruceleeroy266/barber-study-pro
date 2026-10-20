@@ -1,3 +1,4 @@
+import { publicDisplayText } from '@/lib/presentation/public-content-boundary'
 import type { Chapter5Confidence, Chapter5Difficulty, Chapter5EvidenceRecord, Chapter5GradeResult } from './grading'
 import { calculateChapter5ConceptMastery, calculateChapter5Grade } from './grading'
 import type { Chapter5ConceptFamilyId } from './types'
@@ -52,7 +53,7 @@ export interface Chapter5InstructorDiagnosticSummary {
 }
 
 const familySet=new Set<string>(CHAPTER5_CONCEPT_FAMILY_IDS)
-const familyName=new Map(chapter5ConceptFamilies.map(f=>[f.id,f.name]))
+const familyName=new Map(chapter5ConceptFamilies.map(f=>[f.id,publicDisplayText(f.name)]))
 const initialById=new Map(chapter5PremiumQuizQuestions.map(q=>[q.id,q]))
 const reserveById=new Map(chapter5ReassessmentQuestions.map(q=>[q.id,q]))
 const initialMap=new Map<string, Chapter5ConceptFamilyId>(chapter5QuizQuestionConceptMappings.map(m=>[m.questionId,m.conceptFamilyId]))
