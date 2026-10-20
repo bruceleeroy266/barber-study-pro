@@ -1007,7 +1007,7 @@ test.describe('Pilot onboarding certification', () => {
         expect(forbiddenActionResponse.status).toBe(200)
         expect(forbiddenActionResponse.text).toContain('Forbidden')
         expect(forbiddenActionResponse.text).not.toContain('Fresh setup link sent')
-        expect(forbiddenActionResponse.text).not.toMatch(/"success"\\s*:\\s*true/)
+        expect(forbiddenActionResponse.text).not.toMatch(/"success"\s*:\s*true/)
         const mailAfter = await fetch(`${getMailpitUrl()}/api/v1/messages`)
         expect(mailAfter.ok).toBe(true)
         const mailCountAfter = Number((await mailAfter.json() as { total?: number }).total ?? 0)
