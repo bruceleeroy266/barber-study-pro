@@ -33,7 +33,7 @@ export interface Chapter3KeyTerm extends ChapterKeyTerm {
 export interface Chapter3KeyTermGroup {
   conceptId: string
   conceptName: string
-  terms: readonly ChapterKeyTerm[]
+  terms: readonly Pick<ChapterKeyTerm, 'id' | 'term' | 'definition' | 'conceptId' | 'learningObjectiveId'>[]
 }
 
 // ───────────────────────────────────────────────
@@ -142,7 +142,7 @@ export function getChapter3KeyTermById(id: string): Chapter3KeyTerm | undefined 
  * Accepts the shared chapter key-term shape so generic panels can call it.
  */
 export function groupChapter3KeyTermsByConcept(
-  terms: readonly ChapterKeyTerm[] = chapter3KeyTerms
+  terms: readonly Pick<ChapterKeyTerm, 'id' | 'term' | 'definition' | 'conceptId' | 'learningObjectiveId'>[] = chapter3KeyTerms
 ): Chapter3KeyTermGroup[] {
   const groups: Chapter3KeyTermGroup[] = []
   const seen = new Set<string>()

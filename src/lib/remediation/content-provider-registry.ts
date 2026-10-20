@@ -1,3 +1,4 @@
+import { publicDisplayText } from '@/lib/presentation/public-content-boundary'
 /**
  * Remediation Content Provider Registry (C3-3 Stage 1)
  *
@@ -372,7 +373,7 @@ function isChapter1ConceptFamilyId(conceptId: string): boolean {
 const chapter1Provider: ChapterRemediationContentProvider = {
   chapterId: 'ch-1',
   getConceptName(conceptId) {
-    return chapter1ConceptFamilies.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic'
+    return publicDisplayText(chapter1ConceptFamilies.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic')
   },
   getContentBlockIdsForConcept(conceptId) {
     return chapter1ContentMappingsProjected.filter((m) => m.conceptId === conceptId).map((m) => m.contentBlockId)
@@ -440,7 +441,7 @@ const chapter2Provider: ChapterRemediationContentProvider = {
   chapterId: 'ch-2',
 
   getConceptName(conceptId) {
-    return chapter2Concepts.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic'
+    return publicDisplayText(chapter2Concepts.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic')
   },
 
   getContentBlockIdsForConcept: getChapter2ContentBlockIds,
@@ -516,7 +517,7 @@ const chapter3Provider: ChapterRemediationContentProvider = {
   chapterId: 'ch-3',
 
   getConceptName(conceptId) {
-    return chapter3ConceptFamilies.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic'
+    return publicDisplayText(chapter3ConceptFamilies.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic')
   },
 
   getContentBlockIdsForConcept(conceptId) {
@@ -606,7 +607,7 @@ const chapter4Provider: ChapterRemediationContentProvider = {
   chapterId: 'ch-4',
 
   getConceptName(conceptId) {
-    return chapter4ConceptFamilies.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic'
+    return publicDisplayText(chapter4ConceptFamilies.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic')
   },
 
   getContentBlockIdsForConcept(conceptId) {
@@ -697,7 +698,7 @@ const chapter5Provider: ChapterRemediationContentProvider = {
   chapterId: 'ch-5',
 
   getConceptName(conceptId) {
-    return chapter5ConceptFamilies.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic'
+    return publicDisplayText(chapter5ConceptFamilies.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic')
   },
 
   getContentBlockIdsForConcept(conceptId) {
@@ -785,7 +786,7 @@ const chapter6Provider: ChapterRemediationContentProvider = {
   chapterId: 'ch-6',
 
   getConceptName(conceptId) {
-    return chapter6ConceptFamilies.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic'
+    return publicDisplayText(chapter6ConceptFamilies.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic')
   },
 
   getContentBlockIdsForConcept(conceptId) {
@@ -856,7 +857,7 @@ const chapter7Provider: ChapterRemediationContentProvider = {
   chapterId: 'ch-7',
 
   getConceptName(conceptId) {
-    return chapter7ConceptFamilies.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic'
+    return publicDisplayText(chapter7ConceptFamilies.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic')
   },
 
   getContentBlockIdsForConcept(conceptId) {
@@ -948,7 +949,7 @@ const chapter8Provider: ChapterRemediationContentProvider = {
   chapterId: 'ch-8',
 
   getConceptName(conceptId) {
-    return chapter8ConceptFamilies.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic'
+    return publicDisplayText(chapter8ConceptFamilies.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic')
   },
 
   getContentBlockIdsForConcept(conceptId) {
@@ -1040,7 +1041,7 @@ const chapter9Provider: ChapterRemediationContentProvider = {
   chapterId: 'ch-9',
 
   getConceptName(conceptId) {
-    return chapter9ConceptFamilies.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic'
+    return publicDisplayText(chapter9ConceptFamilies.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic')
   },
 
   getContentBlockIdsForConcept(conceptId) {
@@ -1127,7 +1128,7 @@ const chapter10Provider: ChapterRemediationContentProvider = {
   chapterId: 'ch-10',
 
   getConceptName(conceptId) {
-    return chapter10ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic'
+    return publicDisplayText(chapter10ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic')
   },
 
   getContentBlockIdsForConcept(conceptId) {
@@ -1214,7 +1215,7 @@ const chapter11Provider: ChapterRemediationContentProvider = {
   chapterId: 'ch-11',
 
   getConceptName(conceptId) {
-    return chapter11ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic'
+    return publicDisplayText(chapter11ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic')
   },
   getContentBlockIdsForConcept(conceptId) {
     return chapter11ContentMappingsProjected.filter((mapping) => mapping.conceptId === conceptId).map((mapping) => mapping.contentBlockId)
@@ -1293,7 +1294,7 @@ const chapter12Provider: ChapterRemediationContentProvider = {
   chapterId: 'ch-12',
 
   getConceptName(conceptId) {
-    return chapter12ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic'
+    return publicDisplayText(chapter12ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic')
   },
   getContentBlockIdsForConcept(conceptId) {
     return chapter12ContentMappingsProjected.filter((mapping) => mapping.conceptId === conceptId).map((mapping) => mapping.contentBlockId)
@@ -1371,7 +1372,7 @@ const chapter13Provider: ChapterRemediationContentProvider = {
   chapterId: 'ch-13',
 
   getConceptName(conceptId) {
-    return chapter13ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic'
+    return publicDisplayText(chapter13ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic')
   },
   getContentBlockIdsForConcept(conceptId) {
     return chapter13ContentMappingsProjected.filter((mapping) => mapping.conceptId === conceptId).map((mapping) => mapping.contentBlockId)
@@ -1449,7 +1450,7 @@ const chapter14Provider: ChapterRemediationContentProvider = {
   chapterId: 'ch-14',
 
   getConceptName(conceptId) {
-    return chapter14ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic'
+    return publicDisplayText(chapter14ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic')
   },
   getContentBlockIdsForConcept(conceptId) {
     return chapter14ContentMappingsProjected.filter((mapping) => mapping.conceptId === conceptId).map((mapping) => mapping.contentBlockId)
@@ -1528,7 +1529,7 @@ const chapter15Provider: ChapterRemediationContentProvider = {
   chapterId: 'ch-15',
 
   getConceptName(conceptId) {
-    return chapter15ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic'
+    return publicDisplayText(chapter15ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic')
   },
   getContentBlockIdsForConcept(conceptId) {
     return chapter15ContentMappingsProjected.filter((mapping) => mapping.conceptId === conceptId).map((mapping) => mapping.contentBlockId)
@@ -1605,7 +1606,7 @@ function chapter17ReserveAsQuizQuestion(questionId: string): QuizQuestion | null
 const chapter17Provider: ChapterRemediationContentProvider = {
   chapterId: 'ch-17',
   getConceptName(conceptId) {
-    return chapter17ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic'
+    return publicDisplayText(chapter17ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic')
   },
   getContentBlockIdsForConcept(conceptId) {
     return chapter17ContentMappingsProjected.filter((mapping) => mapping.conceptId === conceptId).map((mapping) => mapping.contentBlockId)
@@ -1684,7 +1685,7 @@ function chapter18ReserveAsQuizQuestion(questionId: string): QuizQuestion | null
 const chapter18Provider: ChapterRemediationContentProvider = {
   chapterId: 'ch-18',
   getConceptName(conceptId) {
-    return chapter18ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic'
+    return publicDisplayText(chapter18ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic')
   },
   getContentBlockIdsForConcept(conceptId) {
     return chapter18ContentMappingsProjected.filter((mapping) => mapping.conceptId === conceptId).map((mapping) => mapping.contentBlockId)
@@ -1772,7 +1773,7 @@ function chapter19ReserveAsQuizQuestion(questionId: string): QuizQuestion | null
 const chapter19Provider: ChapterRemediationContentProvider = {
   chapterId: 'ch-19',
   getConceptName(conceptId) {
-    return chapter19ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic'
+    return publicDisplayText(chapter19ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic')
   },
   getContentBlockIdsForConcept(conceptId) {
     return chapter19ContentMappingsProjected
@@ -1866,7 +1867,7 @@ function chapter20ReserveAsQuizQuestion(questionId: string): QuizQuestion | null
 const chapter20Provider: ChapterRemediationContentProvider = {
   chapterId: 'ch-20',
   getConceptName(conceptId) {
-    return chapter20ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic'
+    return publicDisplayText(chapter20ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic')
   },
   getContentBlockIdsForConcept(conceptId) {
     return chapter20ContentMappingsProjected
@@ -1965,7 +1966,7 @@ function isChapter21ConceptFamilyId(conceptId: string): boolean {
 const chapter21Provider: ChapterRemediationContentProvider = {
   chapterId: 'ch-21',
   getConceptName(conceptId) {
-    return chapter21ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic'
+    return publicDisplayText(chapter21ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic')
   },
   getContentBlockIdsForConcept(conceptId) {
     return chapter21ContentMappingsProjected
@@ -2055,7 +2056,7 @@ const chapter16Provider: ChapterRemediationContentProvider = {
   chapterId: 'ch-16',
 
   getConceptName(conceptId) {
-    return chapter16ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic'
+    return publicDisplayText(chapter16ConceptFamilies.find((concept) => concept.id === conceptId)?.name ?? 'Unknown Topic')
   },
   getContentBlockIdsForConcept(conceptId) {
     return chapter16ContentMappingsProjected.filter((mapping) => mapping.conceptId === conceptId).map((mapping) => mapping.contentBlockId)

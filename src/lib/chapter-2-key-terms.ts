@@ -61,10 +61,12 @@ export interface Chapter2KeyTerm extends ChapterKeyTerm {
   learningObjectiveId: LearningObjectiveId
 }
 
+export type PublicChapterKeyTerm = Pick<ChapterKeyTerm, 'id' | 'term' | 'definition' | 'conceptId' | 'learningObjectiveId'>
+
 export interface KeyTermGroup {
   conceptId: string
   conceptName: string
-  terms: readonly ChapterKeyTerm[]
+  terms: readonly PublicChapterKeyTerm[]
 }
 
 // ───────────────────────────────────────────────
@@ -515,7 +517,7 @@ export function getKeyTermById(id: string): Chapter2KeyTerm | undefined {
  * Concepts without terms (and retired C-2-22) produce no group.
  */
 export function groupKeyTermsByConcept(
-  terms: readonly ChapterKeyTerm[] = chapter2KeyTerms
+  terms: readonly PublicChapterKeyTerm[] = chapter2KeyTerms
 ): KeyTermGroup[] {
   const groups: KeyTermGroup[] = []
   const seen = new Set<string>()

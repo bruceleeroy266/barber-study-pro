@@ -187,7 +187,7 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
            hardcode; future chapters register in chapterKeyTerms. */}
       {(chapterKeyTerms[chapter.id]?.length ?? 0) > 0 && (
         <KeyTermsPanel
-          terms={chapterKeyTerms[chapter.id]}
+          terms={chapterKeyTerms[chapter.id].map(({ id, term, definition, conceptId, learningObjectiveId }) => ({ id, term, definition, conceptId, learningObjectiveId }))}
           theme={chapterContent?.theme}
         />
       )}
