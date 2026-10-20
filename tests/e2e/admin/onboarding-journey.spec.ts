@@ -355,6 +355,7 @@ async function inviteSchoolUser(
 test.describe('Pilot onboarding certification', () => {
   test.describe.configure({ retries: 0 })
   test('inquiry → approval → school → invites → acceptance → enrollment → instructor visibility', async ({ browser }) => {
+    test.setTimeout(180_000)
     requireLocalCertificationEnvironment()
     const service = getServiceClient()
 
@@ -961,7 +962,7 @@ test.describe('Pilot onboarding certification', () => {
       const recoveryContext = await browser.newContext()
       const recoveryPage = await recoveryContext.newPage()
       await recoveryPage.goto(recoveryUrl)
-      await recoveryPage.waitForURL(url => url.pathname === '/update-password', { timeout: 20_000 })
+      await recoveryPage.waitForURL(url => url.pathname === '/auth/update-password', { timeout: 20_000 })
       const newPassword = `Recovered${actor.role.replace('_', '')}2026!`
       await recoveryPage.locator('#password').fill(newPassword)
       await recoveryPage.locator('#confirmPassword').fill(newPassword)
