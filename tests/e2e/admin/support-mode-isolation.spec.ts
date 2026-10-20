@@ -3,6 +3,8 @@ import { TEST_ACTORS, TEST_SCHOOLS } from '../../integration/setup/test-actors'
 import { setupTestEnvironment, cleanupTestEnvironment, getServiceClient, resolveActorId } from '../../integration/setup/db-helpers'
 import { assertTestEnvironment } from '../../integration/setup/production-guard'
 
+test.describe.configure({ retries: 0 })
+
 test('authenticated platform support mode persists and enforces School A/B boundaries', async ({ page }) => {
   assertTestEnvironment()
   const service = getServiceClient()
@@ -11,6 +13,13 @@ test('authenticated platform support mode persists and enforces School A/B bound
   let progressId: string | null = null
   await setupTestEnvironment()
   try {
+    // The shared RLS fixtures don't set the approval state required by browser login/support targets.
+    for (const key of ['PLATFORM_ADMIN','INSTRUCTOR_A','INSTRUCTOR_B'] as const) {
+      const { error } = await service.from('profiles').update({
+        approval_status: 'approved', is_disabled: false, requires_password_change: false,
+      }).eq('id',resolveActorId(key))
+      if (error) throw new Error(`Approve fixture ${key}: ${error.message}`)
+    }
     // Local fixtures only. Seed real canonical assignment relationships.
     for (const side of ['A', 'B'] as const) {
       const { data, error } = await service.from('student_instructor_assignments').insert({
