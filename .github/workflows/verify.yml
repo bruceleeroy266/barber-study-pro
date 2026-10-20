@@ -152,6 +152,8 @@ jobs:
           psql "$TEST_DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
           GRANT SELECT ON public.student_instructor_assignments TO authenticated;
           GRANT SELECT, INSERT, DELETE ON public.student_instructor_assignments TO service_role;
+          -- Disposable CI fixture only: verify and clean persisted support audit events.
+          GRANT SELECT, INSERT, DELETE ON public.security_logs TO service_role;
           SQL
       - name: Run authenticated assignment RLS regression
         run: npx vitest run --config vitest.integration.config.ts tests/integration/rls/support-access-assignment-select.test.ts tests/integration/rls/support-access-assignment-mutations.test.ts tests/integration/rls/support-access-audit-persistence.test.ts
