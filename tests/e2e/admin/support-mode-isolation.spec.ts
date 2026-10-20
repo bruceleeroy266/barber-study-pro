@@ -39,6 +39,7 @@ test('authenticated platform support mode persists and enforces School A/B bound
     await page.locator('input[type="email"]').fill(TEST_ACTORS.PLATFORM_ADMIN.email)
     await page.locator('input[type="password"]').fill(TEST_ACTORS.PLATFORM_ADMIN.password)
     await page.locator('button[type="submit"]').click()
+    await expect(page).toHaveURL(/\\/admin(?:\\?|$)/, { timeout: 20000 })
     await page.goto('/admin/support-access')
     await expect(page.getByRole('heading', { name: 'Support Access' })).toBeVisible()
     const aCard = page.locator('div.rounded-xl').filter({hasText:TEST_ACTORS.INSTRUCTOR_A.email}).last()
