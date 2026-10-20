@@ -99,7 +99,7 @@ async function waitForRecoveryUrl(email: string): Promise<string> {
         if (!id) continue
         const details = await fetch(`${getMailpitUrl()}/api/v1/message/${encodeURIComponent(String(id))}`)
         if (!details.ok) continue
-        const urls = collectStrings(await details.json()).flatMap(value => value.match(/https?:\\/\\/[^\\s"'<>]+/g) || [])
+        const urls = collectStrings(await details.json()).flatMap(value => value.match(/https?:\/\/[^\s"'<>]+/g) || [])
         for (const raw of urls) {
           const url = raw.replace(/&amp;/g, '&').replace(/\\u0026/g, '&').replace(/[),.;]+$/, '')
           if (url.includes('/auth/v1/verify') && (url.includes('type=recovery') || url.includes('type%3Drecovery'))) return url
