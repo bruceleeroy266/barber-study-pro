@@ -961,6 +961,11 @@ test.describe('Pilot onboarding certification', () => {
     expect(schoolB?.id).toBeTruthy()
     const schoolBId = String(schoolB!.id)
     expect(schoolBId).not.toBe(schoolId)
+    const { data: schoolBProgram, error: schoolBProgramError } = await service.from('programs')
+      .insert({ school_id: schoolBId, name: 'Barbering', required_hours: 1500, is_active: true })
+      .select('id').single()
+    expect(schoolBProgramError).toBeNull()
+    expect(schoolBProgram?.id).toBeTruthy()
     const schoolBActors = [
       { role: 'student', email: 'login9-b-student@ascynpro.test', password: 'Login9Student2026!' },
       { role: 'instructor', email: 'login9-b-instructor@ascynpro.test', password: 'Login9Instructor2026!' },
@@ -978,6 +983,26 @@ test.describe('Pilot onboarding certification', () => {
         is_disabled: false, requires_password_change: false,
       }, { onConflict: 'id' })
       expect(profileInsertError).toBeNull()
+      if (actor.role === 'student') {
+        const { data: existingStudent, error: existingStudentError } = await service.from('students')
+          .select('id').eq('profile_id', id).eq('school_id', schoolBId).maybeSingle()
+        expect(existingStudentError).toBeNull()
+        let domainStudentId = existingStudent?.id
+        if (!domainStudentId) {
+          const { data: createdStudent, error: createStudentError } = await service.from('students')
+            .insert({ profile_id: id, school_id: schoolBId, is_active: true }).select('id').single()
+          expect(createStudentError).toBeNull()
+          domainStudentId = createdStudent?.id
+        }
+        expect(domainStudentId).toBeTruthy()
+        const { data: createdEnrollment, error: createEnrollmentError } = await service.from('enrollments')
+          .insert({ student_id: domainStudentId!, program_id: schoolBProgram!.id, status: 'active' })
+          .select('id,student_id,program_id,is_active').single()
+        expect(createEnrollmentError).toBeNull()
+        expect(createdEnrollment).toMatchObject({
+          student_id: domainStudentId, program_id: schoolBProgram!.id, is_active: true,
+        })
+      }
       const client = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
         { auth: { persistSession: false, autoRefreshToken: false } })
       const { data: signedIn, error: signInError } = await client.auth.signInWithPassword({ email: actor.email, password: actor.password })
@@ -1075,6 +1100,13 @@ test.describe('Pilot onboarding certification', () => {
           .in('student_id', studentDomainIds).order('id')
         : { data: [], error: null }
       expect(beforeRecoveryEnrollmentsError).toBeNull()
+      if (actor.role === 'student') {
+        expect(studentDomainIds).toHaveLength(1)
+        expect(beforeRecoveryEnrollments).toHaveLength(1)
+        expect(beforeRecoveryEnrollments?.[0]).toMatchObject({
+          student_id: studentDomainIds[0], program_id: schoolBProgram!.id, is_active: true,
+        })
+      }
       const { error: recoveryRequestError } = await client.auth.resetPasswordForEmail(actor.email, {
         redirectTo: 'http://127.0.0.1:3000/auth/callback?type=recovery',
       })
