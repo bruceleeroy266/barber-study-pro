@@ -696,6 +696,15 @@ test.describe('Pilot onboarding certification', () => {
       .single()
     expect(instructorProfile).toMatchObject({ school_id: schoolId, role: 'instructor' })
 
+    // P0: actual authenticated instructor diagnostics and student role boundary.
+    const instructorDetailResponse = await instructorSession.page.goto(`/instructor/student/${studentProfile!.id}`)
+    expect(instructorDetailResponse?.status()).toBe(200)
+    const instructorDetailBytes = (await instructorDetailResponse!.body()).toString('utf8')
+    expect(instructorDetailBytes).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION|\b(?:Milady|Cengage)\b/i)
+    const studentForbiddenResponse = await studentSession.page.goto(`/instructor/student/${studentProfile!.id}`)
+    expect(studentForbiddenResponse?.status()).not.toBe(200)
+    await studentSession.page.goto('/dashboard')
+
     // The newly activated student needs genuine chapter evidence before a
     // practice recommendation is eligible under the zero-data policy.
     const { error: fixtureError } = await service.from('student_progress').upsert({
