@@ -992,6 +992,31 @@ test.describe('Pilot onboarding certification', () => {
     expect(persistError).toBeNull()
     expect(persistedCycles).toHaveLength(2)
     expect(persistedCycles!.every(c => c.status === 'targeted')).toBe(true)
+    // Same-school positive control must succeed for each authenticated owner.
+    for (const [page, id] of [[studentSession.page, ownedByA.id], [pageB, ownedByB.id]] as const) {
+      const ownResponse = await page.request.get(`/api/remediation/cycles/${id}`)
+      expect(ownResponse.status(), 'Owner should retrieve own remediation cycle').toBe(200)
+      const ownPayload = await ownResponse.text()
+      expect(ownPayload).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|\b(?:Milady|Cengage)\b/i)
+    }
+    const { data: authInstructorB, error: instructorBError } = await service.auth.admin.createUser({
+      email: 'p0-instructor-b@ascynpro.test', password: 'DisposableInstructorB2026!', email_confirm: true,
+    })
+    expect(instructorBError).toBeNull()
+    const { error: instructorProfileBError } = await service.from('profiles').upsert({
+      id: authInstructorB.user!.id, email: 'p0-instructor-b@ascynpro.test',
+      full_name: 'Synthetic Instructor B', role: 'instructor', school_id: schoolB!.id,
+      approval_status: 'approved', is_disabled: false, requires_password_change: false,
+    }, { onConflict: 'id' })
+    expect(instructorProfileBError).toBeNull()
+    const instructorBContext = await browser.newContext()
+    const instructorBPage = await instructorBContext.newPage()
+    await login(instructorBPage, 'p0-instructor-b@ascynpro.test', 'DisposableInstructorB2026!', /\\/instructor(?:\\/|$)/)
+    await instructorBPage.goto(`/instructor/student/${studentProfile!.id}`)
+    await expect(instructorBPage.getByText(STUDENT_EMAIL, { exact: true })).toHaveCount(0)
+    const instructorBRaw = await instructorBPage.content()
+    expect(instructorBRaw).not.toContain(STUDENT_EMAIL)
+    await instructorBContext.close()
     await sessionB.close()
 
     await studentSession.context.close()
