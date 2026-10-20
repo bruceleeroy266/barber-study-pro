@@ -356,6 +356,32 @@ describe('Instructor Escalation API', () => {
       )
     })
 
+    it('attributes support-mode acknowledgement to the real administrator, not the selected instructor', async () => {
+      const { mockClient } = await setupMocks({ authenticatedUser: 'platform-operator-001' })
+      const { resolveSupportAccessContext, logSupportAction } = await import('@/lib/support-access')
+      vi.mocked(resolveSupportAccessContext).mockResolvedValue({
+        actorUserId: 'platform-operator-001',
+        actorEmail: 'operator@test.invalid',
+        actorProfile: { id: 'platform-operator-001', role: 'admin', school_id: null },
+        effectiveProfile: MOCK_INSTRUCTOR_PROFILE,
+        supportActive: true,
+        targetProfile: MOCK_INSTRUCTOR_PROFILE,
+      } as any)
+      const { POST } = await import('../escalations/[id]/acknowledge/route')
+      const response = await POST(
+        new NextRequest(`http://localhost/api/instructor/escalations/${ESCALATION_ID}/acknowledge`, { method: 'POST' }),
+        { params: Promise.resolve({ id: ESCALATION_ID }) },
+      )
+      expect(response.status).toBe(200)
+      expect(mockClient.acknowledgeEscalationForSchool).toHaveBeenCalledWith(
+        ESCALATION_ID, SCHOOL_ID, 'platform-operator-001',
+      )
+      expect(logSupportAction).toHaveBeenCalledWith(
+        expect.objectContaining({ actorUserId: 'platform-operator-001', supportActive: true }),
+        'acknowledge_escalation', 'instructor_escalations', expect.objectContaining({ escalationId: ESCALATION_ID }),
+      )
+    })
+
     it('handles already-acknowledged escalation idempotently', async () => {
       await setupMocks({
         authenticatedUser: INSTRUCTOR_ID,
