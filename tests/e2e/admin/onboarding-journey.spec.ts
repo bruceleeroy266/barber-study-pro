@@ -985,7 +985,7 @@ test.describe('Pilot onboarding certification', () => {
         // Replay the actual School A Server Action payload from School B's
         // authenticated browser, without copying School A's session cookies.
         const mailBefore = await fetch(`${getMailpitUrl()}/api/v1/messages`)
-        expect(mailBefore.ok()).toBe(true)
+        expect(mailBefore.ok).toBe(true)
         const mailCountBefore = Number((await mailBefore.json() as { total?: number }).total ?? 0)
         const forbiddenActionResponse = await schoolBPage.evaluate(async ({ actionId, body }) => {
           const response = await fetch('/admin/users', {
@@ -997,7 +997,7 @@ test.describe('Pilot onboarding certification', () => {
         }, { actionId: resendActionId, body: resendActionBody! })
         expect(forbiddenActionResponse.text).not.toContain('Fresh setup link sent')
         const mailAfter = await fetch(`${getMailpitUrl()}/api/v1/messages`)
-        expect(mailAfter.ok()).toBe(true)
+        expect(mailAfter.ok).toBe(true)
         const mailCountAfter = Number((await mailAfter.json() as { total?: number }).total ?? 0)
         expect(mailCountAfter).toBe(mailCountBefore)
 
