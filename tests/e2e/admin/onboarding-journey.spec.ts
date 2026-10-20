@@ -909,6 +909,13 @@ test.describe('Pilot onboarding certification', () => {
       .select('status,auth_user_id').eq('school_id', schoolId).eq('email', STUDENT_EMAIL).single()
     expect(finalAcceptedInvite).toMatchObject({ status: 'accepted', auth_user_id: studentProfile!.id })
 
+    // LOGIN-UX-23: immutable School A evidence before testing School B sessions.
+    const schoolAIdentityBefore = {
+      authId: studentAuth.user!.id,
+      profile: finalStudentProfile,
+      enrollment: finalEnrollment,
+      invitation: finalAcceptedInvite,
+    }
     // LOGIN-UX-9: Second-school authenticated isolation, LOCAL TEST ONLY.
     // Never create fixture accounts against production Supabase.
     const { data: schoolB, error: schoolBError } = await service.from('schools')
@@ -1003,6 +1010,20 @@ test.describe('Pilot onboarding certification', () => {
       expect(afterRecoveryProfile).toEqual(beforeRecoveryProfile)
       await client.auth.signOut()
     }
+    // Check database identity/lifecycle invariants after B-side authentication and recovery.
+    const { data: schoolAAuthAfter, error: schoolAAuthAfterError } =
+      await service.auth.admin.getUserById(studentProfile!.id)
+    expect(schoolAAuthAfterError).toBeNull()
+    expect(schoolAAuthAfter.user?.id).toBe(schoolAIdentityBefore.authId)
+    const { data: schoolAProfileAfter } = await service.from('profiles')
+      .select('id,school_id,role').eq('id', studentProfile!.id).single()
+    const { data: schoolAEnrollmentAfter } = await service.from('enrollments')
+      .select('id,student_id,program_id,is_active').eq('id', enrollment!.id).single()
+    const { data: schoolAInviteAfter } = await service.from('school_onboarding_invitations')
+      .select('status,auth_user_id').eq('school_id', schoolId).eq('email', STUDENT_EMAIL).single()
+    expect(schoolAProfileAfter).toEqual(schoolAIdentityBefore.profile)
+    expect(schoolAEnrollmentAfter).toEqual(schoolAIdentityBefore.enrollment)
+    expect(schoolAInviteAfter).toEqual(schoolAIdentityBefore.invitation)
     // Assert School A records are still intact after School B authentication.
     const { data: retainedStudent } = await service.from('profiles').select('id,school_id').eq('id', studentProfile!.id).single()
     expect(retainedStudent).toMatchObject({ id: studentProfile!.id, school_id: schoolId })
