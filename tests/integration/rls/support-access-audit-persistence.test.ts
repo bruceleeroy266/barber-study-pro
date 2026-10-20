@@ -12,7 +12,7 @@ const recorded: string[] = []
 function testSql(statement: string): string {
   assertTestEnvironment()
   const url = process.env.TEST_DATABASE_URL
-  if (!url || !/127\\.0\\.0\\.1|localhost/.test(url)) throw new Error('Disposable local test database required')
+  if (!url || !/127\.0\.0\.1|localhost/.test(url)) throw new Error('Disposable local test database required')
   return execFileSync('psql', [url, '-X', '-q', '-t', '-A', '-v', 'ON_ERROR_STOP=1', '-c', statement], { encoding: 'utf8' }).trim()
 }
 beforeAll(async () => {
