@@ -1002,7 +1002,12 @@ test.describe('Pilot onboarding certification', () => {
           })
           return { status: response.status, text: await response.text() }
         }, { actionId: resendActionId, body: resendActionBody! })
+        // A fulfilled HTTP transport is not itself authorization. Require
+        // the real Server Action to return its cross-school Forbidden result.
+        expect(forbiddenActionResponse.status).toBe(200)
+        expect(forbiddenActionResponse.text).toContain('Forbidden')
         expect(forbiddenActionResponse.text).not.toContain('Fresh setup link sent')
+        expect(forbiddenActionResponse.text).not.toMatch(/"success"\\s*:\\s*true/)
         const mailAfter = await fetch(`${getMailpitUrl()}/api/v1/messages`)
         expect(mailAfter.ok).toBe(true)
         const mailCountAfter = Number((await mailAfter.json() as { total?: number }).total ?? 0)
