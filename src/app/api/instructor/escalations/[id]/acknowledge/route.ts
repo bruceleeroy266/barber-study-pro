@@ -45,7 +45,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     const result = await instructorClient.acknowledgeEscalationForSchool(
       id,
       profile.school_id,
-      profile.id
+      context.actorUserId
     )
 
     if (!result.success) {
