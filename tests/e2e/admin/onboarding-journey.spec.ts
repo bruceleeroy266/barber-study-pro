@@ -991,6 +991,19 @@ test.describe('Pilot onboarding certification', () => {
         await schoolBPage.goto('/admin/users')
         // Replay the actual School A Server Action payload from School B's
         // authenticated browser, without copying School A's session cookies.
+        const mailRecipientIds = async (email: string): Promise<string[]> => {
+          const response = await fetch(`${getMailpitUrl()}/api/v1/messages`)
+          expect(response.ok).toBe(true)
+          const data = await response.json() as { messages?: Array<{ ID?: string; To?: Array<{ Address?: string }> }> }
+          return (data.messages ?? [])
+            .filter(message => (message.To ?? []).some(to => to.Address?.toLowerCase() === email.toLowerCase()))
+            .map(message => String(message.ID)).sort()
+        }
+        const recipientMessagesBefore = await mailRecipientIds(STUDENT_EMAIL)
+        const { data: auditBefore, error: auditBeforeError } = await service.from('user_management_audit_logs')
+          .select('id,actor_id,target_user_id,action').eq('target_user_id', studentProfile!.id)
+          .eq('action', 'resend_setup_link').order('id')
+        expect(auditBeforeError).toBeNull()
         const mailBefore = await fetch(`${getMailpitUrl()}/api/v1/messages`)
         expect(mailBefore.ok).toBe(true)
         const mailCountBefore = Number((await mailBefore.json() as { total?: number }).total ?? 0)
@@ -1012,6 +1025,12 @@ test.describe('Pilot onboarding certification', () => {
         expect(mailAfter.ok).toBe(true)
         const mailCountAfter = Number((await mailAfter.json() as { total?: number }).total ?? 0)
         expect(mailCountAfter).toBe(mailCountBefore)
+        expect(await mailRecipientIds(STUDENT_EMAIL)).toEqual(recipientMessagesBefore)
+        const { data: auditAfter, error: auditAfterError } = await service.from('user_management_audit_logs')
+          .select('id,actor_id,target_user_id,action').eq('target_user_id', studentProfile!.id)
+          .eq('action', 'resend_setup_link').order('id')
+        expect(auditAfterError).toBeNull()
+        expect(auditAfter).toEqual(auditBefore)
 
         const searchA = schoolBPage.locator('input[placeholder="Search name or email"]')
         await searchA.fill(STUDENT_EMAIL)
