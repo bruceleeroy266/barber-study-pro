@@ -981,6 +981,13 @@ test.describe('Pilot onboarding certification', () => {
       const { data: beforeRecoveryProfile } = await service.from('profiles')
         .select('id,school_id,role,approval_status,requires_password_change').eq('id', id).single()
       const { data: beforeRecoveryAuth } = await service.auth.admin.getUserById(id)
+      const { data: beforeRecoveryInvitations, error: beforeRecoveryInvitationsError } = await service
+        .from('school_onboarding_invitations')
+        .select('id,school_id,auth_user_id,email,status').eq('school_id', schoolBId).eq('email', actor.email).order('id')
+      expect(beforeRecoveryInvitationsError).toBeNull()
+      const { data: beforeRecoveryEnrollments, error: beforeRecoveryEnrollmentsError } = await service
+        .from('enrollments').select('id,student_id,program_id,is_active').eq('student_id', id).order('id')
+      expect(beforeRecoveryEnrollmentsError).toBeNull()
       const { error: recoveryRequestError } = await client.auth.resetPasswordForEmail(actor.email, {
         redirectTo: 'http://127.0.0.1:3000/auth/callback?type=recovery',
       })
@@ -1018,6 +1025,15 @@ test.describe('Pilot onboarding certification', () => {
         .select('id,school_id,role,approval_status,requires_password_change').eq('id', id).single()
       expect(afterRecoveryAuth.user?.id).toBe(beforeRecoveryAuth.user?.id)
       expect(afterRecoveryProfile).toEqual(beforeRecoveryProfile)
+      const { data: afterRecoveryInvitations, error: afterRecoveryInvitationsError } = await service
+        .from('school_onboarding_invitations')
+        .select('id,school_id,auth_user_id,email,status').eq('school_id', schoolBId).eq('email', actor.email).order('id')
+      expect(afterRecoveryInvitationsError).toBeNull()
+      expect(afterRecoveryInvitations).toEqual(beforeRecoveryInvitations)
+      const { data: afterRecoveryEnrollments, error: afterRecoveryEnrollmentsError } = await service
+        .from('enrollments').select('id,student_id,program_id,is_active').eq('student_id', id).order('id')
+      expect(afterRecoveryEnrollmentsError).toBeNull()
+      expect(afterRecoveryEnrollments).toEqual(beforeRecoveryEnrollments)
       await client.auth.signOut()
     }
     // Check database identity/lifecycle invariants after B-side authentication and recovery.
