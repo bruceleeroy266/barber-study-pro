@@ -340,6 +340,9 @@ function CallbackHandler() {
         >
           Request fresh access link
         </Link>
+        <div className="mt-4">
+          <Link href="/login" className="text-[var(--color-brand-gold)] underline">Sign in</Link>
+        </div>
       </div>
     )
   }
