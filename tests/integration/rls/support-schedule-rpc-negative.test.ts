@@ -1,0 +1,87 @@
+/** Direct RPC adversarial tests; disposable local Supabase only. */
+import { beforeAll, afterAll, describe, expect, test } from 'vitest'
+import { assertTestEnvironment } from '../setup/production-guard'
+import { setupTestEnvironment, cleanupTestEnvironment, createAuthenticatedClient, getServiceClient, resolveActorId } from '../setup/db-helpers'
+import { TEST_ACTORS, TEST_SCHOOLS } from '../setup/test-actors'
+const seeded:string[]=[]
+const date='2027-05-11'
+beforeAll(async()=>{
+  assertTestEnvironment()
+  await setupTestEnvironment()
+  const service=getServiceClient()
+  for(const side of ['A','B'] as const){
+    const {data,error}=await service.from('student_instructor_assignments').insert({
+      school_id:TEST_SCHOOLS[`SCHOOL_${side}`].id,
+      student_id:resolveActorId(`STUDENT_${side}`),
+      instructor_id:resolveActorId(`INSTRUCTOR_${side}`),is_active:true,
+    }).select('id').single()
+    if(error||!data)throw new Error(error?.message||'assignment seed failed')
+    seeded.push(data.id)
+  }
+  for(const key of ['PLATFORM_ADMIN','INSTRUCTOR_A','INSTRUCTOR_B'] as const){
+    const {error}=await service.from('profiles').update({approval_status:'approved',is_disabled:false}).eq('id',resolveActorId(key))
+    if(error)throw new Error(error.message)
+  }
+})
+afterAll(async()=>{
+  const service=getServiceClient()
+  await service.from('student_schedule_overrides').delete().eq('override_date',date)
+    .in('school_id',[TEST_SCHOOLS.SCHOOL_A.id,TEST_SCHOOLS.SCHOOL_B.id])
+  if(seeded.length)await service.from('student_instructor_assignments').delete().in('id',seeded)
+  await cleanupTestEnvironment()
+})
+const args=(target:string,student:string)=>({
+  p_target_instructor:target,p_student:student,p_override_date:date,
+  p_override_type:'off',p_start_time:null,p_end_time:null,p_break_minutes:0,
+  p_reason:'disposable-rpc-adversarial-test',
+})
+async function counts(){
+  const {data,error}=await getServiceClient().from('student_schedule_overrides')
+    .select('id,school_id,student_id,created_by').eq('override_date',date)
+    .in('school_id',[TEST_SCHOOLS.SCHOOL_A.id,TEST_SCHOOLS.SCHOOL_B.id])
+  if(error)throw new Error(error.message)
+  return data??[]
+}
+describe('direct authenticated Support Mode schedule RPC',()=>{
+  test('authorized School A success persists true actor only in A',async()=>{
+    const admin=await createAuthenticatedClient(TEST_ACTORS.PLATFORM_ADMIN)
+    const {error}=await admin.rpc('support_upsert_student_schedule_override',
+      args(resolveActorId('INSTRUCTOR_A'),resolveActorId('STUDENT_A')))
+    expect(error).toBeNull()
+    const rows=await counts()
+    expect(rows.filter(r=>r.school_id===TEST_SCHOOLS.SCHOOL_A.id)).toHaveLength(1)
+    expect(rows.find(r=>r.school_id===TEST_SCHOOLS.SCHOOL_A.id)?.created_by).toBe(resolveActorId('PLATFORM_ADMIN'))
+    expect(rows.filter(r=>r.school_id===TEST_SCHOOLS.SCHOOL_B.id)).toHaveLength(0)
+  })
+  test('School A instructor paired with School B student is denied, without write',async()=>{
+    const before=await counts()
+    const admin=await createAuthenticatedClient(TEST_ACTORS.PLATFORM_ADMIN)
+    const {error}=await admin.rpc('support_upsert_student_schedule_override',
+      args(resolveActorId('INSTRUCTOR_A'),resolveActorId('STUDENT_B')))
+    expect(error).not.toBeNull()
+    expect(await counts()).toEqual(before)
+  })
+  test('student or instructor cannot invoke privileged RPC',async()=>{
+    const before=await counts()
+    for(const key of ['INSTRUCTOR_A','STUDENT_A'] as const){
+      const caller=await createAuthenticatedClient(TEST_ACTORS[key])
+      const {error}=await caller.rpc('support_upsert_student_schedule_override',
+        args(resolveActorId('INSTRUCTOR_A'),resolveActorId('STUDENT_A')))
+      expect(error).not.toBeNull()
+    }
+    expect(await counts()).toEqual(before)
+  })
+  test('invalid target instructor and invalid schedule fields are denied',async()=>{
+    const before=await counts()
+    const admin=await createAuthenticatedClient(TEST_ACTORS.PLATFORM_ADMIN)
+    for(const variant of [
+      args(resolveActorId('STUDENT_A'),resolveActorId('STUDENT_A')),
+      {...args(resolveActorId('INSTRUCTOR_A'),resolveActorId('STUDENT_A')),p_override_type:'invalid'},
+      {...args(resolveActorId('INSTRUCTOR_A'),resolveActorId('STUDENT_A')),p_break_minutes:-1},
+    ]){
+      const {error}=await admin.rpc('support_upsert_student_schedule_override',variant)
+      expect(error).not.toBeNull()
+    }
+    expect(await counts()).toEqual(before)
+  })
+})
