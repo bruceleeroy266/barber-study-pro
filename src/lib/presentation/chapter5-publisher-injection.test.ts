@@ -14,7 +14,7 @@ describe('Chapter 5 publisher-marker injection — synthetic only', () => {
       ])
       const provider = getChapterContentProvider('ch-5')
       expect(provider).toBeDefined()
-      expect(provider!.getConceptName(first.id)).toBe('Content under review')
+      expect(provider!.getConceptName(first.id as never)).toBe('Content under review')
       const report = buildChapter5InstructorDiagnostics({
         studentId: 'synthetic-student',
         completionPercent: 0,
