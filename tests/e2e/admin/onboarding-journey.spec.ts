@@ -963,6 +963,16 @@ test.describe('Pilot onboarding certification', () => {
         .select('id').eq('school_id', schoolId)
       expect(inviteReadError).toBeNull()
       expect(forbiddenInvites).toEqual([])
+      // Authenticated cross-tenant write attempt, never using service-role credentials.
+      const { data: forbiddenMutation, error: forbiddenMutationError } = await client
+        .from('school_onboarding_invitations')
+        .update({ status: 'revoked' })
+        .eq('school_id', schoolId)
+        .eq('email', STUDENT_EMAIL)
+        .select('id')
+      // RLS may reject outright or affect zero rows; either way no foreign record may change.
+      expect(forbiddenMutation ?? []).toEqual([])
+
       const { data: unchangedProfile } = await service.from('profiles').select('id,school_id,role').eq('id', id).single()
       expect(unchangedProfile).toMatchObject({ id, school_id: schoolBId, role: actor.role })
       const { data: unchangedAuth } = await service.auth.admin.getUserById(id)
