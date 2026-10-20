@@ -702,7 +702,10 @@ test.describe('Pilot onboarding certification', () => {
     const instructorDetailBytes = (await instructorDetailResponse!.body()).toString('utf8')
     expect(instructorDetailBytes).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION|\b(?:Milady|Cengage)\b/i)
     const studentForbiddenResponse = await studentSession.page.goto(`/instructor/student/${studentProfile!.id}`)
-    expect(studentForbiddenResponse?.status()).not.toBe(200)
+    // Next.js streamed redirects can return a 200 transport status.
+    // Assert the final authorized destination and absence of instructor data.
+    await expect(studentSession.page).toHaveURL(/\/dashboard(?:\?|$)/)
+    await expect(studentSession.page.getByText('Student Study Activity')).toHaveCount(0)
     await studentSession.page.goto('/dashboard')
 
     // The newly activated student needs genuine chapter evidence before a
@@ -793,7 +796,12 @@ test.describe('Pilot onboarding certification', () => {
       const chapterResult = await studentSession.page.goto(`/dashboard/chapters/${chapter}`)
       expect(chapterResult?.status(), `Chapter ${chapter} student HTTP status`).toBe(200)
       const bytes = (await chapterResult!.body()).toString('utf8')
-      expect(bytes, `Chapter ${chapter} must not expose publisher metadata`).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION|\b(?:Milady|Cengage)\b/i)
+      const banned = /sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION|\\b(?:Milady|Cengage)\\b/i
+      const hit = banned.exec(bytes)
+      if (hit) {
+        const surrounding = bytes.slice(Math.max(0, hit.index - 100), Math.min(bytes.length, hit.index + 140))
+        throw new Error(`Chapter ${chapter} exposes marker ${hit[0]} in escaped context: ${JSON.stringify(surrounding).slice(0, 500)}`)
+      }
     }
 
     // API collection is supplemental: require explicit exercised endpoints for coverage certification.
