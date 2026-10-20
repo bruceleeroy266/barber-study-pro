@@ -29,6 +29,12 @@ describe('publisher-safe presentation boundary', () => {
 })
 
 describe('publisher-safe school report projection', () => {
+  it('drops publisher-bearing report column headers', () => {
+    const rows = publicReportRows([{ Student: 'Synthetic Learner', 'Milady Reference': 'restricted', 'notes_cengage_reference': 'restricted', Score: 84 }])
+    expect(rows).toEqual([{ Student: 'Synthetic Learner', Score: 84 }])
+    expect(convertRowsToCSV(rows)).not.toMatch(/milady|cengage/i)
+  })
+
   it('removes provenance and unsafe nested metadata from exported rows', () => {
     const rows = publicReportRows([{
       Student: 'Test Student',
