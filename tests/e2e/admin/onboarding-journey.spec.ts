@@ -964,7 +964,7 @@ test.describe('Pilot onboarding certification', () => {
       expect(inviteReadError).toBeNull()
       expect(forbiddenInvites).toEqual([])
       // Authenticated cross-tenant write attempt, never using service-role credentials.
-      const { data: forbiddenMutation, error: forbiddenMutationError } = await client
+      const { data: forbiddenMutation } = await client
         .from('school_onboarding_invitations')
         .update({ status: 'revoked' })
         .eq('school_id', schoolId)
