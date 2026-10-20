@@ -281,6 +281,7 @@ export async function saveCustomStudentSchedule(formData: FormData) {
   }
 
   revalidatePath('/instructor/schedules')
+  await logSupportAction(context, 'create_custom_schedule', 'student_schedule_profiles', { studentId, scheduleProfileId: profile.id, schoolId: actor.school_id })
   scheduleRedirect({ saved: 'schedule', student: studentId })
 }
 
