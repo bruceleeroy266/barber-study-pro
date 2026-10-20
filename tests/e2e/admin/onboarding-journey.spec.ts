@@ -955,6 +955,45 @@ test.describe('Pilot onboarding certification', () => {
     // Populated, authenticated API against synthetic-only localhost data.
     await verifySyntheticExamReadyApi(service, studentSession.page)
 
+    // P0: disposable second-school Auth, persisted remediation fixtures and cross-school API denial.
+    const { data: schoolB, error: schoolBError } = await service.from('schools')
+      .insert({ name: 'ASCYN Synthetic School B', slug: 'p0-disposable-school-b' }).select('id').single()
+    expect(schoolBError).toBeNull()
+    const { data: authB, error: authBError } = await service.auth.admin.createUser({
+      email: 'p0-student-b@ascynpro.test', password: 'DisposableB2026!', email_confirm: true,
+    })
+    expect(authBError).toBeNull()
+    expect(authB.user).toBeTruthy()
+    const { error: profileBError } = await service.from('profiles').upsert({
+      id: authB.user!.id, email: 'p0-student-b@ascynpro.test', full_name: 'Synthetic Student B',
+      role: 'student', school_id: schoolB!.id, approval_status: 'approved',
+      is_disabled: false, requires_password_change: false,
+    }, { onConflict: 'id' })
+    expect(profileBError).toBeNull()
+    const { data: cycles, error: cycleFixtureError } = await service.from('remediation_cycles')
+      .insert([studentProfile!.id, authB.user!.id].map(user_id => ({
+        user_id, concept_id: 'C-2-01', chapter_id: 'ch-2', cycle_number: 1,
+        detection_state: 'emerging_weakness', detection_confidence: 'low',
+        detection_evidence: {}, status: 'targeted',
+      }))).select('id,user_id')
+    expect(cycleFixtureError).toBeNull()
+    expect(cycles).toHaveLength(2)
+    const ownedByA = cycles!.find(c => c.user_id === studentProfile!.id)!
+    const ownedByB = cycles!.find(c => c.user_id === authB.user!.id)!
+    const sessionB = await browser.newContext()
+    const pageB = await sessionB.newPage()
+    await login(pageB, 'p0-student-b@ascynpro.test', 'DisposableB2026!', /\/dashboard(?:\/|$)/)
+    const forbiddenA = await pageB.request.get(`/api/remediation/cycles/${ownedByA.id}`)
+    const forbiddenB = await studentSession.page.request.get(`/api/remediation/cycles/${ownedByB.id}`)
+    expect([403, 404]).toContain(forbiddenA.status())
+    expect([403, 404]).toContain(forbiddenB.status())
+    const { data: persistedCycles, error: persistError } = await service.from('remediation_cycles')
+      .select('id,user_id,status').in('id', [ownedByA.id, ownedByB.id])
+    expect(persistError).toBeNull()
+    expect(persistedCycles).toHaveLength(2)
+    expect(persistedCycles!.every(c => c.status === 'targeted')).toBe(true)
+    await sessionB.close()
+
     await studentSession.context.close()
     await instructorSession.context.close()
     await schoolAdminSession.context.close()
