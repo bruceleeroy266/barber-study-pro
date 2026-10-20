@@ -27,6 +27,8 @@ type LoginError =
   | 'missing_profile'
   | 'invalid_role'
   | 'unknown'
+  | 'rate_limited'
+  | 'email_not_confirmed'
 
 const ERROR_MESSAGES: Record<LoginError, string> = {
   invalid_credentials: 'Invalid email or password. Please try again.',
@@ -35,7 +37,9 @@ const ERROR_MESSAGES: Record<LoginError, string> = {
   disabled: 'Your account has been disabled. Contact your administrator.',
   missing_profile: 'Account profile not found. Please contact support.',
   invalid_role: 'Your account has an unrecognized role. Please contact support.',
-  unknown: 'Something went wrong. Please try again.',
+  unknown: 'We could not sign you in. Try again, or use Forgot password to regain access.',
+  rate_limited: 'Too many sign-in attempts. Please wait before trying again or use Forgot password.',
+  email_not_confirmed: 'Please confirm your email address using the link in your inbox before signing in.',
 }
 
 function LoginForm() {
@@ -56,8 +60,7 @@ function LoginForm() {
 
     const rateLimit = checkLoginRateLimit(email)
     if (!rateLimit.allowed) {
-      setError('unknown')
-      // Override message via state would be cleaner, but we keep it simple.
+      setError('rate_limited')
       setLoading(false)
       return
     }
@@ -161,9 +164,9 @@ function LoginForm() {
       ) {
         setError('invalid_credentials')
       } else if (message.toLowerCase().includes('rate limit')) {
-        setError('unknown')
+        setError('rate_limited')
       } else if (message.toLowerCase().includes('email not confirmed')) {
-        setError('unknown')
+        setError('email_not_confirmed')
       } else {
         setError('unknown')
       }
@@ -247,7 +250,7 @@ function LoginForm() {
             href="/reset-password"
             className="text-[var(--color-brand-gold)] hover:text-[var(--color-brand-gold-light)] transition-colors"
           >
-            Forgot password?
+            Forgot password or need a setup link?
           </Link>
         </div>
 
