@@ -784,7 +784,7 @@ test.describe('Pilot onboarding certification', () => {
       const chapterResult = await studentSession.page.goto(`/dashboard/chapters/${chapter}`)
       expect(chapterResult?.status(), `Chapter ${chapter} student HTTP status`).toBe(200)
       const bytes = (await chapterResult!.body()).toString('utf8')
-      expect(bytes, `Chapter ${chapter} must not expose publisher metadata`).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION|\\b(?:Milady|Cengage)\\b/i)
+      expect(bytes, `Chapter ${chapter} must not expose publisher metadata`).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION|\b(?:Milady|Cengage)\b/i)
     }
 
     // API collection is supplemental: require explicit exercised endpoints for coverage certification.
