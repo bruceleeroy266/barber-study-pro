@@ -955,7 +955,7 @@ test.describe('Pilot onboarding certification', () => {
     await expect(dashboardStudentRow).toContainText('min')
 
     // Populated, authenticated API against synthetic-only localhost data.
-    await verifySyntheticExamReadyApi(service, studentSession.page)
+    const examA = await verifySyntheticExamReadyApi(service, studentSession.page)
 
     // P0: disposable second-school Auth, persisted remediation fixtures and cross-school API denial.
     const { data: schoolB, error: schoolBError } = await service.from('schools')
@@ -1000,6 +1000,11 @@ test.describe('Pilot onboarding certification', () => {
       return data!
     }
     const beforeDeniedReads = await readCycleSnapshot()
+    // Cross-school Exam Ready attempt check using real School A persisted assessment fixture.
+    const foreignAttempt = await pageB.request.get(`/api/comprehensive-exam/attempts/${examA.attemptId}`)
+    const foreignAttemptText = await foreignAttempt.text()
+    expect(foreignAttempt.status(), 'School B must not receive School A exam attempt').not.toBe(200)
+    expect(foreignAttemptText).not.toContain(examA.attemptId)
     const forbiddenA = await pageB.request.get(`/api/remediation/cycles/${ownedByA.id}`)
     const forbiddenB = await studentSession.page.request.get(`/api/remediation/cycles/${ownedByB.id}`)
     expect([403, 404]).toContain(forbiddenA.status())
