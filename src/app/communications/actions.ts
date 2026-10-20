@@ -605,6 +605,9 @@ export async function sendCommunicationMessage(
 
   const actorResult = await getMessagingActor()
   if (!actorResult.success) return actorResult
+  if (actorResult.data.supportContext.supportActive) {
+    return { success: false, message: 'Support Mode cannot send messages until true-actor attribution is enabled.' }
+  }
 
   const { actor, supabase, supportContext } = actorResult.data
 
