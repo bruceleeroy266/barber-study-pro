@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { hairScalpDisorderQuestions } from './hair-scalp-disorders-bank'
-import { scientificConceptsGapQuestions } from './scientific-concepts-gap'
+import { scientificConceptGapQuestions } from './scientific-concepts-gap'
 
 describe('P0 academic corrections: student-facing assembled questions', () => {
   it('HS-023 asks an answerable androgenetic hair-loss question with coherent options', () => {
@@ -17,7 +17,7 @@ describe('P0 academic corrections: student-facing assembled questions', () => {
   })
 
   it('SCG-015 defines redox by oxidation-number change instead of mandatory oxygen gain', () => {
-    const q = scientificConceptsGapQuestions.find(item => item.id === 'SCG-015')
+    const q = scientificConceptGapQuestions.find(item => item.id === 'SCG-015')
     expect(q).toBeDefined()
     expect(q!.correctOptionId).toBe('a')
     expect(q!.prompt).toMatch(/oxidation and reduction/i)
