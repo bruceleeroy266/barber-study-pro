@@ -980,6 +980,11 @@ test.describe('Pilot onboarding certification', () => {
     expect(cycles).toHaveLength(2)
     const ownedByA = cycles!.find(c => c.user_id === studentProfile!.id)!
     const ownedByB = cycles!.find(c => c.user_id === authB.user!.id)!
+    const { error: betaBError } = await service.from('beta_agreements').upsert({
+      user_id: authB.user!.id, tester_name: 'Synthetic Student B',
+      tester_email: 'p0-student-b@ascynpro.test', agreement_version: 'v1.0',
+    }, { onConflict: 'user_id,agreement_version' })
+    expect(betaBError).toBeNull()
     const sessionB = await browser.newContext()
     const pageB = await sessionB.newPage()
     await login(pageB, 'p0-student-b@ascynpro.test', 'DisposableB2026!', /\/dashboard(?:\/|$)/)
