@@ -939,6 +939,18 @@ test.describe('Pilot onboarding certification', () => {
       const { data: signedIn, error: signInError } = await client.auth.signInWithPassword({ email: actor.email, password: actor.password })
       expect(signInError).toBeNull()
       expect(signedIn.user?.id).toBe(id)
+      if (actor.role === 'school_admin') {
+        // Browser-level school-scoped management search, using a real B-admin session.
+        const schoolBContext = await browser.newContext()
+        const schoolBPage = await schoolBContext.newPage()
+        await login(schoolBPage, actor.email, actor.password, /\/school(?:\/|$)/)
+        await schoolBPage.goto('/admin/users')
+        const searchA = schoolBPage.locator('input[placeholder="Search name or email"]')
+        await searchA.fill(STUDENT_EMAIL)
+        await schoolBPage.getByRole('button', { name: 'Search' }).click()
+        await expect(schoolBPage.getByRole('row').filter({ hasText: STUDENT_EMAIL })).toHaveCount(0)
+        await schoolBContext.close()
+      }
       // A School B actor must not read School A's onboarding-invitation records.
       const { data: forbiddenInvites, error: inviteReadError } = await client.from('school_onboarding_invitations')
         .select('id').eq('school_id', schoolId)
