@@ -33,7 +33,7 @@ export interface Chapter3KeyTerm extends ChapterKeyTerm {
 export interface Chapter3KeyTermGroup {
   conceptId: string
   conceptName: string
-  terms: readonly ChapterKeyTerm[]
+  terms: readonly Pick<ChapterKeyTerm, 'id' | 'term' | 'definition' | 'conceptId' | 'learningObjectiveId'>[]
 }
 
 // ───────────────────────────────────────────────
