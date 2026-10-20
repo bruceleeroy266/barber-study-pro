@@ -1011,7 +1011,7 @@ test.describe('Pilot onboarding certification', () => {
     expect(instructorProfileBError).toBeNull()
     const instructorBContext = await browser.newContext()
     const instructorBPage = await instructorBContext.newPage()
-    await login(instructorBPage, 'p0-instructor-b@ascynpro.test', 'DisposableInstructorB2026!', /\\/instructor(?:\\/|$)/)
+    await login(instructorBPage, 'p0-instructor-b@ascynpro.test', 'DisposableInstructorB2026!', /\/instructor(?:\/|$)/)
     await instructorBPage.goto(`/instructor/student/${studentProfile!.id}`)
     await expect(instructorBPage.getByText(STUDENT_EMAIL, { exact: true })).toHaveCount(0)
     const instructorBRaw = await instructorBPage.content()
