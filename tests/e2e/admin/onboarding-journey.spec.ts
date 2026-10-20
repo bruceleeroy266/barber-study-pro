@@ -332,6 +332,8 @@ async function inviteSchoolUser(
 test.describe('Pilot onboarding certification', () => {
   test.describe.configure({ retries: 0 })
   test('inquiry → approval → school → invites → acceptance → enrollment → instructor visibility', async ({ browser }) => {
+    // Full disposable two-school authorization sequence exceeds the original onboarding-only 45s budget.
+    test.setTimeout(180_000)
     requireLocalCertificationEnvironment()
     const service = getServiceClient()
 
