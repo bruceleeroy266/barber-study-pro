@@ -796,7 +796,7 @@ test.describe('Pilot onboarding certification', () => {
       const chapterResult = await studentSession.page.goto(`/dashboard/chapters/${chapter}`)
       expect(chapterResult?.status(), `Chapter ${chapter} student HTTP status`).toBe(200)
       const bytes = (await chapterResult!.body()).toString('utf8')
-      const banned = /sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION|\\b(?:Milady|Cengage)\\b/i
+      const banned = /sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION|\b(?:Milady|Cengage)\b/i
       const hit = banned.exec(bytes)
       if (hit) {
         const surrounding = bytes.slice(Math.max(0, hit.index - 100), Math.min(bytes.length, hit.index + 140))
