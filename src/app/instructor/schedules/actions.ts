@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
 import { hasPermission } from '@/lib/auth-helpers'
-import { resolveSupportAccessContext } from '@/lib/support-access'
+import { resolveSupportAccessContext, logSupportAction } from '@/lib/support-access'
 
 const DAY_COUNT = 7
 const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/
@@ -100,7 +100,7 @@ export async function createScheduleTemplate(formData: FormData) {
     scheduleRedirect({ error: error instanceof Error ? error.message : 'invalid-schedule' })
   }
 
-  const { supabase, user, actor } = await getStaffActor()
+  const { supabase, user, actor, context } = await getStaffActor()
 
   const { data: template, error: templateError } = await supabase
     .from('school_schedule_templates')
@@ -129,6 +129,7 @@ export async function createScheduleTemplate(formData: FormData) {
   }
 
   revalidatePath('/instructor/schedules')
+  await logSupportAction(context, 'create_schedule_template', 'school_schedule_templates', { templateId: template.id, schoolId: actor.school_id })
   scheduleRedirect({ saved: 'template' })
 }
 
@@ -146,7 +147,7 @@ export async function assignTemplateSchedule(formData: FormData) {
     scheduleRedirect({ error: 'invalid-dates', student: studentId })
   }
 
-  const { supabase, user, actor } = await getStaffActor()
+  const { supabase, user, actor, context } = await getStaffActor()
 
   try {
     await requireSchoolStudent(supabase, actor.school_id!, studentId)
@@ -214,6 +215,7 @@ export async function assignTemplateSchedule(formData: FormData) {
   }
 
   revalidatePath('/instructor/schedules')
+  await logSupportAction(context, 'assign_schedule', 'student_schedule_profiles', { studentId, scheduleProfileId: profile.id, schoolId: actor.school_id })
   scheduleRedirect({ saved: 'schedule', student: studentId })
 }
 
@@ -241,7 +243,7 @@ export async function saveCustomStudentSchedule(formData: FormData) {
     })
   }
 
-  const { supabase, user, actor } = await getStaffActor()
+  const { supabase, user, actor, context } = await getStaffActor()
   try {
     await requireSchoolStudent(supabase, actor.school_id!, studentId)
   } catch {
@@ -307,7 +309,7 @@ export async function saveScheduleOverride(formData: FormData) {
     scheduleRedirect({ error: 'invalid-time', student: studentId })
   }
 
-  const { supabase, user, actor } = await getStaffActor()
+  const { supabase, user, actor, context } = await getStaffActor()
   try {
     await requireSchoolStudent(supabase, actor.school_id!, studentId)
   } catch {
@@ -338,5 +340,6 @@ export async function saveScheduleOverride(formData: FormData) {
   }
 
   revalidatePath('/instructor/schedules')
+  await logSupportAction(context, 'save_schedule_override', 'student_schedule_overrides', { studentId, overrideDate, schoolId: actor.school_id })
   scheduleRedirect({ saved: 'override', student: studentId })
 }
