@@ -61,10 +61,10 @@ test('authenticated platform support mode persists and enforces School A/B bound
     await expect(page.getByRole('row').filter({hasText:TEST_ACTORS.STUDENT_B.fullName})).toHaveCount(0)
     await page.goto('/instructor/students')
     await expect(page).toHaveURL(/\/instructor\/students/)
-    await expect(page.getByText(TEST_ACTORS.STUDENT_A.fullName)).toBeVisible()
+    await expect(page.getByText(TEST_ACTORS.STUDENT_A.fullName).first()).toBeVisible()
     await expect(page.getByText(TEST_ACTORS.STUDENT_B.fullName)).toHaveCount(0)
     await page.reload()
-    await expect(page.getByText(TEST_ACTORS.STUDENT_A.fullName)).toBeVisible()
+    await expect(page.getByText(TEST_ACTORS.STUDENT_A.fullName).first()).toBeVisible()
     await expect(page.getByText(TEST_ACTORS.STUDENT_B.fullName)).toHaveCount(0)
   } finally {
     if (progressId) await service.from('student_progress').delete().eq('id',progressId)
