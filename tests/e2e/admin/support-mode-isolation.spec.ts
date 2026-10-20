@@ -55,7 +55,7 @@ test('authenticated platform support mode persists and enforces School A/B bound
     await expect(aCard.getByRole('button',{name:'Enter Support Mode'})).toBeVisible()
     await aCard.getByRole('button',{name:'Enter Support Mode'}).click()
     await expect(page).toHaveURL(/\/instructor(?:\?|$)/)
-    const readinessRow = page.getByRole('row').filter({hasText:TEST_ACTORS.STUDENT_A.fullName})
+    const readinessRow = page.getByRole('table').filter({ has: page.getByRole('columnheader', { name: 'Readiness Score' }) }).getByRole('row').filter({ hasText: TEST_ACTORS.STUDENT_A.fullName })
     await expect(readinessRow).toContainText('57')
     await expect(readinessRow).toContainText('At Risk')
     await expect(page.getByRole('row').filter({hasText:TEST_ACTORS.STUDENT_B.fullName})).toHaveCount(0)
