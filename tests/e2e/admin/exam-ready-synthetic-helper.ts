@@ -68,4 +68,5 @@ export async function verifySyntheticExamReadyApi(service: SupabaseClient, stude
   expect(serialized).not.toMatch(/sourceBasis|sourceProvenance|correct_option_snapshot|correctOptionSnapshot|INTERNAL_QA_NOT_PUBLIC/)
   expect(detail?.items?.[0]?.prompt).toContain('Synthetic QA')
   console.log('Authenticated 110-item synthetic Exam Ready API response verified (no private metadata/answer key)')
+  return { attemptId: String(result.attempt.attempt.attemptId), configId: String(cfg.id) }
 }

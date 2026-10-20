@@ -332,6 +332,8 @@ async function inviteSchoolUser(
 test.describe('Pilot onboarding certification', () => {
   test.describe.configure({ retries: 0 })
   test('inquiry → approval → school → invites → acceptance → enrollment → instructor visibility', async ({ browser }) => {
+    // Full disposable two-school authorization sequence exceeds the original onboarding-only 45s budget.
+    test.setTimeout(180_000)
     requireLocalCertificationEnvironment()
     const service = getServiceClient()
 
@@ -674,7 +676,7 @@ test.describe('Pilot onboarding certification', () => {
       expect(bytes.length).toBeGreaterThan(3)
       const csvBody = bytes.toString('utf8')
       expect(csvBody).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION/i)
-      expect(csvBody).not.toMatch(/\\b(?:Milady|Cengage)\\b/i)
+      expect(csvBody).not.toMatch(/\b(?:Milady|Cengage)\b/i)
     }
 
     // -----------------------------------------------------------------------
@@ -695,6 +697,18 @@ test.describe('Pilot onboarding certification', () => {
       .eq('email', INSTRUCTOR_EMAIL)
       .single()
     expect(instructorProfile).toMatchObject({ school_id: schoolId, role: 'instructor' })
+
+    // P0: actual authenticated instructor diagnostics and student role boundary.
+    const instructorDetailResponse = await instructorSession.page.goto(`/instructor/student/${studentProfile!.id}`)
+    expect(instructorDetailResponse?.status()).toBe(200)
+    const instructorDetailBytes = (await instructorDetailResponse!.body()).toString('utf8')
+    expect(instructorDetailBytes).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION|\b(?:Milady|Cengage)\b/i)
+    const studentForbiddenResponse = await studentSession.page.goto(`/instructor/student/${studentProfile!.id}`)
+    // Next.js streamed redirects can return a 200 transport status.
+    // Assert the final authorized destination and absence of instructor data.
+    await expect(studentSession.page).toHaveURL(/\/dashboard(?:\?|$)/)
+    await expect(studentSession.page.getByText('Student Study Activity')).toHaveCount(0)
+    await studentSession.page.goto('/dashboard')
 
     // The newly activated student needs genuine chapter evidence before a
     // practice recommendation is eligible under the zero-data policy.
@@ -776,7 +790,21 @@ test.describe('Pilot onboarding certification', () => {
     expect(chapterResponse?.status()).toBe(200)
     const chapterPayload = (await chapterResponse!.body()).toString('utf8')
     expect(chapterPayload).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION/i)
-    expect(chapterPayload).not.toMatch(/\\b(?:Milady|Cengage)\\b/i)
+    expect(chapterPayload).not.toMatch(/\b(?:Milady|Cengage)\b/i)
+
+    // Authenticated disposable-student chapter route sweep: capture real HTML bytes.
+    // Does not certify remediation cycle APIs or instructor chapter access.
+    for (let chapter = 1; chapter <= 21; chapter += 1) {
+      const chapterResult = await studentSession.page.goto(`/dashboard/chapters/${chapter}`)
+      expect(chapterResult?.status(), `Chapter ${chapter} student HTTP status`).toBe(200)
+      const bytes = (await chapterResult!.body()).toString('utf8')
+      const banned = /sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION|\b(?:Milady|Cengage)\b/i
+      const hit = banned.exec(bytes)
+      if (hit) {
+        const surrounding = bytes.slice(Math.max(0, hit.index - 100), Math.min(bytes.length, hit.index + 140))
+        throw new Error(`Chapter ${chapter} exposes marker ${hit[0]} in escaped context: ${JSON.stringify(surrounding).slice(0, 500)}`)
+      }
+    }
 
     // API collection is supplemental: require explicit exercised endpoints for coverage certification.
     studentSession.page.off('response', collectLocalApiResponse)
@@ -788,7 +816,7 @@ test.describe('Pilot onboarding certification', () => {
     expect(examHistoryResponse.headers()['content-type']).toContain('application/json')
     const examHistoryBytes = (await examHistoryResponse.body()).toString('utf8')
     expect(examHistoryBytes).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION/i)
-    expect(examHistoryBytes).not.toMatch(/\\b(?:Milady|Cengage)\\b/i)
+    expect(examHistoryBytes).not.toMatch(/\b(?:Milady|Cengage)\b/i)
     expect(JSON.parse(examHistoryBytes)).toHaveProperty('history')
 
     const gradeAndApprovalBefore = await readGradeAndApprovalBaseline()
@@ -927,7 +955,117 @@ test.describe('Pilot onboarding certification', () => {
     await expect(dashboardStudentRow).toContainText('min')
 
     // Populated, authenticated API against synthetic-only localhost data.
-    await verifySyntheticExamReadyApi(service, studentSession.page)
+    const examA = await verifySyntheticExamReadyApi(service, studentSession.page)
+
+    // P0: disposable second-school Auth, persisted remediation fixtures and cross-school API denial.
+    const { data: schoolB, error: schoolBError } = await service.from('schools')
+      .insert({ name: 'ASCYN Synthetic School B', slug: 'p0-disposable-school-b' }).select('id').single()
+    expect(schoolBError).toBeNull()
+    const { data: authB, error: authBError } = await service.auth.admin.createUser({
+      email: 'p0-student-b@ascynpro.test', password: 'DisposableB2026!', email_confirm: true,
+    })
+    expect(authBError).toBeNull()
+    expect(authB.user).toBeTruthy()
+    const { error: profileBError } = await service.from('profiles').upsert({
+      id: authB.user!.id, email: 'p0-student-b@ascynpro.test', full_name: 'Synthetic Student B',
+      role: 'student', school_id: schoolB!.id, approval_status: 'approved',
+      is_disabled: false, requires_password_change: false,
+    }, { onConflict: 'id' })
+    expect(profileBError).toBeNull()
+    const { data: cycles, error: cycleFixtureError } = await service.from('remediation_cycles')
+      .insert([studentProfile!.id, authB.user!.id].map(user_id => ({
+        user_id, concept_id: 'C-2-01', chapter_id: 'ch-2', cycle_number: 1,
+        detection_state: 'emerging_weakness', detection_confidence: 'low',
+        detection_evidence: {}, status: 'targeted',
+      }))).select('id,user_id')
+    expect(cycleFixtureError).toBeNull()
+    expect(cycles).toHaveLength(2)
+    const ownedByA = cycles!.find(c => c.user_id === studentProfile!.id)!
+    const ownedByB = cycles!.find(c => c.user_id === authB.user!.id)!
+    const { error: betaBError } = await service.from('beta_agreements').upsert({
+      user_id: authB.user!.id, tester_name: 'Synthetic Student B',
+      tester_email: 'p0-student-b@ascynpro.test', agreement_version: 'v1.0',
+    }, { onConflict: 'user_id,agreement_version' })
+    expect(betaBError).toBeNull()
+    const sessionB = await browser.newContext()
+    const pageB = await sessionB.newPage()
+    await login(pageB, 'p0-student-b@ascynpro.test', 'DisposableB2026!', /\/dashboard(?:\/|$)/)
+    // Full persisted snapshots bracket both cross-school HTTP reads.
+    const cycleIds = [ownedByA.id, ownedByB.id]
+    const readCycleSnapshot = async () => {
+      const { data, error } = await service.from('remediation_cycles')
+        .select('*').in('id', cycleIds).order('id')
+      expect(error).toBeNull()
+      expect(data).toHaveLength(2)
+      return data!
+    }
+    const beforeDeniedReads = await readCycleSnapshot()
+    // Cross-school Exam Ready attempt check using real School A persisted assessment fixture.
+    const foreignAttempt = await pageB.request.get(`/api/comprehensive-exam/attempts/${examA.attemptId}`)
+    const foreignAttemptText = await foreignAttempt.text()
+    expect(foreignAttempt.status(), 'School B must not receive School A exam attempt').not.toBe(200)
+    expect(foreignAttemptText).not.toContain(examA.attemptId)
+    // Create School B's own persisted synthetic assessment through authenticated API.
+    const bAttemptCreate = await pageB.request.post('/api/comprehensive-exam/attempts', {
+      data: { configId: examA.configId },
+    })
+    expect(bAttemptCreate.status()).toBe(200)
+    const bAttemptPayload = await bAttemptCreate.json()
+    const bAttemptId = String(bAttemptPayload.attempt?.attemptId ?? '')
+    expect(bAttemptId).toBeTruthy()
+    const ownAssessmentB = await pageB.request.get(`/api/comprehensive-exam/attempts/${bAttemptId}`)
+    expect(ownAssessmentB.status()).toBe(200)
+    const ownAssessmentA = await studentSession.page.request.get(`/api/comprehensive-exam/attempts/${examA.attemptId}`)
+    expect(ownAssessmentA.status()).toBe(200)
+    const deniedAssessmentA = await studentSession.page.request.get(`/api/comprehensive-exam/attempts/${bAttemptId}`)
+    expect(deniedAssessmentA.status()).not.toBe(200)
+    const { data: beforeAssessment, error: beforeAssessmentError } = await service
+      .from('comprehensive_exam_attempts').select('*')
+      .in('id', [examA.attemptId, bAttemptId]).order('id')
+    expect(beforeAssessmentError).toBeNull()
+    expect(beforeAssessment).toHaveLength(2)
+    const forbiddenA = await pageB.request.get(`/api/remediation/cycles/${ownedByA.id}`)
+    const forbiddenB = await studentSession.page.request.get(`/api/remediation/cycles/${ownedByB.id}`)
+    expect([403, 404]).toContain(forbiddenA.status())
+    expect([403, 404]).toContain(forbiddenB.status())
+    const { data: afterAssessment, error: afterAssessmentError } = await service
+      .from('comprehensive_exam_attempts').select('*')
+      .in('id', [examA.attemptId, bAttemptId]).order('id')
+    expect(afterAssessmentError).toBeNull()
+    expect(afterAssessment).toEqual(beforeAssessment)
+    const afterDeniedReads = await readCycleSnapshot()
+    expect(afterDeniedReads).toEqual(beforeDeniedReads)
+    const { data: persistedCycles, error: persistError } = await service.from('remediation_cycles')
+      .select('id,user_id,status').in('id', [ownedByA.id, ownedByB.id])
+    expect(persistError).toBeNull()
+    expect(persistedCycles).toHaveLength(2)
+    expect(persistedCycles!.every(c => c.status === 'targeted')).toBe(true)
+    // Same-school positive control must succeed for each authenticated owner.
+    for (const [page, id] of [[studentSession.page, ownedByA.id], [pageB, ownedByB.id]] as const) {
+      const ownResponse = await page.request.get(`/api/remediation/cycles/${id}`)
+      expect(ownResponse.status(), 'Owner should retrieve own remediation cycle').toBe(200)
+      const ownPayload = await ownResponse.text()
+      expect(ownPayload).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|\b(?:Milady|Cengage)\b/i)
+    }
+    const { data: authInstructorB, error: instructorBError } = await service.auth.admin.createUser({
+      email: 'p0-instructor-b@ascynpro.test', password: 'DisposableInstructorB2026!', email_confirm: true,
+    })
+    expect(instructorBError).toBeNull()
+    const { error: instructorProfileBError } = await service.from('profiles').upsert({
+      id: authInstructorB.user!.id, email: 'p0-instructor-b@ascynpro.test',
+      full_name: 'Synthetic Instructor B', role: 'instructor', school_id: schoolB!.id,
+      approval_status: 'approved', is_disabled: false, requires_password_change: false,
+    }, { onConflict: 'id' })
+    expect(instructorProfileBError).toBeNull()
+    const instructorBContext = await browser.newContext()
+    const instructorBPage = await instructorBContext.newPage()
+    await login(instructorBPage, 'p0-instructor-b@ascynpro.test', 'DisposableInstructorB2026!', /\/instructor(?:\/|$)/)
+    await instructorBPage.goto(`/instructor/student/${studentProfile!.id}`)
+    await expect(instructorBPage.getByText(STUDENT_EMAIL, { exact: true })).toHaveCount(0)
+    const instructorBRaw = await instructorBPage.content()
+    expect(instructorBRaw).not.toContain(STUDENT_EMAIL)
+    await instructorBContext.close()
+    await sessionB.close()
 
     await studentSession.context.close()
     await instructorSession.context.close()
