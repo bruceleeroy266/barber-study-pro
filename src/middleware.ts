@@ -30,7 +30,7 @@ function isDashboardRoute(pathname: string): boolean {
 
 /** Match auth routes. */
 function isAuthRoute(pathname: string): boolean {
-  const authRoutes = ['/login', '/signup', '/reset-password', '/update-password']
+  const authRoutes = ['/login', '/signup', '/reset-password', '/update-password', '/auth/update-password']
   return authRoutes.some((route) => pathname.startsWith(route))
 }
 
@@ -140,10 +140,11 @@ export async function middleware(request: NextRequest) {
   // required so invited/recovery users can finish setup safely.
   if (isAuth && user) {
     const access = validateLoginAccess(profile)
-    const isUpdatePassword = pathname.startsWith('/update-password')
-    const needsPasswordChange = profile?.requires_password_change === true
+    const isUpdatePassword = pathname === '/update-password' || pathname === '/auth/update-password'
 
-    if (access.ok && (!isUpdatePassword || !needsPasswordChange)) {
+    // A valid recovery session must be allowed to choose a new password,
+    // even when an already-approved profile has no forced-change flag.
+    if (access.ok && !isUpdatePassword) {
       const url = request.nextUrl.clone()
       url.pathname = getRoleBasedRedirect(profile?.role)
       return NextResponse.redirect(url)
