@@ -922,7 +922,14 @@ test.describe('Pilot onboarding certification', () => {
       .filter({ hasText: STUDENT_EMAIL })
       .filter({ has: schoolAdminSession.page.getByRole('button', { name: 'Send fresh setup link' }) })
       .first()
+    const actualResendRequest = schoolAdminSession.page.waitForRequest(request =>
+      request.method() === 'POST' && Boolean(request.headers()['next-action']))
     await recoveryCard.getByRole('button', { name: 'Send fresh setup link' }).click()
+    const capturedResend = await actualResendRequest
+    const resendActionId = capturedResend.headers()['next-action']
+    const resendActionBody = capturedResend.postData()
+    expect(resendActionId).toBeTruthy()
+    expect(resendActionBody).not.toBeNull()
     await expect(schoolAdminSession.page.getByText(`Fresh setup link sent to ${STUDENT_EMAIL}`)).toBeVisible()
     const { data: afterResendInvite, error: afterResendInviteError } = await service
       .from('school_onboarding_invitations')
@@ -975,6 +982,25 @@ test.describe('Pilot onboarding certification', () => {
         const schoolBPage = await schoolBContext.newPage()
         await login(schoolBPage, actor.email, actor.password, /\/school(?:\/|$)/)
         await schoolBPage.goto('/admin/users')
+        // Replay the actual School A Server Action payload from School B's
+        // authenticated browser, without copying School A's session cookies.
+        const mailBefore = await fetch(`${getMailpitUrl()}/api/v1/messages`)
+        expect(mailBefore.ok()).toBe(true)
+        const mailCountBefore = Number((await mailBefore.json() as { total?: number }).total ?? 0)
+        const forbiddenActionResponse = await schoolBPage.evaluate(async ({ actionId, body }) => {
+          const response = await fetch('/admin/users', {
+            method: 'POST',
+            headers: { 'next-action': actionId, 'content-type': 'text/plain;charset=UTF-8', 'accept': 'text/x-component' },
+            body,
+          })
+          return { status: response.status, text: await response.text() }
+        }, { actionId: resendActionId, body: resendActionBody! })
+        expect(forbiddenActionResponse.text).not.toContain('Fresh setup link sent')
+        const mailAfter = await fetch(`${getMailpitUrl()}/api/v1/messages`)
+        expect(mailAfter.ok()).toBe(true)
+        const mailCountAfter = Number((await mailAfter.json() as { total?: number }).total ?? 0)
+        expect(mailCountAfter).toBe(mailCountBefore)
+
         const searchA = schoolBPage.locator('input[placeholder="Search name or email"]')
         await searchA.fill(STUDENT_EMAIL)
         await schoolBPage.getByRole('button', { name: 'Search' }).click()
