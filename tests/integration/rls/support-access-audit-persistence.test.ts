@@ -1,5 +1,7 @@
 /** Disposable persistence test for support audit true-actor provenance. */
-import { afterAll, beforeAll, describe, expect, test } from 'vitest'
+import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest'
+// Next.js server-only sentinel is intended for bundlers, not Node integration tests.
+vi.mock('server-only', () => ({}))
 import { assertTestEnvironment } from '../setup/production-guard'
 import { setupTestEnvironment, cleanupTestEnvironment, getServiceClient, resolveActorId } from '../setup/db-helpers'
 import { TEST_SCHOOLS } from '../setup/test-actors'
