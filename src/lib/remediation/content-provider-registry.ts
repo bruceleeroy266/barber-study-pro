@@ -1,3 +1,4 @@
+import { publicDisplayText } from '@/lib/presentation/public-content-boundary'
 /**
  * Remediation Content Provider Registry (C3-3 Stage 1)
  *
@@ -697,7 +698,7 @@ const chapter5Provider: ChapterRemediationContentProvider = {
   chapterId: 'ch-5',
 
   getConceptName(conceptId) {
-    return chapter5ConceptFamilies.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic'
+    return publicDisplayText(chapter5ConceptFamilies.find((c) => c.id === conceptId)?.name ?? 'Unknown Topic')
   },
 
   getContentBlockIdsForConcept(conceptId) {
