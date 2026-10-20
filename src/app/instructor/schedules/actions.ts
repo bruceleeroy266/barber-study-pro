@@ -317,7 +317,21 @@ export async function saveScheduleOverride(formData: FormData) {
     scheduleRedirect({ error: 'student-not-found' })
   }
 
-  const { error } = await supabase
+  // Support writes are authorized by a narrowly scoped DB function. This
+  // validates the true authenticated admin and the current instructor assignment.
+  // Ordinary school staff continue using their existing RLS-backed upsert.
+  const { error } = context.supportActive
+    ? await supabase.rpc('support_upsert_student_schedule_override', {
+        p_target_instructor: actor.id,
+        p_student: studentId,
+        p_override_date: overrideDate,
+        p_override_type: overrideType,
+        p_start_time: overrideType === 'off' ? null : start,
+        p_end_time: overrideType === 'off' ? null : end,
+        p_break_minutes: breakMinutes,
+        p_reason: reason ? reason.slice(0, 500) : null,
+      })
+    : await supabase
     .from('student_schedule_overrides')
     .upsert(
       {
