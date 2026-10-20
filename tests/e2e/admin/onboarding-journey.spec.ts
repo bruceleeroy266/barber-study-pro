@@ -674,7 +674,7 @@ test.describe('Pilot onboarding certification', () => {
       expect(bytes.length).toBeGreaterThan(3)
       const csvBody = bytes.toString('utf8')
       expect(csvBody).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION/i)
-      expect(csvBody).not.toMatch(/\\b(?:Milady|Cengage)\\b/i)
+      expect(csvBody).not.toMatch(/\b(?:Milady|Cengage)\b/i)
     }
 
     // -----------------------------------------------------------------------
@@ -776,7 +776,7 @@ test.describe('Pilot onboarding certification', () => {
     expect(chapterResponse?.status()).toBe(200)
     const chapterPayload = (await chapterResponse!.body()).toString('utf8')
     expect(chapterPayload).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION/i)
-    expect(chapterPayload).not.toMatch(/\\b(?:Milady|Cengage)\\b/i)
+    expect(chapterPayload).not.toMatch(/\b(?:Milady|Cengage)\b/i)
 
     // API collection is supplemental: require explicit exercised endpoints for coverage certification.
     studentSession.page.off('response', collectLocalApiResponse)
@@ -788,7 +788,7 @@ test.describe('Pilot onboarding certification', () => {
     expect(examHistoryResponse.headers()['content-type']).toContain('application/json')
     const examHistoryBytes = (await examHistoryResponse.body()).toString('utf8')
     expect(examHistoryBytes).not.toMatch(/sourceBasis|sourceProvenance|restrictedAuditMetadata|MILADY_SUPPORTED_EXPANSION/i)
-    expect(examHistoryBytes).not.toMatch(/\\b(?:Milady|Cengage)\\b/i)
+    expect(examHistoryBytes).not.toMatch(/\b(?:Milady|Cengage)\b/i)
     expect(JSON.parse(examHistoryBytes)).toHaveProperty('history')
 
     const gradeAndApprovalBefore = await readGradeAndApprovalBaseline()
