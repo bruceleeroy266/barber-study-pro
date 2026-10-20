@@ -13,6 +13,9 @@ describe('P0 academic corrections: student-facing assembled questions', () => {
     expect(answer).toMatch(/genetics.*age.*hormonal/i)
     expect(answer).not.toMatch(/service decision|scalp assessment/i)
     expect(q!.explanation).toMatch(/inherited|androgen/i)
+    // Protect public-facing wording only. Keep sourceBasis as restricted audit provenance.
+    const publicFields = [q!.prompt, q!.explanation, ...q!.options.map(option => option.text)].join(' ')
+    expect(publicFields).not.toMatch(/\\b(?:Milady|Cengage)\\b|sourceBasis|sourceProvenance/i)
     expect(q!.options).toHaveLength(4)
   })
 
@@ -24,6 +27,9 @@ describe('P0 academic corrections: student-facing assembled questions', () => {
     const answer = q!.options.find(o => o.id === 'a')?.text ?? ''
     expect(answer).toMatch(/increases oxidation number.*decreases oxidation number/i)
     expect(q!.explanation).toMatch(/oxygen transfer.*not a requirement/i)
+    // Protect public-facing wording only. Keep sourceBasis as restricted audit provenance.
+    const publicFields = [q!.prompt, q!.explanation, ...q!.options.map(option => option.text)].join(' ')
+    expect(publicFields).not.toMatch(/\\b(?:Milady|Cengage)\\b|sourceBasis|sourceProvenance/i)
     expect(q!.options).toHaveLength(4)
   })
 })
