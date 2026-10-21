@@ -1243,6 +1243,21 @@ test.describe('Pilot onboarding certification', () => {
       .select('id').single()
     expect(seededProgressError).toBeNull()
     expect(seededProgress?.id).toBeTruthy()
+    // Populated disposable hour and attendance evidence must survive account lifecycle.
+    const { data: seededHours, error: seededHoursError } = await service
+      .from('hour_logs').insert({
+        school_id: schoolId, user_id: studentProfile!.id, date: '2026-01-13',
+        category: 'Theory', minutes: 45, status: 'pending', notes: 'CRUD-15 disposable retention evidence',
+      }).select('id').single()
+    expect(seededHoursError).toBeNull()
+    expect(seededHours?.id).toBeTruthy()
+    const { data: seededAttendance, error: seededAttendanceError } = await service
+      .from('attendance_records').insert({
+        school_id: schoolId, user_id: studentProfile!.id, date: '2026-01-13',
+        status: 'Present', minutes_present: 45, note: 'CRUD-15 disposable retention evidence',
+      }).select('id').single()
+    expect(seededAttendanceError).toBeNull()
+    expect(seededAttendance?.id).toBeTruthy()
     const baselineAcademicRecords = await snapshotRecords()
     const correctedName = 'Pilot Certification Student Corrected'
     const correctedEmail = 'cert-student-corrected@ascynpro.test'
