@@ -152,6 +152,13 @@ export async function POST(request: NextRequest) {
   const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
+  // A valid session alone is not sufficient to author academic evidence.
+  const { data: profile, error: profileError } = await supabase.from('profiles')
+    .select('role,school_id,approval_status,is_disabled').eq('id', user.id).single()
+  if (profileError || !profile || !['student', 'apprentice'].includes(profile.role) ||
+      profile.approval_status !== 'approved' || profile.is_disabled || !profile.school_id) {
+    return NextResponse.json({ error: 'Active student enrollment required' }, { status: 403 })
+  }
   let raw: unknown
   try { raw = await request.json() } catch { return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 }) }
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return NextResponse.json({ error: 'Invalid payload' }, { status: 400 })
