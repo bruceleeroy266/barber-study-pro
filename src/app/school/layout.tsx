@@ -49,7 +49,7 @@ export default async function SchoolLayout({
           <div className="flex min-w-0 items-center justify-between gap-2 h-16">
             <div className="flex min-w-0 items-center gap-2 sm:gap-4">
               <BackButton fallbackHref={dashboardHref} label="Back" />
-              {isSchoolAdmin(profile.role) && <SchoolAdminMenu />}
+              {isSchoolAdmin(profile.role) && <><SchoolAdminMenu /><Link href="/school/support-access" className="text-sm text-[var(--color-brand-gold)]">Support Access</Link></>}
               <div className="hidden h-6 w-px bg-graphite sm:block" />
               <Link href="/school" className="flex shrink-0 items-center">
                 <Logo variant="compact" size="md" className="lg:hidden" />
