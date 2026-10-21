@@ -978,6 +978,23 @@ test.describe('Pilot onboarding certification', () => {
       total_questions: 10, percentage: 70,
     })
     expect(aQuizError).toBeNull()
+    // Authenticated A-side rendered parity and REAL browser CSV download.
+    await studentSession.page.goto('/dashboard/progress')
+    const studentQuizSection = studentSession.page.getByRole('region', { name: 'Academic quiz scores' })
+    await expect(studentQuizSection.getByText('70% (7/10)')).toBeVisible()
+    const studentDownloadPromise = studentSession.page.waitForEvent('download')
+    await studentQuizSection.getByRole('button', { name: 'Download academic accuracy CSV' }).click()
+    const studentDownload = await studentDownloadPromise
+    const studentCsv = (await import('node:fs/promises')).readFile(await studentDownload.path()!, 'utf8')
+    expect(await studentCsv).toContain('"70","70","70","7","10"')
+    await instructorSession.page.goto(`/instructor/student/${studentProfile!.id}`)
+    const instructorQuizSection = instructorSession.page.getByRole('region', { name: 'Academic quiz scores' })
+    await expect(instructorQuizSection.getByText('70% (7/10)')).toBeVisible()
+    const instructorDownloadPromise = instructorSession.page.waitForEvent('download')
+    await instructorQuizSection.getByRole('button', { name: 'Download academic accuracy CSV' }).click()
+    const instructorDownload = await instructorDownloadPromise
+    const instructorCsv = await (await import('node:fs/promises')).readFile(await instructorDownload.path()!, 'utf8')
+    expect(instructorCsv).toBe(await studentCsv)
     const aMicroQuestion = 'qa3h-school-a-q1'
     const { error: aMicroError } = await service.from('chapter_micro_check_attempts').insert({
       user_id: studentProfile!.id, chapter_id: 'ch-4', check_id: 'qa3h',
