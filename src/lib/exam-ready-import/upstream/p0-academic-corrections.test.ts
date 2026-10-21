@@ -1,9 +1,25 @@
 import { describe, expect, it } from 'vitest'
+import { anatomyPhysiologyQuestions } from './anatomy-physiology'
 import { infectionControlQuestions } from './infection-control-bank'
 import { hairScalpDisorderQuestions } from './hair-scalp-disorders-bank'
 import { scientificConceptGapQuestions } from './scientific-concepts-gap'
 
 describe('P0 academic corrections: student-facing assembled questions', () => {
+  it('AP-001–010 maintain anatomically correct answers and neutral learner-facing language', () => {
+    for (let n = 1; n <= 10; n++) {
+      const id = 'AP-' + String(n).padStart(3, '0')
+      const q = anatomyPhysiologyQuestions.find(item => item.id === id)
+      expect(q, id).toBeDefined()
+      expect(q!.options, id).toHaveLength(4)
+      expect(q!.correctOptionId, id).toBe('a')
+      expect(q!.options.filter(o => o.id === q!.correctOptionId), id).toHaveLength(1)
+      expect([q!.prompt, q!.explanation, ...q!.options.map(o => o.text)].join(' '), id)
+        .not.toMatch(/\b(?:Milady|Cengage)\b/i)
+    }
+    expect(anatomyPhysiologyQuestions.find(q => q.id === 'AP-004')!.explanation)
+      .toMatch(/smooth muscle.*hair follicle/i)
+  })
+
   it('IC-071–078 assembled safety questions preserve valid keys and original teaching facts', () => {
     for (let n = 71; n <= 78; n++) {
       const id = 'IC-' + String(n).padStart(3, '0')
