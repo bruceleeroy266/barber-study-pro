@@ -82,7 +82,13 @@ export async function resolveSupportAccessContext(): Promise<SupportAccessContex
     targetProfile.is_disabled !== true
   )
 
-  if (!validTarget || !targetProfile) {
+  // A cookie is only a UI selector; database revocation and expiry are
+  // authoritative for all Support Mode routes and actions.
+  const { data: activeSession, error: sessionCheckError } = validTarget && targetProfile
+    ? await supabase.rpc('is_support_access_session_active', { p_target: targetProfile.id })
+    : { data: false, error: null }
+
+  if (!validTarget || !targetProfile || sessionCheckError || activeSession !== true) {
     await (await import('@/lib/security/audit-logger')).logSecurityEvent('support_access', 'blocked', 'Invalid or unavailable support target', {
       userId: user.id,
       email: user.email,
