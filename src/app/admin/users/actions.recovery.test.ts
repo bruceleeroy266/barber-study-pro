@@ -236,7 +236,7 @@ describe('pilot invitation recovery', () => {
     )
   })
 
-  it('reports lifecycle failure after recovery email succeeds (non-atomic side effect)', async () => {
+  it('does not send recovery email when invitation persistence fails', async () => {
     const { resetPasswordForEmail, invitationUpdate } = makeServiceClient({}, 'expired')
     invitationUpdate.mockImplementation(() => ({
       eq: vi.fn().mockResolvedValue({ data: null, error: { message: 'disposable invitation write failure' } }),
@@ -245,8 +245,7 @@ describe('pilot invitation recovery', () => {
     const result = await resendUserSetupLink(USER_ID)
     expect(result.success).toBe(false)
     expect(result.error).toMatch(/disposable invitation write failure/)
-    expect(resetPasswordForEmail).toHaveBeenCalledTimes(1)
-    // This is intentionally a documented partial-failure state, not an atomic operation.
+    expect(resetPasswordForEmail).not.toHaveBeenCalled()
   })
 
   it('does not send setup links to disabled accounts', async () => {
