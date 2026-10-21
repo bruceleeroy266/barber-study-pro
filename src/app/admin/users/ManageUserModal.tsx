@@ -610,20 +610,27 @@ export default function ManageUserModal({
           </section>
         )}
 
-        <section className="space-y-3 border-t border-silver/30 pt-5">
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-silver">Danger zone</h3>
-          <button
-            type="button"
-            onClick={() => onDelete(managedUser)}
-            disabled={!!pendingKey || managedUser.id === currentUserId}
-            className="min-h-11 w-full rounded-lg border border-silver/30 bg-silver/10 px-3 py-2 text-sm text-silver disabled:opacity-40"
-          >
-            Delete user
-          </button>
-          {managedUser.id === currentUserId && (
-            <p className="text-xs text-[var(--color-text-muted)]">You cannot delete your own account.</p>
-          )}
-        </section>
+        {isPlatformAdmin && managedUser.role !== 'student' && managedUser.role !== 'apprentice' && (
+          <section className="space-y-3 border-t border-silver/30 pt-5">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-silver">Danger zone</h3>
+            <button
+              type="button"
+              onClick={() => onDelete(managedUser)}
+              disabled={!!pendingKey || managedUser.id === currentUserId}
+              className="min-h-11 w-full rounded-lg border border-silver/30 bg-silver/10 px-3 py-2 text-sm text-silver disabled:opacity-40"
+            >
+              Delete user
+            </button>
+            {managedUser.id === currentUserId && (
+              <p className="text-xs text-[var(--color-text-muted)]">You cannot delete your own account.</p>
+            )}
+          </section>
+        )}
+        {(managedUser.role === 'student' || managedUser.role === 'apprentice') && (
+          <p className="text-xs text-[var(--color-text-muted)]">
+            To preserve academic records, disable this learner's account instead of deleting it.
+          </p>
+        )}
       </div>
     </Modal>
   )
