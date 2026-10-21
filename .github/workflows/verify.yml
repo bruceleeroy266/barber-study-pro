@@ -167,6 +167,28 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Run authenticated School A/B Support Mode browser test
         run: npx playwright test tests/e2e/admin/support-mode-isolation.spec.ts --project=chromium --workers=1
+      - name: Rehearse disposable database backup and restore
+        shell: bash
+        env:
+          PGPASSWORD: postgres
+        run: |
+          set -euo pipefail
+          if [[ "${ASCYN_TEST_ENVIRONMENT:-}" != "true" || "${TEST_DATABASE_URL:-}" != *"127.0.0.1:54322"* ]]; then
+            echo "Refusing recovery drill outside disposable local Supabase."
+            exit 1
+          fi
+          BACKUP=/tmp/ascyn-support-recovery.dump
+          pg_dump --format=custom --no-owner --no-acl --dbname="$TEST_DATABASE_URL" --file="$BACKUP"
+          test -s "$BACKUP"
+          sha256sum "$BACKUP"
+          ORIGINAL=$(psql "$TEST_DATABASE_URL" -At -v ON_ERROR_STOP=1 -c "select (select count(*) from public.school_support_grants)::text || ':' || (select count(*) from public.support_access_sessions)::text")
+          createdb -h 127.0.0.1 -p 54322 -U postgres ascyn_support_restore
+          pg_restore --exit-on-error --no-owner --no-acl -h 127.0.0.1 -p 54322 -U postgres -d ascyn_support_restore "$BACKUP"
+          RESTORED=$(psql "postgresql://postgres:postgres@127.0.0.1:54322/ascyn_support_restore" -At -v ON_ERROR_STOP=1 -c "select (select count(*) from public.school_support_grants)::text || ':' || (select count(*) from public.support_access_sessions)::text")
+          test "$ORIGINAL" = "$RESTORED"
+          psql "postgresql://postgres:postgres@127.0.0.1:54322/ascyn_support_restore" -v ON_ERROR_STOP=1 -c "select 'restored support consent' as check_name, count(*) from public.school_support_grants; select proname from pg_proc where proname in ('set_school_support_authorization','is_support_access_session_active','support_upsert_student_schedule_override');"
+          echo "Disposable recovery drill completed; original=$ORIGINAL restored=$RESTORED"
+          dropdb -h 127.0.0.1 -p 54322 -U postgres ascyn_support_restore
       - name: Stop disposable Supabase
         if: always()
         run: supabase stop --no-backup
