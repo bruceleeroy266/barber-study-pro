@@ -29,7 +29,7 @@ export default function AcademicQuizAccuracy({
               <th scope="row" className="p-2 font-normal">{names.get(score.chapterId) ?? score.chapterId}</th>
               <td className="p-2">{score.latestPercent === null ? 'Not assessed' : `${score.latestPercent}% (${score.latestCorrect}/${score.latestTotal})`}</td>
               <td className="p-2">{score.bestPercent === null ? 'Not assessed' : `${score.bestPercent}%`}</td>
-              <td className="p-2">{score.attemptCount}</td>
+              <td className="p-2">{score.attemptCount}{score.invalidAttemptCount > 0 && <span className="block text-amber-500"> {score.invalidAttemptCount} inconsistent record(s) excluded</span>}</td>
             </tr>
           ))}</tbody>
         </table>
