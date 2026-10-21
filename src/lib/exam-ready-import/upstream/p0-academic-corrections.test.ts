@@ -40,6 +40,20 @@ describe('P0 academic corrections: student-facing assembled questions', () => {
     }
   })
 
+  it('HS-028/029 and SCG-007–012 present publisher-neutral learner text', () => {
+    const targets = [
+      ...['HS-028', 'HS-029'].map(id => hairScalpDisorderQuestions.find(q => q.id === id)),
+      ...['SCG-007', 'SCG-008', 'SCG-009', 'SCG-010', 'SCG-011', 'SCG-012'].map(id => scientificConceptGapQuestions.find(q => q.id === id)),
+    ]
+    for (const q of targets) {
+      expect(q).toBeDefined()
+      expect(q!.correctOptionId).toBe('a')
+      expect(q!.options).toHaveLength(4)
+      const visible = [q!.prompt, q!.explanation, ...q!.options.map(option => option.text)].join(' ')
+      expect(visible).not.toMatch(/\\b(?:Milady|Cengage)\\b|sourceBasis|sourceProvenance/i)
+    }
+  })
+
   it('SCG-015 defines redox by oxidation-number change instead of mandatory oxygen gain', () => {
     const q = scientificConceptGapQuestions.find(item => item.id === 'SCG-015')
     expect(q).toBeDefined()
