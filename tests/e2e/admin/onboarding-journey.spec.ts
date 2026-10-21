@@ -1296,6 +1296,11 @@ test.describe('Pilot onboarding certification', () => {
     expect(authAfterIdentity.user?.email).toBe(correctedEmail)
     expect(await snapshotRecords()).toEqual(baselineAcademicRecords)
 
+    // CRUD-22: retain a browser session established before account disable.
+    // Protected pages must reject this session even if its access JWT remains valid.
+    await studentSession.page.goto('/dashboard')
+    await expect(studentSession.page).toHaveURL(/\/dashboard(?:\/|$)/)
+
     studentManagement = await openStudentManagement()
     await studentManagement.getByRole('button', { name: 'Review disable account' }).click()
     await studentManagement.getByRole('button', { name: 'Confirm change' }).click()
@@ -1303,6 +1308,11 @@ test.describe('Pilot onboarding certification', () => {
     const { data: disabledProfile } = await service.from('profiles')
       .select('is_disabled').eq('id', studentProfile!.id).single()
     expect(disabledProfile?.is_disabled).toBe(true)
+    const { data: bannedAuth, error: bannedAuthError } = await service.auth.admin.getUserById(studentProfile!.id)
+    expect(bannedAuthError).toBeNull()
+    expect(bannedAuth.user?.banned_until).toBeTruthy()
+    await studentSession.page.goto('/dashboard')
+    await expect(studentSession.page).toHaveURL(/\/login\?error=disabled/)
     expect(await snapshotRecords()).toEqual(baselineAcademicRecords)
 
     studentManagement = await openStudentManagement()
@@ -1312,6 +1322,9 @@ test.describe('Pilot onboarding certification', () => {
     const { data: enabledProfile } = await service.from('profiles')
       .select('is_disabled').eq('id', studentProfile!.id).single()
     expect(enabledProfile?.is_disabled).toBe(false)
+    const { data: unbannedAuth, error: unbannedAuthError } = await service.auth.admin.getUserById(studentProfile!.id)
+    expect(unbannedAuthError).toBeNull()
+    expect(new Date(unbannedAuth.user?.banned_until ?? 0).getTime()).toBeLessThanOrEqual(Date.now())
     expect(await snapshotRecords()).toEqual(baselineAcademicRecords)
     const { data: stillEnrolled } = await service.from('enrollments')
       .select('id,student_id,program_id,status,is_active').eq('id', enrollment!.id).single()
