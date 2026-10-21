@@ -1,5 +1,5 @@
 # P0 HEAVY AUDIT 60 ID reconciliation pinned source bb995882ecf95a00ee409a749114e13e5273c3e3
-# inventory 573 unique; 103 documented targeted editorial or safety-review passes; no independent approvals attested
+# inventory 573 unique; 113 documented targeted editorial or safety-review passes; no independent approvals attested
 # corrected review head prior to report: 5312ae19c848c179bf9f42396fcec578f818202b
 source_question_id,domain,upstream_file,targeted_editorial_record,independent_academic_approval,publisher_rights_clearance
 exam-ready:FS-001,facial_hair_skin_care_services,facial-hair-skin-care,not_documented_in_P0_audit,pending,pending
@@ -499,16 +499,16 @@ exam-ready:IC-037,scientific_concepts,infection-control,documented_targeted_batc
 exam-ready:IC-038,scientific_concepts,infection-control,documented_targeted_batch,pending,pending
 exam-ready:IC-039,scientific_concepts,infection-control,documented_targeted_batch,pending,pending
 exam-ready:IC-040,scientific_concepts,infection-control,documented_targeted_batch,pending,pending
-exam-ready:IC-041,scientific_concepts,infection-control-expansion,not_documented_in_P0_audit,pending,pending
-exam-ready:IC-042,scientific_concepts,infection-control-expansion,not_documented_in_P0_audit,pending,pending
-exam-ready:IC-043,scientific_concepts,infection-control-expansion,not_documented_in_P0_audit,pending,pending
-exam-ready:IC-044,scientific_concepts,infection-control-expansion,not_documented_in_P0_audit,pending,pending
-exam-ready:IC-045,scientific_concepts,infection-control-expansion,not_documented_in_P0_audit,pending,pending
-exam-ready:IC-046,scientific_concepts,infection-control-expansion,not_documented_in_P0_audit,pending,pending
-exam-ready:IC-047,scientific_concepts,infection-control-expansion,not_documented_in_P0_audit,pending,pending
-exam-ready:IC-048,scientific_concepts,infection-control-expansion,not_documented_in_P0_audit,pending,pending
-exam-ready:IC-049,scientific_concepts,infection-control-expansion,not_documented_in_P0_audit,pending,pending
-exam-ready:IC-050,scientific_concepts,infection-control-expansion,not_documented_in_P0_audit,pending,pending
+exam-ready:IC-041,scientific_concepts,infection-control-expansion,documented_targeted_batch,pending,pending
+exam-ready:IC-042,scientific_concepts,infection-control-expansion,documented_targeted_batch,pending,pending
+exam-ready:IC-043,scientific_concepts,infection-control-expansion,documented_targeted_batch,pending,pending
+exam-ready:IC-044,scientific_concepts,infection-control-expansion,documented_targeted_batch,pending,pending
+exam-ready:IC-045,scientific_concepts,infection-control-expansion,documented_targeted_batch,pending,pending
+exam-ready:IC-046,scientific_concepts,infection-control-expansion,documented_targeted_batch,pending,pending
+exam-ready:IC-047,scientific_concepts,infection-control-expansion,documented_targeted_batch,pending,pending
+exam-ready:IC-048,scientific_concepts,infection-control-expansion,documented_targeted_batch,pending,pending
+exam-ready:IC-049,scientific_concepts,infection-control-expansion,documented_targeted_batch,pending,pending
+exam-ready:IC-050,scientific_concepts,infection-control-expansion,documented_targeted_batch,pending,pending
 exam-ready:IC-051,scientific_concepts,infection-control-validation-expansion,not_documented_in_P0_audit,pending,pending
 exam-ready:IC-052,scientific_concepts,infection-control-validation-expansion,not_documented_in_P0_audit,pending,pending
 exam-ready:IC-053,scientific_concepts,infection-control-validation-expansion,not_documented_in_P0_audit,pending,pending
