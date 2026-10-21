@@ -166,6 +166,12 @@ export async function startSupportAccess(targetProfileId: string): Promise<{ ok:
     return { ok: false, error: 'That support target is not available.' }
   }
 
+  const { error: sessionError } = await supabase.rpc('set_support_access_session', {
+    p_target: targetProfile.id,
+    p_enable: true,
+  })
+  if (sessionError) return { ok: false, error: 'Could not authorize the support session.' }
+
   const cookieStore = await cookies()
   cookieStore.set(SUPPORT_ACCESS_COOKIE, targetProfile.id, {
     httpOnly: true,
@@ -203,6 +209,14 @@ export async function stopSupportAccess(): Promise<void> {
   const cookieStore = await cookies()
   const targetId = cookieStore.get(SUPPORT_ACCESS_COOKIE)?.value ?? null
   cookieStore.delete(SUPPORT_ACCESS_COOKIE)
+
+  if (user) {
+    const { error: revokeError } = await supabase.rpc('set_support_access_session', {
+      p_target: targetId,
+      p_enable: false,
+    })
+    if (revokeError) throw new Error('Support session revocation failed')
+  }
 
   if (user) {
     await (await import('@/lib/security/audit-logger')).logSecurityEvent('support_access', 'success', 'Platform admin support mode ended', {
