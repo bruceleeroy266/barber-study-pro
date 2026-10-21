@@ -85,6 +85,7 @@ function mockService(options: {
     error: options.reconciliationError ?? null,
   })
   const auditInsert = vi.fn().mockResolvedValue({ data: null, error: null })
+  const profileUpdate = vi.fn().mockReturnValue({ eq: vi.fn().mockResolvedValue({ error: null }) })
 
   const serviceClient = {
     auth: {
@@ -108,6 +109,7 @@ function mockService(options: {
     from: vi.fn((table: string) => {
       if (table === 'profiles') {
         return {
+          update: profileUpdate,
           select: vi.fn((columns: string) => {
             if (columns === 'id') {
               return {
@@ -146,7 +148,7 @@ function mockService(options: {
     createServiceRoleClient: vi.fn().mockReturnValue(serviceClient),
   }))
 
-  return { profile, serviceClient, authUpdate, rpc, auditInsert }
+  return { profile, serviceClient, authUpdate, rpc, auditInsert, profileUpdate }
 }
 
 describe('UM-H3.2/3 updateUserIdentity', () => {
@@ -348,6 +350,31 @@ describe('UM-H3.2/3 updateUserIdentity', () => {
     expect(result.success).toBe(false)
     expect(result.error).toMatch(/administrator cleanup is required/i)
     expect(authUpdate).toHaveBeenCalledTimes(2)
+  })
+
+  it('synchronizes disabled accounts with Auth bans and reenables on recovery', async () => {
+    const { authUpdate, profileUpdate } = mockService()
+    const { toggleUserDisabled } = await import('./actions')
+    const disabled = await toggleUserDisabled(USER_ID, true)
+    expect(disabled.success).toBe(true)
+    expect(profileUpdate).toHaveBeenCalledWith({ is_disabled: true })
+    expect(authUpdate).toHaveBeenCalledWith(USER_ID, { ban_duration: '876000h' })
+    const enabled = await toggleUserDisabled(USER_ID, false)
+    expect(enabled.success).toBe(true)
+    expect(authUpdate).toHaveBeenCalledWith(USER_ID, { ban_duration: 'none' })
+  })
+
+  it('compensates profile update on Auth ban failure', async () => {
+    const { authUpdate, profileUpdate } = mockService({
+      authUpdateErrors: [{ message: 'Auth unavailable' }],
+    })
+    const { toggleUserDisabled } = await import('./actions')
+    const result = await toggleUserDisabled(USER_ID, true)
+    expect(result.success).toBe(false)
+    expect(result.error).toMatch(/rolled back/i)
+    expect(authUpdate).toHaveBeenCalledTimes(1)
+    expect(profileUpdate).toHaveBeenNthCalledWith(1, { is_disabled: true })
+    expect(profileUpdate).toHaveBeenNthCalledWith(2, { is_disabled: false })
   })
 
   it('returns an idempotent no-op when normalized identity is unchanged', async () => {
