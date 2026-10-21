@@ -156,6 +156,8 @@ jobs:
           GRANT SELECT, INSERT, DELETE ON public.security_logs TO service_role;
           -- Browser test reads and cleans schedule overrides using disposable service-role fixtures.
           GRANT SELECT, INSERT, DELETE ON public.student_schedule_overrides TO service_role;
+          -- Disposable-only session expiry regression fixture privileges.
+          GRANT SELECT, UPDATE ON public.support_access_sessions TO service_role;
           SQL
       - name: Run authenticated assignment RLS regression
         run: npx vitest run --config vitest.integration.config.ts tests/integration/rls/support-access-assignment-select.test.ts tests/integration/rls/support-access-assignment-mutations.test.ts tests/integration/rls/support-access-audit-persistence.test.ts tests/integration/rls/support-schedule-rpc-negative.test.ts
