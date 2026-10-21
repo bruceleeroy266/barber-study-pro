@@ -227,17 +227,18 @@ describe('QuizClient Chapter 4 focused-review handoff', () => {
         '/api/remediation/detect',
         expect.objectContaining({
           method: 'POST',
-          body: JSON.stringify({ chapterId: 'ch-4', quizAttemptId: 'attempt-ch4-1' }),
+          body: JSON.stringify({ chapterId: 'ch-4', quizAttemptId: 'mock-attempt-id-123' }),
         })
       )
     })
   })
 
   it('completes the quiz normally when detection orchestration fails', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockRejectedValue(new Error('network down'))
-    )
+    const originalMockFetch = globalThis.fetch
+    vi.stubGlobal('fetch', vi.fn((url: string, options?: RequestInit) => {
+      if (url === '/api/remediation/detect') return Promise.reject(new Error('network down'))
+      return originalMockFetch(url, options)
+    }))
 
     render(
       <QuizClient
