@@ -187,7 +187,10 @@ jobs:
           sha256sum "$BACKUP"
           ORIGINAL=$(docker exec "$DB_CONTAINER" psql -U postgres -d postgres -At -v ON_ERROR_STOP=1 -c "select (select count(*) from public.school_support_grants)::text || ':' || (select count(*) from public.support_access_sessions)::text")
           docker exec "$DB_CONTAINER" createdb -U postgres ascyn_support_restore
-          docker exec -i "$DB_CONTAINER" pg_restore --exit-on-error --no-owner --no-acl -U postgres -d ascyn_support_restore < "$BACKUP"
+          # Supabase's postgres login is not a true superuser. Its managed realtime
+          # routines require elevated configuration privileges during restore.
+          docker exec "$DB_CONTAINER" psql -U supabase_admin -d postgres -At -v ON_ERROR_STOP=1 -c "select rolsuper from pg_roles where rolname=current_user" | grep -qx t
+          docker exec -i "$DB_CONTAINER" pg_restore --exit-on-error --no-owner --no-acl -U supabase_admin -d ascyn_support_restore < "$BACKUP"
           RESTORED=$(docker exec "$DB_CONTAINER" psql -U postgres -d ascyn_support_restore -At -v ON_ERROR_STOP=1 -c "select (select count(*) from public.school_support_grants)::text || ':' || (select count(*) from public.support_access_sessions)::text")
           test "$ORIGINAL" = "$RESTORED"
           docker exec "$DB_CONTAINER" psql -U postgres -d ascyn_support_restore -v ON_ERROR_STOP=1 -c "select 'restored support consent' as check_name, count(*) from public.school_support_grants; select proname from pg_proc where proname in ('set_school_support_authorization','is_support_access_session_active','support_upsert_student_schedule_override');"
