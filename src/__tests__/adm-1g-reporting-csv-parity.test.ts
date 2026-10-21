@@ -153,6 +153,18 @@ describe('ADM-1G reporting + CSV parity', () => {
     expect(summary.rows.find((row) => row.Metric === 'Total Students')?.Value).toBe(1)
   })
 
+  it('official dashboard reports apply approved, enabled, metric-eligible roster filtering', () => {
+    const source = fs.readFileSync(
+      path.join(process.cwd(), 'src/components/school-owner/SchoolDashboard.tsx'),
+      'utf8',
+    )
+    expect(source).toContain("student.approval_status === 'approved'")
+    expect(source).toContain('student.is_disabled !== true')
+    expect(source).toContain('student.include_in_school_metrics !== false')
+    expect(source).toContain("school_summary: generateSchoolReport('school_summary', reportInputs)")
+    expect(source).toContain("assessment: generateSchoolReport('assessment', reportInputs)")
+  })
+
   it('school and compliance reporting centers share the canonical CSV serializer', () => {
     const school = fs.readFileSync(
       path.join(process.cwd(), 'src/components/school-owner/ReportingCenter.tsx'),
