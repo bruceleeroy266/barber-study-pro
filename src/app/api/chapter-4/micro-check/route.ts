@@ -8,6 +8,14 @@ export async function POST(request: NextRequest) {
   const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
+  // The legacy endpoint must enforce the same enrollment boundary as the shared route.
+  const { data: profile, error: profileError } = await supabase.from('profiles')
+    .select('role,school_id,approval_status,is_disabled').eq('id', user.id).single()
+  if (profileError || !profile || !['student', 'apprentice'].includes(profile.role) ||
+      profile.approval_status !== 'approved' || profile.is_disabled || !profile.school_id) {
+    return NextResponse.json({ error: 'Active student enrollment required' }, { status: 403 })
+  }
+
 
   let body: unknown
   try { body = await request.json() } catch {
@@ -19,7 +27,8 @@ export async function POST(request: NextRequest) {
   const payload = body as Record<string, unknown>
   if (Object.keys(payload).some(k => !['questionId', 'selectedAnswer'].includes(k)) ||
     typeof payload.questionId !== 'string' ||
-    !['a', 'b', 'c', 'd'].includes(String(payload.selectedAnswer))) {
+    typeof payload.selectedAnswer !== 'string' ||
+    !['a', 'b', 'c', 'd'].includes(payload.selectedAnswer)) {
     return NextResponse.json({ error: 'Unsupported academic evidence fields' }, { status: 400 })
   }
   const check = chapter4MicroChecks.find(c => c.questions.some(q => q.id === payload.questionId))
