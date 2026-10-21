@@ -83,6 +83,20 @@ describe('P0 academic corrections: student-facing assembled questions', () => {
     expect(oxidation.explanation).toMatch(/oxidation-state changes/)
   })
 
+  it('SCG-033–036 preserve student-safe wording and classify eczema as dermatitis', () => {
+    for (let n = 33; n <= 36; n++) {
+      const id = 'SCG-' + String(n).padStart(3, '0')
+      const q = scientificConceptGapQuestions.find(item => item.id === id)
+      expect(q, id).toBeDefined()
+      expect(q!.correctOptionId, id).toBe('a')
+      expect(q!.options, id).toHaveLength(4)
+      const visible = [q!.prompt, q!.explanation, ...q!.options.map(o => o.text)].join(' ')
+      expect(visible, id).not.toMatch(/\b(?:Milady|Cengage)\b|sourceBasis|sourceProvenance/i)
+    }
+    const eczema = scientificConceptGapQuestions.find(q => q.id === 'SCG-036')!
+    expect(eczema.options.find(o => o.id === 'a')?.text).toMatch(/eczema is a type of dermatitis/i)
+  })
+
   it('SCG-015 defines redox by oxidation-number change instead of mandatory oxygen gain', () => {
     const q = scientificConceptGapQuestions.find(item => item.id === 'SCG-015')
     expect(q).toBeDefined()
