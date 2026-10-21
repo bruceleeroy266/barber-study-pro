@@ -81,12 +81,15 @@ test('authenticated platform support mode persists and enforces School A/B bound
       .eq('student_id', resolveActorId('STUDENT_B')).eq('override_date', date)
     expect(beforeA).toHaveLength(0)
     await page.goto('/instructor/schedules?student=' + learnerA)
+    // Next.js can display server-rendered forms before its Server Action handlers
+    // are hydrated. Submitting too early leaves the URL unchanged despite a click.
+    await page.waitForLoadState('networkidle')
     const overrideForm = page.locator('form').filter({ has: page.locator('input[name="overrideDate"]') })
     await overrideForm.locator('input[name="overrideDate"]').fill(date)
     await overrideForm.locator('select[name="overrideType"]').selectOption('off')
     await overrideForm.locator('input[name="reason"]').fill(marker)
     await overrideForm.getByRole('button', { name: 'Save Override' }).click()
-    await expect(page).toHaveURL(/saved=override/)
+    await expect(page).toHaveURL(/saved=override/, { timeout: 20000 })
     const { data: afterA, error: afterError } = await service.from('student_schedule_overrides')
       .select('id,school_id,student_id,created_by,reason').eq('school_id', TEST_SCHOOLS.SCHOOL_A.id)
       .eq('student_id', learnerA).eq('override_date', date)
