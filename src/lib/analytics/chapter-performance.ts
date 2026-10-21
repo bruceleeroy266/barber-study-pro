@@ -13,6 +13,8 @@ export function calculateChapterPerformance(
   attempts: QuizAttempt[],
   progress: StudentProgress[]
 ): AreaPerformance[] {
+  // Keep the existing public call signature during incremental migration.
+  void progress
   const chapterAttempts = new Map<string, QuizAttempt[]>()
 
   for (const attempt of attempts) {
