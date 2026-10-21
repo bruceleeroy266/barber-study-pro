@@ -1712,6 +1712,12 @@ export async function deleteUser(id: string): Promise<ActionResult> {
 
   const admin = adminResult.data
 
+  // Permanent deletion is platform-only. School administrators must use the
+  // reversible disable/enable workflow so academic records remain intact.
+  if (!admin.isPlatformAdmin) {
+    return { success: false, error: 'Permanent deletion is restricted to platform administrators. Disable the account to preserve student records.' }
+  }
+
   // Admins cannot delete their own account through this UI.
   if (id === admin.userId) {
     return { success: false, error: 'You cannot delete your own account' }
@@ -1727,6 +1733,12 @@ export async function deleteUser(id: string): Promise<ActionResult> {
   // School admins cannot delete platform admins.
   if (!admin.isPlatformAdmin && userResult.user.role === 'admin') {
     return { success: false, error: 'School admins cannot delete platform administrators' }
+  }
+
+  // Academic retention is not yet certified for auth.users cascade deletion.
+  // Fail closed for all learners, including platform-admin requests.
+  if (userResult.user.role === 'student' || userResult.user.role === 'apprentice') {
+    return { success: false, error: 'Student permanent deletion is disabled until academic-record retention has been independently verified. Disable the student instead.' }
   }
 
   const oldValues = {
