@@ -22,6 +22,7 @@ import BoardReadinessCard from '@/components/BoardReadinessCard'
 import WeakAreaAnalytics from '@/components/WeakAreaAnalytics'
 import StudyRecommendations from '@/components/StudyRecommendations'
 import AnalyticsCharts from '@/components/AnalyticsCharts'
+import AcademicQuizAccuracy from '@/components/AcademicQuizAccuracy'
 import MissedQuestionBank from '@/components/MissedQuestionBank'
 import StudentIdentity from '@/components/StudentIdentity'
 import { AddNoteForm } from './AddNoteForm'
@@ -4862,6 +4863,8 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
             <StudyRecommendations recommendations={recommendations} studentId={studentId} instructorView />
           </div>
         </div>
+
+        <AcademicQuizAccuracy chapters={chapters} scores={analytics.academicChapterScores} />
 
         <AnalyticsCharts
           readinessScore={boardReadiness.score}
