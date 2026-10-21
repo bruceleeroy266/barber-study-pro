@@ -12,7 +12,7 @@ function setup(role: string, schoolId: string | null, targetRole: string, target
     createClient: vi.fn().mockResolvedValue({
       auth: { getUser: vi.fn().mockResolvedValue({ data: { user: { id: 'actor', email: 'actor@test.invalid' } } }) },
       from: () => ({
-        select: () => ({ eq: () => ({ single: async () => ({ data: { role, school_id: schoolId }, error: null }) }) }),
+        select: () => ({ eq: () => ({ single: async () => ({ data: { role, school_id: schoolId, approval_status: 'approved', is_disabled: false, requires_password_change: false }, error: null }) }) }),
       }),
     }),
   }))
