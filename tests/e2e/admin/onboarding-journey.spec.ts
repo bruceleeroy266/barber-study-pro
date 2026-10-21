@@ -1198,6 +1198,34 @@ test.describe('Pilot onboarding certification', () => {
       }
       return rows
     }
+    // Populate two independent academic-history tables: empty snapshots alone
+    // cannot prove that identity/access changes preserve real rows.
+    const { data: seededQuiz, error: seededQuizError } = await service
+      .from('quiz_attempts')
+      .insert({
+        user_id: studentProfile!.id,
+        quiz_id: 'crud13-retention-quiz',
+        score: 3,
+        total_questions: 4,
+        percentage: 75,
+        answers_json: { disposable: true },
+      })
+      .select('id').single()
+    expect(seededQuizError).toBeNull()
+    expect(seededQuiz?.id).toBeTruthy()
+    const { data: seededProgress, error: seededProgressError } = await service
+      .from('student_progress')
+      .insert({
+        user_id: studentProfile!.id,
+        chapter_id: 'crud13-retention-chapter',
+        flashcards_completed: true,
+        quiz_completed: true,
+        best_quiz_score: 75,
+        progress_percentage: 60,
+      })
+      .select('id').single()
+    expect(seededProgressError).toBeNull()
+    expect(seededProgress?.id).toBeTruthy()
     const baselineAcademicRecords = await snapshotRecords()
     const correctedName = 'Pilot Certification Student Corrected'
     const correctedEmail = 'cert-student-corrected@ascynpro.test'
