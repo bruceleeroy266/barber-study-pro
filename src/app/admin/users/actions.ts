@@ -129,11 +129,16 @@ async function getCurrentAdmin(): Promise<ActionResult<AdminContext>> {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role, school_id')
+    .select('role, school_id, approval_status, is_disabled, requires_password_change')
     .eq('id', user.id)
     .single()
 
-  if (!profile || !(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
+  // Server actions bypass page navigation. Recheck live account state on every call.
+  if (profile?.is_disabled || !profile || profile.approval_status !== 'approved' || profile.requires_password_change) {
+    return { success: false, error: 'Account access is disabled or not approved' }
+  }
+
+  if (!(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
     return { success: false, error: 'Forbidden' }
   }
 
