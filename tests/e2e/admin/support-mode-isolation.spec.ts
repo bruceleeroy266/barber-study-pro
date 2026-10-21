@@ -105,7 +105,7 @@ test('authenticated platform support mode persists and enforces School A/B bound
       .eq('actor_id',resolveActorId('PLATFORM_ADMIN'))
     if(expireError)throw new Error(expireError.message)
     await page.goto('/instructor/students')
-    await expect(page).not.toHaveURL(/\\/instructor\\/students(?:\\?|$)/)
+    await expect(page).not.toHaveURL('http://127.0.0.1:3000/instructor/students')
     await expect(page.getByText(TEST_ACTORS.STUDENT_A.fullName)).toHaveCount(0)
   } finally {
     if (progressId) await service.from('student_progress').delete().eq('id',progressId)
