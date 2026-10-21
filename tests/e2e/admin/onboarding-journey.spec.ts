@@ -1019,6 +1019,24 @@ test.describe('Pilot onboarding certification', () => {
       return response.status
     })
     expect(forgedServerSave).toBe(400)
+    // 3AC: the legacy route must reject authenticated instructors, not just anonymous users.
+    const instructorLegacyAttempt = await instructorSession.page.evaluate(async () => {
+      const response = await fetch('/api/chapter-4/micro-check', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ questionId: 'mcq-4-002', selectedAnswer: 'a' }),
+      })
+      return response.status
+    })
+    expect(instructorLegacyAttempt).toBe(403)
+    // Typed validation must reject coercible non-string answers from enrolled students.
+    const invalidLegacyAnswer = await studentSession.page.evaluate(async () => {
+      const response = await fetch('/api/chapter-4/micro-check', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ questionId: 'mcq-4-002', selectedAnswer: 1 }),
+      })
+      return response.status
+    })
+    expect(invalidLegacyAnswer).toBe(400)
     // Legitimate quiz submission is graded by the server, not a client score.
     const { getLocalQuizQuestions } = await import('@/lib/local-data')
     const certQuizQuestions = getLocalQuizQuestions('quiz-4')
