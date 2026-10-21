@@ -4,6 +4,7 @@ import { createServiceRoleClient } from '@/lib/supabase-service-role'
 import { chapter1MicroChecks } from '@/lib/chapter-1-concepts/micro-checks'
 import { chapter2MicroChecks } from '@/lib/chapter-2-concepts/micro-checks'
 import { chapter3MicroChecks } from '@/lib/chapter-3-concepts/micro-checks'
+import { chapter4MicroChecks } from '@/lib/chapter-4-concepts/micro-checks'
 import { chapter5MicroChecks } from '@/lib/chapter-5-concepts/micro-checks'
 import { chapter6MicroChecks } from '@/lib/chapter-6-concepts/micro-checks'
 import { chapter7MicroChecks } from '@/lib/chapter-7-concepts/micro-checks'
@@ -39,6 +40,13 @@ for (const check of chapter3MicroChecks) for (const question of check.questions)
     chapter: 'ch-3', check: check.id, question: question.id,
     concept: question.conceptFamilyId,
     difficulty: question.difficulty, answer: question.correctAnswer,
+  })
+}
+for (const check of chapter4MicroChecks) for (const question of check.questions) {
+  records.set('ch-4:' + question.id, {
+    chapter: 'ch-4', check: check.id, question: question.id,
+    concept: question.conceptFamilyId, difficulty: question.difficulty,
+    answer: question.correctAnswer,
   })
 }
 for (const check of chapter5MicroChecks) for (const question of check.questions) {
