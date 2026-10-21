@@ -971,6 +971,15 @@ test.describe('Pilot onboarding certification', () => {
       { role: 'instructor', email: 'login9-b-instructor@ascynpro.test', password: 'Login9Instructor2026!' },
       { role: 'school_admin', email: 'login9-b-admin@ascynpro.test', password: 'Login9Admin2026!' },
     ] as const
+    // QUIZ-MICRO-ANALYTICS-3H: prove academic micro-check evidence is
+    // school-isolated using real authenticated sessions in local Supabase.
+    const aMicroQuestion = 'qa3h-school-a-q1'
+    const { error: aMicroError } = await service.from('chapter_micro_check_attempts').insert({
+      user_id: studentProfile!.id, chapter_id: 'ch-4', check_id: 'qa3h',
+      question_id: aMicroQuestion, concept_id: 'qa3h-infection-control',
+      difficulty: 'understanding', selected_answer: 'a', is_correct: false,
+    })
+    expect(aMicroError).toBeNull()
     for (const actor of schoolBActors) {
       const { data: newAuth, error: newAuthError } = await service.auth.admin.createUser({
         email: actor.email, password: actor.password, email_confirm: true,
@@ -1008,6 +1017,25 @@ test.describe('Pilot onboarding certification', () => {
       const { data: signedIn, error: signInError } = await client.auth.signInWithPassword({ email: actor.email, password: actor.password })
       expect(signInError).toBeNull()
       expect(signedIn.user?.id).toBe(id)
+      // A student, instructor, and school admin in B must not read A's
+      // immutable academic evidence, even when querying A's exact user ID.
+      const { data: crossSchoolMicro, error: crossSchoolMicroError } = await client
+        .from('chapter_micro_check_attempts').select('question_id,is_correct')
+        .eq('user_id', studentProfile!.id)
+      expect(crossSchoolMicroError).toBeNull()
+      expect(crossSchoolMicro).toEqual([])
+      if (actor.role === 'student') {
+        const { error: bMicroError } = await service.from('chapter_micro_check_attempts').insert({
+          user_id: id, chapter_id: 'ch-4', check_id: 'qa3h',
+          question_id: 'qa3h-school-b-q1', concept_id: 'qa3h-infection-control',
+          difficulty: 'understanding', selected_answer: 'b', is_correct: true,
+        })
+        expect(bMicroError).toBeNull()
+        const { data: ownEvidence, error: ownEvidenceError } = await client
+          .from('chapter_micro_check_attempts').select('question_id,is_correct').eq('user_id',id)
+        expect(ownEvidenceError).toBeNull()
+        expect(ownEvidence).toEqual([{question_id:'qa3h-school-b-q1',is_correct:true}])
+      }
       if (actor.role === 'school_admin') {
         // Browser-level school-scoped management search, using a real B-admin session.
         const schoolBContext = await browser.newContext()
