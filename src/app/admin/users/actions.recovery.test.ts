@@ -15,6 +15,8 @@ vi.mock('next/cache', () => ({
 }))
 
 function mockCaller(role = 'school_admin', schoolId: string | null = SCHOOL_A) {
+  // Replacing an existing dynamic mock must not retain a prior test's tenant identity.
+  vi.doUnmock('@/lib/supabase-server')
   vi.doMock('@/lib/supabase-server', () => ({
     createClient: vi.fn().mockResolvedValue({
       auth: {
