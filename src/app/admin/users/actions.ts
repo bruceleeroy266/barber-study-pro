@@ -1338,14 +1338,14 @@ export async function toggleUserDisabled(id: string, isDisabled: boolean): Promi
     return { success: false, error: error.message }
   }
 
-  // Revoking the Auth refresh sessions limits continued access by disabled
-  // accounts. Existing access JWTs may remain valid until expiry; protected
-  // handlers must still enforce the profile's disabled flag per request.
-  if (isDisabled) {
-    const { error: revokeError } = await serviceClient.auth.admin.signOut(id, 'global')
-    if (revokeError) {
-      return { success: false, error: 'Account disabled, but session revocation failed. Escalate to an administrator.' }
-    }
+  // A profile flag gates protected routes, but does not invalidate existing
+  // JWTs. Ban disables new Auth sign-ins/refreshes; access tokens still need
+  // per-request authorization until expiry.
+  const { error: banError } = await serviceClient.auth.admin.updateUserById(id, {
+    ban_duration: isDisabled ? '876000h' : 'none',
+  })
+  if (banError) {
+    return { success: false, error: 'Profile status changed, but Auth access synchronization failed. Administrator reconciliation required.' }
   }
 
   await logUserManagementAction(admin, id, userResult.user.email, isDisabled ? 'disable_user' : 'enable_user', oldValues, newValues, userResult.user.school_id)
