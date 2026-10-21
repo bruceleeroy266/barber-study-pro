@@ -1338,6 +1338,16 @@ export async function toggleUserDisabled(id: string, isDisabled: boolean): Promi
     return { success: false, error: error.message }
   }
 
+  // Revoking the Auth refresh sessions limits continued access by disabled
+  // accounts. Existing access JWTs may remain valid until expiry; protected
+  // handlers must still enforce the profile's disabled flag per request.
+  if (isDisabled) {
+    const { error: revokeError } = await serviceClient.auth.admin.signOut(id, 'global')
+    if (revokeError) {
+      return { success: false, error: 'Account disabled, but session revocation failed. Escalate to an administrator.' }
+    }
+  }
+
   await logUserManagementAction(admin, id, userResult.user.email, isDisabled ? 'disable_user' : 'enable_user', oldValues, newValues, userResult.user.school_id)
 
   return { success: true }
@@ -1735,11 +1745,9 @@ export async function deleteUser(id: string): Promise<ActionResult> {
     return { success: false, error: 'School admins cannot delete platform administrators' }
   }
 
-  // Academic retention is not yet certified for auth.users cascade deletion.
-  // Fail closed for all learners, including platform-admin requests.
-  if (userResult.user.role === 'student' || userResult.user.role === 'apprentice') {
-    return { success: false, error: 'Student permanent deletion is disabled until academic-record retention has been independently verified. Disable the student instead.' }
-  }
+  // No role is exempt from academic and audit retention risks. Permanent
+  // deletion remains disabled until complete FK/cascade certification.
+  return { success: false, error: 'Permanent deletion is disabled pending academic and audit-record retention certification. Disable the account instead.' }
 
   const oldValues = {
     email: userResult.user.email,
