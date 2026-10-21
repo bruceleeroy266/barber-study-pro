@@ -100,7 +100,7 @@ export async function middleware(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname
   // Privileged API routes require account-state enforcement even with an old JWT.
-  const isPrivilegedApi = /^\/api\/(admin|school)(\/|$)/.test(pathname)
+  const isPrivilegedApi = /^\/api\/(admin|school|instructor|study-sessions|remediation|micro-checks)(\/|$)/.test(pathname)
   const isProtected = isProtectedRoute(pathname) || isPrivilegedApi
   const isAuth = isAuthRoute(pathname)
 
