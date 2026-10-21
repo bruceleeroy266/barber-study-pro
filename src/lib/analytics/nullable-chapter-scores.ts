@@ -11,6 +11,7 @@ export interface NullableChapterAcademicScore {
   latestCorrect: number | null
   latestTotal: number | null
   attemptCount: number
+  invalidAttemptCount: number
   state: 'unassessed' | 'assessed'
 }
 
@@ -26,7 +27,17 @@ export function buildNullableChapterAcademicScores(
   return chapters.map(chapter => {
     const chapterAttempts = attempts.filter(a => quizIdToChapterId(a.quiz_id) === chapter.id)
     const quizId = 'quiz-' + chapter.chapter_number
-    const selected = selectCanonicalQuizAttempts(chapterAttempts, quizId)
+    // Reject inconsistent legacy/demo rows individually, not the entire report.
+    // Keep strict validation in selectCanonicalQuizAttempts unchanged.
+    const validAttempts = chapterAttempts.filter(attempt => {
+      try {
+        selectCanonicalQuizAttempts([attempt], quizId)
+        return true
+      } catch {
+        return false
+      }
+    })
+    const selected = selectCanonicalQuizAttempts(validAttempts, quizId)
     const percent = (a: typeof selected.latest) =>
       a ? Math.round((a.score / a.total_questions) * 10000) / 100 : null
     return {
@@ -37,6 +48,7 @@ export function buildNullableChapterAcademicScores(
       latestCorrect: selected.latest?.score ?? null,
       latestTotal: selected.latest?.total_questions ?? null,
       attemptCount: selected.count,
+      invalidAttemptCount: chapterAttempts.length - validAttempts.length,
       state: selected.latest ? 'assessed' as const : 'unassessed' as const,
     }
   })
