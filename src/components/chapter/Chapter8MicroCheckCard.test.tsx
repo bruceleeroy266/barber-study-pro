@@ -71,6 +71,20 @@ describe('C8-6 Chapter 8 micro-check UI/persistence regression', () => {
       },
       error: null,
     })
+    vi.stubGlobal('fetch', vi.fn(async (url: string, options?: RequestInit) => {
+      if (url !== '/api/academic/micro-check') throw new Error('Unexpected endpoint')
+      const request = JSON.parse(String(options?.body)) as { questionId: string; selectedAnswer: string }
+      const payload = {
+        user_id: 'student-8', chapter_id: 'ch-8', check_id: 'mc-8-01',
+        question_id: request.questionId, concept_id: 'ch8-electricity-circuits',
+        difficulty: 'application', selected_answer: request.selectedAnswer,
+        is_correct: request.selectedAnswer === 'a',
+      }
+      mocks.insert(payload)
+      const saved = await mocks.single()
+      return { ok: true, status: 200, json: async () => ({ row: saved.data, alreadyRecorded: false }) }
+    }))
+
   })
 
   it('renders a Chapter 8 lesson micro-check, persists the first attempt, and locks the saved evidence into the UI', async () => {
