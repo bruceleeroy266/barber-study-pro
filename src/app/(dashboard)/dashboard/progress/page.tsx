@@ -13,6 +13,7 @@ import BoardReadinessCard from '@/components/BoardReadinessCard'
 import WeakAreaAnalytics from '@/components/WeakAreaAnalytics'
 import StudyRecommendations from '@/components/StudyRecommendations'
 import AnalyticsCharts from '@/components/AnalyticsCharts'
+import AcademicQuizAccuracy from '@/components/AcademicQuizAccuracy'
 import { mapAttendanceRecordsFromDb } from '@/lib/mappers/operational-data-mappers'
 import { calculateCanonicalStudentLearningMetrics } from '@/lib/student-level/metrics'
 
@@ -187,6 +188,8 @@ export default async function ProgressPage() {
           <StudyRecommendations recommendations={recommendations} />
         </div>
       </div>
+
+      <AcademicQuizAccuracy chapters={chapters} scores={analytics.academicChapterScores} />
 
       {/* Analytics Charts */}
       <AnalyticsCharts
