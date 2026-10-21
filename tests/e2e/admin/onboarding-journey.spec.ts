@@ -1039,6 +1039,22 @@ test.describe('Pilot onboarding certification', () => {
       const { data: signedIn, error: signInError } = await client.auth.signInWithPassword({ email: actor.email, password: actor.password })
       expect(signInError).toBeNull()
       expect(signedIn.user?.id).toBe(id)
+      // 3O: forged own-user correctness is rejected by table privileges,
+      // independently of RLS school isolation.
+      if (actor.role === 'student') {
+        const { error: forgedInsertError } = await client
+          .from('chapter_micro_check_attempts').insert({
+            user_id: id, chapter_id: 'ch-4', check_id: 'forged-check',
+            question_id: 'forged-question', concept_id: 'forged-concept',
+            difficulty: 'understanding', selected_answer: 'b', is_correct: true,
+          })
+        expect(forgedInsertError).not.toBeNull()
+        const { data: forgedRow, error: forgedLookupError } = await service
+          .from('chapter_micro_check_attempts').select('id').eq('user_id', id)
+          .eq('question_id', 'forged-question')
+        expect(forgedLookupError).toBeNull()
+        expect(forgedRow).toEqual([])
+      }
       if (actor.role === 'student') {
         const { error: bQuizError } = await service.from('quiz_attempts').insert({
           user_id: id, quiz_id: 'quiz-4', score: 9, total_questions: 10, percentage: 90,
