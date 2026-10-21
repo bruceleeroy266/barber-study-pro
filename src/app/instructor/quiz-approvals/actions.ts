@@ -105,7 +105,7 @@ export async function reviewQuizAccess(requestId: string, decision: 'approved' |
 
 export async function bulkApproveQuizAccess(requestIds: string[]) {
   if (requestIds.length === 0) return
-  const { supabase, user, profile } = await getActor()
+  const { supabase, user, profile, context } = await getActor()
   if (!profile.school_id || !isInstructorOrAdmin(profile.role)) {
     throw new Error('Instructor access required')
   }
@@ -154,5 +154,6 @@ export async function bulkApproveQuizAccess(requestIds: string[]) {
     }))
   )
 
+  await logSupportAction(context, 'bulk_approve_quiz_access', 'quiz_access_requests', { requestIds: safeIds, approvedCount: safeRequests.length, effectiveRole: profile.role })
   revalidatePath('/instructor/quiz-approvals')
 }
