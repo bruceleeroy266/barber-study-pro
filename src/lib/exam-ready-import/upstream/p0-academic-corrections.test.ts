@@ -97,6 +97,20 @@ describe('P0 academic corrections: student-facing assembled questions', () => {
     expect(eczema.options.find(o => o.id === 'a')?.text).toMatch(/eczema is a type of dermatitis/i)
   })
 
+  it('SCG-037–042 keep publisher references out of visible content and preserve safety keys', () => {
+    for (let n = 37; n <= 42; n++) {
+      const id = 'SCG-' + String(n).padStart(3, '0')
+      const q = scientificConceptGapQuestions.find(item => item.id === id)
+      expect(q, id).toBeDefined()
+      expect(q!.correctOptionId, id).toBe('a')
+      expect(q!.options, id).toHaveLength(4)
+      const visible = [q!.prompt, q!.explanation, ...q!.options.map(o => o.text)].join(' ')
+      expect(visible, id).not.toMatch(/\b(?:Milady|Cengage)\b|sourceBasis|sourceProvenance/i)
+    }
+    const inflamed = scientificConceptGapQuestions.find(q => q.id === 'SCG-042')!
+    expect(inflamed.options.find(o => o.id === 'a')?.text).toMatch(/Avoid services over inflamed skin/)
+  })
+
   it('SCG-015 defines redox by oxidation-number change instead of mandatory oxygen gain', () => {
     const q = scientificConceptGapQuestions.find(item => item.id === 'SCG-015')
     expect(q).toBeDefined()
