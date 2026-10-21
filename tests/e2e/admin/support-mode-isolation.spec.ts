@@ -102,6 +102,31 @@ test('authenticated platform support mode persists and enforces School A/B bound
 
     await expect(page.getByText(TEST_ACTORS.STUDENT_B.fullName)).toHaveCount(0)
 
+    // Revoke consent as the authenticated school administrator, while the
+    // platform operator still has the original Support Mode cookie.
+    const {error: revokeConsentError}=await schoolAdmin.rpc('set_school_support_authorization',{p_enable:false})
+    if(revokeConsentError)throw new Error('Revoke School A consent: '+revokeConsentError.message)
+    const {data: survivingSessions,error: sessionQueryError}=await service.from('support_access_sessions')
+      .select('actor_id').eq('actor_id',resolveActorId('PLATFORM_ADMIN'))
+    if(sessionQueryError)throw new Error(sessionQueryError.message)
+    expect(survivingSessions).toHaveLength(0)
+    await page.goto('/instructor/students')
+    await expect(page).not.toHaveURL('http://127.0.0.1:3000/instructor/students')
+    await expect(page.getByText(TEST_ACTORS.STUDENT_A.fullName)).toHaveCount(0)
+    const platform=await createAuthenticatedClient(TEST_ACTORS.PLATFORM_ADMIN)
+    const {error: deniedRestart}=await platform.rpc('set_support_access_session',{
+      p_target:resolveActorId('INSTRUCTOR_A'),p_enable:true,
+    })
+    expect(deniedRestart).not.toBeNull()
+
+    // Restore consent and reactivate only in disposable fixtures to separately
+    // exercise expiry rather than treating a revoked grant as an expiry test.
+    const {error: restoreConsent}=await schoolAdmin.rpc('set_school_support_authorization',{p_enable:true})
+    if(restoreConsent)throw new Error(restoreConsent.message)
+    const {error: reactivate}=await platform.rpc('set_support_access_session',{
+      p_target:resolveActorId('INSTRUCTOR_A'),p_enable:true,
+    })
+    if(reactivate)throw new Error(reactivate.message)
     // Force-expire the current actor-bound session in disposable storage.
     // The cookie remains, but must no longer authorize instructor pages.
     const {error: expireError}=await service.from('support_access_sessions')
