@@ -14,12 +14,16 @@ test('authenticated platform support mode persists and enforces School A/B bound
   await setupTestEnvironment()
   try {
     // The shared RLS fixtures don't set the approval state required by browser login/support targets.
-    for (const key of ['PLATFORM_ADMIN','INSTRUCTOR_A','INSTRUCTOR_B'] as const) {
+    for (const key of ['PLATFORM_ADMIN','INSTRUCTOR_A','INSTRUCTOR_B','SCHOOL_ADMIN_A'] as const) {
       const { error } = await service.from('profiles').update({
         approval_status: 'approved', is_disabled: false, requires_password_change: false,
       }).eq('id',resolveActorId(key))
       if (error) throw new Error(`Approve fixture ${key}: ${error.message}`)
     }
+    const {createAuthenticatedClient}=await import('../../integration/setup/db-helpers')
+    const schoolAdmin=await createAuthenticatedClient(TEST_ACTORS.SCHOOL_ADMIN_A)
+    const {error: consentError}=await schoolAdmin.rpc('set_school_support_authorization',{p_enable:true})
+    if(consentError)throw new Error('School consent fixture: '+consentError.message)
     // Local fixtures only. Seed real canonical assignment relationships.
     for (const side of ['A', 'B'] as const) {
       const { data, error } = await service.from('student_instructor_assignments').insert({
