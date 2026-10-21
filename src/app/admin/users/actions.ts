@@ -1749,26 +1749,7 @@ export async function deleteUser(id: string): Promise<ActionResult> {
   // deletion remains disabled until complete FK/cascade certification.
   return { success: false, error: 'Permanent deletion is disabled pending academic and audit-record retention certification. Disable the account instead.' }
 
-  const oldValues = {
-    email: userResult.user.email,
-    role: userResult.user.role,
-    school_id: userResult.user.school_id,
-    approval_status: userResult.user.approval_status,
-    is_disabled: userResult.user.is_disabled,
-  }
 
-  // Delete the Auth user. The profiles table has `on delete cascade` to
-  // auth.users, so the profile row and any cascade-linked operational records
-  // are cleaned up automatically.
-  const { error: deleteError } = await serviceClient.auth.admin.deleteUser(id)
-
-  if (deleteError) {
-    return { success: false, error: deleteError.message }
-  }
-
-  await logUserManagementAction(admin, id, userResult.user.email, 'delete_user', oldValues, {}, userResult.user.school_id)
-
-  return { success: true }
 }
 
 export async function requirePasswordChange(id: string): Promise<ActionResult> {
