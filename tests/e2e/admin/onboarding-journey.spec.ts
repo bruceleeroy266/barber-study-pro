@@ -1078,6 +1078,16 @@ test.describe('Pilot onboarding certification', () => {
           .eq('question_id', 'forged-question')
         expect(forgedLookupError).toBeNull()
         expect(forgedRow).toEqual([])
+        const { error: forgedQuizError } = await client.from('quiz_attempts').insert({
+          user_id: id, quiz_id: 'quiz-4', score: 30,
+          total_questions: 30, percentage: 100,
+        })
+        expect(forgedQuizError).not.toBeNull()
+        const { data: forgedQuiz, error: forgedQuizLookupError } = await service
+          .from('quiz_attempts').select('id').eq('user_id',id).eq('score',30)
+          .eq('total_questions',30)
+        expect(forgedQuizLookupError).toBeNull()
+        expect(forgedQuiz).toEqual([])
       }
       if (actor.role === 'student') {
         const { error: bQuizError } = await service.from('quiz_attempts').insert({
