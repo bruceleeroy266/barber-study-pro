@@ -147,6 +147,20 @@ describe('P0 academic corrections: student-facing assembled questions', () => {
     }
   })
 
+  it('HS-048–051 preserve key and remove publisher-facing attribution', () => {
+    for (let n = 48; n <= 51; n++) {
+      const id = 'HS-' + String(n).padStart(3, '0')
+      const q = hairScalpDisorderQuestions.find(item => item.id === id)
+      expect(q, id).toBeDefined()
+      expect(q!.correctOptionId, id).toBe('a')
+      expect(q!.options, id).toHaveLength(4)
+      const visible = [q!.prompt, q!.explanation, ...q!.options.map(o => o.text)].join(' ')
+      expect(visible, id).not.toMatch(/\b(?:Milady|Cengage)\b|sourceBasis|sourceProvenance/i)
+    }
+    const ringed = hairScalpDisorderQuestions.find(q => q.id === 'HS-051')!
+    expect(ringed.explanation).toMatch(/pili annulati/i)
+  })
+
   it('SCG-015 defines redox by oxidation-number change instead of mandatory oxygen gain', () => {
     const q = scientificConceptGapQuestions.find(item => item.id === 'SCG-015')
     expect(q).toBeDefined()
