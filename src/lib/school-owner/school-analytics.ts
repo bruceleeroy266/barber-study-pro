@@ -832,7 +832,7 @@ export function generateSchoolReport(
               average(metricRows.filter((r) => assessmentEvidence.has(r.studentId)).map((r) => r.assessmentPassRate))
             )}%`
           : 'Average pass rate: No Assessments',
-        rows: rows.map((r) => ({
+        rows: metricRows.map((r) => ({
           Student: r.fullName,
           'Pass Rate': assessmentEvidence.has(r.studentId) ? `${r.assessmentPassRate}%` : 'No Assessments',
           Status: !assessmentEvidence.has(r.studentId)
