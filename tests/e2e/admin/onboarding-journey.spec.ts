@@ -1313,6 +1313,11 @@ test.describe('Pilot onboarding certification', () => {
     expect(bannedAuth.user?.banned_until).toBeTruthy()
     await studentSession.page.goto('/dashboard')
     await expect(studentSession.page).toHaveURL(/\/login\?error=disabled/)
+    // The same existing browser context must not start an authenticated study session.
+    const blockedApi = await studentSession.page.request.post('/api/study-sessions/start', {
+      data: { surfaceType: 'lesson', surfaceId: 'crud28-disposable' },
+    })
+    expect(blockedApi.status()).toBe(403)
     expect(await snapshotRecords()).toEqual(baselineAcademicRecords)
 
     studentManagement = await openStudentManagement()
