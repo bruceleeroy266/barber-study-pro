@@ -628,7 +628,7 @@ export default function ManageUserModal({
         )}
         {(managedUser.role === 'student' || managedUser.role === 'apprentice') && (
           <p className="text-xs text-[var(--color-text-muted)]">
-            To preserve academic records, disable this learner's account instead of deleting it.
+            To preserve academic records, disable this learner&apos;s account instead of deleting it.
           </p>
         )}
       </div>
