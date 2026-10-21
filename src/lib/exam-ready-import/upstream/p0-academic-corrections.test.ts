@@ -4,6 +4,21 @@ import { hairScalpDisorderQuestions } from './hair-scalp-disorders-bank'
 import { scientificConceptGapQuestions } from './scientific-concepts-gap'
 
 describe('P0 academic corrections: student-facing assembled questions', () => {
+  it('IC-061–070 assembled infection-control questions use valid keys and neutral wording', () => {
+    for (let n = 61; n <= 70; n++) {
+      const id = 'IC-' + String(n).padStart(3, '0')
+      const q = infectionControlQuestions.find(item => item.id === id)
+      expect(q, id).toBeDefined()
+      expect(q!.options, id).toHaveLength(4)
+      expect(q!.correctOptionId, id).toBe('a')
+      expect(q!.options.filter(o => o.id === q!.correctOptionId), id).toHaveLength(1)
+      expect([q!.prompt, q!.explanation, ...q!.options.map(o => o.text)].join(' '), id)
+        .not.toMatch(/\b(?:Milady|Cengage)\b/i)
+    }
+    expect(infectionControlQuestions.find(q => q.id === 'IC-066')!.explanation).toMatch(/spores/i)
+    expect(infectionControlQuestions.find(q => q.id === 'IC-070')!.explanation).toMatch(/Safety Data Sheet/i)
+  })
+
   it('IC-051–060 assembled infection-control answers and publisher-neutral public text', () => {
     for (let n = 51; n <= 60; n++) {
       const id = 'IC-' + String(n).padStart(3, '0')
