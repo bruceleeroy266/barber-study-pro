@@ -79,6 +79,7 @@ describe('C8-6 Chapter 8 micro-check UI/persistence regression', () => {
         question_id: request.questionId, concept_id: 'ch8-electricity-circuits',
         difficulty: 'application', selected_answer: request.selectedAnswer,
         is_correct: request.selectedAnswer === 'a',
+        answered_at: new Date().toISOString(),
       }
       mocks.insert(payload)
       const saved = await mocks.single()
