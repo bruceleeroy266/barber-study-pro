@@ -60,7 +60,7 @@ function buildSessionClient(profile: { role: string; school_id: string | null },
       builder.range = () => builder
       builder.single = () => {
         if (table === 'profiles' && String(selectArgs[0]).startsWith('role, school_id')) {
-          return Promise.resolve({ data: profile, error: null })
+          return Promise.resolve({ data: { ...profile, approval_status: 'approved', is_disabled: false, requires_password_change: false }, error: null })
         }
         return Promise.resolve({ data: null, error: null })
       }
