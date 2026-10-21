@@ -973,6 +973,11 @@ test.describe('Pilot onboarding certification', () => {
     ] as const
     // QUIZ-MICRO-ANALYTICS-3H: prove academic micro-check evidence is
     // school-isolated using real authenticated sessions in local Supabase.
+    const { error: aQuizError } = await service.from('quiz_attempts').insert({
+      user_id: studentProfile!.id, quiz_id: 'quiz-4', score: 7,
+      total_questions: 10, percentage: 70,
+    })
+    expect(aQuizError).toBeNull()
     const aMicroQuestion = 'qa3h-school-a-q1'
     const { error: aMicroError } = await service.from('chapter_micro_check_attempts').insert({
       user_id: studentProfile!.id, chapter_id: 'ch-4', check_id: 'qa3h',
@@ -993,6 +998,14 @@ test.describe('Pilot onboarding certification', () => {
       }, { onConflict: 'id' })
       expect(profileInsertError).toBeNull()
       if (actor.role === 'student') {
+        const { error: bQuizError } = await service.from('quiz_attempts').insert({
+          user_id: id, quiz_id: 'quiz-4', score: 9, total_questions: 10, percentage: 90,
+        })
+        expect(bQuizError).toBeNull()
+        const { data: ownQuiz, error: ownQuizError } = await client.from('quiz_attempts')
+          .select('quiz_id,score,total_questions,percentage').eq('user_id',id)
+        expect(ownQuizError).toBeNull()
+        expect(ownQuiz).toEqual([{quiz_id:'quiz-4',score:9,total_questions:10,percentage:90}])
         const { data: existingStudent, error: existingStudentError } = await service.from('students')
           .select('id').eq('profile_id', id).eq('school_id', schoolBId).maybeSingle()
         expect(existingStudentError).toBeNull()
@@ -1024,6 +1037,11 @@ test.describe('Pilot onboarding certification', () => {
         .eq('user_id', studentProfile!.id)
       expect(crossSchoolMicroError).toBeNull()
       expect(crossSchoolMicro).toEqual([])
+      const { data: crossSchoolQuiz, error: crossSchoolQuizError } = await client
+        .from('quiz_attempts').select('quiz_id,score,total_questions,percentage')
+        .eq('user_id', studentProfile!.id)
+      expect(crossSchoolQuizError).toBeNull()
+      expect(crossSchoolQuiz).toEqual([])
       if (actor.role === 'student') {
         const { error: bMicroError } = await service.from('chapter_micro_check_attempts').insert({
           user_id: id, chapter_id: 'ch-4', check_id: 'qa3h',
