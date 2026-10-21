@@ -369,6 +369,9 @@ export default async function DashboardPage() {
     return !chapterProgress || chapterProgress.progress_percentage < 100
   })
 
+  // Practice navigation is a deep link, not a bypass of instructor approval.
+  const practiceChapter = continueChapter ?? chapters?.[0]
+
   const continueProgress = continueChapter
     ? progress?.find(p => p.chapter_id === continueChapter.id)?.progress_percentage || 0
     : 0
@@ -380,6 +383,14 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
+      {practiceChapter && (
+        <Link
+          href={`/dashboard/chapters/${practiceChapter.chapter_number}#chapter-quiz`}
+          className="inline-flex w-fit items-center rounded-lg border border-[var(--color-brand-gold)] px-4 py-2 font-semibold text-[var(--color-brand-gold)] hover:bg-white/5"
+        >
+          Take a Practice Quiz
+        </Link>
+      )}
       {/* ZONE 1: ORIENTATION — Where am I? */}
       <div className="space-y-4">
         <div>
