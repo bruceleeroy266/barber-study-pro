@@ -4,6 +4,23 @@ import { hairScalpDisorderQuestions } from './hair-scalp-disorders-bank'
 import { scientificConceptGapQuestions } from './scientific-concepts-gap'
 
 describe('P0 academic corrections: student-facing assembled questions', () => {
+  it('IC-051–060 assembled infection-control answers and publisher-neutral public text', () => {
+    for (let n = 51; n <= 60; n++) {
+      const id = 'IC-' + String(n).padStart(3, '0')
+      const q = infectionControlQuestions.find(item => item.id === id)
+      expect(q, id).toBeDefined()
+      expect(q!.options, id).toHaveLength(4)
+      expect(q!.options.filter(o => o.id === q!.correctOptionId), id).toHaveLength(1)
+      expect([q!.prompt, q!.explanation, ...q!.options.map(o => o.text)].join(' '), id)
+        .not.toMatch(/\b(?:Milady|Cengage)\b/i)
+    }
+    const byId = (id: string) => infectionControlQuestions.find(q => q.id === id)!
+    expect(byId('IC-051').explanation).toMatch(/Safety Data Sheet/i)
+    expect(byId('IC-058').explanation).toMatch(/regardless of reported health history/i)
+    expect(byId('IC-059').explanation).toMatch(/head lice/i)
+    expect(byId('IC-060').explanation).toMatch(/laundered/i)
+  })
+
   it('IC-041–050 assembled safety keys and publisher-neutral learner fields', () => {
     for (let n = 41; n <= 50; n++) {
       const id = 'IC-' + String(n).padStart(3, '0')
