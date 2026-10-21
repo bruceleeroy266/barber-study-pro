@@ -995,6 +995,30 @@ test.describe('Pilot onboarding certification', () => {
     const instructorDownload = await instructorDownloadPromise
     const instructorCsv = await (await import('node:fs/promises')).readFile(await instructorDownload.path()!, 'utf8')
     expect(instructorCsv).toBe(await studentCsv)
+    // Authenticated student can still save a genuine server-graded chapter answer.
+    const legacySave = await studentSession.page.evaluate(async () => {
+      const result = await fetch('/api/academic/micro-check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chapterId: 'ch-4', questionId: 'mcq-4-001', selectedAnswer: 'b' }),
+      })
+      return { status: result.status, body: await result.json() }
+    })
+    expect(legacySave.status).toBe(200)
+    expect(legacySave.body.row).toMatchObject({
+      user_id: studentProfile!.id, chapter_id: 'ch-4', question_id: 'mcq-4-001',
+      selected_answer: 'b', is_correct: false,
+    })
+    const forgedServerSave = await studentSession.page.evaluate(async () => {
+      const response = await fetch('/api/academic/micro-check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chapterId: 'ch-4', questionId: 'mcq-4-002',
+          selectedAnswer: 'b', is_correct: true, user_id: 'forged' }),
+      })
+      return response.status
+    })
+    expect(forgedServerSave).toBe(400)
     const aMicroQuestion = 'qa3h-school-a-q1'
     const { error: aMicroError } = await service.from('chapter_micro_check_attempts').insert({
       user_id: studentProfile!.id, chapter_id: 'ch-4', check_id: 'qa3h',
