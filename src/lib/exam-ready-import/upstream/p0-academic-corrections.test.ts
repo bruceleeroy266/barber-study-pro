@@ -1,8 +1,27 @@
 import { describe, expect, it } from 'vitest'
+import { infectionControlQuestions } from './infection-control-bank'
 import { hairScalpDisorderQuestions } from './hair-scalp-disorders-bank'
 import { scientificConceptGapQuestions } from './scientific-concepts-gap'
 
 describe('P0 academic corrections: student-facing assembled questions', () => {
+  it('IC-001–012 preserve correct infection-control facts in assembled bank', () => {
+    for (let n = 1; n <= 12; n++) {
+      const id = 'IC-' + String(n).padStart(3, '0')
+      const q = infectionControlQuestions.find(item => item.id === id)
+      expect(q, id).toBeDefined()
+      expect(q!.options, id).toHaveLength(4)
+      expect(q!.options.filter(o => o.id === q!.correctOptionId), id).toHaveLength(1)
+    }
+    const contact = infectionControlQuestions.find(q => q.id === 'IC-002')!
+    expect(contact.options.find(o => o.id === contact.correctOptionId)?.text).toMatch(/product label/i)
+    expect(contact.explanation).toMatch(/wet-contact time/i)
+    expect(contact.explanation).not.toMatch(/\b(?:Milady|Cengage)\b/i)
+    const contagious = infectionControlQuestions.find(q => q.id === 'IC-007')!
+    expect(contagious.prompt).toMatch(/description.*contagious disease/i)
+    expect(contagious.options.find(o => o.id === contagious.correctOptionId)?.text).toMatch(/spread from one person to another/i)
+    expect(contagious.explanation).toMatch(/spread from one person to another/i)
+  })
+
   it('HS-023 asks an answerable androgenetic hair-loss question with coherent options', () => {
     const q = hairScalpDisorderQuestions.find(item => item.id === 'HS-023')
     expect(q).toBeDefined()
