@@ -14,6 +14,7 @@ import {
 interface Props {
   config: SchoolConfiguration
   onChange: (programs: AcademicProgram[]) => void
+  targetSchoolId?: string
 }
 
 const PROGRAM_TEMPLATES = [
@@ -39,7 +40,7 @@ function mapDbToAcademicProgram(db: ProgramListItem): AcademicProgram {
   }
 }
 
-export default function ProgramsSection({ config: _config, onChange }: Props) {
+export default function ProgramsSection({ config, onChange, targetSchoolId }: Props) {
   // config.programs is intentionally NOT used as display source.
   // dbPrograms (loaded from server) is the single source of truth.
   const [dbPrograms, setDbPrograms] = useState<ProgramListItem[]>([])
@@ -48,9 +49,10 @@ export default function ProgramsSection({ config: _config, onChange }: Props) {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editForm, setEditForm] = useState<Partial<AcademicProgram>>({})
   const [isAdding, setIsAdding] = useState(false)
+  const defaultBarberHours = config.school.state?.trim().toUpperCase() === 'OK' ? 1250 : 1500
   const [newProgram, setNewProgram] = useState<Partial<AcademicProgram>>({
     name: '',
-    requiredHours: 1500,
+    requiredHours: defaultBarberHours,
     requiredAssessments: 10,
     requiredPracticals: 20,
   })
@@ -60,7 +62,7 @@ export default function ProgramsSection({ config: _config, onChange }: Props) {
   const loadPrograms = useCallback(async () => {
     setIsLoading(true)
     setActionError(null)
-    const result = await getPrograms()
+    const result = await getPrograms(targetSchoolId)
     setIsLoading(false)
     if (result.success && result.data) {
       setDbPrograms(result.data)
@@ -70,7 +72,7 @@ export default function ProgramsSection({ config: _config, onChange }: Props) {
     } else if (result.error) {
       setActionError(result.error)
     }
-  }, [onChange])
+  }, [onChange, targetSchoolId])
 
   useEffect(() => {
     loadPrograms()
@@ -89,7 +91,7 @@ export default function ProgramsSection({ config: _config, onChange }: Props) {
   function applyTemplate(template: typeof PROGRAM_TEMPLATES[0]) {
     setNewProgram({
       name: template.name,
-      requiredHours: template.requiredHours,
+      requiredHours: template.name === 'Barbering' ? defaultBarberHours : template.requiredHours,
       requiredAssessments: template.requiredAssessments,
       requiredPracticals: template.requiredPracticals,
     })
@@ -113,15 +115,15 @@ export default function ProgramsSection({ config: _config, onChange }: Props) {
 
     const result = await createProgram({
       name,
-      required_hours: newProgram.requiredHours ?? 1500,
+      required_hours: newProgram.requiredHours ?? defaultBarberHours,
       required_assessments: newProgram.requiredAssessments ?? 10,
       required_practicals: newProgram.requiredPracticals ?? 20,
-    })
+    }, targetSchoolId)
 
     setPendingAction(null)
 
     if (result.success) {
-      setNewProgram({ name: '', requiredHours: 1500, requiredAssessments: 10, requiredPracticals: 20 })
+      setNewProgram({ name: '', requiredHours: defaultBarberHours, requiredAssessments: 10, requiredPracticals: 20 })
       setIsAdding(false)
       await loadPrograms()
     } else {
@@ -159,7 +161,7 @@ export default function ProgramsSection({ config: _config, onChange }: Props) {
       required_hours: editForm.requiredHours,
       required_assessments: editForm.requiredAssessments,
       required_practicals: editForm.requiredPracticals,
-    })
+    }, targetSchoolId)
 
     setPendingAction(null)
 
@@ -183,7 +185,7 @@ export default function ProgramsSection({ config: _config, onChange }: Props) {
     setPendingAction(`deactivate-${programId}`)
     setActionError(null)
 
-    const result = await deactivateProgram(programId)
+    const result = await deactivateProgram(programId, targetSchoolId)
 
     setPendingAction(null)
 
@@ -435,9 +437,9 @@ export default function ProgramsSection({ config: _config, onChange }: Props) {
               </div>
             ) : (
               /* View Mode */
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-3">
                     <h3 className="text-lg font-medium text-white">{program.name}</h3>
                     <span
                       className={`px-2 py-0.5 rounded text-xs font-medium ${
@@ -449,14 +451,14 @@ export default function ProgramsSection({ config: _config, onChange }: Props) {
                       {program.active ? 'Active' : 'Inactive'}
                     </span>
                   </div>
-                  <div className="flex items-center gap-6 mt-2 text-sm text-silver">
-                    <span>{program.requiredHours} hours</span>
-                    <span>{program.requiredAssessments} assessments</span>
-                    <span>{program.requiredPracticals} practicals</span>
+                  <div className="mt-3 grid grid-cols-3 gap-3 text-sm text-silver">
+                    <span className="min-w-0">{program.requiredHours}<span className="block text-xs">hours</span></span>
+                    <span className="min-w-0">{program.requiredAssessments}<span className="block text-xs">assessments</span></span>
+                    <span className="min-w-0">{program.requiredPracticals}<span className="block text-xs">practicals</span></span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2 sm:justify-end">
                   <button
                     type="button"
                     onClick={() => handleDbDeactivate(program.id)}
