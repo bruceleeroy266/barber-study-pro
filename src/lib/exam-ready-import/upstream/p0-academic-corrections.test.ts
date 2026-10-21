@@ -15,7 +15,7 @@ describe('P0 academic corrections: student-facing assembled questions', () => {
     expect(q!.explanation).toMatch(/inherited|androgen/i)
     // Protect public-facing wording only. Keep sourceBasis as restricted audit provenance.
     const publicFields = [q!.prompt, q!.explanation, ...q!.options.map(option => option.text)].join(' ')
-    expect(publicFields).not.toMatch(/\\b(?:Milady|Cengage)\\b|sourceBasis|sourceProvenance/i)
+    expect(publicFields).not.toMatch(/\b(?:Milady|Cengage)\b|sourceBasis|sourceProvenance/i)
     expect(q!.options).toHaveLength(4)
   })
 
