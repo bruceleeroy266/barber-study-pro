@@ -25,7 +25,7 @@ type Profile = {
   requires_password_change: boolean
 }
 
-function mockCaller(role = 'admin', schoolId: string | null = null) {
+function mockCaller(role = 'admin', schoolId: string | null = null, disabled = false) {
   // Replace any per-test caller mock deterministically. vi.resetModules()
   // clears the module cache but does not unregister a queued doMock factory.
   vi.doUnmock('@/lib/supabase-server')
@@ -41,7 +41,7 @@ function mockCaller(role = 'admin', schoolId: string | null = null) {
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnValue({
             single: vi.fn().mockResolvedValue({
-              data: { role, school_id: schoolId, approval_status: 'approved', is_disabled: false, requires_password_change: false },
+              data: { role, school_id: schoolId, approval_status: 'approved', is_disabled: disabled, requires_password_change: false },
               error: null,
             }),
           }),
@@ -161,6 +161,20 @@ describe('UM-H3.2/3 updateUserIdentity', () => {
     vi.doUnmock('@/lib/supabase-server')
     vi.doUnmock('@/lib/supabase-service-role')
     vi.restoreAllMocks()
+  })
+
+  it('rejects privileged identity updates by an already-signed-in disabled admin', async () => {
+    mockCaller('admin', null, true)
+    const { authUpdate, rpc } = mockService()
+    const { updateUserIdentity } = await import('./actions')
+    const result = await updateUserIdentity(USER_ID, {
+      full_name: 'Unauthorized edit',
+      email: 'forbidden@example.test',
+    })
+    expect(result.success).toBe(false)
+    expect(result.error).toMatch(/disabled|not approved/i)
+    expect(authUpdate).not.toHaveBeenCalled()
+    expect(rpc).not.toHaveBeenCalled()
   })
 
   it('updates Auth then transactionally reconciles profile + onboarding identity', async () => {
