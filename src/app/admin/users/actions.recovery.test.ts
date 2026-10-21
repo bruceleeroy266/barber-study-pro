@@ -269,6 +269,8 @@ describe('pilot invitation recovery', () => {
   })
 
   it('blocks School B administrator recovery of School A student', async () => {
+    // Clear the prior per-test module mock before binding a different caller.
+    vi.doUnmock('@/lib/supabase-server')
     vi.resetModules()
     mockCaller('school_admin', SCHOOL_B)
     const { resetPasswordForEmail } = makeServiceClient({ school_id: SCHOOL_A })
