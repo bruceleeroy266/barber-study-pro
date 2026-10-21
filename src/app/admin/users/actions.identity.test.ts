@@ -41,7 +41,7 @@ function mockCaller(role = 'admin', schoolId: string | null = null) {
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnValue({
             single: vi.fn().mockResolvedValue({
-              data: { role, school_id: schoolId },
+              data: { role, school_id: schoolId, approval_status: 'approved', is_disabled: false, requires_password_change: false },
               error: null,
             }),
           }),
