@@ -111,6 +111,18 @@ describe('P0 academic corrections: student-facing assembled questions', () => {
     expect(inflamed.options.find(o => o.id === 'a')?.text).toMatch(/Avoid services over inflamed skin/)
   })
 
+  it('HS-030–035 have correct keys and publisher-neutral visible wording', () => {
+    for (let n = 30; n <= 35; n++) {
+      const id = 'HS-' + String(n).padStart(3, '0')
+      const q = hairScalpDisorderQuestions.find(item => item.id === id)
+      expect(q, id).toBeDefined()
+      expect(q!.correctOptionId, id).toBe('a')
+      expect(q!.options, id).toHaveLength(4)
+      const visible = [q!.prompt, q!.explanation, ...q!.options.map(o => o.text)].join(' ')
+      expect(visible, id).not.toMatch(/\b(?:Milady|Cengage)\b|sourceBasis|sourceProvenance/i)
+    }
+  })
+
   it('SCG-015 defines redox by oxidation-number change instead of mandatory oxygen gain', () => {
     const q = scientificConceptGapQuestions.find(item => item.id === 'SCG-015')
     expect(q).toBeDefined()
