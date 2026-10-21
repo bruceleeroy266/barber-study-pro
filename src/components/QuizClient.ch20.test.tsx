@@ -133,6 +133,26 @@ describe('QuizClient — Chapter 20', () => {
     mocks.insert.mockReturnValue({ select: selectAfterInsert })
     mocks.upsert.mockResolvedValue({ error: null })
     mocks.saveMissedQuestions.mockResolvedValue({ ok: true })
+    // Test the server-scored API contract rather than the removed browser DB INSERT.
+    const originalFetch = globalThis.fetch
+    vi.stubGlobal('fetch', vi.fn(async (url: string, options?: RequestInit) => {
+      if (url === '/api/academic/quiz-attempt') {
+        const request = JSON.parse(String(options?.body)) as { answers: Record<string, string> }
+        const submitted = request.answers
+        const questions = chapter20PremiumQuizQuestions
+        const score = Object.entries(submitted).filter(([id, answer]) =>
+          (questions.find(q => q.id === id)?.correct_answer ?? questions[0]?.correct_answer) === answer
+        ).length
+        const total = Object.keys(submitted).length
+        await mocks.insert({ quiz_id: quiz.id, user_id: 'user-1', score, total_questions: total,
+          percentage: Math.round(score / total * 100), answers_json: submitted })
+        return { ok: true, status: 200, json: async () => ({
+          attempt: { id: 'mock-attempt-id-123', score, total_questions: total, percentage: Math.round(score / total * 100) },
+        }) }
+      }
+      return originalFetch(url)
+    }))
+
   })
 
   it('loads all 17 questions', () => {
