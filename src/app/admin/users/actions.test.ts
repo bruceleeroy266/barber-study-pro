@@ -1391,7 +1391,8 @@ describe('deleteUser', () => {
         },
         ...overrides,
       },
-      role
+      role,
+      role === 'admin' ? null : RISE_SCHOOL_ID
     )
   }
 
@@ -1469,7 +1470,7 @@ describe('deleteUser', () => {
     const result = await deleteUserAction(TARGET_USER_ID)
 
     expect(result.success).toBe(false)
-    expect(result.error).toMatch(/cannot delete platform administrators/i)
+    expect(result.error).toMatch(/permanent deletion is restricted to platform administrators/i)
     expect(mockServiceClient.auth.admin.deleteUser).not.toHaveBeenCalled()
   })
 
@@ -1506,7 +1507,7 @@ describe('deleteUser', () => {
     const result = await deleteUserAction(TARGET_USER_ID)
 
     expect(result.success).toBe(false)
-    expect(result.error).toMatch(/forbidden/i)
+    expect(result.error).toMatch(/permanent deletion is restricted to platform administrators/i)
     expect(mockServiceClient.auth.admin.deleteUser).not.toHaveBeenCalled()
   })
 
