@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { Logo } from '@/components/brand'
+import { MIN_PASSWORD_LENGTH, PASSWORD_REQUIREMENTS, isStrongPassword } from '@/lib/auth/password-policy'
 
 export default function UpdatePasswordPage() {
   const router = useRouter()
@@ -26,8 +27,8 @@ export default function UpdatePasswordPage() {
       return
     }
 
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters')
+    if (!isStrongPassword(password)) {
+      setError(PASSWORD_REQUIREMENTS)
       setLoading(false)
       return
     }
@@ -113,11 +114,11 @@ export default function UpdatePasswordPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            minLength={6}
+            minLength={MIN_PASSWORD_LENGTH}
             className="w-full px-4 py-3 bg-[var(--color-background-secondary)] border border-[var(--color-border-primary)] rounded-lg text-white placeholder-silver-gray focus:outline-none focus:border-[var(--color-brand-gold)] focus:ring-1 focus:ring-[var(--color-brand-gold)] transition-colors"
             placeholder="••••••••"
           />
-          <p className="text-xs text-[var(--color-text-muted)] mt-1">Must be at least 6 characters</p>
+          <p className="text-xs text-[var(--color-text-muted)] mt-1">{PASSWORD_REQUIREMENTS}</p>
         </div>
 
         <div>

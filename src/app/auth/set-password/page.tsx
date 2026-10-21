@@ -6,16 +6,7 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { getRoleBasedRedirect } from '@/lib/auth-access'
 import { markCurrentInvitationAccepted } from '@/app/auth/invitation-actions'
-
-const MIN_PASSWORD_LENGTH = 8
-
-function isStrongPassword(password: string): boolean {
-  if (password.length < MIN_PASSWORD_LENGTH) return false
-  const hasUpper = /[A-Z]/.test(password)
-  const hasLower = /[a-z]/.test(password)
-  const hasDigit = /\d/.test(password)
-  return hasUpper && hasLower && hasDigit
-}
+import { MIN_PASSWORD_LENGTH, isStrongPassword } from '@/lib/auth/password-policy'
 
 export default function SetPasswordPage() {
   const router = useRouter()
@@ -44,7 +35,7 @@ export default function SetPasswordPage() {
         if (cancelled) return
 
         if (sessionError || !session) {
-          setError('This ASCYN PRO invitation link is invalid or has expired. Please ask your school administrator to resend the invitation.')
+          setError('This ASCYN PRO invitation link is invalid or has expired. Use Forgot password on the sign-in page to request a fresh access link.')
         } else {
           const { data: profile } = await supabase
             .from('profiles')

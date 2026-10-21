@@ -335,11 +335,14 @@ function CallbackHandler() {
           request a new invitation.
         </p>
         <Link
-          href="/login"
+          href="/reset-password"
           className="inline-block px-6 py-3 bg-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold)] text-black font-semibold rounded-lg transition-colors"
         >
-          Sign in
+          Request fresh access link
         </Link>
+        <div className="mt-4">
+          <Link href="/login" className="text-[var(--color-brand-gold)] underline">Sign in</Link>
+        </div>
       </div>
     )
   }
@@ -378,6 +381,13 @@ function CallbackHandler() {
           {isExchanging ? 'Verifying...' : hasVerificationError ? 'Verification Failed' : 'Continue'}
         </button>
 
+        {hasVerificationError && (
+          <div className="mb-4 text-center text-sm">
+            <Link href="/reset-password" className="text-[var(--color-brand-gold)] underline">
+              Request a new secure access link
+            </Link>
+          </div>
+        )}
         <div className="text-center text-sm">
           <Link href="/login" className="text-[var(--color-brand-gold)] hover:text-[var(--color-brand-gold)] transition-colors">
             Back to sign in

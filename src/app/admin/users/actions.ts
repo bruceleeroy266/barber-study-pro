@@ -991,11 +991,8 @@ export async function resendUserSetupLink(id: string): Promise<ActionResult> {
     return { success: false, error: 'Authentication email does not match the managed profile.' }
   }
 
-  const recoveryResult = await sendAccountRecoveryEmail(serviceClient, target.email.toLowerCase())
-  if (!recoveryResult.success) {
-    return recoveryResult
-  }
-
+  // Persist the invitation lifecycle first. A database failure must never
+  // leave a recovery email sent while reporting that setup failed.
   const lifecycleResult = await ensurePendingInvitationLifecycle(serviceClient, admin, {
     authUserId: target.id,
     email: target.email.toLowerCase(),
@@ -1005,6 +1002,13 @@ export async function resendUserSetupLink(id: string): Promise<ActionResult> {
   })
   if (!lifecycleResult.success) {
     return { success: false, error: lifecycleResult.error }
+  }
+
+  const recoveryResult = await sendAccountRecoveryEmail(serviceClient, target.email.toLowerCase())
+  if (!recoveryResult.success) {
+    // Lifecycle is already pending if delivery fails. Do not claim atomicity;
+    // resend is safe on retry and retains the same Auth identity.
+    return recoveryResult
   }
 
   revalidatePath('/admin/users')

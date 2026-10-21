@@ -236,6 +236,18 @@ describe('pilot invitation recovery', () => {
     )
   })
 
+  it('does not send recovery email when invitation persistence fails', async () => {
+    const { resetPasswordForEmail, invitationUpdate } = makeServiceClient({}, 'expired')
+    invitationUpdate.mockImplementation(() => ({
+      eq: vi.fn().mockResolvedValue({ data: null, error: { message: 'disposable invitation write failure' } }),
+    }))
+    const { resendUserSetupLink } = await import('./actions')
+    const result = await resendUserSetupLink(USER_ID)
+    expect(result.success).toBe(false)
+    expect(result.error).toMatch(/disposable invitation write failure/)
+    expect(resetPasswordForEmail).not.toHaveBeenCalled()
+  })
+
   it('does not send setup links to disabled accounts', async () => {
     const { resetPasswordForEmail } = makeServiceClient({ is_disabled: true })
     const { resendUserSetupLink } = await import('./actions')
@@ -246,4 +258,32 @@ describe('pilot invitation recovery', () => {
     expect(result.error).toMatch(/disabled/i)
     expect(resetPasswordForEmail).not.toHaveBeenCalled()
   })
+  it.each(['student', 'instructor', 'school_admin'])('keeps %s identity stable when resending recovery link', async role => {
+    const { resetPasswordForEmail, getUserById, serviceClient } = makeServiceClient({ role })
+    const { resendUserSetupLink } = await import('./actions')
+    const result = await resendUserSetupLink(USER_ID)
+    expect(result.success).toBe(true)
+    expect(getUserById).toHaveBeenCalledWith(USER_ID)
+    expect(resetPasswordForEmail).toHaveBeenCalledTimes(1)
+    expect(serviceClient.auth.admin.inviteUserByEmail).not.toHaveBeenCalled()
+  })
+
+  it('blocks School B administrator recovery of School A student', async () => {
+    vi.resetModules()
+    mockCaller('school_admin', SCHOOL_B)
+    const { resetPasswordForEmail } = makeServiceClient({ school_id: SCHOOL_A })
+    const { resendUserSetupLink } = await import('./actions')
+    const result = await resendUserSetupLink(USER_ID)
+    expect(result.success).toBe(false)
+    expect(resetPasswordForEmail).not.toHaveBeenCalled()
+  })
+
+  it('blocks rejected user recovery without sending email', async () => {
+    const { resetPasswordForEmail } = makeServiceClient({ approval_status: 'rejected' })
+    const { resendUserSetupLink } = await import('./actions')
+    const result = await resendUserSetupLink(USER_ID)
+    expect(result.success).toBe(false)
+    expect(resetPasswordForEmail).not.toHaveBeenCalled()
+  })
+
 })

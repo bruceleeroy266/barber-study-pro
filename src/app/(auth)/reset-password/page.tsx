@@ -39,8 +39,8 @@ export default function ResetPasswordPage() {
         </div>
         <h1 className="text-2xl font-bold text-white mb-4">Check Your Email</h1>
         <p className="text-[var(--color-text-muted)] mb-6">
-          We&apos;ve sent a password reset link to <strong>{email}</strong>.
-          Please check your inbox and follow the instructions.
+          If an account exists for <strong>{email}</strong>, a recovery link will be sent.
+          Check your inbox and spam folder. If no email arrives, ask your school administrator to verify your account email.
         </p>
         <Link
           href="/login"
@@ -59,7 +59,7 @@ export default function ResetPasswordPage() {
           <Logo variant="compact" size="xl" />
         </div>
         <h1 className="text-2xl font-bold text-white mb-2">Reset Password</h1>
-        <p className="text-[var(--color-text-muted)]">Enter your email to receive a reset link</p>
+        <p className="text-[var(--color-text-muted)]">Enter your account email to request a secure recovery link</p>
       </div>
 
       {error && (

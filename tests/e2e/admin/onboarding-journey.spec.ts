@@ -87,6 +87,30 @@ function extractInviteUrl(value: unknown): string | null {
   return null
 }
 
+async function waitForRecoveryUrl(email: string): Promise<string> {
+  for (let attempt = 0; attempt < 40; attempt += 1) {
+    const response = await fetch(`${getMailpitUrl()}/api/v1/messages`)
+    if (response.ok) {
+      const body = await response.json() as Record<string, unknown>
+      const messages = (Array.isArray(body.messages) ? body.messages : body.Messages) as Record<string, unknown>[] | undefined
+      for (const message of messages || []) {
+        if (!collectStrings(message).join(' ').toLowerCase().includes(email.toLowerCase())) continue
+        const id = message.ID ?? message.Id ?? message.id
+        if (!id) continue
+        const details = await fetch(`${getMailpitUrl()}/api/v1/message/${encodeURIComponent(String(id))}`)
+        if (!details.ok) continue
+        const urls = collectStrings(await details.json()).flatMap(value => value.match(/https?:\/\/[^\s"'<>]+/g) || [])
+        for (const raw of urls) {
+          const url = raw.replace(/&amp;/g, '&').replace(/\\u0026/g, '&').replace(/[),.;]+$/, '')
+          if (url.includes('/auth/v1/verify') && (url.includes('type=recovery') || url.includes('type%3Drecovery'))) return url
+        }
+      }
+    }
+    await new Promise(resolve => setTimeout(resolve, 500))
+  }
+  throw new Error(`No recovery email/link arrived for disposable account ${email}`)
+}
+
 async function waitForInviteUrl(email: string): Promise<string> {
   const mailpit = getMailpitUrl()
 
@@ -331,6 +355,7 @@ async function inviteSchoolUser(
 test.describe('Pilot onboarding certification', () => {
   test.describe.configure({ retries: 0 })
   test('inquiry → approval → school → invites → acceptance → enrollment → instructor visibility', async ({ browser }) => {
+    test.setTimeout(180_000)
     requireLocalCertificationEnvironment()
     const service = getServiceClient()
 
@@ -746,8 +771,15 @@ test.describe('Pilot onboarding certification', () => {
       await expect(practiceLink).toHaveAttribute('href', /\/dashboard\/chapters\/\d+#chapter-quiz$/)
       await practiceLink.click()
       await expect(studentSession.page).toHaveURL(/\/dashboard\/chapters\/\d+#chapter-quiz$/)
-      await expect(studentSession.page.getByRole('heading', { name: 'Chapter Quiz' })).toBeVisible()
-      await expect(studentSession.page.getByText('Instructor approval required')).toBeVisible()
+      // A client-side dashboard transition can resolve the hash before the
+      // server-rendered quiz section has mounted. Revalidate the target once
+      // with a direct navigation; never waive the quiz/approval assertions.
+      const quizSection = studentSession.page.locator('#chapter-quiz')
+      if (await quizSection.count() === 0) {
+        await studentSession.page.reload({ waitUntil: 'domcontentloaded' })
+      }
+      await expect(quizSection.getByRole('heading', { name: 'Chapter Quiz' })).toBeVisible({ timeout: 20_000 })
+      await expect(quizSection.getByText('Instructor approval required')).toBeVisible()
       await expect(studentSession.page.getByRole('button', { name: /Start Quiz/i })).toHaveCount(0)
       const overflow = await studentSession.page.evaluate(() =>
         document.documentElement.scrollWidth > document.documentElement.clientWidth
@@ -867,6 +899,285 @@ test.describe('Pilot onboarding certification', () => {
       .filter({ hasText: STUDENT_NAME })
     await expect(dashboardStudentRow).toHaveCount(1)
     await expect(dashboardStudentRow).toContainText('min')
+
+    // LOGIN-UX-6: read-after-activation identity and lifecycle invariants.
+    // This does not create/delete auth accounts and runs only in local CI.
+    const { data: studentAuth, error: studentAuthError } = await service.auth.admin.getUserById(studentProfile!.id)
+    expect(studentAuthError).toBeNull()
+    expect(studentAuth.user?.id).toBe(studentProfile!.id)
+    expect(studentAuth.user?.email?.toLowerCase()).toBe(STUDENT_EMAIL)
+    const { data: finalStudentProfile } = await service.from('profiles')
+      .select('id,school_id,role').eq('id', studentProfile!.id).single()
+    expect(finalStudentProfile).toMatchObject({ id: studentProfile!.id, school_id: schoolId, role: 'student' })
+    const { data: finalEnrollment } = await service.from('enrollments')
+      .select('id,student_id,program_id,is_active').eq('id', enrollment!.id).single()
+    expect(finalEnrollment).toMatchObject({ id: enrollment!.id, student_id: studentDomain!.id, program_id: barberProgram.id, is_active: true })
+    const { data: finalAcceptedInvite } = await service.from('school_onboarding_invitations')
+      .select('status,auth_user_id').eq('school_id', schoolId).eq('email', STUDENT_EMAIL).single()
+    expect(finalAcceptedInvite).toMatchObject({ status: 'accepted', auth_user_id: studentProfile!.id })
+
+    // LOGIN-UX-30: run the actual administrator resend Server Action through
+    // authenticated School A UI; verify lifecycle and user identity in local DB.
+    const { error: expireInviteError } = await service
+      .from('school_onboarding_invitations')
+      .update({ status: 'expired' })
+      .eq('school_id', schoolId).eq('email', STUDENT_EMAIL)
+    expect(expireInviteError).toBeNull()
+    const { data: aAuthBeforeResend } = await service.auth.admin.getUserById(studentProfile!.id)
+    await schoolAdminSession.page.goto('/admin/users')
+    const recoveryCard = schoolAdminSession.page.locator('div.rounded-lg')
+      .filter({ hasText: STUDENT_EMAIL })
+      .filter({ has: schoolAdminSession.page.getByRole('button', { name: 'Send fresh setup link' }) })
+      .first()
+    const actualResendRequest = schoolAdminSession.page.waitForRequest(request =>
+      request.method() === 'POST' && Boolean(request.headers()['next-action']))
+    await recoveryCard.getByRole('button', { name: 'Send fresh setup link' }).click()
+    const capturedResend = await actualResendRequest
+    const resendActionId = capturedResend.headers()['next-action']
+    const resendActionBody = capturedResend.postData()
+    expect(resendActionId).toBeTruthy()
+    expect(resendActionBody).not.toBeNull()
+    await expect(schoolAdminSession.page.getByText(`Fresh setup link sent to ${STUDENT_EMAIL}`)).toBeVisible()
+    const { data: afterResendInvite, error: afterResendInviteError } = await service
+      .from('school_onboarding_invitations')
+      .select('status,auth_user_id').eq('school_id', schoolId).eq('email', STUDENT_EMAIL).single()
+    expect(afterResendInviteError).toBeNull()
+    expect(afterResendInvite).toMatchObject({ status: 'pending', auth_user_id: studentProfile!.id })
+    const { data: aAuthAfterResend } = await service.auth.admin.getUserById(studentProfile!.id)
+    expect(aAuthAfterResend.user?.id).toBe(aAuthBeforeResend.user?.id)
+
+    // LOGIN-UX-23: immutable School A evidence before testing School B sessions.
+    const schoolAIdentityBefore = {
+      authId: studentAuth.user!.id,
+      profile: finalStudentProfile,
+      enrollment: finalEnrollment,
+      invitation: afterResendInvite,
+    }
+    // LOGIN-UX-9: Second-school authenticated isolation, LOCAL TEST ONLY.
+    // Never create fixture accounts against production Supabase.
+    const { data: schoolB, error: schoolBError } = await service.from('schools')
+      .insert({ name: 'ASCYN Isolation School B', is_active: true }).select('id').single()
+    expect(schoolBError).toBeNull()
+    expect(schoolB?.id).toBeTruthy()
+    const schoolBId = String(schoolB!.id)
+    expect(schoolBId).not.toBe(schoolId)
+    const { data: schoolBProgram, error: schoolBProgramError } = await service.from('programs')
+      .insert({ school_id: schoolBId, name: 'Barbering', required_hours: 1500, is_active: true })
+      .select('id').single()
+    expect(schoolBProgramError).toBeNull()
+    expect(schoolBProgram?.id).toBeTruthy()
+    const schoolBActors = [
+      { role: 'student', email: 'login9-b-student@ascynpro.test', password: 'Login9Student2026!' },
+      { role: 'instructor', email: 'login9-b-instructor@ascynpro.test', password: 'Login9Instructor2026!' },
+      { role: 'school_admin', email: 'login9-b-admin@ascynpro.test', password: 'Login9Admin2026!' },
+    ] as const
+    for (const actor of schoolBActors) {
+      const { data: newAuth, error: newAuthError } = await service.auth.admin.createUser({
+        email: actor.email, password: actor.password, email_confirm: true,
+      })
+      expect(newAuthError).toBeNull()
+      const id = String(newAuth.user!.id)
+      const { error: profileInsertError } = await service.from('profiles').upsert({
+        id, email: actor.email, full_name: 'LOGIN UX9 disposable fixture',
+        role: actor.role, school_id: schoolBId, approval_status: 'approved',
+        is_disabled: false, requires_password_change: false,
+      }, { onConflict: 'id' })
+      expect(profileInsertError).toBeNull()
+      if (actor.role === 'student') {
+        const { data: existingStudent, error: existingStudentError } = await service.from('students')
+          .select('id').eq('profile_id', id).eq('school_id', schoolBId).maybeSingle()
+        expect(existingStudentError).toBeNull()
+        let domainStudentId = existingStudent?.id
+        if (!domainStudentId) {
+          const { data: createdStudent, error: createStudentError } = await service.from('students')
+            .insert({ profile_id: id, school_id: schoolBId, is_active: true }).select('id').single()
+          expect(createStudentError).toBeNull()
+          domainStudentId = createdStudent?.id
+        }
+        expect(domainStudentId).toBeTruthy()
+        const { data: createdEnrollment, error: createEnrollmentError } = await service.from('enrollments')
+          .insert({ student_id: domainStudentId!, program_id: schoolBProgram!.id, status: 'active' })
+          .select('id,student_id,program_id,is_active').single()
+        expect(createEnrollmentError).toBeNull()
+        expect(createdEnrollment).toMatchObject({
+          student_id: domainStudentId, program_id: schoolBProgram!.id, is_active: true,
+        })
+      }
+      const client = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        { auth: { persistSession: false, autoRefreshToken: false } })
+      const { data: signedIn, error: signInError } = await client.auth.signInWithPassword({ email: actor.email, password: actor.password })
+      expect(signInError).toBeNull()
+      expect(signedIn.user?.id).toBe(id)
+      if (actor.role === 'school_admin') {
+        // Browser-level school-scoped management search, using a real B-admin session.
+        const schoolBContext = await browser.newContext()
+        const schoolBPage = await schoolBContext.newPage()
+        await login(schoolBPage, actor.email, actor.password, /\/school(?:\/|$)/)
+        await schoolBPage.goto('/admin/users')
+        // Replay the actual School A Server Action payload from School B's
+        // authenticated browser, without copying School A's session cookies.
+        const mailRecipientIds = async (email: string): Promise<string[]> => {
+          const response = await fetch(`${getMailpitUrl()}/api/v1/messages`)
+          expect(response.ok).toBe(true)
+          const data = await response.json() as { messages?: Array<{ ID?: string; To?: Array<{ Address?: string }> }> }
+          return (data.messages ?? [])
+            .filter(message => (message.To ?? []).some(to => to.Address?.toLowerCase() === email.toLowerCase()))
+            .map(message => String(message.ID)).sort()
+        }
+        const recipientMessagesBefore = await mailRecipientIds(STUDENT_EMAIL)
+        const { data: auditBefore, error: auditBeforeError } = await service.from('user_management_audit_logs')
+          .select('id,actor_id,target_user_id,action').eq('target_user_id', studentProfile!.id)
+          .eq('action', 'resend_setup_link').order('id')
+        expect(auditBeforeError).toBeNull()
+        const mailBefore = await fetch(`${getMailpitUrl()}/api/v1/messages`)
+        expect(mailBefore.ok).toBe(true)
+        const mailCountBefore = Number((await mailBefore.json() as { total?: number }).total ?? 0)
+        const forbiddenActionResponse = await schoolBPage.evaluate(async ({ actionId, body }) => {
+          const response = await fetch('/admin/users', {
+            method: 'POST',
+            headers: { 'next-action': actionId, 'content-type': 'text/plain;charset=UTF-8', 'accept': 'text/x-component' },
+            body,
+          })
+          return { status: response.status, text: await response.text() }
+        }, { actionId: resendActionId, body: resendActionBody! })
+        // A fulfilled HTTP transport is not itself authorization. Require
+        // the real Server Action to return its cross-school Forbidden result.
+        expect(forbiddenActionResponse.status).toBe(200)
+        expect(forbiddenActionResponse.text).toContain('Forbidden')
+        expect(forbiddenActionResponse.text).not.toContain('Fresh setup link sent')
+        expect(forbiddenActionResponse.text).not.toMatch(/"success"\s*:\s*true/)
+        const mailAfter = await fetch(`${getMailpitUrl()}/api/v1/messages`)
+        expect(mailAfter.ok).toBe(true)
+        const mailCountAfter = Number((await mailAfter.json() as { total?: number }).total ?? 0)
+        expect(mailCountAfter).toBe(mailCountBefore)
+        expect(await mailRecipientIds(STUDENT_EMAIL)).toEqual(recipientMessagesBefore)
+        const { data: auditAfter, error: auditAfterError } = await service.from('user_management_audit_logs')
+          .select('id,actor_id,target_user_id,action').eq('target_user_id', studentProfile!.id)
+          .eq('action', 'resend_setup_link').order('id')
+        expect(auditAfterError).toBeNull()
+        expect(auditAfter).toEqual(auditBefore)
+
+        const searchA = schoolBPage.locator('input[placeholder="Search name or email"]')
+        await searchA.fill(STUDENT_EMAIL)
+        await schoolBPage.getByRole('button', { name: 'Search' }).click()
+        await expect(schoolBPage.getByRole('row').filter({ hasText: STUDENT_EMAIL })).toHaveCount(0)
+        await schoolBContext.close()
+      }
+      // A School B actor must not read School A's onboarding-invitation records.
+      const { data: forbiddenInvites, error: inviteReadError } = await client.from('school_onboarding_invitations')
+        .select('id').eq('school_id', schoolId)
+      expect(inviteReadError).toBeNull()
+      expect(forbiddenInvites).toEqual([])
+      // Authenticated cross-tenant write attempt, never using service-role credentials.
+      const { data: forbiddenMutation } = await client
+        .from('school_onboarding_invitations')
+        .update({ status: 'revoked' })
+        .eq('school_id', schoolId)
+        .eq('email', STUDENT_EMAIL)
+        .select('id')
+      // RLS may reject outright or affect zero rows; either way no foreign record may change.
+      expect(forbiddenMutation ?? []).toEqual([])
+
+      const { data: unchangedProfile } = await service.from('profiles').select('id,school_id,role').eq('id', id).single()
+      expect(unchangedProfile).toMatchObject({ id, school_id: schoolBId, role: actor.role })
+      const { data: unchangedAuth } = await service.auth.admin.getUserById(id)
+      expect(unchangedAuth.user?.id).toBe(id)
+      // Exercise the real local GoTrue recovery-mail request without creating users.
+      const { data: beforeRecoveryProfile } = await service.from('profiles')
+        .select('id,school_id,role,approval_status,requires_password_change').eq('id', id).single()
+      const { data: beforeRecoveryAuth } = await service.auth.admin.getUserById(id)
+      const { data: beforeRecoveryInvitations, error: beforeRecoveryInvitationsError } = await service
+        .from('school_onboarding_invitations')
+        .select('id,school_id,auth_user_id,email,status').eq('school_id', schoolBId).eq('email', actor.email).order('id')
+      expect(beforeRecoveryInvitationsError).toBeNull()
+      // Enrollment.student_id references students.id, not profiles/auth.users.id.
+      const { data: schoolBStudentRows, error: schoolBStudentError } = await service
+        .from('students').select('id').eq('profile_id', id).eq('school_id', schoolBId)
+      expect(schoolBStudentError).toBeNull()
+      const studentDomainIds = (schoolBStudentRows ?? []).map(row => row.id)
+      const { data: beforeRecoveryEnrollments, error: beforeRecoveryEnrollmentsError } = studentDomainIds.length
+        ? await service.from('enrollments').select('id,student_id,program_id,is_active')
+          .in('student_id', studentDomainIds).order('id')
+        : { data: [], error: null }
+      expect(beforeRecoveryEnrollmentsError).toBeNull()
+      if (actor.role === 'student') {
+        expect(studentDomainIds).toHaveLength(1)
+        expect(beforeRecoveryEnrollments).toHaveLength(1)
+        expect(beforeRecoveryEnrollments?.[0]).toMatchObject({
+          student_id: studentDomainIds[0], program_id: schoolBProgram!.id, is_active: true,
+        })
+      }
+      const { error: recoveryRequestError } = await client.auth.resetPasswordForEmail(actor.email, {
+        redirectTo: 'http://127.0.0.1:3000/auth/callback?type=recovery',
+      })
+      expect(recoveryRequestError).toBeNull()
+      // Follow the actual Mailpit delivery into the browser callback, update the
+      // password, and verify that the new credentials can authenticate.
+      const recoveryUrl = await waitForRecoveryUrl(actor.email)
+      const recoveryContext = await browser.newContext()
+      const recoveryPage = await recoveryContext.newPage()
+      await recoveryPage.goto(recoveryUrl)
+      await recoveryPage.waitForURL(url => url.pathname === '/auth/update-password', { timeout: 20_000 })
+      const newPassword = `Recovered${actor.role.replace('_', '')}2026!`
+      await recoveryPage.locator('#password').fill(newPassword)
+      await recoveryPage.locator('#confirmPassword').fill(newPassword)
+      const passwordUpdateResponse = recoveryPage.waitForResponse(response =>
+        response.url().includes('/auth/v1/user') && response.request().method() === 'PUT',
+        { timeout: 15_000 })
+      await recoveryPage.getByRole('button', { name: 'Update Password' }).click()
+      const updateResponse = await passwordUpdateResponse
+      expect(updateResponse.ok(), 'Supabase recovery password update must succeed').toBe(true)
+      // The app may immediately route the recovered session to beta-agreement;
+      // successful new-credential authentication below is the durable acceptance gate.
+      await expect(recoveryPage).toHaveURL(/\/(?:auth\/update-password|login|beta-agreement|dashboard)(?:\?|$)/)
+      await recoveryContext.close()
+      const fresh = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        { auth: { persistSession: false, autoRefreshToken: false } })
+      const { data: freshSession, error: freshError } = await fresh.auth.signInWithPassword({
+        email: actor.email, password: newPassword,
+      })
+      expect(freshError).toBeNull()
+      expect(freshSession.user?.id).toBe(id)
+      await fresh.auth.signOut()
+      const { data: afterRecoveryAuth } = await service.auth.admin.getUserById(id)
+      const { data: afterRecoveryProfile } = await service.from('profiles')
+        .select('id,school_id,role,approval_status,requires_password_change').eq('id', id).single()
+      expect(afterRecoveryAuth.user?.id).toBe(beforeRecoveryAuth.user?.id)
+      expect(afterRecoveryProfile).toEqual(beforeRecoveryProfile)
+      const { data: afterRecoveryInvitations, error: afterRecoveryInvitationsError } = await service
+        .from('school_onboarding_invitations')
+        .select('id,school_id,auth_user_id,email,status').eq('school_id', schoolBId).eq('email', actor.email).order('id')
+      expect(afterRecoveryInvitationsError).toBeNull()
+      expect(afterRecoveryInvitations).toEqual(beforeRecoveryInvitations)
+      const { data: schoolBStudentRowsAfter, error: schoolBStudentAfterError } = await service
+        .from('students').select('id').eq('profile_id', id).eq('school_id', schoolBId)
+      expect(schoolBStudentAfterError).toBeNull()
+      expect(schoolBStudentRowsAfter).toEqual(schoolBStudentRows)
+      const { data: afterRecoveryEnrollments, error: afterRecoveryEnrollmentsError } = studentDomainIds.length
+        ? await service.from('enrollments').select('id,student_id,program_id,is_active')
+          .in('student_id', studentDomainIds).order('id')
+        : { data: [], error: null }
+      expect(afterRecoveryEnrollmentsError).toBeNull()
+      expect(afterRecoveryEnrollments).toEqual(beforeRecoveryEnrollments)
+      await client.auth.signOut()
+    }
+    // Check database identity/lifecycle invariants after B-side authentication and recovery.
+    const { data: schoolAAuthAfter, error: schoolAAuthAfterError } =
+      await service.auth.admin.getUserById(studentProfile!.id)
+    expect(schoolAAuthAfterError).toBeNull()
+    expect(schoolAAuthAfter.user?.id).toBe(schoolAIdentityBefore.authId)
+    const { data: schoolAProfileAfter } = await service.from('profiles')
+      .select('id,school_id,role').eq('id', studentProfile!.id).single()
+    const { data: schoolAEnrollmentAfter } = await service.from('enrollments')
+      .select('id,student_id,program_id,is_active').eq('id', enrollment!.id).single()
+    const { data: schoolAInviteAfter } = await service.from('school_onboarding_invitations')
+      .select('status,auth_user_id').eq('school_id', schoolId).eq('email', STUDENT_EMAIL).single()
+    expect(schoolAProfileAfter).toEqual(schoolAIdentityBefore.profile)
+    expect(schoolAEnrollmentAfter).toEqual(schoolAIdentityBefore.enrollment)
+    expect(schoolAInviteAfter).toEqual(schoolAIdentityBefore.invitation)
+    // Assert School A records are still intact after School B authentication.
+    const { data: retainedStudent } = await service.from('profiles').select('id,school_id').eq('id', studentProfile!.id).single()
+    expect(retainedStudent).toMatchObject({ id: studentProfile!.id, school_id: schoolId })
 
     await studentSession.context.close()
     await instructorSession.context.close()
