@@ -1184,10 +1184,10 @@ test.describe('Pilot onboarding certification', () => {
     requireLocalCertificationEnvironment()
     const retentionTables = [
       { table: 'enrollments', key: 'student_id', value: studentDomain!.id },
-      { table: 'quiz_attempts', key: 'student_id', value: studentDomain!.id },
-      { table: 'student_progress', key: 'student_id', value: studentDomain!.id },
-      { table: 'hour_logs', key: 'student_id', value: studentDomain!.id },
-      { table: 'attendance_records', key: 'student_id', value: studentDomain!.id },
+      { table: 'quiz_attempts', key: 'user_id', value: studentProfile!.id },
+      { table: 'student_progress', key: 'user_id', value: studentProfile!.id },
+      { table: 'hour_logs', key: 'user_id', value: studentProfile!.id },
+      { table: 'attendance_records', key: 'user_id', value: studentProfile!.id },
     ] as const
     const snapshotRecords = async () => {
       const rows: Record<string, unknown> = {}
