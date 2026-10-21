@@ -4,6 +4,33 @@ import { hairScalpDisorderQuestions } from './hair-scalp-disorders-bank'
 import { scientificConceptGapQuestions } from './scientific-concepts-gap'
 
 describe('P0 academic corrections: student-facing assembled questions', () => {
+  it('IC-013–020 assembled infection-control keys match their teaching explanations', () => {
+    for (let n = 13; n <= 20; n++) {
+      const id = 'IC-' + String(n).padStart(3, '0')
+      const q = infectionControlQuestions.find(item => item.id === id)
+      expect(q, id).toBeDefined()
+      expect(q!.options, id).toHaveLength(4)
+      expect(q!.options.filter(o => o.id === q!.correctOptionId), id).toHaveLength(1)
+      expect(q!.correctOptionId, id).toBe('a')
+    }
+    const cases = [
+      ['IC-013', /cleaning removes soil and debris/i],
+      ['IC-014', /debris can prevent disinfectant/i],
+      ['IC-015', /dilution specified on the label/i],
+      ['IC-016', /discard it after use/i],
+      ['IC-017', /hand hygiene/i],
+      ['IC-018', /barrier.*reduce exposure/i],
+      ['IC-019', /replace the compromised glove/i],
+      ['IC-020', /OSHA/i],
+    ] as const
+    for (const [id, expectedAnswer] of cases) {
+      const q = infectionControlQuestions.find(item => item.id === id)!
+      expect(q.options.find(o => o.id === q.correctOptionId)?.text, id).toMatch(expectedAnswer)
+      expect([q.prompt, q.explanation, ...q.options.map(o => o.text)].join(' '), id)
+        .not.toMatch(/\b(?:Milady|Cengage)\b/i)
+    }
+  })
+
   it('IC-001–012 preserve correct infection-control facts in assembled bank', () => {
     for (let n = 1; n <= 12; n++) {
       const id = 'IC-' + String(n).padStart(3, '0')
