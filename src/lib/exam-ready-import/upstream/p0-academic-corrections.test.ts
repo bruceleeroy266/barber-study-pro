@@ -69,6 +69,20 @@ describe('P0 academic corrections: student-facing assembled questions', () => {
     expect(ph.explanation).toMatch(/hydrogen-ion activity/)
   })
 
+  it('SCG-021–028 preserve keys and avoid publisher-branded student text', () => {
+    for (let n = 21; n <= 28; n++) {
+      const id = 'SCG-' + String(n).padStart(3, '0')
+      const q = scientificConceptGapQuestions.find(item => item.id === id)
+      expect(q, id).toBeDefined()
+      expect(q!.correctOptionId, id).toBe('a')
+      expect(q!.options, id).toHaveLength(4)
+      const visible = [q!.prompt, q!.explanation, ...q!.options.map(o => o.text)].join(' ')
+      expect(visible, id).not.toMatch(/\b(?:Milady|Cengage)\b|sourceBasis|sourceProvenance/i)
+    }
+    const oxidation = scientificConceptGapQuestions.find(q => q.id === 'SCG-028')!
+    expect(oxidation.explanation).toMatch(/oxidation-state changes/)
+  })
+
   it('SCG-015 defines redox by oxidation-number change instead of mandatory oxygen gain', () => {
     const q = scientificConceptGapQuestions.find(item => item.id === 'SCG-015')
     expect(q).toBeDefined()
