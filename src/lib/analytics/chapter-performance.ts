@@ -31,7 +31,6 @@ export function calculateChapterPerformance(
     const scores = attemptsForChapter.map((a) => a.percentage)
     const bestScore = scores.length > 0 ? Math.max(...scores) : 0
 
-    const progressRecord = progress.find((p) => p.chapter_id === chapter.id)
     const attemptsCount = attemptsForChapter.length
     const trend = trendDirection(scores)
 
@@ -40,7 +39,10 @@ export function calculateChapterPerformance(
       name: `Ch.${chapter.chapter_number} ${chapter.title}`,
       chapterNumber: chapter.chapter_number,
       category: getCategoryForChapter(chapter.chapter_number),
-      score: bestScore || (progressRecord?.progress_percentage ?? 0),
+      // Never substitute curriculum completion for measured quiz accuracy.
+      // AreaPerformance currently requires a number; unassessed chapters remain
+      // 0 here until consumers migrate to nullable academic-v1 evidence scores.
+      score: bestScore,
       attempts: attemptsCount,
       trend,
       lastAttemptAt: attemptsForChapter[0]?.completed_at || null,
