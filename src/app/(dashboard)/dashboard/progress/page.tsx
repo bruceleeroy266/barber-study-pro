@@ -14,6 +14,7 @@ import WeakAreaAnalytics from '@/components/WeakAreaAnalytics'
 import StudyRecommendations from '@/components/StudyRecommendations'
 import AnalyticsCharts from '@/components/AnalyticsCharts'
 import AcademicQuizAccuracy from '@/components/AcademicQuizAccuracy'
+import MicroCheckAccuracy from '@/components/MicroCheckAccuracy'
 import { mapAttendanceRecordsFromDb } from '@/lib/mappers/operational-data-mappers'
 import { calculateCanonicalStudentLearningMetrics } from '@/lib/student-level/metrics'
 
@@ -52,6 +53,13 @@ export default async function ProgressPage() {
     .select('*')
     .eq('user_id', user?.id)
     .order('completed_at', { ascending: false })
+
+  // Student-owned micro-check records, subject to the existing RLS policy.
+  const { data: academicMicroRows, error: academicMicroError } = await supabase
+    .from('chapter_micro_check_attempts')
+    .select('user_id,chapter_id,question_id,concept_id,is_correct,answered_at')
+    .eq('user_id', user.id)
+  if (academicMicroError) console.error('[academic-micro] Unable to load evidence')
 
   // Get attendance records
   const attendanceQuery = supabase
@@ -190,6 +198,8 @@ export default async function ProgressPage() {
       </div>
 
       <AcademicQuizAccuracy chapters={chapters} scores={analytics.academicChapterScores} />
+
+      {!academicMicroError && <MicroCheckAccuracy studentId={user.id} rows={academicMicroRows ?? []} />}
 
       {/* Analytics Charts */}
       <AnalyticsCharts
