@@ -151,7 +151,7 @@ begin
       and column_name = 'address'
       and data_type = 'jsonb'
   ) then
-    execute 'create index if not exists idx_school_settings_address on public.school_settings using gin(address)';
+    execute 'create index if not exists idx_school_settings_address on public.school_settings using gin(address jsonb_path_ops)';
   elsif exists (
     select 1 from information_schema.columns
     where table_schema = 'public'
