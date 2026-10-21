@@ -16,6 +16,7 @@ export interface AnalyticsInputs {
 
 export interface AnalyticsResult {
   categoryPerformance: import('@/types').AreaPerformance[]
+  academicChapterScores: import('./nullable-chapter-scores').NullableChapterAcademicScore[]
   chapterPerformance: import('@/types').AreaPerformance[]
   weakAreas: import('@/types').AreaPerformance[]
   strongAreas: import('@/types').AreaPerformance[]
