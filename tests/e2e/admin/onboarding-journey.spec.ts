@@ -1015,14 +1015,6 @@ test.describe('Pilot onboarding certification', () => {
       }, { onConflict: 'id' })
       expect(profileInsertError).toBeNull()
       if (actor.role === 'student') {
-        const { error: bQuizError } = await service.from('quiz_attempts').insert({
-          user_id: id, quiz_id: 'quiz-4', score: 9, total_questions: 10, percentage: 90,
-        })
-        expect(bQuizError).toBeNull()
-        const { data: ownQuiz, error: ownQuizError } = await client.from('quiz_attempts')
-          .select('quiz_id,score,total_questions,percentage').eq('user_id',id)
-        expect(ownQuizError).toBeNull()
-        expect(ownQuiz).toEqual([{quiz_id:'quiz-4',score:9,total_questions:10,percentage:90}])
         const { data: existingStudent, error: existingStudentError } = await service.from('students')
           .select('id').eq('profile_id', id).eq('school_id', schoolBId).maybeSingle()
         expect(existingStudentError).toBeNull()
@@ -1047,6 +1039,16 @@ test.describe('Pilot onboarding certification', () => {
       const { data: signedIn, error: signInError } = await client.auth.signInWithPassword({ email: actor.email, password: actor.password })
       expect(signInError).toBeNull()
       expect(signedIn.user?.id).toBe(id)
+      if (actor.role === 'student') {
+        const { error: bQuizError } = await service.from('quiz_attempts').insert({
+          user_id: id, quiz_id: 'quiz-4', score: 9, total_questions: 10, percentage: 90,
+        })
+        expect(bQuizError).toBeNull()
+        const { data: ownQuiz, error: ownQuizError } = await client.from('quiz_attempts')
+          .select('quiz_id,score,total_questions,percentage').eq('user_id',id)
+        expect(ownQuizError).toBeNull()
+        expect(ownQuiz).toEqual([{quiz_id:'quiz-4',score:9,total_questions:10,percentage:90}])
+      }
       // A student, instructor, and school admin in B must not read A's
       // immutable academic evidence, even when querying A's exact user ID.
       const { data: crossSchoolMicro, error: crossSchoolMicroError } = await client
