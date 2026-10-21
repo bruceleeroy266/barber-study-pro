@@ -24,13 +24,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unsupported assessment fields' }, { status: 400 })
   }
   const quiz = getLocalQuiz('ch-' + body.quizId.slice(5))
-  if (!quiz || quiz.id !== body.quizId) return NextResponse.json({ error: 'Unknown quiz' }, { status: 404 })
+  if (!quiz || quiz.id !== body.quizId || !quiz.is_active) return NextResponse.json({ error: 'Quiz unavailable' }, { status: 404 })
   const questions = getLocalQuizQuestions(quiz.id)
   if (!questions.length) return NextResponse.json({ error: 'Quiz question bank unavailable' }, { status: 503 })
   const answers = body.answers as Record<string, unknown>
   const questionIds = new Set(questions.map(q => q.id))
   if (Object.keys(answers).length !== questionIds.size || Object.entries(answers)
-    .some(([id, answer]) => !questionIds.has(id) || !['a','b','c','d'].includes(String(answer)))) {
+    .some(([id, answer]) => !questionIds.has(id) || typeof answer !== 'string' || !['a','b','c','d'].includes(answer))) {
     return NextResponse.json({ error: 'Incomplete or invalid quiz answers' }, { status: 400 })
   }
   const scoringAnswers = answers as Record<string, string>
