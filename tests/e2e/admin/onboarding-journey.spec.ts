@@ -1019,6 +1019,30 @@ test.describe('Pilot onboarding certification', () => {
       return response.status
     })
     expect(forgedServerSave).toBe(400)
+    // Legitimate quiz submission is graded by the server, not a client score.
+    const { getLocalQuizQuestions } = await import('@/lib/local-data')
+    const certQuizQuestions = getLocalQuizQuestions('quiz-4')
+    expect(certQuizQuestions.length).toBeGreaterThan(0)
+    const certAnswers = Object.fromEntries(certQuizQuestions.map(q => [q.id, q.correct_answer]))
+    const validQuizResult = await studentSession.page.evaluate(async answers => {
+      const response = await fetch('/api/academic/quiz-attempt', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quizId: 'quiz-4', answers }),
+      })
+      return { status: response.status, body: await response.json() }
+    }, certAnswers)
+    expect(validQuizResult.status).toBe(200)
+    expect(validQuizResult.body.attempt).toMatchObject({
+      score: certQuizQuestions.length, total_questions: certQuizQuestions.length, percentage: 100,
+    })
+    const forgedQuizResult = await studentSession.page.evaluate(async answers => {
+      const response = await fetch('/api/academic/quiz-attempt', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quizId: 'quiz-4', answers, score: 100, percentage: 100 }),
+      })
+      return response.status
+    }, certAnswers)
+    expect(forgedQuizResult).toBe(400)
     const aMicroQuestion = 'qa3h-school-a-q1'
     const { error: aMicroError } = await service.from('chapter_micro_check_attempts').insert({
       user_id: studentProfile!.id, chapter_id: 'ch-4', check_id: 'qa3h',
