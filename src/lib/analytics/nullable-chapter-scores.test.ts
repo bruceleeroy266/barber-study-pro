@@ -16,4 +16,13 @@ describe('student and instructor nullable reporting contract',()=>{
     expect(student[0]).toMatchObject({latestPercent:70,bestPercent:90,firstPercent:90,latestCorrect:7,latestTotal:10,attemptCount:2})
     expect(student[1].state).toBe('unassessed')
   })
+  it('quarantines contradictory historical rows but retains valid scores',()=>{
+    const rows=[
+      {id:'legacy',quiz_id:'quiz-4',score:5,total_questions:10,percentage:100,completed_at:'2026-10-01T00:00:00Z'},
+      {id:'valid',quiz_id:'quiz-4',score:8,total_questions:10,percentage:80,completed_at:'2026-10-02T00:00:00Z'}
+    ] as QuizAttempt[]
+    expect(buildNullableChapterAcademicScores(chapters,rows)[0]).toMatchObject({
+      latestPercent:80,bestPercent:80,invalidAttemptCount:1,attemptCount:1
+    })
+  })
 })
