@@ -1078,6 +1078,23 @@ test.describe('Pilot onboarding certification', () => {
       // RLS may reject outright or affect zero rows; either way no foreign record may change.
       expect(forbiddenMutation ?? []).toEqual([])
 
+      // CRUD-14: assert cross-school student identity mutation fails for
+      // each authenticated School B role, not just invitation writes.
+      const { data: schoolAIdentityBeforeWrite, error: schoolAIdentityBeforeError } = await service
+        .from('profiles').select('id,full_name,email,school_id,is_disabled')
+        .eq('id', studentProfile!.id).single()
+      expect(schoolAIdentityBeforeError).toBeNull()
+      const { data: forbiddenProfileWrite } = await client
+        .from('profiles')
+        .update({ full_name: 'UNAUTHORIZED_CROSS_SCHOOL_CHANGE', is_disabled: true })
+        .eq('id', studentProfile!.id)
+        .select('id')
+      expect(forbiddenProfileWrite ?? []).toEqual([])
+      const { data: schoolAIdentityAfterWrite, error: schoolAIdentityAfterError } = await service
+        .from('profiles').select('id,full_name,email,school_id,is_disabled')
+        .eq('id', studentProfile!.id).single()
+      expect(schoolAIdentityAfterError).toBeNull()
+      expect(schoolAIdentityAfterWrite).toEqual(schoolAIdentityBeforeWrite)
       const { data: unchangedProfile } = await service.from('profiles').select('id,school_id,role').eq('id', id).single()
       expect(unchangedProfile).toMatchObject({ id, school_id: schoolBId, role: actor.role })
       const { data: unchangedAuth } = await service.auth.admin.getUserById(id)
