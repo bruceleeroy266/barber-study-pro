@@ -1345,7 +1345,16 @@ export async function toggleUserDisabled(id: string, isDisabled: boolean): Promi
     ban_duration: isDisabled ? '876000h' : 'none',
   })
   if (banError) {
-    return { success: false, error: 'Profile status changed, but Auth access synchronization failed. Administrator reconciliation required.' }
+    // Restore the prior profile state when the Auth-side restriction failed.
+    // Fail explicitly if compensation also fails; never report full success.
+    const { error: restoreError } = await serviceClient.from('profiles')
+      .update({ is_disabled: userResult.user.is_disabled }).eq('id', id)
+    return {
+      success: false,
+      error: restoreError
+        ? 'Auth access synchronization and profile rollback failed. Administrator reconciliation required.'
+        : 'Auth access synchronization failed; the profile change was rolled back.',
+    }
   }
 
   await logUserManagementAction(admin, id, userResult.user.email, isDisabled ? 'disable_user' : 'enable_user', oldValues, newValues, userResult.user.school_id)
