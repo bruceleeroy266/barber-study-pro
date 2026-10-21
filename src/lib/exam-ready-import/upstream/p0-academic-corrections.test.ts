@@ -14,7 +14,7 @@ describe('P0 academic corrections: student-facing assembled questions', () => {
       expect(q!.correctOptionId, id).toBe('a')
     }
     const cases = [
-      ['IC-013', /cleaning removes soil and debris/i],
+      ['IC-013', /cleaning removes (?:visible )?soil and debris/i],
       ['IC-014', /debris can prevent disinfectant/i],
       ['IC-015', /dilution specified on the label/i],
       ['IC-016', /discard it after use/i],
