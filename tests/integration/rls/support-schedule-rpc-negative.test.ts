@@ -43,8 +43,27 @@ async function counts(){
   return data??[]
 }
 describe('direct authenticated Support Mode schedule RPC',()=>{
+  test('direct privileged RPC requires an active session and rejects revoked sessions',async()=>{
+    const admin=await createAuthenticatedClient(TEST_ACTORS.PLATFORM_ADMIN)
+    await admin.rpc('set_support_access_session',{p_target:resolveActorId('INSTRUCTOR_A'),p_enable:false})
+    const before=await counts()
+    const noSession=await admin.rpc('support_upsert_student_schedule_override',args(resolveActorId('INSTRUCTOR_A'),resolveActorId('STUDENT_A')))
+    expect(noSession.error).not.toBeNull()
+    expect(await counts()).toEqual(before)
+    const {error:activateError}=await admin.rpc('set_support_access_session',{p_target:resolveActorId('INSTRUCTOR_A'),p_enable:true})
+    expect(activateError).toBeNull()
+    const wrongTarget=await admin.rpc('support_upsert_student_schedule_override',args(resolveActorId('INSTRUCTOR_B'),resolveActorId('STUDENT_B')))
+    expect(wrongTarget.error).not.toBeNull()
+    expect(await counts()).toEqual(before)
+    const {error:revokeError}=await admin.rpc('set_support_access_session',{p_target:resolveActorId('INSTRUCTOR_A'),p_enable:false})
+    expect(revokeError).toBeNull()
+    const revoked=await admin.rpc('support_upsert_student_schedule_override',args(resolveActorId('INSTRUCTOR_A'),resolveActorId('STUDENT_A')))
+    expect(revoked.error).not.toBeNull()
+    expect(await counts()).toEqual(before)
+  })
   test('authorized School A success persists true actor only in A',async()=>{
     const admin=await createAuthenticatedClient(TEST_ACTORS.PLATFORM_ADMIN)
+    expect((await admin.rpc('set_support_access_session',{p_target:resolveActorId('INSTRUCTOR_A'),p_enable:true})).error).toBeNull()
     const {error}=await admin.rpc('support_upsert_student_schedule_override',
       args(resolveActorId('INSTRUCTOR_A'),resolveActorId('STUDENT_A')))
     expect(error).toBeNull()
