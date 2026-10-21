@@ -97,6 +97,16 @@ test('authenticated platform support mode persists and enforces School A/B bound
     await service.from('student_schedule_overrides').delete().eq('id', afterA![0].id)
 
     await expect(page.getByText(TEST_ACTORS.STUDENT_B.fullName)).toHaveCount(0)
+
+    // Force-expire the current actor-bound session in disposable storage.
+    // The cookie remains, but must no longer authorize instructor pages.
+    const {error: expireError}=await service.from('support_access_sessions')
+      .update({expires_at:'2020-01-01T00:00:00.000Z'})
+      .eq('actor_id',resolveActorId('PLATFORM_ADMIN'))
+    if(expireError)throw new Error(expireError.message)
+    await page.goto('/instructor/students')
+    await expect(page).not.toHaveURL(/\\/instructor\\/students(?:\\?|$)/)
+    await expect(page.getByText(TEST_ACTORS.STUDENT_A.fullName)).toHaveCount(0)
   } finally {
     if (progressId) await service.from('student_progress').delete().eq('id',progressId)
     if (quizId) await service.from('quiz_attempts').delete().eq('id',quizId)
