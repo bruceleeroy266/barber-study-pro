@@ -1179,6 +1179,86 @@ test.describe('Pilot onboarding certification', () => {
     const { data: retainedStudent } = await service.from('profiles').select('id,school_id').eq('id', studentProfile!.id).single()
     expect(retainedStudent).toMatchObject({ id: studentProfile!.id, school_id: schoolId })
 
+    // CRUD-8: authenticated school-admin identity/edit/disable/enable round-trip.
+    // This exercises ONLY the disposable local Supabase school provisioned above.
+    requireLocalCertificationEnvironment()
+    const retentionTables = [
+      { table: 'enrollments', key: 'student_id', value: studentDomain!.id },
+      { table: 'quiz_attempts', key: 'student_id', value: studentDomain!.id },
+      { table: 'student_progress', key: 'student_id', value: studentDomain!.id },
+      { table: 'hour_logs', key: 'student_id', value: studentDomain!.id },
+      { table: 'attendance_records', key: 'student_id', value: studentDomain!.id },
+    ] as const
+    const snapshotRecords = async () => {
+      const rows: Record<string, unknown> = {}
+      for (const entry of retentionTables) {
+        const { data, error } = await service.from(entry.table).select('*').eq(entry.key, entry.value).order('id')
+        expect(error, `Cannot establish retention baseline for ${entry.table}`).toBeNull()
+        rows[entry.table] = data
+      }
+      return rows
+    }
+    const baselineAcademicRecords = await snapshotRecords()
+    const correctedName = 'Pilot Certification Student Corrected'
+    const correctedEmail = 'cert-student-corrected@ascynpro.test'
+
+    const openStudentManagement = async () => {
+      await schoolAdminSession.page.goto('/admin/users')
+      await schoolAdminSession.page.locator('input[placeholder="Search name or email"]').fill(correctedEmail)
+      await schoolAdminSession.page.getByRole('button', { name: 'Search' }).click()
+      let row = schoolAdminSession.page.getByRole('row').filter({ hasText: correctedEmail })
+      if (await row.count() === 0) {
+        await schoolAdminSession.page.locator('input[placeholder="Search name or email"]').fill(STUDENT_EMAIL)
+        await schoolAdminSession.page.getByRole('button', { name: 'Search' }).click()
+        row = schoolAdminSession.page.getByRole('row').filter({ hasText: STUDENT_EMAIL })
+      }
+      await expect(row).toBeVisible()
+      await row.getByRole('button', { name: 'Manage user' }).click()
+      const dialog = schoolAdminSession.page.getByRole('dialog', { name: /Manage/ })
+      await expect(dialog).toBeVisible()
+      return dialog
+    }
+
+    let studentManagement = await openStudentManagement()
+    await studentManagement.getByLabel('Full name').fill(correctedName)
+    await studentManagement.getByLabel('Login email').fill(correctedEmail)
+    await studentManagement.getByRole('button', { name: 'Review identity change' }).click()
+    await studentManagement.getByRole('button', { name: 'Confirm change' }).click()
+    await expect(studentManagement).toBeHidden()
+
+    const { data: identityAfter, error: identityError } = await service.from('profiles')
+      .select('id,school_id,full_name,email').eq('id', studentProfile!.id).single()
+    expect(identityError).toBeNull()
+    expect(identityAfter).toMatchObject({
+      id: studentProfile!.id, school_id: schoolId, full_name: correctedName, email: correctedEmail,
+    })
+    const { data: authAfterIdentity } = await service.auth.admin.getUserById(studentProfile!.id)
+    expect(authAfterIdentity.user?.email).toBe(correctedEmail)
+    expect(await snapshotRecords()).toEqual(baselineAcademicRecords)
+
+    studentManagement = await openStudentManagement()
+    await studentManagement.getByRole('button', { name: 'Review disable account' }).click()
+    await studentManagement.getByRole('button', { name: 'Confirm change' }).click()
+    await expect(studentManagement).toBeHidden()
+    const { data: disabledProfile } = await service.from('profiles')
+      .select('is_disabled').eq('id', studentProfile!.id).single()
+    expect(disabledProfile?.is_disabled).toBe(true)
+    expect(await snapshotRecords()).toEqual(baselineAcademicRecords)
+
+    studentManagement = await openStudentManagement()
+    await studentManagement.getByRole('button', { name: 'Review enable account' }).click()
+    await studentManagement.getByRole('button', { name: 'Confirm change' }).click()
+    await expect(studentManagement).toBeHidden()
+    const { data: enabledProfile } = await service.from('profiles')
+      .select('is_disabled').eq('id', studentProfile!.id).single()
+    expect(enabledProfile?.is_disabled).toBe(false)
+    expect(await snapshotRecords()).toEqual(baselineAcademicRecords)
+    const { data: stillEnrolled } = await service.from('enrollments')
+      .select('id,student_id,program_id,status,is_active').eq('id', enrollment!.id).single()
+    expect(stillEnrolled).toMatchObject({
+      id: enrollment!.id, student_id: studentDomain!.id, status: 'active', is_active: true,
+    })
+
     await studentSession.context.close()
     await instructorSession.context.close()
     await schoolAdminSession.context.close()
