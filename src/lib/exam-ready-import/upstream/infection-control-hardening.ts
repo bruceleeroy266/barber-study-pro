@@ -13,10 +13,10 @@ const overrides: Record<string, InfectionControlOverride> = {
     'Assume blood may be infectious, clean the visible blood first, and complete the formal exposure procedure after the service',
   )},
   'IC-007': {correctOptionId:'a',options:o(
-    'Do not perform the service and refer the client appropriately',
-    'Avoid direct contact with the affected area but complete the service on unaffected areas',
-    'Use additional sanitation precautions and continue if the client reports no discomfort',
-    'Cover the affected area with a clean barrier and proceed without manipulating that section',
+    'A disease that can spread from one person to another',
+    'A condition caused exclusively by inherited traits',
+    'A disorder that cannot involve infectious agents',
+    'A condition prevented solely by removing visible debris',
   )},
   'IC-008': {options:o(
     'Remove visible debris, clean the blade, then disinfect it as required with an appropriate EPA-registered product',
