@@ -1004,7 +1004,7 @@ test.describe('Pilot onboarding certification', () => {
       })
       return { status: result.status, body: await result.json() }
     })
-    expect(legacySave.status).toBe(200)
+    expect(legacySave).toMatchObject({ status: 200 })
     expect(legacySave.body.row).toMatchObject({
       user_id: studentProfile!.id, chapter_id: 'ch-4', question_id: 'mcq-4-001',
       selected_answer: 'b', is_correct: false,
