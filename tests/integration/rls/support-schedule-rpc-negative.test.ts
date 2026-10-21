@@ -18,10 +18,12 @@ beforeAll(async()=>{
     if(error||!data)throw new Error(error?.message||'assignment seed failed')
     seeded.push(data.id)
   }
-  for(const key of ['PLATFORM_ADMIN','INSTRUCTOR_A','INSTRUCTOR_B'] as const){
+  for(const key of ['PLATFORM_ADMIN','INSTRUCTOR_A','INSTRUCTOR_B','SCHOOL_ADMIN_A','SCHOOL_ADMIN_B'] as const){
     const {error}=await service.from('profiles').update({approval_status:'approved',is_disabled:false}).eq('id',resolveActorId(key))
     if(error)throw new Error(error.message)
   }
+  const schoolAdmin=await createAuthenticatedClient(TEST_ACTORS.SCHOOL_ADMIN_A)
+  expect((await schoolAdmin.rpc('set_school_support_authorization',{p_enable:true})).error).toBeNull()
 })
 afterAll(async()=>{
   const service=getServiceClient()
@@ -43,6 +45,28 @@ async function counts(){
   return data??[]
 }
 describe('direct authenticated Support Mode schedule RPC',()=>{
+  test('school administrator controls consent and revocation immediately stops support',async()=>{
+    const platform=await createAuthenticatedClient(TEST_ACTORS.PLATFORM_ADMIN)
+    const schoolA=await createAuthenticatedClient(TEST_ACTORS.SCHOOL_ADMIN_A)
+    const schoolB=await createAuthenticatedClient(TEST_ACTORS.SCHOOL_ADMIN_B)
+    const instructor=await createAuthenticatedClient(TEST_ACTORS.INSTRUCTOR_A)
+    const target=resolveActorId('INSTRUCTOR_A')
+    expect((await schoolA.rpc('set_school_support_authorization',{p_enable:true})).error).toBeNull()
+    expect((await platform.rpc('set_school_support_authorization',{p_enable:true})).error).not.toBeNull()
+    expect((await instructor.rpc('set_school_support_authorization',{p_enable:true})).error).not.toBeNull()
+    expect((await platform.rpc('set_support_access_session',{p_target:resolveActorId('INSTRUCTOR_B'),p_enable:true})).error).not.toBeNull()
+    expect((await platform.rpc('set_support_access_session',{p_target:target,p_enable:true})).error).toBeNull()
+    expect((await platform.rpc('is_support_access_session_active',{p_target:target})).data).toBe(true)
+    const before=await counts()
+    expect((await schoolB.rpc('set_school_support_authorization',{p_enable:false})).error).toBeNull()
+    expect((await platform.rpc('is_support_access_session_active',{p_target:target})).data).toBe(true)
+    expect((await schoolA.rpc('set_school_support_authorization',{p_enable:false})).error).toBeNull()
+    expect((await platform.rpc('is_support_access_session_active',{p_target:target})).data).toBe(false)
+    expect((await platform.rpc('support_upsert_student_schedule_override',args(target,resolveActorId('STUDENT_A')))).error).not.toBeNull()
+    expect((await platform.rpc('set_support_access_session',{p_target:target,p_enable:true})).error).not.toBeNull()
+    expect(await counts()).toEqual(before)
+    expect((await schoolA.rpc('set_school_support_authorization',{p_enable:true})).error).toBeNull()
+  })
   test('direct privileged RPC requires an active session and rejects revoked sessions',async()=>{
     const admin=await createAuthenticatedClient(TEST_ACTORS.PLATFORM_ADMIN)
     await admin.rpc('set_support_access_session',{p_target:resolveActorId('INSTRUCTOR_A'),p_enable:false})
