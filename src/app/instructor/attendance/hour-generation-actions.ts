@@ -47,6 +47,9 @@ export async function generatePendingHoursFromAttendance(
   const context = await resolveSupportAccessContext()
   if (!context) throw new Error('You must be signed in.')
 
+  if (context.supportActive) {
+    throw new Error('Support Mode cannot generate or change official student hours.')
+  }
   const actor = context.effectiveProfile
   if (!actor.school_id || !hasPermission(actor.role, 'manage_attendance')) {
     throw new Error('You do not have permission to generate student hours.')
