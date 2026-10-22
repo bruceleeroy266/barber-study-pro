@@ -8,7 +8,7 @@ on:
     branches: [main]
     types: [opened, synchronize, reopened, ready_for_review]
   push:
-    branches: [main]
+    branches: [main, admin-support-access-5o-security-corrections]
 
 env:
   NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
@@ -84,7 +84,7 @@ jobs:
 
   support-assignment-rls:
     name: Support Assignment RLS (disposable A/B)
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/admin-support-access-5o-security-corrections'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -212,7 +212,7 @@ jobs:
 
   pilot-onboarding-certification:
     name: Pilot Onboarding Certification
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/admin-support-access-5o-security-corrections'
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
