@@ -9,7 +9,7 @@ export default async function SchoolSupportAccessPage(){
  if(!user) redirect('/login')
  const {data:profile}=await supabase.from('profiles')
   .select('role,school_id,approval_status,is_disabled').eq('id',user.id).maybeSingle()
- if(!profile?.school_id||!['admin','school_admin'].includes(profile.role)
+ if(!profile?.school_id||profile.role!=='school_admin'
   ||profile.approval_status!=='approved'||profile.is_disabled===true) redirect('/school')
  const {data,error}=await supabase.rpc('get_school_support_authorization')
  const grant=(!error&&Array.isArray(data)?data[0]:null) as Authorization|null
