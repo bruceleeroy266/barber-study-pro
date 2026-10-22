@@ -1,5 +1,5 @@
 # P0 HEAVY AUDIT 60 ID reconciliation pinned source bb995882ecf95a00ee409a749114e13e5273c3e3
-# inventory 573 unique; 171 documented targeted editorial or safety-review passes; no independent approvals attested
+# inventory 573 unique; 181 documented targeted editorial or safety-review passes; no independent approvals attested
 # corrected review head prior to report: 5312ae19c848c179bf9f42396fcec578f818202b
 source_question_id,domain,upstream_file,targeted_editorial_record,independent_academic_approval,publisher_rights_clearance
 exam-ready:FS-001,facial_hair_skin_care_services,facial-hair-skin-care,not_documented_in_P0_audit,pending,pending
@@ -331,16 +331,16 @@ exam-ready:AP-027,scientific_concepts,anatomy-physiology,documented_targeted_bat
 exam-ready:AP-028,scientific_concepts,anatomy-physiology,documented_targeted_batch,pending,pending
 exam-ready:AP-029,scientific_concepts,anatomy-physiology,documented_targeted_batch,pending,pending
 exam-ready:AP-030,scientific_concepts,anatomy-physiology,documented_targeted_batch,pending,pending
-exam-ready:AP-031,scientific_concepts,anatomy-physiology,not_documented_in_P0_audit,pending,pending
-exam-ready:AP-032,scientific_concepts,anatomy-physiology,not_documented_in_P0_audit,pending,pending
-exam-ready:AP-033,scientific_concepts,anatomy-physiology,not_documented_in_P0_audit,pending,pending
-exam-ready:AP-034,scientific_concepts,anatomy-physiology,not_documented_in_P0_audit,pending,pending
-exam-ready:AP-035,scientific_concepts,anatomy-physiology,not_documented_in_P0_audit,pending,pending
-exam-ready:AP-036,scientific_concepts,anatomy-physiology,not_documented_in_P0_audit,pending,pending
-exam-ready:AP-037,scientific_concepts,anatomy-physiology,not_documented_in_P0_audit,pending,pending
-exam-ready:AP-038,scientific_concepts,anatomy-physiology,not_documented_in_P0_audit,pending,pending
-exam-ready:AP-039,scientific_concepts,anatomy-physiology,not_documented_in_P0_audit,pending,pending
-exam-ready:AP-040,scientific_concepts,anatomy-physiology,not_documented_in_P0_audit,pending,pending
+exam-ready:AP-031,scientific_concepts,anatomy-physiology,documented_targeted_batch,pending,pending
+exam-ready:AP-032,scientific_concepts,anatomy-physiology,documented_targeted_batch,pending,pending
+exam-ready:AP-033,scientific_concepts,anatomy-physiology,documented_targeted_batch,pending,pending
+exam-ready:AP-034,scientific_concepts,anatomy-physiology,documented_targeted_batch,pending,pending
+exam-ready:AP-035,scientific_concepts,anatomy-physiology,documented_targeted_batch,pending,pending
+exam-ready:AP-036,scientific_concepts,anatomy-physiology,documented_targeted_batch,pending,pending
+exam-ready:AP-037,scientific_concepts,anatomy-physiology,documented_targeted_batch,pending,pending
+exam-ready:AP-038,scientific_concepts,anatomy-physiology,documented_targeted_batch,pending,pending
+exam-ready:AP-039,scientific_concepts,anatomy-physiology,documented_targeted_batch,pending,pending
+exam-ready:AP-040,scientific_concepts,anatomy-physiology,documented_targeted_batch,pending,pending
 exam-ready:AP-041,scientific_concepts,anatomy-physiology,not_documented_in_P0_audit,pending,pending
 exam-ready:AP-042,scientific_concepts,anatomy-physiology,not_documented_in_P0_audit,pending,pending
 exam-ready:AP-043,scientific_concepts,anatomy-physiology,not_documented_in_P0_audit,pending,pending
