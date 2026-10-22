@@ -5,6 +5,22 @@ import { hairScalpDisorderQuestions } from './hair-scalp-disorders-bank'
 import { scientificConceptGapQuestions } from './scientific-concepts-gap'
 
 describe('P0 academic corrections: student-facing assembled questions', () => {
+  it('AP-031–040 assembled anatomy keys and independent student explanations', () => {
+    for (let n = 31; n <= 40; n++) {
+      const id = 'AP-' + String(n).padStart(3, '0')
+      const q = anatomyPhysiologyQuestions.find(item => item.id === id)
+      expect(q, id).toBeDefined()
+      expect(q!.options, id).toHaveLength(4)
+      expect(q!.correctOptionId, id).toBe('a')
+      expect([q!.prompt, q!.explanation, ...q!.options.map(o => o.text)].join(' '), id)
+        .not.toMatch(/\b(?:Milady|Cengage)\b/i)
+    }
+    expect(anatomyPhysiologyQuestions.find(q => q.id === 'AP-036')!.explanation)
+      .toMatch(/pulmonary arteries/i)
+    expect(anatomyPhysiologyQuestions.find(q => q.id === 'AP-032')!.explanation)
+      .toMatch(/mastoid process/i)
+  })
+
   it('AP-021–030 assembled anatomy questions preserve keys and independent explanations', () => {
     for (let n = 21; n <= 30; n++) {
       const id = 'AP-' + String(n).padStart(3, '0')
