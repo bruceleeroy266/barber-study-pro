@@ -67,7 +67,7 @@ test('QA-11: authenticated School A/B quiz score and dashboard parity (LOCAL ONL
     await page.locator('input[type="email"]').fill(actors[0].email)
     await page.locator('input[type="password"]').fill(password)
     await page.locator('button[type="submit"]').click()
-    await page.waitForURL(/\/dashboard(?:\/|$)/)
+    await page.waitForURL(/\/(?:beta-agreement|dashboard)(?:\/|\?|$)/)
     await page.goto('/dashboard/progress')
     await expect(page.getByText('60%', { exact: true }).first()).toBeVisible()
     await context.close()
