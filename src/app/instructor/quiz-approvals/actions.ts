@@ -9,6 +9,8 @@ async function getActor() {
   const supabase = await createClient()
   const context = await resolveSupportAccessContext()
   if (!context) throw new Error('Authentication required')
+  // Quiz permissions and approvals are school academic decisions.
+  if (context.supportActive) throw new Error('Support Mode cannot change quiz approvals.')
 
   const profile = context.effectiveProfile
   const user = { id: context.actorUserId, email: context.actorEmail }
