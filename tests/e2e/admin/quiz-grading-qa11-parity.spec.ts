@@ -12,10 +12,11 @@ test('QA-11: authenticated School A/B quiz score and dashboard parity (LOCAL ONL
   if (!anon || !serviceKey) throw new Error('Missing disposable Supabase keys')
 
   const root = createClient(url, serviceKey, { auth: { persistSession: false, autoRefreshToken: false } })
+  const fixtureId = `${Date.now()}-${Math.floor(Math.random() * 100000)}`
   const actors = [
-    { email: 'qa11-a-student@ascynpro.test', role: 'student', school: 0 },
-    { email: 'qa11-a-instructor@ascynpro.test', role: 'instructor', school: 0 },
-    { email: 'qa11-b-student@ascynpro.test', role: 'student', school: 1 },
+    { email: `qa11-a-student-${fixtureId}@ascynpro.test`, role: 'student', school: 0 },
+    { email: `qa11-a-instructor-${fixtureId}@ascynpro.test`, role: 'instructor', school: 0 },
+    { email: `qa11-b-student-${fixtureId}@ascynpro.test`, role: 'student', school: 1 },
   ] as const
   const ids: string[] = []
   const schools: string[] = []
