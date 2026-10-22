@@ -68,6 +68,14 @@ test('QA-11: authenticated School A/B quiz score and dashboard parity (LOCAL ONL
     await page.locator('input[type="password"]').fill(password)
     await page.locator('button[type="submit"]').click()
     await page.waitForURL(/\/(?:beta-agreement|dashboard)(?:\/|\?|$)/)
+    if (page.url().includes('/beta-agreement')) {
+      await expect(page.getByText('Loading agreement status…')).toBeHidden()
+      await page.locator('#tester-name').fill('QA11 test student')
+      await page.locator('#tester-email').fill(actors[0].email)
+      await page.locator('#agree-checkbox').check()
+      await expect(page.getByText('Agreement accepted. You may continue to the checklist.')).toBeVisible()
+      await page.getByRole('button', { name: 'Continue' }).click()
+    }
     await page.goto('/dashboard/progress')
     await expect(page.getByText('60%', { exact: true }).first()).toBeVisible()
     await context.close()
