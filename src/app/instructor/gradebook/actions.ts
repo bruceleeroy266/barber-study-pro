@@ -24,6 +24,10 @@ export async function saveGrade(
   if (!context) {
     return { success: false, message: 'You must be signed in to save a grade.' }
   }
+  // School consent to technical support is not approval to edit official grades.
+  if (context.supportActive) {
+    return { success: false, message: 'Support Mode cannot change official grades.' }
+  }
 
   const profile = context.effectiveProfile
   const user = { id: context.actorUserId, email: context.actorEmail }
