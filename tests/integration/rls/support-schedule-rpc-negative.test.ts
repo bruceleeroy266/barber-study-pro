@@ -56,10 +56,12 @@ describe('direct authenticated Support Mode schedule RPC',()=>{
     expect((await instructor.rpc('set_school_support_authorization',{p_enable:true})).error).not.toBeNull()
     // A school-scoped generic admin does not acquire consent-authorizer
     // privilege. Platform admins cannot self-grant either.
-    const {data:grantRows,error:grantError}=await getServiceClient().from('school_support_grants')
-      .select('authorized_by').eq('school_id',TEST_SCHOOLS.SCHOOL_A.id)
+    // Consent rows are intentionally not directly readable by API roles.
+    // Query the school-scoped SECURITY DEFINER status RPC instead.
+    const {data:grantRows,error:grantError}=await schoolA.rpc('get_school_support_authorization')
     expect(grantError).toBeNull()
     expect(grantRows).toHaveLength(1)
+    expect(grantRows?.[0].active).toBe(true)
     expect(grantRows?.[0].authorized_by).toBe(resolveActorId('SCHOOL_ADMIN_A'))
 
     expect((await platform.rpc('set_support_access_session',{p_target:resolveActorId('INSTRUCTOR_B'),p_enable:true})).error).not.toBeNull()
