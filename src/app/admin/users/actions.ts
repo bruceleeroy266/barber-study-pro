@@ -989,11 +989,8 @@ export async function resendUserSetupLink(id: string): Promise<ActionResult> {
     return { success: false, error: 'Authentication email does not match the managed profile.' }
   }
 
-  const recoveryResult = await sendAccountRecoveryEmail(serviceClient, target.email.toLowerCase())
-  if (!recoveryResult.success) {
-    return recoveryResult
-  }
-
+  // Persist the authorized invitation state before emailing an access link.
+  // Otherwise a failed lifecycle write can still send an actionable recovery link.
   const lifecycleResult = await ensurePendingInvitationLifecycle(serviceClient, admin, {
     authUserId: target.id,
     email: target.email.toLowerCase(),
@@ -1003,6 +1000,11 @@ export async function resendUserSetupLink(id: string): Promise<ActionResult> {
   })
   if (!lifecycleResult.success) {
     return { success: false, error: lifecycleResult.error }
+  }
+
+  const recoveryResult = await sendAccountRecoveryEmail(serviceClient, target.email.toLowerCase())
+  if (!recoveryResult.success) {
+    return recoveryResult
   }
 
   revalidatePath('/admin/users')
