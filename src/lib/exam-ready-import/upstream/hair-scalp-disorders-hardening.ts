@@ -27,12 +27,6 @@ const overrides: Record<string, Override> = {
 };
 
 const finalOverrides: Record<string, Override> = {
-  'HS-023': {options:o(
-    'Base the service decision on the actual scalp assessment because noncontagious patterned hair loss alone is not infectious',
-    'Postpone the service until the patterned hair-loss diagnosis is medically confirmed even when the scalp is intact',
-    'Proceed only after the client confirms the patterned hair loss is noncontagious and no lesions are present',
-    'Treat patterned hair loss as a service contraindication until a scalp examination shows no sign of infection',
-  )},
   'HS-028': {options:o(
     'Treat the redness, broken skin, and draining lesion as a contraindication; avoid manipulation and refer if infection is suspected',
     'Treat the draining lesion as a localized concern and continue scalp treatment only on nearby intact skin',
