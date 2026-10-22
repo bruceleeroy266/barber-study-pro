@@ -101,6 +101,7 @@ export async function createScheduleTemplate(formData: FormData) {
   }
 
   const { supabase, user, actor, context } = await getStaffActor()
+  if (context.supportActive) scheduleRedirect({ error: 'support-mode-read-only' })
 
   const { data: template, error: templateError } = await supabase
     .from('school_schedule_templates')
@@ -148,6 +149,7 @@ export async function assignTemplateSchedule(formData: FormData) {
   }
 
   const { supabase, user, actor, context } = await getStaffActor()
+  if (context.supportActive) scheduleRedirect({ error: 'support-mode-read-only' })
 
   try {
     await requireSchoolStudent(supabase, actor.school_id!, studentId)
@@ -244,6 +246,7 @@ export async function saveCustomStudentSchedule(formData: FormData) {
   }
 
   const { supabase, user, actor, context } = await getStaffActor()
+  if (context.supportActive) scheduleRedirect({ error: 'support-mode-read-only' })
   try {
     await requireSchoolStudent(supabase, actor.school_id!, studentId)
   } catch {
