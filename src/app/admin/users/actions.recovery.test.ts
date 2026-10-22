@@ -162,6 +162,7 @@ describe('pilot invitation recovery', () => {
     vi.doUnmock('@/lib/supabase-server')
     vi.doUnmock('@/lib/supabase-service-role')
     vi.doUnmock('@/lib/support-access')
+    vi.doUnmock('@/lib/auth-helpers')
     vi.restoreAllMocks()
   })
 
@@ -283,6 +284,12 @@ describe('pilot invitation recovery', () => {
   it('blocks School B administrator recovery of School A student', async () => {
     vi.resetModules()
     mockCaller('school_admin', SCHOOL_B)
+    // Constrain this regression to the real, school-scoped actor rather than
+    // allowing a stale/mocked platform-admin predicate to bypass school scope.
+    vi.doMock('@/lib/auth-helpers', async (importOriginal) => ({
+      ...await importOriginal<typeof import('@/lib/auth-helpers')>(),
+      isPlatformAdminProfile: () => false,
+    }))
     const { resetPasswordForEmail } = makeServiceClient({ school_id: SCHOOL_A })
     const { resendUserSetupLink } = await import('./actions')
     const result = await resendUserSetupLink(USER_ID)
