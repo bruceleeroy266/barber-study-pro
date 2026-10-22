@@ -25,6 +25,11 @@ export async function saveAssessment(
     return { success: false, message: 'You must be signed in to save an assessment.' }
   }
 
+  // Technical-support consent does not authorize changes to official assessments.
+  if (context.supportActive) {
+    return { success: false, message: 'Support Mode cannot change official assessments.' }
+  }
+
   const profile = context.effectiveProfile
   const user = { id: context.actorUserId, email: context.actorEmail }
 
