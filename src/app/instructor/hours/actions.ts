@@ -67,6 +67,8 @@ export async function logStudentHours(formData: FormData) {
   const supabase = await createClient()
   const context = await resolveSupportAccessContext()
   if (!context) redirect('/login')
+  // Official hours require the school's own authorized staff, not Support Mode.
+  if (context.supportActive) redirect('/school/hours?error=support-mode-read-only')
   const actor = context.effectiveProfile
   const trueActorId = context.actorUserId
 
@@ -139,6 +141,8 @@ export async function reviewStudentHours(formData: FormData) {
   const supabase = await createClient()
   const context = await resolveSupportAccessContext()
   if (!context) redirect('/login')
+  // Official hours require the school's own authorized staff, not Support Mode.
+  if (context.supportActive) redirect('/school/hours?error=support-mode-read-only')
   const actor = context.effectiveProfile
   const trueActorId = context.actorUserId
 
@@ -235,6 +239,8 @@ export async function bulkApproveStudentHours(formData: FormData) {
   const supabase = await createClient()
   const context = await resolveSupportAccessContext()
   if (!context) redirect('/login')
+  // Official hours require the school's own authorized staff, not Support Mode.
+  if (context.supportActive) redirect('/school/hours?error=support-mode-read-only')
   const actor = context.effectiveProfile
   const trueActorId = context.actorUserId
 
@@ -306,6 +312,8 @@ export async function adjustApprovedStudentHours(formData: FormData) {
   const supabase = await createClient()
   const context = await resolveSupportAccessContext()
   if (!context) redirect('/login')
+  // Official hours require the school's own authorized staff, not Support Mode.
+  if (context.supportActive) redirect('/school/hours?error=support-mode-read-only')
   const actor = context.effectiveProfile
   const trueActorId = context.actorUserId
 
@@ -429,6 +437,8 @@ export async function setStudentHourContract(formData: FormData) {
   const supabase = await createClient()
   const context = await resolveSupportAccessContext()
   if (!context) redirect('/login')
+  // Official hours require the school's own authorized staff, not Support Mode.
+  if (context.supportActive) redirect('/school/hours?error=support-mode-read-only')
   const actor = context.effectiveProfile
   const trueActorId = context.actorUserId
 
