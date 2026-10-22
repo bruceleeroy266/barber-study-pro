@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase-server'
+import { resolveSupportAccessContext, logSupportAction, type SupportAccessContext } from '@/lib/support-access'
 
 type MessagingRole = 'student' | 'apprentice' | 'instructor' | 'school_admin' | 'admin'
 
@@ -88,26 +89,20 @@ function logMessagingFailure(
 }
 
 async function getMessagingActor(): Promise<
-  MessagingRuntimeResult<{ actor: MessagingActor; supabase: Awaited<ReturnType<typeof createClient>> }>
+  MessagingRuntimeResult<{
+    actor: MessagingActor
+    supabase: Awaited<ReturnType<typeof createClient>>
+    supportContext: SupportAccessContext
+  }>
 > {
   const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const supportContext = await resolveSupportAccessContext()
 
-  if (!user) {
+  if (!supportContext) {
     return { success: false, message: 'You must be signed in to use messaging.' }
   }
 
-  const { data: profile, error } = await supabase
-    .from('profiles')
-    .select('id, school_id, role, approval_status, is_disabled')
-    .eq('id', user.id)
-    .single()
-
-  if (error || !profile) {
-    return { success: false, message: 'Unable to load your messaging profile.' }
-  }
+  const profile = supportContext.effectiveProfile
 
   if (!profile.school_id) {
     return { success: false, message: 'Your account is not assigned to a school.' }
@@ -125,8 +120,9 @@ async function getMessagingActor(): Promise<
     success: true,
     data: {
       supabase,
+      supportContext,
       actor: {
-        id: user.id,
+        id: profile.id,
         schoolId: profile.school_id,
         role: profile.role as MessagingRole,
       },
@@ -171,7 +167,7 @@ export async function openCommunicationThread(
   const actorResult = await getMessagingActor()
   if (!actorResult.success) return actorResult
 
-  const { actor, supabase } = actorResult.data
+  const { actor, supabase, supportContext } = actorResult.data
 
   const { data: counterpart, error: counterpartError } = await supabase
     .from('profiles')
@@ -298,6 +294,13 @@ export async function openCommunicationThread(
     }
   }
 
+  await logSupportAction(supportContext, 'open_message_thread', 'communication_threads', {
+    threadId: createdThread.id,
+    counterpartId,
+    created: true,
+    effectiveRole: actor.role,
+  })
+
   return {
     success: true,
     data: {
@@ -366,7 +369,7 @@ export async function loadCommunicationThreadMessages(
   const actorResult = await getMessagingActor()
   if (!actorResult.success) return actorResult
 
-  const { actor, supabase } = actorResult.data
+  const { actor, supabase, supportContext } = actorResult.data
 
   const { data: thread, error: threadError } = await supabase
     .from('communication_threads')
@@ -437,7 +440,7 @@ export async function archiveCommunicationThread(
   const actorResult = await getMessagingActor()
   if (!actorResult.success) return actorResult
 
-  const { actor, supabase } = actorResult.data
+  const { actor, supabase, supportContext } = actorResult.data
 
   if (actor.role !== 'instructor') {
     return { success: false, message: 'Only instructors can archive conversations.' }
@@ -485,6 +488,11 @@ export async function archiveCommunicationThread(
   }
 
   if (existingThread.status === 'archived') {
+    await logSupportAction(supportContext, 'archive_message_thread', 'communication_threads', {
+      threadId,
+      idempotent: true,
+      effectiveRole: actor.role,
+    })
     return {
       success: true,
       data: { thread: mapThread(existingThread) },
@@ -513,6 +521,10 @@ export async function archiveCommunicationThread(
   }
 
   if (thread) {
+    await logSupportAction(supportContext, 'archive_message_thread', 'communication_threads', {
+      threadId,
+      effectiveRole: actor.role,
+    })
     return {
       success: true,
       data: { thread: mapThread(thread) },
@@ -564,6 +576,11 @@ export async function archiveCommunicationThread(
     return { success: false, message: 'You are no longer authorized to archive this conversation.' }
   }
 
+  await logSupportAction(supportContext, 'archive_message_thread', 'communication_threads', {
+    threadId,
+    idempotent: true,
+    effectiveRole: actor.role,
+  })
   return {
     success: true,
     data: { thread: mapThread(racedThread) },
@@ -588,8 +605,11 @@ export async function sendCommunicationMessage(
 
   const actorResult = await getMessagingActor()
   if (!actorResult.success) return actorResult
+  if (actorResult.data.supportContext.supportActive) {
+    return { success: false, message: 'Support Mode cannot send messages until true-actor attribution is enabled.' }
+  }
 
-  const { actor, supabase } = actorResult.data
+  const { actor, supabase, supportContext } = actorResult.data
 
   // Exactly-once retry recognition happens before fresh sendability checks.
   // If this operation already persisted, a later archive/assignment change must
@@ -614,6 +634,13 @@ export async function sendCommunicationMessage(
       return { success: false, message: 'Unable to safely retry this message.' }
     }
 
+    await logSupportAction(supportContext, 'send_message', 'communication_messages', {
+      threadId,
+      messageId: priorMessage.id,
+      operationId,
+      idempotent: true,
+      effectiveRole: actor.role,
+    })
     return {
       success: true,
       data: {
@@ -689,6 +716,13 @@ export async function sendCommunicationMessage(
     return { success: false, message: 'Unable to send this message right now.' }
   }
 
+  await logSupportAction(supportContext, 'send_message', 'communication_messages', {
+    threadId,
+    messageId: persistedMessage.id,
+    operationId,
+    effectiveRole: actor.role,
+  })
+
   return {
     success: true,
     data: {
@@ -714,7 +748,7 @@ export async function markCommunicationThreadRead(
   const actorResult = await getMessagingActor()
   if (!actorResult.success) return actorResult
 
-  const { actor, supabase } = actorResult.data
+  const { actor, supabase, supportContext } = actorResult.data
 
   const { data: thread, error: threadError } = await supabase
     .from('communication_threads')
@@ -776,6 +810,13 @@ export async function markCommunicationThreadRead(
     ((unreadRows || []) as CommunicationUnreadCountRow[])
       .find((row) => row.thread_id === threadId)
       ?.unread_count ?? 0
+
+  await logSupportAction(supportContext, 'mark_message_thread_read', 'communication_message_reads', {
+    threadId,
+    markedRead: insertedReads?.length || 0,
+    remainingUnread: Number(remainingUnread) || 0,
+    effectiveRole: actor.role,
+  })
 
   return {
     success: true,

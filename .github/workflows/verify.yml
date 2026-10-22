@@ -81,6 +81,135 @@ jobs:
           retention-days: 7
           if-no-files-found: ignore
 
+
+  support-assignment-rls:
+    name: Support Assignment RLS (disposable A/B)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: 2.109.1
+      - name: Start disposable Supabase and export test-only settings
+        shell: bash
+        run: |
+          supabase start
+          supabase status -o env > /tmp/ascyn-rls-local.env
+          set -a
+          source /tmp/ascyn-rls-local.env
+          set +a
+          LOCAL_API_URL="${API_URL:-${SUPABASE_URL:-}}"
+          LOCAL_ANON_KEY="${PUBLISHABLE_KEY:-${ANON_KEY:-}}"
+          LOCAL_SERVICE_KEY="${SECRET_KEY:-${SERVICE_ROLE_KEY:-}}"
+          if [[ -z "$LOCAL_API_URL" || -z "$LOCAL_ANON_KEY" || -z "$LOCAL_SERVICE_KEY" ]]; then
+            echo "Missing disposable Supabase credentials"
+            exit 1
+          fi
+          {
+            echo "ASCYN_TEST_ENVIRONMENT=true"
+            echo "NEXT_PUBLIC_SUPABASE_URL=$LOCAL_API_URL"
+            echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$LOCAL_ANON_KEY"
+            echo "SUPABASE_SERVICE_ROLE_KEY=$LOCAL_SERVICE_KEY"
+            echo "TEST_DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:54322/postgres"
+            echo "NEXT_PUBLIC_SITE_URL=http://127.0.0.1:3000"
+            echo "PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000"
+            echo "PORT=3000"
+            echo "TEST_PLATFORM_ADMIN_EMAIL=platform-admin@ascyn-test.local"
+            echo "TEST_PLATFORM_ADMIN_PASSWORD=Test1234!"
+            echo "TEST_SCHOOL_ADMIN_A_EMAIL=school-admin-a@ascyn-test.local"
+            echo "TEST_SCHOOL_ADMIN_A_PASSWORD=Test1234!"
+            echo "TEST_INSTRUCTOR_A_EMAIL=instructor-a@ascyn-test.local"
+            echo "TEST_INSTRUCTOR_A_PASSWORD=Test1234!"
+            echo "TEST_STUDENT_A_EMAIL=student-a@ascyn-test.local"
+            echo "TEST_STUDENT_A_PASSWORD=Test1234!"
+            echo "TEST_SCHOOL_ADMIN_B_EMAIL=school-admin-b@ascyn-test.local"
+            echo "TEST_SCHOOL_ADMIN_B_PASSWORD=Test1234!"
+            echo "TEST_INSTRUCTOR_B_EMAIL=instructor-b@ascyn-test.local"
+            echo "TEST_INSTRUCTOR_B_PASSWORD=Test1234!"
+            echo "TEST_STUDENT_B_EMAIL=student-b@ascyn-test.local"
+            echo "TEST_STUDENT_B_PASSWORD=Test1234!"
+            echo "TEST_SCHOOL_A_ID=aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+            echo "TEST_SCHOOL_A_NAME=Test Academy Alpha"
+            echo "TEST_SCHOOL_A_SLUG=test-academy-alpha"
+            echo "TEST_SCHOOL_B_ID=bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"
+            echo "TEST_SCHOOL_B_NAME=Test Academy Beta"
+            echo "TEST_SCHOOL_B_SLUG=test-academy-beta"
+          } >> "$GITHUB_ENV"
+      - name: Match production table grants in disposable fixture
+        shell: bash
+        run: |
+          psql "$TEST_DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+          GRANT SELECT ON public.student_instructor_assignments TO authenticated;
+          GRANT SELECT, INSERT, DELETE ON public.student_instructor_assignments TO service_role;
+          -- Disposable CI fixture only: verify and clean persisted support audit events.
+          GRANT SELECT, INSERT, DELETE ON public.security_logs TO service_role;
+          -- Browser test reads and cleans schedule overrides using disposable service-role fixtures.
+          GRANT SELECT, INSERT, DELETE ON public.student_schedule_overrides TO service_role;
+          -- Disposable-only session expiry regression fixture privileges.
+          GRANT SELECT, UPDATE ON public.support_access_sessions TO service_role;
+          SQL
+      - name: Run authenticated assignment RLS regression
+        run: npx vitest run --config vitest.integration.config.ts tests/integration/rls/support-access-assignment-select.test.ts tests/integration/rls/support-access-assignment-mutations.test.ts tests/integration/rls/support-access-audit-persistence.test.ts tests/integration/rls/support-schedule-rpc-negative.test.ts
+      - name: Build local app for authenticated Support Mode browser test
+        run: npm run build
+      - name: Install Chromium for Support Mode test
+        run: npx playwright install --with-deps chromium
+      - name: Run authenticated School A/B Support Mode browser test
+        run: npx playwright test tests/e2e/admin/support-mode-isolation.spec.ts --project=chromium --workers=1
+      - name: Rehearse disposable database backup and restore
+        shell: bash
+        env:
+          PGPASSWORD: postgres
+        run: |
+          set -euo pipefail
+          if [[ "${ASCYN_TEST_ENVIRONMENT:-}" != "true" || "${TEST_DATABASE_URL:-}" != *"127.0.0.1:54322"* ]]; then
+            echo "Refusing recovery drill outside disposable local Supabase."
+            exit 1
+          fi
+          # Run PostgreSQL client utilities inside the disposable PostgreSQL 17
+          # container, avoiding the runner's incompatible PostgreSQL 16 client.
+          DB_CONTAINER=$(docker ps --filter 'name=supabase_db_' --format '{{.Names}}' | head -n 1)
+          if [[ -z "$DB_CONTAINER" ]]; then echo "Disposable Supabase DB container missing"; exit 1; fi
+          BACKUP=/tmp/ascyn-support-recovery.dump
+          docker exec "$DB_CONTAINER" pg_dump -U postgres -d postgres --format=custom --no-owner --no-acl > "$BACKUP"
+          test -s "$BACKUP"
+          sha256sum "$BACKUP"
+          ORIGINAL=$(docker exec "$DB_CONTAINER" psql -U postgres -d postgres -At -v ON_ERROR_STOP=1 -c "select (select count(*) from public.school_support_grants)::text || ':' || (select count(*) from public.support_access_sessions)::text")
+          docker exec "$DB_CONTAINER" createdb -U postgres ascyn_support_restore
+          # Supabase's postgres login is not a true superuser. Its managed realtime
+          # routines require elevated configuration privileges during restore.
+          docker exec "$DB_CONTAINER" psql -U supabase_admin -d postgres -At -v ON_ERROR_STOP=1 -c "select rolsuper from pg_roles where rolname=current_user" | grep -qx t
+          docker exec -i "$DB_CONTAINER" pg_restore --exit-on-error --no-owner --no-acl -U supabase_admin -d ascyn_support_restore < "$BACKUP"
+          RESTORED=$(docker exec "$DB_CONTAINER" psql -U postgres -d ascyn_support_restore -At -v ON_ERROR_STOP=1 -c "select (select count(*) from public.school_support_grants)::text || ':' || (select count(*) from public.support_access_sessions)::text")
+          test "$ORIGINAL" = "$RESTORED"
+          # Compare deterministic manifests of academic records and security
+          # configuration, not merely the two support table row counts.
+          INTEGRITY_SQL="select md5(coalesce((select string_agg(md5(row_to_json(t)::text), ',' order by md5(row_to_json(t)::text)) from public.profiles t),'')) || ':' || md5(coalesce((select string_agg(md5(row_to_json(t)::text), ',' order by md5(row_to_json(t)::text)) from public.student_schedule_overrides t),'')) || ':' || md5(coalesce((select string_agg(md5(row_to_json(t)::text), ',' order by md5(row_to_json(t)::text)) from public.school_support_grants t),'')) || ':' || md5(coalesce((select string_agg(md5(row_to_json(t)::text), ',' order by md5(row_to_json(t)::text)) from public.support_access_sessions t),'')) || ':' || md5(coalesce((select string_agg(schemaname || '.' || tablename || ':' || policyname || ':' || permissive || ':' || roles::text || ':' || cmd || ':' || coalesce(qual,'') || ':' || coalesce(with_check,''), ',' order by schemaname,tablename,policyname) from pg_policies where schemaname='public'),'')) || ':' || md5(coalesce((select string_agg(n.nspname || '.' || c.relname || ':' || c.relrowsecurity::text || ':' || c.relforcerowsecurity::text, ',' order by n.nspname,c.relname) from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='public' and c.relkind in ('r','p')),''));"
+          SOURCE_MANIFEST=$(docker exec "$DB_CONTAINER" psql -U postgres -d postgres -At -v ON_ERROR_STOP=1 -c "$INTEGRITY_SQL")
+          RESTORE_MANIFEST=$(docker exec "$DB_CONTAINER" psql -U postgres -d ascyn_support_restore -At -v ON_ERROR_STOP=1 -c "$INTEGRITY_SQL")
+          if [[ "$SOURCE_MANIFEST" != "$RESTORE_MANIFEST" ]]; then
+            echo "Disposable restore integrity/RLS policy manifest differs from source"
+            exit 1
+          fi
+          echo "Academic data + school consent + RLS policy integrity manifest matched."
+          docker exec "$DB_CONTAINER" psql -U postgres -d ascyn_support_restore -v ON_ERROR_STOP=1 -c "select 'restored support consent' as check_name, count(*) from public.school_support_grants; select proname from pg_proc where proname in ('set_school_support_authorization','is_support_access_session_active','support_upsert_student_schedule_override');"
+          echo "Disposable recovery drill completed; original=$ORIGINAL restored=$RESTORED"
+          docker exec "$DB_CONTAINER" dropdb -U postgres ascyn_support_restore
+      - name: Stop disposable Supabase
+        if: always()
+        run: supabase stop --no-backup
+
   pilot-onboarding-certification:
     name: Pilot Onboarding Certification
     if: github.event_name == 'pull_request'

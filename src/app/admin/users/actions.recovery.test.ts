@@ -15,6 +15,17 @@ vi.mock('next/cache', () => ({
 }))
 
 function mockCaller(role = 'school_admin', schoolId: string | null = SCHOOL_A) {
+  vi.doMock('@/lib/support-access', () => ({
+    resolveSupportAccessContext: vi.fn().mockResolvedValue({
+      actorUserId: ADMIN_ID,
+      actorEmail: 'admin@example.test',
+      actorProfile: { id: ADMIN_ID, role, school_id: schoolId },
+      effectiveProfile: { id: ADMIN_ID, role, school_id: schoolId },
+      supportActive: false,
+      targetProfile: null,
+    }),
+    logSupportAction: vi.fn().mockResolvedValue(undefined),
+  }))
   vi.doMock('@/lib/supabase-server', () => ({
     createClient: vi.fn().mockResolvedValue({
       auth: {
@@ -150,6 +161,7 @@ describe('pilot invitation recovery', () => {
   afterEach(() => {
     vi.doUnmock('@/lib/supabase-server')
     vi.doUnmock('@/lib/supabase-service-role')
+    vi.doUnmock('@/lib/support-access')
     vi.restoreAllMocks()
   })
 

@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
 import { hasPermission } from '@/lib/auth-helpers'
+import { resolveSupportAccessContext, logSupportAction } from '@/lib/support-access'
 
 const DAY_COUNT = 7
 const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/
@@ -53,20 +54,16 @@ function parseDays(formData: FormData): DayInput[] {
 
 async function getStaffActor() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
 
-  const { data: actor } = await supabase
-    .from('profiles')
-    .select('id, role, school_id')
-    .eq('id', user.id)
-    .single()
-
-  if (!actor?.school_id || !hasPermission(actor.role, 'manage_attendance')) {
-    redirect('/dashboard')
+  const actor = context.effectiveProfile
+  if (!actor.school_id || !hasPermission(actor.role, 'manage_attendance')) {
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
 
-  return { supabase, user, actor }
+  const user = { id: context.actorUserId, email: context.actorEmail }
+  return { supabase, user, actor, context }
 }
 
 async function requireSchoolStudent(
@@ -103,7 +100,7 @@ export async function createScheduleTemplate(formData: FormData) {
     scheduleRedirect({ error: error instanceof Error ? error.message : 'invalid-schedule' })
   }
 
-  const { supabase, user, actor } = await getStaffActor()
+  const { supabase, user, actor, context } = await getStaffActor()
 
   const { data: template, error: templateError } = await supabase
     .from('school_schedule_templates')
@@ -132,6 +129,7 @@ export async function createScheduleTemplate(formData: FormData) {
   }
 
   revalidatePath('/instructor/schedules')
+  await logSupportAction(context, 'create_schedule_template', 'school_schedule_templates', { templateId: template.id, schoolId: actor.school_id })
   scheduleRedirect({ saved: 'template' })
 }
 
@@ -149,10 +147,10 @@ export async function assignTemplateSchedule(formData: FormData) {
     scheduleRedirect({ error: 'invalid-dates', student: studentId })
   }
 
-  const { supabase, user, actor } = await getStaffActor()
+  const { supabase, user, actor, context } = await getStaffActor()
 
   try {
-    await requireSchoolStudent(supabase, actor.school_id, studentId)
+    await requireSchoolStudent(supabase, actor.school_id!, studentId)
   } catch {
     scheduleRedirect({ error: 'student-not-found' })
   }
@@ -217,6 +215,7 @@ export async function assignTemplateSchedule(formData: FormData) {
   }
 
   revalidatePath('/instructor/schedules')
+  await logSupportAction(context, 'assign_schedule', 'student_schedule_profiles', { studentId, scheduleProfileId: profile.id, schoolId: actor.school_id })
   scheduleRedirect({ saved: 'schedule', student: studentId })
 }
 
@@ -244,9 +243,9 @@ export async function saveCustomStudentSchedule(formData: FormData) {
     })
   }
 
-  const { supabase, user, actor } = await getStaffActor()
+  const { supabase, user, actor, context } = await getStaffActor()
   try {
-    await requireSchoolStudent(supabase, actor.school_id, studentId)
+    await requireSchoolStudent(supabase, actor.school_id!, studentId)
   } catch {
     scheduleRedirect({ error: 'student-not-found' })
   }
@@ -282,6 +281,7 @@ export async function saveCustomStudentSchedule(formData: FormData) {
   }
 
   revalidatePath('/instructor/schedules')
+  await logSupportAction(context, 'create_custom_schedule', 'student_schedule_profiles', { studentId, scheduleProfileId: profile.id, schoolId: actor.school_id })
   scheduleRedirect({ saved: 'schedule', student: studentId })
 }
 
@@ -310,14 +310,28 @@ export async function saveScheduleOverride(formData: FormData) {
     scheduleRedirect({ error: 'invalid-time', student: studentId })
   }
 
-  const { supabase, user, actor } = await getStaffActor()
+  const { supabase, user, actor, context } = await getStaffActor()
   try {
-    await requireSchoolStudent(supabase, actor.school_id, studentId)
+    await requireSchoolStudent(supabase, actor.school_id!, studentId)
   } catch {
     scheduleRedirect({ error: 'student-not-found' })
   }
 
-  const { error } = await supabase
+  // Support writes are authorized by a narrowly scoped DB function. This
+  // validates the true authenticated admin and the current instructor assignment.
+  // Ordinary school staff continue using their existing RLS-backed upsert.
+  const { error } = context.supportActive
+    ? await supabase.rpc('support_upsert_student_schedule_override', {
+        p_target_instructor: actor.id,
+        p_student: studentId,
+        p_override_date: overrideDate,
+        p_override_type: overrideType,
+        p_start_time: overrideType === 'off' ? null : start,
+        p_end_time: overrideType === 'off' ? null : end,
+        p_break_minutes: breakMinutes,
+        p_reason: reason ? reason.slice(0, 500) : null,
+      })
+    : await supabase
     .from('student_schedule_overrides')
     .upsert(
       {
@@ -341,5 +355,6 @@ export async function saveScheduleOverride(formData: FormData) {
   }
 
   revalidatePath('/instructor/schedules')
+  await logSupportAction(context, 'save_schedule_override', 'student_schedule_overrides', { studentId, overrideDate, schoolId: actor.school_id })
   scheduleRedirect({ saved: 'override', student: studentId })
 }

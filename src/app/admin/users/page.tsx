@@ -4,6 +4,7 @@ import { isAdmin, isSchoolAdmin, isPlatformAdminProfile } from '@/lib/auth-helpe
 import { getUsers, getSchools } from './actions'
 import { UserManagementClient } from './UserManagementClient'
 import BackButton from '@/components/ui/BackButton'
+import { resolveSupportAccessContext } from '@/lib/support-access'
 
 export const metadata = {
   title: 'User Management | ASCYN PRO Admin',
@@ -14,24 +15,15 @@ interface UserManagementPageProps {
 }
 
 export default async function UserManagementPage({ searchParams }: UserManagementPageProps) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
 
-  if (!user) {
-    redirect('/login')
+  const profile = context.effectiveProfile
+  if (!(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role, school_id, full_name')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile || !(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
-    redirect('/dashboard')
-  }
-
-  const isPlatformAdmin = isPlatformAdminProfile(profile)
+  const isPlatformAdmin = context.supportActive ? false : isPlatformAdminProfile(profile)
   const { setup } = await searchParams
   const initialUsers = await getUsers({ limit: 50 })
   const initialSchools = await getSchools()
@@ -51,7 +43,7 @@ export default async function UserManagementPage({ searchParams }: UserManagemen
 
         <UserManagementClient
           currentUser={{
-            id: user.id,
+            id: profile.id,
             role: profile.role,
             schoolId: profile.school_id,
             isPlatformAdmin,

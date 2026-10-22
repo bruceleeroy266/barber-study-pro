@@ -14,6 +14,11 @@ vi.mock('@/lib/supabase-server', () => ({
   createClient: vi.fn(),
 }))
 
+vi.mock('@/lib/support-access', () => ({
+  resolveSupportAccessContext: vi.fn(),
+  logSupportAction: vi.fn().mockResolvedValue(undefined),
+}))
+
 vi.mock('@/lib/instructor/supabase-client', () => ({
   createSupabaseInstructorClient: vi.fn(),
 }))
@@ -84,6 +89,7 @@ async function setupMocks(options: {
 }) {
   const { createClient } = await import('@/lib/supabase-server')
   const { createSupabaseInstructorClient } = await import('@/lib/instructor/supabase-client')
+  const { resolveSupportAccessContext } = await import('@/lib/support-access')
 
   const user = options.authenticatedUser
     ? { id: options.authenticatedUser }
@@ -118,6 +124,15 @@ async function setupMocks(options: {
       options.history !== undefined ? options.history : []
     ),
   }
+
+  vi.mocked(resolveSupportAccessContext).mockResolvedValue(user ? {
+    actorUserId: user.id,
+    actorEmail: null,
+    actorProfile: { id: user.id, ...(options.profile !== undefined ? options.profile : MOCK_INSTRUCTOR_PROFILE) },
+    effectiveProfile: { id: user.id, ...(options.profile !== undefined ? options.profile : MOCK_INSTRUCTOR_PROFILE) },
+    supportActive: false,
+    targetProfile: null,
+  } as any : null)
 
   vi.mocked(createSupabaseInstructorClient).mockReturnValue(mockClient as any)
 
@@ -338,6 +353,32 @@ describe('Instructor Escalation API', () => {
         ESCALATION_ID,
         SCHOOL_ID,
         INSTRUCTOR_ID
+      )
+    })
+
+    it('attributes support-mode acknowledgement to the real administrator, not the selected instructor', async () => {
+      const { mockClient } = await setupMocks({ authenticatedUser: 'platform-operator-001' })
+      const { resolveSupportAccessContext, logSupportAction } = await import('@/lib/support-access')
+      vi.mocked(resolveSupportAccessContext).mockResolvedValue({
+        actorUserId: 'platform-operator-001',
+        actorEmail: 'operator@test.invalid',
+        actorProfile: { id: 'platform-operator-001', role: 'admin', school_id: null },
+        effectiveProfile: MOCK_INSTRUCTOR_PROFILE,
+        supportActive: true,
+        targetProfile: MOCK_INSTRUCTOR_PROFILE,
+      } as any)
+      const { POST } = await import('../escalations/[id]/acknowledge/route')
+      const response = await POST(
+        new NextRequest(`http://localhost/api/instructor/escalations/${ESCALATION_ID}/acknowledge`, { method: 'POST' }),
+        { params: Promise.resolve({ id: ESCALATION_ID }) },
+      )
+      expect(response.status).toBe(200)
+      expect(mockClient.acknowledgeEscalationForSchool).toHaveBeenCalledWith(
+        ESCALATION_ID, SCHOOL_ID, 'platform-operator-001',
+      )
+      expect(logSupportAction).toHaveBeenCalledWith(
+        expect.objectContaining({ actorUserId: 'platform-operator-001', supportActive: true }),
+        'acknowledge_escalation', 'instructor_escalations', expect.objectContaining({ escalationId: ESCALATION_ID }),
       )
     })
 

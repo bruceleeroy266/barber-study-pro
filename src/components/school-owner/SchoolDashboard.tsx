@@ -292,13 +292,31 @@ export default async function SchoolDashboard({ schoolId, privilegedRead = false
   const alerts = buildSchoolAlerts(inputs)
   const snapshot = buildSchoolAnalyticsSnapshot(inputs)
 
+  // Official school reports exclude pending/disabled accounts and students
+  // expressly omitted from metrics. Keep the unfiltered roster for admin tasks.
+  const reportStudents = students.filter((student) =>
+    student.approval_status === 'approved' &&
+    student.is_disabled !== true &&
+    student.include_in_school_metrics !== false
+  )
+  const reportStudentIds = new Set(reportStudents.map((student) => student.id))
+  const reportInputs = {
+    ...inputs,
+    students: reportStudents,
+    attendanceRecords: attendanceRecords.filter((record) => reportStudentIds.has(record.userId)),
+    hourLogs: hourLogs.filter((record) => reportStudentIds.has(record.user_id)),
+    quizAttempts: quizAttempts.filter((record) => reportStudentIds.has(record.user_id)),
+    progress: progress.filter((record) => reportStudentIds.has(record.user_id)),
+    grades: grades.filter((record) => reportStudentIds.has(record.studentId)),
+    assessments: assessments.filter((record) => reportStudentIds.has(record.studentId)),
+  }
   const reports = {
-    attendance: generateSchoolReport('attendance', inputs),
-    readiness: generateSchoolReport('readiness', inputs),
-    grade: generateSchoolReport('grade', inputs),
-    hours: generateSchoolReport('hours', inputs),
-    assessment: generateSchoolReport('assessment', inputs),
-    school_summary: generateSchoolReport('school_summary', inputs),
+    attendance: generateSchoolReport('attendance', reportInputs),
+    readiness: generateSchoolReport('readiness', reportInputs),
+    grade: generateSchoolReport('grade', reportInputs),
+    hours: generateSchoolReport('hours', reportInputs),
+    assessment: generateSchoolReport('assessment', reportInputs),
+    school_summary: generateSchoolReport('school_summary', reportInputs),
   }
 
   const studentCompliances = students.map((student) =>

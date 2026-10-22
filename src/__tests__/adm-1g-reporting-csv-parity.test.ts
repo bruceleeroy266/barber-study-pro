@@ -142,6 +142,29 @@ describe('ADM-1G reporting + CSV parity', () => {
     )
   })
 
+  it('assessment export excludes students explicitly omitted from school metrics', () => {
+    const included = student('eligible')
+    const excluded = { ...student('excluded'), include_in_school_metrics: false }
+    const data = { ...inputs(), students: [included, excluded] }
+    const report = generateSchoolReport('assessment', data)
+    expect(report.rows).toHaveLength(1)
+    expect(report.rows[0].Student).toBe('Student eligible')
+    const summary = generateSchoolReport('school_summary', data)
+    expect(summary.rows.find((row) => row.Metric === 'Total Students')?.Value).toBe(1)
+  })
+
+  it('official dashboard reports apply approved, enabled, metric-eligible roster filtering', () => {
+    const source = fs.readFileSync(
+      path.join(process.cwd(), 'src/components/school-owner/SchoolDashboard.tsx'),
+      'utf8',
+    )
+    expect(source).toContain("student.approval_status === 'approved'")
+    expect(source).toContain('student.is_disabled !== true')
+    expect(source).toContain('student.include_in_school_metrics !== false')
+    expect(source).toContain("school_summary: generateSchoolReport('school_summary', reportInputs)")
+    expect(source).toContain("assessment: generateSchoolReport('assessment', reportInputs)")
+  })
+
   it('school and compliance reporting centers share the canonical CSV serializer', () => {
     const school = fs.readFileSync(
       path.join(process.cwd(), 'src/components/school-owner/ReportingCenter.tsx'),

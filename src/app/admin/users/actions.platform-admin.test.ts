@@ -132,6 +132,18 @@ function setupMocks(profile: { role: string; school_id: string | null }) {
   vi.doMock('@/lib/supabase-server', () => ({
     createClient: vi.fn().mockResolvedValue(sessionClient),
   }))
+  // Isolate role/school authorization from Next.js request cookies in unit tests.
+  vi.doMock('@/lib/support-access', () => ({
+    resolveSupportAccessContext: vi.fn().mockResolvedValue({
+      actorUserId: CALLER_ID,
+      actorEmail: CALLER_EMAIL,
+      actorProfile: { id: CALLER_ID, ...profile },
+      effectiveProfile: { id: CALLER_ID, ...profile },
+      supportActive: false,
+      targetProfile: null,
+    }),
+    logSupportAction: vi.fn().mockResolvedValue(undefined),
+  }))
   vi.doMock('@/lib/supabase-service-role', () => ({
     createServiceRoleClient: vi.fn().mockReturnValue(serviceClient),
   }))
@@ -147,6 +159,7 @@ describe('admin/users actions — platform admin vs school-attached admin', () =
   afterEach(() => {
     vi.doUnmock('@/lib/supabase-server')
     vi.doUnmock('@/lib/supabase-service-role')
+    vi.doUnmock('@/lib/support-access')
     vi.restoreAllMocks()
   })
 

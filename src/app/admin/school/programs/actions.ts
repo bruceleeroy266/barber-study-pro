@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase-server'
 import { createServiceRoleClient } from '@/lib/supabase-service-role'
 import { isAdmin, isSchoolAdmin, isPlatformAdminProfile } from '@/lib/auth-helpers'
 import { logPermissionDenied, logSensitiveConfigChange } from '@/lib/security/audit-logger'
+import { resolveSupportAccessContext, logSupportAction } from '@/lib/support-access'
 
 // ============================================================================
 // TYPES
@@ -62,34 +63,29 @@ interface AdminContext {
 // ============================================================================
 
 async function getCurrentAdmin(): Promise<ActionResult<AdminContext>> {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) {
+  const context = await resolveSupportAccessContext()
+  if (!context) {
     return { success: false, error: 'Unauthorized' }
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role, school_id')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile || !(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
+  const profile = context.effectiveProfile
+  if (!(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
     return { success: false, error: 'Forbidden' }
   }
+
+  await logSupportAction(context, 'program_management', 'programs', {
+    effectiveRole: profile.role,
+    effectiveSchoolId: profile.school_id,
+  })
 
   return {
     success: true,
     data: {
-      userId: user.id,
-      email: user.email ?? '',
+      userId: context.actorUserId,
+      email: context.actorEmail ?? '',
       role: profile.role,
       schoolId: profile.school_id ?? null,
-      // Canonical platform admin: role='admin' AND school_id IS NULL.
-      // A school-attached 'admin' is tenant-scoped (security correction:
-      // previously isAdmin(role) alone granted platform scope).
-      isPlatformAdmin: isPlatformAdminProfile(profile),
+      isPlatformAdmin: context.supportActive ? false : isPlatformAdminProfile(profile),
     },
   }
 }
