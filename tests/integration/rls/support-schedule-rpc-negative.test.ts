@@ -77,6 +77,33 @@ describe('direct authenticated Support Mode schedule RPC',()=>{
     expect(await counts()).toEqual(before)
     expect((await schoolA.rpc('set_school_support_authorization',{p_enable:true})).error).toBeNull()
   })
+  test('concurrent revocation and schedule write leave no post-revocation access',async()=>{
+    const schoolA=await createAuthenticatedClient(TEST_ACTORS.SCHOOL_ADMIN_A)
+    const operator=await createAuthenticatedClient(TEST_ACTORS.PLATFORM_ADMIN)
+    const target=resolveActorId('INSTRUCTOR_A')
+    const student=resolveActorId('STUDENT_A')
+    expect((await schoolA.rpc('set_school_support_authorization',{p_enable:true})).error).toBeNull()
+    expect((await operator.rpc('set_support_access_session',{p_target:target,p_enable:true})).error).toBeNull()
+    // Launch both requests at the same time. A write which linearizes before
+    // revocation may commit; none may succeed after revocation commits.
+    const [revoke, racingWrite]=await Promise.all([
+      schoolA.rpc('set_school_support_authorization',{p_enable:false}),
+      operator.rpc('support_upsert_student_schedule_override',args(target,student)),
+    ])
+    expect(revoke.error).toBeNull()
+    expect((await operator.rpc('is_support_access_session_active',{p_target:target})).data).toBe(false)
+    const snapshot=await counts()
+    for(let attempt=0;attempt<3;attempt++){
+      const blocked=await operator.rpc('support_upsert_student_schedule_override',args(target,student))
+      expect(blocked.error).not.toBeNull()
+    }
+    expect(await counts()).toEqual(snapshot)
+    expect((await operator.rpc('set_support_access_session',{p_target:target,p_enable:true})).error).not.toBeNull()
+    // A pre-revocation win is permitted by serialization, but is recorded
+    // explicitly for evidence rather than mislabeled as a security failure.
+    expect([true,false]).toContain(racingWrite.error===null)
+    expect((await schoolA.rpc('set_school_support_authorization',{p_enable:true})).error).toBeNull()
+  })
   test('direct privileged RPC requires an active session and rejects revoked sessions',async()=>{
     const admin=await createAuthenticatedClient(TEST_ACTORS.PLATFORM_ADMIN)
     await admin.rpc('set_support_access_session',{p_target:resolveActorId('INSTRUCTOR_A'),p_enable:false})
