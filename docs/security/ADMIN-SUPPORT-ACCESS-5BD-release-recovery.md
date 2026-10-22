@@ -11,14 +11,16 @@ PR #429 includes Support Mode access authorization, school/instructor actions, c
 2. `20261020230000_support_schedule_override_scoped_rpc.sql` — original scoped scheduler RPC.
 3. `20261021040000_support_access_session_authorization.sql` — session registry and replacement of scheduler RPC requiring active session.
 4. `20261021050000_support_session_active_check.sql` — read-only, actor-bound RPC for general support context.
+5. `20261021060000_school_controlled_support_consent.sql` — school consent registry, school-level grant/revoke and active-session checks.
+6. `20261021210000_support_consent_revocation_serialization.sql` — school row-lock serialization and restricted school-admin authorization.
 
-Run migrations only against a disposable, fixture-populated local Supabase database during rehearsals. CI's `supabase start` path exercises forward local migrations and RLS/browser checks but does **not** establish backup-and-restore or destructive rollback certification.
+Run migrations only against a disposable, fixture-populated local Supabase database during rehearsals. CI's disposable Supabase workflow exercises forward migrations, authenticated access tests, and a fresh-backup-to-separate-disposable-database restore with integrity manifests. It does **not** establish production-equivalent recovery, live-record restore certification, or destructive rollback readiness.
 
 ## Mandatory disposable recovery rehearsal
 1. Verify all environment URLs and IDs point to a disposable project; block any environment matching production.
 2. Seed fixture Schools A/B, instructor and student accounts, appointments, hours, grades, and academic data.
 3. Make a database backup/snapshot using an operator-approved mechanism; record time, engine version, schema migration state, and checksum.
-4. Apply all four migrations in order; run CI's authenticated School A/B positive and negative cases.
+4. Apply all six migrations in order; run CI's authenticated School A/B positive and negative cases.
 5. Test active, revoked, expired, cross-target, and non-admin sessions; verify true-actor audit attribution.
 6. Simulate application rollback separately; confirm compatibility. Reverting application code alone does not reverse database schema or SECURITY DEFINER function changes.
 7. Restore disposable DB from backup into a **new disposable target**; verify a representative row-count/hash manifest, role privileges, RLS, policies, functions, and student records.
@@ -26,7 +28,7 @@ Run migrations only against a disposable, fixture-populated local Supabase datab
 9. Record commands, exact git SHA, CLI/runtime versions, screenshots/logs, restore duration, data-integrity results, reviewer, and outcomes.
 
 ## Production gates — all required
-- Updated exact-head CI success, plus independent security review signed against the exact commit.
+- Updated exact-head CI success plus documented owner-led security acceptance where permissible; confirm contractual/regulatory obligations before waiving external review.
 - Reviewed diff scope, migration order, and staging backup/restore evidence.
 - Verified no cross-school privilege escalation in service-role codepaths; privileged audit failure policy decided.
 - Written production backup/monitoring plan and designated rollback owner.
