@@ -101,7 +101,9 @@ describe('direct authenticated Support Mode schedule RPC',()=>{
     expect((await operator.rpc('set_support_access_session',{p_target:target,p_enable:true})).error).not.toBeNull()
     // A pre-revocation win is permitted by serialization, but is recorded
     // explicitly for evidence rather than mislabeled as a security failure.
-    expect([true,false]).toContain(racingWrite.error===null)
+    // Both outcomes are permissible before revocation commits; only post-revoke
+    // writes are required to fail. Record the outcome in CI diagnostics.
+    console.info('Concurrent schedule write accepted before revoke:', racingWrite.error===null)
     expect((await schoolA.rpc('set_school_support_authorization',{p_enable:true})).error).toBeNull()
   })
   test('direct privileged RPC requires an active session and rejects revoked sessions',async()=>{
