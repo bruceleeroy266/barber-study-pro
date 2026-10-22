@@ -5,6 +5,20 @@ import { hairScalpDisorderQuestions } from './hair-scalp-disorders-bank'
 import { scientificConceptGapQuestions } from './scientific-concepts-gap'
 
 describe('P0 academic corrections: student-facing assembled questions', () => {
+  it('AP-021–030 assembled anatomy questions preserve keys and independent explanations', () => {
+    for (let n = 21; n <= 30; n++) {
+      const id = 'AP-' + String(n).padStart(3, '0')
+      const q = anatomyPhysiologyQuestions.find(item => item.id === id)
+      expect(q, id).toBeDefined()
+      expect(q!.correctOptionId, id).toBe('a')
+      expect(q!.options, id).toHaveLength(4)
+      expect([q!.prompt, q!.explanation, ...q!.options.map(o => o.text)].join(' '), id)
+        .not.toMatch(/\b(?:Milady|Cengage)\b/i)
+    }
+    expect(anatomyPhysiologyQuestions.find(q => q.id === 'AP-023')!.explanation).toMatch(/Sweat evaporation/)
+    expect(anatomyPhysiologyQuestions.find(q => q.id === 'AP-030')!.explanation).toMatch(/orbicularis oris/i)
+  })
+
   it('AP-011–020 assembled anatomy keys and publisher-neutral student text', () => {
     for (let n = 11; n <= 20; n++) {
       const id = 'AP-' + String(n).padStart(3, '0')
