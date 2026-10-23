@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { createClient } from '@supabase/supabase-js'
+import { getLocalQuizQuestions } from '../../../src/lib/local-data'
 
 test('QA-11: authenticated School A/B quiz score and dashboard parity (LOCAL ONLY)', async ({ browser }) => {
   test.setTimeout(120_000)
@@ -86,6 +87,43 @@ test('QA-11: authenticated School A/B quiz score and dashboard parity (LOCAL ONL
     }
     await page.goto('/dashboard/progress')
     await expect(page.getByText('60%', { exact: true }).first()).toBeVisible()
+    // QA-20: score must originate from real browser answers, not only a seeded row.
+    const questions = getLocalQuizQuestions('quiz-1')
+    expect(questions).toHaveLength(30)
+    await page.goto('/dashboard/chapters/1')
+    await page.getByRole('button', { name: /^(Start Quiz|Retake Quiz)$/ }).click()
+    const used = new Set<string>()
+    for (let index = 0; index < questions.length; index++) {
+      // Only the active quiz question counts. The chapter page can contain
+      // other visible question text (e.g. previews), so global text searches
+      // incorrectly identify more than one question.
+      const activeQuestion = page.getByTestId('active-quiz-question')
+      await expect(activeQuestion).toHaveCount(1)
+      const activeText = (await activeQuestion.textContent())?.trim()
+      const visible = questions.filter(item => !used.has(item.id) && item.question.trim() === activeText)
+      expect(visible).toHaveLength(1)
+      const current = visible[0]
+      used.add(current.id)
+      const intendedKey = index < 18 ? current.correct_answer : (['a', 'b', 'c', 'd'].find(key => key !== current.correct_answer)!)
+      const answerText = current[`answer_${intendedKey}` as 'answer_a' | 'answer_b' | 'answer_c' | 'answer_d']
+      const answerButton = page.getByTestId('active-quiz-options').getByRole('button').filter({ hasText: answerText })
+      await expect(answerButton).toHaveCount(1)
+      await answerButton.click()
+      await page.getByRole('button', { name: index === questions.length - 1 ? 'Submit & Finish Quiz' : 'Submit Answer' }).click()
+    }
+    await expect(page.getByText('You got 18 out of 30 questions correct')).toBeVisible()
+    await expect(page.getByText('60%', { exact: true }).first()).toBeVisible()
+    const { data: submitted, error: submittedError } = await root.from('quiz_attempts')
+      .select('id,score,total_questions,percentage,answers_json')
+      .eq('user_id', studentA).eq('quiz_id', 'quiz-1').order('completed_at', { ascending: false }).limit(1).single()
+    expect(submittedError).toBeNull()
+    expect(submitted?.id).not.toBe(attempt!.id)
+    expect(submitted).toMatchObject({ score: 18, total_questions: 30, percentage: 60 })
+    expect(Object.keys(submitted?.answers_json ?? {})).toHaveLength(30)
+    const { data: persistedProgress, error: persistedProgressError } = await root.from('student_progress')
+      .select('best_quiz_score').eq('user_id', studentA).eq('chapter_id', 'ch-1').single()
+    expect(persistedProgressError).toBeNull()
+    expect(persistedProgress?.best_quiz_score).toBe(60)
     await context.close()
 
     const instructorContext = await browser.newContext()
