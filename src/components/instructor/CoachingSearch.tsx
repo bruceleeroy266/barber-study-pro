@@ -28,7 +28,7 @@ export default function CoachingSearch({attempts}:{attempts:Attempt[]}) {
  if (!questions.length) return null
  return <section className="space-y-4 rounded-xl border border-amber-500/40 p-4">
   <h2 className="text-xl font-bold">Instructor Question Coaching</h2>
-  <p className="text-sm text-gray-400">Search only this student's finalized exam attempts. Instructor-only answer keys must not be shared during active tests. Hints are general and pending academic review.</p>
+  <p className="text-sm text-gray-400">Search only this student&apos;s finalized exam attempts. Instructor-only answer keys must not be shared during active tests. Hints are general and pending academic review.</p>
   <label className="block text-sm font-medium" htmlFor="coaching-search">Search by question number, topic or keyword</label>
   <input id="coaching-search" type="search" value={query} onChange={e=>setQuery(e.target.value)}
     placeholder="Search 110 questions..." className="w-full rounded-lg border border-gray-600 bg-gray-950 p-3 text-white" />
