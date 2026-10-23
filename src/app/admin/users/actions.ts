@@ -129,11 +129,16 @@ async function getCurrentAdmin(): Promise<ActionResult<AdminContext>> {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role, school_id')
+    .select('role, school_id, approval_status, is_disabled, requires_password_change')
     .eq('id', user.id)
     .single()
 
-  if (!profile || !(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
+  // Server actions bypass page navigation. Recheck live account state on every call.
+  if (profile?.is_disabled || !profile || profile.approval_status !== 'approved' || profile.requires_password_change) {
+    return { success: false, error: 'Account access is disabled or not approved' }
+  }
+
+  if (!(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
     return { success: false, error: 'Forbidden' }
   }
 
@@ -1338,6 +1343,25 @@ export async function toggleUserDisabled(id: string, isDisabled: boolean): Promi
     return { success: false, error: error.message }
   }
 
+  // A profile flag gates protected routes, but does not invalidate existing
+  // JWTs. Ban disables new Auth sign-ins/refreshes; access tokens still need
+  // per-request authorization until expiry.
+  const { error: banError } = await serviceClient.auth.admin.updateUserById(id, {
+    ban_duration: isDisabled ? '876000h' : 'none',
+  })
+  if (banError) {
+    // Restore the prior profile state when the Auth-side restriction failed.
+    // Fail explicitly if compensation also fails; never report full success.
+    const { error: restoreError } = await serviceClient.from('profiles')
+      .update({ is_disabled: userResult.user.is_disabled }).eq('id', id)
+    return {
+      success: false,
+      error: restoreError
+        ? 'Auth access synchronization and profile rollback failed. Administrator reconciliation required.'
+        : 'Auth access synchronization failed; the profile change was rolled back.',
+    }
+  }
+
   await logUserManagementAction(admin, id, userResult.user.email, isDisabled ? 'disable_user' : 'enable_user', oldValues, newValues, userResult.user.school_id)
 
   return { success: true }
@@ -1712,6 +1736,12 @@ export async function deleteUser(id: string): Promise<ActionResult> {
 
   const admin = adminResult.data
 
+  // Permanent deletion is platform-only. School administrators must use the
+  // reversible disable/enable workflow so academic records remain intact.
+  if (!admin.isPlatformAdmin) {
+    return { success: false, error: 'Permanent deletion is restricted to platform administrators. Disable the account to preserve student records.' }
+  }
+
   // Admins cannot delete their own account through this UI.
   if (id === admin.userId) {
     return { success: false, error: 'You cannot delete your own account' }
@@ -1729,26 +1759,11 @@ export async function deleteUser(id: string): Promise<ActionResult> {
     return { success: false, error: 'School admins cannot delete platform administrators' }
   }
 
-  const oldValues = {
-    email: userResult.user.email,
-    role: userResult.user.role,
-    school_id: userResult.user.school_id,
-    approval_status: userResult.user.approval_status,
-    is_disabled: userResult.user.is_disabled,
-  }
+  // No role is exempt from academic and audit retention risks. Permanent
+  // deletion remains disabled until complete FK/cascade certification.
+  return { success: false, error: 'Permanent deletion is disabled pending academic and audit-record retention certification. Disable the account instead.' }
 
-  // Delete the Auth user. The profiles table has `on delete cascade` to
-  // auth.users, so the profile row and any cascade-linked operational records
-  // are cleaned up automatically.
-  const { error: deleteError } = await serviceClient.auth.admin.deleteUser(id)
 
-  if (deleteError) {
-    return { success: false, error: deleteError.message }
-  }
-
-  await logUserManagementAction(admin, id, userResult.user.email, 'delete_user', oldValues, {}, userResult.user.school_id)
-
-  return { success: true }
 }
 
 export async function requirePasswordChange(id: string): Promise<ActionResult> {

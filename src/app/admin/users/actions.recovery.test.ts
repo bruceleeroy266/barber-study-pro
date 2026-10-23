@@ -27,7 +27,7 @@ function mockCaller(role = 'school_admin', schoolId: string | null = SCHOOL_A) {
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnValue({
             single: vi.fn().mockResolvedValue({
-              data: { role, school_id: schoolId },
+              data: { role, school_id: schoolId, approval_status: 'approved', is_disabled: false, requires_password_change: false },
               error: null,
             }),
           }),
@@ -270,8 +270,11 @@ describe('pilot invitation recovery', () => {
 
   it('blocks School B administrator recovery of School A student', async () => {
     vi.resetModules()
-    mockCaller('school_admin', SCHOOL_B)
     const { resetPasswordForEmail } = makeServiceClient({ school_id: SCHOOL_A })
+    // Set the cross-school caller mock immediately before dynamic import so
+    // this test cannot accidentally reuse an earlier suite's caller session.
+    vi.doUnmock('@/lib/supabase-server')
+    mockCaller('school_admin', SCHOOL_B)
     const { resendUserSetupLink } = await import('./actions')
     const result = await resendUserSetupLink(USER_ID)
     expect(result.success).toBe(false)

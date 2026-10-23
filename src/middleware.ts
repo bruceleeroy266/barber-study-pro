@@ -99,11 +99,14 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser()
 
   const pathname = request.nextUrl.pathname
-  const isProtected = isProtectedRoute(pathname)
+  // Privileged API routes require account-state enforcement even with an old JWT.
+  const isPrivilegedApi = /^\/api\/(admin|school|instructor|study-sessions|remediation|micro-checks)(\/|$)/.test(pathname)
+  const isProtected = isProtectedRoute(pathname) || isPrivilegedApi
   const isAuth = isAuthRoute(pathname)
 
   // Redirect unauthenticated users from protected routes to login
   if (isProtected && !user) {
+    if (isPrivilegedApi) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     url.searchParams.set('redirect', pathname)
@@ -155,6 +158,7 @@ export async function middleware(request: NextRequest) {
   if (isProtected && user) {
     const access = validateLoginAccess(profile)
     if (!access.ok) {
+      if (isPrivilegedApi) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
       const url = request.nextUrl.clone()
       url.pathname = '/login'
       url.searchParams.set('error', access.errorKey ?? 'unknown')

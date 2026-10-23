@@ -140,7 +140,7 @@ function setupMocks(
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnValue({
             single: vi.fn().mockResolvedValue({
-              data: { role, school_id: callerSchoolId },
+              data: { role, school_id: callerSchoolId, approval_status: 'approved', is_disabled: false, requires_password_change: false },
               error: null,
             }),
           }),
@@ -1391,18 +1391,18 @@ describe('deleteUser', () => {
         },
         ...overrides,
       },
-      role
+      role,
+      role === 'admin' ? null : RISE_SCHOOL_ID
     )
   }
 
-  it('deletes the auth user and logs the action', async () => {
+  it('fails closed for platform-admin permanent deletion of non-learners', async () => {
     const mockServiceClient = setupDeleteMocks()
     const { deleteUser: deleteUserAction } = await import('./actions')
-
     const result = await deleteUserAction(TARGET_USER_ID)
-
-    expect(result.success).toBe(true)
-    expect(mockServiceClient.auth.admin.deleteUser).toHaveBeenCalledWith(TARGET_USER_ID)
+    expect(result.success).toBe(false)
+    expect(result.error).toMatch(/retention certification/i)
+    expect(mockServiceClient.auth.admin.deleteUser).not.toHaveBeenCalled()
   })
 
   it('prevents admins from deleting themselves', async () => {
@@ -1469,7 +1469,7 @@ describe('deleteUser', () => {
     const result = await deleteUserAction(TARGET_USER_ID)
 
     expect(result.success).toBe(false)
-    expect(result.error).toMatch(/cannot delete platform administrators/i)
+    expect(result.error).toMatch(/permanent deletion is restricted to platform administrators/i)
     expect(mockServiceClient.auth.admin.deleteUser).not.toHaveBeenCalled()
   })
 
@@ -1506,27 +1506,9 @@ describe('deleteUser', () => {
     const result = await deleteUserAction(TARGET_USER_ID)
 
     expect(result.success).toBe(false)
-    expect(result.error).toMatch(/forbidden/i)
+    expect(result.error).toMatch(/permanent deletion is restricted to platform administrators/i)
     expect(mockServiceClient.auth.admin.deleteUser).not.toHaveBeenCalled()
   })
 
-  it('returns an error when the auth delete fails', async () => {
-    const mockServiceClient = setupDeleteMocks({
-      auth: {
-        admin: {
-          deleteUser: vi.fn().mockResolvedValue({
-            data: null,
-            error: { message: 'Auth delete failed' },
-          }),
-        },
-      },
-    })
-    const { deleteUser: deleteUserAction } = await import('./actions')
 
-    const result = await deleteUserAction(TARGET_USER_ID)
-
-    expect(result.success).toBe(false)
-    expect(result.error).toMatch(/auth delete failed/i)
-    expect(mockServiceClient.auth.admin.deleteUser).toHaveBeenCalledWith(TARGET_USER_ID)
-  })
 })

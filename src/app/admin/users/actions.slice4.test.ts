@@ -169,7 +169,7 @@ function setupEnrollmentMocks(
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnValue({
             single: vi.fn().mockResolvedValue({
-              data: { role, school_id: callerSchoolId },
+              data: { role, school_id: callerSchoolId, approval_status: 'approved', is_disabled: false, requires_password_change: false },
               error: null,
             }),
           }),

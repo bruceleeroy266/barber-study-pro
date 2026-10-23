@@ -25,7 +25,7 @@ type Profile = {
   requires_password_change: boolean
 }
 
-function mockCaller(role = 'admin', schoolId: string | null = null) {
+function mockCaller(role = 'admin', schoolId: string | null = null, disabled = false) {
   // Replace any per-test caller mock deterministically. vi.resetModules()
   // clears the module cache but does not unregister a queued doMock factory.
   vi.doUnmock('@/lib/supabase-server')
@@ -41,7 +41,7 @@ function mockCaller(role = 'admin', schoolId: string | null = null) {
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnValue({
             single: vi.fn().mockResolvedValue({
-              data: { role, school_id: schoolId },
+              data: { role, school_id: schoolId, approval_status: 'approved', is_disabled: disabled, requires_password_change: false },
               error: null,
             }),
           }),
@@ -85,6 +85,7 @@ function mockService(options: {
     error: options.reconciliationError ?? null,
   })
   const auditInsert = vi.fn().mockResolvedValue({ data: null, error: null })
+  const profileUpdate = vi.fn().mockReturnValue({ eq: vi.fn().mockResolvedValue({ error: null }) })
 
   const serviceClient = {
     auth: {
@@ -108,6 +109,7 @@ function mockService(options: {
     from: vi.fn((table: string) => {
       if (table === 'profiles') {
         return {
+          update: profileUpdate,
           select: vi.fn((columns: string) => {
             if (columns === 'id') {
               return {
@@ -146,7 +148,7 @@ function mockService(options: {
     createServiceRoleClient: vi.fn().mockReturnValue(serviceClient),
   }))
 
-  return { profile, serviceClient, authUpdate, rpc, auditInsert }
+  return { profile, serviceClient, authUpdate, rpc, auditInsert, profileUpdate }
 }
 
 describe('UM-H3.2/3 updateUserIdentity', () => {
@@ -159,6 +161,20 @@ describe('UM-H3.2/3 updateUserIdentity', () => {
     vi.doUnmock('@/lib/supabase-server')
     vi.doUnmock('@/lib/supabase-service-role')
     vi.restoreAllMocks()
+  })
+
+  it('rejects privileged identity updates by an already-signed-in disabled admin', async () => {
+    mockCaller('admin', null, true)
+    const { authUpdate, rpc } = mockService()
+    const { updateUserIdentity } = await import('./actions')
+    const result = await updateUserIdentity(USER_ID, {
+      full_name: 'Unauthorized edit',
+      email: 'forbidden@example.test',
+    })
+    expect(result.success).toBe(false)
+    expect(result.error).toMatch(/disabled|not approved/i)
+    expect(authUpdate).not.toHaveBeenCalled()
+    expect(rpc).not.toHaveBeenCalled()
   })
 
   it('updates Auth then transactionally reconciles profile + onboarding identity', async () => {
@@ -348,6 +364,31 @@ describe('UM-H3.2/3 updateUserIdentity', () => {
     expect(result.success).toBe(false)
     expect(result.error).toMatch(/administrator cleanup is required/i)
     expect(authUpdate).toHaveBeenCalledTimes(2)
+  })
+
+  it('synchronizes disabled accounts with Auth bans and reenables on recovery', async () => {
+    const { authUpdate, profileUpdate } = mockService()
+    const { toggleUserDisabled } = await import('./actions')
+    const disabled = await toggleUserDisabled(USER_ID, true)
+    expect(disabled.success).toBe(true)
+    expect(profileUpdate).toHaveBeenCalledWith({ is_disabled: true })
+    expect(authUpdate).toHaveBeenCalledWith(USER_ID, { ban_duration: '876000h' })
+    const enabled = await toggleUserDisabled(USER_ID, false)
+    expect(enabled.success).toBe(true)
+    expect(authUpdate).toHaveBeenCalledWith(USER_ID, { ban_duration: 'none' })
+  })
+
+  it('compensates profile update on Auth ban failure', async () => {
+    const { authUpdate, profileUpdate } = mockService({
+      authUpdateErrors: [{ message: 'Auth unavailable' }],
+    })
+    const { toggleUserDisabled } = await import('./actions')
+    const result = await toggleUserDisabled(USER_ID, true)
+    expect(result.success).toBe(false)
+    expect(result.error).toMatch(/rolled back/i)
+    expect(authUpdate).toHaveBeenCalledTimes(1)
+    expect(profileUpdate).toHaveBeenNthCalledWith(1, { is_disabled: true })
+    expect(profileUpdate).toHaveBeenNthCalledWith(2, { is_disabled: false })
   })
 
   it('returns an idempotent no-op when normalized identity is unchanged', async () => {
