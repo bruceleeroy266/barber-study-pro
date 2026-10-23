@@ -725,7 +725,7 @@ export default function QuizClient({
 
       {/* Question card */}
       <Card variant="default" padding="lg">
-        <p className="text-lg text-white font-medium mb-6 leading-relaxed">{question.original.question}</p>
+        <p data-testid="active-quiz-question" className="text-lg text-white font-medium mb-6 leading-relaxed">{question.original.question}</p>
 
         <div className="space-y-3">
           {question.options.map((option) => {
