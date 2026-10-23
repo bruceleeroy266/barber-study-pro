@@ -628,7 +628,7 @@ export const chapter2PremiumQuizQuestions: QuizQuestion[] = [
     quiz_id: 'quiz-2',
     question: 'A barber is running 30 minutes behind. A walk-in client is visibly frustrated. Which response demonstrates emotional composure?',
     answer_a: '"I\'m doing my best out here — you\'ll have to wait your turn like everyone else today."',
-    answer_b: '"I apologize for the wait. I want to give you my full attention. I can give you an updated wait estimate or help you book a later appointment."',
+    answer_b: '"I apologize for the delay. I can give you an accurate wait estimate or book you for a later appointment."',
     answer_c: '"If you\'re in a hurry, your best bet is to come back on a slower day when I\'m not behind."',
     answer_d: 'Say nothing, finish the current cut as fast as you safely can, and wave the walk-in over when you are ready',
     correct_answer: 'b',
