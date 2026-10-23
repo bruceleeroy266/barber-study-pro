@@ -73,7 +73,9 @@ test('QA-11: authenticated School A/B quiz score and dashboard parity (LOCAL ONL
       await expect(page.getByText('Loading agreement status…')).toBeHidden()
       await page.locator('#tester-name').fill('QA11 test student')
       await page.locator('#tester-email').fill(actors[0].email)
-      await page.locator('#agree-checkbox').check()
+      await page.locator('#agree-checkbox').scrollIntoViewIfNeeded()
+      await expect(page.locator('#agree-checkbox')).toBeEnabled()
+      await page.locator('#agree-checkbox').click()
       await expect(page.getByText('Agreement accepted. You may continue to the checklist.')).toBeVisible()
       await page.getByRole('button', { name: 'Continue' }).click()
     }
