@@ -26,6 +26,17 @@ let failed = false
 const client = () => createClient(url, pub, { auth: { persistSession: false, autoRefreshToken: false } })
 const must = ({ data, error }, label) => { if (error) throw new Error(label + ': ' + error.message); return data }
 const check = (result, label) => { assert(!result.error, label + ': ' + result.error?.message); return result.data }
+// REST calls explicitly reuse the original JWT: no session refresh can mask a revocation defect.
+async function retainedRead(account, table, column, id) {
+  const endpoint = new URL('/rest/v1/' + table, url)
+  endpoint.searchParams.set('select', 'id')
+  endpoint.searchParams.set(column, 'eq.' + id)
+  const response = await fetch(endpoint, { headers: { apikey: pub, authorization: 'Bearer ' + account.jwt } })
+  if (!response.ok) throw new Error('Retained-token REST request failed for ' + table + ' (HTTP ' + response.status + ')')
+  const rows = await response.json()
+  assert(Array.isArray(rows), 'Expected REST row array')
+  return rows
+}
 const rowSignature = rows => JSON.stringify((rows ?? []).map(({ created_at, updated_at, ...r }) => r).sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b))))
 async function createSchool(suffix) {
   const result = must(await admin.from('schools').insert({ name: tag + '-' + suffix, slug: tag + '-' + suffix }).select('id').single(), 'create school')
@@ -59,7 +70,7 @@ async function main() {
   ]
   const snapshot = async () => {
     const output = {}
-    for (const {table,id} of records) output[table] = rowSignature(must(await admin.from(table).select('*').eq('id', id), 'snapshot ' + table))
+    for (const {table,id} of records) { const rows = must(await admin.from(table).select('*').eq('id', id), 'snapshot ' + table); assert.equal(rows.length, 1, 'Missing academic fixture ' + table); output[table] = rowSignature(rows) }
     return output
   }
   const before = await snapshot()
@@ -70,18 +81,16 @@ async function main() {
   const otherAdmin = await adminB.c.from('profiles').select('id').eq('id',studentA.id)
   assert.equal(check(otherAdmin,'cross-school admin profile').length,0)
   // Disable AFTER logging in. No refresh or new login is allowed before denial assertions.
-  must(await admin.from('profiles').update({is_disabled:true}).eq('id',studentA.id), 'disable student A')
-  must(await admin.from('profiles').update({is_disabled:true}).eq('id',adminA.id), 'disable admin A')
+  assert.equal(must(await admin.from('profiles').update({is_disabled:true}).eq('id',studentA.id).select('id'), 'disable student A').length,1)
+  assert.equal(must(await admin.from('profiles').update({is_disabled:true}).eq('id',adminA.id).select('id'), 'disable admin A').length,1)
   for (const {account,label} of [{account:studentA,label:'studentA'},{account:adminA,label:'adminA'}]) {
-    const v = await account.c.from('profiles').select('id').eq('id',account.id)
-    assert.equal(check(v,label + ' retained JWT profile read').length,0)
-    const q = await account.c.from('quiz_attempts').select('id').eq('id',quiz.id)
-    assert.equal(check(q,label + ' retained JWT quiz read').length,0)
+    assert.equal((await retainedRead(account,'profiles','id',account.id)).length,0,label + ' retained JWT profile read')
+    assert.equal((await retainedRead(account,'quiz_attempts','id',quiz.id)).length,0,label + ' retained JWT quiz read')
   }
   assert.equal(check(await studentB.c.from('profiles').select('id').eq('id',studentB.id),'student B uninterrupted').length,1)
   assert.equal(check(await adminB.c.from('profiles').select('id').eq('id',studentB.id),'admin B uninterrupted').length,1)
-  must(await admin.from('profiles').update({is_disabled:false}).eq('id',studentA.id), 'reactivate student A')
-  must(await admin.from('profiles').update({is_disabled:false}).eq('id',adminA.id), 'reactivate admin A')
+  assert.equal(must(await admin.from('profiles').update({is_disabled:false}).eq('id',studentA.id).select('id'), 'reactivate student A').length,1)
+  assert.equal(must(await admin.from('profiles').update({is_disabled:false}).eq('id',adminA.id).select('id'), 'reactivate admin A').length,1)
   assert.equal(check(await studentA.c.from('profiles').select('id').eq('id',studentA.id),'reactivated student A').length,1)
   assert.deepEqual(await snapshot(),before,'academic records changed across disable/reactivate')
   console.log(JSON.stringify({test:'CRUD-35 isolated JWT and row-retention',passed:true,branch:EXPECTED_REF,checks:['School A/B','retained JWT','disable/reactivate','quiz/progress preservation']}))
