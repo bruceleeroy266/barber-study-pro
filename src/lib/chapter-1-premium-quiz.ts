@@ -324,7 +324,7 @@ export const chapter1PremiumQuizQuestions: QuizQuestion[] = [
   {
     id: 'qq-1-024',
     quiz_id: 'quiz-1',
-    question: 'Which statement best summarizes NABBA's stated objectives?',
+    question: 'Which statement best summarizes NABBA\'s stated objectives?',
     answer_a: 'Profit, expansion, marketing, sales, and recruitment',
     answer_b: 'Political lobbying, union organization, strike coordination, wage negotiation, and benefits management',
     answer_c: 'Promote information exchange, establish exam/licensing standards, set curriculum standards, support continuing education, and protect consumers',
