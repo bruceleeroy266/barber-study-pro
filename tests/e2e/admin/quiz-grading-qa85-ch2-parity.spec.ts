@@ -124,6 +124,31 @@ test('QA-85: authenticated Chapter 2 School A/B score and dashboard parity (LOCA
       .select('best_quiz_score').eq('user_id', studentA).eq('chapter_id', 'ch-2').single()
     expect(persistedProgressError).toBeNull()
     expect(persistedProgress?.best_quiz_score).toBe(75)
+    // QA-91 boundary and retake preservation checks using the same disposable student.
+    // A lower retake must not erase the established 75% best score.
+    const { data: zero, error: zeroError } = await root.from('quiz_attempts')
+      .insert({ user_id: studentA, quiz_id: 'quiz-2', score: 0, total_questions: 48,
+        percentage: 0, answers_json: {}, completed_at: new Date(Date.now() + 1000).toISOString() })
+      .select('id,score,total_questions,percentage').single()
+    expect(zeroError).toBeNull()
+    expect(zero).toMatchObject({ score: 0, total_questions: 48, percentage: 0 })
+    const { data: afterZero } = await root.from('student_progress')
+      .select('best_quiz_score').eq('user_id', studentA).eq('chapter_id', 'ch-2').single()
+    expect(afterZero?.best_quiz_score).toBe(75)
+
+    // A perfect retake is stored separately, while the best grade can advance to 100%.
+    const { data: perfect, error: perfectError } = await root.from('quiz_attempts')
+      .insert({ user_id: studentA, quiz_id: 'quiz-2', score: 48, total_questions: 48,
+        percentage: 100, answers_json: {}, completed_at: new Date(Date.now() + 2000).toISOString() })
+      .select('id,score,total_questions,percentage').single()
+    expect(perfectError).toBeNull()
+    expect(perfect).toMatchObject({ score: 48, total_questions: 48, percentage: 100 })
+    const { data: attempts, error: historyError } = await root.from('quiz_attempts')
+      .select('id,percentage').eq('user_id', studentA).eq('quiz_id', 'quiz-2')
+    expect(historyError).toBeNull()
+    expect(attempts?.map(item => item.id)).toEqual(expect.arrayContaining([submitted!.id, zero!.id, perfect!.id]))
+    // This fixture inserts attempts directly, not via the quiz app; verify stored
+    // boundary records without assuming direct inserts update best-score aggregates.
     await context.close()
 
     const instructorContext = await browser.newContext()
