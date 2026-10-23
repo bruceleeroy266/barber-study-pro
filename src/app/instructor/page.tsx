@@ -550,6 +550,9 @@ export default async function InstructorDashboard({ searchParams }: InstructorDa
               {schoolName} — Student roster and progress overview
             </p>
           </div>
+          <Link href="/instructor/coaching" className="inline-flex min-h-11 items-center justify-center rounded-lg border border-[var(--color-brand-gold)] px-4 py-3 font-semibold text-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold)]/10">
+            Exam Coaching Center
+          </Link>
           {/* Phase 6C-5: Escalation Badge */}
           <div className="flex min-w-0 items-center gap-4">
             <Link
