@@ -269,12 +269,18 @@ describe('pilot invitation recovery', () => {
   })
 
   it('blocks School B administrator recovery of School A student', async () => {
+    vi.doUnmock('@/lib/supabase-server')
+    vi.doUnmock('@/lib/supabase-service-role')
     vi.resetModules()
     mockCaller('school_admin', SCHOOL_B)
     const { resetPasswordForEmail } = makeServiceClient({ school_id: SCHOOL_A })
+    // Re-import the server action after both tenant mocks are installed.
+    // A stale module instance would incorrectly reuse the previous test's caller.
+    vi.resetModules()
     const { resendUserSetupLink } = await import('./actions')
     const result = await resendUserSetupLink(USER_ID)
     expect(result.success).toBe(false)
+    expect(result.error).toMatch(/forbidden/i)
     expect(resetPasswordForEmail).not.toHaveBeenCalled()
   })
 
