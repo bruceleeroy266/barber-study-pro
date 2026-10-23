@@ -128,7 +128,7 @@ export default function AnswerKeySearch({ entries }: AnswerKeySearchProps) {
                       <span className="font-bold uppercase mr-2">{entry.correctAnswer}.</span>
                       {entry.answers[entry.correctAnswer]}
                     </p>
-                  </div>
+                  </div>}
 
                   {(showAllDetails || expandedIds.includes(entry.id)) && entry.explanation && (
                     <div className="mt-3">
