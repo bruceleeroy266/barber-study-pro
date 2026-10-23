@@ -10,6 +10,7 @@
 import { MissedQuestion } from '@/types'
 import { AnalyticsInputs, AnalyticsResult } from './types'
 import { calculateChapterPerformance } from './chapter-performance'
+import { buildNullableChapterAcademicScores } from './nullable-chapter-scores'
 import { calculateCategoryPerformance } from './category-performance'
 import { calculateStudentMetrics } from './student-metrics'
 import { quizIdToChapterId, getCategoryForChapter } from './utils'
@@ -124,6 +125,7 @@ export function analyzePerformance(inputs: AnalyticsInputs): AnalyticsResult {
   return {
     categoryPerformance,
     chapterPerformance,
+    academicChapterScores: buildNullableChapterAcademicScores(chapters, attempts),
     weakAreas: metrics.weakAreas,
     strongAreas: metrics.strongAreas,
     missedQuestionTrend,

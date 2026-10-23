@@ -43,42 +43,18 @@ export async function persistChapter8MicroCheckAttempt(
     return { row: null, alreadyRecorded: false, error: 'Concept mapping mismatch.' }
   }
 
-  const payload = {
-    user_id: userId,
-    chapter_id: 'ch-8',
-    check_id: check.id,
-    question_id: question.id,
-    concept_id: question.conceptFamilyId,
-    difficulty: question.difficulty,
-    selected_answer: selectedAnswer,
-    is_correct: selectedAnswer === question.correctAnswer,
-    answered_at: new Date().toISOString(),
+  // The server validates the trusted question definition and derives correctness.
+  const response = await fetch('/api/academic/micro-check', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chapterId: 'ch-8', questionId: question.id, selectedAnswer }),
+  })
+  const result = await response.json() as { row?: Chapter8MicroCheckAttemptRow; alreadyRecorded?: boolean; error?: string }
+  if (response.ok && result.row) {
+    return { row: result.row, alreadyRecorded: Boolean(result.alreadyRecorded), error: null }
   }
+  return { row: null, alreadyRecorded: false, error: result.error ?? 'Unable to save micro-check answer.' }
 
-  const { data, error } = await supabase
-    .from('chapter_micro_check_attempts')
-    .insert(payload)
-    .select('id,user_id,chapter_id,check_id,question_id,concept_id,difficulty,selected_answer,is_correct,answered_at,created_at')
-    .single()
-
-  if (!error && data) return { row: data as Chapter8MicroCheckAttemptRow, alreadyRecorded: false, error: null }
-
-  if (error?.code === '23505') {
-    const { data: existing, error: existingError } = await supabase
-      .from('chapter_micro_check_attempts')
-      .select('id,user_id,chapter_id,check_id,question_id,concept_id,difficulty,selected_answer,is_correct,answered_at,created_at')
-      .eq('user_id', userId)
-      .eq('chapter_id', 'ch-8')
-      .eq('question_id', question.id)
-      .maybeSingle()
-    return {
-      row: (existing ?? null) as Chapter8MicroCheckAttemptRow | null,
-      alreadyRecorded: true,
-      error: existingError?.message ?? null,
-    }
-  }
-
-  return { row: null, alreadyRecorded: false, error: error?.message ?? 'Unable to save micro-check answer.' }
 }
 
 export function chapter8MicroCheckRowsToEvidence(

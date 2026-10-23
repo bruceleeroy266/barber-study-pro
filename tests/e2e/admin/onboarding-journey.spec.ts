@@ -971,6 +971,103 @@ test.describe('Pilot onboarding certification', () => {
       { role: 'instructor', email: 'login9-b-instructor@ascynpro.test', password: 'Login9Instructor2026!' },
       { role: 'school_admin', email: 'login9-b-admin@ascynpro.test', password: 'Login9Admin2026!' },
     ] as const
+    // QUIZ-MICRO-ANALYTICS-3H: prove academic micro-check evidence is
+    // school-isolated using real authenticated sessions in local Supabase.
+    const { error: aQuizError } = await service.from('quiz_attempts').insert({
+      user_id: studentProfile!.id, quiz_id: 'quiz-4', score: 7,
+      total_questions: 10, percentage: 70,
+    })
+    expect(aQuizError).toBeNull()
+    // Authenticated A-side rendered parity and REAL browser CSV download.
+    await studentSession.page.goto('/dashboard/progress')
+    const studentQuizSection = studentSession.page.getByRole('region', { name: 'Academic quiz scores' })
+    await expect(studentQuizSection.getByText('70% (7/10)')).toBeVisible()
+    const studentDownloadPromise = studentSession.page.waitForEvent('download')
+    await studentQuizSection.getByRole('button', { name: 'Download academic accuracy CSV' }).click()
+    const studentDownload = await studentDownloadPromise
+    const studentCsv = (await import('node:fs/promises')).readFile(await studentDownload.path()!, 'utf8')
+    expect(await studentCsv).toContain('"70","70","70","7","10"')
+    await instructorSession.page.goto(`/instructor/student/${studentProfile!.id}`)
+    const instructorQuizSection = instructorSession.page.getByRole('region', { name: 'Academic quiz scores' })
+    await expect(instructorQuizSection.getByText('70% (7/10)')).toBeVisible()
+    const instructorDownloadPromise = instructorSession.page.waitForEvent('download')
+    await instructorQuizSection.getByRole('button', { name: 'Download academic accuracy CSV' }).click()
+    const instructorDownload = await instructorDownloadPromise
+    const instructorCsv = await (await import('node:fs/promises')).readFile(await instructorDownload.path()!, 'utf8')
+    expect(instructorCsv).toBe(await studentCsv)
+    // Authenticated student can still save a genuine server-graded chapter answer.
+    const legacySave = await studentSession.page.evaluate(async () => {
+      const result = await fetch('/api/academic/micro-check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chapterId: 'ch-4', questionId: 'mcq-4-001', selectedAnswer: 'b' }),
+      })
+      return { status: result.status, body: await result.json() }
+    })
+    expect(legacySave).toMatchObject({ status: 200 })
+    expect(legacySave.body.row).toMatchObject({
+      user_id: studentProfile!.id, chapter_id: 'ch-4', question_id: 'mcq-4-001',
+      selected_answer: 'b', is_correct: false,
+    })
+    const forgedServerSave = await studentSession.page.evaluate(async () => {
+      const response = await fetch('/api/academic/micro-check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chapterId: 'ch-4', questionId: 'mcq-4-002',
+          selectedAnswer: 'b', is_correct: true, user_id: 'forged' }),
+      })
+      return response.status
+    })
+    expect(forgedServerSave).toBe(400)
+    // 3AC: the legacy route must reject authenticated instructors, not just anonymous users.
+    const instructorLegacyAttempt = await instructorSession.page.evaluate(async () => {
+      const response = await fetch('/api/chapter-4/micro-check', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ questionId: 'mcq-4-002', selectedAnswer: 'a' }),
+      })
+      return response.status
+    })
+    expect(instructorLegacyAttempt).toBe(403)
+    // Typed validation must reject coercible non-string answers from enrolled students.
+    const invalidLegacyAnswer = await studentSession.page.evaluate(async () => {
+      const response = await fetch('/api/chapter-4/micro-check', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ questionId: 'mcq-4-002', selectedAnswer: 1 }),
+      })
+      return response.status
+    })
+    expect(invalidLegacyAnswer).toBe(400)
+    // Legitimate quiz submission is graded by the server, not a client score.
+    const { getLocalQuizQuestions } = await import('@/lib/local-data')
+    const certQuizQuestions = getLocalQuizQuestions('quiz-4')
+    expect(certQuizQuestions.length).toBeGreaterThan(0)
+    const certAnswers = Object.fromEntries(certQuizQuestions.map(q => [q.id, q.correct_answer]))
+    const validQuizResult = await studentSession.page.evaluate(async answers => {
+      const response = await fetch('/api/academic/quiz-attempt', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quizId: 'quiz-4', answers }),
+      })
+      return { status: response.status, body: await response.json() }
+    }, certAnswers)
+    expect(validQuizResult.status).toBe(200)
+    expect(validQuizResult.body.attempt).toMatchObject({
+      score: certQuizQuestions.length, total_questions: certQuizQuestions.length, percentage: 100,
+    })
+    const forgedQuizResult = await studentSession.page.evaluate(async answers => {
+      const response = await fetch('/api/academic/quiz-attempt', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quizId: 'quiz-4', answers, score: 100, percentage: 100 }),
+      })
+      return response.status
+    }, certAnswers)
+    expect(forgedQuizResult).toBe(400)
+    const aMicroQuestion = 'qa3h-school-a-q1'
+    const { error: aMicroError } = await service.from('chapter_micro_check_attempts').insert({
+      user_id: studentProfile!.id, chapter_id: 'ch-4', check_id: 'qa3h',
+      question_id: aMicroQuestion, concept_id: 'qa3h-infection-control',
+      difficulty: 'understanding', selected_answer: 'a', is_correct: false,
+    })
+    expect(aMicroError).toBeNull()
     for (const actor of schoolBActors) {
       const { data: newAuth, error: newAuthError } = await service.auth.admin.createUser({
         email: actor.email, password: actor.password, email_confirm: true,
@@ -1008,6 +1105,66 @@ test.describe('Pilot onboarding certification', () => {
       const { data: signedIn, error: signInError } = await client.auth.signInWithPassword({ email: actor.email, password: actor.password })
       expect(signInError).toBeNull()
       expect(signedIn.user?.id).toBe(id)
+      // 3O: forged own-user correctness is rejected by table privileges,
+      // independently of RLS school isolation.
+      if (actor.role === 'student') {
+        const { error: forgedInsertError } = await client
+          .from('chapter_micro_check_attempts').insert({
+            user_id: id, chapter_id: 'ch-4', check_id: 'forged-check',
+            question_id: 'forged-question', concept_id: 'forged-concept',
+            difficulty: 'understanding', selected_answer: 'b', is_correct: true,
+          })
+        expect(forgedInsertError).not.toBeNull()
+        const { data: forgedRow, error: forgedLookupError } = await service
+          .from('chapter_micro_check_attempts').select('id').eq('user_id', id)
+          .eq('question_id', 'forged-question')
+        expect(forgedLookupError).toBeNull()
+        expect(forgedRow).toEqual([])
+        const { error: forgedQuizError } = await client.from('quiz_attempts').insert({
+          user_id: id, quiz_id: 'quiz-4', score: 30,
+          total_questions: 30, percentage: 100,
+        })
+        expect(forgedQuizError).not.toBeNull()
+        const { data: forgedQuiz, error: forgedQuizLookupError } = await service
+          .from('quiz_attempts').select('id').eq('user_id',id).eq('score',30)
+          .eq('total_questions',30)
+        expect(forgedQuizLookupError).toBeNull()
+        expect(forgedQuiz).toEqual([])
+      }
+      if (actor.role === 'student') {
+        const { error: bQuizError } = await service.from('quiz_attempts').insert({
+          user_id: id, quiz_id: 'quiz-4', score: 9, total_questions: 10, percentage: 90,
+        })
+        expect(bQuizError).toBeNull()
+        const { data: ownQuiz, error: ownQuizError } = await client.from('quiz_attempts')
+          .select('quiz_id,score,total_questions,percentage').eq('user_id',id)
+        expect(ownQuizError).toBeNull()
+        expect(ownQuiz).toEqual([{quiz_id:'quiz-4',score:9,total_questions:10,percentage:90}])
+      }
+      // A student, instructor, and school admin in B must not read A's
+      // immutable academic evidence, even when querying A's exact user ID.
+      const { data: crossSchoolMicro, error: crossSchoolMicroError } = await client
+        .from('chapter_micro_check_attempts').select('question_id,is_correct')
+        .eq('user_id', studentProfile!.id)
+      expect(crossSchoolMicroError).toBeNull()
+      expect(crossSchoolMicro).toEqual([])
+      const { data: crossSchoolQuiz, error: crossSchoolQuizError } = await client
+        .from('quiz_attempts').select('quiz_id,score,total_questions,percentage')
+        .eq('user_id', studentProfile!.id)
+      expect(crossSchoolQuizError).toBeNull()
+      expect(crossSchoolQuiz).toEqual([])
+      if (actor.role === 'student') {
+        const { error: bMicroError } = await service.from('chapter_micro_check_attempts').insert({
+          user_id: id, chapter_id: 'ch-4', check_id: 'qa3h',
+          question_id: 'qa3h-school-b-q1', concept_id: 'qa3h-infection-control',
+          difficulty: 'understanding', selected_answer: 'b', is_correct: true,
+        })
+        expect(bMicroError).toBeNull()
+        const { data: ownEvidence, error: ownEvidenceError } = await client
+          .from('chapter_micro_check_attempts').select('question_id,is_correct').eq('user_id',id)
+        expect(ownEvidenceError).toBeNull()
+        expect(ownEvidence).toEqual([{question_id:'qa3h-school-b-q1',is_correct:true}])
+      }
       if (actor.role === 'school_admin') {
         // Browser-level school-scoped management search, using a real B-admin session.
         const schoolBContext = await browser.newContext()

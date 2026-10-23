@@ -50,43 +50,14 @@ export async function persistChapter15MicroCheckAttempt(
     return { row: null, alreadyRecorded: false, error: 'Concept mapping mismatch.' }
   }
 
-  const payload = {
-    user_id: userId,
-    chapter_id: 'ch-15',
-    check_id: check.id,
-    question_id: question.id,
-    concept_id: question.conceptFamilyId,
-    difficulty: question.difficulty,
-    selected_answer: selectedAnswer,
-    is_correct: selectedAnswer === question.correctAnswer,
-    answered_at: new Date().toISOString(),
-  }
+  const response = await fetch('/api/academic/micro-check', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chapterId: 'ch-15', questionId: question.id, selectedAnswer }),
+  })
+  const result = await response.json() as { row?: Chapter15MicroCheckAttemptRow; alreadyRecorded?: boolean; error?: string }
+  if (response.ok && result.row) return { row: result.row, alreadyRecorded: Boolean(result.alreadyRecorded), error: null }
+  return { row: null, alreadyRecorded: false, error: result.error ?? 'Unable to save micro-check answer.' }
 
-  const { data, error } = await supabase
-    .from('chapter_micro_check_attempts')
-    .insert(payload)
-    .select(columns)
-    .single()
-
-  if (!error && data) return { row: data as Chapter15MicroCheckAttemptRow, alreadyRecorded: false, error: null }
-
-  if (error?.code === '23505') {
-    const { data: existing, error: existingError } = await supabase
-      .from('chapter_micro_check_attempts')
-      .select(columns)
-      .eq('user_id', userId)
-      .eq('chapter_id', 'ch-15')
-      .eq('question_id', question.id)
-      .maybeSingle()
-
-    return {
-      row: (existing ?? null) as Chapter15MicroCheckAttemptRow | null,
-      alreadyRecorded: true,
-      error: existingError?.message ?? null,
-    }
-  }
-
-  return { row: null, alreadyRecorded: false, error: error?.message ?? 'Unable to save micro-check answer.' }
 }
 
 export function chapter15MicroCheckRowsToEvidence(

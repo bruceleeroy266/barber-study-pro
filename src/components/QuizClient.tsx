@@ -154,30 +154,23 @@ export default function QuizClient({
     const { score: finalScore, percentage } = calculateQuizScore(scoringQuestions, finalAnswers)
 
     try {
-      // Insert quiz attempt and capture the persisted ID for exact binding
-      const { data: insertedAttempt, error: insertError } = await supabase
-        .from('quiz_attempts')
-        .insert({
-          user_id: userId,
-          quiz_id: quiz.id,
-          score: finalScore,
-          total_questions: shuffledQuestions.length,
-          percentage,
-          answers_json: finalAnswers,
-          completed_at: new Date().toISOString(),
-        })
-        .select('id')
-        .single()
-
-      if (insertError) {
-        console.error('[QuizClient] Failed to persist quiz attempt:', insertError)
-        throw insertError
+      // Server independently recomputes the grade from the trusted question bank.
+      // Client-calculated scores are used for immediate feedback only.
+      const attemptResponse = await fetch('/api/academic/quiz-attempt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quizId: quiz.id, answers: finalAnswers }),
+      })
+      const attemptResult = await attemptResponse.json() as {
+        attempt?: { id: string; score: number; total_questions: number; percentage: number }
+        error?: string
       }
-
-      const persistedQuizAttemptId = insertedAttempt?.id
-      if (!persistedQuizAttemptId) {
-        console.error('[QuizClient] No quiz attempt ID returned from insert')
-        throw new Error('Failed to obtain quiz attempt ID')
+      if (!attemptResponse.ok || !attemptResult.attempt) {
+        throw new Error(attemptResult.error ?? 'Unable to save quiz attempt')
+      }
+      const persistedQuizAttemptId = attemptResult.attempt.id
+      if (attemptResult.attempt.score !== finalScore || attemptResult.attempt.percentage !== percentage) {
+        throw new Error('Persisted quiz grade does not match client feedback')
       }
 
       void linkQuizAttempt(persistedQuizAttemptId)
