@@ -1,6 +1,24 @@
 import { createClient } from '@/lib/supabase-server'
 import { redirect, notFound } from 'next/navigation'
 
+type CoachingItem = {
+  position: number
+  domain: string
+  prompt: string
+  options: Record<string, string>
+  correctOption: string
+  selectedOption: string | null
+  explanation: string | null
+  isScored: boolean
+}
+
+const coachingPrompts: Record<string, string[]> = {
+  scientific_concepts: ['Which scientific principle applies here?', 'What safety or biological process should you recall?', 'Explain the underlying concept without choosing an option.'],
+  implements_equipment: ['What is the main purpose of the tool?', 'Which usage or sanitation precaution applies?', 'Talk through the safest professional technique.'],
+  hair_care_services: ['Which hair characteristic or service step matters?', 'What could go wrong if the procedure is incorrect?', 'Explain the safest sequence of service steps.'],
+  facial_hair_skin_care_services: ['Which skin or facial-hair concern matters?', 'What does client safety require here?', 'Describe the safe service principle in your own words.'],
+}
+
 export const dynamic = 'force-dynamic'
 
 type ExamAttemptSummary = {
@@ -39,12 +57,21 @@ export default async function InstructorExamReadyResults({
   if (error) notFound()
 
   const attempts = (Array.isArray(data) ? data : []) as ExamAttemptSummary[]
+  const coaching = await Promise.all(attempts.map(async (attempt) => {
+    const response = await supabase.rpc('get_assigned_student_exam_coaching', {
+      p_student_id: studentId,
+      p_attempt_id: attempt.attemptId,
+    })
+    return { attemptId: attempt.attemptId, items: (!response.error && Array.isArray(response.data) ? response.data : []) as CoachingItem[] }
+  }))
+
   return (
     <main className="space-y-6 p-6">
       <div>
         <h1 className="text-2xl font-bold">Exam Ready results</h1>
         <p className="text-sm text-gray-400">Read-only results from scored comprehensive exam attempts. These do not change chapter grades.</p>
       </div>
+      <p className="text-sm text-gray-400">Instructor coaching is available only after a student completes an exam. Do not share answer keys during an active attempt. Hints below are general prompts and require academic review before broad use.</p>
       {attempts.length === 0 && <p>No completed practice exams recorded.</p>}
       {attempts.map((attempt) => (
         <section key={attempt.attemptId} className="space-y-3 rounded-lg border p-4">
@@ -57,6 +84,34 @@ export default async function InstructorExamReadyResults({
             ))}
           </ul>
         </section>
+      ))}
+      {coaching.map(({ attemptId, items }) => items.length > 0 && (
+        <details key={attemptId} className="rounded-lg border border-amber-500/40 p-4">
+          <summary className="cursor-pointer font-semibold">Instructor Coaching — completed attempt ({items.length} questions)</summary>
+          <div className="mt-4 space-y-4">
+            {items.map(item => (
+              <details key={item.position} className="rounded-lg border border-gray-700 p-3">
+                <summary className="cursor-pointer font-medium">Q{item.position}: {item.prompt}</summary>
+                <p className="mt-2 text-xs text-gray-400">{labels[item.domain] ?? item.domain} · {item.isScored ? 'Scored' : 'Unscored'}</p>
+                <ul className="mt-2 space-y-1 text-sm">
+                  {Object.entries(item.options).map(([letter, option]) => <li key={letter}>{letter.toUpperCase()}. {option}</li>)}
+                </ul>
+                <div className="mt-3 rounded border border-gray-700 p-3">
+                  <p className="font-medium">Teaching hints (do not reveal the answer)</p>
+                  <ol className="mt-2 list-inside list-decimal space-y-1 text-sm">
+                    {(coachingPrompts[item.domain] ?? ['Identify the main concept.', 'Eliminate unsafe choices.', 'Explain your reasoning.']).map(hint => <li key={hint}>{hint}</li>)}
+                  </ol>
+                </div>
+                <details className="mt-3 rounded border border-amber-500/40 p-3">
+                  <summary className="cursor-pointer font-semibold">Reveal instructor-only answer key</summary>
+                  <p className="mt-2">Correct option: {item.correctOption?.toUpperCase() ?? 'Not available'}</p>
+                  <p className="text-sm">Student selected: {item.selectedOption?.toUpperCase() ?? 'Unanswered'}</p>
+                  <p className="mt-2 text-sm">{item.explanation || 'Explanation awaiting academic review.'}</p>
+                </details>
+              </details>
+            ))}
+          </div>
+        </details>
       ))}
     </main>
   )
