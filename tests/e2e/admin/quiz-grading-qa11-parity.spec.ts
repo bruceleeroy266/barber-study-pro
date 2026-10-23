@@ -94,11 +94,13 @@ test('QA-11: authenticated School A/B quiz score and dashboard parity (LOCAL ONL
     await page.getByRole('button', { name: /^(Start Quiz|Retake Quiz)$/ }).click()
     const used = new Set<string>()
     for (let index = 0; index < questions.length; index++) {
-      const visible = [] as typeof questions
-      for (const item of questions) {
-        if (used.has(item.id)) continue
-        if (await page.getByText(item.question, { exact: true }).isVisible()) visible.push(item)
-      }
+      // Only the active quiz question counts. The chapter page can contain
+      // other visible question text (e.g. previews), so global text searches
+      // incorrectly identify more than one question.
+      const activeQuestion = page.locator('p.text-lg.font-medium.leading-relaxed')
+      await expect(activeQuestion).toHaveCount(1)
+      const activeText = (await activeQuestion.textContent())?.trim()
+      const visible = questions.filter(item => !used.has(item.id) && item.question.trim() === activeText)
       expect(visible).toHaveLength(1)
       const current = visible[0]
       used.add(current.id)
