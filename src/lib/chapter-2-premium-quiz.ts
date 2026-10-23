@@ -594,7 +594,7 @@ export const chapter2PremiumQuizQuestions: QuizQuestion[] = [
   {
     id: 'qq-2-043',
     quiz_id: 'quiz-2',
-    question: 'A barber writes: "I provide quality haircuts because I believe everyone deserves to feel confident, and I\'m building toward owning my own shop." Which mission statement component is MISSING?',
+    question: 'A barber writes: "I provide quality haircuts for clients in my community, and I plan to own a barbershop within five years." Which mission statement component is MISSING?',
     answer_a: 'Purpose (what you do and why)',
     answer_b: 'Values (guiding principles)',
     answer_c: 'Direction (where you\'re heading)',
