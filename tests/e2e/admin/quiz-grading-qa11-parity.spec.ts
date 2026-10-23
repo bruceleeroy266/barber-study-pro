@@ -106,7 +106,7 @@ test('QA-11: authenticated School A/B quiz score and dashboard parity (LOCAL ONL
       used.add(current.id)
       const intendedKey = index < 18 ? current.correct_answer : (['a', 'b', 'c', 'd'].find(key => key !== current.correct_answer)!)
       const answerText = current[`answer_${intendedKey}` as 'answer_a' | 'answer_b' | 'answer_c' | 'answer_d']
-      const answerButton = page.locator('button').filter({ hasText: answerText })
+      const answerButton = page.getByTestId('active-quiz-options').getByRole('button').filter({ hasText: answerText })
       await expect(answerButton).toHaveCount(1)
       await answerButton.click()
       await page.getByRole('button', { name: index === questions.length - 1 ? 'Submit & Finish Quiz' : 'Submit Answer' }).click()
