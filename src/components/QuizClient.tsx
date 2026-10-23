@@ -727,7 +727,7 @@ export default function QuizClient({
       <Card variant="default" padding="lg">
         <p data-testid="active-quiz-question" className="text-lg text-white font-medium mb-6 leading-relaxed">{question.original.question}</p>
 
-        <div className="space-y-3">
+        <div data-testid="active-quiz-options" className="space-y-3">
           {question.options.map((option) => {
             const isSelected = selectedAnswer === option.key
 
