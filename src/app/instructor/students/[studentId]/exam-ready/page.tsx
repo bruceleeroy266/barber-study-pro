@@ -1,3 +1,4 @@
+import CoachingSearch from '@/components/instructor/CoachingSearch'
 import { createClient } from '@/lib/supabase-server'
 import { redirect, notFound } from 'next/navigation'
 
@@ -85,34 +86,7 @@ export default async function InstructorExamReadyResults({
           </ul>
         </section>
       ))}
-      {coaching.map(({ attemptId, items }) => items.length > 0 && (
-        <details key={attemptId} className="rounded-lg border border-amber-500/40 p-4">
-          <summary className="cursor-pointer font-semibold">Instructor Coaching — completed attempt ({items.length} questions)</summary>
-          <div className="mt-4 space-y-4">
-            {items.map(item => (
-              <details key={item.position} className="rounded-lg border border-gray-700 p-3">
-                <summary className="cursor-pointer font-medium">Q{item.position}: {item.prompt}</summary>
-                <p className="mt-2 text-xs text-gray-400">{labels[item.domain] ?? item.domain} · {item.isScored ? 'Scored' : 'Unscored'}</p>
-                <ul className="mt-2 space-y-1 text-sm">
-                  {Object.entries(item.options).map(([letter, option]) => <li key={letter}>{letter.toUpperCase()}. {option}</li>)}
-                </ul>
-                <div className="mt-3 rounded border border-gray-700 p-3">
-                  <p className="font-medium">Teaching hints (do not reveal the answer)</p>
-                  <ol className="mt-2 list-inside list-decimal space-y-1 text-sm">
-                    {(coachingPrompts[item.domain] ?? ['Identify the main concept.', 'Eliminate unsafe choices.', 'Explain your reasoning.']).map(hint => <li key={hint}>{hint}</li>)}
-                  </ol>
-                </div>
-                <details className="mt-3 rounded border border-amber-500/40 p-3">
-                  <summary className="cursor-pointer font-semibold">Reveal instructor-only answer key</summary>
-                  <p className="mt-2">Correct option: {item.correctOption?.toUpperCase() ?? 'Not available'}</p>
-                  <p className="text-sm">Student selected: {item.selectedOption?.toUpperCase() ?? 'Unanswered'}</p>
-                  <p className="mt-2 text-sm">{item.explanation || 'Explanation awaiting academic review.'}</p>
-                </details>
-              </details>
-            ))}
-          </div>
-        </details>
-      ))}
+      <CoachingSearch attempts={coaching} />
     </main>
   )
 }
