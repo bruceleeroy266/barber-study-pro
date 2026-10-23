@@ -1,3 +1,4 @@
+import LiveExamReview from '@/components/instructor/LiveExamReview'
 import CoachingSearch from '@/components/instructor/CoachingSearch'
 import { createClient } from '@/lib/supabase-server'
 import { redirect, notFound } from 'next/navigation'
@@ -56,6 +57,11 @@ export default async function InstructorExamReadyResults({
     remainingSeconds: number; lastAnsweredPosition: number | null
   }
 
+  const { data: liveReviewData } = await supabase.rpc('get_assigned_student_exam_live_review', { p_student_id: studentId })
+  const reviewItems = live && liveReviewData && typeof liveReviewData === 'object' && !Array.isArray(liveReviewData)
+    ? (liveReviewData as { items?: Array<{ position:number;domain:string;prompt:string;selectedOption:string|null;selectedAnswer:string|null;isCorrect:boolean|null;flagged:boolean }> }).items
+    : undefined
+
   const attempts = (Array.isArray(data) ? data : []) as ExamAttemptSummary[]
   const coaching = await Promise.all(attempts.map(async (attempt) => {
     const response = await supabase.rpc('get_assigned_student_exam_coaching', {
@@ -85,6 +91,7 @@ export default async function InstructorExamReadyResults({
           </div>
         ) : <p className="text-sm text-gray-400">No active exam. Finalized exam results appear below.</p>}
       </section>
+      {reviewItems && <LiveExamReview items={reviewItems} />}
       <p className="text-sm text-gray-400">Instructor coaching is available only after a student completes an exam. Do not share answer keys during an active attempt. Hints below are general prompts and require academic review before broad use.</p>
       {attempts.length === 0 && <p>No completed practice exams recorded.</p>}
       {attempts.map((attempt) => (
