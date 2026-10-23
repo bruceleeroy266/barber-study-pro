@@ -98,7 +98,7 @@ test('QA-11: authenticated School A/B quiz score and dashboard parity (LOCAL ONL
       // other visible question text (e.g. previews), so global text searches
       // incorrectly identify more than one question.
       const activeQuestion = page.locator('div.space-y-3')
-        .filter({ has: page.getByRole('button', { name: /^A\\.\\s/ }) })
+        .filter({ has: page.getByRole('button', { name: /^A\.\s/ }) })
         .locator('xpath=..')
         .locator('p.text-lg.font-medium.leading-relaxed')
       await expect(activeQuestion).toHaveCount(1)
