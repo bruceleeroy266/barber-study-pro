@@ -255,7 +255,7 @@ export const chapter2PremiumFlashcards: Flashcard[] = [
     id: 'fc-2-024',
     chapter_id: 'ch-2',
     front: 'What is the most important rule of shop etiquette regarding another barber\'s regular clients?',
-    back: 'Never poach another barber\'s regular clients. If their client asks you for a cut, redirect them back to their regular barber. Violating this destroys shop harmony and professional reputation.',
+    back: 'Do not solicit another barber\'s established clients or disparage a coworker to win business. Clients can choose their barber; handle an independently requested switch respectfully and follow reasonable shop procedures.',
     category: 'Workplace Practice',
     difficulty: 'easy',
     order_index: 24,
