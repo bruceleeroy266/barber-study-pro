@@ -40,6 +40,11 @@ test('QA-11: authenticated School A/B quiz score and dashboard parity (LOCAL ONL
       expect(profileError).toBeNull()
     }
     const studentA = ids[0]
+    // Instructor detail access requires an active canonical student assignment.
+    const { error: assignmentError } = await root.from('student_instructor_assignments').insert({
+      school_id: schools[0], student_id: studentA, instructor_id: ids[1], is_active: true,
+    })
+    expect(assignmentError).toBeNull()
     const { data: attempt, error: attemptError } = await root.from('quiz_attempts')
       .insert({ user_id: studentA, quiz_id: 'quiz-1', score: 12, total_questions: 20, percentage: 60,
         answers_json: {}, completed_at: new Date().toISOString() }).select('id,percentage,score,total_questions').single()
