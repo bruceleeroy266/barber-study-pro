@@ -600,7 +600,7 @@ export const chapter2PremiumQuizQuestions: QuizQuestion[] = [
     answer_c: 'Direction (where you\'re heading)',
     answer_d: 'All components are present',
     correct_answer: 'b',
-    explanation: 'The statement includes purpose ("provide quality haircuts... everyone deserves to feel confident") and direction ("owning my own shop") but lacks explicit values — the principles that guide HOW they work.',
+    explanation: 'The statement identifies a service purpose (providing quality haircuts) and a future direction (owning a barbershop), but does not state guiding professional values such as honesty, respect, or integrity.',
     difficulty: 'medium',
     order_index: 43,
   },
