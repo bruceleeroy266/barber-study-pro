@@ -26,34 +26,34 @@ export default function CoachingSearch({attempts}:{attempts:Attempt[]}) {
    (!needle || [q.position.toString(), 'q'+q.position, q.prompt,labels[q.domain]||q.domain].some(s=>s.toLowerCase().includes(needle)))
  })
  if (!questions.length) return null
- return <section className="space-y-4 rounded-xl border border-amber-500/40 p-4">
-  <h2 className="text-xl font-bold">Instructor Question Coaching</h2>
+ return <section className="min-w-0 space-y-4 overflow-hidden rounded-xl border border-amber-500/40 p-3 sm:p-5 lg:p-6">
+  <h2 className="break-words text-lg font-bold sm:text-xl">Instructor Question Coaching</h2>
   <p className="text-sm text-gray-400">Search only this student&apos;s finalized exam attempts. Instructor-only answer keys must not be shared during active tests. Hints are general and pending academic review.</p>
   <label className="block text-sm font-medium" htmlFor="coaching-search">Search by question number, topic or keyword</label>
   <input id="coaching-search" type="search" value={query} onChange={e=>setQuery(e.target.value)}
-    placeholder="Search 110 questions..." className="w-full rounded-lg border border-gray-600 bg-gray-950 p-3 text-white" />
+    placeholder="Search 110 questions..." className="block min-h-12 w-full min-w-0 rounded-lg border border-gray-600 bg-gray-950 px-3 py-3 text-base text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400" />
   <label className="block text-sm font-medium" htmlFor="coaching-domain">Theory topic</label>
   <select id="coaching-domain" value={domain} onChange={e=>setDomain(e.target.value)}
-    className="w-full rounded-lg border border-gray-600 bg-gray-950 p-3 text-white">
+    className="block min-h-12 w-full min-w-0 rounded-lg border border-gray-600 bg-gray-950 px-3 py-3 text-base text-white">
    <option value="all">All topics</option>
    {Object.entries(labels).map(([key,value])=><option key={key} value={key}>{value}</option>)}
   </select>
-  <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={missed} onChange={e=>setMissed(e.target.checked)} /> Missed or unanswered only</label>
+  <label className="flex min-h-11 items-center gap-3 rounded-lg py-2 text-sm"><input type="checkbox" className="h-5 w-5 shrink-0" checked={missed} onChange={e=>setMissed(e.target.checked)} /> Missed or unanswered only</label>
   <p aria-live="polite" className="text-sm text-gray-400">{filtered.length} of {questions.length} questions</p>
-  <div className="space-y-3">
-  {filtered.map(q=><details key={q.key} className="rounded-lg border border-gray-700 p-3">
-   <summary className="cursor-pointer font-semibold">Attempt {q.attempt} · Q{q.position}: {q.prompt}</summary>
+  <div className="min-w-0 space-y-3">
+  {filtered.map(q=><details key={q.key} className="min-w-0 overflow-hidden rounded-lg border border-gray-700 p-3 sm:p-4">
+   <summary className="cursor-pointer break-words py-1 font-semibold leading-relaxed">Attempt {q.attempt} · Q{q.position}: {q.prompt}</summary>
    <p className="mt-2 text-xs text-gray-400">{labels[q.domain]||q.domain} · {q.isScored?'Scored':'Unscored'}</p>
-   <ul className="mt-2 space-y-1 text-sm">{Object.entries(q.options).map(([letter,option])=><li key={letter}>{letter.toUpperCase()}. {option}</li>)}</ul>
-   <div className="mt-3 rounded-lg border border-gray-700 p-3">
+   <ul className="mt-2 space-y-2 break-words text-sm leading-relaxed">{Object.entries(q.options).map(([letter,option])=><li key={letter}>{letter.toUpperCase()}. {option}</li>)}</ul>
+   <div className="mt-3 rounded-lg border border-gray-700 p-3 sm:p-4">
     <p className="font-medium">Teaching hints</p>
-    <ol className="mt-2 list-inside list-decimal space-y-1 text-sm">{(hints[q.domain]||['Identify the main concept.','Consider safe practice.','Explain the reasoning.']).map(h=><li key={h}>{h}</li>)}</ol>
+    <ol className="mt-2 list-inside list-decimal space-y-2 break-words text-sm leading-relaxed">{(hints[q.domain]||['Identify the main concept.','Consider safe practice.','Explain the reasoning.']).map(h=><li key={h}>{h}</li>)}</ol>
    </div>
-   <details className="mt-3 rounded-lg border border-amber-500/40 p-3">
-    <summary className="cursor-pointer font-semibold">Reveal instructor-only answer</summary>
+   <details className="mt-3 min-w-0 overflow-hidden rounded-lg border border-amber-500/40 p-3 sm:p-4">
+    <summary className="cursor-pointer py-2 font-semibold">Reveal instructor-only answer</summary>
     <p className="mt-2">Correct option: {q.correctOption?.toUpperCase()||'Unavailable'}</p>
     <p className="text-sm">Student selected: {q.selectedOption?.toUpperCase()||'Unanswered'}</p>
-    <p className="mt-2 text-sm">{q.explanation||'Explanation awaiting academic review.'}</p>
+    <p className="mt-2 break-words text-sm leading-relaxed">{q.explanation||'Explanation awaiting academic review.'}</p>
    </details>
   </details>)}
   {!filtered.length&&<p className="text-sm text-gray-400">No matching questions.</p>}
