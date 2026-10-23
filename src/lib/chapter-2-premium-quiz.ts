@@ -640,7 +640,7 @@ export const chapter2PremiumQuizQuestions: QuizQuestion[] = [
     id: 'qq-2-046',
     quiz_id: 'quiz-2',
     question: 'Why is "genuine interest" considered a professional attitude behavior rather than just being friendly?',
-    answer_a: 'Because friendliness by itself is not enough to build and keep a loyal client base',
+    answer_a: 'Because a friendly greeting alone guarantees lasting client loyalty',
     answer_b: 'Because most professional barbershops list it as a requirement in their written shop policies',
     answer_c: 'Because intentionally caring about clients as individuals builds the trust and loyalty that retain them',
     answer_d: 'Because it shortens consultations by getting clients to their decision faster',
