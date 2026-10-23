@@ -50,6 +50,12 @@ export default async function InstructorExamReadyResults({
   })
   if (error) notFound()
 
+  const { data: liveStatus } = await supabase.rpc('get_assigned_student_exam_live_status', { p_student_id: studentId })
+  const live = (liveStatus && typeof liveStatus === 'object' && !Array.isArray(liveStatus) ? liveStatus : null) as null | {
+    status: string; answeredCount: number; totalQuestions: number;
+    remainingSeconds: number; lastAnsweredPosition: number | null
+  }
+
   const attempts = (Array.isArray(data) ? data : []) as ExamAttemptSummary[]
   const coaching = await Promise.all(attempts.map(async (attempt) => {
     const response = await supabase.rpc('get_assigned_student_exam_coaching', {
@@ -65,6 +71,20 @@ export default async function InstructorExamReadyResults({
         <h1 className="break-words text-xl font-bold sm:text-2xl">Exam Ready results</h1>
         <p className="text-sm text-gray-400">Read-only results from scored comprehensive exam attempts. These do not change chapter grades.</p>
       </div>
+      <section className="space-y-2 rounded-xl border border-blue-500/40 p-3 sm:p-5" aria-label="Live Exam Monitor">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-lg font-bold">Live Exam Monitor</h2>
+          <a href={`/instructor/students/${studentId}/exam-ready`} className="rounded-lg border px-4 py-2 text-sm">Refresh status</a>
+        </div>
+        {live ? (
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <p>Exam status: <strong>{live.status}</strong></p>
+            <p>Answered: <strong>{live.answeredCount}/{live.totalQuestions}</strong></p>
+            <p>Time remaining: <strong>{Math.floor(live.remainingSeconds / 60)}m {live.remainingSeconds % 60}s</strong></p>
+            <p className="sm:col-span-3 text-sm text-gray-400">Last answered question: {live.lastAnsweredPosition ?? 'None yet'}. This is not necessarily the question currently on screen. No live answer keys are shown.</p>
+          </div>
+        ) : <p className="text-sm text-gray-400">No active exam. Finalized exam results appear below.</p>}
+      </section>
       <p className="text-sm text-gray-400">Instructor coaching is available only after a student completes an exam. Do not share answer keys during an active attempt. Hints below are general prompts and require academic review before broad use.</p>
       {attempts.length === 0 && <p>No completed practice exams recorded.</p>}
       {attempts.map((attempt) => (
