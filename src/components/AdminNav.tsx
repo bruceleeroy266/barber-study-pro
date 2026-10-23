@@ -21,14 +21,16 @@ import {
   ChartNoAxesCombined,
   LifeBuoy,
 } from 'lucide-react'
-import { Profile } from '@/types'
 import { isAdmin } from '@/lib/auth-helpers'
 import { Logo } from '@/components/brand'
 import BackButton from '@/components/ui/BackButton'
 import { useAccessibleMobileMenu } from '@/hooks/useAccessibleMobileMenu'
 
 interface AdminNavProps {
-  user: Profile | null
+  user: {
+    full_name?: string | null
+    role?: string | null
+  } | null
 }
 
 const adminLinks = [

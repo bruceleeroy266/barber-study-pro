@@ -1,25 +1,19 @@
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase-server'
 import { isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
 import StaffPilotMeasurementView from '@/components/pilot-measurement/StaffPilotMeasurementView'
+import { resolveSupportAccessContext } from '@/lib/support-access'
 
 export const dynamic = 'force-dynamic'
 
 export default async function SchoolPilotMeasurementPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role,school_id')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile || !(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
-    redirect('/dashboard')
+  const profile = context.effectiveProfile
+  if (!(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
-  if (!profile.school_id) redirect('/dashboard')
+  if (!profile.school_id) redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
 
   return (
     <div className="mx-auto max-w-7xl">

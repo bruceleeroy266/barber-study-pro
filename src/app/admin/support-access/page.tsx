@@ -1,12 +1,12 @@
-import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
 import { isPlatformAdminProfile } from '@/lib/auth-helpers'
 import BackButton from '@/components/ui/BackButton'
 import { GraduationCap, School, ShieldCheck } from 'lucide-react'
+import { startSupportMode } from './actions'
 
 interface SupportAccessPageProps {
-  searchParams: Promise<{ q?: string }>
+  searchParams: Promise<{ q?: string; error?: string }>
 }
 
 interface SupportStaffRow {
@@ -21,7 +21,7 @@ interface SupportStaffRow {
 }
 
 export default async function AdminSupportAccessPage({ searchParams }: SupportAccessPageProps) {
-  const { q } = await searchParams
+  const { q, error: supportError } = await searchParams
   const search = (q ?? '').trim().toLowerCase()
 
   const supabase = await createClient()
@@ -96,9 +96,9 @@ export default async function AdminSupportAccessPage({ searchParams }: SupportAc
           </button>
         </form>
 
-        {error && (
+        {(error || supportError) && (
           <div role="alert" className="rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
-            Staff dashboards could not be loaded. Please try again.
+            {supportError ? decodeURIComponent(supportError) : 'Staff dashboards could not be loaded. Please try again.'}
           </div>
         )}
 
@@ -115,12 +115,15 @@ export default async function AdminSupportAccessPage({ searchParams }: SupportAc
                 <div className="mt-2 text-sm text-[var(--color-text-muted)]">{row.schools?.name ?? 'School unavailable'}</div>
                 <div className="mt-4 flex items-center justify-between gap-3">
                   <span className="text-xs capitalize text-[var(--color-text-muted)]">{row.approval_status}</span>
-                  <Link
-                    href={`/instructor?viewAs=${encodeURIComponent(row.id)}`}
-                    className="rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 px-3 py-2 text-sm font-medium text-[var(--color-brand-gold)]"
-                  >
-                    View Dashboard
-                  </Link>
+                  <form action={startSupportMode}>
+                    <input type="hidden" name="targetProfileId" value={row.id} />
+                    <button
+                      type="submit"
+                      className="rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 px-3 py-2 text-sm font-medium text-[var(--color-brand-gold)]"
+                    >
+                      Enter Support Mode
+                    </button>
+                  </form>
                 </div>
               </div>
             ))}
@@ -141,12 +144,15 @@ export default async function AdminSupportAccessPage({ searchParams }: SupportAc
                 <div className="mt-4 flex items-center justify-between gap-3">
                   <span className="text-xs capitalize text-[var(--color-text-muted)]">{row.approval_status}</span>
                   {row.school_id && (
-                    <Link
-                      href={`/admin/school?school=${encodeURIComponent(row.school_id)}`}
-                      className="rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 px-3 py-2 text-sm font-medium text-[var(--color-brand-gold)]"
-                    >
-                      View Dashboard
-                    </Link>
+                    <form action={startSupportMode}>
+                      <input type="hidden" name="targetProfileId" value={row.id} />
+                      <button
+                        type="submit"
+                        className="rounded-lg border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 px-3 py-2 text-sm font-medium text-[var(--color-brand-gold)]"
+                      >
+                        Enter Support Mode
+                      </button>
+                    </form>
                   )}
                 </div>
               </div>
