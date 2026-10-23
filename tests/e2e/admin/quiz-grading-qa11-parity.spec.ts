@@ -97,10 +97,7 @@ test('QA-11: authenticated School A/B quiz score and dashboard parity (LOCAL ONL
       // Only the active quiz question counts. The chapter page can contain
       // other visible question text (e.g. previews), so global text searches
       // incorrectly identify more than one question.
-      const activeQuestion = page.locator('div.space-y-3')
-        .filter({ has: page.getByRole('button', { name: /^A\.\s/ }) })
-        .locator('xpath=..')
-        .locator('p.text-lg.font-medium.leading-relaxed')
+      const activeQuestion = page.getByTestId('active-quiz-question')
       await expect(activeQuestion).toHaveCount(1)
       const activeText = (await activeQuestion.textContent())?.trim()
       const visible = questions.filter(item => !used.has(item.id) && item.question.trim() === activeText)
