@@ -60,15 +60,15 @@ export default async function InstructorExamReadyResults({
   }))
 
   return (
-    <main className="space-y-6 p-6">
+    <main className="mx-auto w-full max-w-5xl min-w-0 space-y-5 px-3 py-5 sm:space-y-6 sm:px-6 sm:py-8 lg:px-8">
       <div>
-        <h1 className="text-2xl font-bold">Exam Ready results</h1>
+        <h1 className="break-words text-xl font-bold sm:text-2xl">Exam Ready results</h1>
         <p className="text-sm text-gray-400">Read-only results from scored comprehensive exam attempts. These do not change chapter grades.</p>
       </div>
       <p className="text-sm text-gray-400">Instructor coaching is available only after a student completes an exam. Do not share answer keys during an active attempt. Hints below are general prompts and require academic review before broad use.</p>
       {attempts.length === 0 && <p>No completed practice exams recorded.</p>}
       {attempts.map((attempt) => (
-        <section key={attempt.attemptId} className="space-y-3 rounded-lg border p-4">
+        <section key={attempt.attemptId} className="min-w-0 space-y-3 overflow-hidden rounded-lg border p-3 sm:p-5">
           <h2 className="font-semibold">Attempt {attempt.attemptNumber}: {attempt.percentage ?? '—'}%</h2>
           <p className="text-sm">Scored: {attempt.scoredCorrect ?? '—'} / {attempt.scoredTotal} · {attempt.passed ? 'Passing' : 'Review recommended'} · {attempt.status}</p>
           <p className="text-xs text-gray-400">{attempt.completedAt ? new Date(attempt.completedAt).toLocaleDateString() : 'Date unavailable'}</p>
