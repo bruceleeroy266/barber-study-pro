@@ -1,0 +1,520 @@
+import type { HairCareQuestion } from './hair-care-services';
+
+type Override = Partial<Pick<HairCareQuestion,'prompt'|'options'|'type'|'difficulty'>>;
+const o=(a:string,b:string,c:string,d:string)=>[
+  {id:'a',text:a},{id:'b',text:b},{id:'c',text:c},{id:'d',text:d},
+];
+
+const overrides: Record<string, Override> = {
+  'CS-003': {options:o(
+    'Reassess or stop the chemical service because the weakened test strand shows poor integrity',
+    'Continue the chemical service for a shorter time because the weakened test strand still reached part of the goal',
+    'Repeat the chemical service on a second test strand with lower strength before deciding whether to stop',
+    'Pause the chemical service, condition the test strand, and continue processing if the strand feels stronger',
+  )},
+  'CS-005': {options:o(
+    'Do not proceed with the chemical service after the required predisposition test shows a reaction',
+    'Repeat the predisposition test later with less product before deciding whether the chemical service can proceed',
+    'Use a milder version of the chemical product and proceed if the predisposition-test reaction fades',
+    'Perform the chemical service away from the test site while monitoring for a second reaction',
+  )},
+  'CS-008': {options:o(
+    'Underlying pigment can expose warm tones as natural pigment is lightened',
+    'Underlying pigment determines the developer strength needed to lighten natural pigment safely',
+    'Underlying pigment controls how quickly natural pigment is removed during lightening',
+    'Underlying pigment determines whether natural pigment can be lightened without first depositing tone',
+  )},
+  'CS-010': {options:o(
+    'Developer strength should match manufacturer directions, hair condition, and the intended color result',
+    'Developer strength should match the desired lift first, with hair condition affecting only processing time',
+    'Developer strength should match hair resistance first, with manufacturer directions adjusted for the desired result',
+    'Developer strength should match the fastest safe processing time as long as the intended result is achieved',
+  )},
+  'CS-012': {options:o(
+    'Highly porous fragile hair may have limited tolerance, so additional lightening must be reassessed',
+    'Highly porous fragile hair may lighten faster, so additional lightening can proceed with shorter processing',
+    'Highly porous fragile hair may absorb more product, so additional lightening should use less product but the same strength',
+    'Highly porous fragile hair may process unevenly, so additional lightening should begin on the strongest sections first',
+  )},
+  'CS-013': {options:o(
+    'Clarify the unknown color history and perform analysis or testing before selecting a corrective formula',
+    'Select a conservative corrective formula first and investigate the unknown color history only if the test strand reacts',
+    'Use a strand test with the desired corrective formula because a successful test makes the unknown history less important',
+    'Choose the corrective formula from the target color and use reduced developer until the unknown history is confirmed',
+  )},
+  'CS-015': {options:o(
+    'Stop the chemical service and follow the product’s safety directions when intense burning occurs',
+    'Pause the chemical service and continue at lower strength if intense burning decreases quickly',
+    'Remove chemical product only from the burning area and allow unaffected sections to finish processing',
+    'Shorten the chemical processing time but continue if the client says the burning becomes tolerable',
+  )},
+  'CS-017': {options:o(
+    'pH matters because acidity and alkalinity can affect hair structure and chemical-product action',
+    'pH matters because acidity and alkalinity primarily determine developer strength rather than hair structure',
+    'pH matters because acidity and alkalinity determine porosity while product action remains unchanged',
+    'pH matters because acidity and alkalinity determine processing speed regardless of the hair condition',
+  )},
+  'CS-018': {options:o(
+    'Investigate chemical history and verify compatibility through testing and manufacturer guidance before proceeding',
+    'Use a lower-strength chemical product first because reduced strength usually resolves compatibility concerns',
+    'Test the planned chemical product on one section and proceed if no immediate incompatibility appears',
+    'Select the chemical product from current hair condition because old chemistry matters only if residue remains',
+  )},
+  'CS-020': {options:o(
+    'The waving solution reduces appropriate side bonds so hair can assume the rod shape',
+    'The waving solution reforms appropriate side bonds so hair is stabilized before neutralization',
+    'The waving solution temporarily breaks hydrogen bonds so hair can assume the rod shape',
+    'The waving solution opens the cuticle without altering side bonds so hair can assume the rod shape',
+  )},
+  'CS-022': {options:o(
+    'Follow the waving product procedure for completing processing, rinsing, and neutralization',
+    'Continue waving processing briefly after the desired test curl to strengthen the finished curl',
+    'Rinse the waving product and reassess before deciding whether neutralization is still required',
+    'Remove selected rods after rinsing and continue processing only areas where the test curl appears weaker',
+  )},
+  'CS-023': {options:o(
+    'Reduce curl by chemically altering the hair structure',
+    'Reduce curl by temporarily reshaping hydrogen bonds without changing hair structure',
+    'Reduce curl by removing pigment and softening the hair structure',
+    'Reduce curl by coating the hair surface so the natural curl appears straighter',
+  )},
+  'CS-024': {options:o(
+    'Identify the previous relaxer chemistry and verify compatibility before selecting another texture product',
+    'Select a mild relaxer first and identify the previous relaxer chemistry only if the strand test fails',
+    'Base the next relaxer on current elasticity because previous relaxer chemistry matters mainly for damaged hair',
+    'Use a different relaxer chemistry at reduced strength to lower the risk created by unknown prior chemistry',
+  )},
+  'CS-025': {options:o(
+    'Reassess both chemical services, verify history, and test before deciding whether either service is appropriate',
+    'Perform the milder chemical service first and postpone the second only if the hair loses more integrity',
+    'Use reduced-strength versions of both chemical services and separate them with conditioning during the visit',
+    'Prioritize the color service because porosity affects color more directly than it affects texture restructuring',
+  )},
+  'CS-026': {options:o(
+    'Use the complementary-color relationship to neutralize the unwanted orange tone',
+    'Use an adjacent color on the color wheel to soften the unwanted orange tone',
+    'Use a warmer version of the target color to blend the unwanted orange tone',
+    'Use the same orange tonal family at a lower intensity to dilute the unwanted tone',
+  )},
+  'CS-027': {options:o(
+    'Use a violet tonal family to neutralize the exposed yellow tone',
+    'Use a blue tonal family to neutralize the exposed yellow tone',
+    'Use a green tonal family to neutralize the exposed yellow tone',
+    'Use an orange tonal family to neutralize the exposed yellow tone',
+  )},
+  'CS-028': {options:o(
+    'Use a blue tonal family to neutralize the unwanted orange tone',
+    'Use a violet tonal family to neutralize the unwanted orange tone',
+    'Use a green tonal family to neutralize the unwanted orange tone',
+    'Use a red tonal family to neutralize the unwanted orange tone',
+  )},
+  'CS-029': {options:o(
+    'Use a green tonal family to neutralize the unwanted red tone',
+    'Use a blue tonal family to neutralize the unwanted red tone',
+    'Use a violet tonal family to neutralize the unwanted red tone',
+    'Use an orange tonal family to neutralize the unwanted red tone',
+  )},
+  'CS-030': {options:o(
+    'Choose developer from manufacturer directions, desired result, and analyzed hair condition',
+    'Choose developer from desired lift and natural level first, then adjust processing time for hair condition',
+    'Choose developer from hair resistance and desired result, using manufacturer directions mainly for mixing ratio',
+    'Choose developer from target level and processing speed, then reduce strength only if damage is visible',
+  )},
+  'CS-031': {options:o(
+    'Protect hair integrity and safely terminate or modify lightening when the strand shows serious damage',
+    'Continue lightening until the target tone is reached if the damaged strand has not actually broken',
+    'Reduce lightening time but continue because stopping early can leave the target tone uneven',
+    'Add a weaker lightener to the damaged strand so processing can continue with less stress',
+  )},
+  'CS-033': {options:o(
+    'Treat the prior metallic or compound color history as uncertain and perform compatibility analysis or testing',
+    'Assume oxidative color unless a strand test shows an obvious reaction to the planned chemical service',
+    'Use a mild non-lightening formula because metallic or compound color matters mainly when lifting',
+    'Proceed with a conservative chemical formula if the current hair condition appears strong and evenly porous',
+  )},
+  'CS-036': {options:o(
+    'Postpone the permanent-wave service until the scalp abrasions are appropriately resolved',
+    'Protect scalp abrasions with barrier product and perform the permanent-wave service with reduced strength',
+    'Avoid solution directly on scalp abrasions but perform the permanent-wave service on surrounding hair',
+    'Perform a sensitivity test over an unaffected area before deciding whether the permanent-wave service can continue',
+  )},
+  'CS-037': {options:o(
+    'Postpone or avoid the relaxer service while visible scalp irritation is present',
+    'Apply protective base over scalp irritation and perform the relaxer service with reduced processing time',
+    'Avoid relaxer directly on the irritated area but process unaffected sections with the planned formula',
+    'Use a milder relaxer on the irritated scalp because reduced strength lowers the contraindication risk',
+  )},
+  'CS-038': {options:o(
+    'Avoid unnecessary relaxer overlap on previously relaxed hair to limit repeated chemical exposure',
+    'Limit relaxer overlap mainly because previously relaxed hair processes more slowly than new growth',
+    'Allow relaxer overlap when the same relaxer chemistry is used and prior hair remains strong',
+    'Control relaxer overlap mainly to protect the scalp rather than to protect previously processed hair',
+  )},
+  'CS-039': {options:o(
+    'Identify prior relaxer chemistry because incompatible relaxer systems can cause severe hair damage',
+    'Identify prior relaxer chemistry because different systems mainly require different processing times',
+    'Identify prior relaxer chemistry mainly to select the correct neutralizer after the new service',
+    'Identify prior relaxer chemistry only when the previous service is recent enough to leave active residue',
+  )},
+  'CS-040': {options:o(
+    'Distribute neutralizer as directed so altered bonds reform throughout the processed hair',
+    'Distribute neutralizer as directed mainly to remove waving solution from all processed hair',
+    'Distribute neutralizer as directed so curl size can be tightened in sections that processed weakly',
+    'Distribute neutralizer as directed mainly to return the cuticle to its pre-service condition',
+  )},
+  'CS-041': {options:o(
+    'Follow manufacturer processing directions rather than extending chemical timing at the client’s request',
+    'Extend chemical timing only if frequent strand checks show the hair remains strong',
+    'Extend chemical timing at lower temperature because reduced heat offsets extra processing time',
+    'Extend chemical timing slightly if the client accepts the risk and the target result still has not developed',
+  )},
+  'CS-042': {options:o(
+    'Follow the manufacturer’s directions for that chemical product within applicable safety rules',
+    'Follow the shop’s standard chemical-service procedure when it is more conservative than the manufacturer’s directions',
+    'Follow the barber’s usual timing when the same chemical category has produced reliable results before',
+    'Follow the general rule of thumb when it matches the active ingredient used by the manufacturer',
+  )},
+  'CS-043': {options:o(
+    'Follow the chemical product’s first-aid directions and applicable emergency procedures immediately',
+    'Rinse the eye briefly and resume the service if discomfort resolves and vision appears normal',
+    'Neutralize the chemical exposure with a compatible salon product before beginning first-aid steps',
+    'Cover the eye and remove the remaining product from the hair before beginning product-specific first aid',
+  )},
+  'CS-044': {options:o(
+    'Stop chemical exposure and follow the product’s removal and first-aid directions',
+    'Remove product only from irritated skin and continue processing unaffected hair to the planned time',
+    'Apply a soothing barrier over the irritated skin and continue if the irritation does not spread',
+    'Shorten total processing time while leaving the chemical product in place long enough to reach the service goal',
+  )},
+  'CS-046': {options:o(
+    'Reassess the strong chemical service because gummy, breaking hair shows compromised integrity',
+    'Use a reduced-strength chemical service because gummy hair indicates high elasticity rather than damage',
+    'Shorten chemical processing because gummy, breaking hair mainly indicates high porosity',
+    'Dry and retest the hair because wet-hair stretch is not useful for judging chemical-service integrity',
+  )},
+  'CS-047': {options:o(
+    'Combine chemical services only after hair/scalp analysis, history, compatibility checks, testing, directions, and sequencing',
+    'Combine chemical services when product directions permit both, then monitor hair condition after the first service',
+    'Combine chemical services when the milder service is performed first and the second formula is reduced in strength',
+    'Combine chemical services when the client accepts the plan and current elasticity appears strong before starting',
+  )},
+  'CS-049': {options:o(
+    'Perform a new analysis and appropriate current testing before reconsidering the chemical service',
+    'Repeat the old strand-test procedure and proceed if the new result is only slightly better',
+    'Use the old test as the baseline and reduce chemical strength without repeating full analysis',
+    'Begin on a small service area because improved condition over time makes formal retesting less important',
+  )},
+  'CS-050': {options:o(
+    'Clarify history, analyze integrity and porosity, verify compatibility, test, then modify or decline chemical services as indicated',
+    'Prioritize the lighter color goal, use a mild formula, then decide on curl reduction from the hair’s response',
+    'Perform curl reduction first to even texture, then formulate the cooler color after reassessing porosity',
+    'Use conservative strengths for both services and separate them with conditioning because both goals are requested',
+  )},
+  'HCG-002': {options:o(
+    'Recommend a product suited to the dry hair condition and service goal instead of the strongly drying option',
+    'Use the strongly drying product in a smaller amount so the requested product remains part of the service',
+    'Use the strongly drying product only on less-dry areas and condition the driest sections separately',
+    'Use the strongly drying product as requested, then add a heavier conditioning finish to offset dryness',
+  )},
+  'HCG-010': {options:o(
+    'Avoid massage over the inflamed scalp area and reassess whether the scalp service should continue',
+    'Use light massage over the inflamed area because reduced pressure is less likely to aggravate it',
+    'Massage around the inflamed area first and include it only if the client reports no discomfort',
+    'Apply a soothing scalp product before massage so lower pressure can be used over the inflamed area',
+  )},
+  'HCG-011': {options:o(
+    'Overall haircut shape is controlled by sections, elevation, overdirection, guidelines, and cutting line working together',
+    'Overall haircut shape is controlled mainly by density, texture, and growth pattern after the cutting line is established',
+    'Overall haircut shape is controlled mainly by head shape and perimeter design, with elevation affecting only interior weight',
+    'Overall haircut shape is controlled mainly by tool choice and section width when the guideline remains consistent',
+  )},
+  'HCG-014': {options:o(
+    'Skin tension creates a smooth surface that supports controlled razor movement during the neck shave',
+    'Skin tension increases blade exposure so the razor can cut closer during the neck shave',
+    'Skin tension changes the shaving angle enough to reduce the importance of growth direction',
+    'Skin tension keeps the neck fixed so the barber does not need to reposition the client',
+  )},
+  'HCG-015': {options:o(
+    'Avoid shaving over the irritated lesion and follow appropriate contraindication or referral principles',
+    'Shave around the irritated lesion with a fresh blade while preserving the planned neckline',
+    'Apply warm lather to the irritated lesion and reassess whether it can be shaved after softening',
+    'Use shorter razor strokes and lighter pressure directly over the irritated lesion',
+  )},
+  'HCG-018': {options:o(
+    'Reduce blow-dryer heat, increase distance or movement, and protect the client from excessive temperature',
+    'Keep the same blow-dryer heat but increase airflow and movement so the section dries faster',
+    'Reduce airflow while moving the blow dryer farther away so the shape remains controlled',
+    'Pause the blow dryer until the scalp cools, then resume at the same heat with shorter passes',
+  )},
+  'HCG-022': {options:o(
+    'Reduce braid tension and reassess the style when the client reports pain',
+    'Reduce braid tension only on the painful section and keep completed sections unchanged',
+    'Pause the braid service and resume at the same tension if the pain decreases after a few minutes',
+    'Change the braid pattern while keeping similar tension so pressure is distributed differently',
+  )},
+  'HCG-024': {options:o(
+    'Choose a safer enhancement method or postpone it when the planned attachment creates excessive tension on fragile hair',
+    'Use the planned enhancement method with lower tension and smaller attachment sections on fragile hair',
+    'Use the planned enhancement method only on stronger hair areas and normal tension there',
+    'Add a protective product before the enhancement so fragile hair can tolerate the planned attachment tension',
+  )},
+  'HCG-027': {options:o(
+    'Treat a thio-labeled product as a thio restructuring system with product-specific compatibility and procedure',
+    'Treat a thio-labeled product as a hydroxide system because both reduce curl through equivalent chemistry',
+    'Treat a thio-labeled product as a keratin smoothing system when the desired result is straighter hair',
+    'Treat a thio-labeled product as an alkaline waving system because both permanently alter texture',
+  )},
+  'HCG-030': {options:o(
+    'Monitor foil placement and processing to control lightening, protect integrity, and prevent unintended exposure',
+    'Monitor foil processing time first because correct timing compensates for minor placement overlap',
+    'Monitor foil temperature first because consistent heat indicates surrounding hair is protected',
+    'Monitor the lightening level first because placement matters less once the foil is closed',
+  )},
+  'HCG-033': {options:o(
+    'Check thio and hydroxide compatibility because combining incompatible restructuring systems can cause severe damage',
+    'Check thio and hydroxide compatibility mainly because the two systems process at different speeds',
+    'Check thio and hydroxide compatibility only when current elasticity is poor or breakage is already visible',
+    'Check thio and hydroxide compatibility mainly to determine which neutralizing procedure follows the next service',
+  )},
+  'HCG-034': {options:o(
+    'Control keratin-service temperature and processing from manufacturer directions and the client’s hair condition',
+    'Control keratin-service temperature mainly from density while following manufacturer timing directions',
+    'Control keratin-service temperature from desired smoothness and use a standard procedure across products',
+    'Control keratin-service processing from the manufacturer but choose heat from the barber’s usual smoothing method',
+  )},
+  'HCG-036': {options:o(
+    'Follow the acid-wave product’s specific procedure, processing, testing, and safety directions',
+    'Follow the acid-wave timing but use the same wrapping and testing procedure as an alkaline wave',
+    'Follow manufacturer processing time but use the barber’s standard preliminary-test procedure',
+    'Follow a lower-heat, shorter-processing approach because acid-wave category determines the key safety steps',
+  )},
+  'HCG-037': {options:o(
+    'Follow the non-thio waving product’s own directions, testing, timing, and safety requirements',
+    'Follow non-thio timing but use the same compatibility assumptions as a thio waving product',
+    'Follow non-thio processing directions but use the barber’s standard preliminary-test procedure',
+    'Follow the same wrapping and neutralizing procedure as other waves and adjust only solution strength',
+  )},
+  'HCG-039': {options:o(
+    'Correct leaking foil placement promptly and protect unintended hair from chemical exposure',
+    'Reduce lightener inside the leaking foil but leave escaped product until the planned processing check',
+    'Move escaped lightener back into the foil and extend processing so the selected strand still reaches target',
+    'Reapply the foil more tightly and continue processing any neighboring hair already touched by lightener',
+  )},
+  'HCG-040': {options:o(
+    'Modify or postpone the chemical service when a required preliminary test gives an unfavorable result',
+    'Repeat the preliminary test with less product and proceed if the second result appears milder',
+    'Modify formula strength or timing and continue the chemical service if the client accepts the risk',
+    'Postpone only the tested area and continue the original chemical plan on the remaining hair',
+  )},
+};
+
+const finalOverrides: Record<string, Override> = {
+  'HC-012': {options:o(
+    'Blend through the demarcation area so the two established lengths transition smoothly',
+    'Blend only above the demarcation area so the lower established length stays unchanged',
+    'Blend only below the demarcation area so the upper established length stays unchanged',
+    'Blend around the demarcation area without connecting the two established lengths',
+  )},
+  'HC-018': {options:o(
+    'Do not perform the affected service over the open inflamed lesion and follow appropriate referral procedures',
+    'Perform the service around the open inflamed lesion while avoiding direct contact with the affected area',
+    'Perform the service over the open inflamed lesion with reduced pressure if the client reports no pain',
+    'Prepare and cover the open inflamed lesion, then perform the service if the area appears stable',
+  )},
+  'HC-020': {options:o(
+    'Evaluate hair condition, select suitable heat, and control thermal-tool contact throughout the service',
+    'Evaluate hair condition, select higher heat, and shorten thermal-tool contact throughout the service',
+    'Evaluate hair density, select suitable heat, and keep thermal-tool contact consistent throughout the service',
+    'Evaluate desired style, select suitable heat, and adjust thermal-tool contact only if visible stress appears',
+  )},
+  'HC-023': {options:o(
+    'Explain how density and growth pattern affect the haircut result and agree on a realistic adaptation',
+    'Explain how density affects the haircut result, then keep the requested shape and correct growth pattern during styling',
+    'Explain how growth pattern affects the haircut result, then keep the requested density-dependent shape unchanged',
+    'Explain the haircut limitations, then reproduce the requested shape and use product to compensate for density and growth pattern',
+  )},
+  'HC-024': {options:o(
+    'A successful taper blend shows smooth length transition with no unintended line or heavy spot',
+    'A successful taper blend shows even guard spacing even if a faint length line remains',
+    'A successful taper blend shows a smooth front view even if one side has a heavier transition',
+    'A successful taper blend shows consistent perimeter length even if the interior transition stays visible',
+  )},
+  'HC-028': {options:o(
+    'Overdirect hair away from the area where additional length should remain',
+    'Overdirect hair toward the area where additional length should remain',
+    'Keep hair in natural fall while raising elevation where additional length should remain',
+    'Keep hair in natural fall while lowering elevation away from the area where additional length should remain',
+  )},
+  'HC-039': {options:o(
+    'Stop the scalp service and reassess whether the irritated area makes the service inappropriate',
+    'Continue the scalp service around the irritated area and reassess only if irritation increases',
+    'Pause the scalp service, soothe the irritated area, and continue if discomfort decreases',
+    'Continue scalp preparation but omit massage over the irritated area until later in the service',
+  )},
+  'HC-044': {options:o(
+    'Base the razor-cutting decision on hair condition, desired result, and whether the fragile porous hair can tolerate the technique',
+    'Base the razor-cutting decision on desired result and section size, using lighter pressure on the fragile porous hair',
+    'Base the razor-cutting decision on texture and density, assuming fragile porous hair can tolerate the technique if softness is desired',
+    'Base the razor-cutting decision on razor angle and section width, then reassess fragile porous hair only if fraying increases',
+  )},
+  'HC-045': {options:o(
+    'Reassess razor technique and choose a safer cutting method for the fragile hair condition',
+    'Keep the razor technique but reduce section size to lower stress on the fragile hair condition',
+    'Keep the razor technique but add moisture to increase flexibility in the fragile hair condition',
+    'Keep the razor technique but use lighter pressure because the fragile hair condition changes only force tolerance',
+  )},
+  'HC-048': {options:o(
+    'Inspect scalp condition, irregularities, and contraindications before beginning the head shave',
+    'Inspect scalp condition and growth direction before beginning the head shave, checking contraindications only where the razor changes direction',
+    'Inspect scalp contours and desired smoothness before beginning the head shave, checking skin condition during preparation',
+    'Inspect scalp growth pattern before beginning the head shave, then assess irregularities as each section is shaved',
+  )},
+  'HC-049': {options:o(
+    'Avoid shaving over the raised lesion and follow appropriate contraindication or referral procedures',
+    'Avoid direct pressure over the raised lesion but complete the head shave around the area',
+    'Shave around the raised lesion with a fresh blade and reduced pressure if the client reports no tenderness',
+    'Prepare the raised lesion with warm lather and reassess whether shaving over the area is appropriate',
+  )},
+  'CS-015': {options:o(
+    'Stop the chemical service when intense burning occurs and follow the product safety directions',
+    'Stop application on the burning area but continue chemical processing on unaffected sections',
+    'Pause the chemical service when intense burning occurs and resume at reduced strength if symptoms decrease',
+    'Shorten chemical processing when intense burning occurs and continue if the client reports improved comfort',
+  )},
+  'CS-017': {options:o(
+    'pH matters because acidity and alkalinity can affect hair structure and chemical-product action',
+    'pH matters because acidity and alkalinity mainly affect processing speed rather than hair structure',
+    'pH matters because acidity and alkalinity mainly affect porosity while chemical-product action stays the same',
+    'pH matters because acidity and alkalinity mainly affect developer choice rather than chemical-product action',
+  )},
+  'CS-018': {options:o(
+    'Investigate chemical history and verify compatibility with testing and manufacturer guidance before proceeding',
+    'Investigate chemical history and proceed with reduced strength before full compatibility testing',
+    'Investigate current hair condition and use one strand test as sufficient compatibility verification',
+    'Investigate chemical history only if visible residue remains from the previous service',
+  )},
+  'CS-025': {options:o(
+    'Reassess both chemical services, verify chemical history, and test before deciding whether either service is appropriate',
+    'Perform the milder chemical service first and reassess before deciding whether the second service is appropriate',
+    'Use reduced-strength chemical services and separate them with conditioning before completing both in one visit',
+    'Prioritize the color chemical service first because porosity affects color more directly than texture restructuring',
+  )},
+  'CS-031': {options:o(
+    'Protect hair integrity and safely terminate or modify lightening when the strand shows serious damage',
+    'Protect the target tone by continuing lightening with shorter timing while the damaged strand remains intact',
+    'Protect evenness by reducing lightening time but continuing until all sections reach a similar level',
+    'Protect hair integrity by switching to weaker lightener and continuing the damaged strand to the target tone',
+  )},
+  'CS-033': {options:o(
+    'Treat the unknown prior metallic or compound color as uncertain and perform compatibility analysis or testing',
+    'Treat the unknown prior color as oxidative unless a compatibility test shows an abnormal reaction',
+    'Treat the unknown prior color as low risk when current hair condition appears strong and evenly porous',
+    'Treat the unknown prior color as relevant only if the new chemical service includes lightening',
+  )},
+  'CS-037': {options:o(
+    'Postpone or avoid the relaxer service while visible scalp irritation is present',
+    'Perform the relaxer service away from visible scalp irritation while protecting the affected area',
+    'Perform the relaxer service with reduced strength and shorter timing when visible scalp irritation is present',
+    'Apply protective base over visible scalp irritation and perform the relaxer service on remaining areas',
+  )},
+  'CS-041': {options:o(
+    'Follow manufacturer processing directions and do not extend chemical timing beyond those directions at the client’s request',
+    'Follow manufacturer processing directions but extend chemical timing when frequent strand checks show the hair remains strong',
+    'Follow manufacturer processing directions for application but extend chemical timing at lower temperature for a stronger result',
+    'Follow manufacturer processing directions for product use but extend chemical timing when the target result has not developed',
+  )},
+  'CS-043': {options:o(
+    'Follow the chemical product’s first-aid directions and applicable emergency procedures immediately after eye exposure',
+    'Rinse after chemical eye exposure and resume service if discomfort resolves and vision appears normal',
+    'Neutralize chemical eye exposure with a compatible salon product before following first-aid directions',
+    'Cover the eye after chemical exposure and finish removing product from the hair before first-aid response',
+  )},
+  'CS-044': {options:o(
+    'Stop chemical exposure and follow the product’s removal and first-aid directions when skin irritation occurs',
+    'Stop chemical exposure only on irritated skin while allowing chemical processing to continue on unaffected hair',
+    'Stop chemical exposure briefly, apply a soothing product, and continue processing if the skin irritation decreases',
+    'Stop chemical exposure on the irritated area, shorten processing time, and continue the service on unaffected hair',
+  )},
+  'CS-049': {options:o(
+    'Perform a current hair analysis and appropriate new testing before reconsidering the chemical service',
+    'Perform a current strand test and reconsider the chemical service if the result is slightly better than the previous test',
+    'Perform a current hair check using the previous test as a baseline, then reduce chemical strength without full retesting',
+    'Perform a current small-area chemical trial because improved hair condition makes formal retesting less necessary',
+  )},
+  'CS-050': {options:o(
+    'Clarify chemical history, analyze integrity and porosity, verify compatibility, test, and modify or decline services based on results',
+    'Clarify chemical history, prioritize the lighter color goal, and decide on curl reduction from the hair response',
+    'Analyze integrity and porosity, perform curl reduction first, and formulate cooler color after reassessing condition',
+    'Verify compatibility, use conservative strengths for both services, and separate the chemical services with conditioning',
+  )},
+  'HCG-015': {options:o(
+    'Avoid shaving over the irritated neckline lesion and follow appropriate contraindication or referral principles',
+    'Avoid direct pressure over the irritated neckline lesion but shave around it with a fresh blade',
+    'Prepare the irritated neckline lesion with warm lather and reassess whether shaving can proceed',
+    'Use shorter razor strokes and lighter pressure over the irritated neckline lesion if the client reports no pain',
+  )},
+  'HCG-018': {options:o(
+    'Reduce blow-dryer heat, increase distance or movement, and protect the client from excessive temperature',
+    'Keep blow-dryer heat the same but increase airflow and movement to reduce exposure time',
+    'Reduce blow-dryer airflow while increasing distance so the style remains controlled at the same heat',
+    'Pause blow-dryer use until the scalp cools, then resume at the same heat with shorter passes',
+  )},
+  'HCG-039': {options:o(
+    'Correct leaking foil placement promptly and protect unintended hair from chemical exposure',
+    'Correct leaking foil placement after reducing product inside the foil while leaving escaped lightener until the next check',
+    'Correct leaking foil placement by moving escaped lightener back into the foil and extending processing',
+    'Correct leaking foil placement by reapplying the foil more tightly while continuing to process contacted neighboring hair',
+  )},
+};
+
+const phase2CCalibration: Record<string, Override> = {
+  'HC-047': {options:o(
+    'Evaluate the hair and scalp, attachment area, desired result, and whether the planned enhancement method is suitable',
+    'Choose the enhancement method from the desired result first, then inspect the attachment area during placement',
+    'Use the least permanent attachment method when scalp condition is uncertain, then reassess after installation',
+    'Select the attachment method from hair density alone when the scalp shows no obvious contraindication',
+  )},
+  'HCG-026': {
+    prompt:'A service plan calls for a hydroxide relaxer. Which product category matches that plan?',
+    options:o(
+      'Hydroxide relaxing system',
+      'Thio relaxing system',
+      'Keratin smoothing system',
+      'Non-thio waving system',
+    ),
+  },
+  'HCG-027': {
+    prompt:'A product label identifies a thio restructuring system. Which category should the barber recognize?',
+    options:o(
+      'Thio relaxing/restructuring system',
+      'Hydroxide relaxing system',
+      'Keratin smoothing system',
+      'Alkaline waving system',
+    ),
+  },
+  'HCG-035': {
+    difficulty:'medium',
+    prompt:'A waving product is identified as alkaline. Which service category does it belong to?',
+    options:o(
+      'Alkaline chemical waving/texturizing',
+      'Acid chemical waving/texturizing',
+      'Thio relaxing/restructuring',
+      'Hydroxide relaxing/restructuring',
+    ),
+  },
+  'HCG-040': {options:o(
+    'Modify or postpone the planned chemical service according to the unfavorable preliminary-test result and safety guidance',
+    'Modify the formula strength, repeat the preliminary test, and proceed with the planned service if the second result appears improved',
+    'Postpone only the tested section and continue the planned chemical service on the remaining hair if those sections appear unaffected',
+    'Repeat the preliminary test after changing the planned processing time and continue the chemical service if the result is less severe',
+  )},
+};
+
+export function applyHairCareSecondPass(question: HairCareQuestion): HairCareQuestion {
+  return {
+    ...question,
+    ...(overrides[question.id] ?? {}),
+    ...(finalOverrides[question.id] ?? {}),
+    ...(phase2CCalibration[question.id] ?? {}),
+  };
+}
