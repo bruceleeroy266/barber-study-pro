@@ -13,13 +13,6 @@ type CoachingItem = {
   isScored: boolean
 }
 
-const coachingPrompts: Record<string, string[]> = {
-  scientific_concepts: ['Which scientific principle applies here?', 'What safety or biological process should you recall?', 'Explain the underlying concept without choosing an option.'],
-  implements_equipment: ['What is the main purpose of the tool?', 'Which usage or sanitation precaution applies?', 'Talk through the safest professional technique.'],
-  hair_care_services: ['Which hair characteristic or service step matters?', 'What could go wrong if the procedure is incorrect?', 'Explain the safest sequence of service steps.'],
-  facial_hair_skin_care_services: ['Which skin or facial-hair concern matters?', 'What does client safety require here?', 'Describe the safe service principle in your own words.'],
-}
-
 export const dynamic = 'force-dynamic'
 
 type ExamAttemptSummary = {
