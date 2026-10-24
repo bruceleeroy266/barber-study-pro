@@ -51,6 +51,8 @@ export default async function InstructorExamReadyResults({
     remainingSeconds: number; lastAnsweredPosition: number | null
   }
 
+  const { data: currentQuestionPosition } = live ? await supabase.rpc('get_assigned_student_exam_live_position', { p_student_id: studentId }) : { data: null }
+
   const { data: liveReviewData } = await supabase.rpc('get_assigned_student_exam_live_review', { p_student_id: studentId })
   const reviewItems = live && liveReviewData && typeof liveReviewData === 'object' && !Array.isArray(liveReviewData)
     ? (liveReviewData as { items?: Array<{ position:number;domain:string;prompt:string;selectedOption:string|null;selectedAnswer:string|null;isCorrect:boolean|null;flagged:boolean }> }).items
@@ -81,7 +83,7 @@ export default async function InstructorExamReadyResults({
             <p>Exam status: <strong>{live.status}</strong></p>
             <p>Answered: <strong>{live.answeredCount}/{live.totalQuestions}</strong></p>
             <p>Time remaining: <strong>{Math.floor(live.remainingSeconds / 60)}m {live.remainingSeconds % 60}s</strong></p>
-            <p className="sm:col-span-3 text-sm text-gray-400">Last answered question: {live.lastAnsweredPosition ?? 'None yet'}. This is not necessarily the question currently on screen. No live answer keys are shown.</p>
+            <p className="sm:col-span-3 text-sm text-gray-200">Current question being viewed: <strong>{currentQuestionPosition ?? 'Not reported yet'}</strong> · Last answered question: {live.lastAnsweredPosition ?? 'None yet'}.</p>
           </div>
         ) : <p className="text-sm text-gray-400">No active exam. Finalized exam results appear below.</p>}
       </section>
