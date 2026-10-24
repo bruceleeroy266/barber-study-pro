@@ -126,7 +126,7 @@ export const chapter15QuizQuestions: QuizQuestion[] = chapter15PremiumQuizQuesti
 export const chapter16QuizQuestions: QuizQuestion[] = chapter16PremiumQuizQuestions
 
 // ───────────────────────────────────────────────
-// CHAPTER 17: Barbershop Management — PREMIUM QUIZ
+// CHAPTER 17: Chemical Texture Services — PREMIUM QUIZ
 // ───────────────────────────────────────────────
 export const chapter17QuizQuestions: QuizQuestion[] = chapter17PremiumQuizQuestions
 
