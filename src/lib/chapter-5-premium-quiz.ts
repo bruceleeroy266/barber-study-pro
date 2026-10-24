@@ -31,7 +31,7 @@ export const chapter5PremiumQuizQuestions: QuizQuestion[] = [
   {
     id: 'qq-5-002',
     quiz_id: 'quiz-5',
-    question: 'According to Milady Chapter 5, what length range do most haircutting combs measure?',
+    question: 'According to the Chapter 5 source, what length range do most haircutting combs measure?',
     answer_a: '5-6 inches',
     answer_b: '7-8 inches',
     answer_c: '9-10 inches',
@@ -349,7 +349,7 @@ export const chapter5PremiumQuizQuestions: QuizQuestion[] = [
   {
     id: 'qq-5-026',
     quiz_id: 'quiz-5',
-    question: 'How do concave (hollow-ground) and wedge-grind straight razors differ in blade shape?',
+    question: 'How do hollow-ground and wedge-grind straight razors differ in blade shape?',
     answer_a: 'Hollow-ground is heavier; wedge is lighter',
     answer_b: 'Hollow-ground is for coarse beards; wedge is for fine beards',
     answer_c: 'Concave grind has hollowed blade sides; wedge grind is not hollowed and forms an angle at the edge',
