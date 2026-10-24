@@ -1,5 +1,5 @@
 import LiveExamReview from '@/components/instructor/LiveExamReview'
-import CoachingSearch from '@/components/instructor/CoachingSearch'
+import AttemptHistoryReview from '@/components/instructor/AttemptHistoryReview'
 import { createClient } from '@/lib/supabase-server'
 import { redirect, notFound } from 'next/navigation'
 
@@ -28,12 +28,6 @@ type ExamAttemptSummary = {
   domainBreakdown: Record<string, { correct: number; total: number; percentage: number }>
 }
 
-const labels: Record<string, string> = {
-  scientific_concepts: 'Scientific Concepts',
-  implements_equipment: 'Implements & Equipment',
-  hair_care_services: 'Hair Care Services',
-  facial_hair_skin_care_services: 'Facial Hair & Skin Care',
-}
 
 export default async function InstructorExamReadyResults({
   params,
@@ -93,20 +87,7 @@ export default async function InstructorExamReadyResults({
       </section>
       {reviewItems && <LiveExamReview items={reviewItems} />}
       <p className="text-sm text-gray-400">Instructor coaching is available only after a student completes an exam. Do not share answer keys during an active attempt. Hints below are general prompts and require academic review before broad use.</p>
-      {attempts.length === 0 && <p>No completed practice exams recorded.</p>}
-      {attempts.map((attempt) => (
-        <section key={attempt.attemptId} className="min-w-0 space-y-3 overflow-hidden rounded-lg border p-3 sm:p-5">
-          <h2 className="font-semibold">Attempt {attempt.attemptNumber}: {attempt.percentage ?? '—'}%</h2>
-          <p className="text-sm">Scored: {attempt.scoredCorrect ?? '—'} / {attempt.scoredTotal} · {attempt.passed ? 'Passing' : 'Review recommended'} · {attempt.status}</p>
-          <p className="text-xs text-gray-400">{attempt.completedAt ? new Date(attempt.completedAt).toLocaleDateString() : 'Date unavailable'}</p>
-          <ul className="space-y-1">
-            {Object.entries(attempt.domainBreakdown ?? {}).map(([domain, score]) => (
-              <li key={domain} className="text-sm">{labels[domain] ?? domain}: {score.correct}/{score.total} ({score.percentage}%)</li>
-            ))}
-          </ul>
-        </section>
-      ))}
-      <CoachingSearch attempts={coaching} />
+      <AttemptHistoryReview attempts={attempts} coaching={coaching} />
     </main>
   )
 }
