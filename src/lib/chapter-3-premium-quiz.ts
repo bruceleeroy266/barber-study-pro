@@ -338,7 +338,7 @@ export const chapter3PremiumQuizQuestions: QuizQuestion[] = [
     answer_c: 'Carpal tunnel syndrome; neutral wrists, ergonomic tools, stretching at intervals, and avoiding tight grips',
     answer_d: 'A shoulder problem; only shoulder exercises will help',
     correct_answer: 'c',
-    explanation: 'Carpal tunnel syndrome is one possible cause of hand numbness and wrist symptoms after repetitive work; these symptoms alone do not establish a diagnosis. Ergonomic prevention includes neutral wrists, suitable tools, avoiding tight grips, and regular breaks or stretch intervals. Persistent numbness or pain warrants medical evaluation.',
+    explanation: 'Carpal tunnel syndrome is one possible cause of hand numbness and wrist symptoms after repetitive work; these symptoms alone cannot confirm that condition. Ergonomic prevention includes neutral wrists, suitable tools, avoiding tight grips, and regular breaks or stretch intervals. Persistent numbness or pain warrants medical evaluation.',
     difficulty: 'hard',
     learningObjective: 'LO-3-03',
     order_index: 41,
