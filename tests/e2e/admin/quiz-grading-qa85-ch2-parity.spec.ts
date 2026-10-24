@@ -165,7 +165,7 @@ test('QA-85: authenticated Chapter 2 School A/B score and dashboard parity (LOCA
     await instructorPage.locator('button[type="submit"]').click()
     await instructorPage.waitForURL(/\/instructor(?:\/|$)/)
     await instructorPage.goto(`/instructor/student/${studentA}`)
-    await expect(instructorPage.getByText('100%', { exact: true }).first()).toBeVisible()
+    await expect(instructorPage.getByText('100%', { exact: true }).filter({ visible: true }).first()).toBeVisible()
     await instructorContext.close()
   } finally {
     // This entire test runs against a disposable local database only.
