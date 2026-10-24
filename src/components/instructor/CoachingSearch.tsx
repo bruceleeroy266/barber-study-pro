@@ -22,7 +22,7 @@ export default function CoachingSearch({attempts,selectedAttemptId}:{attempts:At
  const filtered=questions.filter(q=>{
   const needle=query.trim().toLowerCase()
   return (domain==='all'||q.domain===domain) &&
-   (answerStatus==='all' || (answerStatus==='answered' && Boolean(q.selectedOption)) || (answerStatus==='correct' && Boolean(q.selectedOption) && q.selectedOption.toLowerCase()===q.correctOption?.toLowerCase()) || (answerStatus==='missed' && Boolean(q.selectedOption) && q.selectedOption.toLowerCase()!==q.correctOption?.toLowerCase()) || (answerStatus==='unanswered' && !q.selectedOption)) &&
+   (answerStatus==='all' || (answerStatus==='answered' && Boolean(q.selectedOption)) || (answerStatus==='correct' && Boolean(q.selectedOption) && q.selectedOption?.toLowerCase()===q.correctOption?.toLowerCase()) || (answerStatus==='missed' && Boolean(q.selectedOption) && q.selectedOption?.toLowerCase()!==q.correctOption?.toLowerCase()) || (answerStatus==='unanswered' && !q.selectedOption)) &&
    (!needle || [q.position.toString(), 'q'+q.position, q.prompt,labels[q.domain]||q.domain].some(s=>s.toLowerCase().includes(needle)))
  })
  if (!questions.length) return null
