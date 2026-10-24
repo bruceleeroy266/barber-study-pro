@@ -171,14 +171,20 @@ export default function ExamShell() {
   // Report the question the student is viewing independently of saved answers.
   useEffect(() => {
     if (!attempt?.attemptId || attempt.status !== 'active' || view !== 'active') return
-    const controller = new AbortController()
     const timeout = window.setTimeout(() => {
-      void fetch(`/api/comprehensive-exam/attempts/${attempt.attemptId}/position`, {
-        method: 'PUT', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ position: currentPosition }), signal: controller.signal,
-      }).catch(() => {})
+      void (async () => {
+        try {
+          const response = await fetch(`/api/comprehensive-exam/attempts/${attempt.attemptId}/position`, {
+            method: 'PUT', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ position: currentPosition }),
+          })
+          if (!response.ok) console.warn('[ExamReady] Current question reporting failed', response.status)
+        } catch (error) {
+          console.warn('[ExamReady] Current question reporting unavailable', error)
+        }
+      })()
     }, 300)
-    return () => { window.clearTimeout(timeout); controller.abort() }
+    return () => window.clearTimeout(timeout)
   }, [attempt?.attemptId, attempt?.status, currentPosition, view])
 
   const currentItem = useMemo(
