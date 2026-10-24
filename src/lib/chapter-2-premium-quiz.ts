@@ -701,7 +701,7 @@ export const chapter2PremiumQuizQuestions: QuizQuestion[] = [
     answer_a: 'Recommend the expensive product to earn more commission',
     answer_b: 'Let the client decide without giving any recommendation',
     answer_c: 'Recommend the less expensive product that genuinely helps the client',
-    answer_d: 'Recommend both products and let the client choose what fits their budget',
+    answer_d: 'Recommend both products without explaining that the less expensive one works equally well',
     correct_answer: 'c',
     explanation: 'Ethical product recommendation means prioritizing client benefit over commission. Recommending unnecessary expensive products destroys trust.',
     difficulty: 'medium',

@@ -90,8 +90,25 @@ test('QA-85: authenticated Chapter 2 School A/B score and dashboard parity (LOCA
     // QA-20: score must originate from real browser answers, not only a seeded row.
     const questions = getLocalQuizQuestions('quiz-2')
     expect(questions).toHaveLength(48)
-    await page.goto('/dashboard/chapters/2')
-    await page.getByRole('button', { name: /^(Start Quiz|Retake Quiz)$/ }).click()
+    // A chapter navigation can paint the quiz button before client hydration.
+    // Confirm the click actually activated the quiz; retry only while idle.
+    const startChapterQuiz = async () => {
+      await page.goto('/dashboard/chapters/2')
+      const start = page.getByRole('button', { name: /^(Start Quiz|Retake Quiz)$/ })
+      const active = page.getByTestId('active-quiz-question')
+      for (let attempt = 0; attempt < 3; attempt++) {
+        if (await active.count() === 1) return
+        await expect(start).toBeVisible()
+        await start.click()
+        try {
+          await expect(active).toHaveCount(1, { timeout: 4000 })
+          return
+        } catch {
+          if (attempt === 2 || !(await start.isVisible())) throw new Error('Chapter 2 quiz did not activate after Retake Quiz click')
+        }
+      }
+    }
+    await startChapterQuiz()
     const used = new Set<string>()
     for (let index = 0; index < questions.length; index++) {
       // Only the active quiz question counts. The chapter page can contain
@@ -126,8 +143,7 @@ test('QA-85: authenticated Chapter 2 School A/B score and dashboard parity (LOCA
     expect(persistedProgress?.best_quiz_score).toBe(75)
     // QA-93: actual browser-based boundary retakes in disposable infrastructure.
     for (const target of [0, 48]) {
-      await page.goto('/dashboard/chapters/2')
-      await page.getByRole('button', { name: /^(Start Quiz|Retake Quiz)$/ }).click()
+      await startChapterQuiz()
       const seen = new Set<string>()
       for (let index = 0; index < questions.length; index++) {
         const activeQuestion = page.getByTestId('active-quiz-question')
