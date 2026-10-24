@@ -124,31 +124,37 @@ test('QA-85: authenticated Chapter 2 School A/B score and dashboard parity (LOCA
       .select('best_quiz_score').eq('user_id', studentA).eq('chapter_id', 'ch-2').single()
     expect(persistedProgressError).toBeNull()
     expect(persistedProgress?.best_quiz_score).toBe(75)
-    // QA-91 boundary and retake preservation checks using the same disposable student.
-    // A lower retake must not erase the established 75% best score.
-    const { data: zero, error: zeroError } = await root.from('quiz_attempts')
-      .insert({ user_id: studentA, quiz_id: 'quiz-2', score: 0, total_questions: 48,
-        percentage: 0, answers_json: {}, completed_at: new Date(Date.now() + 1000).toISOString() })
-      .select('id,score,total_questions,percentage').single()
-    expect(zeroError).toBeNull()
-    expect(zero).toMatchObject({ score: 0, total_questions: 48, percentage: 0 })
-    const { data: afterZero } = await root.from('student_progress')
-      .select('best_quiz_score').eq('user_id', studentA).eq('chapter_id', 'ch-2').single()
-    expect(afterZero?.best_quiz_score).toBe(75)
-
-    // A perfect retake is stored separately, while the best grade can advance to 100%.
-    const { data: perfect, error: perfectError } = await root.from('quiz_attempts')
-      .insert({ user_id: studentA, quiz_id: 'quiz-2', score: 48, total_questions: 48,
-        percentage: 100, answers_json: {}, completed_at: new Date(Date.now() + 2000).toISOString() })
-      .select('id,score,total_questions,percentage').single()
-    expect(perfectError).toBeNull()
-    expect(perfect).toMatchObject({ score: 48, total_questions: 48, percentage: 100 })
-    const { data: attempts, error: historyError } = await root.from('quiz_attempts')
-      .select('id,percentage').eq('user_id', studentA).eq('quiz_id', 'quiz-2')
-    expect(historyError).toBeNull()
-    expect(attempts?.map(item => item.id)).toEqual(expect.arrayContaining([submitted!.id, zero!.id, perfect!.id]))
-    // This fixture inserts attempts directly, not via the quiz app; verify stored
-    // boundary records without assuming direct inserts update best-score aggregates.
+    // QA-93: actual browser-based boundary retakes in disposable infrastructure.
+    for (const target of [0, 48]) {
+      await page.goto('/dashboard/chapters/2')
+      await page.getByRole('button', { name: /^(Start Quiz|Retake Quiz)$/ }).click()
+      const seen = new Set<string>()
+      for (let index = 0; index < questions.length; index++) {
+        const activeQuestion = page.getByTestId('active-quiz-question')
+        await expect(activeQuestion).toHaveCount(1)
+        const activeText = (await activeQuestion.textContent())?.trim()
+        const matches = questions.filter(item => !seen.has(item.id) && item.question.trim() === activeText)
+        expect(matches).toHaveLength(1)
+        const current = matches[0]
+        seen.add(current.id)
+        const key = index < target ? current.correct_answer
+          : (['a', 'b', 'c', 'd'].find(letter => letter !== current.correct_answer)!)
+        const choice = current[`answer_${key}` as 'answer_a' | 'answer_b' | 'answer_c' | 'answer_d']
+        await page.getByTestId('active-quiz-options').getByRole('button').filter({ hasText: choice }).click()
+        await page.getByRole('button', { name: index === questions.length - 1 ? 'Submit & Finish Quiz' : 'Submit Answer' }).click()
+      }
+      await expect(page.getByText(`You got ${target} out of 48 questions correct`)).toBeVisible()
+      const { data: latest, error: latestError } = await root.from('quiz_attempts')
+        .select('score,total_questions,percentage,answers_json').eq('user_id', studentA)
+        .eq('quiz_id', 'quiz-2').order('completed_at', { ascending: false }).limit(1).single()
+      expect(latestError).toBeNull()
+      expect(latest).toMatchObject({ score: target, total_questions: 48, percentage: target === 0 ? 0 : 100 })
+      expect(Object.keys(latest?.answers_json ?? {})).toHaveLength(48)
+      const { data: best, error: bestError } = await root.from('student_progress')
+        .select('best_quiz_score').eq('user_id', studentA).eq('chapter_id', 'ch-2').single()
+      expect(bestError).toBeNull()
+      expect(best?.best_quiz_score).toBe(target === 0 ? 75 : 100)
+    }
     await context.close()
 
     const instructorContext = await browser.newContext()
@@ -159,7 +165,7 @@ test('QA-85: authenticated Chapter 2 School A/B score and dashboard parity (LOCA
     await instructorPage.locator('button[type="submit"]').click()
     await instructorPage.waitForURL(/\/instructor(?:\/|$)/)
     await instructorPage.goto(`/instructor/student/${studentA}`)
-    await expect(instructorPage.getByText('75%', { exact: true }).first()).toBeVisible()
+    await expect(instructorPage.getByText('100%', { exact: true }).first()).toBeVisible()
     await instructorContext.close()
   } finally {
     // This entire test runs against a disposable local database only.
