@@ -1,3 +1,4 @@
+import LiveStatusRefresh from '@/components/instructor/LiveStatusRefresh'
 import LiveExamReview from '@/components/instructor/LiveExamReview'
 import AttemptHistoryReview from '@/components/instructor/AttemptHistoryReview'
 import { createClient } from '@/lib/supabase-server'
@@ -87,6 +88,7 @@ export default async function InstructorExamReadyResults({
           </div>
         ) : <p className="text-sm text-gray-400">No active exam. Finalized exam results appear below.</p>}
       </section>
+      {live && !reviewItems && <LiveStatusRefresh />}
       {reviewItems && <LiveExamReview items={reviewItems} />}
       <p className="text-sm text-gray-400">Instructor coaching is available only after a student completes an exam. Do not share answer keys during an active attempt. Hints below are general prompts and require academic review before broad use.</p>
       <AttemptHistoryReview attempts={attempts} coaching={coaching} />
