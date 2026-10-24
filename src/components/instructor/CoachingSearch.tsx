@@ -14,15 +14,15 @@ const hints:Record<string,string[]> = {
  hair_care_services:['Which hair characteristic matters?','What could happen if the service is performed incorrectly?','Describe the correct service sequence.'],
  facial_hair_skin_care_services:['Which facial-hair or skin concern matters?','How should client safety guide the service?','Describe the relevant professional principle.']
 }
-export default function CoachingSearch({attempts}:{attempts:Attempt[]}) {
+export default function CoachingSearch({attempts,selectedAttemptId}:{attempts:Attempt[];selectedAttemptId:string}) {
  const [query,setQuery]=useState('')
  const [domain,setDomain]=useState('all')
- const [missed,setMissed]=useState(false)
- const questions=useMemo(()=>attempts.flatMap((a,i)=>a.items.map(q=>({...q,key:a.attemptId+'-'+q.position,attempt:i+1}))),[attempts])
+ const [answerStatus,setAnswerStatus]=useState('all')
+ const questions=useMemo(()=>attempts.filter(a=>a.attemptId===selectedAttemptId).flatMap(a=>a.items.map(q=>({...q,key:a.attemptId+'-'+q.position}))),[attempts,selectedAttemptId])
  const filtered=questions.filter(q=>{
   const needle=query.trim().toLowerCase()
   return (domain==='all'||q.domain===domain) &&
-   (!missed || q.selectedOption?.toLowerCase()!==q.correctOption?.toLowerCase()) &&
+   (answerStatus==='all' || (answerStatus==='answered' && Boolean(q.selectedOption)) || (answerStatus==='correct' && Boolean(q.selectedOption) && q.selectedOption.toLowerCase()===q.correctOption?.toLowerCase()) || (answerStatus==='missed' && Boolean(q.selectedOption) && q.selectedOption.toLowerCase()!==q.correctOption?.toLowerCase()) || (answerStatus==='unanswered' && !q.selectedOption)) &&
    (!needle || [q.position.toString(), 'q'+q.position, q.prompt,labels[q.domain]||q.domain].some(s=>s.toLowerCase().includes(needle)))
  })
  if (!questions.length) return null
@@ -38,11 +38,18 @@ export default function CoachingSearch({attempts}:{attempts:Attempt[]}) {
    <option value="all">All topics</option>
    {Object.entries(labels).map(([key,value])=><option key={key} value={key}>{value}</option>)}
   </select>
-  <label className="flex min-h-11 items-center gap-3 rounded-lg py-2 text-sm"><input type="checkbox" className="h-5 w-5 shrink-0" checked={missed} onChange={e=>setMissed(e.target.checked)} /> Missed or unanswered only</label>
+  <label className="block text-sm font-medium" htmlFor="coaching-answer-status">Question results</label>
+  <select id="coaching-answer-status" value={answerStatus} onChange={e=>setAnswerStatus(e.target.value)} className="block min-h-12 w-full min-w-0 rounded-lg border border-gray-600 bg-gray-950 px-3 py-3 text-base text-white">
+   <option value="all">All questions</option>
+   <option value="answered">Answered questions</option>
+   <option value="correct">Correctly answered</option>
+   <option value="missed">Missed questions</option>
+   <option value="unanswered">Unanswered questions</option>
+  </select>
   <p aria-live="polite" className="text-sm text-gray-400">{filtered.length} of {questions.length} questions</p>
   <div className="min-w-0 space-y-3">
   {filtered.map(q=><details key={q.key} className="min-w-0 overflow-hidden rounded-lg border border-gray-700 p-3 sm:p-4">
-   <summary className="cursor-pointer break-words py-1 font-semibold leading-relaxed">Attempt {q.attempt} · Q{q.position}: {q.prompt}</summary>
+   <summary className="cursor-pointer break-words py-1 font-semibold leading-relaxed">Q{q.position}: {q.prompt}</summary>
    <p className="mt-2 text-xs text-gray-400">{labels[q.domain]||q.domain} · {q.isScored?'Scored':'Unscored'}</p>
    <ul className="mt-2 space-y-2 break-words text-sm leading-relaxed">{Object.entries(q.options).map(([letter,option])=><li key={letter}>{letter.toUpperCase()}. {option}</li>)}</ul>
    <div className="mt-3 rounded-lg border border-gray-700 p-3 sm:p-4">
