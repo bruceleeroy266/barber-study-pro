@@ -6,6 +6,7 @@ const sql = read('supabase/migrations/20261022010000_exam_ready_instructor_resul
 const examRuntime = read('supabase/migrations/20261002160000_po1c3_comprehensive_exam_runtime.sql')
 const studentResults = read('src/components/comprehensive-exam/ExamResults.tsx')
 const instructorPage = read('src/app/instructor/students/[studentId]/exam-ready/page.tsx')
+const attemptReview = read('src/components/instructor/AttemptHistoryReview.tsx')
 const coachingSql = read('supabase/migrations/20261022200000_exam_ready_instructor_coaching.sql')
 
 describe('Exam Ready student/instructor score provenance contract', () => {
@@ -29,8 +30,8 @@ describe('Exam Ready student/instructor score provenance contract', () => {
   it('student and instructor displays use the stored percentage and domain breakdown', () => {
     expect(studentResults).toContain('result.percentage')
     expect(studentResults).toContain('result.domainBreakdown')
-    expect(instructorPage).toContain('attempt.percentage')
-    expect(instructorPage).toContain('attempt.domainBreakdown')
+    expect(attemptReview).toContain('a.percentage')
+    expect(attemptReview).toContain('a.domainBreakdown')
     // Aggregate reporting remains key-free; a separate, authorized coaching RPC
     // supplies keys only for the student's already-finalized attempt.
     expect(sql).not.toContain('correctOption')
