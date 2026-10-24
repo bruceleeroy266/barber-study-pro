@@ -90,6 +90,20 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
     // QA-20: score must originate from real browser answers, not only a seeded row.
     const questions = getLocalQuizQuestions('quiz-5')
     expect(questions).toHaveLength(50)
+    // QA-128: textbook-aligned Chapter 5 content must survive rendering/grading.
+    for (const [id, expectedText] of [
+      ['qq-5-002', '7-8 inches'],
+      ['qq-5-003', 'Gradual blending in tight areas, around ears, and at necklines'],
+      ['qq-5-023', 'Smoothing and aligning the cutting edge and polishing the blade with a strop'],
+      ['qq-5-026', 'Concave grind has hollowed blade sides; wedge grind is not hollowed and forms an angle at the edge'],
+      ['qq-5-030', 'Clamp the heated iron on tissue or toweling for five seconds; scorching indicates excessive heat'],
+    ]) {
+      const item = questions.find(q => q.id === id)
+      expect(item, id).toBeDefined()
+      const choice = item![`answer_${item!.correct_answer}` as 'answer_a' | 'answer_b' | 'answer_c' | 'answer_d']
+      expect(choice).toBe(expectedText)
+    }
+
     // A chapter navigation can paint the quiz button before client hydration.
     // Confirm the click actually activated the quiz; retry only while idle.
     const startChapterQuiz = async () => {
