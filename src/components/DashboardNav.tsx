@@ -61,39 +61,10 @@ export default function DashboardNav({ user }: DashboardNavProps) {
     return items
   }, [user])
 
-  const handleLogout = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser()
-      await logLogout(user?.id ?? 'unknown', user?.email)
-    } catch {
-      // ignore logging failures
-    }
-    
-    // Clear Supabase session
-    await supabase.auth.signOut()
-    
-    // Clear all storage
-    if (typeof window !== 'undefined') {
-      // Clear localStorage
-      window.localStorage.clear()
-      // Clear sessionStorage
-      window.sessionStorage.clear()
-      // Clear cookies by setting expired date
-      document.cookie.split(';').forEach((c) => {
-        const eqPos = c.indexOf('=')
-        const name = eqPos > -1 ? c.substring(0, eqPos).trim() : c.trim()
-        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`
-      })
-    }
-    
-    // Redirect to home with cache-busting to prevent back-button access
-    router.push('/')
-    router.refresh()
-    
-    // Force reload to clear any cached state
-    setTimeout(() => {
-      window.location.href = '/'
-    }, 100)
+  const handleLogout = () => {
+    // Use the server logout route to revoke the SSR cookie-backed session.
+    // Full navigation avoids stale client-side authentication state.
+    window.location.assign('/auth/logout')
   }
 
   return (
