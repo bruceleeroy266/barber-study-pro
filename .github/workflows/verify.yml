@@ -108,7 +108,24 @@ jobs:
       - name: Start disposable local Supabase
         shell: bash
         run: |
-          supabase start
+          # Container registries may throttle anonymous pulls on fresh runners.
+          # Retry startup without bypassing the real onboarding certification.
+          started=false
+          for attempt in 1 2 3; do
+            if supabase start; then
+              started=true
+              break
+            fi
+            if (( attempt < 3 )); then
+              echo "::warning::Supabase startup failed (attempt $attempt/3); retrying after backoff."
+              supabase stop --no-backup || true
+              sleep $(( attempt * 60 ))
+            fi
+          done
+          if [[ "$started" != "true" ]]; then
+            echo "::error::Local Supabase could not start after three attempts."
+            exit 1
+          fi
           supabase status -o env > /tmp/ascyn-supabase.env
           set -a
           source /tmp/ascyn-supabase.env
