@@ -25,3 +25,22 @@ All 50 source IDs and initial source sections were mapped in QA-149. The changed
 - No DB or production changes.
 - CI and authenticated QA still required on the PR head before approval.
 - Source is educational reference only; do not reproduce textbook passages publicly.
+
+## QA-152 owner approval checkpoint — 2026-10-26
+
+**Current decision: NO-GO / draft PR only; do not merge.**
+
+### Exact GitHub Actions result
+- Commit `e92aed09f432ddc683e9146305aa9e23610729e8`, run [40343712303](https://github.com/bruceleeroy266/barber-study-pro/actions/runs/40343712303): **completed / failure**.
+- `Pilot Onboarding Certification`: **SUCCESS**.
+- `Verify Build`: **FAILURE**. Logs report server-side URL parsing of relative endpoints `/api/study-sessions/start` and `/api/remediation/detect` ("Failed to parse URL" / "Invalid URL") during the build. This is not the previous Q036 TypeScript quote error, which was repaired on the same branch. Root cause/PR attribution not yet proven; do not modify unrelated application endpoints just to force green CI without a controlled reproduction.
+
+### Source-evidence boundaries
+- The original `chapter 5.pdf` scan (Drive ID `1ZTwzf8yUDGR9eUN-_wTiMs_0yFjgPPtJ`) has 29 PDF pages and was visually inspected in part. One full-resolution image of its last PDF page visibly shows printed page **132**, including "Learn How to Remove Hair Clippings". Full book OCR `Chapter_05.txt` contains whole-book pages 98–137 but is expressly unproofread. Its whole-book page indices **are not equivalent to the 29-page extract's page numbers**, and not all referenced OCR pages are present in that extract.
+- Selected source checks support the six targeted corrections (whole-book OCR indices: shears 109, clippers 111, grinds 116, sanitary barrier 123, thermal-tissue test 126; scenario issue is a pedagogic ambiguity not directly a universal textbook rule).
+- **50/50 original-scan image-level certification is NOT established**. Earlier 50-question source-section mapping is not evidence that every correct key, distractor, and explanation has been checked in full-resolution source images. Obtain/inspect the remaining original pages and perform a per-ID image-evidence matrix before academic sign-off.
+
+### Required release gates
+1. Reproduce and fix the Verify Build relative-URL failure on an isolated branch, or establish with comparable base-main run evidence that it is unrelated and resolve the required check through the approved release process.
+2. Complete verified per-question original-scan, figure and safety-text crosswalk for **all 50**, with per-ID evidence and discrepancies.
+3. Recheck the latest PR head, build and pilot CI checks after any changes, and obtain explicit owner merge GO. **No merge or production deployment authorized.**
