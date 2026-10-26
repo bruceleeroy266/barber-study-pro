@@ -93,3 +93,13 @@ All 50 source IDs and initial source sections were mapped in QA-149. The changed
 ### Separate owner decision
 - No qualified independent human barber-instructor reviewer has signed the complete assessment bank in this task. An automated/build PASS is not an academic sign-off.
 - Keep PR #452 **DRAFT / unmerged**. Request merge authorization only after all 50 evidence rows are certified, ambiguities fixed and exact-head CI green. No production changes.
+
+## QA-164 independently reviewed status — 2026-10-26
+
+**Release recommendation: ACADEMIC NO-GO; draft PR #452 must remain unmerged.**
+
+- The requested QA-163 per-question matrix could not be located at `docs/qa/QUIZ-GRADING-QA-163-chapter5-evidence-matrix.md` on this branch. Existing QA-149/150/161 records are a source-section index and selected image checks, not a fully signed 50-row per-option acceptance matrix.
+- Reviewed PR #452's GitHub review list: **zero reviews recorded** at this checkpoint. **No independent barber-instructor sign-off obtained**; no reviewer identity or signature should be inferred from automated checks.
+- The 50-question bank still has **50 IDs**; six prior corrections are documented. No additional academic correction can responsibly be made absent a verified image-level discrepancy. Do not substitute generic barbering assumptions for original-scan evidence.
+- Engineering run [40389132590](https://github.com/bruceleeroy266/barber-study-pro/actions/runs/40389132590), on QA-160 head `c1ae05a405d792eb78a8a0ef0d4a68f6260f4b72`, succeeded for both Verify Build and Pilot Onboarding Certification. This QA-164 documentation commit requires **fresh head CI** before release consideration.
+- To lift academic NO-GO: attach an authoritative 50-row matrix with original scanned-PDF page and printed-page coordinates, each of A/B/C/D adjudicated for single-best-answer correctness, explanations and safety/figures checked, contradictions resolved in code with regression tests, and dated independent instructor sign-off. After exact-final-head green CI, ask owner for explicit merge authorization. **This documentation is not an approval.**
