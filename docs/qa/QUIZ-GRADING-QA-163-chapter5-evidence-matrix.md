@@ -69,3 +69,11 @@ Columns A/B/C/D indicate whether each option's unique correctness/incorrectness 
 5. Record exact final-head PR checks, request explicit owner approval, and retain draft/no-merge state until granted.
 
 **Release gate: ACADEMIC NO-GO.** All 50 rows are accounted for, but the required original-image per-option and independent-human evidence is not yet complete.
+
+## QA-165 adjudication gate audit — 2026-10-26
+
+- Register completeness: **50 question rows**, four answer-option columns per row (**200 option decisions**). All **250** existing pending cells across the answer, explanation and reviewer fields remain *PENDING*. Merely listing option letters is not source-image adjudication.
+- Original-scan item-level claims: **no additional individual option was promoted to accepted/rejected without a readable scan citation**. Earlier selected page checks remain limited to those explicitly documented; no invented proof or review signature.
+- Independent content approval: GitHub PR #452 review listing returned **zero recorded reviews** on 2026-10-26. A separate qualified educator's signed decision has not been supplied or independently verified. **No academic approval recorded.**
+- CI: the last previously certified workflow on commit `c1ae05a405d792eb78a8a0ef0d4a68f6260f4b72`, run `40389132590`, passed both jobs; **do not infer latest-head success from that historical run**. Check the exact SHA after this documentation change.
+- Final disposition: **NO-GO for owner merge decision** until 200 documented option adjudications, 50 explanation/safety audits, and a named independent educator's authenticated sign-off are recorded, followed by green exact-head CI and explicit owner authorization. PR must remain draft/unmerged.
