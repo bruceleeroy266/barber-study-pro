@@ -2,13 +2,11 @@
 
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { LayoutDashboard, BookOpen, TrendingUp, Clock3, User, LogOut, GraduationCap, Shield, RotateCcw, MessageSquare, Megaphone, Calculator, ClipboardCheck, Building2, FileCheck, Settings, FileSignature } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
 import { Profile } from '@/types'
 import { isInstructorOrAdmin, isAdmin, isSchoolAdmin } from '@/lib/auth-helpers'
 import { isDashboardNavItemActive } from '@/lib/nav-active'
-import { logLogout } from '@/app/(auth)/actions'
 import { Logo } from '@/components/brand'
 import BackButton from '@/components/ui/BackButton'
 import { useAccessibleMobileMenu } from '@/hooks/useAccessibleMobileMenu'
@@ -42,7 +40,6 @@ export default function DashboardNav({ user }: DashboardNavProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { triggerRef, panelRef } = useAccessibleMobileMenu(mobileMenuOpen, setMobileMenuOpen)
   const pathname = usePathname()
-  const router = useRouter()
 
   // Build nav items based on role so instructors/admins can reach their portals.
   const navItems = useMemo(() => {
