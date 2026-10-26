@@ -75,3 +75,21 @@ All 50 source IDs and initial source sections were mapped in QA-149. The changed
 - Residual risks: educational-scenario inference that exceeds the original text; ambiguous near-correct distractors; safety-related absolutes; images/tables that OCR does not faithfully capture. Avoid retrospectively classing every mapped row as fully scan-verified.
 - **Engineering status:** at commit `51d613585bddab658fc080d7d85d8ac53f667a6f`, Actions [run 40382908347](https://github.com/bruceleeroy266/barber-study-pro/actions/runs/40382908347) finished **SUCCESS**, both Verify Build and Pilot Onboarding Certification succeeded. This academic record update triggers a new head, so CI must be reevaluated if a new head is required for merger.
 - **Decision:** source mapping/inventory finished; comprehensive item-level verification incomplete. No approval request until independent full-resolution 50-row proof record and instructor review are complete. Explicit owner GO still mandatory.
+
+## QA-161 full-scan certification checkpoint
+
+**Reviewer determination: ACADEMIC NO-GO — no independent content sign-off issued.**
+
+**Engineering:** GitHub Actions [40389132590](https://github.com/bruceleeroy266/barber-study-pro/actions/runs/40389132590), commit `c1ae05a405d792eb78a8a0ef0d4a68f6260f4b72`, **SUCCESS**, both required jobs passed. New documentation commits need fresh head-CI verification.
+
+**Authoritative reference:** 776-page image-only full barbering textbook `Whole Text book PDF.pdf` is accessible for original-scan review. QA-149 has a preliminary map covering `qq-5-001`–`qq-5-050`, keyed to *whole-PDF* page positions, not printed textbook page numbers. Prior QA-159 inspected selected original pages; this does **not** constitute examination of every stem, each of four options, all explanations and illustrated procedures.
+
+### Academic acceptance matrix status
+- IDs **001–013**, **015–025**, **027–029**, **031–035**, **037–044**, **046–047**, **049–050**: **mapped, full per-option original-scan sign-off outstanding**.
+- IDs **014, 026, 030, 036, 045, 048**: revised after targeted discrepancies; **targeted source evidence reviewed, full independent per-option academic acceptance outstanding**.
+- Structural bank count = **50 distinct IDs**; no answer-letter changes authorized in QA-161.
+- Each of the 50 records requires: original PDF index + printed source page, verbatim stem semantic alignment, evaluation of A/B/C/D against evidence, confirmation single best key, explanation review and procedural/safety check, named reviewer decision. **Do not declare a pass on absent evidence.**
+
+### Separate owner decision
+- No qualified independent human barber-instructor reviewer has signed the complete assessment bank in this task. An automated/build PASS is not an academic sign-off.
+- Keep PR #452 **DRAFT / unmerged**. Request merge authorization only after all 50 evidence rows are certified, ambiguities fixed and exact-head CI green. No production changes.
