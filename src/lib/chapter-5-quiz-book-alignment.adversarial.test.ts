@@ -76,7 +76,7 @@ describe('C5 50-question source-book quiz hardening', () => {
       LO4: ['crane', 'thinning/blending shear'],
       LO5: ['left-handed shears', 'reversed'],
       LO6: ['tension check', 'reserve fine haircutting shears for human hair'],
-      LO7: ['rotary, pivot, magnetic', 'clipper motor description'],
+      LO7: ['rotary, pivot, magnetic', 'clipper-motor comparison table'],
       LO8: ['t-blade', 'outliner', 'light hand/free wrist'],
       LO9: ['attachment comb or guard', 'carbon-steel and ceramic', '00000'],
       LO10: ['changeable-blade razors', 'head, back, shoulder, tang, point, edge, heel, shank, pivot'],
