@@ -64,3 +64,14 @@ All 50 source IDs and initial source sections were mapped in QA-149. The changed
 - The QA-149 table provides **50/50 tentative topic-to-page mappings**; it is NOT 50/50 independent image-by-image audit of stems, four distractors, keyed letters and explanations. At QA-159, selected original scans have been independently inspected, not the entire question set at full resolution.
 - **Final academic recommendation: NO-GO for merging PR #452**, notwithstanding passing engineering CI. Before GO, conduct 50-row full-resolution source-image evidence review with correct distinction between PDF and printed page numbers; document any ambiguous distractors and confirm all 50 keys with an independent barber-instructor/content reviewer. Obtain explicit owner authorization to merge.
 - **No merge, production deployment or school assessment change authorized.**
+
+## QA-160 owner review — academic acceptance decision
+
+**Verdict: NO-GO. Do not merge or deploy.**
+
+- The current Chapter 5 premium bank contains **50/50 stable question IDs** (`qq-5-001` to `qq-5-050`), with each ID mapped to a source section in QA-149. This verifies inventory, not academic correctness.
+- The six amended questions are **014, 026, 030, 036, 045, 048**. Representative original images were compared in prior steps, especially thermal tissue test and clipper motor comparison, and the amended text is present on the PR branch.
+- Full academic sign-off requires **50 distinct records**, each recording (a) original scan PDF page and printed book page, (b) stem accuracy, (c) whether the keyed choice is the only defensible answer, (d) three distractors independently evaluated, (e) explanation accuracy, (f) figures/safety requirements, (g) outcome and reviewer. QA-149's 50-row page-reference index **does not satisfy criteria (b)–(g)**.
+- Residual risks: educational-scenario inference that exceeds the original text; ambiguous near-correct distractors; safety-related absolutes; images/tables that OCR does not faithfully capture. Avoid retrospectively classing every mapped row as fully scan-verified.
+- **Engineering status:** at commit `51d613585bddab658fc080d7d85d8ac53f667a6f`, Actions [run 40382908347](https://github.com/bruceleeroy266/barber-study-pro/actions/runs/40382908347) finished **SUCCESS**, both Verify Build and Pilot Onboarding Certification succeeded. This academic record update triggers a new head, so CI must be reevaluated if a new head is required for merger.
+- **Decision:** source mapping/inventory finished; comprehensive item-level verification incomplete. No approval request until independent full-resolution 50-row proof record and instructor review are complete. Explicit owner GO still mandatory.
