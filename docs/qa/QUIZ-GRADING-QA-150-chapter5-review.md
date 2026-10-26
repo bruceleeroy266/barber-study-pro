@@ -44,3 +44,23 @@ All 50 source IDs and initial source sections were mapped in QA-149. The changed
 1. Reproduce and fix the Verify Build relative-URL failure on an isolated branch, or establish with comparable base-main run evidence that it is unrelated and resolve the required check through the approved release process.
 2. Complete verified per-question original-scan, figure and safety-text crosswalk for **all 50**, with per-ID evidence and discrepancies.
 3. Recheck the latest PR head, build and pilot CI checks after any changes, and obtain explicit owner merge GO. **No merge or production deployment authorized.**
+
+## QA-159 academic owner decision — 2026-10-26
+
+### Engineering evidence
+- HEAD tested: `fd97e03993d03bc134e34cf352ef134875409b37`; GitHub Actions [40378064203](https://github.com/bruceleeroy266/barber-study-pro/actions/runs/40378064203) **completed SUCCESS**. Both **Verify Build** and **Pilot Onboarding Certification** succeeded. A documentation-only update here requires checking the exact new head separately.
+- Existing Chapter 5 bank continues to contain exactly 50 stable IDs; six corrected items include 014, 026, 030, 036, 045 and 048. This is a structural check and does **not** prove all keys and distractors are academically certified.
+
+### Original scan visual review and source pagination
+- Original whole-book scan `Whole Text book PDF.pdf` (776 PDF pages, scanned/image-only), visually examined selected PDF pages **109, 111, 116, 123, 126 and 127**. These show *printed* textbook pages **114, 116, 121, 128, 131 and 132**, respectively. Therefore OCR *complete-PDF page* numbers must **not** be cited as textbook-printed page numbers.
+- Whole-book PDF p109 / printed p114: shear care and outliner basics; supports reserving shears for appropriate haircutting, checking tension and safe handling, although this page alone is not exhaustive evidence for every shear-material claim.
+- Whole-book PDF p111 / printed p116: Table 5-4 actually compares rotary, pivot and magnetic clipper motors. This supports the **source-specific** qualifier in qq-5-045.
+- Whole-book PDF p116 / printed p121: razor handling illustrations and conventional-razor discussion; does not alone independently establish every razor-grind assertion.
+- Whole-book PDF p123 / printed p128: neck-strip handling/draping: wraps around the neck as a clean sanitary barrier; consistent with qq-5-036.
+- Whole-book PDF p126 / printed p131: **Testing thermal irons** instructs clamping iron on tissue or toweling for **5 seconds**, and cooling tool if tissue scorches. Confirms qq-5-030 key D and revised explanation.
+- Whole-book PDF p127 / printed p132: removing hair clippings section and equipment review. A source heading crosswalk alone does not prove all distractors.
+
+### Certification boundaries and decision
+- The QA-149 table provides **50/50 tentative topic-to-page mappings**; it is NOT 50/50 independent image-by-image audit of stems, four distractors, keyed letters and explanations. At QA-159, selected original scans have been independently inspected, not the entire question set at full resolution.
+- **Final academic recommendation: NO-GO for merging PR #452**, notwithstanding passing engineering CI. Before GO, conduct 50-row full-resolution source-image evidence review with correct distinction between PDF and printed page numbers; document any ambiguous distractors and confirm all 50 keys with an independent barber-instructor/content reviewer. Obtain explicit owner authorization to merge.
+- **No merge, production deployment or school assessment change authorized.**
