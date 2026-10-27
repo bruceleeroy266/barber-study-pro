@@ -198,6 +198,12 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
     await expect(instructorPage.getByText('100%', { exact: true }).filter({ visible: true }).first()).toBeVisible()
     // QA-174 acceptance: after a fully incorrect, saved Chapter 5 retake, the
     // assigned instructor must see concept-specific weak areas and missed evidence.
+    // Chapter 5 is nested inside the separate Chapter Diagnostics <details>.
+    // Both native disclosures must be open for the instructor to see the results.
+    const diagnosticsGroup = instructorPage.locator('details').filter({ has: instructorPage.getByRole('heading', { name: 'Chapter Diagnostics', exact: true }) }).first()
+    await expect(diagnosticsGroup).toHaveCount(1)
+    await diagnosticsGroup.locator('summary').first().dispatchEvent('click')
+    await expect(diagnosticsGroup).toHaveAttribute('open', '')
     const chapter5Details = instructorPage.locator('details[data-chapter-accordion]').filter({ hasText: 'Chapter 5 —' }).first()
     await expect(chapter5Details).toHaveCount(1)
     // Chapter accordions can shift while the large instructor page hydrates.
