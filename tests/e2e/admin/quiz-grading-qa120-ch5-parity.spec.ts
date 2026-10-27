@@ -254,6 +254,23 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
     await missedQuestionCard.click()
     await expect(instructorBank.getByText('Your answer', { exact: true })).toBeVisible()
     await expect(instructorBank.getByText('Correct answer', { exact: true })).toBeVisible()
+    // QA-174: authorized instructor can assign a Chapter 5 concept review
+    // and observe its persisted assignment progress.
+    const reviewControl = chapter5Details.getByRole('heading', { name: 'Assign Chapter 5 Targeted Review' }).locator('..')
+    await expect(reviewControl.getByRole('button', { name: 'Assign review' })).toBeVisible()
+    await reviewControl.getByRole('button', { name: 'Assign review' }).click()
+    await expect(reviewControl.getByRole('status')).toContainText(/Review assigned to student|Review already assigned/)
+    const { data: reviewCycles, error: cycleError } = await root.from('remediation_cycles')
+      .select('id,concept_id,status').eq('user_id', studentA).eq('chapter_id', 'ch-5')
+    expect(cycleError).toBeNull()
+    expect(reviewCycles?.length).toBeGreaterThan(0)
+    const { data: reviewAssignments, error: reviewError } = await root.from('remediation_assignments')
+      .select('id,cycle_id,status').in('cycle_id', (reviewCycles ?? []).map(c => c.id))
+    expect(reviewError).toBeNull()
+    expect(reviewAssignments?.length).toBeGreaterThan(0)
+    await instructorPage.reload()
+    const progressLine = instructorPage.getByText(/\d+\/\d+ completed \((?:targeted|in_review|review_completed|reassessed|evaluated)\)/).first()
+    await expect(progressLine).toBeVisible()
     await instructorContext.close()
   } finally {
     // This entire test runs against a disposable local database only.
