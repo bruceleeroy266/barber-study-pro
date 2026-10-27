@@ -5,7 +5,7 @@ name: Engineering Verification
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, quiz-grading-qa150-ch5-academic-review]
     types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches: [main]
@@ -108,7 +108,24 @@ jobs:
       - name: Start disposable local Supabase
         shell: bash
         run: |
-          supabase start
+          # Container registries may throttle anonymous pulls on fresh runners.
+          # Retry startup without bypassing the real onboarding certification.
+          started=false
+          for attempt in 1 2 3 4; do
+            if supabase start; then
+              started=true
+              break
+            fi
+            if (( attempt < 4 )); then
+              echo "::warning::Supabase startup failed (attempt $attempt/4); retrying after backoff."
+              supabase stop --no-backup || true
+              sleep $(( attempt * 75 ))
+            fi
+          done
+          if [[ "$started" != "true" ]]; then
+            echo "::error::Local Supabase could not start after four attempts."
+            exit 1
+          fi
           supabase status -o env > /tmp/ascyn-supabase.env
           set -a
           source /tmp/ascyn-supabase.env
