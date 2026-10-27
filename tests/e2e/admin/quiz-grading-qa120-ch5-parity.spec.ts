@@ -235,7 +235,9 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
     await expect(chapter5Details).toHaveAttribute('open', '')
     // Latest chapter assessment must reflect the same 0/50 browser retake;
     // best score (100%) and weighted chapter grade are separate metrics.
-    const assessmentMetric = chapter5Details.locator('div').filter({ has: chapter5Details.getByText('Chapter Assessment', { exact: true }) }).last()
+    // Scope to the metric's immediate container, not the last nested div.
+    // The latter can select an unrelated element and hide a valid grade.
+    const assessmentMetric = chapter5Details.getByText('Chapter Assessment', { exact: true }).locator('..')
     await expect(assessmentMetric.getByText('0%', { exact: true })).toBeVisible()
     await expect(chapter5Details.getByText('Weakest Concepts', { exact: true })).toBeVisible()
     await expect(chapter5Details.getByText(/initial misses/).first()).toBeVisible()
