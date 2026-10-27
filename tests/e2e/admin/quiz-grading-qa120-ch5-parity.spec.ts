@@ -294,26 +294,55 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
     await expect(page.getByRole('button', { name: 'Start Review' })).toBeVisible()
     await page.getByRole('button', { name: 'Start Review' }).click()
     await expect(page.getByRole('button', { name: 'Complete Review' })).toBeVisible()
-    const contentReview = page.getByRole('heading', {name:'Review Materials'}).last().locator('..').locator('..')
-    while (await contentReview.getByRole('button', {name:'Mark as Reviewed'}).count() === 0) {
-      const collapsed = contentReview.locator('button[aria-expanded="false"]').first()
-      if (await collapsed.count() === 0) break
-      await collapsed.click()
+    // Drive all assigned content assets explicitly, not whichever cards happen
+    // to be in the first visible group. Verify server persistence per asset.
+    const {data:assignedAssets,error:assetError} = await root.from('remediation_assignments')
+      .select('id,assignment_type,asset_id,status').eq('cycle_id',assignedCycle!.id)
+      .order('priority',{ascending:true})
+    expect(assetError).toBeNull()
+    expect(assignedAssets?.length).toBeGreaterThan(0)
+    for (const asset of assignedAssets!.filter(item => item.assignment_type === 'content_block')) {
+      const section = page.getByTestId(`remediation-content-${asset.asset_id}`)
+      await expect(section, `Assigned content ${asset.asset_id} must be rendered`).toBeVisible()
+      const expander = section.locator('button[aria-expanded]').first()
+      if (await expander.getAttribute('aria-expanded') === 'false') await expander.click()
+      const mark = section.getByRole('button',{name:'Mark as Reviewed'})
+      if (await mark.count()) {
+        const responsePromise = page.waitForResponse(response =>
+          response.url().includes(`/api/remediation/cycles/${assignedCycle!.id}/events`) &&
+          response.request().postDataJSON()?.eventType === 'content_viewed' &&
+          response.request().postDataJSON()?.assetId === asset.asset_id
+        )
+        await mark.click()
+        const response = await responsePromise
+        expect(response.status(), `Content ${asset.asset_id}: ${await response.text()}`).toBe(200)
+      }
+      await expect.poll(async () => {
+        const {data,error}=await root.from('remediation_assignments').select('status').eq('id',asset.id).single()
+        expect(error).toBeNull()
+        return data?.status
+      },{timeout:15000}).toBe('completed')
     }
-    const reviewSections = contentReview.locator('button[aria-expanded]')
-    for (let i=0; i<await reviewSections.count(); i++) {
-      const section = reviewSections.nth(i)
-      if (await section.getAttribute('aria-expanded') === 'false') await section.click()
-      const mark = contentReview.getByRole('button', {name:'Mark as Reviewed'}).first()
-      if (await mark.count()) await mark.click()
-    }
-    const cardReview = page.getByRole('heading', {name:'Flashcard Review'}).locator('..').locator('..')
-    for (let i=0; i<20; i++) {
-      const mark = cardReview.getByRole('button', {name:'Mark as Reviewed'})
-      if (await mark.count()) await mark.click()
-      const next = cardReview.getByRole('button', {name:'Next'})
-      if (await next.isDisabled()) break
-      await next.click()
+    const cardReview = page.getByRole('heading',{name:'Flashcard Review'}).locator('..').locator('..')
+    for (const asset of assignedAssets!.filter(item => item.assignment_type === 'flashcard')) {
+      const next = cardReview.getByRole('button',{name:'Next'})
+      const mark = cardReview.getByRole('button',{name:'Mark as Reviewed'})
+      if (await mark.count()) {
+        const responsePromise=page.waitForResponse(response =>
+          response.url().includes(`/api/remediation/cycles/${assignedCycle!.id}/events`) &&
+          response.request().postDataJSON()?.eventType === 'flashcard_reviewed' &&
+          response.request().postDataJSON()?.assetId === asset.asset_id
+        )
+        await mark.click()
+        const response=await responsePromise
+        expect(response.status(),`Flashcard ${asset.asset_id}: ${await response.text()}`).toBe(200)
+      }
+      await expect.poll(async () => {
+        const {data,error}=await root.from('remediation_assignments').select('status').eq('id',asset.id).single()
+        expect(error).toBeNull()
+        return data?.status
+      },{timeout:15000}).toBe('completed')
+      if (!await next.isDisabled()) await next.click()
     }
     // The UI updates progress optimistically, but server writes can still be
     // in flight. The completion gate must be checked against persisted rows.
