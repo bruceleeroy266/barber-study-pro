@@ -204,9 +204,8 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
     await page.goto('/dashboard/missed-questions')
     const studentMissedQuestion = page.getByRole('button').filter({ hasText: /Missed \d+x/ }).first()
     await expect(studentMissedQuestion).toBeVisible()
-    const studentMissedText = (await studentMissedQuestion.locator('p.text-white').first().textContent())?.trim()
-    expect(studentMissedText).toBeTruthy()
-    await context.close()
+    const studentMissedTexts = (await page.getByRole('button').filter({ hasText: /Missed \d+x/ }).locator('p.text-white').allTextContents()).map(text => text.trim())
+    expect(studentMissedTexts.length).toBeGreaterThan(0)
 
     const instructorContext = await browser.newContext()
     const instructorPage = await instructorContext.newPage()
@@ -250,7 +249,11 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
     await expect(instructorBank.getByText(/missed questions recorded/)).toBeVisible()
     const missedQuestionCard = instructorBank.getByRole('button').filter({ hasText: /Missed \d+x/ }).first()
     await expect(missedQuestionCard).toBeVisible()
-    await expect(instructorBank.getByText(studentMissedText!, { exact: true })).toBeVisible()
+    const instructorMissedText = (await missedQuestionCard.locator('p.text-white').first().textContent())?.trim()
+    expect(instructorMissedText).toBeTruthy()
+    // Both views can sort missed-question cards differently; assert shared
+    // question evidence rather than falsely requiring identical first rows.
+    expect(studentMissedTexts).toContain(instructorMissedText!)
     await missedQuestionCard.click()
     await expect(instructorBank.getByText('Your answer', { exact: true })).toBeVisible()
     await expect(instructorBank.getByText('Correct answer', { exact: true })).toBeVisible()
@@ -327,6 +330,7 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
     await innerAfter.locator('summary').first().dispatchEvent('click')
     await expect(innerAfter.getByText(/completed \(review_completed\)/).first()).toBeVisible()
     await instructorContext.close()
+    await context.close()
   } finally {
     // This entire test runs against a disposable local database only.
     for (const id of ids.reverse()) await root.auth.admin.deleteUser(id)
