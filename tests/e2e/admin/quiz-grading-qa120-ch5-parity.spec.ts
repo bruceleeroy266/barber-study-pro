@@ -269,7 +269,18 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
     expect(reviewError).toBeNull()
     expect(reviewAssignments?.length).toBeGreaterThan(0)
     await instructorPage.reload()
-    const progressLine = instructorPage.getByText(/\d+\/\d+ completed \((?:targeted|in_review|review_completed|reassessed|evaluated)\)/).first()
+    // Reload closes both native disclosures. Reopen them before checking
+    // the persisted progress; a hidden <li> is not a missing assignment.
+    const refreshedGroup = instructorPage.locator('details').filter({
+      has: instructorPage.getByRole('heading', { name: 'Chapter Diagnostics', exact: true }),
+    }).first()
+    await refreshedGroup.locator('summary').first().dispatchEvent('click')
+    await expect(refreshedGroup).toHaveAttribute('open', '')
+    const refreshedChapter5 = instructorPage.locator('details[data-chapter-accordion]')
+      .filter({ hasText: 'Chapter 5 —' }).first()
+    await refreshedChapter5.locator('summary').first().dispatchEvent('click')
+    await expect(refreshedChapter5).toHaveAttribute('open', '')
+    const progressLine = refreshedChapter5.getByText(/\d+\/\d+ completed \((?:targeted|in_review|review_completed|reassessed|evaluated)\)/).first()
     await expect(progressLine).toBeVisible()
     await instructorContext.close()
   } finally {
