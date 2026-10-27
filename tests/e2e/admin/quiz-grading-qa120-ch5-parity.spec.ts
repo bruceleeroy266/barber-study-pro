@@ -168,7 +168,9 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
     await expect(page.getByText('Correct answer', { exact: true }).first()).toBeVisible()
     await expect(page.getByRole('link', { name: 'Retest Weak Areas' })).toBeVisible()
     // QA-93: actual browser-based boundary retakes in disposable infrastructure.
-    for (const target of [0, 50]) {
+    // End with an incorrect attempt so the instructor has outstanding misses to review.
+    // A later 100%-correct retake correctly clears current misses.
+    for (const target of [50, 0]) {
       await startChapterQuiz()
       const seen = new Set<string>()
       for (let index = 0; index < questions.length; index++) {
@@ -195,7 +197,7 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
       const { data: best, error: bestError } = await root.from('student_progress')
         .select('best_quiz_score').eq('user_id', studentA).eq('chapter_id', 'ch-5').single()
       expect(bestError).toBeNull()
-      expect(best?.best_quiz_score).toBe(target === 0 ? 50 : 100)
+      expect(best?.best_quiz_score).toBe(100)
     }
     await context.close()
 
