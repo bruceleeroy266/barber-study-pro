@@ -155,6 +155,18 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
       .select('best_quiz_score').eq('user_id', studentA).eq('chapter_id', 'ch-5').single()
     expect(persistedProgressError).toBeNull()
     expect(persistedProgress?.best_quiz_score).toBe(50)
+    // QA-174: the same authenticated student must be able to review
+    // the specific missed Chapter 5 questions, not merely see a grade.
+    await page.goto('/dashboard/missed-questions')
+    await expect(page.getByRole('heading', { name: 'Missed Question Bank' })).toBeVisible()
+    const chapter5MissedQuestions = page.getByText('Ch. 5', { exact: true })
+    await expect(chapter5MissedQuestions.first()).toBeVisible()
+    await expect(page.getByText(/Showing \d+ of \d+ missed questions/)).toBeVisible()
+    const missedCard = page.getByRole('button').filter({ has: chapter5MissedQuestions.first() }).first()
+    await missedCard.click()
+    await expect(page.getByText('Your answer', { exact: true }).first()).toBeVisible()
+    await expect(page.getByText('Correct answer', { exact: true }).first()).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Retest Weak Areas' })).toBeVisible()
     // QA-93: actual browser-based boundary retakes in disposable infrastructure.
     for (const target of [0, 50]) {
       await startChapterQuiz()
