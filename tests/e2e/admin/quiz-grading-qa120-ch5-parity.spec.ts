@@ -199,6 +199,13 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
       expect(bestError).toBeNull()
       expect(best?.best_quiz_score).toBe(100)
     }
+    // QA-174 parity: capture the student's current missed-question evidence
+    // after the final 0/50 attempt, then compare against the instructor view.
+    await page.goto('/dashboard/missed-questions')
+    const studentMissedQuestion = page.getByRole('button').filter({ hasText: /Missed \d+x/ }).first()
+    await expect(studentMissedQuestion).toBeVisible()
+    const studentMissedText = (await studentMissedQuestion.locator('p.text-white').first().textContent())?.trim()
+    expect(studentMissedText).toBeTruthy()
     await context.close()
 
     const instructorContext = await browser.newContext()
@@ -226,6 +233,10 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
     // The previous direct DOM mutation was overwritten during hydration.
     await chapter5Details.locator('summary').dispatchEvent('click')
     await expect(chapter5Details).toHaveAttribute('open', '')
+    // Latest chapter assessment must reflect the same 0/50 browser retake;
+    // best score (100%) and weighted chapter grade are separate metrics.
+    const assessmentMetric = chapter5Details.locator('div').filter({ has: chapter5Details.getByText('Chapter Assessment', { exact: true }) }).last()
+    await expect(assessmentMetric.getByText('0%', { exact: true })).toBeVisible()
     await expect(chapter5Details.getByText('Weakest Concepts', { exact: true })).toBeVisible()
     await expect(chapter5Details.getByText(/initial misses/).first()).toBeVisible()
     await expect(chapter5Details.getByText(/Targeted review/).first()).toBeVisible()
@@ -237,6 +248,7 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
     await expect(instructorBank.getByText(/missed questions recorded/)).toBeVisible()
     const missedQuestionCard = instructorBank.getByRole('button').filter({ hasText: /Missed \d+x/ }).first()
     await expect(missedQuestionCard).toBeVisible()
+    await expect(instructorBank.getByText(studentMissedText!, { exact: true })).toBeVisible()
     await missedQuestionCard.click()
     await expect(instructorBank.getByText('Your answer', { exact: true })).toBeVisible()
     await expect(instructorBank.getByText('Correct answer', { exact: true })).toBeVisible()
