@@ -315,6 +315,17 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
       if (await next.isDisabled()) break
       await next.click()
     }
+    // The UI updates progress optimistically, but server writes can still be
+    // in flight. The completion gate must be checked against persisted rows.
+    await expect.poll(async () => {
+      const {data, error} = await root.from('remediation_assignments')
+        .select('id,status,assignment_type,asset_id')
+        .eq('cycle_id',assignedCycle!.id)
+      expect(error).toBeNull()
+      expect(data?.length).toBeGreaterThan(0)
+      return data!.filter(item => item.status !== 'completed')
+        .map(item => `${item.assignment_type}:${item.asset_id}`)
+    }, {message:'All assigned activity writes must be persisted before review completion',timeout:30000}).toEqual([])
     await expect(page.getByRole('button', {name:'Complete Review'})).toBeEnabled()
     const completionResponsePromise = page.waitForResponse(response =>
       response.url().includes(`/api/remediation/cycles/${assignedCycle!.id}/events`) &&
