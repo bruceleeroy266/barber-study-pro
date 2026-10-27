@@ -26,7 +26,7 @@ export async function assignChapter5Review(studentId: string, conceptId: string)
   // Admin credentials remain exclusively on the server after caller and school checks.
   const admin=createAdminSupabase(url,key,{auth:{persistSession:false,autoRefreshToken:false}})
   const {data:existing,error:lookupError}=await admin.from('remediation_cycles').select('id').eq('user_id',studentId).eq('concept_id',conceptId).neq('status','evaluated').is('outcome',null).maybeSingle()
-  if (lookupError) return {success:false,message:'Unable to check active remediation'}
+  if (lookupError) { console.error('[QA174] active cycle lookup failed', {code:lookupError.code, message:lookupError.message}); return {success:false,message:'Unable to check active remediation'} }
   if (existing) return {success:true,message:'Review already assigned'}
   const content=chapter5ContentConceptMappings.filter(m=>m.conceptFamilyId===conceptId).map(m=>({assignment_type:'content_block',asset_id:m.contentBlockId,is_primary:true}))
   const cards=chapter5FlashcardConceptMappings.filter(m=>m.conceptFamilyId===conceptId).map(m=>({assignment_type:'flashcard',asset_id:m.flashcardId,is_primary:false}))
