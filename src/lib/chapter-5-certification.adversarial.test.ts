@@ -225,6 +225,34 @@ describe('C5 final adversarial end-to-end certification', () => {
     expect(new Set(allIds).size).toBe(140)
     expect(new Set(chapter5ReassessmentQuestions.map((q) => q.question.trim().toLowerCase())).size).toBe(90)
   })
+  it('QA-174: every instructor-targeted weakness has matching review lessons and flashcards', () => {
+    const provider = getChapterContentProvider('ch-5')!
+    for (const family of chapter5ConceptFamilies) {
+      const selected = chapter5PremiumQuizQuestions.filter(q =>
+        chapter5QuizQuestionConceptMappings.some(m => m.questionId === q.id && m.conceptFamilyId === family.id)
+      )
+      expect(selected.length).toBeGreaterThan(1)
+      const answers = Object.fromEntries(chapter5PremiumQuizQuestions.map(q => [
+        q.id,
+        selected.some(item => item.id === q.id)
+          ? (q.correct_answer === 'a' ? 'b' : 'a')
+          : q.correct_answer,
+      ]))
+      const report = buildChapter5InstructorDiagnostics({
+        studentId: 'qa174-disposable-student',
+        completionPercent: 100,
+        microCheckRows: [],
+        quizAttempts: [{ quiz_id: 'quiz-5', percentage: 0, answers_json: answers, completed_at: '2026-10-26T12:00:00.000Z' }],
+        referenceTime: '2026-10-26T12:01:00.000Z',
+      })
+      expect(report.weakestConcepts.some(concept => concept.conceptFamilyId === family.id)).toBe(true)
+      const bundle = provider.buildRemediationContentBundle(family.id)
+      expect(bundle.hasSufficientMaterial).toBe(true)
+      expect(bundle.contentBlockCount).toBeGreaterThan(0)
+      expect(bundle.flashcardCount).toBeGreaterThan(0)
+    }
+  })
+
   it('QA-174: a mixed-score Chapter 5 attempt produces the same razor gap in instructor diagnostics and targeted review', () => {
     const answers = Object.fromEntries(chapter5PremiumQuizQuestions.map((q) => [
       q.id,
