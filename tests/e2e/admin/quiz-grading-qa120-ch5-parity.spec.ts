@@ -316,7 +316,16 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
       await next.click()
     }
     await expect(page.getByRole('button', {name:'Complete Review'})).toBeEnabled()
+    const completionResponsePromise = page.waitForResponse(response =>
+      response.url().includes(`/api/remediation/cycles/${assignedCycle!.id}/events`) &&
+      response.request().method() === 'POST' &&
+      response.request().postDataJSON()?.eventType === 'review_completed'
+    )
     await page.getByRole('button', {name:'Complete Review'}).click()
+    const completionResponse = await completionResponsePromise
+    const completionBody = await completionResponse.json()
+    expect(completionResponse.status(), JSON.stringify(completionBody)).toBe(200)
+    expect(completionBody.success).toBe(true)
     await expect(page.getByText('Review Completed', {exact:false}).first()).toBeVisible()
     const {data:finished,error:finishedError} = await root.from('remediation_cycles')
       .select('status,review_completed_at').eq('id',assignedCycle!.id).single()
