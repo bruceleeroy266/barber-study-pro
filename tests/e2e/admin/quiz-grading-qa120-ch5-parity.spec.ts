@@ -202,7 +202,10 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
     await expect(chapter5Details).toHaveCount(1)
     // Chapter accordions can shift while the large instructor page hydrates.
     // Expand the native details element directly; verify its content below.
-    await chapter5Details.evaluate((element: HTMLDetailsElement) => { element.open = true })
+    // Use the native summary activation, and assert the actual expanded state.
+    // The previous direct DOM mutation was overwritten during hydration.
+    await chapter5Details.locator('summary').dispatchEvent('click')
+    await expect(chapter5Details).toHaveAttribute('open', '')
     await expect(chapter5Details.getByText('Weakest Concepts', { exact: true })).toBeVisible()
     await expect(chapter5Details.getByText(/initial misses/).first()).toBeVisible()
     await expect(chapter5Details.getByText(/Targeted review/).first()).toBeVisible()
