@@ -292,7 +292,7 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
     await studentReviewPage.locator('input[type="email"]').fill(actors[0].email)
     await studentReviewPage.locator('input[type="password"]').fill(password)
     await studentReviewPage.locator('button[type="submit"]').click()
-    await studentReviewPage.waitForURL(/\\/(?:beta-agreement|dashboard)(?:\\/|\\?|$)/)
+    await studentReviewPage.waitForURL(/\/(?:beta-agreement|dashboard)(?:\/|\?|$)/)
     await studentReviewPage.goto(`/dashboard/remediation/${assignedCycle!.id}`)
     await expect(studentReviewPage.getByRole('button', { name: 'Start Review' })).toBeVisible()
     await studentReviewPage.getByRole('button', { name: 'Start Review' }).click()
@@ -332,7 +332,7 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
     await outerAfter.locator('summary').first().dispatchEvent('click')
     const innerAfter = instructorPage.locator('details[data-chapter-accordion]').filter({hasText:'Chapter 5 —'}).first()
     await innerAfter.locator('summary').first().dispatchEvent('click')
-    await expect(innerAfter.getByText(/completed \\(review_completed\\)/).first()).toBeVisible()
+    await expect(innerAfter.getByText(/completed \(review_completed\)/).first()).toBeVisible()
     await instructorContext.close()
   } finally {
     // This entire test runs against a disposable local database only.
