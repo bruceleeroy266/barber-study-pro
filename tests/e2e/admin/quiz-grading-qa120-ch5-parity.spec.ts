@@ -282,6 +282,57 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
     await expect(refreshedChapter5).toHaveAttribute('open', '')
     const progressLine = refreshedChapter5.getByText(/\d+\/\d+ completed \((?:targeted|in_review|review_completed|reassessed|evaluated)\)/).first()
     await expect(progressLine).toBeVisible()
+    // QA-174: the same disposable student receives and completes the real
+    // instructor-assigned remediation through the authenticated browser UI.
+    const assignedCycle = reviewCycles!.find(c => c.concept_id === 'ch5-combs-brushes')
+    expect(assignedCycle).toBeDefined()
+    const studentReviewContext = await browser.newContext()
+    const studentReviewPage = await studentReviewContext.newPage()
+    await studentReviewPage.goto('/login')
+    await studentReviewPage.locator('input[type="email"]').fill(actors[0].email)
+    await studentReviewPage.locator('input[type="password"]').fill(password)
+    await studentReviewPage.locator('button[type="submit"]').click()
+    await studentReviewPage.waitForURL(/\\/(?:beta-agreement|dashboard)(?:\\/|\\?|$)/)
+    await studentReviewPage.goto(`/dashboard/remediation/${assignedCycle!.id}`)
+    await expect(studentReviewPage.getByRole('button', { name: 'Start Review' })).toBeVisible()
+    await studentReviewPage.getByRole('button', { name: 'Start Review' }).click()
+    await expect(studentReviewPage.getByRole('button', { name: 'Complete Review' })).toBeVisible()
+    const contentReview = studentReviewPage.getByRole('heading', {name:'Review Materials'}).last().locator('..')
+    while (await contentReview.getByRole('button', {name:'Mark as Reviewed'}).count() === 0) {
+      const collapsed = contentReview.locator('button[aria-expanded="false"]').first()
+      if (await collapsed.count() === 0) break
+      await collapsed.click()
+    }
+    const reviewSections = contentReview.locator('button[aria-expanded]')
+    for (let i=0; i<await reviewSections.count(); i++) {
+      const section = reviewSections.nth(i)
+      if (await section.getAttribute('aria-expanded') === 'false') await section.click()
+      const mark = contentReview.getByRole('button', {name:'Mark as Reviewed'}).first()
+      if (await mark.count()) await mark.click()
+    }
+    const cardReview = studentReviewPage.getByRole('heading', {name:'Flashcard Review'}).locator('..')
+    for (let i=0; i<20; i++) {
+      const mark = cardReview.getByRole('button', {name:'Mark as Reviewed'})
+      if (await mark.count()) await mark.click()
+      const next = cardReview.getByRole('button', {name:'Next'})
+      if (await next.isDisabled()) break
+      await next.click()
+    }
+    await expect(studentReviewPage.getByRole('button', {name:'Complete Review'})).toBeEnabled()
+    await studentReviewPage.getByRole('button', {name:'Complete Review'}).click()
+    await expect(studentReviewPage.getByText('Review Completed', {exact:false}).first()).toBeVisible()
+    const {data:finished,error:finishedError} = await root.from('remediation_cycles')
+      .select('status,review_completed_at').eq('id',assignedCycle!.id).single()
+    expect(finishedError).toBeNull()
+    expect(finished?.status).toBe('review_completed')
+    expect(finished?.review_completed_at).toBeTruthy()
+    await studentReviewContext.close()
+    await instructorPage.reload()
+    const outerAfter = instructorPage.locator('details').filter({has:instructorPage.getByRole('heading',{name:'Chapter Diagnostics',exact:true})}).first()
+    await outerAfter.locator('summary').first().dispatchEvent('click')
+    const innerAfter = instructorPage.locator('details[data-chapter-accordion]').filter({hasText:'Chapter 5 —'}).first()
+    await innerAfter.locator('summary').first().dispatchEvent('click')
+    await expect(innerAfter.getByText(/completed \\(review_completed\\)/).first()).toBeVisible()
     await instructorContext.close()
   } finally {
     // This entire test runs against a disposable local database only.
