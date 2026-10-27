@@ -30,6 +30,9 @@ import ProgressReportModal from './ProgressReportModal'
 import ChapterAccordionGroup, { ChapterAccordionChevron } from './ChapterAccordionGroup'
 import BackButton from '@/components/ui/BackButton'
 import { getInstructorNotes } from './actions'
+import Chapter5ReviewAssign from './Chapter5ReviewAssign'
+import { getChapter5ReviewStatus } from './chapter5-review-actions'
+import { chapter5ConceptFamilies } from '@/lib/chapter-5-concepts/concepts'
 import { type Chapter1MicroCheckAttemptRow } from '@/lib/chapter-1-concepts/micro-check-persistence'
 import {
   buildChapter1InstructorDiagnostics,
@@ -325,6 +328,8 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
   if (!resolvedStudent) {
     notFound()
   }
+
+  const chapter5ReviewHistory = usingDemoData ? [] : await getChapter5ReviewStatus(studentId)
 
   // Last Login signal (server-side only): auth.users.last_sign_in_at for this
   // verified roster student. Skipped for demo students (fictional IDs have no
@@ -1902,6 +1907,8 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
               </div>
             </div>
           </div>
+
+          {!usingDemoData && <Chapter5ReviewAssign studentId={studentId} concepts={chapter5ConceptFamilies.map(c=>({id:c.id,name:c.name}))} history={chapter5ReviewHistory} />}
 
           <div className="px-6 py-4 text-xs text-silver-gray">
             Chapter 5 now uses the shared mastery weights. Formal recovery will only apply after five unique reassessment questions are completed for the target concept.
