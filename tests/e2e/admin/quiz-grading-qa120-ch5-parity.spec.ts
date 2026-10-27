@@ -196,6 +196,14 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
     await instructorPage.waitForURL(/\/instructor(?:\/|$)/)
     await instructorPage.goto(`/instructor/student/${studentA}`)
     await expect(instructorPage.getByText('100%', { exact: true }).filter({ visible: true }).first()).toBeVisible()
+    // QA-174 acceptance: after a fully incorrect, saved Chapter 5 retake, the
+    // assigned instructor must see concept-specific weak areas and missed evidence.
+    const chapter5Details = instructorPage.locator('details[data-chapter-accordion]').filter({ hasText: 'Chapter 5 —' }).first()
+    await expect(chapter5Details).toHaveCount(1)
+    await chapter5Details.locator('summary').click()
+    await expect(chapter5Details.getByText('Weakest Concepts', { exact: true })).toBeVisible()
+    await expect(chapter5Details.getByText(/initial misses/).first()).toBeVisible()
+    await expect(chapter5Details.getByText(/Targeted review/).first()).toBeVisible()
     await instructorContext.close()
   } finally {
     // This entire test runs against a disposable local database only.
