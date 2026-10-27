@@ -227,6 +227,17 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
     await expect(chapter5Details.getByText('Weakest Concepts', { exact: true })).toBeVisible()
     await expect(chapter5Details.getByText(/initial misses/).first()).toBeVisible()
     await expect(chapter5Details.getByText(/Targeted review/).first()).toBeVisible()
+    // QA-174: the instructor must see actual missed question text and its
+    // answer comparison, not only an aggregate concept or miss count.
+    const instructorBank = instructorPage.locator('div.bg-charcoal').filter({
+      has: instructorPage.getByRole('heading', { name: 'Missed Question Bank', exact: true }),
+    }).last()
+    await expect(instructorBank.getByText(/missed questions recorded/)).toBeVisible()
+    const missedQuestionCard = instructorBank.getByRole('button').filter({ hasText: /Missed \d+x/ }).first()
+    await expect(missedQuestionCard).toBeVisible()
+    await missedQuestionCard.click()
+    await expect(instructorBank.getByText('Your answer', { exact: true })).toBeVisible()
+    await expect(instructorBank.getByText('Correct answer', { exact: true })).toBeVisible()
     await instructorContext.close()
   } finally {
     // This entire test runs against a disposable local database only.
