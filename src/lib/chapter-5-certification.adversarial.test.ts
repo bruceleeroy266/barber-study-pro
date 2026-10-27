@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest'
+import { calculateQuizScore } from './quiz-scoring'
+import { buildChapter5InstructorDiagnostics } from './chapter-5-concepts/instructor-diagnostics'
 import { chapter5PremiumContent } from './chapter-5-premium'
 import { chapter5PremiumFlashcards } from './chapter-5-premium-flashcards'
 import { chapter5PremiumQuizQuestions } from './chapter-5-premium-quiz'
@@ -223,4 +225,45 @@ describe('C5 final adversarial end-to-end certification', () => {
     expect(new Set(allIds).size).toBe(140)
     expect(new Set(chapter5ReassessmentQuestions.map((q) => q.question.trim().toLowerCase())).size).toBe(90)
   })
+  it('QA-174: a mixed-score Chapter 5 attempt produces the same razor gap in instructor diagnostics and targeted review', () => {
+    const answers = Object.fromEntries(chapter5PremiumQuizQuestions.map((q) => [
+      q.id,
+      chapter5QuizQuestionConceptMappings.some((m) => m.questionId === q.id && m.conceptFamilyId === 'ch5-razors')
+        ? (q.correct_answer === 'a' ? 'b' : 'a')
+        : q.correct_answer,
+    ]))
+    const scored = calculateQuizScore(
+      chapter5PremiumQuizQuestions.map((q) => ({ id: q.id, correctKey: q.correct_answer })),
+      answers,
+    )
+    const razorItems = chapter5QuizQuestionConceptMappings.filter((m) => m.conceptFamilyId === 'ch5-razors')
+    expect(scored.total).toBe(50)
+    expect(scored.missedCount).toBe(razorItems.length)
+    expect(scored.score).toBe(50 - razorItems.length)
+    expect(scored.percentage).toBe(Math.round(((50 - razorItems.length) / 50) * 100))
+
+    const diagnostics = buildChapter5InstructorDiagnostics({
+      studentId: 'qa174-disposable-student',
+      completionPercent: 100,
+      microCheckRows: [],
+      quizAttempts: [{
+        quiz_id: 'quiz-5',
+        percentage: scored.percentage,
+        answers_json: answers,
+        completed_at: '2026-10-26T12:00:00.000Z',
+      }],
+      referenceTime: '2026-10-26T12:01:00.000Z',
+    })
+    const razor = diagnostics.concepts.find((c) => c.conceptFamilyId === 'ch5-razors')
+    expect(diagnostics.chapterAssessmentPercent).toBe(scored.percentage)
+    expect(razor?.initialMisses).toBe(razorItems.length)
+    expect(razor?.observations).toBe(razorItems.length)
+    expect(diagnostics.weakestConcepts.some((c) => c.conceptFamilyId === 'ch5-razors')).toBe(true)
+    expect(diagnostics.remediationStatus).toContain('Razors')
+    const review = getChapterContentProvider('ch-5')!.buildRemediationContentBundle('ch5-razors')
+    expect(review.hasSufficientMaterial).toBe(true)
+    expect(review.contentBlockCount).toBeGreaterThan(0)
+    expect(review.flashcardCount).toBeGreaterThan(0)
+  })
+
 })
