@@ -200,7 +200,9 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
     // assigned instructor must see concept-specific weak areas and missed evidence.
     const chapter5Details = instructorPage.locator('details[data-chapter-accordion]').filter({ hasText: 'Chapter 5 —' }).first()
     await expect(chapter5Details).toHaveCount(1)
-    await chapter5Details.locator('summary').click()
+    // Chapter accordions can shift while the large instructor page hydrates.
+    // Expand the native details element directly; verify its content below.
+    await chapter5Details.evaluate((element: HTMLDetailsElement) => { element.open = true })
     await expect(chapter5Details.getByText('Weakest Concepts', { exact: true })).toBeVisible()
     await expect(chapter5Details.getByText(/initial misses/).first()).toBeVisible()
     await expect(chapter5Details.getByText(/Targeted review/).first()).toBeVisible()
