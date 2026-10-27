@@ -286,18 +286,12 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
     // instructor-assigned remediation through the authenticated browser UI.
     const assignedCycle = reviewCycles!.find(c => c.concept_id === 'ch5-combs-brushes')
     expect(assignedCycle).toBeDefined()
-    const studentReviewContext = await browser.newContext()
-    const studentReviewPage = await studentReviewContext.newPage()
-    await studentReviewPage.goto('/login')
-    await studentReviewPage.locator('input[type="email"]').fill(actors[0].email)
-    await studentReviewPage.locator('input[type="password"]').fill(password)
-    await studentReviewPage.locator('button[type="submit"]').click()
-    await studentReviewPage.waitForURL(/\/(?:beta-agreement|dashboard)(?:\/|\?|$)/)
-    await studentReviewPage.goto(`/dashboard/remediation/${assignedCycle!.id}`)
-    await expect(studentReviewPage.getByRole('button', { name: 'Start Review' })).toBeVisible()
-    await studentReviewPage.getByRole('button', { name: 'Start Review' }).click()
-    await expect(studentReviewPage.getByRole('button', { name: 'Complete Review' })).toBeVisible()
-    const contentReview = studentReviewPage.getByRole('heading', {name:'Review Materials'}).last().locator('..')
+    // Reuse the authenticated student context above (including beta-agreement acceptance).
+    await page.goto(`/dashboard/remediation/${assignedCycle!.id}`)
+    await expect(page.getByRole('button', { name: 'Start Review' })).toBeVisible()
+    await page.getByRole('button', { name: 'Start Review' }).click()
+    await expect(page.getByRole('button', { name: 'Complete Review' })).toBeVisible()
+    const contentReview = page.getByRole('heading', {name:'Review Materials'}).last().locator('..').locator('..')
     while (await contentReview.getByRole('button', {name:'Mark as Reviewed'}).count() === 0) {
       const collapsed = contentReview.locator('button[aria-expanded="false"]').first()
       if (await collapsed.count() === 0) break
@@ -310,7 +304,7 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
       const mark = contentReview.getByRole('button', {name:'Mark as Reviewed'}).first()
       if (await mark.count()) await mark.click()
     }
-    const cardReview = studentReviewPage.getByRole('heading', {name:'Flashcard Review'}).locator('..')
+    const cardReview = page.getByRole('heading', {name:'Flashcard Review'}).locator('..').locator('..')
     for (let i=0; i<20; i++) {
       const mark = cardReview.getByRole('button', {name:'Mark as Reviewed'})
       if (await mark.count()) await mark.click()
@@ -318,15 +312,14 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
       if (await next.isDisabled()) break
       await next.click()
     }
-    await expect(studentReviewPage.getByRole('button', {name:'Complete Review'})).toBeEnabled()
-    await studentReviewPage.getByRole('button', {name:'Complete Review'}).click()
-    await expect(studentReviewPage.getByText('Review Completed', {exact:false}).first()).toBeVisible()
+    await expect(page.getByRole('button', {name:'Complete Review'})).toBeEnabled()
+    await page.getByRole('button', {name:'Complete Review'}).click()
+    await expect(page.getByText('Review Completed', {exact:false}).first()).toBeVisible()
     const {data:finished,error:finishedError} = await root.from('remediation_cycles')
       .select('status,review_completed_at').eq('id',assignedCycle!.id).single()
     expect(finishedError).toBeNull()
     expect(finished?.status).toBe('review_completed')
     expect(finished?.review_completed_at).toBeTruthy()
-    await studentReviewContext.close()
     await instructorPage.reload()
     const outerAfter = instructorPage.locator('details').filter({has:instructorPage.getByRole('heading',{name:'Chapter Diagnostics',exact:true})}).first()
     await outerAfter.locator('summary').first().dispatchEvent('click')
