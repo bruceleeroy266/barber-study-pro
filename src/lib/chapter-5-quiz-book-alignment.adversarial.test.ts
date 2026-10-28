@@ -77,7 +77,7 @@ describe('C5 50-question source-book quiz hardening', () => {
       LO5: ['left-handed shears', 'reversed'],
       LO6: ['tension check', 'paper, plastic, or wire'],
       LO7: ['rotary, pivot, magnetic', 'clipper-motor comparison table'],
-      LO8: ['t-blade', 'outliner', 'light hand/free wrist'],
+      LO8: ['t-blade', 'outliner', 'light hand and follow manufacturer guidance'],
       LO9: ['attachment comb or guard', 'carbon-steel and ceramic', '00000'],
       LO10: ['changeable-blade razors', 'head, back, shoulder, tang, point, edge, heel, shank, pivot'],
       LO11: ['razor shaper or hair razor', 'texturizing and shaping hair'],
