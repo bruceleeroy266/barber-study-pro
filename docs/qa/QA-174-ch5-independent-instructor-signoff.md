@@ -89,6 +89,24 @@ Source is the original scan in `Milady_Searchable_Pages_081-160.pdf`, independen
 
 **No newly verified original-page-image checks are claimed for Q037–Q040 in this entry.** Do not mark 19/19 academic certification complete. Q025/Q031 bank updates require fresh passing CI at their commit.
 
+## QA-174-ACADEMIC-AUDIT-07 — Original scan review (2026-10-28)
+
+**Source:** `Milady_Searchable_Pages_081-160.pdf`, original raster pages inspected visually, mapping **segment page = printed page − 85**. This audit does not establish approval for earlier unresolved items.
+
+| Item | Original page evidence | Four choices and explanation | Decision |
+|---|---|---|---|
+| **Q037** | Printed pp.133–134, Procedure 5-1 (segment pp.48–49), plus honing guidelines | **A**: alternating, diagonal strokes on both faces of the edge; progressively lighter pressure and honing-edge tests are established by guidelines. **B** heavy pressure on one face, **C** rolling on edge, **D** honing heel only: contrary to safe procedure. Stored explanation consistent. | **Source-image PASS** |
+| **Q038** | Printed p.135, Procedure 5-2 (segment p.50), stropping guidelines | **C**: razor reverses on its back and strokes are diagonal on the opposite side. **A** vertical strike, **B** rotate on cutting edge, **D** single-sided strokes: not instructed. Explanation consistent. | **Source-image PASS** |
+| **Q039** | Printed pp.128–130 (segment pp.43–45), hot towel cabinet, latherizers and electric massager | **D**: all three are identified as appliances for shaving and comfort-related barber services. **A** hone/strop/shear case, **B** shear components, **C** clipper components are not such a matching group. Stored explanation consistent. | **Source-image PASS** |
+| **Q040** | Printed p.132 (segment p.47), “Learn How to Remove Hair Clippings” | **B**: clean towel, paper neck strip and maintained vacuum with sanitized attachment described. **A** explicitly unclean duster contradicts sanitation, **C** used cape, **D** compressed air not source methods. Explanation consistent. | **Source-image PASS** |
+| **Q045** | Printed p.116 (segment p.31), Table 5-4 “Compare Clipper Motors” | **D** consistent: rotary high power/high speed; pivot high power/lower speed, quiet, appropriate for coarse/thick/damp; magnetic reliable, high speed, dry fine-texture cutting. **A/B/C** do not represent source motor categories and properties. Explanation consistent. | **Source-image PASS** |
+| **Q047** | Printed pp.116 and 118 (segment pp.31,33), outliner section and “CAUTION” | **C** is closest: light pressure plus safe, manufacturer-recommended blade settings; original reference **does not expressly teach “free wrist.”** **A/B** aggressive pressure or flush blades are contraindicated, **D** guard does not replace sanitation. Correct-option C and explanation revised to remove unsupported free-wrist phrase. | **Revised; source-image-supported, CI pending** |
+| **Q050** | Printed pp.130–131 and 138–139 (segment pp.45–46,53–54), thermal precautions and Procedure 5-4 | **C** matches preparing/sectioning, testing temperature, controlled continuous movement, and scalp protection. **A/B** overheating or contacting scalp and **D** omitting temperature test conflict with guidance. Explanation source-consistent. | **Source-image PASS** |
+
+**CI check:** Workflow #40636635412 failed Verify Build / Unit tests because LO12 adversarial evidence test expected an outdated literal string (`shank during honing or stropping`) after the Q025 source-supported wording changed to “and stropping.” The expectation was updated without removing the required learning objective. Another test expectation was updated for Q047 source-aligned phrase. New CI required on current head; prior CI success does not certify new commits.
+
+**Total questions examined: 19/19. This is not 19/19 fully certified.** Earlier conditional items include Q018 and source-image/explanation closure on Q025/Q031; no release authorization yet.
+
 ## Item review register
 
 | Item | Candidate key | Candidate PDF pages (NOT verified) | Exact printed page / figure (required) | Decision | Source rationale, distractor checks, explanation disposition | Internal auditor / evidence link |
