@@ -249,8 +249,8 @@ export const chapter5PremiumQuizQuestions: QuizQuestion[] = [
     answer_c: "To eliminate the need for cleaning and disinfecting clipper tools",
     answer_d: "To leave hair longer than cutting with clipper blades alone",
     correct_answer: 'd',
-    explanation: 'Chapter 5 explains that clipper guards (attachment combs) allow hair to remain longer than with the clipper blades alone. Guards are supplemental length guides; the clipper blades perform the actual cutting.',
-    difficulty: 'medium',
+    explanation: strategyExplanation("purpose of a clipper guard", "guards neither sharpen blades nor do the actual cutting; sanitation remains required", "Chapter 5 says attachment combs are supplemental length guides that leave hair longer than bare blades", "choose the longer-length function of a guard"),
+    difficulty: 'hard',
     order_index: 18,
   },
   {
