@@ -32,3 +32,12 @@
 5. Merge/deploy solely through the authorized release process; record resulting commit and production verification.
 
 **Final outcome: NO-GO. QA-174 academic flagged-item audit and code CI have supporting evidence, but release certification criterion 8/8 is not closed. No merge requested or performed.**
+
+## RELEASE-CERT-02 — Branch, diff, and metadata reconciliation (2026-10-28)
+
+- **PR #452**: OPEN, unmerged, base `main` at `8785069`, head `quiz-grading-qa150-ch5-academic-review` at `01966c2`, **34 commits / 21 changed files**. Diff covers premium quiz, adversarial tests, CI workflow, and QA-150–166 evidence files. Its 19-question QA-174 summary is carried in the **stacked** PR, not PR #452 itself.
+- **PR #453**: OPEN, unmerged, base `quiz-grading-qa150-ch5-academic-review` at `28cff4f`, head `qa-169-ch5-source-scoped-corrections` at `ccab68f`, **60 commits / 22 changed files**. Its diff includes quiz/flashcards, remediation instructor UI and services, Supabase migrations, tests, CI and QA-174 audit files. It cannot be reviewed as a direct `main` diff without accounting for its parent PR.
+- PR descriptions were **reconciled and updated** in place to reflect verified branch stack, actual changed-file scope, QA-174's **19 flagged items** rather than an unverified full 50/200 image audit, CI provenance and explicit review-only hold.
+- REST branch protection endpoint `/branches/main/protection` returned **HTTP 401** without authenticated settings access. Public rules endpoint returned an empty collection, **not** conclusive evidence that no private/enforced protection exists. Actual branch protection/CODEOWNERS requirements remain **UNVERIFIED**.
+- Previous inspection of both PR review submissions returned **zero approvals**. Review and owner GO cannot be performed or fabricated on behalf of authorized maintainers; neither PR merged.
+- **Decision reaffirmed: NO-GO** until GitHub maintainers verify rules, review both diffs/migrations, approve both PRs, preserve CI on the integration candidate and explicitly authorize merge.
