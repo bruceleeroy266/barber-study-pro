@@ -41,3 +41,13 @@
 - REST branch protection endpoint `/branches/main/protection` returned **HTTP 401** without authenticated settings access. Public rules endpoint returned an empty collection, **not** conclusive evidence that no private/enforced protection exists. Actual branch protection/CODEOWNERS requirements remain **UNVERIFIED**.
 - Previous inspection of both PR review submissions returned **zero approvals**. Review and owner GO cannot be performed or fabricated on behalf of authorized maintainers; neither PR merged.
 - **Decision reaffirmed: NO-GO** until GitHub maintainers verify rules, review both diffs/migrations, approve both PRs, preserve CI on the integration candidate and explicitly authorize merge.
+
+## RELEASE-CERT-03 — Maintainer authorization and Supabase scope (2026-10-28)
+
+- Three standard CODEOWNERS locations checked on `main`: `.github/CODEOWNERS`, `CODEOWNERS`, `docs/CODEOWNERS`. All returned **404**, so no file-based CODEOWNERS requirement was found in those locations. This does not prove absence of an organization-level or external policy.
+- Public `/rules/branches/main` returned an empty array; authenticated `/branches/main/protection` returned **401**. Required review count and effective branch protection remain **unverified**.
+- Both PR #452 and PR #453 returned **0 reviews**. No authorized reviewer identity was established. Do not send a fabricated approval or guess at a reviewer.
+- Checked PR #453 Supabase migrations: `20261027143000_qa174_remediation_service_read.sql` grants SELECT on `remediation_cycles` and `remediation_assignments` to `service_role`; `20261027150000_qa174_service_remediation_event_write.sql` grants column-scoped UPDATE and event SELECT/INSERT to `service_role`, not `authenticated`.
+- Checked `chapter5-review-actions.ts`: server action authenticates the caller, checks instructor/admin role and school, enforces instructor assignment before use of server-only service-role client, validates Chapter 5 concept and checks for existing cycle. **Static security review only:** no independent exploit assessment or production migration execution was performed. Service-role privileges require authorized maintainer/security review before merger.
+- GitHub Actions run **#40678559761** for preceding QA branch commit `9bfa2bb` reported **success**. Any documentation commit after that run needs current-head checks for strict release signoff.
+- Release remains **NO-GO**: no verified protection requirements, no maintainer approval, and no explicit owner GO.
