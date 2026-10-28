@@ -22,6 +22,19 @@ Source accessed: Google Drive `Milady_Searchable_Pages_081-160.pdf` (original fu
 
 **Audit counts:** 4/19 questions have a preliminary OCR cross-check; **0/19 complete source-image verifications**. No answer keys, explanations, or runtime academic content have been changed. Next inspect the source PDF's original page images to resolve OCR/diagram uncertainty, then continue Q018 onward.
 
+## Original-page image audit — four questions (2026-10-27)
+
+Authoritative source: original page images in `Milady_Searchable_Pages_081-160.pdf` (page offset: PDF page 20 = printed p.105). Images visually inspected, not OCR alone. Decisions below concern source support for the full proposed **answer choices**; production explanation text still requires exact comparison against the question bank before final certification. The earlier candidate PDF page ranges in the register are **not reliable** and are superseded by these visually verified printed pages.
+
+| Item | Original printed source | Keyed answer | Four-choice source evaluation | Audit disposition |
+|---|---|---|---|---|
+| Q006 | p.105–106 (PDF segment pp.20–21), “Know Your Comb Basics” and comb styles | C | **C** is a sensible tool-safety recommendation but the original page images describe smooth rounded teeth and avoiding snagging, **not an explicit replacement threshold** for worn, broken or missing teeth. **A/B/D** are unsupported arbitrary replacement criteria and are therefore unsuitable answers; **C's claimed source-specific condition remains inferential**. | **REVISE** stem to ask about smooth, rounded teeth / snagging, or independently source an explicit replacement rule; no approval yet |
+| Q008 | p.110 (PDF segment p.25), “Size” and adjacent shear illustrations pp.110–111 | B | Original page explicitly states preference for **6½–7½ inches** to facilitate shear-over-comb. **B supported**, with fit and service context a reasonable qualifier. **A** asserts a universal 5½–6 standard not taught; **C** 4-inch-only contradicts source; **D** denies fit/technique relation contrary to the text. | **KEY B VERIFIED** from image; check actual stored explanation before fully closing |
+| Q012 | pp.111–112 (PDF segment pp.26–27), Fig.5-19 and Table 5-3 | C | The table says **thinning/blending shears remove bulk or weight**; texturizing shears create pattern/texture. **C's** extra “without changing overall length” claim is **not stated**, and “create texture” blurs the types. **A** blunt straight cuts, **B** neckline shaving, **D** disinfection are unrelated. | **REVISE keyed C** to “To remove bulk or weight and blend hair ends” while retaining the other distractors if explanation is adjusted |
+| Q017 | p.118 (PDF segment p.33), left-column **CAUTION** on outliner blades | B | Caution expressly says never set blades flush (skin cuts/irritation/ingrowns) and to follow manufacturer recommendations. **B directly supported**; **A** flush setting expressly prohibited; **C** extra pressure conflicts with p.116 light-hand direction; **D** removing still blade is not an endorsed service technique. | **KEY B VERIFIED** from image; check actual stored explanation before fully closing |
+
+**Image checks completed: 4/4. Answer-choice dispositions: two source-supported candidate keys (Q008/Q017), two revision cases (Q006/Q012). Full item approvals: 0/4 pending the actual stored explanations and, for two items, revised question wording. No production key/content changes were made.**
+
 ## Item review register
 
 | Item | Candidate key | Candidate PDF pages (NOT verified) | Exact printed page / figure (required) | Decision | Source rationale, distractor checks, explanation disposition | Internal auditor / evidence link |
