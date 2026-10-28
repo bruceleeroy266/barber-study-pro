@@ -169,7 +169,7 @@ export const chapter5PremiumQuizQuestions: QuizQuestion[] = [
     answer_c: 'To blend hair ends and remove bulk or weight',
     answer_d: 'To disinfect tools between clients',
     correct_answer: 'c',
-    explanation: 'Chapter 5 Table 5-3 describes thinning and blending shears as having many narrow teeth and being used to blend hair ends and remove bulk or weight. It distinguishes these from texturizing shears that add texture.'
+    explanation: 'Chapter 5 Table 5-3 describes thinning and blending shears as having many narrow teeth and being used to blend hair ends and remove bulk or weight. It distinguishes these from texturizing shears that add texture.',
     difficulty: 'medium',
     order_index: 12,
   },
