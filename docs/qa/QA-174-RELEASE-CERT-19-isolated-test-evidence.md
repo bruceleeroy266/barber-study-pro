@@ -48,3 +48,12 @@ Date: 2026-10-28. Target: Supabase project `ascyn-pro-restore-qa-oct21` (`ssbtzo
 - Instructor browser run **INCOMPLETE**: attempt to log in as School B instructor exhausted browser interaction budget before reaching login. No application-level cross-school denial test completed.
 - PostgreSQL `SET LOCAL ROLE authenticated` / `request.jwt.claim.sub` transactions followed by `ROLLBACK`: School B instructor `b37adf55-eff8-41de-86c3-5508a4eaada3` saw 2 own-school profile rows and 0 School A profile rows; School A instructor `73990fd4-a384-4fba-964b-0cdc10e7b6c2` saw 3 own-school profile rows and 0 School B profile rows. These are DB-role/RLS policy tests, **not** signed-in HTTP endpoint tests.
 - Still required for GO: authenticated instructor/ student positive/negative HTTP authorization tests using separate real sessions; remediation assignment / reassessment / evaluation lifecycle; final exact-head CI; owner release acceptance. Status **NO-GO**. Do not merge or promote.
+
+## QA-174 FINAL — roster root cause and corrected fixture (2026-10-28)
+
+- Root cause of empty School B instructor roster: missing `student_instructor_assignments` relationship. The instructor dashboard applies `loadAssignedStudentIds` before reading student profiles; program enrollment alone does not authorize roster visibility. This was a QA fixture gap, not a confirmed app bug.
+- Created isolated QA School B `students` row, active barber `programs` row, and active `enrollments` row for the test student; insert used canonical `students.id` enrollment foreign key.
+- Created active canonical `student_instructor_assignments` row for School B instructor `b37adf55-eff8-41de-86c3-5508a4eaada3` and student profile `bf2eb821-8adf-43c8-9b5c-0ccf43b7a71e`. No application code changes.
+- Live authenticated Preview School B instructor roster then showed assigned School B test student and no School A learners: PASS for roster visibility. This is a UI read test, **not** a direct cross-school IDOR/HTTP denial test.
+- GitHub Actions run `40778851994` for pre-evidence-update SHA `e11f10f0c3e4ad63714029e2705d0ddf34aa62b6`: overall SUCCESS. Exact-head CI for this document-only commit must be checked independently.
+- Direct negative cross-school HTTP authorization test and full application remediation/reassessment cycle NOT established. **NO-GO** until both pass; no production merge or deployment.
