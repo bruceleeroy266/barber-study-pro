@@ -76,6 +76,19 @@ Source is the original scan in `Milady_Searchable_Pages_081-160.pdf`, independen
 
 **CI defect identified and fixed separately:** Missing commas after the newly edited `fc-5-006` back field and `qq-5-012` explanation caused TypeScript TS1005 failures in run #40624649055. Commits `cf6dd34` and `902d031` repair syntax; replacement CI must pass before release.
 
+## QA-174-ACADEMIC-AUDIT-06 — Q025/Q031 revision and Q037–Q040 cross-check (2026-10-28)
+
+**Source:** Connected `Milady_Searchable_Pages_081-160.pdf`, Chapter 5 searchable text. This batch's Q037–Q040 findings use **searchable text**, not a fresh visual confirmation of every original figure/procedure page. They are provisional until page images are inspected.
+
+- **Q025 REVISED** in `src/lib/chapter-5-premium-quiz.ts` (key **A** retained): source Honing Guidelines describe index finger on shank for even pressure, flat blade contact, and equal work on each side; Stropping Guidelines establish shank/pivot control and reversing on the razor back. Explanation no longer implies the same exact grip for both tasks. **Source-text supported; item-level image certification pending.**
+- **Q031 REVISED** (key **A** retained): replaced unsupported “pressing comb directly on scalp” stem with the source's **thermal-iron scalp protection** instruction (hard-rubber comb between scalp and iron; no metal comb barrier), and revised all four answer choices plus explanation. **Source-text supported; original illustration/image check and CI pending.**
+- **Q037 (honing sequence):** Honing Guidelines and Procedure 5-1 textual extraction support diagonal, edge-first strokes, equal strokes/pressure on both sides, reducing pressure as edge sharpens, and testing a honed edge. **A supported by text**, B/C/D conflict with the described procedure or confuse strop and hone. The stored strategy explanation is consistent. **Provisional PASS pending original procedure-page image.**
+- **Q038 (stropping reversal):** Stropping Guidelines explicitly describe reversing by rolling the razor on its back and using slightly diagonal strokes. **C supported by text**; A/B/D incompatible. Stored explanation aligns. **Provisional PASS pending original procedure-page image.**
+- **Q039 (shaving/comfort equipment):** “Appliances Used in Barbering Services” lists hot-towel cabinet, latherizers and electric massager, with corresponding shave/comfort functions. **D supported by text**; A/B/C are unrelated equipment components or tool maintenance items. Stored explanation aligns. **Provisional PASS pending page image.**
+- **Q040 (clipping removal):** “Learn How to Remove Hair Clippings” lists folded cloth/paper towel, paper neck strips, and vacuum systems with nozzle cleaning/disinfection. **B supported by text**; A uses *unclean* duster (source says clean/disinfect after each use and notes possible state prohibitions), C used cape and D compressed air are not endorsed. Stored explanation aligns. **Provisional PASS pending page image.**
+
+**No newly verified original-page-image checks are claimed for Q037–Q040 in this entry.** Do not mark 19/19 academic certification complete. Q025/Q031 bank updates require fresh passing CI at their commit.
+
 ## Item review register
 
 | Item | Candidate key | Candidate PDF pages (NOT verified) | Exact printed page / figure (required) | Decision | Source rationale, distractor checks, explanation disposition | Internal auditor / evidence link |
