@@ -81,7 +81,7 @@ describe('C5 50-question source-book quiz hardening', () => {
       LO9: ['attachment comb or guard', 'carbon-steel and ceramic', '00000'],
       LO10: ['changeable-blade razors', 'head, back, shoulder, tang, point, edge, heel, shank, pivot'],
       LO11: ['razor shaper or hair razor', 'texturizing and shaping hair'],
-      LO12: ['holding a straight razor for shaving', 'shank during honing or stropping'],
+      LO12: ['holding a straight razor for shaving', 'shank during honing and stropping'],
       LO13: ['hollow-ground and wedge', 'crocus finish'],
       LO14: ['source procedure for honing', 'gradually lighten pressure'],
       LO15: ['stropping', 'roll the razor on its back'],
