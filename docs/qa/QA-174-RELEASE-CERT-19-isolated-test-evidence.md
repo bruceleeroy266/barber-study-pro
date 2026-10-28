@@ -19,3 +19,11 @@ Date: 2026-10-28. Target: Supabase project `ascyn-pro-restore-qa-oct21` (`ssbtzo
 ## Release decision
 
 **NO-GO.** Database-only isolated rollback tests provide partial technical evidence but do not satisfy the mandatory two-school authenticated end-to-end acceptance gate. Do not merge or deploy PR #452, #453 or draft #454 until that gate is demonstrated and explicit owner release authorization is granted.
+
+## RELEASE-CERT-20 — Authenticated test provisioning gate (2026-10-28)
+
+- CI run [#40739024443](https://github.com/bruceleeroy266/barber-study-pro/actions/runs/40739024443) at commit `8b37e2dfc0c059ca4d39064c2789c305d41dad27` completed **success** on both Verify Build and Pilot Onboarding Certification jobs.
+- Isolated QA project `ssbtzoukmvafcfympayd` still contains dedicated QA identities from **one** school only (verified by read-only school-count query).
+- Connected Supabase capabilities provide SQL/project administration but no authenticated test-user provisioning/sign-in action. Generating database profile rows alone would not create valid Auth sessions and would falsely certify an application-level test. No such claim is made.
+- The previous rollback-only database exercise remains evidence of RPC creation/idempotency, initial cycle progression and event immutability. **No signed-in School A / School B HTTP or browser test, cross-school denial, reassessment or evaluation was executed.**
+- **NO-GO.** Provision real Auth-managed dedicated School B instructor and student users in the isolated project, obtain a supported authenticated QA application/browser test environment, and exercise same-school success and cross-school rejection before release. No merge/deployment.
