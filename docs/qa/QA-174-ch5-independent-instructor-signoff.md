@@ -35,6 +35,25 @@ Authoritative source: original page images in `Milady_Searchable_Pages_081-160.p
 
 **Image checks completed: 4/4. Answer-choice dispositions: two source-supported candidate keys (Q008/Q017), two revision cases (Q006/Q012). Full item approvals: 0/4 pending the actual stored explanations and, for two items, revised question wording. No production key/content changes were made.**
 
+## Follow-up audit — revisions and Q018/Q019/Q023/Q024 (2026-10-27)
+
+### Applied content changes
+- **Q006** quiz stem/keyed option/explanation rewritten to test **smooth, rounded comb teeth that avoid snagging** (original printed p.105). Correct choice remains **C**. Matching `fc-5-006` flashcard updated to avoid contradicting the quiz. The former replacement interval/criteria were not presented as a cited textbook rule.
+- **Q012** quiz stem/keyed option/explanation rewritten to test **thinning and blending shears for blending hair ends and removing bulk or weight** (original printed pp.111–112, Table 5-3). Correct choice remains **C**.
+- **Q008** stored explanation cross-checked: cites 6½–7½-inch preference, rejects unjustified absolutes, retains service/fit qualification. **Explanation supported by original p.110.**
+- **Q017** stored explanation cross-checked: rejects flush outliner blade positioning and excess pressure, defers to manufacturer alignment; original pp.116,118 support safety and light-touch points. **Explanation supported by original pages.**
+- **Q006 and Q012** replacement explanations were written to match the inspected original pages; verify the revision in required CI before release.
+
+### Next four original-source checks
+| Item | Original source inspected | Choice and explanation analysis | Disposition |
+|---|---|---|---|
+| **Q018** | Printed pp.116–118 (original images); source discusses outliner light pressure, manufacturer alignment, and separately maintenance; OCR chapter clipper section | D is **prudent troubleshooting**, A/B worsen the situation, C is premature; however, these pages do **not explicitly enumerate all four claimed checks for a snagging event**. The stored explanation asserts source support too broadly. | **PARTIAL; source-specific troubleshooting passage still required**, or revise explanation to identify its safety inference |
+| **Q019** | Printed p.116, original Fig.5-32 and outliners text | T-blade used for **rounded or difficult areas** and outliner for detail/fine finish including facial hair. A is best among choices; B/C/D not purposes described. But “extremely close” and “extended blade reaches tight corners” are not exact source claims. | **REVISE wording/explanation to focus on rounded/difficult areas and precision finish** |
+| **Q023** | Connected searchable Chapter 5 source text, heading on hones/strops; **printed page image not yet inspected** | Source explicitly says strop smooths/aligns razor edge and polishes blade; B matches. A hone not strop; C/D not function. The stored explanation adds variable frequency/manufacturer assertions without a direct passage here. | **PRELIMINARY SOURCE-TEXT MATCH; original printed page and full explanation pending** |
+| **Q024** | Connected searchable Chapter 5 source text, heading “Holding the Straight Razor”; **printed page image not yet inspected** | Source describes shaving grip with thumb and first two fingers on flat shank, handle pivoted up, little finger at tang; D supported. A/B/C conflict with described grip/task distinction. Stored explanation broadly matches but requires printed figure verification. | **PRELIMINARY SOURCE-TEXT MATCH; original illustration and explanation pending** |
+
+**Evidence status:** Four original page-image checks from prior batch; two further original-page image checks (Q018/Q019); two textual-only checks (Q023/Q024) not yet image-certified. These findings do not constitute full 19/19 certification or release authorization.
+
 ## Item review register
 
 | Item | Candidate key | Candidate PDF pages (NOT verified) | Exact printed page / figure (required) | Decision | Source rationale, distractor checks, explanation disposition | Internal auditor / evidence link |
