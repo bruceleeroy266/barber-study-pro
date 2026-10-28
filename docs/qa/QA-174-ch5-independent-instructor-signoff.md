@@ -1,22 +1,19 @@
-# QA-174 — Independent Chapter 5 Academic Sign-Off
+# QA-174 — Internal Chapter 5 Source-Based Academic Audit
 
-**Status: AWAITING EXTERNAL QUALIFIED INSTRUCTOR — 0/19 certified.** This is an evidence-entry form, not academic approval. Do not merge or release on the basis of this file alone.
+**Status: INTERNAL SOURCE AUDIT IN PROGRESS — 0/19 source-verified.** No external instructor signature is required by the internal QA gate. This document records evidence, not automatic approval. Do not merge or release on the basis of this file alone.
 
-## Reviewer certification
+## Internal source audit record
 
-- Reviewer full name: **NOT PROVIDED**
-- Barber educator qualification / license, issuing jurisdiction, and current status: **NOT PROVIDED**
-- School / role: **NOT PROVIDED**
+- Internal auditor / accountable owner: **NOT RECORDED**
 - Source textbook edition and publisher: **NOT CONFIRMED**
 - Review date (UTC or local plus timezone): **NOT PROVIDED**
-- Independent review declaration: **NOT SIGNED**
-- Reviewer signature / verifiable GitHub PR review link: **NOT PROVIDED**
+- Evidence record owner and date: **PENDING**
 
-**Procedure:** Inspect the original page image for every item, including relevant tables and diagrams. Record **exact printed book page** (and PDF page), answer-key decision (approve / revise / reject), support for the keyed option, each of the three distractors, and explanation accuracy. When not supported, write the proposed correction and mark **revise**, never approve by inference or OCR alone. Record a reviewer identity and verifiable approval. A named reviewer must independently assess all 19 items and all 76 alternatives before certification.
+**Procedure:** Inspect the original page image for every item, including relevant tables and diagrams. Record **exact printed book page** (and PDF page), answer-key decision (approve / revise / reject), support for the keyed option, each of the three distractors, and explanation accuracy. When not supported, write the proposed correction and mark **revise**, never approve by inference or OCR alone. Record an auditable internal decision for all 19 items and all 76 alternatives. No independent external sign-off is required for this internal gate.
 
 ## Item review register
 
-| Item | Candidate key | Candidate PDF pages (NOT verified) | Exact printed page / figure (required) | Decision | Source rationale, distractor checks, explanation disposition | Reviewer initials |
+| Item | Candidate key | Candidate PDF pages (NOT verified) | Exact printed page / figure (required) | Decision | Source rationale, distractor checks, explanation disposition | Internal auditor / evidence link |
 |---|---|---|---|---|---|---|
 | Q006 | C | 100–103 | **PENDING** | **PENDING** | **PENDING** — Comb replacement rule: verify whether textbook explicitly names worn/broken/missing teeth; review explanation claims about snagging and uneven sections. | **PENDING** |
 | Q008 | B | 104–106 | **PENDING** | **PENDING** | **PENDING** — Shear length: check original figure/text for 6½–7½ inches because OCR fractions are unreliable. | **PENDING** |
@@ -44,7 +41,7 @@
 - [ ] All 76 alternatives independently evaluated.
 - [ ] All 19 explanations reconciled to source evidence.
 - [ ] All rejected or revised items corrected and re-reviewed.
-- [ ] Qualification and independent sign-off recorded with a verifiable audit trail.
+- [ ] Internal audit evidence and decisions recorded with a verifiable audit trail.
 - [ ] PR #452 and PR #453 reviewed and approved by authorized maintainers.
 - [ ] Final CI rerun on approved head commit, required checks passed.
 - [ ] Release authorization explicitly recorded.
