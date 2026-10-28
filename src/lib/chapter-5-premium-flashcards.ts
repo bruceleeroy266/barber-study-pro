@@ -62,7 +62,7 @@ export const chapter5PremiumFlashcards: Flashcard[] = [
     id: 'fc-5-006',
     chapter_id: 'ch-5',
     front: 'Which comb features help avoid snagging hair?',
-    back: 'Chapter 5 describes smoothly finished, rounded comb teeth that glide through hair without snagging. Avoid rough or sharp-edged teeth.'
+    back: 'Chapter 5 describes smoothly finished, rounded comb teeth that glide through hair without snagging. Avoid rough or sharp-edged teeth.',
     category: 'Combs & Brushes',
     difficulty: 'easy',
     order_index: 6,
