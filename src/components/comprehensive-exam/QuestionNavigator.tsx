@@ -16,7 +16,7 @@ export default function QuestionNavigator({ items, currentPosition, onSelect }: 
         <span>Filled: answered</span>
         <span>★: flagged</span>
       </div>
-      <div className="grid grid-cols-10 gap-2 sm:grid-cols-11" aria-label="Question navigator">
+      <div className="grid grid-cols-5 gap-2 min-[400px]:grid-cols-6 sm:grid-cols-8 lg:grid-cols-10" aria-label="Question navigator">
         {items.map((item) => {
           const current = item.position === currentPosition
           const answered = Boolean(item.selectedOption)
@@ -28,7 +28,7 @@ export default function QuestionNavigator({ items, currentPosition, onSelect }: 
               aria-label={`Question ${item.position}${answered ? ', answered' : ', unanswered'}${item.flagged ? ', flagged' : ''}`}
               aria-current={current ? 'step' : undefined}
               className={[
-                'relative flex aspect-square min-h-9 items-center justify-center rounded border text-xs font-semibold',
+                'relative flex aspect-square min-h-11 min-w-0 items-center justify-center rounded border text-xs font-semibold',
                 'focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)]',
                 current ? 'ring-2 ring-[var(--color-brand-gold)]' : '',
                 answered

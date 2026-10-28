@@ -168,6 +168,25 @@ export default function ExamShell() {
     }
   }
 
+  // Report the question the student is viewing independently of saved answers.
+  useEffect(() => {
+    if (!attempt?.attemptId || attempt.status !== 'active' || view !== 'active') return
+    const timeout = window.setTimeout(() => {
+      void (async () => {
+        try {
+          const response = await fetch(`/api/comprehensive-exam/attempts/${attempt.attemptId}/position`, {
+            method: 'PUT', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ position: currentPosition }),
+          })
+          if (!response.ok) console.warn('[ExamReady] Current question reporting failed', response.status)
+        } catch (error) {
+          console.warn('[ExamReady] Current question reporting unavailable', error)
+        }
+      })()
+    }, 300)
+    return () => window.clearTimeout(timeout)
+  }, [attempt?.attemptId, attempt?.status, currentPosition, view])
+
   const currentItem = useMemo(
     () => attempt?.items.find((item) => item.position === currentPosition) ?? null,
     [attempt?.items, currentPosition],
@@ -352,14 +371,14 @@ export default function ExamShell() {
   const flagged = attempt.items.filter((item) => item.flagged).length
 
   return (
-    <div className="space-y-5">
+    <div className="min-w-0 space-y-5">
       <Card variant="ghost" padding="sm">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-xs text-[var(--color-text-muted)]">Server-authoritative time remaining</p>
             <p className="text-2xl font-bold text-white" aria-live="polite">{formatClock(secondsLeft)}</p>
           </div>
-          <div className="flex gap-5 text-sm">
+          <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
             <span className="text-[var(--color-text-muted)]"><strong className="text-white">{answered}</strong>/110 answered</span>
             <span className="text-[var(--color-text-muted)]"><strong className="text-white">{flagged}</strong> flagged</span>
           </div>
@@ -377,7 +396,7 @@ export default function ExamShell() {
         onToggleFlag={toggleFlag}
       />
 
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center sm:justify-between">
         <Button
           type="button"
           variant="secondary"
@@ -386,7 +405,7 @@ export default function ExamShell() {
         >
           Previous
         </Button>
-        <Button type="button" variant="outline" onClick={() => setView('review')}>
+        <Button type="button" className="col-span-2 min-h-11 sm:order-none" variant="outline" onClick={() => setView('review')}>
           Review & Submit
         </Button>
         <Button
