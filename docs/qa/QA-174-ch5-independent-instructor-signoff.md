@@ -54,6 +54,15 @@ Authoritative source: original page images in `Milady_Searchable_Pages_081-160.p
 
 **Evidence status:** Four original page-image checks from prior batch; two further original-page image checks (Q018/Q019); two textual-only checks (Q023/Q024) not yet image-certified. These findings do not constitute full 19/19 certification or release authorization.
 
+## Original-image closure — Q018, Q019, Q023, Q024 (2026-10-27)
+
+- **Q018:** Explanation clarified in `chapter-5-premium-quiz.ts` that stopping when clippers snag is a safety-first inference, not a verbatim four-step source procedure. Cleanliness/lubrication and manufacturer guidance remain relevant. **Decision: conditional; no exact source passage establishing all four checks has been located.** Key D unchanged.
+- **Q019:** Correct option A and explanation rewritten around use of the T-blade in rounded/difficult areas and outliner detail/fine finishing, matching original printed p.116 (Fig.5-32). **Source-aligned revision committed; key A unchanged.**
+- **Q023:** **Original printed p.123**, searchable companion PDF p.38, page image inspected. Source distinguishes hone (grinds/sharpens) from strop (smooths and aligns razor edge, polishes blade). Proposed B correct; A describes hone, while C/D describe unrelated operations. Stored explanation's variable frequency/manufacturer qualification is a prudent qualifier but not a literal source rule; **key B approved at source-evidence level**.
+- **Q024:** **Original printed p.120**, searchable companion PDF p.35, page image inspected. Under “Holding the Straight Razor” the shaving grip positions thumb and first two fingers on flat shank and little finger at tang; honing/stropping has a different hold. D correct; A/B/C inconsistent with original instruction. Stored strategy explanation is supported by the task-specific grip distinction. **Key D and explanation approved at source-evidence level**.
+
+**Updated status:** Q023/Q024 are now image-checked; Q019 revision applied; Q018 still conditional. No production release or key-letter changes. Run CI for the revised bank before release certification.
+
 ## Item review register
 
 | Item | Candidate key | Candidate PDF pages (NOT verified) | Exact printed page / figure (required) | Decision | Source rationale, distractor checks, explanation disposition | Internal auditor / evidence link |
