@@ -63,6 +63,19 @@ Authoritative source: original page images in `Milady_Searchable_Pages_081-160.p
 
 **Updated status:** Q023/Q024 are now image-checked; Q019 revision applied; Q018 still conditional. No production release or key-letter changes. Run CI for the revised bank before release certification.
 
+## QA-174-ACADEMIC-AUDIT-05 — Original page-image inspection (2026-10-27)
+
+Source is the original scan in `Milady_Searchable_Pages_081-160.pdf`, independently rendered and visually inspected. PDF segment page number = printed textbook page minus 85.
+
+| Question | Printed page image(s) inspected | Answer/distractor/explanation disposition |
+|---|---|---|
+| **Q025** — shank control during honing/stropping | pp.120, 125–126, razor grip and stropping guidelines (PDF segment pp.35, 40–41) | **A partially supported**: shank control and proper blade positioning are taught, but the explanation “so the blade can lie flat and travel correctly” conflates the specific shaving/stropping/honing grips; review exact honing passage and current stored explanation before declaring certified. **B** pinching edge unsafe, **C** closing handle inconsistent, **D** working one side only inconsistent with stropping directions. **PENDING detailed honing evidence**. |
+| **Q027** — razor parts | p.119 (PDF segment p.34), **Fig.5-39**, original labeled diagram | **D verified**: head, back, shoulder, tang, point, edge, heel, shank, pivot are all identified. The figure also names blade and handle, so the stem's wording “which list contains only principal parts” correctly avoids implying the list is exhaustive. **A/B/C** contain parts of other implements and are not lists of razor parts. Source-image check **PASS**, provided stored explanation is consistent. |
+| **Q031** — metal pressing comb and scalp | pp.130–131 (PDF segment pp.45–46), thermal tools description and precautions | Source establishes heated **metal pressing combs** are used in straightening and heating stoves can become very hot. Safety rule specifically states to place a hard-rubber comb between the scalp and the **thermal iron**, never a metal comb. It does **not expressly say “metal pressing comb directly on scalp causes serious burns”** as written. **A is safety-plausible inference**, but the question should be rewritten to source-exact thermal-iron/scalp protection; other options B/C/D are not the source rationale. **REVISE**, do not certify. |
+| **Q034** — blowdryer near water | p.130 (PDF segment p.45), blowdryer safety bullets | Text explicitly prohibits using dryer near water. **A (“electrocution risk”) is a scientifically reasonable explanation**, but the source's bullet does not explicitly elaborate electrical-shock mechanism. **B/C/D** do not explain the immediate safety concern. **Key A supported with inference explicitly identified**, recommend explanation phrase “The source says never use the dryer near water; electrical shock/electrocution is the safety rationale,” not a purported direct quotation. |
+
+**CI defect identified and fixed separately:** Missing commas after the newly edited `fc-5-006` back field and `qq-5-012` explanation caused TypeScript TS1005 failures in run #40624649055. Commits `cf6dd34` and `902d031` repair syntax; replacement CI must pass before release.
+
 ## Item review register
 
 | Item | Candidate key | Candidate PDF pages (NOT verified) | Exact printed page / figure (required) | Decision | Source rationale, distractor checks, explanation disposition | Internal auditor / evidence link |
