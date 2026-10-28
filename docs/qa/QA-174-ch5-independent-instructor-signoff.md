@@ -11,6 +11,17 @@
 
 **Procedure:** Inspect the original page image for every item, including relevant tables and diagrams. Record **exact printed book page** (and PDF page), answer-key decision (approve / revise / reject), support for the keyed option, each of the three distractors, and explanation accuracy. When not supported, write the proposed correction and mark **revise**, never approve by inference or OCR alone. Record an auditable internal decision for all 19 items and all 76 alternatives. No independent external sign-off is required for this internal gate.
 
+## Internal audit — first source cross-check (2026-10-27)
+
+Source accessed: Google Drive `Milady_Searchable_Pages_081-160.pdf` (original full-book companion; OCR-derived searchable content). **These are preliminary textual cross-checks, not image-verified printed-page citations or approval.** Do not use fuzzy OCR fractions as final measurements.
+
+- **Q006 (comb replacement; candidate PDF 100–103):** OCR searches for “broken teeth” and “missing teeth” returned no matching passage. **Unverified**; inspect original page images, then confirm/revise wording.
+- **Q008 (shear size; candidate PDF 104–106):** Chapter 5 section on shear sizes explicitly describes typical barber preference and shear-over-comb use, but fractional sizes are garbled by OCR (rendered approximately as `62\" to 744”`). **Source topic confirmed; precise 6½–7½-inch key NOT verified**, inspect original Figure 5-18 / adjacent printed text.
+- **Q012 (texturizing / thinning shears; candidate PDF 106–107):** Chapter 5 Table 5-3 distinguishes texturizing from thinning/blending, describing bulk or weight removal and texture. **“Without changing overall length” is not established by the retrieved passage**; consider editing the keyed option after image inspection.
+- **Q017 (outliner blade safety; candidate PDF 111–112):** Chapter 5 self-review explicitly asks why blades should never be set flush. The passage supports the subject but does not, by itself, verify the full option's reference to manufacturer guidance. **Source topic confirmed; complete answer unverified.**
+
+**Audit counts:** 4/19 questions have a preliminary OCR cross-check; **0/19 complete source-image verifications**. No answer keys, explanations, or runtime academic content have been changed. Next inspect the source PDF's original page images to resolve OCR/diagram uncertainty, then continue Q018 onward.
+
 ## Item review register
 
 | Item | Candidate key | Candidate PDF pages (NOT verified) | Exact printed page / figure (required) | Decision | Source rationale, distractor checks, explanation disposition | Internal auditor / evidence link |
