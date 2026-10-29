@@ -606,7 +606,7 @@ export const chapter5PremiumQuizQuestions: QuizQuestion[] = [
     answer_a: "Hydraulic, lithium, and ceramic are the three motor types",
     answer_b: "Rotary — blade material; pivot — guard size; magnetic — battery chemistry",
     answer_c: "Pivot and magnetic are the same motor type",
-    answer_d: "Rotary — high power/speed; pivot — quieter and suited to thick/coarse hair; magnetic — reliable for fine textures",
+    answer_d: "Rotary — high power/speed; pivot — suited to thick/coarse hair; magnetic — reliable for fine textures",
     correct_answer: 'd',
     explanation: strategyExplanation("motor characteristics", "blade material, guard size, and battery chemistry are different categories; pivot and magnetic are separate source types", "compare the three named motors by the source characteristics", "rotary, pivot, and magnetic remain distinct"),
     difficulty: 'hard',
