@@ -93,6 +93,35 @@ describe('StudentRemediationService', () => {
     service = createStudentRemediationService(mockDbClient)
   })
 
+  describe('QA-174 Chapter 5 student receipt and review completion', () => {
+    it('returns assigned chapter-5 review, denies another student, and tracks completion', async () => {
+      const cycle = createMockCycle({
+        id: 'qa174-ch5-cycle', userId: 'qa174-student',
+        chapterId: 'ch-5' as ChapterId, conceptId: 'ch5-razors' as ConceptId,
+        status: 'in_review',
+      })
+      const assignments = [
+        createMockAssignment({ id: 'qa174-lesson', cycleId: cycle.id, status: 'completed' }),
+        createMockAssignment({ id: 'qa174-flashcard', cycleId: cycle.id, assignmentType: 'flashcard', status: 'completed' }),
+      ]
+      vi.mocked(mockDbClient.getCycleById).mockResolvedValue(cycle)
+      vi.mocked(mockDbClient.getCycleAssignments).mockResolvedValue(assignments)
+      vi.mocked(mockDbClient.recordCycleEvent).mockResolvedValue('qa174-event')
+      vi.mocked(mockDbClient.updateCycleStatus).mockResolvedValue(true)
+
+      const owned = await service.getCycleForStudent(cycle.id, cycle.userId)
+      expect(owned).toEqual({ cycle, assignments })
+      expect(await service.getCycleForStudent(cycle.id, 'other-school-student')).toEqual({ error: 'Access denied' })
+
+      const completed = await service.completeReview(cycle.id, cycle.userId)
+      expect(completed.success).toBe(true)
+      expect(mockDbClient.recordCycleEvent).toHaveBeenCalledWith(cycle.id, 'review_completed')
+      expect(mockDbClient.updateCycleStatus).toHaveBeenCalledWith(
+        cycle.id, 'review_completed', expect.objectContaining({ reviewCompletedAt: expect.any(Date) }),
+      )
+    })
+  })
+
   describe('getCycleForStudent', () => {
     it('should return cycle and assignments for authorized student', async () => {
       const mockCycle = createMockCycle()

@@ -155,8 +155,22 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
       .select('best_quiz_score').eq('user_id', studentA).eq('chapter_id', 'ch-5').single()
     expect(persistedProgressError).toBeNull()
     expect(persistedProgress?.best_quiz_score).toBe(50)
+    // QA-174: the same authenticated student must be able to review
+    // the specific missed Chapter 5 questions, not merely see a grade.
+    await page.goto('/dashboard/missed-questions')
+    await expect(page.getByRole('heading', { name: 'Missed Question Bank' })).toBeVisible()
+    const chapter5MissedQuestions = page.getByText('Ch. 5', { exact: true })
+    await expect(chapter5MissedQuestions.first()).toBeVisible()
+    await expect(page.getByText(/Showing \d+ of \d+ missed questions/)).toBeVisible()
+    const missedCard = page.getByRole('button').filter({ has: chapter5MissedQuestions.first() }).first()
+    await missedCard.click()
+    await expect(page.getByText('Your answer', { exact: true }).first()).toBeVisible()
+    await expect(page.getByText('Correct answer', { exact: true }).first()).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Retest Weak Areas' })).toBeVisible()
     // QA-93: actual browser-based boundary retakes in disposable infrastructure.
-    for (const target of [0, 50]) {
+    // End with an incorrect attempt so the instructor has outstanding misses to review.
+    // A later 100%-correct retake correctly clears current misses.
+    for (const target of [50, 0]) {
       await startChapterQuiz()
       const seen = new Set<string>()
       for (let index = 0; index < questions.length; index++) {
@@ -183,9 +197,15 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
       const { data: best, error: bestError } = await root.from('student_progress')
         .select('best_quiz_score').eq('user_id', studentA).eq('chapter_id', 'ch-5').single()
       expect(bestError).toBeNull()
-      expect(best?.best_quiz_score).toBe(target === 0 ? 50 : 100)
+      expect(best?.best_quiz_score).toBe(100)
     }
-    await context.close()
+    // QA-174 parity: capture the student's current missed-question evidence
+    // after the final 0/50 attempt, then compare against the instructor view.
+    await page.goto('/dashboard/missed-questions')
+    const studentMissedQuestion = page.getByRole('button').filter({ hasText: /Missed \d+x/ }).first()
+    await expect(studentMissedQuestion).toBeVisible()
+    const studentMissedTexts = (await page.getByRole('button').filter({ hasText: /Missed \d+x/ }).locator('p.text-white').allTextContents()).map(text => text.trim())
+    expect(studentMissedTexts.length).toBeGreaterThan(0)
 
     const instructorContext = await browser.newContext()
     const instructorPage = await instructorContext.newPage()
@@ -196,7 +216,170 @@ test('QA-120: authenticated Chapter 5 School A/B score and dashboard parity (LOC
     await instructorPage.waitForURL(/\/instructor(?:\/|$)/)
     await instructorPage.goto(`/instructor/student/${studentA}`)
     await expect(instructorPage.getByText('100%', { exact: true }).filter({ visible: true }).first()).toBeVisible()
+    // QA-174 acceptance: after a fully incorrect, saved Chapter 5 retake, the
+    // assigned instructor must see concept-specific weak areas and missed evidence.
+    // Chapter 5 is nested inside the separate Chapter Diagnostics <details>.
+    // Both native disclosures must be open for the instructor to see the results.
+    const diagnosticsGroup = instructorPage.locator('details').filter({ has: instructorPage.getByRole('heading', { name: 'Chapter Diagnostics', exact: true }) }).first()
+    await expect(diagnosticsGroup).toHaveCount(1)
+    await diagnosticsGroup.locator('summary').first().dispatchEvent('click')
+    await expect(diagnosticsGroup).toHaveAttribute('open', '')
+    const chapter5Details = instructorPage.locator('details[data-chapter-accordion]').filter({ hasText: 'Chapter 5 —' }).first()
+    await expect(chapter5Details).toHaveCount(1)
+    // Chapter accordions can shift while the large instructor page hydrates.
+    // Expand the native details element directly; verify its content below.
+    // Use the native summary activation, and assert the actual expanded state.
+    // The previous direct DOM mutation was overwritten during hydration.
+    await chapter5Details.locator('summary').dispatchEvent('click')
+    await expect(chapter5Details).toHaveAttribute('open', '')
+    // Latest chapter assessment must reflect the same 0/50 browser retake;
+    // best score (100%) and weighted chapter grade are separate metrics.
+    // Scope to the metric's immediate container, not the last nested div.
+    // The latter can select an unrelated element and hide a valid grade.
+    const assessmentMetric = chapter5Details.getByText('Chapter Assessment', { exact: true }).locator('..')
+    await expect(assessmentMetric.getByText('0%', { exact: true })).toBeVisible()
+    await expect(chapter5Details.getByText('Weakest Concepts', { exact: true })).toBeVisible()
+    await expect(chapter5Details.getByText(/initial misses/).first()).toBeVisible()
+    await expect(chapter5Details.getByText(/Targeted review/).first()).toBeVisible()
+    // QA-174: the instructor must see actual missed question text and its
+    // answer comparison, not only an aggregate concept or miss count.
+    const instructorBank = instructorPage.locator('div.bg-charcoal').filter({
+      has: instructorPage.getByRole('heading', { name: 'Missed Question Bank', exact: true }),
+    }).last()
+    await expect(instructorBank.getByText(/missed questions recorded/)).toBeVisible()
+    const missedQuestionCard = instructorBank.getByRole('button').filter({ hasText: /Missed \d+x/ }).first()
+    await expect(missedQuestionCard).toBeVisible()
+    const instructorMissedText = (await missedQuestionCard.locator('p.text-white').first().textContent())?.trim()
+    expect(instructorMissedText).toBeTruthy()
+    // Both views can sort missed-question cards differently; assert shared
+    // question evidence rather than falsely requiring identical first rows.
+    expect(studentMissedTexts).toContain(instructorMissedText!)
+    await missedQuestionCard.click()
+    await expect(instructorBank.getByText('Your answer', { exact: true })).toBeVisible()
+    await expect(instructorBank.getByText('Correct answer', { exact: true })).toBeVisible()
+    // QA-174: authorized instructor can assign a Chapter 5 concept review
+    // and observe its persisted assignment progress.
+    const reviewControl = chapter5Details.getByRole('heading', { name: 'Assign Chapter 5 Targeted Review' }).locator('..')
+    await expect(reviewControl.getByRole('button', { name: 'Assign review' })).toBeVisible()
+    await reviewControl.getByRole('button', { name: 'Assign review' }).click()
+    await expect(reviewControl.getByRole('status')).toContainText(/Review assigned to student|Review already assigned/)
+    const { data: reviewCycles, error: cycleError } = await root.from('remediation_cycles')
+      .select('id,concept_id,status').eq('user_id', studentA).eq('chapter_id', 'ch-5')
+    expect(cycleError).toBeNull()
+    expect(reviewCycles?.length).toBeGreaterThan(0)
+    const { data: reviewAssignments, error: reviewError } = await root.from('remediation_assignments')
+      .select('id,cycle_id,status').in('cycle_id', (reviewCycles ?? []).map(c => c.id))
+    expect(reviewError).toBeNull()
+    expect(reviewAssignments?.length).toBeGreaterThan(0)
+    await instructorPage.reload()
+    // Reload closes both native disclosures. Reopen them before checking
+    // the persisted progress; a hidden <li> is not a missing assignment.
+    const refreshedGroup = instructorPage.locator('details').filter({
+      has: instructorPage.getByRole('heading', { name: 'Chapter Diagnostics', exact: true }),
+    }).first()
+    await refreshedGroup.locator('summary').first().dispatchEvent('click')
+    await expect(refreshedGroup).toHaveAttribute('open', '')
+    const refreshedChapter5 = instructorPage.locator('details[data-chapter-accordion]')
+      .filter({ hasText: 'Chapter 5 —' }).first()
+    await refreshedChapter5.locator('summary').first().dispatchEvent('click')
+    await expect(refreshedChapter5).toHaveAttribute('open', '')
+    const progressLine = refreshedChapter5.getByText(/\d+\/\d+ completed \((?:targeted|in_review|review_completed|reassessed|evaluated)\)/).first()
+    await expect(progressLine).toBeVisible()
+    // QA-174: the same disposable student receives and completes the real
+    // instructor-assigned remediation through the authenticated browser UI.
+    const assignedCycle = reviewCycles!.find(c => c.concept_id === 'ch5-combs-brushes')
+    expect(assignedCycle).toBeDefined()
+    // Reuse the authenticated student context above (including beta-agreement acceptance).
+    await page.goto(`/dashboard/remediation/${assignedCycle!.id}`)
+    await expect(page.getByRole('button', { name: 'Start Review' })).toBeVisible()
+    await page.getByRole('button', { name: 'Start Review' }).click()
+    await expect(page.getByRole('button', { name: 'Complete Review' })).toBeVisible()
+    // Drive all assigned content assets explicitly, not whichever cards happen
+    // to be in the first visible group. Verify server persistence per asset.
+    const {data:assignedAssets,error:assetError} = await root.from('remediation_assignments')
+      .select('id,assignment_type,asset_id,status').eq('cycle_id',assignedCycle!.id)
+      .order('priority',{ascending:true})
+    expect(assetError).toBeNull()
+    expect(assignedAssets?.length).toBeGreaterThan(0)
+    for (const asset of assignedAssets!.filter(item => item.assignment_type === 'content_block')) {
+      const section = page.getByTestId(`remediation-content-${asset.asset_id}`)
+      await expect(section, `Assigned content ${asset.asset_id} must be rendered`).toBeVisible()
+      const expander = section.locator('button[aria-expanded]').first()
+      if (await expander.getAttribute('aria-expanded') === 'false') await expander.click()
+      const mark = section.getByRole('button',{name:'Mark as Reviewed'})
+      if (await mark.count()) {
+        const responsePromise = page.waitForResponse(response =>
+          response.url().includes(`/api/remediation/cycles/${assignedCycle!.id}/events`) &&
+          response.request().postDataJSON()?.eventType === 'content_viewed' &&
+          response.request().postDataJSON()?.assetId === asset.asset_id
+        )
+        await mark.click()
+        const response = await responsePromise
+        expect(response.status(), `Content ${asset.asset_id}: ${await response.text()}`).toBe(200)
+      }
+      await expect.poll(async () => {
+        const {data,error}=await root.from('remediation_assignments').select('status').eq('id',asset.id).single()
+        expect(error).toBeNull()
+        return data?.status
+      },{timeout:15000}).toBe('completed')
+    }
+    const cardReview = page.getByRole('heading',{name:'Flashcard Review'}).locator('..').locator('..')
+    for (const asset of assignedAssets!.filter(item => item.assignment_type === 'flashcard')) {
+      const next = cardReview.getByRole('button',{name:'Next'})
+      const mark = cardReview.getByRole('button',{name:'Mark as Reviewed'})
+      if (await mark.count()) {
+        const responsePromise=page.waitForResponse(response =>
+          response.url().includes(`/api/remediation/cycles/${assignedCycle!.id}/events`) &&
+          response.request().postDataJSON()?.eventType === 'flashcard_reviewed' &&
+          response.request().postDataJSON()?.assetId === asset.asset_id
+        )
+        await mark.click()
+        const response=await responsePromise
+        expect(response.status(),`Flashcard ${asset.asset_id}: ${await response.text()}`).toBe(200)
+      }
+      await expect.poll(async () => {
+        const {data,error}=await root.from('remediation_assignments').select('status').eq('id',asset.id).single()
+        expect(error).toBeNull()
+        return data?.status
+      },{timeout:15000}).toBe('completed')
+      if (!await next.isDisabled()) await next.click()
+    }
+    // The UI updates progress optimistically, but server writes can still be
+    // in flight. The completion gate must be checked against persisted rows.
+    await expect.poll(async () => {
+      const {data, error} = await root.from('remediation_assignments')
+        .select('id,status,assignment_type,asset_id')
+        .eq('cycle_id',assignedCycle!.id)
+      expect(error).toBeNull()
+      expect(data?.length).toBeGreaterThan(0)
+      return data!.filter(item => item.status !== 'completed')
+        .map(item => `${item.assignment_type}:${item.asset_id}`)
+    }, {message:'All assigned activity writes must be persisted before review completion',timeout:30000}).toEqual([])
+    await expect(page.getByRole('button', {name:'Complete Review'})).toBeEnabled()
+    const completionResponsePromise = page.waitForResponse(response =>
+      response.url().includes(`/api/remediation/cycles/${assignedCycle!.id}/events`) &&
+      response.request().method() === 'POST' &&
+      response.request().postDataJSON()?.eventType === 'review_completed'
+    )
+    await page.getByRole('button', {name:'Complete Review'}).click()
+    const completionResponse = await completionResponsePromise
+    const completionBody = await completionResponse.json()
+    expect(completionResponse.status(), JSON.stringify(completionBody)).toBe(200)
+    expect(completionBody.success).toBe(true)
+    await expect(page.getByText('Review Completed', {exact:false}).first()).toBeVisible()
+    const {data:finished,error:finishedError} = await root.from('remediation_cycles')
+      .select('status,review_completed_at').eq('id',assignedCycle!.id).single()
+    expect(finishedError).toBeNull()
+    expect(finished?.status).toBe('review_completed')
+    expect(finished?.review_completed_at).toBeTruthy()
+    await instructorPage.reload()
+    const outerAfter = instructorPage.locator('details').filter({has:instructorPage.getByRole('heading',{name:'Chapter Diagnostics',exact:true})}).first()
+    await outerAfter.locator('summary').first().dispatchEvent('click')
+    const innerAfter = instructorPage.locator('details[data-chapter-accordion]').filter({hasText:'Chapter 5 —'}).first()
+    await innerAfter.locator('summary').first().dispatchEvent('click')
+    await expect(innerAfter.getByText(/completed \(review_completed\)/).first()).toBeVisible()
     await instructorContext.close()
+    await context.close()
   } finally {
     // This entire test runs against a disposable local database only.
     for (const id of ids.reverse()) await root.auth.admin.deleteUser(id)
