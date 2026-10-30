@@ -49,7 +49,7 @@ test('Chapter 6 UI submission matches persisted score and every recorded answer'
     const options = page.getByTestId('active-quiz-options').locator('button')
     await expect(options).toHaveCount(4)
     const chosenText = (await options.first().innerText()).replace(/^A\\.\\s*/, '').trim()
-    const matchingKey = (['a','b','c','d'] as const).find(key => question!['answer_' + key] === chosenText)
+    const optionByKey = { a: question!.answer_a, b: question!.answer_b, c: question!.answer_c, d: question!.answer_d }\n    const matchingKey = (['a','b','c','d'] as const).find(key => optionByKey[key] === chosenText)
     expect(matchingKey, 'Option text mismatch on ' + question!.id).toBeDefined()
     answers[question!.id] = matchingKey!
     if (matchingKey === question!.correct_answer) expectedCorrect++
