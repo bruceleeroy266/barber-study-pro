@@ -36,7 +36,7 @@ for (const [chapter, questions, mappings] of [
       expect(score).toMatchObject({ score:40, total:50, percentage:80, missedCount:10 })
       const missed = sorted.filter(q => answers[q.id] !== q.correct_answer)
       expect(missed.map(q => q.id).sort()).toEqual([...missIds].sort())
-      const concept = new Map(mappings.map(m => [m.questionId,m.conceptFamilyId]))
+      const concept = new Map<string,string>(mappings.map(m => [m.questionId,m.conceptFamilyId]))
       const missesByConcept = new Map<string,number>()
       for (const q of missed) {
         const id = concept.get(q.id)
