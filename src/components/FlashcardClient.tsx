@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '@/lib/supabase'
-import { calculateChapterProgress, preserveLegacyFullCompletion } from '@/lib/progress'
+import { calculateChapterProgress, isQuizPassed, preserveLegacyFullCompletion } from '@/lib/progress'
 import { isSupabaseConfigured } from '@/lib/demo-helpers'
 import { isTypingTarget } from '@/lib/keyboard-shortcuts'
 import { Flag } from 'lucide-react'
@@ -355,7 +355,7 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
     setSaving(true)
     setSaveError(null)
     try {
-      let quizCompleted = false
+      let quizPassed = false
       let lessonCompleted = false
       let knowledgeChecksCompleted = false
       let existingProgressPercentage: number | null = null
@@ -363,18 +363,19 @@ export default function FlashcardClient({ flashcards, chapterId, userId, isCompl
       if (isSupabaseConfigured()) {
         const { data: existingProgress } = await supabase
           .from('student_progress')
-          .select('lesson_completed, knowledge_checks_completed, quiz_completed, progress_percentage')
+          .select('lesson_completed, knowledge_checks_completed, quiz_completed, best_quiz_score, progress_percentage')
           .eq('user_id', userId)
           .eq('chapter_id', chapterId)
           .maybeSingle()
 
-        quizCompleted = existingProgress?.quiz_completed ?? false
+        // Passing is score-derived (quiz_completed means "finished", not "passed").
+        quizPassed = isQuizPassed(existingProgress?.best_quiz_score)
         lessonCompleted = existingProgress?.lesson_completed ?? false
         knowledgeChecksCompleted = existingProgress?.knowledge_checks_completed ?? false
         existingProgressPercentage = existingProgress?.progress_percentage ?? null
       }
 
-      const calculatedProgress = calculateChapterProgress(true, quizCompleted, {
+      const calculatedProgress = calculateChapterProgress(true, quizPassed, {
         lessonCompleted,
         knowledgeChecksCompleted,
       })

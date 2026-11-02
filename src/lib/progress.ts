@@ -52,6 +52,58 @@ export function preserveLegacyFullCompletion(
   return existingProgressPercentage === 100 ? 100 : calculatedProgress
 }
 
+/**
+ * Canonical chapter-quiz pass threshold. All chapter quizzes use
+ * passing_score = 80 (see demo-data demoQuizzes). Passing is a score-derived
+ * status and stays independent from quiz completion.
+ */
+export const QUIZ_PASSING_SCORE_PERCENT = 80
+
+/** True when a best quiz score meets the passing threshold. */
+export function isQuizPassed(bestScore: number | null | undefined): boolean {
+  return (bestScore ?? 0) >= QUIZ_PASSING_SCORE_PERCENT
+}
+
+export interface QuizOutcomeSignals {
+  /** Score of the attempt that just finished. */
+  percentage: number
+  /** Passing threshold of this quiz (quiz.passing_score). */
+  passingScore: number
+  /** Persisted best_quiz_score before this attempt (null/undefined when none). */
+  existingBestScore: number | null | undefined
+  /** Best attempt known to the page before this attempt (null when none). */
+  bestAttemptPercentage: number | null | undefined
+}
+
+export interface QuizOutcome {
+  /** Finishing the quiz marks completion, regardless of score. */
+  quizCompleted: true
+  /** True when this attempt or any prior best crossed the pass threshold. */
+  quizPassed: boolean
+  /** Max of this attempt and all known prior scores. */
+  bestQuizScore: number
+}
+
+/**
+ * Derives quiz completion / passing / best score for a finished attempt.
+ * Completion and passing are deliberately independent:
+ * - quizCompleted is always true once the student finishes the quiz.
+ * - quizPassed feeds chapter learning progress (the 50% quiz weight stays
+ *   pass-gated) and any pass/fail display.
+ */
+export function deriveQuizOutcome(signals: QuizOutcomeSignals): QuizOutcome {
+  const quizPassed =
+    signals.percentage >= signals.passingScore ||
+    isQuizPassed(signals.existingBestScore) ||
+    isQuizPassed(signals.bestAttemptPercentage)
+  const bestQuizScore = Math.max(
+    signals.percentage,
+    signals.existingBestScore ?? 0,
+    signals.bestAttemptPercentage ?? 0
+  )
+  return { quizCompleted: true, quizPassed, bestQuizScore }
+}
+
 
 export function areKnowledgeCheckSectionsComplete(
   requiredSectionIds: readonly string[],

@@ -5,6 +5,7 @@ import Modal from '@/components/ui/Modal'
 import StudentIdentity from '@/components/StudentIdentity'
 import { PrintButton } from './PrintButton'
 import { Profile, StudentProgress, QuizAttempt, InstructorNote, AreaPerformance } from '@/types'
+import { isQuizPassed } from '@/lib/progress'
 
 interface ChapterInfo {
   id: string
@@ -162,7 +163,11 @@ export default function ProgressReportModal({
                         </td>
                         <td className="py-2 pr-4">{chapterProgress?.progress_percentage || 0}%</td>
                         <td className="py-2 pr-4">{chapterProgress?.flashcards_completed ? 'Done' : '—'}</td>
-                        <td className="py-2 pr-4">{chapterProgress?.quiz_completed ? 'Passed' : '—'}</td>
+                        <td className="py-2 pr-4">
+                          {chapterProgress?.best_quiz_score !== null && chapterProgress?.best_quiz_score !== undefined
+                            ? (isQuizPassed(chapterProgress.best_quiz_score) ? 'Passed' : 'Failed')
+                            : '—'}
+                        </td>
                         <td className="py-2">{chapterProgress?.best_quiz_score !== null && chapterProgress?.best_quiz_score !== undefined ? `${chapterProgress.best_quiz_score}%` : '—'}</td>
                       </tr>
                     )

@@ -3,7 +3,10 @@ import {
   areKnowledgeCheckSectionsComplete,
   calculateChapterProgress,
   CHAPTER_PROGRESS_WEIGHTS,
+  deriveQuizOutcome,
+  isQuizPassed,
   preserveLegacyFullCompletion,
+  QUIZ_PASSING_SCORE_PERCENT,
 } from './progress'
 
 describe('chapter progress weighting', () => {
@@ -64,5 +67,41 @@ describe('chapter progress weighting', () => {
     expect(preserveLegacyFullCompletion(65, 100)).toBe(100)
     expect(preserveLegacyFullCompletion(15, 50)).toBe(15)
     expect(preserveLegacyFullCompletion(15, null)).toBe(15)
+  })
+})
+
+describe('quiz completion vs passing (ASCYN-QUIZ-ANALYTICS-02)', () => {
+  it('marks completion on finish regardless of score (completed/failed)', () => {
+    const outcome = deriveQuizOutcome({ percentage: 60, passingScore: 80, existingBestScore: null, bestAttemptPercentage: null })
+    expect(outcome.quizCompleted).toBe(true)
+    expect(outcome.quizPassed).toBe(false)
+    expect(outcome.bestQuizScore).toBe(60)
+  })
+
+  it('marks completion and passing on a passed attempt (completed/passed)', () => {
+    const outcome = deriveQuizOutcome({ percentage: 92, passingScore: 80, existingBestScore: null, bestAttemptPercentage: null })
+    expect(outcome.quizCompleted).toBe(true)
+    expect(outcome.quizPassed).toBe(true)
+    expect(outcome.bestQuizScore).toBe(92)
+  })
+
+  it('keeps passing when a prior persisted best already crossed the threshold', () => {
+    const outcome = deriveQuizOutcome({ percentage: 60, passingScore: 80, existingBestScore: 84, bestAttemptPercentage: null })
+    expect(outcome.quizPassed).toBe(true)
+    expect(outcome.bestQuizScore).toBe(84)
+  })
+
+  it('derives passing from the page-known best attempt when the persisted best is missing', () => {
+    const outcome = deriveQuizOutcome({ percentage: 50, passingScore: 80, existingBestScore: 0, bestAttemptPercentage: 88 })
+    expect(outcome.quizPassed).toBe(true)
+    expect(outcome.bestQuizScore).toBe(88)
+  })
+
+  it('treats the 80% threshold as a strict boundary', () => {
+    expect(isQuizPassed(79)).toBe(false)
+    expect(isQuizPassed(80)).toBe(true)
+    expect(isQuizPassed(null)).toBe(false)
+    expect(isQuizPassed(undefined)).toBe(false)
+    expect(QUIZ_PASSING_SCORE_PERCENT).toBe(80)
   })
 })

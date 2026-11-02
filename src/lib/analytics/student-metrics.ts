@@ -3,15 +3,15 @@
  * ASCYN PRO / ASCYN PRO V2
  */
 
-import { AreaPerformance, QuizAttempt } from '@/types'
+import { AreaPerformance, QuizAttempt, ScoredAreaPerformance } from '@/types'
 
 export interface StudentMetrics {
   totalQuestionsAnswered: number
   totalCorrect: number
   totalIncorrect: number
   averageScore: number
-  weakAreas: AreaPerformance[]
-  strongAreas: AreaPerformance[]
+  weakAreas: ScoredAreaPerformance[]
+  strongAreas: ScoredAreaPerformance[]
 }
 
 export function calculateStudentMetrics(
@@ -25,7 +25,11 @@ export function calculateStudentMetrics(
     ? Math.round(attempts.reduce((sum, a) => sum + a.percentage, 0) / attempts.length)
     : 0
 
-  const scoredChapters = chapterPerformance.filter((c) => c.score > 0)
+  // Only chapters with a real assessment score count as evidence; a null score
+  // (never attempted) is excluded — never treated as 0 or as progress percentage.
+  const scoredChapters = chapterPerformance.filter(
+    (c): c is ScoredAreaPerformance => c.score !== null
+  )
   const sortedAsc = [...scoredChapters].sort((a, b) => a.score - b.score)
   const sortedDesc = [...scoredChapters].sort((a, b) => b.score - a.score)
 

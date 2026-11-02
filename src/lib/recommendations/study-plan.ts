@@ -37,7 +37,7 @@ function nextIncompleteChapter(
   weakAreas: AreaPerformance[]
 ): { chapterNumber: number; title: string } | null {
   for (const area of weakAreas) {
-    if (area.chapterNumber && area.score < 80) {
+    if (area.chapterNumber && area.score !== null && area.score < 80) {
       return { chapterNumber: area.chapterNumber, title: area.name }
     }
   }
@@ -141,7 +141,7 @@ export function generateStudyPlan(inputs: RecommendationsInputs): StudyRecommend
       title: `Flashcard Review: ${topWeak.name}`,
       description: 'Spaced repetition will lock in the concepts you\'re struggling with.',
       chapterNumber: topWeak.chapterNumber,
-      priority: topWeak.score < 60 ? 'critical' : 'high',
+      priority: topWeak.score !== null && topWeak.score < 60 ? 'critical' : 'high',
       estimatedMinutes: 15,
     })
   }
