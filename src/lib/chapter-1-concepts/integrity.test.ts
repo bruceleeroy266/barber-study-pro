@@ -52,11 +52,25 @@ describe('Chapter 1 concept architecture integrity', () => {
       expect(chapter1QuizQuestionConceptMappings.find((x) => x.questionId === question.id)).toBeDefined()
   })
 
-  it('keeps every family diagnostic-ready (at least 3 initial quiz questions per family)', () => {
+  it('locks the per-family quiz question distribution (incl. the qq-1-015 licensing correction)', () => {
+    // Distribution after ASCYN-QUIZ-ANALYTICS-10 Task A: qq-1-015 (barber-pole
+    // display legality) moved to licensing-organizations; modern-profession keeps 2.
+    const expected: Record<string, number> = {
+      'ch1-origins-culture': 12,
+      'ch1-barber-surgeons-symbols': 8,
+      'ch1-tools-technology': 4,
+      'ch1-licensing-organizations': 4,
+      'ch1-modern-profession': 2,
+    }
     for (const id of ACTIVE_CHAPTER1_CONCEPT_FAMILY_IDS) {
       const count = chapter1QuizQuestionConceptMappings.filter((x) => x.conceptFamilyId === id).length
-      expect(count, `family ${id} has only ${count} initial questions`).toBeGreaterThanOrEqual(3)
+      expect(count, `family ${id}`).toBe(expected[id])
     }
+  })
+
+  it('keeps qq-1-015 (legal display of the barber pole) under licensing-organizations', () => {
+    const mapping = chapter1QuizQuestionConceptMappings.find((x) => x.questionId === 'qq-1-015')
+    expect(mapping?.conceptFamilyId).toBe('ch1-licensing-organizations')
   })
 
   it('keeps the 75-question reassessment reserve fully mapped with no orphans', () => {
