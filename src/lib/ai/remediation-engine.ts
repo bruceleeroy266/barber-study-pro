@@ -179,9 +179,9 @@ export class AIRemediationEngine {
   ): 'critical' | 'high' | 'medium' | 'low' {
     const targetWeakAreas = weakAreas.filter(w => targetAreas.includes(w.name))
     
-    if (targetWeakAreas.some(w => w.score < 50)) return 'critical'
-    if (targetWeakAreas.some(w => w.score < 65)) return 'high'
-    if (targetWeakAreas.some(w => w.score < 80)) return 'medium'
+    if (targetWeakAreas.some(w => w.score !== null && w.score < 50)) return 'critical'
+    if (targetWeakAreas.some(w => w.score !== null && w.score < 65)) return 'high'
+    if (targetWeakAreas.some(w => w.score !== null && w.score < 80)) return 'medium'
     return 'low'
   }
 }

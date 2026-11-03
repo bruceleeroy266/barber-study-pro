@@ -185,11 +185,15 @@ export interface AreaPerformance {
   name: string
   chapterNumber: number | null
   category: string
-  score: number
+  /** Assessment score (best quiz percentage). Null = no completed assessment — never substitute chapter learning progress for it. */
+  score: number | null
   attempts: number
   trend: 'improving' | 'stable' | 'declining'
   lastAttemptAt: string | null
 }
+
+/** An AreaPerformance that is known to carry a real assessment score (not null). */
+export type ScoredAreaPerformance = AreaPerformance & { score: number }
 
 export interface StudyRecommendation {
   id: string

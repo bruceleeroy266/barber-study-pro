@@ -3,7 +3,7 @@
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
-import { calculateChapterProgress, preserveLegacyFullCompletion } from '@/lib/progress'
+import { calculateChapterProgress, deriveQuizOutcome, preserveLegacyFullCompletion } from '@/lib/progress'
 import { isSupabaseConfigured } from '@/lib/demo-helpers'
 import { saveMissedQuestions } from '@/lib/missed-questions'
 import { getCategoryForChapter } from '@/lib/analytics'
@@ -203,9 +203,10 @@ export default function QuizClient({
         }
       }
 
-      // Preserve existing progress flags and only mark the quiz complete on a PASS.
+      // Completion and passing are separate statuses: finishing the quiz records
+      // a completed attempt regardless of score; passing stays tied to the
+      // existing 80% threshold and is what feeds chapter learning progress.
       let flashcardsCompleted = false
-      let existingQuizCompleted = false
       let lessonCompleted = false
       let knowledgeChecksCompleted = false
       let existingBestScore = 0
@@ -222,19 +223,17 @@ export default function QuizClient({
         lessonCompleted = existingProgress?.lesson_completed ?? false
         flashcardsCompleted = existingProgress?.flashcards_completed ?? false
         knowledgeChecksCompleted = existingProgress?.knowledge_checks_completed ?? false
-        existingQuizCompleted = existingProgress?.quiz_completed ?? false
         existingBestScore = existingProgress?.best_quiz_score ?? 0
         existingProgressPercentage = existingProgress?.progress_percentage ?? null
       }
 
-      const quizPassed = percentage >= passingScore
-      const quizCompleted = existingQuizCompleted || quizPassed
-      const bestQuizScore = Math.max(
+      const outcome = deriveQuizOutcome({
         percentage,
+        passingScore,
         existingBestScore,
-        bestAttempt?.percentage ?? 0
-      )
-      const calculatedProgress = calculateChapterProgress(flashcardsCompleted, quizCompleted, {
+        bestAttemptPercentage: bestAttempt?.percentage ?? null,
+      })
+      const calculatedProgress = calculateChapterProgress(flashcardsCompleted, outcome.quizPassed, {
         lessonCompleted,
         knowledgeChecksCompleted,
       })
@@ -254,8 +253,8 @@ export default function QuizClient({
           {
             user_id: userId,
             chapter_id: chapterId,
-            quiz_completed: quizCompleted,
-            best_quiz_score: bestQuizScore,
+            quiz_completed: outcome.quizCompleted,
+            best_quiz_score: outcome.bestQuizScore,
             progress_percentage: progressPercentage,
             last_studied_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),

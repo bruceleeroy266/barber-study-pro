@@ -9,7 +9,7 @@
  * and accessibility hardening without changing remediation policy.
  */
 
-import { useState, useCallback, useEffect, useMemo } from 'react'
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import type {
   StudentRemediationState,
@@ -81,6 +81,7 @@ export default function RemediationPageClient({
   )
   const [reservationStartedAt, setReservationStartedAt] = useState<Date | null>(null)
 
+  const actionLock = useRef(false)
   const actionInFlight = useMemo(() => activeAction !== null, [activeAction])
 
   const [reassessmentData, setReassessmentData] = useState<{
@@ -124,18 +125,16 @@ export default function RemediationPageClient({
   }, [reservationStartedAt])
 
   const beginAction = useCallback((action: NonNullable<typeof activeAction>) => {
-    let accepted = false
-    setActiveAction((current) => {
-      if (current !== null) {
-        return current
-      }
-      accepted = true
-      return action
-    })
-    return accepted
+    // State updaters are scheduled asynchronously in React; a value captured
+    // from inside setState cannot determine whether the click was accepted.
+    if (actionLock.current) return false
+    actionLock.current = true
+    setActiveAction(action)
+    return true
   }, [])
 
   const endAction = useCallback(() => {
+    actionLock.current = false
     setActiveAction(null)
   }, [])
 

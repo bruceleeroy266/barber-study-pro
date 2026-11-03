@@ -1,5 +1,6 @@
 import type { QuizAttempt, StudentProgress } from '@/types'
 import { calculateBoardReadiness } from '@/lib/readiness'
+import { isQuizPassed } from '@/lib/progress'
 
 export interface StudentLearningMetricInputs {
   userId: string
@@ -55,8 +56,9 @@ export function calculateCanonicalStudentLearningMetrics(
     (record) => record.flashcards_completed
   ).length
 
+  // Passing is score-derived; quiz_completed now means "finished", not "passed".
   const quizzesPassed = progress.filter(
-    (record) => record.quiz_completed
+    (record) => isQuizPassed(record.best_quiz_score)
   ).length
 
   const averageQuizScore = attempts.length > 0

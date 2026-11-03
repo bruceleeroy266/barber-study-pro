@@ -154,6 +154,7 @@ import { useStudySession } from '@/hooks/useStudySession'
 import {
   areKnowledgeCheckSectionsComplete,
   calculateChapterProgress,
+  isQuizPassed,
   preserveLegacyFullCompletion,
 } from '@/lib/progress'
 
@@ -619,13 +620,15 @@ export default function ChapterContent({ sections, theme, chapterId, userId, les
     if (!userId || !chapterId) return
     const { data: existing } = await supabase
       .from('student_progress')
-      .select('lesson_completed, flashcards_completed, knowledge_checks_completed, quiz_completed, progress_percentage')
+      .select('lesson_completed, flashcards_completed, knowledge_checks_completed, quiz_completed, best_quiz_score, progress_percentage')
       .eq('user_id', userId)
       .eq('chapter_id', chapterId)
       .maybeSingle()
     const lesson = signal === 'lesson_completed' ? true : (existing?.lesson_completed ?? false)
     const knowledge = signal === 'knowledge_checks_completed' ? true : (existing?.knowledge_checks_completed ?? false)
-    const calculatedProgress = calculateChapterProgress(existing?.flashcards_completed ?? false, existing?.quiz_completed ?? false, { lessonCompleted: lesson, knowledgeChecksCompleted: knowledge })
+    // The quiz weight in chapter progress stays pass-gated: derive passing from
+    // the best score. quiz_completed now means "finished", not "passed".
+    const calculatedProgress = calculateChapterProgress(existing?.flashcards_completed ?? false, isQuizPassed(existing?.best_quiz_score), { lessonCompleted: lesson, knowledgeChecksCompleted: knowledge })
     const progressPercentage = preserveLegacyFullCompletion(calculatedProgress, existing?.progress_percentage ?? null)
     const { error } = await supabase.from('student_progress').upsert({ user_id: userId, chapter_id: chapterId, [signal]: true, progress_percentage: progressPercentage, last_studied_at: new Date().toISOString(), updated_at: new Date().toISOString() }, { onConflict: 'user_id,chapter_id' })
     if (error) {

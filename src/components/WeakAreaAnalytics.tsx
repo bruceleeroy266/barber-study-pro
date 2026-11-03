@@ -39,7 +39,11 @@ function AreaList({ areas, type }: { areas: AreaPerformance[]; type: 'weak' | 's
         >
           <div className="flex items-center justify-between mb-2">
             <p className="text-white font-medium">{area.name}</p>
-            <p className={`text-xl font-bold ${scoreToColor(area.score)}`}>{area.score}%</p>
+            {area.score === null ? (
+              <p className="text-xl font-bold text-silver-gray">—</p>
+            ) : (
+              <p className={`text-xl font-bold ${scoreToColor(area.score)}`}>{area.score}%</p>
+            )}
           </div>
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-3 text-silver">
