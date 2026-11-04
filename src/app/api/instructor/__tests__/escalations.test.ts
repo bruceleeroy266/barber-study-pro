@@ -14,6 +14,11 @@ vi.mock('@/lib/supabase-server', () => ({
   createClient: vi.fn(),
 }))
 
+vi.mock('@/lib/support-access', () => ({
+  resolveSupportAccessContext: vi.fn(),
+  logSupportAction: vi.fn().mockResolvedValue(undefined),
+}))
+
 vi.mock('@/lib/instructor/supabase-client', () => ({
   createSupabaseInstructorClient: vi.fn(),
 }))
@@ -84,6 +89,7 @@ async function setupMocks(options: {
 }) {
   const { createClient } = await import('@/lib/supabase-server')
   const { createSupabaseInstructorClient } = await import('@/lib/instructor/supabase-client')
+  const { resolveSupportAccessContext } = await import('@/lib/support-access')
 
   const user = options.authenticatedUser
     ? { id: options.authenticatedUser }
@@ -118,6 +124,15 @@ async function setupMocks(options: {
       options.history !== undefined ? options.history : []
     ),
   }
+
+  vi.mocked(resolveSupportAccessContext).mockResolvedValue(user ? {
+    actorUserId: user.id,
+    actorEmail: null,
+    actorProfile: { id: user.id, ...(options.profile !== undefined ? options.profile : MOCK_INSTRUCTOR_PROFILE) },
+    effectiveProfile: { id: user.id, ...(options.profile !== undefined ? options.profile : MOCK_INSTRUCTOR_PROFILE) },
+    supportActive: false,
+    targetProfile: null,
+  } as any : null)
 
   vi.mocked(createSupabaseInstructorClient).mockReturnValue(mockClient as any)
 

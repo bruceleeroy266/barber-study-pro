@@ -6,6 +6,7 @@ import { logPermissionDenied, logUnauthorizedAccess } from '@/lib/security/audit
 import { mapInstructorNoteFromDb } from '@/lib/mappers/operational-data-mappers'
 import { isExplicitDemoMode, isSupabaseConfigured } from '@/lib/demo-helpers'
 import { InstructorNote } from '@/types'
+import { resolveSupportAccessContext, logSupportAction } from '@/lib/support-access'
 
 export type NoteType = 'coaching' | 'remediation' | 'readiness' | 'general'
 
@@ -32,18 +33,14 @@ export async function addInstructorNote(
   noteText: string
 ): Promise<AddNoteResult> {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const context = await resolveSupportAccessContext()
 
-  if (!user) {
+  if (!context) {
     return { success: false, message: 'You must be signed in to add a note.' }
   }
 
-  // Verify instructor or admin
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role, full_name, school_id')
-    .eq('id', user.id)
-    .single()
+  const profile = context.effectiveProfile
+  const user = { id: context.actorUserId, email: context.actorEmail }
 
   if (!profile || !isInstructorOrAdmin(profile.role)) {
     await logPermissionDenied('manage_students', {
@@ -99,8 +96,8 @@ export async function addInstructorNote(
     const { error } = await supabase.from('instructor_notes').insert({
       school_id: profile.school_id,
       student_id: studentId,
-      instructor_id: user.id,
-      instructor_name: profile.full_name || user.email || 'Instructor',
+      instructor_id: profile.id,
+      instructor_name: profile.full_name || profile.email || 'Instructor',
       note_type: noteType,
       note_text: noteText.trim(),
     })
@@ -116,6 +113,7 @@ export async function addInstructorNote(
       return { success: false, message: error.message }
     }
 
+    await logSupportAction(context, 'add_instructor_note', 'instructor_notes', { studentId, noteType, effectiveRole: profile.role })
     return { success: true, message: 'Note added successfully.' }
   } catch (err) {
     return {
@@ -129,11 +127,11 @@ export async function getInstructorNotes(
   studentId: string,
   schoolId: string
 ): Promise<GetInstructorNotesResult> {
-  // Authorization: verify the caller is staff at the requested school.
+  // Authorization: verify the effective staff role at the requested school.
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const context = await resolveSupportAccessContext()
 
-  if (!user) {
+  if (!context) {
     return {
       success: false,
       data: [],
@@ -142,11 +140,7 @@ export async function getInstructorNotes(
     }
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role, school_id')
-    .eq('id', user.id)
-    .single()
+  const profile = context.effectiveProfile
 
   if (!profile || !isInstructorOrAdmin(profile.role)) {
     return {

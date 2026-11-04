@@ -42,8 +42,9 @@ describe('G7-6 bulletin reliability hardening', () => {
     expect(migration).not.toContain('security definer')
   })
 
-  it('blocks rejected or disabled bulletin actors', () => {
-    expect(actions).toContain("'id, school_id, role, approval_status, is_disabled'")
+  it('blocks rejected or disabled bulletin actors through the validated effective profile', () => {
+    expect(actions).toContain('resolveSupportAccessContext')
+    expect(actions).toContain('supportContext.effectiveProfile')
     expect(actions).toContain("profile.approval_status !== 'approved' || profile.is_disabled")
     expect(migration).toContain("actor.approval_status = 'approved'")
     expect(migration).toContain('coalesce(actor.is_disabled, false) = false')

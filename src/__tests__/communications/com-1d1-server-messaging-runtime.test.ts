@@ -21,12 +21,14 @@ describe('COM-1D.1 server messaging runtime', () => {
     expect(source).not.toContain('InstructorMessageDashboard')
   })
 
-  it('authenticates through the server Supabase session and school profile', () => {
+  it('authenticates through the validated support-aware server context', () => {
     expect(source).toContain("from '@/lib/supabase-server'")
-    expect(source).toContain('supabase.auth.getUser()')
-    expect(source).toContain(".from('profiles')")
+    expect(source).toContain('resolveSupportAccessContext')
+    expect(source).toContain('supportContext.effectiveProfile')
     expect(source).toContain("'student', 'apprentice', 'instructor'")
     expect(source).toContain('profile.school_id')
+    expect(source).toContain('profile.approval_status')
+    expect(source).not.toContain('createServiceRoleClient')
   })
 
   it('loads threads through the RLS-protected production table', () => {

@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
 import { hasPermission, isSchoolAdmin } from '@/lib/auth-helpers'
+import { resolveSupportAccessContext } from '@/lib/support-access'
 import { resolveProgramRequirementsForStudents } from '@/lib/programs/requirements'
 import { adjustApprovedStudentHours, bulkApproveStudentHours, logStudentHours, reviewStudentHours } from '@/app/instructor/hours/actions'
 import HoursPdfExports from '@/components/hours/HoursPdfExports'
@@ -125,18 +126,12 @@ export default async function StaffHoursManager({
   queueCategoryFilter = '',
 }: Props) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
 
-  if (!user) redirect('/login')
-
-  const { data: actor } = await supabase
-    .from('profiles')
-    .select('id, role, school_id')
-    .eq('id', user.id)
-    .single()
-
-  if (!actor?.school_id || !hasPermission(actor.role, 'manage_attendance')) {
-    redirect('/dashboard')
+  const actor = context.effectiveProfile
+  if (!actor.school_id || !hasPermission(actor.role, 'manage_attendance')) {
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
 
   const { data: school } = await supabase

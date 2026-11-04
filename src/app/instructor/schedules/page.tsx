@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
 import { hasPermission } from '@/lib/auth-helpers'
+import { resolveSupportAccessContext } from '@/lib/support-access'
+import { loadAssignedStudentIds } from '@/lib/instructor/assignments'
 import {
   assignTemplateSchedule,
   createScheduleTemplate,
@@ -85,26 +87,34 @@ function formatTime(value: string | null) {
 export default async function StudentSchedulesPage({ searchParams }: PageProps) {
   const params = await searchParams
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
 
-  const { data: actor } = await supabase
+  const actor = context.effectiveProfile
+  if (!actor.school_id || !hasPermission(actor.role, 'manage_attendance')) {
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
+  }
+
+  const assignedStudentIds = actor.role === 'instructor'
+    ? await loadAssignedStudentIds(supabase, actor.school_id, actor.id)
+    : null
+
+  let studentsQuery = supabase
     .from('profiles')
-    .select('role, school_id')
-    .eq('id', user.id)
-    .single()
+    .select('id, full_name, email')
+    .eq('school_id', actor.school_id)
+    .in('role', ['student', 'apprentice'])
+    .order('full_name')
 
-  if (!actor?.school_id || !hasPermission(actor.role, 'manage_attendance')) {
-    redirect('/dashboard')
+  if (assignedStudentIds) {
+    studentsQuery = studentsQuery.in(
+      'id',
+      assignedStudentIds.length > 0 ? assignedStudentIds : ['__none__']
+    )
   }
 
   const [{ data: studentsData }, { data: templatesData }] = await Promise.all([
-    supabase
-      .from('profiles')
-      .select('id, full_name, email')
-      .eq('school_id', actor.school_id)
-      .in('role', ['student', 'apprentice'])
-      .order('full_name'),
+    studentsQuery,
     supabase
       .from('school_schedule_templates')
       .select('id, name, description')

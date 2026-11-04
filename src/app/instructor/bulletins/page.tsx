@@ -6,6 +6,7 @@ import BulletinManager, {
 } from '@/components/messaging/BulletinManager'
 import { loadManagedBulletins } from '@/app/communications/bulletin-actions'
 import BackButton from '@/components/ui/BackButton'
+import { resolveSupportAccessContext } from '@/lib/support-access'
 
 interface AssignmentRow {
   student_id: string
@@ -20,18 +21,12 @@ export const dynamic = 'force-dynamic'
 
 export default async function InstructorBulletinsPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
 
-  if (!user) redirect('/login')
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('id, school_id, role')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile || profile.role !== 'instructor' || !profile.school_id) {
-    redirect('/instructor')
+  const profile = context.effectiveProfile
+  if (profile.role !== 'instructor' || !profile.school_id) {
+    redirect(context.supportActive ? '/admin/support-access' : '/instructor')
   }
 
   const managedResult = await loadManagedBulletins()
@@ -41,7 +36,7 @@ export default async function InstructorBulletinsPage() {
     .from('student_instructor_assignments')
     .select('student_id')
     .eq('school_id', profile.school_id)
-    .eq('instructor_id', user.id)
+    .eq('instructor_id', profile.id)
     .eq('is_active', true)
     .is('ended_at', null)
 

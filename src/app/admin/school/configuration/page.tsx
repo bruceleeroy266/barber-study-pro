@@ -8,6 +8,7 @@ import { SchoolConfiguration } from '@/types'
 import SchoolConfigurationClient from '@/components/admin/school-config/SchoolConfigurationClient'
 import PlatformSchoolSelector from '@/components/admin/PlatformSchoolSelector'
 import BackButton from '@/components/ui/BackButton'
+import { resolveSupportAccessContext } from '@/lib/support-access'
 
 interface SchoolConfigurationPageProps {
   searchParams: Promise<{ school?: string }>
@@ -15,20 +16,12 @@ interface SchoolConfigurationPageProps {
 
 export default async function SchoolConfigurationPage({ searchParams }: SchoolConfigurationPageProps) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const context = await resolveSupportAccessContext()
+  if (!context) redirect('/login')
 
-  if (!user) {
-    redirect('/login')
-  }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role, school_id')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile || !(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
-    redirect('/dashboard')
+  const profile = context.effectiveProfile
+  if (!(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
+    redirect(context.supportActive ? '/admin/support-access' : '/dashboard')
   }
 
   const isDemo = isDemoFallbackEnabled()
@@ -54,7 +47,7 @@ export default async function SchoolConfigurationPage({ searchParams }: SchoolCo
   let platformSelector: { schools: { id: string; name: string }[]; selectedName: string | null } | null =
     null
 
-  if (isPlatformAdminProfile(profile)) {
+  if (!context.supportActive && isPlatformAdminProfile(profile)) {
     const { school: requestedSchoolId } = await searchParams
 
     const { data: schools } = await supabase

@@ -45,11 +45,27 @@ export default function InstructorGradebookPage() {
         return
       }
 
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role, school_id')
-        .eq('id', authUser.id)
-        .single()
+      let profile: { id?: string; role: string; school_id: string | null } | null = null
+      try {
+        const supportResponse = await fetch('/api/support-context', { cache: 'no-store' })
+        if (supportResponse.ok) {
+          const support = await supportResponse.json()
+          if (support?.supportActive && support?.effectiveProfile) {
+            profile = support.effectiveProfile
+          }
+        }
+      } catch {
+        // Fall through to the authenticated profile.
+      }
+
+      if (!profile) {
+        const { data: authenticatedProfile } = await supabase
+          .from('profiles')
+          .select('id, role, school_id')
+          .eq('id', authUser.id)
+          .single()
+        profile = authenticatedProfile
+      }
 
       if (!profile || !isInstructorOrAdmin(profile.role)) {
         router.push('/dashboard')
@@ -63,11 +79,32 @@ export default function InstructorGradebookPage() {
 
       const schoolId = profile.school_id
 
-      const { data: studentsData } = await supabase
+      let assignedStudentIds: string[] | null = null
+      if (profile.role === 'instructor' && profile.id) {
+        const { data: assignments } = await supabase
+          .from('student_instructor_assignments')
+          .select('student_id')
+          .eq('school_id', schoolId)
+          .eq('instructor_id', profile.id)
+          .eq('is_active', true)
+          .is('ended_at', null)
+        assignedStudentIds = (assignments ?? []).map((row: { student_id: string }) => row.student_id)
+      }
+
+      let studentsQuery = supabase
         .from('profiles')
         .select('*')
         .eq('school_id', schoolId)
         .in('role', ['student', 'apprentice'])
+
+      if (assignedStudentIds) {
+        studentsQuery = studentsQuery.in(
+          'id',
+          assignedStudentIds.length > 0 ? assignedStudentIds : ['__none__']
+        )
+      }
+
+      const { data: studentsData } = await studentsQuery
 
       let rosterStudents: Profile[] = (studentsData as Profile[]) || []
       if (rosterStudents.length === 0 && isDemoDataAllowed()) {
