@@ -140,7 +140,7 @@ export const chapter1PremiumQuizQuestions: QuizQuestion[] = [
     answer_c: 'Meryma\'at',
     answer_d: 'Servants',
     correct_answer: 'c',
-    explanation: 'Egyptian barbers were called "Meryma\'at" (pronounced means-a-mot). They held high social standing and were highly esteemed members of society.',
+    explanation: 'Egyptian barbers were called "Meryma\'at" (pronounced mare-a-mott in the Milady Chapter 1 glossary). They held high social standing and were highly esteemed members of society.',
     difficulty: 'easy',
     order_index: 10,
   },
