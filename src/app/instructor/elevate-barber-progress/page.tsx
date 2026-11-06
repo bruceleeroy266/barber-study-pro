@@ -108,7 +108,7 @@ export default async function ElevateBarberProgressPage() {
     const quizzes = (attempts ?? []).filter((row) => row.user_id === learner.id)
     const gradedQuizzes = quizzes.filter((row) => typeof row.percentage === 'number')
     const quizAverage = gradedQuizzes.length
-      ? Math.round(gradedQuizzes.reduce((sum, row) => sum + row.percentage, 0) / gradedQuizzes.length)
+      ? Math.round(gradedQuizzes.reduce((sum, row) => sum + (typeof row.percentage === 'number' ? row.percentage : 0), 0) / gradedQuizzes.length)
       : null
     const completed = chapters.filter((row) => row.progress_percentage === 100).length
     const latest = [
