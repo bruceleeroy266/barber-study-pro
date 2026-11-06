@@ -270,6 +270,11 @@ export default async function InstructorStudentsPage() {
       <div className="max-w-7xl mx-auto space-y-8">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Students</h1>
+          {schoolId === '289a29f8-123f-4d71-b99d-a1bf6c15853c' && (
+            <Link href="/instructor/elevate-barber-progress" className="mt-2 inline-flex rounded-lg border border-[var(--color-brand-gold)] px-3 py-2 text-sm font-semibold text-gold hover:underline">
+              View shared Elevate barber progress (read-only)
+            </Link>
+          )
           <p className="text-[var(--color-text-muted)]">
             {schoolName} — Manage and monitor your student roster
           </p>
