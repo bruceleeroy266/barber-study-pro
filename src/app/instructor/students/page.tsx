@@ -274,7 +274,7 @@ export default async function InstructorStudentsPage() {
             <Link href="/instructor/elevate-barber-progress" className="mt-2 inline-flex rounded-lg border border-[var(--color-brand-gold)] px-3 py-2 text-sm font-semibold text-gold hover:underline">
               View shared Elevate barber progress (read-only)
             </Link>
-          )
+          )}
           <p className="text-[var(--color-text-muted)]">
             {schoolName} — Manage and monitor your student roster
           </p>
