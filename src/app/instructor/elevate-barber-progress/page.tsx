@@ -39,7 +39,7 @@ export default async function ElevateBarberProgressPage() {
     .is('deleted_at', null)
 
   if (programError) throw new Error('Unable to load Elevate programs')
-  const barberProgramIds = (programs ?? [])
+  const barberProgramIds = ((programs ?? []) as Array<{ id: string; name: string }>)
     .filter((program) => /barber/i.test(program.name))
     .map((program) => program.id)
 
@@ -51,7 +51,7 @@ export default async function ElevateBarberProgressPage() {
     .is('deleted_at', null)
 
   if (studentsError) throw new Error('Unable to load Elevate students')
-  const studentRecordIds = (studentRecords ?? []).map((student) => student.id)
+  const studentRecordIds = ((studentRecords ?? []) as Array<{ id: string; profile_id: string | null }>).map((student) => student.id)
   const { data: enrollments, error: enrollmentError } = barberProgramIds.length && studentRecordIds.length
     ? await supabase
         .from('enrollments')
@@ -64,9 +64,9 @@ export default async function ElevateBarberProgressPage() {
     : { data: [], error: null }
 
   if (enrollmentError) throw new Error('Unable to load active barber enrollments')
-  const enrolledRecordIds = new Set((enrollments ?? []).map((row) => row.student_id))
+  const enrolledRecordIds = new Set(((enrollments ?? []) as Array<{ student_id: string }>).map((row) => row.student_id))
   const profileIds = [...new Set(
-    (studentRecords ?? [])
+    ((studentRecords ?? []) as Array<{ id: string; profile_id: string | null }>)
       .filter((student) => enrolledRecordIds.has(student.id))
       .map((student) => student.profile_id)
       .filter((id): id is string => typeof id === 'string')
@@ -84,7 +84,7 @@ export default async function ElevateBarberProgressPage() {
     : { data: [], error: null }
 
   if (profilesError) throw new Error('Unable to load barber learner profiles')
-  const learners = (profiles ?? []).sort((a, b) =>
+  const learners = ((profiles ?? []) as Array<{ id: string; full_name: string | null; role: string; school_id: string; is_disabled: boolean; approval_status: string }>).sort((a, b) =>
     (a.full_name ?? '').localeCompare(b.full_name ?? '')
   )
   const ids = learners.map((learner) => learner.id)
@@ -104,8 +104,8 @@ export default async function ElevateBarberProgressPage() {
   if (progressError || attemptsError) throw new Error('Unable to load learning metrics')
 
   const rows = learners.map((learner) => {
-    const chapters = (progress ?? []).filter((row) => row.user_id === learner.id)
-    const quizzes = (attempts ?? []).filter((row) => row.user_id === learner.id)
+    const chapters = ((progress ?? []) as Array<{ user_id: string; chapter_id: string; progress_percentage: number | null; quiz_completed: boolean; best_quiz_score: number | null; last_studied_at: string | null }>).filter((row) => row.user_id === learner.id)
+    const quizzes = ((attempts ?? []) as Array<{ user_id: string; quiz_id: string; percentage: number | null; completed_at: string | null }>).filter((row) => row.user_id === learner.id)
     const gradedQuizzes = quizzes.filter((row) => typeof row.percentage === 'number')
     const quizAverage = gradedQuizzes.length
       ? Math.round(gradedQuizzes.reduce((sum, row) => sum + (typeof row.percentage === 'number' ? row.percentage : 0), 0) / gradedQuizzes.length)
