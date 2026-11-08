@@ -72,6 +72,7 @@ export default function RemediationContentRenderer({
           return (
             <Card
               key={section.id}
+              data-testid={`remediation-content-${section.id}`}
               className={`overflow-hidden transition-all ${
                 isViewed ? 'border-green-500/30' : ''
               }`}

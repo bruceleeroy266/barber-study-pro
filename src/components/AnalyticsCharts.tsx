@@ -1,6 +1,6 @@
 'use client'
 
-import { AreaPerformance } from '@/types'
+import { AreaPerformance, ScoredAreaPerformance } from '@/types'
 
 interface AnalyticsChartsProps {
   readinessScore: number
@@ -132,13 +132,13 @@ export default function AnalyticsCharts({
   missedQuestionTrend,
 }: AnalyticsChartsProps) {
   const categories = categoryPerformance
-    .filter((c) => c.score > 0)
+    .filter((c): c is ScoredAreaPerformance => c.score !== null && c.score > 0)
     .sort((a, b) => b.score - a.score)
     .slice(0, 6)
     .map((c) => ({ label: c.name, value: c.score }))
 
   const chapters = chapterPerformance
-    .filter((c) => c.score > 0)
+    .filter((c): c is ScoredAreaPerformance => c.score !== null && c.score > 0)
     .sort((a, b) => b.score - a.score)
     .slice(0, 6)
     .map((c) => ({ label: c.name, value: c.score }))

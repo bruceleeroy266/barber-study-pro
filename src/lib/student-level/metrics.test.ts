@@ -6,7 +6,8 @@ function progress(
   chapterId: string,
   percentage: number,
   flashcardsCompleted = false,
-  quizCompleted = false
+  quizCompleted = false,
+  bestQuizScore: number | null = null
 ): StudentProgress {
   return {
     id: `progress-${chapterId}`,
@@ -15,7 +16,7 @@ function progress(
     progress_percentage: percentage,
     flashcards_completed: flashcardsCompleted,
     quiz_completed: quizCompleted,
-    best_quiz_score: null,
+    best_quiz_score: bestQuizScore,
     last_studied_at: null,
     created_at: '2026-10-03T00:00:00.000Z',
     updated_at: '2026-10-03T00:00:00.000Z',
@@ -40,7 +41,9 @@ describe('ADM-1D canonical student learning metrics', () => {
     const metrics = calculateCanonicalStudentLearningMetrics({
       userId: 'student-1',
       progress: [
-        progress('ch-1', 100, true, true),
+        // Passed quizzes are score-derived (best_quiz_score >= 80); quiz_completed
+        // alone means "finished", not "passed" (ASCYN-QUIZ-ANALYTICS-02).
+        progress('ch-1', 100, true, true, 92),
         progress('ch-2', 50),
       ],
       attempts: [],

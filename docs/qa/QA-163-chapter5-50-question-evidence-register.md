@@ -1,0 +1,574 @@
+# QA-163 — Chapter 5 original-scan verification register
+
+Branch: `quiz-grading-qa150-ch5-academic-review`. Bank path: `src/lib/chapter-5-premium-quiz.ts` (50 questions). Original source: full 776-page image-only scan, Chapter 5 approximately complete-PDF pp. 98–137; printed-page numbers differ. Reference map: QA-149, **provisional**. The 29-page `chapter 5.pdf` excerpt is incomplete for the full chapter. Contact sheets of the 40 whole-book page images were generated for source navigation; they do **not** constitute reading and certifying all four options at full resolution.
+
+**Audit rule:** a question is **source-certified** only after the original page image, full stem, all four choices, keyed answer, explanation and any figures or safety limitations have been checked and entered as evidence. **No item is certified solely on the strength of matching keywords or an OCR section map.**
+
+| ID | Source whole-book PDF page(s) (provisional) | Current key | Four-option/key/explanation disposition | Follow-up |
+|---|---|---|---|---|
+| qq-5-001 | 100–102 | A | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-002 | 100–101 | B | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-003 | 101 | C | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-004 | 110–112 | A | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-005 | 102–103 | B | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-006 | 100–103 | C | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-007 | 104–105 | A | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-008 | 104–106 | B | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-009 | 104–109 | C | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-010 | 104–109 | A | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-011 | 105–106 | B | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-012 | 106–107 | C | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-013 | 104–106 | A | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-014 | 109 | B | Previously flagged; revision present; full four-option scan sign-off still open | Review original image against all four choices and explanation |
+| qq-5-015 | 110–112 | D | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-016 | 110–111 | A | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-017 | 111–112 | B | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-018 | 110–113 | D | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-019 | 111–112 | A | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-020 | 110–112 | B | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-021 | 110–112 | D | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-022 | 113–115 | A | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-023 | 118–121;130–131 | B | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-024 | 114–115 | D | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-025 | 118–121;128–131 | A | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-026 | 116 | C | Previously flagged; revision present; full four-option scan sign-off still open | Review original image against all four choices and explanation |
+| qq-5-027 | 114–116 | D | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-028 | 117 | A | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-029 | 125–126 | C | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-030 | 126 | D | Previously flagged; revision present; full four-option scan sign-off still open | Review original image against all four choices and explanation |
+| qq-5-031 | 125–126 | A | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-032 | 124–125 | C | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-033 | 125–126 | D | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-034 | 124–126 | A | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-035 | 122–124 | C | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-036 | 123–124 | D | Previously flagged; revision present; full four-option scan sign-off still open | Review original image against all four choices and explanation |
+| qq-5-037 | 118–119;128–129 | A | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-038 | 119–121;130–131 | C | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-039 | 122–127 | D | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-040 | 127 | B | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-041 | 110–112 | C | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-042 | 105–106 | D | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-043 | 103–105 | B | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-044 | 106–107 | C | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-045 | 110–111 | D | Previously flagged; revision present; full four-option scan sign-off still open | Review original image against all four choices and explanation |
+| qq-5-046 | 115–116 | B | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-047 | 111–112 | C | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-048 | 110–116 | D | Previously flagged; revision present; full four-option scan sign-off still open | Review original image against all four choices and explanation |
+| qq-5-049 | 118–121;128–131 | B | Not independently certified at full resolution | Review original image against all four choices and explanation |
+| qq-5-050 | 125–126 | C | Not independently certified at full resolution | Review original image against all four choices and explanation |
+
+## Targeted academic corrections already in PR
+- 014 shear care: paper/plastic/wire distractor, key B; stem distinguishes fine shears from ordinary human hair cutting.
+- 026 razor grinds: explanation limits claims to blade geometry, key C.
+- 030 thermal test: five-second tissue/toweling clamp, key D.
+- 036 neck strip: sanitation barrier, key D.
+- 045 motor table: textbook-qualified comparisons, key D.
+- 048 skin-fade scenario: razor finishing is requested as optional, key D.
+
+## Independent review and final gates
+1. A barber instructor or content reviewer must compare the actual readable original images to the **four full answer options and full explanation** for each of 50 items, record source-image page and any discrepancies, and sign name/date. No external reviewer has been engaged or signed off in QA-163.
+2. Correct confirmed discrepancies on the isolated PR branch, rerun CI, and obtain approval only after all source-reviewed rows are complete.
+3. **Release decision: NO-GO; no merge.** This register transparently records outstanding evidence instead of falsely certifying 50/50.
+
+## Exact live quiz-bank fields to audit
+
+### qq-5-001
+
+- `question`: "A barber needs a comb material that is antistatic and resistant to heat and many chemicals. Which material BEST matches the Chapter 5 source?",
+- `answer_a`: "Carbon",
+- `answer_b`: "Hard rubber",
+- `answer_c`: "Graphite",
+- `answer_d`: "Metal",
+- `correct_answer`: 'a',
+- `explanation`: strategyExplanation("material performance", "hard rubber is flexible but can deteriorate in disinfectant; graphite is less rigid; metal retains heat and may corrode", "match the service need to the source mater
+
+### qq-5-002
+
+- `question`: 'According to the Chapter 5 source, what length range do most haircutting combs measure?',
+- `answer_a`: '5-6 inches',
+- `answer_b`: '7-8 inches',
+- `answer_c`: '9-10 inches',
+- `answer_d`: '3-4 inches',
+- `correct_answer`: 'b',
+- `explanation`: 'All-purpose cutting combs are 7-8 inches with fine teeth on one end and medium teeth on the other for versatility.',
+
+### qq-5-003
+
+- `question`: 'What is the primary purpose of a taper comb?',
+- `answer_a`: 'Detangling wet hair after washing',
+- `answer_b`: 'Blow-drying and styling long hair',
+- `answer_c`: 'Gradual blending in tight areas, around ears, and at necklines',
+- `answer_d`: 'Sectioning hair for color applications',
+- `correct_answer`: 'c',
+- `explanation`: 'Taper combs are shorter, sturdier, with teeth spaced to grip hair firmly for clipper-over-comb and scissor-over-comb tapering.',
+
+### qq-5-004
+
+- `question`: "A barber wants to increase clipper cutting length without changing the bare blade. Which choice BEST matches the source?",
+- `answer_a`: "Use an attachment comb or guard",
+- `answer_b`: "Adjust an outliner blade flush",
+- `answer_c`: "Switch to a razor shaper",
+- `answer_d`: "Increase motor speed",
+- `correct_answer`: 'a',
+- `explanation`: strategyExplanation("increase cutting length", "flush blade adjustment is a safety concern; razor shapers texturize hair; motor speed does not define the cutting length", "guards extend length beyond the bare b
+
+### qq-5-005
+
+- `question`: 'Which brush type creates volume and curl during blow-drying?',
+- `answer_a`: 'Paddle brush',
+- `answer_b`: 'Round brush',
+- `answer_c`: 'Vent brush',
+- `answer_d`: 'Pick comb',
+- `correct_answer`: 'b',
+- `explanation`: 'Round brush creates volume and curl. Barrel size matters — larger barrels create bigger curls. Paddle brushes smooth; vent brushes speed drying.',
+
+### qq-5-006
+
+- `question`: 'When should you replace a comb?',
+- `answer_a`: 'Only when it breaks completely in half',
+- `answer_b`: 'Every 6 months regardless of condition',
+- `answer_c`: 'When teeth become worn, broken, or missing',
+- `answer_d`: 'Only when the color fades',
+- `correct_answer`: 'c',
+- `explanation`: 'Replace combs with worn, broken, or missing teeth. Damaged teeth snag hair, damage the cuticle, and create uneven sections.',
+
+### qq-5-007
+
+- `question`: "A barber wants the shear edge that glides smoothly and is suited to slide cutting. Which edge is the BEST choice?",
+- `answer_a`: "Convex edge",
+- `answer_b`: "Beveled edge",
+- `answer_c`: "Wedge grind",
+- `answer_d`: "Crocus finish",
+- `correct_answer`: 'a',
+- `explanation`: strategyExplanation("slide cutting", "wedge grind and crocus finish describe straight razors; beveled edges grip hair and are not the source choice for slide cutting", "match the shear-edge design to the cuttin
+
+### qq-5-008
+
+- `question`: "According to the Chapter 5 source, which shear-size statement is MOST accurate?",
+- `answer_a`: "5½–6 inches is always the universal professional standard",
+- `answer_b`: "Most barbers prefer about 6½–7½ inches, but fit and service still matter",
+- `answer_c`: "Only 4-inch shears should be used for barbering",
+- `answer_d`: "Shear size has no relationship to fit or technique",
+- `correct_answer`: 'b',
+- `explanation`: strategyExplanation("source preference versus universal rule", "the distractors turn a preference into an absolute or deny fit and technique", "use source wording while avoiding manufacturer-independent absolut
+
+### qq-5-009
+
+- `question`: "A shear drops far more than intended during a tension check. Which interpretation is BEST?",
+- `answer_a`: "The finger tang is too long",
+- `answer_b`: "The shear must be forged",
+- `answer_c`: "The tension is likely too loose and should be adjusted",
+- `answer_d`: "The beveled edge needs stropping",
+- `correct_answer`: 'c',
+- `explanation`: strategyExplanation("tension check", "forging, tang length, and stropping do not explain blade pressure", "the tension screw controls pressure between the blades; the source teaches a controlled partial-drop ch
+
+### qq-5-010
+
+- `question`: "Which shear part directly adjusts pressure between the moving and still blades?",
+- `answer_a`: "Tension/pivot screw",
+- `answer_b`: "Finger rest/tang",
+- `answer_c`: "Bumper",
+- `answer_d`: "Shank",
+- `correct_answer`: 'a',
+- `explanation`: strategyExplanation("adjusts blade pressure", "the tang supports the little finger, the bumper limits handle closure, and the shank connects blade to handle", "identify the part whose job is to control blade pr
+
+### qq-5-011
+
+- `question`: "Which handle design BEST matches the source description of reducing hand and wrist stress through a greater offset?",
+- `answer_a`: "Opposing",
+- `answer_b`: "Crane",
+- `answer_c`: "German",
+- `answer_d`: "French",
+- `correct_answer`: 'b',
+- `explanation`: strategyExplanation("greater offset and reduced stress", "German and French describe shear styles, not handle designs; opposing is the traditional layout", "match the ergonomic handle geometry to the source des
+
+### qq-5-012
+
+- `question`: 'What is the primary purpose of thinning/texturizing shears?',
+- `answer_a`: 'To create blunt, straight lines in the haircut',
+- `answer_b`: 'To shave the neckline clean',
+- `answer_c`: 'To remove bulk and create texture without changing overall length',
+- `answer_d`: 'To disinfect tools between clients',
+- `correct_answer`: 'c',
+- `explanation`: 'Texturizing/thinning shears use toothed blade designs to remove a portion of hair and create texture or reduce bulk. Tooth count and cutting ratio vary by model.',
+
+### qq-5-013
+
+- `question`: "Why are left-handed shears assembled differently from right-handed shears?",
+- `answer_a`: "The blade orientation is reversed to match the intended hand and cutting mechanics",
+- `answer_b`: "Left-handed shears use a different metal",
+- `answer_c`: "State boards require a different blade length",
+- `answer_d`: "They are designed only for thinning",
+- `correct_answer`: 'a',
+- `explanation`: strategyExplanation("reversed assembly", "metal type, blade length, and thinning purpose do not define handedness", "match blade orientation to the user's hand and shear mechanics", "reversed blade assembly sup
+
+### qq-5-014
+
+- `question`: 'According to Chapter 5, which materials should be kept away from fine haircutting shears?',
+- `answer_a`: 'Clean, wet human hair',
+- `answer_b`: 'Paper, plastic, or wire',
+- `answer_c`: 'Clean, dry human hair',
+- `answer_d`: 'Clean, curly human hair',
+- `correct_answer`: 'b',
+- `explanation`: 'The Chapter 5 shear-care guidance reserves haircutting shears for human hair and advises using less expensive shears on mannequin hair. Cutting paper, plastic, or wire can dull or damage the edge.',
+
+### qq-5-015
+
+- `question`: 'What is the main difference between clippers and trimmers?',
+- `answer_a`: 'There is no difference — they are interchangeable',
+- `answer_b`: 'Clippers are battery-powered; trimmers are corded',
+- `answer_c`: 'Clippers are more expensive; trimmers are disposable',
+- `answer_d`: 'Clippers are for bulk removal and fades; trimmers are for precision outlining and detail',
+- `correct_answer`: 'd',
+- `explanation`: 'Clippers are larger, more powerful, for bulk removal, fades, and tapers. Trimmers are smaller, precise tools for outlining, edging, and detail work.',
+
+### qq-5-016
+
+- `question`: "Which set names the three clipper motor types identified in the Chapter 5 source?",
+- `answer_a`: "Rotary, pivot, magnetic",
+- `answer_b`: "Rotary, hydraulic, lithium",
+- `answer_c`: "Pivot, ceramic, detachable",
+- `answer_d`: "Magnetic, carbon, adjustable",
+- `correct_answer`: 'a',
+- `explanation`: strategyExplanation("motor types", "ceramic/carbon are blade materials; detachable/adjustable are clipper systems; lithium describes a battery chemistry", "separate motor categories from blade, power, and clipp
+
+### qq-5-017
+
+- `question`: "A barber wants an outliner to cut closer. Which action is SAFEST according to the source?",
+- `answer_a`: "Set the moving blade flush with the still blade",
+- `answer_b`: "Keep safe blade alignment and follow manufacturer guidance rather than setting the blades flush",
+- `answer_c`: "Increase hand pressure at the hairline",
+- `answer_d`: "Remove the still blade",
+- `correct_answer`: 'b',
+- `explanation`: strategyExplanation("SAFEST outliner adjustment", "flush alignment, excess pressure, and removing a blade increase risk or defeat the tool design", "the source specifically cautions against flush outliner adjus
+
+### qq-5-018
+
+- `question`: "Clippers begin pulling and snagging during a service. What should the barber do FIRST?",
+- `answer_a`: "Press harder so the blade catches the hair",
+- `answer_b`: "Assume the client has unusually coarse hair and continue",
+- `answer_c`: "Immediately replace the motor",
+- `answer_d`: "Stop and inspect cleanliness, lubrication, alignment, and blade condition",
+- `correct_answer`: 'd',
+- `explanation`: strategyExplanation("FIRST response to pulling", "continuing, replacing the motor without diagnosis, and adding pressure ignore basic troubleshooting", "stop the irritating action and check the source-supported
+
+### qq-5-019
+
+- `question`: 'What is the T-blade design on trimmers used for?',
+- `answer_a`: 'Extremely close, clean lines around necklines, beards, and hairlines',
+- `answer_b`: 'Cutting bulk hair on the top of the head',
+- `answer_c`: 'Shaving the entire head bald',
+- `answer_d`: 'Applying hair products evenly',
+- `correct_answer`: 'a',
+- `explanation`: 'T-blade allows for extremely close, clean lines around necklines, beards, and hairlines. The extended blade reaches tight corners.',
+
+### qq-5-020
+
+- `question`: "Which statement BEST reflects the source's treatment of cordless clippers?",
+- `answer_a`: "Lithium-ion models are always stronger than corded clippers",
+- `answer_b`: "They offer portability and convenience, but some may have less power than corded models",
+- `answer_c`: "Cordless models never lose cutting power",
+- `answer_d`: "Battery chemistry alone determines professional quality",
+- `correct_answer`: 'b',
+- `explanation`: strategyExplanation("source treatment of cordless clippers", "the distractors turn convenience into unsupported battery or power absolutes", "judge the tool by service needs and manufacturer specifications rath
+
+### qq-5-021
+
+- `question`: 'Why should you start with the longest guard and work down when fading?',
+- `answer_a`: 'It is faster than starting short',
+- `answer_b`: 'Long guards are sharper than short guards',
+- `answer_c`: 'State boards require this method',
+- `answer_d`: 'You can always cut more off — you cannot put it back',
+- `correct_answer`: 'd',
+- `explanation`: 'Starting long prevents mistakes and allows gradual refinement. You can always cut more off — you cannot put it back.',
+
+### qq-5-022
+
+- `question`: "Which comparison between straight-razor types is MOST accurate?",
+- `answer_a`: "Changeable-blade razors use replaceable blades; conventional straight razors require honing and stropping",
+- `answer_b`: "Conventional razors use disposable guards; changeable-blade razors require honing",
+- `answer_c`: "Both types require the same honing schedule",
+- `answer_d`: "Razor shapers are the same as conventional shaving razors",
+- `correct_answer`: 'a',
+- `explanation`: strategyExplanation("razor type distinction", "the distractors reverse the systems or confuse hair razors with shaving razors", "identify whether the edge is replaced or maintained as a permanent blade", "chang
+
+### qq-5-023
+
+- `question`: 'What is the function of stropping a conventional straight razor?',
+- `answer_a`: 'Sharpening the blade with a stone — done monthly',
+- `answer_b`: 'Smoothing and aligning the cutting edge and polishing the blade with a strop',
+- `answer_c`: 'Cleaning the blade with alcohol — done after every client',
+- `answer_d`: 'Replacing the blade — done weekly',
+- `correct_answer`: 'b',
+- `explanation`: 'Stropping refines and aligns a traditional straight-razor edge between honings. Technique and frequency depend on the razor, strop, edge condition, and manufacturer or training guidance.',
+
+### qq-5-024
+
+- `question`: "When holding a straight razor for shaving, which principle BEST matches the source?",
+- `answer_a`: "Grip the handle with both hands",
+- `answer_b`: "Hold only the cutting edge for maximum precision",
+- `answer_c`: "Use the same hold as stropping regardless of task",
+- `answer_d`: "Control the shank/tang area with the taught shaving grip and deliberate blade control",
+- `correct_answer`: 'd',
+- `explanation`: strategyExplanation("holding for shaving", "the edge must never be grasped; stropping uses a different task-based hold; two-hand gripping is not the source procedure", "the source changes the hold according to 
+
+### qq-5-025
+
+- `question`: "Why is the straight razor controlled from the shank during honing or stropping?",
+- `answer_a`: "So the blade can lie flat and travel correctly on the hone or strop",
+- `answer_b`: "So the cutting edge can be pinched safely",
+- `answer_c`: "So the handle can remain closed",
+- `answer_d`: "So only one side of the blade is worked",
+- `correct_answer`: 'a',
+- `explanation`: strategyExplanation("honing or stropping hold", "pinching the edge is unsafe; closing the handle or working one side defeats the procedure", "task-based holding keeps the blade flat and allows balanced work on 
+
+### qq-5-026
+
+- `question`: 'How do hollow-ground and wedge-grind straight razors differ in blade shape?',
+- `answer_a`: 'Hollow-ground is heavier; wedge is lighter',
+- `answer_b`: 'Hollow-ground is for coarse beards; wedge is for fine beards',
+- `answer_c`: 'Concave grind has hollowed blade sides; wedge grind is not hollowed and forms an angle at the edge',
+- `answer_d`: 'They are the same grind with different names',
+- `correct_answer`: 'c',
+- `explanation`: 'The concave (hollow-ground) razor has hollowed sides; the wedge grind is not hollow or concave, and both sides form an angle at the cutting edge. The textbook notes that hollow-ground razors let a barber feel 
+
+### qq-5-027
+
+- `question`: "Which list contains only principal straight-razor parts from the Chapter 5 source?",
+- `answer_a`: "Barrel, clamp, swivel, nozzle, diffuser",
+- `answer_b`: "Guard, taper lever, motor, heel, cord",
+- `answer_c`: "Finger rest, bumper, shank, tension screw, thumb grip",
+- `answer_d`: "Head, back, shoulder, tang, point, edge, heel, shank, pivot",
+- `correct_answer`: 'd',
+- `explanation`: strategyExplanation("straight-razor parts", "the other lists describe clippers, shears, or thermal tools", "match the named parts to the razor anatomy taught in LO10", "head/back/shoulder/tang/point/edge/heel/s
+
+### qq-5-028
+
+- `question`: 'What does a crocus finish describe on a traditional straight razor?',
+- `answer_a`: 'A highly polished surface finish; the finish alone does not prove edge retention or overall blade quality',
+- `answer_b`: 'A type of blade guard',
+- `answer_c`: 'A safety feature that prevents cuts',
+- `answer_d`: 'A type of razor handle material',
+- `correct_answer`: 'a',
+- `explanation`: 'A crocus finish describes a highly polished razor surface. Edge retention and overall quality depend on additional factors such as steel, heat treatment, geometry, edge condition, and maintenance.',
+
+### qq-5-029
+
+- `question`: 'What is a Marcel iron and how is it controlled?',
+- `answer_a`: 'An automatic curling iron with a spring-loaded clamp',
+- `answer_b`: 'A heated comb for textured hair',
+- `answer_c`: 'A manual thermal iron with rotating handle for precise control',
+- `answer_d`: 'A type of hair straightener',
+- `correct_answer`: 'c',
+- `explanation`: 'Marcel iron has a rotating handle for precise temperature and winding control. No spring — the barber controls clamp pressure and rotation.',
+
+### qq-5-030
+
+- `question`: 'What is the tissue test for thermal tools?',
+- `answer_a`: 'Wiping the tool with a tissue to clean it',
+- `answer_b`: 'Wrapping tissue around the client\'s neck',
+- `answer_c`: 'Testing the tissue for moisture content',
+- `answer_d`: 'Clamp the heated iron on tissue or toweling for five seconds; scorching indicates excessive heat',
+- `correct_answer`: 'd',
+- `explanation`: 'Clamp the heated iron closed on tissue paper or toweling for five seconds. If the tissue browns or scorches, the iron is too hot; allow it to cool before applying it to hair. Fine, lightened, or damaged hair t
+
+### qq-5-031
+
+- `question`: 'Why should you NEVER use a metal pressing comb directly on the scalp?',
+- `answer_a`: 'Metal on scalp causes serious burns',
+- `answer_b`: 'It will tangle in the hair',
+- `answer_c`: 'It damages the comb',
+- `answer_d`: 'It is against manufacturer warranty',
+- `correct_answer`: 'a',
+- `explanation`: 'Metal on scalp causes serious burns. Always maintain safe distance from skin. Pressing combs straighten hair sections, not touch scalp.',
+
+### qq-5-032
+
+- `question`: 'What blowdryer nozzle type disperses air for textured and curly hair to reduce frizz?',
+- `answer_a`: 'Pick',
+- `answer_b`: 'Concentrator',
+- `answer_c`: 'Diffuser',
+- `answer_d`: 'Vent',
+- `correct_answer`: 'c',
+- `explanation`: 'Diffuser disperses air for textured and curly hair to reduce frizz. Concentrator = precision. Pick = lifts roots and adds volume.',
+
+### qq-5-033
+
+- `question`: 'What is the best approach to heat protection when using thermal tools?',
+- `answer_a`: 'Heat protection is never useful',
+- `answer_b`: 'Heat protection matters only for fine hair',
+- `answer_c`: 'Use the highest temperature so the service finishes faster',
+- `answer_d`: 'Use appropriate heat protection, safe temperature selection, and follow product and tool directions',
+- `correct_answer`: 'd',
+- `explanation`: 'Thermal-tool safety depends on the hair condition, service, temperature, product directions, and tool guidance. Use appropriate heat protection and avoid excessive heat exposure.',
+
+### qq-5-034
+
+- `question`: 'Why should you never use a blowdryer near water?',
+- `answer_a`: 'Electrocution risk — water and electricity are deadly',
+- `answer_b`: 'Water makes the hair too heavy to dry',
+- `answer_c`: 'It voids the warranty',
+- `answer_d`: 'Water damages the motor over time',
+- `correct_answer`: 'a',
+- `explanation`: 'Electrocution risk. Water and electricity are a deadly combination. Keep blowdryers away from sinks, wet floors, and damp hands.',
+
+### qq-5-035
+
+- `question`: "Which equipment-role pairing is MOST accurate?",
+- `answer_a`: "Neck strip — sharpens razors; shampoo cape — adjusts shear tension",
+- `answer_b`: "Barber chair — disinfects implements; towel — powers clippers",
+- `answer_c`: "Haircutting cape — protects the client during cutting; neck strip — barrier between cape and skin",
+- `answer_d`: "Towel — changes clipper length; cape — hones razors",
+- `correct_answer`: 'c',
+- `explanation`: strategyExplanation("equipment role", "the distractors assign tools functions they cannot perform", "match each item to its actual service-support function", "haircutting cape for protection and neck strip as a
+
+### qq-5-036
+
+- `question`: 'What is the purpose of a neck strip?',
+- `answer_a`: 'To hold the cape closed',
+- `answer_b`: 'To apply styling products',
+- `answer_c`: 'To measure hair length',
+- `answer_d`: "A sanitary barrier between the client's neck and the haircutting cape",
+- `correct_answer`: 'd',
+- `explanation`: "A clean neck strip separates the cape from the client's neck for sanitary draping. It is not a guarantee that no loose hairs reach the neck or clothing.",
+
+### qq-5-037
+
+- `question`: "Which sequence BEST reflects the source procedure for honing a conventional straight razor?",
+- `answer_a`: "Use even diagonal strokes, work both sides equally, gradually lighten pressure, then perform the taught edge check",
+- `answer_b`: "Use heavy pressure on one side until the edge feels rough",
+- `answer_c`: "Roll the razor on its cutting edge after every stroke",
+- `answer_d`: "Strop first, then grind only the heel",
+- `correct_answer`: 'a',
+- `explanation`: strategyExplanation("honing sequence", "one-sided heavy pressure and edge-rolling are incorrect; stropping is a different procedure", "honing uses controlled abrasive strokes on both sides with pressure reduced
+
+### qq-5-038
+
+- `question`: "During stropping, how should the barber reverse the razor's direction?",
+- `answer_a`: "Lift it and strike the strop vertically",
+- `answer_b`: "Roll it over the cutting edge",
+- `answer_c`: "Roll the razor on its back, then continue even diagonal strokes on the other side",
+- `answer_d`: "Keep the same side against the strop for every pass",
+- `correct_answer`: 'c',
+- `explanation`: strategyExplanation("reverse direction during stropping", "rolling on the cutting edge risks damage; vertical strikes and one-sided work do not follow the source procedure", "the source distinguishes stropping 
+
+### qq-5-039
+
+- `question`: "Which group consists of Chapter 5 equipment used directly to support shaving or comfort services?",
+- `answer_a`: "Hone, strop, shear case",
+- `answer_b`: "Tension screw, finger tang, bumper",
+- `answer_c`: "Detachable blade, taper lever, guard",
+- `answer_d`: "Hot-towel cabinet, latherizer, electric massager",
+- `correct_answer`: 'd',
+- `explanation`: strategyExplanation("equipment supporting service comfort/shaving", "the other sets are shear, clipper, or blade-maintenance components", "match equipment to its service role rather than its material or locatio
+
+### qq-5-040
+
+- `question`: "Loose hair clippings remain on a client's neck after a haircut. Which removal method BEST matches the source?",
+- `answer_a`: "Use an unclean traditional neck duster because it is faster",
+- `answer_b`: "Use a clean folded towel, disposable paper neck strip, or maintained vacuum method",
+- `answer_c`: "Brush them off with a used cape",
+- `answer_d`: "Blow them away with compressed air",
+- `correct_answer`: 'b',
+- `explanation`: strategyExplanation("safe clipping removal", "used or unclean tools can recontaminate the client and compressed air is not the source method", "choose a clean, maintainable method the source specifically identi
+
+### qq-5-041
+
+- `question`: "Which statement about clipper blades and guards is MOST accurate?",
+- `answer_a`: "Ceramic is a motor type and carbon steel is a battery type",
+- `answer_b`: "00000 is the longest guard and guards replace disinfection",
+- `answer_c`: "Carbon-steel and ceramic are blade materials; 00000 is a very close blade size; guards extend cutting length",
+- `answer_d`: "Guards make outliner blades safe to set flush",
+- `correct_answer`: 'c',
+- `explanation`: strategyExplanation("blade material, size, and guard role", "the distractors mix blade, motor, battery, and sanitation concepts", "separate blade material, blade size, and cutting-length aids", "carbon-steel/ce
+
+### qq-5-042
+
+- `question`: "Which comparison of shear handle designs is MOST accurate?",
+- `answer_a`: "Crane is another name for German-style shears",
+- `answer_b`: "Opposing and crane are blade grinds",
+- `answer_c`: "Offset means the shear has no thumb grip",
+- `answer_d`: "Opposing is traditional; offset changes thumb position; crane creates a greater offset to reduce hand/wrist stress",
+- `correct_answer`: 'd',
+- `explanation`: strategyExplanation("handle design", "blade grinds and shear styles are separate concepts; all professional handles still require controlled finger/thumb placement", "match the geometry to the source's handle c
+
+### qq-5-043
+
+- `question`: "Which comparison between cast and forged shears BEST matches the Chapter 5 source?",
+- `answer_a`: "Cast shears are always denser because they are poured",
+- `answer_b`: "Forged shears are compressed/hammered and described as denser and more durable; cast shears are described as more porous and less durable",
+- `answer_c`: "Forged and cast refer only to handle shape",
+- `answer_d`: "Casting and forging are two names for blade sharpening",
+- `correct_answer`: 'b',
+- `explanation`: strategyExplanation("construction method", "handle shape and sharpening are different features; the source does not describe cast as denser", "use the source's construction comparison without turning one featur
+
+### qq-5-044
+
+- `question`: "A barber wants to remove bulk without creating a blunt line. Which shear type is the BEST fit?",
+- `answer_a`: "German-style shear because it has no tang",
+- `answer_b`: "Straight shear used as a razor",
+- `answer_c`: "Thinning/blending shear with narrow teeth",
+- `answer_d`: "Crane-handle shear regardless of blade type",
+- `correct_answer`: 'c',
+- `explanation`: strategyExplanation("remove bulk without a blunt line", "handle style and tang style do not define the texturizing effect; straight shears are for standard cutting", "choose the toothed shear design built to re
+
+### qq-5-045
+
+- `question`: "According to Chapter 5's clipper-motor comparison table, which description matches the source?",
+- `answer_a`: "Hydraulic, lithium, and ceramic are the three motor types",
+- `answer_b`: "Rotary — blade material; pivot — guard size; magnetic — battery chemistry",
+- `answer_c`: "Pivot and magnetic are the same motor type",
+- `answer_d`: "Rotary — high power/speed; pivot — quieter and suited to thick/coarse hair; magnetic — reliable for fine textures",
+- `correct_answer`: 'd',
+- `explanation`: strategyExplanation("motor characteristics", "blade material, guard size, and battery chemistry are different categories; pivot and magnetic are separate source types", "compare the three named motors by the so
+
+### qq-5-046
+
+- `question`: "What is a razor shaper or hair razor used for?",
+- `answer_a`: "Honing a conventional straight razor",
+- `answer_b`: "Texturizing and shaping hair",
+- `answer_c`: "Disinfecting clipper guards",
+- `answer_d`: "Applying shaving lather",
+- `correct_answer`: 'b',
+- `explanation`: strategyExplanation("razor shaper purpose", "honing, disinfection, and lather application use different tools", "first decide whether the tool is for hair cutting or skin shaving", "texturizing and shaping hair
+
+### qq-5-047
+
+- `question`: "A barber is detailing a hairline with an outliner. Which technique BEST matches the source?",
+- `answer_a`: "Hold the tool rigidly and increase pressure at curves",
+- `answer_b`: "Set the blades flush and press firmly",
+- `answer_c`: "Use a light hand/free wrist and maintain safe blade alignment",
+- `answer_d`: "Use a guard to replace the need for blade sanitation",
+- `correct_answer`: 'c',
+- `explanation`: strategyExplanation("outliner detailing", "flush adjustment, rigid heavy pressure, and treating guards as sanitation devices conflict with source safety", "precision tools require light pressure and safe alignm
+
+### qq-5-048
+
+- `question`: 'SCENARIO: A client requests a skin fade, a crisp beard outline, and an optional straight-razor finish. Which tool set BEST supports that plan?',
+- `answer_a`: 'Shears and comb only',
+- `answer_b`: 'Just clippers with a #1 guard',
+- `answer_c`: 'Trimmer and straight razor only',
+- `answer_d`: 'Clippers with guards, trimmer, straight razor, and comb',
+- `correct_answer`: 'd',
+- `explanation`: 'Clippers and guards support the fade, a trimmer outlines the beard, and a comb supports control and blending. A properly used straight razor may provide the specifically requested optional finishing detail; it
+
+### qq-5-049
+
+- `question`: "A barber finishes honing and begins stropping a conventional razor. What procedural change is MOST important?",
+- `answer_a`: "Increase pressure and roll on the cutting edge",
+- `answer_b`: "Use the strop and reverse direction by rolling the razor on its back while working both sides evenly",
+- `answer_c`: "Work only one side because honing already balanced the edge",
+- `answer_d`: "Hold the razor by the point",
+- `correct_answer`: 'b',
+- `explanation`: strategyExplanation("transition from honing to stropping", "rolling on the edge, one-sided work, and holding the point are unsafe or incorrect", "stropping smooths/refines and uses the source's back-roll revers
+
+### qq-5-050
+
+- `question`: "A barber is preparing to manipulate a thermal iron. Which sequence is BEST?",
+- `answer_a`: "Clamp one section in place until it smokes",
+- `answer_b`: "Heat to maximum temperature, touch the scalp briefly, then section",
+- `answer_c`: "Prepare and section the hair, verify safe heat, control the iron, protect the scalp, and move consistently",
+- `answer_d`: "Skip heat testing if the iron was used earlier",
+- `correct_answer`: 'c',
+- `explanation`: strategyExplanation("safe thermal-iron sequence", "maximum heat, scalp contact, stationary overheating, and skipping temperature verification violate safe procedure", "thermal manipulation begins with preparati
+
