@@ -1,6 +1,17 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+
 export default function InstructorLoading() {
+  const [slow, setSlow] = useState(false)
+  useEffect(() => {
+    const timeout = window.setTimeout(() => setSlow(true), 12000)
+    return () => window.clearTimeout(timeout)
+  }, [])
   return (
-    <div className="min-h-screen bg-black p-6 md:p-8 animate-pulse">
+    <div className="min-h-screen bg-black p-6 md:p-8">
+      {slow && <div role="status" className="mx-auto max-w-7xl mb-5 rounded-lg border border-amber-600/50 bg-charcoal px-4 py-3 text-white">The instructor dashboard is taking longer than expected. <button className="ml-2 underline text-gold" onClick={() => window.location.reload()}>Reload dashboard</button></div>}
+      <div className="animate-pulse">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
         <div>
@@ -93,5 +104,6 @@ export default function InstructorLoading() {
         </div>
       </div>
     </div>
+</div>
   )
 }

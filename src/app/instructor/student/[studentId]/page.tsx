@@ -1220,6 +1220,15 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           noteRecords={noteRecords}
         />
 
+        {!usingDemoData && (
+          <Link
+            href={`/instructor/students/${studentId}/exam-ready`}
+            className="inline-flex min-h-11 items-center justify-center rounded-lg border border-[var(--color-brand-gold)] px-5 py-3 font-semibold text-[var(--color-brand-gold)] hover:bg-[var(--color-brand-gold)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-gold)]"
+          >
+            View Exam Ready Results
+          </Link>
+        )}
+
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           <div className="bg-charcoal border border-graphite rounded-xl p-5">

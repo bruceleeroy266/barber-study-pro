@@ -33,7 +33,7 @@ export default function ExamQuestion({
   onToggleFlag,
 }: Props) {
   return (
-    <Card variant="elevated" padding="lg" className="space-y-6">
+    <Card variant="elevated" padding="lg" className="min-w-0 space-y-5 sm:space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm font-semibold text-[var(--color-brand-gold)]">
           Question {item.position} of {total}
@@ -50,7 +50,7 @@ export default function ExamQuestion({
         </Button>
       </div>
 
-      <h2 className="text-xl md:text-2xl font-semibold text-white leading-relaxed">
+      <h2 className="break-words text-lg sm:text-xl md:text-2xl font-semibold text-white leading-relaxed">
         {item.prompt}
       </h2>
 
@@ -64,7 +64,7 @@ export default function ExamQuestion({
               type="button"
               onClick={() => void onSelect(key)}
               className={[
-                'w-full min-h-14 rounded-lg border p-4 text-left transition-colors',
+                'w-full min-h-14 min-w-0 rounded-lg border p-3 sm:p-4 text-left break-words leading-relaxed transition-colors',
                 'focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-gold)]',
                 selected
                   ? 'border-[var(--color-brand-gold)] bg-[var(--color-brand-gold)]/10 text-white'
