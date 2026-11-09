@@ -29,7 +29,8 @@ const navItems = [
   { href: '/instructor/assessments', label: 'Assessments', icon: ClipboardCheck },
   { href: '/instructor/rubrics', label: 'Rubrics', icon: GraduationCap },
   { href: '/instructor/chapters', label: 'Teaching Notes', icon: BookOpen },
-  { href: '/instructor/answer-keys', label: 'Answer Keys', icon: FileCheck },
+  { href: '/instructor/exam-center', label: 'Exam Center', icon: FileCheck },
+  { href: '/instructor/answer-keys', label: 'Answer Keys', icon: BookOpen },
   { href: '/instructor/quiz-approvals', label: 'Quiz Approvals', icon: ClipboardCheck },
   { href: '/instructor/escalations', label: 'Escalations', icon: AlertTriangle, badge: true },
 ]

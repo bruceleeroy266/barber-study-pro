@@ -43,7 +43,14 @@ describe('AnswerKeySearch', () => {
     fireEvent.change(search, { target: { value: 'head lice' } })
 
     expect(screen.getByText(/identifies live head lice/i)).toBeInTheDocument()
+    expect(screen.queryByText(/refer the client to a physician or pharmacist/i)).not.toBeInTheDocument()
+    const reveal = screen.getByRole('button', { name: /show answer and coaching/i })
+    expect(reveal).toHaveAttribute('aria-expanded', 'false')
+    fireEvent.click(reveal)
     expect(screen.getByText(/refer the client to a physician or pharmacist/i)).toBeInTheDocument()
+    expect(screen.getByText(/instructor coaching prompt/i)).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: /hide answer and coaching/i }))
+    expect(screen.queryByText(/refer the client to a physician or pharmacist/i)).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: /open in chapter/i })).toHaveAttribute(
       'href',
       '/instructor/answer-keys/10#qq-10-034',
