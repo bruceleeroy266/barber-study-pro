@@ -43,7 +43,13 @@ export class SupabaseEscalationDatabaseClient implements IEscalationDatabaseClie
   private readonly supabase
 
   constructor(config: SupabaseEscalationClientConfig) {
-    this.supabase = createClient(config.url, config.serviceRoleKey ?? config.anonKey, {
+    // These RPCs use SECURITY DEFINER. Never fall back to a browser/anon key:
+    // execution is restricted to a server-side service role and only reachable
+    // after an authenticated API route verifies the student's exact quiz attempt.
+    if (!config.serviceRoleKey) {
+      throw new Error('Server-side escalation credentials are required')
+    }
+    this.supabase = createClient(config.url, config.serviceRoleKey, {
       auth: {
         persistSession: false,
         autoRefreshToken: false,
