@@ -95,6 +95,19 @@ export default function StudyRecommendations({ recommendations, studentId, instr
             >
               {cardContent}
             </div>
+          ) : rec.type === 'practice' ? (
+            // A full document navigation ensures the server-rendered quiz and
+            // approval gate are ready before the browser follows the anchor.
+            // Client-side RSC transitions can expose the target URL while the
+            // chapter content is still a loading shell on slower devices/CI.
+            <a
+              key={rec.id}
+              href={href}
+              className="flex items-start gap-4 p-4 bg-black border border-graphite rounded-lg hover:border-[var(--color-brand-gold)]/30 transition-colors group"
+            >
+              {cardContent}
+              <ChevronRight className="w-5 h-5 text-silver-gray group-hover:text-[var(--color-brand-gold)] shrink-0 mt-1" />
+            </a>
           ) : (
             <Link
               key={rec.id}
