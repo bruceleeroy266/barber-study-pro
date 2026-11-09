@@ -378,3 +378,63 @@ describe('P0 academic corrections: student-facing assembled questions', () => {
     expect(q!.options).toHaveLength(4)
   })
 })
+
+describe('EXAM-READY-AUDIT-04: AP-041–054 and SCG-001–006', () => {
+  const apIds = Array.from({ length: 14 }, (_, i) => 'AP-' + String(i + 41).padStart(3, '0'))
+  const scgIds = Array.from({ length: 6 }, (_, i) => 'SCG-' + String(i + 1).padStart(3, '0'))
+
+  it.each(apIds)('%s preserves four unique options, key A, and publisher-neutral student text', id => {
+    const matches = anatomyPhysiologyQuestions.filter(q => q.id === id)
+    expect(matches, id).toHaveLength(1)
+    const q = matches[0]
+    expect(q.options).toHaveLength(4)
+    expect(new Set(q.options.map(o => o.id)).size).toBe(4)
+    expect(q.correctOptionId).toBe('a')
+    expect(q.options.filter(o => o.id === q.correctOptionId)).toHaveLength(1)
+    const visible = [q.prompt, q.explanation, ...q.options.map(o => o.text)].join(' ')
+    expect(visible).not.toMatch(/\b(?:Milady|Cengage)\b|sourceBasis|sourceProvenance/i)
+  })
+
+  it.each(scgIds)('%s preserves four unique options, key A, and publisher-neutral student text', id => {
+    const matches = scientificConceptGapQuestions.filter(q => q.id === id)
+    expect(matches, id).toHaveLength(1)
+    const q = matches[0]
+    expect(q.options).toHaveLength(4)
+    expect(new Set(q.options.map(o => o.id)).size).toBe(4)
+    expect(q.correctOptionId).toBe('a')
+    expect(q.options.filter(o => o.id === q.correctOptionId)).toHaveLength(1)
+    const visible = [q.prompt, q.explanation, ...q.options.map(o => o.text)].join(' ')
+    expect(visible).not.toMatch(/\b(?:Milady|Cengage)\b|sourceBasis|sourceProvenance/i)
+  })
+
+  it('AP-052 distinguishes sensory long buccal nerve from motor facial nerve and buccinator', () => {
+    const q = anatomyPhysiologyQuestions.find(q => q.id === 'AP-052')!
+    expect(q.prompt).toMatch(/long buccal nerve/i)
+    expect(q.correctOptionId).toBe('a')
+    const answer = q.options.find(o => o.id === 'a')!.text
+    expect(answer).toMatch(/sensation/i)
+    expect(answer).toMatch(/compresses the cheek/i)
+    expect(q.explanation).toMatch(/facial nerve/)
+    expect(q.explanation).toMatch(/not the long buccal nerve/)
+  })
+
+  it('AP-047 and AP-050 retain final assembled hardening options', () => {
+    const ap47 = anatomyPhysiologyQuestions.find(q => q.id === 'AP-047')!
+    const ap50 = anatomyPhysiologyQuestions.find(q => q.id === 'AP-050')!
+    expect(ap47.options.find(o => o.id === 'a')!.text).toMatch(/dermal papilla/i)
+    expect(ap50.prompt).toMatch(/During a facial or shaving service/i)
+    expect(ap50.options.find(o => o.id === 'a')!.text).toMatch(/adapt technique and positioning safely/i)
+  })
+
+  it('SCG-004–006 preserve service safety and physician referral', () => {
+    const scg4 = scientificConceptGapQuestions.find(q => q.id === 'SCG-004')!
+    const scg5 = scientificConceptGapQuestions.find(q => q.id === 'SCG-005')!
+    const scg6 = scientificConceptGapQuestions.find(q => q.id === 'SCG-006')!
+    expect(scg4.options.find(o => o.id === 'a')!.text).toMatch(/Do not perform the service/i)
+    expect(scg4.explanation).toMatch(/discontinue services and refer/i)
+    expect(scg5.options.find(o => o.id === 'a')!.text).toMatch(/Refer the client to a physician/i)
+    expect(scg6.options.find(o => o.id === 'a')!.text).toMatch(/refer the client to a physician/i)
+    expect(scg4.prompt).not.toMatch(/Milady/i)
+    expect(scg6.prompt).not.toMatch(/Milady/i)
+  })
+})
