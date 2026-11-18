@@ -6,6 +6,7 @@
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { getTestEnvironment } from './test-environment'
+import { assertTestEnvironment } from './production-guard'
 import { TEST_ACTORS, TEST_SCHOOLS, TEST_PROGRAMS, TestActor } from './test-actors'
 
 let serviceClient: SupabaseClient | null = null
@@ -68,6 +69,7 @@ export function getResolvedActorIds(): ReadonlyMap<string, string> {
  * This client bypasses RLS and should only be used for setup/teardown.
  */
 export function getServiceClient(): SupabaseClient {
+  assertTestEnvironment()
   if (serviceClient) {
     return serviceClient
   }
@@ -125,6 +127,7 @@ export function createAnonClient(): SupabaseClient {
  * This includes auth users, profiles, and domain records.
  */
 export async function createTestActors(): Promise<void> {
+  assertTestEnvironment()
   const client = getServiceClient()
 
   console.log('[TestSetup] Creating test actors...')
@@ -243,6 +246,7 @@ export async function createTestActors(): Promise<void> {
  * Deletes all test actors from the database.
  */
 export async function deleteTestActors(): Promise<void> {
+  assertTestEnvironment()
   const client = getServiceClient()
 
   console.log('[TestSetup] Deleting test actors...')
@@ -286,6 +290,7 @@ export async function deleteTestActors(): Promise<void> {
  * WARNING: This deletes ALL data in the database.
  */
 export async function resetDatabase(): Promise<void> {
+  assertTestEnvironment()
   const client = getServiceClient()
 
   console.log('[TestSetup] Resetting database...')
@@ -390,6 +395,7 @@ export async function verifyTestPrograms(): Promise<boolean> {
  * Creates actors, verifies schools/programs.
  */
 export async function setupTestEnvironment(): Promise<void> {
+  assertTestEnvironment()
   console.log('[TestSetup] Setting up test environment...')
 
   // Verify schools exist (from seed)
@@ -414,6 +420,7 @@ export async function setupTestEnvironment(): Promise<void> {
  * Cleans up the test environment.
  */
 export async function cleanupTestEnvironment(): Promise<void> {
+  assertTestEnvironment()
   console.log('[TestSetup] Cleaning up test environment...')
   await deleteTestActors()
   console.log('[TestSetup] Test environment cleanup complete')
