@@ -306,40 +306,6 @@ export async function deleteTestActors(): Promise<void> {
 export async function resetDatabase(): Promise<void> {
   assertFixtureMutationApproved()
   throw new Error('Unrestricted database reset is prohibited for SEC-SCHOOL-ISOLATION-02F-B.')
-  const client = getServiceClient()
-
-  console.log('[TestSetup] Resetting database...')
-
-  // Delete in reverse order of dependencies
-  const tables = [
-    'enrollments',
-    'students',
-    'instructors',
-    'programs',
-    'school_settings',
-    'school_onboarding_invitations',
-    'pilot_inquiries',
-    'security_logs',
-    'user_management_audit_logs',
-    'profiles',
-  ]
-
-  for (const table of tables) {
-    const { error } = await client.from(table).delete().neq('id', '00000000-0000-0000-0000-000000000000')
-    if (error && !error.message.includes('does not exist')) {
-      console.warn(`[TestSetup] Warning deleting from ${table}:`, error.message)
-    }
-  }
-
-  // Delete auth users (except service role)
-  const { data: users } = await client.auth.admin.listUsers()
-  for (const user of users?.users || []) {
-    if (!user.email?.includes('@supabase.io')) {
-      await client.auth.admin.deleteUser(user.id)
-    }
-  }
-
-  console.log('[TestSetup] Database reset complete')
 }
 
 /**
