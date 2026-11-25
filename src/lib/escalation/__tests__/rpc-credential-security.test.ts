@@ -3,7 +3,11 @@
  * These are source-contract tests; authenticated RPC behavior is separately
  * certified by the local-only integration suite.
  */
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { createClient } from '@supabase/supabase-js'
+import { SupabaseEscalationDatabaseClient, createSupabaseEscalationClient } from '../supabase-client'
+
+vi.mock('@supabase/supabase-js', () => ({ createClient: vi.fn(() => ({})) }))
 import fs from 'node:fs'
 import path from 'node:path'
 
@@ -20,6 +24,31 @@ const rpcSignatures = [
 ]
 
 describe('SEC-RELEASE-01E privileged RPC controls', () => {
+  beforeEach(() => vi.clearAllMocks())
+  afterEach(() => vi.unstubAllEnvs())
+
+  it('rejects an empty privileged key before constructing a client', () => {
+    expect(() => new SupabaseEscalationDatabaseClient({
+      url: 'http://localhost:54321', anonKey: 'public-key', serviceRoleKey: '',
+    })).toThrow('SUPABASE_SERVICE_ROLE_KEY is required')
+    expect(createClient).not.toHaveBeenCalled()
+  })
+
+  it('fails closed at the environment factory when service role is absent', () => {
+    vi.stubEnv('NEXT_PUBLIC_SUPABASE_URL', 'http://localhost:54321')
+    vi.stubEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY', 'public-key')
+    vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY', '')
+    expect(() => createSupabaseEscalationClient()).toThrow('SUPABASE_SERVICE_ROLE_KEY')
+    expect(createClient).not.toHaveBeenCalled()
+  })
+
+  it('constructs the client with the service-role credential only', () => {
+    vi.stubEnv('NEXT_PUBLIC_SUPABASE_URL', 'http://localhost:54321')
+    vi.stubEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY', 'public-key')
+    vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY', 'trusted-test-key')
+    createSupabaseEscalationClient()
+    expect(createClient).toHaveBeenCalledWith('http://localhost:54321', 'trusted-test-key', expect.any(Object))
+  })
   it('has no anon-key fallback in the escalation client', () => {
     expect(source).not.toContain('config.serviceRoleKey ?? config.anonKey')
     expect(source).toContain('createClient(config.url, config.serviceRoleKey')
