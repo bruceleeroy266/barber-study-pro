@@ -12,8 +12,11 @@ import {
   createAuthenticatedClient,
   getServiceClient,
   createAnonClient,
+  resolveActorId,
 } from '../setup/db-helpers'
 import { TEST_ACTORS, TEST_SCHOOLS } from '../setup/test-actors'
+import { getTestEnvironment } from '../setup/test-environment'
+import { SupabaseDetectionOrchestratorDbClient } from '../../../src/lib/remediation/detection-orchestrator'
 
 beforeAll(async () => {
   assertTestEnvironment()
@@ -112,6 +115,55 @@ describe('RPC Authorization', () => {
       expect(data).toEqual([])
     })
   })
+
+  test('SEC-RELEASE-01I creates typed Chapter 2 assignments atomically and prevents duplicates', async () => {
+    const env = getTestEnvironment()
+    const db = new SupabaseDetectionOrchestratorDbClient({
+      url: env.supabaseUrl,
+      anonKey: env.supabaseAnonKey,
+      serviceRoleKey: env.supabaseServiceRoleKey,
+    })
+    const userId = resolveActorId('STUDENT_A')
+    const conceptId = 'SEC-RELEASE-01I-atomic-contract'
+    let cycleId: string | null = null
+    const params = {
+      userId,
+      conceptId,
+      chapterId: 'ch-2' as const,
+      cycleNumber: 1,
+      detectionState: 'emerging_weakness' as const,
+      detectionConfidence: 'high' as const,
+      detectionEvidence: {} as any,
+      status: 'targeted' as const,
+      assignments: [
+        { assignmentType: 'content_block' as const, assetId: 'sec-01i-content', priority: 1, isPrimary: true },
+        { assignmentType: 'flashcard' as const, assetId: 'sec-01i-card', priority: 2, isPrimary: false },
+      ],
+    }
+    try {
+      cycleId = await db.createRemediationCycleWithAssignments(params)
+      expect(cycleId, 'A null cycle ID indicates assignment creation failed').toBeTruthy()
+      const { data: assignments, error } = await getServiceClient()
+        .from('remediation_assignments')
+        .select('assignment_type,asset_id,priority,is_primary')
+        .eq('cycle_id', cycleId!)
+        .order('priority', { ascending: true })
+      expect(error).toBeNull()
+      expect(assignments).toEqual([
+        { assignment_type: 'content_block', asset_id: 'sec-01i-content', priority: 1, is_primary: true },
+        { assignment_type: 'flashcard', asset_id: 'sec-01i-card', priority: 2, is_primary: false },
+      ])
+      const duplicate = await db.createRemediationCycleWithAssignments(params)
+      expect(duplicate, 'Repeated detection must not create a second cycle').toBeNull()
+    } finally {
+      // Delete only this disposable test cycle; its assignments cascade.
+      if (cycleId) {
+        const { error } = await getServiceClient().from('remediation_cycles').delete().eq('id', cycleId)
+        expect(error).toBeNull()
+      }
+    }
+  })
+
   describe('SEC-RELEASE-01E academic RPC service-only contract', () => {
     const calls = [
       { name: 'check_sustained_performance_reset_eligibility', args: { p_user_id: TEST_ACTORS.STUDENT_B.id, p_concept_id: 'test-concept' } },
