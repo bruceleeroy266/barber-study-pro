@@ -11,6 +11,7 @@ import {
   cleanupTestEnvironment,
   createAuthenticatedClient,
   getServiceClient,
+  createAnonClient,
 } from '../setup/db-helpers'
 import { TEST_ACTORS, TEST_SCHOOLS } from '../setup/test-actors'
 
@@ -111,4 +112,44 @@ describe('RPC Authorization', () => {
       expect(data).toEqual([])
     })
   })
+  describe('SEC-RELEASE-01E academic RPC service-only contract', () => {
+    const calls = [
+      { name: 'check_sustained_performance_reset_eligibility', args: { p_user_id: TEST_ACTORS.STUDENT_B.id, p_concept_id: 'test-concept' } },
+      { name: 'execute_sustained_performance_reset', args: { p_user_id: TEST_ACTORS.STUDENT_B.id, p_concept_id: 'test-concept', p_executed_by: TEST_ACTORS.STUDENT_A.id } },
+      { name: 'record_detection_state_transition', args: { p_user_id: TEST_ACTORS.STUDENT_B.id, p_concept_id: 'test-concept', p_chapter_id: 'ch-2', p_new_state: 'currently_performing_well', p_evidence: {} } },
+      { name: 'record_follow_up_evidence', args: { p_user_id: TEST_ACTORS.STUDENT_B.id, p_concept_id: 'test-concept', p_chapter_id: 'ch-2', p_quiz_attempt_id: '00000000-0000-0000-0000-000000000001', p_canonical_mapping_verified: true, p_mapped_question_count: 1 } },
+    ] as const
+
+    for (const call of calls) {
+      test(`anonymous caller cannot execute ${call.name}`, async () => {
+        const { error } = await createAnonClient().rpc(call.name, call.args)
+        expect(error, 'Expected an authorization failure, not an empty success result').not.toBeNull()
+        // PostgREST may conceal the function entirely or return a permission error.
+        expect(['42501', 'PGRST202', 'PGRST301']).toContain(error!.code)
+      })
+
+      test(`student cannot execute ${call.name} for another school`, async () => {
+        const client = await createAuthenticatedClient(TEST_ACTORS.STUDENT_A)
+        const { error } = await client.rpc(call.name, call.args)
+        expect(error).not.toBeNull()
+        expect(['42501', 'PGRST202', 'PGRST301']).toContain(error!.code)
+      })
+
+      test(`school administrator cannot execute ${call.name} directly`, async () => {
+        const client = await createAuthenticatedClient(TEST_ACTORS.SCHOOL_ADMIN_A)
+        const { error } = await client.rpc(call.name, call.args)
+        expect(error).not.toBeNull()
+        expect(['42501', 'PGRST202', 'PGRST301']).toContain(error!.code)
+      })
+    }
+
+    test('trusted service role retains read-only eligibility RPC access', async () => {
+      const { error } = await getServiceClient().rpc(
+        'check_sustained_performance_reset_eligibility',
+        { p_user_id: '00000000-0000-0000-0000-000000000001', p_concept_id: 'nonexistent-concept' },
+      )
+      expect(error).toBeNull()
+    })
+  })
+
 })
