@@ -125,7 +125,6 @@ describe('RPC Authorization', () => {
     })
     const userId = resolveActorId('STUDENT_A')
     const conceptId = 'SEC-RELEASE-01I-atomic-contract'
-    let cycleId: string | null = null
     const params = {
       userId,
       conceptId,
@@ -140,8 +139,7 @@ describe('RPC Authorization', () => {
         { assignmentType: 'flashcard' as const, assetId: 'sec-01i-card', priority: 2, isPrimary: false },
       ],
     }
-    try {
-      cycleId = await db.createRemediationCycleWithAssignments(params)
+    const cycleId = await db.createRemediationCycleWithAssignments(params)
       expect(cycleId, 'A null cycle ID indicates assignment creation failed').toBeTruthy()
       const { data: assignments, error } = await getServiceClient()
         .from('remediation_assignments')
@@ -155,13 +153,8 @@ describe('RPC Authorization', () => {
       ])
       const duplicate = await db.createRemediationCycleWithAssignments(params)
       expect(duplicate, 'Repeated detection must not create a second cycle').toBeNull()
-    } finally {
-      // Delete only this disposable test cycle; its assignments cascade.
-      if (cycleId) {
-        const { error } = await getServiceClient().from('remediation_cycles').delete().eq('id', cycleId)
-        expect(error).toBeNull()
-      }
-    }
+    // No DELETE privilege is granted to service_role for remediation_cycles.
+    // This suite uses disposable local Supabase; actor teardown cascades via auth.users.
   })
 
   describe('SEC-RELEASE-01E academic RPC service-only contract', () => {
