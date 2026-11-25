@@ -5,6 +5,7 @@
  */
 
 import { describe, test, expect, beforeAll, afterAll } from 'vitest'
+import { execFileSync } from 'node:child_process'
 import { assertTestEnvironment } from '../setup/production-guard'
 import {
   setupTestEnvironment,
@@ -17,6 +18,8 @@ import {
 import { TEST_ACTORS, TEST_SCHOOLS } from '../setup/test-actors'
 import { getTestEnvironment } from '../setup/test-environment'
 import { SupabaseDetectionOrchestratorDbClient } from '../../../src/lib/remediation/detection-orchestrator'
+import { SupabaseEscalationDatabaseClient } from '../../../src/lib/escalation/supabase-client'
+import { createSustainedPerformanceService } from '../../../src/lib/escalation/sustained-performance-service'
 
 beforeAll(async () => {
   assertTestEnvironment()
@@ -155,6 +158,95 @@ describe('RPC Authorization', () => {
       expect(duplicate, 'Repeated detection must not create a second cycle').toBeNull()
     // No DELETE privilege is granted to service_role for remediation_cycles.
     // This suite uses disposable local Supabase; actor teardown cascades via auth.users.
+  })
+
+
+  test('SEC-RELEASE-01J full Chapter 2 tracking, mapped follow-up, eligibility and reset on disposable local DB', async () => {
+    // Guard runs in beforeAll before any actor or SQL operation. No remote DB is allowed.
+    assertTestEnvironment()
+    const env = getTestEnvironment()
+    const userId = resolveActorId('STUDENT_B')
+    const conceptId = 'SEC-RELEASE-01J-lifecycle'
+    const rpc = new SupabaseEscalationDatabaseClient({
+      url: env.supabaseUrl,
+      anonKey: env.supabaseAnonKey,
+      serviceRoleKey: env.supabaseServiceRoleKey,
+    })
+    const service = createSustainedPerformanceService(rpc, {
+      isQuestionMappedToConcept: (questionId: string, concept: string) =>
+        questionId === 'sec-01j-question' && concept === conceptId,
+    } as any)
+
+    const transition = await service.recordDetectionTransition({
+      userId, conceptId, chapterId: 'ch-2',
+      newState: 'currently_performing_well', evidence: {} as any,
+    })
+    expect(transition.success, transition.error).toBe(true)
+    const before = await service.checkResetEligibility(userId, conceptId)
+    expect(before.isEligible).toBe(false)
+
+    // Time passage cannot be simulated by client metadata. Backdate ONLY the
+    // disposable local tracking record using the verified loopback Postgres URL.
+    // We never grant service_role the table-level UPDATE privilege for this.
+    execFileSync('psql', [
+      env.databaseUrl, '-X', '-q', '-v', 'ON_ERROR_STOP=1', '-c',
+      `UPDATE public.sustained_performance_tracking
+       SET entered_cpw_at = now() - interval '31 days'
+       WHERE user_id = '${userId}'::uuid AND concept_id = '${conceptId}'
+         AND is_active = true;`,
+    ], { stdio: 'pipe' })
+
+    const { data: attempt, error: attemptError } = await getServiceClient()
+      .from('quiz_attempts')
+      .insert({
+        user_id: userId,
+        quiz_id: 'quiz-2',
+        score: 1,
+        total_questions: 1,
+        percentage: 100,
+        answers_json: { 'sec-01j-question': 'A' },
+        completed_at: new Date().toISOString(),
+      })
+      .select('id')
+      .single()
+    expect(attemptError).toBeNull()
+    expect(attempt?.id).toBeTruthy()
+
+    const followUpParams = {
+      userId, conceptId, chapterId: 'ch-2' as const, quizAttemptId: attempt!.id,
+    }
+    const evidence = await service.recordFollowUpEvidence(
+      followUpParams, { 'sec-01j-question': 'A' },
+    )
+    expect(evidence.success, evidence.error).toBe(true)
+    const repeat = await service.recordFollowUpEvidence(
+      followUpParams, { 'sec-01j-question': 'A' },
+    )
+    expect(repeat.success, repeat.error).toBe(true)
+
+    // The database, not the service-layer response, proves no double count.
+    const count = execFileSync('psql', [
+      env.databaseUrl, '-X', '-A', '-t', '-v', 'ON_ERROR_STOP=1', '-c',
+      `SELECT follow_up_evidence_count
+         FROM public.sustained_performance_tracking
+         WHERE user_id = '${userId}'::uuid AND concept_id = '${conceptId}'
+           AND is_active = true;`,
+    ], { encoding: 'utf8' }).trim()
+    expect(count).toBe('1')
+
+    const eligibility = await service.checkResetEligibility(userId, conceptId)
+    expect(eligibility.isEligible, eligibility.blockingReason).toBe(true)
+    const reset = await service.executeReset(userId, conceptId)
+    expect(reset.success, reset.error).toBe(true)
+    expect(reset.resetId).toBeTruthy()
+    const resetCount = execFileSync('psql', [
+      env.databaseUrl, '-X', '-A', '-t', '-v', 'ON_ERROR_STOP=1', '-c',
+      `SELECT count(*) FROM public.sustained_performance_resets
+         WHERE user_id = '${userId}'::uuid AND concept_id = '${conceptId}';`,
+    ], { encoding: 'utf8' }).trim()
+    expect(resetCount).toBe('1')
+    const after = await service.checkResetEligibility(userId, conceptId)
+    expect(after.isEligible).toBe(false)
   })
 
   describe('SEC-RELEASE-01E academic RPC service-only contract', () => {
