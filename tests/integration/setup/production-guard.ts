@@ -35,95 +35,79 @@ export class ProductionSafetyError extends Error {
  * Asserts that the current environment is a safe test environment.
  * Throws ProductionSafetyError if production indicators are detected.
  */
+function requireLoopbackUrl(name: string, value: string | undefined, protocols: string[]): URL {
+  if (!value) {
+    throw new ProductionSafetyError(`${name} is required for disposable local integration tests.`)
+  }
+
+  let parsed: URL
+  try {
+    parsed = new URL(value)
+  } catch {
+    throw new ProductionSafetyError(`${name} must be a valid local URL.`)
+  }
+
+  if (
+    !protocols.includes(parsed.protocol) ||
+    !['127.0.0.1', 'localhost', '[::1]'].includes(parsed.hostname) ||
+    !parsed.port ||
+    parsed.search ||
+    parsed.hash
+  ) {
+    throw new ProductionSafetyError(
+      `${name} must use an explicit loopback host and port, with an approved protocol and no query or fragment.`
+    )
+  }
+  return parsed
+}
+
+/**
+ * Validate every connection destination and key format before any test
+ * service client is created or fixture mutation is attempted.
+ *
+ * This is a static safety gate, not proof that local services are healthy or
+ * that the database has been seeded. Those require separate certification.
+ */
 export function assertTestEnvironment(): void {
-  // Check 1: ASCYN_TEST_ENVIRONMENT must be explicitly set
-  const testEnv = process.env.ASCYN_TEST_ENVIRONMENT
-  if (testEnv !== 'true') {
-    throw new ProductionSafetyError(
-      `ASCYN_TEST_ENVIRONMENT must be set to "true" for integration tests. ` +
-      `Current value: "${testEnv}". ` +
-      `This guard prevents accidental execution against production.`
-    )
+  if (process.env.ASCYN_TEST_ENVIRONMENT !== 'true') {
+    throw new ProductionSafetyError('ASCYN_TEST_ENVIRONMENT=true is required for integration tests.')
   }
 
-  // Check 2: Supabase URL must be local
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  if (!supabaseUrl) {
-    throw new ProductionSafetyError(
-      'NEXT_PUBLIC_SUPABASE_URL is not set. Integration tests require a local Supabase URL.'
-    )
+  const api = requireLoopbackUrl(
+    'NEXT_PUBLIC_SUPABASE_URL',
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    ['http:']
+  )
+  const db = requireLoopbackUrl(
+    'TEST_DATABASE_URL',
+    process.env.TEST_DATABASE_URL,
+    ['postgres:', 'postgresql:']
+  )
+
+  // A remote database is never permissible, even if the API points to localhost.
+  if (api.hostname !== db.hostname && !(
+    ['localhost', '127.0.0.1', '[::1]'].includes(api.hostname) &&
+    ['localhost', '127.0.0.1', '[::1]'].includes(db.hostname)
+  )) {
+    throw new ProductionSafetyError('Supabase API and database hosts must both be loopback.')
+  }
+  if (api.username || api.password) {
+    throw new ProductionSafetyError('Local Supabase API URL must not contain credentials.')
+  }
+  if (!db.username || !db.pathname || db.pathname === '/') {
+    throw new ProductionSafetyError('TEST_DATABASE_URL must specify a local database user and name.')
   }
 
-  // Check for production URL patterns
-  for (const pattern of PRODUCTION_URL_PATTERNS) {
-    if (pattern.test(supabaseUrl)) {
-      throw new ProductionSafetyError(
-        `Production URL pattern detected in NEXT_PUBLIC_SUPABASE_URL: ${supabaseUrl}. ` +
-        `Integration tests MUST use local Supabase (127.0.0.1 or localhost).`
-      )
-    }
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  if (!serviceKey || !/^sb_secret_[A-Za-z0-9_-]+$/.test(serviceKey)) {
+    throw new ProductionSafetyError('Expected local sb_secret_* key. Unrecognized service credentials are prohibited.')
+  }
+  if (!publishableKey || !/^sb_publishable_[A-Za-z0-9_-]+$/.test(publishableKey)) {
+    throw new ProductionSafetyError('Expected local sb_publishable_* key. Unrecognized client credentials are prohibited.')
   }
 
-  // Verify local URL pattern
-  const isLocal = LOCAL_URL_PATTERNS.some(pattern => pattern.test(supabaseUrl))
-  if (!isLocal) {
-    throw new ProductionSafetyError(
-      `NEXT_PUBLIC_SUPABASE_URL does not appear to be a local URL: ${supabaseUrl}. ` +
-      `Expected 127.0.0.1 or localhost.`
-    )
-  }
-
-  // Check 3: Service role key must be local (starts with sb_secret_ for local)
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-  if (!serviceRoleKey) {
-    throw new ProductionSafetyError(
-      'SUPABASE_SERVICE_ROLE_KEY is not set. Integration tests require a local service role key.'
-    )
-  }
-
-  // Local service role keys start with sb_secret_
-  // Production keys are JWTs (eyJ...)
-  if (serviceRoleKey.startsWith('eyJ')) {
-    throw new ProductionSafetyError(
-      'Production service role key detected (JWT format). ' +
-      'Integration tests MUST use local Supabase keys (sb_secret_*).'
-    )
-  }
-
-  if (!serviceRoleKey.startsWith('sb_secret_')) {
-    console.warn(
-      'Warning: Service role key does not match expected local format (sb_secret_*). ' +
-      'Ensure you are using local Supabase credentials.'
-    )
-  }
-
-  // Check 4: Anon key must be local
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  if (!anonKey) {
-    throw new ProductionSafetyError(
-      'NEXT_PUBLIC_SUPABASE_ANON_KEY is not set. Integration tests require a local anon key.'
-    )
-  }
-
-  if (anonKey.startsWith('eyJ')) {
-    throw new ProductionSafetyError(
-      'Production anon key detected (JWT format). ' +
-      'Integration tests MUST use local Supabase keys (sb_publishable_*).'
-    )
-  }
-
-  // Check 5: Database URL must be local
-  const dbUrl = process.env.TEST_DATABASE_URL
-  if (dbUrl) {
-    if (dbUrl.includes('supabase.co') || dbUrl.includes('pooler.supabase.com')) {
-      throw new ProductionSafetyError(
-        `Production database URL detected: ${dbUrl}. ` +
-        `Integration tests MUST use local database (127.0.0.1 or localhost).`
-      )
-    }
-  }
-
-  console.log('[ProductionGuard] ✓ Test environment verified as safe (local Supabase)')
+  console.log('[ProductionGuard] Local-only configuration validated; runner identity still requires independent verification.')
 }
 
 /**
