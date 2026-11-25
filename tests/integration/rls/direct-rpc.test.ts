@@ -144,12 +144,17 @@ describe('RPC Authorization', () => {
     }
     const cycleId = await db.createRemediationCycleWithAssignments(params)
       expect(cycleId, 'A null cycle ID indicates assignment creation failed').toBeTruthy()
-      const { data: assignments, error } = await getServiceClient()
-        .from('remediation_assignments')
-        .select('assignment_type,asset_id,priority,is_primary')
-        .eq('cycle_id', cycleId!)
-        .order('priority', { ascending: true })
-      expect(error).toBeNull()
+      // Direct table SELECT is intentionally denied to service_role.
+      // Inspect only the guarded disposable LOCAL database without broadening grants.
+      assertTestEnvironment()
+      const assignmentJson = execFileSync('psql', [
+        env.databaseUrl, '-X', '-A', '-t', '-v', 'ON_ERROR_STOP=1', '-c',
+        `SELECT coalesce(json_agg(row_to_json(a) ORDER BY a.priority), '[]'::json)
+           FROM (SELECT assignment_type, asset_id, priority, is_primary
+                   FROM public.remediation_assignments
+                  WHERE cycle_id = '${cycleId}'::uuid) AS a;`,
+      ], { encoding: 'utf8' }).trim()
+      const assignments = JSON.parse(assignmentJson)
       expect(assignments).toEqual([
         { assignment_type: 'content_block', asset_id: 'sec-01i-content', priority: 1, is_primary: true },
         { assignment_type: 'flashcard', asset_id: 'sec-01i-card', priority: 2, is_primary: false },
