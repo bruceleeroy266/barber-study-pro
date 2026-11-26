@@ -158,6 +158,63 @@ describe('SEC-RELEASE-02B operational RLS', () => {
     }
   })
 
+  test('school administration can update own settings, not the other school; staff and students cannot escalate', async () => {
+    const service = getServiceClient()
+    for (const side of ['A', 'B'] as const) {
+      const { error } = await service.from('school_settings').upsert({
+        school_id: school(side), settings: { sec02b: side },
+      }, { onConflict: 'school_id' })
+      expect(error).toBeNull()
+    }
+
+    const snapshot = async (side: 'A' | 'B') => {
+      const { data, error } = await service.from('school_settings')
+        .select('settings').eq('school_id', school(side)).single()
+      expect(error).toBeNull()
+      return data!.settings
+    }
+
+    const foreignBefore = await snapshot('B')
+    const ownBefore = await snapshot('A')
+    const admin = await createAuthenticatedClient(TEST_ACTORS.SCHOOL_ADMIN_A)
+    const sameSchoolWrite = await admin.from('school_settings')
+      .update({ settings: { sec02b: 'authorized-school-admin' } }).eq('school_id', school('A'))
+    expect(sameSchoolWrite.error, 'School administrator should manage own school').toBeNull()
+    expect(await snapshot('A')).toEqual({ sec02b: 'authorized-school-admin' })
+
+    const foreignWrite = await admin.from('school_settings')
+      .update({ settings: { sec02b: 'illicit-cross-school-write' } }).eq('school_id', school('B'))
+    if (foreignWrite.error) expect(foreignWrite.error.code).toBeTruthy()
+    expect(await snapshot('B')).toEqual(foreignBefore)
+
+    for (const actor of [TEST_ACTORS.INSTRUCTOR_A, TEST_ACTORS.STUDENT_A]) {
+      const client = await createAuthenticatedClient(actor)
+      const attempt = await client.from('school_settings')
+        .update({ settings: { sec02b: 'unauthorized-edit' } }).eq('school_id', school('A'))
+      if (attempt.error) expect(attempt.error.code).toBeTruthy()
+      expect(await snapshot('A')).toEqual({ sec02b: 'authorized-school-admin' })
+    }
+
+    const adminId = resolveActorId('SCHOOL_ADMIN_A')
+    const { error: disableError } = await service.from('profiles')
+      .update({ is_disabled: true }).eq('id', adminId)
+    expect(disableError).toBeNull()
+    try {
+      const denied = await admin.from('school_settings')
+        .update({ settings: { sec02b: 'disabled-admin-edit' } }).eq('school_id', school('A'))
+      if (denied.error) expect(denied.error.code).toBeTruthy()
+      expect(await snapshot('A'), 'Disabled admin modified settings with live session')
+        .toEqual({ sec02b: 'authorized-school-admin' })
+    } finally {
+      const { error: restoreError } = await service.from('profiles')
+        .update({ is_disabled: false }).eq('id', adminId)
+      expect(restoreError).toBeNull()
+      const { error: settingsRestore } = await service.from('school_settings')
+        .update({ settings: ownBefore }).eq('school_id', school('A'))
+      expect(settingsRestore).toBeNull()
+    }
+  })
+
   test('disabled instructor session cannot read same-school academic diagnostics', async () => {
     const service = getServiceClient()
     const uid = resolveActorId('INSTRUCTOR_A')
