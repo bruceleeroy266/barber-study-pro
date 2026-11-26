@@ -51,7 +51,7 @@ describe('POST /api/remediation/detect', () => {
           })),
         }
       }
-      return originalFrom(table)
+      return (originalFrom as (name: string) => unknown)(table)
     })
   }
 
