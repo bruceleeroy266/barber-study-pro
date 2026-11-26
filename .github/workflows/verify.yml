@@ -150,6 +150,12 @@ jobs:
           test -n "$TEST_DATABASE_URL"
           npx playwright test tests/e2e/admin/detection-api-real-session.spec.ts --project=chromium --workers=1
 
+      - name: Certify Chapter 19 evidence service-role boundary with real local sessions
+        run: |
+          test "$ASCYN_TEST_ENVIRONMENT" = "true"
+          test -n "$TEST_DATABASE_URL"
+          npx playwright test tests/e2e/admin/sec-02d-chapter-evidence-session.spec.ts --project=chromium --workers=1
+
       - name: Certify instructor escalation direct API role boundaries
         run: |
           test "$ASCYN_TEST_ENVIRONMENT" = "true"
