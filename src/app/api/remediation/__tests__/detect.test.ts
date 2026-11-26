@@ -132,6 +132,7 @@ describe('POST /api/remediation/detect', () => {
         }),
       }),
     }
+    withAuthorizationData(mockSupabase)
     vi.mocked(createClient).mockResolvedValue(mockSupabase as any)
 
     const request = new NextRequest('http://localhost/api/remediation/detect', {
@@ -162,6 +163,7 @@ describe('POST /api/remediation/detect', () => {
         }),
       }),
     }
+    withAuthorizationData(mockSupabase)
     vi.mocked(createClient).mockResolvedValue(mockSupabase as any)
 
     const request = new NextRequest('http://localhost/api/remediation/detect', {
@@ -192,6 +194,7 @@ describe('POST /api/remediation/detect', () => {
         }),
       }),
     }
+    withAuthorizationData(mockSupabase)
     vi.mocked(createClient).mockResolvedValue(mockSupabase as any)
 
     const request = new NextRequest('http://localhost/api/remediation/detect', {
@@ -222,6 +225,7 @@ describe('POST /api/remediation/detect', () => {
         }),
       }),
     }
+    withAuthorizationData(mockSupabase)
     vi.mocked(createClient).mockResolvedValue(mockSupabase as any)
 
     const request = new NextRequest('http://localhost/api/remediation/detect', {
