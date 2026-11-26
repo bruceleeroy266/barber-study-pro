@@ -32,6 +32,29 @@ let progress: Record<'A' | 'B', string>
 beforeAll(async () => {
   assertTestEnvironment()
   await setupTestEnvironment()
+  // Auth admin creation can succeed even when the legacy signup trigger did not
+  // materialize a profile. Explicitly seed and verify the six local role profiles
+  // before creating FK-constrained grades and assessment fixtures.
+  for (const roleKey of [
+    'STUDENT_A', 'STUDENT_B', 'INSTRUCTOR_A', 'INSTRUCTOR_B',
+    'SCHOOL_ADMIN_A', 'SCHOOL_ADMIN_B',
+  ] as const) {
+    const actor = TEST_ACTORS[roleKey]
+    const uid = resolveActorId(roleKey)
+    const escapedEmail = actor.email.replaceAll("'", "''")
+    const escapedName = actor.fullName.replaceAll("'", "''")
+    const profileId = localSql(`
+      INSERT INTO public.profiles
+        (id,email,full_name,role,school_id,approval_status,is_disabled,requires_password_change)
+      VALUES ('${uid}'::uuid,'${escapedEmail}','${escapedName}',
+        '${actor.role}','${actor.schoolId}'::uuid,'approved',false,false)
+      ON CONFLICT (id) DO UPDATE SET
+        role = EXCLUDED.role, school_id = EXCLUDED.school_id,
+        approval_status = 'approved', is_disabled = false, requires_password_change = false
+      RETURNING id::text;
+    `).split('\\n')[0]
+    expect(profileId, `${roleKey} profile must exist before academic fixtures`).toBe(uid)
+  }
   categories = {} as typeof categories
   grades = {} as typeof grades
   assessments = {} as typeof assessments
