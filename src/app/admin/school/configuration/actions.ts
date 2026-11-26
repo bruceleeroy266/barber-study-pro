@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase-server'
+import { validateLoginAccess } from '@/lib/auth-access'
 import { isAdmin, isSchoolAdmin, isPlatformAdminProfile } from '@/lib/auth-helpers'
 import { SchoolConfiguration } from '@/types'
 import { validateSchoolConfiguration, hasValidationErrors } from '@/lib/school-config/validation'
@@ -29,11 +30,11 @@ export async function saveSchoolConfiguration(
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role, school_id')
+    .select('role, school_id, approval_status, is_disabled')
     .eq('id', user.id)
     .single()
 
-  if (!profile || !(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
+  if (!validateLoginAccess(profile).ok || !profile || !(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
     await logPermissionDenied('manage_settings', {
       userId: user.id,
       email: user.email,
