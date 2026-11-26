@@ -28,7 +28,9 @@ export async function GET(request: NextRequest) {
     }
 
     // 2. Resolve instructor profile and school
-    const instructorClient = createSupabaseInstructorClient()
+    // Use the requester's authenticated RLS session for reads, not a privileged
+    // service-role key that does not have direct table SELECT privileges.
+    const instructorClient = createSupabaseInstructorClient(supabase)
     const profile = await instructorClient.getProfileById(user.id)
 
     if (!profile) {
