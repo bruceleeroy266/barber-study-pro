@@ -32,12 +32,12 @@ const current = {
 }
 
 const paths = [
-  '../chapter-19/micro-check/route',
-  '../chapter-20/micro-check/route',
-  '../chapter-21/micro-check/route',
-  '../chapter-19/activity-evidence/route',
-  '../chapter-20/activity-evidence/route',
-  '../chapter-21/activity-evidence/route',
+  ['chapter19-micro', () => import('../chapter-19/micro-check/route')],
+  ['chapter20-micro', () => import('../chapter-20/micro-check/route')],
+  ['chapter21-micro', () => import('../chapter-21/micro-check/route')],
+  ['chapter19-activity', () => import('../chapter-19/activity-evidence/route')],
+  ['chapter20-activity', () => import('../chapter-20/activity-evidence/route')],
+  ['chapter21-activity', () => import('../chapter-21/activity-evidence/route')],
 ] as const
 
 describe('SEC-02D privileged academic API status boundary', () => {
@@ -50,8 +50,8 @@ describe('SEC-02D privileged academic API status boundary', () => {
     ['no school', { ...current, school_id: null }],
   ])('%s existing session is denied before service-role access on all six chapter endpoints', async (_name, profile) => {
     mock.createClient.mockResolvedValue(session(profile))
-    for (const path of paths) {
-      const route = await import(path)
+    for (const [path, load] of paths) {
+      const route = await load()
       const response = await route.POST(new NextRequest('http://localhost/api/chapter-19/micro-check', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
