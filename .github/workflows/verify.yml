@@ -174,7 +174,7 @@ jobs:
           TEST_SCHOOL_B_SLUG: test-academy-beta
         run: |
           test -n "$TEST_DATABASE_URL"
-          npx vitest run --config vitest.integration.config.ts tests/integration/rls/direct-rpc.test.ts tests/integration/rls/sec-02a-cross-school.test.ts
+          npx vitest run --config vitest.integration.config.ts tests/integration/rls/direct-rpc.test.ts tests/integration/rls/sec-02a-cross-school.test.ts tests/integration/rls/sec-02b-role-boundaries.test.ts
 
       - name: Upload onboarding evidence on failure
         if: failure()
