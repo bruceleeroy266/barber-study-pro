@@ -464,7 +464,7 @@ export class DetectionOrchestratorService {
 export interface SupabaseDetectionOrchestratorConfig {
   url: string
   anonKey: string
-  serviceRoleKey?: string
+  serviceRoleKey: string
 }
 
 /**
@@ -474,7 +474,11 @@ export class SupabaseDetectionOrchestratorDbClient implements IDetectionOrchestr
   private readonly supabase
 
   constructor(config: SupabaseDetectionOrchestratorConfig) {
-    this.supabase = createClient(config.url, config.serviceRoleKey ?? config.anonKey, {
+    if (!config.serviceRoleKey) {
+      throw new Error('SUPABASE_SERVICE_ROLE_KEY is required for privileged detection operations')
+    }
+
+    this.supabase = createClient(config.url, config.serviceRoleKey, {
       auth: {
         persistSession: false,
         autoRefreshToken: false,
