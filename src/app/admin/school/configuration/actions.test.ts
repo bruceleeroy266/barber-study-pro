@@ -58,7 +58,7 @@ interface UpdateEqCall {
 }
 
 function buildSessionClient(
-  profile: { role: string; school_id: string | null },
+  profile: { role: string; school_id: string | null; approval_status?: string; is_disabled?: boolean },
   opts: { targetSchoolActive?: boolean } = {}
 ) {
   const upsertCalls: UpsertCall[] = []
@@ -79,7 +79,7 @@ function buildSessionClient(
       }
       builder.single = () => {
         if (table === 'profiles') {
-          return Promise.resolve({ data: profile, error: null })
+          return Promise.resolve({ data: { approval_status: 'approved', is_disabled: false, ...profile }, error: null })
         }
         if (table === 'schools') {
           const active = opts.targetSchoolActive !== false
@@ -116,7 +116,7 @@ const logPermissionDenied = vi.fn()
 const logSensitiveConfigChange = vi.fn()
 
 function setupMocks(
-  profile: { role: string; school_id: string | null },
+  profile: { role: string; school_id: string | null; approval_status?: string; is_disabled?: boolean },
   opts: { targetSchoolActive?: boolean } = {}
 ) {
   const { client, upsertCalls, updateEqCalls } = buildSessionClient(profile, opts)
@@ -231,6 +231,20 @@ describe('saveSchoolConfiguration — platform admin target school', () => {
 
     expect(result.success).toBe(false)
     expect(result.message).toBe('You must be assigned to a school before you can save school settings.')
+  })
+
+  it.each([
+    ['disabled platform admin', { role: 'admin', school_id: null, is_disabled: true }],
+    ['disabled school admin', { role: 'school_admin', school_id: SCHOOL_A_ID, is_disabled: true }],
+    ['unapproved platform admin', { role: 'admin', school_id: null, approval_status: 'pending' }],
+    ['unapproved school admin', { role: 'school_admin', school_id: SCHOOL_A_ID, approval_status: 'pending' }],
+  ])('SEC-02C %s cannot write school configuration', async (_label, profile) => {
+    const { upsertCalls, updateEqCalls } = setupMocks(profile)
+    const { saveSchoolConfiguration } = await import('./actions')
+    const result = await saveSchoolConfiguration(makeValidConfig(SCHOOL_A_ID), SCHOOL_B_ID)
+    expect(result.success).toBe(false)
+    expect(upsertCalls).toEqual([])
+    expect(updateEqCalls).toEqual([])
   })
 
   it('non-admin roles are rejected', async () => {
