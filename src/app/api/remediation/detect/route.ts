@@ -72,7 +72,47 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 3. Verify the exact quiz attempt exists and belongs to the authenticated user.
+    // Direct API calls bypass portal-route middleware. Recheck account eligibility
+    // and canonical school membership before invoking any privileged service client.
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('role, approval_status, is_disabled, school_id, requires_password_change')
+      .eq('id', user.id)
+      .maybeSingle()
+
+    if (profileError) {
+      console.error('[Detection API] Profile authorization lookup failed:', profileError)
+      return NextResponse.json({ error: 'Failed to verify account access' }, { status: 500 })
+    }
+
+    const access = validateLoginAccess(profile)
+    if (
+      !access.ok ||
+      !profile ||
+      !['student', 'apprentice'].includes(profile.role) ||
+      profile.is_disabled !== false ||
+      profile.requires_password_change !== false ||
+      !profile.school_id
+    ) {
+      return NextResponse.json({ error: 'Account is not authorized for remediation detection' }, { status: 403 })
+    }
+
+    const { data: studentRecord, error: studentError } = await supabase
+      .from('students')
+      .select('school_id, is_active')
+      .eq('profile_id', user.id)
+      .maybeSingle()
+
+    if (studentError) {
+      console.error('[Detection API] Student authorization lookup failed:', studentError)
+      return NextResponse.json({ error: 'Failed to verify student school membership' }, { status: 500 })
+    }
+
+    if (!studentRecord || studentRecord.is_active !== true || studentRecord.school_id !== profile.school_id) {
+      return NextResponse.json({ error: 'Student school membership is not authorized' }, { status: 403 })
+    }
+
+    // 3. Verify the exact completed quiz attempt ONLY after live account authorization.
     // answers_json is fetched here because the same persisted attempt may become
     // verified follow-up evidence for an already-active sustained-performance period.
     const { data: exactAttempt, error: attemptError } = await supabase
@@ -116,46 +156,6 @@ export async function POST(request: NextRequest) {
         { error: 'Quiz attempt does not match chapter' },
         { status: 400 }
       )
-    }
-
-    // Direct API calls bypass portal-route middleware. Recheck account eligibility
-    // and canonical school membership before invoking any privileged service client.
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('role, approval_status, is_disabled, school_id, requires_password_change')
-      .eq('id', user.id)
-      .maybeSingle()
-
-    if (profileError) {
-      console.error('[Detection API] Profile authorization lookup failed:', profileError)
-      return NextResponse.json({ error: 'Failed to verify account access' }, { status: 500 })
-    }
-
-    const access = validateLoginAccess(profile)
-    if (
-      !access.ok ||
-      !profile ||
-      !['student', 'apprentice'].includes(profile.role) ||
-      profile.is_disabled !== false ||
-      profile.requires_password_change !== false ||
-      !profile.school_id
-    ) {
-      return NextResponse.json({ error: 'Account is not authorized for remediation detection' }, { status: 403 })
-    }
-
-    const { data: studentRecord, error: studentError } = await supabase
-      .from('students')
-      .select('school_id, is_active')
-      .eq('profile_id', user.id)
-      .maybeSingle()
-
-    if (studentError) {
-      console.error('[Detection API] Student authorization lookup failed:', studentError)
-      return NextResponse.json({ error: 'Failed to verify student school membership' }, { status: 500 })
-    }
-
-    if (!studentRecord || studentRecord.is_active !== true || studentRecord.school_id !== profile.school_id) {
-      return NextResponse.json({ error: 'Student school membership is not authorized' }, { status: 403 })
     }
 
     // 4. Run weakness detection/remediation orchestration with exact-attempt binding.
