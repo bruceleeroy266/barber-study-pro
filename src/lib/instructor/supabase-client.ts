@@ -46,25 +46,46 @@ export class SupabaseInstructorDatabaseClient implements IInstructorDatabaseClie
   }
 
   async listEscalationsForSchool(schoolId: string) {
+    // user_id / acknowledged_by refer to auth.users, not profiles.
+    // PostgREST cannot embed profiles via those foreign keys. Resolve the
+    // student identities explicitly using the same requester's RLS session.
     const { data, error } = await this.supabase
       .from('instructor_escalations')
-      .select('*, student:profiles!instructor_escalations_user_id_fkey(*), acknowledgedByProfile:profiles!instructor_escalations_acknowledged_by_fkey(*)')
+      .select('*')
       .eq('school_id', schoolId)
       .in('status', ['pending', 'acknowledged', 'in_progress'])
       .order('created_at', { ascending: false })
 
-    if (error) {
-      // A permission/query error is not an empty school roster. Fail closed
-      // so callers cannot misreport missing diagnostic evidence as success.
-      throw new Error(`Failed to read instructor escalations: ${error.message}`)
-    }
-    if (!data) return []
+    if (error) throw new Error(`Failed to read instructor escalations: ${error.message}`)
+    if (!data || data.length === 0) return []
 
-    return data.map((row: Record<string, unknown>) => ({
-      ...this.mapEscalationRow(row),
-      student: row.student as Profile,
-      acknowledgedByProfile: (row.acknowledgedByProfile as Profile | null) ?? null,
-    }))
+    const profileIds = Array.from(new Set(
+      data.flatMap(row => [row.user_id, row.acknowledged_by].filter(
+        (id): id is string => typeof id === 'string' && id.length > 0,
+      )),
+    ))
+    const { data: profiles, error: profilesError } = await this.supabase
+      .from('profiles')
+      .select('*')
+      .in('id', profileIds)
+      .eq('school_id', schoolId)
+
+    if (profilesError) throw new Error(`Failed to read escalation participants: ${profilesError.message}`)
+    const byId = new Map((profiles ?? []).map(profile => [profile.id, profile as Profile]))
+
+    return data.map(row => {
+      const student = byId.get(row.user_id)
+      if (!student || !['student', 'apprentice'].includes(student.role)) {
+        throw new Error('Escalation student is not accessible in the authorized school')
+      }
+      return {
+        ...this.mapEscalationRow(row),
+        student,
+        acknowledgedByProfile: row.acknowledged_by
+          ? byId.get(row.acknowledged_by) ?? null
+          : null,
+      }
+    })
   }
 
   async getEscalationForSchool(escalationId: string, schoolId: string) {
