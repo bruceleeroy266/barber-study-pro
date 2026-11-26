@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase-server'
+import { validateLoginAccess } from '@/lib/auth-access'
 import { isPlatformAdminProfile } from '@/lib/auth-helpers'
 import {
   buildPilotCheckpointWindow,
@@ -61,11 +62,11 @@ async function requirePlatformAdmin() {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role,school_id')
+    .select('role,school_id,approval_status,is_disabled')
     .eq('id', user.id)
     .single()
 
-  if (!profile || !isPlatformAdminProfile(profile)) {
+  if (!profile || !validateLoginAccess(profile).ok || !isPlatformAdminProfile(profile)) {
     return { ok: false as const, error: 'Platform administrator access required.' }
   }
 
