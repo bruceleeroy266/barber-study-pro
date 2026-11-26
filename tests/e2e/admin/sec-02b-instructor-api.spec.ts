@@ -34,6 +34,32 @@ async function readEscalations(page: Page) {
   })
 }
 
+async function readEscalationDetail(page: Page, id: string) {
+  return page.evaluate(async escalationId => {
+    const response = await fetch(`/api/instructor/escalations/${encodeURIComponent(escalationId)}`, {
+      credentials: 'same-origin',
+    })
+    return { status: response.status, body: await response.json() }
+  }, id)
+}
+
+async function acknowledgeEscalation(page: Page, id: string) {
+  return page.evaluate(async escalationId => {
+    const response = await fetch(`/api/instructor/escalations/${encodeURIComponent(escalationId)}/acknowledge`, {
+      method: 'POST', credentials: 'same-origin',
+    })
+    return { status: response.status, body: await response.json() }
+  }, id)
+}
+
+function statusSnapshot(escalationId: string) {
+  assertTestEnvironment()
+  const sql = `select status || ':' || coalesce(acknowledged_by::text, 'null') from public.instructor_escalations
+    where id='${escalationId}'::uuid;`
+  return execFileSync('psql', [process.env.TEST_DATABASE_URL!, '-X', '-q', '-A', '-t',
+    '-v', 'ON_ERROR_STOP=1', '-c', sql], { encoding: 'utf8' }).trim()
+}
+
 test.describe('SEC-RELEASE-02B instructor escalation HTTP access', () => {
   test.describe.configure({ retries: 0 })
   test('school-scoped reads, student denial and disabled existing-session denial', async ({ browser }) => {
@@ -98,11 +124,31 @@ test.describe('SEC-RELEASE-02B instructor escalation HTTP access', () => {
       expect(localIds).toContain(escalations.A)
       expect(localIds).not.toContain(escalations.B)
 
+      // SEC-02D: detail endpoint previously contained an invalid PostgREST
+      // auth.users-to-profiles relationship; verify local positive and foreign denial.
+      const detail = await readEscalationDetail(instructor.page, escalations.A)
+      expect(detail.status, JSON.stringify(detail.body)).toBe(200)
+      expect(detail.body.escalation?.id).toBe(escalations.A)
+      const foreignDetail = await readEscalationDetail(instructor.page, escalations.B)
+      expect(foreignDetail.status).toBe(404)
+
+      // Untrusted sessions must never change acknowledgement state.
+      const untouchedForeign = statusSnapshot(escalations.B)
+      const foreignClaim = await acknowledgeEscalation(instructor.page, escalations.B)
+      expect([403, 404]).toContain(foreignClaim.status)
+      expect(statusSnapshot(escalations.B)).toBe(untouchedForeign)
+
       const { error: disabledError } = await service.from('profiles')
         .update({ is_disabled: true }).eq('id', users.instructorA)
       expect(disabledError).toBeNull()
       const disabled = await readEscalations(instructor.page)
       expect(disabled.status, JSON.stringify(disabled.body)).toBe(403)
+      const disabledDetail = await readEscalationDetail(instructor.page, escalations.A)
+      expect(disabledDetail.status, JSON.stringify(disabledDetail.body)).toBe(403)
+      const beforeClaim = statusSnapshot(escalations.A)
+      const disabledClaim = await acknowledgeEscalation(instructor.page, escalations.A)
+      expect(disabledClaim.status, JSON.stringify(disabledClaim.body)).toBe(403)
+      expect(statusSnapshot(escalations.A)).toBe(beforeClaim)
       // The list API has no mutations. This condition checks authorization at
       // the HTTP boundary while the original valid session cookie remains set.
     } finally {
