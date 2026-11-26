@@ -114,6 +114,19 @@ describe('admin/school/programs actions — platform admin vs school-attached ad
     expect(schoolEqs[0].value).toBe(SCHOOL_A_ID)
   })
 
+  it.each([
+    ['disabled platform admin', { role: 'admin', school_id: null, is_disabled: true }],
+    ['unapproved school admin', { role: 'school_admin', school_id: SCHOOL_A_ID, approval_status: 'pending' }],
+    ['disabled school admin', { role: 'school_admin', school_id: SCHOOL_A_ID, is_disabled: true }],
+    ['unassigned school admin', { role: 'school_admin', school_id: null }],
+  ])('SEC-02D %s cannot query programs through service role', async (_label, actor) => {
+    const { eqLog } = setupMocks(actor)
+    const { getPrograms } = await import('./actions')
+    const result = await getPrograms()
+    expect(result.success).toBe(false)
+    expect(eqLog).toEqual([])
+  })
+
   it('school_admin remains tenant-scoped (no behavior change)', async () => {
     const { eqLog } = setupMocks({ role: 'school_admin', school_id: SCHOOL_A_ID })
     const { getPrograms } = await import('./actions')
