@@ -4,12 +4,22 @@
  * backed by a real target row and its after-state is checked by service role.
  */
 import { beforeAll, afterAll, describe, expect, test } from 'vitest'
+import { execFileSync } from 'node:child_process'
 import { assertTestEnvironment } from '../setup/production-guard'
 import {
   setupTestEnvironment, cleanupTestEnvironment, createAuthenticatedClient,
   getServiceClient, resolveActorId,
 } from '../setup/db-helpers'
 import { TEST_ACTORS, TEST_SCHOOLS } from '../setup/test-actors'
+import { getTestEnvironment } from '../setup/test-environment'
+
+function localSql(query: string): string {
+  assertTestEnvironment()
+  return execFileSync('psql', [
+    getTestEnvironment().databaseUrl, '-X', '-A', '-t',
+    '-v', 'ON_ERROR_STOP=1', '-c', query,
+  ], { encoding: 'utf8' }).trim()
+}
 
 const school = (side: 'A' | 'B') => TEST_SCHOOLS[side === 'A' ? 'SCHOOL_A' : 'SCHOOL_B'].id
 const student = (side: 'A' | 'B') => resolveActorId(side === 'A' ? 'STUDENT_A' : 'STUDENT_B')
@@ -22,7 +32,6 @@ let progress: Record<'A' | 'B', string>
 beforeAll(async () => {
   assertTestEnvironment()
   await setupTestEnvironment()
-  const service = getServiceClient()
   categories = {} as typeof categories
   grades = {} as typeof grades
   assessments = {} as typeof assessments
@@ -31,30 +40,38 @@ beforeAll(async () => {
     const uid = student(side)
     const sid = school(side)
     const instructorId = resolveActorId(side === 'A' ? 'INSTRUCTOR_A' : 'INSTRUCTOR_B')
-    const { data: cat, error: catError } = await service.from('grade_categories').insert({
-      school_id: sid, name: '02B verified local category', type: 'QUIZ', weight: 0.1,
-    }).select('id').single()
-    expect(catError).toBeNull()
-    categories[side] = cat!.id
-    const { data: grade, error: gradeError } = await service.from('grades').insert({
-      school_id: sid, student_id: uid, category_id: cat!.id, category_type: 'QUIZ',
-      score: 80, max_score: 100, percentage: 80, weight: 0.1,
-      instructor_id: instructorId, instructor_name: '02B local instructor',
-    }).select('id').single()
-    expect(gradeError).toBeNull()
-    grades[side] = grade!.id
-    const { data: assessment, error: assessmentError } = await service.from('assessments').insert({
-      school_id: sid, student_id: uid, assessment_type: 'HAIRCUT',
-      scoring_type: 'QUALITATIVE', qualitative_result: 'PASS',
-      evaluator_id: instructorId, evaluator_name: '02B local instructor',
-    }).select('id').single()
-    expect(assessmentError).toBeNull()
-    assessments[side] = assessment!.id
-    const { data: prog, error: progressError } = await service.from('student_progress').insert({
-      user_id: uid, chapter_id: 'ch-02b-role-boundaries', progress_percentage: 70,
-    }).select('id').single()
-    expect(progressError).toBeNull()
-    progress[side] = prog!.id
+    // grade_categories has no service_role INSERT grant by design.
+    // Local postgres is used only for fixture creation after the loopback guard.
+    const ids = localSql(`
+      WITH cat AS (
+        INSERT INTO public.grade_categories (school_id,name,type,weight)
+        VALUES ('${sid}'::uuid,'02B local grade category','QUIZ',0.1) RETURNING id
+      ),
+      grd AS (
+        INSERT INTO public.grades
+          (school_id,student_id,category_id,category_type,score,max_score,
+           percentage,weight,instructor_id,instructor_name)
+        SELECT '${sid}'::uuid,'${uid}'::uuid,cat.id,'QUIZ',80,100,80,0.1,
+               '${instructorId}'::uuid,'02B local instructor' FROM cat RETURNING id
+      ),
+      ass AS (
+        INSERT INTO public.assessments
+          (school_id,student_id,assessment_type,scoring_type,qualitative_result,evaluator_id,evaluator_name)
+        VALUES ('${sid}'::uuid,'${uid}'::uuid,'HAIRCUT','QUALITATIVE','PASS',
+                '${instructorId}'::uuid,'02B local instructor') RETURNING id
+      ),
+      prog AS (
+        INSERT INTO public.student_progress (user_id,chapter_id,progress_percentage)
+        VALUES ('${uid}'::uuid,'ch-02b-role-boundaries',70) RETURNING id
+      )
+      SELECT cat.id::text || '|' || grd.id::text || '|' || ass.id::text || '|' || prog.id::text
+        FROM cat,grd,ass,prog;
+    `).split('|')
+    expect(ids).toHaveLength(4)
+    categories[side] = ids[0]
+    grades[side] = ids[1]
+    assessments[side] = ids[2]
+    progress[side] = ids[3]
   }
 })
 afterAll(async () => {
@@ -121,14 +138,12 @@ describe('SEC-RELEASE-02B operational RLS', () => {
     })
     expect(assessmentAttempt.error, 'Student must not be able to author assessments').not.toBeNull()
 
-    const { data: before, error: beforeError } = await service.from('grades')
-      .select('score,student_id,school_id').eq('id', grades.B).single()
-    expect(beforeError).toBeNull()
+    const before = localSql(`SELECT row_to_json(g)::text FROM
+      (SELECT score,student_id,school_id FROM public.grades WHERE id = '${grades.B}'::uuid) g;`)
     const changed = await foreignClient.from('grades').update({ score: 99 }).eq('id', grades.B)
     if (changed.error) expect(changed.error.code).toBeTruthy()
-    const { data: after, error: afterError } = await service.from('grades')
-      .select('score,student_id,school_id').eq('id', grades.B).single()
-    expect(afterError).toBeNull()
+    const after = localSql(`SELECT row_to_json(g)::text FROM
+      (SELECT score,student_id,school_id FROM public.grades WHERE id = '${grades.B}'::uuid) g;`)
     expect(after).toEqual(before)
   })
 
@@ -161,18 +176,13 @@ describe('SEC-RELEASE-02B operational RLS', () => {
   test('school administration can update own settings, not the other school; staff and students cannot escalate', async () => {
     const service = getServiceClient()
     for (const side of ['A', 'B'] as const) {
-      const { error } = await service.from('school_settings').upsert({
-        school_id: school(side), settings: { sec02b: side },
-      }, { onConflict: 'school_id' })
-      expect(error).toBeNull()
+      localSql(`INSERT INTO public.school_settings (school_id,settings)
+        VALUES ('${school(side)}'::uuid,'{"sec02b":"${side}"}'::jsonb)
+        ON CONFLICT (school_id) DO UPDATE SET settings = excluded.settings;`)
     }
-
-    const snapshot = async (side: 'A' | 'B') => {
-      const { data, error } = await service.from('school_settings')
-        .select('settings').eq('school_id', school(side)).single()
-      expect(error).toBeNull()
-      return data!.settings
-    }
+    const snapshot = async (side: 'A' | 'B') => JSON.parse(localSql(
+      `SELECT settings::text FROM public.school_settings WHERE school_id = '${school(side)}'::uuid;`,
+    )) as Record<string, unknown>
 
     const foreignBefore = await snapshot('B')
     const ownBefore = await snapshot('A')
@@ -209,9 +219,9 @@ describe('SEC-RELEASE-02B operational RLS', () => {
       const { error: restoreError } = await service.from('profiles')
         .update({ is_disabled: false }).eq('id', adminId)
       expect(restoreError).toBeNull()
-      const { error: settingsRestore } = await service.from('school_settings')
-        .update({ settings: ownBefore }).eq('school_id', school('A'))
-      expect(settingsRestore).toBeNull()
+      localSql(`UPDATE public.school_settings
+        SET settings = '${JSON.stringify(ownBefore)}'::jsonb
+        WHERE school_id = '${school('A')}'::uuid;`)
     }
   })
 
