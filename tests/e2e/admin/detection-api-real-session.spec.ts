@@ -92,6 +92,27 @@ test.describe('01N real-session API permission gate', () => {
       }).select('id').single()
     expect(attemptError).toBeNull()
     const attemptId = attempt!.id
+    const { data: foreignAuth, error: foreignAuthError } = await service.auth.admin.createUser({
+      email: 'sec-02a-school-b-student@ascyn-test.local', password: PASSWORD, email_confirm: true,
+      user_metadata: { full_name: '02A Local Cross-School Student', role: 'student' },
+    })
+    expect(foreignAuthError).toBeNull()
+    const foreignUserId = foreignAuth.user!.id
+    const { error: foreignProfileError } = await service.from('profiles').update({
+      role: 'student', approval_status: 'approved', is_disabled: false,
+      requires_password_change: false, school_id: schoolBId,
+    }).eq('id', foreignUserId)
+    expect(foreignProfileError).toBeNull()
+    const { error: foreignStudentError } = await service.from('students')
+      .insert({ profile_id: foreignUserId, school_id: schoolBId, is_active: true })
+    expect(foreignStudentError).toBeNull()
+    const { data: foreignAttempt, error: foreignAttemptError } = await service.from('quiz_attempts')
+      .insert({
+        user_id: foreignUserId, quiz_id: 'quiz-2', score: 0, total_questions: 0,
+        percentage: 0, answers_json: {}, completed_at: new Date().toISOString(),
+      }).select('id').single()
+    expect(foreignAttemptError).toBeNull()
+    const foreignAttemptId = foreignAttempt!.id
 
     await page.goto('/login')
     await page.locator('input[type="email"]').fill(EMAIL)
@@ -111,6 +132,18 @@ test.describe('01N real-session API permission gate', () => {
       expect(result.status, `${label}: ${JSON.stringify(result.body)}`).toBe(expected)
       expect(sqlCount(database, userId), `${label} changed privileged academic state`).toBe(before)
     }
+    const foreignBefore = sqlCount(database, foreignUserId)
+    const ownBeforeForeign = sqlCount(database, userId)
+    const crossSchoolRequest = await invokeApi(page, foreignAttemptId)
+    expect([403, 404], JSON.stringify(crossSchoolRequest.body)).toContain(crossSchoolRequest.status)
+    expect(sqlCount(database, foreignUserId)).toBe(foreignBefore)
+    expect(sqlCount(database, userId)).toBe(ownBeforeForeign)
+
+    await updateProfile({ role: 'instructor' })
+    await assertDenied('instructor attempting student-only API', 403)
+    await updateProfile({ role: 'school_admin' })
+    await assertDenied('school administrator attempting student-only API', 403)
+    await updateProfile({ role: 'student' })
     await updateProfile({ is_disabled: true })
     await assertDenied('disabled student', 403)
     await updateProfile({ is_disabled: false, approval_status: 'pending' })
