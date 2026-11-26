@@ -84,7 +84,7 @@ test.describe('SEC-RELEASE-02B instructor escalation HTTP access', () => {
           '${schools[side]}'::uuid,ARRAY[]::uuid[],2,'{}'::jsonb,'pending')
         RETURNING id::text;`
       escalations[side] = execFileSync('psql', [
-        process.env.TEST_DATABASE_URL!, '-X', '-A', '-t',
+        process.env.TEST_DATABASE_URL!, '-X', '-q', '-A', '-t',
         '-v', 'ON_ERROR_STOP=1', '-c', sql,
       ], { encoding: 'utf8' }).trim()
       expect(escalations[side]).toBeTruthy()
