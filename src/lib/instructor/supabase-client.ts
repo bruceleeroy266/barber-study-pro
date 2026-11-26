@@ -53,7 +53,12 @@ export class SupabaseInstructorDatabaseClient implements IInstructorDatabaseClie
       .in('status', ['pending', 'acknowledged', 'in_progress'])
       .order('created_at', { ascending: false })
 
-    if (error || !data) return []
+    if (error) {
+      // A permission/query error is not an empty school roster. Fail closed
+      // so callers cannot misreport missing diagnostic evidence as success.
+      throw new Error(`Failed to read instructor escalations: ${error.message}`)
+    }
+    if (!data) return []
 
     return data.map((row: Record<string, unknown>) => ({
       ...this.mapEscalationRow(row),
