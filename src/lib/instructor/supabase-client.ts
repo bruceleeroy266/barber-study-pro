@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import type { Profile } from '@/types'
 import type { InstructorEscalation } from '@/lib/escalation/types'
 import type { InterventionHistoryItem, IInstructorDatabaseClient } from './types'
@@ -7,13 +7,14 @@ interface SupabaseInstructorClientConfig {
   url: string
   anonKey: string
   serviceRoleKey?: string
+  authenticatedClient?: SupabaseClient
 }
 
 export class SupabaseInstructorDatabaseClient implements IInstructorDatabaseClient {
   private readonly supabase
 
   constructor(config: SupabaseInstructorClientConfig) {
-    this.supabase = createClient(config.url, config.serviceRoleKey ?? config.anonKey, {
+    this.supabase = config.authenticatedClient ?? createClient(config.url, config.serviceRoleKey ?? config.anonKey, {
       auth: {
         persistSession: false,
         autoRefreshToken: false,
@@ -293,7 +294,7 @@ function mapEventSummary(eventType: string): string {
   }
 }
 
-export function createSupabaseInstructorClient(): SupabaseInstructorDatabaseClient {
+export function createSupabaseInstructorClient(authenticatedClient?: SupabaseClient): SupabaseInstructorDatabaseClient {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -302,5 +303,5 @@ export function createSupabaseInstructorClient(): SupabaseInstructorDatabaseClie
     throw new Error('Missing Supabase configuration: NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are required')
   }
 
-  return new SupabaseInstructorDatabaseClient({ url, anonKey, serviceRoleKey })
+  return new SupabaseInstructorDatabaseClient({ url, anonKey, serviceRoleKey, authenticatedClient })
 }
