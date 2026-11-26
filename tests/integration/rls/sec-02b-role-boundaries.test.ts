@@ -132,6 +132,32 @@ describe('SEC-RELEASE-02B operational RLS', () => {
     expect(after).toEqual(before)
   })
 
+  test('student cannot promote own role or reassign school through direct profile update', async () => {
+    const service = getServiceClient()
+    const userId = student('A')
+    const client = await createAuthenticatedClient(TEST_ACTORS.STUDENT_A)
+    const { data: before, error: readError } = await service.from('profiles')
+      .select('role,school_id,approval_status,is_disabled').eq('id', userId).single()
+    expect(readError).toBeNull()
+    try {
+      const attempted = await client.from('profiles').update({
+        role: 'school_admin',
+        school_id: school('B'),
+        approval_status: 'approved',
+        is_disabled: false,
+      }).eq('id', userId)
+      if (attempted.error) expect(attempted.error.code).toBeTruthy()
+      const { data: after, error: verifyError } = await service.from('profiles')
+        .select('role,school_id,approval_status,is_disabled').eq('id', userId).single()
+      expect(verifyError).toBeNull()
+      expect(after, 'Untrusted client changed privileged profile fields').toEqual(before)
+    } finally {
+      // Restore disposable fixture even when regression detects a vulnerable write.
+      const { error } = await service.from('profiles').update(before!).eq('id', userId)
+      expect(error).toBeNull()
+    }
+  })
+
   test('disabled instructor session cannot read same-school academic diagnostics', async () => {
     const service = getServiceClient()
     const uid = resolveActorId('INSTRUCTOR_A')
