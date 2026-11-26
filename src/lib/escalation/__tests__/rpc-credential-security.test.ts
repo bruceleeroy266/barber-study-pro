@@ -6,6 +6,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createClient } from '@supabase/supabase-js'
 import { SupabaseEscalationDatabaseClient, createSupabaseEscalationClient } from '../supabase-client'
+import { SupabaseDetectionOrchestratorDbClient } from '../../remediation/detection-orchestrator'
 
 vi.mock('@supabase/supabase-js', () => ({ createClient: vi.fn(() => ({})) }))
 import fs from 'node:fs'
@@ -49,6 +50,20 @@ describe('SEC-RELEASE-01E privileged RPC controls', () => {
     createSupabaseEscalationClient()
     expect(createClient).toHaveBeenCalledWith('http://localhost:54321', 'trusted-test-key', expect.any(Object))
   })
+  it('rejects missing privileged detection-orchestrator credentials', () => {
+    expect(() => new SupabaseDetectionOrchestratorDbClient({
+      url: 'http://localhost:54321', anonKey: 'public-key', serviceRoleKey: '',
+    })).toThrow('SUPABASE_SERVICE_ROLE_KEY is required')
+    expect(createClient).not.toHaveBeenCalled()
+  })
+
+  it('uses only the service-role credential for privileged detection', () => {
+    new SupabaseDetectionOrchestratorDbClient({
+      url: 'http://localhost:54321', anonKey: 'public-key', serviceRoleKey: 'trusted-test-key',
+    })
+    expect(createClient).toHaveBeenCalledWith('http://localhost:54321', 'trusted-test-key', expect.any(Object))
+  })
+
   it('has no anon-key fallback in the escalation client', () => {
     expect(source).not.toContain('config.serviceRoleKey ?? config.anonKey')
     expect(source).toContain('createClient(config.url, config.serviceRoleKey')
