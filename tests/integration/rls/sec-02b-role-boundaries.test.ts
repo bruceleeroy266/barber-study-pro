@@ -16,7 +16,7 @@ import { getTestEnvironment } from '../setup/test-environment'
 function localSql(query: string): string {
   assertTestEnvironment()
   return execFileSync('psql', [
-    getTestEnvironment().databaseUrl, '-X', '-A', '-t',
+    getTestEnvironment().databaseUrl, '-X', '-q', '-A', '-t',
     '-v', 'ON_ERROR_STOP=1', '-c', query,
   ], { encoding: 'utf8' }).trim()
 }
@@ -52,7 +52,7 @@ beforeAll(async () => {
         role = EXCLUDED.role, school_id = EXCLUDED.school_id,
         approval_status = 'approved', is_disabled = false, requires_password_change = false
       RETURNING id::text;
-    `).split('\\n')[0]
+    `)
     expect(profileId, `${roleKey} profile must exist before academic fixtures`).toBe(uid)
   }
   categories = {} as typeof categories
