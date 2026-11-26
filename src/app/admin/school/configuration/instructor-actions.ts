@@ -1,7 +1,40 @@
 'use server'
 
 import { createServiceRoleClient } from '@/lib/supabase-service-role'
+import { createClient } from '@/lib/supabase-server'
+import { validateLoginAccess } from '@/lib/auth-access'
 import { assignUserSchool, type ActionResult } from '@/app/admin/users/actions'
+
+/**
+ * These actions may be invoked directly with an existing session, without
+ * visiting middleware-protected pages. Check live actor status before any
+ * service-role read, including the impact-preview action.
+ */
+async function authorizeInstructorManagement(instructorId: string): Promise<ActionResult> {
+  const session = await createClient()
+  const { data: { user }, error: authError } = await session.auth.getUser()
+  if (authError || !user) return { success: false, error: 'Unauthorized' }
+
+  const { data: actor, error: actorError } = await session.from('profiles')
+    .select('role,school_id,approval_status,is_disabled')
+    .eq('id', user.id).maybeSingle()
+  if (actorError || !actor || !validateLoginAccess(actor).ok ||
+      !['admin', 'school_admin'].includes(actor.role)) {
+    return { success: false, error: 'Forbidden' }
+  }
+
+  const { data: instructor, error: instructorError } = await session.from('profiles')
+    .select('role,school_id').eq('id', instructorId).maybeSingle()
+  if (instructorError || !instructor || instructor.role !== 'instructor') {
+    return { success: false, error: 'Instructor not found' }
+  }
+  // Only a real platform admin (admin, no school) may inspect other schools.
+  const platformAdmin = actor.role === 'admin' && actor.school_id === null
+  if (!platformAdmin && (!actor.school_id || actor.school_id !== instructor.school_id)) {
+    return { success: false, error: 'Forbidden' }
+  }
+  return { success: true }
+}
 
 export interface InstructorAssignmentImpact {
   activeStudentCount: number
@@ -15,6 +48,8 @@ export interface InstructorAssignmentImpact {
 export async function getInstructorAssignmentImpact(
   instructorId: string
 ): Promise<ActionResult<InstructorAssignmentImpact>> {
+  const access = await authorizeInstructorManagement(instructorId)
+  if (!access.success) return { success: false, error: access.error }
   const serviceClient = createServiceRoleClient()
 
   const { count, error } = await serviceClient
@@ -43,6 +78,8 @@ export async function guardedMoveInstructor(
   instructorId: string,
   targetSchoolId: string | null
 ): Promise<ActionResult> {
+  const access = await authorizeInstructorManagement(instructorId)
+  if (!access.success) return access
   const serviceClient = createServiceRoleClient()
 
   const { data: instructor, error: instructorError } = await serviceClient
