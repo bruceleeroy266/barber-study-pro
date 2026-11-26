@@ -13,6 +13,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
+import { validateLoginAccess } from '@/lib/auth-access'
 import { createSupabaseInstructorClient } from '@/lib/instructor/supabase-client'
 
 interface RouteParams {
@@ -35,13 +36,22 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     }
 
     // 2. Resolve instructor profile and school
-    const instructorClient = createSupabaseInstructorClient()
+    const instructorClient = createSupabaseInstructorClient(supabase)
     const profile = await instructorClient.getProfileById(user.id)
 
     if (!profile) {
       return NextResponse.json(
         { error: 'Profile not found' },
         { status: 404 }
+      )
+    }
+
+    // Middleware does not protect direct API requests. Check live profile
+    // state even when the caller still has an authenticated session.
+    if (!validateLoginAccess(profile).ok || profile.requires_password_change !== false) {
+      return NextResponse.json(
+        { error: 'Account is not authorized for instructor diagnostics' },
+        { status: 403 },
       )
     }
 
