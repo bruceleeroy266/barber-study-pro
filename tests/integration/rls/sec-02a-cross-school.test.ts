@@ -13,6 +13,16 @@ import { TEST_ACTORS, TEST_SCHOOLS } from '../setup/test-actors'
 beforeAll(async () => {
   assertTestEnvironment()
   await setupTestEnvironment()
+  // Seed real per-school evidence so a zero-row result cannot pass vacuously.
+  for (const actor of ['STUDENT_A', 'STUDENT_B'] as const) {
+    const userId = resolveActorId(actor)
+    const { data, error } = await getServiceClient().from('quiz_attempts').insert({
+      user_id: userId, quiz_id: 'quiz-2', score: 0, total_questions: 1,
+      percentage: 0, answers_json: {}, completed_at: new Date().toISOString(),
+    }).select('id').single()
+    expect(error).toBeNull()
+    expect(data?.id).toBeTruthy()
+  }
 })
 afterAll(async () => { await cleanupTestEnvironment() })
 
@@ -32,6 +42,10 @@ describe('SEC-RELEASE-02A cross-school tenant isolation', () => {
     const targetSchoolId = TEST_SCHOOLS[targetSchool].id
     const targetDomainId = TEST_ACTORS[target].domainId!
     const service = getServiceClient()
+    const { data: seededEvidence, error: seededError } = await service.from('quiz_attempts')
+      .select('id').eq('user_id', targetId)
+    expect(seededError).toBeNull()
+    expect(seededEvidence?.length).toBeGreaterThan(0)
 
     const { data: original, error: originalError } = await service
       .from('students').select('student_number,is_active,school_id').eq('id', targetDomainId).single()
