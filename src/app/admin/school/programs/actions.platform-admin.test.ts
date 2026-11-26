@@ -23,7 +23,7 @@ interface EqCall {
   value: unknown
 }
 
-function buildSessionClient(profile: { role: string; school_id: string | null }) {
+function buildSessionClient(profile: { role: string; school_id: string | null; approval_status?: string; is_disabled?: boolean }) {
   return {
     auth: {
       getUser: vi.fn().mockResolvedValue({
@@ -36,7 +36,7 @@ function buildSessionClient(profile: { role: string; school_id: string | null })
       builder.select = () => builder
       builder.eq = () => builder
       builder.single = () =>
-        Promise.resolve(table === 'profiles' ? { data: profile, error: null } : { data: null, error: null })
+        Promise.resolve(table === 'profiles' ? { data: { approval_status: 'approved', is_disabled: false, ...profile }, error: null } : { data: null, error: null })
       return builder
     },
   }
@@ -65,7 +65,7 @@ function buildServiceClient(eqLog: EqCall[]) {
   }
 }
 
-function setupMocks(profile: { role: string; school_id: string | null }) {
+function setupMocks(profile: { role: string; school_id: string | null; approval_status?: string; is_disabled?: boolean }) {
   const eqLog: EqCall[] = []
   vi.doMock('@/lib/supabase-server', () => ({
     createClient: vi.fn().mockResolvedValue(buildSessionClient(profile)),
