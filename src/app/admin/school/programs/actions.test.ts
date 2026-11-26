@@ -40,7 +40,7 @@ function mockAuthUser(role: string, schoolId: string | null) {
       select: vi.fn().mockReturnValue({
         eq: vi.fn().mockReturnValue({
           single: vi.fn().mockResolvedValue({
-            data: { role, school_id: schoolId },
+            data: { role, school_id: schoolId, approval_status: 'approved', is_disabled: false },
             error: null,
           }),
         }),
