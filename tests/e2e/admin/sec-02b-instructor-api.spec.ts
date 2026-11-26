@@ -124,6 +124,14 @@ test.describe('SEC-RELEASE-02B instructor escalation HTTP access', () => {
       const ids = (allowed.body.escalations ?? []).map((row: { id: string }) => row.id)
       expect(ids).toContain(escalations.A)
       expect(ids).not.toContain(escalations.B)
+
+      // SEC-02C: disabling a school administrator after login must revoke the
+      // already-issued session before any privileged instructor API read.
+      const { error: adminDisabledError } = await service.from('profiles')
+        .update({ is_disabled: true }).eq('id', users.adminA)
+      expect(adminDisabledError).toBeNull()
+      const revoked = await readEscalations(admin.page)
+      expect(revoked.status).toBe(403)
     } finally {
       await admin.close()
     }
