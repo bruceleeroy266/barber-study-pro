@@ -239,6 +239,7 @@ describe('POST /api/remediation/detect', () => {
 
   it.each([
     ['disabled account', { ...validProfile, is_disabled: true }, validStudent],
+    ['unknown disabled flag', { ...validProfile, is_disabled: null }, validStudent],
     ['unapproved account', { ...validProfile, approval_status: 'pending' }, validStudent],
     ['missing profile', null, validStudent],
     ['wrong school', validProfile, { school_id: 'school-b', is_active: true }],
@@ -246,6 +247,7 @@ describe('POST /api/remediation/detect', () => {
     ['non-student role', { ...validProfile, role: 'instructor' }, validStudent],
     ['missing school', { ...validProfile, school_id: null }, validStudent],
     ['password change required', { ...validProfile, requires_password_change: true }, validStudent],
+    ['unknown password-change flag', { ...validProfile, requires_password_change: null }, validStudent],
   ])('denies %s before privileged orchestration', async (_case, profile, student) => {
     const exactAttempt = {
       id: 'attempt-1', quiz_id: 'quiz-2', user_id: mockUser.id,
