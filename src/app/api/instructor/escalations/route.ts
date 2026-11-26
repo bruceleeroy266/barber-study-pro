@@ -10,6 +10,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
+import { validateLoginAccess } from '@/lib/auth-access'
 import { createSupabaseInstructorClient } from '@/lib/instructor/supabase-client'
 import type { EscalationListItem } from '@/lib/instructor/types'
 
@@ -34,6 +35,16 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         { error: 'Profile not found' },
         { status: 404 }
+      )
+    }
+
+    // Direct /api routes bypass the portal-route middleware. Privileged
+    // queries must validate current account status, not just the JWT role.
+    const access = validateLoginAccess(profile)
+    if (!access.ok || profile.requires_password_change !== false) {
+      return NextResponse.json(
+        { error: 'Account is not authorized for instructor diagnostics' },
+        { status: 403 },
       )
     }
 
