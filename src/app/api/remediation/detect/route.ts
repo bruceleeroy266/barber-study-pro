@@ -136,7 +136,8 @@ export async function POST(request: NextRequest) {
       !access.ok ||
       !profile ||
       !['student', 'apprentice'].includes(profile.role) ||
-      profile.requires_password_change ||
+      profile.is_disabled !== false ||
+      profile.requires_password_change !== false ||
       !profile.school_id
     ) {
       return NextResponse.json({ error: 'Account is not authorized for remediation detection' }, { status: 403 })
@@ -153,7 +154,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to verify student school membership' }, { status: 500 })
     }
 
-    if (!studentRecord || !studentRecord.is_active || studentRecord.school_id !== profile.school_id) {
+    if (!studentRecord || studentRecord.is_active !== true || studentRecord.school_id !== profile.school_id) {
       return NextResponse.json({ error: 'Student school membership is not authorized' }, { status: 403 })
     }
 
