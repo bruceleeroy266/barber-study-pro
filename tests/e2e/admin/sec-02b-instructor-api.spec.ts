@@ -4,6 +4,7 @@
  */
 import { test, expect, type Browser, type Page } from '@playwright/test'
 import { createClient } from '@supabase/supabase-js'
+import { execFileSync } from 'node:child_process'
 import { assertTestEnvironment } from '../../integration/setup/production-guard'
 
 const PASSWORD = 'LocalOnly02B!'
@@ -72,14 +73,21 @@ test.describe('SEC-RELEASE-02B instructor escalation HTTP access', () => {
 
     const escalations = {} as Record<'A' | 'B', string>
     for (const side of ['A', 'B'] as const) {
-      const { data, error } = await service.from('instructor_escalations').insert({
-        user_id: users[side === 'A' ? 'studentA' : 'studentB'],
-        concept_id: `SEC-02B-${side}`, chapter_id: 'ch-2', school_id: schools[side],
-        triggering_cycle_ids: [], unsuccessful_cycle_count: 2, detection_evidence: {},
-        status: 'pending',
-      }).select('id').single()
-      expect(error).toBeNull()
-      escalations[side] = data!.id
+      // service_role has no table INSERT privilege; fixture setup uses guarded
+      // loopback Postgres instead of weakening the deployment grants.
+      assertTestEnvironment()
+      const targetUser = users[side === 'A' ? 'studentA' : 'studentB']
+      const sql = `INSERT INTO public.instructor_escalations
+        (user_id,concept_id,chapter_id,school_id,triggering_cycle_ids,
+         unsuccessful_cycle_count,detection_evidence,status)
+        VALUES ('${targetUser}'::uuid,'SEC-02B-${side}','ch-2',
+          '${schools[side]}'::uuid,ARRAY[]::uuid[],2,'{}'::jsonb,'pending')
+        RETURNING id::text;`
+      escalations[side] = execFileSync('psql', [
+        process.env.TEST_DATABASE_URL!, '-X', '-A', '-t',
+        '-v', 'ON_ERROR_STOP=1', '-c', sql,
+      ], { encoding: 'utf8' }).trim()
+      expect(escalations[side]).toBeTruthy()
     }
 
     const instructor = await login(browser, people[0].email)
