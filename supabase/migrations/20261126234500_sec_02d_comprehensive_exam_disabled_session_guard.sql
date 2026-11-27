@@ -1,6 +1,7 @@
 -- SEC-RELEASE-02D-1D: Comprehensive exam RPC existing-session revocation.
 -- Source-only migration for disposable LOCAL verification; NOT approved for production.
 -- Preserve existing RPC signatures, ownership checks, scoring and return payloads.
+-- School reassignment invalidates access to historical tenant attempts; no implicit cross-tenant transfer.
 BEGIN;
 
 create or replace function public.get_comprehensive_exam_attempt(
@@ -39,7 +40,14 @@ begin
   where id = p_attempt_id
   for update;
 
-  if not found or v_attempt.user_id <> v_user_id then
+  if not found or v_attempt.user_id <> v_user_id
+     or not exists (
+       select 1 from public.profiles p
+       where p.id = v_user_id
+         and p.school_id = v_attempt.school_id
+         and p.approval_status = 'approved'
+         and p.is_disabled is false
+     ) then
     raise exception 'Comprehensive exam attempt not found';
   end if;
 
@@ -103,7 +111,14 @@ begin
   where id = p_attempt_id
   for update;
 
-  if not found or v_attempt.user_id <> v_user_id then
+  if not found or v_attempt.user_id <> v_user_id
+     or not exists (
+       select 1 from public.profiles p
+       where p.id = v_user_id
+         and p.school_id = v_attempt.school_id
+         and p.approval_status = 'approved'
+         and p.is_disabled is false
+     ) then
     raise exception 'Comprehensive exam attempt not found';
   end if;
 
@@ -209,7 +224,14 @@ begin
   where id = p_attempt_id
   for update;
 
-  if not found or v_attempt.user_id <> v_user_id then
+  if not found or v_attempt.user_id <> v_user_id
+     or not exists (
+       select 1 from public.profiles p
+       where p.id = v_user_id
+         and p.school_id = v_attempt.school_id
+         and p.approval_status = 'approved'
+         and p.is_disabled is false
+     ) then
     raise exception 'Comprehensive exam attempt not found';
   end if;
 
