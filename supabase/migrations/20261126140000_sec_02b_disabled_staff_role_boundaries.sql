@@ -14,6 +14,7 @@ begin
       and p.school_id = target_school_id
       and p.role in ('instructor', 'admin', 'school_admin')
       and p.is_disabled is false
+      and p.approval_status = 'approved'
   );
 end;
 $$ language plpgsql security definer;
@@ -29,6 +30,7 @@ begin
       and p.school_id = target_school_id
       and p.role in ('admin', 'school_admin')
       and p.is_disabled is false
+      and p.approval_status = 'approved'
   );
 end;
 $$ language plpgsql security definer;
@@ -45,6 +47,7 @@ using (
       and p.role in ('admin', 'school_admin')
       and p.school_id = school_settings.school_id
       and p.is_disabled is false
+      and p.approval_status = 'approved'
   )
 )
 with check (
@@ -54,6 +57,7 @@ with check (
       and p.role in ('admin', 'school_admin')
       and p.school_id = school_settings.school_id
       and p.is_disabled is false
+      and p.approval_status = 'approved'
   )
 );
 
