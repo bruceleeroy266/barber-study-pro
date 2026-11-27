@@ -267,4 +267,35 @@ describe('SEC-RELEASE-02B operational RLS', () => {
       expect(restoreError).toBeNull()
     }
   })
+  test('pending and rejected staff sessions cannot use school role helper RPCs', async () => {
+    const service = getServiceClient()
+    for (const [actorKey, rpc] of [
+      ['INSTRUCTOR_A', 'is_school_staff'],
+      ['SCHOOL_ADMIN_A', 'is_school_admin'],
+    ] as const) {
+      const uid = resolveActorId(actorKey)
+      const client = await createAuthenticatedClient(TEST_ACTORS[actorKey])
+      const allowed = await client.rpc(rpc, { target_school_id: school('A') })
+      expect(allowed.error).toBeNull()
+      expect(allowed.data).toBe(true)
+      for (const approval_status of ['pending', 'rejected'] as const) {
+        const { error: changeError } = await service.from('profiles')
+          .update({ approval_status }).eq('id', uid)
+        expect(changeError).toBeNull()
+        try {
+          const denied = await client.rpc(rpc, { target_school_id: school('A') })
+          expect(denied.error).toBeNull()
+          expect(denied.data, rpc + ' permitted ' + approval_status + ' staff').toBe(false)
+          const foreign = await client.rpc(rpc, { target_school_id: school('B') })
+          expect(foreign.error).toBeNull()
+          expect(foreign.data).toBe(false)
+        } finally {
+          const { error } = await service.from('profiles')
+            .update({ approval_status: 'approved' }).eq('id', uid)
+          expect(error).toBeNull()
+        }
+      }
+    }
+  })
+
 })
