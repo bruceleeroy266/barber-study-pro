@@ -25,6 +25,7 @@ function examSnapshot(): string {
 
 let attemptA: string
 let attemptB: string
+let questionId: string
 
 const calls = [
   ['get_comprehensive_exam_attempt', { p_attempt_id: '00000000-0000-0000-0000-000000000001' }],
@@ -69,6 +70,17 @@ beforeAll(async () => {
   }
   expect(attemptA).toBeTruthy()
   expect(attemptB).toBeTruthy()
+  questionId = sql(`INSERT INTO public.comprehensive_exam_questions
+    (source_question_id,source_kind,domain,prompt,option_a,option_b,option_c,option_d,
+     correct_option,explanation,content_version)
+    VALUES ('sec-02d-' || gen_random_uuid()::text,'certified_original','scientific_concepts',
+    'Local security fixture?', 'A','B','C','D','a','Local fixture','test') RETURNING id::text;`)
+  sql(`INSERT INTO public.comprehensive_exam_attempt_items
+    (attempt_id,question_id,position,domain,is_scored,prompt_snapshot,
+     option_a_snapshot,option_b_snapshot,option_c_snapshot,option_d_snapshot,
+     correct_option_snapshot,explanation_snapshot)
+    VALUES ('${attemptA}'::uuid,'${questionId}'::uuid,1,'scientific_concepts',true,
+    'Local security fixture?','A','B','C','D','a','Local fixture');`)
 })
 afterAll(async () => { await cleanupTestEnvironment() })
 
@@ -94,7 +106,26 @@ describe('02D comprehensive exam direct RPC existing-session revocation', () => 
     }
   })
 
-  test('approved student has access to own empty history, then disabled JWT is denied across all four RPCs', async () => {
+  test('approved learner can save a real answer, submit and retrieve history', async () => {
+    const client = await createAuthenticatedClient(TEST_ACTORS.STUDENT_A)
+    const saved = await client.rpc('save_comprehensive_exam_answer', {
+      p_attempt_id: attemptA, p_position: 1, p_selected_option: 'a',
+    })
+    expect(saved.error).toBeNull()
+    expect(saved.data?.selectedOption).toBe('a')
+    const persisted = sql(`SELECT selected_option FROM public.comprehensive_exam_attempt_items
+      WHERE attempt_id = '${attemptA}'::uuid AND position = 1;`)
+    expect(persisted).toBe('a')
+    const submitted = await client.rpc('submit_comprehensive_exam_attempt', { p_attempt_id: attemptA })
+    expect(submitted.error).toBeNull()
+    expect(submitted.data?.status).toBe('completed')
+    const history = await client.rpc('get_my_comprehensive_exam_history')
+    expect(history.error).toBeNull()
+    expect(history.data?.some((row: { attemptId: string; status: string }) =>
+      row.attemptId === attemptA && row.status === 'completed')).toBe(true)
+  })
+
+  test('approved student has access to own history, then disabled JWT is denied across all four RPCs', async () => {
     const client = await createAuthenticatedClient(TEST_ACTORS.STUDENT_A)
     const { data: initial, error: initialError } = await client.rpc('get_my_comprehensive_exam_history')
     expect(initialError).toBeNull()
