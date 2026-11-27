@@ -11,9 +11,9 @@ function examSnapshot(): string {
   return execFileSync('psql', [getTestEnvironment().databaseUrl, '-X', '-q', '-A', '-t',
     '-v', 'ON_ERROR_STOP=1', '-c',
     `SELECT jsonb_build_object(
-      'attempts', (SELECT count(*) FROM public.comprehensive_exam_attempts),
-      'items', (SELECT count(*) FROM public.comprehensive_exam_attempt_items),
-      'events', (SELECT count(*) FROM public.comprehensive_exam_attempt_events)
+      'attempts', (SELECT coalesce(jsonb_agg(to_jsonb(a) ORDER BY a.id), '[]'::jsonb) FROM public.comprehensive_exam_attempts a),
+      'items', (SELECT coalesce(jsonb_agg(to_jsonb(i) ORDER BY i.id), '[]'::jsonb) FROM public.comprehensive_exam_attempt_items i),
+      'events', (SELECT coalesce(jsonb_agg(to_jsonb(e) ORDER BY e.id), '[]'::jsonb) FROM public.comprehensive_exam_attempt_events e)
     )::text;`], { encoding: 'utf8' }).trim()
 }
 
