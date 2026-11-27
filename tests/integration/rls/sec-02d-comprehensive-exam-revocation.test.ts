@@ -150,4 +150,35 @@ describe('02D comprehensive exam direct RPC existing-session revocation', () => 
     const restored = await client.rpc('get_my_comprehensive_exam_history')
     expect(restored.error).toBeNull()
   })
+  test('school reassignment revokes historical attempt and history access without mutation', async () => {
+    const client = await createAuthenticatedClient(TEST_ACTORS.STUDENT_A)
+    const id = resolveActorId('STUDENT_A')
+    const previousSchool = TEST_ACTORS.STUDENT_A.schoolId
+    const newSchool = TEST_ACTORS.STUDENT_B.schoolId
+    const before = examSnapshot()
+    const { error: moveError } = await getServiceClient().from('profiles')
+      .update({ school_id: newSchool }).eq('id', id)
+    expect(moveError).toBeNull()
+    try {
+      for (const [rpc, args] of [
+        ['get_comprehensive_exam_attempt', { p_attempt_id: attemptA }],
+        ['save_comprehensive_exam_answer', { p_attempt_id: attemptA, p_position: 1, p_selected_option: 'b' }],
+        ['submit_comprehensive_exam_attempt', { p_attempt_id: attemptA }],
+      ] as const) {
+        const denied = await client.rpc(rpc, args)
+        expect(denied.error, rpc + ' exposed historical tenant attempt').not.toBeNull()
+        expect(denied.error?.message).toContain('Comprehensive exam attempt not found')
+        expect(examSnapshot(), rpc + ' modified historical tenant data').toBe(before)
+      }
+      const history = await client.rpc('get_my_comprehensive_exam_history')
+      expect(history.error).toBeNull()
+      expect(history.data?.some((row: { attemptId: string }) => row.attemptId === attemptA)).toBe(false)
+      expect(examSnapshot(), 'history mutated exam database').toBe(before)
+    } finally {
+      const { error } = await getServiceClient().from('profiles')
+        .update({ school_id: previousSchool }).eq('id', id)
+      expect(error).toBeNull()
+    }
+  })
+
 })
