@@ -306,7 +306,10 @@ begin
   from public.comprehensive_exam_attempts a
   left join public.study_sessions s
     on s.id = a.study_session_id
-  where a.user_id = v_user_id;
+  where a.user_id = v_user_id
+    and a.school_id = (
+      select p.school_id from public.profiles p where p.id = v_user_id
+    );
 
   return v_history;
 end;
