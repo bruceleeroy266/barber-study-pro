@@ -11,6 +11,7 @@ import { createClient } from '@/lib/supabase-server'
 import { Permission, hasPermission } from './permissions'
 import { logPermissionDenied, logUnauthorizedAccess } from './audit-logger'
 import { Profile } from '@/types'
+import { validateLoginAccess } from '@/lib/auth-access'
 
 export interface AuthenticatedContext {
   user: { id: string; email?: string | null }
@@ -50,8 +51,10 @@ export async function requireProfile(): Promise<AuthenticatedContext> {
     .eq('id', user.id)
     .single()
 
-  if (error || !profile) {
-    redirect('/dashboard')
+  if (error || !profile || !validateLoginAccess(profile).ok) {
+    // An existing session remains authenticated after account revocation;
+    // server components/actions must not grant role permissions from stale JWTs.
+    redirect('/login?error=disabled')
   }
 
   return {

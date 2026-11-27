@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase-server'
+import { validateLoginAccess } from '@/lib/auth-access'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 import { logPermissionDenied, logUnauthorizedAccess, logSecurityEvent } from '@/lib/security/audit-logger'
 
@@ -38,11 +39,11 @@ async function verifyStudentManagementAccess(
   // Fetch caller profile
   const { data: profile } = await supabase
     .from('profiles')
-    .select('id, role, school_id, email')
+    .select('id, role, school_id, email, approval_status, is_disabled')
     .eq('id', user.id)
     .single()
 
-  if (!profile || !isInstructorOrAdmin(profile.role)) {
+  if (!validateLoginAccess(profile).ok || !profile || !isInstructorOrAdmin(profile.role)) {
     await logPermissionDenied('manage_students', {
       userId: user.id,
       email: user.email,

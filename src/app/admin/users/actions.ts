@@ -5,6 +5,7 @@ import { createServiceRoleClient } from '@/lib/supabase-service-role'
 import { isAdmin, isSchoolAdmin, isPlatformAdminProfile } from '@/lib/auth-helpers'
 import { AppRole } from '@/types'
 import { isKnownRole } from '@/lib/security/permissions'
+import { validateLoginAccess } from '@/lib/auth-access'
 import { revalidatePath } from 'next/cache'
 
 export interface UserListItem {
@@ -129,11 +130,11 @@ async function getCurrentAdmin(): Promise<ActionResult<AdminContext>> {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role, school_id')
+    .select('role, school_id, approval_status, is_disabled')
     .eq('id', user.id)
     .single()
 
-  if (!profile || !(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
+  if (!validateLoginAccess(profile).ok || !profile || !(isAdmin(profile.role) || isSchoolAdmin(profile.role))) {
     return { success: false, error: 'Forbidden' }
   }
 

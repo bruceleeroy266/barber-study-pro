@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { createServiceRoleClient } from '@/lib/supabase-service-role'
+import { canRecordAcademicEvidence } from '@/lib/security/academic-evidence-auth'
 import {
   resolveRegisteredMicroCheckQuestion,
 } from '@/lib/micro-checks/registry'
@@ -17,7 +18,11 @@ async function authenticatedUser() {
     error,
   } = await supabase.auth.getUser()
 
-  return error || !user ? null : user
+  if (error || !user) return null
+  // Existing JWTs do not revoke themselves when an academic account is
+  // disabled. The caller must be eligible before privileged GET or POST.
+  if (!(await canRecordAcademicEvidence(supabase, user.id))) return null
+  return user
 }
 
 export async function GET(request: NextRequest) {

@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase-server'
+import { validateLoginAccess } from '@/lib/auth-access'
 import { isInstructorOrAdmin } from '@/lib/auth-helpers'
 import { logPermissionDenied, logUnauthorizedAccess } from '@/lib/security/audit-logger'
 import { Grade } from '@/types'
@@ -27,11 +28,11 @@ export async function saveGrade(
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role, full_name, school_id')
+    .select('role, full_name, school_id, approval_status, is_disabled')
     .eq('id', user.id)
     .single()
 
-  if (!profile || !isInstructorOrAdmin(profile.role)) {
+  if (!validateLoginAccess(profile).ok || !profile || !isInstructorOrAdmin(profile.role)) {
     await logPermissionDenied('manage_gradebook', {
       userId: user.id,
       email: user.email,

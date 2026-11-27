@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { createServiceRoleClient } from '@/lib/supabase-service-role'
+import { canRecordAcademicEvidence } from '@/lib/security/academic-evidence-auth'
 import { getFlashcardEvidenceConcept } from '@/lib/concept-mastery/activity-evidence-registry'
 
 type Chapter19FlashcardSignal = 'got_it' | 'needs_practice'
@@ -14,6 +15,12 @@ export async function POST(request: NextRequest) {
 
   if (authError || !user) {
     return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
+  }
+
+  // Direct API routes bypass portal middleware; the service-role client
+  // must never persist evidence for a disabled/unapproved existing session.
+  if (!(await canRecordAcademicEvidence(supabase, user.id))) {
+    return NextResponse.json({ error: 'Account is not authorized for academic evidence' }, { status: 403 })
   }
 
   let body: { source?: unknown; itemId?: unknown; selectedAnswer?: unknown }

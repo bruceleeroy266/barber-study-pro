@@ -128,6 +128,7 @@ jobs:
             echo "NEXT_PUBLIC_SUPABASE_URL=$LOCAL_API_URL"
             echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$LOCAL_ANON_KEY"
             echo "SUPABASE_SERVICE_ROLE_KEY=$LOCAL_SERVICE_KEY"
+            echo "TEST_DATABASE_URL=${DB_URL:-}"
             echo "NEXT_PUBLIC_SITE_URL=http://127.0.0.1:3000"
             echo "PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000"
             echo "TEST_MAILPIT_URL=http://127.0.0.1:54324"
@@ -142,6 +143,50 @@ jobs:
 
       - name: Run true pilot onboarding certification
         run: npx playwright test tests/e2e/admin/onboarding-journey.spec.ts tests/e2e/admin/quiz-grading-qa11-parity.spec.ts tests/e2e/admin/quiz-grading-qa85-ch2-parity.spec.ts tests/e2e/admin/quiz-grading-qa120-ch5-parity.spec.ts --project=chromium --workers=1
+
+      - name: Certify real-session detection API authorization on disposable local Supabase
+        run: |
+          test "$ASCYN_TEST_ENVIRONMENT" = "true"
+          test -n "$TEST_DATABASE_URL"
+          npx playwright test tests/e2e/admin/detection-api-real-session.spec.ts --project=chromium --workers=1
+
+      - name: Certify Chapter 19 evidence service-role boundary with real local sessions
+        run: |
+          test "$ASCYN_TEST_ENVIRONMENT" = "true"
+          test -n "$TEST_DATABASE_URL"
+          npx playwright test tests/e2e/admin/sec-02d-chapter-evidence-session.spec.ts --project=chromium --workers=1
+
+      - name: Certify instructor escalation direct API role boundaries
+        run: |
+          test "$ASCYN_TEST_ENVIRONMENT" = "true"
+          test -n "$TEST_DATABASE_URL"
+          npx playwright test tests/e2e/admin/sec-02b-instructor-api.spec.ts --project=chromium --workers=1
+
+      - name: Certify privileged RPC permissions using disposable local Supabase
+        env:
+          TEST_PLATFORM_ADMIN_EMAIL: platform-admin@ascyn-test.local
+          TEST_PLATFORM_ADMIN_PASSWORD: Test1234!
+          TEST_SCHOOL_ADMIN_A_EMAIL: school-admin-a@ascyn-test.local
+          TEST_SCHOOL_ADMIN_A_PASSWORD: Test1234!
+          TEST_INSTRUCTOR_A_EMAIL: instructor-a@ascyn-test.local
+          TEST_INSTRUCTOR_A_PASSWORD: Test1234!
+          TEST_STUDENT_A_EMAIL: student-a@ascyn-test.local
+          TEST_STUDENT_A_PASSWORD: Test1234!
+          TEST_SCHOOL_ADMIN_B_EMAIL: school-admin-b@ascyn-test.local
+          TEST_SCHOOL_ADMIN_B_PASSWORD: Test1234!
+          TEST_INSTRUCTOR_B_EMAIL: instructor-b@ascyn-test.local
+          TEST_INSTRUCTOR_B_PASSWORD: Test1234!
+          TEST_STUDENT_B_EMAIL: student-b@ascyn-test.local
+          TEST_STUDENT_B_PASSWORD: Test1234!
+          TEST_SCHOOL_A_ID: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa
+          TEST_SCHOOL_A_NAME: Test Academy Alpha
+          TEST_SCHOOL_A_SLUG: test-academy-alpha
+          TEST_SCHOOL_B_ID: bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb
+          TEST_SCHOOL_B_NAME: Test Academy Beta
+          TEST_SCHOOL_B_SLUG: test-academy-beta
+        run: |
+          test -n "$TEST_DATABASE_URL"
+          npx vitest run --config vitest.integration.config.ts tests/integration/rls/direct-rpc.test.ts tests/integration/rls/sec-02a-cross-school.test.ts tests/integration/rls/sec-02b-role-boundaries.test.ts tests/integration/rls/sec-02c-disabled-revocation.test.ts tests/integration/rls/sec-02d-comprehensive-exam-revocation.test.ts
 
       - name: Upload onboarding evidence on failure
         if: failure()

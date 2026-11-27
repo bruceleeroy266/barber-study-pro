@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase-server'
+import { validateLoginAccess } from '@/lib/auth-access'
 import { isAdmin, isPlatformAdminProfile } from '@/lib/auth-helpers'
 import { hasPermission } from '@/lib/security/permissions'
 import { SecurityEventType } from '@/lib/security/audit-logger'
@@ -52,11 +53,11 @@ export async function getAuditHistory(filters: AuditFilters = {}): Promise<Audit
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role, school_id')
+    .select('role, school_id, approval_status, is_disabled')
     .eq('id', user.id)
     .single()
 
-  if (!profile || !isAdmin(profile.role)) {
+  if (!profile || !validateLoginAccess(profile).ok || !isAdmin(profile.role)) {
     return { logs: [], count: 0, error: 'Forbidden' }
   }
 

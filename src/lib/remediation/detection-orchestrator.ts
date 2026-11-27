@@ -464,7 +464,7 @@ export class DetectionOrchestratorService {
 export interface SupabaseDetectionOrchestratorConfig {
   url: string
   anonKey: string
-  serviceRoleKey?: string
+  serviceRoleKey: string
 }
 
 /**
@@ -474,7 +474,11 @@ export class SupabaseDetectionOrchestratorDbClient implements IDetectionOrchestr
   private readonly supabase
 
   constructor(config: SupabaseDetectionOrchestratorConfig) {
-    this.supabase = createClient(config.url, config.serviceRoleKey ?? config.anonKey, {
+    if (!config.serviceRoleKey) {
+      throw new Error('SUPABASE_SERVICE_ROLE_KEY is required for privileged detection operations')
+    }
+
+    this.supabase = createClient(config.url, config.serviceRoleKey, {
       auth: {
         persistSession: false,
         autoRefreshToken: false,
@@ -682,7 +686,13 @@ export class SupabaseDetectionOrchestratorDbClient implements IDetectionOrchestr
         p_detection_confidence: data.detectionConfidence,
         p_detection_evidence: data.detectionEvidence,
         p_status: data.status,
-        p_assignments: data.assignments,
+        // PostgreSQL jsonb_to_recordset expects SQL column names, not TypeScript camelCase.
+        p_assignments: data.assignments.map((assignment) => ({
+          assignment_type: assignment.assignmentType,
+          asset_id: assignment.assetId,
+          priority: assignment.priority,
+          is_primary: assignment.isPrimary,
+        })),
       }
     )
 

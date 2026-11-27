@@ -40,7 +40,7 @@ function mockAuthUser(role: string, schoolId: string | null) {
       select: vi.fn().mockReturnValue({
         eq: vi.fn().mockReturnValue({
           single: vi.fn().mockResolvedValue({
-            data: { role, school_id: schoolId },
+            data: { role, school_id: schoolId, approval_status: 'approved', is_disabled: false },
             error: null,
           }),
         }),
@@ -384,7 +384,7 @@ describe('Phase 7A Slice 5: createProgram()', () => {
     expect(result.error).toMatch(/forbidden/i)
   })
 
-  it('rejects admin without school assignment', async () => {
+  it('rejects school admin without school assignment', async () => {
     vi.doMock('@/lib/supabase-server', () => ({
       createClient: vi.fn().mockResolvedValue(mockAuthUser('school_admin', null)),
     }))
@@ -396,7 +396,7 @@ describe('Phase 7A Slice 5: createProgram()', () => {
     const result = await createAction({ name: 'Test Program' })
 
     expect(result.success).toBe(false)
-    expect(result.error).toMatch(/must be assigned to a school/i)
+    expect(result.error).toMatch(/forbidden/i)
   })
 
   it('rejects empty program name', async () => {

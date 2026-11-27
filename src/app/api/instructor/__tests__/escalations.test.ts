@@ -34,6 +34,9 @@ const MOCK_INSTRUCTOR_PROFILE = {
   full_name: 'Test Instructor',
   role: 'instructor',
   school_id: SCHOOL_ID,
+  approval_status: 'approved',
+  is_disabled: false,
+  requires_password_change: false,
 }
 
 const MOCK_STUDENT_PROFILE = {
@@ -165,6 +168,20 @@ describe('Instructor Escalation API', () => {
       const response = await GET(new NextRequest('http://localhost/api/instructor/escalations'))
 
       expect(response.status).toBe(403)
+    })
+
+    it.each([
+      ['disabled', { ...MOCK_INSTRUCTOR_PROFILE, is_disabled: true }],
+      ['unapproved', { ...MOCK_INSTRUCTOR_PROFILE, approval_status: 'pending' }],
+      ['forced password change', { ...MOCK_INSTRUCTOR_PROFILE, requires_password_change: true }],
+    ])('denies %s instructor from privileged escalation reads', async (_label, profile) => {
+      const { mockClient } = await setupMocks({
+        authenticatedUser: INSTRUCTOR_ID, profile,
+      })
+      const { GET } = await import('../escalations/route')
+      const response = await GET(new NextRequest('http://localhost/api/instructor/escalations'))
+      expect(response.status).toBe(403)
+      expect(mockClient.listEscalationsForSchool).not.toHaveBeenCalled()
     })
 
     it('returns escalations for the instructor school', async () => {

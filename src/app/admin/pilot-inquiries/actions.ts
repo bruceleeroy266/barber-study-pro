@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase-server'
 import { createServiceRoleClient } from '@/lib/supabase-service-role'
+import { validateLoginAccess } from '@/lib/auth-access'
 import { Resend } from 'resend'
 import { revalidatePath } from 'next/cache'
 import { logSecurityEvent } from '@/lib/security/audit-logger'
@@ -39,12 +40,31 @@ function getSiteUrl(): string {
   return configuredSiteUrl || 'http://localhost:3000'
 }
 
+/**
+ * Server actions can be called without traversing protected pages. Check the
+ * current approved/enabled platform-admin identity before any external email
+ * or service-role database operation.
+ */
+async function requireEnabledPilotPlatformAdmin(): Promise<boolean> {
+  const session = await createClient()
+  const { data: { user }, error: authError } = await session.auth.getUser()
+  if (authError || !user) return false
+  const { data: actor, error: profileError } = await session.from('profiles')
+    .select('role,school_id,approval_status,is_disabled')
+    .eq('id', user.id).maybeSingle()
+  return !profileError && !!actor && validateLoginAccess(actor).ok &&
+    actor.role === 'admin' && actor.school_id === null
+}
+
 export async function sendPilotInquiryReply(
   inquiryId: string,
   subject: string,
   message: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    if (!(await requireEnabledPilotPlatformAdmin())) {
+      return { success: false, error: 'Platform administrator access required.' }
+    }
     if (!resend) {
       return { success: false, error: 'Resend is not configured.' }
     }
@@ -168,11 +188,11 @@ export async function addSchoolFromAdmin(
 
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .select('role, school_id')
+      .select('role, school_id, approval_status, is_disabled')
       .eq('id', user.id)
       .single()
 
-    if (profileError || !profile || profile.role !== 'admin' || profile.school_id !== null) {
+    if (profileError || !profile || !validateLoginAccess(profile).ok || profile.role !== 'admin' || profile.school_id !== null) {
       return { success: false, error: 'Only platform administrators may add schools.' }
     }
 
@@ -326,7 +346,7 @@ export async function approvePilotInquiry(
 
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .select('role, school_id')
+      .select('role, school_id, approval_status, is_disabled')
       .eq('id', user.id)
       .single()
 
@@ -335,7 +355,7 @@ export async function approvePilotInquiry(
     }
 
     // Only platform admins (role='admin', school_id IS NULL) may approve inquiries.
-    if (profile.role !== 'admin' || profile.school_id !== null) {
+    if (!validateLoginAccess(profile).ok || profile.role !== 'admin' || profile.school_id !== null) {
       void logSecurityEvent('permission_denied', 'denied', 'Non-platform-admin attempted pilot inquiry approval', {
         userId: user.id,
         email: user.email,
@@ -490,7 +510,7 @@ export async function createSchoolFromInquiry(
 
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .select('role, school_id')
+      .select('role, school_id, approval_status, is_disabled')
       .eq('id', user.id)
       .single()
 
@@ -499,7 +519,7 @@ export async function createSchoolFromInquiry(
     }
 
     // Only platform admins (role='admin', school_id IS NULL) may create schools.
-    if (profile.role !== 'admin' || profile.school_id !== null) {
+    if (!validateLoginAccess(profile).ok || profile.role !== 'admin' || profile.school_id !== null) {
       // Fire-and-forget audit log for the denied attempt.
       void logSecurityEvent('permission_denied', 'denied', 'Non-platform-admin attempted school creation', {
         userId: user.id,

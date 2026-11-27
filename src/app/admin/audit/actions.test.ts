@@ -23,7 +23,7 @@ interface EqCall {
   value: unknown
 }
 
-function buildSessionClient(profile: { role: string; school_id: string | null }, eqLog: EqCall[]) {
+function buildSessionClient(profile: { role: string; school_id: string | null; approval_status?: string; is_disabled?: boolean }, eqLog: EqCall[]) {
   return {
     auth: {
       getUser: vi.fn().mockResolvedValue({
@@ -48,7 +48,7 @@ function buildSessionClient(profile: { role: string; school_id: string | null },
       builder.order = () => builder
       builder.range = () => builder
       builder.single = () =>
-        Promise.resolve(table === 'profiles' ? { data: profile, error: null } : { data: null, error: null })
+        Promise.resolve(table === 'profiles' ? { data: { approval_status: 'approved', is_disabled: false, ...profile }, error: null } : { data: null, error: null })
       builder.then = (onFulfilled: unknown, onRejected: unknown) => {
         const head = (selectArgs[1] as { head?: boolean } | undefined)?.head
         const result = head ? { count: 0, error: null } : { data: [], error: null }
@@ -62,7 +62,7 @@ function buildSessionClient(profile: { role: string; school_id: string | null },
   }
 }
 
-function setupMocks(profile: { role: string; school_id: string | null }) {
+function setupMocks(profile: { role: string; school_id: string | null; approval_status?: string; is_disabled?: boolean }) {
   const eqLog: EqCall[] = []
   vi.doMock('@/lib/supabase-server', () => ({
     createClient: vi.fn().mockResolvedValue(buildSessionClient(profile, eqLog)),
@@ -112,6 +112,19 @@ describe('getAuditHistory — platform admin vs school-attached admin', () => {
     const schoolEqs = eqLog.filter((c) => c.table === 'security_logs' && c.column === 'school_id')
     expect(schoolEqs.length).toBeGreaterThan(0)
     expect(schoolEqs.every((c) => c.value === SCHOOL_A_ID)).toBe(true)
+  })
+
+  it.each([
+    ['disabled platform admin', { role: 'admin', school_id: null, is_disabled: true }],
+    ['unapproved platform admin', { role: 'admin', school_id: null, approval_status: 'pending' }],
+    ['disabled school-attached admin', { role: 'admin', school_id: SCHOOL_A_ID, is_disabled: true }],
+  ])('SEC-02D %s cannot read audit records', async (_label, profile) => {
+    const { eqLog } = setupMocks(profile)
+    const { getAuditHistory } = await import('./actions')
+    const result = await getAuditHistory({})
+    expect(result.error).toBe('Forbidden')
+    expect(result.logs).toEqual([])
+    expect(eqLog.filter(x => x.table === 'security_logs')).toEqual([])
   })
 
   it('school_admin is forbidden from the audit surface', async () => {

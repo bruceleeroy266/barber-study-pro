@@ -23,7 +23,7 @@ interface EqCall {
   value: unknown
 }
 
-function buildSessionClient(profile: { role: string; school_id: string | null }) {
+function buildSessionClient(profile: { role: string; school_id: string | null; approval_status?: string; is_disabled?: boolean }) {
   return {
     auth: {
       getUser: vi.fn().mockResolvedValue({
@@ -36,7 +36,7 @@ function buildSessionClient(profile: { role: string; school_id: string | null })
       builder.select = () => builder
       builder.eq = () => builder
       builder.single = () =>
-        Promise.resolve(table === 'profiles' ? { data: profile, error: null } : { data: null, error: null })
+        Promise.resolve(table === 'profiles' ? { data: { approval_status: 'approved', is_disabled: false, ...profile }, error: null } : { data: null, error: null })
       return builder
     },
   }
@@ -65,7 +65,7 @@ function buildServiceClient(eqLog: EqCall[]) {
   }
 }
 
-function setupMocks(profile: { role: string; school_id: string | null }) {
+function setupMocks(profile: { role: string; school_id: string | null; approval_status?: string; is_disabled?: boolean }) {
   const eqLog: EqCall[] = []
   vi.doMock('@/lib/supabase-server', () => ({
     createClient: vi.fn().mockResolvedValue(buildSessionClient(profile)),
@@ -112,6 +112,19 @@ describe('admin/school/programs actions — platform admin vs school-attached ad
     const schoolEqs = eqLog.filter((c) => c.table === 'programs' && c.column === 'school_id')
     expect(schoolEqs).toHaveLength(1)
     expect(schoolEqs[0].value).toBe(SCHOOL_A_ID)
+  })
+
+  it.each([
+    ['disabled platform admin', { role: 'admin', school_id: null, is_disabled: true }],
+    ['unapproved school admin', { role: 'school_admin', school_id: SCHOOL_A_ID, approval_status: 'pending' }],
+    ['disabled school admin', { role: 'school_admin', school_id: SCHOOL_A_ID, is_disabled: true }],
+    ['unassigned school admin', { role: 'school_admin', school_id: null }],
+  ])('SEC-02D %s cannot query programs through service role', async (_label, actor) => {
+    const { eqLog } = setupMocks(actor)
+    const { getPrograms } = await import('./actions')
+    const result = await getPrograms()
+    expect(result.success).toBe(false)
+    expect(eqLog).toEqual([])
   })
 
   it('school_admin remains tenant-scoped (no behavior change)', async () => {

@@ -126,7 +126,7 @@ function setupAuthenticatedUser(userId: string, role: string, schoolId: string |
     select: vi.fn().mockReturnThis(),
     eq: vi.fn().mockReturnThis(),
     single: vi.fn().mockResolvedValue({
-      data: { role, school_id: schoolId },
+      data: { role, school_id: schoolId, approval_status: 'approved', is_disabled: false },
       error: null,
     }),
   }

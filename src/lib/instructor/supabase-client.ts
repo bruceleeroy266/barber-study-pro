@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import type { Profile } from '@/types'
 import type { InstructorEscalation } from '@/lib/escalation/types'
 import type { InterventionHistoryItem, IInstructorDatabaseClient } from './types'
@@ -7,13 +7,14 @@ interface SupabaseInstructorClientConfig {
   url: string
   anonKey: string
   serviceRoleKey?: string
+  authenticatedClient?: SupabaseClient
 }
 
 export class SupabaseInstructorDatabaseClient implements IInstructorDatabaseClient {
   private readonly supabase
 
   constructor(config: SupabaseInstructorClientConfig) {
-    this.supabase = createClient(config.url, config.serviceRoleKey ?? config.anonKey, {
+    this.supabase = config.authenticatedClient ?? createClient(config.url, config.serviceRoleKey ?? config.anonKey, {
       auth: {
         persistSession: false,
         autoRefreshToken: false,
@@ -45,36 +46,87 @@ export class SupabaseInstructorDatabaseClient implements IInstructorDatabaseClie
   }
 
   async listEscalationsForSchool(schoolId: string) {
+    // user_id / acknowledged_by refer to auth.users, not profiles.
+    // PostgREST cannot embed profiles via those foreign keys. Resolve the
+    // student identities explicitly using the same requester's RLS session.
     const { data, error } = await this.supabase
       .from('instructor_escalations')
-      .select('*, student:profiles!instructor_escalations_user_id_fkey(*), acknowledgedByProfile:profiles!instructor_escalations_acknowledged_by_fkey(*)')
+      .select('*')
       .eq('school_id', schoolId)
       .in('status', ['pending', 'acknowledged', 'in_progress'])
       .order('created_at', { ascending: false })
 
-    if (error || !data) return []
+    if (error) throw new Error(`Failed to read instructor escalations: ${error.message}`)
+    if (!data || data.length === 0) return []
 
-    return data.map((row: Record<string, unknown>) => ({
-      ...this.mapEscalationRow(row),
-      student: row.student as Profile,
-      acknowledgedByProfile: (row.acknowledgedByProfile as Profile | null) ?? null,
-    }))
+    const profileIds = Array.from(new Set(
+      data.flatMap(row => [row.user_id, row.acknowledged_by].filter(
+        (id): id is string => typeof id === 'string' && id.length > 0,
+      )),
+    ))
+    const { data: profiles, error: profilesError } = await this.supabase
+      .from('profiles')
+      .select('*')
+      .in('id', profileIds)
+      .eq('school_id', schoolId)
+
+    if (profilesError) throw new Error(`Failed to read escalation participants: ${profilesError.message}`)
+    const byId = new Map((profiles ?? []).map(profile => [profile.id, profile as Profile]))
+
+    return data.map(row => {
+      const student = byId.get(row.user_id)
+      if (!student || !['student', 'apprentice'].includes(student.role)) {
+        throw new Error('Escalation student is not accessible in the authorized school')
+      }
+      return {
+        ...this.mapEscalationRow(row),
+        student,
+        acknowledgedByProfile: row.acknowledged_by
+          ? byId.get(row.acknowledged_by) ?? null
+          : null,
+      }
+    })
   }
 
   async getEscalationForSchool(escalationId: string, schoolId: string) {
+    // The escalation FKs reference auth.users, not public.profiles;
+    // PostgREST profile embeds are invalid and can mask permission failures.
     const { data, error } = await this.supabase
       .from('instructor_escalations')
-      .select('*, student:profiles!instructor_escalations_user_id_fkey(*), acknowledgedByProfile:profiles!instructor_escalations_acknowledged_by_fkey(*)')
+      .select('*')
       .eq('id', escalationId)
       .eq('school_id', schoolId)
-      .single()
+      .maybeSingle()
 
-    if (error || !data) return null
+    if (error) throw new Error(`Failed to read instructor escalation: ${error.message}`)
+    if (!data) return null
+
+    const { data: student, error: studentError } = await this.supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', data.user_id)
+      .eq('school_id', schoolId)
+      .maybeSingle()
+    if (studentError || !student || !['student', 'apprentice'].includes(student.role)) {
+      throw new Error('Escalation student cannot be resolved in the authorized school')
+    }
+
+    let acknowledgedByProfile: Profile | null = null
+    if (data.acknowledged_by) {
+      const { data: acknowledger, error: acknowledgerError } = await this.supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', data.acknowledged_by)
+        .eq('school_id', schoolId)
+        .maybeSingle()
+      if (acknowledgerError) throw new Error('Failed to resolve authorized escalation acknowledger')
+      acknowledgedByProfile = (acknowledger as Profile | null) ?? null
+    }
 
     return {
       ...this.mapEscalationRow(data),
-      student: data.student as Profile,
-      acknowledgedByProfile: (data.acknowledgedByProfile as Profile | null) ?? null,
+      student: student as Profile,
+      acknowledgedByProfile,
     }
   }
 
@@ -293,7 +345,7 @@ function mapEventSummary(eventType: string): string {
   }
 }
 
-export function createSupabaseInstructorClient(): SupabaseInstructorDatabaseClient {
+export function createSupabaseInstructorClient(authenticatedClient?: SupabaseClient): SupabaseInstructorDatabaseClient {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -302,5 +354,5 @@ export function createSupabaseInstructorClient(): SupabaseInstructorDatabaseClie
     throw new Error('Missing Supabase configuration: NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are required')
   }
 
-  return new SupabaseInstructorDatabaseClient({ url, anonKey, serviceRoleKey })
+  return new SupabaseInstructorDatabaseClient({ url, anonKey, serviceRoleKey, authenticatedClient })
 }

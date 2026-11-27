@@ -24,6 +24,37 @@ import { createSupabaseDetectionOrchestrator } from '@/lib/remediation/detection
 describe('POST /api/remediation/detect', () => {
   const mockUser = { id: 'user-123', email: 'test@example.com' }
 
+  const validProfile = {
+    role: 'student', approval_status: 'approved', is_disabled: false,
+    school_id: 'school-a', requires_password_change: false,
+  }
+  const validStudent = { school_id: 'school-a', is_active: true }
+
+  function withAuthorizationData(
+    mockSupabase: { from: ReturnType<typeof vi.fn> },
+    profile: Record<string, unknown> | null = validProfile,
+    student: Record<string, unknown> | null = validStudent,
+    profileError: unknown = null,
+    studentError: unknown = null,
+  ) {
+    const originalFrom = mockSupabase.from
+    mockSupabase.from = vi.fn((table: string) => {
+      if (table === 'profiles' || table === 'students') {
+        const result = table === 'profiles'
+          ? { data: profile, error: profileError }
+          : { data: student, error: studentError }
+        return {
+          select: vi.fn(() => ({
+            eq: vi.fn(() => ({
+              maybeSingle: vi.fn().mockResolvedValue(result),
+            })),
+          })),
+        }
+      }
+      return (originalFrom as (name: string) => unknown)(table)
+    })
+  }
+
   beforeEach(() => {
     vi.clearAllMocks()
   })
@@ -101,6 +132,7 @@ describe('POST /api/remediation/detect', () => {
         }),
       }),
     }
+    withAuthorizationData(mockSupabase)
     vi.mocked(createClient).mockResolvedValue(mockSupabase as any)
 
     const request = new NextRequest('http://localhost/api/remediation/detect', {
@@ -131,6 +163,7 @@ describe('POST /api/remediation/detect', () => {
         }),
       }),
     }
+    withAuthorizationData(mockSupabase)
     vi.mocked(createClient).mockResolvedValue(mockSupabase as any)
 
     const request = new NextRequest('http://localhost/api/remediation/detect', {
@@ -161,6 +194,7 @@ describe('POST /api/remediation/detect', () => {
         }),
       }),
     }
+    withAuthorizationData(mockSupabase)
     vi.mocked(createClient).mockResolvedValue(mockSupabase as any)
 
     const request = new NextRequest('http://localhost/api/remediation/detect', {
@@ -191,6 +225,7 @@ describe('POST /api/remediation/detect', () => {
         }),
       }),
     }
+    withAuthorizationData(mockSupabase)
     vi.mocked(createClient).mockResolvedValue(mockSupabase as any)
 
     const request = new NextRequest('http://localhost/api/remediation/detect', {
@@ -203,6 +238,70 @@ describe('POST /api/remediation/detect', () => {
 
     expect(response.status).toBe(400)
     expect(data.error).toBe('Quiz attempt does not match chapter')
+  })
+
+
+  it.each([
+    ['disabled account', { ...validProfile, is_disabled: true }, validStudent],
+    ['unknown disabled flag', { ...validProfile, is_disabled: null }, validStudent],
+    ['unapproved account', { ...validProfile, approval_status: 'pending' }, validStudent],
+    ['missing profile', null, validStudent],
+    ['wrong school', validProfile, { school_id: 'school-b', is_active: true }],
+    ['inactive student', validProfile, { school_id: 'school-a', is_active: false }],
+    ['non-student role', { ...validProfile, role: 'instructor' }, validStudent],
+    ['missing school', { ...validProfile, school_id: null }, validStudent],
+    ['password change required', { ...validProfile, requires_password_change: true }, validStudent],
+    ['unknown password-change flag', { ...validProfile, requires_password_change: null }, validStudent],
+  ])('denies %s before privileged orchestration', async (_case, profile, student) => {
+    const exactAttempt = {
+      id: 'attempt-1', quiz_id: 'quiz-2', user_id: mockUser.id,
+      completed_at: '2026-08-20T10:00:00Z',
+    }
+    const mockSupabase = {
+      auth: { getUser: vi.fn().mockResolvedValue({ data: { user: mockUser }, error: null }) },
+      from: vi.fn(() => ({
+        select: vi.fn(() => ({
+          eq: vi.fn(() => ({
+            maybeSingle: vi.fn().mockResolvedValue({ data: exactAttempt, error: null }),
+          })),
+        })),
+      })),
+    }
+    withAuthorizationData(mockSupabase, profile, student)
+    vi.mocked(createClient).mockResolvedValue(mockSupabase as any)
+    const response = await POST(new NextRequest('http://localhost/api/remediation/detect', {
+      method: 'POST', body: JSON.stringify({ chapterId: 'ch-2', quizAttemptId: 'attempt-1' }),
+    }))
+    expect(response.status).toBe(403)
+    expect(createSupabaseDetectionOrchestrator).not.toHaveBeenCalled()
+  })
+
+  it.each(['profile', 'student'])('fails closed when %s authorization query errors', async (which) => {
+    const exactAttempt = {
+      id: 'attempt-1', quiz_id: 'quiz-2', user_id: mockUser.id,
+      completed_at: '2026-08-20T10:00:00Z',
+    }
+    const mockSupabase = {
+      auth: { getUser: vi.fn().mockResolvedValue({ data: { user: mockUser }, error: null }) },
+      from: vi.fn(() => ({
+        select: vi.fn(() => ({
+          eq: vi.fn(() => ({
+            maybeSingle: vi.fn().mockResolvedValue({ data: exactAttempt, error: null }),
+          })),
+        })),
+      })),
+    }
+    withAuthorizationData(
+      mockSupabase, validProfile, validStudent,
+      which === 'profile' ? { message: 'profile lookup unavailable' } : null,
+      which === 'student' ? { message: 'student lookup unavailable' } : null,
+    )
+    vi.mocked(createClient).mockResolvedValue(mockSupabase as any)
+    const response = await POST(new NextRequest('http://localhost/api/remediation/detect', {
+      method: 'POST', body: JSON.stringify({ chapterId: 'ch-2', quizAttemptId: 'attempt-1' }),
+    }))
+    expect(response.status).toBe(500)
+    expect(createSupabaseDetectionOrchestrator).not.toHaveBeenCalled()
   })
 
   it('should return 500 when orchestration fails', async () => {
@@ -221,6 +320,7 @@ describe('POST /api/remediation/detect', () => {
         }),
       }),
     }
+    withAuthorizationData(mockSupabase)
     vi.mocked(createClient).mockResolvedValue(mockSupabase as any)
 
     const mockOrchestrator = {
@@ -263,6 +363,7 @@ describe('POST /api/remediation/detect', () => {
         }),
       }),
     }
+    withAuthorizationData(mockSupabase)
     vi.mocked(createClient).mockResolvedValue(mockSupabase as any)
 
     const mockOrchestrator = {
@@ -307,6 +408,7 @@ describe('POST /api/remediation/detect', () => {
         }),
       }),
     }
+    withAuthorizationData(mockSupabase)
     vi.mocked(createClient).mockResolvedValue(mockSupabase as any)
 
     const mockOrchestrator = {
