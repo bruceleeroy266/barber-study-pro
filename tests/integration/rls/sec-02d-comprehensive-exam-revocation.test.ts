@@ -1,8 +1,21 @@
 /** SEC-RELEASE-02D-1D: real, already-issued JWT revocation on local Supabase. */
 import { beforeAll, afterAll, describe, test, expect } from 'vitest'
+import { execFileSync } from 'node:child_process'
+import { getTestEnvironment } from '../setup/test-environment'
 import { assertTestEnvironment } from '../setup/production-guard'
 import { setupTestEnvironment, cleanupTestEnvironment, createAuthenticatedClient, getServiceClient, resolveActorId } from '../setup/db-helpers'
 import { TEST_ACTORS } from '../setup/test-actors'
+
+function examSnapshot(): string {
+  assertTestEnvironment()
+  return execFileSync('psql', [getTestEnvironment().databaseUrl, '-X', '-q', '-A', '-t',
+    '-v', 'ON_ERROR_STOP=1', '-c',
+    `SELECT jsonb_build_object(
+      'attempts', (SELECT count(*) FROM public.comprehensive_exam_attempts),
+      'items', (SELECT count(*) FROM public.comprehensive_exam_attempt_items),
+      'events', (SELECT count(*) FROM public.comprehensive_exam_attempt_events)
+    )::text;`], { encoding: 'utf8' }).trim()
+}
 
 const calls = [
   ['get_comprehensive_exam_attempt', { p_attempt_id: '00000000-0000-0000-0000-000000000001' }],
@@ -34,12 +47,14 @@ describe('02D comprehensive exam direct RPC existing-session revocation', () => 
     const id = resolveActorId('STUDENT_A')
     const { error: disableError } = await getServiceClient().from('profiles').update({ is_disabled: true }).eq('id', id)
     expect(disableError).toBeNull()
+    const before = examSnapshot()
     try {
       for (const [rpc, params] of calls) {
         const { data, error } = await client.rpc(rpc, params)
         expect(error, rpc + ' unexpectedly succeeded').not.toBeNull()
         expect(error?.message).toContain('Active approved learner account required')
         expect(data).toBeNull()
+        expect(examSnapshot(), rpc + ' mutated exam database while disabled').toBe(before)
       }
     } finally {
       const { error } = await getServiceClient().from('profiles').update({ is_disabled: false }).eq('id', id)
